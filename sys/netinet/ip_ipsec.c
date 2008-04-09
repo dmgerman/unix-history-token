@@ -626,13 +626,11 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|)
-block|{
+parameter_list|,
 name|int
 name|mtu
-init|=
-literal|0
-decl_stmt|;
+parameter_list|)
+block|{
 comment|/* 	 * If the packet is routed over IPsec tunnel, tell the 	 * originator the tunnel MTU. 	 *	tunnel MTU = if MTU - sizeof(IP) - ESP/AH hdrsiz 	 * XXX quickhack!!! 	 */
 name|struct
 name|secpolicy
