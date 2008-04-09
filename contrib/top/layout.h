@@ -1,147 +1,227 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Top - a top users display for Berkeley Unix  *  *  This file defines the locations on tne screen for various parts of the  *  display.  These definitions are used by the routines in "display.c" for  *  cursor addressing.  */
+comment|/*  *  Top - a top users display for Berkeley Unix  *  *  This file defines the locations on tne screen for various parts of the  *  display.  These definitions are used by the routines in "display.c" for  *  cursor addressing.  *  * $FreeBSD$  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_lastpid
-value|10
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 10 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_lastpid
-value|0
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 0 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_loadave
-value|33
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 33 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_loadave_nompid
-value|15
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 15 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_loadave
-value|0
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 0 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_procstate
-value|0
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 0 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_procstate
-value|1
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 1 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_brkdn
-value|15
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 15 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_brkdn
-value|1
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 1 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_mem
-value|5
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 5 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_mem
-value|3
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 3 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_swap
-value|6
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 6 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_swap
-value|4
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 4 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_message
-value|5
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 5 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_header
-value|0
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 0 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_header
-value|6
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 6 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|x_idlecursor
-value|0
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 0 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_idlecursor
-value|5
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 5 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_procs
-value|7
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* 7 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|y_cpustates
-value|2
-end_define
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 2 */
+end_comment
 
 end_unit
 
