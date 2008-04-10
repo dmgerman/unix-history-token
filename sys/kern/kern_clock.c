@@ -474,8 +474,6 @@ name|int
 name|error
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|c
 decl_stmt|;
 name|long
@@ -491,6 +489,9 @@ name|cp_time32
 index|[
 name|CPUSTATES
 index|]
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 endif|#
 directive|endif
