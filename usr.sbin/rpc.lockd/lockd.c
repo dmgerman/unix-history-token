@@ -785,10 +785,13 @@ literal|"Can't find or load kernel support for rpc.lockd - using non-kernel impl
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|kernel_lockd
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
