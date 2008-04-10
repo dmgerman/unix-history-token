@@ -7038,7 +7038,7 @@ name|stderr
 argument_list|,
 literal|"%s%s"
 argument_list|,
-literal|"usage: vmstat [-afimsz] [-c count] [-M core [-N system]] [-w wait]\n"
+literal|"usage: vmstat [-afHhimPsz] [-c count] [-M core [-N system]] [-w wait]\n"
 argument_list|,
 literal|"              [-n devs] [-p type,if,pass] [disks]\n"
 argument_list|)
