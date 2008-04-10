@@ -1030,7 +1030,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|msgctl_to_event
+name|audit_msgctl_to_event
 parameter_list|(
 name|int
 name|cmd
@@ -1040,7 +1040,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|semctl_to_event
+name|audit_semctl_to_event
 parameter_list|(
 name|int
 name|cmr
@@ -1050,7 +1050,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|canon_path
+name|audit_canon_path
 parameter_list|(
 name|struct
 name|thread

@@ -2832,7 +2832,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|canon_path
+name|audit_canon_path
 argument_list|(
 name|td
 argument_list|,
