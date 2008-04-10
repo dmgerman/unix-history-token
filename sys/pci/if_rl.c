@@ -4724,16 +4724,15 @@ name|rxbufpos
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Here's a totally undocumented fact for you. When the 		 * RealTek chip is in the process of copying a packet into 		 * RAM for you, the length will be 0xfff0. If you spot a 		 * packet header with this value, you need to stop. The 		 * datasheet makes absolutely no mention of this and 		 * RealTek should be shot for this. 		 */
-if|if
-condition|(
-call|(
-name|uint16_t
-call|)
-argument_list|(
+name|total_len
+operator|=
 name|rxstat
 operator|>>
 literal|16
-argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|total_len
 operator|==
 name|RL_RXSTAT_UNFINISHED
 condition|)
@@ -4746,6 +4745,16 @@ name|rxstat
 operator|&
 name|RL_RXSTAT_RXOK
 operator|)
+operator|||
+name|total_len
+operator|<
+name|ETHER_MIN_LEN
+operator|||
+name|total_len
+operator|>
+name|ETHER_MAX_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
 condition|)
 block|{
 name|ifp
@@ -4761,12 +4770,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* No errors; receive the packet. */
-name|total_len
-operator|=
-name|rxstat
-operator|>>
-literal|16
-expr_stmt|;
 name|rx_bytes
 operator|+=
 name|total_len
