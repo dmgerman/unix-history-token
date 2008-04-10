@@ -4318,6 +4318,68 @@ literal|4
 expr_stmt|;
 break|break;
 block|}
+comment|/* nlm_syscall */
+case|case
+literal|154
+case|:
+block|{
+name|struct
+name|nlm_syscall_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|debug_level
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|grace_period
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|addr_count
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|addrs
+expr_stmt|;
+comment|/* char ** */
+operator|*
+name|n_args
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+block|}
 comment|/* nfssvc */
 case|case
 literal|155
