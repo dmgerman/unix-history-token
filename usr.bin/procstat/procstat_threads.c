@@ -100,13 +100,15 @@ name|hflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %6s %-20s %2s %4s %-7s %-9s\n"
+literal|"%5s %6s %-16s %-16s %2s %4s %-7s %-9s\n"
 argument_list|,
 literal|"PID"
 argument_list|,
 literal|"TID"
 argument_list|,
 literal|"COMM"
+argument_list|,
+literal|"TDNAME"
 argument_list|,
 literal|"CPU"
 argument_list|,
@@ -312,7 +314,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-20s "
+literal|"%-16s "
 argument_list|,
 name|strlen
 argument_list|(
@@ -324,6 +326,41 @@ condition|?
 name|kipp
 operator|->
 name|ki_comm
+else|:
+literal|"-"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-16s "
+argument_list|,
+operator|(
+name|strlen
+argument_list|(
+name|kipp
+operator|->
+name|ki_ocomm
+argument_list|)
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|kipp
+operator|->
+name|ki_comm
+argument_list|,
+name|kipp
+operator|->
+name|ki_ocomm
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|)
+condition|?
+name|kipp
+operator|->
+name|ki_ocomm
 else|:
 literal|"-"
 argument_list|)
