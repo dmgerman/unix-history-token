@@ -3497,19 +3497,11 @@ operator|.
 name|fs_cgsize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cg_chkmagic
+name|check_cgmagic
 argument_list|(
-name|cgp
-argument_list|)
-condition|)
-name|pfatal
-argument_list|(
-literal|"CG %d: BAD MAGIC NUMBER\n"
-argument_list|,
 name|cg
+argument_list|,
+name|cgp
 argument_list|)
 expr_stmt|;
 name|setbit
