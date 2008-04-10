@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2007 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998 - 2008 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -895,6 +895,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_AHCI_CAP_SPM
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_AHCI_CAP_CLO
 value|0x01000000
 end_define
@@ -1343,6 +1350,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_AHCI_P_SNTF
+value|0x13C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_AHCI_P_FBS
+value|0x140
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_AHCI_CL_SIZE
 value|32
 end_define
@@ -1365,7 +1386,7 @@ begin_define
 define|#
 directive|define
 name|ATA_AHCI_CT_OFFSET
-value|1024+256
+value|1024+4096
 end_define
 
 begin_define
@@ -1451,6 +1472,30 @@ block|{
 name|u_int16_t
 name|cmd_flags
 decl_stmt|;
+define|#
+directive|define
+name|ATA_AHCI_CMD_ATAPI
+value|0x0020
+define|#
+directive|define
+name|ATA_AHCI_CMD_WRITE
+value|0x0040
+define|#
+directive|define
+name|ATA_AHCI_CMD_PREFETCH
+value|0x0080
+define|#
+directive|define
+name|ATA_AHCI_CMD_RESET
+value|0x0100
+define|#
+directive|define
+name|ATA_AHCI_CMD_BIST
+value|0x0200
+define|#
+directive|define
+name|ATA_AHCI_CMD_CLR_BUSY
+value|0x0400
 name|u_int16_t
 name|prd_length
 decl_stmt|;
@@ -1711,9 +1756,9 @@ define|#
 directive|define
 name|ATA_DEV
 parameter_list|(
-name|device
+name|unit
 parameter_list|)
-value|((device == ATA_MASTER) ? 0 : 1)
+value|((unit == ATA_ATA_SLAVE) ? 0x10 : 0)
 end_define
 
 begin_define
@@ -1962,6 +2007,10 @@ name|caddr_t
 name|data
 decl_stmt|;
 comment|/* pointer to data buf */
+name|u_int32_t
+name|tag
+decl_stmt|;
+comment|/* HW tag of this request */
 name|int
 name|flags
 decl_stmt|;
@@ -2033,10 +2082,44 @@ name|u_int8_t
 name|error
 decl_stmt|;
 comment|/* ATA error */
+struct|struct
+block|{
 name|u_int8_t
-name|dmastat
+name|status
 decl_stmt|;
 comment|/* DMA status */
+name|bus_dma_tag_t
+name|sg_tag
+decl_stmt|;
+comment|/* SG list DMA tag */
+name|bus_dmamap_t
+name|sg_map
+decl_stmt|;
+comment|/* SG list DMA map */
+name|void
+modifier|*
+name|sg
+decl_stmt|;
+comment|/* DMA transfer table */
+name|bus_addr_t
+name|sg_bus
+decl_stmt|;
+comment|/* bus address of dmatab */
+name|bus_dma_tag_t
+name|data_tag
+decl_stmt|;
+comment|/* data DMA tag */
+name|bus_dmamap_t
+name|data_map
+decl_stmt|;
+comment|/* data DMA map */
+name|u_int32_t
+name|cur_iosize
+decl_stmt|;
+comment|/* DMA data current IO size */
+block|}
+name|dma
+struct|;
 name|u_int32_t
 name|donecount
 decl_stmt|;
@@ -2178,6 +2261,10 @@ name|ATA_MASTER
 value|0x00
 define|#
 directive|define
+name|ATA_PM
+value|0x0f
+define|#
+directive|define
 name|ATA_SLAVE
 value|0x10
 name|struct
@@ -2280,31 +2367,6 @@ name|dmatag
 decl_stmt|;
 comment|/* parent DMA tag */
 name|bus_dma_tag_t
-name|sg_tag
-decl_stmt|;
-comment|/* SG list DMA tag */
-name|bus_dmamap_t
-name|sg_map
-decl_stmt|;
-comment|/* SG list DMA map */
-name|void
-modifier|*
-name|sg
-decl_stmt|;
-comment|/* DMA transfer table */
-name|bus_addr_t
-name|sg_bus
-decl_stmt|;
-comment|/* bus address of dmatab */
-name|bus_dma_tag_t
-name|data_tag
-decl_stmt|;
-comment|/* data DMA tag */
-name|bus_dmamap_t
-name|data_map
-decl_stmt|;
-comment|/* data DMA map */
-name|bus_dma_tag_t
 name|work_tag
 decl_stmt|;
 comment|/* workspace DMA tag */
@@ -2337,10 +2399,6 @@ name|u_int32_t
 name|max_iosize
 decl_stmt|;
 comment|/* DMA data max IO size */
-name|u_int32_t
-name|cur_iosize
-decl_stmt|;
-comment|/* DMA data current IO size */
 name|u_int64_t
 name|max_address
 decl_stmt|;
@@ -2350,18 +2408,8 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|ATA_DMA_READ
-value|0x01
-comment|/* transaction is a read */
-define|#
-directive|define
-name|ATA_DMA_LOADED
-value|0x02
-comment|/* DMA tables etc loaded */
-define|#
-directive|define
 name|ATA_DMA_ACTIVE
-value|0x04
+value|0x01
 comment|/* DMA transfer in progress */
 name|void
 function_decl|(
@@ -2410,17 +2458,10 @@ modifier|*
 name|load
 function_decl|)
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|,
-name|int32_t
-name|count
-parameter_list|,
-name|int
-name|dir
+name|struct
+name|ata_request
+modifier|*
+name|request
 parameter_list|,
 name|void
 modifier|*
@@ -2437,8 +2478,10 @@ modifier|*
 name|unload
 function_decl|)
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|ata_request
+modifier|*
+name|request
 parameter_list|)
 function_decl|;
 name|int
@@ -2447,8 +2490,10 @@ modifier|*
 name|start
 function_decl|)
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|ata_request
+modifier|*
+name|request
 parameter_list|)
 function_decl|;
 name|int
@@ -2457,8 +2502,10 @@ modifier|*
 name|stop
 function_decl|)
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|ata_request
+modifier|*
+name|request
 parameter_list|)
 function_decl|;
 name|void
@@ -2483,6 +2530,58 @@ begin_struct
 struct|struct
 name|ata_lowlevel
 block|{
+name|u_int32_t
+function_decl|(
+modifier|*
+name|softreset
+function_decl|)
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|pmport
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pm_read
+function_decl|)
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|port
+parameter_list|,
+name|int
+name|reg
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pm_write
+function_decl|)
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|port
+parameter_list|,
+name|int
+name|reg
+parameter_list|,
+name|u_int32_t
+name|value
+parameter_list|)
+function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -2619,7 +2718,6 @@ decl_stmt|;
 comment|/* lowlevel HW functions */
 name|struct
 name|ata_dma
-modifier|*
 name|dma
 decl_stmt|;
 comment|/* DMA data / functions */
@@ -2654,23 +2752,23 @@ comment|/* what is present */
 define|#
 directive|define
 name|ATA_ATA_MASTER
-value|0x01
+value|0x00000001
 define|#
 directive|define
 name|ATA_ATA_SLAVE
-value|0x02
-define|#
-directive|define
-name|ATA_ATAPI_MASTER
-value|0x04
-define|#
-directive|define
-name|ATA_ATAPI_SLAVE
-value|0x08
+value|0x00000002
 define|#
 directive|define
 name|ATA_PORTMULTIPLIER
-value|0x10
+value|0x00008000
+define|#
+directive|define
+name|ATA_ATAPI_MASTER
+value|0x00010000
+define|#
+directive|define
+name|ATA_ATAPI_SLAVE
+value|0x00020000
 name|struct
 name|mtx
 name|state_mtx
@@ -2804,6 +2902,13 @@ name|ata_wc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ata_setmax
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* public prototypes */
 end_comment
@@ -2901,6 +3006,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ata_getparam
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+name|atadev
+parameter_list|,
+name|int
+name|init
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ata_identify
 parameter_list|(
 name|device_t
@@ -2937,6 +3057,19 @@ name|ata_udelay
 parameter_list|(
 name|int
 name|interval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|ata_unit2str
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
