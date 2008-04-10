@@ -2894,6 +2894,17 @@ begin_comment
 comment|/*  * start each AP in our list  */
 end_comment
 
+begin_comment
+comment|/* Lowest 1MB is already mapped: don't touch*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMPMAP_START
+value|1
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -2987,7 +2998,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|TMPMAP_START
 init|;
 name|i
 operator|<
@@ -3250,7 +3261,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|TMPMAP_START
 init|;
 name|i
 operator|<
