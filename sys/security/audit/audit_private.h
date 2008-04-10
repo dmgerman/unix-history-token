@@ -960,19 +960,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|au_event_t
-name|flags_and_error_to_openevent
-parameter_list|(
-name|int
-name|oflags
-parameter_list|,
-name|int
-name|error
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|au_evclassmap_init
 parameter_list|(
@@ -1006,7 +993,7 @@ end_function_decl
 
 begin_function_decl
 name|au_event_t
-name|ctlname_to_sysctlevent
+name|audit_ctlname_to_sysctlevent
 parameter_list|(
 name|int
 name|name
@@ -1019,11 +1006,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|auditon_command_event
+name|au_event_t
+name|audit_flags_and_error_to_openevent
 parameter_list|(
 name|int
-name|cmd
+name|oflags
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1064,6 +1054,16 @@ parameter_list|,
 name|char
 modifier|*
 name|cpath
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|auditon_command_event
+parameter_list|(
+name|int
+name|cmd
 parameter_list|)
 function_decl|;
 end_function_decl

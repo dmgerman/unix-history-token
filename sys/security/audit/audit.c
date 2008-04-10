@@ -1302,7 +1302,7 @@ name|k_ar
 operator|.
 name|ar_event
 operator|=
-name|flags_and_error_to_openevent
+name|audit_flags_and_error_to_openevent
 argument_list|(
 name|ar
 operator|->
@@ -1323,7 +1323,7 @@ name|k_ar
 operator|.
 name|ar_event
 operator|=
-name|ctlname_to_sysctlevent
+name|audit_ctlname_to_sysctlevent
 argument_list|(
 name|ar
 operator|->
