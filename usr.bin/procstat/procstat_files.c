@@ -135,7 +135,7 @@ name|IPPROTO_ICMP
 case|:
 return|return
 operator|(
-literal|"ICM"
+literal|"ICMP"
 operator|)
 return|;
 case|case
@@ -151,21 +151,13 @@ name|IPPROTO_SCTP
 case|:
 return|return
 operator|(
-literal|"SCT"
-operator|)
-return|;
-case|case
-name|IPPROTO_DIVERT
-case|:
-return|return
-operator|(
-literal|"IPD"
+literal|"SCTP"
 operator|)
 return|;
 default|default:
 return|return
 operator|(
-literal|"IP?"
+literal|"??"
 operator|)
 return|;
 block|}
@@ -182,7 +174,7 @@ name|SOCK_STREAM
 case|:
 return|return
 operator|(
-literal|"UDS"
+literal|"UDSS"
 operator|)
 return|;
 case|case
@@ -190,20 +182,20 @@ name|SOCK_DGRAM
 case|:
 return|return
 operator|(
-literal|"UDD"
+literal|"UDSD"
 operator|)
 return|;
 default|default:
 return|return
 operator|(
-literal|"UD?"
+literal|"??"
 operator|)
 return|;
 block|}
 default|default:
 return|return
 operator|(
-literal|"?"
+literal|"??"
 operator|)
 return|;
 block|}
@@ -448,7 +440,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%-19s"
 argument_list|,
 name|addr
 argument_list|)
@@ -480,14 +472,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
+name|i
+decl_stmt|,
 name|name
 index|[
 literal|4
 index|]
-decl_stmt|;
-name|unsigned
-name|int
-name|i
 decl_stmt|;
 specifier|const
 name|char
@@ -504,11 +494,9 @@ name|hflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %-16s %4s %1s %1s %-8s %3s %7s %-3s %-12s\n"
+literal|"%5s %3s %1s %1s %-8s %3s %7s %-4s %-35s\n"
 argument_list|,
 literal|"PID"
-argument_list|,
-literal|"COMM"
 argument_list|,
 literal|"FD"
 argument_list|,
@@ -522,7 +510,7 @@ literal|"REF"
 argument_list|,
 literal|"OFFSET"
 argument_list|,
-literal|"PRO"
+literal|"PROT"
 argument_list|,
 literal|"NAME"
 argument_list|)
@@ -714,59 +702,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-16s "
-argument_list|,
-name|kipp
-operator|->
-name|ki_comm
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|kif
-operator|->
-name|kf_fd
-condition|)
-block|{
-case|case
-name|KF_FD_TYPE_CWD
-case|:
-name|printf
-argument_list|(
-literal|" cwd "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|KF_FD_TYPE_ROOT
-case|:
-name|printf
-argument_list|(
-literal|"root "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|KF_FD_TYPE_JAIL
-case|:
-name|printf
-argument_list|(
-literal|"jail "
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"%4d "
+literal|"%3d "
 argument_list|,
 name|kif
 operator|->
 name|kf_fd
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 switch|switch
 condition|(
 name|kif
@@ -828,14 +770,6 @@ case|:
 name|str
 operator|=
 literal|"m"
-expr_stmt|;
-break|break;
-case|case
-name|KF_TYPE_SHM
-case|:
-name|str
-operator|=
-literal|"h"
 expr_stmt|;
 break|break;
 case|case
@@ -1083,15 +1017,6 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|kif
-operator|->
-name|kf_ref_count
-operator|>
-operator|-
-literal|1
-condition|)
 name|printf
 argument_list|(
 literal|"%3d "
@@ -1101,23 +1026,6 @@ operator|->
 name|kf_ref_count
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%3c "
-argument_list|,
-literal|'-'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|kif
-operator|->
-name|kf_offset
-operator|>
-operator|-
-literal|1
-condition|)
 name|printf
 argument_list|(
 literal|"%7jd "
@@ -1128,14 +1036,6 @@ operator|)
 name|kif
 operator|->
 name|kf_offset
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%7c "
-argument_list|,
-literal|'-'
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1153,14 +1053,14 @@ name|KF_TYPE_FIFO
 case|:
 name|printf
 argument_list|(
-literal|"%-3s "
+literal|"%-4s "
 argument_list|,
 literal|"-"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-18s"
+literal|"%-35s"
 argument_list|,
 name|kif
 operator|->
@@ -1173,7 +1073,7 @@ name|KF_TYPE_SOCKET
 case|:
 name|printf
 argument_list|(
-literal|"%-3s "
+literal|"%-4s "
 argument_list|,
 name|protocol_to_string
 argument_list|(
@@ -1273,14 +1173,14 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%-3s "
+literal|"%-4s "
 argument_list|,
 literal|"-"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-18s"
+literal|"%-35s"
 argument_list|,
 literal|"-"
 argument_list|)

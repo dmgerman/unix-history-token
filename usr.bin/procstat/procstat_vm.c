@@ -62,7 +62,6 @@ name|struct
 name|kinfo_proc
 modifier|*
 name|kipp
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -76,16 +75,14 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
+name|i
+decl_stmt|,
 name|name
 index|[
 literal|4
 index|]
 decl_stmt|,
 name|ptrwidth
-decl_stmt|;
-name|unsigned
-name|int
-name|i
 decl_stmt|;
 specifier|const
 name|char

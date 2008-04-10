@@ -252,7 +252,6 @@ name|i
 operator|=
 operator|(
 operator|(
-specifier|const
 expr|struct
 name|kinfo_proc
 operator|*
@@ -264,7 +263,6 @@ name|ki_pid
 operator|-
 operator|(
 operator|(
-specifier|const
 expr|struct
 name|kinfo_proc
 operator|*
@@ -289,7 +287,6 @@ name|i
 operator|=
 operator|(
 operator|(
-specifier|const
 expr|struct
 name|kinfo_proc
 operator|*
@@ -301,7 +298,6 @@ name|ki_tid
 operator|-
 operator|(
 operator|(
-specifier|const
 expr|struct
 name|kinfo_proc
 operator|*
@@ -366,6 +362,8 @@ block|{
 name|int
 name|ch
 decl_stmt|,
+name|i
+decl_stmt|,
 name|interval
 decl_stmt|,
 name|name
@@ -374,10 +372,6 @@ literal|4
 index|]
 decl_stmt|,
 name|tmp
-decl_stmt|;
-name|unsigned
-name|int
-name|i
 decl_stmt|;
 name|struct
 name|kinfo_proc
@@ -850,10 +844,6 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
-name|unsigned
-name|int
-operator|)
 name|argc
 condition|;
 name|i
