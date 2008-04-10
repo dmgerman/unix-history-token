@@ -104,7 +104,7 @@ condition|(
 name|__getosreldate
 argument_list|()
 operator|>=
-literal|800028
+literal|700103
 condition|)
 block|{
 return|return

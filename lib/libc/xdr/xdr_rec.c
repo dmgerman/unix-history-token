@@ -2760,6 +2760,11 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+comment|/* 		 * We can only reasonably expect to read once from a 		 * non-blocking stream. Reading the fragment header 		 * may have drained the stream. 		 */
+name|expectdata
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 name|n
 operator|=
