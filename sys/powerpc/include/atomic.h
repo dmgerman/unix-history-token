@@ -243,7 +243,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|8-bit atomic_add not implemented
+value|8-bit atomic_clear not implemented
 end_define
 
 begin_define
@@ -258,7 +258,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|16-bit atomic_add not implemented
+value|16-bit atomic_clear not implemented
 end_define
 
 begin_define
@@ -293,7 +293,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|64-bit atomic_add not implemented
+value|64-bit atomic_clear not implemented
 end_define
 
 begin_define
