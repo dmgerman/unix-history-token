@@ -6240,7 +6240,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|if (rtm_addrs& (w)) {\ 	    l = SA_SIZE(&(u.sa)); memmove(cp,&(u), l); cp += l;\ 	    if (verbose) sodump(&(u),"u");\ 	}
+value|if (rtm_addrs& (w)) {\ 	    l = SA_SIZE(&(u.sa)); memmove(cp,&(u), l); cp += l;\ 	    if (verbose) sodump(&(u),#u);\ 	}
 name|errno
 operator|=
 literal|0
