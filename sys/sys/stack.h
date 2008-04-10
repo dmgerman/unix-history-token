@@ -240,12 +240,33 @@ begin_comment
 comment|/* MD Routine. */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|stack_save
 parameter_list|(
 name|struct
 name|stack
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|stack_save_td
+parameter_list|(
+name|struct
+name|stack
+modifier|*
+parameter_list|,
+name|struct
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;

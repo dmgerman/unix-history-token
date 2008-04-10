@@ -399,6 +399,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
 begin_function
 name|void
 name|stack_print_ddb
@@ -495,6 +501,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Two print routines -- one for use from DDB and DDB-like contexts, the  * other for use in the live kernel.  */
