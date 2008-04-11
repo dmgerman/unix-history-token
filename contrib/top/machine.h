@@ -130,11 +130,6 @@ name|struct
 name|timeval
 name|boottime
 decl_stmt|;
-name|unsigned
-name|long
-name|cpumask
-decl_stmt|;
-comment|/* bitfield of cpu states represented */
 name|int
 name|ncpus
 decl_stmt|;
