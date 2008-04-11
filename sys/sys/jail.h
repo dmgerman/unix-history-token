@@ -132,13 +132,6 @@ directive|include
 file|<sys/_task.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|JAIL_MAX
-value|999999
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
