@@ -3805,7 +3805,7 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_runtime
+name|td_incruntime
 operator|==
 literal|0
 condition|)
@@ -4624,7 +4624,7 @@ name|rux_runtime
 operator|+=
 name|td
 operator|->
-name|td_runtime
+name|td_incruntime
 expr_stmt|;
 name|rux
 operator|->
@@ -4652,7 +4652,7 @@ name|td_iticks
 expr_stmt|;
 name|td
 operator|->
-name|td_runtime
+name|td_incruntime
 operator|=
 literal|0
 expr_stmt|;

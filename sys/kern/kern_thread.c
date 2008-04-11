@@ -500,6 +500,12 @@ name|td_syscalls
 operator|=
 literal|0
 expr_stmt|;
+name|td
+operator|->
+name|td_incruntime
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Note that td_critnest begins life as 1 because the thread is not 	 * running and is thereby implicitly waiting to be on the receiving 	 * end of a context switch. 	 */
 name|td
 operator|->

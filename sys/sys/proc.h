@@ -792,6 +792,10 @@ name|int
 name|td_syscalls
 decl_stmt|;
 comment|/* per-thread syscall count (used by NFS :)) */
+name|uint64_t
+name|td_incruntime
+decl_stmt|;
+comment|/* (t) Cpu ticks to transfer to proc. */
 block|}
 struct|;
 end_struct
