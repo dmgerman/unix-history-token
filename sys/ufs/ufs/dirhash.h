@@ -128,10 +128,10 @@ struct|struct
 name|dirhash
 block|{
 name|struct
-name|mtx
-name|dh_mtx
+name|lock
+name|dh_lock
 decl_stmt|;
-comment|/* protects all fields except dh_list */
+comment|/* protects all fields except list& score */
 name|doff_t
 modifier|*
 modifier|*
@@ -150,6 +150,10 @@ name|int
 name|dh_hused
 decl_stmt|;
 comment|/* entries in use */
+name|int
+name|dh_memreq
+decl_stmt|;
+comment|/* Memory used. */
 comment|/* Free space statistics. XXX assumes DIRBLKSIZ is 512. */
 name|u_int8_t
 modifier|*
