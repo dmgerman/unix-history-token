@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2007, 2008 	Jeffrey Roberson<jeff@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2007, 2008 	Jeffrey Roberson<jeff@freebsd.org>  * All rights reserved.  *  * Copyright (c) 2008 Nokia Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -146,6 +146,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|xflag
 decl_stmt|;
 end_decl_stmt
 
@@ -545,6 +551,8 @@ block|,
 literal|"pid"
 block|,
 literal|"cpuset"
+block|,
+literal|"irq"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -776,7 +784,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cgil:p:rs:t:"
+literal|"cgil:p:rs:t:x:"
 argument_list|)
 operator|)
 operator|!=
@@ -922,6 +930,25 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'x'
+case|:
+name|xflag
+operator|=
+literal|1
+expr_stmt|;
+name|which
+operator|=
+name|CPU_WHICH_IRQ
+expr_stmt|;
+name|id
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 argument_list|()
@@ -953,6 +980,8 @@ expr_stmt|;
 comment|/* Only one identity specifier. */
 if|if
 condition|(
+name|xflag
+operator|+
 name|sflag
 operator|+
 name|pflag
@@ -1001,6 +1030,8 @@ operator||
 name|rflag
 operator||
 name|tflag
+operator||
+name|xflag
 condition|)
 name|usage
 argument_list|()
@@ -1145,8 +1176,26 @@ name|tflag
 operator|&&
 operator|(
 name|sflag
-operator|||
+operator||
 name|pflag
+operator||
+name|xflag
+operator|)
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+comment|/* You can only set a mask on an irq. */
+if|if
+condition|(
+name|xflag
+operator|&&
+operator|(
+name|pflag
+operator||
+name|sflag
+operator||
+name|tflag
 operator|)
 condition|)
 name|usage
@@ -1254,14 +1303,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       cpuset [-cr] [-l cpu-list] [-p pid | -t tid | -s setid]\n"
+literal|"       cpuset [-cr] [-l cpu-list] [-p pid | -t tid | -s setid | -x irq]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       cpuset [-cgir] [-p pid | -t tid | -s setid]\n"
+literal|"       cpuset [-cgir] [-p pid | -t tid | -s setid | -x irq]\n"
 argument_list|)
 expr_stmt|;
 name|exit
