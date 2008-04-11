@@ -1424,6 +1424,15 @@ argument_list|,
 literal|"sysctlbyname kern.cp_times"
 argument_list|)
 expr_stmt|;
+name|pcpu_cp_time
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 name|maxid
 operator|=
 operator|(
@@ -1577,15 +1586,6 @@ operator|*
 name|ncpus
 operator|*
 name|CPUSTATES
-expr_stmt|;
-name|pcpu_cp_time
-operator|=
-name|calloc
-argument_list|(
-literal|1
-argument_list|,
-name|size
-argument_list|)
 expr_stmt|;
 name|pcpu_cp_old
 operator|=
