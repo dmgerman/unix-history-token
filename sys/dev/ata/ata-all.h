@@ -3329,30 +3329,29 @@ begin_comment
 comment|/* macros for alloc/free of struct ata_request */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|uma_zone_t
-name|ata_request_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|struct
+name|ata_request
+modifier|*
 name|ata_alloc_request
-parameter_list|()
-value|uma_zalloc(ata_request_zone, M_NOWAIT | M_ZERO)
-end_define
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|void
 name|ata_free_request
 parameter_list|(
+name|struct
+name|ata_request
+modifier|*
 name|request
 parameter_list|)
-value|{ \ 	if (!(request->flags& ATA_R_DANGER2)) \ 	    uma_zfree(ata_request_zone, request); \ 	}
-end_define
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* macros for alloc/free of struct ata_composite */

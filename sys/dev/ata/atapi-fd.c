@@ -1104,7 +1104,9 @@ operator|(
 name|request
 operator|=
 name|ata_alloc_request
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -1119,12 +1121,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|request
-operator|->
-name|dev
-operator|=
-name|dev
-expr_stmt|;
 name|request
 operator|->
 name|bio

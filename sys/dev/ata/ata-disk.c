@@ -1097,7 +1097,9 @@ operator|(
 name|request
 operator|=
 name|ata_alloc_request
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -1115,12 +1117,6 @@ operator|->
 name|flags
 operator|=
 name|ATA_R_CONTROL
-expr_stmt|;
-name|request
-operator|->
-name|dev
-operator|=
-name|dev
 expr_stmt|;
 name|request
 operator|->
@@ -1224,7 +1220,9 @@ operator|(
 name|request
 operator|=
 name|ata_alloc_request
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -1247,12 +1245,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* setup request */
-name|request
-operator|->
-name|dev
-operator|=
-name|dev
-expr_stmt|;
 name|request
 operator|->
 name|bio
@@ -2426,17 +2418,13 @@ operator|(
 name|request
 operator|=
 name|ata_alloc_request
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 condition|)
 return|return;
 comment|/* get the max native size the device supports */
-name|request
-operator|->
-name|dev
-operator|=
-name|dev
-expr_stmt|;
 name|request
 operator|->
 name|u

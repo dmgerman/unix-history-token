@@ -183,7 +183,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* check that that the device is still valid */
+comment|/* check that the device is still valid */
 if|if
 condition|(
 operator|!
@@ -562,7 +562,9 @@ modifier|*
 name|request
 init|=
 name|ata_alloc_request
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|int
 name|error
@@ -574,12 +576,6 @@ condition|(
 name|request
 condition|)
 block|{
-name|request
-operator|->
-name|dev
-operator|=
-name|dev
-expr_stmt|;
 name|request
 operator|->
 name|u
@@ -691,7 +687,9 @@ modifier|*
 name|request
 init|=
 name|ata_alloc_request
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|struct
 name|ata_device
@@ -713,12 +711,6 @@ condition|(
 name|request
 condition|)
 block|{
-name|request
-operator|->
-name|dev
-operator|=
-name|dev
-expr_stmt|;
 if|if
 condition|(
 operator|(
