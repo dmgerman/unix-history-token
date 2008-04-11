@@ -1504,6 +1504,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+modifier|*
+name|matchallbyorigin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|isinstalledpkg
 parameter_list|(
