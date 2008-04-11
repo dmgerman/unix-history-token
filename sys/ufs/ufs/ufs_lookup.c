@@ -294,6 +294,14 @@ name|doff_t
 name|slotoffset
 decl_stmt|;
 comment|/* offset of area with free space */
+name|doff_t
+name|i_diroff
+decl_stmt|;
+comment|/* cached i_diroff value. */
+name|doff_t
+name|i_offset
+decl_stmt|;
+comment|/* cached i_offset value. */
 name|int
 name|slotsize
 decl_stmt|;
@@ -388,6 +396,9 @@ decl_stmt|;
 name|ino_t
 name|saved_ino
 decl_stmt|;
+name|int
+name|ltype
+decl_stmt|;
 name|bp
 operator|=
 name|NULL
@@ -417,6 +428,12 @@ name|vdp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
+name|i_diroff
+operator|=
+name|dp
+operator|->
+name|i_diroff
+expr_stmt|;
 name|slotstatus
 operator|=
 name|FOUND
@@ -576,8 +593,6 @@ operator|->
 name|cn_namelen
 argument_list|,
 operator|&
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 operator|&
@@ -614,8 +629,6 @@ operator|->
 name|b_data
 operator|+
 operator|(
-name|dp
-operator|->
 name|i_offset
 operator|&
 name|bmask
@@ -628,8 +641,6 @@ goto|;
 case|case
 name|ENOENT
 case|:
-name|dp
-operator|->
 name|i_offset
 operator|=
 name|roundup2
@@ -659,14 +670,10 @@ name|nameiop
 operator|!=
 name|LOOKUP
 operator|||
-name|dp
-operator|->
 name|i_diroff
 operator|==
 literal|0
 operator|||
-name|dp
-operator|->
 name|i_diroff
 operator|>=
 name|dp
@@ -678,8 +685,6 @@ name|entryoffsetinblock
 operator|=
 literal|0
 expr_stmt|;
-name|dp
-operator|->
 name|i_offset
 operator|=
 literal|0
@@ -691,12 +696,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|dp
-operator|->
 name|i_offset
 operator|=
-name|dp
-operator|->
 name|i_diroff
 expr_stmt|;
 if|if
@@ -704,8 +705,6 @@ condition|(
 operator|(
 name|entryoffsetinblock
 operator|=
-name|dp
-operator|->
 name|i_offset
 operator|&
 name|bmask
@@ -721,8 +720,6 @@ argument_list|,
 operator|(
 name|off_t
 operator|)
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 name|NULL
@@ -749,8 +746,6 @@ expr_stmt|;
 block|}
 name|prevoff
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 name|endsearch
@@ -772,8 +767,6 @@ name|searchloop
 label|:
 while|while
 condition|(
-name|dp
-operator|->
 name|i_offset
 operator|<
 name|endsearch
@@ -783,8 +776,6 @@ comment|/* 		 * If necessary, get the next directory block. 		 */
 if|if
 condition|(
 operator|(
-name|dp
-operator|->
 name|i_offset
 operator|&
 name|bmask
@@ -813,8 +804,6 @@ argument_list|,
 operator|(
 name|off_t
 operator|)
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 name|NULL
@@ -932,8 +921,6 @@ name|ufs_dirbad
 argument_list|(
 name|dp
 argument_list|,
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 literal|"mangled entry"
@@ -953,8 +940,6 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-name|dp
-operator|->
 name|i_offset
 operator|+=
 name|i
@@ -1020,8 +1005,6 @@ name|FOUND
 expr_stmt|;
 name|slotoffset
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 name|slotsize
@@ -1052,8 +1035,6 @@ literal|1
 condition|)
 name|slotoffset
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 if|if
@@ -1069,8 +1050,6 @@ name|COMPACT
 expr_stmt|;
 name|slotsize
 operator|=
-name|dp
-operator|->
 name|i_offset
 operator|+
 name|ep
@@ -1201,8 +1180,6 @@ name|FOUND
 expr_stmt|;
 name|slotoffset
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 name|slotsize
@@ -1261,12 +1238,8 @@ block|}
 block|}
 name|prevoff
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
-name|dp
-operator|->
 name|i_offset
 operator|+=
 name|ep
@@ -1287,8 +1260,6 @@ name|d_ino
 condition|)
 name|enduseful
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 block|}
@@ -1305,22 +1276,24 @@ block|{
 name|numdirpasses
 operator|--
 expr_stmt|;
-name|dp
-operator|->
 name|i_offset
 operator|=
 literal|0
 expr_stmt|;
 name|endsearch
 operator|=
-name|dp
-operator|->
 name|i_diroff
 expr_stmt|;
 goto|goto
 name|searchloop
 goto|;
 block|}
+name|dp
+operator|->
+name|i_offset
+operator|=
+name|i_offset
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1384,6 +1357,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|vdp
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Access for write is interpreted as allowing 		 * creation of files in the directory. 		 */
 name|error
 operator|=
@@ -1590,8 +1570,6 @@ expr_stmt|;
 comment|/* 	 * Check that directory length properly reflects presence 	 * of this entry. 	 */
 if|if
 condition|(
-name|dp
-operator|->
 name|i_offset
 operator|+
 name|DIRSIZ
@@ -1613,8 +1591,6 @@ name|ufs_dirbad
 argument_list|(
 name|dp
 argument_list|,
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 literal|"i_size too small"
@@ -1624,8 +1600,6 @@ name|dp
 operator|->
 name|i_size
 operator|=
-name|dp
-operator|->
 name|i_offset
 operator|+
 name|DIRSIZ
@@ -1680,8 +1654,6 @@ name|dp
 operator|->
 name|i_diroff
 operator|=
-name|dp
-operator|->
 name|i_offset
 operator|&
 operator|~
@@ -1690,6 +1662,12 @@ name|DIRBLKSIZ
 operator|-
 literal|1
 operator|)
+expr_stmt|;
+name|dp
+operator|->
+name|i_offset
+operator|=
+name|i_offset
 expr_stmt|;
 comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 */
 if|if
@@ -1705,6 +1683,13 @@ name|ISLASTCN
 operator|)
 condition|)
 block|{
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|vdp
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Write access to directory required to delete files. 		 */
 name|error
 operator|=
@@ -1992,6 +1977,13 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
+name|ltype
+operator|=
+name|VOP_ISLOCKED
+argument_list|(
+name|pdp
+argument_list|)
+expr_stmt|;
 name|saved_ino
 operator|=
 name|dp
@@ -2028,7 +2020,7 @@ name|vn_lock
 argument_list|(
 name|pdp
 argument_list|,
-name|LK_EXCLUSIVE
+name|ltype
 operator||
 name|LK_RETRY
 argument_list|)
@@ -2066,6 +2058,52 @@ name|vdp
 argument_list|)
 expr_stmt|;
 comment|/* we want ourself, ie "." */
+comment|/* 		 * When we lookup "." we still can be asked to lock it 		 * differently. 		 */
+name|ltype
+operator|=
+name|cnp
+operator|->
+name|cn_lkflags
+operator|&
+name|LK_TYPE_MASK
+expr_stmt|;
+if|if
+condition|(
+name|ltype
+operator|!=
+name|VOP_ISLOCKED
+argument_list|(
+name|vdp
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|ltype
+operator|==
+name|LK_EXCLUSIVE
+condition|)
+name|vn_lock
+argument_list|(
+name|vdp
+argument_list|,
+name|LK_UPGRADE
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* if (ltype == LK_SHARED) */
+name|vn_lock
+argument_list|(
+name|vdp
+argument_list|,
+name|LK_DOWNGRADE
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|vpp
 operator|=
