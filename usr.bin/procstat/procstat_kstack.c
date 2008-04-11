@@ -324,6 +324,7 @@ block|{
 return|return
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|kinfo_kstack
 operator|*
@@ -335,6 +336,7 @@ name|kkst_tid
 operator|-
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|kinfo_kstack
 operator|*
@@ -420,14 +422,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
 name|name
 index|[
 literal|4
 index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|size_t
 name|kip_len
