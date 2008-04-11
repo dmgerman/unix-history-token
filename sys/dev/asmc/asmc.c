@@ -1140,9 +1140,11 @@ name|model
 decl_stmt|;
 if|if
 condition|(
-name|acpi_disabled
+name|resource_disabled
 argument_list|(
 literal|"asmc"
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
