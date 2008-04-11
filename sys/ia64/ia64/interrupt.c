@@ -1674,6 +1674,8 @@ name|vector
 argument_list|,
 literal|0
 argument_list|,
+name|vector
+argument_list|,
 name|ia64_intr_mask
 argument_list|,
 name|ia64_intr_unmask

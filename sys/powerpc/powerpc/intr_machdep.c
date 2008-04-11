@@ -810,6 +810,8 @@ name|irq
 argument_list|,
 literal|0
 argument_list|,
+name|irq
+argument_list|,
 name|powerpc_intr_mask
 argument_list|,
 name|powerpc_intr_unmask
