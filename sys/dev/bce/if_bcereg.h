@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006-2007 Broadcom Corporation  *	David Christensen<davidch@broadcom.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Broadcom Corporation nor the name of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written consent.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2006-2008 Broadcom Corporation  *	David Christensen<davidch@broadcom.com>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Broadcom Corporation nor the name of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written consent.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -14,23 +14,6 @@ define|#
 directive|define
 name|_BCE_H_DEFINED
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_KERNEL_OPTION_HEADERS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_device_polling.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -17509,6 +17492,70 @@ value|0x000019fc
 end_define
 
 begin_comment
+comment|/*  *  rlup_reg definition  *  offset: 0x2000  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_RLUP_FTQ_CMD
+value|0x000023f8
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_RLUP_FTQ_CTL
+value|0x000023fc
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_RLUP_FTQ_CTL_MAX_DEPTH
+value|(0x3ffL<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_RLUP_FTQ_CTL_CUR_DEPTH
+value|(0x3ffL<<22)
+end_define
+
+begin_comment
+comment|/*  *  rdma_reg definition  *  offset: 0x2c00  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_RDMA_FTQ_CMD
+value|0x00002ff8
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_RDMA_FTQ_CTL
+value|0x00002ffc
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_RDMA_FTQ_CTL_MAX_DEPTH
+value|(0x3ffL<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_RDMA_FTQ_CTL_CUR_DEPTH
+value|(0x3ffL<<22)
+end_define
+
+begin_comment
 comment|/*  *  timer_reg definition  *  offset: 0x4400  */
 end_comment
 
@@ -17587,6 +17634,38 @@ define|#
 directive|define
 name|BCE_TIMER_25MHZ_FREE_RUN
 value|0x00004448
+end_define
+
+begin_comment
+comment|/*  *  tsch_reg definition  *  offset: 0x4c00  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_TSCH_FTQ_CMD
+value|0x00004ff8
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TSCH_FTQ_CTL
+value|0x00004ffc
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TSCH_FTQ_CTL_MAX_DEPTH
+value|(0x3ffL<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TSCH_FTQ_CTL_CUR_DEPTH
+value|(0x3ffL<<22)
 end_define
 
 begin_comment
@@ -19244,6 +19323,45 @@ define|#
 directive|define
 name|BCE_MQ_MEM_RD_DATA2_VALUE
 value|(0x3fffffffL<<0)
+end_define
+
+begin_comment
+comment|/*  *  csch_reg definition  *  offset: 0x4000  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_CSCH_COMMAND
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CSCH_CH_FTQ_CMD
+value|0x000043f8
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CSCH_CH_FTQ_CTL
+value|0x000043fc
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CSCH_CH_FTQ_CTL_MAX_DEPTH
+value|(0x3ffL<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CSCH_CH_FTQ_CTL_CUR_DEPTH
+value|(0x3ffL<<22)
 end_define
 
 begin_comment
@@ -25579,6 +25697,38 @@ value|0x001a0000
 end_define
 
 begin_comment
+comment|/*  *  tas_reg definition  *  offset: 0x1c0000  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_TAS_FTQ_CMD
+value|0x001c03f8
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TAS_FTQ_CTL
+value|0x001c03fc
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TAS_FTQ_CTL_MAX_DEPTH
+value|(0x3ffL<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_TAS_FTQ_CTL_CUR_DEPTH
+value|(0x3ffL<<22)
+end_define
+
+begin_comment
 comment|/*  *  mcp_reg definition  *  offset: 0x140000  */
 end_comment
 
@@ -28152,6 +28302,9 @@ comment|/* TX DMA mapping failure counter. */
 name|u32
 name|tx_dma_map_failures
 decl_stmt|;
+name|u64
+name|rx_intr_time
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BCE_DEBUG
@@ -28179,9 +28332,6 @@ name|u32
 name|tx_interrupts
 decl_stmt|;
 comment|/* Track interrupt time (25MHz clock). */
-name|u64
-name|rx_intr_time
-decl_stmt|;
 name|u64
 name|tx_intr_time
 decl_stmt|;
