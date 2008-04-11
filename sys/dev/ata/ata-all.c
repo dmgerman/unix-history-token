@@ -5686,6 +5686,13 @@ argument_list|,
 literal|"FAILURE - create sg_tag\n"
 argument_list|)
 expr_stmt|;
+name|uma_zfree
+argument_list|(
+name|ata_request_zone
+argument_list|,
+name|request
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -5739,6 +5746,13 @@ operator|->
 name|dma
 operator|.
 name|sg_tag
+argument_list|)
+expr_stmt|;
+name|uma_zfree
+argument_list|(
+name|ata_request_zone
+argument_list|,
+name|request
 argument_list|)
 expr_stmt|;
 return|return
@@ -5847,6 +5861,13 @@ operator|.
 name|sg_tag
 argument_list|)
 expr_stmt|;
+name|uma_zfree
+argument_list|(
+name|ata_request_zone
+argument_list|,
+name|request
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -5893,6 +5914,7 @@ operator|&
 name|ATA_R_DANGER2
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|request
@@ -5918,7 +5940,6 @@ name|dma
 operator|.
 name|sg_tag
 condition|)
-block|{
 name|bus_dma_tag_destroy
 argument_list|(
 name|request
