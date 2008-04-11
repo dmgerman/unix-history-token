@@ -504,7 +504,7 @@ name|hflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %-16s %3s %1s %1s %-8s %3s %7s %-3s %-12s\n"
+literal|"%5s %-16s %4s %1s %1s %-8s %3s %7s %-3s %-12s\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -721,15 +721,52 @@ operator|->
 name|ki_comm
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|kif
+operator|->
+name|kf_fd
+condition|)
+block|{
+case|case
+name|KF_FD_TYPE_CWD
+case|:
 name|printf
 argument_list|(
-literal|"%3d "
+literal|" cwd "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|KF_FD_TYPE_ROOT
+case|:
+name|printf
+argument_list|(
+literal|"root "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|KF_FD_TYPE_JAIL
+case|:
+name|printf
+argument_list|(
+literal|"jail "
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"%4d "
 argument_list|,
 name|kif
 operator|->
 name|kf_fd
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 switch|switch
 condition|(
 name|kif
@@ -1038,6 +1075,15 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kif
+operator|->
+name|kf_ref_count
+operator|>
+operator|-
+literal|1
+condition|)
 name|printf
 argument_list|(
 literal|"%3d "
@@ -1047,6 +1093,23 @@ operator|->
 name|kf_ref_count
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%3c "
+argument_list|,
+literal|'-'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kif
+operator|->
+name|kf_offset
+operator|>
+operator|-
+literal|1
+condition|)
 name|printf
 argument_list|(
 literal|"%7jd "
@@ -1057,6 +1120,14 @@ operator|)
 name|kif
 operator|->
 name|kf_offset
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%7c "
+argument_list|,
+literal|'-'
 argument_list|)
 expr_stmt|;
 switch|switch
