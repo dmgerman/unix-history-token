@@ -2391,12 +2391,6 @@ name|pcpu_cpu_states
 expr_stmt|;
 name|si
 operator|->
-name|cpumask
-operator|=
-name|cpumask
-expr_stmt|;
-name|si
-operator|->
 name|ncpus
 operator|=
 name|ncpus
@@ -2409,12 +2403,6 @@ operator|->
 name|cpustates
 operator|=
 name|cpu_states
-expr_stmt|;
-name|si
-operator|->
-name|cpumask
-operator|=
-literal|1
 expr_stmt|;
 name|si
 operator|->
