@@ -3022,6 +3022,17 @@ name|extsize
 expr_stmt|;
 name|uid
 operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|uid
+operator|==
+literal|0
+condition|)
+name|uid
+operator|=
 name|curfile
 operator|.
 name|uid
