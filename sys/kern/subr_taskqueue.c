@@ -1889,10 +1889,8 @@ argument_list|(
 name|tq
 argument_list|)
 expr_stmt|;
-name|kproc_exit
-argument_list|(
-literal|0
-argument_list|)
+name|kthread_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
