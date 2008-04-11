@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_intr_filter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<dev/asmc/asmcvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_intr_filter.h"
 end_include
 
 begin_comment
