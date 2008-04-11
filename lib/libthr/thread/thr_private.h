@@ -816,22 +816,14 @@ begin_struct
 struct|struct
 name|pthread_rwlock
 block|{
-name|pthread_mutex_t
+name|struct
+name|urwlock
 name|lock
 decl_stmt|;
-comment|/* monitor lock */
-name|pthread_cond_t
-name|read_signal
-decl_stmt|;
-name|pthread_cond_t
-name|write_signal
-decl_stmt|;
-name|int
-name|state
-decl_stmt|;
-comment|/* 0 = idle>0 = # of readers  -1 = writer */
-name|int
-name|blocked_writers
+name|struct
+name|pthread
+modifier|*
+name|owner
 decl_stmt|;
 block|}
 struct|;
@@ -2733,6 +2725,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|_umtx_op_err
+argument_list|(
+name|void
+operator|*
+argument_list|,
+name|int
+name|op
+argument_list|,
+name|u_long
+argument_list|,
+name|void
+operator|*
+argument_list|,
+name|void
+operator|*
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
