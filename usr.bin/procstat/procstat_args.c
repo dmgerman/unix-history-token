@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -102,9 +108,11 @@ name|hflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %-70s\n"
+literal|"%5s %-16s %-53s\n"
 argument_list|,
 literal|"PID"
+argument_list|,
+literal|"COMM"
 argument_list|,
 literal|"ARGS"
 argument_list|)
@@ -225,6 +233,15 @@ argument_list|(
 literal|"%5d "
 argument_list|,
 name|pid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-16s "
+argument_list|,
+name|kipp
+operator|->
+name|ki_comm
 argument_list|)
 expr_stmt|;
 for|for
