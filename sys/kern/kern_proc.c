@@ -7196,6 +7196,7 @@ operator|(
 name|ESRCH
 operator|)
 return|;
+comment|/* XXXRW: Not clear ESRCH is the right error during proc execve(). */
 if|if
 condition|(
 name|p
@@ -7203,6 +7204,12 @@ operator|->
 name|p_flag
 operator|&
 name|P_WEXIT
+operator|||
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_INEXEC
 condition|)
 block|{
 name|PROC_UNLOCK
