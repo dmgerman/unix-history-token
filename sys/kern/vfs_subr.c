@@ -12111,7 +12111,7 @@ modifier|*
 name|vp
 decl_stmt|;
 comment|/* 	 * Note: because this is DDB, we can't obey the locking semantics 	 * for these structures, which means we could catch an inconsistent 	 * state and dereference a nasty pointer.  Not much to be done 	 * about that. 	 */
-name|printf
+name|db_printf
 argument_list|(
 literal|"Locked vnodes\n"
 argument_list|)
