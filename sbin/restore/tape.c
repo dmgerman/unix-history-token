@@ -6881,6 +6881,10 @@ operator|)
 return|;
 if|if
 condition|(
+name|dumpdate
+operator|!=
+literal|0
+operator|&&
 name|_time64_to_time
 argument_list|(
 name|buf
