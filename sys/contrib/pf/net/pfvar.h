@@ -5187,6 +5187,19 @@ name|u_int8_t
 name|priority
 decl_stmt|;
 comment|/* priority */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|u_int8_t
+name|local_flags
+decl_stmt|;
+comment|/* dynamic interface */
+define|#
+directive|define
+name|PFALTQ_FLAG_IF_REMOVED
+value|0x01
+endif|#
+directive|endif
 name|u_int16_t
 name|qlimit
 decl_stmt|;
@@ -6747,6 +6760,31 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALTQ
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|pf_altq_ifnet_event
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

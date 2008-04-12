@@ -873,6 +873,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|a
+operator|->
+name|local_flags
+operator|&
+name|PFALTQ_FLAG_IF_REMOVED
+condition|)
+name|printf
+argument_list|(
+literal|"INACTIVE "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"altq on %s "
@@ -1049,6 +1067,24 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|a
+operator|->
+name|local_flags
+operator|&
+name|PFALTQ_FLAG_IF_REMOVED
+condition|)
+name|printf
+argument_list|(
+literal|"INACTIVE "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"queue "
@@ -6255,6 +6291,17 @@ operator|==
 operator|-
 literal|1
 condition|)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|ifr
+operator|.
+name|ifr_mtu
+operator|=
+literal|1500
+expr_stmt|;
+else|#
+directive|else
 name|err
 argument_list|(
 literal|1
@@ -6262,6 +6309,8 @@ argument_list|,
 literal|"SIOCGIFMTU"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|shutdown
