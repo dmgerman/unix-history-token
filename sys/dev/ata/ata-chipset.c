@@ -15695,16 +15695,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 comment|/* do we have any PHY events ? */
 name|ata_sata_phy_check_events
 argument_list|(
@@ -15713,11 +15703,7 @@ argument_list|)
 expr_stmt|;
 comment|/* any drive action to take care of ? */
 return|return
-name|ch
-operator|->
-name|hw
-operator|.
-name|status
+name|ata_pci_status
 argument_list|(
 name|dev
 argument_list|)
@@ -24113,11 +24099,7 @@ operator|)
 condition|)
 block|{
 return|return
-name|ch
-operator|->
-name|hw
-operator|.
-name|status
+name|ata_pci_status
 argument_list|(
 name|dev
 argument_list|)
@@ -25157,11 +25139,7 @@ literal|0x20
 condition|)
 block|{
 return|return
-name|ch
-operator|->
-name|hw
-operator|.
-name|status
+name|ata_pci_status
 argument_list|(
 name|dev
 argument_list|)
@@ -33152,11 +33130,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
-name|ch
-operator|->
-name|hw
-operator|.
-name|status
+name|ata_pci_status
 argument_list|(
 name|dev
 argument_list|)
@@ -34207,11 +34181,7 @@ operator|&
 literal|0x00000800
 condition|)
 return|return
-name|ch
-operator|->
-name|hw
-operator|.
-name|status
+name|ata_pci_status
 argument_list|(
 name|dev
 argument_list|)
