@@ -1393,7 +1393,7 @@ name|__i386__
 argument_list|)
 name|testfmt
 argument_list|(
-literal|"0xc.90fdaa22168c234p-2"
+literal|"0x1.921fb54442d18468p+1"
 argument_list|,
 literal|"%La"
 argument_list|,
@@ -1403,7 +1403,7 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-literal|"0x8p-16448"
+literal|"0x1p-16445"
 argument_list|,
 literal|"%La"
 argument_list|,
@@ -1414,7 +1414,7 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-literal|"0x9.8765p-16384"
+literal|"0x1.30ecap-16381"
 argument_list|,
 literal|"%La"
 argument_list|,
@@ -1747,7 +1747,7 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-literal|"0x2.00p-1030"
+literal|"0x1.00p-1029"
 argument_list|,
 literal|"%.2a"
 argument_list|,
@@ -1760,7 +1760,7 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-literal|"0x2.00p-1027"
+literal|"0x1.00p-1026"
 argument_list|,
 literal|"%.2a"
 argument_list|,
