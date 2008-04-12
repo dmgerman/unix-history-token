@@ -502,8 +502,19 @@ comment|/* WO; 1 byte */
 end_comment
 
 begin_comment
-comment|/*  * Temperatures.  *  * First for MacBook, second for MacBook Pro, then for Intel Mac Mini.  *   */
+comment|/*  * Temperatures.  *  * First for MacBook, second for MacBook Pro, third for Intel Mac Mini and  * last Mac Pro 8-core.  *  */
 end_comment
+
+begin_comment
+comment|/* maximum array size for temperatures including the last NULL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASMC_TEMP_MAX
+value|36
+end_define
 
 begin_define
 define|#
@@ -566,6 +577,27 @@ define|#
 directive|define
 name|ASMC_MM_TEMPDESCS
 value|{ "Northbridge Point 1", \ 				  "Northbridge Point 2" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MP_TEMPS
+value|{ "TA0P", "TCAG", "TCAH", "TCBG", "TCBH", \ 				  "TC0C", "TC0D", "TC0P", "TC1C", "TC1D", \ 				  "TC2C", "TC2D", "TC3C", "TC3D", "THTG", \ 				  "TH0P", "TH1P", "TH2P", "TH3P", "TMAP", \ 				  "TMAS", "TMBS", "TM0P", "TM0S", "TM1P", \ 				  "TM1S", "TM2P", "TM2S", "TM3S", "TM8P", \ 				  "TM8S", "TM9P", "TM9S", "TN0H", "TS0C", \ 				  NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MP_TEMPNAMES
+value|{ "TA0P", "TCAG", "TCAH", "TCBG", "TCBH", \ 				  "TC0C", "TC0D", "TC0P", "TC1C", "TC1D", \ 				  "TC2C", "TC2D", "TC3C", "TC3D", "THTG", \ 				  "TH0P", "TH1P", "TH2P", "TH3P", "TMAP", \ 				  "TMAS", "TMBS", "TM0P", "TM0S", "TM1P", \ 				  "TM1S", "TM2P", "TM2S", "TM3S", "TM8P", \ 				  "TM8S", "TM9P", "TM9S", "TN0H", "TS0C", \ 				  NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MP_TEMPDESCS
+value|{ "TA0P", "TCAG", "TCAH", "TCBG", "TCBH", \ 				  "TC0C", "TC0D", "TC0P", "TC1C", "TC1D", \ 				  "TC2C", "TC2D", "TC3C", "TC3D", "THTG", \ 				  "TH0P", "TH1P", "TH2P", "TH3P", "TMAP", \ 				  "TMAS", "TMBS", "TM0P", "TM0S", "TM1P", \ 				  "TM1S", "TM2P", "TM2S", "TM3S", "TM8P", \ 				  "TM8S", "TM9P", "TM9S", "TN0H", "TS0C", \ 				  NULL }
 end_define
 
 end_unit

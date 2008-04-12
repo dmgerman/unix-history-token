@@ -599,7 +599,7 @@ name|char
 modifier|*
 name|smc_temps
 index|[
-literal|8
+name|ASMC_TEMP_MAX
 index|]
 decl_stmt|;
 specifier|const
@@ -607,7 +607,7 @@ name|char
 modifier|*
 name|smc_tempnames
 index|[
-literal|8
+name|ASMC_TEMP_MAX
 index|]
 decl_stmt|;
 specifier|const
@@ -615,7 +615,7 @@ name|char
 modifier|*
 name|smc_tempdescs
 index|[
-literal|8
+name|ASMC_TEMP_MAX
 index|]
 decl_stmt|;
 block|}
@@ -834,6 +834,31 @@ block|,
 name|ASMC_MM_TEMPNAMES
 block|,
 name|ASMC_MM_TEMPDESCS
+block|}
+block|,
+comment|/* Idem for the MacPro */
+block|{
+literal|"MacPro2"
+block|,
+literal|"Apple SMC Mac Pro (8-core)"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|ASMC_FAN_FUNCS
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|ASMC_MP_TEMPS
+block|,
+name|ASMC_MP_TEMPNAMES
+block|,
+name|ASMC_MP_TEMPDESCS
 block|}
 block|,
 block|{
