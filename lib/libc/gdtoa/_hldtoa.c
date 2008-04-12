@@ -61,6 +61,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"../stdio/floatio.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"fpmath.h"
 end_include
 
