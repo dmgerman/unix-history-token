@@ -1529,6 +1529,31 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
+name|op
+operator|&
+operator|(
+name|op
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: Invalid requested operation @ %s:%d"
+operator|,
+name|__func__
+operator|,
+name|file
+operator|,
+name|line
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
 name|flags
 operator|&
 operator|(
@@ -3304,7 +3329,6 @@ name|op
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We could have exited from the switch without reacquiring the 	 * interlock, so we need to check for the interlock ownership. 	 */
 if|if
 condition|(
 name|flags
