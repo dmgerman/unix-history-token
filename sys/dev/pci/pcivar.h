@@ -800,7 +800,7 @@ block|,
 name|PCI_IVAR_MAXLAT
 block|,
 name|PCI_IVAR_LATTIMER
-block|, }
+block|}
 enum|;
 end_enum
 
