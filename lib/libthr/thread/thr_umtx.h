@@ -34,13 +34,6 @@ name|DEFAULT_UMUTEX
 value|{0}
 end_define
 
-begin_typedef
-typedef|typedef
-name|long
-name|umtx_t
-typedef|;
-end_typedef
-
 begin_decl_stmt
 name|int
 name|__thr_umutex_lock
@@ -137,11 +130,11 @@ name|int
 name|_thr_umtx_wait
 argument_list|(
 specifier|volatile
-name|umtx_t
+name|long
 operator|*
 name|mtx
 argument_list|,
-name|umtx_t
+name|long
 name|exp
 argument_list|,
 specifier|const
@@ -159,7 +152,7 @@ name|int
 name|_thr_umtx_wake
 argument_list|(
 specifier|volatile
-name|umtx_t
+name|long
 operator|*
 name|mtx
 argument_list|,

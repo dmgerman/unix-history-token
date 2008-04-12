@@ -295,7 +295,7 @@ name|int
 name|_thr_umtx_wait
 parameter_list|(
 specifier|volatile
-name|umtx_t
+name|long
 modifier|*
 name|mtx
 parameter_list|,
@@ -453,7 +453,7 @@ name|int
 name|_thr_umtx_wake
 parameter_list|(
 specifier|volatile
-name|umtx_t
+name|long
 modifier|*
 name|mtx
 parameter_list|,

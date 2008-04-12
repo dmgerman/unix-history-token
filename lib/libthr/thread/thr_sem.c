@@ -831,7 +831,7 @@ operator|=
 name|_thr_umtx_wait
 argument_list|(
 operator|(
-name|umtx_t
+name|long
 operator|*
 operator|)
 operator|&
@@ -1062,7 +1062,7 @@ operator|=
 name|_thr_umtx_wait
 argument_list|(
 operator|(
-name|umtx_t
+name|long
 operator|*
 operator|)
 operator|&
@@ -1197,7 +1197,7 @@ operator|=
 name|_thr_umtx_wake
 argument_list|(
 operator|(
-name|umtx_t
+name|long
 operator|*
 operator|)
 operator|&

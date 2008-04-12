@@ -144,11 +144,11 @@ name|int
 name|wr_waiters
 decl_stmt|;
 specifier|volatile
-name|umtx_t
+name|long
 name|rd_cv
 decl_stmt|;
 specifier|volatile
-name|umtx_t
+name|long
 name|wr_cv
 decl_stmt|;
 name|void
@@ -347,7 +347,7 @@ name|rtld_lock
 modifier|*
 name|l
 decl_stmt|;
-name|umtx_t
+name|long
 name|v
 decl_stmt|;
 name|curthread
@@ -469,7 +469,7 @@ name|rtld_lock
 modifier|*
 name|l
 decl_stmt|;
-name|umtx_t
+name|long
 name|v
 decl_stmt|;
 name|curthread
@@ -813,7 +813,7 @@ name|pthread
 modifier|*
 name|curthread
 decl_stmt|;
-name|umtx_t
+name|long
 name|dummy
 decl_stmt|;
 name|curthread

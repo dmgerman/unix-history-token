@@ -390,7 +390,7 @@ name|int
 name|waitok
 parameter_list|)
 block|{
-name|umtx_t
+name|long
 name|tmp
 decl_stmt|;
 while|while
