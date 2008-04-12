@@ -4194,14 +4194,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* 	 * Try locks do not block if they fail to acquire the lock, thus 	 * there is no danger of deadlocks or of switching while holding a 	 * spin lock if we acquire a lock via a try operation. 	 */
-if|if
-condition|(
-name|flags
-operator|&
-name|LOP_TRYLOCK
-condition|)
-return|return;
 comment|/* 	 * Check for duplicate locks of the same type.  Note that we only 	 * have to check for this on the last lock we just acquired.  Any 	 * other cases will be caught as lock order violations. 	 */
 name|lock1
 operator|=
@@ -5466,33 +5458,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"upgrade of non-upgradable lock (%s) %s @ %s:%d"
-argument_list|,
-name|class
-operator|->
-name|lc_name
-argument_list|,
-name|lock
-operator|->
-name|lo_name
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|LOP_TRYLOCK
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"non-try upgrade of lock (%s) %s @ %s:%d"
 argument_list|,
 name|class
 operator|->
