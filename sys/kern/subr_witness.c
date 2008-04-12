@@ -1991,6 +1991,13 @@ endif|#
 directive|endif
 comment|/* 	 * leaf locks 	 */
 block|{
+literal|"intrcnt"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"icu"
 block|,
 operator|&
@@ -2038,6 +2045,13 @@ endif|#
 directive|endif
 block|{
 literal|"clk"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
+literal|"cpuset"
 block|,
 operator|&
 name|lock_class_mtx_spin
