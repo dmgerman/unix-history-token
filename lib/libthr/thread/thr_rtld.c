@@ -31,6 +31,19 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|errno
+end_undef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -327,6 +340,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|SAVE_ERRNO
+parameter_list|()
+value|{			\ 	if (curthread != _thr_initial)		\ 		errsave = curthread->error;	\ 	else					\ 		errsave = errno;		\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESTORE_ERRNO
+parameter_list|()
+value|{ 			\ 	if (curthread != _thr_initial)  	\ 		curthread->error = errsave;	\ 	else					\ 		errno = errsave;		\ }
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -350,9 +379,15 @@ decl_stmt|;
 name|long
 name|v
 decl_stmt|;
+name|int
+name|errsave
+decl_stmt|;
 name|curthread
 operator|=
 name|_get_curthread
+argument_list|()
+expr_stmt|;
+name|SAVE_ERRNO
 argument_list|()
 expr_stmt|;
 name|l
@@ -390,7 +425,12 @@ operator|&
 name|WAFLAG
 operator|)
 condition|)
+block|{
+name|RESTORE_ERRNO
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 name|v
 operator|=
 name|l
@@ -446,6 +486,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|RESTORE_ERRNO
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -472,9 +515,15 @@ decl_stmt|;
 name|long
 name|v
 decl_stmt|;
+name|int
+name|errsave
+decl_stmt|;
 name|curthread
 operator|=
 name|_get_curthread
+argument_list|()
+expr_stmt|;
+name|SAVE_ERRNO
 argument_list|()
 expr_stmt|;
 name|l
@@ -511,7 +560,12 @@ argument_list|,
 name|WAFLAG
 argument_list|)
 condition|)
+block|{
+name|RESTORE_ERRNO
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 name|v
 operator|=
 name|l
@@ -591,9 +645,15 @@ name|rtld_lock
 modifier|*
 name|l
 decl_stmt|;
+name|int
+name|errsave
+decl_stmt|;
 name|curthread
 operator|=
 name|_get_curthread
+argument_list|()
+expr_stmt|;
+name|SAVE_ERRNO
 argument_list|()
 expr_stmt|;
 name|l
@@ -757,6 +817,9 @@ name|curthread
 argument_list|)
 expr_stmt|;
 block|}
+name|RESTORE_ERRNO
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -822,7 +885,7 @@ name|_get_curthread
 argument_list|()
 expr_stmt|;
 comment|/* force to resolve _umtx_op PLT */
-name|_umtx_op
+name|_umtx_op_err
 argument_list|(
 operator|(
 expr|struct
@@ -840,6 +903,10 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* force to resolve errno() PLT */
+name|__error
+argument_list|()
 expr_stmt|;
 name|li
 operator|.
