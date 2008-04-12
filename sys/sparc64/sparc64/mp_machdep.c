@@ -1517,6 +1517,10 @@ expr_stmt|;
 name|pmap_map_tsb
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Flush all non-locked TLB entries possibly left over by the 	 * firmware. 	 */
+name|tlb_flush_nonlocked
+argument_list|()
+expr_stmt|;
 name|cpu_setregs
 argument_list|(
 name|pc
