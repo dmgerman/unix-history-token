@@ -569,7 +569,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Public interface for lock operations.  *  * XXX: Missing try locks.  */
+comment|/*  * Public interface for lock operations.  */
 end_comment
 
 begin_ifndef
