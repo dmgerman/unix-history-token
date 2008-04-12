@@ -689,8 +689,11 @@ name|ct_debug
 condition|)
 name|printf
 argument_list|(
-literal|" = %d.%09ld\n"
+literal|" = %ld.%09ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ts
 operator|->
 name|tv_sec
@@ -890,8 +893,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ts_to_ct(%d.%09ld) = "
+literal|"ts_to_ct(%ld.%09ld) = "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ts
 operator|->
 name|tv_sec
