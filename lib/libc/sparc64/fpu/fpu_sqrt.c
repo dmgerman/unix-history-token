@@ -608,7 +608,7 @@ operator|=
 name|d2
 expr_stmt|;
 name|q
-operator||=
+operator|=
 name|bit
 expr_stmt|;
 name|y1
@@ -778,8 +778,6 @@ argument_list|,
 name|t0
 argument_list|)
 expr_stmt|;
-name|ODD_DOUBLE
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -802,8 +800,12 @@ name|x2
 operator|=
 name|d2
 expr_stmt|;
+name|x3
+operator|=
+name|d3
+expr_stmt|;
 name|q
-operator||=
+operator|=
 name|bit
 expr_stmt|;
 name|y2
@@ -811,6 +813,8 @@ operator||=
 literal|1
 expr_stmt|;
 block|}
+name|ODD_DOUBLE
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -887,6 +891,10 @@ operator|,
 name|x2
 operator|=
 name|d2
+expr_stmt|;
+name|x3
+operator|=
+name|d3
 expr_stmt|;
 name|q
 operator||=
