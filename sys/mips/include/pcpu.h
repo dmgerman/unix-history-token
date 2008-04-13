@@ -1,0 +1,204 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1999 Luoqi Chen<luoqi@freebsd.org>  * Copyright (c) Peter Wemm<peter@netplex.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: src/sys/alpha/include/pcpu.h,v 1.15 2004/11/05 19:16:44 jhb  * $FreeBSD$  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_PCPU_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MACHINE_PCPU_H_
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/pte.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+define|\
+value|pd_entry_t	*pc_segbase;
+comment|/* curthread segbase */
+value|\ 	struct	pmap	*pc_curpmap;
+comment|/* pmap of curthread */
+value|\ 	u_int32_t	pc_next_asid;
+comment|/* next ASID to alloc */
+value|\ 	u_int32_t	pc_asid_generation;
+comment|/* current ASID generation */
+value|\ 	u_int		pc_pending_ipis;
+comment|/* the IPIs pending to this CPU */
+value|\ 	void		*pc_boot_stack;
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|pcpu
+operator|*
+name|get_pcpup
+argument_list|(
+argument|void
+argument_list|)
+block|{
+comment|/* 	 * FREEBSD_DEVELOPERS_FIXME 	 * In multiprocessor case, store/retrieve the pcpu structure 	 * address for current CPU in scratch register for fast access. 	 * 	 * In this routine, read the scratch register to retrieve the PCPU 	 * structure for this CPU 	 */
+block|struct
+name|pcpu
+operator|*
+name|ret
+block|;
+comment|/* ret should contain the pointer to the PCPU structure for this CPU */
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|PCPUP
+value|((struct pcpu *)get_pcpup())
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Uni processor systems */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+modifier|*
+name|pcpup
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCPUP
+value|pcpup
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCPU_ADD
+parameter_list|(
+name|member
+parameter_list|,
+name|value
+parameter_list|)
+value|(PCPUP->pc_ ## member += (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_GET
+parameter_list|(
+name|member
+parameter_list|)
+value|(PCPUP->pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_INC
+parameter_list|(
+name|member
+parameter_list|)
+value|PCPU_ADD(member, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_PTR
+parameter_list|(
+name|member
+parameter_list|)
+value|(&PCPUP->pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_SET
+parameter_list|(
+name|member
+parameter_list|,
+name|value
+parameter_list|)
+value|(PCPUP->pc_ ## member = (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_LAZY_INC
+parameter_list|(
+name|member
+parameter_list|)
+value|(++PCPUP->pc_ ## member)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_MACHINE_PCPU_H_ */
+end_comment
+
+end_unit
+
