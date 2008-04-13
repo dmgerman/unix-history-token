@@ -111,6 +111,9 @@ decl_stmt|;
 name|int
 name|gps_maxent
 decl_stmt|;
+name|int
+name|gps_bootcodesz
+decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|g_part_scheme
@@ -381,6 +384,13 @@ name|G_PART_PARM_VERSION
 value|0x0800
 end_define
 
+begin_define
+define|#
+directive|define
+name|G_PART_PARM_BOOTCODE
+value|0x1000
+end_define
+
 begin_struct
 struct|struct
 name|g_part_parms
@@ -436,6 +446,15 @@ decl_stmt|;
 name|unsigned
 name|int
 name|gpp_version
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|gpp_codeptr
+decl_stmt|;
+name|unsigned
+name|int
+name|gpp_codesize
 decl_stmt|;
 block|}
 struct|;
