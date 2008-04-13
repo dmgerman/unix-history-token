@@ -2981,10 +2981,10 @@ name|deldone
 goto|;
 comment|/* done with the RTM_DELETE command */
 block|}
-endif|#
-directive|endif
 name|normal_rtdel
 label|:
+endif|#
+directive|endif
 comment|/* 		 * Remove the item from the tree and return it. 		 * Complain if it is not there and do no more processing. 		 */
 name|rn
 operator|=
@@ -3135,8 +3135,13 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RADIX_MPATH
 name|deldone
 label|:
+endif|#
+directive|endif
 comment|/* 		 * One more rtentry floating around that is not 		 * linked to the routing table. rttrash will be decremented 		 * when RTFREE(rt) is eventually called. 		 */
 name|rttrash
 operator|++
