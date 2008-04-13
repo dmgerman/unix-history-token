@@ -170,6 +170,23 @@ directive|include
 file|<net/radix.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RADIX_MPATH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/radix_mpath.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

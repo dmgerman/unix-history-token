@@ -552,6 +552,10 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* empty tree for common case */
+name|int
+name|rnh_multipath
+decl_stmt|;
+comment|/* multipath capable ? */
 ifdef|#
 directive|ifdef
 name|_KERNEL
