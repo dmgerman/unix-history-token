@@ -3712,7 +3712,7 @@ name|LK_ALL_WAITERS
 expr_stmt|;
 if|if
 condition|(
-name|atomic_cmpset_ptr
+name|atomic_cmpset_rel_ptr
 argument_list|(
 operator|&
 name|lk
