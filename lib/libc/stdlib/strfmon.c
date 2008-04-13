@@ -2110,8 +2110,10 @@ literal|1
 expr_stmt|;
 name|rslt
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|bufsize
 argument_list|)
 expr_stmt|;
@@ -2133,15 +2135,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|memset
-argument_list|(
-name|rslt
-argument_list|,
-literal|0
-argument_list|,
-name|bufsize
-argument_list|)
-expr_stmt|;
 name|bufend
 operator|=
 name|rslt
