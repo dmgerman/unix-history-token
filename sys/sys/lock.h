@@ -29,6 +29,12 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|lock_list_entry
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
@@ -321,28 +327,6 @@ name|LOCK_CLASS_MAX
 value|(LO_CLASSMASK>> LO_CLASSSHIFT)
 end_define
 
-begin_define
-define|#
-directive|define
-name|LI_RECURSEMASK
-value|0x0000ffff
-end_define
-
-begin_comment
-comment|/* Recursion depth of lock instance. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LI_EXCLUSIVE
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* Exclusive lock instance. */
-end_comment
-
 begin_comment
 comment|/*  * Option flags passed to lock operations that witness also needs to know  * about or that are generic across all locks.  */
 end_comment
@@ -488,70 +472,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_comment
-comment|/*  * Lock instances.  A lock instance is the data associated with a lock while  * it is held by witness.  For example, a lock instance will hold the  * recursion count of a lock.  Lock instances are held in lists.  Spin locks  * are held in a per-cpu list while sleep locks are held in per-thread list.  */
-end_comment
-
-begin_struct
-struct|struct
-name|lock_instance
-block|{
-name|struct
-name|lock_object
-modifier|*
-name|li_lock
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|li_file
-decl_stmt|;
-comment|/* File and line of last acquire. */
-name|int
-name|li_line
-decl_stmt|;
-name|u_int
-name|li_flags
-decl_stmt|;
-comment|/* Recursion count and LI_* flags. */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * A simple list type used to build the list of locks held by a thread  * or CPU.  We can't simply embed the list in struct lock_object since a  * lock may be held by more than one thread if it is a shared lock.  Locks  * are added to the head of the list, so we fill up each list entry from  * "the back" logically.  To ease some of the arithmetic, we actually fill  * in each list entry the normal way (childer[0] then children[1], etc.) but  * when we traverse the list we read children[count-1] as the first entry  * down to children[0] as the final entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCK_NCHILDREN
-value|3
-end_define
-
-begin_struct
-struct|struct
-name|lock_list_entry
-block|{
-name|struct
-name|lock_list_entry
-modifier|*
-name|ll_next
-decl_stmt|;
-name|struct
-name|lock_instance
-name|ll_children
-index|[
-name|LOCK_NCHILDREN
-index|]
-decl_stmt|;
-name|u_int
-name|ll_count
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * If any of WITNESS, INVARIANTS, or KTR_LOCK KTR tracing has been enabled,  * then turn on LOCK_DEBUG.  When this option is on, extra debugging  * facilities such as tracking the file and line number of lock operations  * are enabled.  Also, mutex locking operations are not inlined to avoid  * bloat from all the extra debugging code.  We also have to turn on all the  * calling conventions for this debugging code in modules so that modules can  * work with both debug and non-debug kernels.  */
