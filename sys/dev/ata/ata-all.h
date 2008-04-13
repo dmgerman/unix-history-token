@@ -1758,7 +1758,7 @@ name|ATA_DEV
 parameter_list|(
 name|unit
 parameter_list|)
-value|((unit == ATA_ATA_SLAVE) ? 0x10 : 0)
+value|((unit> 0) ? 0x10 : 0)
 end_define
 
 begin_define
