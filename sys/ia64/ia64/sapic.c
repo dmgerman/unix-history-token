@@ -993,7 +993,7 @@ name|rte
 operator|.
 name|rte_delivery_mode
 operator|=
-name|SAPIC_DELMODE_LOWPRI
+name|SAPIC_DELMODE_FIXED
 expr_stmt|;
 name|rte
 operator|.
