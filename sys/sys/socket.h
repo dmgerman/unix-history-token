@@ -2770,6 +2770,31 @@ begin_comment
 comment|/* shut down both sides */
 end_comment
 
+begin_comment
+comment|/* we cheat and use the SHUT_XX defines for these */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_FLUSH_RD
+value|SHUT_RD
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRU_FLUSH_WR
+value|SHUT_WR
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRU_FLUSH_RDWR
+value|SHUT_RDWR
+end_define
+
 begin_if
 if|#
 directive|if
