@@ -2112,7 +2112,10 @@ name|ATA_D_IBM
 operator||
 name|ATA_D_LBA
 operator||
+name|ATA_DEV
+argument_list|(
 name|ATA_MASTER
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2176,7 +2179,10 @@ name|ATA_D_IBM
 operator||
 name|ATA_D_LBA
 operator||
+name|ATA_DEV
+argument_list|(
 name|ATA_SLAVE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2260,7 +2266,10 @@ name|ATA_D_IBM
 operator||
 name|ATA_D_LBA
 operator||
+name|ATA_DEV
+argument_list|(
 name|ATA_MASTER
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2343,7 +2352,10 @@ name|ATA_DRIVE
 argument_list|,
 name|ATA_D_IBM
 operator||
+name|ATA_DEV
+argument_list|(
 name|ATA_MASTER
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2555,7 +2567,10 @@ name|ATA_DRIVE
 argument_list|,
 name|ATA_D_IBM
 operator||
+name|ATA_DEV
+argument_list|(
 name|ATA_SLAVE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2869,7 +2884,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"reset tp2 stat0=%02x stat1=%02x devices=0x%b\n"
+literal|"reset tp2 stat0=%02x stat1=%02x devices=0x%x\n"
 argument_list|,
 name|stat0
 argument_list|,
@@ -2878,8 +2893,6 @@ argument_list|,
 name|ch
 operator|->
 name|devices
-argument_list|,
-literal|"\20\4ATAPI_SLAVE\3ATAPI_MASTER\2ATA_SLAVE\1ATA_MASTER"
 argument_list|)
 expr_stmt|;
 block|}

@@ -602,7 +602,7 @@ argument_list|,
 operator|&
 name|dcba
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|)
 operator|||
 name|dcba
@@ -1152,7 +1152,7 @@ argument_list|,
 operator|&
 name|dcba
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|)
 operator|||
 name|dcba

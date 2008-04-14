@@ -2261,12 +2261,12 @@ name|ATA_MASTER
 value|0x00
 define|#
 directive|define
-name|ATA_PM
-value|0x0f
+name|ATA_SLAVE
+value|0x01
 define|#
 directive|define
-name|ATA_SLAVE
-value|0x10
+name|ATA_PM
+value|0x0f
 name|struct
 name|ata_params
 name|param
