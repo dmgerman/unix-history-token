@@ -6079,6 +6079,11 @@ operator|=
 name|sopoll_generic
 block|,
 operator|.
+name|pru_flush
+operator|=
+name|sctp_flush
+block|,
+operator|.
 name|pru_disconnect
 operator|=
 name|sctp6_disconnect
