@@ -714,7 +714,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
+file|<isa/rtc.h>
 end_include
 
 begin_ifdef
