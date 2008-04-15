@@ -2433,8 +2433,18 @@ argument_list|,
 name|devidx
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
+comment|/* Default registry entry missing */
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|"\n\t{ \"\" }, %d },"
+argument_list|,
+name|devidx
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
