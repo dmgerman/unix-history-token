@@ -653,8 +653,15 @@ begin_comment
 comment|/* 100 see consio.h */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TIOCGSID
+value|_IOR('t', 99, int)
+end_define
+
 begin_comment
-comment|/* 99 obsolete or unused */
+comment|/* get session id */
 end_comment
 
 begin_define
