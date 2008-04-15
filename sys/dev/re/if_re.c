@@ -5134,23 +5134,7 @@ name|rl_msi
 operator|=
 literal|1
 expr_stmt|;
-block|}
-else|else
-name|pci_release_msi
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/* For MSI capable hardwares, explicitily set/clear MSI enable bit. */
-if|if
-condition|(
-name|msic
-operator|!=
-literal|0
-condition|)
-block|{
+comment|/* Explicitly set MSI enable bit. */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -5169,22 +5153,8 @@ argument_list|,
 name|RL_CFG2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|rl_msi
-operator|!=
-literal|0
-condition|)
 name|cfg
 operator||=
-name|RL_CFG2_MSI
-expr_stmt|;
-else|else
-name|cfg
-operator|&=
-operator|~
 name|RL_CFG2_MSI
 expr_stmt|;
 name|CSR_WRITE_1
@@ -5205,6 +5175,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|pci_release_msi
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Allocate interrupt */
 if|if
