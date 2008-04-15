@@ -735,9 +735,9 @@ argument_list|(
 name|sysbuf
 argument_list|)
 argument_list|,
-literal|"objcopy --redefine-sym _binary_%s_start=%s_drv_data_start "
+literal|"objcopy --redefine-sym _binary_%s_start=ndis_%s_drv_data_start "
 literal|"--strip-symbol _binary_%s_size "
-literal|"--redefine-sym _binary_%s_end=%s_drv_data_end %s.o %s.o\n"
+literal|"--redefine-sym _binary_%s_end=ndis_%s_drv_data_end %s.o %s.o\n"
 argument_list|,
 name|tname
 argument_list|,
@@ -1546,7 +1546,7 @@ name|fprintf
 argument_list|(
 name|outfp
 argument_list|,
-literal|"\nextern unsigned char %s_drv_data_start[];\n"
+literal|"\nextern unsigned char ndis_%s_drv_data_start[];\n"
 argument_list|,
 name|sysfile
 argument_list|)
@@ -1556,7 +1556,7 @@ argument_list|(
 name|outfp
 argument_list|,
 literal|"static unsigned char *drv_data = "
-literal|"%s_drv_data_start;\n\n"
+literal|"ndis_%s_drv_data_start;\n\n"
 argument_list|,
 name|sysfile
 argument_list|)
