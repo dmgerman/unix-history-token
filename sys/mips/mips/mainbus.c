@@ -105,29 +105,6 @@ directive|include
 file|<machine/resource.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DCHU_DEBUG_UART
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/pltfm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ns16550.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -489,27 +466,6 @@ name|mainbus_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG_UART
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|printf
-parameter_list|(
-name|s
-parameter_list|)
-value|puts_post(PA_2_K1VA(ADDR_NS16550_UART1), s)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -760,9 +716,6 @@ argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|DEBUG_UART
 name|retval
 operator|+=
 name|printf
@@ -770,8 +723,6 @@ argument_list|(
 literal|" on motherboard\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|retval

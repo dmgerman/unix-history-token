@@ -308,12 +308,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ns16550.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -1243,34 +1237,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG_UART_POLLED
-end_ifdef
-
-begin_function
-name|void
-name|init_bootstrap_console
-parameter_list|()
-block|{
-comment|/* 	 * Initalize the (temporary) bootstrap console interface, so 	 * we can use printf until the VM system starts being setup. 	 * The real console is initialized before then. 	 */
-name|uart_post_init
-argument_list|(
-name|PA_2_K1VA
-argument_list|(
-name|ADDR_NS16550_UART1
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
