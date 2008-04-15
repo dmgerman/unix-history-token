@@ -335,9 +335,6 @@ name|ng_deadtype
 block|,
 name|NGF_INVALID
 block|,
-literal|1
-block|,
-comment|/* refs */
 literal|0
 block|,
 comment|/* numhooks */
@@ -360,28 +357,30 @@ comment|/* all_nodes list entry */
 block|{}
 block|,
 comment|/* id hashtable list entry */
-block|{}
-block|,
-comment|/* workqueue entry */
 block|{
+literal|0
+block|,
 literal|0
 block|,
 block|{}
 block|,
 comment|/* should never use! (should hang) */
-name|NULL
+block|{}
 block|,
-operator|&
+comment|/* workqueue entry */
+name|STAILQ_HEAD_INITIALIZER
+argument_list|(
 name|ng_deadnode
 operator|.
 name|nd_input_queue
 operator|.
 name|queue
+argument_list|)
+block|, 	}
 block|,
-operator|&
-name|ng_deadnode
-block|}
+literal|1
 block|,
+comment|/* refs */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -416,9 +415,6 @@ name|HK_INVALID
 operator||
 name|HK_DEAD
 block|,
-literal|1
-block|,
-comment|/* refs always>= 1 */
 literal|0
 block|,
 comment|/* undefined data link type */
@@ -439,6 +435,9 @@ comment|/* override rcvmsg() */
 name|NULL
 block|,
 comment|/* override rcvdata() */
+literal|1
+block|,
+comment|/* refs always>= 1 */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -468,14 +467,14 @@ end_comment
 
 begin_expr_stmt
 specifier|static
-name|TAILQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|ng_node
 argument_list|)
 name|ng_worklist
 operator|=
-name|TAILQ_HEAD_INITIALIZER
+name|STAILQ_HEAD_INITIALIZER
 argument_list|(
 name|ng_worklist
 argument_list|)
@@ -746,10 +745,8 @@ specifier|static
 name|void
 name|ng_flush_input_queue
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2443,26 +2440,15 @@ operator|->
 name|nd_input_queue
 argument_list|)
 expr_stmt|;
-name|node
-operator|->
-name|nd_input_queue
-operator|.
-name|queue
-operator|=
-name|NULL
-expr_stmt|;
-name|node
-operator|->
-name|nd_input_queue
-operator|.
-name|last
-operator|=
+name|STAILQ_INIT
+argument_list|(
 operator|&
 name|node
 operator|->
 name|nd_input_queue
 operator|.
 name|queue
+argument_list|)
 expr_stmt|;
 name|node
 operator|->
@@ -2471,14 +2457,6 @@ operator|.
 name|q_flags
 operator|=
 literal|0
-expr_stmt|;
-name|node
-operator|->
-name|nd_input_queue
-operator|.
-name|q_node
-operator|=
-name|node
 expr_stmt|;
 comment|/* Initialize hook list for new node */
 name|LIST_INIT
@@ -2730,10 +2708,7 @@ expr_stmt|;
 comment|/* 	 * Drain the input queue forceably. 	 * it has no hooks so what's it going to do, bleed on someone? 	 * Theoretically we came here from a queue entry that was added 	 * Just before the queue was closed, so it should be empty anyway. 	 * Also removes us from worklist if needed. 	 */
 name|ng_flush_input_queue
 argument_list|(
-operator|&
 name|node
-operator|->
-name|nd_input_queue
 argument_list|)
 expr_stmt|;
 comment|/* Ask the type if it has anything to do in this case */
@@ -6384,13 +6359,29 @@ end_comment
 begin_function_decl
 specifier|static
 name|__inline
+name|void
+name|ng_queue_rw
+parameter_list|(
+name|node_p
+name|node
+parameter_list|,
+name|item_p
+name|item
+parameter_list|,
+name|int
+name|rw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
 name|item_p
 name|ng_dequeue
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|,
 name|int
 modifier|*
@@ -6405,10 +6396,8 @@ name|__inline
 name|item_p
 name|ng_acquire_read
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|,
 name|item_p
 name|item
@@ -6422,10 +6411,8 @@ name|__inline
 name|item_p
 name|ng_acquire_write
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|,
 name|item_p
 name|item
@@ -6439,10 +6426,8 @@ name|__inline
 name|void
 name|ng_leave_read
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6453,30 +6438,8 @@ name|__inline
 name|void
 name|ng_leave_write
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|void
-name|ng_queue_rw
-parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
-parameter_list|,
-name|item_p
-name|item
-parameter_list|,
-name|int
-name|rw
+name|node_p
+name|node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6583,7 +6546,7 @@ name|HEAD_IS_READER
 parameter_list|(
 name|QP
 parameter_list|)
-value|NGI_QUEUED_READER((QP)->queue)
+value|NGI_QUEUED_READER(STAILQ_FIRST(&(QP)->queue))
 end_define
 
 begin_define
@@ -6593,7 +6556,7 @@ name|HEAD_IS_WRITER
 parameter_list|(
 name|QP
 parameter_list|)
-value|NGI_QUEUED_WRITER((QP)->queue)
+value|NGI_QUEUED_WRITER(STAILQ_FIRST(&(QP)->queue))
 end_define
 
 begin_comment
@@ -6655,6 +6618,13 @@ name|NGQRW_W
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|NGQ2_WORKQ
+value|0x00000001
+end_define
+
 begin_comment
 comment|/*  * Taking into account the current state of the queue and node, possibly take  * the next entry off the queue and return it. Return NULL if there was  * nothing we could return, either because there really was nothing there, or  * because the node was in a state where it cannot yet process the next item  * on the queue.  */
 end_comment
@@ -6665,10 +6635,8 @@ name|__inline
 name|item_p
 name|ng_dequeue
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|,
 name|int
 modifier|*
@@ -6677,6 +6645,16 @@ parameter_list|)
 block|{
 name|item_p
 name|item
+decl_stmt|;
+name|struct
+name|ng_queue
+modifier|*
+name|ngq
+init|=
+operator|&
+name|node
+operator|->
+name|nd_input_queue
 decl_stmt|;
 comment|/* This MUST be called with the mutex held. */
 name|mtx_assert
@@ -6708,15 +6686,11 @@ literal|"queue flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 operator|->
 name|nd_ID
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 argument_list|,
 name|ngq
 operator|->
@@ -6767,15 +6741,11 @@ literal|"can't proceed; queue flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 operator|->
 name|nd_ID
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 argument_list|,
 name|t
 argument_list|)
@@ -6788,7 +6758,7 @@ return|;
 block|}
 if|if
 condition|(
-name|atomic_cmpset_acq_long
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
 name|ngq
@@ -6817,7 +6787,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|atomic_cmpset_acq_long
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
 name|ngq
@@ -6851,15 +6821,11 @@ literal|"can't proceed; queue flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 operator|->
 name|nd_ID
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 argument_list|,
 name|ngq
 operator|->
@@ -6875,44 +6841,35 @@ block|}
 comment|/* 	 * Now we dequeue the request (whatever it may be) and correct the 	 * pending flags and the next and last pointers. 	 */
 name|item
 operator|=
+name|STAILQ_FIRST
+argument_list|(
+operator|&
 name|ngq
 operator|->
 name|queue
+argument_list|)
 expr_stmt|;
+name|STAILQ_REMOVE_HEAD
+argument_list|(
+operator|&
 name|ngq
 operator|->
 name|queue
-operator|=
-name|item
-operator|->
+argument_list|,
 name|el_next
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ngq
-operator|->
-name|last
-operator|==
+name|STAILQ_EMPTY
+argument_list|(
 operator|&
-operator|(
-name|item
-operator|->
-name|el_next
-operator|)
-condition|)
-block|{
-name|ngq
-operator|->
-name|last
-operator|=
-operator|&
-operator|(
 name|ngq
 operator|->
 name|queue
-operator|)
-expr_stmt|;
-name|atomic_clear_long
+argument_list|)
+condition|)
+name|atomic_clear_int
 argument_list|(
 operator|&
 name|ngq
@@ -6922,7 +6879,6 @@ argument_list|,
 name|OP_PENDING
 argument_list|)
 expr_stmt|;
-block|}
 name|CTR6
 argument_list|(
 name|KTR_NET
@@ -6932,15 +6888,11 @@ literal|"queue flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 operator|->
 name|nd_ID
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 argument_list|,
 name|item
 argument_list|,
@@ -6974,10 +6926,8 @@ name|__inline
 name|void
 name|ng_queue_rw
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|,
 name|item_p
 name|item
@@ -6986,6 +6936,16 @@ name|int
 name|rw
 parameter_list|)
 block|{
+name|struct
+name|ng_queue
+modifier|*
+name|ngq
+init|=
+operator|&
+name|node
+operator|->
+name|nd_input_queue
+decl_stmt|;
 if|if
 condition|(
 name|rw
@@ -7003,20 +6963,13 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-name|item
-operator|->
-name|el_next
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* maybe not needed */
 name|NG_QUEUE_LOCK
 argument_list|(
 name|ngq
 argument_list|)
 expr_stmt|;
 comment|/* Set OP_PENDING flag and enqueue the item. */
-name|atomic_set_long
+name|atomic_set_int
 argument_list|(
 operator|&
 name|ngq
@@ -7026,23 +6979,17 @@ argument_list|,
 name|OP_PENDING
 argument_list|)
 expr_stmt|;
-operator|*
-name|ngq
-operator|->
-name|last
-operator|=
-name|item
-expr_stmt|;
-name|ngq
-operator|->
-name|last
-operator|=
+name|STAILQ_INSERT_TAIL
+argument_list|(
 operator|&
-operator|(
-name|item
+name|ngq
 operator|->
+name|queue
+argument_list|,
+name|item
+argument_list|,
 name|el_next
-operator|)
+argument_list|)
 expr_stmt|;
 name|CTR5
 argument_list|(
@@ -7052,15 +6999,11 @@ literal|"%20s: node [%x] (%p) queued item %p as %s"
 argument_list|,
 name|__func__
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 operator|->
 name|nd_ID
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 argument_list|,
 name|item
 argument_list|,
@@ -7081,9 +7024,7 @@ argument_list|)
 condition|)
 name|ng_worklist_add
 argument_list|(
-name|ngq
-operator|->
-name|q_node
+name|node
 argument_list|)
 expr_stmt|;
 name|NG_QUEUE_UNLOCK
@@ -7104,10 +7045,8 @@ name|__inline
 name|item_p
 name|ng_acquire_read
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|,
 name|item_p
 name|item
@@ -7115,12 +7054,10 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
-name|ngq
+name|node
 operator|!=
 operator|&
 name|ng_deadnode
-operator|.
-name|nd_input_queue
 argument_list|,
 operator|(
 literal|"%s: working on deadnode"
@@ -7138,8 +7075,10 @@ block|{
 name|long
 name|t
 init|=
-name|ngq
+name|node
 operator|->
+name|nd_input_queue
+operator|.
 name|q_flags
 decl_stmt|;
 if|if
@@ -7152,11 +7091,13 @@ break|break;
 comment|/* Node is not ready for reader. */
 if|if
 condition|(
-name|atomic_cmpset_acq_long
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
-name|ngq
+name|node
 operator|->
+name|nd_input_queue
+operator|.
 name|q_flags
 argument_list|,
 name|t
@@ -7176,15 +7117,11 @@ literal|"%20s: node [%x] (%p) acquired item %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 operator|->
 name|nd_ID
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 argument_list|,
 name|item
 argument_list|)
@@ -7203,7 +7140,7 @@ empty_stmt|;
 comment|/* Queue the request for later. */
 name|ng_queue_rw
 argument_list|(
-name|ngq
+name|node
 argument_list|,
 name|item
 argument_list|,
@@ -7228,10 +7165,8 @@ name|__inline
 name|item_p
 name|ng_acquire_write
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|,
 name|item_p
 name|item
@@ -7239,12 +7174,10 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
-name|ngq
+name|node
 operator|!=
 operator|&
 name|ng_deadnode
-operator|.
-name|nd_input_queue
 argument_list|,
 operator|(
 literal|"%s: working on deadnode"
@@ -7256,11 +7189,13 @@ expr_stmt|;
 comment|/* Writer needs completely idle node. */
 if|if
 condition|(
-name|atomic_cmpset_acq_long
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
-name|ngq
+name|node
 operator|->
+name|nd_input_queue
+operator|.
 name|q_flags
 argument_list|,
 literal|0
@@ -7278,15 +7213,11 @@ literal|"%20s: node [%x] (%p) acquired item %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 operator|->
 name|nd_ID
 argument_list|,
-name|ngq
-operator|->
-name|q_node
+name|node
 argument_list|,
 name|item
 argument_list|)
@@ -7300,7 +7231,7 @@ block|}
 comment|/* Queue the request for later. */
 name|ng_queue_rw
 argument_list|(
-name|ngq
+name|node
 argument_list|,
 name|item
 argument_list|,
@@ -7322,12 +7253,12 @@ literal|0
 end_if
 
 begin_comment
-unit|static __inline item_p ng_upgrade_write(struct ng_queue *ngq, item_p item) { 	KASSERT(ngq !=&ng_deadnode.nd_input_queue, 	    ("%s: working on deadnode", __func__));  	NGI_SET_WRITER(item);  	mtx_lock_spin(&(ngq->q_mtx));
+unit|static __inline item_p ng_upgrade_write(node_p node, item_p item) { 	struct ng_queue *ngq =&node->nd_input_queue; 	KASSERT(node !=&ng_deadnode, 	    ("%s: working on deadnode", __func__));  	NGI_SET_WRITER(item);  	NG_QUEUE_LOCK(ngq);
 comment|/* 	 * There will never be no readers as we are there ourselves. 	 * Set the WRITER_ACTIVE flags ASAP to block out fast track readers. 	 * The caller we are running from will call ng_leave_read() 	 * soon, so we must account for that. We must leave again with the 	 * READER lock. If we find other readers, then 	 * queue the request for later. However "later" may be rignt now 	 * if there are no readers. We don't really care if there are queued 	 * items as we will bypass them anyhow. 	 */
 end_comment
 
 begin_comment
-unit|atomic_add_long(&ngq->q_flags, WRITER_ACTIVE - READER_INCREMENT); 	if (ngq->q_flags& (NGQ_WMASK& ~OP_PENDING) == WRITER_ACTIVE) { 		mtx_unlock_spin(&(ngq->q_mtx));
+unit|atomic_add_int(&ngq->q_flags, WRITER_ACTIVE - READER_INCREMENT); 	if ((ngq->q_flags& (NGQ_WMASK& ~OP_PENDING)) == WRITER_ACTIVE) { 		NG_QUEUE_UNLOCK(ngq);
 comment|/* It's just us, act on the item. */
 end_comment
 
@@ -7341,7 +7272,7 @@ comment|/* 		 * Having acted on the item, atomically  		 * down grade back to RE
 end_comment
 
 begin_comment
-unit|atomic_add_long(&ngq->q_flags, 		    READER_INCREMENT - WRITER_ACTIVE);
+unit|atomic_add_int(&ngq->q_flags, 		    READER_INCREMENT - WRITER_ACTIVE);
 comment|/* Our caller will call ng_leave_read() */
 end_comment
 
@@ -7351,22 +7282,17 @@ comment|/* 	 * It's not just us active, so queue us AT THE HEAD. 	 * "Why?" I he
 end_comment
 
 begin_comment
-unit|if ((item->el_next = ngq->queue) == NULL) {
-comment|/* 		 * Set up the "last" pointer. 		 * We are the only (and thus last) item 		 */
-end_comment
-
-begin_comment
-unit|ngq->last =&(item->el_next);
+unit|if (STAILQ_EMPTY(&ngq->queue)) {
 comment|/* We've gone from, 0 to 1 item in the queue */
 end_comment
 
 begin_comment
-unit|atomic_set_long(&ngq->q_flags, OP_PENDING);  		CTR3(KTR_NET, "%20s: node [%x] (%p) set OP_PENDING", __func__, 		    ngq->q_node->nd_ID, ngq->q_node); 	}; 	ngq->queue = item; 	CTR5(KTR_NET, "%20s: node [%x] (%p) requeued item %p as WRITER", 	    __func__, ngq->q_node->nd_ID, ngq->q_node, item );
+unit|atomic_set_int(&ngq->q_flags, OP_PENDING);  		CTR3(KTR_NET, "%20s: node [%x] (%p) set OP_PENDING", __func__, 		    node->nd_ID, node); 	}; 	STAILQ_INSERT_HEAD(&ngq->queue, item, el_next); 	CTR4(KTR_NET, "%20s: node [%x] (%p) requeued item %p as WRITER", 	    __func__, node->nd_ID, node, item );
 comment|/* Reverse what we did above. That downgrades us back to reader */
 end_comment
 
 begin_endif
-unit|atomic_add_long(&ngq->q_flags, READER_INCREMENT - WRITER_ACTIVE); 	if (QUEUE_ACTIVE(ngq)&& NEXT_QUEUED_ITEM_CAN_PROCEED(ngq)) 		ng_worklist_add(ngq->q_node); 	mtx_unlock_spin(&(ngq->q_mtx));  	return; }
+unit|atomic_add_int(&ngq->q_flags, READER_INCREMENT - WRITER_ACTIVE); 	if (QUEUE_ACTIVE(ngq)&& NEXT_QUEUED_ITEM_CAN_PROCEED(ngq)) 		ng_worklist_add(node); 	NG_QUEUE_UNLOCK(ngq);  	return; }
 endif|#
 directive|endif
 end_endif
@@ -7381,17 +7307,17 @@ name|__inline
 name|void
 name|ng_leave_read
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|)
 block|{
-name|atomic_subtract_rel_long
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
-name|ngq
+name|node
 operator|->
+name|nd_input_queue
+operator|.
 name|q_flags
 argument_list|,
 name|READER_INCREMENT
@@ -7410,17 +7336,17 @@ name|__inline
 name|void
 name|ng_leave_write
 parameter_list|(
-name|struct
-name|ng_queue
-modifier|*
-name|ngq
+name|node_p
+name|node
 parameter_list|)
 block|{
-name|atomic_clear_rel_long
+name|atomic_clear_rel_int
 argument_list|(
 operator|&
-name|ngq
+name|node
 operator|->
+name|nd_input_queue
+operator|.
 name|q_flags
 argument_list|,
 name|WRITER_ACTIVE
@@ -7438,12 +7364,20 @@ specifier|static
 name|void
 name|ng_flush_input_queue
 parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+block|{
 name|struct
 name|ng_queue
 modifier|*
 name|ngq
-parameter_list|)
-block|{
+init|=
+operator|&
+name|node
+operator|->
+name|nd_input_queue
+decl_stmt|;
 name|item_p
 name|item
 decl_stmt|;
@@ -7454,51 +7388,42 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|item
+operator|=
+name|STAILQ_FIRST
+argument_list|(
+operator|&
 name|ngq
 operator|->
 name|queue
+argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
-name|item
-operator|=
+name|STAILQ_REMOVE_HEAD
+argument_list|(
+operator|&
 name|ngq
 operator|->
 name|queue
-expr_stmt|;
-name|ngq
-operator|->
-name|queue
-operator|=
-name|item
-operator|->
+argument_list|,
 name|el_next
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ngq
-operator|->
-name|last
-operator|==
+name|STAILQ_EMPTY
+argument_list|(
 operator|&
-operator|(
-name|item
-operator|->
-name|el_next
-operator|)
-condition|)
-block|{
-name|ngq
-operator|->
-name|last
-operator|=
-operator|&
-operator|(
 name|ngq
 operator|->
 name|queue
-operator|)
-expr_stmt|;
-name|atomic_clear_long
+argument_list|)
+condition|)
+name|atomic_clear_int
 argument_list|(
 operator|&
 name|ngq
@@ -7508,7 +7433,6 @@ argument_list|,
 name|OP_PENDING
 argument_list|)
 expr_stmt|;
-block|}
 name|NG_QUEUE_UNLOCK
 argument_list|(
 name|ngq
@@ -7909,13 +7833,6 @@ block|}
 endif|#
 directive|endif
 block|}
-name|ngq
-operator|=
-operator|&
-name|node
-operator|->
-name|nd_input_queue
-expr_stmt|;
 if|if
 condition|(
 name|queue
@@ -7930,7 +7847,7 @@ expr_stmt|;
 comment|/* Put it on the queue for that node*/
 name|ng_queue_rw
 argument_list|(
-name|ngq
+name|node
 argument_list|,
 name|item
 argument_list|,
@@ -7962,7 +7879,7 @@ name|item
 operator|=
 name|ng_acquire_read
 argument_list|(
-name|ngq
+name|node
 argument_list|,
 name|item
 argument_list|)
@@ -7972,7 +7889,7 @@ name|item
 operator|=
 name|ng_acquire_write
 argument_list|(
-name|ngq
+name|node
 argument_list|,
 name|item
 argument_list|)
@@ -8023,6 +7940,13 @@ argument_list|)
 expr_stmt|;
 comment|/* drops r/w lock when done */
 comment|/* If something is waiting on queue and ready, schedule it. */
+name|ngq
+operator|=
+operator|&
+name|node
+operator|->
+name|nd_input_queue
+expr_stmt|;
 if|if
 condition|(
 name|QUEUE_ACTIVE
@@ -8050,9 +7974,7 @@ argument_list|)
 condition|)
 name|ng_worklist_add
 argument_list|(
-name|ngq
-operator|->
-name|q_node
+name|node
 argument_list|)
 expr_stmt|;
 name|NG_QUEUE_UNLOCK
@@ -8635,19 +8557,13 @@ name|NGQRW_R
 condition|)
 name|ng_leave_read
 argument_list|(
-operator|&
 name|node
-operator|->
-name|nd_input_queue
 argument_list|)
 expr_stmt|;
 else|else
 name|ng_leave_write
 argument_list|(
-operator|&
 name|node
-operator|->
-name|nd_input_queue
 argument_list|)
 expr_stmt|;
 comment|/* Apply callback. */
@@ -12596,7 +12512,7 @@ argument_list|()
 expr_stmt|;
 name|node
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|ng_worklist
@@ -12613,14 +12529,14 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|ng_worklist
 argument_list|,
-name|node
-argument_list|,
-name|nd_work
+name|nd_input_queue
+operator|.
+name|q_work
 argument_list|)
 expr_stmt|;
 name|NG_WORKLIST_UNLOCK
@@ -12666,10 +12582,7 @@ name|item
 operator|=
 name|ng_dequeue
 argument_list|(
-operator|&
 name|node
-operator|->
-name|nd_input_queue
 argument_list|,
 operator|&
 name|rw
@@ -12682,15 +12595,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|atomic_clear_int
-argument_list|(
-operator|&
 name|node
 operator|->
-name|nd_flags
-argument_list|,
-name|NGF_WORKQ
-argument_list|)
+name|nd_input_queue
+operator|.
+name|q_flags2
+operator|&=
+operator|~
+name|NGQ2_WORKQ
 expr_stmt|;
 name|NG_QUEUE_UNLOCK
 argument_list|(
@@ -12776,24 +12688,24 @@ condition|(
 operator|(
 name|node
 operator|->
-name|nd_flags
+name|nd_input_queue
+operator|.
+name|q_flags2
 operator|&
-name|NGF_WORKQ
+name|NGQ2_WORKQ
 operator|)
 operator|==
 literal|0
 condition|)
 block|{
 comment|/* 		 * If we are not already on the work queue, 		 * then put us on. 		 */
-name|atomic_set_int
-argument_list|(
-operator|&
 name|node
 operator|->
-name|nd_flags
-argument_list|,
-name|NGF_WORKQ
-argument_list|)
+name|nd_input_queue
+operator|.
+name|q_flags2
+operator||=
+name|NGQ2_WORKQ
 expr_stmt|;
 name|NG_NODE_REF
 argument_list|(
@@ -12804,14 +12716,16 @@ comment|/* XXX fafe in mutex? */
 name|NG_WORKLIST_LOCK
 argument_list|()
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|ng_worklist
 argument_list|,
 name|node
 argument_list|,
-name|nd_work
+name|nd_input_queue
+operator|.
+name|q_work
 argument_list|)
 expr_stmt|;
 name|NG_WORKLIST_UNLOCK

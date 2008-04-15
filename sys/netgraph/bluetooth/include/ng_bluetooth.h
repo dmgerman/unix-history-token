@@ -19,6 +19,12 @@ directive|define
 name|_NETGRAPH_BLUETOOTH_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_comment
 comment|/*  * Version of the stack  */
 end_comment
@@ -268,18 +274,14 @@ begin_struct
 struct|struct
 name|ng_bt_itemq
 block|{
-name|struct
-name|ng_item
-modifier|*
-name|head
-decl_stmt|;
-comment|/* first item in the queue */
-name|struct
-name|ng_item
-modifier|*
-name|tail
-decl_stmt|;
-comment|/* last item in the queue */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ng_item
+argument_list|)
+name|queue
+expr_stmt|;
+comment|/* actually items queue */
 name|u_int32_t
 name|len
 decl_stmt|;
@@ -322,7 +324,8 @@ name|q
 parameter_list|,
 name|_maxlen
 parameter_list|)
-value|NG_BT_MBUFQ_INIT((q), (_maxlen))
+define|\
+value|do {						\ 		STAILQ_INIT(&(q)->queue);		\ 		(q)->len = 0;				\ 		(q)->maxlen = (_maxlen);		\ 		(q)->drops = 0;				\ 	} while (0)
 end_define
 
 begin_define
@@ -343,7 +346,7 @@ name|NG_BT_ITEMQ_FIRST
 parameter_list|(
 name|q
 parameter_list|)
-value|NG_BT_MBUFQ_FIRST((q))
+value|STAILQ_FIRST(&(q)->queue)
 end_define
 
 begin_define
@@ -386,7 +389,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {						\ 		(i)->el_next = NULL;			\ 							\ 		if ((q)->tail == NULL)			\ 			(q)->head = (i);		\ 		else					\ 			(q)->tail->el_next = (i);	\ 							\ 		(q)->tail = (i);			\ 		(q)->len ++;				\ 	} while (0)
+value|do {						\ 		STAILQ_INSERT_TAIL(&(q)->queue, (i), el_next);	\ 		(q)->len ++;				\ 	} while (0)
 end_define
 
 begin_define
@@ -399,7 +402,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {						\ 		(i) = (q)->head;			\ 		if ((i) != NULL) {			\ 			(q)->head = (q)->head->el_next;	\ 			if ((q)->head == NULL)		\ 				(q)->tail = NULL;	\ 							\ 			(q)->len --;			\ 			(i)->el_next = NULL;		\ 		} 					\ 	} while (0)
+value|do {						\ 		(i) = STAILQ_FIRST(&(q)->queue);	\ 		if ((i) != NULL) {			\ 			STAILQ_REMOVE_HEAD(&(q)->queue, el_next);	\ 			(q)->len --;			\ 		} 					\ 	} while (0)
 end_define
 
 begin_define
@@ -412,7 +415,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {						\ 		(i)->el_next = (q)->head;		\ 		if ((q)->tail == NULL)			\ 			(q)->tail = (i);		\ 							\ 		(q)->head = (i);			\ 		(q)->len ++;				\ 	} while (0)
+value|do {						\ 		STAILQ_INSERT_HEAD(&(q)->queue, (i), el_next);	\ 		(q)->len ++;				\ 	} while (0)
 end_define
 
 begin_define

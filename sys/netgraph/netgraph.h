@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|_NG_ABI_VERSION
-value|11
+value|12
 end_define
 
 begin_ifdef
@@ -363,10 +363,6 @@ name|hk_flags
 decl_stmt|;
 comment|/* info about this hook/link */
 name|int
-name|hk_refs
-decl_stmt|;
-comment|/* dont actually free this till 0 */
-name|int
 name|hk_type
 decl_stmt|;
 comment|/* tbd: hook data link type */
@@ -399,6 +395,10 @@ modifier|*
 name|hk_rcvdata
 decl_stmt|;
 comment|/* data comes here */
+name|int
+name|hk_refs
+decl_stmt|;
+comment|/* dont actually free this till 0 */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -1908,26 +1908,33 @@ begin_struct
 struct|struct
 name|ng_queue
 block|{
-name|u_long
+name|u_int
 name|q_flags
 decl_stmt|;
+comment|/* Current r/w/q lock flags */
+name|u_int
+name|q_flags2
+decl_stmt|;
+comment|/* Other queue flags */
 name|struct
 name|mtx
 name|q_mtx
 decl_stmt|;
-name|item_p
+name|STAILQ_ENTRY
+argument_list|(
+argument|ng_node
+argument_list|)
+name|q_work
+expr_stmt|;
+comment|/* nodes with work to do */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ng_item
+argument_list|)
 name|queue
-decl_stmt|;
-name|item_p
-modifier|*
-name|last
-decl_stmt|;
-name|struct
-name|ng_node
-modifier|*
-name|q_node
-decl_stmt|;
-comment|/* find the front of the node.. */
+expr_stmt|;
+comment|/* actually items queue */
 block|}
 struct|;
 end_struct
@@ -1953,10 +1960,6 @@ name|int
 name|nd_flags
 decl_stmt|;
 comment|/* see below for bit definitions */
-name|int
-name|nd_refs
-decl_stmt|;
-comment|/* # of references to this node */
 name|int
 name|nd_numhooks
 decl_stmt|;
@@ -1993,18 +1996,15 @@ argument_list|)
 name|nd_idnodes
 expr_stmt|;
 comment|/* ID hash collision list */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ng_node
-argument_list|)
-name|nd_work
-expr_stmt|;
-comment|/* nodes with work to do */
 name|struct
 name|ng_queue
 name|nd_input_queue
 decl_stmt|;
 comment|/* input queue for locking */
+name|int
+name|nd_refs
+decl_stmt|;
+comment|/* # of references to this node */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -2058,28 +2058,6 @@ define|#
 directive|define
 name|NG_INVALID
 value|NGF_INVALID
-end_define
-
-begin_comment
-comment|/* compat for old code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NGF_WORKQ
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* node is on the work queue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_WORKQ
-value|NGF_WORKQ
 end_define
 
 begin_comment
@@ -3770,9 +3748,12 @@ block|{
 name|u_long
 name|el_flags
 decl_stmt|;
-name|item_p
+name|STAILQ_ENTRY
+argument_list|(
+argument|ng_item
+argument_list|)
 name|el_next
-decl_stmt|;
+expr_stmt|;
 name|node_p
 name|el_dest
 decl_stmt|;
@@ -3835,7 +3816,7 @@ name|ng_apply_info
 modifier|*
 name|apply
 decl_stmt|;
-name|uintptr_t
+name|u_int
 name|depth
 decl_stmt|;
 ifdef|#
