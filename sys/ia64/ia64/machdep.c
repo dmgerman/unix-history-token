@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_sched.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1547,6 +1553,36 @@ name|oldpcb
 argument_list|)
 condition|)
 block|{
+name|old
+operator|->
+name|td_lock
+operator|=
+name|mtx
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCHED_ULE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+comment|/* td_lock is volatile */
+while|while
+condition|(
+name|new
+operator|->
+name|td_lock
+operator|==
+operator|&
+name|blocked_lock
+condition|)
+empty_stmt|;
+endif|#
+directive|endif
 name|newpcb
 operator|=
 name|new
@@ -3749,6 +3785,9 @@ name|end
 decl_stmt|,
 name|now
 decl_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|start
 operator|=
 name|ia64_get_itc
@@ -3792,6 +3831,9 @@ name|start
 operator|)
 condition|)
 do|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
