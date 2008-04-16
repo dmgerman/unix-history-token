@@ -705,6 +705,13 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
+operator|&&
+operator|!
+name|isURL
+argument_list|(
+operator|*
+name|argv
+argument_list|)
 condition|)
 while|while
 condition|(
