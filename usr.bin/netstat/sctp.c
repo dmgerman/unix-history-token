@@ -2678,7 +2678,7 @@ argument_list|(
 name|sctps_sendmultfastretrans
 argument_list|,
 literal|"\t\t%ju FR'%s that happened more "
-literal|"than once to same chunk.\n"
+literal|"than once to same chunk\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3028,7 +3028,7 @@ name|p1a
 argument_list|(
 name|sctps_maxburstqueued
 argument_list|,
-literal|"\t%ju max burst dosn't allow sending\n"
+literal|"\t%ju times max burst prohibited sending\n"
 argument_list|)
 expr_stmt|;
 name|p1a
@@ -3051,7 +3051,7 @@ argument_list|(
 name|sctps_lowlevelerr
 argument_list|,
 literal|"\t%ju time%s an output error to clamp "
-literal|"down on next user send.\n"
+literal|"down on next user send\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3097,7 +3097,7 @@ name|p1a
 argument_list|(
 name|sctps_vtagbogus
 argument_list|,
-literal|"\t%ju collision in express lookup.\n"
+literal|"\t%ju collision in express lookup\n"
 argument_list|)
 expr_stmt|;
 name|p
