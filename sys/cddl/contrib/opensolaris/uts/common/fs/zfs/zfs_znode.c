@@ -623,12 +623,6 @@ name|z_dirlocks
 operator|=
 literal|0
 expr_stmt|;
-name|zp
-operator|->
-name|z_lockf
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 literal|0

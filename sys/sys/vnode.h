@@ -346,6 +346,12 @@ modifier|*
 name|v_label
 decl_stmt|;
 comment|/* MAC label for vnode */
+name|struct
+name|lockf
+modifier|*
+name|v_lockf
+decl_stmt|;
+comment|/* Byte-level lock list */
 block|}
 struct|;
 end_struct
@@ -3639,6 +3645,30 @@ parameter_list|(
 name|struct
 name|vop_poll_args
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_stdadvlock
+parameter_list|(
+name|struct
+name|vop_advlock_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_stdadvlockasync
+parameter_list|(
+name|struct
+name|vop_advlockasync_args
+modifier|*
+name|ap
 parameter_list|)
 function_decl|;
 end_function_decl

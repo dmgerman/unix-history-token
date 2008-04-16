@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lockf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -11138,6 +11144,19 @@ operator|,
 name|vp
 operator|->
 name|v_tag
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Clear the advisory locks and wake up waiting threads. 	 */
+name|lf_purgelocks
+argument_list|(
+name|vp
+argument_list|,
+operator|&
+operator|(
+name|vp
+operator|->
+name|v_lockf
 operator|)
 argument_list|)
 expr_stmt|;

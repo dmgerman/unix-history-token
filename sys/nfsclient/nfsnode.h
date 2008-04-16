@@ -259,12 +259,6 @@ modifier|*
 name|n_dvp
 decl_stmt|;
 comment|/* parent vnode */
-name|struct
-name|lockf
-modifier|*
-name|n_lockf
-decl_stmt|;
-comment|/* Locking record of file */
 name|int
 name|n_error
 decl_stmt|;

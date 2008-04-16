@@ -169,6 +169,21 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Extra lf_flags bits used by the implementation  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_INTR
+value|0x8000
+end_define
+
+begin_comment
+comment|/* lock was interrupted by lf_purgelocks */
+end_comment
+
+begin_comment
 comment|/*  * Filesystem private node structures should include space for a  * pointer to a struct lockf_state. This pointer is used by the lock  * manager to track the locking state for a file.  *  * The ls_active list contains the set of active locks on the file. It  * is strictly ordered by the lock's lf_start value. Each active lock  * will have in-coming edges to any pending lock which it blocks.  *  * Lock requests which are blocked by some other active lock are  * listed in ls_pending with newer requests first in the list. Lock  * requests in this list will have out-going edges to each active lock  * that blocks then. They will also have out-going edges to each  * pending lock that is older in the queue - this helps to ensure  * fairness when several processes are contenting to lock the same  * record.   * The value of ls_threads is the number of threads currently using  * the state structure (typically either setting/clearing locks or  * sleeping waiting to do so). This is used to defer freeing the  * structure while some thread is still using it.  */
 end_comment
 
@@ -247,6 +262,24 @@ modifier|*
 modifier|*
 parameter_list|,
 name|u_quad_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lf_purgelocks
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|lockf
+modifier|*
+modifier|*
+name|statep
 parameter_list|)
 function_decl|;
 end_function_decl

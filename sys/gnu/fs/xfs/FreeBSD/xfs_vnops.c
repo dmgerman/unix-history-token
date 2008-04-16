@@ -5007,9 +5007,9 @@ argument_list|(
 name|ap
 argument_list|,
 operator|&
-name|np
+name|vp
 operator|->
-name|n_lockf
+name|v_lockf
 argument_list|,
 name|size
 argument_list|)
@@ -5023,9 +5023,9 @@ argument_list|(
 name|ap
 argument_list|,
 operator|&
-name|np
+name|vp
 operator|->
-name|n_lockf
+name|v_lockf
 argument_list|,
 name|size
 argument_list|)
@@ -5041,9 +5041,9 @@ argument_list|(
 name|ap
 argument_list|,
 operator|&
-name|np
+name|vp
 operator|->
-name|n_lockf
+name|v_lockf
 argument_list|,
 name|size
 argument_list|)

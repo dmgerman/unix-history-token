@@ -108,12 +108,6 @@ name|u_quad_t
 name|i_modrev
 decl_stmt|;
 comment|/* Revision level for NFS lease. */
-name|struct
-name|lockf
-modifier|*
-name|i_lockf
-decl_stmt|;
-comment|/* Head of byte-level lock list. */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
 name|int32_t
 name|i_count

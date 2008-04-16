@@ -622,12 +622,6 @@ literal|0
 expr_stmt|;
 name|node
 operator|->
-name|tn_lockf
-operator|=
-name|NULL
-expr_stmt|;
-name|node
-operator|->
 name|tn_vnode
 operator|=
 name|NULL
