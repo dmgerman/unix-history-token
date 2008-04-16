@@ -5789,7 +5789,7 @@ name|sc
 operator|->
 name|aue_tick_callout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 operator|(
