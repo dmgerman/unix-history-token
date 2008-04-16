@@ -455,7 +455,7 @@ comment|/*  * Locks:  * (l)		locked by nh_lock  * (s)		only accessed via server 
 end_comment
 
 begin_comment
-comment|/*  * A pending asynchronous lock request, stored on the nc_pending list  * of the NLM host.  */
+comment|/*  * A pending asynchronous lock request, stored on the nh_pending list  * of the NLM host.  */
 end_comment
 
 begin_struct
@@ -1164,6 +1164,23 @@ argument_list|,
 name|uaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|a
+condition|)
+block|{
+name|CLNT_DESTROY
+argument_list|(
+name|rpcb
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|memcpy
 argument_list|(
 operator|&
@@ -1375,6 +1392,11 @@ operator|)
 name|stat
 argument_list|)
 expr_stmt|;
+name|CLNT_DESTROY
+argument_list|(
+name|rpcb
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -1495,7 +1517,7 @@ operator|->
 name|nh_sysid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Send the results back to the host. 	 * 	 * Note: there is a possible race here with nlm_host_notify 	 * destroying teh RPC client. To avoid problems, the first 	 * thing nlm_host_notify does is to cancel pending async lock 	 * requests. 	 */
+comment|/* 	 * Send the results back to the host. 	 * 	 * Note: there is a possible race here with nlm_host_notify 	 * destroying the RPC client. To avoid problems, the first 	 * thing nlm_host_notify does is to cancel pending async lock 	 * requests. 	 */
 if|if
 condition|(
 name|af
