@@ -9482,7 +9482,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|lf
 argument_list|,
-argument|&lock->lf_inode->i_lockf->ls_active
+argument|&lock->lf_vnode->v_lockf->ls_active
 argument_list|,
 argument|lf_link
 argument_list|)
