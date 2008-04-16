@@ -1550,6 +1550,13 @@ name|sc_dying
 operator|=
 literal|1
 expr_stmt|;
+name|rv
+operator|=
+name|ucom_detach
+argument_list|(
+name|ucom
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
