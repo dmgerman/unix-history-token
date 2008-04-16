@@ -3351,21 +3351,6 @@ literal|"=ftp://ftp2.gr.freebsd.org"
 block|}
 block|,
 block|{
-literal|"Hong Kong"
-block|,
-literal|"ftp.hk.super.net"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_FTP_PATH
-literal|"=ftp://ftp.hk.super.net"
-block|}
-block|,
-block|{
 literal|"Hungary"
 block|,
 literal|"ftp.hu.freebsd.org"
