@@ -1195,6 +1195,12 @@ name|sctppcbinfo
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function_decl
 name|int
 name|SCTP6_ARE_ADDR_EQUAL
@@ -1211,6 +1217,11 @@ name|b
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

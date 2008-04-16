@@ -946,6 +946,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function_decl
 name|uint32_t
 name|sctp_is_same_scope
@@ -989,6 +995,11 @@ name|store
 parameter_list|)
 value|do { \ 	 if ((addr->sin6_family == AF_INET6)&& \ 	     (IN6_IS_SCOPE_LINKLOCAL(&addr->sin6_addr))) { \ 		*store = *addr; \ 		if (addr->sin6_scope_id == 0) { \ 			if (!sa6_recoverscope(store)) { \ 				addr = store; \ 			} \ 		} else { \ 			in6_clearscope(&addr->sin6_addr); \ 			addr = store; \ 		} \ 	 } \ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
