@@ -810,14 +810,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|STATIC_LIB_REQUIRE
-argument_list|(
-name|_vfork
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * These are needed when linking statically.  All references within  * libgcc (and in the future libc) to these routines are weak, but  * if they are not (strongly) referenced by the application or other  * libraries, then the actual functions will not be loaded.  */
 end_comment
