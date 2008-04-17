@@ -938,6 +938,8 @@ operator|.
 name|ni_vp
 argument_list|,
 literal|0
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1194,6 +1196,13 @@ name|cr
 parameter_list|)
 block|{
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+name|struct
 name|mount
 modifier|*
 name|mp
@@ -1249,6 +1258,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1259,7 +1270,7 @@ name|vp
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|curthread
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1267,6 +1278,8 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write

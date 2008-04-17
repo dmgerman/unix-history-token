@@ -103,9 +103,10 @@ directive|endif
 comment|/*  * macros for conversion between host and (internet) network byte order  */
 if|#
 directive|if
-name|BYTE_ORDER
-operator|==
+name|defined
+argument_list|(
 name|_BIG_ENDIAN
+argument_list|)
 operator|&&
 operator|!
 name|defined
@@ -329,10 +330,8 @@ name|x
 parameter_list|)
 value|(x)
 comment|/*  * Macros to convert from a specific byte order to/from native byte order  */
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
+ifdef|#
+directive|ifdef
 name|_BIG_ENDIAN
 define|#
 directive|define

@@ -240,9 +240,7 @@ function_decl|;
 specifier|extern
 name|int
 name|vmem_is_populator
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 specifier|extern
 name|size_t

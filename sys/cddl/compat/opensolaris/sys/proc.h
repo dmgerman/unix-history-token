@@ -90,6 +90,17 @@ name|boot_max_ncpus
 value|mp_ncpus
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|hz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system clock's frequency */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -259,7 +270,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kproc_create
+name|kthread_create
 argument_list|(
 name|proc
 argument_list|,
@@ -299,7 +310,7 @@ define|#
 directive|define
 name|thread_exit
 parameter_list|()
-value|kproc_exit(0)
+value|kthread_exit(0)
 end_define
 
 begin_endif

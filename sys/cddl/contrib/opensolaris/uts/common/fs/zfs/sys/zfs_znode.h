@@ -389,6 +389,12 @@ name|list_node_t
 name|z_link_node
 decl_stmt|;
 comment|/* all znodes in fs link */
+name|struct
+name|lockf
+modifier|*
+name|z_lockf
+decl_stmt|;
+comment|/* Head of byte-level lock list. */
 comment|/* 	 * These are dmu managed fields. 	 */
 name|znode_phys_t
 modifier|*

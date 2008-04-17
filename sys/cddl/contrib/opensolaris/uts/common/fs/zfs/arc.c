@@ -5161,7 +5161,7 @@ operator||
 name|ARC_INDIRECT
 operator|)
 operator|&&
-name|LBOLT
+name|lbolt
 operator|-
 name|ab
 operator|->
@@ -6406,10 +6406,10 @@ operator|(
 name|kmem_size
 argument_list|()
 operator|*
-literal|3
+literal|4
 operator|)
 operator|/
-literal|4
+literal|5
 condition|)
 return|return
 operator|(
@@ -6710,7 +6710,7 @@ block|}
 comment|/* reset the growth delay for every reclaim */
 name|growtime
 operator|=
-name|LBOLT
+name|lbolt
 operator|+
 operator|(
 name|arc_grow_retry
@@ -6763,7 +6763,7 @@ operator|(
 operator|(
 name|growtime
 operator|-
-name|LBOLT
+name|lbolt
 operator|)
 operator|<=
 literal|0
@@ -7588,7 +7588,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|LBOLT
+name|lbolt
 expr_stmt|;
 name|DTRACE_PROBE1
 argument_list|(
@@ -7714,14 +7714,14 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|LBOLT
+name|lbolt
 expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * This buffer has been "accessed" only once so far, 		 * but it is still in the cache. Move it to the MFU 		 * state. 		 */
 if|if
 condition|(
-name|LBOLT
+name|lbolt
 operator|>
 name|buf
 operator|->
@@ -7735,7 +7735,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|LBOLT
+name|lbolt
 expr_stmt|;
 name|DTRACE_PROBE1
 argument_list|(
@@ -7842,7 +7842,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|LBOLT
+name|lbolt
 expr_stmt|;
 name|arc_change_state
 argument_list|(
@@ -7953,7 +7953,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|LBOLT
+name|lbolt
 expr_stmt|;
 block|}
 elseif|else
@@ -8007,7 +8007,7 @@ name|buf
 operator|->
 name|b_arc_access
 operator|=
-name|LBOLT
+name|lbolt
 expr_stmt|;
 name|DTRACE_PROBE1
 argument_list|(
@@ -12202,7 +12202,7 @@ name|MAX
 argument_list|(
 name|arc_c
 operator|*
-literal|5
+literal|6
 argument_list|,
 name|arc_c_max
 argument_list|)
@@ -12596,7 +12596,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
-comment|/* Warn about ZFS memory and address space requirements. */
+comment|/* Warn about ZFS memory requirements. */
 if|if
 condition|(
 operator|(
@@ -12630,12 +12630,13 @@ literal|"expect unstable behavior.\n"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|kmem_size
 argument_list|()
 operator|<
-literal|512
+literal|256
 operator|*
 operator|(
 literal|1
@@ -12646,19 +12647,19 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS WARNING: Recommended minimum kmem_size is 512MB; "
+literal|"ZFS WARNING: Recommended minimum kmem_size is 256MB; "
 literal|"expect unstable behavior.\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"	     Consider tuning vm.kmem_size and "
-literal|"vm.kmem_size_max\n"
+literal|"             Consider tuning vm.kmem_size or "
+literal|"vm.kmem_size_min\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"	     in /boot/loader.conf.\n"
+literal|"             in /boot/loader.conf.\n"
 argument_list|)
 expr_stmt|;
 block|}

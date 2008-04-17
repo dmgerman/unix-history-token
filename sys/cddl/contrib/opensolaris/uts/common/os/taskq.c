@@ -2797,21 +2797,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|SYSINIT
 argument_list|(
-name|sol_taskq
+argument|sol_taskq
 argument_list|,
-name|SI_SUB_DRIVERS
+argument|SI_SUB_DRIVERS
 argument_list|,
-name|SI_ORDER_MIDDLE
+argument|SI_ORDER_MIDDLE
 argument_list|,
-name|taskq_init
+argument|taskq_init
 argument_list|,
-name|NULL
+argument|NULL
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_expr_stmt
 name|SYSUNINIT

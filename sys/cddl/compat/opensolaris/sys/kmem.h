@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vmem.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/uma.h>
 end_include
 
@@ -77,6 +71,13 @@ directive|define
 name|KMC_NODEBUG
 value|0
 end_define
+
+begin_typedef
+typedef|typedef
+name|void
+name|vmem_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -168,7 +169,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint64_t
+name|u_long
 name|kmem_size
 parameter_list|(
 name|void
@@ -177,7 +178,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint64_t
+name|u_long
 name|kmem_used
 parameter_list|(
 name|void

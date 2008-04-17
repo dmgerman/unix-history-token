@@ -288,7 +288,7 @@ name|flags
 argument_list|,
 literal|0
 argument_list|,
-name|curthread
+name|td
 operator|->
 name|td_ucred
 argument_list|,
@@ -322,6 +322,8 @@ operator|.
 name|ni_vp
 argument_list|,
 literal|0
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -505,6 +507,8 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -528,6 +532,8 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -794,6 +800,8 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -819,6 +827,8 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 return|return

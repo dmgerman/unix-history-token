@@ -1139,11 +1139,9 @@ parameter_list|)
 value|IXDR_PUT_INT32((buf), ((int)(v)))
 endif|#
 directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|_BIG_ENDIAN
+ifndef|#
+directive|ifndef
+name|_LITTLE_ENDIAN
 define|#
 directive|define
 name|IXDR_GET_HYPER

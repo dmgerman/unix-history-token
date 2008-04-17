@@ -1481,21 +1481,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|SYSINIT
 argument_list|(
-name|sol_callb
+argument|sol_callb
 argument_list|,
-name|SI_SUB_DRIVERS
+argument|SI_SUB_DRIVERS
 argument_list|,
-name|SI_ORDER_FIRST
+argument|SI_ORDER_FIRST
 argument_list|,
-name|callb_init
+argument|callb_init
 argument_list|,
-name|NULL
+argument|NULL
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_expr_stmt
 name|SYSUNINIT

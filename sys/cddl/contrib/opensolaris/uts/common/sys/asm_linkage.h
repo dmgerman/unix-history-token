@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SYS_ASM_LINKAGE_H
+name|_IA32_SYS_ASM_LINKAGE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SYS_ASM_LINKAGE_H
+name|_IA32_SYS_ASM_LINKAGE_H
 end_define
 
 begin_ifdef
@@ -51,24 +51,6 @@ define|#
 directive|define
 name|ASM_ENTRY_ALIGN
 value|16
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-comment|/* GCC uses 32-byte function alignment for UltraSPARC CPUs. */
-define|#
-directive|define
-name|ASM_ENTRY_ALIGN
-value|32
-else|#
-directive|else
-error|#
-directive|error
-error|Unsupported architecture.
-endif|#
-directive|endif
 comment|/*  * ENTRY provides the standard procedure entry code and an easy way to  * insert the calls to mcount for profiling. ENTRY_NP is identical, but  * never calls mcount.  */
 define|#
 directive|define
@@ -96,6 +78,46 @@ name|x
 parameter_list|)
 define|\
 value|.size	x, [.-x]
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+comment|/*  * ENTRY provides the standard procedure entry code and an easy way to  * insert the calls to mcount for profiling. ENTRY_NP is identical, but  * never calls mcount.  */
+define|#
+directive|define
+name|ENTRY
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|.section	".text"; \ 	.align	4; \ 	.global	x; \ 	.type	x, @function; \ x:
+comment|/*  * ALTENTRY provides for additional entry points.  */
+define|#
+directive|define
+name|ALTENTRY
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|.global	x; \ 	.type	x, @function; \ x:
+comment|/*  * SET_SIZE trails a function and set the size for the ELF symbol table.  */
+define|#
+directive|define
+name|SET_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|.size	x, (.-x)
+else|#
+directive|else
+error|#
+directive|error
+error|Unsupported architecture.
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* _ASM */
