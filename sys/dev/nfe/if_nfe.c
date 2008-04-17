@@ -1551,6 +1551,38 @@ literal|"NVIDIA nForce MCP67 Networking Adapter"
 block|}
 block|,
 block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP73_LAN1
+block|,
+literal|"NVIDIA nForce MCP73 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP73_LAN2
+block|,
+literal|"NVIDIA nForce MCP73 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP73_LAN3
+block|,
+literal|"NVIDIA nForce MCP73 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP73_LAN4
+block|,
+literal|"NVIDIA nForce MCP73 Networking Adapter"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -2727,6 +2759,18 @@ name|PCI_PRODUCT_NVIDIA_MCP67_LAN3
 case|:
 case|case
 name|PCI_PRODUCT_NVIDIA_MCP67_LAN4
+case|:
+case|case
+name|PCI_PRODUCT_NVIDIA_MCP73_LAN1
+case|:
+case|case
+name|PCI_PRODUCT_NVIDIA_MCP73_LAN2
+case|:
+case|case
+name|PCI_PRODUCT_NVIDIA_MCP73_LAN3
+case|:
+case|case
+name|PCI_PRODUCT_NVIDIA_MCP73_LAN4
 case|:
 name|sc
 operator|->
