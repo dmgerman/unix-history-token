@@ -562,9 +562,7 @@ modifier|*
 name|request
 init|=
 name|ata_alloc_request
-argument_list|(
-name|dev
-argument_list|)
+argument_list|()
 decl_stmt|;
 name|int
 name|error
@@ -576,6 +574,12 @@ condition|(
 name|request
 condition|)
 block|{
+name|request
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 name|request
 operator|->
 name|u
@@ -687,9 +691,7 @@ modifier|*
 name|request
 init|=
 name|ata_alloc_request
-argument_list|(
-name|dev
-argument_list|)
+argument_list|()
 decl_stmt|;
 name|struct
 name|ata_device
@@ -711,6 +713,12 @@ condition|(
 name|request
 condition|)
 block|{
+name|request
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1880,7 +1888,7 @@ operator|(
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|status
 operator|&
 name|ATA_BMSTAT_ERROR
@@ -1893,7 +1901,7 @@ argument_list|,
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|status
 argument_list|)
 expr_stmt|;

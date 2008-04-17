@@ -1409,7 +1409,7 @@ condition|)
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|status
 operator|=
 name|ch
@@ -1447,7 +1447,7 @@ condition|(
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|status
 operator|&
 name|ATA_BMSTAT_ERROR
@@ -1927,7 +1927,7 @@ condition|)
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|status
 operator|=
 name|ch
@@ -1969,7 +1969,7 @@ condition|(
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|status
 operator|&
 name|ATA_BMSTAT_ERROR

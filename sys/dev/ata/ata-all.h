@@ -1379,28 +1379,21 @@ begin_define
 define|#
 directive|define
 name|ATA_AHCI_FB_OFFSET
-value|1024
+value|(ATA_AHCI_CL_SIZE * 32)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_AHCI_CT_OFFSET
-value|1024+4096
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_AHCI_CT_SG_OFFSET
-value|128
+value|(ATA_AHCI_FB_OFFSET + 4096)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_AHCI_CT_SIZE
-value|256
+value|(1024 + 128)
 end_define
 
 begin_struct
@@ -1453,11 +1446,15 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|ATA_AHCI_DMA_ENTRIES
+value|64
 name|struct
 name|ata_ahci_dma_prd
 name|prd_tab
 index|[
-literal|16
+name|ATA_AHCI_DMA_ENTRIES
 index|]
 decl_stmt|;
 block|}
@@ -2074,6 +2071,12 @@ define|#
 directive|define
 name|ATA_R_DANGER2
 value|0x40000000
+name|struct
+name|ata_dmaslot
+modifier|*
+name|dma
+decl_stmt|;
+comment|/* DMA slot of this request */
 name|u_int8_t
 name|status
 decl_stmt|;
@@ -2082,44 +2085,6 @@ name|u_int8_t
 name|error
 decl_stmt|;
 comment|/* ATA error */
-struct|struct
-block|{
-name|u_int8_t
-name|status
-decl_stmt|;
-comment|/* DMA status */
-name|bus_dma_tag_t
-name|sg_tag
-decl_stmt|;
-comment|/* SG list DMA tag */
-name|bus_dmamap_t
-name|sg_map
-decl_stmt|;
-comment|/* SG list DMA map */
-name|void
-modifier|*
-name|sg
-decl_stmt|;
-comment|/* DMA transfer table */
-name|bus_addr_t
-name|sg_bus
-decl_stmt|;
-comment|/* bus address of dmatab */
-name|bus_dma_tag_t
-name|data_tag
-decl_stmt|;
-comment|/* data DMA tag */
-name|bus_dmamap_t
-name|data_map
-decl_stmt|;
-comment|/* data DMA map */
-name|u_int32_t
-name|cur_iosize
-decl_stmt|;
-comment|/* DMA data current IO size */
-block|}
-name|dma
-struct|;
 name|u_int32_t
 name|donecount
 decl_stmt|;
@@ -2354,6 +2319,43 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ata_dmaslot
+block|{
+name|u_int8_t
+name|status
+decl_stmt|;
+comment|/* DMA status */
+name|bus_dma_tag_t
+name|sg_tag
+decl_stmt|;
+comment|/* SG list DMA tag */
+name|bus_dmamap_t
+name|sg_map
+decl_stmt|;
+comment|/* SG list DMA map */
+name|void
+modifier|*
+name|sg
+decl_stmt|;
+comment|/* DMA transfer table */
+name|bus_addr_t
+name|sg_bus
+decl_stmt|;
+comment|/* bus address of dmatab */
+name|bus_dma_tag_t
+name|data_tag
+decl_stmt|;
+comment|/* data DMA tag */
+name|bus_dmamap_t
+name|data_map
+decl_stmt|;
+comment|/* data DMA map */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* structure holding DMA related information */
 end_comment
@@ -2383,6 +2385,21 @@ name|bus_addr_t
 name|work_bus
 decl_stmt|;
 comment|/* bus address of dmatab */
+define|#
+directive|define
+name|ATA_DMA_SLOTS
+value|32
+name|int
+name|dma_slots
+decl_stmt|;
+comment|/* DMA slots allocated */
+name|struct
+name|ata_dmaslot
+name|slot
+index|[
+name|ATA_DMA_SLOTS
+index|]
+decl_stmt|;
 name|u_int32_t
 name|alignment
 decl_stmt|;
@@ -3329,29 +3346,30 @@ begin_comment
 comment|/* macros for alloc/free of struct ata_request */
 end_comment
 
-begin_function_decl
-name|struct
-name|ata_request
-modifier|*
-name|ata_alloc_request
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|ata_request_zone
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
+name|ata_alloc_request
+parameter_list|()
+value|uma_zalloc(ata_request_zone, M_NOWAIT | M_ZERO)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ata_free_request
 parameter_list|(
-name|struct
-name|ata_request
-modifier|*
 name|request
 parameter_list|)
-function_decl|;
-end_function_decl
+value|{ \ 	if (!(request->flags& ATA_R_DANGER2)) \ 	    uma_zfree(ata_request_zone, request); \ 	}
+end_define
 
 begin_comment
 comment|/* macros for alloc/free of struct ata_composite */

@@ -3272,7 +3272,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"SiI-3726-R%x Portmultiplier with %d ports\n"
+literal|"SiI 3726 r%x Portmultiplier with %d ports\n"
 argument_list|,
 name|pm_revision
 argument_list|,
@@ -3295,6 +3295,15 @@ name|pm_ports
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* inform dma.alloc() about needed DMA slots */
+name|ch
+operator|->
+name|dma
+operator|.
+name|dma_slots
+operator|=
+name|pm_ports
+expr_stmt|;
 comment|/* reset all ports and register if anything connected */
 for|for
 control|(
@@ -7621,12 +7630,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* we only have space for 16 entries in a slot */
 name|KASSERT
 argument_list|(
 name|nsegs
 operator|<=
-literal|16
+name|ATA_AHCI_DMA_ENTRIES
 argument_list|,
 operator|(
 literal|"too many DMA segment entries\n"
@@ -13655,6 +13663,20 @@ block|,
 block|{
 name|ATA_I82801HB_R1
 block|,
+literal|2
+block|,
+name|AHCI
+block|,
+literal|0x00
+block|,
+name|ATA_SA300
+block|,
+literal|"ICH9R"
+block|}
+block|,
+block|{
+name|ATA_I82801HB_R1
+block|,
 literal|0
 block|,
 name|AHCI
@@ -19351,7 +19373,7 @@ operator|)
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|sg_bus
 operator|&
 literal|0xffffffff
@@ -19367,7 +19389,7 @@ operator|)
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|sg_bus
 operator|>>
 literal|32
@@ -24234,9 +24256,7 @@ operator||
 operator|(
 name|request
 operator|->
-name|dma
-operator|.
-name|cur_iosize
+name|bytecount
 operator|>>
 literal|1
 operator|)
@@ -24274,7 +24294,7 @@ argument_list|,
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|sg_bus
 argument_list|)
 expr_stmt|;
@@ -26232,7 +26252,7 @@ argument_list|(
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|sg_bus
 argument_list|)
 expr_stmt|;
@@ -28432,7 +28452,7 @@ init|=
 name|request
 operator|->
 name|dma
-operator|.
+operator|->
 name|sg
 decl_stmt|;
 name|caddr_t
@@ -32208,7 +32228,7 @@ name|SII4CH
 block|,
 name|ATA_SA150
 block|,
-literal|"SiI 3114"
+literal|"3114"
 block|}
 block|,
 block|{
@@ -32222,7 +32242,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"SiI 3512"
+literal|"3512"
 block|}
 block|,
 block|{
@@ -32236,7 +32256,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"SiI 3112"
+literal|"3112"
 block|}
 block|,
 block|{
@@ -32250,7 +32270,7 @@ literal|0
 block|,
 name|ATA_SA150
 block|,
-literal|"SiI 3112"
+literal|"3112"
 block|}
 block|,
 block|{
@@ -32264,7 +32284,7 @@ name|SIIBUG
 block|,
 name|ATA_SA150
 block|,
-literal|"SiI 3512"
+literal|"3512"
 block|}
 block|,
 block|{
@@ -32278,7 +32298,7 @@ name|SIIBUG
 block|,
 name|ATA_SA150
 block|,
-literal|"SiI 3112"
+literal|"3112"
 block|}
 block|,
 block|{
@@ -32292,7 +32312,7 @@ name|SIIBUG
 block|,
 name|ATA_SA150
 block|,
-literal|"SiI 3112"
+literal|"3112"
 block|}
 block|,
 block|{
@@ -32306,7 +32326,7 @@ name|SII4CH
 block|,
 name|ATA_SA300
 block|,
-literal|"SiI 3124"
+literal|"3124"
 block|}
 block|,
 block|{
@@ -32320,7 +32340,7 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"SiI 3132"
+literal|"3132"
 block|}
 block|,
 block|{
@@ -32334,7 +32354,7 @@ name|SIISETCLK
 block|,
 name|ATA_UDMA6
 block|,
-literal|"SiI 0680"
+literal|"680"
 block|}
 block|,
 block|{
@@ -32348,7 +32368,7 @@ name|SIIINTR
 block|,
 name|ATA_UDMA5
 block|,
-literal|"CMD 649"
+literal|"(CMD) 649"
 block|}
 block|,
 block|{
@@ -32362,7 +32382,7 @@ name|SIIINTR
 block|,
 name|ATA_UDMA4
 block|,
-literal|"CMD 648"
+literal|"(CMD) 648"
 block|}
 block|,
 block|{
@@ -32376,7 +32396,7 @@ literal|0
 block|,
 name|ATA_UDMA2
 block|,
-literal|"CMD 646U2"
+literal|"(CMD) 646U2"
 block|}
 block|,
 block|{
@@ -32390,7 +32410,7 @@ literal|0
 block|,
 name|ATA_WDMA2
 block|,
-literal|"CMD 646"
+literal|"(CMD) 646"
 block|}
 block|,
 block|{
@@ -34713,6 +34733,13 @@ name|__packed
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|ATA_SIIPRB_DMA_ENTRIES
+value|125
+end_define
+
 begin_struct
 struct|struct
 name|ata_siiprb_ata_command
@@ -34721,7 +34748,7 @@ name|struct
 name|ata_siiprb_dma_prdentry
 name|prd
 index|[
-literal|126
+name|ATA_SIIPRB_DMA_ENTRIES
 index|]
 decl_stmt|;
 block|}
@@ -34743,7 +34770,7 @@ name|struct
 name|ata_siiprb_dma_prdentry
 name|prd
 index|[
-literal|125
+name|ATA_SIIPRB_DMA_ENTRIES
 index|]
 decl_stmt|;
 block|}
@@ -37336,7 +37363,7 @@ name|KASSERT
 argument_list|(
 name|nsegs
 operator|<=
-name|ATA_DMA_ENTRIES
+name|ATA_SIIPRB_DMA_ENTRIES
 argument_list|,
 operator|(
 literal|"too many DMA segment entries\n"

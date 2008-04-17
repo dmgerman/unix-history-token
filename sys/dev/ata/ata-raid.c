@@ -24239,9 +24239,7 @@ operator|(
 name|request
 operator|=
 name|ata_alloc_request
-argument_list|(
-name|dev
-argument_list|)
+argument_list|()
 operator|)
 condition|)
 block|{
@@ -24254,6 +24252,12 @@ return|return
 name|NULL
 return|;
 block|}
+name|request
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 name|request
 operator|->
 name|timeout
@@ -24607,9 +24611,7 @@ operator|(
 name|request
 operator|=
 name|ata_alloc_request
-argument_list|(
-name|dev
-argument_list|)
+argument_list|()
 operator|)
 condition|)
 block|{
@@ -24625,6 +24627,12 @@ name|ENOMEM
 return|;
 block|}
 comment|/* setup request */
+name|request
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 name|request
 operator|->
 name|timeout
