@@ -347,8 +347,8 @@ name|interface_type
 name|ndis_type
 decl_stmt|;
 name|struct
-name|callout_handle
-name|ndis_stat_ch
+name|callout
+name|ndis_stat_callout
 decl_stmt|;
 name|int
 name|ndis_maxpkts
