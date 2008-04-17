@@ -16,7 +16,7 @@ comment|/*-----------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.4 of 20 December 2006    Copyright (C) 1996-2006 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
+comment|/* ------------------------------------------------------------------    This file is part of bzip2/libbzip2, a program and library for    lossless, block-sorting data compression.     bzip2/libbzip2 version 1.0.5 of 10 December 2007    Copyright (C) 1996-2007 Julian Seward<jseward@bzip.org>     Please read the WARNING, DISCLAIMER and PATENTS sections in the     README file.     This program is released under the terms of the license contained    in the file LICENSE.    ------------------------------------------------------------------ */
 end_comment
 
 begin_comment
@@ -1395,7 +1395,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bzip2recover 1.0.4: extracts blocks from damaged .bz2 files.\n"
+literal|"bzip2recover 1.0.5: extracts blocks from damaged .bz2 files.\n"
 argument_list|)
 expr_stmt|;
 if|if
