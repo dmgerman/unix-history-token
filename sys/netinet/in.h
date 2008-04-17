@@ -2072,6 +2072,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|IN_LOOPBACK
+parameter_list|(
+name|i
+parameter_list|)
+value|(((u_int32_t)(i)& 0xff000000) == 0x7f000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_ZERONET
+parameter_list|(
+name|i
+parameter_list|)
+value|(((u_int32_t)(i)& 0xff000000) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IN_PRIVATE
 parameter_list|(
 name|i
