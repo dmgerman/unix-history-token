@@ -265,14 +265,6 @@ argument_list|,
 name|ofw_pcib_gen_get_node
 argument_list|)
 block|,
-comment|/* ofw_pci interface */
-name|DEVMETHOD
-argument_list|(
-name|ofw_pci_adjust_busrange
-argument_list|,
-name|ofw_pcib_gen_adjust_busrange
-argument_list|)
-block|,
 block|{
 literal|0
 block|,
