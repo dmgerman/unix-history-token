@@ -3052,14 +3052,11 @@ operator|->
 name|ts_lock
 argument_list|)
 expr_stmt|;
-name|SCHED_STAT_INC
-argument_list|(
-name|switch_turnstile
-argument_list|)
-expr_stmt|;
 name|mi_switch
 argument_list|(
 name|SW_VOL
+operator||
+name|SWT_TURNSTILE
 argument_list|,
 name|NULL
 argument_list|)

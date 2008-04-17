@@ -648,7 +648,7 @@ comment|/* Priority updated due to prio_lend */
 end_comment
 
 begin_comment
-comment|/* Switch stats. */
+comment|/* Scheduler stats. */
 end_comment
 
 begin_ifdef
@@ -660,51 +660,40 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|long
-name|switch_preempt
+name|sched_switch_stats
+index|[
+name|SWT_COUNT
+index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|long
-name|switch_owepreempt
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|SCHED_STAT_DEFINE_VAR
+parameter_list|(
+name|name
+parameter_list|,
+name|ptr
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_LONG(_kern_sched_stats, OID_AUTO, name, CTLFLAG_RD, ptr, 0, descr)
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|long
-name|switch_turnstile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|switch_sleepq
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|switch_sleepqtimo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|switch_relinquish
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|switch_needresched
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|SCHED_STAT_DEFINE
+parameter_list|(
+name|name
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|unsigned long name;							\     SCHED_STAT_DEFINE_VAR(name,&name, descr)
+end_define
 
 begin_define
 define|#
@@ -720,6 +709,30 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|SCHED_STAT_DEFINE_VAR
+parameter_list|(
+name|name
+parameter_list|,
+name|descr
+parameter_list|,
+name|ptr
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCHED_STAT_DEFINE
+parameter_list|(
+name|name
+parameter_list|,
+name|descr
+parameter_list|)
+end_define
 
 begin_define
 define|#

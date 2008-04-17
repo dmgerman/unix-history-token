@@ -2085,6 +2085,8 @@ expr_stmt|;
 name|mi_switch
 argument_list|(
 name|SW_INVOL
+operator||
+name|SWT_RELINQUISH
 argument_list|,
 name|NULL
 argument_list|)

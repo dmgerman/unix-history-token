@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_sched.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1545,6 +1551,21 @@ operator|.
 name|ru_nivcsw
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SCHED_STATS
+name|SCHED_STAT_INC
+argument_list|(
+name|sched_switch_stats
+index|[
+name|flags
+operator|&
+name|SW_TYPE_MASK
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Compute the amount of time during which the current 	 * thread was running, and add that to its total so far. 	 */
 name|new_switchtime
 operator|=
@@ -2158,6 +2179,8 @@ expr_stmt|;
 name|mi_switch
 argument_list|(
 name|SW_VOL
+operator||
+name|SWT_RELINQUISH
 argument_list|,
 name|NULL
 argument_list|)

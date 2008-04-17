@@ -810,14 +810,11 @@ operator|->
 name|td_user_pri
 argument_list|)
 expr_stmt|;
-name|SCHED_STAT_INC
-argument_list|(
-name|switch_needresched
-argument_list|)
-expr_stmt|;
 name|mi_switch
 argument_list|(
 name|SW_INVOL
+operator||
+name|SWT_NEEDRESCHED
 argument_list|,
 name|NULL
 argument_list|)

@@ -2831,14 +2831,183 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/* Flags for mi_switch(). */
+comment|/* Types and flags for mi_switch(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SW_TYPE_MASK
+value|0xff
+end_define
+
+begin_comment
+comment|/* First 8 bits are switch type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* Unspecified switch. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_PREEMPT
+value|1
+end_define
+
+begin_comment
+comment|/* Switching due to preemption. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_OWEPREEMPT
+value|2
+end_define
+
+begin_comment
+comment|/* Switching due to opepreempt. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_TURNSTILE
+value|3
+end_define
+
+begin_comment
+comment|/* Turnstile contention. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_SLEEPQ
+value|4
+end_define
+
+begin_comment
+comment|/* Sleepq wait. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_SLEEPQTIMO
+value|5
+end_define
+
+begin_comment
+comment|/* Sleepq timeout wait. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_RELINQUISH
+value|6
+end_define
+
+begin_comment
+comment|/* yield call. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_NEEDRESCHED
+value|7
+end_define
+
+begin_comment
+comment|/* NEEDRESCHED was set. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_IDLE
+value|8
+end_define
+
+begin_comment
+comment|/* Switching from the idle thread. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_IWAIT
+value|9
+end_define
+
+begin_comment
+comment|/* Waiting for interrupts. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_SUSPEND
+value|10
+end_define
+
+begin_comment
+comment|/* Thread suspended. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_REMOTEPREEMPT
+value|11
+end_define
+
+begin_comment
+comment|/* Remote processor preempted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_REMOTEWAKEIDLE
+value|12
+end_define
+
+begin_comment
+comment|/* Remote processor preempted idle. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWT_COUNT
+value|13
+end_define
+
+begin_comment
+comment|/* Number of switch types. */
+end_comment
+
+begin_comment
+comment|/* Flags */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SW_VOL
-value|0x0001
+value|0x0100
 end_define
 
 begin_comment
@@ -2849,7 +3018,7 @@ begin_define
 define|#
 directive|define
 name|SW_INVOL
-value|0x0002
+value|0x0200
 end_define
 
 begin_comment
@@ -2860,7 +3029,7 @@ begin_define
 define|#
 directive|define
 name|SW_PREEMPT
-value|0x0004
+value|0x0400
 end_define
 
 begin_comment

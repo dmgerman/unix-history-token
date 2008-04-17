@@ -401,6 +401,8 @@ expr_stmt|;
 name|mi_switch
 argument_list|(
 name|SW_VOL
+operator||
+name|SWT_IDLE
 argument_list|,
 name|NULL
 argument_list|)

@@ -2717,6 +2717,8 @@ expr_stmt|;
 name|mi_switch
 argument_list|(
 name|SW_VOL
+operator||
+name|SWT_IWAIT
 argument_list|,
 name|NULL
 argument_list|)
