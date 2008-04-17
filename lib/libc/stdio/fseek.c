@@ -799,8 +799,6 @@ name|n
 operator|=
 name|fp
 operator|->
-name|_extra
-operator|->
 name|_up
 operator|-
 name|fp
@@ -910,9 +908,7 @@ argument_list|(
 operator|&
 name|fp
 operator|->
-name|_extra
-operator|->
-name|mbstate
+name|_mbstate
 argument_list|,
 literal|0
 argument_list|,
@@ -1040,9 +1036,7 @@ argument_list|(
 operator|&
 name|fp
 operator|->
-name|_extra
-operator|->
-name|mbstate
+name|_mbstate
 argument_list|,
 literal|0
 argument_list|,
@@ -1160,9 +1154,7 @@ argument_list|(
 operator|&
 name|fp
 operator|->
-name|_extra
-operator|->
-name|mbstate
+name|_mbstate
 argument_list|,
 literal|0
 argument_list|,

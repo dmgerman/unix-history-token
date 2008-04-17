@@ -622,8 +622,6 @@ name|_r
 expr_stmt|;
 name|fp
 operator|->
-name|_extra
-operator|->
 name|_up
 operator|=
 name|fp

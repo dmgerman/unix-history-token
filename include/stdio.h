@@ -140,16 +140,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* hold a buncha junk that would grow the ABI */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|__sFILEX
-struct_decl|;
-end_struct_decl
-
-begin_comment
 comment|/*  * stdio state variables.  *  * The following always hold:  *  *	if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),  *		_lbfsize is -_bf._size, else _lbfsize is 0  *	if _flags&__SRD, _w is 0  *	if _flags&__SWR, _r is 0  *  * This ensures that the getc and putc macros (or inline functions) never  * try to write or read from a file that is in `read' or `write' mode.  * (Moreover, they can, and do, automatically switch from read mode to  * write mode, and back, on "r+" and "w+" files.)  *  * _lbfsize is used only to make the inline line-buffered output stream  * code as compact as possible.  *  * _ub, _up, and _ur are used when ungetc() pushes back more characters  * than fit in the current _bf, or when ungetc() pushes back a character  * that does not match the previous one in _bf.  When this happens,  * _ub._base becomes non-nil (i.e., a stream has ungetc() data iff  * _ub._base!=NULL) and _up and _ur save the current values of _p and _r.  *  * Certain members of __sFILE are accessed directly via macros or  * inline functions.  To preserve ABI compat, these members must not  * be disturbed.  These members are marked below with (*).  */
 end_comment
 
@@ -256,12 +246,12 @@ name|__sbuf
 name|_ub
 decl_stmt|;
 comment|/* ungetc buffer */
-name|struct
-name|__sFILEX
+name|unsigned
+name|char
 modifier|*
-name|_extra
+name|_up
 decl_stmt|;
-comment|/* additions to FILE to not break ABI */
+comment|/* saved _p when _p is doing ungetc data */
 name|int
 name|_ur
 decl_stmt|;
@@ -298,6 +288,30 @@ name|fpos_t
 name|_offset
 decl_stmt|;
 comment|/* current lseek offset */
+name|struct
+name|pthread_mutex
+modifier|*
+name|_fl_mutex
+decl_stmt|;
+comment|/* used for MT-safety */
+name|struct
+name|pthread
+modifier|*
+name|_fl_owner
+decl_stmt|;
+comment|/* current owner */
+name|int
+name|_fl_count
+decl_stmt|;
+comment|/* recursive lock count */
+name|int
+name|_orientation
+decl_stmt|;
+comment|/* orientation for fwide() */
+name|__mbstate_t
+name|_mbstate
+decl_stmt|;
+comment|/* multibyte conversion state */
 block|}
 name|FILE
 typedef|;

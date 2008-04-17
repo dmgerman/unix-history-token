@@ -138,15 +138,11 @@ parameter_list|,
 name|file
 parameter_list|)
 define|\
-value|{0,0,0,flags,file,{0},0,__sF+file,__sclose,__sread,__sseek,__swrite, \ 	 {0}, __sFX + file}
+value|{0,0,0,flags,file,{0},0,__sF+file,__sclose,__sread,__sseek,__swrite}
 end_define
 
 begin_comment
 comment|/*	 p r w flags file _bf z  cookie      close    read    seek    write */
-end_comment
-
-begin_comment
-comment|/*     _ub _extra */
 end_comment
 
 begin_comment
@@ -157,19 +153,6 @@ begin_decl_stmt
 specifier|static
 name|FILE
 name|usual
-index|[
-name|FOPEN_MAX
-operator|-
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|__sFILEX
-name|usual_extra
 index|[
 name|FOPEN_MAX
 operator|-
@@ -198,20 +181,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|__sFILEX
-name|__sFX
-index|[
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * We can't make this 'static' until 6.0-current due to binary  * compatibility concerns.  This also means we cannot change the  * sizeof(FILE) until that time either and must continue to use the  * __sFILEX stuff to add to FILE.  */
-end_comment
-
-begin_decl_stmt
 name|FILE
 name|__sF
 index|[
@@ -242,10 +211,6 @@ argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * The following kludge is done to ensure enough binary compatibility  * with future versions of libc.  Or rather it allows us to work with  * libraries that have been built with a newer libc that defines these  * symbols and expects libc to provide them.  We only have need to support  * i386 because it is the only "old" system we have deployed.  */
-end_comment
 
 begin_decl_stmt
 name|FILE
@@ -413,19 +378,9 @@ specifier|static
 name|FILE
 name|empty
 decl_stmt|;
-specifier|static
-name|struct
-name|__sFILEX
-name|emptyx
-decl_stmt|;
 name|FILE
 modifier|*
 name|p
-decl_stmt|;
-name|struct
-name|__sFILEX
-modifier|*
-name|fx
 decl_stmt|;
 name|g
 operator|=
@@ -449,14 +404,6 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|FILE
-argument_list|)
-operator|+
-name|n
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|__sFILEX
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -484,19 +431,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|fx
-operator|=
-operator|(
-expr|struct
-name|__sFILEX
-operator|*
-operator|)
-operator|&
-name|p
-index|[
-name|n
-index|]
-expr_stmt|;
 name|g
 operator|->
 name|next
@@ -522,32 +456,12 @@ name|n
 operator|>=
 literal|0
 condition|)
-block|{
 operator|*
 name|p
+operator|++
 operator|=
 name|empty
 expr_stmt|;
-name|p
-operator|->
-name|_extra
-operator|=
-name|fx
-expr_stmt|;
-operator|*
-name|p
-operator|->
-name|_extra
-operator|=
-name|emptyx
-expr_stmt|;
-name|p
-operator|++
-operator|,
-name|fx
-operator|++
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|g
@@ -793,9 +707,7 @@ comment|/*	fp->_lock = NULL; */
 comment|/* once set always set (reused) */
 name|fp
 operator|->
-name|_extra
-operator|->
-name|orientation
+name|_orientation
 operator|=
 literal|0
 expr_stmt|;
@@ -804,9 +716,7 @@ argument_list|(
 operator|&
 name|fp
 operator|->
-name|_extra
-operator|->
-name|mbstate
+name|_mbstate
 argument_list|,
 literal|0
 argument_list|,
@@ -967,48 +877,6 @@ name|void
 name|__sinit
 parameter_list|()
 block|{
-name|int
-name|i
-decl_stmt|;
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|__sdidinit
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Set _extra for the usual suspects. */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|FOPEN_MAX
-operator|-
-literal|3
-condition|;
-name|i
-operator|++
-control|)
-name|usual
-index|[
-name|i
-index|]
-operator|.
-name|_extra
-operator|=
-operator|&
-name|usual_extra
-index|[
-name|i
-index|]
-expr_stmt|;
 comment|/* Make sure we clean up on exit. */
 name|__cleanup
 operator|=
@@ -1018,10 +886,6 @@ comment|/* conservative */
 name|__sdidinit
 operator|=
 literal|1
-expr_stmt|;
-block|}
-name|THREAD_UNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 end_function

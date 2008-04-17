@@ -536,11 +536,19 @@ name|_write
 expr_stmt|;
 name|fake
 operator|.
-name|_extra
+name|_orientation
 operator|=
 name|fp
 operator|->
-name|_extra
+name|_orientation
+expr_stmt|;
+name|fake
+operator|.
+name|_mbstate
+operator|=
+name|fp
+operator|->
+name|_mbstate
 expr_stmt|;
 comment|/* set up the buffer */
 name|fake

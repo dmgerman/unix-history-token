@@ -127,9 +127,7 @@ argument_list|,
 operator|&
 name|fp
 operator|->
-name|_extra
-operator|->
-name|mbstate
+name|_mbstate
 argument_list|)
 operator|)
 operator|==

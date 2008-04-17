@@ -769,9 +769,7 @@ literal|0
 expr_stmt|;
 name|fp
 operator|->
-name|_extra
-operator|->
-name|orientation
+name|_orientation
 operator|=
 literal|0
 expr_stmt|;
@@ -780,9 +778,7 @@ argument_list|(
 operator|&
 name|fp
 operator|->
-name|_extra
-operator|->
-name|mbstate
+name|_mbstate
 argument_list|,
 literal|0
 argument_list|,

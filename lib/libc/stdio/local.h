@@ -501,44 +501,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hold a buncha junk that would grow the ABI */
-end_comment
-
-begin_struct
-struct|struct
-name|__sFILEX
-block|{
-name|unsigned
-name|char
-modifier|*
-name|_up
-decl_stmt|;
-comment|/* saved _p when _p is doing ungetc data */
-name|pthread_mutex_t
-name|fl_mutex
-decl_stmt|;
-comment|/* used for MT-safety */
-name|pthread_t
-name|fl_owner
-decl_stmt|;
-comment|/* current owner */
-name|int
-name|fl_count
-decl_stmt|;
-comment|/* recursive lock count */
-name|int
-name|orientation
-decl_stmt|;
-comment|/* orientation for fwide() */
-name|mbstate_t
-name|mbstate
-decl_stmt|;
-comment|/* multibyte conversion state */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Prepare the given FILE for writing, and return 0 iff it  * can be written now.  Otherwise, return EOF and set errno.  */
 end_comment
 
@@ -601,16 +563,6 @@ parameter_list|)
 value|{ \ 	free((char *)(fp)->_lb._base); \ 	(fp)->_lb._base = NULL; \ }
 end_define
 
-begin_define
-define|#
-directive|define
-name|INITEXTRA
-parameter_list|(
-name|fp
-parameter_list|)
-value|{ \ 	(fp)->_extra->_up = NULL; \ 	(fp)->_extra->fl_mutex = PTHREAD_MUTEX_INITIALIZER; \ 	(fp)->_extra->fl_owner = NULL; \ 	(fp)->_extra->fl_count = 0; \ 	(fp)->_extra->orientation = 0; \ 	memset(&(fp)->_extra->mbstate, 0, sizeof(mbstate_t)); \ }
-end_define
-
 begin_comment
 comment|/*  * Set the orientation for a stream. If o> 0, the stream has wide-  * orientation. If o< 0, the stream has byte-orientation.  */
 end_comment
@@ -624,7 +576,7 @@ name|fp
 parameter_list|,
 name|o
 parameter_list|)
-value|do {				\ 	if ((fp)->_extra->orientation == 0)		\ 		(fp)->_extra->orientation = (o);	\ } while (0)
+value|do {				\ 	if ((fp)->_orientation == 0)			\ 		(fp)->_orientation = (o);		\ } while (0)
 end_define
 
 end_unit
