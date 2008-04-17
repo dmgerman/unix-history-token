@@ -13869,13 +13869,6 @@ argument_list|(
 name|sock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ai
-operator|->
-name|ai_next
-condition|)
-continue|continue;
 for|for
 control|(
 name|n
