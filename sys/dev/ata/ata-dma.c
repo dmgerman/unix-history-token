@@ -387,7 +387,7 @@ name|dma
 operator|.
 name|dma_slots
 operator|=
-literal|1
+literal|2
 expr_stmt|;
 if|if
 condition|(
