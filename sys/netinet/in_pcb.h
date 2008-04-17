@@ -36,8 +36,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -499,8 +522,8 @@ name|inp_gencnt
 decl_stmt|;
 comment|/* generation count of this instance */
 name|struct
-name|mtx
-name|inp_mtx
+name|rwlock
+name|inp_lock
 decl_stmt|;
 define|#
 directive|define
@@ -723,8 +746,8 @@ name|u_quad_t
 name|ipi_gencnt
 decl_stmt|;
 name|struct
-name|mtx
-name|ipi_mtx
+name|rwlock
+name|ipi_lock
 decl_stmt|;
 comment|/* 	 * vimage 1 	 * general use 1 	 */
 name|void
@@ -750,7 +773,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|mtx_init(&(inp)->inp_mtx, (d), (t), MTX_DEF | MTX_RECURSE | MTX_DUPOK)
+value|rw_init_flags(&(inp)->inp_lock, (t), RW_RECURSE |  RW_DUPOK)
 end_define
 
 begin_define
@@ -760,27 +783,47 @@ name|INP_LOCK_DESTROY
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_destroy(&(inp)->inp_mtx)
+value|rw_destroy(&(inp)->inp_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|INP_LOCK
+name|INP_RLOCK
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_lock(&(inp)->inp_mtx)
+value|rw_rlock(&(inp)->inp_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|INP_UNLOCK
+name|INP_WLOCK
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_unlock(&(inp)->inp_mtx)
+value|rw_wlock(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_RUNLOCK
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_runlock(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_WUNLOCK
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_wunlock(&(inp)->inp_lock)
 end_define
 
 begin_define
@@ -790,7 +833,27 @@ name|INP_LOCK_ASSERT
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_assert(&(inp)->inp_mtx, MA_OWNED)
+value|rw_assert(&(inp)->inp_lock, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_RLOCK_ASSERT
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_assert(&(inp)->inp_lock, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_WLOCK_ASSERT
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_assert(&(inp)->inp_lock, RA_WLOCKED)
 end_define
 
 begin_define
@@ -800,7 +863,7 @@ name|INP_UNLOCK_ASSERT
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_assert(&(inp)->inp_mtx, MA_NOTOWNED)
+value|rw_assert(&(inp)->inp_lock, RA_UNLOCKED)
 end_define
 
 begin_ifdef
@@ -944,7 +1007,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|mtx_init(&(ipi)->ipi_mtx, (d), NULL, MTX_DEF | MTX_RECURSE)
+value|rw_init_flags(&(ipi)->ipi_lock, (d), RW_RECURSE)
 end_define
 
 begin_define
@@ -954,7 +1017,7 @@ name|INP_INFO_LOCK_DESTROY
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_destroy(&(ipi)->ipi_mtx)
+value|rw_destroy(&(ipi)->ipi_lock)
 end_define
 
 begin_define
@@ -964,7 +1027,7 @@ name|INP_INFO_RLOCK
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_lock(&(ipi)->ipi_mtx)
+value|rw_rlock(&(ipi)->ipi_lock)
 end_define
 
 begin_define
@@ -974,7 +1037,7 @@ name|INP_INFO_WLOCK
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_lock(&(ipi)->ipi_mtx)
+value|rw_wlock(&(ipi)->ipi_lock)
 end_define
 
 begin_define
@@ -984,7 +1047,7 @@ name|INP_INFO_RUNLOCK
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_unlock(&(ipi)->ipi_mtx)
+value|rw_runlock(&(ipi)->ipi_lock)
 end_define
 
 begin_define
@@ -994,7 +1057,17 @@ name|INP_INFO_WUNLOCK
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_unlock(&(ipi)->ipi_mtx)
+value|rw_wunlock(&(ipi)->ipi_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_INFO_LOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_assert(&(ipi)->ipi_lock, RA_LOCKED)
 end_define
 
 begin_define
@@ -1004,7 +1077,7 @@ name|INP_INFO_RLOCK_ASSERT
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_assert(&(ipi)->ipi_mtx, MA_OWNED)
+value|rw_assert(&(ipi)->ipi_lock, RA_RLOCKED)
 end_define
 
 begin_define
@@ -1014,7 +1087,7 @@ name|INP_INFO_WLOCK_ASSERT
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_assert(&(ipi)->ipi_mtx, MA_OWNED)
+value|rw_assert(&(ipi)->ipi_lock, RA_WLOCKED)
 end_define
 
 begin_define
@@ -1024,7 +1097,7 @@ name|INP_INFO_UNLOCK_ASSERT
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_assert(&(ipi)->ipi_mtx, MA_NOTOWNED)
+value|rw_assert(&(ipi)->ipi_lock, RA_UNLOCKED)
 end_define
 
 begin_define

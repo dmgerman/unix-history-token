@@ -9378,7 +9378,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -9535,7 +9535,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|pcb
 argument_list|)
@@ -9562,7 +9562,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|pcb
 argument_list|)

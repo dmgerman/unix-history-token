@@ -342,7 +342,7 @@ name|mbuf
 modifier|*
 name|opts
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -993,7 +993,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1010,7 +1010,7 @@ operator|&
 name|fromsa
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1064,7 +1064,7 @@ goto|goto
 name|badheadlocked
 goto|;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1081,7 +1081,7 @@ operator|&
 name|fromsa
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1269,7 +1269,7 @@ name|IPPROTO_DONE
 operator|)
 return|;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1286,7 +1286,7 @@ operator|&
 name|fromsa
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1883,7 +1883,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1941,7 +1941,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2131,7 +2131,7 @@ name|struct
 name|sockaddr_in6
 name|tmp
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -2964,7 +2964,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2998,7 +2998,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3194,7 +3194,7 @@ name|inp_ip_ttl
 operator|=
 name|ip_defttl
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3260,7 +3260,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3397,7 +3397,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3499,7 +3499,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3533,7 +3533,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3600,7 +3600,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3800,7 +3800,7 @@ expr_stmt|;
 block|}
 name|out
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3859,7 +3859,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3926,7 +3926,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4019,7 +4019,7 @@ expr_stmt|;
 comment|/* XXX */
 name|out
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4106,7 +4106,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4345,7 +4345,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4363,7 +4363,7 @@ operator|)
 return|;
 name|bad
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)

@@ -341,7 +341,7 @@ argument_list|(
 name|pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1220,7 +1220,7 @@ operator|->
 name|inp_pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1473,7 +1473,7 @@ operator|->
 name|inp_pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1682,7 +1682,7 @@ operator|->
 name|inp_pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1806,7 +1806,7 @@ operator|->
 name|inp_pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1906,7 +1906,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2162,7 +2162,7 @@ literal|"in6_getsockaddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2179,7 +2179,7 @@ name|inp
 operator|->
 name|in6p_laddr
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2247,7 +2247,7 @@ literal|"in6_getpeeraddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2264,7 +2264,7 @@ name|inp
 operator|->
 name|in6p_faddr
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2700,7 +2700,7 @@ argument_list|,
 argument|inp_temp
 argument_list|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2718,7 +2718,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2899,7 +2899,7 @@ name|fport
 operator|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2925,14 +2925,14 @@ argument_list|,
 name|errno
 argument_list|)
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3332,7 +3332,7 @@ argument_list|,
 argument|inp_list
 argument_list|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|in6p
 argument_list|)
@@ -3434,7 +3434,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|in6p
 argument_list|)
@@ -3556,7 +3556,7 @@ decl_stmt|;
 name|int
 name|faith
 decl_stmt|;
-name|INP_INFO_RLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|pcbinfo
 argument_list|)

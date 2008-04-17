@@ -750,7 +750,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -793,7 +793,7 @@ name|tt_delack
 argument_list|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -829,7 +829,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -904,7 +904,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -946,7 +946,7 @@ name|tt_2msl
 argument_list|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|tp
 operator|->
@@ -1118,7 +1118,7 @@ name|tp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1203,7 +1203,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1240,7 +1240,7 @@ name|tt_keep
 argument_list|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1454,7 +1454,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1535,7 +1535,7 @@ name|tp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|tp
 operator|->
@@ -1617,7 +1617,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1654,7 +1654,7 @@ name|tt_persist
 argument_list|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1808,7 +1808,7 @@ name|tp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1898,7 +1898,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1935,7 +1935,7 @@ name|tt_rexmt
 argument_list|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2390,7 +2390,7 @@ name|tp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)

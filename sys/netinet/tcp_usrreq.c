@@ -651,7 +651,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -782,7 +782,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -923,7 +923,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1082,7 +1082,7 @@ literal|"tcp_usr_bind: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1138,7 +1138,7 @@ argument_list|(
 name|PRU_BIND
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1280,7 +1280,7 @@ literal|"tcp6_usr_bind: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1439,7 +1439,7 @@ argument_list|(
 name|PRU_BIND
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1533,7 +1533,7 @@ literal|"tcp_usr_listen: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1649,7 +1649,7 @@ argument_list|(
 name|PRU_LISTEN
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1736,7 +1736,7 @@ literal|"tcp6_usr_listen: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1874,7 +1874,7 @@ argument_list|(
 name|PRU_LISTEN
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2052,7 +2052,7 @@ literal|"tcp_usr_connect: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2124,7 +2124,7 @@ argument_list|(
 name|PRU_CONNECT
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2266,7 +2266,7 @@ literal|"tcp6_usr_connect: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2455,7 +2455,7 @@ argument_list|(
 name|PRU_CONNECT
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2541,7 +2541,7 @@ literal|"tcp_usr_disconnect: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2589,7 +2589,7 @@ argument_list|(
 name|PRU_DISCONNECT
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2696,7 +2696,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2752,7 +2752,7 @@ argument_list|(
 name|PRU_ACCEPT
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2879,7 +2879,7 @@ literal|"tcp6_usr_accept: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2964,7 +2964,7 @@ argument_list|(
 name|PRU_ACCEPT
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3077,7 +3077,7 @@ literal|"inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3137,7 +3137,7 @@ argument_list|(
 name|PRU_SHUTDOWN
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3211,7 +3211,7 @@ literal|"tcp_usr_rcvd: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3259,7 +3259,7 @@ argument_list|(
 name|PRU_RCVD
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3387,7 +3387,7 @@ literal|"tcp_usr_send: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3899,7 +3899,7 @@ name|PRU_SEND
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3975,7 +3975,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4073,7 +4073,7 @@ operator||=
 name|INP_SOCKREF
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4140,7 +4140,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4236,7 +4236,7 @@ operator||=
 name|INP_SOCKREF
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4310,7 +4310,7 @@ literal|"tcp_usr_rcvoob: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4455,7 +4455,7 @@ argument_list|(
 name|PRU_RCVOOB
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4733,7 +4733,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -5002,7 +5002,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -5288,7 +5288,7 @@ modifier|*
 name|ti
 parameter_list|)
 block|{
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -5479,11 +5479,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INP_LOCK_RECHECK
+name|INP_WLOCK_RECHECK
 parameter_list|(
 name|inp
 parameter_list|)
-value|do {					\ 	INP_LOCK(inp);							\ 	if (inp->inp_vflag& (INP_TIMEWAIT | INP_DROPPED)) {		\ 		INP_UNLOCK(inp);					\ 		return (ECONNRESET);					\ 	}								\ 	tp = intotcpcb(inp);						\ } while(0)
+value|do {					\ 	INP_WLOCK(inp);							\ 	if (inp->inp_vflag& (INP_TIMEWAIT | INP_DROPPED)) {		\ 		INP_WUNLOCK(inp);					\ 		return (ECONNRESET);					\ 	}								\ 	tp = intotcpcb(inp);						\ } while(0)
 end_define
 
 begin_function
@@ -5544,7 +5544,7 @@ literal|"tcp_ctloutput: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5571,7 +5571,7 @@ name|AF_INET6
 argument_list|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5591,7 +5591,7 @@ block|{
 endif|#
 directive|endif
 comment|/* INET6 */
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5630,7 +5630,7 @@ name|INP_DROPPED
 operator|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5664,7 +5664,7 @@ name|TCP_SIGNATURE
 case|case
 name|TCP_MD5SIG
 case|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5694,7 +5694,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|INP_LOCK_RECHECK
+name|INP_WLOCK_RECHECK
 argument_list|(
 name|inp
 argument_list|)
@@ -5719,7 +5719,7 @@ operator|&=
 operator|~
 name|TF_SIGNATURE
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5734,7 +5734,7 @@ case|:
 case|case
 name|TCP_NOOPT
 case|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5764,7 +5764,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|INP_LOCK_RECHECK
+name|INP_WLOCK_RECHECK
 argument_list|(
 name|inp
 argument_list|)
@@ -5818,7 +5818,7 @@ operator|&=
 operator|~
 name|opt
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5827,7 +5827,7 @@ break|break;
 case|case
 name|TCP_NOPUSH
 case|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5857,7 +5857,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|INP_LOCK_RECHECK
+name|INP_WLOCK_RECHECK
 argument_list|(
 name|inp
 argument_list|)
@@ -5889,7 +5889,7 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5898,7 +5898,7 @@ break|break;
 case|case
 name|TCP_MAXSEG
 case|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5928,7 +5928,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|INP_LOCK_RECHECK
+name|INP_WLOCK_RECHECK
 argument_list|(
 name|inp
 argument_list|)
@@ -5962,7 +5962,7 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5971,7 +5971,7 @@ break|break;
 case|case
 name|TCP_INFO
 case|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5982,7 +5982,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 default|default:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6031,7 +6031,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6063,7 +6063,7 @@ name|t_flags
 operator|&
 name|TF_NODELAY
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6091,7 +6091,7 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6121,7 +6121,7 @@ name|t_flags
 operator|&
 name|TF_NOOPT
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6151,7 +6151,7 @@ name|t_flags
 operator|&
 name|TF_NOPUSH
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6181,7 +6181,7 @@ operator|&
 name|ti
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6201,7 +6201,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6225,7 +6225,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|INP_LOCK_RECHECK
+name|INP_WLOCK_RECHECK
 end_undef
 
 begin_comment
@@ -6538,7 +6538,7 @@ name|t_state
 operator|=
 name|TCPS_CLOSED
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6596,7 +6596,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -6730,7 +6730,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->

@@ -2233,7 +2233,7 @@ goto|goto
 name|dropwithreset
 goto|;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2426,7 +2426,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|MAC
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -2780,7 +2780,7 @@ name|dropunlock
 goto|;
 block|}
 comment|/* 			 * Socket is created in state SYN_RECEIVED. 			 * Unlock the listen socket, lock the newly 			 * created socket and update the tp variable. 			 */
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2793,7 +2793,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3598,7 +3598,7 @@ name|inp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3740,7 +3740,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -5494,7 +5494,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -7570,7 +7570,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -8312,7 +8312,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -8695,7 +8695,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -9137,7 +9137,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -9170,7 +9170,7 @@ name|tcp_delacktime
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|tp
 operator|->
@@ -9303,7 +9303,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|tp
 operator|->
@@ -9348,7 +9348,7 @@ name|tp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|tp
 operator|->
@@ -9418,7 +9418,7 @@ name|tp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|tp
 operator|->
@@ -9497,7 +9497,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -10277,7 +10277,7 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -10390,7 +10390,7 @@ block|{
 name|int
 name|delta
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -10727,7 +10727,7 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -11791,7 +11791,7 @@ name|tp
 operator|->
 name|snd_cwnd
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->

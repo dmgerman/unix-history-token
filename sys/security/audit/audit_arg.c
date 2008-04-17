@@ -2603,7 +2603,7 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|pcb
 argument_list|)
@@ -2660,7 +2660,7 @@ name|pcb
 operator|->
 name|inp_lport
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|pcb
 argument_list|)

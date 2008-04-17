@@ -1537,7 +1537,7 @@ operator|*
 operator|)
 name|tcp_ptr
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -2051,7 +2051,7 @@ literal|"tcp control block w/o inpcb"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -2562,7 +2562,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Packet is associated with a socket, so allow the 		 * label of the response to reflect the socket label. 		 */
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -3225,7 +3225,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -3353,7 +3353,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -3717,7 +3717,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -3799,7 +3799,7 @@ operator|&=
 operator|~
 name|INP_SOCKREF
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3890,7 +3890,7 @@ operator|&
 name|INP_TIMEWAIT
 condition|)
 continue|continue;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inpb
 argument_list|)
@@ -3962,7 +3962,7 @@ name|tcpb
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inpb
 argument_list|)
@@ -4009,7 +4009,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -4461,7 +4461,7 @@ name|inp_list
 argument_list|)
 control|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4550,7 +4550,7 @@ operator|=
 name|inp
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4591,7 +4591,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4781,7 +4781,7 @@ name|inp
 operator|->
 name|inp_gencnt
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4801,7 +4801,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5034,7 +5034,7 @@ goto|goto
 name|outunlocked
 goto|;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5092,7 +5092,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5458,7 +5458,7 @@ goto|goto
 name|outunlocked
 goto|;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5516,7 +5516,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5869,7 +5869,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6082,7 +6082,7 @@ name|inp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6654,7 +6654,7 @@ decl_stmt|;
 name|tcp_seq
 name|new_isn
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -7048,7 +7048,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -7176,7 +7176,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -8283,7 +8283,7 @@ decl_stmt|;
 name|int
 name|save_ticks
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -9526,7 +9526,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -9562,7 +9562,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -9614,14 +9614,14 @@ name|tp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)

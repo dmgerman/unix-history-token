@@ -8009,7 +8009,7 @@ argument_list|,
 argument|inp_list
 argument_list|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|in6p
 argument_list|)
@@ -8029,7 +8029,7 @@ condition|)
 block|{
 name|docontinue
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|in6p
 argument_list|)
@@ -8356,7 +8356,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -8574,7 +8574,7 @@ operator|->
 name|in6p_socket
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|last
 argument_list|)

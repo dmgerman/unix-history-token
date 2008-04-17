@@ -678,7 +678,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->

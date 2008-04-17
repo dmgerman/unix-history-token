@@ -2759,7 +2759,7 @@ block|}
 block|}
 name|out_locked
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2808,7 +2808,7 @@ decl_stmt|;
 name|size_t
 name|idx
 decl_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2828,7 +2828,7 @@ operator|->
 name|inp_moptions
 operator|)
 return|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3002,7 +3002,7 @@ name|imo_mfilters
 operator|=
 name|imfp
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3306,7 +3306,7 @@ decl_stmt|;
 name|size_t
 name|idx
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -3330,7 +3330,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3405,7 +3405,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3450,7 +3450,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3578,7 +3578,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3698,7 +3698,7 @@ decl_stmt|;
 name|u_char
 name|coptval
 decl_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3745,7 +3745,7 @@ name|SOCK_DGRAM
 operator|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3788,7 +3788,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3903,7 +3903,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3984,7 +3984,7 @@ name|imo
 operator|->
 name|imo_multicast_ttl
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4056,7 +4056,7 @@ name|imo
 operator|->
 name|imo_multicast_loop
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4118,7 +4118,7 @@ name|error
 operator|=
 name|EADDRNOTAVAIL
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4138,7 +4138,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5158,7 +5158,7 @@ name|imo
 operator|->
 name|imo_num_memberships
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5177,7 +5177,7 @@ block|}
 block|}
 name|out_locked
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6015,7 +6015,7 @@ operator|--
 expr_stmt|;
 name|out_locked
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6310,7 +6310,7 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -6709,7 +6709,7 @@ decl_stmt|,
 name|j
 decl_stmt|;
 comment|/* 		 * Drop the inp lock so we may sleep if we need to 		 * in order to satisfy a malloc request. 		 * We will re-take it before changing socket state. 		 */
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -7116,7 +7116,7 @@ name|pkss
 operator|=
 name|kss
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -7198,7 +7198,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Update the filter mode on the socket before releasing the inpcb. 	 */
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -7213,7 +7213,7 @@ name|msfr_fmode
 expr_stmt|;
 name|out_locked
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -7385,7 +7385,7 @@ name|imo_multicast_vif
 operator|=
 name|vifi
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -7515,7 +7515,7 @@ name|imo_multicast_ttl
 operator|=
 name|ttl
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -7621,7 +7621,7 @@ operator|!
 operator|!
 name|loop
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)

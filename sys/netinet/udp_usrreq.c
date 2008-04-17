@@ -822,7 +822,7 @@ name|udp_in6
 decl_stmt|;
 endif|#
 directive|endif
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1849,7 +1849,7 @@ operator|->
 name|uh_sport
 condition|)
 continue|continue;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2057,7 +2057,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2114,7 +2114,7 @@ operator|&
 name|udp_in
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -2182,7 +2182,7 @@ operator|&
 name|udp_in
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -2366,7 +2366,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Check the minimum TTL for socket. 	 */
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2408,7 +2408,7 @@ operator|&
 name|udp_in
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2426,7 +2426,7 @@ if|if
 condition|(
 name|inp
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2466,6 +2466,11 @@ name|int
 name|errno
 parameter_list|)
 block|{
+name|INP_WLOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|inp
 operator|->
 name|inp_socket
@@ -2668,7 +2673,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2693,7 +2698,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2984,7 +2989,7 @@ name|inp_list
 argument_list|)
 control|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3020,7 +3025,7 @@ index|]
 operator|=
 name|inp
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3061,7 +3066,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3140,7 +3145,7 @@ name|inp
 operator|->
 name|inp_gencnt
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3160,7 +3165,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3878,7 +3883,7 @@ name|unlock_udbinfo
 operator|=
 literal|0
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4559,7 +4564,7 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4571,7 +4576,7 @@ operator|)
 return|;
 name|release
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4639,7 +4644,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4674,7 +4679,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4815,7 +4820,7 @@ name|inp_ip_ttl
 operator|=
 name|ip_defttl
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4881,7 +4886,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4899,7 +4904,7 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4958,7 +4963,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4993,7 +4998,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5065,7 +5070,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5081,7 +5086,7 @@ operator|!=
 name|INADDR_ANY
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5156,7 +5161,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5230,7 +5235,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5294,7 +5299,7 @@ operator|&
 name|udbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5310,15 +5315,15 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
+name|INP_WUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|udbinfo
-argument_list|)
-expr_stmt|;
-name|INP_UNLOCK
-argument_list|(
-name|inp
 argument_list|)
 expr_stmt|;
 return|return
@@ -5358,7 +5363,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5486,7 +5491,7 @@ literal|"udp_shutdown: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5496,7 +5501,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
