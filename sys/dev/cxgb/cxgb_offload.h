@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  $FreeBSD$  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2007-2008, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  $FreeBSD$  ***************************************************************************/
 end_comment
 
 begin_ifndef
@@ -33,16 +33,33 @@ directive|include
 file|<cxgb_config.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TOE_ENABLED
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<cxgb_l2t.h>
+file|<ulp/tom/cxgb_l2t.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
 file|<common/cxgb_tcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<t3cdev.h>
 end_include
 
 begin_else
@@ -62,11 +79,22 @@ directive|include
 file|<dev/cxgb/cxgb_config.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TOE_ENABLED
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_l2t.h>
+file|<dev/cxgb/ulp/tom/cxgb_l2t.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -74,10 +102,24 @@ directive|include
 file|<dev/cxgb/common/cxgb_tcb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/cxgb/t3cdev.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_CXGB
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct_decl
 struct_decl|struct
@@ -162,7 +204,7 @@ name|int
 name|cxgb_ofld_recv
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -183,7 +225,7 @@ name|void
 name|cxgb_set_dummy_ops
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|)
@@ -191,7 +233,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Client registration.  Users of T3 driver must register themselves.  * The T3 driver will call the add function of every client for each T3  * adapter activated, passing up the toedev ptr.  Each client fills out an  * array of callback functions to process CPL messages.  */
+comment|/*  * Client registration.  Users of T3 driver must register themselves.  * The T3 driver will call the add function of every client for each T3  * adapter activated, passing up the t3cdev ptr.  Each client fills out an  * array of callback functions to process CPL messages.  */
 end_comment
 
 begin_function_decl
@@ -223,7 +265,7 @@ name|void
 name|cxgb_add_clients
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 parameter_list|)
@@ -235,7 +277,7 @@ name|void
 name|cxgb_remove_clients
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|tdev
 parameter_list|)
@@ -251,7 +293,7 @@ name|cxgb_cpl_handler_func
 function_decl|)
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -266,6 +308,12 @@ name|ctx
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TOE_ENABLED
+end_ifdef
 
 begin_struct
 struct|struct
@@ -282,7 +330,7 @@ name|add
 function_decl|)
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 parameter_list|)
 function_decl|;
@@ -293,7 +341,7 @@ name|remove
 function_decl|)
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 parameter_list|)
 function_decl|;
@@ -346,7 +394,7 @@ name|int
 name|cxgb_alloc_atid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -367,7 +415,7 @@ name|int
 name|cxgb_alloc_stid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -383,13 +431,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 modifier|*
 name|cxgb_free_atid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -404,9 +457,25 @@ name|void
 name|cxgb_free_stid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
+parameter_list|,
+name|int
+name|stid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|cxgb_get_lctx
+parameter_list|(
+name|struct
+name|t3cdev
+modifier|*
+name|tdev
 parameter_list|,
 name|int
 name|stid
@@ -419,7 +488,7 @@ name|void
 name|cxgb_insert_tid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -444,7 +513,7 @@ name|void
 name|cxgb_queue_tid_release
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -460,7 +529,7 @@ name|void
 name|cxgb_remove_tid
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -566,7 +635,7 @@ name|cpl_handler_func
 function_decl|)
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -738,19 +807,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|toe_data
+name|t3c_data
 block|{
-ifdef|#
-directive|ifdef
-name|notyet
 name|struct
-name|list_head
-name|list_node
-decl_stmt|;
-endif|#
-directive|endif
-name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 decl_stmt|;
@@ -796,17 +856,17 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * toedev -> toe_data accessor  */
+comment|/*  * t3cdev -> toe_data accessor  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TOE_DATA
+name|T3C_DATA
 parameter_list|(
 name|dev
 parameter_list|)
-value|(*(struct toe_data **)&(dev)->l4opt)
+value|(*(struct t3c_data **)&(dev)->l4opt)
 end_define
 
 begin_comment
@@ -1079,6 +1139,15 @@ name|struct
 name|rtentry
 modifier|*
 name|rt
+parameter_list|,
+name|uint8_t
+modifier|*
+name|enaddr
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1096,6 +1165,11 @@ name|struct
 name|rtentry
 modifier|*
 name|new
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1105,7 +1179,7 @@ name|int
 name|process_rx
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|,
@@ -1123,10 +1197,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|attach_toedev
+name|attach_t3cdev
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|)
@@ -1135,15 +1209,23 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|detach_toedev
+name|detach_t3cdev
 parameter_list|(
 name|struct
-name|toedev
+name|t3cdev
 modifier|*
 name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|UNIMPLEMENTED
+parameter_list|()
+value|panic("IMPLEMENT: %s:%s:%d", __FUNCTION__, __FILE__, __LINE__)
+end_define
 
 begin_endif
 endif|#

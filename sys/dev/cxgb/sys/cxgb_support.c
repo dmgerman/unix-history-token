@@ -130,25 +130,6 @@ name|cxgb_use_16k_clusters
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_i386__
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|cxgb_pcpu_cache_enable
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|int
 name|cxgb_pcpu_cache_enable
@@ -156,11 +137,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct

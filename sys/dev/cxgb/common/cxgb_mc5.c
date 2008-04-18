@@ -1883,7 +1883,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	read_mc5_range - dump a part of the memory managed by MC5  *	@mc5: the MC5 handle  *	@start: the start address for the dump  *	@n: number of 72-bit words to read  *	@buf: result buffer  *  *	Read n 72-bit words from MC5 memory from the given start location.  */
+comment|/**  *	read_mc5_range - dump a part of the memory managed by MC5  *	@mc5: the MC5 handle  *	@start: the start address for the dump  *	@n: number of 72-bit words to read  *	@buf: result buffer  *  *	Read n 72-bit words from MC5 memory from the given start location.  */
 end_comment
 
 begin_function
@@ -2032,7 +2032,7 @@ value|(F_PARITYERR | F_REQQPARERR | F_DISPQPARERR)
 end_define
 
 begin_comment
-comment|/*  * MC5 interrupt handler  */
+comment|/**  *	t3_mc5_intr_handler - MC5 interrupt handler  *	@mc5: the MC5 handle  *  *	The MC5 interrupt handler.  */
 end_comment
 
 begin_function
@@ -2209,6 +2209,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  *	t3_mc5_prep - initialize the SW state for MC5  *	@adapter: the adapter  *	@mc5: the MC5 handle  *	@mode: whether the TCAM will be in 72- or 144-bit mode  *  *	Initialize the SW state associated with MC5.  Among other things  *	this determines the size of the attached TCAM.  */
+end_comment
 
 begin_function
 name|void

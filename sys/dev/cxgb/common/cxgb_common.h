@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  $FreeBSD$  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2007-2008, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  $FreeBSD$  ***************************************************************************/
 end_comment
 
 begin_ifndef
@@ -300,11 +300,11 @@ enum|enum
 block|{
 name|FW_VERSION_MAJOR
 init|=
-literal|4
+literal|5
 block|,
 name|FW_VERSION_MINOR
 init|=
-literal|7
+literal|0
 block|,
 name|FW_VERSION_MICRO
 init|=
@@ -561,7 +561,7 @@ begin_struct
 struct|struct
 name|port_type_info
 block|{
-name|void
+name|int
 function_decl|(
 modifier|*
 name|phy_prep
@@ -586,15 +586,6 @@ modifier|*
 name|ops
 parameter_list|)
 function_decl|;
-name|unsigned
-name|int
-name|caps
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|desc
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1850,18 +1841,6 @@ begin_struct
 struct|struct
 name|cphy_ops
 block|{
-name|void
-function_decl|(
-modifier|*
-name|destroy
-function_decl|)
-parameter_list|(
-name|struct
-name|cphy
-modifier|*
-name|phy
-parameter_list|)
-function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -2063,11 +2042,22 @@ name|int
 name|addr
 decl_stmt|;
 comment|/* PHY address */
+name|unsigned
+name|int
+name|caps
+decl_stmt|;
+comment|/* PHY capabilities */
 name|adapter_t
 modifier|*
 name|adapter
 decl_stmt|;
 comment|/* associated adapter */
+specifier|const
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+comment|/* PHY description */
 name|unsigned
 name|long
 name|fifo_errors
@@ -2260,6 +2250,15 @@ name|struct
 name|mdio_ops
 modifier|*
 name|mdio_ops
+parameter_list|,
+name|unsigned
+name|int
+name|caps
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|desc
 parameter_list|)
 block|{
 name|phy
@@ -2273,6 +2272,18 @@ operator|->
 name|addr
 operator|=
 name|phy_addr
+expr_stmt|;
+name|phy
+operator|->
+name|caps
+operator|=
+name|caps
+expr_stmt|;
+name|phy
+operator|->
+name|desc
+operator|=
+name|desc
 expr_stmt|;
 name|phy
 operator|->
@@ -3043,6 +3054,10 @@ parameter_list|(
 name|adapter_t
 modifier|*
 name|adapter
+parameter_list|,
+name|int
+modifier|*
+name|must_load
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3090,6 +3105,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|t3_load_boot
+parameter_list|(
+name|adapter_t
+modifier|*
+name|adapter
+parameter_list|,
+name|u8
+modifier|*
+name|boot_data
+parameter_list|,
+name|unsigned
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|t3_get_fw_version
 parameter_list|(
 name|adapter_t
@@ -3110,6 +3144,10 @@ parameter_list|(
 name|adapter_t
 modifier|*
 name|adapter
+parameter_list|,
+name|int
+modifier|*
+name|must_load
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3220,6 +3258,20 @@ name|ports
 parameter_list|,
 name|int
 name|on
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t3_tp_set_offload_mode
+parameter_list|(
+name|adapter_t
+modifier|*
+name|adap
+parameter_list|,
+name|int
+name|enable
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3650,11 +3702,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CONFIG_CHELSIO_T3_CORE
-end_ifdef
+argument_list|)
+end_if
 
 begin_function_decl
 name|int
@@ -3685,20 +3740,6 @@ parameter_list|,
 name|unsigned
 name|int
 name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t3_tp_set_offload_mode
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adap
-parameter_list|,
-name|int
-name|enable
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4435,6 +4476,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|t3_phy_advertise_fiber
+parameter_list|(
+name|struct
+name|cphy
+modifier|*
+name|phy
+parameter_list|,
+name|unsigned
+name|int
+name|advert
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|struct
 name|mac_stats
@@ -4450,7 +4507,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_mv88e1xxx_phy_prep
 parameter_list|(
 name|struct
@@ -4475,7 +4532,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_vsc8211_phy_prep
 parameter_list|(
 name|struct
@@ -4500,7 +4557,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_ael1002_phy_prep
 parameter_list|(
 name|struct
@@ -4525,7 +4582,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_ael1006_phy_prep
 parameter_list|(
 name|struct
@@ -4550,7 +4607,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_qt2045_phy_prep
 parameter_list|(
 name|struct
@@ -4575,7 +4632,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|t3_xaui_direct_phy_prep
 parameter_list|(
 name|struct

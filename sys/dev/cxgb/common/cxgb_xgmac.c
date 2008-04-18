@@ -252,6 +252,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  *	t3b_pcs_reset - reset the PCS on T3B+ adapters  *	@mac: the XGMAC handle  *  *	Reset the XGMAC PCS block on T3B+ adapters.  */
+end_comment
+
 begin_function
 name|void
 name|t3b_pcs_reset
@@ -303,6 +307,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  *	t3_mac_reset - reset a MAC  *	@mac: the MAC to reset  *  *	Reset the given MAC.  */
+end_comment
 
 begin_function
 name|int
@@ -493,6 +501,19 @@ else|:
 name|F_RXSTRFRWRD
 argument_list|)
 expr_stmt|;
+name|t3_set_reg_field
+argument_list|(
+name|adap
+argument_list|,
+name|A_XGM_TXFIFO_CFG
+operator|+
+name|oft
+argument_list|,
+literal|0
+argument_list|,
+name|F_UNDERUNFIX
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uses_xaui
@@ -675,9 +696,32 @@ name|F_RXEN
 argument_list|)
 expr_stmt|;
 block|}
+name|t3_set_reg_field
+argument_list|(
+name|adap
+argument_list|,
+name|A_XGM_RX_MAX_PKT_SIZE
+operator|+
+name|oft
+argument_list|,
+name|V_RXMAXFRAMERSIZE
+argument_list|(
+name|M_RXMAXFRAMERSIZE
+argument_list|)
+argument_list|,
+name|V_RXMAXFRAMERSIZE
+argument_list|(
+name|MAX_FRAME_SIZE
+argument_list|)
+operator||
+name|F_RXENFRAMER
+argument_list|)
+expr_stmt|;
 name|val
 operator|=
 name|F_MAC_RESET_
+operator||
+name|F_XGMAC_STOP_EN
 expr_stmt|;
 if|if
 condition|(
@@ -1206,7 +1250,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set one of the station's unicast MAC addresses. */
+comment|/**  *	t3_mac_set_address - set one of the station's unicast MAC addresses  *	@mac: the MAC handle  *	@idx: index of the exact address match filter to use  *	@addr: the Ethernet address  *  *	Set one of the station's unicast MAC addresses.  */
 end_comment
 
 begin_function
@@ -1306,7 +1350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Specify the number of exact address filters that should be reserved for  * unicast addresses.  Caller should reload the unicast and multicast addresses  * after calling this.  */
+comment|/**  *	t3_mac_set_num_ucast - set the number of unicast addresses needed  *	@mac: the MAC handle  *	@n: number of unicast addresses needed  *  *	Specify the number of exact address filters that should be reserved for  *	unicast addresses.  Caller should reload the unicast and multicast  *	addresses after calling this.  */
 end_comment
 
 begin_function
@@ -1597,6 +1641,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  *	t3_mac_set_rx_mode - set the Rx mode and address filters  *	@mac: the MAC to configure  *	@rm: structure containing the Rx mode and MAC addresses needed  *  *	Configures the MAC Rx mode (promiscuity, etc) and exact and hash  *	address filters.  */
+end_comment
+
 begin_function
 name|int
 name|t3_mac_set_rx_mode
@@ -1857,6 +1905,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  *	t3_mac_set_mtu - set the MAC MTU  *	@mac: the MAC to configure  *	@mtu: the MTU  *  *	Sets the MAC MTU and adjusts the FIFO PAUSE watermarks accordingly.  */
+end_comment
+
 begin_function
 name|int
 name|t3_mac_set_mtu
@@ -1875,12 +1927,19 @@ name|int
 name|hwm
 decl_stmt|,
 name|lwm
+decl_stmt|,
+name|divisor
+decl_stmt|;
+name|int
+name|ipg
 decl_stmt|;
 name|unsigned
 name|int
 name|thres
 decl_stmt|,
 name|v
+decl_stmt|,
+name|reg
 decl_stmt|;
 name|adapter_t
 modifier|*
@@ -1945,7 +2004,7 @@ operator|->
 name|params
 operator|.
 name|rev
-operator|==
+operator|>=
 name|T3_REV_B2
 operator|&&
 operator|(
@@ -1999,22 +2058,34 @@ argument_list|,
 name|F_DISBCAST
 argument_list|)
 expr_stmt|;
-comment|/* drain rx FIFO */
+name|reg
+operator|=
+name|adap
+operator|->
+name|params
+operator|.
+name|rev
+operator|==
+name|T3_REV_B2
+condition|?
+name|A_XGM_RX_MAX_PKT_SIZE_ERR_CNT
+else|:
+name|A_XGM_RXFIFO_CFG
+expr_stmt|;
+comment|/* drain RX FIFO */
 if|if
 condition|(
 name|t3_wait_op_done
 argument_list|(
 name|adap
 argument_list|,
-name|A_XGM_RX_MAX_PKT_SIZE_ERR_CNT
+name|reg
 operator|+
 name|mac
 operator|->
 name|offset
 argument_list|,
-literal|1
-operator|<<
-literal|31
+name|F_RXFIFO_EMPTY
 argument_list|,
 literal|1
 argument_list|,
@@ -2047,7 +2118,7 @@ operator|-
 name|EIO
 return|;
 block|}
-name|t3_write_reg
+name|t3_set_reg_field
 argument_list|(
 name|adap
 argument_list|,
@@ -2057,7 +2128,15 @@ name|mac
 operator|->
 name|offset
 argument_list|,
+name|V_RXMAXPKTSIZE
+argument_list|(
+name|M_RXMAXPKTSIZE
+argument_list|)
+argument_list|,
+name|V_RXMAXPKTSIZE
+argument_list|(
 name|mtu
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t3_write_reg
@@ -2080,7 +2159,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|t3_write_reg
+name|t3_set_reg_field
 argument_list|(
 name|adap
 argument_list|,
@@ -2090,7 +2169,15 @@ name|mac
 operator|->
 name|offset
 argument_list|,
+name|V_RXMAXPKTSIZE
+argument_list|(
+name|M_RXMAXPKTSIZE
+argument_list|)
+argument_list|,
+name|V_RXMAXPKTSIZE
+argument_list|(
 name|mtu
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Adjust the PAUSE frame watermarks.  We always set the LWM, and the 	 * HWM only if flow-control is enabled. 	 */
@@ -2252,6 +2339,22 @@ literal|8U
 argument_list|)
 expr_stmt|;
 comment|/* need at least 8 */
+name|ipg
+operator|=
+operator|(
+name|adap
+operator|->
+name|params
+operator|.
+name|rev
+operator|==
+name|T3_REV_C
+operator|)
+condition|?
+literal|0
+else|:
+literal|1
+expr_stmt|;
 name|t3_set_reg_field
 argument_list|(
 name|adap
@@ -2279,7 +2382,7 @@ argument_list|)
 operator||
 name|V_TXIPG
 argument_list|(
-literal|1
+name|ipg
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2294,6 +2397,23 @@ name|rev
 operator|>
 literal|0
 condition|)
+block|{
+name|divisor
+operator|=
+operator|(
+name|adap
+operator|->
+name|params
+operator|.
+name|rev
+operator|==
+name|T3_REV_C
+operator|)
+condition|?
+literal|64
+else|:
+literal|8
+expr_stmt|;
 name|t3_write_reg
 argument_list|(
 name|adap
@@ -2312,9 +2432,10 @@ operator|)
 operator|*
 literal|4
 operator|/
-literal|8
+name|divisor
 argument_list|)
 expr_stmt|;
+block|}
 name|t3_write_reg
 argument_list|(
 name|adap
@@ -2339,6 +2460,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  *	t3_mac_set_speed_duplex_fc - set MAC speed, duplex and flow control  *	@mac: the MAC to configure  *	@speed: the desired speed (10/100/1000/10000)  *	@duplex: the desired duplex  *	@fc: desired Tx/Rx PAUSE configuration  *  *	Set the MAC speed, duplex (actually only full-duplex is supported), and  *	flow control.  If a parameter value is negative the corresponding  *	MAC setting is left at its current value.  */
+end_comment
 
 begin_function
 name|int
@@ -2642,6 +2767,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  *	t3_mac_enable - enable the MAC in the given directions  *	@mac: the MAC to configure  *	@which: bitmap indicating which directions to enable  *  *	Enables the MAC for operation in the given directions.  *	%MAC_DIRECTION_TX enables the Tx direction, and %MAC_DIRECTION_RX  *	enables the Rx one.  */
+end_comment
+
 begin_function
 name|int
 name|t3_mac_enable
@@ -2731,6 +2860,16 @@ name|adap
 argument_list|,
 name|A_TP_PIO_DATA
 argument_list|,
+name|adap
+operator|->
+name|params
+operator|.
+name|rev
+operator|==
+name|T3_REV_C
+condition|?
+literal|0xc4ffff01
+else|:
 literal|0xc0ede401
 argument_list|)
 expr_stmt|;
@@ -2753,6 +2892,16 @@ literal|1
 operator|<<
 name|idx
 argument_list|,
+name|adap
+operator|->
+name|params
+operator|.
+name|rev
+operator|==
+name|T3_REV_C
+condition|?
+literal|0
+else|:
 literal|1
 operator|<<
 name|idx
@@ -2899,6 +3048,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  *	t3_mac_disable - disable the MAC in the given directions  *	@mac: the MAC to configure  *	@which: bitmap indicating which directions to disable  *  *	Disables the MAC in the given directions.  *	%MAC_DIRECTION_TX disables the Tx direction, and %MAC_DIRECTION_RX  *	disables the Rx one.  */
+end_comment
 
 begin_function
 name|int
@@ -3575,7 +3728,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is called periodically to accumulate the current values of the  * RMON counters into the port statistics.  Since the packet counters are only  * 32 bits they can overflow in ~286 secs at 10G, so the function should be  * called more frequently than that.  The byte counters are 45-bit wide, they  * would overflow in ~7.8 hours.  */
+comment|/**  *	t3_mac_update_stats - accumulate MAC statistics  *	@mac: the MAC handle  *  *	This function is called periodically to accumulate the current values  *	of the RMON counters into the port statistics.  Since the packet  *	counters are only 32 bits they can overflow in ~286 secs at 10G, so the  *	function should be called more frequently than that.  The byte counters  *	are 45-bit wide, they would overflow in ~7.8 hours.  */
 end_comment
 
 begin_function

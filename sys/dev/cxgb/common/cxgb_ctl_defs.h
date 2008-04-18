@@ -346,13 +346,12 @@ name|udbell_physbase
 decl_stmt|;
 comment|/* user doorbell physical start addr */
 name|void
-specifier|volatile
 modifier|*
 name|kdb_addr
 decl_stmt|;
 comment|/* kernel doorbell register address */
 name|struct
-name|pci_dev
+name|device
 modifier|*
 name|pdev
 decl_stmt|;

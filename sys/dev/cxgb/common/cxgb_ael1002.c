@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2007-2008, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_include
@@ -44,6 +44,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|msleep
+end_undef
+
+begin_define
+define|#
+directive|define
+name|msleep
+value|t3_os_sleep
+end_define
 
 begin_enum
 enum|enum
@@ -107,7 +120,7 @@ name|F_GPIO7_OUT_VAL
 else|:
 name|F_GPIO2_OUT_VAL
 decl_stmt|;
-name|t3_os_sleep
+name|msleep
 argument_list|(
 literal|100
 argument_list|)
@@ -125,7 +138,7 @@ argument_list|,
 name|tx_on_gpio
 argument_list|)
 expr_stmt|;
-name|t3_os_sleep
+name|msleep
 argument_list|(
 literal|30
 argument_list|)
@@ -464,8 +477,6 @@ name|cphy_ops
 name|ael1002_ops
 init|=
 block|{
-name|NULL
-block|,
 name|ael1002_reset
 block|,
 name|ael1002_intr_noop
@@ -549,7 +560,7 @@ directive|endif
 end_endif
 
 begin_function
-name|void
+name|int
 name|t3_ael1002_phy_prep
 parameter_list|(
 name|struct
@@ -583,6 +594,14 @@ operator|&
 name|ael1002_ops
 argument_list|,
 name|mdio_ops
+argument_list|,
+name|SUPPORTED_10000baseT_Full
+operator||
+name|SUPPORTED_AUI
+operator||
+name|SUPPORTED_FIBRE
+argument_list|,
+literal|"10GBASE-R"
 argument_list|)
 expr_stmt|;
 name|ael100x_txon
@@ -590,6 +609,9 @@ argument_list|(
 name|phy
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -801,8 +823,6 @@ name|cphy_ops
 name|ael1006_ops
 init|=
 block|{
-name|NULL
-block|,
 name|ael1006_reset
 block|,
 name|ael1006_intr_enable
@@ -886,7 +906,7 @@ directive|endif
 end_endif
 
 begin_function
-name|void
+name|int
 name|t3_ael1006_phy_prep
 parameter_list|(
 name|struct
@@ -920,6 +940,14 @@ operator|&
 name|ael1006_ops
 argument_list|,
 name|mdio_ops
+argument_list|,
+name|SUPPORTED_10000baseT_Full
+operator||
+name|SUPPORTED_AUI
+operator||
+name|SUPPORTED_FIBRE
+argument_list|,
+literal|"10GBASE-SR"
 argument_list|)
 expr_stmt|;
 name|ael100x_txon
@@ -927,6 +955,9 @@ argument_list|(
 name|phy
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -943,8 +974,6 @@ name|cphy_ops
 name|qt2045_ops
 init|=
 block|{
-name|NULL
-block|,
 name|ael1006_reset
 block|,
 name|ael1006_intr_enable
@@ -1028,7 +1057,7 @@ directive|endif
 end_endif
 
 begin_function
-name|void
+name|int
 name|t3_qt2045_phy_prep
 parameter_list|(
 name|struct
@@ -1066,6 +1095,14 @@ operator|&
 name|qt2045_ops
 argument_list|,
 name|mdio_ops
+argument_list|,
+name|SUPPORTED_10000baseT_Full
+operator||
+name|SUPPORTED_AUI
+operator||
+name|SUPPORTED_TP
+argument_list|,
+literal|"10GBASE-CX4"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Some cards where the PHY is supposed to be at address 0 actually 	 * have it at 1. 	 */
@@ -1097,6 +1134,9 @@ name|addr
 operator|=
 literal|1
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1290,8 +1330,6 @@ name|cphy_ops
 name|xaui_direct_ops
 init|=
 block|{
-name|NULL
-block|,
 name|xaui_direct_reset
 block|,
 name|ael1002_intr_noop
@@ -1375,7 +1413,7 @@ directive|endif
 end_endif
 
 begin_function
-name|void
+name|int
 name|t3_xaui_direct_phy_prep
 parameter_list|(
 name|struct
@@ -1409,8 +1447,19 @@ operator|&
 name|xaui_direct_ops
 argument_list|,
 name|mdio_ops
+argument_list|,
+name|SUPPORTED_10000baseT_Full
+operator||
+name|SUPPORTED_AUI
+operator||
+name|SUPPORTED_TP
+argument_list|,
+literal|"10GBASE-CX4"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

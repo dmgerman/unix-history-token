@@ -15,12 +15,6 @@ directive|define
 name|_CXGB_TOEDEV_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<netinet/toedev.h>
-end_include
-
 begin_comment
 comment|/* offload type ids */
 end_comment

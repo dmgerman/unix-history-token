@@ -250,6 +250,20 @@ name|FW_MNGTOPCODE_PKTSCHED_SET
 value|0x00
 end_define
 
+begin_define
+define|#
+directive|define
+name|FW_MNGTOPCODE_WRC_SET
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_MNGTOPCODE_TUNNEL_CR_FLUSH
+value|0x02
+end_define
+
 begin_comment
 comment|/* Maximum size of a WR sent from the host, limited by the SGE.   *  * Note: WR coming from ULP or TP are only limited by CIM.   */
 end_comment
