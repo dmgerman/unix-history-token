@@ -3708,11 +3708,6 @@ index|]
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|unit
-init|=
-operator|-
-literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -3762,6 +3757,12 @@ operator|)
 operator|)
 condition|)
 block|{
+name|int
+name|unit
+init|=
+operator|-
+literal|1
+decl_stmt|;
 if|if
 condition|(
 operator|!
