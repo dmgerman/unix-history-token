@@ -1909,6 +1909,9 @@ name|unsigned
 name|short
 name|macaddr_hi
 decl_stmt|;
+name|uint32_t
+name|macaddr_mid
+decl_stmt|;
 name|int
 name|unit
 decl_stmt|,
@@ -2048,6 +2051,13 @@ argument_list|(
 literal|0x00bd
 argument_list|)
 expr_stmt|;
+name|macaddr_mid
+operator|=
+operator|(
+name|uint32_t
+operator|)
+name|ticks
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
@@ -2064,7 +2074,7 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
-name|ticks
+name|macaddr_mid
 argument_list|,
 operator|&
 name|eaddr
@@ -2074,7 +2084,7 @@ index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
