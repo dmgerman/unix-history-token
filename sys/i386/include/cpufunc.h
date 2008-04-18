@@ -325,6 +325,61 @@ asm|__asm __volatile("sti");
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|cpu_monitor
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|int
+name|extensions
+parameter_list|,
+name|int
+name|hints
+parameter_list|)
+block|{
+asm|__asm __volatile("monitor;"
+block|: :
+literal|"a"
+operator|(
+name|addr
+operator|)
+operator|,
+literal|"c"
+operator|(
+name|extensions
+operator|)
+operator|,
+literal|"d"
+operator|(
+name|hints
+operator|)
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+specifier|inline
+name|void
+name|cpu_mwait
+parameter_list|(
+name|int
+name|extensions
+parameter_list|,
+name|int
+name|hints
+parameter_list|)
+block|{
+asm|__asm __volatile("mwait;" : :"a" (hints), "c" (extensions));
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
