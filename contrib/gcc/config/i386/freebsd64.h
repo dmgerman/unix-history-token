@@ -60,5 +60,18 @@ name|LINK_SPEC
 value|"\   %{m32:-m elf_i386_fbsd} \   %{Wl,*:%*} \   %{v:-V} \   %{assert*} %{R*} %{rpath*} %{defsym*} \   %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \         %{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \     %{static:-Bstatic}} \   %{symbolic:-Bsymbolic}"
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|MCOUNT_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|MCOUNT_NAME
+value|".mcount"
+end_define
+
 end_unit
 
