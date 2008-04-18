@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<_bzlib.h>
+file|<bzlib.h>
 end_include
 
 begin_define
