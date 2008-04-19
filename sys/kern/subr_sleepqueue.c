@@ -1636,7 +1636,12 @@ name|ps_mtx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Lock sleepq chain before unlocking proc 	 * without this, we could lose a race. 	 */
+comment|/* 	 * Lock the per-process spinlock prior to dropping the PROC_LOCK 	 * to avoid a signal delivery race.  PROC_LOCK, PROC_SLOCK, and 	 * thread_lock() are currently held in tdsignal(). 	 */
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1653,6 +1658,11 @@ expr_stmt|;
 name|thread_lock
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|PROC_SUNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
