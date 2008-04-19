@@ -200,7 +200,7 @@ name|GET_NUMBER
 parameter_list|(
 name|VAR
 parameter_list|)
-value|do {					\ 	VAR = 0;						\ 	while (isdigit((unsigned char)*fmt)) {			\ 		VAR *= 10;					\ 		VAR += *fmt - '0';				\ 		fmt++;						\ 	}							\ } while (0)
+value|do {					\ 	VAR = 0;						\ 	while (isdigit((unsigned char)*fmt)) {			\ 		VAR *= 10;					\ 		VAR += *fmt - '0';				\ 		if (VAR< 0)					\ 			goto e2big_error;			\ 		fmt++;						\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -626,13 +626,19 @@ expr_stmt|;
 comment|/* Do we have enough space to put number with 			 * required width ? 			 */
 if|if
 condition|(
-name|dst
-operator|+
+operator|(
+name|unsigned
+name|int
+operator|)
 name|width
 operator|>=
-name|s
-operator|+
 name|maxsize
+operator|-
+operator|(
+name|dst
+operator|-
+name|s
+operator|)
 condition|)
 goto|goto
 name|e2big_error
@@ -669,6 +675,25 @@ argument_list|(
 name|left_prec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
+name|left_prec
+operator|>=
+name|maxsize
+operator|-
+operator|(
+name|dst
+operator|-
+name|s
+operator|)
+condition|)
+goto|goto
+name|e2big_error
+goto|;
 block|}
 comment|/* Right precision */
 if|if
@@ -701,6 +726,27 @@ argument_list|(
 name|right_prec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
+name|right_prec
+operator|>=
+name|maxsize
+operator|-
+operator|(
+name|dst
+operator|-
+name|s
+operator|)
+operator|-
+name|left_prec
+condition|)
+goto|goto
+name|e2big_error
+goto|;
 block|}
 comment|/* Conversion Characters */
 switch|switch
