@@ -139,18 +139,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_PMAP
-argument_list|,
-literal|"PMAP"
-argument_list|,
-literal|"PMAP Structures"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef

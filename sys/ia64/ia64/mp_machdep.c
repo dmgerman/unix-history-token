@@ -204,9 +204,13 @@ file|<i386/include/specialreg.h>
 end_include
 
 begin_expr_stmt
-name|MALLOC_DECLARE
+name|MALLOC_DEFINE
 argument_list|(
-name|M_PMAP
+name|M_SMP
+argument_list|,
+literal|"SMP"
+argument_list|,
+literal|"SMP related allocations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -718,7 +722,7 @@ operator|*
 name|pc
 argument_list|)
 argument_list|,
-name|M_PMAP
+name|M_SMP
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -904,7 +908,7 @@ name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
 argument_list|,
-name|M_PMAP
+name|M_SMP
 argument_list|,
 name|M_WAITOK
 argument_list|)
