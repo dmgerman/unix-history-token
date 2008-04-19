@@ -481,7 +481,7 @@ name|inp
 operator|!=
 name|NULL
 condition|)
-name|INP_WLOCK_ASSERT
+name|INP_LOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
