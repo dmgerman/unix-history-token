@@ -2162,7 +2162,7 @@ literal|"in6_getsockaddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2179,7 +2179,7 @@ name|inp
 operator|->
 name|in6p_laddr
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2247,7 +2247,7 @@ literal|"in6_getpeeraddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2264,7 +2264,7 @@ name|inp
 operator|->
 name|in6p_faddr
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
