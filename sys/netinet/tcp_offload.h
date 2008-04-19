@@ -240,6 +240,16 @@ value|((tp)->t_flags& TF_TOE)
 end_define
 
 begin_comment
+comment|/*  * hackish way of allowing this file to also be included by TOE  * which needs to be kept ignorant of socket implementation details  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_SOCKETVAR_H_
+end_ifdef
+
+begin_comment
 comment|/*  * The socket has not been marked as "do not offload"  */
 end_comment
 
@@ -617,13 +627,22 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|tp_offload
+name|SO_OFFLOADABLE
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_SOCKETVAR_H_ */
+end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|SO_OFFLOADABLE
+name|tp_offload
 end_undef
 
 begin_endif

@@ -188,12 +188,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_l2t.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/cxgb/cxgb_offload.h>
 end_include
 

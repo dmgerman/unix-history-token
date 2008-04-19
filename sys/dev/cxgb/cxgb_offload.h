@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cxgb_l2t.h>
+file|<ulp/tom/cxgb_l2t.h>
 end_include
 
 begin_include
@@ -71,7 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_l2t.h>
+file|<dev/cxgb/ulp/tom/cxgb_l2t.h>
 end_include
 
 begin_include

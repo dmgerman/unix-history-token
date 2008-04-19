@@ -212,12 +212,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_l2t.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/cxgb/ulp/toecore/cxgb_toedev.h>
 end_include
 
