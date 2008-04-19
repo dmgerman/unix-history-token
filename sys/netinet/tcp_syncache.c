@@ -6508,6 +6508,17 @@ modifier|*
 name|toepcb
 parameter_list|)
 block|{
+name|INP_INFO_WLOCK
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
+name|INP_WLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|_syncache_add
 argument_list|(
 name|inc
