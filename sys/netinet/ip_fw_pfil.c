@@ -2409,6 +2409,8 @@ argument_list|,
 name|SI_SUB_PROTO_IFATTACHDOMAIN
 argument_list|,
 name|SI_ORDER_ANY
+operator|-
+literal|256
 argument_list|)
 expr_stmt|;
 end_expr_stmt
