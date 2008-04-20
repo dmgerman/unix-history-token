@@ -1257,7 +1257,7 @@ name|sdl
 operator|->
 name|sdl_data
 argument_list|,
-literal|"ndis"
+literal|"wlan"
 argument_list|,
 name|sdl
 operator|->
@@ -1393,7 +1393,7 @@ name|sdl
 operator|->
 name|sdl_data
 argument_list|,
-literal|"ndis"
+literal|"wlan"
 argument_list|,
 name|sdl
 operator|->
