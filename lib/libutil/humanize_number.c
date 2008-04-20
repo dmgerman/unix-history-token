@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: humanize_number.c,v 1.8 2004/07/27 01:56:24 enami Exp $	*/
+comment|/*	$NetBSD: humanize_number.c,v 1.13 2007/12/14 17:26:19 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
 end_include
 
 begin_include
@@ -371,6 +377,7 @@ name|max
 operator|*=
 literal|10
 expr_stmt|;
+comment|/* 		 * Divide the number until it fits the given column. 		 * If there will be an overflow by the rounding below, 		 * divide once more. 		 */
 for|for
 control|(
 name|i
@@ -380,6 +387,8 @@ init|;
 name|bytes
 operator|>=
 name|max
+operator|-
+literal|50
 operator|&&
 name|i
 operator|<
@@ -525,14 +534,10 @@ name|buf
 argument_list|,
 name|len
 argument_list|,
-literal|"%lld%s%s%s"
+literal|"%"
+name|PRId64
+literal|"%s%s%s"
 argument_list|,
-comment|/* LONGLONG */
-call|(
-name|long
-name|long
-call|)
-argument_list|(
 name|sign
 operator|*
 operator|(
@@ -544,7 +549,6 @@ operator|)
 operator|/
 literal|100
 operator|)
-argument_list|)
 argument_list|,
 name|sep
 argument_list|,
