@@ -8901,7 +8901,7 @@ comment|/* XXX: revisit */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (inp_arg != NULL) { 		INP_WLOCK_ASSERT(inp_arg); 		if (inp_arg->inp_socket) { 			pd->lookup.uid = inp_arg->inp_socket->so_cred->cr_uid; 			pd->lookup.gid = 			    inp_arg->inp_socket->so_cred->cr_groups[
+argument|if (inp_arg != NULL) { 		INP_LOCK_ASSERT(inp_arg); 		if (inp_arg->inp_socket) { 			pd->lookup.uid = inp_arg->inp_socket->so_cred->cr_uid; 			pd->lookup.gid = 			    inp_arg->inp_socket->so_cred->cr_groups[
 literal|0
 argument|]; 			return (
 literal|1
@@ -8995,11 +8995,11 @@ argument|); 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|INP_WLOCK(inp); 	if ((inp->inp_socket == NULL) || (inp->inp_socket->so_cred == NULL)) { 		INP_WUNLOCK(inp); 		INP_INFO_RUNLOCK(pi); 		return (-
+argument|INP_RLOCK(inp); 	INP_INFO_RUNLOCK(pi); 	if ((inp->inp_socket == NULL) || (inp->inp_socket->so_cred == NULL)) { 		INP_RUNLOCK(inp); 		return (-
 literal|1
 argument|); 	} 	pd->lookup.uid = inp->inp_socket->so_cred->cr_uid; 	pd->lookup.gid = inp->inp_socket->so_cred->cr_groups[
 literal|0
-argument|]; 	INP_WUNLOCK(inp); 	INP_INFO_RUNLOCK(pi);
+argument|]; 	INP_RUNLOCK(inp);
 else|#
 directive|else
 argument|pd->lookup.uid = inp->inp_socket->so_euid; 	pd->lookup.gid = inp->inp_socket->so_egid; 	pd->lookup.pid = inp->inp_socket->so_cpid;
