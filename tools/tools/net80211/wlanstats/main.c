@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002-2007 Sam Leffler, Errno Consulting  * All righ
 end_comment
 
 begin_comment
-comment|/*  * wlanstats [-i interface]  * (default interface is ath0).  */
+comment|/*  * wlanstats [-i interface]  * (default interface is wlan0).  */
 end_comment
 
 begin_include
@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -53,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
 end_include
 
 begin_include
@@ -178,7 +190,7 @@ name|wf
 operator|=
 name|wlanstats_new
 argument_list|(
-literal|"ath0"
+literal|"wlan0"
 argument_list|,
 name|S_DEFAULT
 argument_list|)
