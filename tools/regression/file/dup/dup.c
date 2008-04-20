@@ -4,7 +4,7 @@ comment|/*  * $OpenBSD: dup2test.c,v 1.3 2003/07/31 21:48:08 deraadt Exp $  * $O
 end_comment
 
 begin_comment
-comment|/*  * Test #1:  check if dup(2) works.  * Test #2:  check if dup2(2) works.  * Test #3:  check if dup2(2) returned a fd we asked for.  * Test #4:  check if dup2(2) cleared close-on-exec flag for duped fd.  * Test #5:  check if dup2(2) allows to dup fd to itself.  * Test #6:  check if dup2(2) returned a fd we asked for.  * Test #7:  check if dup2(2) did not clear close-on-exec flag for duped fd.  * Test #8:  check if fcntl(F_DUPFD) works.  * Test #9:  check if fcntl(F_DUPFD) cleared close-on-exec flag for duped fd.  * Test #10: check if dup2() to a fd> current maximum number of open files  *           limit work.  */
+comment|/*  * Test #1:  check if dup(2) works.  * Test #2:  check if dup2(2) works.  * Test #3:  check if dup2(2) returned a fd we asked for.  * Test #4:  check if dup2(2) cleared close-on-exec flag for duped fd.  * Test #5:  check if dup2(2) allows to dup fd to itself.  * Test #6:  check if dup2(2) returned a fd we asked for.  * Test #7:  check if dup2(2) did not clear close-on-exec flag for duped fd.  * Test #8:  check if fcntl(F_DUPFD) works.  * Test #9:  check if fcntl(F_DUPFD) cleared close-on-exec flag for duped fd.  * Test #10: check if dup2() to a fd> current maximum number of open files  *           limit work.  * Test #11: check if fcntl(F_DUP2FD) works.  * Test #12: check if fcntl(F_DUP2FD) returned a fd we asked for.  * Test #13: check if fcntl(F_DUP2FD) cleared close-on-exec flag for duped fd.  * Test #14: check if fcntl(F_DUP2FD) allows to dup fd to itself.  * Test #15: check if fcntl(F_DUP2FD) returned a fd we asked for.  * Test #16: check if fcntl(F_DUP2FD) did not clear close-on-exec flag for  *           duped fd.  * Test #17: check if fcntl(F_DUP2FD) to a fd> current maximum number of open  *           files limit work.  */
 end_comment
 
 begin_include
@@ -170,7 +170,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"1..10\n"
+literal|"1..17\n"
 argument_list|)
 expr_stmt|;
 comment|/* If dup(2) ever work? */
@@ -498,7 +498,7 @@ operator|+
 literal|1
 argument_list|)
 operator|)
-operator|==
+operator|>=
 literal|0
 condition|)
 name|printf
@@ -512,6 +512,244 @@ else|else
 name|printf
 argument_list|(
 literal|"ok %d - dup2(2) didn't bypass NOFILE limit\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+comment|/* If fcntl(F_DUP2FD) ever work? */
+if|if
+condition|(
+operator|(
+name|fd2
+operator|=
+name|fcntl
+argument_list|(
+name|fd1
+argument_list|,
+name|F_DUP2FD
+argument_list|,
+name|fd1
+operator|+
+literal|1
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"fcntl(F_DUP2FD)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok %d - fcntl(F_DUP2FD) works\n"
+argument_list|,
+operator|++
+name|test
+argument_list|)
+expr_stmt|;
+comment|/* Do we get the right fd? */
+operator|++
+name|test
+expr_stmt|;
+if|if
+condition|(
+name|fd2
+operator|!=
+name|fd1
+operator|+
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"no ok %d - fcntl(F_DUP2FD) didn't give us the right fd\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d - fcntl(F_DUP2FD) returned a correct fd\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+comment|/* Was close-on-exec cleared? */
+operator|++
+name|test
+expr_stmt|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|fd2
+argument_list|,
+name|F_GETFD
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"not ok %d - fcntl(F_DUP2FD) didn't clear close-on-exec\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d - fcntl(F_DUP2FD) cleared close-on-exec\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+comment|/* Dup to itself */
+if|if
+condition|(
+operator|(
+name|fd2
+operator|=
+name|fcntl
+argument_list|(
+name|fd1
+argument_list|,
+name|F_DUP2FD
+argument_list|,
+name|fd1
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"fcntl(F_DUP2FD)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok %d - fcntl(F_DUP2FD) to itself works\n"
+argument_list|,
+operator|++
+name|test
+argument_list|)
+expr_stmt|;
+comment|/* Do we get the right fd? */
+operator|++
+name|test
+expr_stmt|;
+if|if
+condition|(
+name|fd2
+operator|!=
+name|fd1
+condition|)
+name|printf
+argument_list|(
+literal|"not ok %d - fcntl(F_DUP2FD) didn't give us the right fd\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d - fcntl(F_DUP2FD) to itself returned a correct fd\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+comment|/* Was close-on-exec cleared? */
+operator|++
+name|test
+expr_stmt|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|fd2
+argument_list|,
+name|F_GETFD
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"not ok %d - fcntl(F_DUP2FD) cleared close-on-exec\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d - fcntl(F_DUP2FD) didn't clear close-on-exec\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+operator|++
+name|test
+expr_stmt|;
+if|if
+condition|(
+name|getrlimit
+argument_list|(
+name|RLIMIT_NOFILE
+argument_list|,
+operator|&
+name|rlp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"getrlimit"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fd2
+operator|=
+name|fcntl
+argument_list|(
+name|fd1
+argument_list|,
+name|F_DUP2FD
+argument_list|,
+name|rlp
+operator|.
+name|rlim_cur
+operator|+
+literal|1
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"not ok %d - fcntl(F_DUP2FD) bypassed NOFILE limit\n"
+argument_list|,
+name|test
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ok %d - fcntl(F_DUP2FD) didn't bypass NOFILE limit\n"
 argument_list|,
 name|test
 argument_list|)
