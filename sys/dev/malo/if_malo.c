@@ -1045,6 +1045,8 @@ parameter_list|)
 block|{
 name|int
 name|error
+decl_stmt|,
+name|i
 decl_stmt|;
 name|struct
 name|ieee80211com
