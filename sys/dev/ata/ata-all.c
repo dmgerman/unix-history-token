@@ -1764,6 +1764,7 @@ block|{
 case|case
 name|IOCATAGMAXCHANNEL
 case|:
+comment|/* In case we have channel 0..n this will return n+1. */
 operator|*
 name|value
 operator|=
@@ -1784,7 +1785,7 @@ if|if
 condition|(
 operator|*
 name|value
-operator|>
+operator|>=
 name|devclass_get_maxunit
 argument_list|(
 name|ata_devclass
@@ -1826,7 +1827,7 @@ if|if
 condition|(
 operator|*
 name|value
-operator|>
+operator|>=
 name|devclass_get_maxunit
 argument_list|(
 name|ata_devclass
@@ -1864,7 +1865,7 @@ if|if
 condition|(
 operator|*
 name|value
-operator|>
+operator|>=
 name|devclass_get_maxunit
 argument_list|(
 name|ata_devclass
@@ -1903,7 +1904,7 @@ condition|(
 name|devices
 operator|->
 name|channel
-operator|>
+operator|>=
 name|devclass_get_maxunit
 argument_list|(
 name|ata_devclass
