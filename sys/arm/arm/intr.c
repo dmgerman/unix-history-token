@@ -154,6 +154,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|arm_post_filter
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+init|=
+name|NULL
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|arm_setup_irqhandler
@@ -253,7 +268,7 @@ name|mask_fn
 operator|)
 name|arm_unmask_irq
 argument_list|,
-name|NULL
+name|arm_post_filter
 argument_list|,
 name|NULL
 argument_list|,
