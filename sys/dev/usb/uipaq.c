@@ -392,6 +392,16 @@ block|{
 block|{
 name|USB_VENDOR_HTC
 block|,
+name|USB_PRODUCT_HTC_WINMOBILE
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_HTC
+block|,
 name|USB_PRODUCT_HTC_SMARTPHONE
 block|}
 block|,
