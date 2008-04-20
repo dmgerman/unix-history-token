@@ -273,25 +273,32 @@ end_struct
 
 begin_struct
 struct|struct
-name|iwi_softc
+name|iwi_vap
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
+name|ieee80211vap
+name|iwi_vap
 decl_stmt|;
 name|struct
-name|ieee80211com
-name|sc_ic
+name|task
+name|iwi_authsuccess_task
+decl_stmt|;
+name|struct
+name|task
+name|iwi_assocsuccess_task
+decl_stmt|;
+name|struct
+name|task
+name|iwi_assocfailed_task
 decl_stmt|;
 name|int
 function_decl|(
 modifier|*
-name|sc_newstate
+name|iwi_newstate
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|enum
@@ -300,6 +307,29 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IWI_VAP
+parameter_list|(
+name|vap
+parameter_list|)
+value|((struct iwi_vap *)(vap))
+end_define
+
+begin_struct
+struct|struct
+name|iwi_softc
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|sc_ifp
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -352,18 +382,6 @@ modifier|*
 name|sc_tq2
 decl_stmt|;
 comment|/* reset task queue */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|700000
-name|struct
-name|proc
-modifier|*
-name|sc_tqproc
-decl_stmt|;
-endif|#
-directive|endif
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -612,13 +630,14 @@ name|callout
 name|sc_wdtimer
 decl_stmt|;
 comment|/* watchdog timer */
+name|struct
+name|callout
+name|sc_rftimer
+decl_stmt|;
+comment|/* rfkill timer */
 name|int
 name|sc_tx_timer
 decl_stmt|;
-name|int
-name|sc_rfkill_timer
-decl_stmt|;
-comment|/* poll for rfkill change */
 name|int
 name|sc_state_timer
 decl_stmt|;
@@ -629,42 +648,17 @@ decl_stmt|;
 comment|/* firmware cmd timer */
 define|#
 directive|define
-name|IWI_SCAN_START
-value|(1<< 0)
-define|#
-directive|define
-name|IWI_SET_CHANNEL
-value|(1<< 1)
-define|#
-directive|define
-name|IWI_SCAN_END
-value|(1<< 2)
-define|#
-directive|define
-name|IWI_ASSOC
-value|(1<< 3)
-define|#
-directive|define
-name|IWI_DISASSOC
-value|(1<< 4)
-define|#
-directive|define
-name|IWI_SCAN_CURCHAN
-value|(1<< 5)
-define|#
-directive|define
-name|IWI_SCAN_ALLCHAN
-value|(1<< 6)
-define|#
-directive|define
-name|IWI_SET_WME
-value|(1<< 7)
-define|#
-directive|define
 name|IWI_CMD_MAXOPS
 value|10
 name|int
 name|sc_cmd
+index|[
+name|IWI_CMD_MAXOPS
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|sc_arg
 index|[
 name|IWI_CMD_MAXOPS
 index|]
@@ -677,57 +671,54 @@ name|int
 name|sc_cmd_next
 decl_stmt|;
 comment|/* last queued scan task */
-name|unsigned
-name|long
-name|sc_maxdwell
-decl_stmt|;
-comment|/* max dwell time for curchan */
-name|struct
-name|bpf_if
-modifier|*
-name|sc_drvbpf
-decl_stmt|;
-union|union
-block|{
-name|struct
-name|iwi_rx_radiotap_header
-name|th
-decl_stmt|;
-name|uint8_t
-name|pad
-index|[
-literal|64
-index|]
-decl_stmt|;
-block|}
-name|sc_rxtapu
-union|;
 define|#
 directive|define
+name|IWI_CMD_FREE
+value|0
+comment|/* for marking slots unused */
+define|#
+directive|define
+name|IWI_SCAN_START
+value|1
+define|#
+directive|define
+name|IWI_SET_CHANNEL
+value|2
+define|#
+directive|define
+name|IWI_AUTH
+value|3
+define|#
+directive|define
+name|IWI_ASSOC
+value|4
+define|#
+directive|define
+name|IWI_DISASSOC
+value|5
+define|#
+directive|define
+name|IWI_SCAN_CURCHAN
+value|6
+define|#
+directive|define
+name|IWI_SCAN_ALLCHAN
+value|7
+define|#
+directive|define
+name|IWI_SET_WME
+value|8
+name|struct
+name|iwi_rx_radiotap_header
 name|sc_rxtap
-value|sc_rxtapu.th
+decl_stmt|;
 name|int
 name|sc_rxtap_len
 decl_stmt|;
-union|union
-block|{
 name|struct
 name|iwi_tx_radiotap_header
-name|th
-decl_stmt|;
-name|uint8_t
-name|pad
-index|[
-literal|64
-index|]
-decl_stmt|;
-block|}
-name|sc_txtapu
-union|;
-define|#
-directive|define
 name|sc_txtap
-value|sc_txtapu.th
+decl_stmt|;
 name|int
 name|sc_txtap_len
 decl_stmt|;
@@ -744,7 +735,7 @@ name|_sc
 parameter_list|,
 name|_state
 parameter_list|)
-value|do {			\ 	KASSERT(_sc->fw_state == IWI_FW_IDLE,			\ 	    ("iwi firmware not idle"));				\ 	_sc->fw_state = _state;					\ 	_sc->sc_state_timer = 5;				\ 	DPRINTF(("enter FW state %d\n",	_state));		\ } while (0)
+value|do {			\ 	KASSERT(_sc->fw_state == IWI_FW_IDLE,			\ 	    ("iwi firmware not idle"));				\ 	_sc->fw_state = _state;					\ 	_sc->sc_state_timer = 5;				\ 	DPRINTF(("enter %s state\n", iwi_fw_states[_state]));	\ } while (0)
 end_define
 
 begin_define
@@ -756,7 +747,7 @@ name|_sc
 parameter_list|,
 name|_state
 parameter_list|)
-value|do {			\ 	if (_sc->fw_state == _state)				\ 		DPRINTF(("exit FW state %d\n", _state));	\ 	 else							\ 		DPRINTF(("expected FW state %d, got %d\n",	\ 			    _state, _sc->fw_state));		\ 	_sc->fw_state = IWI_FW_IDLE;				\ 	wakeup(_sc);						\ 	_sc->sc_state_timer = 0;				\ } while (0)
+value|do {			\ 	if (_sc->fw_state == _state)				\ 		DPRINTF(("exit %s state\n", iwi_fw_states[_state])); \ 	 else							\ 		DPRINTF(("expected %s state, got %s\n",	\ 		    iwi_fw_states[_state], iwi_fw_states[_sc->fw_state])); \ 	_sc->fw_state = IWI_FW_IDLE;				\ 	wakeup(_sc);						\ 	_sc->sc_state_timer = 0;				\ } while (0)
 end_define
 
 begin_comment

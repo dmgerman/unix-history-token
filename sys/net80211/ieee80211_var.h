@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -17,22 +17,6 @@ end_define
 
 begin_comment
 comment|/*  * Definitions for IEEE 802.11 drivers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|IEEE80211_DEBUG_REFCNT
-end_undef
-
-begin_comment
-comment|/* node refcnt stuff */
 end_comment
 
 begin_comment
@@ -107,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<net80211/ieee80211_crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_dfs.h>
 end_include
 
 begin_include
@@ -301,18 +291,18 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_FIXED_RATE_NONE
-value|-1
+value|0xff
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_MCAST_RATE_DEFAULT
-value|(2*1)
+name|IEEE80211_TXMAX_DEFAULT
+value|6
 end_define
 
 begin_comment
-comment|/* default mcast rate (1M) */
+comment|/* default ucast max retries */
 end_comment
 
 begin_define
@@ -359,28 +349,56 @@ parameter_list|)
 value|(((x) * 1024 * hz) / (1000 * 1000))
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|ieee80211_aclator
-struct_decl|;
-end_struct_decl
+begin_comment
+comment|/*  * 802.11 control state is split into a common portion that maps  * 1-1 to a physical device and one or more "Virtual AP's" (VAP)  * that are bound to an ieee80211com instance and share a single  * underlying device.  Each VAP has a corresponding OS device  * entity through which traffic flows and that applications use  * for issuing ioctls, etc.  */
+end_comment
+
+begin_comment
+comment|/*  * Data common to one or more virtual AP's.  State shared by  * the underlying device and the net80211 layer is exposed here;  * e.g. device-specific callbacks.  */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|sysctl_ctx_list
+name|ieee80211vap
 struct_decl|;
 end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|ieee80211vap_attach
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|ieee80211_appie
+block|{
+name|uint16_t
+name|ie_len
+decl_stmt|;
+comment|/* size of ie_data */
+name|uint8_t
+name|ie_data
+index|[]
+decl_stmt|;
+comment|/* user-specified IE's */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
 name|ieee80211com
 block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|ieee80211com
-argument_list|)
-name|ic_next
-expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -391,29 +409,19 @@ name|ieee80211_com_lock_t
 name|ic_comlock
 decl_stmt|;
 comment|/* state update lock */
-name|ieee80211_beacon_lock_t
-name|ic_beaconlock
-decl_stmt|;
-comment|/* beacon update lock */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ieee80211vap
+argument_list|)
+name|ic_vaps
+expr_stmt|;
+comment|/* list of vap instances */
 name|struct
 name|ieee80211_stats
 name|ic_stats
 decl_stmt|;
 comment|/* statistics */
-name|struct
-name|sysctl_ctx_list
-modifier|*
-name|ic_sysctl
-decl_stmt|;
-comment|/* dynamic sysctl context */
-name|uint32_t
-name|ic_debug
-decl_stmt|;
-comment|/* debug msg flags */
-name|int
-name|ic_vap
-decl_stmt|;
-comment|/* virtual AP index */
 name|int
 name|ic_headroom
 decl_stmt|;
@@ -439,6 +447,16 @@ index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
+name|struct
+name|callout
+name|ic_inact
+decl_stmt|;
+comment|/* inactivity processing */
+name|struct
+name|task
+name|ic_parent_task
+decl_stmt|;
+comment|/* deferred parent processing */
 name|uint32_t
 name|ic_flags
 decl_stmt|;
@@ -459,6 +477,10 @@ name|uint32_t
 name|ic_htcaps
 decl_stmt|;
 comment|/* HT capabilities */
+name|uint32_t
+name|ic_cryptocaps
+decl_stmt|;
+comment|/* crypto capabilities */
 name|uint8_t
 name|ic_modecaps
 index|[
@@ -466,17 +488,22 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* set of mode capabilities */
-name|uint16_t
+name|uint8_t
+name|ic_promisc
+decl_stmt|;
+comment|/* vap's needing promisc mode */
+name|uint8_t
+name|ic_allmulti
+decl_stmt|;
+comment|/* vap's needing all multicast*/
+name|uint8_t
+name|ic_nrunning
+decl_stmt|;
+comment|/* vap's marked running */
+name|uint8_t
 name|ic_curmode
 decl_stmt|;
 comment|/* current mode */
-name|struct
-name|ieee80211_rateset
-name|ic_sup_rates
-index|[
-name|IEEE80211_MODE_MAX
-index|]
-decl_stmt|;
 name|uint16_t
 name|ic_bintval
 decl_stmt|;
@@ -493,22 +520,13 @@ name|uint16_t
 name|ic_txpowlimit
 decl_stmt|;
 comment|/* global tx power limit */
-name|int
-name|ic_ampdu_rxmax
+name|struct
+name|ieee80211_rateset
+name|ic_sup_rates
+index|[
+name|IEEE80211_MODE_MAX
+index|]
 decl_stmt|;
-comment|/* A-MPDU rx limit (bytes) */
-name|int
-name|ic_ampdu_density
-decl_stmt|;
-comment|/* A-MPDU density */
-name|int
-name|ic_ampdu_limit
-decl_stmt|;
-comment|/* A-MPDU tx limit (bytes) */
-name|int
-name|ic_amsdu_limit
-decl_stmt|;
-comment|/* A-MSDU tx limit (bytes) */
 comment|/* 	 * Channel state: 	 * 	 * ic_channels is the set of available channels for the device; 	 *    it is setup by the driver 	 * ic_nchans is the number of valid entries in ic_channels 	 * ic_chan_avail is a bit vector of these channels used to check 	 *    whether a channel is available w/o searching the channel table. 	 * ic_chan_active is a (potentially) constrained subset of 	 *    ic_chan_avail that reflects any mode setting or user-specified 	 *    limit on the set of channels to use/scan 	 * ic_curchan is the current channel the device is set to; it may 	 *    be different from ic_bsschan when we are off-channel scanning 	 *    or otherwise doing background work 	 * ic_bsschan is the channel selected for operation; it may 	 *    be undefined (IEEE80211_CHAN_ANYC) 	 * ic_prevchan is a cached ``previous channel'' used to optimize 	 *    lookups when switching back+forth between two channels 	 *    (e.g. for dynamic turbo) 	 */
 name|int
 name|ic_nchans
@@ -559,29 +577,44 @@ modifier|*
 name|ic_prevchan
 decl_stmt|;
 comment|/* previous channel */
-name|int
-name|ic_countrycode
-decl_stmt|;
-comment|/* ISO country code */
-name|uint16_t
+name|struct
+name|ieee80211_regdomain
 name|ic_regdomain
 decl_stmt|;
-comment|/* regulatory domain */
-name|uint8_t
-name|ic_location
+comment|/* regulatory data */
+name|struct
+name|ieee80211_appie
+modifier|*
+name|ic_countryie
 decl_stmt|;
-comment|/* unknown, indoor, outdoor */
+comment|/* calculated country ie */
+name|struct
+name|ieee80211_channel
+modifier|*
+name|ic_countryie_chan
+decl_stmt|;
+comment|/* 802.11h/DFS state */
+name|struct
+name|ieee80211_channel
+modifier|*
+name|ic_csa_newchan
+decl_stmt|;
+comment|/* channel for doing CSA */
+name|int
+name|ic_csa_count
+decl_stmt|;
+comment|/* count for doing CSA */
+name|struct
+name|ieee80211_dfs_state
+name|ic_dfs
+decl_stmt|;
+comment|/* DFS state */
 name|struct
 name|ieee80211_scan_state
 modifier|*
 name|ic_scan
 decl_stmt|;
 comment|/* scan state */
-name|enum
-name|ieee80211_roamingmode
-name|ic_roaming
-decl_stmt|;
-comment|/* roaming mode */
 name|int
 name|ic_lastdata
 decl_stmt|;
@@ -590,73 +623,23 @@ name|int
 name|ic_lastscan
 decl_stmt|;
 comment|/* time last scan completed */
+comment|/* NB: this is the union of all vap stations/neighbors */
 name|int
-name|ic_des_nssid
+name|ic_max_keyix
 decl_stmt|;
-comment|/* # desired ssids */
-name|struct
-name|ieee80211_scan_ssid
-name|ic_des_ssid
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* desired ssid table */
-name|uint8_t
-name|ic_des_bssid
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-decl_stmt|;
-name|struct
-name|ieee80211_channel
-modifier|*
-name|ic_des_chan
-decl_stmt|;
-comment|/* desired channel */
-name|int
-name|ic_des_mode
-decl_stmt|;
-comment|/* desired phymode */
-name|u_int
-name|ic_bgscanidle
-decl_stmt|;
-comment|/* bg scan idle threshold */
-name|u_int
-name|ic_bgscanintvl
-decl_stmt|;
-comment|/* bg scan min interval */
-name|u_int
-name|ic_scanvalid
-decl_stmt|;
-comment|/* scan cache valid threshold */
-name|struct
-name|ieee80211_roam
-name|ic_roam
-decl_stmt|;
-comment|/* sta-mode roaming state */
+comment|/* max h/w key index */
 name|struct
 name|ieee80211_node_table
 name|ic_sta
 decl_stmt|;
 comment|/* stations/neighbors */
+comment|/* XXX multi-bss: split out common/vap parts */
 name|struct
 name|ieee80211_wme_state
 name|ic_wme
 decl_stmt|;
 comment|/* WME/WMM state */
-specifier|const
-name|struct
-name|ieee80211_aclator
-modifier|*
-name|ic_acl
-decl_stmt|;
-comment|/* aclator glue */
-name|void
-modifier|*
-name|ic_as
-decl_stmt|;
-comment|/* private aclator state */
+comment|/* XXX multi-bss: can per-vap be done/make sense? */
 name|enum
 name|ieee80211_protmode
 name|ic_protmode
@@ -699,172 +682,109 @@ name|int
 name|ic_lastnonht
 decl_stmt|;
 comment|/* last time non-HT sta noted */
+comment|/* virtual ap create/delete */
 name|struct
-name|ifqueue
-name|ic_mgtq
-decl_stmt|;
-name|enum
-name|ieee80211_state
-name|ic_state
-decl_stmt|;
-comment|/* 802.11 state */
-name|struct
-name|callout
-name|ic_mgtsend
-decl_stmt|;
-comment|/* mgmt frame response timer */
-name|uint32_t
+name|ieee80211vap
 modifier|*
-name|ic_aid_bitmap
-decl_stmt|;
-comment|/* association id map */
-name|uint16_t
-name|ic_max_aid
-decl_stmt|;
-name|uint16_t
-name|ic_ps_sta
-decl_stmt|;
-comment|/* stations in power save */
-name|uint16_t
-name|ic_ps_pending
-decl_stmt|;
-comment|/* ps sta's w/ pending frames */
-name|uint8_t
+function_decl|(
 modifier|*
-name|ic_tim_bitmap
-decl_stmt|;
-comment|/* power-save stations w/ data*/
-name|uint16_t
-name|ic_tim_len
-decl_stmt|;
-comment|/* ic_tim_bitmap size (bytes) */
-name|uint8_t
-name|ic_dtim_period
-decl_stmt|;
-comment|/* DTIM period */
-name|uint8_t
-name|ic_dtim_count
-decl_stmt|;
-comment|/* DTIM count for last bcn */
+name|ic_vap_create
+function_decl|)
+parameter_list|(
 name|struct
-name|bpf_if
+name|ieee80211com
 modifier|*
-name|ic_rawbpf
-decl_stmt|;
-comment|/* packet filter structure */
-name|struct
-name|ieee80211_node
-modifier|*
-name|ic_bss
-decl_stmt|;
-comment|/* information for this node */
-name|int
-name|ic_fixed_rate
-decl_stmt|;
-comment|/* 802.11 rate or -1 */
-name|int
-name|ic_mcast_rate
-decl_stmt|;
-comment|/* rate for mcast frames */
-name|uint16_t
-name|ic_rtsthreshold
-decl_stmt|;
-name|uint16_t
-name|ic_fragthreshold
-decl_stmt|;
-name|uint8_t
-name|ic_bmissthreshold
-decl_stmt|;
-name|uint8_t
-name|ic_bmiss_count
-decl_stmt|;
-comment|/* current beacon miss count */
-name|int
-name|ic_bmiss_max
-decl_stmt|;
-comment|/* max bmiss before scan */
-name|uint16_t
-name|ic_swbmiss_count
-decl_stmt|;
-comment|/* beacons in last period */
-name|uint16_t
-name|ic_swbmiss_period
-decl_stmt|;
-comment|/* s/w bmiss period */
-name|struct
-name|callout
-name|ic_swbmiss
-decl_stmt|;
-comment|/* s/w beacon miss timer */
-name|uint16_t
-name|ic_txmin
-decl_stmt|;
-comment|/* min tx retry count */
-name|uint16_t
-name|ic_txmax
-decl_stmt|;
-comment|/* max tx retry count */
-name|uint16_t
-name|ic_txlifetime
-decl_stmt|;
-comment|/* tx lifetime */
-name|struct
-name|callout
-name|ic_inact
-decl_stmt|;
-comment|/* inactivity timer wait */
-name|void
-modifier|*
-name|ic_opt_ie
-decl_stmt|;
-comment|/* user-specified IE's */
-name|uint16_t
-name|ic_opt_ie_len
-decl_stmt|;
-comment|/* length of ni_opt_ie */
-name|int
-name|ic_inact_init
-decl_stmt|;
-comment|/* initial setting */
-name|int
-name|ic_inact_auth
-decl_stmt|;
-comment|/* auth but not assoc setting */
-name|int
-name|ic_inact_run
-decl_stmt|;
-comment|/* authorized setting */
-name|int
-name|ic_inact_probe
-decl_stmt|;
-comment|/* inactive probe time */
-comment|/* 	 * Cipher state/configuration. 	 */
-name|struct
-name|ieee80211_crypto_state
-name|ic_crypto
-decl_stmt|;
-define|#
-directive|define
-name|ic_nw_keys
-value|ic_crypto.cs_nw_keys
-comment|/* XXX compatibility */
-define|#
-directive|define
-name|ic_def_txkey
-value|ic_crypto.cs_def_txkey
-comment|/* XXX compatibility */
-comment|/* 	 * 802.1x glue.  When an authenticator attaches it 	 * fills in this section.  We assume that when ic_ec 	 * is setup that the methods are safe to call. 	 */
+parameter_list|,
 specifier|const
-name|struct
-name|ieee80211_authenticator
+name|char
+name|name
+index|[
+name|IFNAMSIZ
+index|]
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|int
+name|opmode
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+specifier|const
+name|uint8_t
+name|bssid
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|,
+specifier|const
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
 modifier|*
-name|ic_auth
-decl_stmt|;
+name|ic_vap_delete
+function_decl|)
+parameter_list|(
 name|struct
-name|eapolcom
+name|ieee80211vap
 modifier|*
-name|ic_ec
+parameter_list|)
+function_decl|;
+comment|/* operating mode attachment */
+name|ieee80211vap_attach
+name|ic_vattach
+index|[
+name|IEEE80211_OPMODE_MAX
+index|]
 decl_stmt|;
+comment|/* return hardware/radio capabilities */
+name|void
+function_decl|(
+modifier|*
+name|ic_getradiocaps
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_channel
+type|[]
+parameter_list|)
+function_decl|;
+comment|/* check and/or prepare regdomain state change */
+name|int
+function_decl|(
+modifier|*
+name|ic_setregdomain
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_regdomain
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ieee80211_channel
+type|[]
+parameter_list|)
+function_decl|;
 comment|/* send/recv 802.11 management frame */
 name|int
 function_decl|(
@@ -873,43 +793,12 @@ name|ic_send_mgmt
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|ic_recv_mgmt
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|ieee80211_node
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|uint32_t
 parameter_list|)
 function_decl|;
 comment|/* send raw 802.11 frame */
@@ -933,11 +822,11 @@ name|ieee80211_bpf_params
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* reset device state after 802.11 parameter/state change */
-name|int
+comment|/* update device state for 802.11 slot time change */
+name|void
 function_decl|(
 modifier|*
-name|ic_reset
+name|ic_updateslot
 function_decl|)
 parameter_list|(
 name|struct
@@ -945,25 +834,23 @@ name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* [schedule] beacon frame update */
+comment|/* handle multicast state changes */
 name|void
 function_decl|(
 modifier|*
-name|ic_update_beacon
+name|ic_update_mcast
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ifnet
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
-comment|/* update device state for 802.11 slot time change */
+comment|/* handle promiscuous mode changes */
 name|void
 function_decl|(
 modifier|*
-name|ic_updateslot
+name|ic_update_promisc
 function_decl|)
 parameter_list|(
 name|struct
@@ -1021,6 +908,28 @@ name|ieee80211_node
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ic_node_age
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ic_node_drain
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
 name|int8_t
 function_decl|(
 modifier|*
@@ -1048,6 +957,22 @@ name|int8_t
 modifier|*
 parameter_list|,
 name|int8_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ic_node_getmimoinfo
+function_decl|)
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_mimo_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1092,7 +1017,7 @@ name|ic_scan_curchan
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211_scan_state
 modifier|*
 parameter_list|,
 name|unsigned
@@ -1106,38 +1031,8 @@ name|ic_scan_mindwell
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211_scan_state
 modifier|*
-parameter_list|)
-function_decl|;
-comment|/* per-vap eventually... */
-name|int
-function_decl|(
-modifier|*
-name|ic_newstate
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|enum
-name|ieee80211_state
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|ic_set_tim
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211_node
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 comment|/* 	 * 802.11n ADDBA support.  A simple/generic implementation 	 * of A-MPDU tx aggregation is provided; the driver may 	 * override these methods to provide their own support. 	 * A-MPDU rx re-ordering happens automatically if the 	 * driver passes out-of-order frames to ieee80211_input 	 * from an assocated HT station. 	 */
@@ -1183,6 +1078,22 @@ name|args
 index|[
 literal|4
 index|]
+parameter_list|)
+function_decl|;
+comment|/* check if A-MPDU should be enabled this station+ac */
+name|int
+function_decl|(
+modifier|*
+name|ic_ampdu_enable
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* start/stop doing A-MPDU tx aggregation for a station */
@@ -1253,6 +1164,709 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_aclator
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|ieee80211vap
+block|{
+name|struct
+name|ifmedia
+name|iv_media
+decl_stmt|;
+comment|/* interface media config */
+name|struct
+name|ifnet
+modifier|*
+name|iv_ifp
+decl_stmt|;
+comment|/* associated device */
+name|struct
+name|bpf_if
+modifier|*
+name|iv_rawbpf
+decl_stmt|;
+comment|/* packet filter structure */
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|iv_sysctl
+decl_stmt|;
+comment|/* dynamic sysctl context */
+name|struct
+name|sysctl_oid
+modifier|*
+name|iv_oid
+decl_stmt|;
+comment|/* net.wlan.X sysctl oid */
+name|TAILQ_ENTRY
+argument_list|(
+argument|ieee80211vap
+argument_list|)
+name|iv_next
+expr_stmt|;
+comment|/* list of vap instances */
+name|struct
+name|ieee80211com
+modifier|*
+name|iv_ic
+decl_stmt|;
+comment|/* back ptr to common state */
+name|uint32_t
+name|iv_debug
+decl_stmt|;
+comment|/* debug msg flags */
+name|struct
+name|ieee80211_stats
+name|iv_stats
+decl_stmt|;
+comment|/* statistics */
+name|uint8_t
+name|iv_myaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint32_t
+name|iv_flags
+decl_stmt|;
+comment|/* state flags */
+name|uint32_t
+name|iv_flags_ext
+decl_stmt|;
+comment|/* extended state flags */
+name|uint32_t
+name|iv_flags_ven
+decl_stmt|;
+comment|/* vendor state flags */
+name|uint32_t
+name|iv_caps
+decl_stmt|;
+comment|/* capabilities */
+name|uint32_t
+name|iv_htcaps
+decl_stmt|;
+comment|/* HT capabilities */
+name|enum
+name|ieee80211_opmode
+name|iv_opmode
+decl_stmt|;
+comment|/* operation mode */
+name|enum
+name|ieee80211_state
+name|iv_state
+decl_stmt|;
+comment|/* state machine state */
+name|void
+function_decl|(
+modifier|*
+name|iv_newstate_cb
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|enum
+name|ieee80211_state
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|struct
+name|callout
+name|iv_mgtsend
+decl_stmt|;
+comment|/* mgmt frame response timer */
+comment|/* inactivity timer settings */
+name|int
+name|iv_inact_init
+decl_stmt|;
+comment|/* setting for new station */
+name|int
+name|iv_inact_auth
+decl_stmt|;
+comment|/* auth but not assoc setting */
+name|int
+name|iv_inact_run
+decl_stmt|;
+comment|/* authorized setting */
+name|int
+name|iv_inact_probe
+decl_stmt|;
+comment|/* inactive probe time */
+name|int
+name|iv_des_nssid
+decl_stmt|;
+comment|/* # desired ssids */
+name|struct
+name|ieee80211_scan_ssid
+name|iv_des_ssid
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* desired ssid table */
+name|uint8_t
+name|iv_des_bssid
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|struct
+name|ieee80211_channel
+modifier|*
+name|iv_des_chan
+decl_stmt|;
+comment|/* desired channel */
+name|uint16_t
+name|iv_des_mode
+decl_stmt|;
+comment|/* desired mode */
+name|int
+name|iv_nicknamelen
+decl_stmt|;
+comment|/* XXX junk */
+name|uint8_t
+name|iv_nickname
+index|[
+name|IEEE80211_NWID_LEN
+index|]
+decl_stmt|;
+name|u_int
+name|iv_bgscanidle
+decl_stmt|;
+comment|/* bg scan idle threshold */
+name|u_int
+name|iv_bgscanintvl
+decl_stmt|;
+comment|/* bg scan min interval */
+name|u_int
+name|iv_scanvalid
+decl_stmt|;
+comment|/* scan cache valid threshold */
+name|u_int
+name|iv_scanreq_duration
+decl_stmt|;
+name|u_int
+name|iv_scanreq_mindwell
+decl_stmt|;
+name|u_int
+name|iv_scanreq_maxdwell
+decl_stmt|;
+name|uint16_t
+name|iv_scanreq_flags
+decl_stmt|;
+comment|/* held scan request params */
+name|uint8_t
+name|iv_scanreq_nssid
+decl_stmt|;
+name|struct
+name|ieee80211_scan_ssid
+name|iv_scanreq_ssid
+index|[
+name|IEEE80211_SCAN_MAX_SSID
+index|]
+decl_stmt|;
+comment|/* sta-mode roaming state */
+name|enum
+name|ieee80211_roamingmode
+name|iv_roaming
+decl_stmt|;
+comment|/* roaming mode */
+name|struct
+name|ieee80211_roamparam
+name|iv_roamparms
+index|[
+name|IEEE80211_MODE_MAX
+index|]
+decl_stmt|;
+name|uint8_t
+name|iv_bmissthreshold
+decl_stmt|;
+name|uint8_t
+name|iv_bmiss_count
+decl_stmt|;
+comment|/* current beacon miss count */
+name|int
+name|iv_bmiss_max
+decl_stmt|;
+comment|/* max bmiss before scan */
+name|uint16_t
+name|iv_swbmiss_count
+decl_stmt|;
+comment|/* beacons in last period */
+name|uint16_t
+name|iv_swbmiss_period
+decl_stmt|;
+comment|/* s/w bmiss period */
+name|struct
+name|callout
+name|iv_swbmiss
+decl_stmt|;
+comment|/* s/w beacon miss timer */
+name|int
+name|iv_ampdu_rxmax
+decl_stmt|;
+comment|/* A-MPDU rx limit (bytes) */
+name|int
+name|iv_ampdu_density
+decl_stmt|;
+comment|/* A-MPDU density */
+name|int
+name|iv_ampdu_limit
+decl_stmt|;
+comment|/* A-MPDU tx limit (bytes) */
+name|int
+name|iv_amsdu_limit
+decl_stmt|;
+comment|/* A-MSDU tx limit (bytes) */
+name|u_int
+name|iv_ampdu_mintraffic
+index|[
+name|WME_NUM_AC
+index|]
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|iv_aid_bitmap
+decl_stmt|;
+comment|/* association id map */
+name|uint16_t
+name|iv_max_aid
+decl_stmt|;
+name|uint16_t
+name|iv_sta_assoc
+decl_stmt|;
+comment|/* stations associated */
+name|uint16_t
+name|iv_ps_sta
+decl_stmt|;
+comment|/* stations in power save */
+name|uint16_t
+name|iv_ps_pending
+decl_stmt|;
+comment|/* ps sta's w/ pending frames */
+name|uint16_t
+name|iv_txseq
+decl_stmt|;
+comment|/* mcast xmit seq# space */
+name|uint16_t
+name|iv_tim_len
+decl_stmt|;
+comment|/* ic_tim_bitmap size (bytes) */
+name|uint8_t
+modifier|*
+name|iv_tim_bitmap
+decl_stmt|;
+comment|/* power-save stations w/ data*/
+name|uint8_t
+name|iv_dtim_period
+decl_stmt|;
+comment|/* DTIM period */
+name|uint8_t
+name|iv_dtim_count
+decl_stmt|;
+comment|/* DTIM count from last bcn */
+comment|/* set/unset aid pwrsav state */
+name|int
+name|iv_csa_count
+decl_stmt|;
+comment|/* count for doing CSA */
+name|struct
+name|ieee80211_node
+modifier|*
+name|iv_bss
+decl_stmt|;
+comment|/* information for this node */
+name|struct
+name|ieee80211_txparam
+name|iv_txparms
+index|[
+name|IEEE80211_MODE_MAX
+index|]
+decl_stmt|;
+name|uint16_t
+name|iv_rtsthreshold
+decl_stmt|;
+name|uint16_t
+name|iv_fragthreshold
+decl_stmt|;
+name|int
+name|iv_inact_timer
+decl_stmt|;
+comment|/* inactivity timer wait */
+comment|/* application-specified IE's to attach to mgt frames */
+name|struct
+name|ieee80211_appie
+modifier|*
+name|iv_appie_beacon
+decl_stmt|;
+name|struct
+name|ieee80211_appie
+modifier|*
+name|iv_appie_probereq
+decl_stmt|;
+name|struct
+name|ieee80211_appie
+modifier|*
+name|iv_appie_proberesp
+decl_stmt|;
+name|struct
+name|ieee80211_appie
+modifier|*
+name|iv_appie_assocreq
+decl_stmt|;
+name|struct
+name|ieee80211_appie
+modifier|*
+name|iv_appie_assocresp
+decl_stmt|;
+name|struct
+name|ieee80211_appie
+modifier|*
+name|iv_appie_wpa
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|iv_wpa_ie
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|iv_rsn_ie
+decl_stmt|;
+name|uint16_t
+name|iv_max_keyix
+decl_stmt|;
+comment|/* max h/w key index */
+name|ieee80211_keyix
+name|iv_def_txkey
+decl_stmt|;
+comment|/* default/group tx key index */
+name|struct
+name|ieee80211_key
+name|iv_nw_keys
+index|[
+name|IEEE80211_WEP_NKID
+index|]
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|iv_key_alloc
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_key
+modifier|*
+parameter_list|,
+name|ieee80211_keyix
+modifier|*
+parameter_list|,
+name|ieee80211_keyix
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|iv_key_delete
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_key
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|iv_key_set
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_key
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+name|mac
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|iv_key_update_begin
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|iv_key_update_end
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|const
+name|struct
+name|ieee80211_authenticator
+modifier|*
+name|iv_auth
+decl_stmt|;
+comment|/* authenticator glue */
+name|void
+modifier|*
+name|iv_ec
+decl_stmt|;
+comment|/* private auth state */
+specifier|const
+name|struct
+name|ieee80211_aclator
+modifier|*
+name|iv_acl
+decl_stmt|;
+comment|/* acl glue */
+name|void
+modifier|*
+name|iv_as
+decl_stmt|;
+comment|/* private aclator state */
+comment|/* operate-mode detach hook */
+name|void
+function_decl|(
+modifier|*
+name|iv_opdetach
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* receive processing */
+name|int
+function_decl|(
+modifier|*
+name|iv_input
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+name|rssi
+parameter_list|,
+name|int
+name|noise
+parameter_list|,
+name|uint32_t
+name|rstamp
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|iv_recv_mgmt
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|iv_deliver_data
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+if|#
+directive|if
+literal|0
+comment|/* send processing */
+block|int			(*iv_send_mgmt)(struct ieee80211_node *, 				     int, int);
+endif|#
+directive|endif
+comment|/* beacon miss processing */
+name|void
+function_decl|(
+modifier|*
+name|iv_bmiss
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* reset device state after 802.11 parameter/state change */
+name|int
+function_decl|(
+modifier|*
+name|iv_reset
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+comment|/* [schedule] beacon frame update */
+name|void
+function_decl|(
+modifier|*
+name|iv_update_beacon
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* power save handling */
+name|void
+function_decl|(
+modifier|*
+name|iv_update_ps
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|iv_set_tim
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* state machine processing */
+name|int
+function_decl|(
+modifier|*
+name|iv_newstate
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|enum
+name|ieee80211_state
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* 802.3 output method for raw frame xmit */
+name|int
+function_decl|(
+modifier|*
+name|iv_output
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_80211_VAP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -1278,11 +1892,7 @@ value|memcpy(dst,src,IEEE80211_ADDR_LEN)
 end_define
 
 begin_comment
-comment|/* ic_flags */
-end_comment
-
-begin_comment
-comment|/* NB: bits 0x4c available */
+comment|/* ic_flags/iv_flags */
 end_comment
 
 begin_define
@@ -1527,6 +2137,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_F_CSAPENDING
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* STATUS: chan switch pending*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_F_WPA1
 value|0x00800000
 end_define
@@ -1604,12 +2225,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_F_PCF
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* CONF: PCF enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_F_DOTH
 value|0x40000000
 end_define
 
 begin_comment
 comment|/* CONF: 11h enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_DWDS
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* CONF: Dynamic WDS enabled */
 end_comment
 
 begin_comment
@@ -1633,18 +2276,18 @@ define|#
 directive|define
 name|IEEE80211_ATH_CAP
 parameter_list|(
-name|ic
+name|vap
 parameter_list|,
 name|ni
 parameter_list|,
 name|bit
 parameter_list|)
 define|\
-value|((ic)->ic_flags& (ni)->ni_ath_flags& (bit))
+value|((vap)->iv_flags& (ni)->ni_ath_flags& (bit))
 end_define
 
 begin_comment
-comment|/* ic_flags_ext */
+comment|/* ic_flags_ext/iv_flags_ext */
 end_comment
 
 begin_define
@@ -1669,6 +2312,17 @@ begin_comment
 comment|/* CONF: sta inact handling */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_SCANWAIT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* STATUS: awaiting scan */
+end_comment
+
 begin_comment
 comment|/* 0x00000006 reserved */
 end_comment
@@ -1682,6 +2336,50 @@ end_define
 
 begin_comment
 comment|/* STATUS: complete bgscan */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_WPS
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* CONF: WPS enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_TSN
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* CONF: TSN enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_SCANREQ
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* STATUS: scan req params */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_DFS
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* CONF: DFS enabled */
 end_comment
 
 begin_define
@@ -1704,6 +2402,32 @@ end_define
 
 begin_comment
 comment|/* CONF: do bmiss in s/w */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_DOTD
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* CONF: 11d enabled */
+end_comment
+
+begin_comment
+comment|/* NB: immutable: should be set only when creating a vap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_WDSLEGACY
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* CONF: legacy WDS operation */
 end_comment
 
 begin_define
@@ -1828,62 +2552,11 @@ comment|/* CONF: HT vendor OUI's */
 end_comment
 
 begin_comment
-comment|/* ic_caps */
+comment|/* ic_caps/iv_caps: device driver capabilities */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_WEP
-value|0x00000001
-end_define
-
 begin_comment
-comment|/* CAPABILITY: WEP available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_TKIP
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* CAPABILITY: TKIP available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_AES
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* CAPABILITY: AES OCB avail */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_AES_CCM
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* CAPABILITY: AES CCM avail */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_CKIP
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* CAPABILITY: CKIP available */
+comment|/* 0x2f available */
 end_comment
 
 begin_define
@@ -2007,15 +2680,8 @@ begin_comment
 comment|/* CAPABILITY: monitor mode */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_TKIPMIC
-value|0x00020000
-end_define
-
 begin_comment
-comment|/* CAPABILITY: TKIP MIC avail */
+comment|/* 0x20000 available */
 end_comment
 
 begin_define
@@ -2114,19 +2780,8 @@ begin_comment
 comment|/* XXX protection/barker? */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_CRYPTO
-value|0x0000002f
-end_define
-
 begin_comment
-comment|/* CAPABILITY: crypto alg's */
-end_comment
-
-begin_comment
-comment|/*  * ic_htcaps: HT-specific device/driver capabilities  *  * NB: the low 16-bits are the 802.11 definitions, the upper  *     16-bits are used to define s/w/driver capabilities.  */
+comment|/*  * ic_htcaps/iv_htcaps: HT-specific device/driver capabilities  *  * NB: the low 16-bits are the 802.11 definitions, the upper  *     16-bits are used to define s/w/driver capabilities.  */
 end_comment
 
 begin_define
@@ -2189,6 +2844,77 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ieee80211_vap_setup
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+name|name
+index|[
+name|IFNAMSIZ
+index|]
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|int
+name|opmode
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+specifier|const
+name|uint8_t
+name|bssid
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|,
+specifier|const
+name|uint8_t
+name|macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ieee80211_vap_attach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|ifm_change_cb_t
+parameter_list|,
+name|ifm_stat_cb_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_vap_detach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|struct
 name|ieee80211_rateset
@@ -2232,15 +2958,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_drain
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee80211_media_init
 parameter_list|(
 name|struct
 name|ieee80211com
 modifier|*
-parameter_list|,
-name|ifm_change_cb_t
-parameter_list|,
-name|ifm_stat_cb_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2292,37 +3025,7 @@ name|int
 name|ieee80211_ioctl
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|u_long
-parameter_list|,
-name|caddr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ieee80211_cfgget
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|u_long
-parameter_list|,
-name|caddr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ieee80211_cfgset
-parameter_list|(
-name|struct
-name|ieee80211com
+name|ifnet
 modifier|*
 parameter_list|,
 name|u_long
@@ -2471,18 +3174,16 @@ name|void
 name|ieee80211_key_update_begin
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
+name|vap
 parameter_list|)
 block|{
-name|ic
+name|vap
 operator|->
-name|ic_crypto
-operator|.
-name|cs_key_update_begin
+name|iv_key_update_begin
 argument_list|(
-name|ic
+name|vap
 argument_list|)
 expr_stmt|;
 block|}
@@ -2495,18 +3196,16 @@ name|void
 name|ieee80211_key_update_end
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
+name|vap
 parameter_list|)
 block|{
-name|ic
+name|vap
 operator|->
-name|ic_crypto
-operator|.
-name|cs_key_update_end
+name|iv_key_update_end
 argument_list|(
-name|ic
+name|vap
 argument_list|)
 expr_stmt|;
 block|}
@@ -2627,7 +3326,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Notify a driver that beacon state has been updated.  */
+comment|/*  * Notify a vap that beacon state has been updated.  */
 end_comment
 
 begin_function
@@ -2637,9 +3336,9 @@ name|void
 name|ieee80211_beacon_notify
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
+name|vap
 parameter_list|,
 name|int
 name|what
@@ -2647,21 +3346,60 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|ic
+name|vap
 operator|->
-name|ic_state
+name|iv_state
 operator|==
 name|IEEE80211_S_RUN
 condition|)
-name|ic
+name|vap
 operator|->
-name|ic_update_beacon
+name|iv_update_beacon
 argument_list|(
-name|ic
+name|vap
 argument_list|,
 name|what
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Calculate HT channel promotion flags for a channel.  * XXX belongs in ieee80211_ht.h but needs IEEE80211_FEXT_*  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|ieee80211_htchanflags
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|c
+parameter_list|)
+block|{
+return|return
+name|IEEE80211_IS_CHAN_HT40
+argument_list|(
+name|c
+argument_list|)
+condition|?
+name|IEEE80211_FEXT_HT
+operator||
+name|IEEE80211_FEXT_USEHT40
+else|:
+name|IEEE80211_IS_CHAN_HT
+argument_list|(
+name|c
+argument_list|)
+condition|?
+name|IEEE80211_FEXT_HT
+else|:
+literal|0
+return|;
 block|}
 end_function
 
@@ -3021,11 +3759,11 @@ define|#
 directive|define
 name|ieee80211_msg
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|)
-value|((_ic)->ic_debug& (_m))
+value|((_vap)->iv_debug& (_m))
 end_define
 
 begin_define
@@ -3033,7 +3771,7 @@ define|#
 directive|define
 name|IEEE80211_DPRINTF
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3041,7 +3779,7 @@ name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {			\ 	if (ieee80211_msg(_ic, _m))					\ 		ieee80211_note(_ic, _fmt, __VA_ARGS__);		\ } while (0)
+value|do {			\ 	if (ieee80211_msg(_vap, _m))					\ 		ieee80211_note(_vap, _fmt, __VA_ARGS__);		\ } while (0)
 end_define
 
 begin_define
@@ -3049,7 +3787,7 @@ define|#
 directive|define
 name|IEEE80211_NOTE
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3059,7 +3797,7 @@ name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {			\ 	if (ieee80211_msg(_ic, _m))					\ 		ieee80211_note_mac(_ic, (_ni)->ni_macaddr, _fmt, __VA_ARGS__);\ } while (0)
+value|do {			\ 	if (ieee80211_msg(_vap, _m))					\ 		ieee80211_note_mac(_vap, (_ni)->ni_macaddr, _fmt, __VA_ARGS__);\ } while (0)
 end_define
 
 begin_define
@@ -3067,7 +3805,7 @@ define|#
 directive|define
 name|IEEE80211_NOTE_MAC
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3077,7 +3815,7 @@ name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {		\ 	if (ieee80211_msg(_ic, _m))					\ 		ieee80211_note_mac(_ic, _mac, _fmt, __VA_ARGS__);	\ } while (0)
+value|do {		\ 	if (ieee80211_msg(_vap, _m))					\ 		ieee80211_note_mac(_vap, _mac, _fmt, __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_define
@@ -3085,7 +3823,7 @@ define|#
 directive|define
 name|IEEE80211_NOTE_FRAME
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3095,7 +3833,7 @@ name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {		\ 	if (ieee80211_msg(_ic, _m))					\ 		ieee80211_note_frame(_ic, _wh, _fmt, __VA_ARGS__);	\ } while (0)
+value|do {		\ 	if (ieee80211_msg(_vap, _m))					\ 		ieee80211_note_frame(_vap, _wh, _fmt, __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_function_decl
@@ -3103,14 +3841,12 @@ name|void
 name|ieee80211_note
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -3122,9 +3858,8 @@ name|void
 name|ieee80211_note_mac
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
 parameter_list|,
 specifier|const
 name|uint8_t
@@ -3136,7 +3871,6 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -3148,20 +3882,17 @@ name|void
 name|ieee80211_note_frame
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
 parameter_list|,
 specifier|const
 name|struct
 name|ieee80211_frame
 modifier|*
-name|wh
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -3173,10 +3904,10 @@ define|#
 directive|define
 name|ieee80211_msg_debug
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|)
 define|\
-value|((_ic)->ic_debug& IEEE80211_MSG_DEBUG)
+value|((_vap)->iv_debug& IEEE80211_MSG_DEBUG)
 end_define
 
 begin_define
@@ -3184,10 +3915,10 @@ define|#
 directive|define
 name|ieee80211_msg_dumppkts
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|)
 define|\
-value|((_ic)->ic_debug& IEEE80211_MSG_DUMPPKTS)
+value|((_vap)->iv_debug& IEEE80211_MSG_DUMPPKTS)
 end_define
 
 begin_define
@@ -3195,10 +3926,10 @@ define|#
 directive|define
 name|ieee80211_msg_input
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|)
 define|\
-value|((_ic)->ic_debug& IEEE80211_MSG_INPUT)
+value|((_vap)->iv_debug& IEEE80211_MSG_INPUT)
 end_define
 
 begin_define
@@ -3206,10 +3937,10 @@ define|#
 directive|define
 name|ieee80211_msg_radius
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|)
 define|\
-value|((_ic)->ic_debug& IEEE80211_MSG_RADIUS)
+value|((_vap)->iv_debug& IEEE80211_MSG_RADIUS)
 end_define
 
 begin_define
@@ -3217,10 +3948,10 @@ define|#
 directive|define
 name|ieee80211_msg_dumpradius
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|)
 define|\
-value|((_ic)->ic_debug& IEEE80211_MSG_RADDUMP)
+value|((_vap)->iv_debug& IEEE80211_MSG_RADDUMP)
 end_define
 
 begin_define
@@ -3228,10 +3959,10 @@ define|#
 directive|define
 name|ieee80211_msg_dumpradkeys
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|)
 define|\
-value|((_ic)->ic_debug& IEEE80211_MSG_RADKEYS)
+value|((_vap)->iv_debug& IEEE80211_MSG_RADKEYS)
 end_define
 
 begin_define
@@ -3239,10 +3970,10 @@ define|#
 directive|define
 name|ieee80211_msg_scan
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|)
 define|\
-value|((_ic)->ic_debug& IEEE80211_MSG_SCAN)
+value|((_vap)->iv_debug& IEEE80211_MSG_SCAN)
 end_define
 
 begin_define
@@ -3250,10 +3981,10 @@ define|#
 directive|define
 name|ieee80211_msg_assoc
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|)
 define|\
-value|((_ic)->ic_debug& IEEE80211_MSG_ASSOC)
+value|((_vap)->iv_debug& IEEE80211_MSG_ASSOC)
 end_define
 
 begin_comment
@@ -3265,7 +3996,7 @@ define|#
 directive|define
 name|IEEE80211_DISCARD
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3277,7 +4008,7 @@ name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {		\ 	if ((_ic)->ic_debug& (_m))					\ 		ieee80211_discard_frame(_ic, _wh, _type, _fmt, __VA_ARGS__);\ } while (0)
+value|do {		\ 	if ((_vap)->iv_debug& (_m))					\ 		ieee80211_discard_frame(_vap, _wh, _type, _fmt, __VA_ARGS__);\ } while (0)
 end_define
 
 begin_define
@@ -3285,7 +4016,7 @@ define|#
 directive|define
 name|IEEE80211_DISCARD_IE
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3297,7 +4028,7 @@ name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {	\ 	if ((_ic)->ic_debug& (_m))					\ 		ieee80211_discard_ie(_ic, _wh, _type, _fmt, __VA_ARGS__);\ } while (0)
+value|do {	\ 	if ((_vap)->iv_debug& (_m))					\ 		ieee80211_discard_ie(_vap, _wh, _type, _fmt, __VA_ARGS__);\ } while (0)
 end_define
 
 begin_define
@@ -3305,7 +4036,7 @@ define|#
 directive|define
 name|IEEE80211_DISCARD_MAC
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3317,7 +4048,7 @@ name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {	\ 	if ((_ic)->ic_debug& (_m))					\ 		ieee80211_discard_mac(_ic, _mac, _type, _fmt, __VA_ARGS__);\ } while (0)
+value|do {	\ 	if ((_vap)->iv_debug& (_m))					\ 		ieee80211_discard_mac(_vap, _mac, _type, _fmt, __VA_ARGS__);\ } while (0)
 end_define
 
 begin_function_decl
@@ -3325,7 +4056,7 @@ name|void
 name|ieee80211_discard_frame
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const
@@ -3353,7 +4084,7 @@ name|void
 name|ieee80211_discard_ie
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const
@@ -3381,7 +4112,7 @@ name|void
 name|ieee80211_discard_mac
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const
@@ -3416,7 +4147,7 @@ define|#
 directive|define
 name|IEEE80211_DPRINTF
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3431,7 +4162,7 @@ define|#
 directive|define
 name|IEEE80211_NOTE
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3448,7 +4179,7 @@ define|#
 directive|define
 name|IEEE80211_NOTE_FRAME
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3465,7 +4196,7 @@ define|#
 directive|define
 name|IEEE80211_NOTE_MAC
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3482,7 +4213,7 @@ define|#
 directive|define
 name|ieee80211_msg_dumppkts
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|)
 value|0
 end_define
@@ -3492,7 +4223,7 @@ define|#
 directive|define
 name|ieee80211_msg
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|)
@@ -3504,7 +4235,7 @@ define|#
 directive|define
 name|IEEE80211_DISCARD
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3523,7 +4254,7 @@ define|#
 directive|define
 name|IEEE80211_DISCARD_IE
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,
@@ -3542,7 +4273,7 @@ define|#
 directive|define
 name|IEEE80211_DISCARD_MAC
 parameter_list|(
-name|_ic
+name|_vap
 parameter_list|,
 name|_m
 parameter_list|,

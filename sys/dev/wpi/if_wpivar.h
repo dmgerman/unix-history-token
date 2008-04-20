@@ -289,6 +289,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|WPI_NODE
+parameter_list|(
+name|ni
+parameter_list|)
+value|((struct wpi_node *)(ni))
+end_define
+
 begin_struct
 struct|struct
 name|wpi_power_sample
@@ -333,6 +343,48 @@ end_struct
 
 begin_struct
 struct|struct
+name|wpi_vap
+block|{
+name|struct
+name|ieee80211vap
+name|vap
+decl_stmt|;
+name|struct
+name|ieee80211_amrr
+name|amrr
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|newstate
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|enum
+name|ieee80211_state
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|WPI_VAP
+parameter_list|(
+name|vap
+parameter_list|)
+value|((struct wpi_vap *)(vap))
+end_define
+
+begin_struct
+struct|struct
 name|wpi_softc
 block|{
 name|device_t
@@ -343,39 +395,9 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
-comment|/* net80211 driver specifics */
-name|struct
-name|ieee80211com
-name|sc_ic
-decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|sc_newstate
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|enum
-name|ieee80211_state
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|unsigned
-name|long
-name|maxdwell
-decl_stmt|;
-comment|/* Max dwell time whilst scanning */
 name|struct
 name|mtx
 name|sc_mtx
-decl_stmt|;
-name|struct
-name|ieee80211_amrr
-name|amrr
 decl_stmt|;
 comment|/* Flags indicating the current state the driver 	 * expects the hardware to be in 	 */
 name|uint32_t
@@ -647,7 +669,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|//reglatory domain //XXX
+comment|/*reglatory domain XXX */
 block|}
 struct|;
 end_struct
@@ -691,16 +713,6 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|mtx_assert(&(sc)->sc_mtx, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPI_LOCK_OWNED
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_owned(&(_sc)->sc_mtx)
 end_define
 
 begin_define

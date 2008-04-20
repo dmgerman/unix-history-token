@@ -1367,6 +1367,13 @@ define|#
 directive|define
 name|RT2560_TX_CIPHER_AES
 value|(4<< 29)
+define|#
+directive|define
+name|RT2560_TX_RETRYCNT
+parameter_list|(
+name|v
+parameter_list|)
+value|(((v)>> 5)& 0x7)
 name|uint32_t
 name|physaddr
 decl_stmt|;

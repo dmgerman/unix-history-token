@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -99,6 +99,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ATH_BCBUF
+value|4
+end_define
+
+begin_comment
+comment|/* number of beacon buffers */
+end_comment
 
 begin_define
 define|#
@@ -267,10 +278,20 @@ name|ieee80211_node
 name|an_node
 decl_stmt|;
 comment|/* base class */
-name|u_int32_t
-name|an_avgrssi
+specifier|const
+name|struct
+name|ieee80211_txparam
+modifier|*
+name|an_tp
 decl_stmt|;
-comment|/* average rssi over all rx frames */
+name|u_int8_t
+name|an_mgmtrix
+decl_stmt|;
+comment|/* min h/w rate index */
+name|u_int8_t
+name|an_mcastrix
+decl_stmt|;
+comment|/* mcast h/w rate index */
 name|struct
 name|ath_buf
 modifier|*
@@ -516,6 +537,11 @@ name|u_int
 name|axq_qnum
 decl_stmt|;
 comment|/* hardware q number */
+define|#
+directive|define
+name|ATH_TXQ_SWQ
+value|(HAL_NUM_TX_QUEUES+1)
+comment|/* qnum for s/w only queue */
 name|u_int
 name|axq_depth
 decl_stmt|;
@@ -644,6 +670,114 @@ parameter_list|)
 value|do { \ 	STAILQ_REMOVE_HEAD(&(_tq)->axq_q, _field); \ 	(_tq)->axq_depth--; \ } while (0)
 end_define
 
+begin_comment
+comment|/* NB: this does not do the "head empty check" that STAILQ_LAST does */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LAST
+parameter_list|(
+name|_tq
+parameter_list|)
+define|\
+value|((struct ath_buf *)(void *) \ 	 ((char *)((_tq)->axq_q.stqh_last) - __offsetof(struct ath_buf, bf_list)))
+end_define
+
+begin_struct
+struct|struct
+name|ath_vap
+block|{
+name|struct
+name|ieee80211vap
+name|av_vap
+decl_stmt|;
+comment|/* base class */
+name|int
+name|av_bslot
+decl_stmt|;
+comment|/* beacon slot index */
+name|struct
+name|ath_buf
+modifier|*
+name|av_bcbuf
+decl_stmt|;
+comment|/* beacon buffer */
+name|struct
+name|ieee80211_beacon_offsets
+name|av_boff
+decl_stmt|;
+comment|/* dynamic update state */
+name|struct
+name|ath_txq
+name|av_mcastq
+decl_stmt|;
+comment|/* buffered mcast s/w queue */
+name|void
+function_decl|(
+modifier|*
+name|av_recv_mgmt
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|av_newstate
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|enum
+name|ieee80211_state
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|av_bmiss
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_VAP
+parameter_list|(
+name|vap
+parameter_list|)
+value|((struct ath_vap *)(vap))
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|taskqueue
@@ -671,63 +805,31 @@ name|ath_stats
 name|sc_stats
 decl_stmt|;
 comment|/* interface statistics */
-name|struct
-name|ieee80211com
-name|sc_ic
-decl_stmt|;
-comment|/* IEEE 802.11 common */
 name|int
 name|sc_debug
 decl_stmt|;
-name|u_int32_t
-name|sc_countrycode
+name|int
+name|sc_nvaps
 decl_stmt|;
-name|u_int32_t
-name|sc_regdomain
+comment|/* # vaps */
+name|int
+name|sc_nstavaps
 decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|sc_recv_mgmt
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|ieee80211_node
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|u_int32_t
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|sc_newstate
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|enum
-name|ieee80211_state
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
+comment|/* # station vaps */
+name|u_int8_t
+name|sc_hwbssidmask
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|u_int8_t
+name|sc_nbssid0
+decl_stmt|;
+comment|/* # vap's using base mac */
+name|uint32_t
+name|sc_bssidmask
+decl_stmt|;
+comment|/* bssid mask */
 name|void
 function_decl|(
 modifier|*
@@ -876,8 +978,38 @@ comment|/* outdoor operation */
 name|sc_dturbo
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* dynamic turbo in use */
+name|sc_hasbmask
+range|:
+literal|1
+decl_stmt|,
+comment|/* bssid mask support */
+name|sc_hastsfadd
+range|:
+literal|1
+decl_stmt|,
+comment|/* tsf adjust support */
+name|sc_beacons
+range|:
+literal|1
+decl_stmt|,
+comment|/* beacons running */
+name|sc_swbmiss
+range|:
+literal|1
+decl_stmt|,
+comment|/* sta mode using sw bmiss */
+name|sc_stagbeacons
+range|:
+literal|1
+decl_stmt|,
+comment|/* use staggered beacons */
+name|sc_wmetkipmic
+range|:
+literal|1
+decl_stmt|;
+comment|/* can do WME+TKIP MIC */
 comment|/* rate tables */
 define|#
 directive|define
@@ -967,14 +1099,6 @@ index|]
 struct|;
 comment|/* h/w rate ix mappings */
 name|u_int8_t
-name|sc_minrateix
-decl_stmt|;
-comment|/* min h/w rate index */
-name|u_int8_t
-name|sc_mcastrix
-decl_stmt|;
-comment|/* mcast h/w rate index */
-name|u_int8_t
 name|sc_protrix
 decl_stmt|;
 comment|/* protection rate index */
@@ -1055,43 +1179,16 @@ name|sc_rfsilentpol
 decl_stmt|;
 comment|/* pin setting for rfkill on */
 name|struct
-name|bpf_if
-modifier|*
-name|sc_drvbpf
-decl_stmt|;
-union|union
-block|{
-name|struct
 name|ath_tx_radiotap_header
-name|th
+name|sc_tx_th
 decl_stmt|;
-name|u_int8_t
-name|pad
-index|[
-literal|64
-index|]
-decl_stmt|;
-block|}
-name|u_tx_rt
-union|;
 name|int
 name|sc_tx_th_len
 decl_stmt|;
-union|union
-block|{
 name|struct
 name|ath_rx_radiotap_header
-name|th
+name|sc_rx_th
 decl_stmt|;
-name|u_int8_t
-name|pad
-index|[
-literal|64
-index|]
-decl_stmt|;
-block|}
-name|u_rx_rt
-union|;
 name|int
 name|sc_rx_th_len
 decl_stmt|;
@@ -1103,7 +1200,7 @@ name|struct
 name|ath_descdma
 name|sc_rxdma
 decl_stmt|;
-comment|/* RX descriptos */
+comment|/* RX descriptors */
 name|ath_bufhead
 name|sc_rxbuf
 decl_stmt|;
@@ -1222,11 +1319,6 @@ name|sc_cabq
 decl_stmt|;
 comment|/* tx q for cab frames */
 name|struct
-name|ieee80211_beacon_offsets
-name|sc_boff
-decl_stmt|;
-comment|/* dynamic update state */
-name|struct
 name|task
 name|sc_bmisstask
 decl_stmt|;
@@ -1250,11 +1342,22 @@ block|}
 name|sc_updateslot
 enum|;
 comment|/* slot time update fsm */
-name|struct
-name|ath_txq
-name|sc_mcastq
+name|int
+name|sc_slotupdate
 decl_stmt|;
-comment|/* mcast xmits w/ ps sta's */
+comment|/* slot to advance fsm */
+name|struct
+name|ieee80211vap
+modifier|*
+name|sc_bslot
+index|[
+name|ATH_BCBUF
+index|]
+decl_stmt|;
+name|int
+name|sc_nbcnvaps
+decl_stmt|;
+comment|/* # vaps with beacons */
 name|struct
 name|callout
 name|sc_cal_ch
@@ -1272,28 +1375,9 @@ name|HAL_NODE_STATS
 name|sc_halstats
 decl_stmt|;
 comment|/* station-mode rssi stats */
-name|struct
-name|callout
-name|sc_dfs_ch
-decl_stmt|;
-comment|/* callout handle for dfs */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|sc_tx_th
-value|u_tx_rt.th
-end_define
-
-begin_define
-define|#
-directive|define
-name|sc_rx_th
-value|u_rx_rt.th
-end_define
 
 begin_define
 define|#
@@ -1547,6 +1631,32 @@ name|_mac
 parameter_list|)
 define|\
 value|((*(_ah)->ah_setMacAddress)((_ah), (_mac)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getbssidmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_mask
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getBssIdMask)((_ah), (_mask)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setbssidmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_mask
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setBssIdMask)((_ah), (_mask)))
 end_define
 
 begin_define
@@ -2343,7 +2453,7 @@ parameter_list|,
 name|_rd
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setRegulatoryDomain)((_ah), (_rd), NULL))
+value|(*(uint16_t *)(((uint8_t *)(_ah)) + 520) = (_rd))
 end_define
 
 begin_define
@@ -2357,6 +2467,30 @@ name|_pcc
 parameter_list|)
 define|\
 value|(*(_pcc) = (_ah)->ah_countryCode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettkipmic
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TKIP_MIC, 1, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settkipmic
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_TKIP_MIC, 1, _v, NULL)
 end_define
 
 begin_define
@@ -2392,6 +2526,17 @@ name|_v
 parameter_list|)
 define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_TKIP_SPLIT, 1, _v, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_haswmetkipmic
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_WME_TKIPMIC, 0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -2693,6 +2838,52 @@ name|_ah
 parameter_list|)
 define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_FASTFRAME, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasbssidmask
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_BSSIDMASK, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hastsfadjust
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TSF_ADJUST, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettsfadjust
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TSF_ADJUST, 1, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settsfadjust
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_onoff
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_TSF_ADJUST, 1, _onoff, NULL)
 end_define
 
 begin_define

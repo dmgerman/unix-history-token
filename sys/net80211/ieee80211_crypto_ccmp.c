@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ end_expr_stmt
 begin_comment
 comment|/*  * IEEE 802.11i AES-CCMP crypto support.  *  * Part of this module is derived from similar code in the Host  * AP driver. The code is used with the consent of the author and  * it's license is included below.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_wlan.h"
+end_include
 
 begin_include
 include|#
@@ -105,11 +111,16 @@ struct|struct
 name|ccmp_ctx
 block|{
 name|struct
+name|ieee80211vap
+modifier|*
+name|cc_vap
+decl_stmt|;
+comment|/* for diagnostics+statistics */
+name|struct
 name|ieee80211com
 modifier|*
 name|cc_ic
 decl_stmt|;
-comment|/* for diagnostics */
 name|rijndael_ctx
 name|cc_aes
 decl_stmt|;
@@ -124,7 +135,7 @@ modifier|*
 name|ccmp_attach
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|struct
@@ -368,9 +379,9 @@ modifier|*
 name|ccmp_attach
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
+name|vap
 parameter_list|,
 name|struct
 name|ieee80211_key
@@ -397,7 +408,7 @@ expr|struct
 name|ccmp_ctx
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_80211_CRYPTO
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -411,9 +422,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ic
+name|vap
 operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_crypto_nomem
 operator|++
@@ -424,9 +435,17 @@ return|;
 block|}
 name|ctx
 operator|->
+name|cc_vap
+operator|=
+name|vap
+expr_stmt|;
+name|ctx
+operator|->
 name|cc_ic
 operator|=
-name|ic
+name|vap
+operator|->
+name|iv_ic
 expr_stmt|;
 name|nrefs
 operator|++
@@ -462,7 +481,7 @@ name|FREE
 argument_list|(
 name|ctx
 argument_list|,
-name|M_DEVBUF
+name|M_80211_CRYPTO
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -520,7 +539,7 @@ name|IEEE80211_DPRINTF
 argument_list|(
 name|ctx
 operator|->
-name|cc_ic
+name|cc_vap
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
@@ -956,6 +975,15 @@ operator|->
 name|wk_private
 decl_stmt|;
 name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|ctx
+operator|->
+name|cc_vap
+decl_stmt|;
+name|struct
 name|ieee80211_frame
 modifier|*
 name|wh
@@ -963,6 +991,8 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|ivp
+decl_stmt|,
+name|tid
 decl_stmt|;
 name|uint64_t
 name|pn
@@ -1006,29 +1036,24 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * No extended IV; discard frame. 		 */
-name|IEEE80211_DPRINTF
+name|IEEE80211_NOTE_MAC
 argument_list|(
-name|ctx
-operator|->
-name|cc_ic
+name|vap
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] Missing ExtIV for AES-CCM cipher\n"
-argument_list|,
-name|ether_sprintf
-argument_list|(
 name|wh
 operator|->
 name|i_addr2
-argument_list|)
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"missing ExtIV for AES-CCM cipher"
 argument_list|)
 expr_stmt|;
-name|ctx
+name|vap
 operator|->
-name|cc_ic
-operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_rx_ccmpformat
 operator|++
@@ -1037,6 +1062,13 @@ return|return
 literal|0
 return|;
 block|}
+name|tid
+operator|=
+name|ieee80211_gettid
+argument_list|(
+name|wh
+argument_list|)
+expr_stmt|;
 name|pn
 operator|=
 name|READ_6
@@ -1079,14 +1111,15 @@ operator|<=
 name|k
 operator|->
 name|wk_keyrsc
+index|[
+name|tid
+index|]
 condition|)
 block|{
 comment|/* 		 * Replay violation. 		 */
 name|ieee80211_notify_replay_failure
 argument_list|(
-name|ctx
-operator|->
-name|cc_ic
+name|vap
 argument_list|,
 name|wh
 argument_list|,
@@ -1095,11 +1128,9 @@ argument_list|,
 name|pn
 argument_list|)
 expr_stmt|;
-name|ctx
+name|vap
 operator|->
-name|cc_ic
-operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_rx_ccmpreplay
 operator|++
@@ -1183,6 +1214,9 @@ comment|/* 	 * Ok to update rsc now. 	 */
 name|k
 operator|->
 name|wk_keyrsc
+index|[
+name|tid
+index|]
 operator|=
 name|pn
 expr_stmt|;
@@ -1946,9 +1980,9 @@ name|pos
 decl_stmt|;
 name|ctx
 operator|->
-name|cc_ic
+name|cc_vap
 operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_crypto_ccmp
 operator|++
@@ -2540,6 +2574,15 @@ operator|->
 name|wk_private
 decl_stmt|;
 name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|ctx
+operator|->
+name|cc_vap
+decl_stmt|;
+name|struct
 name|ieee80211_frame
 modifier|*
 name|wh
@@ -2589,9 +2632,9 @@ name|space
 decl_stmt|;
 name|ctx
 operator|->
-name|cc_ic
+name|cc_vap
 operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_crypto_ccmp
 operator|++
@@ -2980,29 +3023,24 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|IEEE80211_DPRINTF
+name|IEEE80211_NOTE_MAC
 argument_list|(
-name|ctx
-operator|->
-name|cc_ic
+name|vap
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] AES-CCM decrypt failed; MIC mismatch\n"
-argument_list|,
-name|ether_sprintf
-argument_list|(
 name|wh
 operator|->
 name|i_addr2
-argument_list|)
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"AES-CCM decrypt failed; MIC mismatch"
 argument_list|)
 expr_stmt|;
-name|ctx
+name|vap
 operator|->
-name|cc_ic
-operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_rx_ccmpmic
 operator|++

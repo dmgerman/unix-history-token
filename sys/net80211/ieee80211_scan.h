@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,10 @@ directive|define
 name|_NET80211_IEEE80211_SCAN_H_
 end_define
 
+begin_comment
+comment|/*  * 802.11 scanning support.  *  * Scanning is the procedure by which a station locates a bss to join  * (infrastructure/ibss mode), or a channel to use (when operating as  * an ap or ibss master).  Scans are either "active" or "passive".  An  * active scan causes one or more probe request frames to be sent on  * visiting each channel.  A passive request causes each channel in the  * scan set to be visited but no frames to be transmitted; the station  * only listens for traffic.  Note that active scanning may still need  * to listen for traffic before sending probe request frames depending  * on regulatory constraints; the 802.11 layer handles this by generating  * a callback when scanning on a ``passive channel'' when the  * IEEE80211_FEXT_PROBECHAN flag is set.  *  * A scan operation involves constructing a set of channels to inspec  * (the scan set), visiting each channel and collecting information  * (e.g. what bss are present), and then analyzing the results to make  * decisions like which bss to join.  This process needs to be as fast  * as possible so we do things like intelligently construct scan sets  * and dwell on a channel only as long as necessary.  The scan code also  * maintains a cache of recent scan results and uses it to bypass scanning  * whenever possible.  The scan cache is also used to enable roaming  * between access points when operating in infrastructure mode.  *  * Scanning is handled with pluggable modules that implement "policy"  * per-operating mode.  The core scanning support provides an  * instrastructure to support these modules and exports a common api  * to the rest of the 802.11 layer.  Policy modules decide what  * channels to visit, what state to record to make decisions (e.g. ap  * mode scanning for auto channel selection keeps significantly less  * state than sta mode scanning for an ap to associate to), and selects  * the final station/channel to return as the result of a scan.  *  * Scanning is done synchronously when initially bringing a vap to an  * operational state and optionally in the background to maintain the  * scan cache for doing roaming and rogue ap monitoring.  Scanning is  * not tied to the 802.11 state machine that governs vaps though there  * is linkage to the IEEE80211_SCAN state.  Only one vap at a time may  * be scanning; this scheduling policy is handled in ieee80211_new_state  * and is invisible to the scanning code. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -27,6 +31,10 @@ struct_decl|struct
 name|ieee80211_scanner
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* scan policy state */
+end_comment
 
 begin_struct
 struct|struct
@@ -54,14 +62,22 @@ name|IEEE80211_SCAN_MAX_SSID
 value|1
 end_define
 
+begin_comment
+comment|/* max # ssid's to probe */
+end_comment
+
+begin_comment
+comment|/*  * Scan state visible to the 802.11 layer.  Scan parameters and  * results are stored in this data structure.  The ieee80211_scan_state  * structure is extended with space that is maintained private to  * the core scanning support.  We allocate one instance and link it  * to the ieee80211com structure; then share it between all associated  * vaps.  We could allocate multiple of these, e.g. to hold multiple  * scan results, but this is sufficient for current needs.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_scan_state
 block|{
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ss_ic
+name|ss_vap
 decl_stmt|;
 specifier|const
 name|struct
@@ -103,6 +119,16 @@ directive|define
 name|IEEE80211_SCAN_ONCE
 value|0x0010
 comment|/* do one complete pass */
+define|#
+directive|define
+name|IEEE80211_SCAN_NOBCAST
+value|0x0020
+comment|/* no broadcast probe req */
+define|#
+directive|define
+name|IEEE80211_SCAN_NOJOIN
+value|0x0040
+comment|/* no auto-sequencing */
 define|#
 directive|define
 name|IEEE80211_SCAN_GOTPICK
@@ -159,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_SCAN_FLUSH
-value|0x10000
+value|0x00010000
 end_define
 
 begin_comment
@@ -170,7 +196,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_SCAN_NOSSID
-value|0x20000
+value|0x80000000
 end_define
 
 begin_comment
@@ -207,22 +233,33 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ieee80211_scan_dump_channels
+name|ieee80211_scan_vattach
 parameter_list|(
-specifier|const
 name|struct
-name|ieee80211_scan_state
+name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|ieee80211_scan_update
+name|void
+name|ieee80211_scan_vdetach
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_scan_dump_channels
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211_scan_state
 modifier|*
 parameter_list|)
 function_decl|;
@@ -240,7 +277,7 @@ name|int
 name|ieee80211_start_scan
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|int
@@ -248,6 +285,12 @@ name|flags
 parameter_list|,
 name|u_int
 name|duration
+parameter_list|,
+name|u_int
+name|mindwell
+parameter_list|,
+name|u_int
+name|maxdwell
 parameter_list|,
 name|u_int
 name|nssid
@@ -266,7 +309,7 @@ name|int
 name|ieee80211_check_scan
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|int
@@ -274,6 +317,12 @@ name|flags
 parameter_list|,
 name|u_int
 name|duration
+parameter_list|,
+name|u_int
+name|mindwell
+parameter_list|,
+name|u_int
+name|maxdwell
 parameter_list|,
 name|u_int
 name|nssid
@@ -289,11 +338,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ieee80211_check_scan_current
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ieee80211_bg_scan
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -303,7 +365,18 @@ name|void
 name|ieee80211_cancel_scan
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_cancel_anyscan
+parameter_list|(
+name|struct
+name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -314,7 +387,7 @@ name|void
 name|ieee80211_scan_next
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -325,8 +398,36 @@ name|void
 name|ieee80211_scan_done
 parameter_list|(
 name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_probe_curchan
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ieee80211_channel
+modifier|*
+name|ieee80211_scan_pickchannel
+parameter_list|(
+name|struct
 name|ieee80211com
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -342,7 +443,7 @@ name|void
 name|ieee80211_add_scan
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const
@@ -386,7 +487,7 @@ name|void
 name|ieee80211_scan_assoc_success
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const
@@ -420,7 +521,7 @@ name|void
 name|ieee80211_scan_assoc_fail
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const
@@ -441,7 +542,7 @@ name|void
 name|ieee80211_scan_flush
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -474,7 +575,7 @@ name|void
 name|ieee80211_scan_iterate
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|ieee80211_scan_iter_func
@@ -485,6 +586,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_enum
+enum|enum
+block|{
+name|IEEE80211_BPARSE_BADIELEN
+init|=
+literal|0x01
+block|,
+comment|/* ie len past end of frame */
+name|IEEE80211_BPARSE_RATES_INVALID
+init|=
+literal|0x02
+block|,
+comment|/* invalid RATES ie */
+name|IEEE80211_BPARSE_XRATES_INVALID
+init|=
+literal|0x04
+block|,
+comment|/* invalid XRATES ie */
+name|IEEE80211_BPARSE_SSID_INVALID
+init|=
+literal|0x08
+block|,
+comment|/* invalid SSID ie */
+name|IEEE80211_BPARSE_CHAN_INVALID
+init|=
+literal|0x10
+block|,
+comment|/* invalid FH/DSPARMS chan */
+name|IEEE80211_BPARSE_OFFCHAN
+init|=
+literal|0x20
+block|,
+comment|/* DSPARMS chan != curchan */
+name|IEEE80211_BPARSE_BINTVAL_INVALID
+init|=
+literal|0x40
+block|,
+comment|/* invalid beacon interval */
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/*  * Parameters supplied when adding/updating an entry in a  * scan cache.  Pointer variables should be set to NULL  * if no data is available.  Pointer references can be to  * local data; any information that is saved will be copied.  * All multi-byte values must be in host byte order.  */
 end_comment
@@ -493,35 +636,48 @@ begin_struct
 struct|struct
 name|ieee80211_scanparams
 block|{
+name|uint8_t
+name|status
+decl_stmt|;
+comment|/* bitmask of IEEE80211_BPARSE_* */
+name|uint8_t
+name|chan
+decl_stmt|;
+comment|/* channel # from FH/DSPARMS */
+name|uint8_t
+name|bchan
+decl_stmt|;
+comment|/* curchan's channel # */
+name|uint8_t
+name|fhindex
+decl_stmt|;
+name|uint16_t
+name|fhdwell
+decl_stmt|;
+comment|/* FHSS dwell interval */
 name|uint16_t
 name|capinfo
 decl_stmt|;
 comment|/* 802.11 capabilities */
 name|uint16_t
-name|fhdwell
-decl_stmt|;
-comment|/* FHSS dwell interval */
-name|struct
-name|ieee80211_channel
-modifier|*
-name|curchan
-decl_stmt|;
-name|uint8_t
-name|bchan
-decl_stmt|;
-comment|/* chan# advertised inside beacon */
-name|uint8_t
-name|fhindex
-decl_stmt|;
-name|uint8_t
 name|erp
 decl_stmt|;
+comment|/* NB: 0x100 indicates ie present */
 name|uint16_t
 name|bintval
 decl_stmt|;
 name|uint8_t
 name|timoff
 decl_stmt|;
+name|uint8_t
+modifier|*
+name|ies
+decl_stmt|;
+comment|/* all captured ies */
+name|size_t
+name|ies_len
+decl_stmt|;
+comment|/* length of all captured ies */
 name|uint8_t
 modifier|*
 name|tim
@@ -598,6 +754,7 @@ index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
+comment|/* XXX can point inside se_ies */
 name|uint8_t
 name|se_ssid
 index|[
@@ -634,7 +791,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|uint64_t
+name|u_int64_t
 name|tsf
 decl_stmt|;
 block|}
@@ -668,6 +825,10 @@ name|se_fhindex
 decl_stmt|;
 comment|/* FH only */
 name|uint8_t
+name|se_dtimperiod
+decl_stmt|;
+comment|/* DTIM period */
+name|uint16_t
 name|se_erp
 decl_stmt|;
 comment|/* ERP from beacon/probe resp */
@@ -680,39 +841,17 @@ name|se_noise
 decl_stmt|;
 comment|/* noise floor */
 name|uint8_t
-name|se_dtimperiod
+name|se_cc
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* DTIM period */
-name|uint8_t
-modifier|*
-name|se_wpa_ie
+comment|/* captured country code */
+name|struct
+name|ieee80211_ies
+name|se_ies
 decl_stmt|;
-comment|/* captured WPA ie */
-name|uint8_t
-modifier|*
-name|se_rsn_ie
-decl_stmt|;
-comment|/* captured RSN ie */
-name|uint8_t
-modifier|*
-name|se_wme_ie
-decl_stmt|;
-comment|/* captured WME ie */
-name|uint8_t
-modifier|*
-name|se_htcap_ie
-decl_stmt|;
-comment|/* captured HTP cap ie */
-name|uint8_t
-modifier|*
-name|se_htinfo_ie
-decl_stmt|;
-comment|/* captured HTP info ie */
-name|uint8_t
-modifier|*
-name|se_ath_ie
-decl_stmt|;
-comment|/* captured Atheros ie */
+comment|/* captured ie's */
 name|u_int
 name|se_age
 decl_stmt|;
@@ -776,7 +915,7 @@ name|ieee80211_scan_state
 modifier|*
 parameter_list|,
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -791,7 +930,7 @@ name|ieee80211_scan_state
 modifier|*
 parameter_list|,
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -806,7 +945,7 @@ name|ieee80211_scan_state
 modifier|*
 parameter_list|,
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -821,7 +960,7 @@ name|ieee80211_scan_state
 modifier|*
 parameter_list|,
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -834,6 +973,21 @@ parameter_list|(
 name|struct
 name|ieee80211_scan_state
 modifier|*
+parameter_list|)
+function_decl|;
+name|struct
+name|ieee80211_channel
+modifier|*
+function_decl|(
+modifier|*
+name|scan_pickchan
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_scan_state
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* add an entry to the cache */

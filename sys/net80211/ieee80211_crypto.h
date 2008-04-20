@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -55,6 +55,38 @@ index|[
 name|IEEE80211_KEYBUF_SIZE
 index|]
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_rsnparms
+block|{
+name|uint8_t
+name|rsn_mcastcipher
+decl_stmt|;
+comment|/* mcast/group cipher */
+name|uint8_t
+name|rsn_mcastkeylen
+decl_stmt|;
+comment|/* mcast key length */
+name|uint8_t
+name|rsn_ucastcipher
+decl_stmt|;
+comment|/* selected unicast cipher */
+name|uint8_t
+name|rsn_ucastkeylen
+decl_stmt|;
+comment|/* unicast key length */
+name|uint8_t
+name|rsn_keymgmt
+decl_stmt|;
+comment|/* selected key mgmt algo */
+name|uint16_t
+name|rsn_caps
+decl_stmt|;
+comment|/* capabilities */
 block|}
 struct|;
 end_struct
@@ -145,10 +177,13 @@ directive|define
 name|wk_rxmic
 value|wk_key+IEEE80211_KEYBUF_SIZE+8
 comment|/* XXX can't () right */
+comment|/* key receive sequence counter */
 name|uint64_t
 name|wk_keyrsc
+index|[
+name|IEEE80211_TID_SIZE
+index|]
 decl_stmt|;
-comment|/* key receive sequence counter */
 name|uint64_t
 name|wk_keytsc
 decl_stmt|;
@@ -177,8 +212,15 @@ define|\
 value|(IEEE80211_KEY_XMIT | IEEE80211_KEY_RECV | IEEE80211_KEY_GROUP)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_KEYIX_NONE
+value|((ieee80211_keyix) -1)
+end_define
+
 begin_comment
-comment|/*  * NB: these values are ordered carefully; there are lots of  * of implications in any reordering.  In particular beware  * that 4 is not used to avoid conflicting with IEEE80211_F_PRIVACY.  */
+comment|/*  * NB: these values are ordered carefully; there are lots of  * of implications in any reordering.  Beware that 4 is used  * only to indicate h/w TKIP MIC support in driver capabilities;  * there is no separate cipher support (it's rolled into the  * TKIP cipher support).  */
 end_comment
 
 begin_define
@@ -212,6 +254,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_CIPHER_TKIPMIC
+value|4
+end_define
+
+begin_comment
+comment|/* TKIP MIC capability */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_CIPHER_CKIP
 value|5
 end_define
@@ -234,11 +287,50 @@ name|IEEE80211_CIPHER_MAX
 value|(IEEE80211_CIPHER_NONE+1)
 end_define
 
+begin_comment
+comment|/* capability bits in ic_cryptocaps/iv_cryptocaps */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|IEEE80211_KEYIX_NONE
-value|((ieee80211_keyix) -1)
+name|IEEE80211_CRYPTO_WEP
+value|(1<<IEEE80211_CIPHER_WEP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CRYPTO_TKIP
+value|(1<<IEEE80211_CIPHER_TKIP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CRYPTO_AES_OCB
+value|(1<<IEEE80211_CIPHER_AES_OCB)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CRYPTO_AES_CCM
+value|(1<<IEEE80211_CIPHER_AES_CCM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CRYPTO_TKIPMIC
+value|(1<<IEEE80211_CIPHER_TKIPMIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CRYPTO_CKIP
+value|(1<<IEEE80211_CIPHER_CKIP)
 end_define
 
 begin_if
@@ -263,6 +355,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|ieee80211vap
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ieee80211_node
 struct_decl|;
 end_struct_decl
@@ -273,115 +371,13 @@ name|mbuf
 struct_decl|;
 end_struct_decl
 
-begin_comment
-comment|/*  * Crypto state kept in each ieee80211com.  Some of this  * can/should be shared when virtual AP's are supported.  *  * XXX save reference to ieee80211com to properly encapsulate state.  * XXX split out crypto capabilities from ic_caps  */
-end_comment
-
-begin_struct
-struct|struct
-name|ieee80211_crypto_state
-block|{
-name|struct
-name|ieee80211_key
-name|cs_nw_keys
-index|[
-name|IEEE80211_WEP_NKID
-index|]
-decl_stmt|;
-name|ieee80211_keyix
-name|cs_def_txkey
-decl_stmt|;
-comment|/* default/group tx key index */
-name|uint16_t
-name|cs_max_keyix
-decl_stmt|;
-comment|/* max h/w key index */
-name|int
-function_decl|(
-modifier|*
-name|cs_key_alloc
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|ieee80211_key
-modifier|*
-parameter_list|,
-name|ieee80211_keyix
-modifier|*
-parameter_list|,
-name|ieee80211_keyix
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|cs_key_delete
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|ieee80211_key
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|cs_key_set
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|ieee80211_key
-modifier|*
-parameter_list|,
-specifier|const
-name|uint8_t
-name|mac
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|cs_key_update_begin
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|cs_key_update_end
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-end_struct
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_80211_CRYPTO
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void
@@ -406,11 +402,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ieee80211_crypto_vattach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_crypto_vdetach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ieee80211_crypto_newkey
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|int
@@ -431,7 +449,7 @@ name|int
 name|ieee80211_crypto_delkey
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|struct
@@ -446,7 +464,7 @@ name|int
 name|ieee80211_crypto_setkey
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|struct
@@ -468,7 +486,7 @@ name|void
 name|ieee80211_crypto_delglobalkeys
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -512,7 +530,7 @@ name|ic_attach
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|struct
@@ -676,10 +694,6 @@ modifier|*
 name|ieee80211_crypto_encap
 parameter_list|(
 name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,
@@ -696,10 +710,6 @@ name|ieee80211_key
 modifier|*
 name|ieee80211_crypto_decap
 parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
 name|struct
 name|ieee80211_node
 modifier|*
@@ -724,9 +734,9 @@ name|int
 name|ieee80211_crypto_demic
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
+name|vap
 parameter_list|,
 name|struct
 name|ieee80211_key
@@ -788,9 +798,9 @@ name|int
 name|ieee80211_crypto_enmic
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
+name|vap
 parameter_list|,
 name|struct
 name|ieee80211_key
@@ -852,9 +862,9 @@ name|void
 name|ieee80211_crypto_resetkey
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
+name|vap
 parameter_list|,
 name|struct
 name|ieee80211_key
@@ -883,7 +893,7 @@ name|wk_cipher
 operator|->
 name|ic_attach
 argument_list|(
-name|ic
+name|vap
 argument_list|,
 name|k
 argument_list|)
@@ -918,7 +928,7 @@ name|void
 name|ieee80211_notify_replay_failure
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const
@@ -931,7 +941,7 @@ name|struct
 name|ieee80211_key
 modifier|*
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|rsc
 parameter_list|)
 function_decl|;
@@ -942,7 +952,7 @@ name|void
 name|ieee80211_notify_michael_failure
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const

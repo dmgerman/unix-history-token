@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -639,6 +639,14 @@ name|is_tx_classify
 decl_stmt|;
 comment|/* tx classification failed */
 name|uint32_t
+name|is_dwds_mcast
+decl_stmt|;
+comment|/* discard mcast over dwds */
+name|uint32_t
+name|is_dwds_qdrop
+decl_stmt|;
+comment|/* dwds pending frame q full */
+name|uint32_t
 name|is_ht_assoc_nohtcap
 decl_stmt|;
 comment|/* non-HT sta rejected */
@@ -683,9 +691,29 @@ name|is_ampdu_rx_reorder
 decl_stmt|;
 comment|/* A-MPDU held for rx reorder */
 name|uint32_t
+name|is_scan_bg
+decl_stmt|;
+comment|/* background scans started */
+name|uint8_t
+name|is_rx_deauth_code
+decl_stmt|;
+comment|/* last rx'd deauth reason */
+name|uint8_t
+name|is_rx_disassoc_code
+decl_stmt|;
+comment|/* last rx'd disassoc reason */
+name|uint8_t
+name|is_rx_authfail_code
+decl_stmt|;
+comment|/* last rx'd auth fail reason */
+name|uint32_t
+name|is_beacon_miss
+decl_stmt|;
+comment|/* beacon miss notification */
+name|uint32_t
 name|is_spare
 index|[
-literal|16
+literal|14
 index|]
 decl_stmt|;
 block|}
@@ -820,6 +848,11 @@ directive|define
 name|IEEE80211_MLME_UNAUTHORIZE
 value|5
 comment|/* unauthorize station */
+define|#
+directive|define
+name|IEEE80211_MLME_AUTH
+value|6
+comment|/* authenticate station */
 name|uint8_t
 name|im_ssid_len
 decl_stmt|;
@@ -886,6 +919,11 @@ init|=
 literal|6
 block|,
 comment|/* get ACL database */
+name|IEEE80211_MACCMD_POLICY_RADIUS
+init|=
+literal|7
+block|,
+comment|/* set policy: RADIUS managed */
 block|}
 enum|;
 end_enum
@@ -1037,7 +1075,7 @@ block|{
 name|uint16_t
 name|isi_len
 decl_stmt|;
-comment|/* length (mult of 4) */
+comment|/* total length (mult of 4) */
 name|uint16_t
 name|isi_ie_off
 decl_stmt|;
@@ -1097,7 +1135,7 @@ decl_stmt|;
 name|uint8_t
 name|isi_txrate
 decl_stmt|;
-comment|/* index to isi_rates[] */
+comment|/* legacy/IEEE rate or MCS */
 name|uint16_t
 name|isi_associd
 decl_stmt|;
@@ -1129,6 +1167,19 @@ name|uint16_t
 name|isi_inact
 decl_stmt|;
 comment|/* inactivity timer */
+name|uint16_t
+name|isi_txmbps
+decl_stmt|;
+comment|/* current tx rate in .5 Mb/s */
+name|uint32_t
+name|isi_jointime
+decl_stmt|;
+comment|/* time of assoc/join */
+name|struct
+name|ieee80211_mimo_info
+name|isi_mimo
+decl_stmt|;
+comment|/* MIMO info for 11n sta's */
 comment|/* XXX frag state? */
 comment|/* variable length IE data */
 block|}
@@ -1192,7 +1243,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * WME parameters are set and return using i_val and i_len.  * i_val holds the value itself.  i_len specifies the AC  * and, as appropriate, then high bit specifies whether the  * operation is to be applied to the BSS or ourself.  */
+comment|/*  * WME parameters manipulated with IEEE80211_IOC_WME_CWMIN  * through IEEE80211_IOC_WME_ACKPOLICY are set and return  * using i_val and i_len.  i_val holds the value itself.  * i_len specifies the AC and, as appropriate, then high bit  * specifies whether the operation is to be applied to the  * BSS or ourself.  */
 end_comment
 
 begin_define
@@ -1227,6 +1278,161 @@ end_define
 begin_comment
 comment|/* parameter value */
 end_comment
+
+begin_comment
+comment|/*  * Application Information Elements can be appended to a variety  * of frames with the IEE80211_IOC_APPIE request.  This request  * piggybacks on a normal ieee80211req; the frame type is passed  * in i_val as the 802.11 FC0 bytes and the length of the IE data  * is passed in i_len.  The data is referenced in i_data.  If i_len  * is zero then any previously configured IE data is removed.  At  * most IEEE80211_MAX_APPIE data be appened.  Note that multiple  * IE's can be supplied; the data is treated opaquely.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MAX_APPIE
+value|1024
+end_define
+
+begin_comment
+comment|/* max app IE data */
+end_comment
+
+begin_comment
+comment|/*  * Hack: the WPA authenticator uses this mechanism to specify WPA  * ie's that are used instead of the ones normally constructed using  * the cipher state setup with separate ioctls.  This avoids issues  * like the authenticator ordering ie data differently than the  * net80211 layer and needing to keep separate state for WPA and RSN.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_APPIE_WPA
+define|\
+value|(IEEE80211_FC0_TYPE_MGT | IEEE80211_FC0_SUBTYPE_BEACON | \ 	 IEEE80211_FC0_SUBTYPE_PROBE_RESP)
+end_define
+
+begin_comment
+comment|/*  * Station mode roaming parameters.  These are maintained  * per band/mode and control the roaming algorithm.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_roamparams_req
+block|{
+name|struct
+name|ieee80211_roamparam
+name|params
+index|[
+name|IEEE80211_MODE_MAX
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Transmit parameters.  These can be used to set fixed transmit  * rate for each operating mode when operating as client or on a  * per-client basis according to the capabilities of the client  * (e.g. an 11b client associated to an 11g ap) when operating as  * an ap.  *  * MCS are distinguished from legacy rates by or'ing in 0x80.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_txparams_req
+block|{
+name|struct
+name|ieee80211_txparam
+name|params
+index|[
+name|IEEE80211_MODE_MAX
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Set regulatory domain state with IEEE80211_IOC_REGDOMAIN.  * Note this is both the regulatory description and the channel  * list.  The get request for IEEE80211_IOC_REGDOMAIN returns  * only the regdomain info; the channel list is obtained  * separately with IEEE80211_IOC_CHANINFO.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_regdomain_req
+block|{
+name|struct
+name|ieee80211_regdomain
+name|rd
+decl_stmt|;
+name|struct
+name|ieee80211req_chaninfo
+name|chaninfo
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Get driver capabilities.  Driver, hardware crypto, and  * HT/802.11n capabilities, and a table that describes what  * the radio can do.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_devcaps_req
+block|{
+name|uint32_t
+name|dc_drivercaps
+decl_stmt|;
+comment|/* general driver caps */
+name|uint32_t
+name|dc_cryptocaps
+decl_stmt|;
+comment|/* hardware crypto support */
+name|uint32_t
+name|dc_htcaps
+decl_stmt|;
+comment|/* HT/802.11n support */
+name|struct
+name|ieee80211req_chaninfo
+name|dc_chaninfo
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_chanswitch_req
+block|{
+name|struct
+name|ieee80211_channel
+name|csa_chan
+decl_stmt|;
+comment|/* new channel */
+name|int
+name|csa_mode
+decl_stmt|;
+comment|/* CSA mode */
+name|int
+name|csa_count
+decl_stmt|;
+comment|/* beacon count to switch */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Get/set per-station vlan tag.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211req_sta_vlan
+block|{
+name|uint8_t
+name|sv_macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|sv_vlan
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -1549,23 +1755,13 @@ name|IEEE80211_IOC_MLME
 value|21
 end_define
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_OPTIE
-value|22
-end_define
-
 begin_comment
-comment|/* optional info. element */
+comment|/* 22 was IEEE80211_IOC_OPTIE, replaced by IEEE80211_IOC_APPIE */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_SCAN_REQ
-value|23
-end_define
+begin_comment
+comment|/* 23 was IEEE80211_IOC_SCAN_REQ */
+end_comment
 
 begin_comment
 comment|/* 24 was IEEE80211_IOC_SCAN_RESULTS */
@@ -1637,92 +1833,12 @@ begin_comment
 comment|/* AP inter-sta bridging */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_MCASTCIPHER
-value|31
-end_define
-
 begin_comment
-comment|/* multicast/default cipher */
+comment|/* 31-35,37-38 were for WPA authenticator settings */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_MCASTKEYLEN
-value|32
-end_define
-
 begin_comment
-comment|/* multicast key length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_UCASTCIPHERS
-value|33
-end_define
-
-begin_comment
-comment|/* unicast cipher suites */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_UCASTCIPHER
-value|34
-end_define
-
-begin_comment
-comment|/* unicast cipher */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_UCASTKEYLEN
-value|35
-end_define
-
-begin_comment
-comment|/* unicast key length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_DRIVER_CAPS
-value|36
-end_define
-
-begin_comment
-comment|/* driver capabilities */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_KEYMGTALGS
-value|37
-end_define
-
-begin_comment
-comment|/* key management algorithms */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_RSNCAPS
-value|38
-end_define
-
-begin_comment
-comment|/* RSN capabilities */
+comment|/* 36 was IEEE80211_IOC_DRIVER_CAPS */
 end_comment
 
 begin_define
@@ -1982,81 +2098,8 @@ begin_comment
 comment|/* scan cache valid threshold */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_ROAM_RSSI_11A
-value|66
-end_define
-
 begin_comment
-comment|/* rssi threshold in 11a */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_ROAM_RSSI_11B
-value|67
-end_define
-
-begin_comment
-comment|/* rssi threshold in 11b */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_ROAM_RSSI_11G
-value|68
-end_define
-
-begin_comment
-comment|/* rssi threshold in 11g */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_ROAM_RATE_11A
-value|69
-end_define
-
-begin_comment
-comment|/* tx rate threshold in 11a */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_ROAM_RATE_11B
-value|70
-end_define
-
-begin_comment
-comment|/* tx rate threshold in 11b */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_ROAM_RATE_11G
-value|71
-end_define
-
-begin_comment
-comment|/* tx rate threshold in 11g */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_MCAST_RATE
-value|72
-end_define
-
-begin_comment
-comment|/* tx rate for mcast frames */
+comment|/* 66-72 were IEEE80211_IOC_ROAM_* and IEEE80211_IOC_MCAST_RATE */
 end_comment
 
 begin_define
@@ -2224,37 +2267,8 @@ begin_comment
 comment|/* 802.11h (on, off) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_REGDOMAIN
-value|89
-end_define
-
 begin_comment
-comment|/* regulatory domain */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_COUNTRYCODE
-value|90
-end_define
-
-begin_comment
-comment|/* ISO country code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_IOC_LOCATION
-value|91
-end_define
-
-begin_comment
-comment|/* indoor/outdoor/anywhere */
+comment|/* 89-91 were regulatory items */
 end_comment
 
 begin_define
@@ -2271,12 +2285,100 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IOC_DWDS
+value|93
+end_define
+
+begin_comment
+comment|/* DWDS/4-address handling */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IOC_INACTIVITY
 value|94
 end_define
 
 begin_comment
 comment|/* sta inactivity handling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_APPIE
+value|95
+end_define
+
+begin_comment
+comment|/* application IE's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_WPS
+value|96
+end_define
+
+begin_comment
+comment|/* WPS operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_TSN
+value|97
+end_define
+
+begin_comment
+comment|/* TSN operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_DEVCAPS
+value|98
+end_define
+
+begin_comment
+comment|/* driver+device capabilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_CHANSWITCH
+value|99
+end_define
+
+begin_comment
+comment|/* start 11h channel switch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_DFS
+value|100
+end_define
+
+begin_comment
+comment|/* DFS (on, off) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_DOTD
+value|101
+end_define
+
+begin_comment
+comment|/* 802.11d (on, off) */
 end_comment
 
 begin_define
@@ -2293,6 +2395,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_IOC_SCAN_REQ
+value|103
+end_define
+
+begin_comment
+comment|/* scan w/ specified params */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_CANCEL
+value|104
+end_define
+
+begin_comment
+comment|/* cancel ongoing scan */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_IOC_HTCONF
 value|105
 end_define
@@ -2300,6 +2424,160 @@ end_define
 begin_comment
 comment|/* HT config (off, HT20, HT40)*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_REGDOMAIN
+value|106
+end_define
+
+begin_comment
+comment|/* regulatory domain info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_ROAM
+value|107
+end_define
+
+begin_comment
+comment|/* roaming params en masse */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_TXPARAMS
+value|108
+end_define
+
+begin_comment
+comment|/* tx parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_STA_VLAN
+value|109
+end_define
+
+begin_comment
+comment|/* per-station vlan tag */
+end_comment
+
+begin_comment
+comment|/*  * Parameters for controlling a scan requested with  * IEEE80211_IOC_SCAN_REQ.  *  * Active scans cause ProbeRequest frames to be issued for each  * specified ssid and, by default, a broadcast ProbeRequest frame.  * The set of ssid's is specified in the request.  *  * By default the scan will cause a BSS to be joined (in station/adhoc  * mode) or a channel to be selected for operation (hostap mode).  * To disable that specify IEEE80211_IOC_SCAN_NOPICK and if the  *  * If the station is currently associated to an AP then a scan request  * will cause the station to leave the current channel and potentially  * miss frames from the AP.  Alternatively the station may notify the  * AP that it is going into power save mode before it leaves the channel.  * This ensures frames for the station are buffered by the AP.  This is  * termed a ``bg scan'' and is requested with the IEEE80211_IOC_SCAN_BGSCAN  * flag.  Background scans may take longer than foreground scans and may  * be preempted by traffic.  If a station is not associated to an AP  * then a request for a background scan is automatically done in the  * foreground.  *  * The results of the scan request are cached by the system.  This  * information is aged out and/or invalidated based on events like not  * being able to associated to an AP.  To flush the current cache  * contents before doing a scan the IEEE80211_IOC_SCAN_FLUSH flag may  * be specified.  *  * By default the scan will be done until a suitable AP is located  * or a channel is found for use.  A scan can also be constrained  * to be done once (IEEE80211_IOC_SCAN_ONCE) or to last for no more  * than a specified duration.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_scan_req
+block|{
+name|int
+name|sr_flags
+decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_NOPICK
+value|0x00001
+comment|/* scan only, no selection */
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_ACTIVE
+value|0x00002
+comment|/* active scan (probe req) */
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_PICK1ST
+value|0x00004
+comment|/* ``hey sailor'' mode */
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_BGSCAN
+value|0x00008
+comment|/* bg scan, exit ps at end */
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_ONCE
+value|0x00010
+comment|/* do one complete pass */
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_NOBCAST
+value|0x00020
+comment|/* don't send bcast probe req */
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_NOJOIN
+value|0x00040
+comment|/* no auto-sequencing */
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_FLUSH
+value|0x10000
+comment|/* flush scan cache first */
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_CHECK
+value|0x20000
+comment|/* check scan cache first */
+name|u_int
+name|sr_duration
+decl_stmt|;
+comment|/* duration (ms) */
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_DURATION_MIN
+value|1
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_DURATION_MAX
+value|0x7fffffff
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_FOREVER
+value|IEEE80211_IOC_SCAN_DURATION_MAX
+name|u_int
+name|sr_mindwell
+decl_stmt|;
+comment|/* min channel dwelltime (ms) */
+name|u_int
+name|sr_maxdwell
+decl_stmt|;
+comment|/* max channel dwelltime (ms) */
+name|int
+name|sr_nssid
+decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_IOC_SCAN_MAX_SSID
+value|3
+struct|struct
+block|{
+name|int
+name|len
+decl_stmt|;
+comment|/* length in bytes */
+name|uint8_t
+name|ssid
+index|[
+name|IEEE80211_NWID_LEN
+index|]
+decl_stmt|;
+comment|/* ssid contents */
+block|}
+name|sr_ssid
+index|[
+name|IEEE80211_IOC_SCAN_MAX_SSID
+index|]
+struct|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Scan result data returned for IEEE80211_IOC_SCAN_RESULTS.  * Each result is a fixed size structure followed by a variable  * length SSID and one or more variable length information elements.  * The size of each variable length item is found in the fixed  * size structure and the entire length of the record is specified  * in isr_len.  Result records are rounded to a multiple of 4 bytes.  */
@@ -2312,11 +2590,11 @@ block|{
 name|uint16_t
 name|isr_len
 decl_stmt|;
-comment|/* length (mult of 4) */
+comment|/* total length (mult of 4) */
 name|uint16_t
 name|isr_ie_off
 decl_stmt|;
-comment|/* offset to IE data */
+comment|/* offset to SSID+IE data */
 name|uint16_t
 name|isr_ie_len
 decl_stmt|;
@@ -2371,6 +2649,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Virtual AP cloning parameters.  The parent device must  * be a vap-capable device.  All parameters specified with  * the clone request are fixed for the lifetime of the vap.  *  * There are two flavors of WDS vaps: legacy and dynamic.  * Legacy WDS operation implements a static binding between  * two stations encapsulating traffic in 4-address frames.  * Dynamic WDS vaps are created when a station associates to  * an AP and sends a 4-address frame.  If the AP vap is  * configured to support WDS then this will generate an  * event to user programs listening on the routing socket  * and a Dynamic WDS vap will be created to handle traffic  * to/from that station.  In both cases the bssid of the  * peer must be specified when creating the vap.  *  * By default a vap will inherit the mac address/bssid of  * the underlying device.  To request a unique address the  * IEEE80211_CLONE_BSSID flag should be supplied.  This is  * meaningless for WDS vaps as they share the bssid of an  * AP vap that must otherwise exist.  Note that some devices  * may not be able to support multiple addresses.  *  * Station mode vap's normally depend on the device to notice  * when the AP stops sending beacon frames.  If IEEE80211_CLONE_NOBEACONS  * is specified the net80211 layer will do this in s/w.  This  * is mostly useful when setting up a WDS repeater/extender where  * an AP vap is combined with a sta vap and the device isn't able  * to track beacon frames in hardware.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_clone_params
@@ -2382,13 +2664,75 @@ name|IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* parent device */
-name|int
+name|uint16_t
 name|icp_opmode
 decl_stmt|;
 comment|/* operating mode */
+name|uint16_t
+name|icp_flags
+decl_stmt|;
+comment|/* see below */
+name|uint8_t
+name|icp_bssid
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+comment|/* for WDS links */
+name|uint8_t
+name|icp_macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+comment|/* local address */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CLONE_BSSID
+value|0x0001
+end_define
+
+begin_comment
+comment|/* allocate unique mac/bssid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CLONE_NOBEACONS
+value|0x0002
+end_define
+
+begin_comment
+comment|/* don't setup beacon timers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CLONE_WDSLEGACY
+value|0x0004
+end_define
+
+begin_comment
+comment|/* legacy WDS processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CLONE_MACADDR
+value|0x0008
+end_define
+
+begin_comment
+comment|/* use specified mac addr */
+end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -88,6 +88,18 @@ name|txa_token
 decl_stmt|;
 comment|/* dialog token */
 name|int
+name|txa_lastsample
+decl_stmt|;
+comment|/* ticks @ last traffic sample */
+name|int
+name|txa_pkts
+decl_stmt|;
+comment|/* packets over last sample interval */
+name|int
+name|txa_avgpps
+decl_stmt|;
+comment|/* filtered traffic over window */
+name|int
 name|txa_qbytes
 decl_stmt|;
 comment|/* data queued (bytes) */
@@ -108,11 +120,11 @@ comment|/* BA window size */
 name|uint8_t
 name|txa_attempts
 decl_stmt|;
-comment|/* # setup attempts */
+comment|/* # ADDBA requests w/o a response */
 name|int
-name|txa_lastrequest
+name|txa_nextrequest
 decl_stmt|;
-comment|/* time of last ADDBA request */
+comment|/* soonest to make next ADDBA request */
 name|struct
 name|ifqueue
 name|txa_q
@@ -160,6 +172,193 @@ parameter_list|)
 define|\
 value|(((tap)->txa_flags& \ 	 (IEEE80211_AGGR_RUNNING|IEEE80211_AGGR_XCHGPEND|IEEE80211_AGGR_NAK)) != 0)
 end_define
+
+begin_comment
+comment|/*  * Traffic estimator support.  We estimate packets/sec for  * each AC that is setup for AMPDU or will potentially be  * setup for AMPDU.  The traffic rate can be used to decide  * when AMPDU should be setup (according to a threshold)  * and is available for drivers to do things like cache  * eviction when only a limited number of BA streams are  * available and more streams are requested than available.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|__inline
+name|ieee80211_txampdu_update_pps
+parameter_list|(
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+name|tap
+parameter_list|)
+block|{
+comment|/* NB: scale factor of 2 was picked heuristically */
+name|tap
+operator|->
+name|txa_avgpps
+operator|=
+operator|(
+operator|(
+name|tap
+operator|->
+name|txa_avgpps
+operator|<<
+literal|2
+operator|)
+operator|-
+name|tap
+operator|->
+name|txa_avgpps
+operator|+
+name|tap
+operator|->
+name|txa_pkts
+operator|)
+operator|>>
+literal|2
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Count a packet towards the pps estimate.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|__inline
+name|ieee80211_txampdu_count_packet
+parameter_list|(
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+name|tap
+parameter_list|)
+block|{
+comment|/* XXX bound loop/do more crude estimate? */
+while|while
+condition|(
+name|ticks
+operator|-
+name|tap
+operator|->
+name|txa_lastsample
+operator|>=
+name|hz
+condition|)
+block|{
+name|ieee80211_txampdu_update_pps
+argument_list|(
+name|tap
+argument_list|)
+expr_stmt|;
+comment|/* reset to start new sample interval */
+name|tap
+operator|->
+name|txa_pkts
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|tap
+operator|->
+name|txa_avgpps
+operator|==
+literal|0
+condition|)
+block|{
+name|tap
+operator|->
+name|txa_lastsample
+operator|=
+name|ticks
+expr_stmt|;
+break|break;
+block|}
+name|tap
+operator|->
+name|txa_lastsample
+operator|+=
+name|hz
+expr_stmt|;
+block|}
+name|tap
+operator|->
+name|txa_pkts
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Get the current pps estimate.  If the average is out of  * date due to lack of traffic then we decay the estimate  * to account for the idle time.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|__inline
+name|ieee80211_txampdu_getpps
+parameter_list|(
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+name|tap
+parameter_list|)
+block|{
+comment|/* XXX bound loop/do more crude estimate? */
+while|while
+condition|(
+name|ticks
+operator|-
+name|tap
+operator|->
+name|txa_lastsample
+operator|>=
+name|hz
+condition|)
+block|{
+name|ieee80211_txampdu_update_pps
+argument_list|(
+name|tap
+argument_list|)
+expr_stmt|;
+name|tap
+operator|->
+name|txa_pkts
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|tap
+operator|->
+name|txa_avgpps
+operator|==
+literal|0
+condition|)
+block|{
+name|tap
+operator|->
+name|txa_lastsample
+operator|=
+name|ticks
+expr_stmt|;
+break|break;
+block|}
+name|tap
+operator|->
+name|txa_lastsample
+operator|+=
+name|hz
+expr_stmt|;
+block|}
+return|return
+name|tap
+operator|->
+name|txa_avgpps
+return|;
+block|}
+end_function
 
 begin_struct
 struct|struct
@@ -231,6 +430,28 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_ht_vattach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ht_vdetach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee80211_ht_announce
 parameter_list|(
 name|struct
@@ -240,10 +461,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct
+struct|struct
+name|ieee80211_mcs_rates
+block|{
+name|uint16_t
+name|ht20_rate_800ns
+decl_stmt|;
+name|uint16_t
+name|ht20_rate_400ns
+decl_stmt|;
+name|uint16_t
+name|ht40_rate_800ns
+decl_stmt|;
+name|uint16_t
+name|ht40_rate_400ns
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|int
+name|struct
+name|ieee80211_mcs_rates
 name|ieee80211_htrates
 index|[
 literal|16
@@ -385,6 +627,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ieee80211_ht_node_age
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|ieee80211_channel
 modifier|*
@@ -438,7 +691,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ieee80211_htinfo_update
+name|ieee80211_htprot_update
 parameter_list|(
 name|struct
 name|ieee80211com
@@ -647,7 +900,7 @@ name|void
 name|ieee80211_ht_update_beacon
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|struct

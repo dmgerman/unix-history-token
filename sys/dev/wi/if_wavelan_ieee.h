@@ -1070,6 +1070,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WI_RID_ENH_SECURITY
+value|0xFC43
+end_define
+
+begin_comment
+comment|/* enhanced security (AP mode) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WI_RID_CNF_DBM_ADJUST
 value|0xFC46
 end_define
@@ -1088,6 +1099,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WI_RID_WPA_DATA
+value|0xFC48
+end_define
+
+begin_comment
+comment|/* WPA IE */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WI_RID_BASIC_RATE
 value|0xFCB3
 end_define
@@ -1098,6 +1120,17 @@ directive|define
 name|WI_RID_SUPPORT_RATE
 value|0xFCB4
 end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_WPA_HANDLING
+value|0xFCBB
+end_define
+
+begin_comment
+comment|/* WPA handling procedures */
+end_comment
 
 begin_comment
 comment|/*  * Network parameters, dynamic configuration entities  */

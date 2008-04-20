@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ end_expr_stmt
 begin_comment
 comment|/*  * IEEE 802.11 WEP crypto support.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_wlan.h"
+end_include
 
 begin_include
 include|#
@@ -100,7 +106,7 @@ modifier|*
 name|wep_attach
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
 parameter_list|,
 name|struct
@@ -324,11 +330,16 @@ struct|struct
 name|wep_ctx
 block|{
 name|struct
+name|ieee80211vap
+modifier|*
+name|wc_vap
+decl_stmt|;
+comment|/* for diagnostics+statistics */
+name|struct
 name|ieee80211com
 modifier|*
 name|wc_ic
 decl_stmt|;
-comment|/* for diagnostics */
 name|uint32_t
 name|wc_iv
 decl_stmt|;
@@ -357,9 +368,9 @@ modifier|*
 name|wep_attach
 parameter_list|(
 name|struct
-name|ieee80211com
+name|ieee80211vap
 modifier|*
-name|ic
+name|vap
 parameter_list|,
 name|struct
 name|ieee80211_key
@@ -386,7 +397,7 @@ expr|struct
 name|wep_ctx
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_80211_CRYPTO
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -400,9 +411,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ic
+name|vap
 operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_crypto_nomem
 operator|++
@@ -413,9 +424,17 @@ return|;
 block|}
 name|ctx
 operator|->
+name|wc_vap
+operator|=
+name|vap
+expr_stmt|;
+name|ctx
+operator|->
 name|wc_ic
 operator|=
-name|ic
+name|vap
+operator|->
+name|iv_ic
 expr_stmt|;
 name|get_random_bytes
 argument_list|(
@@ -466,7 +485,7 @@ name|FREE
 argument_list|(
 name|ctx
 argument_list|,
-name|M_DEVBUF
+name|M_80211_CRYPTO
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -840,6 +859,15 @@ operator|->
 name|wk_private
 decl_stmt|;
 name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|ctx
+operator|->
+name|wc_vap
+decl_stmt|;
+name|struct
 name|ieee80211_frame
 modifier|*
 name|wh
@@ -877,29 +905,24 @@ name|hdrlen
 argument_list|)
 condition|)
 block|{
-name|IEEE80211_DPRINTF
+name|IEEE80211_NOTE_MAC
 argument_list|(
-name|ctx
-operator|->
-name|wc_ic
+name|vap
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] WEP ICV mismatch on decrypt\n"
-argument_list|,
-name|ether_sprintf
-argument_list|(
 name|wh
 operator|->
 name|i_addr2
-argument_list|)
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"WEP ICV mismatch on decrypt"
 argument_list|)
 expr_stmt|;
-name|ctx
+name|vap
 operator|->
-name|wc_ic
-operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_rx_wepfail
 operator|++
@@ -1551,6 +1574,15 @@ operator|->
 name|wk_private
 decl_stmt|;
 name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|ctx
+operator|->
+name|wc_vap
+decl_stmt|;
+name|struct
 name|mbuf
 modifier|*
 name|m
@@ -1600,11 +1632,9 @@ name|off
 decl_stmt|,
 name|keylen
 decl_stmt|;
-name|ctx
+name|vap
 operator|->
-name|wc_ic
-operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_crypto_wep
 operator|++
@@ -1890,15 +1920,11 @@ literal|0
 condition|)
 block|{
 comment|/* out of data */
-name|IEEE80211_DPRINTF
+name|IEEE80211_NOTE_MAC
 argument_list|(
-name|ctx
-operator|->
-name|wc_ic
+name|vap
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
-argument_list|,
-literal|"[%s] out of data for WEP (data_len %zu)\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -1914,9 +1940,12 @@ operator|->
 name|i_addr2
 argument_list|)
 argument_list|,
+literal|"out of data for WEP (data_len %zu)"
+argument_list|,
 name|data_len
 argument_list|)
 expr_stmt|;
+comment|/* XXX stat */
 return|return
 literal|0
 return|;
@@ -2107,6 +2136,15 @@ operator|->
 name|wk_private
 decl_stmt|;
 name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|ctx
+operator|->
+name|wc_vap
+decl_stmt|;
+name|struct
 name|mbuf
 modifier|*
 name|m
@@ -2156,11 +2194,9 @@ name|off
 decl_stmt|,
 name|keylen
 decl_stmt|;
-name|ctx
+name|vap
 operator|->
-name|wc_ic
-operator|->
-name|ic_stats
+name|iv_stats
 operator|.
 name|is_crypto_wep
 operator|++
@@ -2458,18 +2494,12 @@ literal|0
 condition|)
 block|{
 comment|/* out of data */
-name|IEEE80211_DPRINTF
+name|IEEE80211_NOTE_MAC
 argument_list|(
-name|ctx
-operator|->
-name|wc_ic
+name|vap
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] out of data for WEP (data_len %zu)\n"
-argument_list|,
-name|ether_sprintf
-argument_list|(
 name|mtod
 argument_list|(
 name|m0
@@ -2480,7 +2510,8 @@ operator|*
 argument_list|)
 operator|->
 name|i_addr2
-argument_list|)
+argument_list|,
+literal|"out of data for WEP (data_len %zu)"
 argument_list|,
 name|data_len
 argument_list|)

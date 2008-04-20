@@ -266,6 +266,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|IFM_OPMODE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)& (IFM_IEEE80211_ADHOC | IFM_IEEE80211_HOSTAP | \ 	 IFM_IEEE80211_IBSS | IFM_IEEE80211_WDS | IFM_IEEE80211_MONITOR))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_STA
+value|0
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -554,7 +572,6 @@ break|break;
 case|case
 name|IFM_IEEE80211
 case|:
-comment|/* XXX: Different value for adhoc? */
 if|if
 condition|(
 name|ifmr
@@ -563,11 +580,31 @@ name|ifm_status
 operator|&
 name|IFM_ACTIVE
 condition|)
+block|{
+comment|/* NB: only sta mode associates */
+if|if
+condition|(
+name|IFM_OPMODE
+argument_list|(
+name|ifmr
+operator|.
+name|ifm_active
+argument_list|)
+operator|==
+name|IFM_IEEE80211_STA
+condition|)
 name|printf
 argument_list|(
 literal|"associated"
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"running"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|printf
 argument_list|(

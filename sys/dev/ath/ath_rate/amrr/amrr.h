@@ -28,11 +28,6 @@ name|ath_ratectrl
 name|arc
 decl_stmt|;
 comment|/* base state */
-name|struct
-name|callout
-name|timer
-decl_stmt|;
-comment|/* periodic timer */
 block|}
 struct|;
 end_struct
@@ -45,6 +40,18 @@ begin_struct
 struct|struct
 name|amrr_node
 block|{
+name|int
+name|amn_rix
+decl_stmt|;
+comment|/* current rate index */
+name|int
+name|amn_ticks
+decl_stmt|;
+comment|/* time of last update */
+name|int
+name|amn_interval
+decl_stmt|;
+comment|/* update interval (ticks) */
 comment|/* AMRR statistics for this node */
 name|u_int
 name|amn_tx_try0_cnt

@@ -32,11 +32,6 @@ name|ath_ratectrl
 name|arc
 decl_stmt|;
 comment|/* base state */
-name|struct
-name|callout
-name|timer
-decl_stmt|;
-comment|/* periodic timer */
 block|}
 struct|;
 end_struct
@@ -49,6 +44,18 @@ begin_struct
 struct|struct
 name|onoe_node
 block|{
+name|int
+name|on_rix
+decl_stmt|;
+comment|/* current rate index */
+name|int
+name|on_ticks
+decl_stmt|;
+comment|/* time of last update */
+name|int
+name|on_interval
+decl_stmt|;
+comment|/* update interval (ticks) */
 name|u_int
 name|on_tx_ok
 decl_stmt|;

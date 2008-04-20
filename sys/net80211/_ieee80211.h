@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,14 @@ define|#
 directive|define
 name|_NET80211__IEEE80211_H_
 end_define
+
+begin_comment
+comment|/*  * 802.11 implementation definitions.  *  * NB: this file is used by applications.  */
+end_comment
+
+begin_comment
+comment|/*  * PHY type; mostly used to identify FH phys.  */
+end_comment
 
 begin_enum
 enum|enum
@@ -33,7 +41,7 @@ block|,
 comment|/* high rate OFDM, aka turbo mode */
 name|IEEE80211_T_HT
 block|,
-comment|/* high throughput, full GI */
+comment|/* high throughput */
 block|}
 enum|;
 end_enum
@@ -50,7 +58,7 @@ comment|/* more common nomenclature */
 end_comment
 
 begin_comment
-comment|/* XXX not really a mode; there are really multiple PHY's */
+comment|/*  * PHY mode; this is not really a mode as multi-mode devices  * have multiple PHY's.  Mode is mostly used as a shorthand  * for constraining which channels to consider in setting up  * operation.  Modes used to be used more extensively when  * channels were identified as IEEE channel numbers.  */
 end_comment
 
 begin_enum
@@ -118,20 +126,29 @@ name|IEEE80211_MODE_MAX
 value|(IEEE80211_MODE_11NG+1)
 end_define
 
+begin_comment
+comment|/*  * Operating mode.  Devices do not necessarily support  * all modes; they indicate which are supported in their  * capabilities.  */
+end_comment
+
 begin_enum
 enum|enum
 name|ieee80211_opmode
 block|{
-name|IEEE80211_M_STA
-init|=
-literal|1
-block|,
-comment|/* infrastructure station */
 name|IEEE80211_M_IBSS
 init|=
 literal|0
 block|,
 comment|/* IBSS (adhoc) station */
+name|IEEE80211_M_STA
+init|=
+literal|1
+block|,
+comment|/* infrastructure station */
+name|IEEE80211_M_WDS
+init|=
+literal|2
+block|,
+comment|/* WDS link */
 name|IEEE80211_M_AHDEMO
 init|=
 literal|3
@@ -139,18 +156,14 @@ block|,
 comment|/* Old lucent compatible adhoc demo */
 name|IEEE80211_M_HOSTAP
 init|=
-literal|6
+literal|4
 block|,
 comment|/* Software Access Point */
 name|IEEE80211_M_MONITOR
 init|=
-literal|8
+literal|5
 block|,
 comment|/* Monitor mode */
-name|IEEE80211_M_WDS
-init|=
-literal|2
-comment|/* WDS link */
 block|}
 enum|;
 end_enum
@@ -190,7 +203,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Authentication mode.  */
+comment|/*  * Authentication mode.  The open and shared key authentication  * modes are implemented within the 802.11 layer.  802.1x and  * WPA/802.11i are implemented in user mode by setting the  * 802.11 layer into IEEE80211_AUTH_8021X and deferring  * authentication to user space programs.  */
 end_comment
 
 begin_enum
@@ -1163,6 +1176,24 @@ comment|/* index for non-QoS sta */
 end_comment
 
 begin_comment
+comment|/*  * The 802.11 spec says at most 2007 stations may be  * associated at once.  For most AP's this is way more  * than is feasible so we use a default of 128.  This  * number may be overridden by the driver and/or by  * user configuration but may not be less than IEEE80211_AID_MIN.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AID_DEF
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AID_MIN
+value|16
+end_define
+
+begin_comment
 comment|/*  * 802.11 rate set.  */
 end_comment
 
@@ -1206,7 +1237,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * 802.11n variant of ieee80211_rateset.  Instead  * legacy rates the entries are MCS rates.  We define  * the structure such that it can be used interchangeably  * with an ieee80211_rateset (modulo structure size).  */
+comment|/*  * 802.11n variant of ieee80211_rateset.  Instead of  * legacy rates the entries are MCS rates.  We define  * the structure such that it can be used interchangeably  * with an ieee80211_rateset (modulo structure size).  */
 end_comment
 
 begin_define
@@ -1241,43 +1272,127 @@ value|0x80
 end_define
 
 begin_comment
-comment|/*  * Roaming state visible to user space.  There are two  * thresholds that control whether roaming is considered;  * when either is exceeded the 802.11 layer will check  * the scan cache for another AP.  If the cache is stale  * then a scan may be triggered.  */
+comment|/*  * Per-mode transmit parameters/controls visible to user space.  * These can be used to set fixed transmit rate for all operating  * modes or on a per-client basis according to the capabilities  * of the client (e.g. an 11b client associated to an 11g ap).  *  * MCS are distinguished from legacy rates by or'ing in 0x80.  */
 end_comment
 
 begin_struct
 struct|struct
-name|ieee80211_roam
+name|ieee80211_txparam
+block|{
+name|uint8_t
+name|ucastrate
+decl_stmt|;
+comment|/* ucast data rate (legacy/MCS|0x80) */
+name|uint8_t
+name|mgmtrate
+decl_stmt|;
+comment|/* mgmt frame rate (legacy/MCS|0x80) */
+name|uint8_t
+name|mcastrate
+decl_stmt|;
+comment|/* multicast rate (legacy/MCS|0x80) */
+name|uint8_t
+name|maxretry
+decl_stmt|;
+comment|/* max unicast data retry count */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Per-mode roaming state visible to user space.  There are two  * thresholds that control whether roaming is considered; when  * either is exceeded the 802.11 layer will check the scan cache  * for another AP.  If the cache is stale then a scan may be  * triggered.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_roamparam
 block|{
 name|int8_t
-name|rssi11a
+name|rssi
 decl_stmt|;
-comment|/* rssi thresh for 11a bss */
+comment|/* rssi thresh (.5 dBm) */
+name|uint8_t
+name|rate
+decl_stmt|;
+comment|/* tx rate thresh (.5 Mb/s or MCS) */
+name|uint16_t
+name|pad
+decl_stmt|;
+comment|/* reserve */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Regulatory Information.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_regdomain
+block|{
+name|uint16_t
+name|regdomain
+decl_stmt|;
+comment|/* SKU */
+name|uint16_t
+name|country
+decl_stmt|;
+comment|/* ISO country code */
+name|uint8_t
+name|location
+decl_stmt|;
+comment|/* I (indoor), O (outdoor), other */
+name|uint8_t
+name|ecm
+decl_stmt|;
+comment|/* Extended Channel Mode */
+name|char
+name|isocc
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* country code string */
+name|short
+name|pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * MIMO antenna/radio state.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_mimo_info
+block|{
 name|int8_t
-name|rssi11b
+name|rssi
+index|[
+literal|3
+index|]
 decl_stmt|;
-comment|/* for 11g sta in 11b bss */
+comment|/* per-antenna rssi */
 name|int8_t
-name|rssi11bOnly
+name|noise
+index|[
+literal|3
+index|]
 decl_stmt|;
-comment|/* for 11b sta */
-name|uint8_t
-name|pad1
+comment|/* per-antenna noise floor */
+name|uint32_t
+name|evm
+index|[
+literal|3
+index|]
 decl_stmt|;
-name|uint8_t
-name|rate11a
-decl_stmt|;
-comment|/* rate thresh for 11a bss */
-name|uint8_t
-name|rate11b
-decl_stmt|;
-comment|/* for 11g sta in 11b bss */
-name|uint8_t
-name|rate11bOnly
-decl_stmt|;
-comment|/* for 11b sta */
-name|uint8_t
-name|pad2
-decl_stmt|;
+comment|/* EVM data */
 block|}
 struct|;
 end_struct

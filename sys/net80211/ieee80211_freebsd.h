@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,30 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
 
 begin_comment
 comment|/*  * Common state locking definitions.  */
@@ -43,7 +67,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_ic)->ic_comlock, _name, "802.11 com lock", MTX_DEF)
+value|mtx_init(&(_ic)->ic_comlock, _name, "802.11 com lock", \ 	    MTX_DEF | MTX_RECURSE)
 end_define
 
 begin_define
@@ -88,79 +112,25 @@ value|mtx_assert(&(_ic)->ic_comlock, MA_OWNED)
 end_define
 
 begin_comment
-comment|/*  * Beacon locking definitions.  */
+comment|/*  * Node locking definitions.  */
 end_comment
 
 begin_typedef
 typedef|typedef
+struct|struct
+block|{
+name|char
+name|name
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* e.g. "ath0_node_lock" */
 name|struct
 name|mtx
-name|ieee80211_beacon_lock_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_BEACON_LOCK_INIT
-parameter_list|(
-name|_ic
-parameter_list|,
-name|_name
-parameter_list|)
-define|\
-value|mtx_init(&(_ic)->ic_beaconlock, _name, "802.11 beacon lock", MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_BEACON_LOCK_DESTROY
-parameter_list|(
-name|_ic
-parameter_list|)
-value|mtx_destroy(&(_ic)->ic_beaconlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_BEACON_LOCK
-parameter_list|(
-name|_ic
-parameter_list|)
-value|mtx_lock(&(_ic)->ic_beaconlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_BEACON_UNLOCK
-parameter_list|(
-name|_ic
-parameter_list|)
-value|mtx_unlock(&(_ic)->ic_beaconlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_BEACON_LOCK_ASSERT
-parameter_list|(
-name|_ic
-parameter_list|)
-define|\
-value|mtx_assert(&(_ic)->ic_beaconlock, MA_OWNED)
-end_define
-
-begin_comment
-comment|/*  * Node locking definitions.  * NB: MTX_DUPOK is because we don't generate per-interface strings.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
 name|mtx
+decl_stmt|;
+block|}
 name|ieee80211_node_lock_t
 typedef|;
 end_typedef
@@ -174,8 +144,7 @@ name|_nt
 parameter_list|,
 name|_name
 parameter_list|)
-define|\
-value|mtx_init(&(_nt)->nt_nodelock, _name, "802.11 node table", \ 		MTX_DEF | MTX_DUPOK)
+value|do {			\ 	ieee80211_node_lock_t *nl =&(_nt)->nt_nodelock;		\ 	snprintf(nl->name, sizeof(nl->name), "%s_node_lock", _name);	\ 	mtx_init(&nl->mtx, NULL, nl->name, MTX_DEF | MTX_RECURSE);	\ } while (0)
 end_define
 
 begin_define
@@ -185,7 +154,8 @@ name|IEEE80211_NODE_LOCK_DESTROY
 parameter_list|(
 name|_nt
 parameter_list|)
-value|mtx_destroy(&(_nt)->nt_nodelock)
+define|\
+value|mtx_destroy(&(_nt)->nt_nodelock.mtx)
 end_define
 
 begin_define
@@ -195,7 +165,8 @@ name|IEEE80211_NODE_LOCK
 parameter_list|(
 name|_nt
 parameter_list|)
-value|mtx_lock(&(_nt)->nt_nodelock)
+define|\
+value|mtx_lock(&(_nt)->nt_nodelock.mtx)
 end_define
 
 begin_define
@@ -205,7 +176,8 @@ name|IEEE80211_NODE_IS_LOCKED
 parameter_list|(
 name|_nt
 parameter_list|)
-value|mtx_owned(&(_nt)->nt_nodelock)
+define|\
+value|mtx_owned(&(_nt)->nt_nodelock.mtx)
 end_define
 
 begin_define
@@ -215,7 +187,8 @@ name|IEEE80211_NODE_UNLOCK
 parameter_list|(
 name|_nt
 parameter_list|)
-value|mtx_unlock(&(_nt)->nt_nodelock)
+define|\
+value|mtx_unlock(&(_nt)->nt_nodelock.mtx)
 end_define
 
 begin_define
@@ -226,17 +199,29 @@ parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_assert(&(_nt)->nt_nodelock, MA_OWNED)
+value|mtx_assert(&(_nt)->nt_nodelock.mtx, MA_OWNED)
 end_define
 
 begin_comment
-comment|/*  * Node table scangen locking definitions.  */
+comment|/*  * Node table iteration locking definitions; this protects the  * scan generation # used to iterate over the station table  * while grabbing+releasing the node lock.  */
 end_comment
 
 begin_typedef
 typedef|typedef
+struct|struct
+block|{
+name|char
+name|name
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* e.g. "ath0_scan_lock" */
 name|struct
 name|mtx
+name|mtx
+decl_stmt|;
+block|}
 name|ieee80211_scan_lock_t
 typedef|;
 end_typedef
@@ -244,55 +229,62 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|IEEE80211_SCAN_LOCK_INIT
+name|IEEE80211_NODE_ITERATE_LOCK_INIT
 parameter_list|(
 name|_nt
 parameter_list|,
 name|_name
 parameter_list|)
-define|\
-value|mtx_init(&(_nt)->nt_scanlock, _name, "802.11 node scangen", MTX_DEF)
+value|do {		\ 	ieee80211_scan_lock_t *sl =&(_nt)->nt_scanlock;		\ 	snprintf(sl->name, sizeof(sl->name), "%s_scan_lock", _name);	\ 	mtx_init(&sl->mtx, NULL, sl->name, MTX_DEF);			\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_SCAN_LOCK_DESTROY
-parameter_list|(
-name|_nt
-parameter_list|)
-value|mtx_destroy(&(_nt)->nt_scanlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_SCAN_LOCK
-parameter_list|(
-name|_nt
-parameter_list|)
-value|mtx_lock(&(_nt)->nt_scanlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_SCAN_UNLOCK
-parameter_list|(
-name|_nt
-parameter_list|)
-value|mtx_unlock(&(_nt)->nt_scanlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_SCAN_LOCK_ASSERT
+name|IEEE80211_NODE_ITERATE_LOCK_DESTROY
 parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_assert(&(_nt)->nt_scanlock, MA_OWNED)
+value|mtx_destroy(&(_nt)->nt_scanlock.mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_ITERATE_LOCK
+parameter_list|(
+name|_nt
+parameter_list|)
+define|\
+value|mtx_lock(&(_nt)->nt_scanlock.mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_ITERATE_UNLOCK
+parameter_list|(
+name|_nt
+parameter_list|)
+define|\
+value|mtx_unlock(&(_nt)->nt_scanlock.mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_AGEQ_ENQUEUE
+parameter_list|(
+name|_ifq
+parameter_list|,
+name|_m
+parameter_list|,
+name|_qlen
+parameter_list|,
+name|_age
+parameter_list|)
+value|do {		\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ifq)->ifq_tail != NULL) { 			\ 		_age -= M_AGE_GET((_ifq)->ifq_tail);		\ 		(_ifq)->ifq_tail->m_nextpkt = (_m);		\ 	} else { 						\ 		(_ifq)->ifq_head = (_m); 			\ 	}							\ 	M_AGE_SET(_m, _age);					\ 	(_ifq)->ifq_tail = (_m); 				\ 	(_qlen) = ++(_ifq)->ifq_len; 				\ } while (0)
 end_define
 
 begin_comment
@@ -408,7 +400,7 @@ name|_qlen
 parameter_list|,
 name|_age
 parameter_list|)
-value|do {\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ni)->ni_savedq.ifq_tail != NULL) { 		\ 		_age -= M_AGE_GET((_ni)->ni_savedq.ifq_tail);	\ 		(_ni)->ni_savedq.ifq_tail->m_nextpkt = (_m);	\ 	} else { 						\ 		(_ni)->ni_savedq.ifq_head = (_m); 		\ 	}							\ 	M_AGE_SET(_m, _age);					\ 	(_ni)->ni_savedq.ifq_tail = (_m); 			\ 	(_qlen) = ++(_ni)->ni_savedq.ifq_len; 			\ } while (0)
+value|do {\ 	_AGEQ_ENQUEUE(&ni->ni_savedq, _m, _qlen, _age);		\ } while (0)
 end_define
 
 begin_define
@@ -478,6 +470,90 @@ end_endif
 begin_comment
 comment|/* IF_PREPEND_LIST */
 end_comment
+
+begin_comment
+comment|/* XXX temporary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_WDSQ_INIT
+parameter_list|(
+name|_ni
+parameter_list|,
+name|_name
+parameter_list|)
+value|do {		\ 	mtx_init(&(_ni)->ni_wdsq.ifq_mtx, _name, "802.11 wds queue", MTX_DEF);\ 	(_ni)->ni_wdsq.ifq_maxlen = IEEE80211_PS_MAX_QUEUE;	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_WDSQ_DESTROY
+parameter_list|(
+name|_ni
+parameter_list|)
+value|do { \ 	mtx_destroy(&(_ni)->ni_wdsq.ifq_mtx); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_WDSQ_QLEN
+parameter_list|(
+name|_ni
+parameter_list|)
+value|_IF_QLEN(&(_ni)->ni_wdsq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_WDSQ_LOCK
+parameter_list|(
+name|_ni
+parameter_list|)
+value|IF_LOCK(&(_ni)->ni_wdsq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_WDSQ_UNLOCK
+parameter_list|(
+name|_ni
+parameter_list|)
+value|IF_UNLOCK(&(_ni)->ni_wdsq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IEEE80211_NODE_WDSQ_DEQUEUE_HEAD
+parameter_list|(
+name|_ni
+parameter_list|,
+name|_m
+parameter_list|)
+value|do {		\ 	_IF_DEQUEUE(&(_ni)->ni_wdsq, m);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IEEE80211_NODE_WDSQ_ENQUEUE
+parameter_list|(
+name|_ni
+parameter_list|,
+name|_m
+parameter_list|,
+name|_qlen
+parameter_list|,
+name|_age
+parameter_list|)
+value|do {	\ 	_AGEQ_ENQUEUE(&ni->ni_wdsq, _m, _qlen, _age);		\ } while (0)
+end_define
 
 begin_comment
 comment|/*  * 802.1x MAC ACL database locking definitions.  */
@@ -622,6 +698,12 @@ name|ifqueue
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211vap
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|ieee80211_drain_ifq
@@ -632,6 +714,43 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_flush_ifq
+parameter_list|(
+name|struct
+name|ifqueue
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_vap_destroy
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|IFNET_IS_UP_RUNNING
+parameter_list|(
+name|_ifp
+parameter_list|)
+define|\
+value|(((_ifp)->if_flags& IFF_UP)&& \ 	 ((_ifp)->if_drv_flags& IFF_DRV_RUNNING))
+end_define
 
 begin_define
 define|#
@@ -647,6 +766,16 @@ begin_define
 define|#
 directive|define
 name|ticks_to_msecs
+parameter_list|(
+name|t
+parameter_list|)
+value|(1000*(t) / hz)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ticks_to_secs
 parameter_list|(
 name|t
 parameter_list|)
@@ -701,6 +830,20 @@ parameter_list|)
 value|time_after_eq(b,a)
 end_define
 
+begin_define
+define|#
+directive|define
+name|memmove
+parameter_list|(
+name|dst
+parameter_list|,
+name|src
+parameter_list|,
+name|n
+parameter_list|)
+value|ovbcopy(src, dst, n)
+end_define
+
 begin_function_decl
 name|struct
 name|mbuf
@@ -739,6 +882,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_WDS
+value|M_PROTO2
+end_define
+
+begin_comment
+comment|/* WDS frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_EAPOL
+value|M_PROTO3
+end_define
+
+begin_comment
+comment|/* PAE/EAPOL frame */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_PWR_SAV
 value|M_PROTO4
 end_define
@@ -762,7 +927,7 @@ begin_define
 define|#
 directive|define
 name|M_FF
-value|0x20000
+value|M_PROTO6
 end_define
 
 begin_comment
@@ -773,7 +938,7 @@ begin_define
 define|#
 directive|define
 name|M_TXCB
-value|0x40000
+value|M_PROTO7
 end_define
 
 begin_comment
@@ -784,7 +949,8 @@ begin_define
 define|#
 directive|define
 name|M_80211_TX
-value|(0x60000|M_PROTO1|M_WME_AC_MASK|M_PROTO4|M_PROTO5)
+define|\
+value|(M_LINK0|M_WDS|M_EAPOL|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB)
 end_define
 
 begin_comment
@@ -821,26 +987,8 @@ value|(M_AMPDU|M_WEP)
 end_define
 
 begin_comment
-comment|/*  * Encode WME access control bits in the PROTO flags.  * This is safe since it's passed directly in to the  * driver and there's no chance someone else will clobber  * them on us.  */
+comment|/*  * Store WME access control bits in the vlan tag.  * This is safe since it's done after the packet is classified  * (where we use any previous tag) and because it's passed  * directly in to the driver and there's no chance someone  * else will clobber them on us.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|M_WME_AC_MASK
-value|(M_PROTO2|M_PROTO3)
-end_define
-
-begin_comment
-comment|/* XXX 5 is wrong if M_PROTO* are redefined */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_WME_AC_SHIFT
-value|5
-end_define
 
 begin_define
 define|#
@@ -852,7 +1000,7 @@ parameter_list|,
 name|ac
 parameter_list|)
 define|\
-value|((m)->m_flags = ((m)->m_flags&~ M_WME_AC_MASK) | \ 		((ac)<< M_WME_AC_SHIFT))
+value|((m)->m_pkthdr.ether_vtag = (ac))
 end_define
 
 begin_define
@@ -862,7 +1010,7 @@ name|M_WME_GETAC
 parameter_list|(
 name|m
 parameter_list|)
-value|(((m)->m_flags>> M_WME_AC_SHIFT)& 0x3)
+value|((m)->m_pkthdr.ether_vtag)
 end_define
 
 begin_comment
@@ -1045,6 +1193,28 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_sysctl_vattach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_sysctl_vdetach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee80211_load_module
 parameter_list|(
 specifier|const
@@ -1053,6 +1223,29 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * A "policy module" is an adjunct module to net80211 that provides  * functionality that typically includes policy decisions.  This  * modularity enables extensibility and vendor-supplied functionality.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_IEEE80211_POLICY_MODULE
+parameter_list|(
+name|policy
+parameter_list|,
+name|name
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|typedef void (*policy##_setup)(int);					\ SET_DECLARE(policy##_set, policy##_setup);				\ static int								\ wlan_##name##_modevent(module_t mod, int type, void *unused)		\ {									\ 	policy##_setup * const *iter, f;				\ 	switch (type) {							\ 	case MOD_LOAD:							\ 		SET_FOREACH(iter, policy##_set) {			\ 			f = (void*) *iter;				\ 			f(type);					\ 		}							\ 		return 0;						\ 	case MOD_UNLOAD:						\ 	case MOD_QUIESCE:						\ 		if (nrefs) {						\ 			printf("wlan_##name: still in use (%u dynamic refs)\n",\ 				nrefs);					\ 			return EBUSY;					\ 		}							\ 		if (type == MOD_UNLOAD) {				\ 			SET_FOREACH(iter, policy##_set) {		\ 				f = (void*) *iter;			\ 				f(type);				\ 			}						\ 		}							\ 		return 0;						\ 	}								\ 	return EINVAL;							\ }									\ static moduledata_t name##_mod = {					\ 	"wlan_" #name,							\ 	wlan_##name##_modevent,						\ 	0								\ };									\ DECLARE_MODULE(wlan_##name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_FIRST);\ MODULE_VERSION(wlan_##name, version);					\ MODULE_DEPEND(wlan_##name, wlan, 1, 1, 1)
+end_define
+
+begin_comment
+comment|/*  * Crypto modules implement cipher support.  */
+end_comment
 
 begin_define
 define|#
@@ -1064,7 +1257,111 @@ parameter_list|,
 name|version
 parameter_list|)
 define|\
-value|static int								\ name##_modevent(module_t mod, int type, void *unused)			\ {									\ 	switch (type) {							\ 	case MOD_LOAD:							\ 		ieee80211_crypto_register(&name);			\ 		return 0;						\ 	case MOD_UNLOAD:						\ 	case MOD_QUIESCE:						\ 		if (nrefs) {						\ 			printf("wlan_##name: still in use (%u dynamic refs)\n",\ 				nrefs);					\ 			return EBUSY;					\ 		}							\ 		if (type == MOD_UNLOAD)					\ 			ieee80211_crypto_unregister(&name);		\ 		return 0;						\ 	}								\ 	return EINVAL;							\ }									\ static moduledata_t name##_mod = {					\ 	"wlan_" #name,							\ 	name##_modevent,						\ 	0								\ };									\ DECLARE_MODULE(wlan_##name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_FIRST);\ MODULE_VERSION(wlan_##name, version);					\ MODULE_DEPEND(wlan_##name, wlan, 1, 1, 1)
+value|_IEEE80211_POLICY_MODULE(crypto, name, version);			\ static void								\ name##_modevent(int type)						\ {									\ 	if (type == MOD_LOAD)						\ 		ieee80211_crypto_register(&name);			\ 	else								\ 		ieee80211_crypto_unregister(&name);			\ }									\ TEXT_SET(crypto##_set, name##_modevent)
+end_define
+
+begin_comment
+comment|/*  * Scanner modules provide scanning policy.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_SCANNER_MODULE
+parameter_list|(
+name|name
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|_IEEE80211_POLICY_MODULE(scanner, name, version)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_SCANNER_ALG
+parameter_list|(
+name|name
+parameter_list|,
+name|alg
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|static void								\ name##_modevent(int type)						\ {									\ 	if (type == MOD_LOAD)						\ 		ieee80211_scanner_register(alg,&v);			\ 	else								\ 		ieee80211_scanner_unregister(alg,&v);			\ }									\ TEXT_SET(scanner_set, name##_modevent);
+end_define
+
+begin_comment
+unit|\
+comment|/*  * ACL modules implement acl policy.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ACL_MODULE
+parameter_list|(
+name|name
+parameter_list|,
+name|alg
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|_IEEE80211_POLICY_MODULE(acl, name, version);				\ static void								\ alg##_modevent(int type)						\ {									\ 	if (type == MOD_LOAD)						\ 		ieee80211_aclator_register(&alg);			\ 	else								\ 		ieee80211_aclator_unregister(&alg);			\ }									\ TEXT_SET(acl_set, alg##_modevent);
+end_define
+
+begin_comment
+unit|\
+comment|/*  * Authenticator modules handle 802.1x/WPA authentication.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AUTH_MODULE
+parameter_list|(
+name|name
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|_IEEE80211_POLICY_MODULE(auth, name, version)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AUTH_ALG
+parameter_list|(
+name|name
+parameter_list|,
+name|alg
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|static void								\ name##_modevent(int type)						\ {									\ 	if (type == MOD_LOAD)						\ 		ieee80211_authenticator_register(alg,&v);		\ 	else								\ 		ieee80211_authenticator_unregister(alg);		\ }									\ TEXT_SET(auth_set, name##_modevent)
+end_define
+
+begin_comment
+comment|/*  * Rate control modules provide tx rate control support.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RATE_MODULE
+parameter_list|(
+name|alg
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|_IEEE80211_POLICY_MODULE(rate, alg, version);				\ static void								\ alg##_modevent(int type)						\ {									\
+comment|/* XXX nothing to do until the rate control framework arrives */
+value|\ }									\ TEXT_SET(rate##_set, alg##_modevent)
 end_define
 
 begin_endif
@@ -1180,6 +1477,155 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ieee80211_wds_event
+block|{
+name|uint8_t
+name|iev_addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_csa_event
+block|{
+name|uint32_t
+name|iev_flags
+decl_stmt|;
+comment|/* channel flags */
+name|uint16_t
+name|iev_freq
+decl_stmt|;
+comment|/* setting in Mhz */
+name|uint8_t
+name|iev_ieee
+decl_stmt|;
+comment|/* IEEE channel number */
+name|uint8_t
+name|iev_mode
+decl_stmt|;
+comment|/* CSA mode */
+name|uint8_t
+name|iev_count
+decl_stmt|;
+comment|/* CSA count */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_cac_event
+block|{
+name|uint32_t
+name|iev_flags
+decl_stmt|;
+comment|/* channel flags */
+name|uint16_t
+name|iev_freq
+decl_stmt|;
+comment|/* setting in Mhz */
+name|uint8_t
+name|iev_ieee
+decl_stmt|;
+comment|/* IEEE channel number */
+comment|/* XXX timestamp? */
+name|uint8_t
+name|iev_type
+decl_stmt|;
+comment|/* IEEE80211_NOTIFY_CAC_* */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_radar_event
+block|{
+name|uint32_t
+name|iev_flags
+decl_stmt|;
+comment|/* channel flags */
+name|uint16_t
+name|iev_freq
+decl_stmt|;
+comment|/* setting in Mhz */
+name|uint8_t
+name|iev_ieee
+decl_stmt|;
+comment|/* IEEE channel number */
+comment|/* XXX timestamp? */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_auth_event
+block|{
+name|uint8_t
+name|iev_addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_deauth_event
+block|{
+name|uint8_t
+name|iev_addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_country_event
+block|{
+name|uint8_t
+name|iev_addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|uint8_t
+name|iev_cc
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* ISO country code */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_radio_event
+block|{
+name|uint8_t
+name|iev_state
+decl_stmt|;
+comment|/* 1 on, 0 off */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1277,6 +1723,94 @@ end_define
 
 begin_comment
 comment|/* station re-associate (ap mode) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211_WDS
+value|109
+end_define
+
+begin_comment
+comment|/* WDS discovery (ap mode) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211_CSA
+value|110
+end_define
+
+begin_comment
+comment|/* Channel Switch Announcement event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211_RADAR
+value|111
+end_define
+
+begin_comment
+comment|/* radar event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211_CAC
+value|112
+end_define
+
+begin_comment
+comment|/* Channel Availability Check event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211_DEAUTH
+value|113
+end_define
+
+begin_comment
+comment|/* station deauthenticate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211_AUTH
+value|114
+end_define
+
+begin_comment
+comment|/* station authenticate (ap mode) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211_COUNTRY
+value|115
+end_define
+
+begin_comment
+comment|/* discovered country code (sta mode) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_IEEE80211_RADIO
+value|116
+end_define
+
+begin_comment
+comment|/* RF kill switch state change */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2007 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -57,7 +57,15 @@ name|CTRY_ANGUILLA
 init|=
 literal|660
 block|,
-comment|/* XXX correct remainder */
+name|CTRY_ANTARTICA
+init|=
+literal|10
+block|,
+name|CTRY_ANTIGUA
+init|=
+literal|28
+block|,
+comment|/* Antigua and Barbuda */
 name|CTRY_ARGENTINA
 init|=
 literal|32
@@ -68,6 +76,11 @@ init|=
 literal|51
 block|,
 comment|/* Armenia */
+name|CTRY_ARUBA
+init|=
+literal|533
+block|,
+comment|/* Aruba */
 name|CTRY_AUSTRALIA
 init|=
 literal|36
@@ -83,11 +96,25 @@ init|=
 literal|31
 block|,
 comment|/* Azerbaijan */
+name|CTRY_BAHAMAS
+init|=
+literal|44
+block|,
+comment|/* Bahamas */
 name|CTRY_BAHRAIN
 init|=
 literal|48
 block|,
 comment|/* Bahrain */
+name|CTRY_BANGLADESH
+init|=
+literal|50
+block|,
+comment|/* Bangladesh */
+name|CTRY_BARBADOS
+init|=
+literal|52
+block|,
 name|CTRY_BELARUS
 init|=
 literal|112
@@ -102,17 +129,44 @@ name|CTRY_BELIZE
 init|=
 literal|84
 block|,
-comment|/* Belize */
+name|CTRY_BENIN
+init|=
+literal|204
+block|,
+name|CTRY_BERMUDA
+init|=
+literal|60
+block|,
+name|CTRY_BHUTAN
+init|=
+literal|64
+block|,
 name|CTRY_BOLIVIA
 init|=
 literal|68
 block|,
 comment|/* Bolivia */
+name|CTRY_BOSNIA_AND_HERZEGOWINA
+init|=
+literal|70
+block|,
+name|CTRY_BOTSWANA
+init|=
+literal|72
+block|,
+name|CTRY_BOUVET_ISLAND
+init|=
+literal|74
+block|,
 name|CTRY_BRAZIL
 init|=
 literal|76
 block|,
 comment|/* Brazil */
+name|CTRY_BRITISH_INDIAN_OCEAN_TERRITORY
+init|=
+literal|86
+block|,
 name|CTRY_BRUNEI_DARUSSALAM
 init|=
 literal|96
@@ -123,11 +177,43 @@ init|=
 literal|100
 block|,
 comment|/* Bulgaria */
+name|CTRY_BURKINA_FASO
+init|=
+literal|854
+block|,
+name|CTRY_BURUNDI
+init|=
+literal|108
+block|,
+name|CTRY_CAMBODIA
+init|=
+literal|116
+block|,
+name|CTRY_CAMEROON
+init|=
+literal|120
+block|,
 name|CTRY_CANADA
 init|=
 literal|124
 block|,
 comment|/* Canada */
+name|CTRY_CAPE_VERDE
+init|=
+literal|132
+block|,
+name|CTRY_CAYMAN_ISLANDS
+init|=
+literal|136
+block|,
+name|CTRY_CENTRAL_AFRICAN_REPUBLIC
+init|=
+literal|140
+block|,
+name|CTRY_CHAD
+init|=
+literal|148
+block|,
 name|CTRY_CHILE
 init|=
 literal|152
@@ -138,21 +224,45 @@ init|=
 literal|156
 block|,
 comment|/* People's Republic of China */
+name|CTRY_CHRISTMAS_ISLAND
+init|=
+literal|162
+block|,
+name|CTRY_COCOS_ISLANDS
+init|=
+literal|166
+block|,
 name|CTRY_COLOMBIA
 init|=
 literal|170
 block|,
 comment|/* Colombia */
+name|CTRY_COMOROS
+init|=
+literal|174
+block|,
+name|CTRY_CONGO
+init|=
+literal|178
+block|,
+name|CTRY_COOK_ISLANDS
+init|=
+literal|184
+block|,
 name|CTRY_COSTA_RICA
 init|=
 literal|188
 block|,
 comment|/* Costa Rica */
+name|CTRY_COTE_DIVOIRE
+init|=
+literal|384
+block|,
 name|CTRY_CROATIA
 init|=
 literal|191
 block|,
-comment|/* Croatia */
+comment|/* Croatia (local name: Hrvatska) */
 name|CTRY_CYPRUS
 init|=
 literal|196
@@ -168,11 +278,23 @@ init|=
 literal|208
 block|,
 comment|/* Denmark */
+name|CTRY_DJIBOUTI
+init|=
+literal|262
+block|,
+name|CTRY_DOMINICA
+init|=
+literal|212
+block|,
 name|CTRY_DOMINICAN_REPUBLIC
 init|=
 literal|214
 block|,
 comment|/* Dominican Republic */
+name|CTRY_EAST_TIMOR
+init|=
+literal|626
+block|,
 name|CTRY_ECUADOR
 init|=
 literal|218
@@ -188,16 +310,37 @@ init|=
 literal|222
 block|,
 comment|/* El Salvador */
+name|CTRY_EQUATORIAL_GUINEA
+init|=
+literal|226
+block|,
+name|CTRY_ERITREA
+init|=
+literal|232
+block|,
 name|CTRY_ESTONIA
 init|=
 literal|233
 block|,
 comment|/* Estonia */
+name|CTRY_ETHIOPIA
+init|=
+literal|210
+block|,
+name|CTRY_FALKLAND_ISLANDS
+init|=
+literal|238
+block|,
+comment|/* (Malvinas) */
 name|CTRY_FAEROE_ISLANDS
 init|=
 literal|234
 block|,
 comment|/* Faeroe Islands */
+name|CTRY_FIJI
+init|=
+literal|242
+block|,
 name|CTRY_FINLAND
 init|=
 literal|246
@@ -212,7 +355,27 @@ name|CTRY_FRANCE2
 init|=
 literal|255
 block|,
-comment|/* France2 */
+comment|/* France (Metropolitan) */
+name|CTRY_FRENCH_GUIANA
+init|=
+literal|254
+block|,
+name|CTRY_FRENCH_POLYNESIA
+init|=
+literal|258
+block|,
+name|CTRY_FRENCH_SOUTHERN_TERRITORIES
+init|=
+literal|260
+block|,
+name|CTRY_GABON
+init|=
+literal|266
+block|,
+name|CTRY_GAMBIA
+init|=
+literal|270
+block|,
 name|CTRY_GEORGIA
 init|=
 literal|268
@@ -223,16 +386,57 @@ init|=
 literal|276
 block|,
 comment|/* Germany */
+name|CTRY_GHANA
+init|=
+literal|288
+block|,
+name|CTRY_GIBRALTAR
+init|=
+literal|292
+block|,
 name|CTRY_GREECE
 init|=
 literal|300
 block|,
 comment|/* Greece */
+name|CTRY_GREENLAND
+init|=
+literal|304
+block|,
+name|CTRY_GRENADA
+init|=
+literal|308
+block|,
+name|CTRY_GUADELOUPE
+init|=
+literal|312
+block|,
+name|CTRY_GUAM
+init|=
+literal|316
+block|,
 name|CTRY_GUATEMALA
 init|=
 literal|320
 block|,
 comment|/* Guatemala */
+name|CTRY_GUINEA
+init|=
+literal|324
+block|,
+name|CTRY_GUINEA_BISSAU
+init|=
+literal|624
+block|,
+name|CTRY_GUYANA
+init|=
+literal|328
+block|,
+comment|/* XXX correct remainder */
+name|CTRY_HAITI
+init|=
+literal|332
+block|,
 name|CTRY_HONDURAS
 init|=
 literal|340
@@ -403,6 +607,11 @@ init|=
 literal|458
 block|,
 comment|/* Malaysia */
+name|CTRY_MALTA
+init|=
+literal|470
+block|,
+comment|/* Malta */
 name|CTRY_MEXICO
 init|=
 literal|484
@@ -418,6 +627,11 @@ init|=
 literal|504
 block|,
 comment|/* Morocco */
+name|CTRY_NEPAL
+init|=
+literal|524
+block|,
+comment|/* Nepal */
 name|CTRY_NETHERLANDS
 init|=
 literal|528
@@ -528,6 +742,11 @@ init|=
 literal|724
 block|,
 comment|/* Spain */
+name|CTRY_SRILANKA
+init|=
+literal|144
+block|,
+comment|/* Sri Lanka */
 name|CTRY_SWEDEN
 init|=
 literal|752
@@ -622,6 +841,80 @@ block|}
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|RegdomainCode
+block|{
+name|SKU_FCC
+init|=
+literal|0x10
+block|,
+comment|/* FCC, aka United States */
+name|SKU_CA
+init|=
+literal|0x20
+block|,
+comment|/* North America, aka Canada */
+name|SKU_ETSI
+init|=
+literal|0x30
+block|,
+comment|/* Europe */
+name|SKU_ETSI2
+init|=
+literal|0x32
+block|,
+comment|/* Europe w/o HT40 in 5GHz */
+name|SKU_ETSI3
+init|=
+literal|0x33
+block|,
+comment|/* Europe - channel 36 */
+name|SKU_FCC3
+init|=
+literal|0x3a
+block|,
+comment|/* FCC w/5470 band, 11h, DFS */
+name|SKU_JAPAN
+init|=
+literal|0x40
+block|,
+name|SKU_KOREA
+init|=
+literal|0x45
+block|,
+name|SKU_APAC
+init|=
+literal|0x50
+block|,
+comment|/* Asia Pacific */
+name|SKU_APAC2
+init|=
+literal|0x51
+block|,
+comment|/* Asia Pacific w/ DFS on mid-band */
+name|SKU_APAC3
+init|=
+literal|0x5d
+block|,
+comment|/* Asia Pacific w/o ISM band */
+name|SKU_ROW
+init|=
+literal|0x81
+block|,
+comment|/* China/Taiwan/Rest of World */
+name|SKU_NONE
+init|=
+literal|0xf0
+block|,
+comment|/* "Region Free" */
+name|SKU_DEBUG
+init|=
+literal|0x1ff
+block|}
+enum|;
+end_enum
+
 begin_if
 if|#
 directive|if
@@ -682,76 +975,98 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_regdomain_vattach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_regdomain_vdetach
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ieee80211_init_channels
 parameter_list|(
 name|struct
 name|ieee80211com
 modifier|*
-name|ic
 parameter_list|,
-name|int
-name|rd
+specifier|const
+name|struct
+name|ieee80211_regdomain
+modifier|*
 parameter_list|,
-name|enum
-name|ISOCountryCode
-name|cc
-parameter_list|,
-name|int
+specifier|const
+name|uint8_t
 name|bands
-parameter_list|,
-name|int
-name|outdoor
-parameter_list|,
-name|int
-name|ecm
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint8_t
-modifier|*
-name|ieee80211_add_countryie
+name|void
+name|ieee80211_sort_channels
 parameter_list|(
-name|uint8_t
-modifier|*
+name|struct
+name|ieee80211_channel
+name|chans
+index|[]
 parameter_list|,
+name|int
+name|nchans
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_appie
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|struct
+name|ieee80211_appie
+modifier|*
+name|ieee80211_alloc_countryie
+parameter_list|(
 name|struct
 name|ieee80211com
 modifier|*
-parameter_list|,
-name|enum
-name|ISOCountryCode
-name|cc
-parameter_list|,
-name|int
-name|location
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_regdomain_req
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
-specifier|const
-name|char
+name|int
+name|ieee80211_setregdomain
+parameter_list|(
+name|struct
+name|ieee80211vap
 modifier|*
-name|ieee80211_cctoiso
-parameter_list|(
-name|enum
-name|ISOCountryCode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ieee80211_isotocc
-parameter_list|(
-specifier|const
-name|char
-name|iso
-index|[
-literal|2
-index|]
+parameter_list|,
+name|struct
+name|ieee80211_regdomain_req
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
