@@ -1614,9 +1614,9 @@ condition|)
 empty_stmt|;
 name|shellparam
 operator|.
-name|optnext
+name|reset
 operator|=
-name|NULL
+literal|1
 expr_stmt|;
 name|INTON
 expr_stmt|;
@@ -1681,6 +1681,12 @@ name|argptr
 argument_list|)
 expr_stmt|;
 block|}
+name|shellparam
+operator|.
+name|reset
+operator|=
+literal|1
+expr_stmt|;
 name|INTON
 expr_stmt|;
 return|return
@@ -1709,12 +1715,6 @@ operator|==
 literal|1
 condition|)
 block|{
-name|shellparam
-operator|.
-name|optnext
-operator|=
-name|NULL
-expr_stmt|;
 name|shellparam
 operator|.
 name|reset
