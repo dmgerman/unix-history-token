@@ -4757,19 +4757,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* enable FIS based switching */
-name|ATA_OUTL
-argument_list|(
-name|ctlr
-operator|->
-name|r_res2
-argument_list|,
-name|ATA_AHCI_P_FBS
-operator|+
-name|offset
-argument_list|,
-literal|0x00000003
-argument_list|)
-expr_stmt|;
+comment|//ATA_OUTL(ctlr->r_res2, ATA_AHCI_P_FBS + offset, 0x00000003);
 comment|/* start operations on this channel */
 name|ATA_OUTL
 argument_list|(
@@ -5471,25 +5459,7 @@ name|ATA_AHCI_P_CMD_ATAPI
 argument_list|)
 expr_stmt|;
 comment|/* set PM port to address */
-name|ATA_OUTL
-argument_list|(
-name|ctlr
-operator|->
-name|r_res2
-argument_list|,
-name|ATA_AHCI_P_FBS
-operator|+
-name|offset
-argument_list|,
-operator|(
-name|port
-operator|<<
-literal|8
-operator|)
-operator||
-literal|0x00000001
-argument_list|)
-expr_stmt|;
+comment|//ATA_OUTL(ctlr->r_res2, ATA_AHCI_P_FBS + offset, (port<< 8) | 0x00000001);
 comment|/* issue command to controller */
 name|ATA_OUTL
 argument_list|(
