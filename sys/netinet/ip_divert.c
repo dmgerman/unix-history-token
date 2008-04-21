@@ -894,7 +894,7 @@ argument_list|,
 argument|inp_list
 argument_list|)
 block|{
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -973,14 +973,14 @@ argument_list|(
 name|sa
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1305,7 +1305,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1358,7 +1358,7 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1469,7 +1469,7 @@ operator|=
 name|ENOBUFS
 expr_stmt|;
 block|}
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2485,7 +2485,7 @@ name|inp_list
 argument_list|)
 control|)
 block|{
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2521,7 +2521,7 @@ index|]
 operator|=
 name|inp
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2562,7 +2562,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2631,7 +2631,7 @@ operator|.
 name|xi_socket
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2651,7 +2651,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
