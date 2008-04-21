@@ -4179,13 +4179,6 @@ name|r
 operator|=
 literal|0x7fffffff
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|r
 operator|+=
 operator|(
@@ -4194,12 +4187,6 @@ operator|)
 name|vm
 operator|->
 name|vm_daddr
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
