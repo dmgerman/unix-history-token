@@ -2666,6 +2666,15 @@ argument_list|,
 name|ATA_LF_UNLOCK
 argument_list|)
 expr_stmt|;
+name|ch
+operator|->
+name|dma
+operator|.
+name|unload
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
 name|ata_finish
 argument_list|(
 name|request
