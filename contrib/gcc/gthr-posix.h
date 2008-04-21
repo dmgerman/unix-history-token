@@ -748,12 +748,18 @@ name|GTHREAD_USE_WEAK
 end_if
 
 begin_comment
-comment|/* On Solaris 2.6 up to 9, the libc exposes a POSIX threads interface even if    -pthreads is not specified.  The functions are dummies and most return an    error value.  However pthread_once returns 0 without invoking the routine    it is passed so we cannot pretend that the interface is active if -pthreads    is not specified.  On Solaris 2.5.1, the interface is not exposed at all so    we need to play the usual game with weak symbols.  On Solaris 10 and up, a    working interface is always exposed.  */
+comment|/* On Solaris 2.6 up to 9, the libc exposes a POSIX threads interface even if    -pthreads is not specified.  The functions are dummies and most return an    error value.  However pthread_once returns 0 without invoking the routine    it is passed so we cannot pretend that the interface is active if -pthreads    is not specified.  On Solaris 2.5.1, the interface is not exposed at all so    we need to play the usual game with weak symbols.  On Solaris 10 and up, a    working interface is always exposed.  On FreeBSD 6 and later, libc also    exposes a dummy POSIX threads interface, similar to what Solaris 2.6 up    to 9 does.  FreeBSD>= 700014 even provides a pthread_cancel stub in libc,    which means the alternate __gthread_active_p below cannot be used there.  */
 end_comment
 
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+operator|(
 name|defined
 argument_list|(
 name|__sun
@@ -763,6 +769,7 @@ name|defined
 argument_list|(
 name|__svr4__
 argument_list|)
+operator|)
 end_if
 
 begin_decl_stmt
@@ -900,7 +907,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not Solaris */
+comment|/* neither FreeBSD nor Solaris */
 end_comment
 
 begin_function
@@ -943,7 +950,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Solaris */
+comment|/* FreeBSD or Solaris */
 end_comment
 
 begin_else
