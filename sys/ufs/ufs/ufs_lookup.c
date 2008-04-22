@@ -394,7 +394,7 @@ operator|->
 name|cn_nameiop
 decl_stmt|;
 name|ino_t
-name|saved_ino
+name|ino
 decl_stmt|;
 name|int
 name|ltype
@@ -428,6 +428,10 @@ name|vdp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
+name|ino
+operator|=
+literal|0
+expr_stmt|;
 name|i_diroff
 operator|=
 name|dp
@@ -1215,9 +1219,7 @@ goto|goto
 name|notfound
 goto|;
 block|}
-name|dp
-operator|->
-name|i_ino
+name|ino
 operator|=
 name|ep
 operator|->
@@ -1357,13 +1359,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ASSERT_VOP_ELOCKED
-argument_list|(
-name|vdp
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Access for write is interpreted as allowing 		 * creation of files in the directory. 		 */
 name|error
 operator|=
@@ -1755,9 +1750,7 @@ name|dp
 operator|->
 name|i_number
 operator|==
-name|dp
-operator|->
-name|i_ino
+name|ino
 condition|)
 block|{
 name|VREF
@@ -1787,9 +1780,7 @@ name|vdp
 operator|->
 name|v_mount
 argument_list|,
-name|dp
-operator|->
-name|i_ino
+name|ino
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
@@ -1910,9 +1901,7 @@ name|dp
 operator|->
 name|i_number
 operator|==
-name|dp
-operator|->
-name|i_ino
+name|ino
 condition|)
 return|return
 operator|(
@@ -1930,9 +1919,7 @@ name|vdp
 operator|->
 name|v_mount
 argument_list|,
-name|dp
-operator|->
-name|i_ino
+name|ino
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
@@ -1984,12 +1971,6 @@ argument_list|(
 name|pdp
 argument_list|)
 expr_stmt|;
-name|saved_ino
-operator|=
-name|dp
-operator|->
-name|i_ino
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|pdp
@@ -2006,7 +1987,7 @@ name|pdp
 operator|->
 name|v_mount
 argument_list|,
-name|saved_ino
+name|ino
 argument_list|,
 name|cnp
 operator|->
@@ -2047,9 +2028,7 @@ name|dp
 operator|->
 name|i_number
 operator|==
-name|dp
-operator|->
-name|i_ino
+name|ino
 condition|)
 block|{
 name|VREF
@@ -2120,9 +2099,7 @@ name|pdp
 operator|->
 name|v_mount
 argument_list|,
-name|dp
-operator|->
-name|i_ino
+name|ino
 argument_list|,
 name|cnp
 operator|->
