@@ -250,13 +250,6 @@ begin_comment
 comment|/* interruptible */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_SKIP_BPF
-value|M_SKIP_FIREWALL
-end_define
-
 begin_comment
 comment|/*  * bpf_iflist is a list of BPF interface structures, each corresponding to a  * specific DLT.  The same network interface might have several BPF interface  * structures registered by different layers in the stack (i.e., 802.11  * frames, ethernet frames, etc).  */
 end_comment
@@ -2726,7 +2719,7 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
-comment|/* XXX Do not return the same packet twice. */
+comment|/* Set M_PROMISC for outgoing packets to be discarded. */
 if|if
 condition|(
 name|d
@@ -2739,7 +2732,7 @@ name|m
 operator|->
 name|m_flags
 operator||=
-name|M_SKIP_BPF
+name|M_PROMISC
 expr_stmt|;
 block|}
 else|else
@@ -5287,10 +5280,10 @@ name|BPF_CHECK_DIRECTION
 parameter_list|(
 name|d
 parameter_list|,
-name|m
+name|i
 parameter_list|)
 define|\
-value|if (((d)->bd_direction == BPF_D_IN&& (m)->m_pkthdr.rcvif == NULL) || \ 	    ((d)->bd_direction == BPF_D_OUT&& (m)->m_pkthdr.rcvif != NULL))
+value|(((d)->bd_direction == BPF_D_IN&& (i) == NULL) ||	\ 	    ((d)->bd_direction == BPF_D_OUT&& (i) != NULL))
 end_define
 
 begin_comment
@@ -5329,13 +5322,26 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+comment|/* Skip outgoing duplicate packets. */
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
-name|M_SKIP_BPF
+name|M_PROMISC
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|==
+name|NULL
 condition|)
 block|{
 name|m
@@ -5343,10 +5349,8 @@ operator|->
 name|m_flags
 operator|&=
 operator|~
-name|M_SKIP_BPF
+name|M_PROMISC
 expr_stmt|;
-return|return;
-block|}
 name|gottime
 operator|=
 literal|0
@@ -5374,12 +5378,19 @@ argument_list|,
 argument|bd_next
 argument_list|)
 block|{
+if|if
+condition|(
 name|BPF_CHECK_DIRECTION
 argument_list|(
-argument|d
+name|d
 argument_list|,
-argument|m
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 argument_list|)
+condition|)
 continue|continue;
 name|BPFD_LOCK
 argument_list|(
@@ -5541,13 +5552,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Incoming linkage from device drivers, when packet is in  * an mbuf chain and to be prepended by a contiguous header.  */
-end_comment
-
-begin_function
 name|void
 name|bpf_mtap2
 parameter_list|(
@@ -5590,13 +5595,26 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+comment|/* Skip outgoing duplicate packets. */
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
-name|M_SKIP_BPF
+name|M_PROMISC
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|==
+name|NULL
 condition|)
 block|{
 name|m
@@ -5604,7 +5622,7 @@ operator|->
 name|m_flags
 operator|&=
 operator|~
-name|M_SKIP_BPF
+name|M_PROMISC
 expr_stmt|;
 return|return;
 block|}
@@ -5658,12 +5676,19 @@ argument_list|,
 argument|bd_next
 argument_list|)
 block|{
+if|if
+condition|(
 name|BPF_CHECK_DIRECTION
 argument_list|(
-argument|d
+name|d
 argument_list|,
-argument|m
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 argument_list|)
+condition|)
 continue|continue;
 name|BPFD_LOCK
 argument_list|(
@@ -5776,19 +5801,10 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_undef
 undef|#
 directive|undef
 name|BPF_CHECK_DIRECTION
-end_undef
-
-begin_comment
 comment|/*  * Move the packet data from interface memory (pkt) into the  * store buffer.  "cpfn" is the routine called to do the actual data  * transfer.  bcopy is passed in to copy contiguous chunks, while  * bpf_mcopy is passed in to copy mbuf chains.  In the latter case,  * pkt is really an mbuf.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|catchpacket
@@ -6036,13 +6052,7 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Initialize all nonzero fields of a descriptor.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bpf_allocbufs
@@ -6141,13 +6151,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Free buffers currently in use by a descriptor.  * Called on close.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bpf_freed
@@ -6271,13 +6275,7 @@ name|bd_mtx
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Attach an interface to bpf.  dlt is the link layer type; hdrlen is the  * fixed size of the link header (variable length headers not yet supported).  */
-end_comment
-
-begin_function
 name|void
 name|bpfattach
 parameter_list|(
@@ -6308,13 +6306,7 @@ name|if_bpf
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Attach an interface to bpf.  ifp is a pointer to the structure  * defining the interface to be attached, dlt is the link layer type,  * and hdrlen is the fixed size of the link header (variable length  * headers are not yet supporrted).  */
-end_comment
-
-begin_function
 name|void
 name|bpfattach2
 parameter_list|(
@@ -6468,13 +6460,7 @@ literal|"bpf attached\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Detach bpf from an interface.  This involves detaching each descriptor  * associated with the interface, and leaving bd_bif NULL.  Notify each  * descriptor as it's detached so that any sleepers wake up and get  * ENXIO.  */
-end_comment
-
-begin_function
 name|void
 name|bpfdetach
 parameter_list|(
@@ -6622,13 +6608,7 @@ name|M_BPF
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Get a list of available data link type of the interface.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|bpf_getdltlist
@@ -6773,13 +6753,7 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Set the data link type of a BPF instance.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|bpf_setdlt
@@ -6960,9 +6934,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bpf_clone
@@ -7059,9 +7030,6 @@ name|SI_CHEAPCLONE
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bpf_drvinit
@@ -7101,9 +7069,6 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bpfstats_fill_xbpf
@@ -7273,9 +7238,6 @@ operator|->
 name|bd_locked
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bpf_stats_sysctl
@@ -7522,9 +7484,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_macro
 name|SYSINIT
 argument_list|(
 argument|bpfdev
@@ -7537,30 +7496,15 @@ argument|bpf_drvinit
 argument_list|,
 argument|NULL
 argument_list|)
-end_macro
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* !DEV_BPF&& !NETGRAPH_BPF */
-end_comment
-
-begin_comment
 comment|/*  * NOP stubs to allow bpf-using drivers to load and function.  *  * A 'better' implementation would allow the core bpf functionality  * to be loaded at runtime.  */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|bpf_if
 name|bp_null
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|bpf_tap
 parameter_list|(
@@ -7577,9 +7521,6 @@ name|u_int
 name|pktlen
 parameter_list|)
 block|{ }
-end_function
-
-begin_function
 name|void
 name|bpf_mtap
 parameter_list|(
@@ -7594,9 +7535,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{ }
-end_function
-
-begin_function
 name|void
 name|bpf_mtap2
 parameter_list|(
@@ -7618,9 +7556,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{ }
-end_function
-
-begin_function
 name|void
 name|bpfattach
 parameter_list|(
@@ -7651,9 +7586,6 @@ name|if_bpf
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|bpfattach2
 parameter_list|(
@@ -7682,9 +7614,6 @@ operator|&
 name|bp_null
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|bpfdetach
 parameter_list|(
@@ -7694,9 +7623,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{ }
-end_function
-
-begin_function
 name|u_int
 name|bpf_filter
 parameter_list|(
@@ -7723,9 +7649,6 @@ literal|1
 return|;
 comment|/* "no filter" behaviour */
 block|}
-end_function
-
-begin_function
 name|int
 name|bpf_validate
 parameter_list|(
