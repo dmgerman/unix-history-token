@@ -2703,6 +2703,24 @@ name|RL_ETHER_ALIGN
 value|2
 end_define
 
+begin_comment
+comment|/*  * re(4) hardware ip4csum-tx could be mangled with 28 bytes or less IP packets.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_IP4CSUMTX_MINLEN
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_IP4CSUMTX_PADLEN
+value|(ETHER_HDR_LEN + RL_IP4CSUMTX_MINLEN)
+end_define
+
 begin_struct
 struct|struct
 name|rl_chain_data

@@ -9585,7 +9585,7 @@ name|m_pkthdr
 operator|.
 name|len
 operator|<
-name|RL_MIN_FRAMELEN
+name|RL_IP4CSUMTX_PADLEN
 operator|&&
 operator|(
 operator|(
