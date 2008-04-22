@@ -5351,6 +5351,8 @@ operator|&=
 operator|~
 name|M_PROMISC
 expr_stmt|;
+return|return;
+block|}
 name|gottime
 operator|=
 literal|0
@@ -5552,7 +5554,13 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Incoming linkage from device drivers, when packet is in  * an mbuf chain and to be prepended by a contiguous header.  */
+end_comment
+
+begin_function
 name|void
 name|bpf_mtap2
 parameter_list|(
@@ -5801,10 +5809,19 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_undef
 undef|#
 directive|undef
 name|BPF_CHECK_DIRECTION
+end_undef
+
+begin_comment
 comment|/*  * Move the packet data from interface memory (pkt) into the  * store buffer.  "cpfn" is the routine called to do the actual data  * transfer.  bcopy is passed in to copy contiguous chunks, while  * bpf_mcopy is passed in to copy mbuf chains.  In the latter case,  * pkt is really an mbuf.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|catchpacket
@@ -6052,7 +6069,13 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize all nonzero fields of a descriptor.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|bpf_allocbufs
@@ -6151,7 +6174,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Free buffers currently in use by a descriptor.  * Called on close.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|bpf_freed
@@ -6275,7 +6304,13 @@ name|bd_mtx
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Attach an interface to bpf.  dlt is the link layer type; hdrlen is the  * fixed size of the link header (variable length headers not yet supported).  */
+end_comment
+
+begin_function
 name|void
 name|bpfattach
 parameter_list|(
@@ -6306,7 +6341,13 @@ name|if_bpf
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Attach an interface to bpf.  ifp is a pointer to the structure  * defining the interface to be attached, dlt is the link layer type,  * and hdrlen is the fixed size of the link header (variable length  * headers are not yet supporrted).  */
+end_comment
+
+begin_function
 name|void
 name|bpfattach2
 parameter_list|(
@@ -6460,7 +6501,13 @@ literal|"bpf attached\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Detach bpf from an interface.  This involves detaching each descriptor  * associated with the interface, and leaving bd_bif NULL.  Notify each  * descriptor as it's detached so that any sleepers wake up and get  * ENXIO.  */
+end_comment
+
+begin_function
 name|void
 name|bpfdetach
 parameter_list|(
@@ -6608,7 +6655,13 @@ name|M_BPF
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Get a list of available data link type of the interface.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|bpf_getdltlist
@@ -6753,7 +6806,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Set the data link type of a BPF instance.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|bpf_setdlt
@@ -6934,6 +6993,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|bpf_clone
@@ -7030,6 +7092,9 @@ name|SI_CHEAPCLONE
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|bpf_drvinit
@@ -7069,6 +7134,9 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|bpfstats_fill_xbpf
@@ -7238,6 +7306,9 @@ operator|->
 name|bd_locked
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|bpf_stats_sysctl
@@ -7484,6 +7555,9 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_macro
 name|SYSINIT
 argument_list|(
 argument|bpfdev
@@ -7496,15 +7570,30 @@ argument|bpf_drvinit
 argument_list|,
 argument|NULL
 argument_list|)
+end_macro
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/* !DEV_BPF&& !NETGRAPH_BPF */
+end_comment
+
+begin_comment
 comment|/*  * NOP stubs to allow bpf-using drivers to load and function.  *  * A 'better' implementation would allow the core bpf functionality  * to be loaded at runtime.  */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|bpf_if
 name|bp_null
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 name|void
 name|bpf_tap
 parameter_list|(
@@ -7521,6 +7610,9 @@ name|u_int
 name|pktlen
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
 name|void
 name|bpf_mtap
 parameter_list|(
@@ -7535,6 +7627,9 @@ modifier|*
 name|m
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
 name|void
 name|bpf_mtap2
 parameter_list|(
@@ -7556,6 +7651,9 @@ modifier|*
 name|m
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
 name|void
 name|bpfattach
 parameter_list|(
@@ -7586,6 +7684,9 @@ name|if_bpf
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|bpfattach2
 parameter_list|(
@@ -7614,6 +7715,9 @@ operator|&
 name|bp_null
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|bpfdetach
 parameter_list|(
@@ -7623,6 +7727,9 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
 name|u_int
 name|bpf_filter
 parameter_list|(
@@ -7649,6 +7756,9 @@ literal|1
 return|;
 comment|/* "no filter" behaviour */
 block|}
+end_function
+
+begin_function
 name|int
 name|bpf_validate
 parameter_list|(
