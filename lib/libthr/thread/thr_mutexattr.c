@@ -387,14 +387,9 @@ operator|>=
 name|PTHREAD_MUTEX_TYPE_MAX
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
