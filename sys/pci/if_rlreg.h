@@ -3815,6 +3815,14 @@ name|RL_JUMBO_MTU
 value|(RL_JUMBO_FRAMELEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RL_MAX_FRAMELEN
+define|\
+value|(ETHER_MAX_LEN + ETHER_VLAN_ENCAP_LEN - ETHER_HDR_LEN - ETHER_CRC_LEN)
+end_define
+
 begin_struct
 struct|struct
 name|rl_txdesc
