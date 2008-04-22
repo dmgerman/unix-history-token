@@ -342,7 +342,7 @@ name|mbuf
 modifier|*
 name|opts
 decl_stmt|;
-name|INP_WLOCK_ASSERT
+name|INP_LOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -993,7 +993,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1010,7 +1010,7 @@ operator|&
 name|fromsa
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1064,7 +1064,7 @@ goto|goto
 name|badheadlocked
 goto|;
 block|}
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1081,7 +1081,7 @@ operator|&
 name|fromsa
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1269,7 +1269,7 @@ name|IPPROTO_DONE
 operator|)
 return|;
 block|}
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1286,7 +1286,7 @@ operator|&
 name|fromsa
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1883,7 +1883,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1941,7 +1941,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
