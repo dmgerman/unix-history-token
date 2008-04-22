@@ -730,7 +730,6 @@ name|cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* startrtclock(); */
 ifdef|#
 directive|ifdef
 name|PERFMON

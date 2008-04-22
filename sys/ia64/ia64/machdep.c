@@ -1154,7 +1154,6 @@ comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|identifycpu
 argument_list|()
 expr_stmt|;
-comment|/* startrtclock(); */
 ifdef|#
 directive|ifdef
 name|PERFMON

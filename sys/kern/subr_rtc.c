@@ -85,6 +85,38 @@ name|clock_res
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX: should be kern. now, it's no longer machdep.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|disable_rtc_set
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|disable_rtc_set
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|disable_rtc_set
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|clock_register
@@ -250,6 +282,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* XXX: We should poll all registered RTCs in case of failure */
 name|error
 operator|=
 name|CLOCK_GETTIME
@@ -414,6 +447,7 @@ operator|-=
 name|utc_offset
 argument_list|()
 expr_stmt|;
+comment|/* XXX: We should really set all registered RTCs */
 if|if
 condition|(
 operator|(

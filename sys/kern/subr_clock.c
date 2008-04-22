@@ -90,16 +90,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|disable_rtc_set
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* disable resettodr() if != 0 */
-end_comment
-
-begin_decl_stmt
-name|int
 name|tz_minuteswest
 decl_stmt|;
 end_decl_stmt
@@ -111,29 +101,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These have traditionally been in machdep, but should probably be moved to  * kern.  */
+comment|/*  * This have traditionally been in machdep, but should probably be moved to  * kern.  */
 end_comment
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_machdep
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|disable_rtc_set
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|disable_rtc_set
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
