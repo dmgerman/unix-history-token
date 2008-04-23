@@ -2525,6 +2525,12 @@ index|[
 name|XL_TX_LIST_CNT
 index|]
 decl_stmt|;
+name|bus_dma_segment_t
+name|xl_tx_segs
+index|[
+name|XL_MAXFRAGS
+index|]
+decl_stmt|;
 name|struct
 name|xl_chain_onefrag
 modifier|*
@@ -3017,6 +3023,7 @@ decl_stmt|;
 name|device_t
 name|xl_miibus
 decl_stmt|;
+specifier|const
 name|struct
 name|xl_type
 modifier|*
