@@ -7701,6 +7701,18 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * libdisk compatibility quirk - the scheme dumps the 		 * slicer name and partition type in a way that is 		 * compatible with libdisk. When libdisk is not used 		 * anymore, this should go away. 		 */
+name|G_PART_DUMPCONF
+argument_list|(
+name|table
+argument_list|,
+name|entry
+argument_list|,
+name|sb
+argument_list|,
+name|indent
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
