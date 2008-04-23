@@ -408,6 +408,42 @@ literal|"Intel 82801GB/R (ICH7) USB 2.0 controller"
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|PCI_EHCI_DEVICEID_ICH8_A
+value|0x28368086
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ehci_device_ich8_a
+init|=
+literal|"Intel 82801H (ICH8) USB 2.0 controller USB2-A"
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCI_EHCI_DEVICEID_ICH8_B
+value|0x283a8086
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ehci_device_ich8_b
+init|=
+literal|"Intel 82801H (ICH8) USB 2.0 controller USB2-B"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* NEC */
 end_comment
@@ -946,6 +982,22 @@ case|:
 return|return
 operator|(
 name|ehci_device_ich7
+operator|)
+return|;
+case|case
+name|PCI_EHCI_DEVICEID_ICH8_A
+case|:
+return|return
+operator|(
+name|ehci_device_ich8_a
+operator|)
+return|;
+case|case
+name|PCI_EHCI_DEVICEID_ICH8_B
+case|:
+return|return
+operator|(
+name|ehci_device_ich8_b
 operator|)
 return|;
 case|case
