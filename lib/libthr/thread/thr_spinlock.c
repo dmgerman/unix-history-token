@@ -123,9 +123,9 @@ block|{
 name|struct
 name|spinlock_extra
 modifier|*
-name|extra
+name|_extra
 decl_stmt|;
-name|extra
+name|_extra
 operator|=
 operator|(
 expr|struct
@@ -142,7 +142,7 @@ name|_get_curthread
 argument_list|()
 argument_list|,
 operator|&
-name|extra
+name|_extra
 operator|->
 name|lock
 argument_list|)
@@ -162,7 +162,7 @@ block|{
 name|struct
 name|spinlock_extra
 modifier|*
-name|extra
+name|_extra
 decl_stmt|;
 if|if
 condition|(
@@ -197,7 +197,7 @@ argument_list|(
 name|lck
 argument_list|)
 expr_stmt|;
-name|extra
+name|_extra
 operator|=
 operator|(
 expr|struct
@@ -214,7 +214,7 @@ name|_get_curthread
 argument_list|()
 argument_list|,
 operator|&
-name|extra
+name|_extra
 operator|->
 name|lock
 argument_list|)

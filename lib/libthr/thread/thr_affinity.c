@@ -72,7 +72,7 @@ parameter_list|,
 specifier|const
 name|cpuset_t
 modifier|*
-name|cpuset
+name|cpusetp
 parameter_list|)
 block|{
 name|struct
@@ -109,7 +109,7 @@ literal|1
 argument_list|,
 name|cpusetsize
 argument_list|,
-name|cpuset
+name|cpusetp
 argument_list|)
 expr_stmt|;
 if|if
@@ -174,7 +174,7 @@ name|tid
 argument_list|,
 name|cpusetsize
 argument_list|,
-name|cpuset
+name|cpusetp
 argument_list|)
 expr_stmt|;
 if|if
@@ -216,7 +216,7 @@ name|cpusetsize
 parameter_list|,
 name|cpuset_t
 modifier|*
-name|cpuset
+name|cpusetp
 parameter_list|)
 block|{
 name|struct
@@ -261,7 +261,7 @@ name|tid
 argument_list|,
 name|cpusetsize
 argument_list|,
-name|cpuset
+name|cpusetp
 argument_list|)
 expr_stmt|;
 if|if

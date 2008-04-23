@@ -2045,7 +2045,7 @@ parameter_list|,
 specifier|const
 name|cpuset_t
 modifier|*
-name|cpuset
+name|cpusetp
 parameter_list|)
 block|{
 name|pthread_attr_t
@@ -2083,7 +2083,7 @@ name|cpusetsize
 operator|==
 literal|0
 operator|||
-name|cpuset
+name|cpusetp
 operator|==
 name|NULL
 condition|)
@@ -2169,7 +2169,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|cpuset
+name|cpusetp
 operator|)
 index|[
 name|i
@@ -2257,7 +2257,7 @@ name|attr
 operator|->
 name|cpuset
 argument_list|,
-name|cpuset
+name|cpusetp
 argument_list|,
 name|cpusetsize
 argument_list|)
@@ -2299,7 +2299,7 @@ name|cpusetsize
 parameter_list|,
 name|cpuset_t
 modifier|*
-name|cpuset
+name|cpusetp
 parameter_list|)
 block|{
 name|pthread_attr_t
@@ -2343,7 +2343,7 @@ condition|)
 block|{
 name|memcpy
 argument_list|(
-name|cpuset
+name|cpusetp
 argument_list|,
 name|attr
 operator|->
@@ -2374,7 +2374,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|cpuset
+name|cpusetp
 operator|)
 operator|+
 name|attr
@@ -2401,7 +2401,7 @@ argument_list|()
 decl_stmt|;
 name|memset
 argument_list|(
-name|cpuset
+name|cpusetp
 argument_list|,
 operator|-
 literal|1
@@ -2427,7 +2427,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|cpuset
+name|cpusetp
 operator|)
 operator|+
 name|kern_size

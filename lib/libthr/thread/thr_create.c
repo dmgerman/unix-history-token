@@ -176,7 +176,7 @@ name|oset
 decl_stmt|;
 name|cpuset_t
 modifier|*
-name|cpuset
+name|cpusetp
 init|=
 name|NULL
 decl_stmt|;
@@ -272,7 +272,7 @@ operator|*
 name|attr
 operator|)
 expr_stmt|;
-name|cpuset
+name|cpusetp
 operator|=
 name|new_thread
 operator|->
@@ -553,7 +553,7 @@ argument_list|,
 name|TD_CREATE
 argument_list|)
 operator|||
-name|cpuset
+name|cpusetp
 operator|!=
 name|NULL
 condition|)
@@ -923,7 +923,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|cpuset
+name|cpusetp
 operator|!=
 name|NULL
 condition|)
@@ -943,7 +943,7 @@ argument_list|)
 argument_list|,
 name|cpusetsize
 argument_list|,
-name|cpuset
+name|cpusetp
 argument_list|)
 condition|)
 block|{
