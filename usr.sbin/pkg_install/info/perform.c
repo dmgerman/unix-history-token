@@ -418,17 +418,31 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strcpy
+if|if
+condition|(
+operator|!
+name|getcwd
 argument_list|(
 name|fname
 argument_list|,
-name|cp
+name|FILENAME_MAX
+argument_list|)
+condition|)
+name|upchuck
+argument_list|(
+literal|"getcwd"
 argument_list|)
 expr_stmt|;
 name|isTMP
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
+else|else
+block|{
+goto|goto
+name|bail
+goto|;
 block|}
 block|}
 elseif|else
@@ -541,7 +555,16 @@ condition|(
 name|cp
 condition|)
 block|{
-comment|/* 	 * Apply a crude heuristic to see how much space the package will 	 * take up once it's unpacked.  I've noticed that most packages 	 * compress an average of 75%, but we're only unpacking the + files so 	 * be very optimistic. 	 */
+if|if
+condition|(
+operator|!
+name|isURL
+argument_list|(
+name|pkg
+argument_list|)
+condition|)
+block|{
+comment|/* 	     * Apply a crude heuristic to see how much space the package will 	     * take up once it's unpacked.  I've noticed that most packages 	     * compress an average of 75%, but we're only unpacking the + files so 	     * be very optimistic. 	     */
 if|if
 condition|(
 name|stat
@@ -607,6 +630,7 @@ expr_stmt|;
 goto|goto
 name|bail
 goto|;
+block|}
 block|}
 block|}
 comment|/* It's not an uninstalled package, try and find it among the installed */
