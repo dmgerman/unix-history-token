@@ -340,7 +340,7 @@ name|value
 operator|==
 name|NULL
 condition|?
-literal|""
+literal|"*NULL*"
 else|:
 name|value
 argument_list|,
