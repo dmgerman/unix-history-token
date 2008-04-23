@@ -686,7 +686,7 @@ decl_stmt|;
 name|phandle_t
 name|child
 decl_stmt|;
-name|int
+name|u_int
 name|cpus
 decl_stmt|;
 name|all_cpus
@@ -975,7 +975,7 @@ decl_stmt|;
 name|u_int
 name|mid
 decl_stmt|;
-name|int
+name|u_int
 name|cpuid
 decl_stmt|;
 name|mtx_init
@@ -1345,6 +1345,11 @@ operator||=
 literal|1
 operator|<<
 name|cpuid
+expr_stmt|;
+name|intr_add_cpu
+argument_list|(
+name|cpuid
+argument_list|)
 expr_stmt|;
 block|}
 name|KASSERT

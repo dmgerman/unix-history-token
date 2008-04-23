@@ -195,7 +195,20 @@ parameter_list|,
 name|mid
 parameter_list|)
 define|\
-value|(((mr)& ~INTMAP_TID_MASK) | ((mid)<< INTMAP_TID_SHIFT) | INTMAP_V)
+value|(INTMAP_TID((mr), (mid)) | INTMAP_V)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTMAP_TID
+parameter_list|(
+name|mr
+parameter_list|,
+name|mid
+parameter_list|)
+define|\
+value|(((mr)& ~INTMAP_TID_MASK) | ((mid)<< INTMAP_TID_SHIFT))
 end_define
 
 begin_define
@@ -208,7 +221,7 @@ parameter_list|,
 name|inr
 parameter_list|)
 define|\
-value|(((ign)<< INTMAP_IGN_SHIFT) | (inr))
+value|((((ign)<< INTMAP_IGN_SHIFT)& INTMAP_IGN_MASK) |		\ 	((inr)& INTMAP_INR_MASK))
 end_define
 
 begin_comment
