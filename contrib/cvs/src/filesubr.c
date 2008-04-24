@@ -7,10 +7,6 @@ begin_comment
 comment|/* These functions were moved out of subr.c because they need different    definitions under operating systems (like, say, Windows NT) with different    file system semantics.  */
 end_comment
 
-begin_comment
-comment|/*  * $FreeBSD$  */
-end_comment
-
 begin_include
 include|#
 directive|include
