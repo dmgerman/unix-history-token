@@ -1120,16 +1120,15 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|sc_pci
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX: should all be done in bus_dma. */
-name|sc
-operator|->
 name|sc_dev
 operator|=
 name|dev
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flags
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
