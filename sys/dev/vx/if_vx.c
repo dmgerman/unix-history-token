@@ -760,7 +760,17 @@ operator|=
 literal|20
 expr_stmt|;
 comment|/* probably a good starting point. */
+name|VX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|vx_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|VX_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -1201,7 +1211,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"no connectors!"
+literal|"no connectors!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1262,7 +1272,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|": disable 'auto select' with DOS util!"
+literal|": disable 'auto select' with DOS util!\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1270,7 +1280,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"[*%s*]"
+literal|"[*%s*]\n"
 argument_list|,
 name|conn_tab
 index|[
