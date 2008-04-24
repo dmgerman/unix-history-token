@@ -4591,6 +4591,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cpu_thread_alloc
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cpu_thread_clean
 parameter_list|(
 name|struct
@@ -4613,12 +4624,11 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cpu_thread_setup
+name|cpu_thread_free
 parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
