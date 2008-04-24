@@ -2451,7 +2451,9 @@ argument_list|,
 operator|&
 name|vaddr
 argument_list|,
-name|BUS_DMA_NOWAIT
+name|BUS_DMA_COHERENT
+operator||
+name|BUS_DMA_WAITOK
 argument_list|,
 operator|&
 name|vbp
@@ -2901,10 +2903,9 @@ name|MEMO_CLUSTER_SIZE
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|mp
@@ -3757,7 +3758,7 @@ name|INB_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|bus_space_read_1(np->io_tag, np->io_bsh, o)
+value|bus_read_1(np->io_res, (o))
 end_define
 
 begin_define
@@ -3767,7 +3768,7 @@ name|INW_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|bus_space_read_2(np->io_tag, np->io_bsh, o)
+value|bus_read_2(np->io_res, (o))
 end_define
 
 begin_define
@@ -3777,7 +3778,7 @@ name|INL_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|bus_space_read_4(np->io_tag, np->io_bsh, o)
+value|bus_read_4(np->io_res, (o))
 end_define
 
 begin_define
@@ -3789,7 +3790,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|bus_space_write_1(np->io_tag, np->io_bsh, o, (v))
+value|bus_write_1(np->io_res, (o), (v))
 end_define
 
 begin_define
@@ -3801,7 +3802,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|bus_space_write_2(np->io_tag, np->io_bsh, o, (v))
+value|bus_write_2(np->io_res, (o), (v))
 end_define
 
 begin_define
@@ -3813,7 +3814,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|bus_space_write_4(np->io_tag, np->io_bsh, o, (v))
+value|bus_write_4(np->io_res, (o), (v))
 end_define
 
 begin_else
@@ -3832,7 +3833,7 @@ name|INB_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|bus_space_read_1(np->mmio_tag, np->mmio_bsh, o)
+value|bus_read_1(np->mmio_res, (o))
 end_define
 
 begin_define
@@ -3842,7 +3843,7 @@ name|INW_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|bus_space_read_2(np->mmio_tag, np->mmio_bsh, o)
+value|bus_read_2(np->mmio_res, (o))
 end_define
 
 begin_define
@@ -3852,7 +3853,7 @@ name|INL_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|bus_space_read_4(np->mmio_tag, np->mmio_bsh, o)
+value|bus_read_4(np->mmio_res, (o))
 end_define
 
 begin_define
@@ -3864,7 +3865,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|bus_space_write_1(np->mmio_tag, np->mmio_bsh, o, (v))
+value|bus_write_1(np->mmio_res, (o), (v))
 end_define
 
 begin_define
@@ -3876,7 +3877,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|bus_space_write_2(np->mmio_tag, np->mmio_bsh, o, (v))
+value|bus_write_2(np->mmio_res, (o), (v))
 end_define
 
 begin_define
@@ -3888,7 +3889,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-value|bus_space_write_4(np->mmio_tag, np->mmio_bsh, o, (v))
+value|bus_write_4(np->mmio_res, (o), (v))
 end_define
 
 begin_endif
@@ -3912,7 +3913,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|bus_space_write_region_1(np->ram_tag, np->ram_bsh, o, (a), (l))
+value|bus_write_region_1(np->ram_res, (o), (a), (l))
 end_define
 
 begin_comment
@@ -4527,6 +4528,56 @@ end_define
 begin_comment
 comment|/*  *  Misc.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SYM_LOCK
+parameter_list|()
+value|mtx_lock(&np->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_LOCK_ASSERT
+parameter_list|(
+name|_what
+parameter_list|)
+value|mtx_assert(&np->mtx, (_what))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_LOCK_DESTROY
+parameter_list|()
+value|mtx_destroy(&np->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_LOCK_INIT
+parameter_list|()
+value|mtx_init(&np->mtx, "sym_lock", NULL, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_LOCK_INITIALIZED
+parameter_list|()
+value|mtx_initialized(&np->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_UNLOCK
+parameter_list|()
+value|mtx_unlock(&np->mtx)
+end_define
 
 begin_define
 define|#
@@ -5258,6 +5309,11 @@ name|sym_dsb
 name|phys
 decl_stmt|;
 comment|/* 	 *  Pointer to CAM ccb and related stuff. 	 */
+name|struct
+name|callout
+name|ch
+decl_stmt|;
+comment|/* callout handle		*/
 name|union
 name|ccb
 modifier|*
@@ -5423,6 +5479,10 @@ begin_struct
 struct|struct
 name|sym_hcb
 block|{
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
 comment|/* 	 *  Global headers. 	 *  Due to poorness of addressing capabilities, earlier 	 *  chips (810, 815, 825) copy part of the data structures 	 *  (CCB, TCB and LCB) in fixed areas. 	 */
 ifdef|#
 directive|ifdef
@@ -5610,24 +5670,6 @@ modifier|*
 name|intr
 decl_stmt|;
 comment|/* 	 *  Bus stuff. 	 * 	 *  My understanding of PCI is that all agents must share the 	 *  same addressing range and model. 	 *  But some hardware architecture guys provide complex and 	 *  brain-deaded stuff that makes shit. 	 *  This driver only support PCI compliant implementations and 	 *  deals with part of the BUS stuff complexity only to fit O/S 	 *  requirements. 	 */
-name|bus_space_handle_t
-name|io_bsh
-decl_stmt|;
-name|bus_space_tag_t
-name|io_tag
-decl_stmt|;
-name|bus_space_handle_t
-name|mmio_bsh
-decl_stmt|;
-name|bus_space_tag_t
-name|mmio_tag
-decl_stmt|;
-name|bus_space_handle_t
-name|ram_bsh
-decl_stmt|;
-name|bus_space_tag_t
-name|ram_tag
-decl_stmt|;
 comment|/* 	 *  DMA stuff. 	 */
 name|bus_dma_tag_t
 name|bus_dmat
@@ -5637,15 +5679,7 @@ name|bus_dma_tag_t
 name|data_dmat
 decl_stmt|;
 comment|/* DMA tag for user data	*/
-comment|/* 	 *  Virtual and physical bus addresses of the chip. 	 */
-name|vm_offset_t
-name|mmio_va
-decl_stmt|;
-comment|/* MMIO kernel virtual address	*/
-name|vm_offset_t
-name|mmio_pa
-decl_stmt|;
-comment|/* MMIO CPU physical address	*/
+comment|/* 	 *  BUS addresses of the chip 	 */
 name|vm_offset_t
 name|mmio_ba
 decl_stmt|;
@@ -5655,14 +5689,6 @@ name|mmio_ws
 decl_stmt|;
 comment|/* MMIO Window size		*/
 name|vm_offset_t
-name|ram_va
-decl_stmt|;
-comment|/* RAM kernel virtual address	*/
-name|vm_offset_t
-name|ram_pa
-decl_stmt|;
-comment|/* RAM CPU physical address	*/
-name|vm_offset_t
 name|ram_ba
 decl_stmt|;
 comment|/* RAM BUS address		*/
@@ -5670,10 +5696,6 @@ name|int
 name|ram_ws
 decl_stmt|;
 comment|/* RAM window size		*/
-name|u32
-name|io_port
-decl_stmt|;
-comment|/* IO port address		*/
 comment|/* 	 *  SCRIPTS virtual and physical bus addresses. 	 *  'script'  is loaded in the on-chip RAM if present. 	 *  'scripth' stays in main memory for all chips except the 	 *  53C895A, 53C896 and 53C1010 that provide 8K on-chip RAM. 	 */
 name|u_char
 modifier|*
@@ -8652,7 +8674,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|sym_timeout
+name|sym_callout
 parameter_list|(
 name|void
 modifier|*
@@ -8700,24 +8722,6 @@ begin_function_decl
 specifier|static
 name|void
 name|sym_action
-parameter_list|(
-name|struct
-name|cam_sim
-modifier|*
-name|sim
-parameter_list|,
-name|union
-name|ccb
-modifier|*
-name|ccb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|sym_action1
 parameter_list|(
 name|struct
 name|cam_sim
@@ -9230,15 +9234,33 @@ specifier|static
 name|void
 name|sym_enqueue_cam_ccb
 parameter_list|(
+name|ccb_p
+name|cp
+parameter_list|)
+block|{
 name|hcb_p
 name|np
-parameter_list|,
+decl_stmt|;
 name|union
 name|ccb
 modifier|*
 name|ccb
-parameter_list|)
-block|{
+decl_stmt|;
+name|ccb
+operator|=
+name|cp
+operator|->
+name|cam_ccb
+expr_stmt|;
+name|np
+operator|=
+operator|(
+name|hcb_p
+operator|)
+name|cp
+operator|->
+name|arg
+expr_stmt|;
 name|assert
 argument_list|(
 operator|!
@@ -9261,20 +9283,12 @@ name|status
 operator|=
 name|CAM_REQ_INPROG
 expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|timeout_ch
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
-name|sym_timeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|ccb
+operator|&
+name|cp
+operator|->
+name|ch
 argument_list|,
 name|ccb
 operator|->
@@ -9285,6 +9299,13 @@ operator|*
 name|hz
 operator|/
 literal|1000
+argument_list|,
+name|sym_callout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|ccb
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -9331,7 +9352,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|sym_xpt_done
+name|_sym_xpt_done
 parameter_list|(
 name|hcb_p
 name|np
@@ -9342,6 +9363,77 @@ modifier|*
 name|ccb
 parameter_list|)
 block|{
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_SIM_QUEUED
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: status=CAM_SIM_QUEUED"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|&
+name|CAM_DEV_QFREEZE
+condition|)
+name|sym_freeze_cam_ccb
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sym_xpt_done
+parameter_list|(
+name|hcb_p
+name|np
+parameter_list|,
+name|union
+name|ccb
+modifier|*
+name|ccb
+parameter_list|,
+name|ccb_p
+name|cp
+parameter_list|)
+block|{
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ccb
@@ -9353,20 +9445,12 @@ operator|&
 name|CAM_SIM_QUEUED
 condition|)
 block|{
-name|untimeout
+name|callout_stop
 argument_list|(
-name|sym_timeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|ccb
-argument_list|,
-name|ccb
+operator|&
+name|cp
 operator|->
-name|ccb_h
-operator|.
-name|timeout_ch
+name|ch
 argument_list|)
 expr_stmt|;
 name|sym_remque
@@ -9400,23 +9484,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
-name|CAM_DEV_QFREEZE
-condition|)
-name|sym_freeze_cam_ccb
+name|_sym_xpt_done
 argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
-name|xpt_done
-argument_list|(
+name|np
+argument_list|,
 name|ccb
 argument_list|)
 expr_stmt|;
@@ -9440,6 +9511,11 @@ name|int
 name|cam_status
 parameter_list|)
 block|{
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|sym_set_cam_status
 argument_list|(
 name|ccb
@@ -9447,7 +9523,7 @@ argument_list|,
 name|cam_status
 argument_list|)
 expr_stmt|;
-name|sym_xpt_done
+name|_sym_xpt_done
 argument_list|(
 name|np
 argument_list|,
@@ -12396,6 +12472,11 @@ decl_stmt|;
 name|u32
 name|dsa
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 literal|0
@@ -12583,6 +12664,11 @@ decl_stmt|;
 name|u32
 name|phys
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  Reset chip if asked, otherwise just clear fifos.  	 */
 if|if
 condition|(
@@ -15509,6 +15595,11 @@ decl_stmt|;
 name|u_short
 name|sist
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  interrupt on the fly ? 	 * 	 *  A `dummy read' is needed to ensure that the 	 *  clear of the INTF flag reaches the device 	 *  before the scanning of the DONE queue. 	 */
 name|istat
 operator|=
@@ -15997,6 +16088,14 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|hcb_p
+name|np
+init|=
+name|arg
+decl_stmt|;
+name|SYM_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -16027,6 +16126,9 @@ argument_list|(
 literal|"]"
 argument_list|)
 expr_stmt|;
+name|SYM_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -16041,23 +16143,12 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splcam
-argument_list|()
-decl_stmt|;
-name|sym_intr
+name|sym_intr1
 argument_list|(
 name|cam_sim_softc
 argument_list|(
 name|sim
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -18471,13 +18562,6 @@ argument_list|,
 name|cam_status
 argument_list|)
 expr_stmt|;
-name|sym_free_ccb
-argument_list|(
-name|np
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 name|sym_freeze_cam_ccb
 argument_list|(
 name|ccb
@@ -18488,6 +18572,15 @@ argument_list|(
 name|np
 argument_list|,
 name|ccb
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|sym_free_ccb
+argument_list|(
+name|np
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
@@ -18552,6 +18645,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  Compute the index of the next job to start from SCRIPTS. 	 */
 name|i
 operator|=
@@ -23586,6 +23684,11 @@ decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -24430,14 +24533,9 @@ operator|->
 name|free_ccbq
 argument_list|)
 condition|)
-operator|(
-name|void
-operator|)
-name|sym_alloc_ccb
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 name|qp
 operator|=
 name|sym_remque_head
@@ -25148,6 +25246,11 @@ decl_stmt|;
 name|int
 name|hcode
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  Prevent from allocating more CCBs than we can 	 *  queue to the controller. 	 */
 if|if
 condition|(
@@ -25179,9 +25282,9 @@ condition|(
 operator|!
 name|cp
 condition|)
-goto|goto
-name|out_free
-goto|;
+return|return
+name|NULL
+return|;
 comment|/* 	 *  Allocate a bounce buffer for sense data. 	 */
 name|cp
 operator|->
@@ -25229,6 +25332,17 @@ name|np
 operator|->
 name|actccbs
 operator|++
+expr_stmt|;
+comment|/* 	 * Initialize the callout. 	 */
+name|callout_init
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|ch
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 *  Compute the bus address of this ccb. 	 */
 name|cp
@@ -25355,11 +25469,6 @@ label|:
 if|if
 condition|(
 name|cp
-condition|)
-block|{
-if|if
-condition|(
-name|cp
 operator|->
 name|sns_bbuf
 condition|)
@@ -25387,7 +25496,6 @@ argument_list|,
 literal|"CCB"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|NULL
 return|;
@@ -27509,6 +27617,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  Paranoid check. :) 	 */
 if|if
 condition|(
@@ -28060,6 +28173,11 @@ decl_stmt|;
 name|lcb_p
 name|lp
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  Paranoid check. :) 	 */
 if|if
 condition|(
@@ -28234,13 +28352,6 @@ argument_list|,
 name|CAM_REQ_CMP
 argument_list|)
 expr_stmt|;
-name|sym_free_ccb
-argument_list|(
-name|np
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 name|sym_xpt_done
 argument_list|(
 name|np
@@ -28251,13 +28362,22 @@ name|ccb
 operator|*
 operator|)
 name|csio
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|sym_free_ccb
+argument_list|(
+name|np
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *  Our timeout handler.  */
+comment|/*  *  Our callout handler  */
 specifier|static
 name|void
-name|sym_timeout1
+name|sym_callout
 parameter_list|(
 name|void
 modifier|*
@@ -28292,6 +28412,9 @@ operator|!
 name|np
 condition|)
 return|return;
+name|SYM_LOCK
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|ccb
@@ -28320,31 +28443,8 @@ break|break;
 default|default:
 break|break;
 block|}
-block|}
-specifier|static
-name|void
-name|sym_timeout
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|int
-name|s
-init|=
-name|splcam
+name|SYM_UNLOCK
 argument_list|()
-decl_stmt|;
-name|sym_timeout1
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 comment|/*  *  Abort an SCSI IO.  */
@@ -28371,6 +28471,11 @@ name|SYM_QUEHEAD
 modifier|*
 name|qp
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  Look up our CCB control block. 	 */
 name|cp
 operator|=
@@ -28457,24 +28562,23 @@ literal|2
 else|:
 literal|1
 expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|timeout_ch
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
-name|sym_timeout
+operator|&
+name|cp
+operator|->
+name|ch
+argument_list|,
+literal|10
+operator|*
+name|hz
+argument_list|,
+name|sym_callout
 argument_list|,
 operator|(
 name|caddr_t
 operator|)
 name|ccb
-argument_list|,
-literal|10
-operator|*
-name|hz
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  Tell the SCRIPTS processor to stop and synchronize with us. 	 */
@@ -28524,6 +28628,11 @@ name|ccb
 operator|->
 name|ccb_h
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ccb_h
@@ -28617,40 +28726,6 @@ modifier|*
 name|ccb
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splcam
-argument_list|()
-decl_stmt|;
-name|sym_action1
-argument_list|(
-name|sim
-argument_list|,
-name|ccb
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-specifier|static
-name|void
-name|sym_action1
-parameter_list|(
-name|struct
-name|cam_sim
-modifier|*
-name|sim
-parameter_list|,
-name|union
-name|ccb
-modifier|*
-name|ccb
-parameter_list|)
-block|{
 name|hcb_p
 name|np
 decl_stmt|;
@@ -28709,6 +28784,11 @@ operator|)
 name|cam_sim_softc
 argument_list|(
 name|sim
+argument_list|)
+expr_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  The common case is SCSI IO. 	 *  We deal with other ones elsewhere. 	 */
@@ -29354,18 +29434,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sym_free_ccb
-argument_list|(
-name|np
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 name|sym_xpt_done
 argument_list|(
 name|np
 argument_list|,
 name|ccb
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|sym_free_ccb
+argument_list|(
+name|np
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -29473,6 +29555,11 @@ decl_stmt|;
 name|int
 name|cmd_len
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|ccb_h
 operator|=
 operator|&
@@ -29674,6 +29761,11 @@ name|lastp
 decl_stmt|,
 name|goalp
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  No segments means no data. 	 */
 if|if
 condition|(
@@ -29864,14 +29956,6 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|cp
 operator|=
 operator|(
@@ -29893,6 +29977,11 @@ operator|)
 name|cp
 operator|->
 name|arg
+expr_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 comment|/* 	 *  Deal with weird races. 	 */
 if|if
@@ -30070,9 +30159,7 @@ expr_stmt|;
 comment|/* 	 *  Enqueue this IO in our pending queue. 	 */
 name|sym_enqueue_cam_ccb
 argument_list|(
-name|np
-argument_list|,
-name|ccb
+name|cp
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  When `#ifed 1', the code below makes the driver 	 *  panic on the first attempt to write to a SCSI device. 	 *  It is the first test we want to do after a driver 	 *  change that does not seem obviously safe. :) 	 */
@@ -30090,16 +30177,18 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|out
-label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 name|out_abort
 label|:
+name|sym_xpt_done
+argument_list|(
+name|np
+argument_list|,
+name|ccb
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
 name|sym_free_ccb
 argument_list|(
 name|np
@@ -30107,16 +30196,6 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|sym_xpt_done
-argument_list|(
-name|np
-argument_list|,
-name|ccb
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
 comment|/*  *  How complex it gets to deal with the data in CAM.  *  The Bus Dma stuff makes things still more complex.  */
 specifier|static
@@ -30145,6 +30224,11 @@ name|dir
 decl_stmt|,
 name|retv
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|ccb_h
 operator|=
 operator|&
@@ -30224,9 +30308,6 @@ operator|)
 condition|)
 block|{
 comment|/* Buffer is virtual */
-name|int
-name|s
-decl_stmt|;
 name|cp
 operator|->
 name|dmamapped
@@ -30240,11 +30321,6 @@ condition|?
 name|SYM_DMA_READ
 else|:
 name|SYM_DMA_WRITE
-expr_stmt|;
-name|s
-operator|=
-name|splsoftvm
-argument_list|()
 expr_stmt|;
 name|retv
 operator|=
@@ -30304,11 +30380,6 @@ operator||=
 name|CAM_RELEASE_SIMQ
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -30432,13 +30503,6 @@ block|}
 return|return;
 name|out_abort
 label|:
-name|sym_free_ccb
-argument_list|(
-name|np
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 name|sym_xpt_done
 argument_list|(
 name|np
@@ -30449,6 +30513,15 @@ name|ccb
 operator|*
 operator|)
 name|csio
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|sym_free_ccb
+argument_list|(
+name|np
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
@@ -30480,6 +30553,11 @@ name|bus_dma_segment_t
 modifier|*
 name|psegs2
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nsegs
@@ -30638,6 +30716,11 @@ name|s
 decl_stmt|,
 name|t
 decl_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|SYM_CONF_MAX_SG
@@ -30866,6 +30949,11 @@ operator|)
 name|cam_sim_softc
 argument_list|(
 name|sim
+argument_list|)
+expr_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|ccb_h
@@ -31759,14 +31847,6 @@ decl_stmt|;
 name|tcb_p
 name|tp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|sim
 operator|=
 operator|(
@@ -31784,6 +31864,11 @@ operator|)
 name|cam_sim_softc
 argument_list|(
 name|sim
+argument_list|)
+expr_stmt|;
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -31926,11 +32011,6 @@ break|break;
 default|default:
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 comment|/*  *  Update transfer settings of a target.  */
 specifier|static
@@ -31954,6 +32034,11 @@ modifier|*
 name|cts
 parameter_list|)
 block|{
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  Update the infos. 	 */
 define|#
 directive|define
@@ -32339,6 +32424,11 @@ modifier|*
 name|cts
 parameter_list|)
 block|{
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|cts__scsi
@@ -32467,11 +32557,8 @@ literal|"sym"
 block|,
 name|sym_pci_methods
 block|,
-expr|sizeof
-operator|(
-expr|struct
-name|sym_hcb
-operator|)
+literal|1
+comment|/* no softc */
 block|}
 decl_stmt|;
 specifier|static
@@ -33475,9 +33562,14 @@ operator|=
 name|bus_dmat
 expr_stmt|;
 else|else
-goto|goto
-name|attach_failed
-goto|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+name|SYM_LOCK_INIT
+argument_list|()
+expr_stmt|;
 comment|/* 	 *  Copy some useful infos to the HCB. 	 */
 name|np
 operator|->
@@ -33729,7 +33821,9 @@ argument_list|,
 name|busdma_lock_mutex
 argument_list|,
 operator|&
-name|Giant
+name|np
+operator|->
+name|mtx
 argument_list|,
 operator|&
 name|np
@@ -33874,29 +33968,7 @@ goto|;
 block|}
 name|np
 operator|->
-name|mmio_bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|np
-operator|->
-name|mmio_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|mmio_tag
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|np
-operator|->
-name|mmio_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|mmio_pa
+name|mmio_ba
 operator|=
 name|rman_get_start
 argument_list|(
@@ -33904,28 +33976,6 @@ name|np
 operator|->
 name|mmio_res
 argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|mmio_va
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|rman_get_virtual
-argument_list|(
-name|np
-operator|->
-name|mmio_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|mmio_ba
-operator|=
-name|np
-operator|->
-name|mmio_pa
 expr_stmt|;
 comment|/* 	 *  Allocate the IRQ. 	 */
 name|i
@@ -34025,39 +34075,6 @@ goto|goto
 name|attach_failed
 goto|;
 block|}
-name|np
-operator|->
-name|io_bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|np
-operator|->
-name|io_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|io_tag
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|np
-operator|->
-name|io_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|io_port
-operator|=
-name|rman_get_start
-argument_list|(
-name|np
-operator|->
-name|io_res
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* SYM_CONF_IOMAPPED */
@@ -34145,29 +34162,7 @@ name|regs_id
 expr_stmt|;
 name|np
 operator|->
-name|ram_bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|np
-operator|->
-name|ram_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|ram_tag
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|np
-operator|->
-name|ram_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|ram_pa
+name|ram_ba
 operator|=
 name|rman_get_start
 argument_list|(
@@ -34175,28 +34170,6 @@ name|np
 operator|->
 name|ram_res
 argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|ram_va
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|rman_get_virtual
-argument_list|(
-name|np
-operator|->
-name|ram_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|ram_ba
-operator|=
-name|np
-operator|->
-name|ram_pa
 expr_stmt|;
 block|}
 comment|/* 	 *  Save setting of some IO registers, so we will 	 *  be able to probe specific implementations. 	 */
@@ -34429,14 +34402,29 @@ condition|)
 goto|goto
 name|attach_failed
 goto|;
-comment|/* 	 *  Allocate some CCB. We need at least ONE. 	 */
-if|if
-condition|(
-operator|!
+comment|/* 	 *  Allocate the CCBs. We need at least ONE. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
 name|sym_alloc_ccb
 argument_list|(
 name|np
 argument_list|)
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+empty_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|1
 condition|)
 goto|goto
 name|attach_failed
@@ -35045,23 +35033,10 @@ name|target
 decl_stmt|,
 name|lun
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 comment|/* 	 *  First free CAM resources. 	 */
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 name|sym_cam_free
 argument_list|(
 name|np
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  Now every should be quiet for us to 	 *  free other resources. 	 */
@@ -35520,6 +35495,16 @@ operator|->
 name|data_dmat
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SYM_LOCK_INITIALIZED
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|SYM_LOCK_DESTROY
+argument_list|()
+expr_stmt|;
 name|sym_mfree_dma
 argument_list|(
 name|np
@@ -35570,14 +35555,7 @@ name|csa
 decl_stmt|;
 name|int
 name|err
-decl_stmt|,
-name|s
 decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 comment|/* 	 *  Establish our interrupt handler. 	 */
 name|err
 operator|=
@@ -35591,9 +35569,11 @@ name|np
 operator|->
 name|irq_res
 argument_list|,
-name|INTR_TYPE_CAM
-operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
+operator||
+name|INTR_TYPE_CAM
 argument_list|,
 name|NULL
 argument_list|,
@@ -35661,7 +35641,9 @@ operator|->
 name|unit
 argument_list|,
 operator|&
-name|Giant
+name|np
+operator|->
+name|mtx
 argument_list|,
 literal|1
 argument_list|,
@@ -35678,9 +35660,8 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|devq
-operator|=
-literal|0
+name|SYM_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -35705,10 +35686,6 @@ operator|->
 name|sim
 operator|=
 name|sim
-expr_stmt|;
-name|sim
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -35806,10 +35783,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|SYM_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 literal|1
@@ -35836,14 +35811,12 @@ argument_list|(
 name|devq
 argument_list|)
 expr_stmt|;
+name|SYM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|sym_cam_free
 argument_list|(
 name|np
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -35859,6 +35832,11 @@ name|hcb_p
 name|np
 parameter_list|)
 block|{
+name|SYM_LOCK_ASSERT
+argument_list|(
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|np
@@ -35888,6 +35866,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|SYM_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|np
@@ -35943,6 +35924,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|SYM_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 comment|/*============ OPTIONNAL NVRAM SUPPORT =================*/
 comment|/*  *  Get host setup from NVRAM.  */
