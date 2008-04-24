@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  Device driver optimized for the Symbios/LSI 53C896/53C895A/53C1010   *  PCI-SCSI controllers.  *  *  Copyright (C) 1999-2001  Gerard Roudier<groudier@free.fr>  *  *  This driver also supports the following Symbios/LSI PCI-SCSI chips:  *	53C810A, 53C825A, 53C860, 53C875, 53C876, 53C885, 53C895,  *	53C810,  53C815,  53C825 and the 53C1510D is 53C8XX mode.  *  *    *  This driver for FreeBSD-CAM is derived from the Linux sym53c8xx driver.  *  Copyright (C) 1998-1999  Gerard Roudier  *  *  The sym53c8xx driver is derived from the ncr53c8xx driver that had been   *  a port of the FreeBSD ncr driver to Linux-1.2.13.  *  *  The original ncr driver has been written for 386bsd and FreeBSD by  *          Wolfgang Stanglmeier<wolf@cologne.de>  *          Stefan Esser<se@mi.Uni-Koeln.de>  *  Copyright (C) 1994  Wolfgang Stanglmeier  *  *  The initialisation code, and part of the code that addresses   *  FreeBSD-CAM services is based on the aic7xxx driver for FreeBSD-CAM   *  written by Justin T. Gibbs.  *  *  Other major contributions:  *  *  NVRAM detection and reading.  *  Copyright (C) 1997 Richard Waltham<dormouse@farsrobt.demon.co.uk>  *  *-----------------------------------------------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  *  Device driver optimized for the Symbios/LSI 53C896/53C895A/53C1010  *  PCI-SCSI controllers.  *  *  Copyright (C) 1999-2001  Gerard Roudier<groudier@free.fr>  *  *  This driver also supports the following Symbios/LSI PCI-SCSI chips:  *	53C810A, 53C825A, 53C860, 53C875, 53C876, 53C885, 53C895,  *	53C810,  53C815,  53C825 and the 53C1510D is 53C8XX mode.  *  *  *  This driver for FreeBSD-CAM is derived from the Linux sym53c8xx driver.  *  Copyright (C) 1998-1999  Gerard Roudier  *  *  The sym53c8xx driver is derived from the ncr53c8xx driver that had been  *  a port of the FreeBSD ncr driver to Linux-1.2.13.  *  *  The original ncr driver has been written for 386bsd and FreeBSD by  *          Wolfgang Stanglmeier<wolf@cologne.de>  *          Stefan Esser<se@mi.Uni-Koeln.de>  *  Copyright (C) 1994  Wolfgang Stanglmeier  *  *  The initialisation code, and part of the code that addresses  *  FreeBSD-CAM services is based on the aic7xxx driver for FreeBSD-CAM  *  written by Justin T. Gibbs.  *  *  Other major contributions:  *  *  NVRAM detection and reading.  *  Copyright (C) 1997 Richard Waltham<dormouse@farsrobt.demon.co.uk>  *  *-----------------------------------------------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -257,7 +257,7 @@ file|<dev/sym/sym_fw.h>
 end_include
 
 begin_comment
-comment|/*  *  IA32 architecture does not reorder STORES and prevents  *  LOADS from passing STORES. It is called `program order'   *  by Intel and allows device drivers to deal with memory   *  ordering by only ensuring that the code is not reordered    *  by the compiler when ordering is required.  *  Other architectures implement a weaker ordering that   *  requires memory barriers (and also IO barriers when they   *  make sense) to be used.  */
+comment|/*  *  IA32 architecture does not reorder STORES and prevents  *  LOADS from passing STORES. It is called `program order'  *  by Intel and allows device drivers to deal with memory  *  ordering by only ensuring that the code is not reordered  *  by the compiler when ordering is required.  *  Other architectures implement a weaker ordering that  *  requires memory barriers (and also IO barriers when they  *  make sense) to be used.  */
 end_comment
 
 begin_if
@@ -395,7 +395,7 @@ operator|==
 name|head
 operator|)
 operator|?
-literal|0
+name|NULL
 operator|:
 name|head
 operator|->
@@ -424,7 +424,7 @@ operator|==
 name|head
 operator|)
 operator|?
-literal|0
+name|NULL
 operator|:
 name|head
 operator|->
@@ -701,7 +701,7 @@ expr_stmt|;
 else|else
 name|elem
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 end_expr_stmt
 
@@ -765,7 +765,7 @@ expr_stmt|;
 else|else
 name|elem
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 name|elem
@@ -980,7 +980,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *    Asynchronous pre-scaler (ns). Shall be 40 for   *    the SCSI timings to be compliant.  */
+comment|/*  *    Asynchronous pre-scaler (ns). Shall be 40 for  *    the SCSI timings to be compliant.  */
 end_comment
 
 begin_define
@@ -991,7 +991,7 @@ value|(40)
 end_define
 
 begin_comment
-comment|/*  *  Number of entries in the START and DONE queues.  *  *  We limit to 1 PAGE in order to succeed allocation of   *  these queues. Each entry is 8 bytes long (2 DWORDS).  */
+comment|/*  *  Number of entries in the START and DONE queues.  *  *  We limit to 1 PAGE in order to succeed allocation of  *  these queues. Each entry is 8 bytes long (2 DWORDS).  */
 end_comment
 
 begin_ifdef
@@ -1257,7 +1257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Simple power of two buddy-like allocator.  *  *  This simple code is not intended to be fast, but to   *  provide power of 2 aligned memory allocations.  *  Since the SCRIPTS processor only supplies 8 bit arithmetic,   *  this allocator allows simple and fast address calculations    *  from the SCRIPTS code. In addition, cache line alignment   *  is guaranteed for power of 2 cache line size.  *  *  This allocator has been developped for the Linux sym53c8xx    *  driver, since this O/S does not provide naturally aligned   *  allocations.  *  It has the advantage of allowing the driver to use private   *  pages of memory that will be useful if we ever need to deal   *  with IO MMUs for PCI.  */
+comment|/*  *  Simple power of two buddy-like allocator.  *  *  This simple code is not intended to be fast, but to  *  provide power of 2 aligned memory allocations.  *  Since the SCRIPTS processor only supplies 8 bit arithmetic,  *  this allocator allows simple and fast address calculations  *  from the SCRIPTS code. In addition, cache line alignment  *  is guaranteed for power of 2 cache line size.  *  *  This allocator has been developped for the Linux sym53c8xx  *  driver, since this O/S does not provide naturally aligned  *  allocations.  *  It has the advantage of allowing the driver to use private  *  pages of memory that will be useful if we ever need to deal  *  with IO MMUs for PCI.  */
 end_comment
 
 begin_define
@@ -1577,7 +1577,7 @@ operator|>
 name|MEMO_CLUSTER_SIZE
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 while|while
 condition|(
@@ -1648,7 +1648,7 @@ name|next
 operator|->
 name|next
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 break|break;
 block|}
@@ -1734,7 +1734,7 @@ name|next
 operator|->
 name|next
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -2139,7 +2139,7 @@ comment|/*  * Default memory pool we donnot need to involve in DMA.  */
 end_comment
 
 begin_comment
-comment|/*  * With the `bus dma abstraction', we use a separate pool for   * memory we donnot need to involve in DMA.  */
+comment|/*  * With the `bus dma abstraction', we use a separate pool for  * memory we donnot need to involve in DMA.  */
 end_comment
 
 begin_function
@@ -2346,7 +2346,7 @@ comment|/*  * DMAable pools.  */
 end_comment
 
 begin_comment
-comment|/*  * With `bus dma abstraction', we use a separate pool per parent   * BUS handle. A reverse table (hashed) is maintained for virtual   * to BUS address translation.  */
+comment|/*  * With `bus dma abstraction', we use a separate pool per parent  * BUS handle. A reverse table (hashed) is maintained for virtual  * to BUS address translation.  */
 end_comment
 
 begin_function
@@ -2409,7 +2409,7 @@ name|void
 modifier|*
 name|vaddr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|bus_addr_t
 name|baddr
@@ -2845,7 +2845,7 @@ name|m_pool_s
 modifier|*
 name|mp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|mp
 operator|=
@@ -2970,7 +2970,7 @@ literal|"MPOOL"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -3096,7 +3096,7 @@ name|void
 modifier|*
 name|m
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 comment|/* Lock */
 name|mp
@@ -3259,7 +3259,7 @@ name|m_vtob_s
 modifier|*
 name|vp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|m_addr_t
 name|a
@@ -3351,7 +3351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verbs for DMAable memory handling.  * The _uvptv_ macro avoids a nasty warning about pointer to volatile   * being discarded.  */
+comment|/*  * Verbs for DMAable memory handling.  * The _uvptv_ macro avoids a nasty warning about pointer to volatile  * being discarded.  */
 end_comment
 
 begin_define
@@ -3690,7 +3690,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  Some provision for a possible big endian mode supported by   *  Symbios chips (never seen, by the way).  *  For now, this stuff does not deserve any comments. :)  */
+comment|/*  *  Some provision for a possible big endian mode supported by  *  Symbios chips (never seen, by the way).  *  For now, this stuff does not deserve any comments. :)  */
 end_comment
 
 begin_define
@@ -3738,7 +3738,7 @@ value|le32toh(dw)
 end_define
 
 begin_comment
-comment|/*  *  Access to the chip IO registers and on-chip RAM.  *  We use the `bus space' interface under FreeBSD-4 and   *  later kernel versions.  */
+comment|/*  *  Access to the chip IO registers and on-chip RAM.  *  We use the `bus space' interface under FreeBSD-4 and  *  later kernel versions.  */
 end_comment
 
 begin_if
@@ -4429,7 +4429,7 @@ value|(3)
 end_define
 
 begin_comment
-comment|/*  *  A CCB hashed table is used to retrieve CCB address   *  from DSA value.  */
+comment|/*  *  A CCB hashed table is used to retrieve CCB address  *  from DSA value.  */
 end_comment
 
 begin_define
@@ -4514,7 +4514,7 @@ value|(1<<1)
 end_define
 
 begin_comment
-comment|/*  *  Device quirks.  *  Some devices, for example the CHEETAH 2 LVD, disconnects without   *  saving the DATA POINTER then reselects and terminates the IO.  *  On reselection, the automatic RESTORE DATA POINTER makes the   *  CURRENT DATA POINTER not point at the end of the IO.  *  This behaviour just breaks our calculation of the residual.  *  For now, we just force an AUTO SAVE on disconnection and will   *  fix that in a further driver version.  */
+comment|/*  *  Device quirks.  *  Some devices, for example the CHEETAH 2 LVD, disconnects without  *  saving the DATA POINTER then reselects and terminates the IO.  *  On reselection, the automatic RESTORE DATA POINTER makes the  *  CURRENT DATA POINTER not point at the end of the IO.  *  This behaviour just breaks our calculation of the residual.  *  For now, we just force an AUTO SAVE on disconnection and will  *  fix that in a further driver version.  */
 end_comment
 
 begin_define
@@ -4684,14 +4684,14 @@ value|MSG_EXT_WDTR_BUS_16_BIT
 end_define
 
 begin_comment
-comment|/*  *  Global TCB HEADER.  *  *  Due to lack of indirect addressing on earlier NCR chips,  *  this substructure is copied from the TCB to a global   *  address after selection.  *  For SYMBIOS chips that support LOAD/STORE this copy is   *  not needed and thus not performed.  */
+comment|/*  *  Global TCB HEADER.  *  *  Due to lack of indirect addressing on earlier NCR chips,  *  this substructure is copied from the TCB to a global  *  address after selection.  *  For SYMBIOS chips that support LOAD/STORE this copy is  *  not needed and thus not performed.  */
 end_comment
 
 begin_struct
 struct|struct
 name|sym_tcbh
 block|{
-comment|/* 	 *  Scripts bus addresses of LUN table accessed from scripts. 	 *  LUN #0 is a special case, since multi-lun devices are rare,  	 *  and we we want to speed-up the general case and not waste  	 *  resources. 	 */
+comment|/* 	 *  Scripts bus addresses of LUN table accessed from scripts. 	 *  LUN #0 is a special case, since multi-lun devices are rare, 	 *  and we we want to speed-up the general case and not waste 	 *  resources. 	 */
 name|u32
 name|luntbl_sa
 decl_stmt|;
@@ -4700,7 +4700,7 @@ name|u32
 name|lun0_sa
 decl_stmt|;
 comment|/* bus address of LCB #0	*/
-comment|/* 	 *  Actual SYNC/WIDE IO registers value for this target. 	 *  'sval', 'wval' and 'uval' are read from SCRIPTS and  	 *  so have alignment constraints. 	 */
+comment|/* 	 *  Actual SYNC/WIDE IO registers value for this target. 	 *  'sval', 'wval' and 'uval' are read from SCRIPTS and 	 *  so have alignment constraints. 	 */
 comment|/*0*/
 name|u_char
 name|uval
@@ -4761,7 +4761,7 @@ decl_stmt|;
 comment|/* Other LCBs [1..MAX_LUN]	*/
 endif|#
 directive|endif
-comment|/* 	 *  Bitmap that tells about LUNs that succeeded at least  	 *  1 IO and therefore assumed to be a real device. 	 *  Avoid useless allocation of the LCB structure. 	 */
+comment|/* 	 *  Bitmap that tells about LUNs that succeeded at least 	 *  1 IO and therefore assumed to be a real device. 	 *  Avoid useless allocation of the LCB structure. 	 */
 name|u32
 name|lun_map
 index|[
@@ -4774,7 +4774,7 @@ operator|/
 literal|32
 index|]
 decl_stmt|;
-comment|/* 	 *  Bitmap that tells about LUNs that haven't yet an LCB  	 *  allocated (not discovered or LCB allocation failed). 	 */
+comment|/* 	 *  Bitmap that tells about LUNs that haven't yet an LCB 	 *  allocated (not discovered or LCB allocation failed). 	 */
 name|u32
 name|busy0_map
 index|[
@@ -4813,19 +4813,19 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *  Global LCB HEADER.  *  *  Due to lack of indirect addressing on earlier NCR chips,  *  this substructure is copied from the LCB to a global   *  address after selection.  *  For SYMBIOS chips that support LOAD/STORE this copy is   *  not needed and thus not performed.  */
+comment|/*  *  Global LCB HEADER.  *  *  Due to lack of indirect addressing on earlier NCR chips,  *  this substructure is copied from the LCB to a global  *  address after selection.  *  For SYMBIOS chips that support LOAD/STORE this copy is  *  not needed and thus not performed.  */
 end_comment
 
 begin_struct
 struct|struct
 name|sym_lcbh
 block|{
-comment|/* 	 *  SCRIPTS address jumped by SCRIPTS on reselection. 	 *  For not probed logical units, this address points to  	 *  SCRIPTS that deal with bad LU handling (must be at  	 *  offset zero of the LCB for that reason). 	 */
+comment|/* 	 *  SCRIPTS address jumped by SCRIPTS on reselection. 	 *  For not probed logical units, this address points to 	 *  SCRIPTS that deal with bad LU handling (must be at 	 *  offset zero of the LCB for that reason). 	 */
 comment|/*0*/
 name|u32
 name|resel_sa
 decl_stmt|;
-comment|/* 	 *  Task (bus address of a CCB) read from SCRIPTS that points  	 *  to the unique ITL nexus allowed to be disconnected. 	 */
+comment|/* 	 *  Task (bus address of a CCB) read from SCRIPTS that points 	 *  to the unique ITL nexus allowed to be disconnected. 	 */
 name|u32
 name|itl_task_sa
 decl_stmt|;
@@ -4851,7 +4851,7 @@ name|struct
 name|sym_lcbh
 name|head
 decl_stmt|;
-comment|/* 	 *  Task table read from SCRIPTS that contains pointers to  	 *  ITLQ nexuses. The bus address read from SCRIPTS is  	 *  inside the header. 	 */
+comment|/* 	 *  Task table read from SCRIPTS that contains pointers to 	 *  ITLQ nexuses. The bus address read from SCRIPTS is 	 *  inside the header. 	 */
 name|u32
 modifier|*
 name|itlq_tbl
@@ -4896,7 +4896,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *  Action from SCRIPTS on a task.  *  Is part of the CCB, but is also used separately to plug   *  error handling action to perform from SCRIPTS.  */
+comment|/*  *  Action from SCRIPTS on a task.  *  Is part of the CCB, but is also used separately to plug  *  error handling action to perform from SCRIPTS.  */
 end_comment
 
 begin_struct
@@ -4916,7 +4916,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *  Phase mismatch context.  *  *  It is part of the CCB and is used as parameters for the   *  DATA pointer. We need two contexts to handle correctly the   *  SAVED DATA POINTER.  */
+comment|/*  *  Phase mismatch context.  *  *  It is part of the CCB and is used as parameters for the  *  DATA pointer. We need two contexts to handle correctly the  *  SAVED DATA POINTER.  */
 end_comment
 
 begin_struct
@@ -4937,7 +4937,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *  LUN control block lookup.  *  We use a direct pointer for LUN #0, and a table of   *  pointers which is only allocated for devices that support   *  LUN(s)> 0.  */
+comment|/*  *  LUN control block lookup.  *  We use a direct pointer for LUN #0, and a table of  *  pointers which is only allocated for devices that support  *  LUN(s)> 0.  */
 end_comment
 
 begin_if
@@ -4988,7 +4988,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  Status are used by the host and the script processor.  *  *  The last four bytes (status[4]) are copied to the   *  scratchb register (declared as scr0..scr3) just after the   *  select/reselect, and copied back just after disconnecting.  *  Inside the script the XX_REG are used.  */
+comment|/*  *  Status are used by the host and the script processor.  *  *  The last four bytes (status[4]) are copied to the  *  scratchb register (declared as scr0..scr3) just after the  *  select/reselect, and copied back just after disconnecting.  *  Inside the script the XX_REG are used.  */
 end_comment
 
 begin_comment
@@ -5148,7 +5148,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  Global CCB HEADER.  *  *  Due to lack of indirect addressing on earlier NCR chips,  *  this substructure is copied from the ccb to a global   *  address after selection (or reselection) and copied back   *  before disconnect.  *  For SYMBIOS chips that support LOAD/STORE this copy is   *  not needed and thus not performed.  */
+comment|/*  *  Global CCB HEADER.  *  *  Due to lack of indirect addressing on earlier NCR chips,  *  this substructure is copied from the ccb to a global  *  address after selection (or reselection) and copied back  *  before disconnect.  *  For SYMBIOS chips that support LOAD/STORE this copy is  *  not needed and thus not performed.  */
 end_comment
 
 begin_struct
@@ -5161,7 +5161,7 @@ name|struct
 name|sym_actscr
 name|go
 decl_stmt|;
-comment|/* 	 *  SCRIPTS jump address that deal with data pointers. 	 *  'savep' points to the position in the script responsible  	 *  for the actual transfer of data. 	 *  It's written on reception of a SAVE_DATA_POINTER message. 	 */
+comment|/* 	 *  SCRIPTS jump address that deal with data pointers. 	 *  'savep' points to the position in the script responsible 	 *  for the actual transfer of data. 	 *  It's written on reception of a SAVE_DATA_POINTER message. 	 */
 name|u32
 name|savep
 decl_stmt|;
@@ -5186,7 +5186,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *  Data Structure Block  *  *  During execution of a ccb by the script processor, the   *  DSA (data structure address) register points to this   *  substructure of the ccb.  */
+comment|/*  *  Data Structure Block  *  *  During execution of a ccb by the script processor, the  *  DSA (data structure address) register points to this  *  substructure of the ccb.  */
 end_comment
 
 begin_struct
@@ -5199,7 +5199,7 @@ name|struct
 name|sym_ccbh
 name|head
 decl_stmt|;
-comment|/* 	 *  Phase mismatch contexts. 	 *  We need two to handle correctly the SAVED DATA POINTER. 	 *  MUST BOTH BE AT OFFSET< 256, due to using 8 bit arithmetic  	 *  for address calculation from SCRIPTS. 	 */
+comment|/* 	 *  Phase mismatch contexts. 	 *  We need two to handle correctly the SAVED DATA POINTER. 	 *  MUST BOTH BE AT OFFSET< 256, due to using 8 bit arithmetic 	 *  for address calculation from SCRIPTS. 	 */
 name|struct
 name|sym_pmc
 name|pm0
@@ -5252,7 +5252,7 @@ begin_struct
 struct|struct
 name|sym_ccb
 block|{
-comment|/* 	 *  This is the data structure which is pointed by the DSA  	 *  register when it is executed by the script processor. 	 *  It must be the first entry. 	 */
+comment|/* 	 *  This is the data structure which is pointed by the DSA 	 *  register when it is executed by the script processor. 	 *  It must be the first entry. 	 */
 name|struct
 name|sym_dsb
 name|phys
@@ -5301,7 +5301,7 @@ name|u32
 name|extra_bytes
 decl_stmt|;
 comment|/* Extraneous bytes transferred	*/
-comment|/* 	 *  Message areas. 	 *  We prepare a message to be sent after selection. 	 *  We may use a second one if the command is rescheduled  	 *  due to CHECK_CONDITION or COMMAND TERMINATED. 	 *  Contents are IDENTIFY and SIMPLE_TAG. 	 *  While negotiating sync or wide transfer, 	 *  a SDTR or WDTR message is appended. 	 */
+comment|/* 	 *  Message areas. 	 *  We prepare a message to be sent after selection. 	 *  We may use a second one if the command is rescheduled 	 *  due to CHECK_CONDITION or COMMAND TERMINATED. 	 *  Contents are IDENTIFY and SIMPLE_TAG. 	 *  While negotiating sync or wide transfer, 	 *  a SDTR or WDTR message is appended. 	 */
 name|u_char
 name|scsi_smsg
 index|[
@@ -5423,7 +5423,7 @@ begin_struct
 struct|struct
 name|sym_hcb
 block|{
-comment|/* 	 *  Global headers. 	 *  Due to poorness of addressing capabilities, earlier  	 *  chips (810, 815, 825) copy part of the data structures  	 *  (CCB, TCB and LCB) in fixed areas. 	 */
+comment|/* 	 *  Global headers. 	 *  Due to poorness of addressing capabilities, earlier 	 *  chips (810, 815, 825) copy part of the data structures 	 *  (CCB, TCB and LCB) in fixed areas. 	 */
 ifdef|#
 directive|ifdef
 name|SYM_CONF_GENERIC_SUPPORT
@@ -5441,7 +5441,7 @@ name|lcb_head
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 *  Idle task and invalid task actions and  	 *  their bus addresses. 	 */
+comment|/* 	 *  Idle task and invalid task actions and 	 *  their bus addresses. 	 */
 name|struct
 name|sym_actscr
 name|idletask
@@ -5461,7 +5461,7 @@ name|bad_itl_ba
 decl_stmt|,
 name|bad_itlq_ba
 decl_stmt|;
-comment|/* 	 *  Dummy lun table to protect us against target  	 *  returning bad lun number on reselection. 	 */
+comment|/* 	 *  Dummy lun table to protect us against target 	 *  returning bad lun number on reselection. 	 */
 name|u32
 modifier|*
 name|badluntbl
@@ -5475,7 +5475,7 @@ comment|/* 	 *  Bus address of this host control block. 	 */
 name|u32
 name|hcb_ba
 decl_stmt|;
-comment|/* 	 *  Bit 32-63 of the on-chip RAM bus address in LE format. 	 *  The START_RAM64 script loads the MMRS and MMWS from this  	 *  field. 	 */
+comment|/* 	 *  Bit 32-63 of the on-chip RAM bus address in LE format. 	 *  The START_RAM64 script loads the MMRS and MMWS from this 	 *  field. 	 */
 name|u32
 name|scr_ram_seg
 decl_stmt|;
@@ -5492,7 +5492,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* 	 *  Initial value of some IO register bits. 	 *  These values are assumed to have been set by BIOS, and may  	 *  be used to probe adapter implementation differences. 	 */
+comment|/* 	 *  Initial value of some IO register bits. 	 *  These values are assumed to have been set by BIOS, and may 	 *  be used to probe adapter implementation differences. 	 */
 name|u_char
 name|sv_scntl0
 decl_stmt|,
@@ -5518,7 +5518,7 @@ name|sv_scntl4
 decl_stmt|,
 name|sv_stest1
 decl_stmt|;
-comment|/* 	 *  Actual initial value of IO register bits used by the  	 *  driver. They are loaded at initialisation according to   	 *  features that are to be enabled/disabled. 	 */
+comment|/* 	 *  Actual initial value of IO register bits used by the 	 *  driver. They are loaded at initialisation according to 	 *  features that are to be enabled/disabled. 	 */
 name|u_char
 name|rv_scntl0
 decl_stmt|,
@@ -5562,7 +5562,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 *  Target control block bus address array used by the SCRIPT  	 *  on reselection. 	 */
+comment|/* 	 *  Target control block bus address array used by the SCRIPT 	 *  on reselection. 	 */
 name|u32
 modifier|*
 name|targtbl
@@ -5609,7 +5609,7 @@ name|void
 modifier|*
 name|intr
 decl_stmt|;
-comment|/* 	 *  Bus stuff. 	 * 	 *  My understanding of PCI is that all agents must share the  	 *  same addressing range and model. 	 *  But some hardware architecture guys provide complex and   	 *  brain-deaded stuff that makes shit. 	 *  This driver only support PCI compliant implementations and  	 *  deals with part of the BUS stuff complexity only to fit O/S  	 *  requirements. 	 */
+comment|/* 	 *  Bus stuff. 	 * 	 *  My understanding of PCI is that all agents must share the 	 *  same addressing range and model. 	 *  But some hardware architecture guys provide complex and 	 *  brain-deaded stuff that makes shit. 	 *  This driver only support PCI compliant implementations and 	 *  deals with part of the BUS stuff complexity only to fit O/S 	 *  requirements. 	 */
 name|bus_space_handle_t
 name|io_bsh
 decl_stmt|;
@@ -5674,7 +5674,7 @@ name|u32
 name|io_port
 decl_stmt|;
 comment|/* IO port address		*/
-comment|/* 	 *  SCRIPTS virtual and physical bus addresses. 	 *  'script'  is loaded in the on-chip RAM if present. 	 *  'scripth' stays in main memory for all chips except the  	 *  53C895A, 53C896 and 53C1010 that provide 8K on-chip RAM. 	 */
+comment|/* 	 *  SCRIPTS virtual and physical bus addresses. 	 *  'script'  is loaded in the on-chip RAM if present. 	 *  'scripth' stays in main memory for all chips except the 	 *  53C895A, 53C896 and 53C1010 that provide 8K on-chip RAM. 	 */
 name|u_char
 modifier|*
 name|scripta0
@@ -5704,7 +5704,7 @@ name|u_short
 name|scriptb_sz
 decl_stmt|;
 comment|/* Actual size of script B	*/
-comment|/* 	 *  Bus addresses, setup and patch methods for  	 *  the selected firmware. 	 */
+comment|/* 	 *  Bus addresses, setup and patch methods for 	 *  the selected firmware. 	 */
 name|struct
 name|sym_fwa_ba
 name|fwa_bas
@@ -5809,7 +5809,7 @@ name|u32
 name|pciclk_khz
 decl_stmt|;
 comment|/* Estimated PCI clock  in KHz	*/
-comment|/* 	 *  Start queue management. 	 *  It is filled up by the host processor and accessed by the  	 *  SCRIPTS processor in order to start SCSI commands. 	 */
+comment|/* 	 *  Start queue management. 	 *  It is filled up by the host processor and accessed by the 	 *  SCRIPTS processor in order to start SCSI commands. 	 */
 specifier|volatile
 comment|/* Prevent code optimizations	*/
 name|u32
@@ -5845,7 +5845,7 @@ name|u32
 name|dqueue_ba
 decl_stmt|;
 comment|/* Done queue BUS address	*/
-comment|/* 	 *  Miscellaneous buffers accessed by the scripts-processor. 	 *  They shall be DWORD aligned, because they may be read or  	 *  written with a script command. 	 */
+comment|/* 	 *  Miscellaneous buffers accessed by the scripts-processor. 	 *  They shall be DWORD aligned, because they may be read or 	 *  written with a script command. 	 */
 name|u_char
 name|msgout
 index|[
@@ -5901,7 +5901,7 @@ name|SYM_QUEHEAD
 name|busy_ccbq
 decl_stmt|;
 comment|/* Queue of busy CCBs		*/
-comment|/* 	 *  During error handling and/or recovery, 	 *  active CCBs that are to be completed with  	 *  error or requeued are moved from the busy_ccbq 	 *  to the comp_ccbq prior to completion. 	 */
+comment|/* 	 *  During error handling and/or recovery, 	 *  active CCBs that are to be completed with 	 *  error or requeued are moved from the busy_ccbq 	 *  to the comp_ccbq prior to completion. 	 */
 name|SYM_QUEHEAD
 name|comp_ccbq
 decl_stmt|;
@@ -5909,7 +5909,7 @@ comment|/* 	 *  CAM CCB pending queue. 	 */
 name|SYM_QUEHEAD
 name|cam_ccbq
 decl_stmt|;
-comment|/* 	 *  IMMEDIATE ARBITRATION (IARB) control. 	 * 	 *  We keep track in 'last_cp' of the last CCB that has been  	 *  queued to the SCRIPTS processor and clear 'last_cp' when  	 *  this CCB completes. If last_cp is not zero at the moment  	 *  we queue a new CCB, we set a flag in 'last_cp' that is  	 *  used by the SCRIPTS as a hint for setting IARB. 	 *  We donnot set more than 'iarb_max' consecutive hints for  	 *  IARB in order to leave devices a chance to reselect. 	 *  By the way, any non zero value of 'iarb_max' is unfair. :) 	 */
+comment|/* 	 *  IMMEDIATE ARBITRATION (IARB) control. 	 * 	 *  We keep track in 'last_cp' of the last CCB that has been 	 *  queued to the SCRIPTS processor and clear 'last_cp' when 	 *  this CCB completes. If last_cp is not zero at the moment 	 *  we queue a new CCB, we set a flag in 'last_cp' that is 	 *  used by the SCRIPTS as a hint for setting IARB. 	 *  We donnot set more than 'iarb_max' consecutive hints for 	 *  IARB in order to leave devices a chance to reselect. 	 *  By the way, any non zero value of 'iarb_max' is unfair. :) 	 */
 ifdef|#
 directive|ifdef
 name|SYM_CONF_IARB_SUPPORT
@@ -5926,7 +5926,7 @@ name|last_cp
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 *  Command abort handling. 	 *  We need to synchronize tightly with the SCRIPTS  	 *  processor in order to handle things correctly. 	 */
+comment|/* 	 *  Command abort handling. 	 *  We need to synchronize tightly with the SCRIPTS 	 *  processor in order to handle things correctly. 	 */
 name|u_char
 name|abrt_msg
 index|[
@@ -6608,7 +6608,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  Remove a couple of work-arounds specific to C1010 if  	 *  they are not desirable. See `sym_fw2.h' for more details. 	 */
+comment|/* 	 *  Remove a couple of work-arounds specific to C1010 if 	 *  they are not desirable. See `sym_fw2.h' for more details. 	 */
 if|if
 condition|(
 operator|!
@@ -6860,7 +6860,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 *  Build the bus address table for script A  	 *  from the script A offset table. 	 */
+comment|/* 	 *  Build the bus address table for script A 	 *  from the script A offset table. 	 */
 name|po
 operator|=
 operator|(
@@ -7249,7 +7249,7 @@ endif|#
 directive|endif
 else|else
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -7482,7 +7482,7 @@ literal|10000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 *  If PREFETCH feature not enabled, remove  			 *  the NO FLUSH bit if present. 			 */
+comment|/* 			 *  If PREFETCH feature not enabled, remove 			 *  the NO FLUSH bit if present. 			 */
 if|if
 condition|(
 operator|(
@@ -7639,7 +7639,7 @@ argument_list|(
 name|opcode
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  If no relocation, assume 1 argument  		 *  and just scriptize:) it. 		 */
+comment|/* 		 *  If no relocation, assume 1 argument 		 *  and just scriptize:) it. 		 */
 if|if
 condition|(
 operator|!
@@ -7750,7 +7750,7 @@ break|break;
 case|case
 literal|0
 case|:
-comment|/* 				 *  Don't relocate a 0 address. 				 *  They are mostly used for patched or  				 *  script self-modified areas. 				 */
+comment|/* 				 *  Don't relocate a 0 address. 				 *  They are mostly used for patched or 				 *  script self-modified areas. 				 */
 if|if
 condition|(
 name|old
@@ -8994,7 +8994,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *  Print something which allows to retrieve the controler type,   *  unit, target, lun concerned by a kernel message.  */
+comment|/*  *  Print something which allows to retrieve the controler type,  *  unit, target, lun concerned by a kernel message.  */
 end_comment
 
 begin_function
@@ -9397,7 +9397,7 @@ name|ccb_h
 operator|.
 name|sym_hcb_ptr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -9458,7 +9458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  SYMBIOS chip clock divisor table.  *  *  Divisors are multiplied by 10,000,000 in order to make   *  calculations more simple.  */
+comment|/*  *  SYMBIOS chip clock divisor table.  *  *  Divisors are multiplied by 10,000,000 in order to make  *  calculations more simple.  */
 end_comment
 
 begin_define
@@ -9507,7 +9507,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  SYMBIOS chips allow burst lengths of 2, 4, 8, 16, 32, 64,  *  128 transfers. All chips support at least 16 transfers   *  bursts. The 825A, 875 and 895 chips support bursts of up   *  to 128 transfers and the 895A and 896 support bursts of up  *  to 64 transfers. All other chips support up to 16   *  transfers bursts.  *  *  For PCI 32 bit data transfers each transfer is a DWORD.  *  It is a QUADWORD (8 bytes) for PCI 64 bit data transfers.  *  *  We use log base 2 (burst length) as internal code, with   *  value 0 meaning "burst disabled".  */
+comment|/*  *  SYMBIOS chips allow burst lengths of 2, 4, 8, 16, 32, 64,  *  128 transfers. All chips support at least 16 transfers  *  bursts. The 825A, 875 and 895 chips support bursts of up  *  to 128 transfers and the 895A and 896 support bursts of up  *  to 64 transfers. All other chips support up to 16  *  transfers bursts.  *  *  For PCI 32 bit data transfers each transfer is a DWORD.  *  It is a QUADWORD (8 bytes) for PCI 64 bit data transfers.  *  *  We use log base 2 (burst length) as internal code, with  *  value 0 meaning "burst disabled".  */
 end_comment
 
 begin_comment
@@ -9738,7 +9738,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Save initial settings of some IO registers.  *  Assumed to have been set by BIOS.  *  We cannot reset the chip prior to reading the   *  IO registers, since informations will be lost.  *  Since the SCRIPTS processor may be running, this   *  is not safe on paper, but it seems to work quite   *  well. :)  */
+comment|/*  *  Save initial settings of some IO registers.  *  Assumed to have been set by BIOS.  *  We cannot reset the chip prior to reading the  *  IO registers, since informations will be lost.  *  Since the SCRIPTS processor may be running, this  *  is not safe on paper, but it seems to work quite  *  well. :)  */
 end_comment
 
 begin_function
@@ -9901,7 +9901,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Prepare io register values used by sym_init() according   *  to selected and supported features.  */
+comment|/*  *  Prepare io register values used by sym_init() according  *  to selected and supported features.  */
 end_comment
 
 begin_function
@@ -10430,7 +10430,7 @@ name|np
 operator|->
 name|maxburst
 expr_stmt|;
-comment|/* 	 *  DEL 352 - 53C810 Rev x11 - Part Number 609-0392140 - ITEM 2. 	 *  This chip and the 860 Rev 1 may wrongly use PCI cache line  	 *  based transactions on LOAD/STORE instructions. So we have  	 *  to prevent these chips from using such PCI transactions in  	 *  this driver. The generic ncr driver that does not use  	 *  LOAD/STORE instructions does not need this work-around. 	 */
+comment|/* 	 *  DEL 352 - 53C810 Rev x11 - Part Number 609-0392140 - ITEM 2. 	 *  This chip and the 860 Rev 1 may wrongly use PCI cache line 	 *  based transactions on LOAD/STORE instructions. So we have 	 *  to prevent these chips from using such PCI transactions in 	 *  this driver. The generic ncr driver that does not use 	 *  LOAD/STORE instructions does not need this work-around. 	 */
 if|if
 condition|(
 operator|(
@@ -10480,7 +10480,7 @@ operator||
 name|FE_ERMP
 operator|)
 expr_stmt|;
-comment|/* 	 *  Select all supported special features. 	 *  If we are using on-board RAM for scripts, prefetch (PFEN)  	 *  does not help, but burst op fetch (BOF) does. 	 *  Disabling PFEN makes sure BOF will be used. 	 */
+comment|/* 	 *  Select all supported special features. 	 *  If we are using on-board RAM for scripts, prefetch (PFEN) 	 *  does not help, but burst op fetch (BOF) does. 	 *  Disabling PFEN makes sure BOF will be used. 	 */
 if|if
 condition|(
 name|np
@@ -10688,7 +10688,7 @@ argument_list|,
 name|burst_max
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Set SCSI BUS mode. 	 *  - LVD capable chips (895/895A/896/1010) report the  	 *    current BUS mode through the STEST4 IO register. 	 *  - For previous generation chips (825/825A/875),  	 *    user has to tell us how to check against HVD,  	 *    since a 100% safe algorithm is not possible. 	 */
+comment|/* 	 *  Set SCSI BUS mode. 	 *  - LVD capable chips (895/895A/896/1010) report the 	 *    current BUS mode through the STEST4 IO register. 	 *  - For previous generation chips (825/825A/875), 	 *    user has to tell us how to check against HVD, 	 *    since a 100% safe algorithm is not possible. 	 */
 name|np
 operator|->
 name|scsi_mode
@@ -10816,7 +10816,7 @@ name|rv_stest2
 operator||=
 literal|0x20
 expr_stmt|;
-comment|/* 	 *  Set LED support from SCRIPTS. 	 *  Ignore this feature for boards known to use a  	 *  specific GPIO wiring and for the 895A, 896  	 *  and 1010 that drive the LED directly. 	 */
+comment|/* 	 *  Set LED support from SCRIPTS. 	 *  Ignore this feature for boards known to use a 	 *  specific GPIO wiring and for the 895A, 896 	 *  and 1010 that drive the LED directly. 	 */
 if|if
 condition|(
 operator|(
@@ -11033,7 +11033,7 @@ argument_list|,
 name|nvram
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  For now, guess PPR/DT support from the period  		 *  and BUS width. 		 */
+comment|/* 		 *  For now, guess PPR/DT support from the period 		 *  and BUS width. 		 */
 if|if
 condition|(
 name|np
@@ -11379,7 +11379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Prepare the next negotiation message if needed.  *  *  Fill in the part of message buffer that contains the   *  negotiation and the nego_status field of the CCB.  *  Returns the size of the message in bytes.  */
+comment|/*  *  Prepare the next negotiation message if needed.  *  *  Fill in the part of message buffer that contains the  *  negotiation and the nego_status field of the CCB.  *  Returns the size of the message in bytes.  */
 end_comment
 
 begin_function
@@ -11419,7 +11419,7 @@ name|msglen
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 *  Early C1010 chips need a work-around for DT  	 *  data transfer to work. 	 */
+comment|/* 	 *  Early C1010 chips need a work-around for DT 	 *  data transfer to work. 	 */
 if|if
 condition|(
 operator|!
@@ -11799,7 +11799,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SYM_CONF_IARB_SUPPORT
-comment|/* 	 *  If the previously queued CCB is not yet done,  	 *  set the IARB hint. The SCRIPTS will go with IARB  	 *  for this job when starting the previous one. 	 *  We leave devices a chance to win arbitration by  	 *  not using more than 'iarb_max' consecutive  	 *  immediate arbitrations. 	 */
+comment|/* 	 *  If the previously queued CCB is not yet done, 	 *  set the IARB hint. The SCRIPTS will go with IARB 	 *  for this job when starting the previous one. 	 *  We leave devices a chance to win arbitration by 	 *  not using more than 'iarb_max' consecutive 	 *  immediate arbitrations. 	 */
 if|if
 condition|(
 name|np
@@ -11943,7 +11943,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Soft reset the chip.  *  *  Raising SRST when the chip is running may cause   *  problems on dual function chips (see below).  *  On the other hand, LVD devices need some delay   *  to settle and report actual BUS mode in STEST4.  */
+comment|/*  *  Soft reset the chip.  *  *  Raising SRST when the chip is running may cause  *  problems on dual function chips (see below).  *  On the other hand, LVD devices need some delay  *  to settle and report actual BUS mode in STEST4.  */
 end_comment
 
 begin_function
@@ -11984,7 +11984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Soft reset the chip.  *  *  Some 896 and 876 chip revisions may hang-up if we set   *  the SRST (soft reset) bit at the wrong time when SCRIPTS   *  are running.  *  So, we need to abort the current operation prior to   *  soft resetting the chip.  */
+comment|/*  *  Soft reset the chip.  *  *  Some 896 and 876 chip revisions may hang-up if we set  *  the SRST (soft reset) bit at the wrong time when SCRIPTS  *  are running.  *  So, we need to abort the current operation prior to  *  soft resetting the chip.  */
 end_comment
 
 begin_function
@@ -12150,7 +12150,7 @@ argument_list|,
 name|RST
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Enable Tolerant, reset IRQD if present and  	 *  properly set IRQ mode, prior to resetting the bus. 	 */
+comment|/* 	 *  Enable Tolerant, reset IRQD if present and 	 *  properly set IRQ mode, prior to resetting the bus. 	 */
 name|OUTB
 argument_list|(
 name|nc_stest3
@@ -12191,7 +12191,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  Check for no terminators or SCSI bus shorts to ground. 	 *  Read SCSI data bus, data parity bits and control signals. 	 *  We are expecting RESET to be TRUE and other signals to be  	 *  FALSE. 	 */
+comment|/* 	 *  Check for no terminators or SCSI bus shorts to ground. 	 *  Read SCSI data bus, data parity bits and control signals. 	 *  We are expecting RESET to be TRUE and other signals to be 	 *  FALSE. 	 */
 name|term
 operator|=
 name|INB
@@ -12373,7 +12373,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  The chip may have completed jobs. Look at the DONE QUEUE.  *  *  On architectures that may reorder LOAD/STORE operations,   *  a memory barrier may be needed after the reading of the   *  so-called `flag' and prior to dealing with the data.  */
+comment|/*  *  The chip may have completed jobs. Look at the DONE QUEUE.  *  *  On architectures that may reorder LOAD/STORE operations,  *  a memory barrier may be needed after the reading of the  *  so-called `flag' and prior to dealing with the data.  */
 end_comment
 
 begin_function
@@ -12529,7 +12529,7 @@ name|int
 name|cam_status
 parameter_list|)
 block|{
-comment|/* 	 *  Move all active CCBs to the COMP queue  	 *  and flush this queue. 	 */
+comment|/* 	 *  Move all active CCBs to the COMP queue 	 *  and flush this queue. 	 */
 name|sym_que_splice
 argument_list|(
 operator|&
@@ -12777,7 +12777,7 @@ name|dqueueget
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 *  Install patches in scripts. 	 *  This also let point to first position the start  	 *  and done queue pointers used from SCRIPTS. 	 */
+comment|/* 	 *  Install patches in scripts. 	 *  This also let point to first position the start 	 *  and done queue pointers used from SCRIPTS. 	 */
 name|np
 operator|->
 name|fw_patch
@@ -12984,7 +12984,7 @@ argument_list|,
 name|DISAIP
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  C10101 Errata. 	 *  Errant SGE's when in narrow. Write bits 4& 5 of 	 *  STEST1 register to disable SGE. We probably should do  	 *  that from SCRIPTS for each selection/reselection, but  	 *  I just don't want. :) 	 */
+comment|/* 	 *  C10101 Errata. 	 *  Errant SGE's when in narrow. Write bits 4& 5 of 	 *  STEST1 register to disable SGE. We probably should do 	 *  that from SCRIPTS for each selection/reselection, but 	 *  I just don't want. :) 	 */
 if|if
 condition|(
 name|np
@@ -13008,7 +13008,7 @@ operator||
 literal|0x30
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  DEL 441 - 53C876 Rev 5 - Part Number 609-0392787/2788 - ITEM 2. 	 *  Disable overlapped arbitration for some dual function devices,  	 *  regardless revision id (kind of post-chip-design feature. ;-)) 	 */
+comment|/* 	 *  DEL 441 - 53C876 Rev 5 - Part Number 609-0392787/2788 - ITEM 2. 	 *  Disable overlapped arbitration for some dual function devices, 	 *  regardless revision id (kind of post-chip-design feature. ;-)) 	 */
 if|if
 condition|(
 name|np
@@ -13043,7 +13043,7 @@ name|rv_ccntl0
 operator||=
 name|DPR
 expr_stmt|;
-comment|/* 	 *  Write CCNTL0/CCNTL1 for chips capable of 64 bit addressing  	 *  and/or hardware phase mismatch, since only such chips  	 *  seem to support those IO registers. 	 */
+comment|/* 	 *  Write CCNTL0/CCNTL1 for chips capable of 64 bit addressing 	 *  and/or hardware phase mismatch, since only such chips 	 *  seem to support those IO registers. 	 */
 if|if
 condition|(
 name|np
@@ -13194,7 +13194,7 @@ operator||
 name|IID
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  For 895/6 enable SBMC interrupt and save current SCSI bus mode. 	 *  Try to eat the spurious SBMC interrupt that may occur when  	 *  we reset the chip but not the SCSI BUS (at initialization). 	 */
+comment|/* 	 *  For 895/6 enable SBMC interrupt and save current SCSI bus mode. 	 *  Try to eat the spurious SBMC interrupt that may occur when 	 *  we reset the chip but not the SCSI BUS (at initialization). 	 */
 if|if
 condition|(
 name|np
@@ -13503,7 +13503,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Get clock factor and sync divisor for a given   *  synchronous factor period.  */
+comment|/*  *  Get clock factor and sync divisor for a given  *  synchronous factor period.  */
 end_comment
 
 begin_function
@@ -13631,7 +13631,7 @@ name|kpc
 operator|<<=
 literal|1
 expr_stmt|;
-comment|/* 	 *  For earliest C10 revision 0, we cannot use extra  	 *  clocks for the setting of the SCSI clocking. 	 *  Note that this limits the lowest sync data transfer  	 *  to 5 Mega-transfers per second and may result in 	 *  using higher clock divisors. 	 */
+comment|/* 	 *  For earliest C10 revision 0, we cannot use extra 	 *  clocks for the setting of the SCSI clocking. 	 *  Note that this limits the lowest sync data transfer 	 *  to 5 Mega-transfers per second and may result in 	 *  using higher clock divisors. 	 */
 if|#
 directive|if
 literal|1
@@ -13652,7 +13652,7 @@ operator|==
 name|FE_C10
 condition|)
 block|{
-comment|/* 		 *  Look for the lowest clock divisor that allows an  		 *  output speed not faster than the period. 		 */
+comment|/* 		 *  Look for the lowest clock divisor that allows an 		 *  output speed not faster than the period. 		 */
 while|while
 condition|(
 name|div
@@ -13720,7 +13720,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 *  Look for the greatest clock divisor that allows an  	 *  input speed faster than the period. 	 */
+comment|/* 	 *  Look for the greatest clock divisor that allows an 	 *  input speed faster than the period. 	 */
 while|while
 condition|(
 name|div
@@ -13742,7 +13742,7 @@ literal|2
 operator|)
 condition|)
 break|break;
-comment|/* 	 *  Calculate the lowest clock factor that allows an output  	 *  speed not faster than the period, and the max output speed. 	 *  If fak>= 1 we will set both XCLKH_ST and XCLKH_DT. 	 *  If fak>= 2 we will also set XCLKS_ST and XCLKS_DT. 	 */
+comment|/* 	 *  Calculate the lowest clock factor that allows an output 	 *  speed not faster than the period, and the max output speed. 	 *  If fak>= 1 we will set both XCLKH_ST and XCLKH_DT. 	 *  If fak>= 2 we will also set XCLKS_ST and XCLKS_DT. 	 */
 if|if
 condition|(
 name|dt
@@ -14670,7 +14670,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("XXXX sval=%x wval=%x uval=%x (%x)\n",  		sval, wval, uval, np->rv_scntl3);
+block|printf("XXXX sval=%x wval=%x uval=%x (%x)\n", 		sval, wval, uval, np->rv_scntl3);
 endif|#
 directive|endif
 comment|/* 	 *  Set the offset. 	 */
@@ -15486,7 +15486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  chip interrupt handler  *  *  In normal situations, interrupt conditions occur one at   *  a time. But when something bad happens on the SCSI BUS,   *  the chip may raise several interrupt flags before   *  stopping and interrupting the CPU. The additionnal   *  interrupt flags are stacked in some extra registers   *  after the SIP and/or DIP flag has been raised in the   *  ISTAT. After the CPU has read the interrupt condition   *  flag from SIST or DSTAT, the chip unstacks the other   *  interrupt flags and sets the corresponding bits in   *  SIST or DSTAT. Since the chip starts stacking once the   *  SIP or DIP flag is set, there is a small window of time   *  where the stacking does not occur.  *  *  Typically, multiple interrupt conditions may happen in   *  the following situations:  *  *  - SCSI parity error + Phase mismatch  (PAR|MA)  *    When a parity error is detected in input phase   *    and the device switches to msg-in phase inside a   *    block MOV.  *  - SCSI parity error + Unexpected disconnect (PAR|UDC)  *    When a stupid device does not want to handle the   *    recovery of an SCSI parity error.  *  - Some combinations of STO, PAR, UDC, ...  *    When using non compliant SCSI stuff, when user is   *    doing non compliant hot tampering on the BUS, when   *    something really bad happens to a device, etc ...  *  *  The heuristic suggested by SYMBIOS to handle   *  multiple interrupts is to try unstacking all   *  interrupts conditions and to handle them on some   *  priority based on error severity.  *  This will work when the unstacking has been   *  successful, but we cannot be 100 % sure of that,   *  since the CPU may have been faster to unstack than   *  the chip is able to stack. Hmmm ... But it seems that   *  such a situation is very unlikely to happen.  *  *  If this happen, for example STO caught by the CPU   *  then UDC happenning before the CPU have restarted   *  the SCRIPTS, the driver may wrongly complete the   *  same command on UDC, since the SCRIPTS didn't restart   *  and the DSA still points to the same command.  *  We avoid this situation by setting the DSA to an   *  invalid value when the CCB is completed and before   *  restarting the SCRIPTS.  *  *  Another issue is that we need some section of our   *  recovery procedures to be somehow uninterruptible but   *  the SCRIPTS processor does not provides such a   *  feature. For this reason, we handle recovery preferently   *  from the C code and check against some SCRIPTS critical   *  sections from the C code.  *  *  Hopefully, the interrupt handling of the driver is now   *  able to resist to weird BUS error conditions, but donnot   *  ask me for any guarantee that it will never fail. :-)  *  Use at your own decision and risk.  */
+comment|/*  *  chip interrupt handler  *  *  In normal situations, interrupt conditions occur one at  *  a time. But when something bad happens on the SCSI BUS,  *  the chip may raise several interrupt flags before  *  stopping and interrupting the CPU. The additionnal  *  interrupt flags are stacked in some extra registers  *  after the SIP and/or DIP flag has been raised in the  *  ISTAT. After the CPU has read the interrupt condition  *  flag from SIST or DSTAT, the chip unstacks the other  *  interrupt flags and sets the corresponding bits in  *  SIST or DSTAT. Since the chip starts stacking once the  *  SIP or DIP flag is set, there is a small window of time  *  where the stacking does not occur.  *  *  Typically, multiple interrupt conditions may happen in  *  the following situations:  *  *  - SCSI parity error + Phase mismatch  (PAR|MA)  *    When a parity error is detected in input phase  *    and the device switches to msg-in phase inside a  *    block MOV.  *  - SCSI parity error + Unexpected disconnect (PAR|UDC)  *    When a stupid device does not want to handle the  *    recovery of an SCSI parity error.  *  - Some combinations of STO, PAR, UDC, ...  *    When using non compliant SCSI stuff, when user is  *    doing non compliant hot tampering on the BUS, when  *    something really bad happens to a device, etc ...  *  *  The heuristic suggested by SYMBIOS to handle  *  multiple interrupts is to try unstacking all  *  interrupts conditions and to handle them on some  *  priority based on error severity.  *  This will work when the unstacking has been  *  successful, but we cannot be 100 % sure of that,  *  since the CPU may have been faster to unstack than  *  the chip is able to stack. Hmmm ... But it seems that  *  such a situation is very unlikely to happen.  *  *  If this happen, for example STO caught by the CPU  *  then UDC happenning before the CPU have restarted  *  the SCRIPTS, the driver may wrongly complete the  *  same command on UDC, since the SCRIPTS didn't restart  *  and the DSA still points to the same command.  *  We avoid this situation by setting the DSA to an  *  invalid value when the CCB is completed and before  *  restarting the SCRIPTS.  *  *  Another issue is that we need some section of our  *  recovery procedures to be somehow uninterruptible but  *  the SCRIPTS processor does not provides such a  *  feature. For this reason, we handle recovery preferently  *  from the C code and check against some SCRIPTS critical  *  sections from the C code.  *  *  Hopefully, the interrupt handling of the driver is now  *  able to resist to weird BUS error conditions, but donnot  *  ask me for any guarantee that it will never fail. :-)  *  Use at your own decision and risk.  */
 end_comment
 
 begin_function
@@ -15509,7 +15509,7 @@ decl_stmt|;
 name|u_short
 name|sist
 decl_stmt|;
-comment|/* 	 *  interrupt on the fly ? 	 * 	 *  A `dummy read' is needed to ensure that the  	 *  clear of the INTF flag reaches the device  	 *  before the scanning of the DONE queue. 	 */
+comment|/* 	 *  interrupt on the fly ? 	 * 	 *  A `dummy read' is needed to ensure that the 	 *  clear of the INTF flag reaches the device 	 *  before the scanning of the DONE queue. 	 */
 name|istat
 operator|=
 name|INB
@@ -15591,7 +15591,7 @@ comment|/* We should never get this one */
 block|if (istat& CABRT) 		OUTB (nc_istat, CABRT);
 endif|#
 directive|endif
-comment|/* 	 *  PAR and MA interrupts may occur at the same time, 	 *  and we need to know of both in order to handle  	 *  this situation properly. We try to unstack SCSI  	 *  interrupts for that reason. BTW, I dislike a LOT  	 *  such a loop inside the interrupt routine. 	 *  Even if DMA interrupt stacking is very unlikely to  	 *  happen, we also try unstacking these ones, since  	 *  this has no performance impact. 	 */
+comment|/* 	 *  PAR and MA interrupts may occur at the same time, 	 *  and we need to know of both in order to handle 	 *  this situation properly. We try to unstack SCSI 	 *  interrupts for that reason. BTW, I dislike a LOT 	 *  such a loop inside the interrupt routine. 	 *  Even if DMA interrupt stacking is very unlikely to 	 *  happen, we also try unstacking these ones, since 	 *  this has no performance impact. 	 */
 name|sist
 operator|=
 literal|0
@@ -15698,7 +15698,7 @@ comment|/* 	 *  On paper, a memory barrier may be needed here. 	 *  And since we
 name|MEMORY_BARRIER
 argument_list|()
 expr_stmt|;
-comment|/* 	 *  First, interrupts we want to service cleanly. 	 * 	 *  Phase mismatch (MA) is the most frequent interrupt  	 *  for chip earlier than the 896 and so we have to service  	 *  it as quickly as possible. 	 *  A SCSI parity error (PAR) may be combined with a phase  	 *  mismatch condition (MA). 	 *  Programmed interrupts (SIR) are used to call the C code  	 *  from SCRIPTS. 	 *  The single step interrupt (SSI) is not used in this  	 *  driver. 	 */
+comment|/* 	 *  First, interrupts we want to service cleanly. 	 * 	 *  Phase mismatch (MA) is the most frequent interrupt 	 *  for chip earlier than the 896 and so we have to service 	 *  it as quickly as possible. 	 *  A SCSI parity error (PAR) may be combined with a phase 	 *  mismatch condition (MA). 	 *  Programmed interrupts (SIR) are used to call the C code 	 *  from SCRIPTS. 	 *  The single step interrupt (SSI) is not used in this 	 *  driver. 	 */
 if|if
 condition|(
 operator|!
@@ -15792,7 +15792,7 @@ goto|;
 return|return;
 block|}
 empty_stmt|;
-comment|/* 	 *  Now, interrupts that donnot happen in normal  	 *  situations and that we may need to recover from. 	 * 	 *  On SCSI RESET (RST), we reset everything. 	 *  On SCSI BUS MODE CHANGE (SBMC), we complete all  	 *  active CCBs with RESET status, prepare all devices  	 *  for negotiating again and restart the SCRIPTS. 	 *  On STO and UDC, we complete the CCB with the corres-  	 *  ponding status and restart the SCRIPTS. 	 */
+comment|/* 	 *  Now, interrupts that donnot happen in normal 	 *  situations and that we may need to recover from. 	 * 	 *  On SCSI RESET (RST), we reset everything. 	 *  On SCSI BUS MODE CHANGE (SBMC), we complete all 	 *  active CCBs with RESET status, prepare all devices 	 *  for negotiating again and restart the SCRIPTS. 	 *  On STO and UDC, we complete the CCB with the corres- 	 *  ponding status and restart the SCRIPTS. 	 */
 if|if
 condition|(
 name|sist
@@ -16027,7 +16027,6 @@ argument_list|(
 literal|"]"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16065,7 +16064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  generic recovery from scsi interrupt  *  *  The doc says that when the chip gets an SCSI interrupt,  *  it tries to stop in an orderly fashion, by completing   *  an instruction fetch that had started or by flushing   *  the DMA fifo for a write to memory that was executing.  *  Such a fashion is not enough to know if the instruction   *  that was just before the current DSP value has been   *  executed or not.  *  *  There are some small SCRIPTS sections that deal with   *  the start queue and the done queue that may break any   *  assomption from the C code if we are interrupted   *  inside, so we reset if this happens. Btw, since these   *  SCRIPTS sections are executed while the SCRIPTS hasn't   *  started SCSI operations, it is very unlikely to happen.  *  *  All the driver data structures are supposed to be   *  allocated from the same 4 GB memory window, so there   *  is a 1 to 1 relationship between DSA and driver data   *  structures. Since we are careful :) to invalidate the   *  DSA when we complete a command or when the SCRIPTS   *  pushes a DSA into a queue, we can trust it when it   *  points to a CCB.  */
+comment|/*  *  generic recovery from scsi interrupt  *  *  The doc says that when the chip gets an SCSI interrupt,  *  it tries to stop in an orderly fashion, by completing  *  an instruction fetch that had started or by flushing  *  the DMA fifo for a write to memory that was executing.  *  Such a fashion is not enough to know if the instruction  *  that was just before the current DSP value has been  *  executed or not.  *  *  There are some small SCRIPTS sections that deal with  *  the start queue and the done queue that may break any  *  assomption from the C code if we are interrupted  *  inside, so we reset if this happens. Btw, since these  *  SCRIPTS sections are executed while the SCRIPTS hasn't  *  started SCSI operations, it is very unlikely to happen.  *  *  All the driver data structures are supposed to be  *  allocated from the same 4 GB memory window, so there  *  is a 1 to 1 relationship between DSA and driver data  *  structures. Since we are careful :) to invalidate the  *  DSA when we complete a command or when the SCRIPTS  *  pushes a DSA into a queue, we can trust it when it  *  points to a CCB.  */
 end_comment
 
 begin_function
@@ -16106,7 +16105,7 @@ argument_list|,
 name|dsa
 argument_list|)
 decl_stmt|;
-comment|/* 	 *  If we haven't been interrupted inside the SCRIPTS  	 *  critical pathes, we can safely restart the SCRIPTS  	 *  and trust the DSA value if it matches a CCB. 	 */
+comment|/* 	 *  If we haven't been interrupted inside the SCRIPTS 	 *  critical pathes, we can safely restart the SCRIPTS 	 *  and trust the DSA value if it matches a CCB. 	 */
 if|if
 condition|(
 operator|(
@@ -16232,7 +16231,7 @@ name|CSF
 argument_list|)
 expr_stmt|;
 comment|/* clear scsi fifo */
-comment|/* 		 *  If we have a CCB, let the SCRIPTS call us back for  		 *  the handling of the error with SCRATCHA filled with  		 *  STARTPOS. This way, we will be able to freeze the  		 *  device queue and requeue awaiting IOs. 		 */
+comment|/* 		 *  If we have a CCB, let the SCRIPTS call us back for 		 *  the handling of the error with SCRATCHA filled with 		 *  STARTPOS. This way, we will be able to freeze the 		 *  device queue and requeue awaiting IOs. 		 */
 if|if
 condition|(
 name|cp
@@ -16387,7 +16386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  chip exception handler for SCSI bus mode change  *  *  spi2-r12 11.2.3 says a transceiver mode change must   *  generate a reset event and a device that detects a reset   *  event shall initiate a hard reset. It says also that a  *  device that detects a mode change shall set data transfer   *  mode to eight bit asynchronous, etc...  *  So, just reinitializing all except chip should be enough.  */
+comment|/*  *  chip exception handler for SCSI bus mode change  *  *  spi2-r12 11.2.3 says a transceiver mode change must  *  generate a reset event and a device that detects a reset  *  event shall initiate a hard reset. It says also that a  *  device that detects a mode change shall set data transfer  *  mode to eight bit asynchronous, etc...  *  So, just reinitializing all except chip should be enough.  */
 end_comment
 
 begin_function
@@ -16434,7 +16433,7 @@ name|scsi_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Should suspend command processing for a few seconds and  	 *  reinitialize all except the chip. 	 */
+comment|/* 	 *  Should suspend command processing for a few seconds and 	 *  reinitialize all except the chip. 	 */
 name|sym_init
 argument_list|(
 name|np
@@ -16446,7 +16445,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  chip exception handler for SCSI parity error.  *  *  When the chip detects a SCSI parity error and is   *  currently executing a (CH)MOV instruction, it does   *  not interrupt immediately, but tries to finish the   *  transfer of the current scatter entry before   *  interrupting. The following situations may occur:  *  *  - The complete scatter entry has been transferred   *    without the device having changed phase.  *    The chip will then interrupt with the DSP pointing   *    to the instruction that follows the MOV.  *  *  - A phase mismatch occurs before the MOV finished   *    and phase errors are to be handled by the C code.  *    The chip will then interrupt with both PAR and MA   *    conditions set.  *  *  - A phase mismatch occurs before the MOV finished and   *    phase errors are to be handled by SCRIPTS.  *    The chip will load the DSP with the phase mismatch   *    JUMP address and interrupt the host processor.  */
+comment|/*  *  chip exception handler for SCSI parity error.  *  *  When the chip detects a SCSI parity error and is  *  currently executing a (CH)MOV instruction, it does  *  not interrupt immediately, but tries to finish the  *  transfer of the current scatter entry before  *  interrupting. The following situations may occur:  *  *  - The complete scatter entry has been transferred  *    without the device having changed phase.  *    The chip will then interrupt with the DSP pointing  *    to the instruction that follows the MOV.  *  *  - A phase mismatch occurs before the MOV finished  *    and phase errors are to be handled by the C code.  *    The chip will then interrupt with both PAR and MA  *    conditions set.  *  *  - A phase mismatch occurs before the MOV finished and  *    phase errors are to be handled by SCRIPTS.  *    The chip will load the DSP with the phase mismatch  *    JUMP address and interrupt the host processor.  */
 end_comment
 
 begin_function
@@ -16573,7 +16572,7 @@ condition|)
 goto|goto
 name|reset_all
 goto|;
-comment|/* 	 *  Check instruction was a MOV, direction was INPUT and  	 *  ATN is asserted. 	 */
+comment|/* 	 *  Check instruction was a MOV, direction was INPUT and 	 *  ATN is asserted. 	 */
 if|if
 condition|(
 operator|(
@@ -16631,7 +16630,7 @@ name|M_PARITY
 else|:
 name|M_ID_ERROR
 expr_stmt|;
-comment|/* 	 *  If the old phase was DATA IN phase, we have to deal with 	 *  the 3 situations described above. 	 *  For other input phases (MSG IN and STATUS), the device  	 *  must resend the whole thing that failed parity checking  	 *  or signal error. So, jumping to dispatcher should be OK. 	 */
+comment|/* 	 *  If the old phase was DATA IN phase, we have to deal with 	 *  the 3 situations described above. 	 *  For other input phases (MSG IN and STATUS), the device 	 *  must resend the whole thing that failed parity checking 	 *  or signal error. So, jumping to dispatcher should be OK. 	 */
 if|if
 condition|(
 name|phase
@@ -16714,7 +16713,6 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16828,7 +16826,7 @@ argument_list|,
 name|dsa
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Donnot take into account dma fifo and various buffers in  	 *  INPUT phase since the chip flushes everything before  	 *  raising the MA interrupt for interrupted INPUT phases. 	 *  For DATA IN phase, we will check for the SWIDE later. 	 */
+comment|/* 	 *  Donnot take into account dma fifo and various buffers in 	 *  INPUT phase since the chip flushes everything before 	 *  raising the MA interrupt for interrupted INPUT phases. 	 *  For DATA IN phase, we will check for the SWIDE later. 	 */
 if|if
 condition|(
 operator|(
@@ -17396,7 +17394,7 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/* 	 *  check cmd against assumed interrupted script command. 	 *  If dt data phase, the MOVE instruction hasn't bit 4 of  	 *  the phase. 	 */
+comment|/* 	 *  check cmd against assumed interrupted script command. 	 *  If dt data phase, the MOVE instruction hasn't bit 4 of 	 *  the phase. 	 */
 if|if
 condition|(
 operator|(
@@ -17511,7 +17509,7 @@ name|unexpected_phase
 goto|;
 block|}
 empty_stmt|;
-comment|/* 	 *  Choose the correct PM save area. 	 * 	 *  Look at the PM_SAVE SCRIPT if you want to understand  	 *  this stuff. The equivalent code is implemented in  	 *  SCRIPTS for the 895A, 896 and 1010 that are able to  	 *  handle PM from the SCRIPTS processor. 	 */
+comment|/* 	 *  Choose the correct PM save area. 	 * 	 *  Look at the PM_SAVE SCRIPT if you want to understand 	 *  this stuff. The equivalent code is implemented in 	 *  SCRIPTS for the 895A, 896 and 1010 that are able to 	 *  handle PM from the SCRIPTS processor. 	 */
 name|hflags0
 operator|=
 name|INB
@@ -17743,7 +17741,7 @@ block|{
 name|u32
 name|tmp
 decl_stmt|;
-comment|/* 		 *  Set up the table indirect for the MOVE 		 *  of the residual byte and adjust the data  		 *  pointer context. 		 */
+comment|/* 		 *  Set up the table indirect for the MOVE 		 *  of the residual byte and adjust the data 		 *  pointer context. 		 */
 name|tmp
 operator|=
 name|scr_to_cpu
@@ -17824,7 +17822,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  If only the residual byte is to be moved,  		 *  no PM context is needed. 		 */
+comment|/* 		 *  If only the residual byte is to be moved, 		 *  no PM context is needed. 		 */
 if|if
 condition|(
 operator|(
@@ -17841,7 +17839,7 @@ name|pm
 operator|->
 name|ret
 expr_stmt|;
-comment|/* 		 *  Prepare the address of SCRIPTS that will  		 *  move the residual byte to memory. 		 */
+comment|/* 		 *  Prepare the address of SCRIPTS that will 		 *  move the residual byte to memory. 		 */
 name|nxtdsp
 operator|=
 name|SCRIPTB_BA
@@ -17924,7 +17922,7 @@ name|nxtdsp
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* 	 *  Unexpected phase changes that occurs when the current phase  	 *  is not a DATA IN or DATA OUT phase are due to error conditions. 	 *  Such event may only happen when the SCRIPTS is using a  	 *  multibyte SCSI MOVE. 	 * 	 *  Phase change		Some possible cause 	 * 	 *  COMMAND  --> MSG IN	SCSI parity error detected by target. 	 *  COMMAND  --> STATUS	Bad command or refused by target. 	 *  MSG OUT  --> MSG IN     Message rejected by target. 	 *  MSG OUT  --> COMMAND    Bogus target that discards extended 	 *  			negotiation messages. 	 * 	 *  The code below does not care of the new phase and so  	 *  trusts the target. Why to annoy it ? 	 *  If the interrupted phase is COMMAND phase, we restart at 	 *  dispatcher. 	 *  If a target does not get all the messages after selection,  	 *  the code assumes blindly that the target discards extended  	 *  messages and clears the negotiation status. 	 *  If the target does not want all our response to negotiation, 	 *  we force a SIR_NEGO_PROTO interrupt (it is a hack that avoids  	 *  bloat for such a should_not_happen situation). 	 *  In all other situation, we reset the BUS. 	 *  Are these assumptions reasonnable ? (Wait and see ...) 	 */
+comment|/* 	 *  Unexpected phase changes that occurs when the current phase 	 *  is not a DATA IN or DATA OUT phase are due to error conditions. 	 *  Such event may only happen when the SCRIPTS is using a 	 *  multibyte SCSI MOVE. 	 * 	 *  Phase change		Some possible cause 	 * 	 *  COMMAND  --> MSG IN	SCSI parity error detected by target. 	 *  COMMAND  --> STATUS	Bad command or refused by target. 	 *  MSG OUT  --> MSG IN     Message rejected by target. 	 *  MSG OUT  --> COMMAND    Bogus target that discards extended 	 *  			negotiation messages. 	 * 	 *  The code below does not care of the new phase and so 	 *  trusts the target. Why to annoy it ? 	 *  If the interrupted phase is COMMAND phase, we restart at 	 *  dispatcher. 	 *  If a target does not get all the messages after selection, 	 *  the code assumes blindly that the target discards extended 	 *  messages and clears the negotiation status. 	 *  If the target does not want all our response to negotiation, 	 *  we force a SIR_NEGO_PROTO interrupt (it is a hack that avoids 	 *  bloat for such a should_not_happen situation). 	 *  In all other situation, we reset the BUS. 	 *  Are these assumptions reasonnable ? (Wait and see ...) 	 */
 name|unexpected_phase
 label|:
 name|dsp
@@ -17968,7 +17966,7 @@ case|case
 literal|6
 case|:
 comment|/* MSG OUT phase */
-comment|/* 		 *  If the device may want to use untagged when we want  		 *  tagged, we prepare an IDENTIFY without disc. granted,  		 *  since we will not be able to handle reselect. 		 *  Otherwise, we just don't care. 		 */
+comment|/* 		 *  If the device may want to use untagged when we want 		 *  tagged, we prepare an IDENTIFY without disc. granted, 		 *  since we will not be able to handle reselect. 		 *  Otherwise, we just don't care. 		 */
 if|if
 condition|(
 name|dsp
@@ -18110,7 +18108,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Dequeue from the START queue all CCBs that match   *  a given target/lun/task condition (-1 means all),  *  and move them from the BUSY queue to the COMP queue   *  with CAM_REQUEUE_REQ status condition.  *  This function is used during error handling/recovery.  *  It is called with SCRIPTS not running.  */
+comment|/*  *  Dequeue from the START queue all CCBs that match  *  a given target/lun/task condition (-1 means all),  *  and move them from the BUSY queue to the COMP queue  *  with CAM_REQUEUE_REQ status condition.  *  This function is used during error handling/recovery.  *  It is called with SCRIPTS not running.  */
 end_comment
 
 begin_function
@@ -18158,7 +18156,7 @@ name|MAX_QUEUE
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Walk until end of START queue and dequeue every job  	 *  that matches the target/lun/task condition. 	 */
+comment|/* 	 *  Walk until end of START queue and dequeue every job 	 *  that matches the target/lun/task condition. 	 */
 name|j
 operator|=
 name|i
@@ -18377,7 +18375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Complete all CCBs queued to the COMP queue.  *  *  These CCBs are assumed:  *  - Not to be referenced either by devices or   *    SCRIPTS-related queues and datas.  *  - To have to be completed with an error condition   *    or requeued.  *  *  The device queue freeze count is incremented   *  for each CCB that does not prevent this.  *  This function is called when all CCBs involved   *  in error handling/recovery have been reaped.  */
+comment|/*  *  Complete all CCBs queued to the COMP queue.  *  *  These CCBs are assumed:  *  - Not to be referenced either by devices or  *    SCRIPTS-related queues and datas.  *  - To have to be completed with an error condition  *    or requeued.  *  *  The device queue freeze count is incremented  *  for each CCB that does not prevent this.  *  This function is called when all CCBs involved  *  in error handling/recovery have been reaped.  */
 end_comment
 
 begin_function
@@ -18497,7 +18495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  chip handler for bad SCSI status condition  *  *  In case of bad SCSI status, we unqueue all the tasks   *  currently queued to the controller but not yet started   *  and then restart the SCRIPTS processor immediately.  *  *  QUEUE FULL and BUSY conditions are handled the same way.  *  Basically all the not yet started tasks are requeued in   *  device queue and the queue is frozen until a completion.  *  *  For CHECK CONDITION and COMMAND TERMINATED status, we use   *  the CCB of the failed command to prepare a REQUEST SENSE   *  SCSI command and queue it to the controller queue.  *  *  SCRATCHA is assumed to have been loaded with STARTPOS   *  before the SCRIPTS called the C code.  */
+comment|/*  *  chip handler for bad SCSI status condition  *  *  In case of bad SCSI status, we unqueue all the tasks  *  currently queued to the controller but not yet started  *  and then restart the SCRIPTS processor immediately.  *  *  QUEUE FULL and BUSY conditions are handled the same way.  *  Basically all the not yet started tasks are requeued in  *  device queue and the queue is frozen until a completion.  *  *  For CHECK CONDITION and COMMAND TERMINATED status, we use  *  the CCB of the failed command to prepare a REQUEST SENSE  *  SCSI command and queue it to the controller queue.  *  *  SCRATCHA is assumed to have been loaded with STARTPOS  *  before the SCRIPTS called the C code.  */
 end_comment
 
 begin_function
@@ -18570,7 +18568,7 @@ operator|)
 operator|/
 literal|4
 expr_stmt|;
-comment|/* 	 *  The last CCB queued used for IARB hint may be  	 *  no longer relevant. Forget it. 	 */
+comment|/* 	 *  The last CCB queued used for IARB hint may be 	 *  no longer relevant. Forget it. 	 */
 ifdef|#
 directive|ifdef
 name|SYM_CONF_IARB_SUPPORT
@@ -18584,7 +18582,7 @@ name|np
 operator|->
 name|last_cp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif
@@ -18717,7 +18715,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  Prepare all needed data structures for  		 *  requesting sense data. 		 */
+comment|/* 		 *  Prepare all needed data structures for 		 *  requesting sense data. 		 */
 comment|/* 		 *  identify message 		 */
 name|cp
 operator|->
@@ -18736,7 +18734,7 @@ name|msglen
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 *  If we are currently using anything different from  		 *  async. 8 bit data transfers with that target, 		 *  start a negotiation, since the device may want  		 *  to report us a UNIT ATTENTION condition due to  		 *  a cause we currently ignore, and we donnot want  		 *  to be stuck with WIDE and/or SYNC data transfer. 		 * 		 *  cp->nego_status is filled by sym_prepare_nego(). 		 */
+comment|/* 		 *  If we are currently using anything different from 		 *  async. 8 bit data transfers with that target, 		 *  start a negotiation, since the device may want 		 *  to report us a UNIT ATTENTION condition due to 		 *  a cause we currently ignore, and we donnot want 		 *  to be stuck with WIDE and/or SYNC data transfer. 		 * 		 *  cp->nego_status is filled by sym_prepare_nego(). 		 */
 name|cp
 operator|->
 name|nego_status
@@ -19138,7 +19136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  After a device has accepted some management message   *  as BUS DEVICE RESET, ABORT TASK, etc ..., or when   *  a device signals a UNIT ATTENTION condition, some   *  tasks are thrown away by the device. We are required   *  to reflect that on our tasks list since the device   *  will never complete these tasks.  *  *  This function move from the BUSY queue to the COMP   *  queue all disconnected CCBs for a given target that   *  match the following criteria:  *  - lun=-1  means any logical UNIT otherwise a given one.  *  - task=-1 means any task, otherwise a given one.  */
+comment|/*  *  After a device has accepted some management message  *  as BUS DEVICE RESET, ABORT TASK, etc ..., or when  *  a device signals a UNIT ATTENTION condition, some  *  tasks are thrown away by the device. We are required  *  to reflect that on our tasks list since the device  *  will never complete these tasks.  *  *  This function move from the BUSY queue to the COMP  *  queue all disconnected CCBs for a given target that  *  match the following criteria:  *  - lun=-1  means any logical UNIT otherwise a given one.  *  - task=-1 means any task, otherwise a given one.  */
 end_comment
 
 begin_function
@@ -19202,7 +19200,7 @@ operator|->
 name|busy_ccbq
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Put all CCBs that matches our criteria into  	 *  the COMP queue and put back other ones into  	 *  the BUSY queue. 	 */
+comment|/* 	 *  Put all CCBs that matches our criteria into 	 *  the COMP queue and put back other ones into 	 *  the BUSY queue. 	 */
 while|while
 condition|(
 operator|(
@@ -19355,7 +19353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  chip handler for TASKS recovery  *  *  We cannot safely abort a command, while the SCRIPTS   *  processor is running, since we just would be in race   *  with it.  *  *  As long as we have tasks to abort, we keep the SEM   *  bit set in the ISTAT. When this bit is set, the   *  SCRIPTS processor interrupts (SIR_SCRIPT_STOPPED)   *  each time it enters the scheduler.  *  *  If we have to reset a target, clear tasks of a unit,  *  or to perform the abort of a disconnected job, we   *  restart the SCRIPTS for selecting the target. Once   *  selected, the SCRIPTS interrupts (SIR_TARGET_SELECTED).  *  If it loses arbitration, the SCRIPTS will interrupt again   *  the next time it will enter its scheduler, and so on ...  *  *  On SIR_TARGET_SELECTED, we scan for the more   *  appropriate thing to do:  *  *  - If nothing, we just sent a M_ABORT message to the   *    target to get rid of the useless SCSI bus ownership.  *    According to the specs, no tasks shall be affected.  *  - If the target is to be reset, we send it a M_RESET   *    message.  *  - If a logical UNIT is to be cleared , we send the   *    IDENTIFY(lun) + M_ABORT.  *  - If an untagged task is to be aborted, we send the   *    IDENTIFY(lun) + M_ABORT.  *  - If a tagged task is to be aborted, we send the   *    IDENTIFY(lun) + task attributes + M_ABORT_TAG.  *  *  Once our 'kiss of death' :) message has been accepted   *  by the target, the SCRIPTS interrupts again   *  (SIR_ABORT_SENT). On this interrupt, we complete   *  all the CCBs that should have been aborted by the   *  target according to our message.  */
+comment|/*  *  chip handler for TASKS recovery  *  *  We cannot safely abort a command, while the SCRIPTS  *  processor is running, since we just would be in race  *  with it.  *  *  As long as we have tasks to abort, we keep the SEM  *  bit set in the ISTAT. When this bit is set, the  *  SCRIPTS processor interrupts (SIR_SCRIPT_STOPPED)  *  each time it enters the scheduler.  *  *  If we have to reset a target, clear tasks of a unit,  *  or to perform the abort of a disconnected job, we  *  restart the SCRIPTS for selecting the target. Once  *  selected, the SCRIPTS interrupts (SIR_TARGET_SELECTED).  *  If it loses arbitration, the SCRIPTS will interrupt again  *  the next time it will enter its scheduler, and so on ...  *  *  On SIR_TARGET_SELECTED, we scan for the more  *  appropriate thing to do:  *  *  - If nothing, we just sent a M_ABORT message to the  *    target to get rid of the useless SCSI bus ownership.  *    According to the specs, no tasks shall be affected.  *  - If the target is to be reset, we send it a M_RESET  *    message.  *  - If a logical UNIT is to be cleared , we send the  *    IDENTIFY(lun) + M_ABORT.  *  - If an untagged task is to be aborted, we send the  *    IDENTIFY(lun) + M_ABORT.  *  - If a tagged task is to be aborted, we send the  *    IDENTIFY(lun) + task attributes + M_ABORT_TAG.  *  *  Once our 'kiss of death' :) message has been accepted  *  by the target, the SCRIPTS interrupts again  *  (SIR_ABORT_SENT). On this interrupt, we complete  *  all the CCBs that should have been aborted by the  *  target according to our message.  */
 end_comment
 
 begin_function
@@ -19403,7 +19401,7 @@ condition|(
 name|num
 condition|)
 block|{
-comment|/* 	 *  The SCRIPTS processor stopped before starting 	 *  the next command in order to allow us to perform  	 *  some task recovery. 	 */
+comment|/* 	 *  The SCRIPTS processor stopped before starting 	 *  the next command in order to allow us to perform 	 *  some task recovery. 	 */
 case|case
 name|SIR_SCRIPT_STOPPED
 case|:
@@ -19514,7 +19512,7 @@ literal|1
 condition|)
 break|break;
 block|}
-comment|/* 		 *  If not, walk the busy queue for any  		 *  disconnected CCB to be aborted. 		 */
+comment|/* 		 *  If not, walk the busy queue for any 		 *  disconnected CCB to be aborted. 		 */
 if|if
 condition|(
 name|target
@@ -19568,7 +19566,7 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* 		 *  If some target is to be selected,  		 *  prepare and start the selection. 		 */
+comment|/* 		 *  If some target is to be selected, 		 *  prepare and start the selection. 		 */
 if|if
 condition|(
 name|target
@@ -19640,14 +19638,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 *  Now look for a CCB to abort that haven't started yet. 		 *  Btw, the SCRIPTS processor is still stopped, so  		 *  we are not in race. 		 */
+comment|/* 		 *  Now look for a CCB to abort that haven't started yet. 		 *  Btw, the SCRIPTS processor is still stopped, so 		 *  we are not in race. 		 */
 name|i
 operator|=
 literal|0
 expr_stmt|;
 name|cp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|FOR_EACH_QUEUED_ELEMENT
 argument_list|(
@@ -19694,7 +19692,7 @@ continue|continue;
 ifdef|#
 directive|ifdef
 name|SYM_CONF_IARB_SUPPORT
-comment|/* 			 *    If we are using IMMEDIATE ARBITRATION, we donnot  			 *    want to cancel the last queued CCB, since the  			 *    SCRIPTS may have anticipated the selection. 			 */
+comment|/* 			 *    If we are using IMMEDIATE ARBITRATION, we donnot 			 *    want to cancel the last queued CCB, since the 			 *    SCRIPTS may have anticipated the selection. 			 */
 if|if
 condition|(
 name|cp
@@ -19727,7 +19725,7 @@ operator|!
 name|i
 condition|)
 block|{
-comment|/* 			 *  We are done, so we donnot need  			 *  to synchronize with the SCRIPTS anylonger. 			 *  Remove the SEM flag from the ISTAT. 			 */
+comment|/* 			 *  We are done, so we donnot need 			 *  to synchronize with the SCRIPTS anylonger. 			 *  Remove the SEM flag from the ISTAT. 			 */
 name|np
 operator|->
 name|istat_sem
@@ -19743,7 +19741,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 *  Compute index of next position in the start  		 *  queue the SCRIPTS intends to start and dequeue  		 *  all CCBs for that device that haven't been started. 		 */
+comment|/* 		 *  Compute index of next position in the start 		 *  queue the SCRIPTS intends to start and dequeue 		 *  all CCBs for that device that haven't been started. 		 */
 name|i
 operator|=
 operator|(
@@ -19831,7 +19829,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 *  The SCRIPTS processor has selected a target  	 *  we may have some manual recovery to perform for. 	 */
+comment|/* 	 *  The SCRIPTS processor has selected a target 	 *  we may have some manual recovery to perform for. 	 */
 case|case
 name|SIR_TARGET_SELECTED
 case|:
@@ -19872,7 +19870,7 @@ name|abrt_msg
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  If the target is to be reset, prepare a  		 *  M_RESET message and clear the to_reset flag  		 *  since we donnot expect this operation to fail. 		 */
+comment|/* 		 *  If the target is to be reset, prepare a 		 *  M_RESET message and clear the to_reset flag 		 *  since we donnot expect this operation to fail. 		 */
 if|if
 condition|(
 name|tp
@@ -19971,7 +19969,7 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* 		 *  If a logical unit is to be cleared, prepare  		 *  an IDENTIFY(lun) + ABORT MESSAGE. 		 */
+comment|/* 		 *  If a logical unit is to be cleared, prepare 		 *  an IDENTIFY(lun) + ABORT MESSAGE. 		 */
 if|if
 condition|(
 name|lun
@@ -20029,14 +20027,14 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 *  Otherwise, look for some disconnected job to  		 *  abort for this target. 		 */
+comment|/* 		 *  Otherwise, look for some disconnected job to 		 *  abort for this target. 		 */
 name|i
 operator|=
 literal|0
 expr_stmt|;
 name|cp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|FOR_EACH_QUEUED_ELEMENT
 argument_list|(
@@ -20090,7 +20088,7 @@ expr_stmt|;
 comment|/* Means we have some */
 break|break;
 block|}
-comment|/* 		 *  If we have none, probably since the device has  		 *  completed the command before we won abitration, 		 *  send a M_ABORT message without IDENTIFY. 		 *  According to the specs, the device must just  		 *  disconnect the BUS and not abort any task. 		 */
+comment|/* 		 *  If we have none, probably since the device has 		 *  completed the command before we won abitration, 		 *  send a M_ABORT message without IDENTIFY. 		 *  According to the specs, the device must just 		 *  disconnect the BUS and not abort any task. 		 */
 if|if
 condition|(
 operator|!
@@ -20130,7 +20128,7 @@ name|cp
 operator|->
 name|lun
 expr_stmt|;
-comment|/* 		 *  If we want to abort an untagged command, we  		 *  will send an IDENTIFY + M_ABORT. 		 *  Otherwise (tagged command), we will send  		 *  an IDENTIFY + task attributes + ABORT TAG. 		 */
+comment|/* 		 *  If we want to abort an untagged command, we 		 *  will send an IDENTIFY + M_ABORT. 		 *  Otherwise (tagged command), we will send 		 *  an IDENTIFY + task attributes + ABORT TAG. 		 */
 if|if
 condition|(
 name|cp
@@ -20206,7 +20204,7 @@ operator|=
 literal|4
 expr_stmt|;
 block|}
-comment|/* 		 *  Keep track of software timeout condition, since the  		 *  peripheral driver may not count retries on abort  		 *  conditions not due to timeout. 		 */
+comment|/* 		 *  Keep track of software timeout condition, since the 		 *  peripheral driver may not count retries on abort 		 *  conditions not due to timeout. 		 */
 if|if
 condition|(
 name|cp
@@ -20232,7 +20230,7 @@ literal|0
 expr_stmt|;
 comment|/* We donnot expect to fail here */
 break|break;
-comment|/* 	 *  The target has accepted our message and switched  	 *  to BUS FREE phase as we expected. 	 */
+comment|/* 	 *  The target has accepted our message and switched 	 *  to BUS FREE phase as we expected. 	 */
 case|case
 name|SIR_ABORT_SENT
 case|:
@@ -20270,7 +20268,7 @@ operator|==
 name|M_ABORT
 condition|)
 break|break;
-comment|/* 		 *  If we sent a M_RESET, then a hardware reset has  		 *  been performed by the target. 		 *  - Reset everything to async 8 bit 		 *  - Tell ourself to negotiate next time :-) 		 *  - Prepare to clear all disconnected CCBs for  		 *    this target from our task list (lun=task=-1) 		 */
+comment|/* 		 *  If we sent a M_RESET, then a hardware reset has 		 *  been performed by the target. 		 *  - Reset everything to async 8 bit 		 *  - Tell ourself to negotiate next time :-) 		 *  - Prepare to clear all disconnected CCBs for 		 *    this target from our task list (lun=task=-1) 		 */
 name|lun
 operator|=
 operator|-
@@ -20360,7 +20358,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 *  Otherwise, check for the LUN and TASK(s)  		 *  concerned by the cancelation. 		 *  If it is not ABORT_TAG then it is CLEAR_QUEUE  		 *  or an ABORT message :-) 		 */
+comment|/* 		 *  Otherwise, check for the LUN and TASK(s) 		 *  concerned by the cancelation. 		 *  If it is not ABORT_TAG then it is CLEAR_QUEUE 		 *  or an ABORT message :-) 		 */
 else|else
 block|{
 name|lun
@@ -20395,7 +20393,7 @@ literal|2
 index|]
 expr_stmt|;
 block|}
-comment|/* 		 *  Complete all the CCBs the device should have  		 *  aborted due to our 'kiss of death' message. 		 */
+comment|/* 		 *  Complete all the CCBs the device should have 		 *  aborted due to our 'kiss of death' message. 		 */
 name|i
 operator|=
 operator|(
@@ -20530,7 +20528,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Gerard's alchemy:) that deals with with the data   *  pointer for both MDP and the residual calculation.  *  *  I didn't want to bloat the code by more than 200   *  lignes for the handling of both MDP and the residual.  *  This has been achieved by using a data pointer   *  representation consisting in an index in the data   *  array (dp_sg) and a negative offset (dp_ofs) that   *  have the following meaning:  *  *  - dp_sg = SYM_CONF_MAX_SG  *    we are at the end of the data script.  *  - dp_sg< SYM_CONF_MAX_SG  *    dp_sg points to the next entry of the scatter array   *    we want to transfer.  *  - dp_ofs< 0  *    dp_ofs represents the residual of bytes of the   *    previous entry scatter entry we will send first.  *  - dp_ofs = 0  *    no residual to send first.  *  *  The function sym_evaluate_dp() accepts an arbitray   *  offset (basically from the MDP message) and returns   *  the corresponding values of dp_sg and dp_ofs.  */
+comment|/*  *  Gerard's alchemy:) that deals with with the data  *  pointer for both MDP and the residual calculation.  *  *  I didn't want to bloat the code by more than 200  *  lignes for the handling of both MDP and the residual.  *  This has been achieved by using a data pointer  *  representation consisting in an index in the data  *  array (dp_sg) and a negative offset (dp_ofs) that  *  have the following meaning:  *  *  - dp_sg = SYM_CONF_MAX_SG  *    we are at the end of the data script.  *  - dp_sg< SYM_CONF_MAX_SG  *    dp_sg points to the next entry of the scatter array  *    we want to transfer.  *  - dp_ofs< 0  *    dp_ofs represents the residual of bytes of the  *    previous entry scatter entry we will send first.  *  - dp_ofs = 0  *    no residual to send first.  *  *  The function sym_evaluate_dp() accepts an arbitray  *  offset (basically from the MDP message) and returns  *  the corresponding values of dp_sg and dp_ofs.  */
 end_comment
 
 begin_function
@@ -20570,7 +20568,7 @@ name|sym_pmc
 modifier|*
 name|pm
 decl_stmt|;
-comment|/* 	 *  Compute the resulted data pointer in term of a script  	 *  address within some DATA script and a signed byte offset. 	 */
+comment|/* 	 *  Compute the resulted data pointer in term of a script 	 *  address within some DATA script and a signed byte offset. 	 */
 name|dp_scr
 operator|=
 name|scr
@@ -20624,7 +20622,7 @@ expr_stmt|;
 else|else
 name|pm
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -20671,7 +20669,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 *  Deduce the index of the sg entry. 	 *  Keep track of the index of the first valid entry. 	 *  If result is dp_sg = SYM_CONF_MAX_SG, then we are at the  	 *  end of the data. 	 */
+comment|/* 	 *  Deduce the index of the sg entry. 	 *  Keep track of the index of the first valid entry. 	 *  If result is dp_sg = SYM_CONF_MAX_SG, then we are at the 	 *  end of the data. 	 */
 name|tmp
 operator|=
 name|scr_to_cpu
@@ -20722,7 +20720,7 @@ name|cp
 operator|->
 name|segments
 expr_stmt|;
-comment|/* 	 *  Move to the sg entry the data pointer belongs to. 	 * 	 *  If we are inside the data area, we expect result to be: 	 * 	 *  Either, 	 *      dp_ofs = 0 and dp_sg is the index of the sg entry 	 *      the data pointer belongs to (or the end of the data) 	 *  Or, 	 *      dp_ofs< 0 and dp_sg is the index of the sg entry  	 *      the data pointer belongs to + 1. 	 */
+comment|/* 	 *  Move to the sg entry the data pointer belongs to. 	 * 	 *  If we are inside the data area, we expect result to be: 	 * 	 *  Either, 	 *      dp_ofs = 0 and dp_sg is the index of the sg entry 	 *      the data pointer belongs to (or the end of the data) 	 *  Or, 	 *      dp_ofs< 0 and dp_sg is the index of the sg entry 	 *      the data pointer belongs to + 1. 	 */
 if|if
 condition|(
 name|dp_ofs
@@ -20934,7 +20932,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  chip handler for MODIFY DATA POINTER MESSAGE  *  *  We also call this function on IGNORE WIDE RESIDUE   *  messages that do not match a SWIDE full condition.  *  Btw, we assume in that situation that such a message   *  is equivalent to a MODIFY DATA POINTER (offset=-1).  */
+comment|/*  *  chip handler for MODIFY DATA POINTER MESSAGE  *  *  We also call this function on IGNORE WIDE RESIDUE  *  messages that do not match a SWIDE full condition.  *  Btw, we assume in that situation that such a message  *  is equivalent to a MODIFY DATA POINTER (offset=-1).  */
 end_comment
 
 begin_function
@@ -20997,7 +20995,7 @@ condition|)
 goto|goto
 name|out_reject
 goto|;
-comment|/* 	 *  Apply our alchemy:) (see comments in sym_evaluate_dp()),  	 *  to the resulted data pointer. 	 */
+comment|/* 	 *  Apply our alchemy:) (see comments in sym_evaluate_dp()), 	 *  to the resulted data pointer. 	 */
 name|dp_sg
 operator|=
 name|sym_evaluate_dp
@@ -21021,7 +21019,7 @@ condition|)
 goto|goto
 name|out_reject
 goto|;
-comment|/* 	 *  And our alchemy:) allows to easily calculate the data  	 *  script address we want to return for the next data phase. 	 */
+comment|/* 	 *  And our alchemy:) allows to easily calculate the data 	 *  script address we want to return for the next data phase. 	 */
 name|dp_ret
 operator|=
 name|cpu_to_scr
@@ -21053,7 +21051,7 @@ operator|*
 literal|4
 operator|)
 expr_stmt|;
-comment|/* 	 *  If offset / scatter entry is zero we donnot need  	 *  a context for the new current data pointer. 	 */
+comment|/* 	 *  If offset / scatter entry is zero we donnot need 	 *  a context for the new current data pointer. 	 */
 if|if
 condition|(
 name|dp_ofs
@@ -21151,7 +21149,7 @@ argument_list|,
 name|hflags
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Set up the new current data pointer. 	 *  ofs< 0 there, and for the next data phase, we  	 *  want to transfer part of the data of the sg entry  	 *  corresponding to index dp_sg-1 prior to returning  	 *  to the main data script. 	 */
+comment|/* 	 *  Set up the new current data pointer. 	 *  ofs< 0 there, and for the next data phase, we 	 *  want to transfer part of the data of the sg entry 	 *  corresponding to index dp_sg-1 prior to returning 	 *  to the main data script. 	 */
 name|pm
 operator|->
 name|ret
@@ -21258,7 +21256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  chip calculation of the data residual.  *  *  As I used to say, the requirement of data residual   *  in SCSI is broken, useless and cannot be achieved   *  without huge complexity.  *  But most OSes and even the official CAM require it.  *  When stupidity happens to be so widely spread inside   *  a community, it gets hard to convince.  *  *  Anyway, I don't care, since I am not going to use   *  any software that considers this data residual as   *  a relevant information. :)  */
+comment|/*  *  chip calculation of the data residual.  *  *  As I used to say, the requirement of data residual  *  in SCSI is broken, useless and cannot be achieved  *  without huge complexity.  *  But most OSes and even the official CAM require it.  *  When stupidity happens to be so widely spread inside  *  a community, it gets hard to convince.  *  *  Anyway, I don't care, since I am not going to use  *  any software that considers this data residual as  *  a relevant information. :)  */
 end_comment
 
 begin_function
@@ -21287,7 +21285,7 @@ name|dp_ofs
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 *  Check for some data lost or just thrown away. 	 *  We are not required to be quite accurate in this  	 *  situation. Btw, if we are odd for output and the  	 *  device claims some more data, it may well happen  	 *  than our residual be zero. :-) 	 */
+comment|/* 	 *  Check for some data lost or just thrown away. 	 *  We are not required to be quite accurate in this 	 *  situation. Btw, if we are odd for output and the 	 *  device claims some more data, it may well happen 	 *  than our residual be zero. :-) 	 */
 if|if
 condition|(
 name|cp
@@ -21422,7 +21420,7 @@ operator|-
 name|dp_ofs
 return|;
 block|}
-comment|/* 	 *  We are now full comfortable in the computation  	 *  of the data residual (2's complement). 	 */
+comment|/* 	 *  We are now full comfortable in the computation 	 *  of the data residual (2's complement). 	 */
 name|dp_sgmin
 operator|=
 name|SYM_CONF_MAX_SG
@@ -21654,7 +21652,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Negotiation for WIDE and SYNCHRONOUS DATA TRANSFER.  *  *  When we try to negotiate, we append the negotiation message  *  to the identify and (maybe) simple tag message.  *  The host status field is set to HS_NEGOTIATE to mark this  *  situation.  *  *  If the target doesn't answer this message immediately  *  (as required by the standard), the SIR_NEGO_FAILED interrupt  *  will be raised eventually.  *  The handler removes the HS_NEGOTIATE status, and sets the  *  negotiated value to the default (async / nowide).  *  *  If we receive a matching answer immediately, we check it  *  for validity, and set the values.  *  *  If we receive a Reject message immediately, we assume the  *  negotiation has failed, and fall back to standard values.  *  *  If we receive a negotiation message while not in HS_NEGOTIATE  *  state, it's a target initiated negotiation. We prepare a  *  (hopefully) valid answer, set our parameters, and send back   *  this answer to the target.  *  *  If the target doesn't fetch the answer (no message out phase),  *  we assume the negotiation has failed, and fall back to default  *  settings (SIR_NEGO_PROTO interrupt).  *  *  When we set the values, we adjust them in all ccbs belonging   *  to this target, in the controller's register, and in the "phys"  *  field of the controller's struct sym_hcb.  */
+comment|/*  *  Negotiation for WIDE and SYNCHRONOUS DATA TRANSFER.  *  *  When we try to negotiate, we append the negotiation message  *  to the identify and (maybe) simple tag message.  *  The host status field is set to HS_NEGOTIATE to mark this  *  situation.  *  *  If the target doesn't answer this message immediately  *  (as required by the standard), the SIR_NEGO_FAILED interrupt  *  will be raised eventually.  *  The handler removes the HS_NEGOTIATE status, and sets the  *  negotiated value to the default (async / nowide).  *  *  If we receive a matching answer immediately, we check it  *  for validity, and set the values.  *  *  If we receive a Reject message immediately, we assume the  *  negotiation has failed, and fall back to standard values.  *  *  If we receive a negotiation message while not in HS_NEGOTIATE  *  state, it's a target initiated negotiation. We prepare a  *  (hopefully) valid answer, set our parameters, and send back  *  this answer to the target.  *  *  If the target doesn't fetch the answer (no message out phase),  *  we assume the negotiation has failed, and fall back to default  *  settings (SIR_NEGO_PROTO interrupt).  *  *  When we set the values, we adjust them in all ccbs belonging  *  to this target, in the controller's register, and in the "phys"  *  field of the controller's struct sym_hcb.  */
 end_comment
 
 begin_comment
@@ -22835,7 +22833,7 @@ name|msg_bad
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  If it was a device response that should result in   	 *  ST, we may want to try a legacy negotiation later. 	 */
+comment|/* 	 *  If it was a device response that should result in 	 *  ST, we may want to try a legacy negotiation later. 	 */
 if|if
 condition|(
 operator|!
@@ -22886,7 +22884,6 @@ operator|=
 name|ofs
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -23094,7 +23091,7 @@ argument_list|,
 name|wide
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Negotiate for SYNC immediately after WIDE response. 		 * This allows to negotiate for both WIDE and SYNC on  		 * a single SCSI command (Suggested by Justin Gibbs). 		 */
+comment|/* 		 * Negotiate for SYNC immediately after WIDE response. 		 * This allows to negotiate for both WIDE and SYNC on 		 * a single SCSI command (Suggested by Justin Gibbs). 		 */
 if|if
 condition|(
 name|tp
@@ -23327,7 +23324,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Reset SYNC or WIDE to default settings.  *  *  Called when a negotiation does not succeed either   *  on rejection or on protocol error.  *  *  If it was a PPR that made problems, we may want to   *  try a legacy negotiation later.  */
+comment|/*  *  Reset SYNC or WIDE to default settings.  *  *  Called when a negotiation does not succeed either  *  on rejection or on protocol error.  *  *  If it was a PPR that made problems, we may want to  *  try a legacy negotiation later.  */
 end_comment
 
 begin_function
@@ -23489,7 +23486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  chip handler for MESSAGE REJECT received in response to   *  a WIDE or SYNCHRONOUS negotiation.  */
+comment|/*  *  chip handler for MESSAGE REJECT received in response to  *  a WIDE or SYNCHRONOUS negotiation.  */
 end_comment
 
 begin_function
@@ -23607,7 +23604,7 @@ condition|(
 name|num
 condition|)
 block|{
-comment|/* 	 *  Command has been completed with error condition  	 *  or has been auto-sensed. 	 */
+comment|/* 	 *  Command has been completed with error condition 	 *  or has been auto-sensed. 	 */
 case|case
 name|SIR_COMPLETE_ERROR
 case|:
@@ -23637,7 +23634,7 @@ name|num
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* 	 *  The device didn't go to MSG OUT phase after having  	 *  been selected with ATN. We donnot want to handle  	 *  that. 	 */
+comment|/* 	 *  The device didn't go to MSG OUT phase after having 	 *  been selected with ATN. We donnot want to handle 	 *  that. 	 */
 case|case
 name|SIR_SEL_ATN_NO_MSG_OUT
 case|:
@@ -23656,7 +23653,7 @@ expr_stmt|;
 goto|goto
 name|out_stuck
 goto|;
-comment|/* 	 *  The device didn't switch to MSG IN phase after  	 *  having reseleted the initiator. 	 */
+comment|/* 	 *  The device didn't switch to MSG IN phase after 	 *  having reseleted the initiator. 	 */
 case|case
 name|SIR_RESEL_NO_MSG_IN
 case|:
@@ -23675,7 +23672,7 @@ expr_stmt|;
 goto|goto
 name|out_stuck
 goto|;
-comment|/* 	 *  After reselection, the device sent a message that wasn't  	 *  an IDENTIFY. 	 */
+comment|/* 	 *  After reselection, the device sent a message that wasn't 	 *  an IDENTIFY. 	 */
 case|case
 name|SIR_RESEL_NO_IDENTIFY
 case|:
@@ -23710,7 +23707,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  The device reselected for an untagged nexus and we  	 *  haven't any. 	 */
+comment|/* 	 *  The device reselected for an untagged nexus and we 	 *  haven't any. 	 */
 case|case
 name|SIR_RESEL_BAD_I_T_L
 case|:
@@ -23726,7 +23723,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  The device reselected for a tagged nexus that we donnot  	 *  have. 	 */
+comment|/* 	 *  The device reselected for a tagged nexus that we donnot 	 *  have. 	 */
 case|case
 name|SIR_RESEL_BAD_I_T_L_Q
 case|:
@@ -23742,7 +23739,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  The SCRIPTS let us know that the device has grabbed  	 *  our message and will abort the job. 	 */
+comment|/* 	 *  The SCRIPTS let us know that the device has grabbed 	 *  our message and will abort the job. 	 */
 case|case
 name|SIR_RESEL_ABORTED
 case|:
@@ -23785,7 +23782,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  The SCRIPTS let us know that a message has been  	 *  successfully sent to the device. 	 */
+comment|/* 	 *  The SCRIPTS let us know that a message has been 	 *  successfully sent to the device. 	 */
 case|case
 name|SIR_MSG_OUT_DONE
 case|:
@@ -23856,7 +23853,7 @@ block|}
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  The device didn't send a GOOD SCSI status. 	 *  We may have some work to do prior to allow  	 *  the SCRIPTS processor to continue. 	 */
+comment|/* 	 *  The device didn't send a GOOD SCSI status. 	 *  We may have some work to do prior to allow 	 *  the SCRIPTS processor to continue. 	 */
 case|case
 name|SIR_BAD_SCSI_STATUS
 case|:
@@ -23878,7 +23875,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* 	 *  We are asked by the SCRIPTS to prepare a  	 *  REJECT message. 	 */
+comment|/* 	 *  We are asked by the SCRIPTS to prepare a 	 *  REJECT message. 	 */
 case|case
 name|SIR_REJECT_TO_SEND
 case|:
@@ -23905,7 +23902,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  We have been ODD at the end of a DATA IN  	 *  transfer and the device didn't send a  	 *  IGNORE WIDE RESIDUE message. 	 *  It is a data overrun condition. 	 */
+comment|/* 	 *  We have been ODD at the end of a DATA IN 	 *  transfer and the device didn't send a 	 *  IGNORE WIDE RESIDUE message. 	 *  It is a data overrun condition. 	 */
 case|case
 name|SIR_SWIDE_OVERRUN
 case|:
@@ -23931,7 +23928,7 @@ block|}
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  We have been ODD at the end of a DATA OUT  	 *  transfer. 	 *  It is a data underrun condition. 	 */
+comment|/* 	 *  We have been ODD at the end of a DATA OUT 	 *  transfer. 	 *  It is a data underrun condition. 	 */
 case|case
 name|SIR_SODL_UNDERRUN
 case|:
@@ -23957,7 +23954,7 @@ block|}
 goto|goto
 name|out
 goto|;
-comment|/* 	 *  The device wants us to tranfer more data than  	 *  expected or in the wrong direction. 	 *  The number of extra bytes is in scratcha. 	 *  It is a data overrun condition. 	 */
+comment|/* 	 *  The device wants us to tranfer more data than 	 *  expected or in the wrong direction. 	 *  The number of extra bytes is in scratcha. 	 *  It is a data overrun condition. 	 */
 case|case
 name|SIR_DATA_OVERRUN
 case|:
@@ -24040,7 +24037,7 @@ literal|0
 index|]
 condition|)
 block|{
-comment|/* 		 *  We received an extended message. 		 *  We handle MODIFY DATA POINTER, SDTR, WDTR  		 *  and reject all other extended messages. 		 */
+comment|/* 		 *  We received an extended message. 		 *  We handle MODIFY DATA POINTER, SDTR, WDTR 		 *  and reject all other extended messages. 		 */
 case|case
 name|M_EXTENDED
 case|:
@@ -24175,7 +24172,7 @@ name|out_reject
 goto|;
 block|}
 break|break;
-comment|/* 		 *  We received a 1/2 byte message not handled from SCRIPTS. 		 *  We are only expecting MESSAGE REJECT and IGNORE WIDE  		 *  RESIDUE messages that haven't been anticipated by  		 *  SCRIPTS on SWIDE full condition. Unanticipated IGNORE  		 *  WIDE RESIDUE messages are aliased as MODIFY DP (-1). 		 */
+comment|/* 		 *  We received a 1/2 byte message not handled from SCRIPTS. 		 *  We are only expecting MESSAGE REJECT and IGNORE WIDE 		 *  RESIDUE messages that haven't been anticipated by 		 *  SCRIPTS on SWIDE full condition. Unanticipated IGNORE 		 *  WIDE RESIDUE messages are aliased as MODIFY DP (-1). 		 */
 case|case
 name|M_IGN_RESIDUE
 case|:
@@ -24420,7 +24417,7 @@ init|=
 operator|(
 name|ccb_p
 operator|)
-literal|0
+name|NULL
 decl_stmt|;
 comment|/* 	 *  Look for a free CCB 	 */
 if|if
@@ -24507,7 +24504,7 @@ goto|goto
 name|out_free
 goto|;
 block|}
-comment|/* 	 *  If the LCB is not available here, then the  	 *  logical unit is not yet discovered. For those  	 *  ones only accept 1 SCSI IO per logical unit,  	 *  since we cannot allow disconnections. 	 */
+comment|/* 	 *  If the LCB is not available here, then the 	 *  logical unit is not yet discovered. For those 	 *  ones only accept 1 SCSI IO per logical unit, 	 *  since we cannot allow disconnections. 	 */
 if|if
 condition|(
 operator|!
@@ -24587,7 +24584,7 @@ goto|goto
 name|out_free
 goto|;
 block|}
-comment|/* 			 *  Get a tag for this SCSI IO and set up 			 *  the CCB bus address for reselection,  			 *  and count it for this LUN. 			 *  Toggle reselect path to tagged. 			 */
+comment|/* 			 *  Get a tag for this SCSI IO and set up 			 *  the CCB bus address for reselection, 			 *  and count it for this LUN. 			 *  Toggle reselect path to tagged. 			 */
 if|if
 condition|(
 name|lp
@@ -24664,7 +24661,7 @@ goto|goto
 name|out_free
 goto|;
 block|}
-comment|/* 		 *  This command will not be tagged. 		 *  If we already have either a tagged or untagged  		 *  one, refuse to overlap this untagged one. 		 */
+comment|/* 		 *  This command will not be tagged. 		 *  If we already have either a tagged or untagged 		 *  one, refuse to overlap this untagged one. 		 */
 else|else
 block|{
 comment|/* 			 *  Debugging purpose. 			 */
@@ -24816,10 +24813,7 @@ name|free_ccbq
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|ccb_p
-operator|)
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -24905,7 +24899,7 @@ condition|(
 name|lp
 condition|)
 block|{
-comment|/* 		 *  If tagged, release the tag, set the relect path  		 */
+comment|/* 		 *  If tagged, release the tag, set the relect path 		 */
 if|if
 condition|(
 name|cp
@@ -24944,7 +24938,7 @@ name|if_tag
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 *  Make the reselect path invalid,  			 *  and uncount this CCB. 			 */
+comment|/* 			 *  Make the reselect path invalid, 			 *  and uncount this CCB. 			 */
 name|lp
 operator|->
 name|itlq_tbl
@@ -24970,7 +24964,7 @@ block|}
 else|else
 block|{
 comment|/* Untagged */
-comment|/* 			 *  Make the reselect path invalid,  			 *  and uncount this CCB. 			 */
+comment|/* 			 *  Make the reselect path invalid, 			 *  and uncount this CCB. 			 */
 name|lp
 operator|->
 name|head
@@ -25035,7 +25029,7 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  We donnot queue more than 1 ccb per target  	 *  with negotiation at any time. If this ccb was  	 *  used for negotiation, clear this info in the tcb. 	 */
+comment|/* 	 *  We donnot queue more than 1 ccb per target 	 *  with negotiation at any time. If this ccb was 	 *  used for negotiation, clear this info in the tcb. 	 */
 if|if
 condition|(
 name|cp
@@ -25048,7 +25042,7 @@ name|tp
 operator|->
 name|nego_cp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -25066,7 +25060,7 @@ name|np
 operator|->
 name|last_cp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif
@@ -25101,7 +25095,7 @@ name|cp
 operator|->
 name|cam_ccb
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|cp
 operator|->
@@ -25149,12 +25143,12 @@ block|{
 name|ccb_p
 name|cp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|hcode
 decl_stmt|;
-comment|/* 	 *  Prevent from allocating more CCBs than we can  	 *  queue to the controller. 	 */
+comment|/* 	 *  Prevent from allocating more CCBs than we can 	 *  queue to the controller. 	 */
 if|if
 condition|(
 name|np
@@ -25164,7 +25158,7 @@ operator|>=
 name|SYM_CONF_MAX_START
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 comment|/* 	 *  Allocate memory for this CCB. 	 */
 name|cp
@@ -25276,7 +25270,7 @@ index|]
 operator|=
 name|cp
 expr_stmt|;
-comment|/* 	 *  Initialyze the start and restart actions. 	 */
+comment|/* 	 *  Initialize the start and restart actions. 	 */
 name|cp
 operator|->
 name|phys
@@ -25395,7 +25389,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -25930,10 +25924,8 @@ name|ln
 argument_list|)
 operator|)
 condition|)
-goto|goto
-name|fail
-goto|;
-comment|/* 	 *  Allocate the task table and and the tag allocation  	 *  circular buffer. We want both or none. 	 */
+return|return;
+comment|/* 	 *  Allocate the task table and and the tag allocation 	 *  circular buffer. We want both or none. 	 */
 name|lp
 operator|->
 name|itlq_tbl
@@ -25954,9 +25946,7 @@ name|lp
 operator|->
 name|itlq_tbl
 condition|)
-goto|goto
-name|fail
-goto|;
+return|return;
 name|lp
 operator|->
 name|cb_tags
@@ -25995,9 +25985,7 @@ name|itlq_tbl
 operator|=
 literal|0
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
+return|return;
 block|}
 comment|/* 	 *  Initialize the task table with invalid entries. 	 */
 for|for
@@ -26050,7 +26038,7 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-comment|/* 	 *  Make the task table available to SCRIPTS,  	 *  And accept tagged commands now. 	 */
+comment|/* 	 *  Make the task table available to SCRIPTS, 	 *  And accept tagged commands now. 	 */
 name|lp
 operator|->
 name|head
@@ -26067,10 +26055,6 @@ name|itlq_tbl
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
-name|fail
-label|:
-return|return;
 block|}
 end_function
 
@@ -26232,7 +26216,7 @@ endif|#
 directive|endif
 name|restart_test
 label|:
-comment|/* 	 *  Enable Master Parity Checking as we intend  	 *  to enable it for normal operations. 	 */
+comment|/* 	 *  Enable Master Parity Checking as we intend 	 *  to enable it for normal operations. 	 */
 name|OUTB
 argument_list|(
 name|nc_ctest4
@@ -26606,7 +26590,7 @@ name|err
 operator|)
 return|;
 block|}
-comment|/*  *  Determine the chip's clock frequency.  *  *  This is essential for the negotiation of the synchronous   *  transfer rate.  *  *  Note: we have to return the correct value.  *  THERE IS NO SAFE DEFAULT VALUE.  *  *  Most NCR/SYMBIOS boards are delivered with a 40 Mhz clock.  *  53C860 and 53C875 rev. 1 support fast20 transfers but   *  do not have a clock doubler and so are provided with a   *  80 MHz clock. All other fast20 boards incorporate a doubler   *  and so should be delivered with a 40 MHz clock.  *  The recent fast40 chips (895/896/895A/1010) use a 40 Mhz base   *  clock and provide a clock quadrupler (160 Mhz).  */
+comment|/*  *  Determine the chip's clock frequency.  *  *  This is essential for the negotiation of the synchronous  *  transfer rate.  *  *  Note: we have to return the correct value.  *  THERE IS NO SAFE DEFAULT VALUE.  *  *  Most NCR/SYMBIOS boards are delivered with a 40 Mhz clock.  *  53C860 and 53C875 rev. 1 support fast20 transfers but  *  do not have a clock doubler and so are provided with a  *  80 MHz clock. All other fast20 boards incorporate a doubler  *  and so should be delivered with a 40 MHz clock.  *  The recent fast40 chips (895/896/895A/1010) use a 40 Mhz base  *  clock and provide a clock quadrupler (160 Mhz).  */
 comment|/*  *  Select SCSI clock frequency  */
 specifier|static
 name|void
@@ -26779,7 +26763,7 @@ name|unsigned
 name|int
 name|f
 decl_stmt|;
-comment|/* 	 * Measure GEN timer delay in order  	 * to calculate SCSI clock frequency 	 * 	 * This code will never execute too 	 * many loop iterations (if DELAY is  	 * reasonably correct). It could get 	 * too low a delay (too high a freq.) 	 * if the CPU is slow executing the  	 * loop for some reason (an NMI, for 	 * example). For this reason we will 	 * if multiple measurements are to be  	 * performed trust the higher delay  	 * (lower frequency returned). 	 */
+comment|/* 	 * Measure GEN timer delay in order 	 * to calculate SCSI clock frequency 	 * 	 * This code will never execute too 	 * many loop iterations (if DELAY is 	 * reasonably correct). It could get 	 * too low a delay (too high a freq.) 	 * if the CPU is slow executing the 	 * loop for some reason (an NMI, for 	 * example). For this reason we will 	 * if multiple measurements are to be 	 * performed trust the higher delay 	 * (lower frequency returned). 	 */
 name|OUTW
 argument_list|(
 name|nc_sien
@@ -26877,7 +26861,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  	 * adjust for prescaler, and convert into KHz    	 */
+comment|/*  	 * adjust for prescaler, and convert into KHz   	 */
 name|f
 operator|=
 name|ms
@@ -27284,7 +27268,7 @@ name|f
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 *  For the C1010-33, this doesn't work. 	 *  For the C1010-66, this will be tested when I'll have  	 *  such a beast to play with. 	 */
+comment|/* 	 *  For the C1010-33, this doesn't work. 	 *  For the C1010-66, this will be tested when I'll have 	 *  such a beast to play with. 	 */
 if|if
 condition|(
 operator|!
@@ -27437,7 +27421,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  *  Choose the more appropriate CAM status if   *  the IO encountered an extended error.  */
+comment|/*  *  Choose the more appropriate CAM status if  *  the IO encountered an extended error.  */
 specifier|static
 name|int
 name|sym_xerr_cam_status
@@ -27502,7 +27486,7 @@ return|return
 name|cam_status
 return|;
 block|}
-comment|/*  *  Complete execution of a SCSI command with extented   *  error, SCSI status error, or having been auto-sensed.  *  *  The SCRIPTS processor is not running there, so we   *  can safely access IO registers and remove JOBs from    *  the START queue.  *  SCRATCHA is assumed to have been loaded with STARTPOS   *  before the SCRIPTS called the C code.  */
+comment|/*  *  Complete execution of a SCSI command with extented  *  error, SCSI status error, or having been auto-sensed.  *  *  The SCRIPTS processor is not running there, so we  *  can safely access IO registers and remove JOBs from  *  the START queue.  *  SCRATCHA is assumed to have been loaded with STARTPOS  *  before the SCRIPTS called the C code.  */
 specifier|static
 name|void
 name|sym_complete_error
@@ -27765,7 +27749,7 @@ name|cam_status
 operator||=
 name|CAM_AUTOSNS_VALID
 expr_stmt|;
-comment|/* 			 *  Bounce back the sense data to user and  			 *  fix the residual. 			 */
+comment|/* 			 *  Bounce back the sense data to user and 			 *  fix the residual. 			 */
 name|bzero
 argument_list|(
 operator|&
@@ -27816,7 +27800,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* 			 *  If the device reports a UNIT ATTENTION condition  			 *  due to a RESET condition, we should consider all  			 *  disconnect CCBs for this unit as aborted. 			 */
+comment|/* 			 *  If the device reports a UNIT ATTENTION condition 			 *  due to a RESET condition, we should consider all 			 *  disconnect CCBs for this unit as aborted. 			 */
 block|if (1) { 				u_char *p; 				p  = (u_char *) csio->sense_data; 				if (p[0]==0x70&& p[2]==0x6&& p[12]==0x29) 					sym_clear_tasks(np, CAM_REQ_ABORTED, 							cp->target,cp->lun, -1); 			}
 endif|#
 directive|endif
@@ -27931,7 +27915,7 @@ name|xerr_status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  Dequeue all queued CCBs for that device  	 *  not yet started by SCRIPTS. 	 */
+comment|/* 	 *  Dequeue all queued CCBs for that device 	 *  not yet started by SCRIPTS. 	 */
 name|i
 operator|=
 operator|(
@@ -28011,7 +27995,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  Add this one to the COMP queue. 	 *  Complete all those commands with either error  	 *  or requeue condition. 	 */
+comment|/* 	 *  Add this one to the COMP queue. 	 *  Complete all those commands with either error 	 *  or requeue condition. 	 */
 name|sym_set_cam_status
 argument_list|(
 operator|(
@@ -28053,7 +28037,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *  Complete execution of a successful SCSI command.  *  *  Only successful commands go to the DONE queue,   *  since we need to have the SCRIPTS processor   *  stopped on any error condition.  *  The SCRIPTS processor is running while we are   *  completing successful commands.  */
+comment|/*  *  Complete execution of a successful SCSI command.  *  *  Only successful commands go to the DONE queue,  *  since we need to have the SCRIPTS processor  *  stopped on any error condition.  *  The SCRIPTS processor is running while we are  *  completing successful commands.  */
 specifier|static
 name|void
 name|sym_complete_ok
@@ -28185,7 +28169,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Wrong transfer residuals may be worse than just always  	 *  returning zero. User can disable this feature from  	 *  sym_conf.h. Residual support is enabled by default. 	 */
+comment|/* 	 *  Wrong transfer residuals may be worse than just always 	 *  returning zero. User can disable this feature from 	 *  sym_conf.h. Residual support is enabled by default. 	 */
 if|if
 condition|(
 operator|!
@@ -28390,7 +28374,7 @@ decl_stmt|;
 comment|/* 	 *  Look up our CCB control block. 	 */
 name|cp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|FOR_EACH_QUEUED_ELEMENT
 argument_list|(
@@ -28616,7 +28600,6 @@ operator||
 name|SEM
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  *  SIM action entry point.  */
 specifier|static
@@ -28784,7 +28767,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 *  Minimal checkings, so that we will not  	 *  go outside our tables. 	 */
+comment|/* 	 *  Minimal checkings, so that we will not 	 *  go outside our tables. 	 */
 if|if
 condition|(
 name|ccb_h
@@ -28845,7 +28828,7 @@ operator|->
 name|target_lun
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Complete the 1st INQUIRY command with error  	 *  condition if the device is flagged NOSCAN  	 *  at BOOT in the NVRAM. This may speed up  	 *  the boot and maintain coherency with BIOS  	 *  device numbering. Clearing the flag allows  	 *  user to rescan skipped devices later. 	 *  We also return error for devices not flagged  	 *  for SCAN LUNS in the NVRAM since some mono-lun  	 *  devices behave badly when asked for some non  	 *  zero LUN. Btw, this is an absolute hack.:-) 	 */
+comment|/* 	 *  Complete the 1st INQUIRY command with error 	 *  condition if the device is flagged NOSCAN 	 *  at BOOT in the NVRAM. This may speed up 	 *  the boot and maintain coherency with BIOS 	 *  device numbering. Clearing the flag allows 	 *  user to rescan skipped devices later. 	 *  We also return error for devices not flagged 	 *  for SCAN LUNS in the NVRAM since some mono-lun 	 *  devices behave badly when asked for some non 	 *  zero LUN. Btw, this is an absolute hack.:-) 	 */
 if|if
 condition|(
 operator|!
@@ -29087,7 +29070,7 @@ index|]
 operator|=
 name|order
 expr_stmt|;
-comment|/* 		 *  For less than 128 tags, actual tags are numbered  		 *  1,3,5,..2*MAXTAGS+1,since we may have to deal  		 *  with devices that have problems with #TAG 0 or too  		 *  great #TAG numbers. For more tags (up to 256),  		 *  we use directly our tag number. 		 */
+comment|/* 		 *  For less than 128 tags, actual tags are numbered 		 *  1,3,5,..2*MAXTAGS+1,since we may have to deal 		 *  with devices that have problems with #TAG 0 or too 		 *  great #TAG numbers. For more tags (up to 256), 		 *  we use directly our tag number. 		 */
 if|#
 directive|if
 name|SYM_CONF_MAX_TASK
@@ -29451,7 +29434,7 @@ name|ext_ofs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 *  Build the data descriptor block  	 *  and start the IO. 	 */
+comment|/* 	 *  Build the data descriptor block 	 *  and start the IO. 	 */
 name|sym_setup_data_and_start
 argument_list|(
 name|np
@@ -29462,7 +29445,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *  Setup buffers and pointers that address the CDB.  *  I bet, physical CDBs will never be used on the planet,   *  since they can be bounced without significant overhead.  */
+comment|/*  *  Setup buffers and pointers that address the CDB.  *  I bet, physical CDBs will never be used on the planet,  *  since they can be bounced without significant overhead.  */
 specifier|static
 name|int
 name|sym_setup_cdb
@@ -29850,7 +29833,7 @@ operator|.
 name|savep
 expr_stmt|;
 block|}
-comment|/*  *  Call back routine for the DMA map service.  *  If bounce buffers are used (why ?), we may sleep and then   *  be called there in another context.  */
+comment|/*  *  Call back routine for the DMA map service.  *  If bounce buffers are used (why ?), we may sleep and then  *  be called there in another context.  */
 specifier|static
 name|void
 name|sym_execute_ccb
@@ -30021,7 +30004,7 @@ name|out_abort
 goto|;
 block|}
 block|}
-comment|/* 	 *  Synchronize the DMA map only if we have  	 *  actually mapped the data. 	 */
+comment|/* 	 *  Synchronize the DMA map only if we have 	 *  actually mapped the data. 	 */
 if|if
 condition|(
 name|cp
@@ -30092,7 +30075,7 @@ argument_list|,
 name|ccb
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  When `#ifed 1', the code below makes the driver  	 *  panic on the first attempt to write to a SCSI device. 	 *  It is the first test we want to do after a driver  	 *  change that does not seem obviously safe. :) 	 */
+comment|/* 	 *  When `#ifed 1', the code below makes the driver 	 *  panic on the first attempt to write to a SCSI device. 	 *  It is the first test we want to do after a driver 	 *  change that does not seem obviously safe. :) 	 */
 if|#
 directive|if
 literal|0
@@ -30617,7 +30600,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*  *  Scatter a SG list with physical addresses into bus addressable chunks.  *  We need to ensure 16MB boundaries not to be crossed during DMA of   *  each segment, due to some chips being flawed.  */
+comment|/*  *  Scatter a SG list with physical addresses into bus addressable chunks.  *  We need to ensure 16MB boundaries not to be crossed during DMA of  *  each segment, due to some chips being flawed.  */
 define|#
 directive|define
 name|BOUND_MASK
@@ -33227,7 +33210,7 @@ directive|define
 name|sym_pci_num_devs
 define|\
 value|(sizeof(sym_pci_dev_table) / sizeof(sym_pci_dev_table[0]))
-comment|/*  *  Look up the chip table.  *  *  Return a pointer to the chip entry if found,   *  zero otherwise.  */
+comment|/*  *  Look up the chip table.  *  *  Return a pointer to the chip entry if found,  *  zero otherwise.  */
 specifier|static
 name|struct
 name|sym_pci_chip
@@ -33262,7 +33245,7 @@ operator|!=
 name|PCI_VENDOR_NCR
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|device_id
 operator|=
@@ -33323,7 +33306,7 @@ name|chip
 return|;
 block|}
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 comment|/*  *  Tell upper layer if the chip is supported.  */
@@ -33409,7 +33392,7 @@ name|sym_hcb
 modifier|*
 name|np
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|sym_nvram
@@ -33420,7 +33403,7 @@ name|sym_fw
 modifier|*
 name|fw
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|i
@@ -33465,7 +33448,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 *  Allocate immediately the host control block,  	 *  since we are only expecting to succeed. :) 	 *  We keep track in the HCB of all the resources that  	 *  are to be released on error. 	 */
+comment|/* 	 *  Allocate immediately the host control block, 	 *  since we are only expecting to succeed. :) 	 *  We keep track in the HCB of all the resources that 	 *  are to be released on error. 	 */
 name|np
 operator|=
 name|__sym_calloc_dma
@@ -33673,7 +33656,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Initialyze the CCB free and busy queues. 	 */
+comment|/* 	 *  Initialize the CCB free and busy queues. 	 */
 name|sym_que_init
 argument_list|(
 operator|&
@@ -33766,7 +33749,7 @@ goto|goto
 name|attach_failed
 goto|;
 block|}
-comment|/* 	 *  Read and apply some fix-ups to the PCI COMMAND  	 *  register. We want the chip to be enabled for: 	 *  - BUS mastering 	 *  - PCI parity checking (reporting would also be fine) 	 *  - Write And Invalidate. 	 */
+comment|/* 	 *  Read and apply some fix-ups to the PCI COMMAND 	 *  register. We want the chip to be enabled for: 	 *  - BUS mastering 	 *  - PCI parity checking (reporting would also be fine) 	 *  - Write And Invalidate. 	 */
 name|command
 operator|=
 name|pci_read_config
@@ -33802,7 +33785,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Let the device know about the cache line size,  	 *  if it doesn't yet. 	 */
+comment|/* 	 *  Let the device know about the cache line size, 	 *  if it doesn't yet. 	 */
 name|cachelnsz
 operator|=
 name|pci_read_config
@@ -34216,13 +34199,13 @@ operator|->
 name|ram_pa
 expr_stmt|;
 block|}
-comment|/* 	 *  Save setting of some IO registers, so we will  	 *  be able to probe specific implementations. 	 */
+comment|/* 	 *  Save setting of some IO registers, so we will 	 *  be able to probe specific implementations. 	 */
 name|sym_save_initial_setting
 argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Reset the chip now, since it has been reported  	 *  that SCSI clock calibration may not work properly  	 *  if the chip is currently active. 	 */
+comment|/* 	 *  Reset the chip now, since it has been reported 	 *  that SCSI clock calibration may not work properly 	 *  if the chip is currently active. 	 */
 name|sym_chip_reset
 argument_list|(
 name|np
@@ -34240,7 +34223,7 @@ operator|&
 name|nvram
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Prepare controller and devices settings, according  	 *  to chip features, user set-up and driver set-up. 	 */
+comment|/* 	 *  Prepare controller and devices settings, according 	 *  to chip features, user set-up and driver set-up. 	 */
 operator|(
 name|void
 operator|)
@@ -34252,7 +34235,7 @@ operator|&
 name|nvram
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Check the PCI clock frequency. 	 *  Must be performed after prepare_setting since it destroys  	 *  STEST1 that is used to probe for the clock doubler. 	 */
+comment|/* 	 *  Check the PCI clock frequency. 	 *  Must be performed after prepare_setting since it destroys 	 *  STEST1 that is used to probe for the clock doubler. 	 */
 name|i
 operator|=
 name|sym_getpciclock
@@ -34458,7 +34441,7 @@ condition|)
 goto|goto
 name|attach_failed
 goto|;
-comment|/* 	 *  Calculate BUS addresses where we are going  	 *  to load the SCRIPTS. 	 */
+comment|/* 	 *  Calculate BUS addresses where we are going 	 *  to load the SCRIPTS. 	 */
 name|np
 operator|->
 name|scripta_ba
@@ -34597,7 +34580,7 @@ argument_list|,
 name|fw
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Bind SCRIPTS with physical addresses usable by the  	 *  SCRIPTS processor (as seen from the BUS = BUS addresses). 	 */
+comment|/* 	 *  Bind SCRIPTS with physical addresses usable by the 	 *  SCRIPTS processor (as seen from the BUS = BUS addresses). 	 */
 name|sym_fw_bind_script
 argument_list|(
 name|np
@@ -34635,7 +34618,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SYM_CONF_IARB_SUPPORT
-comment|/* 	 *    If user wants IARB to be set when we win arbitration  	 *    and have other jobs, compute the max number of consecutive  	 *    settings of IARB hints before we leave devices a chance to  	 *    arbitrate for reselection. 	 */
+comment|/* 	 *    If user wants IARB to be set when we win arbitration 	 *    and have other jobs, compute the max number of consecutive 	 *    settings of IARB hints before we leave devices a chance to 	 *    arbitrate for reselection. 	 */
 ifdef|#
 directive|ifdef
 name|SYM_SETUP_IARB_MAX
@@ -34834,7 +34817,7 @@ operator|->
 name|bad_itlq
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Allocate and prepare the lun JUMP table that is used  	 *  for a target prior the probing of devices (bad lun table). 	 *  A private table will be allocated for the target on the  	 *  first INQUIRY response received. 	 */
+comment|/* 	 *  Allocate and prepare the lun JUMP table that is used 	 *  for a target prior the probing of devices (bad lun table). 	 *  A private table will be allocated for the target on the 	 *  first INQUIRY response received. 	 */
 name|np
 operator|->
 name|badluntbl
@@ -34902,7 +34885,7 @@ name|badlun_sa
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Prepare the bus address array that contains the bus  	 *  address of each target control block. 	 *  For now, assume all logical units are wrong. :) 	 */
+comment|/* 	 *  Prepare the bus address array that contains the bus 	 *  address of each target control block. 	 *  For now, assume all logical units are wrong. :) 	 */
 for|for
 control|(
 name|i
@@ -35019,7 +35002,7 @@ comment|/* 	 *  Sigh! we are done. 	 */
 return|return
 literal|0
 return|;
-comment|/* 	 *  We have failed. 	 *  We will try to free all the resources we have  	 *  allocated, but if we are a boot device, this  	 *  will not help that much.;) 	 */
+comment|/* 	 *  We have failed. 	 *  We will try to free all the resources we have 	 *  allocated, but if we are a boot device, this 	 *  will not help that much.;) 	 */
 name|attach_failed
 label|:
 if|if
@@ -35081,7 +35064,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Now every should be quiet for us to  	 *  free other resources. 	 */
+comment|/* 	 *  Now every should be quiet for us to 	 *  free other resources. 	 */
 if|if
 condition|(
 name|np
@@ -35565,21 +35548,21 @@ name|cam_devq
 modifier|*
 name|devq
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|cam_sim
 modifier|*
 name|sim
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|cam_path
 modifier|*
 name|path
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|ccb_setasync
@@ -35815,7 +35798,7 @@ operator|&
 name|csa
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Start the chip now, without resetting the BUS, since   	 *  it seems that this must stay under control of CAM. 	 *  With LVD/SE capable chips and BUS in SE mode, we may  	 *  get a spurious SMBC interrupt. 	 */
+comment|/* 	 *  Start the chip now, without resetting the BUS, since 	 *  it seems that this must stay under control of CAM. 	 *  With LVD/SE capable chips and BUS in SE mode, we may 	 *  get a spurious SMBC interrupt. 	 */
 name|sym_init
 argument_list|(
 name|np
@@ -35979,7 +35962,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SYM_CONF_NVRAM_SUPPORT
-comment|/* 	 *  Get parity checking, host ID, verbose mode  	 *  and miscellaneous host flags from NVRAM. 	 */
+comment|/* 	 *  Get parity checking, host ID, verbose mode 	 *  and miscellaneous host flags from NVRAM. 	 */
 switch|switch
 condition|(
 name|nvram
@@ -38323,7 +38306,7 @@ name|gpreg
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*   *  Read bit from NVRAM  */
+comment|/*  *  Read bit from NVRAM  */
 specifier|static
 name|void
 name|T93C46_Read_Bit
