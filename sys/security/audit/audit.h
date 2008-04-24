@@ -1166,7 +1166,7 @@ name|error
 parameter_list|,
 name|td
 parameter_list|)
-value|do {				\ 	if (audit_enabled | (td->td_ar != NULL))			\ 		audit_syscall_exit(error, td);				\ } while (0)
+value|do {				\ 	if (audit_enabled || (td->td_ar != NULL))			\ 		audit_syscall_exit(error, td);				\ } while (0)
 end_define
 
 begin_comment
