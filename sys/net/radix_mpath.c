@@ -1039,12 +1039,15 @@ expr_stmt|;
 comment|/* if the route does not exist or it is not multipath, don't care */
 if|if
 condition|(
-operator|!
 name|ro
 operator|->
 name|ro_rt
-operator|||
-operator|!
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
 name|rn_mpath_next
 argument_list|(
 operator|(
@@ -1056,6 +1059,8 @@ name|ro
 operator|->
 name|ro_rt
 argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|RT_UNLOCK
