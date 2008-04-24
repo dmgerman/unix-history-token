@@ -659,7 +659,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|F_GETLK
+name|F_OGETLK
 value|7
 end_define
 
@@ -670,7 +670,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|F_SETLK
+name|F_OSETLK
 value|8
 end_define
 
@@ -681,12 +681,60 @@ end_comment
 begin_define
 define|#
 directive|define
-name|F_SETLKW
+name|F_OSETLKW
 value|9
 end_define
 
 begin_comment
 comment|/* F_SETLK; wait if blocked */
+end_comment
+
+begin_comment
+comment|/* 10 reserved for F_DUP2FD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_GETLK
+value|11
+end_define
+
+begin_comment
+comment|/* get record locking information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_SETLK
+value|12
+end_define
+
+begin_comment
+comment|/* set record locking information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_SETLKW
+value|13
+end_define
+
+begin_comment
+comment|/* F_SETLK; wait if blocked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_SETLK_REMOTE
+value|14
+end_define
+
+begin_comment
+comment|/* debugging support for remote locks */
 end_comment
 
 begin_comment
@@ -741,6 +789,28 @@ begin_comment
 comment|/* exclusive or write lock */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_UNLCKSYS
+value|4
+end_define
+
+begin_comment
+comment|/* purge locks for a given system ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_CANCEL
+value|5
+end_define
+
+begin_comment
+comment|/* cancel an async lock request */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -780,6 +850,17 @@ begin_comment
 comment|/* Use POSIX semantics for lock */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_REMOTE
+value|0x080
+end_define
+
+begin_comment
+comment|/* Lock owner is remote NFS client */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -792,6 +873,42 @@ end_comment
 begin_struct
 struct|struct
 name|flock
+block|{
+name|off_t
+name|l_start
+decl_stmt|;
+comment|/* starting offset */
+name|off_t
+name|l_len
+decl_stmt|;
+comment|/* len = 0 means until end of file */
+name|pid_t
+name|l_pid
+decl_stmt|;
+comment|/* lock owner */
+name|short
+name|l_type
+decl_stmt|;
+comment|/* lock type: read/write, etc. */
+name|short
+name|l_whence
+decl_stmt|;
+comment|/* type of l_start */
+name|int
+name|l_sysid
+decl_stmt|;
+comment|/* remote system id or zero for local */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Old advisory file segment locking data type,  * before adding l_sysid.  */
+end_comment
+
+begin_struct
+struct|struct
+name|oflock
 block|{
 name|off_t
 name|l_start

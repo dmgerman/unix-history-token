@@ -274,6 +274,13 @@ name|ufs_advlock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|vop_advlockasync_t
+name|ufs_advlockasync
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -10098,6 +10105,58 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Advisory record locking support  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ufs_advlockasync
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_advlockasync_args
+comment|/* { 		struct vnode *a_vp; 		caddr_t  a_id; 		int  a_op; 		struct flock *a_fl; 		int  a_flags; 		struct task *a_task; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|struct
+name|inode
+modifier|*
+name|ip
+init|=
+name|VTOI
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|lf_advlockasync
+argument_list|(
+name|ap
+argument_list|,
+operator|&
+operator|(
+name|ip
+operator|->
+name|i_lockf
+operator|)
+argument_list|,
+name|ip
+operator|->
+name|i_size
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize the vnode associated with a new inode, handle aliased  * vnodes.  */
 end_comment
 
@@ -11289,6 +11348,11 @@ operator|.
 name|vop_advlock
 operator|=
 name|ufs_advlock
+block|,
+operator|.
+name|vop_advlockasync
+operator|=
+name|ufs_advlockasync
 block|,
 operator|.
 name|vop_bmap

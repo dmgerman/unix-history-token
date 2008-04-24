@@ -1427,6 +1427,13 @@ condition|)
 block|{
 name|fl
 operator|->
+name|l_sysid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
+name|fl
+operator|->
 name|l_pid
 operator|=
 name|p

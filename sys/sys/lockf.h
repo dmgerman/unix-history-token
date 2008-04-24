@@ -21,95 +21,199 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_sx.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|vop_advlock_args
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vop_advlockasync_args
+struct_decl|;
+end_struct_decl
+
 begin_comment
-comment|/*  * The lockf structure is a kernel structure which contains the information  * associated with a byte range lock.  The lockf structures are linked into  * the inode structure. Locks are sorted by the starting byte of the lock for  * efficiency.  */
+comment|/*  * The lockf_entry structure is a kernel structure which contains the  * information associated with a byte range lock.  The lockf_entry  * structures are linked into the inode structure. Locks are sorted by  * the starting byte of the lock for efficiency.  *  * Active and pending locks on a vnode are organised into a  * graph. Each pending lock has an out-going edge to each active lock  * that blocks it.  *  * Locks:  * (i)		locked by the vnode interlock  * (s)		locked by state->ls_lock  * (S)		locked by lf_lock_states_lock  * (c)		const until freeing  */
 end_comment
 
-begin_expr_stmt
-name|TAILQ_HEAD
+begin_struct
+struct|struct
+name|lockf_edge
+block|{
+name|LIST_ENTRY
 argument_list|(
-name|locklist
+argument|lockf_edge
+argument_list|)
+name|le_outlink
+expr_stmt|;
+comment|/* (s) link from's out-edge list */
+name|LIST_ENTRY
+argument_list|(
+argument|lockf_edge
+argument_list|)
+name|le_inlink
+expr_stmt|;
+comment|/* (s) link to's in-edge list */
+name|struct
+name|lockf_entry
+modifier|*
+name|le_from
+decl_stmt|;
+comment|/* (c) out-going from here */
+name|struct
+name|lockf_entry
+modifier|*
+name|le_to
+decl_stmt|;
+comment|/* (s) in-coming to here */
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|lockf_edge_list
 argument_list|,
-name|lockf
+name|lockf_edge
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_struct
 struct|struct
-name|lockf
+name|lockf_entry
 block|{
 name|short
 name|lf_flags
 decl_stmt|;
-comment|/* Semantics: F_POSIX, F_FLOCK, F_WAIT */
+comment|/* (c) Semantics: F_POSIX, F_FLOCK, F_WAIT */
 name|short
 name|lf_type
 decl_stmt|;
-comment|/* Lock type: F_RDLCK, F_WRLCK */
+comment|/* (s) Lock type: F_RDLCK, F_WRLCK */
 name|off_t
 name|lf_start
 decl_stmt|;
-comment|/* Byte # of the start of the lock */
+comment|/* (s) Byte # of the start of the lock */
 name|off_t
 name|lf_end
 decl_stmt|;
-comment|/* Byte # of the end of the lock (-1=EOF) */
-name|caddr_t
-name|lf_id
-decl_stmt|;
-comment|/* Id of the resource holding the lock */
+comment|/* (s) Byte # of the end of the lock (OFF_MAX=EOF) */
 name|struct
-name|lockf
+name|lock_owner
 modifier|*
-modifier|*
-name|lf_head
+name|lf_owner
 decl_stmt|;
-comment|/* Back pointer to the head of the locf list */
+comment|/* (c) Owner of the lock */
+name|struct
+name|vnode
+modifier|*
+name|lf_vnode
+decl_stmt|;
+comment|/* (c) File being locked (only valid for active lock) */
 name|struct
 name|inode
 modifier|*
 name|lf_inode
 decl_stmt|;
-comment|/* Back pointer to the inode */
+comment|/* (c) Back pointer to the inode */
 name|struct
-name|lockf
+name|task
 modifier|*
-name|lf_next
+name|lf_async_task
 decl_stmt|;
-comment|/* Pointer to the next lock on this inode */
-name|struct
-name|locklist
-name|lf_blkhd
-decl_stmt|;
-comment|/* List of requests blocked on this lock */
-name|TAILQ_ENTRY
+comment|/* (c) Async lock callback */
+name|LIST_ENTRY
 argument_list|(
-argument|lockf
+argument|lockf_entry
 argument_list|)
-name|lf_block
+name|lf_link
 expr_stmt|;
-comment|/* A request waiting for a lock */
+comment|/* (s) Linkage for lock lists */
+name|struct
+name|lockf_edge_list
+name|lf_outedges
+decl_stmt|;
+comment|/* (s) list of out-edges */
+name|struct
+name|lockf_edge_list
+name|lf_inedges
+decl_stmt|;
+comment|/* (s) list of out-edges */
 block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|lockf_entry_list
+argument_list|,
+name|lockf_entry
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/* Maximum length of sleep chains to traverse to try and detect deadlock. */
+comment|/*  * Filesystem private node structures should include space for a  * pointer to a struct lockf_state. This pointer is used by the lock  * manager to track the locking state for a file.  *  * The ls_active list contains the set of active locks on the file. It  * is strictly ordered by the lock's lf_start value. Each active lock  * will have in-coming edges to any pending lock which it blocks.  *  * Lock requests which are blocked by some other active lock are  * listed in ls_pending with newer requests first in the list. Lock  * requests in this list will have out-going edges to each active lock  * that blocks then. They will also have out-going edges to each  * pending lock that is older in the queue - this helps to ensure  * fairness when several processes are contenting to lock the same  * record.   * The value of ls_threads is the number of threads currently using  * the state structure (typically either setting/clearing locks or  * sleeping waiting to do so). This is used to defer freeing the  * structure while some thread is still using it.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAXDEPTH
-value|50
-end_define
+begin_struct
+struct|struct
+name|lockf
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|lockf
+argument_list|)
+name|ls_link
+expr_stmt|;
+comment|/* (S) all active lockf states */
+name|struct
+name|sx
+name|ls_lock
+decl_stmt|;
+name|struct
+name|lockf_entry_list
+name|ls_active
+decl_stmt|;
+comment|/* (s) Active locks */
+name|struct
+name|lockf_entry_list
+name|ls_pending
+decl_stmt|;
+comment|/* (s) Pending locks */
+name|int
+name|ls_threads
+decl_stmt|;
+comment|/* (i) Thread count */
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|lockf_list
+argument_list|,
+name|lockf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
@@ -125,6 +229,44 @@ modifier|*
 modifier|*
 parameter_list|,
 name|u_quad_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lf_advlockasync
+parameter_list|(
+name|struct
+name|vop_advlockasync_args
+modifier|*
+parameter_list|,
+name|struct
+name|lockf
+modifier|*
+modifier|*
+parameter_list|,
+name|u_quad_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lf_countlocks
+parameter_list|(
+name|int
+name|sysid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lf_clearremotesys
+parameter_list|(
+name|int
+name|sysid
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -918,6 +918,14 @@ name|iflp
 operator|->
 name|l_pid
 expr_stmt|;
+name|oflp
+operator|->
+name|l_sysid
+operator|=
+name|iflp
+operator|->
+name|l_sysid
+expr_stmt|;
 block|}
 end_function
 
@@ -1025,7 +1033,9 @@ name|oflp
 operator|->
 name|l_sysid
 operator|=
-literal|0
+name|iflp
+operator|->
+name|l_sysid
 expr_stmt|;
 name|oflp
 operator|->

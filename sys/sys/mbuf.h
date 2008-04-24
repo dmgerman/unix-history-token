@@ -2249,7 +2249,41 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_last
+argument_list|(
+argument|struct mbuf *m
+argument_list|)
+block|{
+while|while
+condition|(
+name|m
+operator|->
+name|m_next
+condition|)
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|m
+operator|)
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/*  * mbuf, cluster, and external object allocation macros  * (for compatibility purposes).  */
 end_comment
 
@@ -2502,7 +2536,7 @@ value|m_copym((m), (o), (l), M_DONTWAIT)
 end_define
 
 begin_decl_stmt
-specifier|extern
+unit|extern
 name|int
 name|max_datalen
 decl_stmt|;
