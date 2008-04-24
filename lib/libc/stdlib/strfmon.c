@@ -200,7 +200,7 @@ name|GET_NUMBER
 parameter_list|(
 name|VAR
 parameter_list|)
-value|do {					\ 	VAR = 0;						\ 	while (isdigit((unsigned char)*fmt)) {			\ 		VAR *= 10;					\ 		VAR += *fmt - '0';				\ 		if (VAR< 0)					\ 			goto e2big_error;			\ 		fmt++;						\ 	}							\ } while (0)
+value|do {					\ 	VAR = 0;						\ 	while (isdigit((unsigned char)*fmt)) {			\ 		if (VAR> INT_MAX / 10)				\ 			goto e2big_error;			\ 		VAR *= 10;					\ 		VAR += *fmt - '0';				\ 		if (VAR< 0)					\ 			goto e2big_error;			\ 		fmt++;						\ 	}							\ } while (0)
 end_define
 
 begin_define
