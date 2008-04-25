@@ -173,6 +173,46 @@ parameter_list|)
 value|((f)& 0x80)
 end_define
 
+begin_define
+define|#
+directive|define
+name|UART_FLAGS_FCR_RX_LOW
+parameter_list|(
+name|f
+parameter_list|)
+value|((f)& 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UART_FLAGS_FCR_RX_MEDL
+parameter_list|(
+name|f
+parameter_list|)
+value|((f)& 0x200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UART_FLAGS_FCR_RX_MEDH
+parameter_list|(
+name|f
+parameter_list|)
+value|((f)& 0x400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UART_FLAGS_FCR_RX_HIGH
+parameter_list|(
+name|f
+parameter_list|)
+value|((f)& 0x800)
+end_define
+
 begin_comment
 comment|/*  * Data parity values (magical numbers related to ns8250).  */
 end_comment
