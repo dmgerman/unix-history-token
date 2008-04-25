@@ -2211,7 +2211,12 @@ name|ic
 operator|->
 name|ic_ifp
 decl_stmt|;
-name|rt2661_stop
+name|RAL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|rt2661_stop_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -2222,6 +2227,11 @@ operator|&
 name|sc
 operator|->
 name|watchdog_ch
+argument_list|)
+expr_stmt|;
+name|RAL_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|callout_stop
