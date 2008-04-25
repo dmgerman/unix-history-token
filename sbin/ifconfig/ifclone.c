@@ -568,7 +568,7 @@ name|clone_cmds
 index|[]
 init|=
 block|{
-name|DEF_CMD
+name|DEF_CLONE_CMD
 argument_list|(
 literal|"create"
 argument_list|,
@@ -586,7 +586,7 @@ argument_list|,
 name|clone_destroy
 argument_list|)
 block|,
-name|DEF_CMD
+name|DEF_CLONE_CMD
 argument_list|(
 literal|"plumb"
 argument_list|,

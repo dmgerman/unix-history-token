@@ -798,14 +798,14 @@ name|vlan_cmds
 index|[]
 init|=
 block|{
-name|DEF_CMD_ARG
+name|DEF_CLONE_CMD_ARG
 argument_list|(
 literal|"vlan"
 argument_list|,
 name|setvlantag
 argument_list|)
 block|,
-name|DEF_CMD_ARG
+name|DEF_CLONE_CMD_ARG
 argument_list|(
 literal|"vlandev"
 argument_list|,

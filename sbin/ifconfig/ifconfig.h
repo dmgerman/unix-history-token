@@ -114,6 +114,9 @@ decl_stmt|;
 block|}
 name|c_u
 union|;
+name|int
+name|c_iscloneop
+decl_stmt|;
 name|struct
 name|cmd
 modifier|*
@@ -243,6 +246,32 @@ parameter_list|,
 name|func
 parameter_list|)
 value|{ name, NEXTARG2, { .c_func2 = func } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEF_CLONE_CMD
+parameter_list|(
+name|name
+parameter_list|,
+name|param
+parameter_list|,
+name|func
+parameter_list|)
+value|{ name, param, { .c_func = func }, 1 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEF_CLONE_CMD_ARG
+parameter_list|(
+name|name
+parameter_list|,
+name|func
+parameter_list|)
+value|{ name, NEXTARG, { .c_func = func }, 1 }
 end_define
 
 begin_struct_decl
