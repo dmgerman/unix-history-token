@@ -196,6 +196,10 @@ name|RADIUS_ATTR_NAS_IDENTIFIER
 init|=
 literal|32
 block|,
+name|RADIUS_ATTR_PROXY_STATE
+init|=
+literal|33
+block|,
 name|RADIUS_ATTR_ACCT_STATUS_TYPE
 init|=
 literal|40

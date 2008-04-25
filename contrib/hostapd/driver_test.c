@@ -793,8 +793,8 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"%s: invalid parameters (sock=%d len=%d "
-literal|"socket_dir=%p)"
+literal|"%s: invalid parameters (sock=%d len=%lu"
+literal|" socket_dir=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -802,6 +802,10 @@ name|drv
 operator|->
 name|test_socket
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|len
 argument_list|,
 name|drv

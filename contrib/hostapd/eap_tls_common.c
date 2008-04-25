@@ -509,6 +509,27 @@ condition|)
 block|{
 if|if
 condition|(
+operator|*
+name|in_len
+operator|==
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"SSL: Empty fragment when trying "
+literal|"to reassemble"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
 name|data
 operator|->
 name|tls_in_len
