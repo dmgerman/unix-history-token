@@ -10455,7 +10455,7 @@ name|va
 argument_list|,
 name|oldpde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 argument_list|)
 expr_stmt|;
 name|pmap_pde_demotions
@@ -10605,7 +10605,7 @@ name|pa_to_pvh
 argument_list|(
 name|oldpde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 argument_list|)
 expr_stmt|;
 name|pmap_pvh_free
@@ -10635,7 +10635,7 @@ name|PHYS_TO_VM_PAGE
 argument_list|(
 name|oldpde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 argument_list|)
 init|;
 name|va
@@ -11882,7 +11882,7 @@ name|PHYS_TO_VM_PAGE
 argument_list|(
 name|oldpde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 argument_list|)
 init|;
 name|va
@@ -12925,7 +12925,7 @@ name|va
 argument_list|,
 name|newpde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Propagate the PAT index to its proper position. 	 */
@@ -17054,7 +17054,7 @@ name|pa_to_pvh
 argument_list|(
 name|tpte
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -18101,7 +18101,7 @@ operator|-
 operator|(
 name|oldpde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 operator|)
 expr_stmt|;
 name|pmap_remove_page
@@ -18499,7 +18499,7 @@ operator|-
 operator|(
 name|oldpde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 operator|)
 expr_stmt|;
 name|pte
@@ -18843,7 +18843,7 @@ operator|-
 operator|(
 name|oldpde
 operator|&
-name|PG_FRAME
+name|PG_PS_FRAME
 operator|)
 expr_stmt|;
 name|pmap_remove_page
