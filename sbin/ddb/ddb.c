@@ -96,7 +96,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ddb script scriptname\n"
+literal|"usage: ddb capture [-M core] [-N system] print\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       ddb capture [-M core] [-N system] status\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       ddb script scriptname\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -417,6 +431,28 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"capture"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ddb_capture
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|strcmp
