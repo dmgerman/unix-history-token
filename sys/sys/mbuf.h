@@ -538,7 +538,7 @@ begin_define
 define|#
 directive|define
 name|M_EXT
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -549,7 +549,7 @@ begin_define
 define|#
 directive|define
 name|M_PKTHDR
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -560,7 +560,7 @@ begin_define
 define|#
 directive|define
 name|M_EOR
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -571,7 +571,7 @@ begin_define
 define|#
 directive|define
 name|M_RDONLY
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -582,7 +582,7 @@ begin_define
 define|#
 directive|define
 name|M_PROTO1
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -593,7 +593,7 @@ begin_define
 define|#
 directive|define
 name|M_PROTO2
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
@@ -604,7 +604,7 @@ begin_define
 define|#
 directive|define
 name|M_PROTO3
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
@@ -615,7 +615,7 @@ begin_define
 define|#
 directive|define
 name|M_PROTO4
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -626,7 +626,150 @@ begin_define
 define|#
 directive|define
 name|M_PROTO5
-value|0x0100
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_BCAST
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* send/received as link-level broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MCAST
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* send/received as link-level multicast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FRAG
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* packet is a fragment of a larger packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FIRSTFRAG
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* packet is first fragment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LASTFRAG
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* packet is last fragment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SKIP_FIREWALL
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* skip firewall processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FREELIST
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* mbuf is on the free list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VLANTAG
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* ether_vtag is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROMISC
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* packet was not for us */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NOFREE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* do not free mbuf, embedded in cluster */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO6
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO7
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO8
+value|0x00200000
 end_define
 
 begin_comment
@@ -644,119 +787,29 @@ begin_comment
 comment|/* SCTP notification */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_SKIP_FIREWALL
-value|0x4000
-end_define
-
 begin_comment
-comment|/* skip firewall processing */
+comment|/*  * Flags to purge when crossing layers.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|M_FREELIST
-value|0x8000
+name|M_PROTOFLAGS
+define|\
+value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_PROTO6|M_PROTO7|M_PROTO8)
 end_define
 
 begin_comment
-comment|/* mbuf is on the free list */
-end_comment
-
-begin_comment
-comment|/*  * mbuf pkthdr flags (also stored in m_flags).  */
+comment|/*  * Flags preserved when copying m_pkthdr.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|M_BCAST
-value|0x0200
+name|M_COPYFLAGS
+define|\
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_SKIP_FIREWALL|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC)
 end_define
-
-begin_comment
-comment|/* send/received as link-level broadcast */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_MCAST
-value|0x0400
-end_define
-
-begin_comment
-comment|/* send/received as link-level multicast */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_FRAG
-value|0x0800
-end_define
-
-begin_comment
-comment|/* packet is a fragment of a larger packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_FIRSTFRAG
-value|0x1000
-end_define
-
-begin_comment
-comment|/* packet is first fragment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_LASTFRAG
-value|0x2000
-end_define
-
-begin_comment
-comment|/* packet is last fragment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_VLANTAG
-value|0x10000
-end_define
-
-begin_comment
-comment|/* ether_vtag is valid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROMISC
-value|0x20000
-end_define
-
-begin_comment
-comment|/* packet was not for us */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_NOFREE
-value|0x40000
-end_define
-
-begin_comment
-comment|/* do not free mbuf - it is embedded in the cluster */
-end_comment
 
 begin_comment
 comment|/*  * External buffer types: identify ext_buf type.  */
@@ -882,28 +935,6 @@ end_define
 begin_comment
 comment|/* has externally maintained ref_cnt ptr */
 end_comment
-
-begin_comment
-comment|/*  * Flags copied when copying m_pkthdr.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_COPYFLAGS
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTO1|M_PROTO1|M_PROTO2|\ 			    M_PROTO3|M_PROTO4|M_PROTO5|M_SKIP_FIREWALL|\ 			    M_BCAST|M_MCAST|M_FRAG|M_FIRSTFRAG|M_LASTFRAG|\ 			    M_VLANTAG|M_PROMISC)
-end_define
-
-begin_comment
-comment|/*  * Flags to purge when crossing layers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTOFLAGS
-value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5)
-end_define
 
 begin_comment
 comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  This  * field can be directly tested against if_data.ifi_hwassist.  */
