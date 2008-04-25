@@ -108,6 +108,29 @@ directive|include
 file|<sys/taskqueue.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -237,6 +260,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|"e1000_82571.h"
+end_include
+
+begin_comment
+comment|/* For Hartwell */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"if_em.h"
 end_include
 
@@ -261,7 +294,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"6.8.8"
+literal|"6.9.0"
 decl_stmt|;
 end_decl_stmt
 
@@ -1061,6 +1094,42 @@ block|{
 literal|0x8086
 block|,
 name|E1000_DEV_ID_ICH9_IFE_G
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_82574L
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_ICH10_D_BM_LM
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_ICH10_D_BM_LF
 block|,
 name|PCI_ANY_ID
 block|,
@@ -2043,6 +2112,45 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|EM_TIMESYNC
+end_ifdef
+
+begin_comment
+comment|/* Precision Time sync support */
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|em_tsync_init
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|em_tsync_disable
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EM_LEGACY_IRQ
 end_ifdef
 
@@ -2106,10 +2214,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* MSIX handlers */
+end_comment
+
 begin_function_decl
 specifier|static
-name|int
-name|em_tx_fast
+name|void
+name|em_msix_tx
 parameter_list|(
 name|void
 modifier|*
@@ -2119,8 +2231,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|em_rx_fast
+name|void
+name|em_msix_rx
 parameter_list|(
 name|void
 modifier|*
@@ -2130,8 +2242,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|em_link_fast
+name|void
+name|em_msix_link
 parameter_list|(
 name|void
 modifier|*
@@ -2522,6 +2634,32 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Controls whether promiscuous also shows bad packets */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|em_debug_sbp
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Local switch for MSI/MSIX */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|em_enable_msi
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
@@ -2595,6 +2733,28 @@ literal|"hw.em.smart_pwr_down"
 argument_list|,
 operator|&
 name|em_smart_pwr_down
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.em.sbp"
+argument_list|,
+operator|&
+name|em_debug_sbp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.em.enable_msi"
+argument_list|,
+operator|&
+name|em_enable_msi
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2920,6 +3080,16 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|EM_RX_LOCK_INIT
+argument_list|(
+name|adapter
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* SYSCTL stuff */
 name|SYSCTL_ADD_PROC
 argument_list|(
@@ -3062,6 +3232,18 @@ operator|.
 name|type
 operator|==
 name|e1000_ich8lan
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_ich10lan
 operator|)
 operator|||
 operator|(
@@ -4357,6 +4539,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|EM_RX_LOCK_DESTROY
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|EM_CORE_LOCK_DESTROY
 argument_list|(
 name|adapter
@@ -4529,6 +4716,18 @@ operator|.
 name|type
 operator|==
 name|e1000_ich8lan
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_ich10lan
 operator|)
 operator|||
 operator|(
@@ -4717,6 +4916,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|EM_RX_LOCK_DESTROY
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|EM_CORE_LOCK_DESTROY
 argument_list|(
 name|adapter
@@ -4813,6 +5017,18 @@ operator|.
 name|type
 operator|==
 name|e1000_ich8lan
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_ich10lan
 operator|)
 operator|||
 operator|(
@@ -4934,32 +5150,14 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|&&
-operator|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-operator|)
-condition|)
-name|em_start_locked
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|EM_CORE_UNLOCK
 argument_list|(
 name|adapter
+argument_list|)
+expr_stmt|;
+name|em_start
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -5367,6 +5565,12 @@ case|case
 name|e1000_ich9lan
 case|:
 case|case
+name|e1000_ich10lan
+case|:
+case|case
+name|e1000_82574
+case|:
+case|case
 name|e1000_80003es2lan
 case|:
 comment|/* Limit Jumbo Frame size */
@@ -5494,7 +5698,11 @@ operator|->
 name|if_flags
 operator|)
 operator|&
+operator|(
 name|IFF_PROMISC
+operator||
+name|IFF_ALLMULTI
+operator|)
 condition|)
 block|{
 name|em_disable_promisc
@@ -5928,6 +6136,397 @@ endif|#
 directive|endif
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+comment|/* 	** IOCTL support for Precision Time (IEEE 1588) Support 	*/
+case|case
+name|EM_TIMESYNC_READTS
+case|:
+block|{
+name|u32
+name|rx_ctl
+decl_stmt|,
+name|tx_ctl
+decl_stmt|;
+name|struct
+name|em_tsync_read
+modifier|*
+name|tdata
+decl_stmt|;
+name|tdata
+operator|=
+operator|(
+expr|struct
+name|em_tsync_read
+operator|*
+operator|)
+name|ifr
+operator|->
+name|ifr_data
+expr_stmt|;
+name|IOCTL_DEBUGOUT
+argument_list|(
+literal|"Reading Timestamp\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tdata
+operator|->
+name|read_current_time
+condition|)
+block|{
+name|getnanotime
+argument_list|(
+operator|&
+name|tdata
+operator|->
+name|system_time
+argument_list|)
+expr_stmt|;
+name|tdata
+operator|->
+name|network_time
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_SYSTIML
+argument_list|)
+expr_stmt|;
+name|tdata
+operator|->
+name|network_time
+operator||=
+operator|(
+name|u64
+operator|)
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_SYSTIMH
+argument_list|)
+operator|<<
+literal|32
+expr_stmt|;
+block|}
+name|rx_ctl
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_TSYNCRXCTL
+argument_list|)
+expr_stmt|;
+name|tx_ctl
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_TSYNCTXCTL
+argument_list|)
+expr_stmt|;
+name|IOCTL_DEBUGOUT1
+argument_list|(
+literal|"RX_CTL value = %u\n"
+argument_list|,
+name|rx_ctl
+argument_list|)
+expr_stmt|;
+name|IOCTL_DEBUGOUT1
+argument_list|(
+literal|"TX_CTL value = %u\n"
+argument_list|,
+name|tx_ctl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rx_ctl
+operator|&
+literal|0x1
+condition|)
+block|{
+name|IOCTL_DEBUGOUT
+argument_list|(
+literal|"RX timestamp is valid\n"
+argument_list|)
+expr_stmt|;
+name|u32
+name|tmp
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|tmp_cp
+decl_stmt|;
+name|tdata
+operator|->
+name|rx_valid
+operator|=
+literal|1
+expr_stmt|;
+name|tdata
+operator|->
+name|rx_stamp
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_RXSTMPL
+argument_list|)
+expr_stmt|;
+name|tdata
+operator|->
+name|rx_stamp
+operator||=
+operator|(
+name|u64
+operator|)
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_RXSTMPH
+argument_list|)
+operator|<<
+literal|32
+expr_stmt|;
+name|tmp
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_RXSATRL
+argument_list|)
+expr_stmt|;
+name|tmp_cp
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|&
+name|tmp
+expr_stmt|;
+name|tdata
+operator|->
+name|srcid
+index|[
+literal|0
+index|]
+operator|=
+name|tmp_cp
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|tdata
+operator|->
+name|srcid
+index|[
+literal|1
+index|]
+operator|=
+name|tmp_cp
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|tdata
+operator|->
+name|srcid
+index|[
+literal|2
+index|]
+operator|=
+name|tmp_cp
+index|[
+literal|2
+index|]
+expr_stmt|;
+name|tdata
+operator|->
+name|srcid
+index|[
+literal|3
+index|]
+operator|=
+name|tmp_cp
+index|[
+literal|3
+index|]
+expr_stmt|;
+name|tmp
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_RXSATRH
+argument_list|)
+expr_stmt|;
+name|tmp_cp
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|&
+name|tmp
+expr_stmt|;
+name|tdata
+operator|->
+name|srcid
+index|[
+literal|4
+index|]
+operator|=
+name|tmp_cp
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|tdata
+operator|->
+name|srcid
+index|[
+literal|5
+index|]
+operator|=
+name|tmp_cp
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|tdata
+operator|->
+name|seqid
+operator|=
+name|tmp
+operator|>>
+literal|16
+expr_stmt|;
+name|tdata
+operator|->
+name|seqid
+operator|=
+name|htons
+argument_list|(
+name|tdata
+operator|->
+name|seqid
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|tdata
+operator|->
+name|rx_valid
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|tx_ctl
+operator|&
+literal|0x1
+condition|)
+block|{
+name|IOCTL_DEBUGOUT
+argument_list|(
+literal|"TX timestamp is valid\n"
+argument_list|)
+expr_stmt|;
+name|tdata
+operator|->
+name|tx_valid
+operator|=
+literal|1
+expr_stmt|;
+name|tdata
+operator|->
+name|tx_stamp
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_TXSTMPL
+argument_list|)
+expr_stmt|;
+name|tdata
+operator|->
+name|tx_stamp
+operator||=
+operator|(
+name|u64
+operator|)
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_TXSTMPH
+argument_list|)
+operator|<<
+literal|32
+expr_stmt|;
+block|}
+else|else
+name|tdata
+operator|->
+name|tx_valid
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* EM_TIMESYNC */
 default|default:
 name|error
 operator|=
@@ -6212,7 +6811,19 @@ expr_stmt|;
 comment|/* 12K for Rx, 20K for Tx */
 break|break;
 case|case
+name|e1000_82574
+case|:
+name|pba
+operator|=
+name|E1000_PBA_20K
+expr_stmt|;
+comment|/* 20K for Rx, 20K for Tx */
+break|break;
+case|case
 name|e1000_ich9lan
+case|:
+case|case
+name|e1000_ich10lan
 case|:
 define|#
 directive|define
@@ -6568,6 +7179,65 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
+comment|/* MSI/X configuration for 82574 */
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
+condition|)
+block|{
+name|int
+name|tmp
+decl_stmt|;
+name|tmp
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_CTRL_EXT
+argument_list|)
+expr_stmt|;
+name|tmp
+operator||=
+name|E1000_CTRL_EXT_PBA_CLR
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_CTRL_EXT
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+comment|/* 		** Set the IVAR - interrupt vector routing. 		** Each nibble represents a vector, high bit 		** is enable, other 3 bits are the MSIX table 		** entry, we map RXQ0 to 0, TXQ0 to 1, and 		** Link (other) to 2, hence the magic number. 		*/
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_IVAR
+argument_list|,
+literal|0x800A0908
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
@@ -6594,6 +7264,43 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+comment|/* Initializae IEEE 1588 Precision Time hardware */
+if|if
+condition|(
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_ich10lan
+operator|)
+condition|)
+name|em_tsync_init
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Don't reset the phy next time init gets called */
 name|adapter
 operator|->
@@ -6765,16 +7472,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|EM_CORE_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 name|em_rxeof
 argument_list|(
 name|adapter
 argument_list|,
 name|count
-argument_list|)
-expr_stmt|;
-name|EM_CORE_UNLOCK
-argument_list|(
-name|adapter
 argument_list|)
 expr_stmt|;
 name|EM_TX_LOCK
@@ -6836,21 +7543,14 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+init|=
+name|adapter
+operator|->
+name|ifp
 decl_stmt|;
 name|u32
 name|reg_icr
 decl_stmt|;
-name|EM_CORE_LOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|=
-name|adapter
-operator|->
-name|ifp
-expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -6859,14 +7559,12 @@ name|if_capenable
 operator|&
 name|IFCAP_POLLING
 condition|)
-block|{
-name|EM_CORE_UNLOCK
+return|return;
+name|EM_CORE_LOCK
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 for|for
 control|(
 init|;
@@ -6922,6 +7620,11 @@ operator|==
 literal|0xffffffff
 condition|)
 break|break;
+name|EM_CORE_UNLOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -6955,6 +7658,11 @@ name|adapter
 argument_list|)
 expr_stmt|;
 block|}
+name|EM_CORE_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 comment|/* Link status change */
 if|if
 condition|(
@@ -7077,13 +7785,11 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|ifp
-operator|=
+init|=
 name|adapter
 operator|->
 name|ifp
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -7241,7 +7947,6 @@ name|adapter
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* RX deferred handler: used with MSIX */
 specifier|static
 name|void
 name|em_handle_rx
@@ -7270,11 +7975,6 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
-operator|++
-name|adapter
-operator|->
-name|rx_irq
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7310,11 +8010,6 @@ operator|->
 name|rx_task
 argument_list|)
 expr_stmt|;
-name|em_enable_intr
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 block|}
 specifier|static
 name|void
@@ -7344,11 +8039,6 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
-operator|++
-name|adapter
-operator|->
-name|tx_irq
-expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -7390,11 +8080,6 @@ name|adapter
 argument_list|)
 expr_stmt|;
 block|}
-name|em_enable_intr
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 block|}
 comment|/*********************************************************************  *  *  Fast Legacy/MSI Combined Interrupt Service routine    *  *********************************************************************/
 if|#
@@ -7566,10 +8251,22 @@ return|return
 name|FILTER_HANDLED
 return|;
 block|}
-comment|/*********************************************************************  *  *  MSIX TX Fast Interrupt Service routine  *  **********************************************************************/
+comment|/*********************************************************************  *  *  MSIX Interrupt Service Routines  *  **********************************************************************/
+define|#
+directive|define
+name|EM_MSIX_TX
+value|0x00040000
+define|#
+directive|define
+name|EM_MSIX_RX
+value|0x00010000
+define|#
+directive|define
+name|EM_MSIX_LINK
+value|0x00100000
 specifier|static
-name|int
-name|em_tx_fast
+name|void
+name|em_msix_tx
 parameter_list|(
 name|void
 modifier|*
@@ -7583,23 +8280,40 @@ name|adapter
 init|=
 name|arg
 decl_stmt|;
-name|u32
-name|reg_icr
-decl_stmt|;
-name|reg_icr
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
 name|adapter
 operator|->
-name|hw
-argument_list|,
-name|E1000_ICR
+name|ifp
+decl_stmt|;
+operator|++
+name|adapter
+operator|->
+name|tx_irq
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
+name|EM_TX_LOCK
+argument_list|(
+name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Mask interrupts until the taskqueue is finished running.  This is          * cheap, just assume that it is needed.  This also works around the 	 * MSI message reordering errata on certain systems. 	 */
-name|em_disable_intr
+name|em_txeof
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|EM_TX_UNLOCK
 argument_list|(
 name|adapter
 argument_list|)
@@ -7616,14 +8330,26 @@ operator|->
 name|tx_task
 argument_list|)
 expr_stmt|;
-return|return
-name|FILTER_HANDLED
-return|;
 block|}
-comment|/*********************************************************************  *  *  MSIX RX Fast Interrupt Service routine  *  **********************************************************************/
+comment|/* Reenable this interrupt */
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_IMS
+argument_list|,
+name|EM_MSIX_TX
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/*********************************************************************  *  *  MSIX RX Interrupt Service routine  *  **********************************************************************/
 specifier|static
-name|int
-name|em_rx_fast
+name|void
+name|em_msix_rx
 parameter_list|(
 name|void
 modifier|*
@@ -7637,27 +8363,43 @@ name|adapter
 init|=
 name|arg
 decl_stmt|;
-name|u32
-name|reg_icr
-decl_stmt|;
-name|reg_icr
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
 name|adapter
 operator|->
-name|hw
-argument_list|,
-name|E1000_ICR
-argument_list|)
+name|ifp
+decl_stmt|;
+operator|++
+name|adapter
+operator|->
+name|rx_irq
 expr_stmt|;
-comment|/* 	 * Mask interrupts until the taskqueue is finished running.  This is 	 * cheap, just assume that it is needed.  This also works around the 	 * MSI message reordering errata on certain systems. 	 */
-name|em_disable_intr
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|&&
+operator|(
+name|em_rxeof
 argument_list|(
 name|adapter
+argument_list|,
+name|adapter
+operator|->
+name|rx_process_limit
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+operator|)
+condition|)
 name|taskqueue_enqueue
 argument_list|(
 name|adapter
@@ -7670,25 +8412,25 @@ operator|->
 name|rx_task
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|reg_icr
+comment|/* Reenable this interrupt */
+name|E1000_WRITE_REG
+argument_list|(
 operator|&
-name|E1000_ICR_RXO
-condition|)
 name|adapter
 operator|->
-name|rx_overruns
-operator|++
+name|hw
+argument_list|,
+name|E1000_IMS
+argument_list|,
+name|EM_MSIX_RX
+argument_list|)
 expr_stmt|;
-return|return
-name|FILTER_HANDLED
-return|;
+return|return;
 block|}
 comment|/*********************************************************************  *  *  MSIX Link Fast Interrupt Service routine  *  **********************************************************************/
 specifier|static
-name|int
-name|em_link_fast
+name|void
+name|em_msix_link
 parameter_list|(
 name|void
 modifier|*
@@ -7703,9 +8445,14 @@ init|=
 name|arg
 decl_stmt|;
 name|u32
-name|reg_eicr
+name|reg_icr
 decl_stmt|;
-name|reg_eicr
+operator|++
+name|adapter
+operator|->
+name|link_irq
+expr_stmt|;
+name|reg_icr
 operator|=
 name|E1000_READ_REG
 argument_list|(
@@ -7719,7 +8466,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|reg_eicr
+name|reg_icr
 operator|&
 operator|(
 name|E1000_ICR_RXSEQ
@@ -7727,6 +8474,17 @@ operator||
 name|E1000_ICR_LSC
 operator|)
 condition|)
+block|{
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|get_link_status
+operator|=
+literal|1
+expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_fast
@@ -7737,6 +8495,7 @@ operator|->
 name|link_task
 argument_list|)
 expr_stmt|;
+block|}
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
@@ -7746,12 +8505,12 @@ name|hw
 argument_list|,
 name|E1000_IMS
 argument_list|,
+name|EM_MSIX_LINK
+operator||
 name|E1000_IMS_LSC
 argument_list|)
 expr_stmt|;
-return|return
-name|FILTER_HANDLED
-return|;
+return|return;
 block|}
 endif|#
 directive|endif
@@ -8789,6 +9548,9 @@ block|}
 elseif|else
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|EM_TIMESYNC
 comment|/* 	** Timesync needs to check the packet header  	** so call checksum code to do so, but don't 	** penalize the code if not defined. 	*/
 if|if
 condition|(
@@ -8800,6 +9562,8 @@ name|csum_flags
 operator|&
 name|CSUM_OFFLOAD
 condition|)
+endif|#
+directive|endif
 name|em_transmit_checksum_setup
 argument_list|(
 name|adapter
@@ -9589,6 +10353,28 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+if|if
+condition|(
+name|ctxd
+operator|->
+name|upper
+operator|.
+name|data
+operator|&
+name|E1000_TXD_EXTCMD_TSTAMP
+condition|)
+block|{
+name|HW_DEBUGOUT
+argument_list|(
+literal|"@@@ Timestamp bit is set in transmit descriptor\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -10195,6 +10981,15 @@ operator||
 name|E1000_RCTL_MPE
 operator|)
 expr_stmt|;
+comment|/* Turn this on if you want to see bad packets */
+if|if
+condition|(
+name|em_debug_sbp
+condition|)
+name|reg_rctl
+operator||=
+name|E1000_RCTL_SBP
+expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
@@ -10278,6 +11073,13 @@ operator|&=
 operator|(
 operator|~
 name|E1000_RCTL_MPE
+operator|)
+expr_stmt|;
+name|reg_rctl
+operator|&=
+operator|(
+operator|~
+name|E1000_RCTL_SBP
 operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
@@ -11155,6 +11957,43 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+comment|/* Disable IEEE 1588 Time hardware */
+if|if
+condition|(
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
+operator|)
+operator|||
+operator|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_ich10lan
+operator|)
+condition|)
+name|em_tsync_disable
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|e1000_reset_hw
 argument_list|(
 operator|&
@@ -11734,6 +12573,10 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * Setup MSI/X or MSI if PCI Express 	 */
+if|if
+condition|(
+name|em_enable_msi
+condition|)
 name|adapter
 operator|->
 name|msi
@@ -12085,7 +12928,7 @@ comment|/* 	 * And setup the interrupt handlers 	 */
 comment|/* First slot to RX */
 argument|if ((error = bus_setup_intr(dev, adapter->res[
 literal|0
-argument|], 	    INTR_TYPE_NET, em_rx_fast, NULL, adapter,&adapter->tag[
+argument|], 	    INTR_TYPE_NET | INTR_MPSAFE, NULL, em_msix_rx, adapter,&adapter->tag[
 literal|0
 argument|])) !=
 literal|0
@@ -12095,7 +12938,7 @@ argument|); 		return (error); 	}
 comment|/* Next TX */
 argument|if ((error = bus_setup_intr(dev, adapter->res[
 literal|1
-argument|], 	    INTR_TYPE_NET, em_tx_fast, NULL, adapter,&adapter->tag[
+argument|], 	    INTR_TYPE_NET | INTR_MPSAFE, NULL, em_msix_tx, adapter,&adapter->tag[
 literal|1
 argument|])) !=
 literal|0
@@ -12105,7 +12948,7 @@ argument|); 		return (error); 	}
 comment|/* And Link */
 argument|if ((error = bus_setup_intr(dev, adapter->res[
 literal|2
-argument|], 	    INTR_TYPE_NET, em_link_fast, NULL, adapter,&adapter->tag[
+argument|], 	    INTR_TYPE_NET | INTR_MPSAFE, NULL, em_msix_link, adapter,&adapter->tag[
 literal|2
 argument|])) !=
 literal|0
@@ -12131,7 +12974,25 @@ argument|static int em_setup_msix(struct adapter *adapter) { 	device_t dev = ada
 literal|0
 argument|;  	if (adapter->hw.mac.type< e1000_82571) 		return (
 literal|0
-argument|);         	val = pci_msi_count(dev);        	if (val ==
+argument|);
+comment|/* Setup MSI/X for Hartwell */
+argument|if (adapter->hw.mac.type == e1000_82574) {
+comment|/* Map the MSIX BAR */
+argument|int rid = PCIR_BAR(EM_MSIX_BAR); 		adapter->msix = bus_alloc_resource_any(dev, 		    SYS_RES_MEMORY,&rid, RF_ACTIVE);        		if (!adapter->msix) {
+comment|/* May not be enabled */
+argument|device_printf(adapter->dev,
+literal|"Unable to map MSIX table \n"
+argument|); 			goto msi;        		} 		val = pci_msix_count(dev);
+comment|/* 		** 82574 can be configured for 5 but 		** we limit use to 3. 		*/
+argument|if (val>
+literal|3
+argument|) val =
+literal|3
+argument|; 		if ((val)&& pci_alloc_msix(dev,&val) ==
+literal|0
+argument|) {                		device_printf(adapter->dev,
+literal|"Using MSIX interrupts\n"
+argument|); 			return (val); 		} 	} msi:        	val = pci_msi_count(dev);        	if (val ==
 literal|1
 argument|&& pci_alloc_msi(dev,&val) ==
 literal|0
@@ -12149,7 +13010,7 @@ argument|);
 comment|/* Issue a global reset */
 argument|e1000_reset_hw(&adapter->hw);
 comment|/* Get control from any management/hw control */
-argument|if (((adapter->hw.mac.type == e1000_82573) || 	    (adapter->hw.mac.type == e1000_ich8lan) || 	    (adapter->hw.mac.type == e1000_ich9lan))&& 	    e1000_check_mng_mode(&adapter->hw)) 		em_get_hw_control(adapter);
+argument|if (((adapter->hw.mac.type == e1000_82573) || 	    (adapter->hw.mac.type == e1000_ich8lan) || 	    (adapter->hw.mac.type == e1000_ich10lan) || 	    (adapter->hw.mac.type == e1000_ich9lan))&& 	    e1000_check_mng_mode(&adapter->hw)) 		em_get_hw_control(adapter);
 comment|/* When hardware is reset, fifo_head is also reset */
 argument|adapter->tx_fifo_head =
 literal|0
@@ -12478,7 +13339,14 @@ comment|/* XXX: No header stacking. */
 argument|if (mp->m_len< ehdrlen + ip_hlen) 			return;
 comment|/* failure */
 comment|/* IPv6 doesn't have a header checksum. */
-argument|hdr_len = ehdrlen + ip_hlen; 		ipproto = ip6->ip6_nxt;  		break; 	default: 		*txd_upper =
+argument|hdr_len = ehdrlen + ip_hlen; 		ipproto = ip6->ip6_nxt;  		break;
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+argument|case ETHERTYPE_IEEE1588: 		*txd_upper |= E1000_TXD_EXTCMD_TSTAMP; 		break;
+endif|#
+directive|endif
+argument|default: 		*txd_upper =
 literal|0
 argument|; 		*txd_lower =
 literal|0
@@ -12488,7 +13356,16 @@ argument|th = (struct tcp_hdr *)(mp->m_data + hdr_len); 			TXD->upper_setup.tcp_
 literal|0
 argument|); 			TXD->upper_setup.tcp_fields.tucso = 			    hdr_len + offsetof(struct tcphdr, th_sum); 			cmd |= E1000_TXD_CMD_TCP; 			*txd_upper |= E1000_TXD_POPTS_TXSM<<
 literal|8
-argument|; 		} 		break; 	case IPPROTO_UDP: 	{ 		if (mp->m_pkthdr.csum_flags& CSUM_UDP) {
+argument|; 		} 		break; 	case IPPROTO_UDP: 	{
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+argument|void *hdr = (caddr_t) ip + ip_hlen; 		struct udphdr *uh = (struct udphdr *)hdr;  		if (uh->uh_dport == htons(TSYNC_PORT)) { 			*txd_upper |= E1000_TXD_EXTCMD_TSTAMP; 			IOCTL_DEBUGOUT(
+literal|"@@@ Sending Event Packet\n"
+argument|); 		}
+endif|#
+directive|endif
+argument|if (mp->m_pkthdr.csum_flags& CSUM_UDP) {
 comment|/* 			 * Start offset for header checksum calculation. 			 * End offset for header checksum calculation. 			 * Offset of place to put the checksum. 			 */
 argument|TXD->upper_setup.tcp_fields.tucss = hdr_len; 			TXD->upper_setup.tcp_fields.tucse = htole16(
 literal|0
@@ -12496,7 +13373,15 @@ argument|); 			TXD->upper_setup.tcp_fields.tucso = 			    hdr_len + offsetof(str
 literal|8
 argument|; 		}
 comment|/* Fall Thru */
-argument|} 	default: 		break; 	}  	*txd_lower = E1000_TXD_CMD_DEXT |
+argument|} 	default: 		break; 	}
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+comment|/* 	** We might be here just for TIMESYNC 	** which means we don't need the context 	** descriptor. 	*/
+argument|if (!mp->m_pkthdr.csum_flags& CSUM_OFFLOAD) 		return;
+endif|#
+directive|endif
+argument|*txd_lower = E1000_TXD_CMD_DEXT |
 comment|/* Extended descr type */
 argument|E1000_TXD_DTYP_D;
 comment|/* Data descr */
@@ -12743,12 +13628,6 @@ argument|; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	   
 literal|0
 argument|); }
 comment|/*********************************************************************  *  *  Enable receive unit.  *  **********************************************************************/
-argument|static void em_initialize_receive_unit(struct adapter *adapter) { 	struct ifnet	*ifp = adapter->ifp; 	u64	bus_addr; 	u32	rctl, rxcsum;  	INIT_DEBUGOUT(
-literal|"em_initialize_receive_unit: begin"
-argument|);
-comment|/* 	 * Make sure receives are disabled while setting 	 * up the descriptor ring 	 */
-argument|rctl = E1000_READ_REG(&adapter->hw, E1000_RCTL); 	E1000_WRITE_REG(&adapter->hw, E1000_RCTL, rctl& ~E1000_RCTL_EN);  	if(adapter->hw.mac.type>= e1000_82540) { 		E1000_WRITE_REG(&adapter->hw, E1000_RADV, 		    adapter->rx_abs_int_delay.value);
-comment|/* 		 * Set the interrupt throttling rate. Value is calculated 		 * as DEFAULT_ITR = 1/(MAX_INTS_PER_SEC * 256ns) 		 */
 define|#
 directive|define
 name|MAX_INTS_PER_SEC
@@ -12757,7 +13636,21 @@ define|#
 directive|define
 name|DEFAULT_ITR
 value|1000000000/(MAX_INTS_PER_SEC * 256)
+argument|static void em_initialize_receive_unit(struct adapter *adapter) { 	struct ifnet	*ifp = adapter->ifp; 	u64	bus_addr; 	u32	rctl, rxcsum;  	INIT_DEBUGOUT(
+literal|"em_initialize_receive_unit: begin"
+argument|);
+comment|/* 	 * Make sure receives are disabled while setting 	 * up the descriptor ring 	 */
+argument|rctl = E1000_READ_REG(&adapter->hw, E1000_RCTL); 	E1000_WRITE_REG(&adapter->hw, E1000_RCTL, rctl& ~E1000_RCTL_EN);  	if (adapter->hw.mac.type>= e1000_82540) { 		E1000_WRITE_REG(&adapter->hw, E1000_RADV, 		    adapter->rx_abs_int_delay.value);
+comment|/* 		 * Set the interrupt throttling rate. Value is calculated 		 * as DEFAULT_ITR = 1/(MAX_INTS_PER_SEC * 256ns) 		 */
 argument|E1000_WRITE_REG(&adapter->hw, E1000_ITR, DEFAULT_ITR); 	}
+comment|/* 	** When using MSIX interrupts we need to throttle 	** using the EITR register (82574 only) 	*/
+argument|if (adapter->msix) 		for (int i =
+literal|0
+argument|; i<
+literal|4
+argument|; i++) 			E1000_WRITE_REG(&adapter->hw, 			    E1000_EITR_82574(i), DEFAULT_ITR);
+comment|/* Disable accelerated ackknowledge */
+argument|if (adapter->hw.mac.type == e1000_82574) 		E1000_WRITE_REG(&adapter->hw, 		    E1000_RFCTL, E1000_RFCTL_ACK_DIS);
 comment|/* Setup the Base and Length of the Rx Descriptor Ring */
 argument|bus_addr = adapter->rxdma.dma_paddr; 	E1000_WRITE_REG(&adapter->hw, E1000_RDLEN(
 literal|0
@@ -12809,13 +13702,13 @@ argument|if (adapter->rx_buffer_area != NULL) { 		rx_buffer = adapter->rx_buffer
 literal|0
 argument|; i< adapter->num_rx_desc; i++, rx_buffer++) { 			if (rx_buffer->m_head != NULL) { 				bus_dmamap_sync(adapter->rxtag, rx_buffer->map, 				    BUS_DMASYNC_POSTREAD); 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 				m_freem(rx_buffer->m_head); 				rx_buffer->m_head = NULL; 			} else if (rx_buffer->map != NULL) 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 			if (rx_buffer->map != NULL) { 				bus_dmamap_destroy(adapter->rxtag, 				    rx_buffer->map); 				rx_buffer->map = NULL; 			} 		} 	}  	if (adapter->rx_buffer_area != NULL) { 		free(adapter->rx_buffer_area, M_DEVBUF); 		adapter->rx_buffer_area = NULL; 	}  	if (adapter->rxtag != NULL) { 		bus_dma_tag_destroy(adapter->rxtag); 		adapter->rxtag = NULL; 	} }
 comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *  *********************************************************************/
-argument|static int em_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp; 	struct mbuf	*mp; 	u8		status, accept_frame =
+argument|static int em_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
 literal|0
 argument|, eop =
 literal|0
-argument|; 	u16 		len, desc_len, prev_len_adj; 	int		i; 	struct e1000_rx_desc   *current_desc;  	ifp = adapter->ifp; 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) 		return (
+argument|; 	u16 		len, desc_len, prev_len_adj; 	int		i; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		EM_RX_UNLOCK(adapter); 		return (
 literal|0
-argument|);  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
+argument|); 	}  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
 literal|0
 argument|)&& 	    (ifp->if_drv_flags& IFF_DRV_RUNNING)) { 		struct mbuf *m = NULL;  		mp = adapter->rx_buffer_area[i].m_head;
 comment|/* 		 * Can't defer bus_dmamap_sync(9) because TBI_ACCEPT 		 * needs to access the last received byte in the mbuf. 		 */
@@ -12886,17 +13779,8 @@ comment|/* Advance our pointers to the next descriptor. */
 argument|if (++i == adapter->num_rx_desc) 			i =
 literal|0
 argument|; 		if (m != NULL) { 			adapter->next_rx_desc_to_check = i;
-ifdef|#
-directive|ifdef
-name|EM_LEGACY_IRQ
-argument|EM_CORE_UNLOCK(adapter); 			(*ifp->if_input)(ifp, m); 			EM_CORE_LOCK(adapter);
-else|#
-directive|else
-comment|/* Already running unlocked */
-argument|(*ifp->if_input)(ifp, m);
-endif|#
-directive|endif
-argument|i = adapter->next_rx_desc_to_check; 		} 		current_desc =&adapter->rx_desc_base[i]; 	} 	adapter->next_rx_desc_to_check = i;
+comment|/* Unlock for call into stack */
+argument|EM_RX_UNLOCK(adapter); 			(*ifp->if_input)(ifp, m); 			EM_RX_LOCK(adapter); 			i = adapter->next_rx_desc_to_check; 		} 		current_desc =&adapter->rx_desc_base[i]; 	} 	adapter->next_rx_desc_to_check = i;
 comment|/* Advance the E1000's Receive Queue #0  "Tail Pointer". */
 argument|if (--i<
 literal|0
@@ -12904,7 +13788,7 @@ argument|) 		i = adapter->num_rx_desc -
 literal|1
 argument|; 	E1000_WRITE_REG(&adapter->hw, E1000_RDT(
 literal|0
-argument|), i); 	if (!((current_desc->status)& E1000_RXD_STAT_DD)) 		return (
+argument|), i); 	EM_RX_UNLOCK(adapter); 	if (!((current_desc->status)& E1000_RXD_STAT_DD)) 		return (
 literal|0
 argument|);  	return (
 literal|1
@@ -12937,16 +13821,9 @@ argument|if (!(rx_desc->errors& E1000_RXD_ERR_TCPE)) { 			mp->m_pkthdr.csum_flag
 literal|0xffff
 argument|); 		} 	} }
 comment|/*  * This turns on the hardware offload of the VLAN  * tag insertion and strip  */
-argument|static void em_enable_hw_vlans(struct adapter *adapter) { 	u32 ctrl;  	ctrl = E1000_READ_REG(&adapter->hw, E1000_CTRL); 	ctrl |= E1000_CTRL_VME; 	E1000_WRITE_REG(&adapter->hw, E1000_CTRL, ctrl); }
-define|#
-directive|define
-name|QUEUE_MASK
-value|0x01500000
-argument|static void em_enable_intr(struct adapter *adapter) { 	u32 ims_mask = IMS_ENABLE_MASK;  	if (adapter->msix) { 		E1000_WRITE_REG(&adapter->hw, E1000_EIMS, QUEUE_MASK); 		E1000_WRITE_REG(&adapter->hw, E1000_EIAC, QUEUE_MASK); 		ims_mask |= QUEUE_MASK; 	}  	E1000_WRITE_REG(&adapter->hw, E1000_IMS, ims_mask); }  static void em_disable_intr(struct adapter *adapter) { 	if (adapter->msix) { 		E1000_WRITE_REG(&adapter->hw, E1000_EIMC, ~
+argument|static void em_enable_hw_vlans(struct adapter *adapter) { 	u32 ctrl;  	ctrl = E1000_READ_REG(&adapter->hw, E1000_CTRL); 	ctrl |= E1000_CTRL_VME; 	E1000_WRITE_REG(&adapter->hw, E1000_CTRL, ctrl); }  static void em_enable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw; 	u32 ims_mask = IMS_ENABLE_MASK;  	if (adapter->msix) { 		E1000_WRITE_REG(hw, EM_EIAC, EM_MSIX_MASK); 		ims_mask |= EM_MSIX_MASK; 	}  	E1000_WRITE_REG(hw, E1000_IMS, ims_mask); }  static void em_disable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw;  	if (adapter->msix) 		E1000_WRITE_REG(hw, EM_EIAC,
 literal|0
-argument|); 		E1000_WRITE_REG(&adapter->hw, E1000_EIAC,
-literal|0
-argument|); 	} 	E1000_WRITE_REG(&adapter->hw, E1000_IMC,
+argument|); 	E1000_WRITE_REG(&adapter->hw, E1000_IMC,
 literal|0xffffffff
 argument|); }
 comment|/*  * Bit of a misnomer, what this really means is  * to enable OS management of the system... aka  * to disable special hardware management features   */
@@ -12977,11 +13854,11 @@ argument|manc |= E1000_MANC_ARP_EN;  		if (adapter->hw.mac.type>= e1000_82571) 	
 comment|/*  * em_get_hw_control sets {CTRL_EXT|FWSM}:DRV_LOAD bit.  * For ASF and Pass Through versions of f/w this means that  * the driver is loaded. For AMT version (only with 82573)  * of the f/w this means that the network i/f is open.  *  */
 argument|static void em_get_hw_control(struct adapter *adapter) { 	u32 ctrl_ext, swsm;
 comment|/* Let firmware know the driver has taken over */
-argument|switch (adapter->hw.mac.type) { 	case e1000_82573: 		swsm = E1000_READ_REG(&adapter->hw, E1000_SWSM); 		E1000_WRITE_REG(&adapter->hw, E1000_SWSM, 		    swsm | E1000_SWSM_DRV_LOAD); 		break; 	case e1000_82571: 	case e1000_82572: 	case e1000_80003es2lan: 	case e1000_ich8lan: 	case e1000_ich9lan: 		ctrl_ext = E1000_READ_REG(&adapter->hw, E1000_CTRL_EXT); 		E1000_WRITE_REG(&adapter->hw, E1000_CTRL_EXT, 		    ctrl_ext | E1000_CTRL_EXT_DRV_LOAD); 		break; 	default: 		break; 	} }
+argument|switch (adapter->hw.mac.type) { 	case e1000_82573: 		swsm = E1000_READ_REG(&adapter->hw, E1000_SWSM); 		E1000_WRITE_REG(&adapter->hw, E1000_SWSM, 		    swsm | E1000_SWSM_DRV_LOAD); 		break; 	case e1000_82571: 	case e1000_82572: 	case e1000_80003es2lan: 	case e1000_ich8lan: 	case e1000_ich9lan: 	case e1000_ich10lan: 		ctrl_ext = E1000_READ_REG(&adapter->hw, E1000_CTRL_EXT); 		E1000_WRITE_REG(&adapter->hw, E1000_CTRL_EXT, 		    ctrl_ext | E1000_CTRL_EXT_DRV_LOAD); 		break; 	default: 		break; 	} }
 comment|/*  * em_release_hw_control resets {CTRL_EXT|FWSM}:DRV_LOAD bit.  * For ASF and Pass Through versions of f/w this means that the  * driver is no longer loaded. For AMT version (only with 82573) i  * of the f/w this means that the network i/f is closed.  *  */
 argument|static void em_release_hw_control(struct adapter *adapter) { 	u32 ctrl_ext, swsm;
 comment|/* Let firmware taken over control of h/w */
-argument|switch (adapter->hw.mac.type) { 	case e1000_82573: 		swsm = E1000_READ_REG(&adapter->hw, E1000_SWSM); 		E1000_WRITE_REG(&adapter->hw, E1000_SWSM, 		    swsm& ~E1000_SWSM_DRV_LOAD); 		break; 	case e1000_82571: 	case e1000_82572: 	case e1000_80003es2lan: 	case e1000_ich8lan: 	case e1000_ich9lan: 		ctrl_ext = E1000_READ_REG(&adapter->hw, E1000_CTRL_EXT); 		E1000_WRITE_REG(&adapter->hw, E1000_CTRL_EXT, 		    ctrl_ext& ~E1000_CTRL_EXT_DRV_LOAD); 		break; 	default: 		break;  	} }  static int em_is_valid_ether_addr(u8 *addr) { 	char zero_addr[
+argument|switch (adapter->hw.mac.type) { 	case e1000_82573: 		swsm = E1000_READ_REG(&adapter->hw, E1000_SWSM); 		E1000_WRITE_REG(&adapter->hw, E1000_SWSM, 		    swsm& ~E1000_SWSM_DRV_LOAD); 		break; 	case e1000_82571: 	case e1000_82572: 	case e1000_80003es2lan: 	case e1000_ich8lan: 	case e1000_ich9lan: 	case e1000_ich10lan: 		ctrl_ext = E1000_READ_REG(&adapter->hw, E1000_CTRL_EXT); 		E1000_WRITE_REG(&adapter->hw, E1000_CTRL_EXT, 		    ctrl_ext& ~E1000_CTRL_EXT_DRV_LOAD); 		break; 	default: 		break;  	} }  static int em_is_valid_ether_addr(u8 *addr) { 	char zero_addr[
 literal|6
 argument|] = {
 literal|0
@@ -13168,10 +14045,9 @@ literal|"RX overruns = %ld\n"
 argument|, adapter->rx_overruns); 	device_printf(dev,
 literal|"watchdog timeouts = %ld\n"
 argument|, 	    adapter->watchdog_events); 	device_printf(dev,
-literal|"TX Interrupts = %ld "
-argument|, adapter->tx_irq); 	device_printf(dev,
-literal|"RX Interrupts = %ld\n"
-argument|, adapter->rx_irq); 	device_printf(dev,
+literal|"RX MSIX IRQ = %ld TX MSIX IRQ = %ld"
+literal|" LINK MSIX IRQ = %ld\n"
+argument|, adapter->rx_irq, 	    adapter->tx_irq , adapter->link_irq); 	device_printf(dev,
 literal|"XON Rcvd = %lld\n"
 argument|, 	    (long long)adapter->stats.xonrxc); 	device_printf(dev,
 literal|"XON Xmtd = %lld\n"
@@ -13262,12 +14138,87 @@ ifndef|#
 directive|ifndef
 name|EM_LEGACY_IRQ
 argument|static void em_add_rx_process_limit(struct adapter *adapter, const char *name, 	const char *description, int *limit, int value) { 	*limit = value; 	SYSCTL_ADD_INT(device_get_sysctl_ctx(adapter->dev), 	    SYSCTL_CHILDREN(device_get_sysctl_tree(adapter->dev)), 	    OID_AUTO, name, CTLTYPE_INT|CTLFLAG_RW, limit, value, description); }
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+comment|/*  * Initialize the Time Sync Feature  */
+argument|static int em_tsync_init(struct adapter *adapter) { 	device_t	dev = adapter->dev; 	u32		tx_ctl, rx_ctl;   	E1000_WRITE_REG(&adapter->hw, E1000_TIMINCA, (
+literal|1
+argument|<<
+literal|24
+argument|) |
+literal|20833
+argument|/PICOSECS_PER_TICK);  	adapter->last_stamp =  E1000_READ_REG(&adapter->hw, E1000_SYSTIML); 	adapter->last_stamp |= (u64)E1000_READ_REG(&adapter->hw, 	    E1000_SYSTIMH)<<
+literal|32ULL
+argument|;
+comment|/* Enable the TX side */
+argument|tx_ctl =  E1000_READ_REG(&adapter->hw, E1000_TSYNCTXCTL); 	tx_ctl |=
+literal|0x10
+argument|; 	E1000_WRITE_REG(&adapter->hw, E1000_TSYNCTXCTL, tx_ctl); 	E1000_WRITE_FLUSH(&adapter->hw);  	tx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCTXCTL); 	if ((tx_ctl&
+literal|0x10
+argument|) ==
+literal|0
+argument|) {      		device_printf(dev,
+literal|"Failed to enable TX timestamping\n"
+argument|); 		return (ENXIO); 	}
+comment|/* Enable RX */
+argument|rx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCRXCTL); 	rx_ctl |=
+literal|0x10
+argument|;
+comment|/* Enable the feature */
+argument|rx_ctl |=
+literal|0x0a
+argument|;
+comment|/* This value turns on Ver 1 and 2 */
+argument|E1000_WRITE_REG(&adapter->hw, E1000_TSYNCRXCTL, rx_ctl);
+comment|/* 	 * Ethertype Stamping (Ethertype = 0x88F7) 	 */
+argument|E1000_WRITE_REG(&adapter->hw, E1000_RXMTRL, htonl(
+literal|0x440088f7
+argument|));
+comment|/* 	 * Source Port Queue Filter Setup: 	 *  this is for UDP port filtering  	 */
+argument|E1000_WRITE_REG(&adapter->hw, E1000_RXUDP, htons(TSYNC_PORT));
+comment|/* Protocol = UDP, enable Timestamp, and filter on source/protocol */
+argument|E1000_WRITE_FLUSH(&adapter->hw);  	rx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCRXCTL); 	if ((rx_ctl&
+literal|0x10
+argument|) ==
+literal|0
+argument|) {      		device_printf(dev,
+literal|"Failed to enable RX timestamping\n"
+argument|); 		return (ENXIO); 	}   	device_printf(dev,
+literal|"IEEE 1588 Precision Time Protocol enabled\n"
+argument|);  	return (
+literal|0
+argument|); }
+comment|/*  * Disable the Time Sync Feature  */
+argument|static void em_tsync_disable(struct adapter *adapter) { 	u32		tx_ctl, rx_ctl;   	tx_ctl =  E1000_READ_REG(&adapter->hw, E1000_TSYNCTXCTL); 	tx_ctl&= ~
+literal|0x10
+argument|; 	E1000_WRITE_REG(&adapter->hw, E1000_TSYNCTXCTL, tx_ctl); 	E1000_WRITE_FLUSH(&adapter->hw);
+comment|/* Invalidate TX Timestamp */
+argument|E1000_READ_REG(&adapter->hw, E1000_TXSTMPH);   	tx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCTXCTL); 	if (tx_ctl&
+literal|0x10
+argument|)      		HW_DEBUGOUT(
+literal|"Failed to disable TX timestamping\n"
+argument|);     	rx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCRXCTL); 	rx_ctl&= ~
+literal|0x10
+argument|;     	E1000_WRITE_REG(&adapter->hw, E1000_TSYNCRXCTL, rx_ctl); 	E1000_WRITE_FLUSH(&adapter->hw);
+comment|/* Invalidate RX Timestamp */
+argument|E1000_READ_REG(&adapter->hw, E1000_RXSATRH);   	rx_ctl = E1000_READ_REG(&adapter->hw, E1000_TSYNCRXCTL); 	if (rx_ctl&
+literal|0x10
+argument|) 		HW_DEBUGOUT(
+literal|"Failed to disable RX timestamping\n"
+argument|);   	return; }
 end_function
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* EM_TIMESYNC */
+end_comment
 
 end_unit
 

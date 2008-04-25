@@ -2732,6 +2732,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_PCS_CFG_PCS_EN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_PCS_LCTL_FLV_LINK_UP
 value|1
 end_define

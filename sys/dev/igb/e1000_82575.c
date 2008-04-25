@@ -17,12 +17,6 @@ directive|include
 file|"e1000_api.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"e1000_82575.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|s32
@@ -2144,7 +2138,7 @@ argument_list|(
 literal|"e1000_phy_hw_reset_sgmii_82575"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This isn't a true "hard" reset, but is the only reset 	 * available to us at this time. 	 */
+comment|/* 	 * This isn't a TRUE "hard" reset, but is the only reset 	 * available to us at this time. 	 */
 name|DEBUGOUT
 argument_list|(
 literal|"Soft resetting SGMII attached PHY...\n"
@@ -4358,7 +4352,7 @@ literal|"Running reset init script for 82575\n"
 argument_list|)
 expr_stmt|;
 comment|/* SerDes configuration via SERDESCTRL */
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4369,7 +4363,7 @@ argument_list|,
 literal|0x0C
 argument_list|)
 expr_stmt|;
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4380,7 +4374,7 @@ argument_list|,
 literal|0x78
 argument_list|)
 expr_stmt|;
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4391,7 +4385,7 @@ argument_list|,
 literal|0x23
 argument_list|)
 expr_stmt|;
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4403,7 +4397,7 @@ literal|0x15
 argument_list|)
 expr_stmt|;
 comment|/* CCM configuration via CCMCTL register */
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4414,7 +4408,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4426,7 +4420,7 @@ literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* PCIe lanes configuration */
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4437,7 +4431,7 @@ argument_list|,
 literal|0xEC
 argument_list|)
 expr_stmt|;
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4448,7 +4442,7 @@ argument_list|,
 literal|0xDF
 argument_list|)
 expr_stmt|;
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4459,7 +4453,7 @@ argument_list|,
 literal|0x05
 argument_list|)
 expr_stmt|;
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4471,7 +4465,7 @@ literal|0x81
 argument_list|)
 expr_stmt|;
 comment|/* PCIe PLL Configuration */
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4482,7 +4476,7 @@ argument_list|,
 literal|0x47
 argument_list|)
 expr_stmt|;
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,
@@ -4493,7 +4487,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-name|e1000_write_8bit_ctrl_reg
+name|e1000_write_8bit_ctrl_reg_generic
 argument_list|(
 name|hw
 argument_list|,

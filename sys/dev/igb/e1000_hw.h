@@ -124,7 +124,7 @@ block|,
 name|e1000_82575
 block|,
 name|e1000_num_macs
-comment|/* List is 1-based, so subtract 1 for true count. */
+comment|/* List is 1-based, so subtract 1 for TRUE count. */
 block|}
 name|e1000_mac_type
 typedef|;
@@ -2258,33 +2258,15 @@ block|}
 struct|;
 end_struct
 
+begin_include
+include|#
+directive|include
+file|"e1000_82575.h"
+end_include
+
 begin_comment
 comment|/* These functions must be implemented by drivers */
 end_comment
-
-begin_function_decl
-name|void
-name|e1000_pci_clear_mwi
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|e1000_pci_set_mwi
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|s32

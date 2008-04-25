@@ -13,24 +13,6 @@ directive|include
 file|"e1000_api.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"e1000_mac.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"e1000_nvm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"e1000_phy.h"
-end_include
-
 begin_comment
 comment|/**  *  e1000_init_mac_params - Initialize MAC function pointers  *  @hw: pointer to the HW structure  *  *  This function initializes the function pointers for the MAC  *  set of functions.  Called by drivers or by e1000_setup_init_funcs.  **/
 end_comment
@@ -2226,7 +2208,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_d0_lplu_state - Sets low power link up state for D0  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D0  *  and SmartSpeed is disabled when active is true, else clear lplu for D0  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  This is a function pointer entry point called by drivers.  **/
+comment|/**  *  e1000_set_d0_lplu_state - Sets low power link up state for D0  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D0  *  and SmartSpeed is disabled when active is TRUE, else clear lplu for D0  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  This is a function pointer entry point called by drivers.  **/
 end_comment
 
 begin_function
@@ -2273,7 +2255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_d3_lplu_state - Sets low power link up state for D3  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is true, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  This is a function pointer entry point called by drivers.  **/
+comment|/**  *  e1000_set_d3_lplu_state - Sets low power link up state for D3  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is TRUE, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  This is a function pointer entry point called by drivers.  **/
 end_comment
 
 begin_function

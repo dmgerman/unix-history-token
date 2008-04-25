@@ -419,6 +419,29 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_82542_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|E1000_REGISTER
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|)
+value|reg
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -430,6 +453,11 @@ name|reg
 parameter_list|)
 value|(((hw)->mac.type>= e1000_82543) \     ? reg : e1000_translate_register_82542(reg))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

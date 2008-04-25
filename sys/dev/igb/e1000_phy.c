@@ -13,12 +13,6 @@ directive|include
 file|"e1000_api.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"e1000_phy.h"
-end_include
-
 begin_comment
 comment|/* Cable length tables */
 end_comment
@@ -2320,7 +2314,13 @@ goto|;
 block|}
 name|ret_val
 operator|=
-name|e1000_phy_hw_reset
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|reset
 argument_list|(
 name|hw
 argument_list|)
@@ -2358,7 +2358,13 @@ block|{
 comment|/* disable lplu d3 during driver init */
 name|ret_val
 operator|=
-name|e1000_set_d3_lplu_state
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|set_d3_lplu_state
 argument_list|(
 name|hw
 argument_list|,
@@ -2383,7 +2389,13 @@ block|}
 comment|/* disable lplu d0 during driver init */
 name|ret_val
 operator|=
-name|e1000_set_d0_lplu_state
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|set_d0_lplu_state
 argument_list|(
 name|hw
 argument_list|,
@@ -2892,7 +2904,13 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_wait_autoneg
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|wait_autoneg
 argument_list|(
 name|hw
 argument_list|)
@@ -4284,7 +4302,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_d3_lplu_state_generic - Sets low power link up state for D3  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is true, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  **/
+comment|/**  *  e1000_set_d3_lplu_state_generic - Sets low power link up state for D3  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is TRUE, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  **/
 end_comment
 
 begin_function
@@ -5851,7 +5869,13 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_get_cable_length
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|get_cable_length
 argument_list|(
 name|hw
 argument_list|)
@@ -6094,7 +6118,13 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_get_cable_length
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|get_cable_length
 argument_list|(
 name|hw
 argument_list|)

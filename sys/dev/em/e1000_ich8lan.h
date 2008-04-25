@@ -375,6 +375,82 @@ name|IMS_ICH_ENABLE_MASK
 value|(\     E1000_IMS_DSW   | \     E1000_IMS_PHYINT | \     E1000_IMS_EPRST)
 end_define
 
+begin_comment
+comment|/* Additional interrupt register bit definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_LSECPNC
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* PN threshold - client */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_LSECPNC
+value|E1000_ICR_LSECPNC
+end_define
+
+begin_comment
+comment|/* PN threshold - client */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_LSECPNC
+value|E1000_ICR_LSECPNC
+end_define
+
+begin_comment
+comment|/* PN threshold - client */
+end_comment
+
+begin_comment
+comment|/* Security Processing bit Indication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LINKSEC_STATUS_LSECH
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LINKSEC_ERROR_BIT_MASK
+value|0x60000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LINKSEC_ERROR_NO_SA_MATCH
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LINKSEC_ERROR_REPLAY_ERROR
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LINKSEC_ERROR_BAD_SIG
+value|0x60000000
+end_define
+
 begin_endif
 endif|#
 directive|endif

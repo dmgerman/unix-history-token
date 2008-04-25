@@ -273,7 +273,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 1.1.6"
+literal|"version - 1.1.9"
 decl_stmt|;
 end_decl_stmt
 
@@ -1741,15 +1741,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* These auto configure if set to 0, based on number of cpus */
+comment|/* ** IF YOU CHANGE THESE: be sure and change IGB_MSIX_VEC in ** if_igb.h to match. These can be autoconfigured if set to ** 0, it will then be based on number of cpus. */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mp_ncpus
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1790,6 +1783,13 @@ name|igb_rx_queues
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mp_ncpus
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* How many packets rxeof tries to clean at a time */
@@ -3077,6 +3077,14 @@ operator|->
 name|timer
 argument_list|)
 expr_stmt|;
+name|e1000_remove_device
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|)
+expr_stmt|;
 name|igb_free_pci_resources
 argument_list|(
 name|adapter
@@ -3090,14 +3098,6 @@ expr_stmt|;
 name|if_free
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-name|e1000_remove_device
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
 argument_list|)
 expr_stmt|;
 name|igb_free_transmit_structures
@@ -3826,7 +3826,11 @@ operator|->
 name|if_flags
 operator|)
 operator|&
+operator|(
 name|IFF_PROMISC
+operator||
+name|IFF_ALLMULTI
+operator|)
 condition|)
 block|{
 name|igb_disable_promisc
@@ -4862,6 +4866,7 @@ endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
 block|{
+comment|/* this clears any pending interrupts */
 name|E1000_READ_REG
 argument_list|(
 operator|&
@@ -4875,6 +4880,18 @@ expr_stmt|;
 name|igb_enable_intr
 argument_list|(
 name|adapter
+argument_list|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_ICS
+argument_list|,
+name|E1000_ICS_LSC
 argument_list|)
 expr_stmt|;
 block|}
@@ -5636,7 +5653,9 @@ literal|1
 expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_fast
+name|adapter
+operator|->
+name|tq
 argument_list|,
 operator|&
 name|adapter
@@ -5923,7 +5942,9 @@ literal|1
 expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_fast
+name|adapter
+operator|->
+name|tq
 argument_list|,
 operator|&
 name|adapter
@@ -5933,6 +5954,7 @@ argument_list|)
 expr_stmt|;
 name|spurious
 label|:
+comment|/* Rearm */
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
@@ -5954,7 +5976,9 @@ name|hw
 argument_list|,
 name|E1000_EIMS
 argument_list|,
-name|E1000_EIMS_OTHER
+name|adapter
+operator|->
+name|link_mask
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9404,7 +9428,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|10
+name|IGB_MSIX_VEC
 condition|;
 name|i
 operator|++
@@ -9547,9 +9571,17 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|eims_mask
+name|link_mask
 operator||=
 name|E1000_EIMS_OTHER
+expr_stmt|;
+name|adapter
+operator|->
+name|eims_mask
+operator||=
+name|adapter
+operator|->
+name|link_mask
 expr_stmt|;
 block|}
 return|return;
@@ -9863,6 +9895,17 @@ goto|goto
 name|msi
 goto|;
 block|}
+comment|/* Limit by the number set in header */
+if|if
+condition|(
+name|msgs
+operator|>
+name|IGB_MSIX_VEC
+condition|)
+name|msgs
+operator|=
+name|IGB_MSIX_VEC
+expr_stmt|;
 comment|/* Figure out a reasonable auto config value */
 name|queues
 operator|=
@@ -9937,7 +9980,7 @@ operator|->
 name|dev
 argument_list|,
 literal|"MSIX Configuration Problem, "
-literal|"%d vectors but %d queues wanted!\n"
+literal|"%d vectors configured, but %d queues wanted!\n"
 argument_list|,
 name|msgs
 argument_list|,
@@ -13109,12 +13152,6 @@ return|return
 name|FALSE
 return|;
 comment|/* 0 */
-name|ip
-operator|->
-name|ip_len
-operator|=
-literal|0
-expr_stmt|;
 name|ip
 operator|->
 name|ip_sum
@@ -17426,7 +17463,7 @@ operator|++
 expr_stmt|;
 name|m_freem
 argument_list|(
-name|rxr
+name|adapter
 operator|->
 name|fmp
 argument_list|)
@@ -17681,6 +17718,20 @@ operator|->
 name|hw
 argument_list|,
 name|E1000_EIAC
+argument_list|,
+name|adapter
+operator|->
+name|eims_mask
+argument_list|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_EIAM
 argument_list|,
 name|adapter
 operator|->
@@ -19278,6 +19329,14 @@ name|E1000_RCTL
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|DEBUG_HW
+operator|>
+literal|0
+operator|)
+comment|/* Dont output these errors normally */
 name|device_printf
 argument_list|(
 name|dev
@@ -19305,6 +19364,50 @@ name|E1000_EIMS
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Kawela only */
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"IVAR0 = 0x%x IVAR1 = 0x%x IVAR_MISC = 0x%x\n"
+argument_list|,
+name|E1000_READ_REG_ARRAY
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_IVAR0
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|E1000_READ_REG_ARRAY
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_IVAR0
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_IVAR_MISC
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|device_printf
 argument_list|(
 name|dev
@@ -19480,12 +19583,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no descriptors avail event = %lld\n"
+literal|"no descriptors avail event = %lu\n"
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|txr
 operator|->
 name|no_desc_avail
@@ -19495,16 +19594,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"TX(%d) MSIX IRQ Handled = %lld\n"
+literal|"TX(%d) MSIX IRQ Handled = %lu\n"
 argument_list|,
 name|txr
 operator|->
 name|me
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|txr
 operator|->
 name|tx_irq
@@ -19514,16 +19609,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"TX(%d) Packets sent = %lld\n"
+literal|"TX(%d) Packets sent = %lu\n"
 argument_list|,
 name|txr
 operator|->
 name|me
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|txr
 operator|->
 name|tx_packets
@@ -19589,16 +19680,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"RX(%d) Packets received = %lld\n"
+literal|"RX(%d) Packets received = %lu\n"
 argument_list|,
 name|rxr
 operator|->
 name|me
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|rxr
 operator|->
 name|rx_packets
@@ -19608,16 +19695,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"RX(%d) Byte count = %lld\n"
+literal|"RX(%d) Byte count = %lu\n"
 argument_list|,
 name|rxr
 operator|->
 name|me
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|rxr
 operator|->
 name|rx_bytes
@@ -19627,16 +19710,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"RX(%d) MSIX IRQ Handled = %lld\n"
+literal|"RX(%d) MSIX IRQ Handled = %lu\n"
 argument_list|,
 name|rxr
 operator|->
 name|me
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|rxr
 operator|->
 name|rx_irq

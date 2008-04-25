@@ -281,8 +281,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|false
+value|FALSE
+end_define
+
+begin_comment
+comment|/* shared code stupidity */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TRUE
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|true
+value|TRUE
 end_define
 
 begin_define

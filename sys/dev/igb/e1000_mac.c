@@ -13,12 +13,6 @@ directive|include
 file|"e1000_api.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"e1000_mac.h"
-end_include
-
 begin_comment
 comment|/**  *  e1000_init_mac_ops_generic - Initialize MAC function pointers  *  @hw: pointer to the HW structure  *  *  Setups up the function pointers to no-op functions  **/
 end_comment
@@ -1807,7 +1801,7 @@ control|)
 block|{
 name|hash_value
 operator|=
-name|e1000_hash_mc_addr
+name|e1000_hash_mc_addr_generic
 argument_list|(
 name|hw
 argument_list|,

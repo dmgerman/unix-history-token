@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2001-2008, Intel Corporation All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Redistributions in binary form must reproduce the above copyright     notice, this list of conditions and the following disclaimer in the     documentation and/or other materials provided with the distribution.   3. Neither the name of the Intel Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_ifndef
@@ -588,6 +588,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_MSIX_MASK
+value|0x01F00000
+end_define
+
+begin_comment
+comment|/* For 82574 use */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ETH_ZLEN
 value|60
 end_define
@@ -609,6 +620,17 @@ end_define
 begin_comment
 comment|/* Offload bits in mbuf flag */
 end_comment
+
+begin_comment
+comment|/*  * 82574 has a nonstandard address for EIAC  * and since its only used in MSIX, and in  * the em driver only 82574 uses MSIX we can  * solve it just using this define.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_EIAC
+value|0x000DC
+end_define
 
 begin_comment
 comment|/* Used in for 82547 10Mb Half workaround */
@@ -648,6 +670,105 @@ directive|define
 name|EM_82547_PKT_THRESH
 value|0x3e0
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+end_ifdef
+
+begin_comment
+comment|/* Precision Time Sync (IEEE 1588) defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_IEEE1588
+value|0x88F7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PICOSECS_PER_TICK
+value|20833
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSYNC_PORT
+value|319
+end_define
+
+begin_comment
+comment|/* UDP port for the protocol */
+end_comment
+
+begin_comment
+comment|/* TIMESYNC IOCTL defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_TIMESYNC_READTS
+value|_IOWR('i', 127, struct em_tsync_read)
+end_define
+
+begin_comment
+comment|/* Used in the READTS IOCTL */
+end_comment
+
+begin_struct
+struct|struct
+name|em_tsync_read
+block|{
+name|int
+name|read_current_time
+decl_stmt|;
+name|struct
+name|timespec
+name|system_time
+decl_stmt|;
+name|u64
+name|network_time
+decl_stmt|;
+name|u64
+name|rx_stamp
+decl_stmt|;
+name|u64
+name|tx_stamp
+decl_stmt|;
+name|u16
+name|seqid
+decl_stmt|;
+name|unsigned
+name|char
+name|srcid
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|int
+name|rx_valid
+decl_stmt|;
+name|int
+name|tx_valid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EM_TIMESYNC */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -813,6 +934,10 @@ decl_stmt|;
 name|struct
 name|mtx
 name|tx_mtx
+decl_stmt|;
+name|struct
+name|mtx
+name|rx_mtx
 decl_stmt|;
 name|int
 name|em_insert_vlan_header
@@ -1006,6 +1131,10 @@ name|unsigned
 name|long
 name|tx_irq
 decl_stmt|;
+name|unsigned
+name|long
+name|link_irq
+decl_stmt|;
 comment|/* 82547 workaround */
 name|uint32_t
 name|tx_fifo_size
@@ -1032,6 +1161,20 @@ decl_stmt|;
 name|boolean_t
 name|in_detach
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|EM_TIMESYNC
+name|u64
+name|last_stamp
+decl_stmt|;
+name|u64
+name|last_sec
+decl_stmt|;
+name|u32
+name|last_ns
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|e1000_hw_stats
 name|stats
@@ -1169,6 +1312,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|EM_RX_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_name
+parameter_list|)
+define|\
+value|mtx_init(&(_sc)->rx_mtx, _name, "EM RX Lock", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EM_CORE_LOCK_DESTROY
 parameter_list|(
 name|_sc
@@ -1184,6 +1340,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_destroy(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_RX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->rx_mtx)
 end_define
 
 begin_define
@@ -1209,6 +1375,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|EM_RX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EM_CORE_UNLOCK
 parameter_list|(
 name|_sc
@@ -1224,6 +1400,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_unlock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_RX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->rx_mtx)
 end_define
 
 begin_define

@@ -991,6 +991,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_CTRL_EXT_LSECCK
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_I2CCMD_REG_ADDR_SHIFT
 value|16
 end_define
@@ -1390,6 +1397,48 @@ define|#
 directive|define
 name|E1000_RXDEXT_STATERR_RXE
 value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LSECH
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LSECE_MASK
+value|0x60000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LSECE_NO_ERROR
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LSECE_NO_SA_MATCH
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LSECE_REPLAY_DETECT
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDEXT_LSECE_BAD_SIG
+value|0x60000000
 end_define
 
 begin_comment
@@ -2855,6 +2904,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_PCS_CFG_PCS_EN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_PCS_LCTL_FLV_LINK_UP
 value|1
 end_define
@@ -4050,6 +4106,28 @@ begin_comment
 comment|/* Extended desc bits for Linksec and timesync */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_TXD_CMD_LINKSEC
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Apply LinkSec on packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TXD_EXTCMD_TSTAMP
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* IEEE1588 Timestamp packet */
+end_comment
+
 begin_comment
 comment|/* Transmit Control */
 end_comment
@@ -5202,6 +5280,61 @@ begin_comment
 comment|/* ME hardware reset occurs */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_ICR_RXQ0
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Rx Queue 0 Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_RXQ1
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Rx Queue 1 Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_TXQ0
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Tx Queue 0 Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_TXQ1
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Tx Queue 1 Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_OTHER
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Other Interrupts */
+end_comment
+
 begin_comment
 comment|/* Extended Interrupt Cause Read */
 end_comment
@@ -5666,6 +5799,61 @@ directive|define
 name|E1000_IMS_EPRST
 value|E1000_ICR_EPRST
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_RXQ0
+value|E1000_ICR_RXQ0
+end_define
+
+begin_comment
+comment|/* Rx Queue 0 Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_RXQ1
+value|E1000_ICR_RXQ1
+end_define
+
+begin_comment
+comment|/* Rx Queue 1 Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_TXQ0
+value|E1000_ICR_TXQ0
+end_define
+
+begin_comment
+comment|/* Tx Queue 0 Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_TXQ1
+value|E1000_ICR_TXQ1
+end_define
+
+begin_comment
+comment|/* Tx Queue 1 Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_OTHER
+value|E1000_ICR_OTHER
+end_define
+
+begin_comment
+comment|/* Other Interrupts */
+end_comment
 
 begin_comment
 comment|/* Extended Interrupt Mask Set */

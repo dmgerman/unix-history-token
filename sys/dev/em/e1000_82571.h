@@ -40,6 +40,49 @@ name|E1000_GCR_L1_ACT_WITHOUT_L0S_RX
 value|0x08000000
 end_define
 
+begin_comment
+comment|/* Intr Throttling - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EITR_82574
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x000E8 + (0x4 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_EIAC_82574
+value|0x000DC
+end_define
+
+begin_comment
+comment|/* Ext. Interrupt Auto Clear - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EIAC_MASK_82574
+value|0x01500000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXCFGL
+value|0x0B634
+end_define
+
+begin_comment
+comment|/* TimeSync Rx EtherType& Msg Type Reg - RW */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

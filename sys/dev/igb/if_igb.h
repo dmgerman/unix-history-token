@@ -379,15 +379,19 @@ name|IGB_MSIX_BAR
 value|3
 end_define
 
+begin_comment
+comment|/* ** This is the total number of MSIX vectors you wish ** to use, it also controls the size of resources. ** The 82575 has a total of 10, 82576 has 25. Set this ** to the real amount you need to streamline data storage. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IGB_MSIX_VEC
-value|10
+value|5
 end_define
 
 begin_comment
-comment|/* Max vectors supported */
+comment|/* MSIX vectors configured */
 end_comment
 
 begin_comment
@@ -858,6 +862,9 @@ name|eims_mask
 decl_stmt|;
 name|int
 name|linkvec
+decl_stmt|;
+name|int
+name|link_mask
 decl_stmt|;
 name|int
 name|link_irq
