@@ -4367,7 +4367,16 @@ begin_function_decl
 name|void
 name|cpu_idle
 parameter_list|(
-name|void
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cpu_idle_wakeup
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

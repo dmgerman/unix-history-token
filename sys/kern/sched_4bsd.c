@@ -5518,7 +5518,9 @@ operator|==
 literal|0
 condition|)
 name|cpu_idle
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
 argument_list|(

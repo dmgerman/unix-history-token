@@ -2855,7 +2855,8 @@ begin_function
 name|void
 name|cpu_idle
 parameter_list|(
-name|void
+name|int
+name|busy
 parameter_list|)
 block|{
 name|register_t
@@ -2915,6 +2916,22 @@ comment|/* no output */
 block|: 		"r" (msr));
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_function
+name|int
+name|cpu_idle_wakeup
+parameter_list|(
+name|int
+name|cpu
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
