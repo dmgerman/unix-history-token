@@ -631,7 +631,7 @@ begin_define
 define|#
 directive|define
 name|IXP425_MAX_DEV
-value|4
+value|5
 end_define
 
 begin_define
@@ -704,6 +704,17 @@ block|,
 name|PCI_INT_B
 block|,
 name|PCI_INT_C
+block|}
+block|,
+comment|/* NB: for optional USB controller on Gateworks Avila */
+block|{
+name|PCI_INT_A
+block|,
+name|PCI_INT_B
+block|,
+name|PCI_INT_C
+block|,
+name|PCI_INT_D
 block|}
 block|, 	}
 decl_stmt|;
