@@ -1499,7 +1499,9 @@ begin_define
 define|#
 directive|define
 name|wpa_debug_open_file
-parameter_list|()
+parameter_list|(
+name|p
+parameter_list|)
 value|do { } while (0)
 end_define
 
@@ -1524,7 +1526,10 @@ begin_function_decl
 name|int
 name|wpa_debug_open_file
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|path
 parameter_list|)
 function_decl|;
 end_function_decl

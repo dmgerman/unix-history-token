@@ -5014,7 +5014,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eapol_sm_notify_tx_eapol_key - Notification about transmitted EAPOL packet  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  *  * Notify EAPOL station machine about transmitted EAPOL packet from an external  * component, e.g., WPA. This will update the statistics.  */
+comment|/**  * eapol_sm_notify_tx_eapol_key - Notification about transmitted EAPOL packet  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  *  * Notify EAPOL state machine about transmitted EAPOL packet from an external  * component, e.g., WPA. This will update the statistics.  */
 end_comment
 
 begin_function
@@ -5040,7 +5040,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eapol_sm_notify_portEnabled - Notification about portEnabled change  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @enabled: New portEnabled value  *  * Notify EAPOL station machine about new portEnabled value.  */
+comment|/**  * eapol_sm_notify_portEnabled - Notification about portEnabled change  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @enabled: New portEnabled value  *  * Notify EAPOL state machine about new portEnabled value.  */
 end_comment
 
 begin_function
@@ -5088,7 +5088,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eapol_sm_notify_portValid - Notification about portValid change  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @valid: New portValid value  *  * Notify EAPOL station machine about new portValid value.  */
+comment|/**  * eapol_sm_notify_portValid - Notification about portValid change  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @valid: New portValid value  *  * Notify EAPOL state machine about new portValid value.  */
 end_comment
 
 begin_function
@@ -5136,7 +5136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eapol_sm_notify_eap_success - Notification of external EAP success trigger  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @success: %TRUE = set success, %FALSE = clear success  *  * Notify EAPOL station machine that external event has forced EAP state to  * success (success = %TRUE). This can be cleared by setting success = %FALSE.  *  * This function is called to update EAP state when WPA-PSK key handshake has  * been completed successfully since WPA-PSK does not use EAP state machine.  */
+comment|/**  * eapol_sm_notify_eap_success - Notification of external EAP success trigger  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @success: %TRUE = set success, %FALSE = clear success  *  * Notify the EAPOL state machine that external event has forced EAP state to  * success (success = %TRUE). This can be cleared by setting success = %FALSE.  *  * This function is called to update EAP state when WPA-PSK key handshake has  * been completed successfully since WPA-PSK does not use EAP state machine.  */
 end_comment
 
 begin_function
@@ -5201,7 +5201,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eapol_sm_notify_eap_fail - Notification of external EAP failure trigger  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @fail: %TRUE = set failure, %FALSE = clear failure  *  * Notify EAPOL station machine that external event has forced EAP state to  * failure (fail = %TRUE). This can be cleared by setting fail = %FALSE.  */
+comment|/**  * eapol_sm_notify_eap_fail - Notification of external EAP failure trigger  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @fail: %TRUE = set failure, %FALSE = clear failure  *  * Notify EAPOL state machine that external event has forced EAP state to  * failure (fail = %TRUE). This can be cleared by setting fail = %FALSE.  */
 end_comment
 
 begin_function
@@ -5255,7 +5255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eapol_sm_notify_config - Notification of EAPOL configuration change  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @config: Pointer to current network configuration  * @conf: Pointer to EAPOL configuration data  *  * Notify EAPOL station machine that configuration has changed. config will be  * stored as a backpointer to network configuration. This can be %NULL to clear  * the stored pointed. conf will be copied to local EAPOL/EAP configuration  * data. If conf is %NULL, this part of the configuration change will be  * skipped.  */
+comment|/**  * eapol_sm_notify_config - Notification of EAPOL configuration change  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  * @config: Pointer to current network configuration  * @conf: Pointer to EAPOL configuration data  *  * Notify EAPOL state machine that configuration has changed. config will be  * stored as a backpointer to network configuration. This can be %NULL to clear  * the stored pointed. conf will be copied to local EAPOL/EAP configuration  * data. If conf is %NULL, this part of the configuration change will be  * skipped.  */
 end_comment
 
 begin_function

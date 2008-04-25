@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * AES-based functions  *  * - AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * - One-Key CBC MAC (OMAC1) hash with AES-128  * - AES-128 CTR mode encryption  * - AES-128 EAX mode encryption/decryption  * - AES-128 CBC  *  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * AES-based functions  *  * - AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * - One-Key CBC MAC (OMAC1) hash with AES-128  * - AES-128 CTR mode encryption  * - AES-128 EAX mode encryption/decryption  * - AES-128 CBC  *  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -55,7 +55,7 @@ name|CONFIG_NO_AES_WRAP
 end_ifndef
 
 begin_comment
-comment|/**  * aes_wrap - Wrap keys with AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * @kek: Key encryption key (KEK)  * @n: Length of the wrapped key in 64-bit units; e.g., 2 = 128-bit = 16 bytes  * @plain: Plaintext key to be wrapped, n * 64 bit  * @cipher: Wrapped key, (n + 1) * 64 bit  * Returns: 0 on success, -1 on failure  */
+comment|/**  * aes_wrap - Wrap keys with AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * @kek: 16-octet Key encryption key (KEK)  * @n: Length of the plaintext key in 64-bit units; e.g., 2 = 128-bit = 16  * bytes  * @plain: Plaintext key to be wrapped, n * 64 bits  * @cipher: Wrapped key, (n + 1) * 64 bits  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -274,7 +274,7 @@ comment|/* CONFIG_NO_AES_WRAP */
 end_comment
 
 begin_comment
-comment|/**  * aes_unwrap - Unwrap key with AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * @kek: Key encryption key (KEK)  * @n: Length of the wrapped key in 64-bit units; e.g., 2 = 128-bit = 16 bytes  * @cipher: Wrapped key to be unwrapped, (n + 1) * 64 bit  * @plain: Plaintext key, n * 64 bit  * Returns: 0 on success, -1 on failure (e.g., integrity verification failed)  */
+comment|/**  * aes_unwrap - Unwrap key with AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * @kek: Key encryption key (KEK)  * @n: Length of the plaintext key in 64-bit units; e.g., 2 = 128-bit = 16  * bytes  * @cipher: Wrapped key to be unwrapped, (n + 1) * 64 bits  * @plain: Plaintext key, n * 64 bits  * Returns: 0 on success, -1 on failure (e.g., integrity verification failed)  */
 end_comment
 
 begin_function
@@ -618,25 +618,31 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * omac1_aes_128 - One-Key CBC MAC (OMAC1) hash with AES-128 (aka AES-CMAC)  * @key: 128-bit key for the hash operation  * @data: Data buffer for which a MAC is determined  * @data: Length of data buffer in bytes  * @mac: Buffer for MAC (128 bits, i.e., 16 bytes)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * omac1_aes_128_vector - One-Key CBC MAC (OMAC1) hash with AES-128  * @key: 128-bit key for the hash operation  * @num_elem: Number of elements in the data vector  * @addr: Pointers to the data areas  * @len: Lengths of the data blocks  * @mac: Buffer for MAC (128 bits, i.e., 16 bytes)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
 name|int
-name|omac1_aes_128
+name|omac1_aes_128_vector
 parameter_list|(
 specifier|const
 name|u8
 modifier|*
 name|key
 parameter_list|,
+name|size_t
+name|num_elem
+parameter_list|,
 specifier|const
 name|u8
 modifier|*
-name|data
+name|addr
+index|[]
 parameter_list|,
+specifier|const
 name|size_t
-name|data_len
+modifier|*
+name|len
 parameter_list|,
 name|u8
 modifier|*
@@ -662,15 +668,18 @@ specifier|const
 name|u8
 modifier|*
 name|pos
-init|=
-name|data
+decl_stmt|,
+modifier|*
+name|end
 decl_stmt|;
 name|size_t
 name|i
 decl_stmt|,
+name|e
+decl_stmt|,
 name|left
-init|=
-name|data_len
+decl_stmt|,
+name|total_len
 decl_stmt|;
 name|ctx
 operator|=
@@ -700,6 +709,54 @@ argument_list|,
 name|BLOCK_SIZE
 argument_list|)
 expr_stmt|;
+name|total_len
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|e
+operator|=
+literal|0
+init|;
+name|e
+operator|<
+name|num_elem
+condition|;
+name|e
+operator|++
+control|)
+name|total_len
+operator|+=
+name|len
+index|[
+name|e
+index|]
+expr_stmt|;
+name|left
+operator|=
+name|total_len
+expr_stmt|;
+name|e
+operator|=
+literal|0
+expr_stmt|;
+name|pos
+operator|=
+name|addr
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|end
+operator|=
+name|pos
+operator|+
+name|len
+index|[
+literal|0
+index|]
+expr_stmt|;
 while|while
 condition|(
 name|left
@@ -720,6 +777,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|cbc
 index|[
 name|i
@@ -729,6 +787,34 @@ operator|*
 name|pos
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|pos
+operator|>=
+name|end
+condition|)
+block|{
+name|e
+operator|++
+expr_stmt|;
+name|pos
+operator|=
+name|addr
+index|[
+name|e
+index|]
+expr_stmt|;
+name|end
+operator|=
+name|pos
+operator|+
+name|len
+index|[
+name|e
+index|]
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|left
@@ -776,7 +862,7 @@ if|if
 condition|(
 name|left
 operator|||
-name|data_len
+name|total_len
 operator|==
 literal|0
 condition|)
@@ -794,6 +880,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|cbc
 index|[
 name|i
@@ -803,6 +890,34 @@ operator|*
 name|pos
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|pos
+operator|>=
+name|end
+condition|)
+block|{
+name|e
+operator|++
+expr_stmt|;
+name|pos
+operator|=
+name|addr
+index|[
+name|e
+index|]
+expr_stmt|;
+name|end
+operator|=
+name|pos
+operator|+
+name|len
+index|[
+name|e
+index|]
+expr_stmt|;
+block|}
+block|}
 name|cbc
 index|[
 name|left
@@ -855,6 +970,51 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * omac1_aes_128 - One-Key CBC MAC (OMAC1) hash with AES-128 (aka AES-CMAC)  * @key: 128-bit key for the hash operation  * @data: Data buffer for which a MAC is determined  * @data_len: Length of data buffer in bytes  * @mac: Buffer for MAC (128 bits, i.e., 16 bytes)  * Returns: 0 on success, -1 on failure  *  * This is a mode for using block cipher (AES in this case) for authentication.  * OMAC1 was standardized with the name CMAC by NIST in a Special Publication  * (SP) 800-38B.  */
+end_comment
+
+begin_function
+name|int
+name|omac1_aes_128
+parameter_list|(
+specifier|const
+name|u8
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|data_len
+parameter_list|,
+name|u8
+modifier|*
+name|mac
+parameter_list|)
+block|{
+return|return
+name|omac1_aes_128_vector
+argument_list|(
+name|key
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|data
+argument_list|,
+operator|&
+name|data_len
+argument_list|,
+name|mac
+argument_list|)
 return|;
 block|}
 end_function

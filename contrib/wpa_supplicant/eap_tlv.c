@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer method: EAP-TLV (draft-josefsson-pppext-eap-tls-eap-07.txt)  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer method: EAP-TLV (draft-josefsson-pppext-eap-tls-eap-07.txt)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -288,6 +288,9 @@ parameter_list|,
 name|size_t
 modifier|*
 name|resp_len
+parameter_list|,
+name|int
+name|force_failure
 parameter_list|)
 block|{
 name|size_t
@@ -614,6 +617,32 @@ literal|"EAP-TLV: TLV Result - Success "
 literal|"- EAP-TLV/Phase2 Completed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|force_failure
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"EAP-TLV: Earlier failure"
+literal|" - force failed Phase 2"
+argument_list|)
+expr_stmt|;
+name|resp_status
+operator|=
+name|EAP_TLV_RESULT_FAILURE
+expr_stmt|;
+name|ret
+operator|->
+name|decision
+operator|=
+name|DECISION_FAIL
+expr_stmt|;
+block|}
+else|else
+block|{
 name|resp_status
 operator|=
 name|EAP_TLV_RESULT_SUCCESS
@@ -624,6 +653,7 @@ name|decision
 operator|=
 name|DECISION_UNCOND_SUCC
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if

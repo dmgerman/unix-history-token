@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * This file implements functions for registering and unregistering  * %wpa_supplicant interfaces. In addition, this file contains number of  * functions for managing network connections.  *  * $FreeBSD$  */
+comment|/*  * WPA Supplicant  * Copyright (c) 2003-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * This file implements functions for registering and unregistering  * %wpa_supplicant interfaces. In addition, this file contains number of  * functions for managing network connections.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -120,7 +120,7 @@ init|=
 literal|"wpa_supplicant v"
 name|VERSION_STR
 literal|"\n"
-literal|"Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi> and contributors"
+literal|"Copyright (c) 2003-2008, Jouni Malinen<j@w1.fi> and contributors"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,13 +260,6 @@ name|wpa_driver_ops
 modifier|*
 name|wpa_supplicant_drivers
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|wpa_debug_use_file
 decl_stmt|;
 end_decl_stmt
 
@@ -1993,8 +1986,6 @@ literal|" timed out."
 argument_list|,
 name|MAC2STR
 argument_list|(
-name|wpa_s
-operator|->
 name|bssid
 argument_list|)
 argument_list|)
@@ -3599,6 +3590,26 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * TODO: should notify EAPOL SM about changes in opensc_engine_path, 	 * pkcs11_engine_path, pkcs11_module_path. 	 */
+if|if
+condition|(
+name|wpa_s
+operator|->
+name|key_mgmt
+operator|==
+name|WPA_KEY_MGMT_PSK
+condition|)
+block|{
+comment|/* 		 * Clear forced success to clear EAP state for next 		 * authentication. 		 */
+name|eapol_sm_notify_eap_success
+argument_list|(
+name|wpa_s
+operator|->
+name|eapol
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 name|eapol_sm_notify_config
 argument_list|(
 name|wpa_s
@@ -3900,6 +3911,11 @@ condition|(
 name|wpa_s
 operator|->
 name|disconnected
+operator|&&
+operator|!
+name|wpa_s
+operator|->
+name|scan_req
 condition|)
 return|return;
 name|enabled
@@ -6412,6 +6428,35 @@ operator|->
 name|ssid_len
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ssid
+operator|->
+name|mode
+operator|==
+literal|1
+operator|&&
+name|ssid
+operator|->
+name|frequency
+operator|>
+literal|0
+operator|&&
+name|params
+operator|.
+name|freq
+operator|==
+literal|0
+condition|)
+name|params
+operator|.
+name|freq
+operator|=
+name|ssid
+operator|->
+name|frequency
+expr_stmt|;
+comment|/* Initial channel for IBSS */
 name|params
 operator|.
 name|wpa_ie
@@ -10585,7 +10630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * wpa_supplicant_remove_iface - Remove a network interface  * @global: Pointer to global data from wpa_supplicant_init()  * @wpa_s: Pointer to the network interface to be removed  * Returns: 0 if interface was removed, -1 if interface was not found  *  * This function can be used to dynamically remove network interfaces from  * %wpa_supplicant, e.g., when a hotplug network adapter is ejected. In  * addition, this function is used to remove all remaining interdaces when  * %wpa_supplicant is terminated.  */
+comment|/**  * wpa_supplicant_remove_iface - Remove a network interface  * @global: Pointer to global data from wpa_supplicant_init()  * @wpa_s: Pointer to the network interface to be removed  * Returns: 0 if interface was removed, -1 if interface was not found  *  * This function can be used to dynamically remove network interfaces from  * %wpa_supplicant, e.g., when a hotplug network adapter is ejected. In  * addition, this function is used to remove all remaining interfaces when  * %wpa_supplicant is terminated.  */
 end_comment
 
 begin_function
@@ -10794,13 +10839,20 @@ condition|)
 return|return
 name|NULL
 return|;
-name|wpa_debug_use_file
-operator|=
+name|wpa_debug_open_file
+argument_list|(
 name|params
 operator|->
-name|wpa_debug_use_file
+name|wpa_debug_file_path
+argument_list|)
 expr_stmt|;
-name|wpa_debug_open_file
+if|if
+condition|(
+name|params
+operator|->
+name|wpa_debug_syslog
+condition|)
+name|wpa_debug_open_syslog
 argument_list|()
 expr_stmt|;
 name|ret
@@ -10972,18 +11024,6 @@ operator|=
 name|params
 operator|->
 name|wpa_debug_timestamp
-expr_stmt|;
-name|wpa_debug_use_file
-operator|=
-name|global
-operator|->
-name|params
-operator|.
-name|wpa_debug_use_file
-operator|=
-name|params
-operator|->
-name|wpa_debug_use_file
 expr_stmt|;
 if|if
 condition|(
@@ -11330,6 +11370,9 @@ name|os_free
 argument_list|(
 name|global
 argument_list|)
+expr_stmt|;
+name|wpa_debug_close_syslog
+argument_list|()
 expr_stmt|;
 name|wpa_debug_close_file
 argument_list|()

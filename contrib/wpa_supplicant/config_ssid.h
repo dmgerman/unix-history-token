@@ -679,6 +679,10 @@ enum|;
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211W */
+comment|/** 	 * frequency - Channel frequency in megahertz (MHz) for IBSS 	 * 	 * This value is used to configure the initial channel for IBSS (adhoc) 	 * networks, e.g., 2412 = IEEE 802.11b/g channel 1. It is ignored in 	 * the infrastructure mode. In addition, this value is only used by the 	 * station that creates the IBSS. If an IBSS network with the 	 * configured SSID is already present, the frequency of the network 	 * will be used instead of this configured value. 	 */
+name|int
+name|frequency
+decl_stmt|;
 block|}
 struct|;
 end_struct

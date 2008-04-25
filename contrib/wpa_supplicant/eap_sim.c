@@ -1374,6 +1374,14 @@ argument_list|,
 name|EAP_SIM_SUBTYPE_START
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|data
+operator|->
+name|reauth
+condition|)
+block|{
 name|wpa_hexdump
 argument_list|(
 name|MSG_DEBUG
@@ -1428,6 +1436,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|identity

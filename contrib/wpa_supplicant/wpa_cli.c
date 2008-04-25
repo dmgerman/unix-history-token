@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - command line interface for wpa_supplicant daemon  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - command line interface for wpa_supplicant daemon  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -91,7 +91,7 @@ init|=
 literal|"wpa_cli v"
 name|VERSION_STR
 literal|"\n"
-literal|"Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi> and contributors"
+literal|"Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi> and contributors"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,8 +203,10 @@ literal|"(shows\n"
 literal|"    list of variables when run without arguments)\n"
 literal|"  get_network<network id><variable> = get network variables\n"
 literal|"  save_config = save the current configuration\n"
-literal|"  disconnect = disconnect and wait for reassociate command before "
-literal|"connecting\n"
+literal|"  disconnect = disconnect and wait for reassociate/reconnect command before\n "
+literal|"    connecting\n"
+literal|"  reconnect = like reassociate, but only takes effect if already "
+literal|"disconnected\n"
 literal|"  scan = request new BSS scan\n"
 literal|"  scan_results = get latest scan results\n"
 literal|"  get_capability<eap/pairwise/group/key_mgmt/proto/auth_alg> = "
@@ -1014,7 +1016,8 @@ literal|"name and value)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|res
@@ -1066,7 +1069,8 @@ literal|"Too long SET command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return
@@ -1212,7 +1216,8 @@ literal|"(BSSID)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|res
@@ -1259,7 +1264,8 @@ literal|"Too long PREAUTH command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return
@@ -1315,7 +1321,8 @@ literal|"value)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|res
@@ -1362,7 +1369,8 @@ literal|"Too long AP_SCAN command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return
@@ -1418,7 +1426,8 @@ literal|"(Peer STA MAC address)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|res
@@ -1465,7 +1474,8 @@ literal|"Too long STKSTART command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return
@@ -1521,7 +1531,8 @@ literal|"level)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|res
@@ -1568,7 +1579,8 @@ literal|"Too long LEVEL command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return
@@ -1632,7 +1644,8 @@ literal|"(network id and identity)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|end
@@ -1691,7 +1704,8 @@ literal|"Too long IDENTITY command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -1749,7 +1763,8 @@ literal|"Too long IDENTITY command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -1818,7 +1833,8 @@ literal|"(network id and password)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|end
@@ -1877,7 +1893,8 @@ literal|"Too long PASSWORD command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -1935,7 +1952,8 @@ literal|"Too long PASSWORD command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2004,7 +2022,8 @@ literal|"(network id and password)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|end
@@ -2063,7 +2082,8 @@ literal|"Too long NEW_PASSWORD command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2121,7 +2141,8 @@ literal|"Too long NEW_PASSWORD command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2190,7 +2211,8 @@ literal|"(network id and pin)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|end
@@ -2249,7 +2271,8 @@ literal|"Too long PIN command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2307,7 +2330,8 @@ literal|"Too long PIN command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2376,7 +2400,8 @@ literal|"id and password)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|end
@@ -2435,7 +2460,8 @@ literal|"Too long OTP command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2493,7 +2519,8 @@ literal|"Too long OTP command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2562,7 +2589,8 @@ literal|"(network id and passphrase)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|end
@@ -2621,7 +2649,8 @@ literal|"Too long PASSPHRASE command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2679,7 +2708,8 @@ literal|"Too long PASSPHRASE command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2748,7 +2778,8 @@ literal|"id and BSSID)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|end
@@ -2796,7 +2827,8 @@ literal|"Too long BSSID command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2854,7 +2886,8 @@ literal|"Too long BSSID command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|pos
@@ -2942,7 +2975,8 @@ literal|"(network id)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|os_snprintf
@@ -3024,7 +3058,8 @@ literal|"(network id)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|os_snprintf
@@ -3106,7 +3141,8 @@ literal|"(network id)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|os_snprintf
@@ -3218,7 +3254,8 @@ literal|"(network id)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|os_snprintf
@@ -3348,7 +3385,8 @@ literal|"(network id, variable name, and value)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|res
@@ -3405,7 +3443,8 @@ literal|"Too long SET_NETWORK command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return
@@ -3475,7 +3514,8 @@ literal|"(network id and variable name)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|res
@@ -3527,7 +3567,8 @@ literal|"Too long GET_NETWORK command.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return
@@ -3566,6 +3607,36 @@ argument_list|(
 name|ctrl
 argument_list|,
 literal|"DISCONNECT"
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|wpa_cli_cmd_reconnect
+parameter_list|(
+name|struct
+name|wpa_ctrl
+modifier|*
+name|ctrl
+parameter_list|,
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+return|return
+name|wpa_ctrl_command
+argument_list|(
+name|ctrl
+argument_list|,
+literal|"RECONNECT"
 argument_list|)
 return|;
 block|}
@@ -3704,7 +3775,8 @@ literal|"two arguments\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 if|if
@@ -3735,7 +3807,8 @@ literal|"if any, must be 'strict'\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|os_snprintf
@@ -4025,7 +4098,8 @@ literal|"driver_param bridge_name\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 comment|/* 	 * INTERFACE_ADD<ifname>TAB<confname>TAB<driver>TAB<ctrl_interface>TAB 	 *<driver_param>TAB<bridge_name> 	 */
@@ -4163,7 +4237,8 @@ literal|"(interface name)\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|os_snprintf
@@ -4434,6 +4509,12 @@ name|wpa_cli_cmd_disconnect
 block|}
 block|,
 block|{
+literal|"reconnect"
+block|,
+name|wpa_cli_cmd_reconnect
+block|}
+block|,
+block|{
 literal|"scan"
 block|,
 name|wpa_cli_cmd_scan
@@ -4498,7 +4579,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|wpa_request
 parameter_list|(
 name|struct
@@ -4527,6 +4608,11 @@ name|NULL
 decl_stmt|;
 name|int
 name|count
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|count
 operator|=
@@ -4676,6 +4762,10 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -4695,9 +4785,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
+name|ret
+operator|=
 name|match
 operator|->
 name|handler
@@ -4716,6 +4812,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|ret
+return|;
 block|}
 end_function
 
@@ -6781,6 +6880,11 @@ name|daemonize
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -7178,6 +7282,8 @@ name|ctrl_conn
 argument_list|)
 expr_stmt|;
 else|else
+name|ret
+operator|=
 name|wpa_request
 argument_list|(
 name|ctrl_conn
@@ -7202,7 +7308,7 @@ name|wpa_cli_cleanup
 argument_list|()
 expr_stmt|;
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function
