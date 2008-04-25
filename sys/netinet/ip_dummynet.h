@@ -712,6 +712,7 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 name|m
 parameter_list|,
 name|int

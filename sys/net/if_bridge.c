@@ -12910,7 +12910,6 @@ name|ifp
 expr_stmt|;
 name|ip_dn_io_ptr
 argument_list|(
-operator|*
 name|mp
 argument_list|,
 name|DN_TO_IFB_FWD
