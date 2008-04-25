@@ -191,6 +191,27 @@ argument_list|)
 name|un_unshead
 expr_stmt|;
 comment|/* unionfs status head */
+name|LIST_HEAD
+argument_list|(
+name|unionfs_node_hashhead
+argument_list|,
+name|unionfs_node
+argument_list|)
+operator|*
+name|un_hashtbl
+expr_stmt|;
+comment|/* dir vnode hash table */
+name|LIST_ENTRY
+argument_list|(
+argument|unionfs_node
+argument_list|)
+name|un_hash
+expr_stmt|;
+comment|/* hash list entry */
+name|u_long
+name|un_hashmask
+decl_stmt|;
+comment|/* bit mask */
 name|char
 modifier|*
 name|un_path
