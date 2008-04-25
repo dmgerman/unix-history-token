@@ -246,6 +246,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|DB_SHOW_ALL_COMMAND
+parameter_list|(
+name|cmd_name
+parameter_list|,
+name|func_name
+parameter_list|)
+define|\
+value|DB_FUNC(cmd_name, func_name, db_show_all_cmd_set, 0, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DB_SET
 parameter_list|(
 name|cmd_name
