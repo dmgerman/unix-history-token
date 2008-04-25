@@ -662,9 +662,27 @@ name|msgbuf
 modifier|*
 name|msgbufp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Other subsystems (e.g., ACPI) can hook this later. */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|cpu_idle_hook
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+init|=
+name|NULL
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|long
@@ -1408,9 +1426,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|cpu_idle_default
+name|cpu_idle
 parameter_list|(
 name|int
 name|busy
@@ -1420,6 +1437,19 @@ name|struct
 name|ia64_pal_result
 name|res
 decl_stmt|;
+if|if
+condition|(
+name|cpu_idle_hook
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|cpu_idle_hook
+call|)
+argument_list|()
+expr_stmt|;
+else|else
 name|res
 operator|=
 name|ia64_call_pal_static
@@ -1432,20 +1462,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|cpu_idle
-parameter_list|()
-block|{
-call|(
-modifier|*
-name|cpu_idle_hook
-call|)
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1465,24 +1481,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* Other subsystems (e.g., ACPI) can hook this later. */
-end_comment
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|cpu_idle_hook
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-init|=
-name|cpu_idle_default
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
