@@ -1313,7 +1313,7 @@ name|setlogmask
 argument_list|(
 name|LOG_UPTO
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|)
 argument_list|)
 expr_stmt|;
