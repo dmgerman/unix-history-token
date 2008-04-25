@@ -108,10 +108,10 @@ argument_list|)
 name|uns_list
 expr_stmt|;
 comment|/* Status list */
-name|lwpid_t
-name|uns_tid
+name|pid_t
+name|uns_pid
 decl_stmt|;
-comment|/* current thread id */
+comment|/* current process id */
 name|int
 name|uns_node_flag
 decl_stmt|;
@@ -396,11 +396,6 @@ name|struct
 name|unionfs_node
 modifier|*
 name|unp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|,
 name|struct
 name|unionfs_node_status

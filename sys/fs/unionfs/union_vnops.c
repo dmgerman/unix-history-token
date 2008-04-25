@@ -2318,8 +2318,6 @@ name|unionfs_tryrem_node_status
 argument_list|(
 name|unp
 argument_list|,
-name|td
-argument_list|,
 name|unsp
 argument_list|)
 expr_stmt|;
@@ -2642,8 +2640,6 @@ label|:
 name|unionfs_tryrem_node_status
 argument_list|(
 name|unp
-argument_list|,
-name|td
 argument_list|,
 name|unsp
 argument_list|)
@@ -4202,10 +4198,6 @@ name|unionfs_tryrem_node_status
 argument_list|(
 name|unp
 argument_list|,
-name|ap
-operator|->
-name|a_td
-argument_list|,
 name|unsp
 argument_list|)
 expr_stmt|;
@@ -4349,10 +4341,6 @@ name|unionfs_tryrem_node_status
 argument_list|(
 name|unp
 argument_list|,
-name|ap
-operator|->
-name|a_td
-argument_list|,
 name|unsp
 argument_list|)
 expr_stmt|;
@@ -4465,10 +4453,6 @@ expr_stmt|;
 name|unionfs_tryrem_node_status
 argument_list|(
 name|unp
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|,
 name|unsp
 argument_list|)
@@ -6945,8 +6929,6 @@ name|unionfs_tryrem_node_status
 argument_list|(
 name|unp
 argument_list|,
-name|td
-argument_list|,
 name|unsp
 argument_list|)
 expr_stmt|;
@@ -9076,8 +9058,6 @@ else|else
 name|unionfs_tryrem_node_status
 argument_list|(
 name|unp
-argument_list|,
-name|td
 argument_list|,
 name|unsp
 argument_list|)
