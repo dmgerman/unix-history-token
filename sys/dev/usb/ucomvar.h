@@ -559,6 +559,24 @@ end_decl_stmt
 
 begin_function_decl
 name|int
+name|ucom_attach_tty
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ucom_attach
 parameter_list|(
 name|struct
