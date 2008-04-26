@@ -4629,6 +4629,7 @@ name|real_dst
 expr_stmt|;
 name|ip_dn_io_ptr
 argument_list|(
+operator|&
 name|m
 argument_list|,
 name|DN_TO_BDG_FWD
