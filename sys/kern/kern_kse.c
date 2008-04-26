@@ -614,6 +614,9 @@ name|KSE
 name|struct
 name|kse_thr_mailbox
 name|tmbx
+decl_stmt|,
+modifier|*
+name|tmbxp
 decl_stmt|;
 name|struct
 name|kse_upcall
@@ -622,7 +625,22 @@ name|ku
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|flags
 decl_stmt|;
+comment|/* 	 * Put the arguments in local variables, to allow uap to 	 * point into the trapframe. We clobber the trapframe as 	 * part of setting a new context. 	 */
+name|tmbxp
+operator|=
+name|uap
+operator|->
+name|tmbx
+expr_stmt|;
+name|flags
+operator|=
+name|uap
+operator|->
+name|flags
+expr_stmt|;
 name|thread_lock
 argument_list|(
 name|td
@@ -665,9 +683,7 @@ expr_stmt|;
 name|error
 operator|=
 operator|(
-name|uap
-operator|->
-name|tmbx
+name|tmbxp
 operator|==
 name|NULL
 operator|)
@@ -685,9 +701,7 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-name|uap
-operator|->
-name|tmbx
+name|tmbxp
 argument_list|,
 operator|&
 name|tmbx
@@ -704,8 +718,6 @@ operator|!
 name|error
 operator|&&
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|KSE_SWITCHIN_SETTMBX
@@ -726,9 +738,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|uap
-operator|->
-name|tmbx
+name|tmbxp
 argument_list|)
 operator|!=
 literal|0
@@ -766,9 +776,7 @@ block|{
 name|suword32
 argument_list|(
 operator|&
-name|uap
-operator|->
-name|tmbx
+name|tmbxp
 operator|->
 name|tm_lwp
 argument_list|,
@@ -779,8 +787,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|KSE_SWITCHIN_SETTMBX
@@ -790,9 +796,7 @@ name|td
 operator|->
 name|td_mailbox
 operator|=
-name|uap
-operator|->
-name|tmbx
+name|tmbxp
 expr_stmt|;
 name|td
 operator|->
