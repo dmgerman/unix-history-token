@@ -83,7 +83,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|devname
+name|devnamep
 init|=
 literal|"/dev/dtrace/helper"
 decl_stmt|;
@@ -251,6 +251,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -259,6 +268,33 @@ name|(
 name|dtrace_dof_init
 name|)
 end_pragma
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|static
+name|void
+name|dtrace_dof_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(constructor
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -293,6 +329,12 @@ directive|endif
 name|dof_helper_t
 name|dh
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|Link_map
 modifier|*
 name|lmp
@@ -300,6 +342,20 @@ decl_stmt|;
 name|Lmid_t
 name|lmid
 decl_stmt|;
+else|#
+directive|else
+name|struct
+name|link_map
+modifier|*
+name|lmp
+decl_stmt|;
+name|u_long
+name|lmid
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|fd
 decl_stmt|;
@@ -347,6 +403,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 if|if
 condition|(
 name|dlinfo
@@ -372,6 +434,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -476,6 +540,9 @@ name|e_type
 operator|==
 name|ET_DYN
 condition|?
+operator|(
+name|uintptr_t
+operator|)
 name|lmp
 operator|->
 name|l_addr
@@ -550,7 +617,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|devname
+name|devnamep
 operator|=
 name|p
 expr_stmt|;
@@ -561,7 +628,7 @@ name|fd
 operator|=
 name|open64
 argument_list|(
-name|devname
+name|devnamep
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -576,7 +643,7 @@ literal|1
 argument_list|,
 literal|"failed to open helper device %s"
 argument_list|,
-name|devname
+name|devnamep
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the device path wasn't explicitly set, try again with 		 * the old device path. 		 */
@@ -587,7 +654,7 @@ operator|!=
 name|NULL
 condition|)
 return|return;
-name|devname
+name|devnamep
 operator|=
 name|olddevname
 expr_stmt|;
@@ -598,7 +665,7 @@ name|fd
 operator|=
 name|open64
 argument_list|(
-name|devname
+name|devnamep
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -613,7 +680,7 @@ literal|1
 argument_list|,
 literal|"failed to open helper device %s"
 argument_list|,
-name|devname
+name|devnamep
 argument_list|)
 expr_stmt|;
 return|return;
@@ -668,6 +735,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -676,6 +752,33 @@ name|(
 name|dtrace_dof_fini
 name|)
 end_pragma
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|static
+name|void
+name|dtrace_dof_fini
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(destructor
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -695,7 +798,7 @@ name|fd
 operator|=
 name|open64
 argument_list|(
-name|devname
+name|devnamep
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -710,7 +813,7 @@ literal|1
 argument_list|,
 literal|"failed to open helper device %s"
 argument_list|,
-name|devname
+name|devnamep
 argument_list|)
 expr_stmt|;
 return|return;
