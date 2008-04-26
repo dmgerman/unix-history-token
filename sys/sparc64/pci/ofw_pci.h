@@ -28,12 +28,6 @@ name|ofw_pci_intr_t
 typedef|;
 end_typedef
 
-begin_include
-include|#
-directive|include
-file|"ofw_pci_if.h"
-end_include
-
 begin_comment
 comment|/* PCI range child spaces. XXX: are these MI? */
 end_comment
