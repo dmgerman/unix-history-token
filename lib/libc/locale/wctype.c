@@ -75,6 +75,8 @@ modifier|*
 name|property
 parameter_list|)
 block|{
+specifier|static
+specifier|const
 struct|struct
 block|{
 specifier|const
