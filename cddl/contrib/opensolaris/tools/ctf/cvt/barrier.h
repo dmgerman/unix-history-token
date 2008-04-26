@@ -30,43 +30,11 @@ begin_comment
 comment|/*  * APIs for the barrier synchronization primitive.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<synch.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<semaphore.h>
-end_include
-
-begin_typedef
-typedef|typedef
-name|sem_t
-name|sema_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

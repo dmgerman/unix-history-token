@@ -48,12 +48,6 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"memory.h"
-end_include
-
 begin_function
 specifier|static
 name|void

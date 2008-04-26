@@ -625,19 +625,7 @@ name|D_LQUANT_MATCHLIM
 block|,
 comment|/* lquantize() mismatch on limit */
 name|D_LQUANT_MATCHSTEP
-block|,
 comment|/* lquantize() mismatch on step */
-name|D_PRINTM_ADDR
-block|,
-comment|/* printm() memref bad type */
-name|D_PRINTM_SIZE
-block|,
-comment|/* printm() size bad type */
-name|D_PRINTT_ADDR
-block|,
-comment|/* printt() typeref bad type */
-name|D_PRINTT_SIZE
-comment|/* printt() size bad type */
 block|}
 name|dt_errtag_t
 typedef|;

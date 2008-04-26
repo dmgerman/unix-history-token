@@ -41,22 +41,9 @@ directive|endif
 include|#
 directive|include
 file|<sys/types.h>
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
 include|#
 directive|include
 file|<sys/machelf.h>
-else|#
-directive|else
-include|#
-directive|include
-file|<sys/elf.h>
-endif|#
-directive|endif
 comment|/*  * An Alist implements array lists. The functionality is similar to  * that of a linked list. However, an Alist is represented by a single  * contigious allocation of memory. The head of the memory is a header  * that contains control information for the list. Following the header  * is an array used to hold the user data. In the type definitions that  * follow, we define these as an array with a single element, but when  * we allocate the memory, we actually allocate the amount of memory needed.  *  * There are two "flavors" of array list:  *  *	Alist - Contain arbitrary data, usually structs.  *	APlist - Contain pointers to data allocated elsewhere.  *  * This differentiation is useful, because pointer lists are heavily  * used, and support a slightly different set of operations that are  * unique to their purpose.  *  * Array lists are initially represented by a NULL pointer. The memory  * for the list is only allocated if an item is inserted. This is very  * efficient for data structures that may or may not be needed for a  * given linker operation --- you only pay for what you use. In addition:  *  *	- Array lists grow as needed (memory is reallocated as necessary)  *	- Data is kept contiguously (no unused holes in between elements)  *		at the beginning of the data area. This locality has  *		good cache behavior, as access to adjacent items are  *		highly likely to be in the same page of memory.  *	- Insert/Delete operations at the end of the list are very  *		efficient. However, insert/delete operations elsewhere  *		will cause a relatively expensive overlapped memory  *		copy of the data following the insert/delete location.  *	- As with any generic memory alloctor (i.e. malloc()/free()),  *		array lists are not type safe for the data they contain.  *		Data is managed as (void *) pointers to data of a given  *		length, so the Alist module cannot prevent the caller from  *		inserting/extracting the wrong type of data. The caller  *		must guard against this.  *	- To free an array list, simply call the standard free() function  *		on the list pointer.  */
 comment|/*  * Aliste is used to represent list indexes, offsets, and sizes.  */
 typedef|typedef

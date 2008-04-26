@@ -417,6 +417,13 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|debug_level
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|debug_parse
 init|=
@@ -440,7 +447,6 @@ name|char
 modifier|*
 name|cp
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|fmt
@@ -606,19 +612,16 @@ specifier|static
 name|void
 name|_expected
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|who
 parameter_list|,
 comment|/* what function, or part thereof, is reporting */
-specifier|const
 name|char
 modifier|*
 name|what
 parameter_list|,
 comment|/* what was expected */
-specifier|const
 name|char
 modifier|*
 name|where
@@ -675,7 +678,6 @@ parameter_list|(
 name|tdata_t
 modifier|*
 name|td
-name|__unused
 parameter_list|)
 block|{
 name|int
@@ -799,7 +801,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|read_tid
@@ -971,8 +972,6 @@ parameter_list|)
 block|{
 name|iitype_t
 name|iitype
-init|=
-literal|0
 decl_stmt|;
 name|tdesc_t
 modifier|*
@@ -1213,8 +1212,6 @@ name|tdp
 decl_stmt|;
 name|iitype_t
 name|iitype
-init|=
-literal|0
 decl_stmt|;
 comment|/* 	 * name:G		global variable 	 * name:S		static variable 	 */
 switch|switch
@@ -5489,7 +5486,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|tdesc_t
 modifier|*
 name|lookup_name
@@ -5502,7 +5498,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name1
+name|name
 parameter_list|)
 block|{
 name|int
@@ -5510,7 +5506,7 @@ name|bucket
 init|=
 name|compute_sum
 argument_list|(
-name|name1
+name|name
 argument_list|)
 decl_stmt|;
 name|tdesc_t
@@ -5556,7 +5552,7 @@ name|tdp
 operator|->
 name|t_name
 argument_list|,
-name|name1
+name|name
 argument_list|)
 operator|==
 literal|0
@@ -5623,7 +5619,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name1
+name|name
 parameter_list|)
 block|{
 return|return
@@ -5632,7 +5628,7 @@ name|lookup_name
 argument_list|(
 name|name_table
 argument_list|,
-name|name1
+name|name
 argument_list|)
 operator|)
 return|;
@@ -6013,22 +6009,15 @@ specifier|static
 name|int
 name|resolve_typed_bitfields_cb
 parameter_list|(
-name|void
+name|mlist_t
 modifier|*
-name|arg
+name|ml
 parameter_list|,
 name|void
 modifier|*
 name|private
-name|__unused
 parameter_list|)
 block|{
-name|mlist_t
-modifier|*
-name|ml
-init|=
-name|arg
-decl_stmt|;
 name|tdesc_t
 modifier|*
 name|tdp
@@ -6206,6 +6195,13 @@ name|list_iter
 argument_list|(
 name|typedbitfldmems
 argument_list|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|resolve_typed_bitfields_cb
 argument_list|,
 name|NULL

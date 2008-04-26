@@ -103,7 +103,6 @@ typedef|typedef
 struct|struct
 name|tdesc_ops
 block|{
-specifier|const
 name|char
 modifier|*
 name|name
@@ -253,13 +252,9 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"Adding mapping %u<%x> => %u<%x>\n"
+literal|"Adding mapping %u => %u\n"
 argument_list|,
 name|srcid
-argument_list|,
-name|srcid
-argument_list|,
-name|tgtid
 argument_list|,
 name|tgtid
 argument_list|)
@@ -274,9 +269,6 @@ argument_list|,
 operator|(
 name|void
 operator|*
-operator|)
-operator|(
-name|uintptr_t
 operator|)
 name|srcid
 argument_list|,
@@ -303,17 +295,11 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|srcid
 argument_list|,
 operator|(
 name|void
 operator|*
-operator|)
-operator|(
-name|uintptr_t
 operator|)
 name|tgtid
 argument_list|)
@@ -334,8 +320,7 @@ name|int
 name|srcid
 parameter_list|)
 block|{
-name|void
-modifier|*
+name|long
 name|ltgtid
 decl_stmt|;
 if|if
@@ -347,9 +332,6 @@ argument_list|,
 operator|(
 name|void
 operator|*
-operator|)
-operator|(
-name|uintptr_t
 operator|)
 name|srcid
 argument_list|,
@@ -365,7 +347,7 @@ condition|)
 return|return
 operator|(
 operator|(
-name|uintptr_t
+name|int
 operator|)
 name|ltgtid
 operator|)
@@ -453,7 +435,6 @@ parameter_list|,
 name|equiv_data_t
 modifier|*
 name|ed
-name|__unused
 parameter_list|)
 block|{
 name|intr_t
@@ -687,9 +668,6 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
-name|int
-operator|)
 name|fn1
 operator|->
 name|fn_nargs
@@ -1005,7 +983,6 @@ parameter_list|,
 name|equiv_data_t
 modifier|*
 name|ed
-name|__unused
 parameter_list|)
 block|{
 name|elist_t
@@ -1103,17 +1080,14 @@ parameter_list|(
 name|tdesc_t
 modifier|*
 name|stdp
-name|__unused
 parameter_list|,
 name|tdesc_t
 modifier|*
 name|ttdp
-name|__unused
 parameter_list|,
 name|equiv_data_t
 modifier|*
 name|ed
-name|__unused
 parameter_list|)
 block|{
 comment|/* foul, evil, and very bad - this is a "shouldn't happen" */
@@ -1203,16 +1177,7 @@ function_decl|(
 modifier|*
 name|equiv
 function_decl|)
-parameter_list|(
-name|tdesc_t
-modifier|*
-parameter_list|,
-name|tdesc_t
-modifier|*
-parameter_list|,
-name|equiv_data_t
-modifier|*
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|int
 name|mapping
@@ -1475,17 +1440,9 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"equiv_node matched %d<%x> %d<%x>\n"
+literal|"equiv_node matched %d %d\n"
 argument_list|,
 name|ctdp
-operator|->
-name|t_id
-argument_list|,
-name|ctdp
-operator|->
-name|t_id
-argument_list|,
-name|mtdp
 operator|->
 name|t_id
 argument_list|,
@@ -1533,7 +1490,6 @@ name|tdesc_t
 modifier|*
 modifier|*
 name|ctdpp
-name|__unused
 parameter_list|,
 name|void
 modifier|*
@@ -1591,7 +1547,6 @@ name|tdesc_t
 modifier|*
 modifier|*
 name|ctdpp
-name|__unused
 parameter_list|,
 name|void
 modifier|*
@@ -1653,11 +1608,7 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"map_td_tree_post on %d<%x> %s\n"
-argument_list|,
-name|ctdp
-operator|->
-name|t_id
+literal|"map_td_tree_post on %d %s\n"
 argument_list|,
 name|ctdp
 operator|->
@@ -1722,9 +1673,7 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"Creating new defn type %d<%x>\n"
-argument_list|,
-name|id
+literal|"Creating new defn type %d\n"
 argument_list|,
 name|id
 argument_list|)
@@ -1860,9 +1809,7 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"Creating new type %d<%x>\n"
-argument_list|,
-name|id
+literal|"Creating new type %d\n"
 argument_list|,
 name|id
 argument_list|)
@@ -1927,7 +1874,6 @@ name|tdesc_t
 modifier|*
 modifier|*
 name|ctdpp
-name|__unused
 parameter_list|,
 name|void
 modifier|*
@@ -2014,19 +1960,9 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"Self check found %d<%x> in %d<%x>\n"
+literal|"Self check found %d in %d\n"
 argument_list|,
 name|ctdp
-operator|->
-name|t_id
-argument_list|,
-name|ctdp
-operator|->
-name|t_id
-argument_list|,
-name|ed
-operator|.
-name|ed_tgt
 operator|->
 name|t_id
 argument_list|,
@@ -2087,11 +2023,7 @@ block|{
 comment|/* 		 * We didn't find an equivalent node using the quick way (going 		 * through the hash normally), but we did find it by iterating 		 * through the entire hash.  This usually means that the hash 		 * function is broken. 		 */
 name|aborterr
 argument_list|(
-literal|"Self-unique second pass for %d<%x> (%s) == %d<%x>\n"
-argument_list|,
-name|ctdp
-operator|->
-name|t_id
+literal|"Self-unique second pass for %d (%s) == %d\n"
 argument_list|,
 name|ctdp
 operator|->
@@ -2101,12 +2033,6 @@ name|tdesc_name
 argument_list|(
 name|ctdp
 argument_list|)
-argument_list|,
-name|ed
-operator|.
-name|ed_tgt
-operator|->
-name|t_id
 argument_list|,
 name|ed
 operator|.
@@ -2132,9 +2058,7 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"Creating new type %d<%x>\n"
-argument_list|,
-name|id
+literal|"Creating new type %d\n"
 argument_list|,
 name|id
 argument_list|)
@@ -2894,9 +2818,7 @@ literal|0
 condition|)
 name|aborterr
 argument_list|(
-literal|"failed to get mapping for tid %d<%x>\n"
-argument_list|,
-name|oldid
+literal|"failed to get mapping for tid %d\n"
 argument_list|,
 name|oldid
 argument_list|)
@@ -2967,17 +2889,11 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"Remap couldn't find %d<%x> (from %d<%x>)\n"
+literal|"Remap couldn't find %d (from %d)\n"
 argument_list|,
 name|template
 operator|.
 name|t_id
-argument_list|,
-name|template
-operator|.
-name|t_id
-argument_list|,
-name|oldid
 argument_list|,
 name|oldid
 argument_list|)
@@ -3116,7 +3032,6 @@ parameter_list|,
 name|merge_cb_data_t
 modifier|*
 name|mcd
-name|__unused
 parameter_list|)
 block|{
 name|tdesc_t
@@ -3350,9 +3265,6 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
-name|int
-operator|)
 name|ofn
 operator|->
 name|fn_nargs
@@ -3640,12 +3552,6 @@ argument_list|(
 name|omem
 operator|->
 name|ml_name
-condition|?
-name|omem
-operator|->
-name|ml_name
-else|:
-literal|"empty omem->ml_name"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3710,7 +3616,6 @@ parameter_list|,
 name|merge_cb_data_t
 modifier|*
 name|mcd
-name|__unused
 parameter_list|)
 block|{
 name|tdesc_t
@@ -3884,16 +3789,13 @@ parameter_list|(
 name|tdesc_t
 modifier|*
 name|old
-name|__unused
 parameter_list|,
 name|int
 name|newselfid
-name|__unused
 parameter_list|,
 name|merge_cb_data_t
 modifier|*
 name|mcd
-name|__unused
 parameter_list|)
 block|{
 name|assert
@@ -4038,7 +3940,7 @@ name|map
 init|=
 name|private
 decl_stmt|;
-name|void
+name|tdesc_t
 modifier|*
 name|defn
 decl_stmt|;
@@ -4191,7 +4093,7 @@ name|int
 name|defnid
 init|=
 operator|(
-name|uintptr_t
+name|int
 operator|)
 name|value
 decl_stmt|;
@@ -4622,7 +4524,7 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"trying to conjure %d %s (%d,<%x>) as %d,<%x>\n"
+literal|"trying to conjure %d %s (%d) as %d\n"
 argument_list|,
 name|oldtdp
 operator|->
@@ -4636,12 +4538,6 @@ argument_list|,
 name|oldtdp
 operator|->
 name|t_id
-argument_list|,
-name|oldtdp
-operator|->
-name|t_id
-argument_list|,
-name|newid
 argument_list|,
 name|newid
 argument_list|)
@@ -4980,6 +4876,10 @@ name|md_tdtba
 argument_list|,
 name|add_tdtba_cb
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mcd
 argument_list|)
 expr_stmt|;
@@ -5003,6 +4903,10 @@ name|md_iitba
 argument_list|,
 name|add_iitba_cb
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mcd
 argument_list|)
 expr_stmt|;
@@ -5048,6 +4952,10 @@ name|md_tdtbr
 argument_list|,
 name|add_tdtbr_cb
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mcd
 argument_list|)
 expr_stmt|;

@@ -942,6 +942,7 @@ modifier|*
 name|func
 function_decl|)
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 parameter_list|,
