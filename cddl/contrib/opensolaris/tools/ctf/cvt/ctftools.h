@@ -195,6 +195,7 @@ name|int
 name|debug_parse
 decl_stmt|;
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|curhdr
@@ -916,7 +917,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|void
+name|iidesc_t
 modifier|*
 parameter_list|,
 name|void
@@ -964,7 +965,7 @@ function_decl|;
 name|void
 name|iidesc_free
 parameter_list|(
-name|void
+name|iidesc_t
 modifier|*
 parameter_list|,
 name|void
@@ -1258,6 +1259,7 @@ parameter_list|,
 name|Elf
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1272,6 +1274,7 @@ parameter_list|,
 name|Elf
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1386,7 +1389,6 @@ parameter_list|(
 name|tdata_t
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1488,7 +1490,6 @@ function_decl|;
 name|void
 name|terminate
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1498,7 +1499,6 @@ function_decl|;
 name|void
 name|aborterr
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1512,9 +1512,7 @@ name|void
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 parameter_list|)
 function_decl|;
 name|void
@@ -1534,7 +1532,6 @@ function_decl|;
 name|void
 name|warning
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1546,7 +1543,6 @@ name|vadebug
 parameter_list|(
 name|int
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1558,26 +1554,10 @@ name|debug
 parameter_list|(
 name|int
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
 modifier|...
-parameter_list|)
-function_decl|;
-name|void
-name|watch_dump
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-name|void
-name|watch_set
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 ifdef|#

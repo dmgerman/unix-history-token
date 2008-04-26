@@ -23,6 +23,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libctf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mman.h>
 end_include
 
@@ -151,7 +157,6 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|__unused
 name|size_t
 name|size
 parameter_list|)
@@ -176,11 +181,6 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|strerror
 argument_list|(
 name|err

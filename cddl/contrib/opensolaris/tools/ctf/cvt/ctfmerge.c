@@ -48,25 +48,11 @@ directive|include
 file|<assert.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<synch.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -92,25 +78,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<alloca.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -130,25 +102,11 @@ directive|include
 file|<sys/mman.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/sysconf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -316,15 +274,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
 
 begin_function
 specifier|static
@@ -520,11 +469,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -1881,13 +1825,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 if|if
 condition|(
 name|dounlink
@@ -1908,8 +1845,6 @@ name|outfile
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2474,12 +2409,6 @@ name|wq
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
 name|sigset
 argument_list|(
 name|SIGINT
@@ -2501,31 +2430,6 @@ argument_list|,
 name|handle_sig
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|handle_sig
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|handle_sig
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|handle_sig
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|pthread_sigmask
 argument_list|(
 name|SIG_UNBLOCK

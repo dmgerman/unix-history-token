@@ -224,7 +224,6 @@ parameter_list|,
 name|void
 modifier|*
 name|private
-name|__unused
 parameter_list|)
 block|{
 return|return
@@ -544,12 +543,10 @@ parameter_list|(
 name|void
 modifier|*
 name|data
-name|__unused
 parameter_list|,
 name|void
 modifier|*
 name|private
-name|__unused
 parameter_list|)
 block|{
 return|return

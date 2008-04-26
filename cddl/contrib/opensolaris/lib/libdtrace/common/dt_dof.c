@@ -20,25 +20,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/sysmacros.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -46,25 +32,11 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<alloca.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

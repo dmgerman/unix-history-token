@@ -109,6 +109,7 @@ file|"traverse.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|curhdr
@@ -140,7 +141,6 @@ parameter_list|,
 name|void
 modifier|*
 name|private
-name|__unused
 parameter_list|)
 block|{
 name|tdesc_t
@@ -234,7 +234,6 @@ parameter_list|,
 name|void
 modifier|*
 name|private
-name|__unused
 parameter_list|)
 block|{
 name|tdesc_t
@@ -661,6 +660,7 @@ name|Elf
 modifier|*
 name|elf
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -827,6 +827,10 @@ name|stack_push
 argument_list|(
 name|file_stack
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|file
 argument_list|)
 expr_stmt|;
@@ -1145,6 +1149,10 @@ name|stack_push
 argument_list|(
 name|file_stack
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|curhdr
 argument_list|)
 expr_stmt|;
