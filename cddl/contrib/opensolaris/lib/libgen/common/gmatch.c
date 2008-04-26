@@ -30,6 +30,15 @@ begin_comment
 comment|/*LINTLIBRARY*/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -39,11 +48,30 @@ name|=
 name|_gmatch
 end_pragma
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|"gen_synonyms.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -69,6 +97,15 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -80,6 +117,49 @@ include|#
 directive|include
 file|"_range.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* DOODAD */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|multibyte
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|WCHAR_CSMASK
+value|0x30000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|valid_range
+parameter_list|(
+name|c1
+parameter_list|,
+name|c2
+parameter_list|)
+define|\
+value|(((c1)& WCHAR_CSMASK) == ((c2)& WCHAR_CSMASK)&& \     ((c1)> 0xff || !iscntrl((int)c1))&& ((c2)> 0xff || \     !iscntrl((int)c2)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
