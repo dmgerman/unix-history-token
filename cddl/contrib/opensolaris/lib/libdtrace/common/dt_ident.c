@@ -14,11 +14,25 @@ name|ident
 literal|"%Z%%M%	%I%	%E% SMI"
 end_pragma
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/sysmacros.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -32,11 +46,25 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<alloca.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -56,11 +84,25 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/procfs_isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
