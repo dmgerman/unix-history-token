@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|MUTEX_ADAPTIVE_SPINS
-value|200
+value|2000
 end_define
 
 begin_comment
