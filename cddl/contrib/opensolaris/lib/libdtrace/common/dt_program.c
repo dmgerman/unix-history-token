@@ -50,11 +50,25 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<alloca.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -580,6 +594,9 @@ modifier|*
 name|pip
 parameter_list|)
 block|{
+name|dtrace_enable_io_t
+name|args
+decl_stmt|;
 name|void
 modifier|*
 name|dof
@@ -621,6 +638,18 @@ operator|-
 literal|1
 operator|)
 return|;
+name|args
+operator|.
+name|dof
+operator|=
+name|dof
+expr_stmt|;
+name|args
+operator|.
+name|n_matched
+operator|=
+literal|0
+expr_stmt|;
 name|n
 operator|=
 name|dt_ioctl
@@ -629,7 +658,8 @@ name|dtp
 argument_list|,
 name|DTRACEIOC_ENABLE
 argument_list|,
-name|dof
+operator|&
+name|args
 argument_list|)
 expr_stmt|;
 name|dtrace_dof_destroy
@@ -703,7 +733,9 @@ name|pip
 operator|->
 name|dpi_matches
 operator|+=
-name|n
+name|args
+operator|.
+name|n_matched
 expr_stmt|;
 return|return
 operator|(
