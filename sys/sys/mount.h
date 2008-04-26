@@ -56,6 +56,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * NOTE: When changing statfs structure, mount structure, MNT_* flags or  * MNTK_* flags also update DDB show mount command in vfs_subr.c.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
