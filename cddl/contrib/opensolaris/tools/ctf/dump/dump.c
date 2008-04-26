@@ -888,14 +888,12 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-comment|/* LINTED - pointer alignment */
-specifier|const
-name|ctf_lblent_t
+name|void
 modifier|*
-name|ctl
+name|v
 init|=
 operator|(
-name|ctf_lblent_t
+name|void
 operator|*
 operator|)
 operator|(
@@ -907,6 +905,13 @@ name|hp
 operator|->
 name|cth_lbloff
 operator|)
+decl_stmt|;
+specifier|const
+name|ctf_lblent_t
+modifier|*
+name|ctl
+init|=
+name|v
 decl_stmt|;
 name|ulong_t
 name|i
@@ -1200,14 +1205,12 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-comment|/* LINTED - pointer alignment */
-specifier|const
-name|ushort_t
+name|void
 modifier|*
-name|idp
+name|v
 init|=
 operator|(
-name|ushort_t
+name|void
 operator|*
 operator|)
 operator|(
@@ -1219,6 +1222,13 @@ name|hp
 operator|->
 name|cth_objtoff
 operator|)
+decl_stmt|;
+specifier|const
+name|ushort_t
+modifier|*
+name|idp
+init|=
+name|v
 decl_stmt|;
 name|ulong_t
 name|n
@@ -1340,6 +1350,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|n
 condition|;
 name|i
@@ -1463,14 +1476,12 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-comment|/* LINTED - pointer alignment */
-specifier|const
-name|ushort_t
+name|void
 modifier|*
-name|fp
+name|v
 init|=
 operator|(
-name|ushort_t
+name|void
 operator|*
 operator|)
 operator|(
@@ -1483,14 +1494,17 @@ operator|->
 name|cth_funcoff
 operator|)
 decl_stmt|;
-comment|/* LINTED - pointer alignment */
 specifier|const
 name|ushort_t
 modifier|*
-name|end
+name|fp
 init|=
+name|v
+decl_stmt|;
+name|v
+operator|=
 operator|(
-name|ushort_t
+name|void
 operator|*
 operator|)
 operator|(
@@ -1502,6 +1516,13 @@ name|hp
 operator|->
 name|cth_typeoff
 operator|)
+expr_stmt|;
+specifier|const
+name|ushort_t
+modifier|*
+name|end
+init|=
+name|v
 decl_stmt|;
 name|ulong_t
 name|id
@@ -1886,14 +1907,12 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-comment|/* LINTED - pointer alignment */
-specifier|const
-name|ctf_type_t
+name|void
 modifier|*
-name|tp
+name|v
 init|=
 operator|(
-name|ctf_type_t
+name|void
 operator|*
 operator|)
 operator|(
@@ -1906,14 +1925,17 @@ operator|->
 name|cth_typeoff
 operator|)
 decl_stmt|;
-comment|/* LINTED - pointer alignment */
 specifier|const
 name|ctf_type_t
 modifier|*
-name|end
+name|tp
 init|=
+name|v
+decl_stmt|;
+name|v
+operator|=
 operator|(
-name|ctf_type_t
+name|void
 operator|*
 operator|)
 operator|(
@@ -1925,6 +1947,13 @@ name|hp
 operator|->
 name|cth_stroff
 operator|)
+expr_stmt|;
+specifier|const
+name|ctf_type_t
+modifier|*
+name|end
+init|=
+name|v
 decl_stmt|;
 name|ulong_t
 name|id
@@ -2068,7 +2097,6 @@ name|void
 modifier|*
 name|ptr
 decl_stmt|;
-specifier|const
 name|ctf_array_t
 modifier|*
 name|ap
@@ -2182,7 +2210,9 @@ operator|.
 name|ptr
 operator|=
 operator|(
-name|caddr_t
+specifier|const
+name|char
+operator|*
 operator|)
 name|tp
 operator|+
@@ -2675,7 +2705,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %s (%d bytes)\n"
+literal|" %s (%zd bytes)\n"
 argument_list|,
 name|ref_to_str
 argument_list|(
@@ -2743,6 +2773,11 @@ name|lmp
 operator|->
 name|ctlm_type
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|CTF_LMEM_OFFSET
 argument_list|(
 name|u
@@ -4108,6 +4143,7 @@ name|GElf_Ehdr
 modifier|*
 name|ehdr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|secname
@@ -4249,6 +4285,8 @@ decl_stmt|;
 name|ctf_header_t
 modifier|*
 name|hp
+init|=
+name|NULL
 decl_stmt|;
 name|Elf
 modifier|*
@@ -4521,6 +4559,8 @@ block|{
 name|Elf_Data
 modifier|*
 name|dp
+init|=
+name|NULL
 decl_stmt|;
 name|Elf_Scn
 modifier|*
@@ -4798,17 +4838,21 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-comment|/* LINTED - pointer alignment */
-name|pp
-operator|=
+name|void
+modifier|*
+name|v
+init|=
 operator|(
-specifier|const
-name|ctf_preamble_t
+name|void
 operator|*
 operator|)
 name|cd
 operator|.
 name|cd_ctfdata
+decl_stmt|;
+name|pp
+operator|=
+name|v
 expr_stmt|;
 if|if
 condition|(
@@ -4834,16 +4878,19 @@ operator|==
 name|CTF_VERSION
 condition|)
 block|{
-comment|/* LINTED - pointer alignment */
-name|hp
+name|v
 operator|=
 operator|(
-name|ctf_header_t
+name|void
 operator|*
 operator|)
 name|cd
 operator|.
 name|cd_ctfdata
+expr_stmt|;
+name|hp
+operator|=
+name|v
 expr_stmt|;
 name|cd
 operator|.
@@ -5311,6 +5358,9 @@ operator|.
 name|cd_ctflen
 argument_list|)
 operator|!=
+operator|(
+name|int
+operator|)
 name|cd
 operator|.
 name|cd_ctflen
