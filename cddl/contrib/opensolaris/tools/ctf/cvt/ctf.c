@@ -154,6 +154,7 @@ specifier|static
 name|void
 name|parseterminate
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -211,6 +212,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ctf_buf_grow
 parameter_list|(
@@ -277,6 +279,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|ctf_buf_t
 modifier|*
 name|ctf_buf_new
@@ -318,6 +321,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ctf_buf_free
 parameter_list|(
@@ -350,6 +354,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|uint_t
 name|ctf_buf_cur
 parameter_list|(
@@ -373,6 +378,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ctf_buf_write
 parameter_list|(
@@ -380,8 +386,8 @@ name|ctf_buf_t
 modifier|*
 name|b
 parameter_list|,
-specifier|const
 name|void
+specifier|const
 modifier|*
 name|p
 parameter_list|,
@@ -455,6 +461,7 @@ name|p
 operator|=
 operator|(
 name|char
+specifier|const
 operator|*
 operator|)
 name|p
@@ -474,15 +481,27 @@ specifier|static
 name|int
 name|write_label
 parameter_list|(
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|)
+block|{
 name|labelent_t
 modifier|*
 name|le
-parameter_list|,
+init|=
+name|arg1
+decl_stmt|;
 name|ctf_buf_t
 modifier|*
 name|b
-parameter_list|)
-block|{
+init|=
+name|arg2
+decl_stmt|;
 name|ctf_lblent_t
 name|ctl
 decl_stmt|;
@@ -947,15 +966,27 @@ specifier|static
 name|int
 name|write_type
 parameter_list|(
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|)
+block|{
 name|tdesc_t
 modifier|*
 name|tp
-parameter_list|,
+init|=
+name|arg1
+decl_stmt|;
 name|ctf_buf_t
 modifier|*
 name|b
-parameter_list|)
-block|{
+init|=
+name|arg2
+decl_stmt|;
 name|elist_t
 modifier|*
 name|ep
@@ -1971,6 +2002,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|tp
 operator|->
 name|t_fndef
@@ -2322,7 +2356,6 @@ specifier|static
 name|ssize_t
 name|compress_buffer
 parameter_list|(
-specifier|const
 name|void
 modifier|*
 name|buf
@@ -2388,10 +2421,6 @@ name|rb_zstr
 operator|.
 name|next_in
 operator|=
-operator|(
-name|Bytef
-operator|*
-operator|)
 name|buf
 expr_stmt|;
 name|rb
@@ -2720,7 +2749,6 @@ specifier|static
 name|ssize_t
 name|bcopy_data
 parameter_list|(
-specifier|const
 name|void
 modifier|*
 name|buf
@@ -3145,13 +3173,6 @@ name|iib_td
 operator|->
 name|td_labels
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|write_label
 argument_list|,
 name|buf
@@ -3268,13 +3289,6 @@ name|iiburst
 operator|->
 name|iib_types
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|write_type
 argument_list|,
 name|buf
@@ -3359,6 +3373,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|get_ctt_size
 parameter_list|(
@@ -3471,16 +3486,21 @@ operator|->
 name|cth_stroff
 condition|)
 block|{
-comment|/* LINTED - pointer alignment */
+name|void
+modifier|*
+name|v
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+decl_stmt|;
 name|ctf_type_t
 modifier|*
 name|ctt
 init|=
-operator|(
-name|ctf_type_t
-operator|*
-operator|)
-name|dptr
+name|v
 decl_stmt|;
 name|size_t
 name|vlen
@@ -3740,21 +3760,28 @@ decl_stmt|;
 name|char
 modifier|*
 name|baselabel
+init|=
+name|NULL
 decl_stmt|;
 name|ctf_lblent_t
 modifier|*
 name|ctl
 decl_stmt|;
-comment|/* LINTED - pointer alignment */
+name|void
+modifier|*
+name|v
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+name|buf
+decl_stmt|;
 for|for
 control|(
 name|ctl
 operator|=
-operator|(
-name|ctf_lblent_t
-operator|*
-operator|)
-name|buf
+name|v
 init|;
 operator|(
 name|caddr_t
@@ -3986,7 +4013,16 @@ operator|+=
 literal|2
 control|)
 block|{
-comment|/* LINTED - pointer alignment */
+name|void
+modifier|*
+name|v
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+decl_stmt|;
 name|ushort_t
 name|id
 init|=
@@ -3996,7 +4032,7 @@ operator|(
 name|ushort_t
 operator|*
 operator|)
-name|dptr
+name|v
 operator|)
 decl_stmt|;
 name|iidesc_t
@@ -4262,7 +4298,16 @@ operator|+
 name|bufsz
 condition|)
 block|{
-comment|/* LINTED - pointer alignment */
+name|void
+modifier|*
+name|v
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+decl_stmt|;
 name|info
 operator|=
 operator|*
@@ -4271,7 +4316,7 @@ operator|(
 name|ushort_t
 operator|*
 operator|)
-name|dptr
+name|v
 operator|)
 expr_stmt|;
 name|dptr
@@ -4322,7 +4367,14 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* LINTED - pointer alignment */
+name|v
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+expr_stmt|;
 name|retid
 operator|=
 operator|*
@@ -4331,7 +4383,7 @@ operator|(
 name|ushort_t
 operator|*
 operator|)
-name|dptr
+name|v
 operator|)
 expr_stmt|;
 name|dptr
@@ -4460,7 +4512,14 @@ operator|+=
 literal|2
 control|)
 block|{
-comment|/* LINTED - pointer alignment */
+name|v
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+expr_stmt|;
 name|ushort_t
 name|id
 init|=
@@ -4470,7 +4529,7 @@ operator|(
 name|ushort_t
 operator|*
 operator|)
-name|dptr
+name|v
 operator|)
 decl_stmt|;
 if|if
@@ -4755,14 +4814,19 @@ argument_list|,
 name|tid
 argument_list|)
 expr_stmt|;
-comment|/* LINTED - pointer alignment */
-name|ctt
-operator|=
+name|void
+modifier|*
+name|v
+init|=
 operator|(
-name|ctf_type_t
+name|void
 operator|*
 operator|)
 name|dptr
+decl_stmt|;
+name|ctt
+operator|=
+name|v
 expr_stmt|;
 name|get_ctt_size
 argument_list|(
@@ -4876,7 +4940,14 @@ name|t_size
 operator|=
 name|size
 expr_stmt|;
-comment|/* LINTED - pointer alignment */
+name|v
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+expr_stmt|;
 name|data
 operator|=
 operator|*
@@ -4885,7 +4956,7 @@ operator|(
 name|uint_t
 operator|*
 operator|)
-name|dptr
+name|v
 operator|)
 expr_stmt|;
 name|dptr
@@ -5017,7 +5088,14 @@ name|t_size
 operator|=
 name|size
 expr_stmt|;
-comment|/* LINTED - pointer alignment */
+name|v
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+expr_stmt|;
 name|data
 operator|=
 operator|*
@@ -5026,7 +5104,7 @@ operator|(
 name|uint_t
 operator|*
 operator|)
-name|dptr
+name|v
 operator|)
 expr_stmt|;
 name|dptr
@@ -5122,14 +5200,17 @@ name|t_size
 operator|=
 name|size
 expr_stmt|;
-comment|/* LINTED - pointer alignment */
-name|cta
+name|v
 operator|=
 operator|(
-name|ctf_array_t
+name|void
 operator|*
 operator|)
 name|dptr
+expr_stmt|;
+name|cta
+operator|=
+name|v
 expr_stmt|;
 name|dptr
 operator|+=
@@ -5253,16 +5334,19 @@ name|ml_next
 operator|)
 control|)
 block|{
-comment|/* LINTED - pointer alignment */
+name|v
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+expr_stmt|;
 name|ctf_member_t
 modifier|*
 name|ctm
 init|=
-operator|(
-name|ctf_member_t
-operator|*
-operator|)
-name|dptr
+name|v
 decl_stmt|;
 name|dptr
 operator|+=
@@ -5369,16 +5453,19 @@ name|ml_next
 operator|)
 control|)
 block|{
-comment|/* LINTED - pointer alignment */
+name|v
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+expr_stmt|;
 name|ctf_lmember_t
 modifier|*
 name|ctlm
 init|=
-operator|(
-name|ctf_lmember_t
-operator|*
-operator|)
-name|dptr
+name|v
 decl_stmt|;
 name|dptr
 operator|+=
@@ -5508,14 +5595,17 @@ name|el_next
 operator|)
 control|)
 block|{
-comment|/* LINTED - pointer alignment */
-name|cte
+name|v
 operator|=
 operator|(
-name|ctf_enum_t
+name|void
 operator|*
 operator|)
 name|dptr
+expr_stmt|;
+name|cte
+operator|=
+name|v
 expr_stmt|;
 name|dptr
 operator|+=
@@ -5686,16 +5776,10 @@ operator|->
 name|ctt_type
 index|]
 expr_stmt|;
-comment|/* LINTED - pointer alignment */
-if|if
-condition|(
-name|vlen
-operator|>
-literal|0
-operator|&&
-operator|*
+name|v
+operator|=
 operator|(
-name|ushort_t
+name|void
 operator|*
 operator|)
 operator|(
@@ -5714,6 +5798,19 @@ literal|1
 operator|)
 operator|)
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|vlen
+operator|>
+literal|0
+operator|&&
+operator|*
+operator|(
+name|ushort_t
+operator|*
+operator|)
+name|v
 operator|==
 literal|0
 condition|)
@@ -5775,7 +5872,14 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* LINTED - pointer alignment */
+name|v
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dptr
+expr_stmt|;
 name|argid
 operator|=
 operator|*
@@ -5783,7 +5887,7 @@ operator|(
 name|ushort_t
 operator|*
 operator|)
-name|dptr
+name|v
 expr_stmt|;
 name|dptr
 operator|+=
@@ -6336,7 +6440,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
@@ -6434,14 +6538,19 @@ argument_list|(
 literal|"Corrupt CTF - short header"
 argument_list|)
 expr_stmt|;
-comment|/* LINTED - pointer alignment */
-name|h
-operator|=
+name|void
+modifier|*
+name|v
+init|=
 operator|(
-name|ctf_header_t
+name|void
 operator|*
 operator|)
 name|buf
+decl_stmt|;
+name|h
+operator|=
+name|v
 expr_stmt|;
 name|buf
 operator|+=

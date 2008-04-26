@@ -219,6 +219,9 @@ break|break;
 case|case
 literal|'s'
 case|:
+case|case
+literal|'S'
+case|:
 name|types
 operator||=
 name|SOURCE_S
@@ -280,6 +283,8 @@ decl_stmt|;
 name|Elf_Data
 modifier|*
 name|ctfdata
+init|=
+name|NULL
 decl_stmt|;
 name|symit_data_t
 modifier|*
@@ -964,6 +969,7 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+name|__unused
 parameter_list|,
 name|void
 modifier|*

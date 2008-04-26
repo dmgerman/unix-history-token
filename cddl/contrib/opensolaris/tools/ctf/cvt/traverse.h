@@ -172,11 +172,10 @@ function_decl|;
 name|int
 name|iitraverse_td
 parameter_list|(
-name|iidesc_t
+name|void
 modifier|*
-name|ii
 parameter_list|,
-name|tdtrav_data_t
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

@@ -102,7 +102,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|infile
@@ -163,6 +162,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -184,6 +190,8 @@ name|infile
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -215,7 +223,6 @@ name|tdata_t
 modifier|*
 name|td
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|filename
@@ -237,13 +244,11 @@ parameter_list|,
 name|Elf
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|)
 function_decl|;
 specifier|static
-specifier|const
 name|reader_f
 name|readers
 index|[]
@@ -544,6 +549,7 @@ decl_stmt|,
 modifier|*
 name|mstrtd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|label
@@ -568,6 +574,12 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|sighold
 argument_list|(
 name|SIGINT
@@ -583,6 +595,8 @@ argument_list|(
 name|SIGTERM
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|progname
 operator|=
 name|basename
@@ -796,6 +810,12 @@ argument_list|(
 name|terminate_cleanup
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|sigset
 argument_list|(
 name|SIGINT
@@ -817,6 +837,31 @@ argument_list|,
 name|handle_sig
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|handle_sig
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|handle_sig
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|handle_sig
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|filetd
 operator|=
 name|tdata_new
