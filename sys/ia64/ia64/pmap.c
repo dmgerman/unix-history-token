@@ -139,16 +139,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX fc.i kluge (quick fix) */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ia64_icache_sync_kluge
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -230,6 +220,16 @@ parameter_list|(
 name|lpte
 parameter_list|)
 value|((lpte)->pte& PTE_DIRTY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_exec
+parameter_list|(
+name|lpte
+parameter_list|)
+value|((lpte)->pte& PTE_AR_RX)
 end_define
 
 begin_define
@@ -2261,48 +2261,6 @@ end_function
 
 begin_comment
 comment|/***************************************************  * Manipulate TLBs for a pmap  ***************************************************/
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_ifdef
-unit|static __inline void pmap_invalidate_page_locally(void *arg) { 	vm_offset_t va = (uintptr_t)arg; 	struct ia64_lpte *pte;  	pte = (struct ia64_lpte *)ia64_thash(va); 	if (pte->tag == ia64_ttag(va)) 		pte->tag = 1UL<< 63; 	ia64_ptc_l(va, PAGE_SHIFT<< 2); }
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_endif
-unit|static void pmap_invalidate_page_1(void *arg) { 	void **args = arg; 	pmap_t oldpmap;  	critical_enter(); 	oldpmap = pmap_switch(args[0]); 	pmap_invalidate_page_locally(args[1]); 	pmap_switch(oldpmap); 	critical_exit(); }
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-unit|static void pmap_invalidate_page(pmap_t pmap, vm_offset_t va) {  	KASSERT((pmap == kernel_pmap || pmap == PCPU_GET(current_pmap)), 		("invalidating TLB for non-current pmap"));
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_endif
-unit|if (mp_ncpus> 1) { 		void *args[2]; 		args[0] = pmap; 		args[1] = (void *)va; 		smp_rendezvous(NULL, pmap_invalidate_page_1, NULL, args); 	} else
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|pmap_invalidate_page_locally((void *)va); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
 end_comment
 
 begin_function
@@ -4843,9 +4801,6 @@ name|boolean_t
 name|managed
 parameter_list|)
 block|{
-name|vm_offset_t
-name|lim
-decl_stmt|;
 name|pte
 operator|->
 name|pte
@@ -4919,32 +4874,6 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* XXX fc.i kluge (quick fix) */
-if|if
-condition|(
-name|ia64_icache_sync_kluge
-condition|)
-block|{
-name|lim
-operator|=
-name|va
-operator|+
-name|PAGE_SIZE
-expr_stmt|;
-while|while
-condition|(
-name|va
-operator|<
-name|lim
-condition|)
-block|{
-asm|__asm __volatile("fc.i %0" :: "r"(va));
-name|va
-operator|+=
-literal|32
-expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -6179,14 +6108,19 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|sva
 operator|<
 name|eva
-condition|)
+condition|;
+name|sva
+operator|+=
+name|PAGE_SIZE
+control|)
 block|{
-comment|/*  		 * If page is invalid, skip this page 		 */
+comment|/* If page is invalid, skip this page */
 name|pte
 operator|=
 name|pmap_find_vhpt
@@ -6200,23 +6134,18 @@ name|pte
 operator|==
 name|NULL
 condition|)
-block|{
-name|sva
-operator|+=
-name|PAGE_SIZE
-expr_stmt|;
 continue|continue;
-block|}
+comment|/* If there's no change, skip it too */
 if|if
 condition|(
 name|pmap_prot
 argument_list|(
 name|pte
 argument_list|)
-operator|!=
+operator|==
 name|prot
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 name|pmap_managed
@@ -6282,6 +6211,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|prot
+operator|&
+name|VM_PROT_EXECUTE
+condition|)
+name|ia64_invalidate_icache
+argument_list|(
+name|sva
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 name|pmap_pte_prot
 argument_list|(
 name|pmap
@@ -6297,11 +6239,6 @@ name|pmap
 argument_list|,
 name|sva
 argument_list|)
-expr_stmt|;
-block|}
-name|sva
-operator|+=
-name|PAGE_SIZE
 expr_stmt|;
 block|}
 name|vm_page_unlock_queues
@@ -6363,6 +6300,8 @@ modifier|*
 name|pte
 decl_stmt|;
 name|boolean_t
+name|icache_inval
+decl_stmt|,
 name|managed
 decl_stmt|;
 name|vm_page_lock_queues
@@ -6493,6 +6432,18 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|icache_inval
+operator|=
+operator|(
+name|prot
+operator|&
+name|VM_PROT_EXECUTE
+operator|)
+condition|?
+name|TRUE
+else|:
+name|FALSE
+expr_stmt|;
 comment|/* 	 * Mapping has not changed, must be protection or wiring change. 	 */
 if|if
 condition|(
@@ -6553,7 +6504,7 @@ name|TRUE
 else|:
 name|FALSE
 expr_stmt|;
-comment|/* 		 * We might be turning off write access to the page, 		 * so we go ahead and sense modify status. 		 */
+comment|/* 		 * We might be turning off write access to the page, 		 * so we go ahead and sense modify status. Otherwise, 		 * we can avoid I-cache invalidation if the page 		 * already allowed execution. 		 */
 if|if
 condition|(
 name|managed
@@ -6568,6 +6519,19 @@ name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pmap_exec
+argument_list|(
+operator|&
+name|origpte
+argument_list|)
+condition|)
+name|icache_inval
+operator|=
+name|FALSE
 expr_stmt|;
 name|pmap_invalidate_page
 argument_list|(
@@ -6703,6 +6667,18 @@ argument_list|,
 name|wired
 argument_list|,
 name|managed
+argument_list|)
+expr_stmt|;
+comment|/* Invalidate the I-cache when needed. */
+if|if
+condition|(
+name|icache_inval
+condition|)
+name|ia64_invalidate_icache
+argument_list|(
+name|va
+argument_list|,
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 if|if
