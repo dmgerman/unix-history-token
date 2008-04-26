@@ -55,7 +55,7 @@ block|{
 name|int
 name|mdi_interrupts
 index|[
-literal|5
+literal|6
 index|]
 decl_stmt|;
 name|int
