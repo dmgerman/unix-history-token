@@ -770,51 +770,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Reset back to firmware. */
-end_comment
-
-begin_function
-name|void
-name|cpu_reset
-parameter_list|()
-block|{
-comment|/* Clear DBCR0, disables debug interrupts and events. */
-name|mtspr
-argument_list|(
-name|SPR_DBCR0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-asm|__asm volatile("isync");
-comment|/* Enable Debug Interrupts in MSR. */
-name|mtmsr
-argument_list|(
-name|mfmsr
-argument_list|()
-operator||
-name|PSL_DE
-argument_list|)
-expr_stmt|;
-comment|/* Enable debug interrupts and issue reset. */
-name|mtspr
-argument_list|(
-name|SPR_DBCR0
-argument_list|,
-name|mfspr
-argument_list|(
-name|SPR_DBCR0
-argument_list|)
-operator||
-name|DBCR0_IDM
-operator||
-name|DBCR0_RST_SYSTEM
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Allocate a pool of sf_bufs (sendfile(2) or "super-fast" if you prefer. :-))  */
 end_comment
 
@@ -1334,7 +1289,9 @@ parameter_list|)
 block|{
 comment|/* 	 * stuff other tests for known memory-mapped devices (PCI?) 	 * here 	 */
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
