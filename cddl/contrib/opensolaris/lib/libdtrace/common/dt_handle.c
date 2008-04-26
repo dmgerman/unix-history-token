@@ -50,11 +50,25 @@ directive|include
 file|<assert.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<alloca.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1123,7 +1137,7 @@ name|err
 operator|.
 name|dteda_addr
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|len
 operator|=
