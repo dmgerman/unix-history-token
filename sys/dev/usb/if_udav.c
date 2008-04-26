@@ -1417,15 +1417,17 @@ block|,
 literal|0
 block|}
 block|,
-if|#
-directive|if
-literal|0
-comment|/* DAVICOM DM9601 Generic? */
-comment|/*  XXX: The following ids was obtained from the data sheet. */
-block|{{ 0x0a46, 0x9601 }, 0},
-endif|#
-directive|endif
+comment|/* ShanTou DM9601 USB NIC */
+block|{
+block|{
+name|USB_VENDOR_SHANTOU
+block|,
+name|USB_PRODUCT_SHANTOU_DM9601
 block|}
+block|,
+literal|0
+block|}
+block|, }
 struct|;
 end_struct
 
