@@ -114,6 +114,17 @@ value|(CCSRBAR_VA + 0xe0014)
 end_define
 
 begin_comment
+comment|/*  * Status Registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_RSTCR
+value|(CCSRBAR_VA + 0xe00b0)
+end_define
+
+begin_comment
 comment|/*  * OCP Bus Definitions  */
 end_comment
 

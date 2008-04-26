@@ -32,6 +32,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -44,7 +56,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/spr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<powerpc/mpc85xx/ocpbus.h>
 end_include
 
 begin_comment
@@ -55,6 +79,32 @@ begin_function
 name|void
 name|cpu_reset
 parameter_list|()
+block|{
+name|uint32_t
+name|svr
+init|=
+name|mfsvr
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|svr
+operator|==
+name|SVR_MPC8572E
+operator|||
+name|svr
+operator|==
+name|SVR_MPC8572
+condition|)
+comment|/* Systems with dedicated reset register */
+name|out32
+argument_list|(
+name|OCP85XX_RSTCR
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 comment|/* Clear DBCR0, disables debug interrupts and events. */
 name|mtspr
@@ -89,6 +139,7 @@ operator||
 name|DBCR0_RST_SYSTEM
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"Reset failed...\n"
