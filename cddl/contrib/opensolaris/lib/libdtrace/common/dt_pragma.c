@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -26,11 +26,25 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<alloca.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -970,6 +984,12 @@ name|dt_lib_depend_t
 modifier|*
 name|dld
 decl_stmt|;
+name|char
+name|lib
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|cnp
@@ -1089,7 +1109,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * We have the file we are working on in dtp->dt_filetag 		 * so find that node and add the dependency in. 		 */
 if|if
 condition|(
 name|yypcb
@@ -1099,12 +1118,16 @@ operator|&
 name|DTRACE_C_CTL
 condition|)
 block|{
-name|char
-name|lib
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
+name|assert
+argument_list|(
+name|dtp
+operator|->
+name|dt_filetag
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 			 * We have the file we are working on in dtp->dt_filetag 			 * so find that node and add the dependency in. 			 */
 name|dld
 operator|=
 name|dt_lib_depend_lookup
@@ -1133,7 +1156,10 @@ name|snprintf
 argument_list|(
 name|lib
 argument_list|,
-name|MAXPATHLEN
+sizeof|sizeof
+argument_list|(
+name|lib
+argument_list|)
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -1186,9 +1212,109 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
+block|{
+comment|/* 			 * By this point we have already performed a topological 			 * sort of the dependencies; we process this directive 			 * as satisfied as long as the dependency was properly 			 * loaded. 			 */
+if|if
+condition|(
+name|dtp
+operator|->
+name|dt_filetag
+operator|==
+name|NULL
+condition|)
+name|xyerror
+argument_list|(
+name|D_PRAGMA_DEPEND
+argument_list|,
+literal|"main program may "
+literal|"not explicitly depend on a library"
+argument_list|)
+expr_stmt|;
+name|dld
+operator|=
+name|dt_lib_depend_lookup
+argument_list|(
+operator|&
+name|dtp
+operator|->
+name|dt_lib_dep
+argument_list|,
+name|dtp
+operator|->
+name|dt_filetag
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|dld
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|lib
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lib
+argument_list|)
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|dld
+operator|->
+name|dtld_libpath
+argument_list|,
+name|nnp
+operator|->
+name|dn_string
+argument_list|)
+expr_stmt|;
+name|dld
+operator|=
+name|dt_lib_depend_lookup
+argument_list|(
+operator|&
+name|dtp
+operator|->
+name|dt_lib_dep_sorted
+argument_list|,
+name|lib
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|dld
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dld
+operator|->
+name|dtld_loaded
+condition|)
+name|xyerror
+argument_list|(
+name|D_PRAGMA_DEPEND
+argument_list|,
+literal|"program requires "
+literal|"library \"%s\" which failed to load"
+argument_list|,
+name|lib
+argument_list|)
+expr_stmt|;
+block|}
 name|found
 operator|=
-literal|1
+name|B_TRUE
 expr_stmt|;
 block|}
 else|else
