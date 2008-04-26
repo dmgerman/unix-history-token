@@ -20,6 +20,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sgs.h>
+end_include
+
 begin_comment
 comment|/*  * function that will find a prime'ish number.  Usefull for  * hashbuckets and related things.  */
 end_comment
