@@ -50,6 +50,12 @@ directive|include
 file|<machine/psl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/spr.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|thread
@@ -222,6 +228,27 @@ name|register_t
 name|value
 decl_stmt|;
 asm|__asm __volatile ("mfpvr %0" : "=r"(value));
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|register_t
+name|mfsvr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|register_t
+name|value
+decl_stmt|;
+asm|__asm __volatile ("mfspr %0, %1" : "=r"(value) : "K"(SPR_SVR));
 return|return
 operator|(
 name|value

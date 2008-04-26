@@ -3067,7 +3067,7 @@ name|tgt
 condition|)
 block|{
 case|case
-name|OCP85XX_TGTIF_RAM
+name|OCP85XX_TGTIF_RAM1
 case|:
 name|attr
 operator|=
@@ -3877,7 +3877,7 @@ name|sc
 argument_list|,
 literal|3
 argument_list|,
-name|OCP85XX_TGTIF_RAM
+name|OCP85XX_TGTIF_RAM1
 argument_list|,
 literal|0
 argument_list|,
