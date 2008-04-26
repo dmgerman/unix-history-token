@@ -11959,6 +11959,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fdp
@@ -11967,14 +11972,9 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|ENOENT
 operator|)
 return|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|kif
 operator|=
 name|malloc
