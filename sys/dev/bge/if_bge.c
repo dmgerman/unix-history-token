@@ -11092,8 +11092,6 @@ operator|&
 name|rid
 argument_list|,
 name|RF_ACTIVE
-operator||
-name|PCI_RF_DENSE
 argument_list|)
 expr_stmt|;
 if|if

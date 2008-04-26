@@ -737,24 +737,6 @@ directive|include
 file|"pci_if.h"
 end_include
 
-begin_comment
-comment|/*  * Define pci-specific resource flags for accessing memory via dense  * or bwx memory spaces. These flags are ignored on i386.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_RF_DENSE
-value|0x10000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_RF_BWX
-value|0x20000
-end_define
-
 begin_enum
 enum|enum
 name|pci_device_ivars

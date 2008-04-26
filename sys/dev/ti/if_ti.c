@@ -9193,23 +9193,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|__brokenalpha__
-comment|/* 	 * From the Alteon sample driver: 	 * Must insure that we do not cross an 8K (bytes) boundary 	 * for DMA reads.  Our highest limit is 1K bytes.  This is a 	 * restriction on some ALPHA platforms with early revision 	 * 21174 PCI chipsets, such as the AlphaPC 164lx 	 */
-name|TI_SETBIT
-argument_list|(
-name|sc
-argument_list|,
-name|TI_PCI_STATE
-argument_list|,
-name|pci_writemax
-operator||
-name|TI_PCI_READMAX_1024
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|TI_SETBIT
 argument_list|(
 name|sc
@@ -9219,8 +9202,6 @@ argument_list|,
 name|pci_writemax
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* This sets the min dma param all the way up (0xff). */
 name|TI_SETBIT
 argument_list|(
@@ -10501,8 +10482,6 @@ operator|&
 name|rid
 argument_list|,
 name|RF_ACTIVE
-operator||
-name|PCI_RF_DENSE
 argument_list|)
 expr_stmt|;
 if|if
