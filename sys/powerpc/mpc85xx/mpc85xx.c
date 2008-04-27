@@ -83,8 +83,10 @@ block|{
 name|uint32_t
 name|svr
 init|=
-name|mfsvr
-argument_list|()
+name|mfspr
+argument_list|(
+name|SPR_SVR
+argument_list|)
 decl_stmt|;
 if|if
 condition|(

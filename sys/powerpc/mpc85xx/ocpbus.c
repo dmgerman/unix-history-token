@@ -1000,8 +1000,10 @@ argument_list|)
 expr_stmt|;
 name|svr
 operator|=
-name|mfsvr
-argument_list|()
+name|mfspr
+argument_list|(
+name|SPR_SVR
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
