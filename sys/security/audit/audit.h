@@ -16,7 +16,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_SEUCRITY_AUDIT_KERNEL_H_
+name|_SECURITY_AUDIT_KERNEL_H_
 end_define
 
 begin_ifndef
