@@ -70,7 +70,7 @@ end_ifdef
 
 begin_function_decl
 name|void
-name|ppc_db_trap
+name|breakpoint
 parameter_list|(
 name|void
 parameter_list|)
@@ -81,26 +81,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|breakpoint
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|KDB
-name|ppc_db_trap
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
 
 begin_comment
 comment|/* CPU register mangling inlines */

@@ -49,7 +49,7 @@ value|int		pc_inside_intr;					\ 	struct pmap	*pc_curpmap;
 comment|/* current pmap */
 value|\ 	struct thread	*pc_fputhread;
 comment|/* current fpu user */
-value|\ 	register_t	pc_tempsave[CPUSAVE_LEN];			\ 	register_t	pc_disisave[CPUSAVE_LEN];			\ 	register_t	pc_dbsave[CPUSAVE_LEN];
+value|\ 	uintptr_t	pc_hwref;					\ 	uint32_t	pc_pir;						\ 	int		pc_bsp:1;					\ 	int		pc_awake:1;					\ 	uint32_t	pc_ipimask;					\ 	register_t	pc_tempsave[CPUSAVE_LEN];			\ 	register_t	pc_disisave[CPUSAVE_LEN];			\ 	register_t	pc_dbsave[CPUSAVE_LEN];
 end_define
 
 begin_define
@@ -412,7 +412,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|PCPUP
+name|pcpup
 value|((struct pcpu *) powerpc_get_pcpup())
 end_define
 
@@ -423,7 +423,7 @@ name|PCPU_GET
 parameter_list|(
 name|member
 parameter_list|)
-value|(PCPUP->pc_ ## member)
+value|(pcpup->pc_ ## member)
 end_define
 
 begin_comment
@@ -439,7 +439,7 @@ name|member
 parameter_list|,
 name|value
 parameter_list|)
-value|(PCPUP->pc_ ## member += (value))
+value|(pcpup->pc_ ## member += (value))
 end_define
 
 begin_define
@@ -459,7 +459,7 @@ name|PCPU_PTR
 parameter_list|(
 name|member
 parameter_list|)
-value|(&PCPUP->pc_ ## member)
+value|(&pcpup->pc_ ## member)
 end_define
 
 begin_define
@@ -471,7 +471,7 @@ name|member
 parameter_list|,
 name|value
 parameter_list|)
-value|(PCPUP->pc_ ## member = (value))
+value|(pcpup->pc_ ## member = (value))
 end_define
 
 begin_endif

@@ -42,25 +42,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/timetc.h>
+file|<sys/interrupt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/interrupt.h>
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/timetc.h>
 end_include
 
 begin_include
@@ -98,12 +104,6 @@ comment|/*  * Initially we assume a processor with a bus frequency of 12.5 MHz. 
 end_comment
 
 begin_decl_stmt
-name|u_int
-name|tickspending
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 name|ns_per_tick
 init|=
@@ -124,14 +124,6 @@ begin_decl_stmt
 specifier|static
 name|long
 name|ticks_per_intr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|volatile
-name|u_long
-name|lasttb
 decl_stmt|;
 end_decl_stmt
 
@@ -178,9 +170,6 @@ modifier|*
 name|frame
 parameter_list|)
 block|{
-name|u_long
-name|tb
-decl_stmt|;
 name|long
 name|tick
 decl_stmt|;
@@ -195,7 +184,7 @@ name|ticks_per_intr
 condition|)
 return|return;
 comment|/* 	 * Based on the actual time delay since the last decrementer reload, 	 * we arrange for earlier interrupt next time. 	 */
-asm|__asm ("mftb %0; mfdec %1" : "=r"(tb), "=r"(tick));
+asm|__asm ("mfdec %0" : "=r"(tick));
 for|for
 control|(
 name|nticks
@@ -218,37 +207,23 @@ argument_list|(
 name|tick
 argument_list|)
 expr_stmt|;
-comment|/* 	 * lasttb is used during microtime. Set it to the virtual 	 * start of this tick interval. 	 */
-name|lasttb
-operator|=
-name|tb
-operator|+
-name|tick
-operator|-
-name|ticks_per_intr
-expr_stmt|;
+while|while
+condition|(
 name|nticks
-operator|+=
-name|tickspending
-expr_stmt|;
-name|tickspending
-operator|=
+operator|--
+operator|>
 literal|0
-expr_stmt|;
-comment|/* 	 * Reenable interrupts 	 */
-if|#
-directive|if
+condition|)
+block|{
+if|if
+condition|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+operator|==
 literal|0
-block|msr = mfmsr(); 	mtmsr(msr | PSL_EE | PSL_RI);
-endif|#
-directive|endif
-comment|/* 	 * Do standard timer interrupt stuff. 	 * Do softclock stuff only on the last iteration. 	 */
-if|#
-directive|if
-literal|0
-block|while (--nticks> 0) { 		hardclock(TRAPF_USERMODE(frame), TRAPF_PC(frame)); 	}
-endif|#
-directive|endif
+condition|)
 name|hardclock
 argument_list|(
 name|TRAPF_USERMODE
@@ -262,6 +237,16 @@ name|frame
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+name|hardclock_cpu
+argument_list|(
+name|TRAPF_USERMODE
+argument_list|(
+name|frame
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -378,7 +363,6 @@ name|ticks_per_sec
 operator|/
 name|hz
 expr_stmt|;
-asm|__asm __volatile ("mftb %0" : "=r"(lasttb));
 name|mtdec
 argument_list|(
 name|ticks_per_intr
