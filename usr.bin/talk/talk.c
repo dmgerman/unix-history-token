@@ -81,18 +81,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -113,7 +109,7 @@ argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|""
+literal|" "
 argument_list|)
 expr_stmt|;
 name|check_writeable

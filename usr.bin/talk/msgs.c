@@ -86,12 +86,10 @@ begin_function
 name|void
 name|disp_msg
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|message
 argument_list|(
@@ -104,7 +102,9 @@ end_function
 begin_function
 name|void
 name|start_msgs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|itimerval
@@ -171,7 +171,9 @@ end_function
 begin_function
 name|void
 name|end_msgs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|itimerval

@@ -240,9 +240,11 @@ specifier|extern
 name|void
 name|get_addrs
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)

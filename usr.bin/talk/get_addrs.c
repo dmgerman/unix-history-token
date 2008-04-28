@@ -73,21 +73,17 @@ begin_function
 name|void
 name|get_addrs
 parameter_list|(
-name|my_machine_name
-parameter_list|,
-name|his_machine_name
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|my_machine_name
 name|__unused
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|his_machine_name
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|hostent
@@ -205,7 +201,7 @@ operator|->
 name|s_port
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

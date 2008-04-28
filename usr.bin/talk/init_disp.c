@@ -100,7 +100,9 @@ end_comment
 begin_function
 name|void
 name|check_writeable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -179,7 +181,9 @@ end_comment
 begin_function
 name|void
 name|init_display
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|sigaction
@@ -478,7 +482,9 @@ end_comment
 begin_function
 name|void
 name|set_edit_chars
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -706,12 +712,10 @@ begin_function
 name|void
 name|sig_sent
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|message
 argument_list|(
@@ -730,6 +734,7 @@ name|sig_winch
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|gotwinch
@@ -746,7 +751,9 @@ end_comment
 begin_function
 name|void
 name|quit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

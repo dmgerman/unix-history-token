@@ -88,7 +88,9 @@ end_comment
 begin_function
 name|int
 name|check_local
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|CTL_RESPONSE
 name|response
@@ -318,12 +320,10 @@ begin_function
 name|int
 name|look_for_invite
 parameter_list|(
-name|rp
-parameter_list|)
 name|CTL_RESPONSE
 modifier|*
 name|rp
-decl_stmt|;
+parameter_list|)
 block|{
 name|current_state
 operator|=

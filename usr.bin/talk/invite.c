@@ -118,7 +118,9 @@ end_decl_stmt
 begin_function
 name|void
 name|invite_remote
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|new_sockt
@@ -384,12 +386,10 @@ begin_function
 name|void
 name|re_invite
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|message
 argument_list|(
@@ -497,7 +497,9 @@ end_comment
 begin_function
 name|void
 name|announce_invite
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|CTL_RESPONSE
 name|response
@@ -588,7 +590,9 @@ end_comment
 begin_function
 name|void
 name|send_delete
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|msg
 operator|.
