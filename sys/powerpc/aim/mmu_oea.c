@@ -2820,26 +2820,11 @@ index|]
 operator|=
 literal|0x1001
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-block|{
-asm|__asm __volatile("mtdbatu %0,%1" :: "n"(i), "r"(0));
-asm|__asm __volatile("mtibatu %0,%1" :: "n"(i), "r"(0));
+asm|__asm __volatile("mtdbatu 1,%0" :: "r"(battable[8].batu));
+asm|__asm __volatile("mtdbatl 1,%0" :: "r"(battable[8].batl));
 name|isync
 argument_list|()
 expr_stmt|;
-block|}
 name|trcp
 index|[
 literal|0
@@ -2847,8 +2832,11 @@ index|]
 operator|=
 literal|0x1002
 expr_stmt|;
-asm|__asm __volatile("mtdbatu 1,%0" :: "r"(battable[8].batu));
-asm|__asm __volatile("mtdbatl 1,%0" :: "r"(battable[8].batl));
+asm|__asm __volatile("mtibatu 1,%0" :: "r"(0));
+asm|__asm __volatile("mtdbatu 2,%0" :: "r"(0));
+asm|__asm __volatile("mtibatu 2,%0" :: "r"(0));
+asm|__asm __volatile("mtdbatu 3,%0" :: "r"(0));
+asm|__asm __volatile("mtibatu 3,%0" :: "r"(0));
 name|isync
 argument_list|()
 expr_stmt|;
