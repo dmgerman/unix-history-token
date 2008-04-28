@@ -4944,7 +4944,7 @@ if|if
 condition|(
 name|d
 operator|->
-name|lft_c
+name|lft_h
 operator|->
 name|sadb_lifetime_addtime
 operator|!=
