@@ -1274,7 +1274,6 @@ parameter_list|,
 name|vm_ooffset_t
 parameter_list|,
 name|vm_offset_t
-modifier|*
 parameter_list|,
 name|vm_size_t
 parameter_list|,

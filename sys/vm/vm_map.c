@@ -4410,9 +4410,7 @@ name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|vm_offset_t
-modifier|*
-name|addr
-comment|/* IN/OUT */
+name|start
 parameter_list|,
 name|vm_size_t
 name|length
@@ -4428,18 +4426,11 @@ name|cow
 parameter_list|)
 block|{
 name|vm_offset_t
-name|start
-decl_stmt|,
 name|end
 decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-name|start
-operator|=
-operator|*
-name|addr
-expr_stmt|;
 name|vm_map_lock
 argument_list|(
 name|map

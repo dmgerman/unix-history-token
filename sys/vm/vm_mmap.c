@@ -5925,6 +5925,7 @@ name|object
 argument_list|,
 name|foff
 argument_list|,
+operator|*
 name|addr
 argument_list|,
 name|size
