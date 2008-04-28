@@ -558,9 +558,6 @@ expr_stmt|;
 operator|*
 name|min
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 name|vm_map_min
 argument_list|(
 name|parent
@@ -574,9 +571,6 @@ name|parent
 argument_list|,
 name|NULL
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 literal|0
 argument_list|,
 name|min
