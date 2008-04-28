@@ -600,6 +600,23 @@ operator|)
 return|;
 block|}
 case|case
+literal|'D'
+case|:
+block|{
+comment|/* Detach */
+name|gdb_tx_ok
+argument_list|()
+expr_stmt|;
+name|kdb_cpu_clear_singlestep
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+case|case
 literal|'g'
 case|:
 block|{
