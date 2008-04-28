@@ -6101,10 +6101,12 @@ name|BPF_CHECK_DIRECTION
 parameter_list|(
 name|d
 parameter_list|,
+name|r
+parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|(((d)->bd_direction == BPF_D_IN&& (i) == NULL) ||	\ 	    ((d)->bd_direction == BPF_D_OUT&& (i) != NULL))
+value|(((d)->bd_direction == BPF_D_IN&& (r) != (i)) ||	\ 	    ((d)->bd_direction == BPF_D_OUT&& (r) == (i)))
 end_define
 
 begin_comment
@@ -6212,6 +6214,10 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+argument_list|,
+name|bp
+operator|->
+name|bif_ifp
 argument_list|)
 condition|)
 continue|continue;
@@ -6516,6 +6522,10 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+argument_list|,
+name|bp
+operator|->
+name|bif_ifp
 argument_list|)
 condition|)
 continue|continue;
