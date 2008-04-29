@@ -1570,6 +1570,10 @@ operator|*
 name|procptr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tdptr
+condition|)
 operator|*
 name|tdptr
 operator|=
