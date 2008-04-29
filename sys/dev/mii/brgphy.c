@@ -640,6 +640,13 @@ argument_list|,
 name|BCM5709C
 argument_list|)
 block|,
+name|MII_PHY_DESC
+argument_list|(
+name|BROADCOM2
+argument_list|,
+name|BCM5906
+argument_list|)
+block|,
 name|MII_PHY_END
 block|}
 decl_stmt|;
@@ -909,6 +916,9 @@ block|{
 case|case
 name|MII_OUI_BROADCOM
 case|:
+case|case
+name|MII_OUI_BROADCOM2
+case|:
 break|break;
 case|case
 name|MII_OUI_xxBROADCOM
@@ -1050,7 +1060,7 @@ operator|->
 name|if_softc
 expr_stmt|;
 block|}
-comment|/* Todo: Need to add additional controllers such as 5906& 5787F */
+comment|/* Todo: Need to add additional controllers such as 5787F */
 comment|/* The 590x chips are 10/100 only. */
 if|if
 condition|(
@@ -1083,6 +1093,24 @@ name|bge_dev
 argument_list|)
 operator|==
 name|BCOM_DEVICEID_BCM5901A2
+operator|||
+name|pci_get_device
+argument_list|(
+name|bge_sc
+operator|->
+name|bge_dev
+argument_list|)
+operator|==
+name|BCOM_DEVICEID_BCM5906
+operator|||
+name|pci_get_device
+argument_list|(
+name|bge_sc
+operator|->
+name|bge_dev
+argument_list|)
+operator|==
+name|BCOM_DEVICEID_BCM5906M
 operator|)
 condition|)
 block|{
@@ -4211,6 +4239,24 @@ name|BRGPHY_PHY_EXTCTL_3_LED
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Adjust output voltage (From Linux driver) */
+if|if
+condition|(
+name|bge_sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5906
+condition|)
+name|PHY_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|BRGPHY_MII_EPHY_PTEST
+argument_list|,
+literal|0x12
+argument_list|)
+expr_stmt|;
 comment|/* Handle any bce (NetXtreme II) workarounds. */
 block|}
 elseif|else

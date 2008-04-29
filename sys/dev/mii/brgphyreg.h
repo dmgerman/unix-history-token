@@ -1138,6 +1138,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BRGPHY_MII_EPHY_PTEST
+value|0x17
+end_define
+
+begin_comment
+comment|/* 5906 PHY register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BRGPHY_DSP_TAP_NUMBER_MASK
 value|0x00
 end_define
