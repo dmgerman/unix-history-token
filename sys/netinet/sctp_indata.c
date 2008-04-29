@@ -2508,6 +2508,8 @@ operator|->
 name|last_sequence_delivered
 argument_list|)
 expr_stmt|;
+name|protocol_error
+label|:
 comment|/* 		 * throw it in the stream so it gets cleaned up in 		 * association destruction 		 */
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -2904,6 +2906,38 @@ name|queue_needed
 condition|)
 block|{
 comment|/* 		 * Ok, we did not deliver this guy, find the correct place 		 * to put it on the queue. 		 */
+if|if
+condition|(
+operator|(
+name|compare_with_wrap
+argument_list|(
+name|asoc
+operator|->
+name|cumulative_tsn
+argument_list|,
+name|control
+operator|->
+name|sinfo_tsn
+argument_list|,
+name|MAX_TSN
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|control
+operator|->
+name|sinfo_tsn
+operator|==
+name|asoc
+operator|->
+name|cumulative_tsn
+operator|)
+condition|)
+block|{
+goto|goto
+name|protocol_error
+goto|;
+block|}
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -16140,6 +16174,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|tp1
 operator|->
 name|rec
@@ -16147,6 +16182,13 @@ operator|.
 name|data
 operator|.
 name|doing_fast_retransmit
+operator|)
+operator|&&
+operator|(
+name|sctp_cmt_on_off
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 			 * For those that have done a FR we must take 			 * special consideration if we strike. I.e the 			 * biggest_newly_acked must be higher than the 			 * sending_seq at the time we did the FR. 			 */
