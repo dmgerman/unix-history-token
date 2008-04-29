@@ -651,7 +651,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Data structures required by both ipfw(8) and ipfw(4) but not part of the  * management API are protcted by IPFW_INTERNAL.  */
+comment|/*  * Data structures required by both ipfw(8) and ipfw(4) but not part of the  * management API are protected by IPFW_INTERNAL.  */
 end_comment
 
 begin_ifdef
