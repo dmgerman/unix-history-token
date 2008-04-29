@@ -7133,7 +7133,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|FILEDESC_SLOCK
+name|FILEDESC_XLOCK
 argument_list|(
 name|p
 operator|->
@@ -7204,7 +7204,7 @@ argument_list|(
 name|rootvnode
 argument_list|)
 expr_stmt|;
-name|FILEDESC_SUNLOCK
+name|FILEDESC_XUNLOCK
 argument_list|(
 name|p
 operator|->
