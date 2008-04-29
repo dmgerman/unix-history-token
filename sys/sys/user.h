@@ -285,6 +285,24 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__mips__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|816
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__powerpc__
 end_ifdef
 
