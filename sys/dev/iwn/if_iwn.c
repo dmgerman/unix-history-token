@@ -2484,38 +2484,32 @@ operator||
 name|IEEE80211_C_WME
 comment|/* WME */
 expr_stmt|;
-name|ic
-operator|->
-name|ic_htcaps
-operator|=
-name|IEEE80211_HTCAP_SMPS_ENA
+if|#
+directive|if
+literal|0
+comment|/* XXX disable until HT channel setup works */
+block|ic->ic_htcaps = 		  IEEE80211_HTCAP_SMPS_ENA
 comment|/* SM PS mode enabled */
-operator||
-name|IEEE80211_HTCAP_CHWIDTH40
+block|| IEEE80211_HTCAP_CHWIDTH40
 comment|/* 40MHz channel width */
-operator||
-name|IEEE80211_HTCAP_SHORTGI20
+block|| IEEE80211_HTCAP_SHORTGI20
 comment|/* short GI in 20MHz */
-operator||
-name|IEEE80211_HTCAP_SHORTGI40
+block|| IEEE80211_HTCAP_SHORTGI40
 comment|/* short GI in 40MHz */
-operator||
-name|IEEE80211_HTCAP_RXSTBC_2STREAM
+block|| IEEE80211_HTCAP_RXSTBC_2STREAM
 comment|/* 1-2 spatial streams */
-operator||
-name|IEEE80211_HTCAP_MAXAMSDU_3839
+block|| IEEE80211_HTCAP_MAXAMSDU_3839
 comment|/* max A-MSDU length */
 comment|/* s/w capabilities */
-operator||
-name|IEEE80211_HTC_HT
+block|| IEEE80211_HTC_HT
 comment|/* HT operation */
-operator||
-name|IEEE80211_HTC_AMPDU
+block|| IEEE80211_HTC_AMPDU
 comment|/* tx A-MPDU */
-operator||
-name|IEEE80211_HTC_AMSDU
+block|| IEEE80211_HTC_AMSDU
 comment|/* tx A-MSDU */
-expr_stmt|;
+block|;
+endif|#
+directive|endif
 comment|/* read supported channels and MAC address from EEPROM */
 name|iwn_read_eeprom
 argument_list|(
