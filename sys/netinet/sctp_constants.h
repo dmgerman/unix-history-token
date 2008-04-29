@@ -858,197 +858,204 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_SORCV_FREECTL
+name|SCTP_MBUF_SPLIT
 value|94
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_SORCV_DOESCPY
+name|SCTP_SORCV_FREECTL
 value|95
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_SORCV_DOESLCK
+name|SCTP_SORCV_DOESCPY
 value|96
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_SORCV_DOESADJ
+name|SCTP_SORCV_DOESLCK
 value|97
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_SORCV_BOTWHILE
+name|SCTP_SORCV_DOESADJ
 value|98
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_SORCV_PASSBF
+name|SCTP_SORCV_BOTWHILE
 value|99
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_SORCV_ADJD
+name|SCTP_SORCV_PASSBF
 value|100
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_UNKNOWN_MAX
+name|SCTP_SORCV_ADJD
 value|101
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_RANDY_STUFF
+name|SCTP_UNKNOWN_MAX
 value|102
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_RANDY_STUFF1
+name|SCTP_RANDY_STUFF
 value|103
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRMOUT_LOG_ASSIGN
+name|SCTP_RANDY_STUFF1
 value|104
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRMOUT_LOG_SEND
+name|SCTP_STRMOUT_LOG_ASSIGN
 value|105
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_DOWN_CA
+name|SCTP_STRMOUT_LOG_SEND
 value|106
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_UP
+name|SCTP_FLIGHT_LOG_DOWN_CA
 value|107
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_DOWN_GAP
+name|SCTP_FLIGHT_LOG_UP
 value|108
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_DOWN_RSND
+name|SCTP_FLIGHT_LOG_DOWN_GAP
 value|109
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_UP_RSND
+name|SCTP_FLIGHT_LOG_DOWN_RSND
 value|110
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_DOWN_RSND_TO
+name|SCTP_FLIGHT_LOG_UP_RSND
 value|111
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_DOWN_WP
+name|SCTP_FLIGHT_LOG_DOWN_RSND_TO
 value|112
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_UP_REVOKE
+name|SCTP_FLIGHT_LOG_DOWN_WP
 value|113
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_DOWN_PDRP
+name|SCTP_FLIGHT_LOG_UP_REVOKE
 value|114
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_FLIGHT_LOG_DOWN_PMTU
+name|SCTP_FLIGHT_LOG_DOWN_PDRP
 value|115
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_SACK_LOG_NORMAL
+name|SCTP_FLIGHT_LOG_DOWN_PMTU
 value|116
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_SACK_LOG_EXPRESS
+name|SCTP_SACK_LOG_NORMAL
 value|117
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_MAP_TSN_ENTERS
+name|SCTP_SACK_LOG_EXPRESS
 value|118
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_THRESHOLD_CLEAR
+name|SCTP_MAP_TSN_ENTERS
 value|119
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_THRESHOLD_INCR
+name|SCTP_THRESHOLD_CLEAR
 value|120
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_LOG_MAX_TYPES
+name|SCTP_THRESHOLD_INCR
 value|121
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOG_MAX_TYPES
+value|122
 end_define
 
 begin_comment
