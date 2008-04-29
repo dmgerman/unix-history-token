@@ -358,8 +358,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_MAX
+name|UMTX_OP_WAIT_UINT_PRIVATE
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_WAKE_PRIVATE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|17
 end_define
 
 begin_comment
@@ -854,14 +868,13 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|,
 name|void
 modifier|*
-name|uaddr
 parameter_list|,
 name|int
-name|n_wake
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -873,10 +886,8 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|,
 name|u_char
-name|oldpri
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -888,7 +899,6 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -900,7 +910,6 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -912,7 +921,6 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -924,7 +932,6 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
