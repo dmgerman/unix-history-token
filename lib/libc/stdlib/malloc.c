@@ -5619,6 +5619,21 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+comment|/* 	 * sbrk() uses a signed increment argument, so take care not to 	 * interpret a huge allocation request as a negative increment. 	 */
+if|if
+condition|(
+operator|(
+name|intptr_t
+operator|)
+name|size
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|malloc_mutex_lock
 argument_list|(
 operator|&
