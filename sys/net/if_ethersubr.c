@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mbuf_profiling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -848,6 +854,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|M_PROFILE
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
