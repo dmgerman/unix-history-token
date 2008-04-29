@@ -221,6 +221,13 @@ operator|>
 name|SHRT_MAX
 condition|)
 block|{
+name|fp
+operator|->
+name|_flags
+operator|=
+literal|0
+expr_stmt|;
+comment|/* release */
 name|_close
 argument_list|(
 name|f
