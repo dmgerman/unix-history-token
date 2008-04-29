@@ -164,6 +164,9 @@ expr|struct
 name|timespec
 operator|*
 name|timeout
+argument_list|,
+name|int
+name|shared
 argument_list|)
 name|__hidden
 decl_stmt|;
@@ -180,6 +183,9 @@ name|mtx
 argument_list|,
 name|int
 name|count
+argument_list|,
+name|int
+name|shared
 argument_list|)
 name|__hidden
 decl_stmt|;

@@ -386,6 +386,9 @@ name|struct
 name|timespec
 modifier|*
 name|timeout
+parameter_list|,
+name|int
+name|shared
 parameter_list|)
 block|{
 if|if
@@ -430,7 +433,11 @@ argument_list|,
 name|mtx
 argument_list|)
 argument_list|,
+name|shared
+condition|?
 name|UMTX_OP_WAIT_UINT
+else|:
+name|UMTX_OP_WAIT_UINT_PRIVATE
 argument_list|,
 name|id
 argument_list|,
@@ -459,6 +466,9 @@ name|mtx
 parameter_list|,
 name|int
 name|nr_wakeup
+parameter_list|,
+name|int
+name|shared
 parameter_list|)
 block|{
 return|return
@@ -472,7 +482,11 @@ argument_list|,
 name|mtx
 argument_list|)
 argument_list|,
+name|shared
+condition|?
 name|UMTX_OP_WAKE
+else|:
+name|UMTX_OP_WAKE_PRIVATE
 argument_list|,
 name|nr_wakeup
 argument_list|,

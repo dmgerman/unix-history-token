@@ -385,7 +385,7 @@ modifier|*
 name|curthread
 parameter_list|)
 block|{
-name|long
+name|uint32_t
 name|cycle
 decl_stmt|;
 name|int
@@ -463,6 +463,8 @@ operator|->
 name|cycle
 argument_list|,
 name|INT_MAX
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * if we are from pthread_exit, we don't want to 		 * suspend, just go and die. 		 */
@@ -493,7 +495,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|_thr_umtx_wait
+name|_thr_umtx_wait_uint
 argument_list|(
 operator|&
 name|curthread
@@ -503,6 +505,8 @@ argument_list|,
 name|cycle
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|THR_UMUTEX_LOCK

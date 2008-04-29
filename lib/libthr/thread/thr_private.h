@@ -946,7 +946,7 @@ name|umutex
 name|lock
 decl_stmt|;
 comment|/* Internal condition variable cycle number. */
-name|long
+name|uint32_t
 name|cycle
 decl_stmt|;
 comment|/* How many low level locks the thread held. */

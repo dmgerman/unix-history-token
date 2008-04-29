@@ -753,6 +753,8 @@ operator|->
 name|count
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -925,6 +927,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|_thr_cancel_leave
@@ -1184,6 +1188,10 @@ name|retval
 operator|=
 name|_thr_umtx_wait_uint
 argument_list|(
+operator|(
+name|uint32_t
+operator|*
+operator|)
 operator|&
 operator|(
 operator|*
@@ -1196,6 +1204,8 @@ literal|0
 argument_list|,
 operator|&
 name|ts2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|_thr_cancel_leave
@@ -1338,6 +1348,8 @@ operator|->
 name|count
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
