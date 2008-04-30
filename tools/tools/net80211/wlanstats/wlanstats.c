@@ -780,7 +780,7 @@ literal|5
 block|,
 literal|"rx_badkeyid"
 block|,
-literal|"badkeyid"
+literal|"rxkid"
 block|,
 literal|"rx w/ incorrect keyid"
 block|}
@@ -1046,7 +1046,7 @@ literal|5
 block|,
 literal|"scan_active"
 block|,
-literal|"scan_active"
+literal|"ascan"
 block|,
 literal|"active scans started"
 block|}
@@ -1060,7 +1060,7 @@ literal|5
 block|,
 literal|"scan_passive"
 block|,
-literal|"scan_passive"
+literal|"pscan"
 block|,
 literal|"passive scans started"
 block|}
@@ -1074,7 +1074,7 @@ literal|5
 block|,
 literal|"scan_bg"
 block|,
-literal|"scan_bg"
+literal|"bgscn"
 block|,
 literal|"background scans started"
 block|}
@@ -1490,11 +1490,11 @@ directive|define
 name|S_RX_MGMT
 value|AFTER(S_RX_BADBINTVAL)
 block|{
-literal|5
+literal|8
 block|,
 literal|"rx_mgmt"
 block|,
-literal|"rx_mgmt"
+literal|"mgmt"
 block|,
 literal|"rx management frames"
 block|}
@@ -2022,7 +2022,7 @@ directive|define
 name|S_RATE
 value|AFTER(S_TX_MCAST)
 block|{
-literal|4
+literal|5
 block|,
 literal|"rate"
 block|,
@@ -2036,7 +2036,7 @@ directive|define
 name|S_RSSI
 value|AFTER(S_RATE)
 block|{
-literal|4
+literal|5
 block|,
 literal|"rssi"
 block|,
@@ -2050,7 +2050,7 @@ directive|define
 name|S_NOISE
 value|AFTER(S_RSSI)
 block|{
-literal|4
+literal|5
 block|,
 literal|"noise"
 block|,
@@ -2064,7 +2064,7 @@ directive|define
 name|S_SIGNAL
 value|AFTER(S_NOISE)
 block|{
-literal|4
+literal|5
 block|,
 literal|"signal"
 block|,

@@ -78,7 +78,7 @@ define|#
 directive|define
 name|S_DEFAULT
 define|\
-value|"input,output,rx_ucast,rx_mcast,tx_ucast,tx_mcast,rssi,rate"
+value|"input,rx_mgmt,output,rx_badkeyid,scan_active,scan_bg,bmiss,rssi,noise,rate"
 end_define
 
 begin_define

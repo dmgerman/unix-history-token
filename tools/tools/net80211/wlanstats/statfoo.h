@@ -111,6 +111,13 @@ name|int
 name|nstats
 decl_stmt|;
 comment|/* number of stats */
+name|int
+name|fields
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* index of field referenced in fmts */
 name|unsigned
 name|char
 name|fmts
