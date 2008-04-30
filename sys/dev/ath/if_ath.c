@@ -29452,27 +29452,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SIOCADDMULTI
-case|:
-case|case
-name|SIOCDELMULTI
-case|:
-comment|/* 		 * The upper layer has already installed/removed 		 * the multicast address(es), just recalculate the 		 * multicast filter for the card. 		 */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-condition|)
-name|ath_mode_init
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|SIOCGIFMEDIA
 case|:
 case|case
