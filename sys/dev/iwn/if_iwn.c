@@ -15977,7 +15977,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_ANY
 argument_list|,
-literal|"%s: val = %llu %s\n"
+literal|"%s: val = %ju %s\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -16035,7 +16035,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_RESET
 argument_list|,
-literal|"TSF bintval=%u tstamp=%llu, init=%u\n"
+literal|"TSF bintval=%u tstamp=%ju, init=%u\n"
 argument_list|,
 name|ni
 operator|->
