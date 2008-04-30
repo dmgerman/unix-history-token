@@ -9492,19 +9492,19 @@ begin_struct
 struct|struct
 name|mbufprofile
 block|{
-name|u_int64_t
+name|uintmax_t
 name|wasted
 index|[
 name|MP_BUCKETS
 index|]
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|used
 index|[
 name|MP_BUCKETS
 index|]
 decl_stmt|;
-name|u_int64_t
+name|uintmax_t
 name|segments
 index|[
 name|MP_BUCKETS
@@ -9797,8 +9797,8 @@ operator|+
 literal|10
 argument_list|,
 literal|"wasted:\n"
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld "
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld\n"
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju "
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju\n"
 argument_list|,
 name|p
 index|[
@@ -9906,8 +9906,8 @@ name|c
 argument_list|,
 name|MP_MAXLINE
 argument_list|,
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld "
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld\n"
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju "
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju\n"
 argument_list|,
 name|p
 index|[
@@ -10017,8 +10017,8 @@ operator|+
 literal|10
 argument_list|,
 literal|"used:\n"
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld "
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld\n"
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju "
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju\n"
 argument_list|,
 name|p
 index|[
@@ -10126,8 +10126,8 @@ name|c
 argument_list|,
 name|MP_MAXLINE
 argument_list|,
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld "
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld\n"
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju "
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju\n"
 argument_list|,
 name|p
 index|[
@@ -10237,8 +10237,8 @@ operator|+
 literal|10
 argument_list|,
 literal|"segments:\n"
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld "
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld\n"
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju "
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju\n"
 argument_list|,
 name|p
 index|[
@@ -10346,8 +10346,8 @@ name|c
 argument_list|,
 name|MP_MAXLINE
 argument_list|,
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld "
-literal|"%lld %lld %lld %lld %lld %lld %lld %lld\n"
+literal|"%ju %ju %ju %ju %ju %ju %ju %ju "
+literal|"%ju %ju %ju %ju %ju %ju %ju %jju"
 argument_list|,
 name|p
 index|[
