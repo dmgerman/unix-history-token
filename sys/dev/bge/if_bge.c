@@ -18581,7 +18581,7 @@ name|sc
 argument_list|,
 name|BGE_HCC_MODE
 argument_list|,
-name|BGE_HCCMODE_ATTN
+name|BGE_HCCMODE_COAL_NOW
 argument_list|)
 expr_stmt|;
 endif|#
