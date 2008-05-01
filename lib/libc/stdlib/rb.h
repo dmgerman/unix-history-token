@@ -217,7 +217,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|rb_tree_new
+name|rb_new
 parameter_list|(
 name|a_type
 parameter_list|,
@@ -225,7 +225,7 @@ name|a_field
 parameter_list|,
 name|a_tree
 parameter_list|)
-value|do {			\     (a_tree)->rbt_root =&(a_tree)->rbt_nil;				\     rbp_node_new(a_type, a_field, a_tree,&(a_tree)->rbt_nil);		\     rbp_black_set(a_type, a_field,&(a_tree)->rbt_nil);			\ } while (0)
+value|do {				\     (a_tree)->rbt_root =&(a_tree)->rbt_nil;				\     rbp_node_new(a_type, a_field, a_tree,&(a_tree)->rbt_nil);		\     rbp_black_set(a_type, a_field,&(a_tree)->rbt_nil);			\ } while (0)
 end_define
 
 begin_comment
@@ -683,7 +683,32 @@ value|\     (a_tree)->rbt_root = rbp_left_get(a_type, a_field,&rbp_r_s);	\ } whi
 end_define
 
 begin_comment
-comment|/*  * The iterators simulate recursion via an array of pointers that store the  * current path.  This is critical to performance, since a series of calls to  * rb_{next,prev}() would require time proportional to (n lg n), whereas this  * implementation only requires time proportional to (n).  */
+comment|/*  * The rb_wrap() macro provides a convenient way to wrap functions around the  * cpp macros.  The main benefits of wrapping are that 1) repeated macro  * expansion can cause code bloat, especially for rb_{insert,remove)(), and  * 2) type, linkage, comparison functions, etc. need not be specified at every  * call point.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rb_wrap
+parameter_list|(
+name|a_attr
+parameter_list|,
+name|a_prefix
+parameter_list|,
+name|a_tree_type
+parameter_list|,
+name|a_type
+parameter_list|,
+name|a_field
+parameter_list|,
+name|a_cmp
+parameter_list|)
+define|\
+value|a_attr void								\ a_prefix##new(a_tree_type *tree) {					\     rb_new(a_type, a_field, tree);					\ }									\ a_attr a_type *								\ a_prefix##first(a_tree_type *tree) {					\     a_type *ret;							\     rb_first(a_type, a_field, tree, ret);				\     return (ret);							\ }									\ a_attr a_type *								\ a_prefix##last(a_tree_type *tree) {					\     a_type *ret;							\     rb_last(a_type, a_field, tree, ret);				\     return (ret);							\ }									\ a_attr a_type *								\ a_prefix##next(a_tree_type *tree, a_type *node) {			\     a_type *ret;							\     rb_next(a_type, a_field, a_cmp, tree, node, ret);			\     return (ret);							\ }									\ a_attr a_type *								\ a_prefix##prev(a_tree_type *tree, a_type *node) {			\     a_type *ret;							\     rb_prev(a_type, a_field, a_cmp, tree, node, ret);			\     return (ret);							\ }									\ a_attr a_type *								\ a_prefix##search(a_tree_type *tree, a_type *key) {			\     a_type *ret;							\     rb_search(a_type, a_field, a_cmp, tree, key, ret);			\     return (ret);							\ }									\ a_attr a_type *								\ a_prefix##nsearch(a_tree_type *tree, a_type *key) {			\     a_type *ret;							\     rb_nsearch(a_type, a_field, a_cmp, tree, key, ret);			\     return (ret);							\ }									\ a_attr a_type *								\ a_prefix##psearch(a_tree_type *tree, a_type *key) {			\     a_type *ret;							\     rb_psearch(a_type, a_field, a_cmp, tree, key, ret);			\     return (ret);							\ }									\ a_attr void								\ a_prefix##insert(a_tree_type *tree, a_type *node) {			\     rb_insert(a_type, a_field, a_cmp, tree, node);			\ }									\ a_attr void								\ a_prefix##remove(a_tree_type *tree, a_type *node) {			\     rb_remove(a_type, a_field, a_cmp, tree, node);			\ }
+end_define
+
+begin_comment
+comment|/*  * The iterators simulate recursion via an array of pointers that store the  * current path.  This is critical to performance, since a series of calls to  * rb_{next,prev}() would require time proportional to (n lg n), whereas this  * implementation only requires time proportional to (n).  *  * Since the iterators cache a path down the tree, any tree modification may  * cause the cached path to become invalid.  In order to continue iteration,  * use something like the following sequence:  *  *   {  *       a_type *node, *tnode;  *  *       rb_foreach_begin(a_type, a_field, a_tree, node) {  *           ...  *           rb_prev(a_type, a_field, a_cmp, a_tree, node, tnode);  *           rb_remove(a_type, a_field, a_cmp, a_tree, node);  *           rb_foreach_next(a_type, a_field, a_cmp, a_tree, tnode);  *           ...  *       } rb_foreach_end(a_type, a_field, a_tree, node)  *   }  *  * Note that this idiom is not advised if every iteration modifies the tree,  * since in that case there is no algorithmic complexity improvement over a  * series of rb_{next,prev}() calls, thus making the setup overhead wasted  * effort.  */
 end_comment
 
 begin_define
@@ -703,9 +728,34 @@ value|{	\
 comment|/* Compute the maximum possible tree depth (3X the black height). */
 value|\     unsigned rbp_f_height;						\     rbp_black_height(a_type, a_field, a_tree, rbp_f_height);		\     rbp_f_height *= 3;							\     {									\
 comment|/* Initialize the path to contain the left spine.             */
-value|\ 	a_type *rbp_f_path[rbp_f_height];				\ 	a_type *rbp_f_node;						\ 	unsigned rbp_f_depth = 0;					\ 	if ((a_tree)->rbt_root !=&(a_tree)->rbt_nil) {			\ 	    rbp_f_path[rbp_f_depth] = (a_tree)->rbt_root;		\ 	    rbp_f_depth++;						\ 	    while ((rbp_f_node = rbp_left_get(a_type, a_field,		\ 	      rbp_f_path[rbp_f_depth-1])) !=&(a_tree)->rbt_nil) {	\ 		rbp_f_path[rbp_f_depth] = rbp_f_node;			\ 		rbp_f_depth++;						\ 	    }								\ 	}								\
+value|\ 	a_type *rbp_f_path[rbp_f_height];				\ 	a_type *rbp_f_node;						\ 	bool rbp_f_synced = false;					\ 	unsigned rbp_f_depth = 0;					\ 	if ((a_tree)->rbt_root !=&(a_tree)->rbt_nil) {			\ 	    rbp_f_path[rbp_f_depth] = (a_tree)->rbt_root;		\ 	    rbp_f_depth++;						\ 	    while ((rbp_f_node = rbp_left_get(a_type, a_field,		\ 	      rbp_f_path[rbp_f_depth-1])) !=&(a_tree)->rbt_nil) {	\ 		rbp_f_path[rbp_f_depth] = rbp_f_node;			\ 		rbp_f_depth++;						\ 	    }								\ 	}								\
 comment|/* While the path is non-empty, iterate.                      */
 value|\ 	while (rbp_f_depth> 0) {					\ 	    (a_var) = rbp_f_path[rbp_f_depth-1];
+end_define
+
+begin_comment
+comment|/* Only use if modifying the tree during iteration. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rb_foreach_next
+parameter_list|(
+name|a_type
+parameter_list|,
+name|a_field
+parameter_list|,
+name|a_cmp
+parameter_list|,
+name|a_tree
+parameter_list|,
+name|a_node
+parameter_list|)
+define|\
+comment|/* Re-initialize the path to contain the path to a_node.  */
+define|\
+value|rbp_f_depth = 0;						\ 	    if (a_node != NULL) {					\ 		if ((a_tree)->rbt_root !=&(a_tree)->rbt_nil) {		\ 		    rbp_f_path[rbp_f_depth] = (a_tree)->rbt_root;	\ 		    rbp_f_depth++;					\ 		    rbp_f_node = rbp_f_path[0];				\ 		    while (true) {					\ 			int rbp_f_cmp = (a_cmp)((a_node),		\ 			  rbp_f_path[rbp_f_depth-1]);			\ 			if (rbp_f_cmp< 0) {				\ 			    rbp_f_node = rbp_left_get(a_type, a_field,	\ 			      rbp_f_path[rbp_f_depth-1]);		\ 			} else if (rbp_f_cmp> 0) {			\ 			    rbp_f_node = rbp_right_get(a_type, a_field,	\ 			      rbp_f_path[rbp_f_depth-1]);		\ 			} else {					\ 			    break;					\ 			}						\ 			assert(rbp_f_node !=&(a_tree)->rbt_nil);	\ 			rbp_f_path[rbp_f_depth] = rbp_f_node;		\ 			rbp_f_depth++;					\ 		    }							\ 		}							\ 	    }								\ 	    rbp_f_synced = true;
 end_define
 
 begin_define
@@ -722,9 +772,9 @@ parameter_list|,
 name|a_var
 parameter_list|)
 define|\
+value|if (rbp_f_synced) {						\ 		rbp_f_synced = false;					\ 		continue;						\ 	    }								\
 comment|/* Find the successor.                                    */
-define|\
-value|if ((rbp_f_node = rbp_right_get(a_type, a_field,		\ 	      rbp_f_path[rbp_f_depth-1])) !=&(a_tree)->rbt_nil) {	\
+value|\ 	    if ((rbp_f_node = rbp_right_get(a_type, a_field,		\ 	      rbp_f_path[rbp_f_depth-1])) !=&(a_tree)->rbt_nil) {	\
 comment|/* The successor is the left-most node in the right   */
 value|\
 comment|/* subtree.                                           */
@@ -754,9 +804,34 @@ value|{	\
 comment|/* Compute the maximum possible tree depth (3X the black height). */
 value|\     unsigned rbp_fr_height;						\     rbp_black_height(a_type, a_field, a_tree, rbp_fr_height);		\     rbp_fr_height *= 3;							\     {									\
 comment|/* Initialize the path to contain the right spine.            */
-value|\ 	a_type *rbp_fr_path[rbp_fr_height];				\ 	a_type *rbp_fr_node;						\ 	unsigned rbp_fr_depth = 0;					\ 	if ((a_tree)->rbt_root !=&(a_tree)->rbt_nil) {			\ 	    rbp_fr_path[rbp_fr_depth] = (a_tree)->rbt_root;		\ 	    rbp_fr_depth++;						\ 	    while ((rbp_fr_node = rbp_right_get(a_type, a_field,	\ 	      rbp_fr_path[rbp_fr_depth-1])) !=&(a_tree)->rbt_nil) {	\ 		rbp_fr_path[rbp_fr_depth] = rbp_fr_node;		\ 		rbp_fr_depth++;						\ 	    }								\ 	}								\
+value|\ 	a_type *rbp_fr_path[rbp_fr_height];				\ 	a_type *rbp_fr_node;						\ 	bool rbp_fr_synced = false;					\ 	unsigned rbp_fr_depth = 0;					\ 	if ((a_tree)->rbt_root !=&(a_tree)->rbt_nil) {			\ 	    rbp_fr_path[rbp_fr_depth] = (a_tree)->rbt_root;		\ 	    rbp_fr_depth++;						\ 	    while ((rbp_fr_node = rbp_right_get(a_type, a_field,	\ 	      rbp_fr_path[rbp_fr_depth-1])) !=&(a_tree)->rbt_nil) {	\ 		rbp_fr_path[rbp_fr_depth] = rbp_fr_node;		\ 		rbp_fr_depth++;						\ 	    }								\ 	}								\
 comment|/* While the path is non-empty, iterate.                      */
 value|\ 	while (rbp_fr_depth> 0) {					\ 	    (a_var) = rbp_fr_path[rbp_fr_depth-1];
+end_define
+
+begin_comment
+comment|/* Only use if modifying the tree during iteration. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rb_foreach_reverse_prev
+parameter_list|(
+name|a_type
+parameter_list|,
+name|a_field
+parameter_list|,
+name|a_cmp
+parameter_list|,
+name|a_tree
+parameter_list|,
+name|a_node
+parameter_list|)
+define|\
+comment|/* Re-initialize the path to contain the path to a_node.  */
+define|\
+value|rbp_fr_depth = 0;						\ 	    if (a_node != NULL) {					\ 		if ((a_tree)->rbt_root !=&(a_tree)->rbt_nil) {		\ 		    rbp_fr_path[rbp_fr_depth] = (a_tree)->rbt_root;	\ 		    rbp_fr_depth++;					\ 		    rbp_fr_node = rbp_fr_path[0];			\ 		    while (true) {					\ 			int rbp_fr_cmp = (a_cmp)((a_node),		\ 			  rbp_fr_path[rbp_fr_depth-1]);			\ 			if (rbp_fr_cmp< 0) {				\ 			    rbp_fr_node = rbp_left_get(a_type, a_field,	\ 			      rbp_fr_path[rbp_fr_depth-1]);		\ 			} else if (rbp_fr_cmp> 0) {			\ 			    rbp_fr_node = rbp_right_get(a_type, a_field,\ 			      rbp_fr_path[rbp_fr_depth-1]);		\ 			} else {					\ 			    break;					\ 			}						\ 			assert(rbp_fr_node !=&(a_tree)->rbt_nil);	\ 			rbp_fr_path[rbp_fr_depth] = rbp_fr_node;	\ 			rbp_fr_depth++;					\ 		    }							\ 		}							\ 	    }								\ 	    rbp_fr_synced = true;
 end_define
 
 begin_define
@@ -773,9 +848,13 @@ parameter_list|,
 name|a_var
 parameter_list|)
 define|\
+value|if (rbp_fr_synced) {					\ 		rbp_fr_synced = false;					\ 		continue;						\ 	    }								\ 	    if (rbp_fr_depth == 0) {					\
+comment|/* rb_foreach_reverse_sync() was called with a NULL   */
+value|\
+comment|/* a_node.                                            */
+value|\ 		break;							\ 	    }								\
 comment|/* Find the predecessor.                                  */
-define|\
-value|if ((rbp_fr_node = rbp_left_get(a_type, a_field,		\ 	      rbp_fr_path[rbp_fr_depth-1])) !=&(a_tree)->rbt_nil) {	\
+value|\ 	    if ((rbp_fr_node = rbp_left_get(a_type, a_field,		\ 	      rbp_fr_path[rbp_fr_depth-1])) !=&(a_tree)->rbt_nil) {	\
 comment|/* The predecessor is the right-most node in the left */
 value|\
 comment|/* subtree.                                           */
