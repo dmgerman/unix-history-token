@@ -8844,17 +8844,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|ndis_80211
-condition|)
-name|ndis_setstate_80211
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|NDIS_LOCK
 argument_list|(
 name|sc
@@ -14504,16 +14493,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|ss
-operator|->
-name|ss_nssid
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* Perform a directed scan */
 name|len
 operator|=
 sizeof|sizeof
@@ -14533,6 +14512,23 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ss
+operator|->
+name|ss_nssid
+operator|==
+literal|0
+condition|)
+name|ssid
+operator|.
+name|ns_ssidlen
+operator|=
+literal|1
+expr_stmt|;
+else|else
+block|{
+comment|/* Perform a directed scan */
 name|ssid
 operator|.
 name|ns_ssidlen
@@ -14566,6 +14562,7 @@ operator|.
 name|ns_ssidlen
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|ndis_set_info
@@ -14594,7 +14591,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|len
 operator|=
 literal|0
