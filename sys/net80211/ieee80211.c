@@ -1775,13 +1775,20 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 	 * Enable various functionality by default if we're 	 * capable; the driver can override us if it knows better. 	 */
-if|#
-directive|if
-literal|0
-comment|/* XXX temp disable until we resolve regressions */
-block|if (vap->iv_caps& IEEE80211_C_WME) 		vap->iv_flags |= IEEE80211_F_WME;
-endif|#
-directive|endif
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_WME
+condition|)
+name|vap
+operator|->
+name|iv_flags
+operator||=
+name|IEEE80211_F_WME
+expr_stmt|;
 if|if
 condition|(
 name|vap
