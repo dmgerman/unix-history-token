@@ -7402,13 +7402,9 @@ name|ni_vap
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"%s (%s:%u) %p<%s> refcnt %d\n"
+literal|"%s %p<%s> refcnt %d\n"
 argument_list|,
 name|__func__
-argument_list|,
-name|func
-argument_list|,
-name|line
 argument_list|,
 name|ni
 argument_list|,
