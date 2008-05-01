@@ -381,7 +381,7 @@ begin_define
 define|#
 directive|define
 name|EST_TRANS_LAT
-value|10
+value|1000
 end_define
 
 begin_comment
@@ -7631,6 +7631,10 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|count
+operator|=
+name|MAX_SETTINGS
+expr_stmt|;
 name|error
 operator|=
 name|CPUFREQ_DRV_SETTINGS
