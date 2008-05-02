@@ -3059,7 +3059,7 @@ argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-name|kproc_exit
+name|mpt_kthread_exit
 argument_list|(
 literal|0
 argument_list|)

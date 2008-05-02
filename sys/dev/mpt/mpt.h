@@ -918,16 +918,52 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/**************************** Kernel Thread Support ***************************/
+comment|/* **************************** NewBUS CAM Support ****************************/
 end_comment
 
 begin_if
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>
-literal|500005
+operator|<
+literal|700049
 end_if
+
+begin_define
+define|#
+directive|define
+name|mpt_xpt_bus_register
+parameter_list|(
+name|sim
+parameter_list|,
+name|parent
+parameter_list|,
+name|bus
+parameter_list|)
+define|\
+value|xpt_bus_register(sim, bus)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|mpt_xpt_bus_register
+value|xpt_bus_register
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/**************************** Kernel Thread Support ***************************/
+end_comment
 
 begin_if
 if|#
@@ -960,10 +996,24 @@ define|\
 value|kproc_create(func, farg, proc_ptr, flags, stackpgs, fmtstr, arg)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_define
+define|#
+directive|define
+name|mpt_kthread_exit
+parameter_list|(
+name|status
+parameter_list|)
+define|\
+value|kproc_exit(status)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|>
+literal|500005
+end_elif
 
 begin_define
 define|#
@@ -988,10 +1038,16 @@ define|\
 value|kthread_create(func, farg, proc_ptr, flags, stackpgs, fmtstr, arg)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|mpt_kthread_exit
+parameter_list|(
+name|status
+parameter_list|)
+define|\
+value|kthread_exit(status)
+end_define
 
 begin_else
 else|#
@@ -1019,6 +1075,17 @@ name|arg
 parameter_list|)
 define|\
 value|kthread_create(func, farg, proc_ptr, fmtstr, arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mpt_kthread_exit
+parameter_list|(
+name|status
+parameter_list|)
+define|\
+value|kthread_exit(status)
 end_define
 
 begin_endif
