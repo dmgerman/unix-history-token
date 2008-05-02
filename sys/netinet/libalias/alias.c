@@ -6666,9 +6666,12 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-if|if feof
+if|if
 condition|(
+name|feof
+argument_list|(
 name|fd
+argument_list|)
 condition|)
 break|break;
 name|len
