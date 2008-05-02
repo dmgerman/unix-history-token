@@ -85,12 +85,6 @@ directive|include
 file|"libc_private.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|getchar
-end_undef
-
 begin_function
 name|int
 name|getchar
@@ -121,6 +115,24 @@ expr_stmt|;
 return|return
 operator|(
 name|retval
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|getchar_unlocked
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__sgetc
+argument_list|(
+name|stdin
+argument_list|)
 operator|)
 return|;
 block|}

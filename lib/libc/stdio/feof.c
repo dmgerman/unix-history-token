@@ -72,14 +72,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"local.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|feof
-end_undef
+begin_define
+define|#
+directive|define
+name|__sfeof
+parameter_list|(
+name|p
+parameter_list|)
+value|(((p)->_flags& __SEOF) != 0)
+end_define
 
 begin_function
 name|int
@@ -113,6 +123,26 @@ expr_stmt|;
 return|return
 operator|(
 name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|feof_unlocked
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__sfeof
+argument_list|(
+name|fp
+argument_list|)
 operator|)
 return|;
 block|}

@@ -72,14 +72,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"local.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|clearerr
-end_undef
+begin_define
+define|#
+directive|define
+name|__sclearerr
+parameter_list|(
+name|p
+parameter_list|)
+value|((void)((p)->_flags&= ~(__SERR|__SEOF)))
+end_define
 
 begin_function
 name|void
@@ -103,6 +113,23 @@ name|fp
 argument_list|)
 expr_stmt|;
 name|FUNLOCKFILE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|clearerr_unlocked
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|__sclearerr
 argument_list|(
 name|fp
 argument_list|)

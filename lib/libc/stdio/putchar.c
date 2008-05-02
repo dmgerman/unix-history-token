@@ -81,12 +81,6 @@ directive|include
 file|"libc_private.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|putchar
-end_undef
-
 begin_comment
 comment|/*  * A subroutine version of the macro putchar  */
 end_comment
@@ -134,6 +128,27 @@ expr_stmt|;
 return|return
 operator|(
 name|retval
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|putchar_unlocked
+parameter_list|(
+name|int
+name|ch
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__sputc
+argument_list|(
+name|ch
+argument_list|,
+name|stdout
+argument_list|)
 operator|)
 return|;
 block|}

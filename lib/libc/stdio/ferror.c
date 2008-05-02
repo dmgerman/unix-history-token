@@ -72,14 +72,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libc_private.h"
+file|"local.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|ferror
-end_undef
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
 
 begin_function
 name|int
@@ -113,6 +113,26 @@ expr_stmt|;
 return|return
 operator|(
 name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ferror_unlocked
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__sferror
+argument_list|(
+name|fp
+argument_list|)
 operator|)
 return|;
 block|}
