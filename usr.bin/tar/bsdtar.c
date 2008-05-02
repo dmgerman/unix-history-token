@@ -3443,7 +3443,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
