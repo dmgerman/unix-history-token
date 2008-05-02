@@ -2758,7 +2758,7 @@ name|bsdtar
 argument_list|,
 literal|"--format"
 argument_list|,
-literal|"c"
+literal|"cru"
 argument_list|)
 expr_stmt|;
 if|if
