@@ -7560,9 +7560,6 @@ name|maxi
 decl_stmt|,
 name|maxfreq
 decl_stmt|;
-name|uint16_t
-name|saved_id16
-decl_stmt|;
 name|perf_dev
 operator|=
 name|device_find_child
@@ -7731,12 +7728,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|est_get_id16
-argument_list|(
-operator|&
-name|saved_id16
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|est_set_id16
