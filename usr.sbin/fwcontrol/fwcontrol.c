@@ -169,10 +169,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fwcontrol [-u bus_num] [-rt] [-g gap_count] [-o node] "
+literal|"fwcontrol [-u bus_num] [-rt] [-f node] [-g gap_count] "
+literal|"[-o node] "
 literal|"[-b pri_req] [-c node] [-d node] [-l file] "
 literal|"[-R file] [-S file] [-m target]\n"
 literal|"\t-u: specify bus number\n"
+literal|"\t-f: broadcast force_root by phy_config packet\n"
 literal|"\t-g: broadcast gap_count by phy_config packet\n"
 literal|"\t-o: send link-on packet to the node\n"
 literal|"\t-s: write RESET_START register on the node\n"
@@ -574,6 +576,11 @@ name|addr
 index|[
 name|EUI64_SIZ
 index|]
+decl_stmt|,
+name|hostname
+index|[
+literal|40
+index|]
 decl_stmt|;
 name|int
 name|i
@@ -600,7 +607,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"node           EUI64          status\n"
+literal|"node           EUI64          status    hostname\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -653,9 +660,31 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|eui64_ntohost
+argument_list|(
+name|hostname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+argument_list|,
+operator|&
+name|eui
+argument_list|)
+condition|)
+name|hostname
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%4d  %s %6d\n"
+literal|"%4d  %s %6d    %s\n"
 argument_list|,
 operator|(
 name|devinfo
@@ -679,6 +708,8 @@ argument_list|,
 name|devinfo
 operator|->
 name|status
+argument_list|,
+name|hostname
 argument_list|)
 expr_stmt|;
 block|}
@@ -870,7 +901,10 @@ name|wreqq
 operator|.
 name|data
 operator|=
+name|htonl
+argument_list|(
 name|data
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3899,7 +3933,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"M:g:m:o:s:b:prtc:d:l:u:R:S:"
+literal|"M:f:g:m:o:s:b:prtc:d:l:u:R:S:"
 argument_list|)
 operator|)
 operator|!=
@@ -4034,6 +4068,39 @@ expr_stmt|;
 name|dump_crom
 argument_list|(
 name|crom_buf
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|tmp
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|open_dev
+argument_list|(
+operator|&
+name|fd
+argument_list|,
+name|devbase
+argument_list|)
+expr_stmt|;
+name|send_phy_config
+argument_list|(
+name|fd
+argument_list|,
+name|tmp
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
