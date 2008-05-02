@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_include
@@ -18,6 +18,494 @@ include|#
 directive|include
 file|"e1000_mac.h"
 end_include
+
+begin_comment
+comment|/**  *  e1000_init_mac_ops_generic - Initialize MAC function pointers  *  @hw: pointer to the HW structure  *  *  Setups up the function pointers to no-op functions  **/
+end_comment
+
+begin_function
+name|void
+name|e1000_init_mac_ops_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|struct
+name|e1000_mac_info
+modifier|*
+name|mac
+init|=
+operator|&
+name|hw
+operator|->
+name|mac
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_init_mac_ops_generic"
+argument_list|)
+expr_stmt|;
+comment|/* General Setup */
+name|mac
+operator|->
+name|ops
+operator|.
+name|init_params
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|init_hw
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|reset_hw
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_physical_interface
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|get_bus_info
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|read_mac_addr
+operator|=
+name|e1000_read_mac_addr_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|remove_device
+operator|=
+name|e1000_remove_device_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|config_collision_dist
+operator|=
+name|e1000_config_collision_dist_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|clear_hw_cntrs
+operator|=
+name|e1000_null_mac_generic
+expr_stmt|;
+comment|/* LED */
+name|mac
+operator|->
+name|ops
+operator|.
+name|cleanup_led
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_led
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|blink_led
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|led_on
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|led_off
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+comment|/* LINK */
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_link
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|get_link_up_info
+operator|=
+name|e1000_null_link_info
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_for_link
+operator|=
+name|e1000_null_ops_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|wait_autoneg
+operator|=
+name|e1000_wait_autoneg_generic
+expr_stmt|;
+comment|/* Management */
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_mng_mode
+operator|=
+name|e1000_null_mng_mode
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|mng_host_if_write
+operator|=
+name|e1000_mng_host_if_write_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|mng_write_cmd_header
+operator|=
+name|e1000_mng_write_cmd_header_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|mng_enable_host_if
+operator|=
+name|e1000_mng_enable_host_if_generic
+expr_stmt|;
+comment|/* VLAN, MC, etc. */
+name|mac
+operator|->
+name|ops
+operator|.
+name|update_mc_addr_list
+operator|=
+name|e1000_null_update_mc
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|clear_vfta
+operator|=
+name|e1000_null_mac_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|write_vfta
+operator|=
+name|e1000_null_write_vfta
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|mta_set
+operator|=
+name|e1000_null_mta_set
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|rar_set
+operator|=
+name|e1000_rar_set_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|validate_mdi_setting
+operator|=
+name|e1000_validate_mdi_setting_generic
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_null_ops_generic - No-op function, returns 0  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|s32
+name|e1000_null_ops_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_null_ops_generic"
+argument_list|)
+expr_stmt|;
+return|return
+name|E1000_SUCCESS
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_null_mac_generic - No-op function, return void  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|void
+name|e1000_null_mac_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_null_mac_generic"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_null_link_info - No-op function, return 0  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|s32
+name|e1000_null_link_info
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u16
+modifier|*
+name|s
+parameter_list|,
+name|u16
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_null_link_info"
+argument_list|)
+expr_stmt|;
+return|return
+name|E1000_SUCCESS
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_null_mng_mode - No-op function, return FALSE  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|bool
+name|e1000_null_mng_mode
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_null_mng_mode"
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_null_update_mc - No-op function, return void  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|void
+name|e1000_null_update_mc
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+modifier|*
+name|h
+parameter_list|,
+name|u32
+name|a
+parameter_list|,
+name|u32
+name|b
+parameter_list|,
+name|u32
+name|c
+parameter_list|)
+block|{
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_null_update_mc"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_null_write_vfta - No-op function, return void  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|void
+name|e1000_null_write_vfta
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|a
+parameter_list|,
+name|u32
+name|b
+parameter_list|)
+block|{
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_null_write_vfta"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_null_set_mta - No-op function, return void  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|void
+name|e1000_null_mta_set
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|a
+parameter_list|)
+block|{
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_null_mta_set"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_null_rar_set - No-op function, return void  *  @hw: pointer to the HW structure  **/
+end_comment
+
+begin_function
+name|void
+name|e1000_null_rar_set
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+modifier|*
+name|h
+parameter_list|,
+name|u32
+name|a
+parameter_list|)
+block|{
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_null_rar_set"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
 
 begin_comment
 comment|/**  *  e1000_remove_device_generic - Free device specific structure  *  @hw: pointer to the HW structure  *  *  If a device specific structure was allocated, this function will  *  free it.  **/
@@ -517,7 +1005,13 @@ argument_list|(
 literal|"Programming MAC Address into RAR[0]\n"
 argument_list|)
 expr_stmt|;
-name|e1000_rar_set_generic
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|rar_set
 argument_list|(
 name|hw
 argument_list|,
@@ -644,7 +1138,13 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -734,7 +1234,13 @@ operator|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -849,7 +1355,13 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|e1000_rar_set
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|rar_set
 argument_list|(
 name|hw
 argument_list|,
@@ -996,36 +1508,26 @@ operator||=
 name|E1000_RAH_AV
 expr_stmt|;
 block|}
-name|E1000_WRITE_REG_ARRAY
+name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_RA
-argument_list|,
-operator|(
+name|E1000_RAL
+argument_list|(
 name|index
-operator|<<
-literal|1
-operator|)
+argument_list|)
 argument_list|,
 name|rar_low
 argument_list|)
 expr_stmt|;
-name|E1000_WRITE_REG_ARRAY
+name|E1000_WRITE_REG
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_RA
-argument_list|,
-operator|(
-operator|(
+name|E1000_RAH
+argument_list|(
 name|index
-operator|<<
-literal|1
-operator|)
-operator|+
-literal|1
-operator|)
+argument_list|)
 argument_list|,
 name|rar_high
 argument_list|)
@@ -1183,7 +1685,13 @@ condition|(
 name|mc_addr_count
 condition|)
 block|{
-name|e1000_rar_set
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|rar_set
 argument_list|(
 name|hw
 argument_list|,
@@ -1313,7 +1821,13 @@ argument_list|,
 name|hash_value
 argument_list|)
 expr_stmt|;
-name|e1000_mta_set
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|mta_set
 argument_list|(
 name|hw
 argument_list|,
@@ -1470,7 +1984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_pcix_mmrbc_workaround_generic - Fix incorrect MMRBC value  *  @hw: pointer to the HW structure  *  *  In certain situations, a system BIOS may report that the PCIx maximum  *  memory read byte count (MMRBC) value is higher than than the actual  *  value. We check the PCIx command regsiter with the current PCIx status  *  regsiter.  **/
+comment|/**  *  e1000_pcix_mmrbc_workaround_generic - Fix incorrect MMRBC value  *  @hw: pointer to the HW structure  *  *  In certain situations, a system BIOS may report that the PCIx maximum  *  memory read byte count (MMRBC) value is higher than than the actual  *  value. We check the PCIx command register with the current PCIx status  *  register.  **/
 end_comment
 
 begin_function
@@ -2720,16 +3234,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
-decl_stmt|;
 name|s32
 name|ret_val
 init|=
@@ -2743,7 +3247,23 @@ expr_stmt|;
 comment|/* 	 * In the case of the phy reset being blocked, we already have a link. 	 * We do not need to set it up again. 	 */
 if|if
 condition|(
-name|e1000_check_reset_block
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|check_reset_block
+condition|)
+if|if
+condition|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|check_reset_block
 argument_list|(
 name|hw
 argument_list|)
@@ -2805,8 +3325,12 @@ expr_stmt|;
 comment|/* Call the necessary media_type subroutine to configure the link. */
 name|ret_val
 operator|=
-name|func
+name|hw
 operator|->
+name|mac
+operator|.
+name|ops
+operator|.
 name|setup_physical_interface
 argument_list|(
 name|hw
@@ -2966,7 +3490,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For these adapters, the SW defineable pin 1 is set when the optics 	 * detect a signal.  If we have a signal, then poll for a "Link-Up" 	 * indication. 	 */
+comment|/* 	 * For these adapters, the SW definable pin 1 is set when the optics 	 * detect a signal.  If we have a signal, then poll for a "Link-Up" 	 * indication. 	 */
 if|if
 condition|(
 name|hw
@@ -3111,7 +3635,7 @@ argument_list|(
 literal|"e1000_poll_fiber_serdes_link_generic"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we have a signal (the cable is plugged in, or assumed true for 	 * serdes media) then poll for a "Link-Up" indication in the Device 	 * Status Register.  Time-out if a link isn't seen in 500 milliseconds 	 * seconds (Auto-negotiation should complete in less than 500 	 * milliseconds even if the other end is doing it in SW). 	 */
+comment|/* 	 * If we have a signal (the cable is plugged in, or assumed TRUE for 	 * serdes media) then poll for a "Link-Up" indication in the Device 	 * Status Register.  Time-out if a link isn't seen in 500 milliseconds 	 * seconds (Auto-negotiation should complete in less than 500 	 * milliseconds even if the other end is doing it in SW). 	 */
 for|for
 control|(
 name|i
@@ -3169,7 +3693,13 @@ expr_stmt|;
 comment|/* 		 * AutoNeg failed to achieve a link, so we'll call 		 * mac->check_for_link. This routine will force the 		 * link up if we detect a signal. This will allow us to 		 * communicate with non-autonegotiating link partners. 		 */
 name|ret_val
 operator|=
-name|e1000_check_for_link
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|check_for_link
 argument_list|(
 name|hw
 argument_list|)
@@ -3362,7 +3892,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_fc_watermarks_generic - Set flow control high/low watermarks  *  @hw: pointer to the HW structure  *  *  Sets the flow control high/low threshold (watermark) registers.  If  *  flow control XON frame transmission is enabled, then set XON frame  *  tansmission as well.  **/
+comment|/**  *  e1000_set_fc_watermarks_generic - Set flow control high/low watermarks  *  @hw: pointer to the HW structure  *  *  Sets the flow control high/low threshold (watermark) registers.  If  *  flow control XON frame transmission is enabled, then set XON frame  *  transmission as well.  **/
 end_comment
 
 begin_function
@@ -3490,7 +4020,13 @@ expr_stmt|;
 comment|/* 	 * Read and store word 0x0F of the EEPROM. This word contains bits 	 * that determine the hardware's default PAUSE (flow control) mode, 	 * a bit that determines whether the HW defaults to enabling or 	 * disabling auto-negotiation, and the direction of the 	 * SW defined pins. If there is no SW over-ride of the flow 	 * control setting, then the variable hw->fc will 	 * be initialized based on a value in the EEPROM. 	 */
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -3740,6 +4276,16 @@ name|hw
 operator|->
 name|mac
 decl_stmt|;
+name|struct
+name|e1000_phy_info
+modifier|*
+name|phy
+init|=
+operator|&
+name|hw
+operator|->
+name|phy
+decl_stmt|;
 name|s32
 name|ret_val
 init|=
@@ -3851,7 +4397,11 @@ block|{
 comment|/* 		 * Read the MII Status Register and check to see if AutoNeg 		 * has completed.  We read this twice because this reg has 		 * some "sticky" (latched) bits. 		 */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3870,7 +4420,11 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3910,7 +4464,11 @@ block|}
 comment|/* 		 * The AutoNeg process has completed, so we now need to 		 * read both the Auto Negotiation Advertisement 		 * Register (Address 4) and the Auto_Negotiation Base 		 * Page Ability Register (Address 5) to determine how 		 * flow control was negotiated. 		 */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3929,7 +4487,11 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4114,7 +4676,11 @@ block|}
 comment|/* 		 * Now we need to do one last check...  If we auto- 		 * negotiated to HALF DUPLEX, flow control should not be 		 * enabled per IEEE 802.3 spec. 		 */
 name|ret_val
 operator|=
-name|e1000_get_speed_and_duplex
+name|mac
+operator|->
+name|ops
+operator|.
+name|get_link_up_info
 argument_list|(
 name|hw
 argument_list|,
@@ -4185,7 +4751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_speed_and_duplex_copper_generic - Retreive current speed/duplex  *  @hw: pointer to the HW structure  *  @speed: stores the current speed  *  @duplex: stores the current duplex  *  *  Read the status register for the current speed/duplex and store the current  *  speed and duplex for copper connections.  **/
+comment|/**  *  e1000_get_speed_and_duplex_copper_generic - Retrieve current speed/duplex  *  @hw: pointer to the HW structure  *  @speed: stores the current speed  *  @duplex: stores the current duplex  *  *  Read the status register for the current speed/duplex and store the current  *  speed and duplex for copper connections.  **/
 end_comment
 
 begin_function
@@ -4311,7 +4877,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_speed_and_duplex_fiber_generic - Retreive current speed/duplex  *  @hw: pointer to the HW structure  *  @speed: stores the current speed  *  @duplex: stores the current duplex  *  *  Sets the speed and duplex to gigabit full duplex (the only possible option)  *  for fiber/serdes links.  **/
+comment|/**  *  e1000_get_speed_and_duplex_fiber_generic - Retrieve current speed/duplex  *  @hw: pointer to the HW structure  *  @speed: stores the current speed  *  @duplex: stores the current duplex  *  *  Sets the speed and duplex to gigabit full duplex (the only possible option)  *  for fiber/serdes links.  **/
 end_comment
 
 begin_function
@@ -4335,11 +4901,6 @@ block|{
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_get_speed_and_duplex_fiber_serdes_generic"
-argument_list|)
-expr_stmt|;
-name|UNREFERENCED_PARAMETER
-argument_list|(
-name|hw
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4713,7 +5274,13 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -4830,7 +5397,9 @@ name|ret_val
 operator|=
 name|hw
 operator|->
-name|func
+name|nvm
+operator|.
+name|ops
 operator|.
 name|valid_led_default
 argument_list|(
@@ -5108,7 +5677,9 @@ if|if
 condition|(
 name|hw
 operator|->
-name|func
+name|mac
+operator|.
+name|ops
 operator|.
 name|setup_led
 operator|!=
@@ -5244,7 +5815,9 @@ if|if
 condition|(
 name|hw
 operator|->
-name|func
+name|mac
+operator|.
+name|ops
 operator|.
 name|cleanup_led
 operator|!=
@@ -5282,7 +5855,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_blink_led_generic - Blink LED  *  @hw: pointer to the HW structure  *  *  Blink the led's which are set to be on.  **/
+comment|/**  *  e1000_blink_led_generic - Blink LED  *  @hw: pointer to the HW structure  *  *  Blink the LEDs which are set to be on.  **/
 end_comment
 
 begin_function
@@ -5660,7 +6233,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_disable_pcie_master_generic - Disables PCI-express master access  *  @hw: pointer to the HW structure  *  *  Returns 0 (E1000_SUCCESS) if successful, else returns -10  *  (-E1000_ERR_MASTER_REQUESTS_PENDING) if master disable bit has not casued  *  the master requests to be disabled.  *  *  Disables PCI-Express master access and verifies there are no pending  *  requests.  **/
+comment|/**  *  e1000_disable_pcie_master_generic - Disables PCI-express master access  *  @hw: pointer to the HW structure  *  *  Returns 0 (E1000_SUCCESS) if successful, else returns -10  *  (-E1000_ERR_MASTER_REQUESTS_PENDING) if master disable bit has not caused  *  the master requests to be disabled.  *  *  Disables PCI-Express master access and verifies there are no pending  *  requests.  **/
 end_comment
 
 begin_function
@@ -6063,7 +6636,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_validate_mdi_setting_generic - Verify MDI/MDIx settings  *  @hw: pointer to the HW structure  *  *  Verify that when not using auto-negotitation that MDI/MDIx is correctly  *  set, which is forced to MDI mode only.  **/
+comment|/**  *  e1000_validate_mdi_setting_generic - Verify MDI/MDIx settings  *  @hw: pointer to the HW structure  *  *  Verify that when not using auto-negotiation that MDI/MDIx is correctly  *  set, which is forced to MDI mode only.  **/
 end_comment
 
 begin_function

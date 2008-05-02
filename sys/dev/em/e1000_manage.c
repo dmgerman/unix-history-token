@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_include
@@ -106,7 +106,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mng_enable_host_if_generic - Checks host interface is enabled  *  @hw: pointer to the HW structure  *  *  Returns E1000_success upon success, else E1000_ERR_HOST_INTERFACE_COMMAND  *  *  This function checks whether the HOST IF is enabled for command operaton  *  and also checks whether the previous command is completed.  It busy waits  *  in case of previous command is not completed.  **/
+comment|/**  *  e1000_mng_enable_host_if_generic - Checks host interface is enabled  *  @hw: pointer to the HW structure  *  *  Returns E1000_success upon success, else E1000_ERR_HOST_INTERFACE_COMMAND  *  *  This function checks whether the HOST IF is enabled for command operation  *  and also checks whether the previous command is completed.  It busy waits  *  in case of previous command is not completed.  **/
 end_comment
 
 begin_function
@@ -240,7 +240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_mng_mode_generic - Generic check managament mode  *  @hw: pointer to the HW structure  *  *  Reads the firmware semaphore register and returns true (>0) if  *  manageability is enabled, else false (0).  **/
+comment|/**  *  e1000_check_mng_mode_generic - Generic check management mode  *  @hw: pointer to the HW structure  *  *  Reads the firmware semaphore register and returns TRUE (>0) if  *  manageability is enabled, else FALSE (0).  **/
 end_comment
 
 begin_function
@@ -354,7 +354,13 @@ comment|/* No manageability, no filtering */
 if|if
 condition|(
 operator|!
-name|e1000_check_mng_mode
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|check_mng_mode
 argument_list|(
 name|hw
 argument_list|)
@@ -371,7 +377,13 @@ block|}
 comment|/* 	 * If we can't read from the host interface for whatever 	 * reason, disable filtering. 	 */
 name|ret_val
 operator|=
-name|e1000_mng_enable_host_if
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|mng_enable_host_if
 argument_list|(
 name|hw
 argument_list|)
@@ -584,7 +596,13 @@ expr_stmt|;
 comment|/* Enable the host interface */
 name|ret_val
 operator|=
-name|e1000_mng_enable_host_if
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|mng_enable_host_if
 argument_list|(
 name|hw
 argument_list|)
@@ -599,7 +617,13 @@ goto|;
 comment|/* Populate the host interface with the contents of "buffer". */
 name|ret_val
 operator|=
-name|e1000_mng_host_if_write
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|mng_host_if_write
 argument_list|(
 name|hw
 argument_list|,
@@ -630,7 +654,13 @@ goto|;
 comment|/* Write the manageability command header */
 name|ret_val
 operator|=
-name|e1000_mng_write_cmd_header
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|mng_write_cmd_header
 argument_list|(
 name|hw
 argument_list|,
@@ -777,7 +807,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_mng_host_if_write_generic - Writes to the manageability host interface  *  @hw: pointer to the HW structure  *  @buffer: pointer to the host interface buffer  *  @length: size of the buffer  *  @offset: location in the buffer to write to  *  @sum: sum of the data (not checksum)  *  *  This function writes the buffer content at the offset given on the host if.  *  It also does alignment considerations to do the writes in most efficient  *  way.  Also fills up the sum of the buffer in *buffer parameter.  **/
+comment|/**  *  e1000_mng_host_if_write_generic - Write to the manageability host interface  *  @hw: pointer to the HW structure  *  @buffer: pointer to the host interface buffer  *  @length: size of the buffer  *  @offset: location in the buffer to write to  *  @sum: sum of the data (not checksum)  *  *  This function writes the buffer content at the offset given on the host if.  *  It also does alignment considerations to do the writes in most efficient  *  way.  Also fills up the sum of the buffer in *buffer parameter.  **/
 end_comment
 
 begin_function

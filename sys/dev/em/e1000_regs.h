@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -248,6 +248,17 @@ end_define
 
 begin_comment
 comment|/* Interrupt Acknowledge Auto Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IVAR
+value|0x000E4
+end_define
+
+begin_comment
+comment|/* Interrupt Vector Allocation Register - RW */
 end_comment
 
 begin_define
@@ -1033,7 +1044,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_PSRTYPE_REG
+name|E1000_PSRTYPE
 parameter_list|(
 name|_i
 parameter_list|)
@@ -1047,7 +1058,7 @@ name|E1000_RAL
 parameter_list|(
 name|_i
 parameter_list|)
-value|(0x05400 + ((_i) * 8))
+value|(((_i)<= 15) ? (0x05400 + ((_i) * 8)) : (0x054E0 + ((_i - 16) * 8)))
 end_define
 
 begin_define
@@ -1057,7 +1068,7 @@ name|E1000_RAH
 parameter_list|(
 name|_i
 parameter_list|)
-value|(0x05404 + ((_i) * 8))
+value|(((_i)<= 15) ? (0x05404 + ((_i) * 8)) : (0x054E4 + ((_i - 16) * 8)))
 end_define
 
 begin_define
@@ -2014,417 +2025,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_LSECTXUT
-value|0x04300
-end_define
-
-begin_comment
-comment|/* LinkSec Tx Untagged Packet Count - OutPktsUntagged */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXPKTE
-value|0x04304
-end_define
-
-begin_comment
-comment|/* LinkSec Encrypted Tx Packets Count - OutPktsEncrypted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXPKTP
-value|0x04308
-end_define
-
-begin_comment
-comment|/* LinkSec Protected Tx Packet Count - OutPktsProtected */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXOCTE
-value|0x0430C
-end_define
-
-begin_comment
-comment|/* LinkSec Encrypted Tx Octets Count - OutOctetsEncrypted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXOCTP
-value|0x04310
-end_define
-
-begin_comment
-comment|/* LinkSec Protected Tx Octets Count - OutOctetsProtected */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXUT
-value|0x04314
-end_define
-
-begin_comment
-comment|/* LinkSec Untagged non-Strict Rx Packet Count - InPktsUntagged/InPktsNoTag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXOCTD
-value|0x0431C
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Octets Decrypted Count - InOctetsDecrypted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXOCTV
-value|0x04320
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Octets Validated - InOctetsValidated */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXBAD
-value|0x04324
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Bad Tag - InPktsBadTag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXNOSCI
-value|0x04328
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Packet No SCI Count - InPktsNoSci */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXUNSCI
-value|0x0432C
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Packet Unknown SCI Count - InPktsUnknownSci */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXUNCH
-value|0x04330
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Unchecked Packets Count - InPktsUnchecked */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXDELAY
-value|0x04340
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Delayed Packet Count - InPktsDelayed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXLATE
-value|0x04350
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Late Packets Count - InPktsLate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXOK
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x04360 + (0x04 * (_n)))
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Packet OK Count - InPktsOk */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXINV
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x04380 + (0x04 * (_n)))
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Invalid Count - InPktsInvalid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXNV
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x043A0 + (0x04 * (_n)))
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Not Valid Count - InPktsNotValid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXUNSA
-value|0x043C0
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Unused SA Count - InPktsUnusedSa */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXNUSA
-value|0x043D0
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Not Using SA Count - InPktsNotUsingSa */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXCAP
-value|0x0B000
-end_define
-
-begin_comment
-comment|/* LinkSec Tx Capabilities Register - RO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXCAP
-value|0x0B300
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Capabilities Register - RO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXCTRL
-value|0x0B004
-end_define
-
-begin_comment
-comment|/* LinkSec Tx Control - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXCTRL
-value|0x0B304
-end_define
-
-begin_comment
-comment|/* LinkSec Rx Control - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXSCIL
-value|0x0B008
-end_define
-
-begin_comment
-comment|/* LinkSec Tx SCI Low - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXSCIH
-value|0x0B00C
-end_define
-
-begin_comment
-comment|/* LinkSec Tx SCI High - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXSA
-value|0x0B010
-end_define
-
-begin_comment
-comment|/* LinkSec Tx SA0 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXPN0
-value|0x0B018
-end_define
-
-begin_comment
-comment|/* LinkSec Tx SA PN 0 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXPN1
-value|0x0B01C
-end_define
-
-begin_comment
-comment|/* LinkSec Tx SA PN 1 - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXSCL
-value|0x0B3D0
-end_define
-
-begin_comment
-comment|/* LinkSec Rx SCI Low - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXSCH
-value|0x0B3E0
-end_define
-
-begin_comment
-comment|/* LinkSec Rx SCI High - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXKEY0
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x0B020 + (0x04 * (_n)))
-end_define
-
-begin_comment
-comment|/* LinkSec Tx 128-bit Key 0 - WO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECTXKEY1
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x0B030 + (0x04 * (_n)))
-end_define
-
-begin_comment
-comment|/* LinkSec Tx 128-bit Key 1 - WO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXSA
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x0B310 + (0x04 * (_n)))
-end_define
-
-begin_comment
-comment|/* LinkSec Rx SAs - RW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXPN
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x0B330 + (0x04 * (_n)))
-end_define
-
-begin_comment
-comment|/* LinkSec Rx SAs - RW */
-end_comment
-
-begin_comment
-comment|/*  * LinkSec Rx Keys  - where _n is the SA no. and _m the 4 dwords of the 128 bit  * key - RW.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_LSECRXKEY
-parameter_list|(
-name|_n
-parameter_list|,
-name|_m
-parameter_list|)
-value|(0x0B350 + (0x10 * (_n)) + (0x04 * (_m)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_PCS_CFG0
 value|0x04200
 end_define
@@ -2717,17 +2317,6 @@ end_define
 
 begin_comment
 comment|/* Receive Address - RW Array */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_PSRTYPE
-value|0x05480
-end_define
-
-begin_comment
-comment|/* Packet Split Receive Type - RW */
 end_comment
 
 begin_define
@@ -3134,7 +2723,7 @@ value|0x08F00
 end_define
 
 begin_comment
-comment|/* Host Inteface Control */
+comment|/* Host Interface Control */
 end_comment
 
 begin_comment
@@ -3331,6 +2920,164 @@ end_define
 
 begin_comment
 comment|/* RSS Interrupt Request */
+end_comment
+
+begin_comment
+comment|/* Time Sync */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCTL
+value|0x0B620
+end_define
+
+begin_comment
+comment|/* Rx Time Sync Control register - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCTXCTL
+value|0x0B614
+end_define
+
+begin_comment
+comment|/* Tx Time Sync Control register - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSYNCRXCFG
+value|0x05F50
+end_define
+
+begin_comment
+comment|/* Time Sync Rx Configuration - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXSTMPL
+value|0x0B624
+end_define
+
+begin_comment
+comment|/* Rx timestamp Low - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXSTMPH
+value|0x0B628
+end_define
+
+begin_comment
+comment|/* Rx timestamp High - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXSATRL
+value|0x0B62C
+end_define
+
+begin_comment
+comment|/* Rx timestamp attribute low - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXSATRH
+value|0x0B630
+end_define
+
+begin_comment
+comment|/* Rx timestamp attribute high - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TXSTMPL
+value|0x0B618
+end_define
+
+begin_comment
+comment|/* Tx timestamp value Low - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TXSTMPH
+value|0x0B61C
+end_define
+
+begin_comment
+comment|/* Tx timestamp value High - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SYSTIML
+value|0x0B600
+end_define
+
+begin_comment
+comment|/* System time register Low - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SYSTIMH
+value|0x0B604
+end_define
+
+begin_comment
+comment|/* System time register High - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TIMINCA
+value|0x0B608
+end_define
+
+begin_comment
+comment|/* Increment attributes register - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXMTRL
+value|0x0B634
+end_define
+
+begin_comment
+comment|/* Time sync Rx EtherType and Message Type - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXUDP
+value|0x0B638
+end_define
+
+begin_comment
+comment|/* Time Sync Rx UDP Port - RW */
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -421,6 +421,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82574L
+value|0x10D3
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_80003ES2LAN_COPPER_DPT
 value|0x1096
 end_define
@@ -498,8 +505,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_ICH9_IGP_M
+value|0x10BF
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_ICH9_IGP_M_AMT
+value|0x10F5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_ICH9_IGP_M_V
+value|0x10CB
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_ICH9_IGP_AMT
 value|0x10BD
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_ICH9_BM
+value|0x10E5
 end_define
 
 begin_define
@@ -528,6 +563,41 @@ define|#
 directive|define
 name|E1000_DEV_ID_ICH9_IFE_G
 value|0x10C2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_ICH10_R_BM_LM
+value|0x10CC
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_ICH10_R_BM_LF
+value|0x10CD
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_ICH10_R_BM_V
+value|0x10CE
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_ICH10_D_BM_LM
+value|0x10DE
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_ICH10_D_BM_LF
+value|0x10DF
 end_define
 
 begin_define
@@ -643,16 +713,20 @@ name|e1000_82572
 block|,
 name|e1000_82573
 block|,
+name|e1000_82574
+block|,
 name|e1000_80003es2lan
 block|,
 name|e1000_ich8lan
 block|,
 name|e1000_ich9lan
 block|,
+name|e1000_ich10lan
+block|,
 name|e1000_82575
 block|,
 name|e1000_num_macs
-comment|/* List is 1-based, so subtract 1 for true count. */
+comment|/* List is 1-based, so subtract 1 for TRUE count. */
 block|}
 name|e1000_mac_type
 typedef|;
@@ -747,6 +821,8 @@ block|,
 name|e1000_phy_igp_3
 block|,
 name|e1000_phy_ife
+block|,
+name|e1000_phy_bm
 block|, }
 name|e1000_phy_type
 typedef|;
@@ -1766,13 +1842,13 @@ end_include
 
 begin_struct
 struct|struct
-name|e1000_functions
+name|e1000_mac_operations
 block|{
 comment|/* Function pointers for the MAC. */
 name|s32
 function_decl|(
 modifier|*
-name|init_mac_params
+name|init_params
 function_decl|)
 parameter_list|(
 name|struct
@@ -2119,11 +2195,18 @@ name|e1000_hw
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Function pointers for the PHY. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e1000_phy_operations
+block|{
 name|s32
 function_decl|(
 modifier|*
-name|init_phy_params
+name|init_params
 function_decl|)
 parameter_list|(
 name|struct
@@ -2134,7 +2217,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|acquire_phy
+name|acquire
 function_decl|)
 parameter_list|(
 name|struct
@@ -2167,7 +2250,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|commit_phy
+name|commit
 function_decl|)
 parameter_list|(
 name|struct
@@ -2212,7 +2295,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|get_phy_info
+name|get_info
 function_decl|)
 parameter_list|(
 name|struct
@@ -2223,7 +2306,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|read_phy_reg
+name|read_reg
 function_decl|)
 parameter_list|(
 name|struct
@@ -2239,7 +2322,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|release_phy
+name|release
 function_decl|)
 parameter_list|(
 name|struct
@@ -2250,7 +2333,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|reset_phy
+name|reset
 function_decl|)
 parameter_list|(
 name|struct
@@ -2287,7 +2370,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|write_phy_reg
+name|write_reg
 function_decl|)
 parameter_list|(
 name|struct
@@ -2302,7 +2385,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|power_up_phy
+name|power_up
 function_decl|)
 parameter_list|(
 name|struct
@@ -2313,7 +2396,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|power_down_phy
+name|power_down
 function_decl|)
 parameter_list|(
 name|struct
@@ -2321,22 +2404,18 @@ name|e1000_hw
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Function pointers for the NVM. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|e1000_nvm_operations
+block|{
 name|s32
 function_decl|(
 modifier|*
-name|init_nvm_params
-function_decl|)
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-parameter_list|)
-function_decl|;
-name|s32
-function_decl|(
-modifier|*
-name|acquire_nvm
+name|init_params
 function_decl|)
 parameter_list|(
 name|struct
@@ -2347,7 +2426,18 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|read_nvm
+name|acquire
+function_decl|)
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|read
 function_decl|)
 parameter_list|(
 name|struct
@@ -2365,7 +2455,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|release_nvm
+name|release
 function_decl|)
 parameter_list|(
 name|struct
@@ -2376,7 +2466,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|reload_nvm
+name|reload
 function_decl|)
 parameter_list|(
 name|struct
@@ -2387,7 +2477,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|update_nvm
+name|update
 function_decl|)
 parameter_list|(
 name|struct
@@ -2412,7 +2502,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|validate_nvm
+name|validate
 function_decl|)
 parameter_list|(
 name|struct
@@ -2423,7 +2513,7 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
-name|write_nvm
+name|write
 function_decl|)
 parameter_list|(
 name|struct
@@ -2446,6 +2536,10 @@ begin_struct
 struct|struct
 name|e1000_mac_info
 block|{
+name|struct
+name|e1000_mac_operations
+name|ops
+decl_stmt|;
 name|u8
 name|addr
 index|[
@@ -2553,6 +2647,10 @@ begin_struct
 struct|struct
 name|e1000_phy_info
 block|{
+name|struct
+name|e1000_phy_operations
+name|ops
+decl_stmt|;
 name|e1000_phy_type
 name|type
 decl_stmt|;
@@ -2634,6 +2732,10 @@ begin_struct
 struct|struct
 name|e1000_nvm_info
 block|{
+name|struct
+name|e1000_nvm_operations
+name|ops
+decl_stmt|;
 name|e1000_nvm_type
 name|type
 decl_stmt|;
@@ -2749,10 +2851,6 @@ decl_stmt|;
 name|unsigned
 name|long
 name|io_base
-decl_stmt|;
-name|struct
-name|e1000_functions
-name|func
 decl_stmt|;
 name|struct
 name|e1000_mac_info

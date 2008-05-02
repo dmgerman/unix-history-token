@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
@@ -18,19 +18,7 @@ file|"e1000_api.h"
 end_include
 
 begin_function_decl
-name|void
-name|e1000_init_function_pointers_82540
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_phy_params_82540
 parameter_list|(
@@ -43,7 +31,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_nvm_params_82540
 parameter_list|(
@@ -56,7 +44,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_mac_params_82540
 parameter_list|(
@@ -82,7 +70,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|e1000_clear_hw_cntrs_82540
 parameter_list|(
@@ -95,7 +83,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_hw_82540
 parameter_list|(
@@ -108,7 +96,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_reset_hw_82540
 parameter_list|(
@@ -147,7 +135,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_copper_link_82540
 parameter_list|(
@@ -160,7 +148,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_fiber_serdes_link_82540
 parameter_list|(
@@ -173,7 +161,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|e1000_power_down_phy_copper_82540
 parameter_list|(
@@ -190,7 +178,7 @@ comment|/**  * e1000_init_phy_params_82540 - Init PHY func ptrs.  * @hw: pointer
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_phy_params_82540
 parameter_list|(
@@ -209,16 +197,6 @@ operator|&
 name|hw
 operator|->
 name|phy
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|s32
 name|ret_val
@@ -250,69 +228,91 @@ operator|=
 name|e1000_phy_m88
 expr_stmt|;
 comment|/* Function Pointers */
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|check_polarity
 operator|=
 name|e1000_check_polarity_m88
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|commit_phy
+name|ops
+operator|.
+name|commit
 operator|=
 name|e1000_phy_sw_reset_generic
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|force_speed_duplex
 operator|=
 name|e1000_phy_force_speed_duplex_m88
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|get_cable_length
 operator|=
 name|e1000_get_cable_length_m88
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|get_cfg_done
 operator|=
 name|e1000_get_cfg_done_generic
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|read_phy_reg
+name|ops
+operator|.
+name|read_reg
 operator|=
 name|e1000_read_phy_reg_m88
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|reset_phy
+name|ops
+operator|.
+name|reset
 operator|=
 name|e1000_phy_hw_reset_generic
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|write_phy_reg
+name|ops
+operator|.
+name|write_reg
 operator|=
 name|e1000_write_phy_reg_m88
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|get_phy_info
+name|ops
+operator|.
+name|get_info
 operator|=
 name|e1000_get_phy_info_m88
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|power_up_phy
+name|ops
+operator|.
+name|power_up
 operator|=
 name|e1000_power_up_phy_copper
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|power_down_phy
+name|ops
+operator|.
+name|power_down
 operator|=
 name|e1000_power_down_phy_copper_82540
 expr_stmt|;
@@ -389,7 +389,7 @@ comment|/**  * e1000_init_nvm_params_82540 - Init NVM func ptrs.  * @hw: pointer
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_nvm_params_82540
 parameter_list|(
@@ -408,16 +408,6 @@ operator|&
 name|hw
 operator|->
 name|nvm
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|u32
 name|eecd
@@ -519,45 +509,59 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Function Pointers */
-name|func
+name|nvm
 operator|->
-name|acquire_nvm
+name|ops
+operator|.
+name|acquire
 operator|=
 name|e1000_acquire_nvm_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|read_nvm
+name|ops
+operator|.
+name|read
 operator|=
 name|e1000_read_nvm_microwire
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|release_nvm
+name|ops
+operator|.
+name|release
 operator|=
 name|e1000_release_nvm_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|update_nvm
+name|ops
+operator|.
+name|update
 operator|=
 name|e1000_update_nvm_checksum_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
+name|ops
+operator|.
 name|valid_led_default
 operator|=
 name|e1000_valid_led_default_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|validate_nvm
+name|ops
+operator|.
+name|validate
 operator|=
 name|e1000_validate_nvm_checksum_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|write_nvm
+name|ops
+operator|.
+name|write
 operator|=
 name|e1000_write_nvm_microwire
 expr_stmt|;
@@ -572,7 +576,7 @@ comment|/**  * e1000_init_mac_params_82540 - Init MAC func ptrs.  * @hw: pointer
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_mac_params_82540
 parameter_list|(
@@ -591,16 +595,6 @@ operator|&
 name|hw
 operator|->
 name|mac
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|s32
 name|ret_val
@@ -683,36 +677,46 @@ name|E1000_RAR_ENTRIES
 expr_stmt|;
 comment|/* Function pointers */
 comment|/* bus type/speed/width */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|get_bus_info
 operator|=
 name|e1000_get_bus_info_pci_generic
 expr_stmt|;
 comment|/* reset */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|reset_hw
 operator|=
 name|e1000_reset_hw_82540
 expr_stmt|;
 comment|/* hw initialization */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|init_hw
 operator|=
 name|e1000_init_hw_82540
 expr_stmt|;
 comment|/* link setup */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_link
 operator|=
 name|e1000_setup_link_generic
 expr_stmt|;
 comment|/* physical interface setup */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_physical_interface
 operator|=
 operator|(
@@ -742,8 +746,10 @@ block|{
 case|case
 name|e1000_media_type_copper
 case|:
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|check_for_link
 operator|=
 name|e1000_check_for_copper_link_generic
@@ -752,8 +758,10 @@ break|break;
 case|case
 name|e1000_media_type_fiber
 case|:
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|check_for_link
 operator|=
 name|e1000_check_for_fiber_link_generic
@@ -762,8 +770,10 @@ break|break;
 case|case
 name|e1000_media_type_internal_serdes
 case|:
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|check_for_link
 operator|=
 name|e1000_check_for_serdes_link_generic
@@ -781,8 +791,10 @@ goto|;
 break|break;
 block|}
 comment|/* link info */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|get_link_up_info
 operator|=
 operator|(
@@ -800,63 +812,81 @@ else|:
 name|e1000_get_speed_and_duplex_fiber_serdes_generic
 expr_stmt|;
 comment|/* multicast address update */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|update_mc_addr_list
 operator|=
 name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* writing VFTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|write_vfta
 operator|=
 name|e1000_write_vfta_generic
 expr_stmt|;
 comment|/* clearing VFTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|clear_vfta
 operator|=
 name|e1000_clear_vfta_generic
 expr_stmt|;
 comment|/* setting MTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|mta_set
 operator|=
 name|e1000_mta_set_generic
 expr_stmt|;
 comment|/* setup LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_led
 operator|=
 name|e1000_setup_led_generic
 expr_stmt|;
 comment|/* cleanup LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|cleanup_led
 operator|=
 name|e1000_cleanup_led_generic
 expr_stmt|;
 comment|/* turn on/off LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|led_on
 operator|=
 name|e1000_led_on_generic
 expr_stmt|;
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|led_off
 operator|=
 name|e1000_led_off_generic
 expr_stmt|;
 comment|/* clear hardware counters */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|clear_hw_cntrs
 operator|=
 name|e1000_clear_hw_cntrs_82540
@@ -890,25 +920,31 @@ argument_list|)
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|mac
 operator|.
-name|init_mac_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_mac_params_82540
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|nvm
 operator|.
-name|init_nvm_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_nvm_params_82540
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|phy
 operator|.
-name|init_phy_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_phy_params_82540
 expr_stmt|;
@@ -920,7 +956,7 @@ comment|/**  *  e1000_reset_hw_82540 - Reset hardware  *  @hw: pointer to the HW
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_reset_hw_82540
 parameter_list|(
@@ -1105,7 +1141,7 @@ comment|/**  *  e1000_init_hw_82540 - Initialize hardware  *  @hw: pointer to th
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_hw_82540
 parameter_list|(
@@ -1186,7 +1222,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|e1000_clear_vfta
+name|mac
+operator|->
+name|ops
+operator|.
+name|clear_vfta
 argument_list|(
 name|hw
 argument_list|)
@@ -1257,7 +1297,11 @@ expr_stmt|;
 comment|/* Setup link and flow control */
 name|ret_val
 operator|=
-name|e1000_setup_link
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_link
 argument_list|(
 name|hw
 argument_list|)
@@ -1357,7 +1401,7 @@ comment|/**  *  e1000_setup_copper_link_82540 - Configure copper link settings  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_copper_link_82540
 parameter_list|(
@@ -1449,7 +1493,13 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1472,7 +1522,13 @@ literal|0x00000008
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1523,7 +1579,7 @@ comment|/**  *  e1000_setup_fiber_serdes_link_82540 - Setup link for fiber/serde
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_fiber_serdes_link_82540
 parameter_list|(
@@ -1627,7 +1683,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_adjust_serdes_amplitude_82540 - Adjust amplitude based on EEPROM  *  @hw: pointer to the HW structure  *  *  Adjust the SERDES ouput amplitude based on the EEPROM settings.  **/
+comment|/**  *  e1000_adjust_serdes_amplitude_82540 - Adjust amplitude based on EEPROM  *  @hw: pointer to the HW structure  *  *  Adjust the SERDES output amplitude based on the EEPROM settings.  **/
 end_comment
 
 begin_function
@@ -1656,7 +1712,13 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -1689,7 +1751,13 @@ name|NVM_SERDES_AMPLITUDE_MASK
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1750,7 +1818,13 @@ expr_stmt|;
 comment|/* Set PHY register 30, page 5, bit 8 to 0 */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1769,7 +1843,13 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1787,7 +1867,13 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1811,7 +1897,13 @@ name|M88E1000_PHY_VCO_REG_BIT8
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1830,7 +1922,13 @@ goto|;
 comment|/* Set PHY register 30, page 4, bit 11 to 1 */
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1848,7 +1946,13 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1871,7 +1975,13 @@ name|M88E1000_PHY_VCO_REG_BIT11
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1889,7 +1999,13 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1959,7 +2075,13 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -2002,7 +2124,13 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2027,7 +2155,13 @@ goto|;
 block|}
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2070,7 +2204,7 @@ comment|/**  * e1000_power_down_phy_copper_82540 - Remove link in case of PHY po
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|e1000_power_down_phy_copper_82540
 parameter_list|(
@@ -2109,7 +2243,7 @@ comment|/**  *  e1000_clear_hw_cntrs_82540 - Clear device specific hardware coun
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|e1000_clear_hw_cntrs_82540
 parameter_list|(

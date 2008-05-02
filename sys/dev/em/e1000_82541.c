@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
@@ -24,19 +24,7 @@ file|"e1000_82541.h"
 end_include
 
 begin_function_decl
-name|void
-name|e1000_init_function_pointers_82541
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_phy_params_82541
 parameter_list|(
@@ -49,7 +37,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_nvm_params_82541
 parameter_list|(
@@ -62,7 +50,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_mac_params_82541
 parameter_list|(
@@ -75,7 +63,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_reset_hw_82541
 parameter_list|(
@@ -88,7 +76,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_hw_82541
 parameter_list|(
@@ -101,7 +89,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_link_up_info_82541
 parameter_list|(
@@ -122,7 +110,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_phy_hw_reset_82541
 parameter_list|(
@@ -135,7 +123,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_copper_link_82541
 parameter_list|(
@@ -148,7 +136,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_check_for_link_82541
 parameter_list|(
@@ -161,7 +149,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_cable_length_igp_82541
 parameter_list|(
@@ -174,7 +162,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_set_d3_lplu_state_82541
 parameter_list|(
@@ -190,7 +178,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_led_82541
 parameter_list|(
@@ -203,7 +191,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_cleanup_led_82541
 parameter_list|(
@@ -216,7 +204,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|e1000_clear_hw_cntrs_82541
 parameter_list|(
@@ -258,7 +246,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|e1000_power_down_phy_copper_82541
 parameter_list|(
@@ -570,7 +558,7 @@ comment|/**  *  e1000_init_phy_params_82541 - Init PHY func ptrs.  *  @hw: point
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_phy_params_82541
 parameter_list|(
@@ -589,16 +577,6 @@ operator|&
 name|hw
 operator|->
 name|phy
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|s32
 name|ret_val
@@ -635,69 +613,91 @@ operator|=
 name|e1000_phy_igp
 expr_stmt|;
 comment|/* Function Pointers */
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|check_polarity
 operator|=
 name|e1000_check_polarity_igp
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|force_speed_duplex
 operator|=
 name|e1000_phy_force_speed_duplex_igp
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|get_cable_length
 operator|=
 name|e1000_get_cable_length_igp_82541
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|get_cfg_done
 operator|=
 name|e1000_get_cfg_done_generic
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|get_phy_info
+name|ops
+operator|.
+name|get_info
 operator|=
 name|e1000_get_phy_info_igp
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|read_phy_reg
+name|ops
+operator|.
+name|read_reg
 operator|=
 name|e1000_read_phy_reg_igp
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|reset_phy
+name|ops
+operator|.
+name|reset
 operator|=
 name|e1000_phy_hw_reset_82541
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|set_d3_lplu_state
 operator|=
 name|e1000_set_d3_lplu_state_82541
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|write_phy_reg
+name|ops
+operator|.
+name|write_reg
 operator|=
 name|e1000_write_phy_reg_igp
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|power_up_phy
+name|ops
+operator|.
+name|power_up
 operator|=
 name|e1000_power_up_phy_copper
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|power_down_phy
+name|ops
+operator|.
+name|power_down
 operator|=
 name|e1000_power_down_phy_copper_82541
 expr_stmt|;
@@ -747,7 +747,7 @@ comment|/**  *  e1000_init_nvm_params_82541 - Init NVM func ptrs.  *  @hw: point
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_nvm_params_82541
 parameter_list|(
@@ -766,16 +766,6 @@ operator|&
 name|hw
 operator|->
 name|nvm
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|s32
 name|ret_val
@@ -930,45 +920,59 @@ else|:
 literal|8
 expr_stmt|;
 comment|/* Function Pointers */
-name|func
+name|nvm
 operator|->
-name|acquire_nvm
+name|ops
+operator|.
+name|acquire
 operator|=
 name|e1000_acquire_nvm_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|read_nvm
+name|ops
+operator|.
+name|read
 operator|=
 name|e1000_read_nvm_spi
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|release_nvm
+name|ops
+operator|.
+name|release
 operator|=
 name|e1000_release_nvm_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|update_nvm
+name|ops
+operator|.
+name|update
 operator|=
 name|e1000_update_nvm_checksum_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
+name|ops
+operator|.
 name|valid_led_default
 operator|=
 name|e1000_valid_led_default_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|validate_nvm
+name|ops
+operator|.
+name|validate
 operator|=
 name|e1000_validate_nvm_checksum_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|write_nvm
+name|ops
+operator|.
+name|write
 operator|=
 name|e1000_write_nvm_spi
 expr_stmt|;
@@ -981,7 +985,11 @@ literal|64
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -1073,45 +1081,59 @@ else|:
 literal|64
 expr_stmt|;
 comment|/* Function Pointers */
-name|func
+name|nvm
 operator|->
-name|acquire_nvm
+name|ops
+operator|.
+name|acquire
 operator|=
 name|e1000_acquire_nvm_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|read_nvm
+name|ops
+operator|.
+name|read
 operator|=
 name|e1000_read_nvm_microwire
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|release_nvm
+name|ops
+operator|.
+name|release
 operator|=
 name|e1000_release_nvm_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|update_nvm
+name|ops
+operator|.
+name|update
 operator|=
 name|e1000_update_nvm_checksum_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
+name|ops
+operator|.
 name|valid_led_default
 operator|=
 name|e1000_valid_led_default_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|validate_nvm
+name|ops
+operator|.
+name|validate
 operator|=
 name|e1000_validate_nvm_checksum_generic
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|write_nvm
+name|ops
+operator|.
+name|write
 operator|=
 name|e1000_write_nvm_microwire
 expr_stmt|;
@@ -1129,7 +1151,7 @@ comment|/**  *  e1000_init_mac_params_82541 - Init MAC func ptrs.  *  @hw: point
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_mac_params_82541
 parameter_list|(
@@ -1148,16 +1170,6 @@ operator|&
 name|hw
 operator|->
 name|mac
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|s32
 name|ret_val
@@ -1199,119 +1211,153 @@ name|TRUE
 expr_stmt|;
 comment|/* Function Pointers */
 comment|/* bus type/speed/width */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|get_bus_info
 operator|=
 name|e1000_get_bus_info_pci_generic
 expr_stmt|;
 comment|/* reset */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|reset_hw
 operator|=
 name|e1000_reset_hw_82541
 expr_stmt|;
 comment|/* hw initialization */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|init_hw
 operator|=
 name|e1000_init_hw_82541
 expr_stmt|;
 comment|/* link setup */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_link
 operator|=
 name|e1000_setup_link_generic
 expr_stmt|;
 comment|/* physical interface link setup */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_physical_interface
 operator|=
 name|e1000_setup_copper_link_82541
 expr_stmt|;
 comment|/* check for link */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|check_for_link
 operator|=
 name|e1000_check_for_link_82541
 expr_stmt|;
 comment|/* link info */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|get_link_up_info
 operator|=
 name|e1000_get_link_up_info_82541
 expr_stmt|;
 comment|/* multicast address update */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|update_mc_addr_list
 operator|=
 name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* writing VFTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|write_vfta
 operator|=
 name|e1000_write_vfta_generic
 expr_stmt|;
 comment|/* clearing VFTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|clear_vfta
 operator|=
 name|e1000_clear_vfta_generic
 expr_stmt|;
 comment|/* setting MTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|mta_set
 operator|=
 name|e1000_mta_set_generic
 expr_stmt|;
 comment|/* setup LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_led
 operator|=
 name|e1000_setup_led_82541
 expr_stmt|;
 comment|/* cleanup LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|cleanup_led
 operator|=
 name|e1000_cleanup_led_82541
 expr_stmt|;
 comment|/* turn on/off LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|led_on
 operator|=
 name|e1000_led_on_generic
 expr_stmt|;
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|led_off
 operator|=
 name|e1000_led_off_generic
 expr_stmt|;
 comment|/* remove device */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|remove_device
 operator|=
 name|e1000_remove_device_generic
 expr_stmt|;
 comment|/* clear hardware counters */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|clear_hw_cntrs
 operator|=
 name|e1000_clear_hw_cntrs_82541
@@ -1365,25 +1411,31 @@ argument_list|)
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|mac
 operator|.
-name|init_mac_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_mac_params_82541
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|nvm
 operator|.
-name|init_nvm_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_nvm_params_82541
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|phy
 operator|.
-name|init_phy_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_phy_params_82541
 expr_stmt|;
@@ -1395,7 +1447,7 @@ comment|/**  *  e1000_reset_hw_82541 - Reset hardware  *  @hw: pointer to the HW
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_reset_hw_82541
 parameter_list|(
@@ -1687,7 +1739,7 @@ comment|/**  *  e1000_init_hw_82541 - Initialize hardware  *  @hw: pointer to th
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_hw_82541
 parameter_list|(
@@ -1746,7 +1798,11 @@ argument_list|(
 literal|"Initializing the IEEE VLAN\n"
 argument_list|)
 expr_stmt|;
-name|e1000_clear_vfta
+name|mac
+operator|->
+name|ops
+operator|.
+name|clear_vfta
 argument_list|(
 name|hw
 argument_list|)
@@ -1804,7 +1860,11 @@ block|}
 comment|/* Setup link and flow control */
 name|ret_val
 operator|=
-name|e1000_setup_link
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_link
 argument_list|(
 name|hw
 argument_list|)
@@ -1861,7 +1921,7 @@ comment|/**  * e1000_get_link_up_info_82541 - Report speed and duplex  * @hw: po
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_link_up_info_82541
 parameter_list|(
@@ -1931,7 +1991,11 @@ goto|;
 comment|/* 	 * IGP01 PHY may advertise full duplex operation after speed 	 * downgrade even if it is operating at half duplex. 	 * Here we set the duplex settings to match the duplex in the 	 * link partner's capabilities. 	 */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -1968,7 +2032,11 @@ else|else
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2042,11 +2110,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_hw_reset_82541 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Verify the reset block is not blocking us from resetting.  Acquire  *  semaphore (if necessary) and read/set/write the device control reset  *  bit in the PHY.  Wait the appropriate delay time for the device to  *  reset and relase the semaphore (if necessary).  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_phy_hw_reset_82541 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Verify the reset block is not blocking us from resetting.  Acquire  *  semaphore (if necessary) and read/set/write the device control reset  *  bit in the PHY.  Wait the appropriate delay time for the device to  *  reset and release the semaphore (if necessary).  *  This is a function pointer entry point called by the api module.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_phy_hw_reset_82541
 parameter_list|(
@@ -2154,7 +2222,7 @@ comment|/**  *  e1000_setup_copper_link_82541 - Configure copper link settings  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_copper_link_82541
 parameter_list|(
@@ -2373,7 +2441,7 @@ comment|/**  *  e1000_check_for_link_82541 - Check/Store link connection  *  @hw
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_check_for_link_82541
 parameter_list|(
@@ -2631,7 +2699,13 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_get_speed_and_duplex
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|get_link_up_info
 argument_list|(
 name|hw
 argument_list|,
@@ -2673,7 +2747,11 @@ goto|;
 block|}
 name|ret_val
 operator|=
-name|e1000_get_cable_length
+name|phy
+operator|->
+name|ops
+operator|.
+name|get_cable_length
 argument_list|(
 name|hw
 argument_list|)
@@ -2718,7 +2796,11 @@ control|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2745,7 +2827,11 @@ name|IGP01E1000_PHY_EDAC_MU_INDEX
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2802,7 +2888,11 @@ block|}
 comment|/* clear previous idle error counts */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2840,7 +2930,11 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2880,7 +2974,11 @@ name|e1000_ffe_config_active
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2922,7 +3020,11 @@ block|{
 comment|/* 			 * Save off the current value of register 0x2F5B 			 * to be restored at the end of the routines. 			 */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2942,7 +3044,11 @@ goto|;
 comment|/* Disable the PHY transmitter */
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2965,7 +3071,11 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2997,7 +3107,11 @@ control|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3028,7 +3142,11 @@ name|IGP01E1000_PHY_EDAC_SIGN_EXT_9_BITS
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3050,7 +3168,11 @@ goto|;
 block|}
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3074,7 +3196,11 @@ expr_stmt|;
 comment|/* Now enable the transmitter */
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3117,7 +3243,11 @@ block|}
 comment|/* 		 * Save off the current value of register 0x2F5B 		 * to be restored at the end of the routines. 		 */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3137,7 +3267,11 @@ goto|;
 comment|/* Disable the PHY transmitter */
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3160,7 +3294,11 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3178,7 +3316,11 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3196,7 +3338,11 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3220,7 +3366,11 @@ expr_stmt|;
 comment|/* Now enable the transmitter */
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3252,11 +3402,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_cable_length_igp_82541 - Determine cable length for igp PHY  *  @hw: pointer to the HW structure  *  *  The automatic gain control (agc) normalizes the amplitude of the  *  received signal, adjusting for the attenuation produced by the  *  cable.  By reading the AGC registers, which reperesent the  *  cobination of course and fine gain value, the value can be put  *  into a lookup table to obtain the approximate cable length  *  for each channel.  This is a function pointer entry point called by the  *  api module.  **/
+comment|/**  *  e1000_get_cable_length_igp_82541 - Determine cable length for igp PHY  *  @hw: pointer to the HW structure  *  *  The automatic gain control (agc) normalizes the amplitude of the  *  received signal, adjusting for the attenuation produced by the  *  cable.  By reading the AGC registers, which represent the  *  combination of coarse and fine gain value, the value can be put  *  into a lookup table to obtain the approximate cable length  *  for each channel.  This is a function pointer entry point called by the  *  api module.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_cable_length_igp_82541
 parameter_list|(
@@ -3336,7 +3486,11 @@ control|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3496,11 +3650,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_d3_lplu_state_82541 - Sets low power link up state for D3  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is true, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  This is a function pointer entry point called by the  *  api module.  **/
+comment|/**  *  e1000_set_d3_lplu_state_82541 - Sets low power link up state for D3  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is TRUE, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  This is a function pointer entry point called by the  *  api module.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_set_d3_lplu_state_82541
 parameter_list|(
@@ -3567,7 +3721,11 @@ break|break;
 block|}
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3597,7 +3755,11 @@ name|IGP01E1000_GMII_FLEX_SPD
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3625,7 +3787,11 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3648,7 +3814,11 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3677,7 +3847,11 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3701,7 +3875,11 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3753,7 +3931,11 @@ name|IGP01E1000_GMII_FLEX_SPD
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3772,7 +3954,11 @@ goto|;
 comment|/* When LPLU is enabled, we should disable SmartSpeed */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3796,7 +3982,11 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3819,7 +4009,7 @@ comment|/**  *  e1000_setup_led_82541 - Configures SW controllable LED  *  @hw: 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_led_82541
 parameter_list|(
@@ -3855,7 +4045,13 @@ name|dev_spec
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3876,7 +4072,13 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3928,7 +4130,7 @@ comment|/**  *  e1000_cleanup_led_82541 - Set LED config to default operation  *
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_cleanup_led_82541
 parameter_list|(
@@ -3964,7 +4166,13 @@ name|dev_spec
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4070,7 +4278,13 @@ expr_stmt|;
 comment|/* 	 * Save off the current value of register 0x2F5B to be restored at 	 * the end of this routine. 	 */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4081,7 +4295,13 @@ name|phy_saved_data
 argument_list|)
 expr_stmt|;
 comment|/* Disabled the PHY transmitter */
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4095,7 +4315,13 @@ argument_list|(
 literal|20
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4124,7 +4350,13 @@ case|:
 case|case
 name|e1000_82547
 case|:
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4133,7 +4365,13 @@ argument_list|,
 literal|0x0001
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4142,7 +4380,13 @@ argument_list|,
 literal|0xBD21
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4151,7 +4395,13 @@ argument_list|,
 literal|0x0018
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4160,7 +4410,13 @@ argument_list|,
 literal|0x1600
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4169,7 +4425,13 @@ argument_list|,
 literal|0x0014
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4178,7 +4440,13 @@ argument_list|,
 literal|0x161C
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4187,7 +4455,13 @@ argument_list|,
 literal|0x0003
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4196,7 +4470,13 @@ argument_list|,
 literal|0x003F
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4212,7 +4492,13 @@ case|:
 case|case
 name|e1000_82547_rev_2
 case|:
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4225,7 +4511,13 @@ break|break;
 default|default:
 break|break;
 block|}
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4240,7 +4532,13 @@ literal|20
 argument_list|)
 expr_stmt|;
 comment|/* Now enable the transmitter */
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4268,7 +4566,13 @@ decl_stmt|,
 name|coarse
 decl_stmt|;
 comment|/* Move to analog registers page */
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4288,7 +4592,13 @@ name|IGP01E1000_ANALOG_SPARE_FUSE_ENABLED
 operator|)
 condition|)
 block|{
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4357,7 +4667,13 @@ operator|&
 name|IGP01E1000_ANALOG_FUSE_COARSE_MASK
 operator|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4366,7 +4682,13 @@ argument_list|,
 name|fused
 argument_list|)
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -4475,7 +4797,7 @@ comment|/**  * e1000_power_down_phy_copper_82541 - Remove link in case of PHY po
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|e1000_power_down_phy_copper_82541
 parameter_list|(
@@ -4514,7 +4836,7 @@ comment|/**  *  e1000_clear_hw_cntrs_82541 - Clear device specific hardware coun
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|e1000_clear_hw_cntrs_82541
 parameter_list|(

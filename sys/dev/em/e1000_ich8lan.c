@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2007, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
@@ -24,19 +24,7 @@ file|"e1000_ich8lan.h"
 end_include
 
 begin_function_decl
-name|void
-name|e1000_init_function_pointers_ich8lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_phy_params_ich8lan
 parameter_list|(
@@ -49,7 +37,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_nvm_params_ich8lan
 parameter_list|(
@@ -62,7 +50,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_mac_params_ich8lan
 parameter_list|(
@@ -75,7 +63,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_acquire_swflag_ich8lan
 parameter_list|(
@@ -88,7 +76,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|e1000_release_swflag_ich8lan
 parameter_list|(
@@ -101,7 +89,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|bool
 name|e1000_check_mng_mode_ich8lan
 parameter_list|(
@@ -114,7 +102,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_check_polarity_ife_ich8lan
 parameter_list|(
@@ -127,7 +115,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_check_reset_block_ich8lan
 parameter_list|(
@@ -140,7 +128,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_phy_force_speed_duplex_ich8lan
 parameter_list|(
@@ -153,7 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_phy_hw_reset_ich8lan
 parameter_list|(
@@ -166,7 +154,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_phy_info_ich8lan
 parameter_list|(
@@ -179,7 +167,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_set_d0_lplu_state_ich8lan
 parameter_list|(
@@ -195,7 +183,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_set_d3_lplu_state_ich8lan
 parameter_list|(
@@ -211,7 +199,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_read_nvm_ich8lan
 parameter_list|(
@@ -234,7 +222,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_write_nvm_ich8lan
 parameter_list|(
@@ -257,7 +245,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_validate_nvm_checksum_ich8lan
 parameter_list|(
@@ -270,7 +258,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_update_nvm_checksum_ich8lan
 parameter_list|(
@@ -283,7 +271,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_valid_led_default_ich8lan
 parameter_list|(
@@ -300,7 +288,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_bus_info_ich8lan
 parameter_list|(
@@ -313,7 +301,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_reset_hw_ich8lan
 parameter_list|(
@@ -326,7 +314,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_hw_ich8lan
 parameter_list|(
@@ -339,7 +327,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_link_ich8lan
 parameter_list|(
@@ -352,7 +340,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_copper_link_ich8lan
 parameter_list|(
@@ -365,7 +353,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_link_up_info_ich8lan
 parameter_list|(
@@ -386,7 +374,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_cleanup_led_ich8lan
 parameter_list|(
@@ -399,7 +387,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_led_on_ich8lan
 parameter_list|(
@@ -412,7 +400,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_led_off_ich8lan
 parameter_list|(
@@ -425,7 +413,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|e1000_clear_hw_cntrs_ich8lan
 parameter_list|(
@@ -438,7 +426,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_erase_flash_bank_ich8lan
 parameter_list|(
@@ -524,6 +512,26 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|s32
+name|e1000_read_flash_byte_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u8
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|s32
 name|e1000_read_flash_data_ich8lan
 parameter_list|(
 name|struct
@@ -545,7 +553,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_read_flash_word_ich8lan
 parameter_list|(
@@ -584,7 +592,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_write_flash_byte_ich8lan
 parameter_list|(
@@ -625,7 +633,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_cfg_done_ich8lan
 parameter_list|(
@@ -638,7 +646,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|e1000_power_down_phy_copper_ich8lan
 parameter_list|(
@@ -866,7 +874,7 @@ comment|/**  *  e1000_init_phy_params_ich8lan - Initialize PHY function pointers
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_phy_params_ich8lan
 parameter_list|(
@@ -885,16 +893,6 @@ operator|&
 name|hw
 operator|->
 name|phy
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|s32
 name|ret_val
@@ -923,96 +921,177 @@ name|reset_delay_us
 operator|=
 literal|100
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|acquire_phy
+name|ops
+operator|.
+name|acquire
 operator|=
 name|e1000_acquire_swflag_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|check_polarity
 operator|=
 name|e1000_check_polarity_ife_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|check_reset_block
 operator|=
 name|e1000_check_reset_block_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|force_speed_duplex
 operator|=
 name|e1000_phy_force_speed_duplex_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|get_cable_length
 operator|=
 name|e1000_get_cable_length_igp_2
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|get_cfg_done
 operator|=
 name|e1000_get_cfg_done_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|get_phy_info
+name|ops
+operator|.
+name|get_info
 operator|=
 name|e1000_get_phy_info_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|read_phy_reg
+name|ops
+operator|.
+name|read_reg
 operator|=
 name|e1000_read_phy_reg_igp
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|release_phy
+name|ops
+operator|.
+name|release
 operator|=
 name|e1000_release_swflag_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|reset_phy
+name|ops
+operator|.
+name|reset
 operator|=
 name|e1000_phy_hw_reset_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|set_d0_lplu_state
 operator|=
 name|e1000_set_d0_lplu_state_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
+name|ops
+operator|.
 name|set_d3_lplu_state
 operator|=
 name|e1000_set_d3_lplu_state_ich8lan
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|write_phy_reg
+name|ops
+operator|.
+name|write_reg
 operator|=
 name|e1000_write_phy_reg_igp
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|power_up_phy
+name|ops
+operator|.
+name|power_up
 operator|=
 name|e1000_power_up_phy_copper
 expr_stmt|;
-name|func
+name|phy
 operator|->
-name|power_down_phy
+name|ops
+operator|.
+name|power_down
 operator|=
 name|e1000_power_down_phy_copper_ich8lan
 expr_stmt|;
+comment|/* 	 * We may need to do this twice - once for IGP and if that fails, 	 * we'll set BM func pointers and try again 	 */
+name|ret_val
+operator|=
+name|e1000_determine_phy_address
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
+operator|=
+name|e1000_write_phy_reg_bm
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
+operator|=
+name|e1000_read_phy_reg_bm
+expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_determine_phy_address
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"Cannot determine PHY address. Erroring out\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+block|}
 name|phy
 operator|->
 name|id
@@ -1106,6 +1185,46 @@ operator|=
 name|E1000_ALL_NOT_GIG
 expr_stmt|;
 break|break;
+case|case
+name|BME1000_E_PHY_ID
+case|:
+name|phy
+operator|->
+name|type
+operator|=
+name|e1000_phy_bm
+expr_stmt|;
+name|phy
+operator|->
+name|autoneg_mask
+operator|=
+name|AUTONEG_ADVERTISE_SPEED_DEFAULT
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
+operator|=
+name|e1000_read_phy_reg_bm
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
+operator|=
+name|e1000_write_phy_reg_bm
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|commit
+operator|=
+name|e1000_phy_sw_reset_generic
+expr_stmt|;
+break|break;
 default|default:
 name|ret_val
 operator|=
@@ -1129,7 +1248,7 @@ comment|/**  *  e1000_init_nvm_params_ich8lan - Initialize NVM function pointers
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_nvm_params_ich8lan
 parameter_list|(
@@ -1148,16 +1267,6 @@ operator|&
 name|hw
 operator|->
 name|nvm
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|struct
 name|e1000_dev_spec_ich8lan
@@ -1359,45 +1468,59 @@ literal|0xFFFF
 expr_stmt|;
 block|}
 comment|/* Function Pointers */
-name|func
+name|nvm
 operator|->
-name|acquire_nvm
+name|ops
+operator|.
+name|acquire
 operator|=
 name|e1000_acquire_swflag_ich8lan
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|read_nvm
+name|ops
+operator|.
+name|read
 operator|=
 name|e1000_read_nvm_ich8lan
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|release_nvm
+name|ops
+operator|.
+name|release
 operator|=
 name|e1000_release_swflag_ich8lan
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|update_nvm
+name|ops
+operator|.
+name|update
 operator|=
 name|e1000_update_nvm_checksum_ich8lan
 expr_stmt|;
-name|func
+name|nvm
 operator|->
+name|ops
+operator|.
 name|valid_led_default
 operator|=
 name|e1000_valid_led_default_ich8lan
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|validate_nvm
+name|ops
+operator|.
+name|validate
 operator|=
 name|e1000_validate_nvm_checksum_ich8lan
 expr_stmt|;
-name|func
+name|nvm
 operator|->
-name|write_nvm
+name|ops
+operator|.
+name|write
 operator|=
 name|e1000_write_nvm_ich8lan
 expr_stmt|;
@@ -1414,7 +1537,7 @@ comment|/**  *  e1000_init_mac_params_ich8lan - Initialize MAC function pointers
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_mac_params_ich8lan
 parameter_list|(
@@ -1433,16 +1556,6 @@ operator|&
 name|hw
 operator|->
 name|mac
-decl_stmt|;
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
 decl_stmt|;
 name|s32
 name|ret_val
@@ -1506,119 +1619,153 @@ name|TRUE
 expr_stmt|;
 comment|/* Function pointers */
 comment|/* bus type/speed/width */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|get_bus_info
 operator|=
 name|e1000_get_bus_info_ich8lan
 expr_stmt|;
 comment|/* reset */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|reset_hw
 operator|=
 name|e1000_reset_hw_ich8lan
 expr_stmt|;
 comment|/* hw initialization */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|init_hw
 operator|=
 name|e1000_init_hw_ich8lan
 expr_stmt|;
 comment|/* link setup */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_link
 operator|=
 name|e1000_setup_link_ich8lan
 expr_stmt|;
 comment|/* physical interface setup */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_physical_interface
 operator|=
 name|e1000_setup_copper_link_ich8lan
 expr_stmt|;
 comment|/* check for link */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|check_for_link
 operator|=
 name|e1000_check_for_copper_link_generic
 expr_stmt|;
 comment|/* check management mode */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|check_mng_mode
 operator|=
 name|e1000_check_mng_mode_ich8lan
 expr_stmt|;
 comment|/* link info */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|get_link_up_info
 operator|=
 name|e1000_get_link_up_info_ich8lan
 expr_stmt|;
 comment|/* multicast address update */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|update_mc_addr_list
 operator|=
 name|e1000_update_mc_addr_list_generic
 expr_stmt|;
 comment|/* setting MTA */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|mta_set
 operator|=
 name|e1000_mta_set_generic
 expr_stmt|;
 comment|/* blink LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|blink_led
 operator|=
 name|e1000_blink_led_generic
 expr_stmt|;
 comment|/* setup LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|setup_led
 operator|=
 name|e1000_setup_led_generic
 expr_stmt|;
 comment|/* cleanup LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|cleanup_led
 operator|=
 name|e1000_cleanup_led_ich8lan
 expr_stmt|;
 comment|/* turn on/off LED */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|led_on
 operator|=
 name|e1000_led_on_ich8lan
 expr_stmt|;
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|led_off
 operator|=
 name|e1000_led_off_ich8lan
 expr_stmt|;
 comment|/* remove device */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|remove_device
 operator|=
 name|e1000_remove_device_generic
 expr_stmt|;
 comment|/* clear hardware counters */
-name|func
+name|mac
 operator|->
+name|ops
+operator|.
 name|clear_hw_cntrs
 operator|=
 name|e1000_clear_hw_cntrs_ich8lan
@@ -1697,25 +1844,31 @@ argument_list|)
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|mac
 operator|.
-name|init_mac_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_mac_params_ich8lan
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|nvm
 operator|.
-name|init_nvm_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_nvm_params_ich8lan
 expr_stmt|;
 name|hw
 operator|->
-name|func
+name|phy
 operator|.
-name|init_phy_params
+name|ops
+operator|.
+name|init_params
 operator|=
 name|e1000_init_phy_params_ich8lan
 expr_stmt|;
@@ -1727,7 +1880,7 @@ comment|/**  *  e1000_acquire_swflag_ich8lan - Acquire software control flag  * 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_acquire_swflag_ich8lan
 parameter_list|(
@@ -1853,7 +2006,7 @@ comment|/**  *  e1000_release_swflag_ich8lan - Release software control flag  * 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|e1000_release_swflag_ich8lan
 parameter_list|(
@@ -1903,7 +2056,7 @@ comment|/**  *  e1000_check_mng_mode_ich8lan - Checks management mode  *  @hw: p
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|bool
 name|e1000_check_mng_mode_ich8lan
 parameter_list|(
@@ -1953,7 +2106,7 @@ comment|/**  *  e1000_check_reset_block_ich8lan - Check if PHY reset is blocked 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_check_reset_block_ich8lan
 parameter_list|(
@@ -1999,7 +2152,7 @@ comment|/**  *  e1000_phy_force_speed_duplex_ich8lan - Force PHY speed& duplex  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_phy_force_speed_duplex_ich8lan
 parameter_list|(
@@ -2055,7 +2208,11 @@ goto|;
 block|}
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2082,7 +2239,11 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2101,7 +2262,11 @@ goto|;
 comment|/* Disable MDI-X support for 10/100 */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2130,7 +2295,11 @@ name|IFE_PMC_FORCE_MDIX
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2239,7 +2408,7 @@ comment|/**  *  e1000_phy_hw_reset_ich8lan - Performs a PHY reset  *  @hw: point
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_phy_hw_reset_ich8lan
 parameter_list|(
@@ -2258,6 +2427,16 @@ operator|&
 name|hw
 operator|->
 name|phy
+decl_stmt|;
+name|struct
+name|e1000_nvm_info
+modifier|*
+name|nvm
+init|=
+operator|&
+name|hw
+operator|->
+name|nvm
 decl_stmt|;
 name|u32
 name|i
@@ -2529,7 +2708,11 @@ control|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -2556,7 +2739,11 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -2603,7 +2790,11 @@ name|phy_page
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2637,7 +2828,7 @@ comment|/**  *  e1000_get_phy_info_ich8lan - Calls appropriate PHY type get_phy_
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_phy_info_ich8lan
 parameter_list|(
@@ -2680,6 +2871,9 @@ expr_stmt|;
 break|break;
 case|case
 name|e1000_phy_igp_3
+case|:
+case|case
+name|e1000_phy_bm
 case|:
 name|ret_val
 operator|=
@@ -2780,7 +2974,11 @@ goto|;
 block|}
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2853,7 +3051,11 @@ expr_stmt|;
 block|}
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -2912,11 +3114,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_polarity_ife_ich8lan - Check cable polarity for IFE PHY  *  @hw: pointer to the HW structure  *  *  Polarity is determined on the polarity reveral feature being enabled.  *  This function is only called by other family-specific  *  routines.  **/
+comment|/**  *  e1000_check_polarity_ife_ich8lan - Check cable polarity for IFE PHY  *  @hw: pointer to the HW structure  *  *  Polarity is determined on the polarity reversal feature being enabled.  *  This function is only called by other family-specific  *  routines.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_check_polarity_ife_ich8lan
 parameter_list|(
@@ -2981,7 +3183,11 @@ expr_stmt|;
 block|}
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3021,7 +3227,7 @@ comment|/**  *  e1000_set_d0_lplu_state_ich8lan - Set Low Power Linkup D0 state 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_set_d0_lplu_state_ich8lan
 parameter_list|(
@@ -3129,7 +3335,11 @@ expr_stmt|;
 comment|/* When LPLU is enabled, we should disable SmartSpeed */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3146,7 +3356,11 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3191,7 +3405,11 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3214,7 +3432,11 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3243,7 +3465,11 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3267,7 +3493,11 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3298,7 +3528,7 @@ comment|/**  *  e1000_set_d3_lplu_state_ich8lan - Set Low Power Linkup D3 state 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_set_d3_lplu_state_ich8lan
 parameter_list|(
@@ -3378,7 +3608,11 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3401,7 +3635,11 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3430,7 +3668,11 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3454,7 +3696,11 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3544,7 +3790,11 @@ expr_stmt|;
 comment|/* When LPLU is enabled, we should disable SmartSpeed */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3568,7 +3818,11 @@ name|IGP01E1000_PSCFR_SMART_SPEED
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|phy
+operator|->
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -3591,7 +3845,7 @@ comment|/**  *  e1000_valid_nvm_bank_detect_ich8lan - finds out the valid bank 0
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_valid_nvm_bank_detect_ich8lan
 parameter_list|(
@@ -3610,6 +3864,54 @@ name|ret_val
 init|=
 name|E1000_SUCCESS
 decl_stmt|;
+name|struct
+name|e1000_nvm_info
+modifier|*
+name|nvm
+init|=
+operator|&
+name|hw
+operator|->
+name|nvm
+decl_stmt|;
+comment|/* flash bank size is in words */
+name|u32
+name|bank1_offset
+init|=
+name|nvm
+operator|->
+name|flash_bank_size
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u16
+argument_list|)
+decl_stmt|;
+name|u32
+name|act_offset
+init|=
+name|E1000_ICH_NVM_SIG_WORD
+operator|*
+literal|2
+operator|+
+literal|1
+decl_stmt|;
+name|u8
+name|bank_high_byte
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|!=
+name|e1000_ich10lan
+condition|)
+block|{
 if|if
 condition|(
 name|E1000_READ_REG
@@ -3632,6 +3934,106 @@ name|bank
 operator|=
 literal|0
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|hw
+operator|->
+name|dev_spec
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Make sure the signature for bank 0 is valid, 		 * if not check for bank1 		 */
+name|e1000_read_flash_byte_ich8lan
+argument_list|(
+name|hw
+argument_list|,
+name|act_offset
+argument_list|,
+operator|&
+name|bank_high_byte
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bank_high_byte
+operator|&
+literal|0xC0
+operator|)
+operator|==
+literal|0x80
+condition|)
+block|{
+operator|*
+name|bank
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * find if segment 1 is valid by verifying 			 * bit 15:14 = 10b in word 0x13 			 */
+name|e1000_read_flash_byte_ich8lan
+argument_list|(
+name|hw
+argument_list|,
+name|act_offset
+operator|+
+name|bank1_offset
+argument_list|,
+operator|&
+name|bank_high_byte
+argument_list|)
+expr_stmt|;
+comment|/* bank1 has a valid signature equivalent to SEC1V */
+if|if
+condition|(
+operator|(
+name|bank_high_byte
+operator|&
+literal|0xC0
+operator|)
+operator|==
+literal|0x80
+condition|)
+block|{
+operator|*
+name|bank
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"ERROR: EEPROM not present\n"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_NVM
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"DEV SPEC is NULL\n"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_NVM
+expr_stmt|;
+block|}
 return|return
 name|ret_val
 return|;
@@ -3643,7 +4045,7 @@ comment|/**  *  e1000_read_nvm_ich8lan - Read word(s) from the NVM  *  @hw: poin
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_read_nvm_ich8lan
 parameter_list|(
@@ -3775,7 +4177,11 @@ goto|;
 block|}
 name|ret_val
 operator|=
-name|e1000_acquire_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|acquire
 argument_list|(
 name|hw
 argument_list|)
@@ -3905,7 +4311,11 @@ name|word
 expr_stmt|;
 block|}
 block|}
-name|e1000_release_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
 argument_list|(
 name|hw
 argument_list|)
@@ -4014,7 +4424,7 @@ operator|.
 name|regval
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Either we should have a hardware SPI cycle in progress 	 * bit to check against, in order to start a new cycle or 	 * FDONE bit should be changed in the hardware so that it 	 * is 1 after harware reset, which can then be used as an 	 * indication whether a cycle is in progress or has been 	 * completed. 	 */
+comment|/* 	 * Either we should have a hardware SPI cycle in progress 	 * bit to check against, in order to start a new cycle or 	 * FDONE bit should be changed in the hardware so that it 	 * is 1 after hardware reset, which can then be used as an 	 * indication whether a cycle is in progress or has been 	 * completed. 	 */
 if|if
 condition|(
 name|hsfsts
@@ -4292,7 +4702,7 @@ comment|/**  *  e1000_read_flash_word_ich8lan - Read word from flash  *  @hw: po
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_read_flash_word_ich8lan
 parameter_list|(
@@ -4349,6 +4759,75 @@ literal|2
 argument_list|,
 name|data
 argument_list|)
+expr_stmt|;
+name|out
+label|:
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_read_flash_byte_ich8lan - Read byte from flash  *  @hw: pointer to the HW structure  *  @offset: The offset of the byte to read.  *  @data: Pointer to a byte to store the value read.  *  *  Reads a single byte from the NVM using the flash access registers.  **/
+end_comment
+
+begin_function
+specifier|static
+name|s32
+name|e1000_read_flash_byte_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u8
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|u16
+name|word
+init|=
+literal|0
+decl_stmt|;
+name|ret_val
+operator|=
+name|e1000_read_flash_data_ich8lan
+argument_list|(
+name|hw
+argument_list|,
+name|offset
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|word
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+operator|*
+name|data
+operator|=
+operator|(
+name|u8
+operator|)
+name|word
 expr_stmt|;
 name|out
 label|:
@@ -4658,7 +5137,7 @@ comment|/**  *  e1000_write_nvm_ich8lan - Write word(s) to the NVM  *  @hw: poin
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_write_nvm_ich8lan
 parameter_list|(
@@ -4780,7 +5259,11 @@ goto|;
 block|}
 name|ret_val
 operator|=
-name|e1000_acquire_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|acquire
 argument_list|(
 name|hw
 argument_list|)
@@ -4836,7 +5319,11 @@ name|i
 index|]
 expr_stmt|;
 block|}
-name|e1000_release_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
 argument_list|(
 name|hw
 argument_list|)
@@ -4850,11 +5337,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_update_nvm_checksum_ich8lan - Update the checksum for NVM  *  @hw: pointer to the HW structure  *  *  The NVM checksum is updated by calling the generic update_nvm_checksum,  *  which writes the checksum to the shadow ram.  The changes in the shadow  *  ram are then committed to the EEPROM by processing each bank at a time  *  checking for the modified bit and writing only the pending changes.  *  After a succesful commit, the shadow ram is cleared and is ready for  *  future writes.  **/
+comment|/**  *  e1000_update_nvm_checksum_ich8lan - Update the checksum for NVM  *  @hw: pointer to the HW structure  *  *  The NVM checksum is updated by calling the generic update_nvm_checksum,  *  which writes the checksum to the shadow ram.  The changes in the shadow  *  ram are then committed to the EEPROM by processing each bank at a time  *  checking for the modified bit and writing only the pending changes.  *  After a successful commit, the shadow ram is cleared and is ready for  *  future writes.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_update_nvm_checksum_ich8lan
 parameter_list|(
@@ -4939,7 +5426,11 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_acquire_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|acquire
 argument_list|(
 name|hw
 argument_list|)
@@ -5159,7 +5650,11 @@ argument_list|(
 literal|"Flash commit failed.\n"
 argument_list|)
 expr_stmt|;
-name|e1000_release_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
 argument_list|(
 name|hw
 argument_list|)
@@ -5216,7 +5711,11 @@ condition|(
 name|ret_val
 condition|)
 block|{
-name|e1000_release_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
 argument_list|(
 name|hw
 argument_list|)
@@ -5254,7 +5753,11 @@ condition|(
 name|ret_val
 condition|)
 block|{
-name|e1000_release_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
 argument_list|(
 name|hw
 argument_list|)
@@ -5301,13 +5804,21 @@ operator|=
 literal|0xFFFF
 expr_stmt|;
 block|}
-name|e1000_release_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|release
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reload the EEPROM, or else modifications will not appear 	 * until after the next adapter reset. 	 */
-name|e1000_reload_nvm
+name|nvm
+operator|->
+name|ops
+operator|.
+name|reload
 argument_list|(
 name|hw
 argument_list|)
@@ -5326,11 +5837,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_validate_nvm_checksum_ich8lan - Validate EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Check to see if checksum needs to be fixed by reading bit 6 in word 0x19.  *  If the bit is 0, that the EEPROM had been modified, but the checksum was not  *  calculated, in which case we need to calculate the checksum and set bit 6.  **/
+comment|/**  *  e1000_validate_nvm_checksum_ich8lan - Validate EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Check to see if checksum needs to be fixed by reading bit 6 in word 0x19.  *  If the bit is 0, that the EEPROM had been modified, but the checksum was  *  not calculated, in which case we need to calculate the checksum and set  *  bit 6.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_validate_nvm_checksum_ich8lan
 parameter_list|(
@@ -5356,7 +5867,13 @@ expr_stmt|;
 comment|/* 	 * Read 0x19 and check bit 6.  If this bit is 0, the checksum 	 * needs to be fixed.  This bit is an indication that the NVM 	 * was prepared by OEM software and did not calculate the 	 * checksum...a likely scenario. 	 */
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -5392,7 +5909,13 @@ literal|0x40
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|write
 argument_list|(
 name|hw
 argument_list|,
@@ -5413,7 +5936,13 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_update_nvm_checksum
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|update
 argument_list|(
 name|hw
 argument_list|)
@@ -5728,7 +6257,7 @@ comment|/**  *  e1000_write_flash_byte_ich8lan - Write a single byte to NVM  *  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_write_flash_byte_ich8lan
 parameter_list|(
@@ -5900,7 +6429,7 @@ comment|/**  *  e1000_erase_flash_bank_ich8lan - Erase a bank (4k) from NVM  *  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_erase_flash_bank_ich8lan
 parameter_list|(
@@ -6264,7 +6793,7 @@ comment|/**  *  e1000_valid_led_default_ich8lan - Set the default LED settings  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_valid_led_default_ich8lan
 parameter_list|(
@@ -6288,7 +6817,13 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_read_nvm
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
 argument_list|(
 name|hw
 argument_list|,
@@ -6343,7 +6878,7 @@ comment|/**  *  e1000_get_bus_info_ich8lan - Get/Set the bus type and width  *  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_bus_info_ich8lan
 parameter_list|(
@@ -6404,7 +6939,7 @@ comment|/**  *  e1000_reset_hw_ich8lan - Reset the hardware  *  @hw: pointer to 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_reset_hw_ich8lan
 parameter_list|(
@@ -6536,7 +7071,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|e1000_check_reset_block
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|check_reset_block
 argument_list|(
 name|hw
 argument_list|)
@@ -6651,11 +7192,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_ich8lan - Initialize the hardware  *  @hw: pointer to the HW structure  *  *  Prepares the hardware for transmit and receive by doing the following:  *   - initialize hardware bits  *   - initialize LED identification  *   - setup receive address registers  *   - setup flow control  *   - setup transmit discriptors  *   - clear statistics  **/
+comment|/**  *  e1000_init_hw_ich8lan - Initialize the hardware  *  @hw: pointer to the HW structure  *  *  Prepares the hardware for transmit and receive by doing the following:  *   - initialize hardware bits  *   - initialize LED identification  *   - setup receive address registers  *   - setup flow control  *   - setup transmit descriptors  *   - clear statistics  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_init_hw_ich8lan
 parameter_list|(
@@ -6763,7 +7304,11 @@ expr_stmt|;
 comment|/* Setup link and flow control */
 name|ret_val
 operator|=
-name|e1000_setup_link
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_link
 argument_list|(
 name|hw
 argument_list|)
@@ -7253,7 +7798,7 @@ comment|/**  *  e1000_setup_link_ich8lan - Setup flow control and link settings 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_link_ich8lan
 parameter_list|(
@@ -7263,16 +7808,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|struct
-name|e1000_functions
-modifier|*
-name|func
-init|=
-operator|&
-name|hw
-operator|->
-name|func
-decl_stmt|;
 name|s32
 name|ret_val
 init|=
@@ -7285,7 +7820,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|e1000_check_reset_block
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|check_reset_block
 argument_list|(
 name|hw
 argument_list|)
@@ -7338,8 +7879,12 @@ expr_stmt|;
 comment|/* Continue to configure the copper link. */
 name|ret_val
 operator|=
-name|func
+name|hw
 operator|->
+name|mac
+operator|.
+name|ops
+operator|.
 name|setup_physical_interface
 argument_list|(
 name|hw
@@ -7385,7 +7930,7 @@ comment|/**  *  e1000_setup_copper_link_ich8lan - Configure MAC/PHY interface  *
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_setup_copper_link_ich8lan
 parameter_list|(
@@ -7541,6 +8086,33 @@ goto|goto
 name|out
 goto|;
 block|}
+elseif|else
+if|if
+condition|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|type
+operator|==
+name|e1000_phy_bm
+condition|)
+block|{
+name|ret_val
+operator|=
+name|e1000_copper_link_setup_m88
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|hw
@@ -7554,7 +8126,13 @@ condition|)
 block|{
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -7614,7 +8192,13 @@ break|break;
 block|}
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -7647,11 +8231,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_link_up_info_ich8lan - Get current link speed and duplex  *  @hw: pointer to the HW structure  *  @speed: pointer to store current link speed  *  @duplex: pointer to store the current link duplex  *  *  Calls the generic get_speed_and_duplex to retreive the current link  *  information and then calls the Kumeran lock loss workaround for links at  *  gigabit speeds.  **/
+comment|/**  *  e1000_get_link_up_info_ich8lan - Get current link speed and duplex  *  @hw: pointer to the HW structure  *  @speed: pointer to store current link speed  *  @duplex: pointer to store the current link duplex  *  *  Calls the generic get_speed_and_duplex to retrieve the current link  *  information and then calls the Kumeran lock loss workaround for links at  *  gigabit speeds.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_link_up_info_ich8lan
 parameter_list|(
@@ -7871,7 +8455,13 @@ block|{
 comment|/* read once to clear */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -7891,7 +8481,13 @@ goto|;
 comment|/* and again to get new status */
 name|ret_val
 operator|=
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -7928,7 +8524,13 @@ name|out
 goto|;
 block|}
 comment|/* Issue PHY reset */
-name|e1000_phy_hw_reset
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|reset
 argument_list|(
 name|hw
 argument_list|)
@@ -7966,7 +8568,7 @@ argument_list|,
 name|phy_ctrl
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Call gig speed drop workaround on Giga disable before accessing 	 * any PHY registers 	 */
+comment|/* 	 * Call gig speed drop workaround on Gig disable before accessing 	 * any PHY registers 	 */
 name|e1000_gig_downshift_workaround_ich8lan
 argument_list|(
 name|hw
@@ -7987,7 +8589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_kmrn_lock_loss_workaound_ich8lan - Set Kumeran workaround state  *  @hw: pointer to the HW structure  *  @state: boolean value used to set the current Kumaran workaround state  *  *  If ICH8, set the current Kumeran workaround state (enabled - TRUE  *  /disabled - FALSE).  **/
+comment|/**  *  e1000_set_kmrn_lock_loss_workaround_ich8lan - Set Kumeran workaround state  *  @hw: pointer to the HW structure  *  @state: boolean value used to set the current Kumeran workaround state  *  *  If ICH8, set the current Kumeran workaround state (enabled - TRUE  *  /disabled - FALSE).  **/
 end_comment
 
 begin_function
@@ -8144,7 +8746,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Call gig speed drop workaround on Giga disable before 		 * accessing any PHY registers 		 */
+comment|/* 		 * Call gig speed drop workaround on Gig disable before 		 * accessing any PHY registers 		 */
 if|if
 condition|(
 name|hw
@@ -8161,7 +8763,13 @@ name|hw
 argument_list|)
 expr_stmt|;
 comment|/* Write VR power-down enable */
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -8176,7 +8784,13 @@ operator|&=
 operator|~
 name|IGP3_VR_CTRL_DEV_POWERDOWN_MODE_MASK
 expr_stmt|;
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -8188,7 +8802,13 @@ name|IGP3_VR_CTRL_MODE_SHUTDOWN
 argument_list|)
 expr_stmt|;
 comment|/* Read it back and test */
-name|e1000_read_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -8250,7 +8870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_gig_downshift_workaround_ich8lan - WoL from S5 stops working  *  @hw: pointer to the HW structure  *  *  Steps to take when dropping from 1Gb/s (eg. link cable removal (LSC),  *  LPLU, Giga disable, MDIC PHY reset):  *    1) Set Kumeran Near-end loopback  *    2) Clear Kumeran Near-end loopback  *  Should only be called for ICH8[m] devices with IGP_3 Phy.  **/
+comment|/**  *  e1000_gig_downshift_workaround_ich8lan - WoL from S5 stops working  *  @hw: pointer to the HW structure  *  *  Steps to take when dropping from 1Gb/s (eg. link cable removal (LSC),  *  LPLU, Gig disable, MDIC PHY reset):  *    1) Set Kumeran Near-end loopback  *    2) Clear Kumeran Near-end loopback  *  Should only be called for ICH8[m] devices with IGP_3 Phy.  **/
 end_comment
 
 begin_function
@@ -8365,11 +8985,80 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *  e1000_disable_gig_wol_ich8lan - disable gig during WoL  *  @hw: pointer to the HW structure  *  *  During S0 to Sx transition, it is possible the link remains at gig  *  instead of negotiating to a lower speed.  Before going to Sx, set  *  'LPLU Enabled' and 'Gig Disable' to force link speed negotiation  *  to a lower speed.  *  *  Should only be called for ICH9 and ICH10 devices.  **/
+end_comment
+
+begin_function
+name|void
+name|e1000_disable_gig_wol_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|u32
+name|phy_ctrl
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_ich10lan
+operator|)
+operator|||
+operator|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_ich9lan
+operator|)
+condition|)
+block|{
+name|phy_ctrl
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_PHY_CTRL
+argument_list|)
+expr_stmt|;
+name|phy_ctrl
+operator||=
+name|E1000_PHY_CTRL_D0A_LPLU
+operator||
+name|E1000_PHY_CTRL_GBE_DISABLE
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_PHY_CTRL
+argument_list|,
+name|phy_ctrl
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+end_function
+
+begin_comment
 comment|/**  *  e1000_cleanup_led_ich8lan - Restore the default LED operation  *  @hw: pointer to the HW structure  *  *  Return the LED back to the default configuration.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_cleanup_led_ich8lan
 parameter_list|(
@@ -8401,7 +9090,13 @@ name|e1000_phy_ife
 condition|)
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -8431,11 +9126,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_on_ich8lan - Turn LED's on  *  @hw: pointer to the HW structure  *  *  Turn on the LED's.  **/
+comment|/**  *  e1000_led_on_ich8lan - Turn LEDs on  *  @hw: pointer to the HW structure  *  *  Turn on the LEDs.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_led_on_ich8lan
 parameter_list|(
@@ -8467,7 +9162,13 @@ name|e1000_phy_ife
 condition|)
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -8501,11 +9202,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_off_ich8lan - Turn LED's off  *  @hw: pointer to the HW structure  *  *  Turn off the LED's.  **/
+comment|/**  *  e1000_led_off_ich8lan - Turn LEDs off  *  @hw: pointer to the HW structure  *  *  Turn off the LEDs.  **/
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_led_off_ich8lan
 parameter_list|(
@@ -8537,7 +9238,13 @@ name|e1000_phy_ife
 condition|)
 name|ret_val
 operator|=
-name|e1000_write_phy_reg
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|write_reg
 argument_list|(
 name|hw
 argument_list|,
@@ -8575,7 +9282,7 @@ comment|/**  *  e1000_get_cfg_done_ich8lan - Read config done bit  *  @hw: point
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|s32
 name|e1000_get_cfg_done_ich8lan
 parameter_list|(
@@ -8590,12 +9297,28 @@ name|ret_val
 init|=
 name|E1000_SUCCESS
 decl_stmt|;
+name|u32
+name|bank
+init|=
+literal|0
+decl_stmt|;
 name|e1000_get_cfg_done_generic
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
 comment|/* If EEPROM is not marked present, init the IGP 3 PHY manually */
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|!=
+name|e1000_ich10lan
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -8630,6 +9353,33 @@ name|hw
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|e1000_valid_nvm_bank_detect_ich8lan
+argument_list|(
+name|hw
+argument_list|,
+operator|&
+name|bank
+argument_list|)
+condition|)
+block|{
+comment|/* Maybe we should do a basic Boazman config */
+name|DEBUGOUT
+argument_list|(
+literal|"EEPROM not present\n"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+operator|-
+name|E1000_ERR_CONFIG
+expr_stmt|;
+block|}
+block|}
 return|return
 name|ret_val
 return|;
@@ -8641,7 +9391,7 @@ comment|/**  * e1000_power_down_phy_copper_ich8lan - Remove link during PHY powe
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|e1000_power_down_phy_copper_ich8lan
 parameter_list|(
@@ -8651,17 +9401,45 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
+name|struct
+name|e1000_phy_info
+modifier|*
+name|phy
+init|=
+operator|&
+name|hw
+operator|->
+name|phy
+decl_stmt|;
+name|struct
+name|e1000_mac_info
+modifier|*
+name|mac
+init|=
+operator|&
+name|hw
+operator|->
+name|mac
+decl_stmt|;
 comment|/* If the management interface is not enabled, then power down */
 if|if
 condition|(
 operator|!
 operator|(
-name|e1000_check_mng_mode
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_mng_mode
 argument_list|(
 name|hw
 argument_list|)
 operator|||
-name|e1000_check_reset_block
+name|phy
+operator|->
+name|ops
+operator|.
+name|check_reset_block
 argument_list|(
 name|hw
 argument_list|)
@@ -8681,7 +9459,7 @@ comment|/**  *  e1000_clear_hw_cntrs_ich8lan - Clear statistical counters  *  @h
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|e1000_clear_hw_cntrs_ich8lan
 parameter_list|(
