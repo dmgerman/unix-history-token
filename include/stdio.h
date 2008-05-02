@@ -1793,17 +1793,6 @@ begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|__END_DECLS
 end_macro
