@@ -1010,6 +1010,14 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* can do WME+TKIP MIC */
+name|uint32_t
+name|sc_eerd
+decl_stmt|;
+comment|/* regdomain from EEPROM */
+name|uint32_t
+name|sc_eecc
+decl_stmt|;
+comment|/* country code from EEPROM */
 comment|/* rate tables */
 define|#
 directive|define
