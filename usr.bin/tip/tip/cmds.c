@@ -3391,6 +3391,9 @@ expr_stmt|;
 name|unraw
 argument_list|()
 expr_stmt|;
+name|unexcl
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0

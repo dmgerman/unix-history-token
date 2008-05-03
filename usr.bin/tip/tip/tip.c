@@ -1270,6 +1270,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * give up exclusive tty access  */
+end_comment
+
+begin_function
+name|void
+name|unexcl
+parameter_list|()
+block|{
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCNXCL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|jmp_buf

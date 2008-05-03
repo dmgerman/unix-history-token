@@ -511,6 +511,9 @@ argument_list|,
 name|ttyname
 argument_list|)
 expr_stmt|;
+name|unexcl
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|unlink

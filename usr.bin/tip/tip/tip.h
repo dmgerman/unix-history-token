@@ -2270,6 +2270,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|unexcl
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|unraw
 parameter_list|(
 name|void
