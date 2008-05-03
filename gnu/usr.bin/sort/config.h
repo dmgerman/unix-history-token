@@ -3773,7 +3773,7 @@ begin_define
 define|#
 directive|define
 name|PENDING_OUTPUT_N_BYTES
-value|fp->_p - fp->_bf._base
+value|__fgetpendout(fp)
 end_define
 
 begin_comment
