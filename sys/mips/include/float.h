@@ -82,6 +82,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * XXXMIPS: MIPS32 has both float and double type, so set FLT_EVAL_METHOD  *   to 0. Check it for 64-bits systems.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLT_EVAL_METHOD
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECIMAL_DIG
+value|17
+end_define
+
 begin_define
 define|#
 directive|define
