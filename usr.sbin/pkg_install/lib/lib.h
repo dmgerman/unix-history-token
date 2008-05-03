@@ -1507,6 +1507,7 @@ begin_function_decl
 name|char
 modifier|*
 modifier|*
+modifier|*
 name|matchallbyorigin
 parameter_list|(
 specifier|const
