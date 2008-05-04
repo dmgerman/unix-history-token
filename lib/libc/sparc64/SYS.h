@@ -82,7 +82,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|ENTRY(__CONCAT(__sys_,x)) ; \ 	.weak	CNAME(__CONCAT(_,x)) ; \ 	.type	CNAME(__CONCAT(_,x)),@function ; \ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)) ; \ 	mov	__CONCAT(SYS_,x), %g1 ; \ 	ta	%xcc, ST_SYSCALL ; \ 	retl ; \ 	 nop ; \ 	.size	CNAME(__CONCAT(__sys_,x)), . - CNAME(__CONCAT(__sys_,x)) ; \ 	.size	CNAME(__CONCAT(_,x)), . - CNAME(__CONCAT(__sys_,x))
+value|ENTRY(__CONCAT(__sys_,x)) ; \ 	.weak	CNAME(__CONCAT(_,x)) ; \ 	.type	CNAME(__CONCAT(_,x)),@function ; \ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)) ; \ 	_SYSCALL(x) ; \ 	retl ; \ 	 nop ; \ 	.size	CNAME(__CONCAT(__sys_,x)), . - CNAME(__CONCAT(__sys_,x)) ; \ 	.size	CNAME(__CONCAT(_,x)), . - CNAME(__CONCAT(__sys_,x))
 end_define
 
 end_unit
