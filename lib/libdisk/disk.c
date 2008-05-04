@@ -212,6 +212,13 @@ argument_list|(
 name|__arm__
 argument_list|)
 name|p_arm
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+name|p_mips
 else|#
 directive|else
 name|IHAVENOIDEA
