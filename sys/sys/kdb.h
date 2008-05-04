@@ -258,6 +258,26 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|kdb_panic
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kdb_reboot
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|kdb_reenter
 parameter_list|(
 name|void
@@ -549,6 +569,43 @@ end_define
 
 begin_comment
 comment|/* Unionfs bug. */
+end_comment
+
+begin_comment
+comment|/* Return values for kdb_alt_break */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KDB_REQ_DEBUGGER
+value|1
+end_define
+
+begin_comment
+comment|/* User requested Debugger */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KDB_REQ_PANIC
+value|2
+end_define
+
+begin_comment
+comment|/* User requested a panic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KDB_REQ_REBOOT
+value|3
+end_define
+
+begin_comment
+comment|/* User requested a clean reboot */
 end_comment
 
 begin_endif

@@ -2201,6 +2201,9 @@ name|defined
 argument_list|(
 name|ALT_BREAK_TO_DEBUGGER
 argument_list|)
+name|int
+name|kdb_brk
+decl_stmt|;
 if|if
 condition|(
 name|sc
@@ -2220,6 +2223,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|kdb_brk
+operator|=
 name|kdb_alt_break
 argument_list|(
 name|key
@@ -2229,14 +2235,39 @@ name|sc
 operator|->
 name|sc_altbrk
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
+case|case
+name|KDB_REQ_DEBUGGER
+case|:
 name|kdb_enter
 argument_list|(
 name|KDB_WHY_BREAK
 argument_list|,
-literal|"Break sequence to console"
+literal|"Break sequence on console"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|KDB_REQ_PANIC
+case|:
+name|kdb_panic
+argument_list|(
+literal|"Panic sequence on console"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|KDB_REQ_REBOOT
+case|:
+name|kdb_reboot
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
 block|}
 endif|#
 directive|endif

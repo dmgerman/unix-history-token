@@ -852,6 +852,9 @@ name|defined
 argument_list|(
 name|KDB
 argument_list|)
+name|int
+name|kdb_brk
+decl_stmt|;
 if|if
 condition|(
 name|l
@@ -871,6 +874,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|kdb_brk
+operator|=
 name|kdb_alt_break
 argument_list|(
 name|ch
@@ -878,7 +884,19 @@ argument_list|,
 operator|&
 name|alt_break_state
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
+switch|switch
+condition|(
+name|kdb_brk
+condition|)
+block|{
+case|case
+name|KDB_REQ_DEBUGGER
+case|:
 name|kdb_enter
 argument_list|(
 name|KDB_WHY_BREAK
@@ -886,6 +904,25 @@ argument_list|,
 literal|"Break sequence on console"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|KDB_REQ_PANIC
+case|:
+name|kdb_panic
+argument_list|(
+literal|"Panic sequence on console"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|KDB_REQ_REBOOT
+case|:
+name|kdb_reboot
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
+block|}
 endif|#
 directive|endif
 if|if
