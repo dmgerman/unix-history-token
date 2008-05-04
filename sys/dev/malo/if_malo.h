@@ -1733,46 +1733,13 @@ end_struct
 
 begin_struct
 struct|struct
-name|malo_vap
-block|{
-name|struct
-name|ieee80211vap
-name|malo_vap
-decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|malo_newstate
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211vap
-modifier|*
-parameter_list|,
-name|enum
-name|ieee80211_state
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|MALO_VAP
-parameter_list|(
-name|vap
-parameter_list|)
-value|((struct malo_vap *)(vap))
-end_define
-
-begin_struct
-struct|struct
 name|malo_softc
 block|{
+name|struct
+name|ieee80211com
+name|malo_ic
+decl_stmt|;
+comment|/* IEEE 802.11 common */
 name|device_t
 name|malo_dev
 decl_stmt|;
@@ -1826,8 +1793,13 @@ comment|/* recv setup */
 name|malo_fixedrate
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* use fixed tx rate */
+name|malo_fw_loaded
+range|:
+literal|1
+decl_stmt|;
+comment|/* fw loaded */
 name|struct
 name|malo_hal
 modifier|*
@@ -1892,6 +1864,22 @@ name|task
 name|malo_txtask
 decl_stmt|;
 comment|/* tx int processing */
+name|int
+function_decl|(
+modifier|*
+name|malo_newstate
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|enum
+name|ieee80211_state
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 name|struct
 name|bpf_if
 modifier|*
