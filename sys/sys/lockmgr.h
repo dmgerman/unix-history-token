@@ -441,6 +441,39 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOCK_FILE
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|LOCK_LINE
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"LOCK_FILE and LOCK_LINE not defined, include<sys/lock.h> before"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INVARIANTS
 end_ifdef
 
@@ -457,7 +490,7 @@ name|p
 parameter_list|)
 value|do {				\ 	switch ((what)) {						\ 	case LK_SHARED:							\ 		if (lockstatus((lkp), (p)) == LK_SHARED)		\ 			break;						\
 comment|/* fall into exclusive */
-value|\ 	case LK_EXCLUSIVE:						\ 		if (lockstatus((lkp), (p)) != LK_EXCLUSIVE)		\ 			panic("lock %s %s not held at %s:%d",		\ 			    (lkp)->lk_wmesg, #what, __FILE__,		\ 			    __LINE__);					\ 		break;							\ 	default:							\ 		panic("unknown LOCKMGR_ASSERT at %s:%d", __FILE__,	\ 		    __LINE__);						\ 	}								\ } while (0)
+value|\ 	case LK_EXCLUSIVE:						\ 		if (lockstatus((lkp), (p)) != LK_EXCLUSIVE)		\ 			panic("lock %s %s not held at %s:%d",		\ 			    (lkp)->lk_wmesg, #what, LOCK_FILE,		\ 			    LOCK_LINE);					\ 		break;							\ 	default:							\ 		panic("unknown LOCKMGR_ASSERT at %s:%d", LOCK_FILE,	\ 		    LOCK_LINE);						\ 	}								\ } while (0)
 end_define
 
 begin_else
@@ -490,18 +523,6 @@ end_endif
 begin_comment
 comment|/* INVARIANTS */
 end_comment
-
-begin_function_decl
-name|void
-name|dumplockinfo
-parameter_list|(
-name|struct
-name|lock
-modifier|*
-name|lkp
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -651,7 +672,8 @@ name|mtx
 parameter_list|,
 name|td
 parameter_list|)
-value|_lockmgr((lock), (flags), (mtx), (td), __FILE__, __LINE__)
+define|\
+value|_lockmgr((lock), (flags), (mtx), (td), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_ifdef
@@ -682,6 +704,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_endif
 endif|#
