@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2007, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2007-2008, Chelsio Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the Chelsio Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_include
@@ -1492,7 +1492,6 @@ name|m
 argument_list|)
 argument_list|)
 condition|)
-block|{
 comment|/* RX_DATA */
 return|return
 name|m_uiomove
@@ -1506,7 +1505,6 @@ argument_list|,
 name|uio
 argument_list|)
 return|;
-block|}
 if|if
 condition|(
 name|__predict_true
@@ -2515,16 +2513,11 @@ modifier|*
 name|nextrecord
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|notyet
-name|SOCKBUF_LOCK_ASSERT
+name|sockbuf_lock_assert
 argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * First, update for the new value of nextrecord.  If necessary, make 	 * it the first record. 	 */
 if|if
 condition|(
@@ -3206,6 +3199,24 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|rcv
+operator|->
+name|sb_state
+operator|&
+name|SBS_CANTRCVMORE
+condition|)
+goto|goto
+name|done
+goto|;
+name|CTR0
+argument_list|(
+name|KTR_TOM
+argument_list|,
+literal|"ddp pending -- waiting"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|err
 operator|=
@@ -3309,6 +3320,24 @@ name|restart
 goto|;
 if|if
 condition|(
+name|rcv
+operator|->
+name|sb_state
+operator|&
+name|SBS_CANTRCVMORE
+condition|)
+goto|goto
+name|done
+goto|;
+name|CTR0
+argument_list|(
+name|KTR_TOM
+argument_list|,
+literal|"no buffers -- waiting"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|err
 operator|=
@@ -3329,17 +3358,64 @@ name|restart
 goto|;
 name|got_mbuf
 label|:
+comment|/* 	 * Adjust the mbuf seqno if it has already been partially processed by 	 * soreceive_generic 	 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|!=
+name|m
+operator|->
+name|m_len
+condition|)
+block|{
+name|m
+operator|->
+name|m_seq
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-
+name|m
+operator|->
+name|m_len
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|m
+operator|->
+name|m_len
+expr_stmt|;
+block|}
 name|CTR6
 argument_list|(
 name|KTR_TOM
 argument_list|,
-literal|"t3_soreceive: ddp=%d m_len=%u resid=%u "
-literal|"m_seq=0x%08x copied_seq=0x%08x copied_unacked=%u"
+literal|"t3_soreceive: ddp_flags=0x%x m_len=%u resid=%u "
+literal|"m_seq=0x%08x c_seq=0x%08x c_unack=%u"
 argument_list|,
+operator|(
 name|is_ddp
 argument_list|(
 name|m
 argument_list|)
+condition|?
+name|m
+operator|->
+name|m_ddp_flags
+else|:
+literal|0
+operator|)
 argument_list|,
 name|m
 operator|->
@@ -3436,7 +3512,8 @@ operator|)
 literal|0xffffffff
 argument_list|,
 operator|(
-literal|"bad next value m_next=%p m_nextpkt=%p m_flags=0x%x m->m_len=%d"
+literal|"bad next value m_next=%p m_nextpkt=%p"
+literal|" m_flags=0x%x m->m_len=%d"
 operator|,
 name|m
 operator|->
@@ -3506,14 +3583,6 @@ goto|goto
 name|done
 goto|;
 block|}
-if|if
-condition|(
-name|is_ddp
-argument_list|(
-name|m
-argument_list|)
-condition|)
-block|{
 name|KASSERT
 argument_list|(
 call|(
@@ -3561,12 +3630,6 @@ operator|-
 name|m
 operator|->
 name|m_seq
-expr_stmt|;
-block|}
-else|else
-name|offset
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3653,7 +3716,35 @@ name|avail
 operator|=
 name|len
 expr_stmt|;
+name|rcv
+operator|->
+name|sb_flags
+operator||=
+name|SB_IN_TOE
+expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|kbuf_posted
+operator|==
+literal|0
+operator|&&
+name|p
+operator|->
+name|user_ddp_pending
+operator|==
+literal|0
+condition|)
+name|rcv
+operator|->
+name|sb_flags
+operator|&=
+operator|~
+name|SB_IN_TOE
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|URGENT_DATA_SUPPORTED
@@ -4332,6 +4423,23 @@ name|m_len
 operator|)
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_TOM
+argument_list|,
+literal|"freeing mbuf m_len = %d pktlen = %d"
+argument_list|,
+name|m
+operator|->
+name|m_len
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|)
+expr_stmt|;
 name|sbfree
 argument_list|(
 name|rcv
@@ -4657,12 +4765,20 @@ name|so
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|rcv
+operator|->
+name|sb_flags
+operator||=
+name|SB_IN_TOE
+expr_stmt|;
 name|p
 operator|->
 name|kbuf_posted
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 block|}
 ifdef|#
@@ -4813,6 +4929,16 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+name|struct
+name|sockbuf
+modifier|*
+name|rcv
+init|=
+name|so_sockbuf_rcv
+argument_list|(
+name|so
+argument_list|)
+decl_stmt|;
 name|flags
 operator|=
 name|flagsp
@@ -4869,6 +4995,24 @@ name|mp0
 operator|==
 name|NULL
 operator|)
+operator|&&
+operator|(
+operator|(
+name|rcv
+operator|->
+name|sb_flags
+operator|&
+name|SB_IN_TOE
+operator|)
+operator|||
+operator|(
+name|uio
+operator|->
+name|uio_iovcnt
+operator|==
+literal|1
+operator|)
+operator|)
 condition|)
 block|{
 name|struct
@@ -4907,6 +5051,15 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|rcv
+operator|->
+name|sb_flags
+operator|&
+name|SB_IN_TOE
+operator|)
+operator|||
+operator|(
+operator|(
 name|uio
 operator|->
 name|uio_resid
@@ -4923,13 +5076,18 @@ literal|1
 operator|)
 operator|&&
 name|zcopy_enabled
+operator|)
 condition|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
-name|KTR_CXGB
+name|KTR_TOM
 argument_list|,
-literal|"cxgb_soreceive: t_flags=0x%x flags=0x%x uio_resid=%d"
+literal|"cxgb_soreceive: sb_flags=0x%x t_flags=0x%x flags=0x%x uio_resid=%d"
+argument_list|,
+name|rcv
+operator|->
+name|sb_flags
 argument_list|,
 name|tp
 operator|->

@@ -9255,6 +9255,12 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+comment|/* Call back all registered clients */
+name|cxgb_add_clients
+argument_list|(
+name|tdev
+argument_list|)
+expr_stmt|;
 comment|/* restore them in case the offload module has changed them */
 if|if
 condition|(
@@ -9331,6 +9337,12 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* Call back all registered clients */
+name|cxgb_remove_clients
+argument_list|(
+name|tdev
+argument_list|)
+expr_stmt|;
 name|tdev
 operator|->
 name|lldev

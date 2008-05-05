@@ -688,6 +688,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SB_IN_TOE
+value|0x400
+end_define
+
+begin_comment
+comment|/* socket buffer is in the middle of an operation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SB_AUTOSIZE
 value|0x800
 end_define
