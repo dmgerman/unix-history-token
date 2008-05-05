@@ -1021,7 +1021,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|KDB_REQ_BREAK
+name|KDB_REQ_REBOOT
 case|:
 name|kdb_reboot
 argument_list|()
