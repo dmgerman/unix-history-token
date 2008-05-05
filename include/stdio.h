@@ -1810,47 +1810,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* XXX used by libftpio */
-end_comment
-
-begin_function_decl
-name|void
-modifier|*
-name|__fgetcookie
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|__fsetfileno
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX used by sort */
-end_comment
-
-begin_function_decl
-name|size_t
-name|__fgetpendout
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * The system error table contains messages for the first sys_nerr  * positive errno values.  Use strerror() or strerror_r() from<string.h>  * instead.  */
 end_comment
 
