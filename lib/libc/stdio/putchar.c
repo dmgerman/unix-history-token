@@ -81,6 +81,18 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|putchar
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|putchar_unlocked
+end_undef
+
 begin_comment
 comment|/*  * A subroutine version of the macro putchar  */
 end_comment

@@ -85,6 +85,18 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|getchar
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|getchar_unlocked
+end_undef
+
 begin_function
 name|int
 name|getchar

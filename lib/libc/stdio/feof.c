@@ -72,24 +72,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|"local.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"libc_private.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|__sfeof
-parameter_list|(
-name|p
-parameter_list|)
-value|(((p)->_flags& __SEOF) != 0)
-end_define
+begin_undef
+undef|#
+directive|undef
+name|feof
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|feof_unlocked
+end_undef
 
 begin_function
 name|int

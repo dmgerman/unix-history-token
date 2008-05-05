@@ -72,14 +72,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|"local.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"libc_private.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|ferror
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ferror_unlocked
+end_undef
 
 begin_function
 name|int

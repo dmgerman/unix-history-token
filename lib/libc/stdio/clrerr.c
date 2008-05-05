@@ -72,24 +72,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|"local.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"libc_private.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|__sclearerr
-parameter_list|(
-name|p
-parameter_list|)
-value|((void)((p)->_flags&= ~(__SERR|__SEOF)))
-end_define
+begin_undef
+undef|#
+directive|undef
+name|clearerr
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|clearerr_unlocked
+end_undef
 
 begin_function
 name|void

@@ -115,16 +115,204 @@ begin_comment
 comment|/* Define for new stdio with functions. */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|__sFILE
-struct_decl|;
-end_struct_decl
+begin_comment
+comment|/*  * NB: to fit things in six character monocase externals, the stdio  * code uses the prefix `__s' for stdio objects, typically followed  * by a three-character attempt at a mnemonic.  */
+end_comment
+
+begin_comment
+comment|/* stdio buffers */
+end_comment
+
+begin_struct
+struct|struct
+name|__sbuf
+block|{
+name|unsigned
+name|char
+modifier|*
+name|_base
+decl_stmt|;
+name|int
+name|_size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * stdio state variables.  *  * The following always hold:  *  *	if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),  *		_lbfsize is -_bf._size, else _lbfsize is 0  *	if _flags&__SRD, _w is 0  *	if _flags&__SWR, _r is 0  *  * This ensures that the getc and putc macros (or inline functions) never  * try to write or read from a file that is in `read' or `write' mode.  * (Moreover, they can, and do, automatically switch from read mode to  * write mode, and back, on "r+" and "w+" files.)  *  * _lbfsize is used only to make the inline line-buffered output stream  * code as compact as possible.  *  * _ub, _up, and _ur are used when ungetc() pushes back more characters  * than fit in the current _bf, or when ungetc() pushes back a character  * that does not match the previous one in _bf.  When this happens,  * _ub._base becomes non-nil (i.e., a stream has ungetc() data iff  * _ub._base!=NULL) and _up and _ur save the current values of _p and _r.  *  * Certain members of __sFILE are accessed directly via macros or  * inline functions.  To preserve ABI compat, these members must not  * be disturbed.  These members are marked below with (*).  */
+end_comment
 
 begin_typedef
 typedef|typedef
-name|struct
+struct|struct
 name|__sFILE
+block|{
+name|unsigned
+name|char
+modifier|*
+name|_p
+decl_stmt|;
+comment|/* (*) current position in (some) buffer */
+name|int
+name|_r
+decl_stmt|;
+comment|/* (*) read space left for getc() */
+name|int
+name|_w
+decl_stmt|;
+comment|/* (*) write space left for putc() */
+name|short
+name|_flags
+decl_stmt|;
+comment|/* (*) flags, below; this FILE is free if 0 */
+name|short
+name|_file
+decl_stmt|;
+comment|/* (*) fileno, if Unix descriptor, else -1 */
+name|struct
+name|__sbuf
+name|_bf
+decl_stmt|;
+comment|/* the buffer (at least 1 byte, if !NULL) */
+name|int
+name|_lbfsize
+decl_stmt|;
+comment|/* (*) 0 or -_bf._size, for inline putc */
+comment|/* operations */
+name|void
+modifier|*
+name|_cookie
+decl_stmt|;
+comment|/* cookie passed to io functions */
+name|int
+function_decl|(
+modifier|*
+name|_close
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|_read
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|fpos_t
+function_decl|(
+modifier|*
+name|_seek
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|fpos_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|_write
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* separate buffer for long sequences of ungetc() */
+name|struct
+name|__sbuf
+name|_ub
+decl_stmt|;
+comment|/* ungetc buffer */
+name|unsigned
+name|char
+modifier|*
+name|_up
+decl_stmt|;
+comment|/* saved _p when _p is doing ungetc data */
+name|int
+name|_ur
+decl_stmt|;
+comment|/* saved _r when _r is counting ungetc data */
+comment|/* tricks to meet minimum requirements even when malloc() fails */
+name|unsigned
+name|char
+name|_ubuf
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* guarantee an ungetc() buffer */
+name|unsigned
+name|char
+name|_nbuf
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* guarantee a getc() buffer */
+comment|/* separate buffer for fgetln() when line crosses buffer boundary */
+name|struct
+name|__sbuf
+name|_lb
+decl_stmt|;
+comment|/* buffer for fgetln() */
+comment|/* Unix stdio files get aligned to block boundaries on fseek() */
+name|int
+name|_blksize
+decl_stmt|;
+comment|/* stat.st_blksize (may be != _bf._size) */
+name|fpos_t
+name|_offset
+decl_stmt|;
+comment|/* current lseek offset */
+name|struct
+name|pthread_mutex
+modifier|*
+name|_fl_mutex
+decl_stmt|;
+comment|/* used for MT-safety */
+name|struct
+name|pthread
+modifier|*
+name|_fl_owner
+decl_stmt|;
+comment|/* current owner */
+name|int
+name|_fl_count
+decl_stmt|;
+comment|/* recursive lock count */
+name|int
+name|_orientation
+decl_stmt|;
+comment|/* orientation for fwide() */
+name|__mbstate_t
+name|_mbstate
+decl_stmt|;
+comment|/* multibyte conversion state */
+block|}
 name|FILE
 typedef|;
 end_typedef
@@ -167,7 +355,88 @@ directive|define
 name|_STDSTREAM_DECLARED
 endif|#
 directive|endif
-comment|/*  * The following three definitions are for ANSI C, which took them  * from System V, which brilliantly took internal interface macros and  * made them official arguments to setvbuf(), without renaming them.  * Hence, these ugly _IOxxx names are *supposed* to appear in user code.  */
+define|#
+directive|define
+name|__SLBF
+value|0x0001
+comment|/* line buffered */
+define|#
+directive|define
+name|__SNBF
+value|0x0002
+comment|/* unbuffered */
+define|#
+directive|define
+name|__SRD
+value|0x0004
+comment|/* OK to read */
+define|#
+directive|define
+name|__SWR
+value|0x0008
+comment|/* OK to write */
+comment|/* RD and WR are never simultaneously asserted */
+define|#
+directive|define
+name|__SRW
+value|0x0010
+comment|/* open for reading& writing */
+define|#
+directive|define
+name|__SEOF
+value|0x0020
+comment|/* found EOF */
+define|#
+directive|define
+name|__SERR
+value|0x0040
+comment|/* found error */
+define|#
+directive|define
+name|__SMBF
+value|0x0080
+comment|/* _buf is from malloc */
+define|#
+directive|define
+name|__SAPP
+value|0x0100
+comment|/* fdopen()ed in append mode */
+define|#
+directive|define
+name|__SSTR
+value|0x0200
+comment|/* this is an sprintf/snprintf string */
+define|#
+directive|define
+name|__SOPT
+value|0x0400
+comment|/* do fseek() optimization */
+define|#
+directive|define
+name|__SNPT
+value|0x0800
+comment|/* do not do fseek() optimization */
+define|#
+directive|define
+name|__SOFF
+value|0x1000
+comment|/* set iff _offset is in fact correct */
+define|#
+directive|define
+name|__SMOD
+value|0x2000
+comment|/* true => fgetln modified _p text */
+define|#
+directive|define
+name|__SALC
+value|0x4000
+comment|/* allocate string space dynamically */
+define|#
+directive|define
+name|__SIGN
+value|0x8000
+comment|/* ignore this file in _fwalk */
+comment|/*  * The following three definitions are for ANSI C, which took them  * from System V, which brilliantly took internal interface macros and  * made them official arguments to setvbuf(), without renaming them.  * Hence, these ugly _IOxxx names are *supposed* to appear in user code.  *  * Although numbered as their counterparts above, the implementation  * does not rely on this.  */
 define|#
 directive|define
 name|_IOFBF
@@ -1158,7 +1427,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * See ISO/IEC 9945-1 ANSI/IEEE Std 1003.1 Second Edition 1996-07-12  * B.8.2.7 for the rationale behind the *_unlocked() functions.  */
+comment|/*  * These are normally used through macros as defined below, but POSIX  * requires functions as well.  */
 end_comment
 
 begin_function_decl
@@ -1833,6 +2102,398 @@ end_endif
 begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
+
+begin_comment
+comment|/*  * Functions internal to the implementation.  */
+end_comment
+
+begin_function_decl
+name|int
+name|__srget
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__swbuf
+parameter_list|(
+name|int
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * The __sfoo macros are here so that we can  * define function versions in the C library.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__sgetc
+parameter_list|(
+name|p
+parameter_list|)
+value|(--(p)->_r< 0 ? __srget(p) : (int)(*(p)->_p++))
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|__sputc
+parameter_list|(
+name|int
+name|_c
+parameter_list|,
+name|FILE
+modifier|*
+name|_p
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|--
+name|_p
+operator|->
+name|_w
+operator|>=
+literal|0
+operator|||
+operator|(
+name|_p
+operator|->
+name|_w
+operator|>=
+name|_p
+operator|->
+name|_lbfsize
+operator|&&
+operator|(
+name|char
+operator|)
+name|_c
+operator|!=
+literal|'\n'
+operator|)
+condition|)
+return|return
+operator|(
+operator|*
+name|_p
+operator|->
+name|_p
+operator|++
+operator|=
+name|_c
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|__swbuf
+argument_list|(
+name|_c
+argument_list|,
+name|_p
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * This has been tuned to generate reasonable code on the vax using pcc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__sputc
+parameter_list|(
+name|c
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|(--(p)->_w< 0 ? \ 		(p)->_w>= (p)->_lbfsize ? \ 			(*(p)->_p = (c)), *(p)->_p != '\n' ? \ 				(int)*(p)->_p++ : \ 				__swbuf('\n', p) : \ 			__swbuf((int)(c), p) : \ 		(*(p)->_p = (c), (int)*(p)->_p++))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|__sfeof
+parameter_list|(
+name|p
+parameter_list|)
+value|(((p)->_flags& __SEOF) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__sferror
+parameter_list|(
+name|p
+parameter_list|)
+value|(((p)->_flags& __SERR) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__sclearerr
+parameter_list|(
+name|p
+parameter_list|)
+value|((void)((p)->_flags&= ~(__SERR|__SEOF)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__sfileno
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->_file)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|__isthreaded
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|feof
+parameter_list|(
+name|p
+parameter_list|)
+value|(!__isthreaded ? __sfeof(p) : (feof)(p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ferror
+parameter_list|(
+name|p
+parameter_list|)
+value|(!__isthreaded ? __sferror(p) : (ferror)(p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|clearerr
+parameter_list|(
+name|p
+parameter_list|)
+value|(!__isthreaded ? __sclearerr(p) : (clearerr)(p))
+end_define
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|fileno
+parameter_list|(
+name|p
+parameter_list|)
+value|(!__isthreaded ? __sfileno(p) : (fileno)(p))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|getc
+parameter_list|(
+name|fp
+parameter_list|)
+value|(!__isthreaded ? __sgetc(fp) : (getc)(fp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|putc
+parameter_list|(
+name|x
+parameter_list|,
+name|fp
+parameter_list|)
+value|(!__isthreaded ? __sputc(x, fp) : (putc)(x, fp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|getchar
+parameter_list|()
+value|getc(stdin)
+end_define
+
+begin_define
+define|#
+directive|define
+name|putchar
+parameter_list|(
+name|x
+parameter_list|)
+value|putc(x, stdout)
+end_define
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_comment
+comment|/*  * See ISO/IEC 9945-1 ANSI/IEEE Std 1003.1 Second Edition 1996-07-12  * B.8.2.7 for the rationale behind the *_unlocked() macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|feof_unlocked
+parameter_list|(
+name|p
+parameter_list|)
+value|__sfeof(p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ferror_unlocked
+parameter_list|(
+name|p
+parameter_list|)
+value|__sferror(p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|clearerr_unlocked
+parameter_list|(
+name|p
+parameter_list|)
+value|__sclearerr(p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fileno_unlocked
+parameter_list|(
+name|p
+parameter_list|)
+value|__sfileno(p)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199506
+end_if
+
+begin_define
+define|#
+directive|define
+name|getc_unlocked
+parameter_list|(
+name|fp
+parameter_list|)
+value|__sgetc(fp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|putc_unlocked
+parameter_list|(
+name|x
+parameter_list|,
+name|fp
+parameter_list|)
+value|__sputc(x, fp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|getchar_unlocked
+parameter_list|()
+value|getc_unlocked(stdin)
+end_define
+
+begin_define
+define|#
+directive|define
+name|putchar_unlocked
+parameter_list|(
+name|x
+parameter_list|)
+value|putc_unlocked(x, stdout)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__END_DECLS

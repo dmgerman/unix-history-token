@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"local.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"printf.h"
 end_include
 

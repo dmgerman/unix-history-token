@@ -81,6 +81,18 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|putc
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|putc_unlocked
+end_undef
+
 begin_function
 name|int
 name|putc

@@ -81,6 +81,18 @@ directive|include
 file|"local.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|getc
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|getc_unlocked
+end_undef
+
 begin_function
 name|int
 name|getc
