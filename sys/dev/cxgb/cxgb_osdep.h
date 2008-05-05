@@ -135,6 +135,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PANIC_IF
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -144,6 +150,11 @@ name|exp
 parameter_list|)
 value|do {                  \ 	if (exp)                            \ 		panic("BUG: %s", #exp);      \ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -656,7 +667,7 @@ name|WARN_ON
 parameter_list|(
 name|condition
 parameter_list|)
-value|do { \         if (unlikely((condition)!=0)) { \                 log(LOG_WARNING, "BUG: warning at %s:%d/%s()\n", __FILE__, __LINE__, __FUNCTION__); \                 kdb_backtrace(); \         } \ } while (0)
+value|do { \         if (__predict_false((condition)!=0)) { \                 log(LOG_WARNING, "BUG: warning at %s:%d/%s()\n", __FILE__, __LINE__, __FUNCTION__); \                 kdb_backtrace(); \         } \ } while (0)
 end_define
 
 begin_else
