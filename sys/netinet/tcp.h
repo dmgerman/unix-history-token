@@ -591,6 +591,13 @@ name|TCPI_OPT_ECN
 value|0x08
 end_define
 
+begin_define
+define|#
+directive|define
+name|TCPI_OPT_TOE
+value|0x10
+end_define
+
 begin_comment
 comment|/*  * The TCP_INFO socket option comes from the Linux 2.6 TCP API, and permits  * the caller to query certain information about the state of a TCP  * connection.  We provide an overlapping set of fields with the Linux  * implementation, but since this is a fixed size structure, room has been  * left for growth.  In order to maximize potential future compatibility with  * the Linux API, the same variable names and order have been adopted, and  * padding left to make room for omitted fields in case they are added later.  *  * XXX: This is currently an unstable ABI/API, in that it is expected to  * change.  */
 end_comment
@@ -716,11 +723,23 @@ name|u_int32_t
 name|tcpi_snd_bwnd
 decl_stmt|;
 comment|/* Bandwidth send window. */
+name|u_int32_t
+name|tcpi_snd_nxt
+decl_stmt|;
+comment|/* Next egress seqno */
+name|u_int32_t
+name|tcpi_rcv_nxt
+decl_stmt|;
+comment|/* Next ingress seqno */
+name|u_int32_t
+name|tcpi_toe_tid
+decl_stmt|;
+comment|/* HWTID for TOE endpoints */
 comment|/* Padding to grow without breaking ABI. */
 name|u_int32_t
 name|__tcpi_pad
 index|[
-literal|32
+literal|29
 index|]
 decl_stmt|;
 comment|/* Padding. */
