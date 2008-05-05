@@ -437,7 +437,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * blist_create() - create a blist capable of handling up to the specified  *		    number of blocks  *  *	blocks must be greater then 0  *  *	The smallest blist consists of a single leaf node capable of   *	managing BLIST_BMAP_RADIX blocks.  */
+comment|/*  * blist_create() - create a blist capable of handling up to the specified  *		    number of blocks  *  *	blocks - must be greater then 0  * 	flags  - malloc flags  *  *	The smallest blist consists of a single leaf node capable of   *	managing BLIST_BMAP_RADIX blocks.  */
 end_comment
 
 begin_function
@@ -446,6 +446,9 @@ name|blist_create
 parameter_list|(
 name|daddr_t
 name|blocks
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|blist_t
@@ -498,7 +501,7 @@ argument_list|)
 argument_list|,
 name|M_SWAP
 argument_list|,
-name|M_WAITOK
+name|flags
 operator||
 name|M_ZERO
 argument_list|)
@@ -559,7 +562,7 @@ name|bl_rootblks
 argument_list|,
 name|M_SWAP
 argument_list|,
-name|M_WAITOK
+name|flags
 argument_list|)
 expr_stmt|;
 if|#
@@ -948,6 +951,9 @@ name|count
 parameter_list|,
 name|int
 name|freenew
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|blist_t
@@ -956,6 +962,8 @@ init|=
 name|blist_create
 argument_list|(
 name|count
+argument_list|,
+name|flags
 argument_list|)
 decl_stmt|;
 name|blist_t
@@ -3651,6 +3659,8 @@ operator|=
 name|blist_create
 argument_list|(
 name|size
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|blist_free

@@ -6391,6 +6391,8 @@ operator|=
 name|blist_create
 argument_list|(
 name|nblks
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do not free the first two block in order to avoid overwriting 	 * any bsd label at the front of the partition 	 */
