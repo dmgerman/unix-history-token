@@ -1044,7 +1044,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|BUG_ON
+name|PANIC_IF
 argument_list|(
 operator|++
 name|i

@@ -795,7 +795,7 @@ call|(
 name|uint32_t
 call|)
 argument_list|(
-name|be64_to_cpu
+name|be64toh
 argument_list|(
 operator|*
 name|data
@@ -834,7 +834,7 @@ name|unsigned
 name|long
 name|long
 operator|)
-name|be64_to_cpu
+name|be64toh
 argument_list|(
 operator|*
 name|data
@@ -900,7 +900,7 @@ name|unsigned
 name|long
 name|long
 operator|)
-name|be64_to_cpu
+name|be64toh
 argument_list|(
 operator|*
 name|data
