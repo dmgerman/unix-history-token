@@ -154,6 +154,12 @@ parameter_list|)
 value|((long)(ptr))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PANIC_IF
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -163,6 +169,11 @@ name|exp
 parameter_list|)
 value|do {                  \ 	if (exp)                            \ 		panic("BUG func %s line %u: %s", __FUNCTION__, __LINE__, #exp);      \ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
