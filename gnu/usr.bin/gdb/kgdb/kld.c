@@ -730,9 +730,6 @@ decl_stmt|;
 name|CORE_ADDR
 name|base_addr
 decl_stmt|;
-name|int
-name|add_kld_command
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -869,12 +866,6 @@ name|sect
 operator|->
 name|index
 expr_stmt|;
-if|if
-condition|(
-name|asi
-operator|->
-name|add_kld_command
-condition|)
 name|printf_unfiltered
 argument_list|(
 literal|"\t%s_addr = %s\n"
@@ -909,9 +900,6 @@ name|base_addr
 parameter_list|,
 name|int
 name|from_tty
-parameter_list|,
-name|int
-name|add_kld_command
 parameter_list|)
 block|{
 name|struct
@@ -999,10 +987,6 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|add_kld_command
-condition|)
 name|printf_unfiltered
 argument_list|(
 literal|"add symbol table from file \"%s\" at\n"
@@ -1046,12 +1030,6 @@ name|base_addr
 operator|=
 name|base_addr
 expr_stmt|;
-name|asi
-operator|.
-name|add_kld_command
-operator|=
-name|add_kld_command
-expr_stmt|;
 name|bfd_map_over_sections
 argument_list|(
 name|bfd
@@ -1093,11 +1071,7 @@ name|section_addrs
 argument_list|,
 literal|0
 argument_list|,
-name|add_kld_command
-condition|?
 name|OBJF_USERLOADED
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|do_cleanups
@@ -1209,8 +1183,6 @@ argument_list|,
 name|base_addr
 argument_list|,
 name|from_tty
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|reinit_frame_cache
