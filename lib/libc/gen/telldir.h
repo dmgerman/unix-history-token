@@ -84,6 +84,8 @@ name|_readdir_unlocked
 parameter_list|(
 name|DIR
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

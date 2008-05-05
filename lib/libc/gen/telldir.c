@@ -370,6 +370,8 @@ operator|=
 name|_readdir_unlocked
 argument_list|(
 name|dirp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
