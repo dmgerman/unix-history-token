@@ -9892,7 +9892,7 @@ name|VOP_LOCK
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUPGRADE
+name|LK_UPGRADE
 operator||
 name|LK_INTERLOCK
 operator||
