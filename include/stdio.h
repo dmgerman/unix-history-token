@@ -184,7 +184,7 @@ name|void
 modifier|*
 name|_cookie
 decl_stmt|;
-comment|/* cookie passed to io functions */
+comment|/* (*) cookie passed to io functions */
 name|int
 function_decl|(
 modifier|*
