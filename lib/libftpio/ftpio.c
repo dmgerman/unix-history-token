@@ -554,6 +554,20 @@ value|421
 end_define
 
 begin_comment
+comment|/*  * XXX  * gross!  evil!  bad!  We really need an access primitive for cookie in stdio itself.  * it's too convenient a hook to bury and it's already exported through funopen as it is, so...  * XXX  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|fcookie
+parameter_list|(
+name|fp
+parameter_list|)
+value|((fp)->_cookie)
+end_define
+
+begin_comment
 comment|/* Placeholder in case we want to do any pre-init stuff at some point */
 end_comment
 
@@ -687,7 +701,7 @@ block|{
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
@@ -756,7 +770,7 @@ block|{
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
@@ -827,7 +841,7 @@ block|{
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
@@ -860,7 +874,7 @@ decl_stmt|;
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
@@ -912,7 +926,7 @@ block|{
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
@@ -1036,7 +1050,7 @@ decl_stmt|;
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
@@ -1200,7 +1214,7 @@ decl_stmt|;
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
@@ -1418,7 +1432,7 @@ decl_stmt|;
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
@@ -1653,14 +1667,13 @@ name|ftp_close_method
 argument_list|)
 expr_stmt|;
 comment|/* BSD 4.4 function! */
-name|__fsetfileno
-argument_list|(
 name|fp
-argument_list|,
+operator|->
+name|_file
+operator|=
 name|n
 operator|->
 name|fd_ctrl
-argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1751,7 +1764,7 @@ decl_stmt|;
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
@@ -1805,7 +1818,7 @@ block|{
 name|FTP_t
 name|ftp
 init|=
-name|__fgetcookie
+name|fcookie
 argument_list|(
 name|fp
 argument_list|)
