@@ -64,18 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dirent.h>
 end_include
 
@@ -200,10 +188,6 @@ name|nitems
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|stat
-name|stb
-decl_stmt|;
 name|long
 name|arraysz
 decl_stmt|;
@@ -230,34 +214,11 @@ operator|-
 literal|1
 operator|)
 return|;
-if|if
-condition|(
-name|_fstat
-argument_list|(
-name|dirp
-operator|->
-name|dd_fd
-argument_list|,
-operator|&
-name|stb
-argument_list|)
-operator|<
-literal|0
-condition|)
-goto|goto
-name|fail
-goto|;
-comment|/* 	 * estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry. 	 */
 name|arraysz
 operator|=
-operator|(
-name|stb
-operator|.
-name|st_size
-operator|/
-literal|24
-operator|)
+literal|32
 expr_stmt|;
+comment|/* initial estimate of the array size */
 name|names
 operator|=
 operator|(
@@ -400,13 +361,6 @@ operator|>=
 name|arraysz
 condition|)
 block|{
-specifier|const
-name|int
-name|inc
-init|=
-literal|10
-decl_stmt|;
-comment|/* increase by this much */
 name|struct
 name|dirent
 modifier|*
@@ -431,8 +385,8 @@ name|names
 argument_list|,
 operator|(
 name|arraysz
-operator|+
-name|inc
+operator|*
+literal|2
 operator|)
 operator|*
 sizeof|sizeof
@@ -464,8 +418,8 @@ operator|=
 name|names2
 expr_stmt|;
 name|arraysz
-operator|+=
-name|inc
+operator|*=
+literal|2
 expr_stmt|;
 block|}
 name|names
