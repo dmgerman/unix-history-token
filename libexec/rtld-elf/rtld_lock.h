@@ -158,6 +158,13 @@ name|rtld_libc_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|rtld_lock_t
+name|rtld_phdr_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|rlock_acquire
