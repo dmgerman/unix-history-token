@@ -4406,7 +4406,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"delta sec %lu delta usec %lu iter %d size %d\n"
+literal|"delta sec %zu delta usec %lu iter %d size %d\n"
 argument_list|,
 name|stop_tv
 operator|.
@@ -5341,7 +5341,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"delta sec %lu delta usec %lu iter %d size %d cycle_iters %d sum_post %llu sum_poll %llu sum_last_poll %llu\n"
+literal|"delta sec %zu delta usec %lu iter %d size %d cycle_iters %d sum_post %llu sum_poll %llu sum_last_poll %llu\n"
 argument_list|,
 name|stop_tv
 operator|.
@@ -5917,7 +5917,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"delta sec %lu delta usec %lu iter %d size %d cycle_iters %d sum_post %llu sum_poll %llu sum_last_poll %llu\n"
+literal|"delta sec %zu delta usec %lu iter %d size %d cycle_iters %d sum_post %llu sum_poll %llu sum_last_poll %llu\n"
 argument_list|,
 name|stop_tv
 operator|.
