@@ -1138,7 +1138,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {					\ 	if (audit_enabled)						\ 		audit_arg_ ## op (args);				\ } while (0)
+value|do {					\ 	if (td->td_ar != NULL)						\ 		audit_arg_ ## op (args);				\ } while (0)
 end_define
 
 begin_define
