@@ -196,7 +196,7 @@ name|char
 modifier|*
 name|dataptr
 decl_stmt|;
-name|int
+name|void
 modifier|*
 name|zphys_addr
 decl_stmt|;
@@ -333,8 +333,10 @@ operator|)
 expr_stmt|;
 name|zphys_addr
 operator|=
+operator|*
 operator|(
-name|int
+name|void
+operator|*
 operator|*
 operator|)
 operator|(
@@ -351,7 +353,6 @@ condition|(
 operator|!
 name|KVM_READ
 argument_list|(
-operator|*
 name|zphys_addr
 argument_list|,
 operator|&
