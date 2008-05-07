@@ -1477,6 +1477,12 @@ name|FREAD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * current working directory vnode 	 */
+if|if
+condition|(
+name|filed
+operator|.
+name|fd_cdir
+condition|)
 name|vtrans
 argument_list|(
 name|filed
