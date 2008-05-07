@@ -113,12 +113,23 @@ name|_PATH_FTPLOGINMESG
 value|SYSCONFDIR "/motd"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_ISSUE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_ISSUE
 value|SYSCONFDIR "/issue"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

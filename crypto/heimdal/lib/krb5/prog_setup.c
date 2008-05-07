@@ -24,13 +24,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: prog_setup.c,v 1.9 2001/02/20 01:44:54 assar Exp $"
+literal|"$Id: prog_setup.c 15470 2005-06-17 04:29:41Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_std_usage
 parameter_list|(
 name|int
@@ -66,6 +67,7 @@ end_function
 
 begin_function
 name|int
+name|KRB5_LIB_FUNCTION
 name|krb5_program_setup
 parameter_list|(
 name|krb5_context
@@ -108,7 +110,7 @@ name|krb5_error_code
 name|ret
 decl_stmt|;
 name|int
-name|optind
+name|optidx
 init|=
 literal|0
 decl_stmt|;
@@ -163,7 +165,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|optidx
 argument_list|)
 condition|)
 call|(
@@ -179,7 +181,7 @@ name|num_args
 argument_list|)
 expr_stmt|;
 return|return
-name|optind
+name|optidx
 return|;
 block|}
 end_function

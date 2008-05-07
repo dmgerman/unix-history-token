@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: privs_c.c,v 1.4 2000/07/11 15:59:54 joda Exp $"
+literal|"$Id: privs_c.c 17512 2006-05-08 13:43:17Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -25,7 +25,7 @@ name|void
 modifier|*
 name|server_handle
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|privs
 parameter_list|)
@@ -56,6 +56,11 @@ decl_stmt|;
 name|krb5_data
 name|reply
 decl_stmt|;
+operator|*
+name|privs
+operator|=
+literal|0
+expr_stmt|;
 name|ret
 operator|=
 name|_kadm5_connect
@@ -88,9 +93,18 @@ name|sp
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+operator|->
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|krb5_store_int32
 argument_list|(
 name|sp
@@ -151,6 +165,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+operator|->
+name|context
+argument_list|)
+expr_stmt|;
 name|krb5_data_free
 argument_list|(
 operator|&
@@ -169,6 +190,13 @@ operator|&
 name|tmp
 argument_list|)
 expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+operator|->
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|tmp
@@ -180,18 +208,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|krb5_ret_int32
+name|krb5_ret_uint32
 argument_list|(
 name|sp
 argument_list|,
-operator|&
-name|tmp
-argument_list|)
-expr_stmt|;
-operator|*
 name|privs
-operator|=
-name|tmp
+argument_list|)
 expr_stmt|;
 block|}
 name|krb5_storage_free

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: roken_rename.h,v 1.5 2001/05/06 21:47:54 assar Exp $ */
+comment|/* $Id: roken_rename.h 9842 2001-05-06 21:47:54Z assar $ */
 end_comment
 
 begin_ifndef

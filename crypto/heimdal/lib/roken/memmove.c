@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: memmove.c,v 1.7 1999/12/02 16:58:51 joda Exp $"
+literal|"$Id: memmove.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -52,6 +52,7 @@ end_endif
 begin_function
 name|void
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|memmove
 parameter_list|(
 name|void

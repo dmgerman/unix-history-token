@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_in_tkt_with_skey.c,v 1.3 1999/12/02 17:05:10 joda Exp $"
+literal|"$Id: get_in_tkt_with_skey.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -55,6 +55,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_get_in_tkt_with_skey
 parameter_list|(
 name|krb5_context

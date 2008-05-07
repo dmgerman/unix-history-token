@@ -616,6 +616,15 @@ literal|"set protection level"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|prothelp_c
+index|[]
+init|=
+literal|"set command protection level"
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -631,6 +640,25 @@ literal|"get remote tokens"
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|char
 name|klisthelp
@@ -639,6 +667,17 @@ init|=
 literal|"show remote tickets"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB4
+end_ifdef
 
 begin_decl_stmt
 name|char
@@ -657,6 +696,25 @@ init|=
 literal|"set filename of remote tickets"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|char
@@ -1688,7 +1746,7 @@ name|help
 block|}
 block|,
 block|{
-literal|"prot"
+literal|"protect"
 block|,
 name|prothelp
 block|,
@@ -1699,6 +1757,21 @@ block|,
 literal|0
 block|,
 name|sec_prot
+block|}
+block|,
+comment|/* what MIT uses */
+block|{
+literal|"cprotect"
+block|,
+name|prothelp_c
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|sec_prot_command
 block|}
 block|,
 ifdef|#
@@ -1718,6 +1791,19 @@ block|,
 name|kauth
 block|}
 block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 block|{
 literal|"klist"
 block|,
@@ -1732,6 +1818,11 @@ block|,
 name|klist
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|KRB4
 block|{
 literal|"kdestroy"
 block|,
@@ -1760,6 +1851,19 @@ block|,
 name|krbtkfile
 block|}
 block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 block|{
 literal|"afslog"
 block|,

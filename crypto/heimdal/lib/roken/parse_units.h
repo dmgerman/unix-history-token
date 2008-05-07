@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: parse_units.h,v 1.8 2003/04/16 17:30:54 lha Exp $ */
+comment|/* $Id: parse_units.h 14773 2005-04-12 11:29:18Z lha $ */
 end_comment
 
 begin_ifndef
@@ -31,6 +31,46 @@ directive|include
 file|<stddef.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ROKEN_LIB_FUNCTION
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+value|_stdcall
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|units
@@ -49,6 +89,7 @@ end_struct
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|parse_units
 parameter_list|(
 specifier|const
@@ -72,6 +113,7 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ROKEN_LIB_FUNCTION
 name|print_units_table
 parameter_list|(
 specifier|const
@@ -89,6 +131,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|parse_flags
 parameter_list|(
 specifier|const
@@ -110,6 +153,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_units
 parameter_list|(
 name|int
@@ -133,6 +177,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_units_approx
 parameter_list|(
 name|int
@@ -156,6 +201,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_flags
 parameter_list|(
 name|int
@@ -179,6 +225,7 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ROKEN_LIB_FUNCTION
 name|print_flags_table
 parameter_list|(
 specifier|const

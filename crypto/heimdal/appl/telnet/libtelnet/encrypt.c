@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: encrypt.c,v 1.23 2002/01/18 12:58:49 joda Exp $"
+literal|"$Id: encrypt.c 16802 2006-03-23 19:36:31Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2745,7 +2745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when a ENCRYPT START command is received.  */
+comment|/*  * Called when ENCRYPT START is received.  */
 end_comment
 
 begin_function

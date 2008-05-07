@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: n-fold-test.c,v 1.4 2001/03/12 07:42:30 assar Exp $"
+literal|"$Id: n-fold-test.c 21745 2007-07-31 16:11:25Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -620,6 +620,8 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|ret
+operator|=
 name|_krb5_n_fold
 argument_list|(
 name|t
@@ -638,6 +640,17 @@ argument_list|,
 name|t
 operator|->
 name|n
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 if|if

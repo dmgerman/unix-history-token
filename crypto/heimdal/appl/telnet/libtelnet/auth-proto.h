@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: auth-proto.h,v 1.11 2002/08/28 20:56:14 joda Exp $ */
+comment|/* $Id: auth-proto.h 11288 2002-08-28 20:56:14Z joda $ */
 end_comment
 
 begin_ifdef

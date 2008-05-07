@@ -69,7 +69,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mkstemp.c,v 1.3 1999/12/02 16:58:51 joda Exp $"
+literal|"$Id: mkstemp.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -82,6 +82,7 @@ end_ifndef
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|mkstemp
 parameter_list|(
 name|char

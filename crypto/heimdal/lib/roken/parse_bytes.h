@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: parse_bytes.h,v 1.3 2001/09/04 09:56:00 assar Exp $ */
+comment|/* $Id: parse_bytes.h 14787 2005-04-13 13:19:07Z lha $ */
 end_comment
 
 begin_ifndef
@@ -19,8 +19,49 @@ directive|define
 name|__PARSE_BYTES_H__
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ROKEN_LIB_FUNCTION
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+value|_stdcall
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|parse_bytes
 parameter_list|(
 specifier|const
@@ -38,6 +79,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_bytes
 parameter_list|(
 name|int
@@ -55,6 +97,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_bytes_short
 parameter_list|(
 name|int

@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: encrypt.h,v 1.8 2002/09/10 20:03:47 joda Exp $ */
+comment|/* $Id: encrypt.h 11444 2002-09-10 20:03:49Z joda $ */
 end_comment
 
 begin_ifndef

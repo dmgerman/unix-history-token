@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: eread.c,v 1.2 1999/12/02 16:58:45 joda Exp $"
+literal|"$Id: eread.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_comment
@@ -52,6 +52,7 @@ end_comment
 
 begin_function
 name|ssize_t
+name|ROKEN_LIB_FUNCTION
 name|eread
 parameter_list|(
 name|int

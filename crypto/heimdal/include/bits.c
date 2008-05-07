@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bits.c,v 1.22 2002/08/28 16:08:44 joda Exp $"
+literal|"$Id: bits.c 18703 2006-10-20 20:33:58Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -334,6 +334,7 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fn
@@ -341,6 +342,34 @@ decl_stmt|,
 modifier|*
 name|hb
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"--version"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"some version"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|argc
@@ -374,7 +403,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|hb
+name|p
 operator|=
 name|malloc
 argument_list|(
@@ -388,18 +417,19 @@ argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
-name|hb
+name|p
 argument_list|,
 literal|"__%s__"
 argument_list|,
 name|fn
 argument_list|)
 expr_stmt|;
+name|hb
+operator|=
+name|p
+expr_stmt|;
 for|for
 control|(
-name|p
-operator|=
-name|hb
 init|;
 operator|*
 name|p
@@ -467,7 +497,7 @@ argument_list|)
 argument_list|,
 literal|""
 argument_list|,
-literal|"$Id: bits.c,v 1.22 2002/08/28 16:08:44 joda Exp $"
+literal|"$Id: bits.c 18703 2006-10-20 20:33:58Z lha $"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -644,18 +674,28 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_INT32_T */
-if|#
-directive|if
-literal|0
 ifndef|#
 directive|ifndef
 name|HAVE_INT64_T
-block|flag = print_bt(f, flag);     try_signed (f, 64);
+name|flag
+operator|=
+name|print_bt
+argument_list|(
+name|f
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+name|try_signed
+argument_list|(
+name|f
+argument_list|,
+literal|64
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_INT64_T */
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|HAVE_UINT8_T
@@ -722,18 +762,28 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_UINT32_T */
-if|#
-directive|if
-literal|0
 ifndef|#
 directive|ifndef
 name|HAVE_UINT64_T
-block|flag = print_bt(f, flag);     try_unsigned (f, 64);
+name|flag
+operator|=
+name|print_bt
+argument_list|(
+name|f
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+name|try_unsigned
+argument_list|(
+name|f
+argument_list|,
+literal|64
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_UINT64_T */
-endif|#
-directive|endif
 define|#
 directive|define
 name|X
@@ -801,18 +851,26 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_U_INT32_T */
-if|#
-directive|if
-literal|0
 ifndef|#
 directive|ifndef
 name|HAVE_U_INT64_T
-block|flag = print_bt(f, flag);     X(64);
+name|flag
+operator|=
+name|print_bt
+argument_list|(
+name|f
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+name|X
+argument_list|(
+literal|64
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_U_INT64_T */
-endif|#
-directive|endif
 if|if
 condition|(
 name|flag

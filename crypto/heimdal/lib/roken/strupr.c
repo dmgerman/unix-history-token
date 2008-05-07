@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: strupr.c,v 1.5 2003/04/14 11:46:41 lha Exp $"
+literal|"$Id: strupr.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_ifndef
@@ -55,6 +55,7 @@ end_ifndef
 begin_function
 name|char
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|strupr
 parameter_list|(
 name|char

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2001 Kungliga Tekniska Högskolan  * (Royal Institut
 end_comment
 
 begin_comment
-comment|/* $Id: snprintf-test.h,v 1.2 2001/07/19 18:39:14 assar Exp $ */
+comment|/* $Id: snprintf-test.h 10377 2001-07-19 18:39:14Z assar $ */
 end_comment
 
 begin_ifndef

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify.c,v 1.13 1999/12/02 16:58:53 joda Exp $"
+literal|"$Id: verify.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -76,6 +76,7 @@ end_include
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unix_verify_user
 parameter_list|(
 name|char

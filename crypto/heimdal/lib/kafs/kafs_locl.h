@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999 Kungliga Tekniska Högs
 end_comment
 
 begin_comment
-comment|/* $Id: kafs_locl.h,v 1.17 2003/04/14 08:28:37 lha Exp $ */
+comment|/* $Id: kafs_locl.h 16116 2005-10-02 03:14:47Z lha $ */
 end_comment
 
 begin_ifndef
@@ -140,6 +140,23 @@ begin_include
 include|#
 directive|include
 file|<sys/filio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SYSCTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_endif
@@ -479,8 +496,7 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|kafs_data
 block|{
@@ -503,9 +519,8 @@ modifier|*
 name|data
 decl_stmt|;
 block|}
-name|kafs_data
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -544,6 +559,7 @@ begin_function_decl
 name|int
 name|_kafs_afslog_all_local_cells
 parameter_list|(
+name|struct
 name|kafs_data
 modifier|*
 parameter_list|,
@@ -560,6 +576,7 @@ begin_function_decl
 name|int
 name|_kafs_get_cred
 parameter_list|(
+name|struct
 name|kafs_data
 modifier|*
 parameter_list|,
@@ -588,6 +605,7 @@ begin_function_decl
 name|int
 name|_kafs_realm_of_cell
 parameter_list|(
+name|struct
 name|kafs_data
 modifier|*
 parameter_list|,

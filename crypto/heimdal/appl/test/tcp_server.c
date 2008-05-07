@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: tcp_server.c,v 1.16 1999/12/16 10:31:08 assar Exp $"
+literal|"$Id: tcp_server.c 17954 2006-09-01 09:01:03Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -66,7 +66,7 @@ decl_stmt|;
 name|krb5_data
 name|data
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|len
 decl_stmt|,
 name|net_len
@@ -200,7 +200,7 @@ name|server
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|keytab
 argument_list|,
 operator|&
 name|ticket

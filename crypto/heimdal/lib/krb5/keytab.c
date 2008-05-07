@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab.c,v 1.55 2003/03/27 03:45:01 lha Exp $"
+literal|"$Id: keytab.c 20211 2007-02-09 07:11:03Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -23,6 +23,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_register
 parameter_list|(
 name|krb5_context
@@ -61,7 +62,7 @@ literal|"krb5_kt_register; prefix too long"
 argument_list|)
 expr_stmt|;
 return|return
-name|KRB5_KT_NAME_TOOLONG
+name|KRB5_KT_BADNAME
 return|;
 block|}
 name|tmp
@@ -153,6 +154,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_resolve
 parameter_list|(
 name|krb5_context
@@ -403,6 +405,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_default_name
 parameter_list|(
 name|krb5_context
@@ -453,6 +456,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_default_modify_name
 parameter_list|(
 name|krb5_context
@@ -602,6 +606,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_default
 parameter_list|(
 name|krb5_context
@@ -633,6 +638,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_read_service_key
 parameter_list|(
 name|krb5_context
@@ -765,6 +771,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_get_type
 parameter_list|(
 name|krb5_context
@@ -804,6 +811,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_get_name
 parameter_list|(
 name|krb5_context
@@ -841,11 +849,138 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finish using the keytab in `id'.  All resources will be released.  * Return 0 or an error.  */
+comment|/*  * Retrieve the full name of the keytab `keytab' and store the name in  * `str'. `str' needs to be freed by the caller using free(3).  * Returns 0 or an error. On error, *str is set to NULL.  */
 end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
+name|krb5_kt_get_full_name
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_keytab
+name|keytab
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|char
+name|type
+index|[
+name|KRB5_KT_PREFIX_MAX_LEN
+index|]
+decl_stmt|;
+name|char
+name|name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|krb5_error_code
+name|ret
+decl_stmt|;
+operator|*
+name|str
+operator|=
+name|NULL
+expr_stmt|;
+name|ret
+operator|=
+name|krb5_kt_get_type
+argument_list|(
+name|context
+argument_list|,
+name|keytab
+argument_list|,
+name|type
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
+name|krb5_kt_get_name
+argument_list|(
+name|context
+argument_list|,
+name|keytab
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+if|if
+condition|(
+name|asprintf
+argument_list|(
+name|str
+argument_list|,
+literal|"%s:%s"
+argument_list|,
+name|type
+argument_list|,
+name|name
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc - out of memory"
+argument_list|)
+expr_stmt|;
+operator|*
+name|str
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Finish using the keytab in `id'.  All resources will be released,  * even on errors.  Return 0 or an error.  */
+end_comment
+
+begin_function
+name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_close
 parameter_list|(
 name|krb5_context
@@ -872,12 +1007,19 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
+name|memset
+argument_list|(
+name|id
+argument_list|,
 literal|0
-condition|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|id
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|id
@@ -895,6 +1037,7 @@ end_comment
 
 begin_function
 name|krb5_boolean
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_compare
 parameter_list|(
 name|krb5_context
@@ -975,6 +1118,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_get_entry
 parameter_list|(
 name|krb5_context
@@ -1049,10 +1193,17 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KT_NOTFOUND
 return|;
 comment|/* XXX i.e. file not found */
+block|}
 name|entry
 operator|->
 name|vno
@@ -1231,15 +1382,19 @@ index|[
 literal|256
 index|]
 decl_stmt|,
-name|kt_name
-index|[
-literal|256
-index|]
-decl_stmt|,
 name|kvno_str
 index|[
 literal|25
 index|]
+decl_stmt|,
+modifier|*
+name|kt_name
+decl_stmt|;
+name|char
+modifier|*
+name|enctype_str
+init|=
+name|NULL
 decl_stmt|;
 name|krb5_unparse_name_fixed
 argument_list|(
@@ -1255,18 +1410,24 @@ name|princ
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|krb5_kt_get_name
+name|krb5_kt_get_full_name
 argument_list|(
 name|context
 argument_list|,
 name|id
 argument_list|,
-name|kt_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
+operator|&
 name|kt_name
 argument_list|)
+expr_stmt|;
+name|krb5_enctype_to_string
+argument_list|(
+name|context
+argument_list|,
+name|enctype
+argument_list|,
+operator|&
+name|enctype_str
 argument_list|)
 expr_stmt|;
 if|if
@@ -1299,13 +1460,33 @@ name|krb5_set_error_string
 argument_list|(
 name|context
 argument_list|,
-literal|"failed to find %s%s in keytab %s"
+literal|"Failed to find %s%s in keytab %s (%s)"
 argument_list|,
 name|princ
 argument_list|,
 name|kvno_str
 argument_list|,
 name|kt_name
+condition|?
+name|kt_name
+else|:
+literal|"unknown keytab"
+argument_list|,
+name|enctype_str
+condition|?
+name|enctype_str
+else|:
+literal|"unknown enctype"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|kt_name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|enctype_str
 argument_list|)
 expr_stmt|;
 return|return
@@ -1321,6 +1502,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_copy_entry_contents
 parameter_list|(
 name|krb5_context
@@ -1439,6 +1621,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_free_entry
 parameter_list|(
 name|krb5_context
@@ -1468,23 +1651,24 @@ operator|->
 name|keyblock
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+name|entry
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|entry
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int xxxlock(int fd, int write) {     if(flock(fd, (write ? LOCK_EX : LOCK_SH) | LOCK_NB)< 0) { 	sleep(1); 	if(flock(fd, (write ? LOCK_EX : LOCK_SH) | LOCK_NB)< 0)  	    return -1;     }     return 0; }  static void xxxunlock(int fd) {     flock(fd, LOCK_UN); }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Set `cursor' to point at the beginning of `id'.  * Return 0 or an error.  */
@@ -1492,6 +1676,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_start_seq_get
 parameter_list|(
 name|krb5_context
@@ -1554,6 +1739,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_next_entry
 parameter_list|(
 name|krb5_context
@@ -1622,6 +1808,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_end_seq_get
 parameter_list|(
 name|krb5_context
@@ -1684,6 +1871,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_add_entry
 parameter_list|(
 name|krb5_context
@@ -1754,6 +1942,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_kt_remove_entry
 parameter_list|(
 name|krb5_context

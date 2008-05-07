@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: add_et_list.c,v 1.2 1999/12/02 17:05:07 joda Exp $"
+literal|"$Id: add_et_list.c 13713 2004-04-13 14:33:45Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -23,6 +23,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_add_et_list
 parameter_list|(
 name|krb5_context

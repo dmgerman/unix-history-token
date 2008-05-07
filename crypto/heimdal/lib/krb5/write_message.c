@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: write_message.c,v 1.8 2001/07/02 18:43:06 joda Exp $"
+literal|"$Id: write_message.c 17442 2006-05-05 09:31:15Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_write_message
 parameter_list|(
 name|krb5_context
@@ -32,10 +33,10 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|buf
 index|[
 literal|4
@@ -118,6 +119,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_write_priv_message
 parameter_list|(
 name|krb5_context
@@ -189,6 +191,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_write_safe_message
 parameter_list|(
 name|krb5_context

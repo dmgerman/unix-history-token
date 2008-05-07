@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,27 +12,16 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: 524.c,v 1.29 2003/03/17 05:35:47 assar Exp $"
+literal|"$Id: 524.c 18270 2006-10-06 17:06:30Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KRB4
-end_ifndef
 
 begin_include
 include|#
 directive|include
 file|<krb5-v4compat.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * fetch the server from `t', returning the name in malloced memory in  * `spn' and the entry itself in `server'  */
@@ -43,6 +32,13 @@ specifier|static
 name|krb5_error_code
 name|fetch_server
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_kdc_configuration
+modifier|*
+name|config
+parameter_list|,
 specifier|const
 name|Ticket
 modifier|*
@@ -53,7 +49,7 @@ modifier|*
 modifier|*
 name|spn
 parameter_list|,
-name|hdb_entry
+name|hdb_entry_ex
 modifier|*
 modifier|*
 name|server
@@ -72,8 +68,10 @@ name|sprinc
 decl_stmt|;
 name|ret
 operator|=
-name|principalname2krb5_principal
+name|_krb5_principalname2krb5_principal
 argument_list|(
+name|context
+argument_list|,
 operator|&
 name|sprinc
 argument_list|,
@@ -93,9 +91,13 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
-literal|"principalname2krb5_principal: %s"
+literal|"_krb5_principalname2krb5_principal: %s"
 argument_list|,
 name|krb5_get_err_text
 argument_list|(
@@ -134,6 +136,10 @@ argument_list|)
 expr_stmt|;
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"krb5_unparse_name: %s"
@@ -152,9 +158,17 @@ return|;
 block|}
 name|ret
 operator|=
-name|db_fetch
+name|_kdc_db_fetch
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 name|sprinc
+argument_list|,
+name|HDB_F_GET_SERVER
+argument_list|,
+name|NULL
 argument_list|,
 name|server
 argument_list|)
@@ -173,6 +187,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Request to convert ticket from %s for unknown principal %s: %s"
@@ -215,6 +233,13 @@ specifier|static
 name|krb5_error_code
 name|log_524
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_kdc_configuration
+modifier|*
+name|config
+parameter_list|,
 specifier|const
 name|EncTicketPart
 modifier|*
@@ -243,8 +268,10 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|principalname2krb5_principal
+name|_krb5_principalname2krb5_principal
 argument_list|(
+name|context
+argument_list|,
 operator|&
 name|client
 argument_list|,
@@ -264,9 +291,13 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
-literal|"principalname2krb5_principal: %s"
+literal|"_krb5_principalname2krb5_principal: %s"
 argument_list|,
 name|krb5_get_err_text
 argument_list|(
@@ -306,6 +337,10 @@ argument_list|)
 expr_stmt|;
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"krb5_unparse_name: %s"
@@ -324,6 +359,10 @@ return|;
 block|}
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|1
 argument_list|,
 literal|"524-REQ %s from %s for %s"
@@ -358,6 +397,13 @@ specifier|static
 name|krb5_error_code
 name|verify_flags
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_kdc_configuration
+modifier|*
+name|config
+parameter_list|,
 specifier|const
 name|EncTicketPart
 modifier|*
@@ -380,6 +426,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Ticket expired (%s)"
@@ -402,6 +452,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Ticket not valid (%s)"
@@ -428,6 +482,13 @@ specifier|static
 name|krb5_error_code
 name|set_address
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_kdc_configuration
+modifier|*
+name|config
+parameter_list|,
 name|EncTicketPart
 modifier|*
 name|et
@@ -493,6 +554,10 @@ argument_list|)
 expr_stmt|;
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Failed to convert address (%s)"
@@ -525,6 +590,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Incorrect network address (%s)"
@@ -661,6 +730,13 @@ specifier|static
 name|krb5_error_code
 name|encrypt_v4_ticket
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_kdc_configuration
+modifier|*
+name|config
+parameter_list|,
 name|void
 modifier|*
 name|buf
@@ -709,6 +785,10 @@ argument_list|)
 expr_stmt|;
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"krb5_crypto_init failed: %s"
@@ -758,6 +838,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Failed to encrypt data: %s"
@@ -785,6 +869,13 @@ specifier|static
 name|krb5_error_code
 name|encode_524_response
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_kdc_configuration
+modifier|*
+name|config
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -799,7 +890,7 @@ name|Ticket
 modifier|*
 name|t
 parameter_list|,
-name|hdb_entry
+name|hdb_entry_ex
 modifier|*
 name|server
 parameter_list|,
@@ -877,6 +968,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Failed to encode v4 (2b) ticket (%s)"
@@ -927,6 +1022,8 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
+name|config
+operator|->
 name|enable_v4_cross_realm
 operator|&&
 name|strcmp
@@ -945,6 +1042,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"524 cross-realm %s -> %s disabled"
@@ -964,8 +1065,12 @@ return|;
 block|}
 name|ret
 operator|=
-name|encode_v4_ticket
+name|_kdc_encode_v4_ticket
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 name|buf
 operator|+
 sizeof|sizeof
@@ -999,6 +1104,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Failed to encode v4 ticket (%s)"
@@ -1012,8 +1121,10 @@ return|;
 block|}
 name|ret
 operator|=
-name|get_des_key
+name|_kdc_get_des_key
 argument_list|(
+name|context
+argument_list|,
 name|server
 argument_list|,
 name|TRUE
@@ -1031,6 +1142,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"no suitable DES key for server (%s)"
@@ -1046,6 +1161,10 @@ name|ret
 operator|=
 name|encrypt_v4_ticket
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 name|buf
 operator|+
 sizeof|sizeof
@@ -1072,6 +1191,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Failed to encrypt v4 ticket (%s)"
@@ -1088,6 +1211,8 @@ name|kvno
 operator|=
 name|server
 operator|->
+name|entry
+operator|.
 name|kvno
 expr_stmt|;
 block|}
@@ -1103,8 +1228,15 @@ end_comment
 
 begin_function
 name|krb5_error_code
-name|do_524
+name|_kdc_do_524
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_kdc_configuration
+modifier|*
+name|config
+parameter_list|,
 specifier|const
 name|Ticket
 modifier|*
@@ -1133,7 +1265,7 @@ decl_stmt|;
 name|krb5_crypto
 name|crypto
 decl_stmt|;
-name|hdb_entry
+name|hdb_entry_ex
 modifier|*
 name|server
 init|=
@@ -1178,10 +1310,14 @@ name|len
 decl_stmt|;
 name|int
 name|kvno
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
 operator|!
+name|config
+operator|->
 name|enable_524
 condition|)
 block|{
@@ -1191,6 +1327,10 @@ name|KRB5KDC_ERR_POLICY
 expr_stmt|;
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Rejected ticket conversion request from %s"
@@ -1206,6 +1346,10 @@ name|ret
 operator|=
 name|fetch_server
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 name|t
 argument_list|,
 operator|&
@@ -1232,7 +1376,10 @@ name|hdb_enctype2key
 argument_list|(
 name|context
 argument_list|,
+operator|&
 name|server
+operator|->
+name|entry
 argument_list|,
 name|t
 operator|->
@@ -1251,6 +1398,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"No suitable key found for server (%s) from %s"
@@ -1288,6 +1439,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"krb5_crypto_init failed: %s"
@@ -1337,6 +1492,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Failed to decrypt ticket from %s for %s"
@@ -1384,6 +1543,10 @@ condition|)
 block|{
 name|kdc_log
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 literal|0
 argument_list|,
 literal|"Failed to decode ticket from %s for %s"
@@ -1401,6 +1564,10 @@ name|ret
 operator|=
 name|log_524
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 operator|&
 name|et
 argument_list|,
@@ -1428,6 +1595,10 @@ name|ret
 operator|=
 name|verify_flags
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 operator|&
 name|et
 argument_list|,
@@ -1453,6 +1624,10 @@ name|ret
 operator|=
 name|set_address
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 operator|&
 name|et
 argument_list|,
@@ -1480,6 +1655,10 @@ name|ret
 operator|=
 name|encode_524_response
 argument_list|(
+name|context
+argument_list|,
+name|config
+argument_list|,
 name|spn
 argument_list|,
 name|et
@@ -1528,6 +1707,11 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+condition|)
+block|{
 name|krb5_store_int32
 argument_list|(
 name|sp
@@ -1616,6 +1800,13 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|krb5_data_zero
+argument_list|(
+name|reply
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|spn
@@ -1629,8 +1820,10 @@ if|if
 condition|(
 name|server
 condition|)
-name|free_ent
+name|_kdc_free_ent
 argument_list|(
+name|context
+argument_list|,
 name|server
 argument_list|)
 expr_stmt|;

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: socket.c,v 1.8 2003/04/15 03:26:51 lha Exp $"
+literal|"$Id: socket.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -31,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_include
@@ -46,6 +46,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|socket_set_any
 parameter_list|(
 name|struct
@@ -69,7 +70,7 @@ block|{
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 init|=
 operator|(
 expr|struct
@@ -80,30 +81,30 @@ name|sa
 decl_stmt|;
 name|memset
 argument_list|(
-name|sin
+name|sin4
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|sin4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_port
 operator|=
 literal|0
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 operator|.
@@ -190,6 +191,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|socket_set_address_and_port
 parameter_list|(
 name|struct
@@ -220,7 +222,7 @@ block|{
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 init|=
 operator|(
 expr|struct
@@ -231,24 +233,24 @@ name|sa
 decl_stmt|;
 name|memset
 argument_list|(
-name|sin
+name|sin4
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|sin4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_port
 operator|=
@@ -257,7 +259,7 @@ expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 argument_list|,
@@ -359,6 +361,7 @@ end_comment
 
 begin_function
 name|size_t
+name|ROKEN_LIB_FUNCTION
 name|socket_addr_size
 parameter_list|(
 specifier|const
@@ -423,6 +426,7 @@ end_comment
 
 begin_function
 name|size_t
+name|ROKEN_LIB_FUNCTION
 name|socket_sockaddr_size
 parameter_list|(
 specifier|const
@@ -488,6 +492,7 @@ end_comment
 begin_function
 name|void
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|socket_get_address
 parameter_list|(
 name|struct
@@ -510,7 +515,7 @@ block|{
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 init|=
 operator|(
 expr|struct
@@ -521,7 +526,7 @@ name|sa
 decl_stmt|;
 return|return
 operator|&
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 return|;
@@ -577,6 +582,7 @@ end_comment
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|socket_get_port
 parameter_list|(
 specifier|const
@@ -601,7 +607,7 @@ specifier|const
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 init|=
 operator|(
 specifier|const
@@ -612,7 +618,7 @@ operator|)
 name|sa
 decl_stmt|;
 return|return
-name|sin
+name|sin4
 operator|->
 name|sin_port
 return|;
@@ -669,6 +675,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|socket_set_port
 parameter_list|(
 name|struct
@@ -694,7 +701,7 @@ block|{
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 init|=
 operator|(
 expr|struct
@@ -703,7 +710,7 @@ operator|*
 operator|)
 name|sa
 decl_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_port
 operator|=
@@ -763,6 +770,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|socket_set_portrange
 parameter_list|(
 name|int
@@ -886,6 +894,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|socket_set_debug
 parameter_list|(
 name|int
@@ -949,6 +958,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|socket_set_tos
 parameter_list|(
 name|int
@@ -1016,6 +1026,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|socket_set_reuseaddr
 parameter_list|(
 name|int
@@ -1066,6 +1077,59 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"setsockopt SO_REUSEADDR"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/*  * Set the that the `sock' should bind to only IPv6 addresses.  */
+end_comment
+
+begin_function
+name|void
+name|ROKEN_LIB_FUNCTION
+name|socket_set_ipv6only
+parameter_list|(
+name|int
+name|sock
+parameter_list|,
+name|int
+name|val
+parameter_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPV6_V6ONLY
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SETSOCKOPT
+argument_list|)
+name|setsockopt
+argument_list|(
+name|sock
+argument_list|,
+name|IPPROTO_IPV6
+argument_list|,
+name|IPV6_V6ONLY
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|val
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|val
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

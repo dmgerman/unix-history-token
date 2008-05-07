@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify_user.c,v 1.17 2002/08/20 14:48:31 joda Exp $"
+literal|"$Id: verify_user.c 19078 2006-11-20 18:12:41Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -201,7 +201,7 @@ name|id
 argument_list|)
 expr_stmt|;
 block|}
-name|krb5_free_creds_contents
+name|krb5_free_cred_contents
 argument_list|(
 name|context
 argument_list|,
@@ -221,6 +221,7 @@ end_comment
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_opt_init
 parameter_list|(
 name|krb5_verify_opt
@@ -257,7 +258,88 @@ block|}
 end_function
 
 begin_function
+name|int
+name|KRB5_LIB_FUNCTION
+name|krb5_verify_opt_alloc
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_verify_opt
+modifier|*
+modifier|*
+name|opt
+parameter_list|)
+block|{
+operator|*
+name|opt
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+operator|*
+name|opt
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|opt
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
+name|krb5_verify_opt_init
+argument_list|(
+operator|*
+name|opt
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
 name|void
+name|KRB5_LIB_FUNCTION
+name|krb5_verify_opt_free
+parameter_list|(
+name|krb5_verify_opt
+modifier|*
+name|opt
+parameter_list|)
+block|{
+name|free
+argument_list|(
+name|opt
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_opt_set_ccache
 parameter_list|(
 name|krb5_verify_opt
@@ -279,6 +361,7 @@ end_function
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_opt_set_keytab
 parameter_list|(
 name|krb5_verify_opt
@@ -300,6 +383,7 @@ end_function
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_opt_set_secure
 parameter_list|(
 name|krb5_verify_opt
@@ -321,6 +405,7 @@ end_function
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_opt_set_service
 parameter_list|(
 name|krb5_verify_opt
@@ -344,6 +429,7 @@ end_function
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_opt_set_flags
 parameter_list|(
 name|krb5_verify_opt
@@ -389,32 +475,42 @@ name|krb5_error_code
 name|ret
 decl_stmt|;
 name|krb5_get_init_creds_opt
+modifier|*
 name|opt
 decl_stmt|;
 name|krb5_creds
 name|cred
 decl_stmt|;
-name|krb5_get_init_creds_opt_init
+name|ret
+operator|=
+name|krb5_get_init_creds_opt_alloc
 argument_list|(
+name|context
+argument_list|,
 operator|&
 name|opt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
 name|krb5_get_init_creds_opt_set_default_flags
 argument_list|(
 name|context
 argument_list|,
 name|NULL
 argument_list|,
-operator|*
-name|krb5_princ_realm
+name|krb5_principal_get_realm
 argument_list|(
 name|context
 argument_list|,
 name|principal
 argument_list|)
 argument_list|,
-operator|&
 name|opt
 argument_list|)
 expr_stmt|;
@@ -439,7 +535,13 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
+name|opt
+argument_list|)
+expr_stmt|;
+name|krb5_get_init_creds_opt_free
+argument_list|(
+name|context
+argument_list|,
 name|opt
 argument_list|)
 expr_stmt|;
@@ -506,6 +608,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_user_opt
 parameter_list|(
 name|krb5_context
@@ -698,6 +801,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_user
 parameter_list|(
 name|krb5_context
@@ -778,6 +882,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_user_lrealm
 parameter_list|(
 name|krb5_context

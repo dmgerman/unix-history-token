@@ -27,7 +27,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos.c,v 1.54 2001/08/22 20:30:22 assar Exp $"
+literal|"$Id: kerberos.c 22071 2007-11-14 20:04:50Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1680,6 +1680,11 @@ name|char
 modifier|*
 name|msg
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|asprintf
 argument_list|(
 operator|&
@@ -1712,9 +1717,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|msg
+name|ret
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 name|Data
 argument_list|(
@@ -2260,6 +2266,7 @@ argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
+operator|&
 name|ks
 argument_list|,
 literal|0
@@ -2717,7 +2724,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* make sure its NULL terminated */
+comment|/* make sure it's NULL terminated */
 name|buflen
 operator|-=
 literal|1
@@ -3322,7 +3329,7 @@ operator|*
 operator|)
 name|buf
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tmp
 decl_stmt|;
 name|strncpy
@@ -3530,7 +3537,7 @@ argument_list|(
 name|p
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -3743,6 +3750,7 @@ argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
+operator|&
 name|ks
 argument_list|,
 literal|0

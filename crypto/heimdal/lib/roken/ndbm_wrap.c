@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ndbm_wrap.c,v 1.1.8.1 2003/08/29 17:00:34 lha Exp $"
+literal|"$Id: ndbm_wrap.c 21634 2007-07-17 11:30:36Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -104,6 +104,16 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_comment
+comment|/* XXX undefine open so this works on Solaris with large file support */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|open
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -169,6 +179,7 @@ end_define
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|dbm_close
 parameter_list|(
 name|DBM
@@ -220,6 +231,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|dbm_delete
 parameter_list|(
 name|DBM
@@ -357,12 +369,20 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|dvalue
 operator|.
 name|dptr
 operator|=
 name|NULL
 expr_stmt|;
+name|dvalue
+operator|.
+name|dsize
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 name|DBT2DATUM
 argument_list|(
@@ -442,12 +462,20 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|datum
 operator|.
 name|dptr
 operator|=
 name|NULL
 expr_stmt|;
+name|datum
+operator|.
+name|dsize
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 name|DBT2DATUM
 argument_list|(
@@ -524,6 +552,7 @@ end_endif
 
 begin_function
 name|datum
+name|ROKEN_LIB_FUNCTION
 name|dbm_firstkey
 parameter_list|(
 name|DBM
@@ -547,6 +576,7 @@ end_function
 
 begin_function
 name|datum
+name|ROKEN_LIB_FUNCTION
 name|dbm_nextkey
 parameter_list|(
 name|DBM
@@ -571,6 +601,7 @@ end_function
 begin_function
 name|DBM
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|dbm_open
 parameter_list|(
 specifier|const
@@ -812,6 +843,7 @@ name|db
 return|;
 block|}
 name|int
+name|ROKEN_LIB_FUNCTION
 name|dbm_store
 parameter_list|(
 name|DBM
@@ -919,6 +951,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|int
+name|ROKEN_LIB_FUNCTION
 name|dbm_error
 parameter_list|(
 name|DBM
@@ -931,6 +964,7 @@ literal|0
 return|;
 block|}
 name|int
+name|ROKEN_LIB_FUNCTION
 name|dbm_clearerr
 parameter_list|(
 name|DBM

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: modify_c.c,v 1.4 2000/07/11 15:59:46 joda Exp $"
+literal|"$Id: modify_c.c 17445 2006-05-05 10:37:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,7 +28,7 @@ parameter_list|,
 name|kadm5_principal_ent_t
 name|princ
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mask
 parameter_list|)
 block|{
@@ -90,9 +90,18 @@ name|sp
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+operator|->
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|krb5_store_int32
 argument_list|(
 name|sp
@@ -167,6 +176,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+operator|->
+name|context
+argument_list|)
+expr_stmt|;
 name|krb5_data_free
 argument_list|(
 operator|&
@@ -183,6 +199,13 @@ name|sp
 argument_list|,
 operator|&
 name|tmp
+argument_list|)
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+operator|->
+name|context
 argument_list|)
 expr_stmt|;
 name|krb5_storage_free

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: concat.c,v 1.4 1999/12/02 16:58:45 joda Exp $"
+literal|"$Id: concat.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -36,6 +36,7 @@ end_include
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|roken_concat
 parameter_list|(
 name|char
@@ -85,6 +86,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|roken_vconcat
 parameter_list|(
 name|char
@@ -168,6 +170,7 @@ end_function
 
 begin_function
 name|size_t
+name|ROKEN_LIB_FUNCTION
 name|roken_vmconcat
 parameter_list|(
 name|char
@@ -339,6 +342,7 @@ end_function
 
 begin_function
 name|size_t
+name|ROKEN_LIB_FUNCTION
 name|roken_mconcat
 parameter_list|(
 name|char

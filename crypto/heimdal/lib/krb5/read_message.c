@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: read_message.c,v 1.8 2001/05/14 06:14:51 assar Exp $"
+literal|"$Id: read_message.c 21750 2007-07-31 20:41:25Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_read_message
 parameter_list|(
 name|krb5_context
@@ -35,15 +36,20 @@ block|{
 name|krb5_error_code
 name|ret
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|buf
 index|[
 literal|4
 index|]
 decl_stmt|;
+name|krb5_data_zero
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|krb5_net_read
@@ -85,11 +91,10 @@ operator|<
 literal|4
 condition|)
 block|{
-name|data
-operator|->
-name|length
-operator|=
-literal|0
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
 expr_stmt|;
 return|return
 name|HEIM_ERR_EOF
@@ -142,9 +147,16 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 if|if
 condition|(
 name|krb5_net_read
@@ -189,6 +201,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_read_priv_message
 parameter_list|(
 name|krb5_context
@@ -260,6 +273,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_read_safe_message
 parameter_list|(
 name|krb5_context

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: hstrerror.c,v 1.24 2001/08/08 03:47:23 assar Exp $"
+literal|"$Id: hstrerror.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -166,11 +166,12 @@ else|#
 directive|else
 end_else
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_H_ERRLIST_DECLARATION
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_H_ERRLIST
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -203,6 +204,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|hstrerror
 parameter_list|(
 name|int

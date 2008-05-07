@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: strsep_copy.c,v 1.4 2002/08/14 17:20:40 joda Exp $"
+literal|"$Id: strsep_copy.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -52,6 +52,7 @@ end_comment
 
 begin_function
 name|ssize_t
+name|ROKEN_LIB_FUNCTION
 name|strsep_copy
 parameter_list|(
 specifier|const

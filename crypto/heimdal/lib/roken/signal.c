@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: signal.c,v 1.12 2000/07/08 12:39:06 assar Exp $"
+literal|"$Id: signal.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -66,6 +66,7 @@ end_comment
 
 begin_function
 name|SigAction
+name|ROKEN_LIB_FUNCTION
 name|signal
 parameter_list|(
 name|int

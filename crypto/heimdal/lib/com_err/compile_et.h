@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: compile_et.h,v 1.6 2000/07/01 20:21:48 assar Exp $ */
+comment|/* $Id: compile_et.h 15426 2005-06-16 19:21:42Z lha $ */
 end_comment
 
 begin_ifndef
@@ -35,6 +35,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -75,7 +81,7 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|long
-name|base
+name|base_id
 decl_stmt|;
 end_decl_stmt
 

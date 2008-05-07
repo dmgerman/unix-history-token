@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: net_read.c,v 1.6 2002/08/21 09:08:06 joda Exp $"
+literal|"$Id: net_read.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_ssize_t
+name|KRB5_LIB_FUNCTION
 name|krb5_net_read
 parameter_list|(
 name|krb5_context

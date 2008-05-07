@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: strtok_r.c,v 1.5 1999/12/02 16:58:53 joda Exp $"
+literal|"$Id: strtok_r.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,6 +49,7 @@ end_ifndef
 begin_function
 name|char
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|strtok_r
 parameter_list|(
 name|char

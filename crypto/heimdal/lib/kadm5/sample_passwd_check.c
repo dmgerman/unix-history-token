@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999 Kungliga Tekniska Högskolan  * (Royal Institut
 end_comment
 
 begin_comment
-comment|/* $Id: sample_passwd_check.c,v 1.1 1999/09/10 10:11:03 assar Exp $ */
+comment|/* $Id: sample_passwd_check.c 21901 2007-08-10 06:05:35Z lha $ */
 end_comment
 
 begin_include
@@ -24,6 +24,22 @@ include|#
 directive|include
 file|<krb5.h>
 end_include
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|check_length
+parameter_list|(
+name|krb5_context
+parameter_list|,
+name|krb5_principal
+parameter_list|,
+name|krb5_data
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* specify the api-version this library conforms to */

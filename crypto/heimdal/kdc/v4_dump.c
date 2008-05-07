@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: v4_dump.c,v 1.4.8.1 2003/04/28 12:24:54 lha Exp $"
+literal|"$Id: v4_dump.c 17023 2006-04-09 17:41:47Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -742,6 +742,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

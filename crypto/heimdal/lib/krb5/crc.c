@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: crc.c,v 1.9 2000/08/03 01:45:14 assar Exp $"
+literal|"$Id: crc.c 17442 2006-05-05 09:31:15Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -141,7 +141,7 @@ block|}
 end_function
 
 begin_function
-name|u_int32_t
+name|uint32_t
 name|_krb5_crc_update
 parameter_list|(
 specifier|const
@@ -152,7 +152,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|res
 parameter_list|)
 block|{

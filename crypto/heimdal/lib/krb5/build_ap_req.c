@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: build_ap_req.c,v 1.18 2002/09/04 16:26:04 joda Exp $"
+literal|"$Id: build_ap_req.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_build_ap_req
 parameter_list|(
 name|krb5_context
@@ -240,6 +241,25 @@ operator|&
 name|len
 argument_list|,
 name|ret
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+operator|&&
+name|retdata
+operator|->
+name|length
+operator|!=
+name|len
+condition|)
+name|krb5_abortx
+argument_list|(
+name|context
+argument_list|,
+literal|"internal error in ASN.1 encoder"
 argument_list|)
 expr_stmt|;
 name|free_AP_REQ

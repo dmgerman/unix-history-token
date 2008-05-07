@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mit_dump.c,v 1.3 2000/08/09 09:57:37 joda Exp $"
+literal|"$Id: mit_dump.c 21745 2007-07-31 16:11:25Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -530,9 +530,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|krb5_error_code
-name|ret
-decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -829,9 +826,9 @@ name|krb5_error_code
 name|ret
 decl_stmt|;
 name|char
-name|buf
+name|line
 index|[
-literal|1024
+literal|2048
 index|]
 decl_stmt|;
 name|FILE
@@ -844,7 +841,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|hdb_entry
+name|hdb_entry_ex
 name|ent
 decl_stmt|;
 name|struct
@@ -876,11 +873,11 @@ while|while
 condition|(
 name|fgets
 argument_list|(
-name|buf
+name|line
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|buf
+name|line
 argument_list|)
 argument_list|,
 name|f
@@ -891,7 +888,7 @@ name|char
 modifier|*
 name|p
 init|=
-name|buf
+name|line
 decl_stmt|,
 modifier|*
 name|q
@@ -1160,6 +1157,8 @@ argument_list|,
 operator|&
 name|ent
 operator|.
+name|entry
+operator|.
 name|principal
 argument_list|)
 expr_stmt|;
@@ -1178,6 +1177,8 @@ name|attributes
 argument_list|,
 operator|&
 name|ent
+operator|.
+name|entry
 operator|.
 name|flags
 argument_list|)
@@ -1202,11 +1203,15 @@ name|ALLOC
 argument_list|(
 name|ent
 operator|.
+name|entry
+operator|.
 name|max_life
 argument_list|)
 expr_stmt|;
 operator|*
 name|ent
+operator|.
+name|entry
 operator|.
 name|max_life
 operator|=
@@ -1233,11 +1238,15 @@ name|ALLOC
 argument_list|(
 name|ent
 operator|.
+name|entry
+operator|.
 name|max_renew
 argument_list|)
 expr_stmt|;
 operator|*
 name|ent
+operator|.
+name|entry
 operator|.
 name|max_renew
 operator|=
@@ -1268,11 +1277,15 @@ name|ALLOC
 argument_list|(
 name|ent
 operator|.
+name|entry
+operator|.
 name|valid_end
 argument_list|)
 expr_stmt|;
 operator|*
 name|ent
+operator|.
+name|entry
 operator|.
 name|valid_end
 operator|=
@@ -1299,11 +1312,15 @@ name|ALLOC
 argument_list|(
 name|ent
 operator|.
+name|entry
+operator|.
 name|pw_end
 argument_list|)
 expr_stmt|;
 operator|*
 name|ent
+operator|.
+name|entry
 operator|.
 name|pw_end
 operator|=
@@ -1388,11 +1405,11 @@ expr_stmt|;
 comment|/* data length */
 define|#
 directive|define
-name|KRB5_TL_LAST_PWD_CHANGE
+name|mit_KRB5_TL_LAST_PWD_CHANGE
 value|1
 define|#
 directive|define
-name|KRB5_TL_MOD_PRINC
+name|mit_KRB5_TL_MOD_PRINC
 value|2
 switch|switch
 condition|(
@@ -1400,13 +1417,26 @@ name|tl_type
 condition|)
 block|{
 case|case
-name|KRB5_TL_MOD_PRINC
+name|mit_KRB5_TL_MOD_PRINC
 case|:
 name|buf
 operator|=
 name|malloc
 argument_list|(
 name|tl_length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|ENOMEM
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|getdata
@@ -1462,6 +1492,10 @@ name|pd
 operator|->
 name|context
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 literal|4
@@ -1479,10 +1513,14 @@ name|ALLOC
 argument_list|(
 name|ent
 operator|.
+name|entry
+operator|.
 name|modified_by
 argument_list|)
 expr_stmt|;
 name|ent
+operator|.
+name|entry
 operator|.
 name|modified_by
 operator|->
@@ -1491,6 +1529,8 @@ operator|=
 name|val
 expr_stmt|;
 name|ent
+operator|.
+name|entry
 operator|.
 name|modified_by
 operator|->
@@ -1513,6 +1553,8 @@ name|ALLOC_SEQ
 argument_list|(
 operator|&
 name|ent
+operator|.
+name|entry
 operator|.
 name|keys
 argument_list|,
@@ -1547,6 +1589,8 @@ expr_stmt|;
 comment|/* key data version */
 name|ent
 operator|.
+name|entry
+operator|.
 name|kvno
 operator|=
 name|getint
@@ -1559,6 +1603,8 @@ comment|/* XXX kvno */
 name|ALLOC
 argument_list|(
 name|ent
+operator|.
+name|entry
 operator|.
 name|keys
 operator|.
@@ -1573,6 +1619,8 @@ expr_stmt|;
 operator|*
 name|ent
 operator|.
+name|entry
+operator|.
 name|keys
 operator|.
 name|val
@@ -1586,6 +1634,8 @@ literal|0
 expr_stmt|;
 comment|/* key version 0 -- actual key */
 name|ent
+operator|.
+name|entry
 operator|.
 name|keys
 operator|.
@@ -1619,6 +1669,8 @@ name|krb5_data_alloc
 argument_list|(
 operator|&
 name|ent
+operator|.
+name|entry
 operator|.
 name|keys
 operator|.
@@ -1654,6 +1706,8 @@ argument_list|,
 operator|&
 name|ent
 operator|.
+name|entry
+operator|.
 name|keys
 operator|.
 name|val
@@ -1678,6 +1732,8 @@ name|ALLOC
 argument_list|(
 name|ent
 operator|.
+name|entry
+operator|.
 name|keys
 operator|.
 name|val
@@ -1689,6 +1745,8 @@ name|salt
 argument_list|)
 expr_stmt|;
 name|ent
+operator|.
+name|entry
 operator|.
 name|keys
 operator|.
@@ -1729,6 +1787,8 @@ argument_list|(
 operator|&
 name|ent
 operator|.
+name|entry
+operator|.
 name|keys
 operator|.
 name|val
@@ -1763,6 +1823,8 @@ argument_list|,
 operator|&
 name|ent
 operator|.
+name|entry
+operator|.
 name|keys
 operator|.
 name|val
@@ -1780,6 +1842,8 @@ else|else
 block|{
 name|ent
 operator|.
+name|entry
+operator|.
 name|keys
 operator|.
 name|val
@@ -1796,6 +1860,8 @@ operator|=
 literal|0
 expr_stmt|;
 name|ent
+operator|.
+name|entry
 operator|.
 name|keys
 operator|.
@@ -1830,6 +1896,8 @@ name|context
 argument_list|,
 operator|&
 name|ent
+operator|.
+name|entry
 argument_list|,
 name|i
 argument_list|)
@@ -1860,6 +1928,11 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

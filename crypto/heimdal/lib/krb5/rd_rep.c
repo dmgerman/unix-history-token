@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_rep.c,v 1.22 2001/06/18 02:46:53 assar Exp $"
+literal|"$Id: rd_rep.c 17890 2006-08-21 09:19:22Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rd_rep
 parameter_list|(
 name|krb5_context
@@ -255,6 +256,15 @@ name|ret
 return|;
 if|if
 condition|(
+name|auth_context
+operator|->
+name|flags
+operator|&
+name|KRB5_AUTH_CONTEXT_DO_TIME
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 operator|*
 name|repl
@@ -282,6 +292,19 @@ operator|->
 name|cusec
 condition|)
 block|{
+name|krb5_free_ap_rep_enc_part
+argument_list|(
+name|context
+argument_list|,
+operator|*
+name|repl
+argument_list|)
+expr_stmt|;
+operator|*
+name|repl
+operator|=
+name|NULL
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_MUT_FAIL
@@ -294,6 +317,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -366,6 +390,7 @@ end_function
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_free_ap_rep_enc_part
 parameter_list|(
 name|krb5_context
@@ -375,6 +400,11 @@ name|krb5_ap_rep_enc_part
 modifier|*
 name|val
 parameter_list|)
+block|{
+if|if
+condition|(
+name|val
+condition|)
 block|{
 name|free_EncAPRepPart
 argument_list|(
@@ -386,6 +416,7 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

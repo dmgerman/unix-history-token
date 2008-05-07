@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: kadm5_locl.h,v 1.23 2000/07/08 11:57:40 assar Exp $ */
+comment|/* $Id: kadm5_locl.h 8579 2000-07-08 11:57:40Z assar $ */
 end_comment
 
 begin_ifndef

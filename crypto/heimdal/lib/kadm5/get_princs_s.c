@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_princs_s.c,v 1.5 1999/12/02 17:05:06 joda Exp $"
+literal|"$Id: get_princs_s.c 16378 2005-12-12 12:40:12Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -130,7 +130,7 @@ name|HDB
 modifier|*
 name|db
 parameter_list|,
-name|hdb_entry
+name|hdb_entry_ex
 modifier|*
 name|ent
 parameter_list|,
@@ -161,6 +161,8 @@ name|context
 argument_list|,
 name|ent
 operator|->
+name|entry
+operator|.
 name|principal
 argument_list|,
 operator|&
@@ -263,7 +265,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|exp
+name|expression
 parameter_list|,
 name|char
 modifier|*
@@ -295,7 +297,7 @@ name|context
 operator|->
 name|db
 operator|->
-name|open
+name|hdb_open
 argument_list|(
 name|context
 operator|->
@@ -334,7 +336,7 @@ name|d
 operator|.
 name|exp
 operator|=
-name|exp
+name|expression
 expr_stmt|;
 block|{
 name|krb5_realm
@@ -359,7 +361,7 @@ name|exp2
 argument_list|,
 literal|"%s@%s"
 argument_list|,
-name|exp
+name|expression
 argument_list|,
 name|r
 argument_list|)
@@ -406,7 +408,7 @@ name|context
 operator|->
 name|db
 operator|->
-name|close
+name|hdb_close
 argument_list|(
 name|context
 operator|->

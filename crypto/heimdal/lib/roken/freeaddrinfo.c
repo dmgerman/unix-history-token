@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: freeaddrinfo.c,v 1.4 2001/05/11 09:10:32 joda Exp $"
+literal|"$Id: freeaddrinfo.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -40,6 +40,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|freeaddrinfo
 parameter_list|(
 name|struct

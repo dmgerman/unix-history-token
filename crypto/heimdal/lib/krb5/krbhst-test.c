@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krbhst-test.c,v 1.3 2002/08/23 03:43:18 assar Exp $"
+literal|"$Id: krbhst-test.c 15466 2005-06-17 04:21:47Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -177,7 +177,7 @@ literal|"krb524"
 block|}
 decl_stmt|;
 name|int
-name|optind
+name|optidx
 init|=
 literal|0
 decl_stmt|;
@@ -213,7 +213,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|optidx
 argument_list|)
 condition|)
 name|usage
@@ -248,11 +248,11 @@ expr_stmt|;
 block|}
 name|argc
 operator|-=
-name|optind
+name|optidx
 expr_stmt|;
 name|argv
 operator|+=
-name|optind
+name|optidx
 expr_stmt|;
 name|krb5_init_context
 argument_list|(

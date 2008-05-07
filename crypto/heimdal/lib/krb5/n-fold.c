@@ -12,14 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: n-fold.c,v 1.6 1999/08/27 09:03:41 joda Exp $"
+literal|"$Id: n-fold.c 22190 2007-12-06 16:24:22Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 specifier|static
-name|void
+name|krb5_error_code
 name|rr13
 parameter_list|(
 name|unsigned
@@ -56,7 +56,9 @@ name|len
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 block|{
 specifier|const
 name|int
@@ -81,6 +83,15 @@ argument_list|(
 name|bytes
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|memcpy
 argument_list|(
 name|tmp
@@ -268,11 +279,14 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Add `b' to `a', both beeing one's complement numbers. */
+comment|/* Add `b' to `a', both being one's complement numbers. */
 end_comment
 
 begin_function
@@ -397,7 +411,8 @@ block|}
 end_function
 
 begin_function
-name|void
+name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|_krb5_n_fold
 parameter_list|(
 specifier|const
@@ -417,6 +432,11 @@ name|size
 parameter_list|)
 block|{
 comment|/* if len< size we need at most N * len bytes, ie< 2 * size;        if len> size we need at most 2 * len */
+name|krb5_error_code
+name|ret
+init|=
+literal|0
+decl_stmt|;
 name|size_t
 name|maxlen
 init|=
@@ -454,6 +474,19 @@ argument_list|(
 name|len
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+operator|||
+name|buf
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|memcpy
 argument_list|(
 name|buf
@@ -489,6 +522,8 @@ name|l
 operator|+=
 name|len
 expr_stmt|;
+name|ret
+operator|=
 name|rr13
 argument_list|(
 name|buf
@@ -498,6 +533,13 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|out
+goto|;
 while|while
 condition|(
 name|l
@@ -545,6 +587,8 @@ operator|!=
 literal|0
 condition|)
 do|;
+name|out
+label|:
 name|memset
 argument_list|(
 name|buf
@@ -573,6 +617,9 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+return|return
+name|ret
+return|;
 block|}
 end_function
 

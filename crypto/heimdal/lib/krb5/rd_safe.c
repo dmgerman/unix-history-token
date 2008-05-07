@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_safe.c,v 1.27 2002/09/04 16:26:05 joda Exp $"
+literal|"$Id: rd_safe.c 19827 2007-01-11 02:54:59Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -229,6 +229,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rd_safe
 parameter_list|(
 name|krb5_context
@@ -246,8 +247,7 @@ name|krb5_data
 modifier|*
 name|outbuf
 parameter_list|,
-comment|/*krb5_replay_data*/
-name|void
+name|krb5_replay_data
 modifier|*
 name|outdata
 parameter_list|)
@@ -261,6 +261,46 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+if|if
+condition|(
+name|outbuf
+condition|)
+name|krb5_data_zero
+argument_list|(
+name|outbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|auth_context
+operator|->
+name|flags
+operator|&
+operator|(
+name|KRB5_AUTH_CONTEXT_RET_TIME
+operator||
+name|KRB5_AUTH_CONTEXT_RET_SEQUENCE
+operator|)
+operator|)
+operator|&&
+name|outdata
+operator|==
+name|NULL
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"rd_safe: need outdata to return data"
+argument_list|)
+expr_stmt|;
+return|return
+name|KRB5_RC_REQUIRED
+return|;
+comment|/* XXX better error, MIT returns this */
+block|}
 name|ret
 operator|=
 name|decode_KRB_SAFE
@@ -528,7 +568,7 @@ goto|;
 block|}
 block|}
 comment|/* XXX - check replay cache */
-comment|/* check sequence number. since MIT krb5 cannot generate a sequence      number of zero but instead generates no sequence number, we accept that   */
+comment|/* check sequence number. since MIT krb5 cannot generate a sequence        number of zero but instead generates no sequence number, we accept that     */
 if|if
 condition|(
 name|auth_context
@@ -646,6 +686,12 @@ operator|->
 name|data
 operator|==
 name|NULL
+operator|&&
+name|outbuf
+operator|->
+name|length
+operator|!=
+literal|0
 condition|)
 block|{
 name|ret
@@ -657,6 +703,11 @@ argument_list|(
 name|context
 argument_list|,
 literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+name|krb5_data_zero
+argument_list|(
+name|outbuf
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -682,15 +733,93 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-name|free_KRB_SAFE
-argument_list|(
+if|if
+condition|(
+operator|(
+name|auth_context
+operator|->
+name|flags
 operator|&
-name|safe
+operator|(
+name|KRB5_AUTH_CONTEXT_RET_TIME
+operator||
+name|KRB5_AUTH_CONTEXT_RET_SEQUENCE
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* if these fields are not present in the safe-part, silently            return zero */
+name|memset
+argument_list|(
+name|outdata
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|outdata
+argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+if|if
+condition|(
+name|safe
+operator|.
+name|safe_body
+operator|.
+name|timestamp
+condition|)
+name|outdata
+operator|->
+name|timestamp
+operator|=
+operator|*
+name|safe
+operator|.
+name|safe_body
+operator|.
+name|timestamp
+expr_stmt|;
+if|if
+condition|(
+name|safe
+operator|.
+name|safe_body
+operator|.
+name|usec
+condition|)
+name|outdata
+operator|->
+name|usec
+operator|=
+operator|*
+name|safe
+operator|.
+name|safe_body
+operator|.
+name|usec
+expr_stmt|;
+if|if
+condition|(
+name|safe
+operator|.
+name|safe_body
+operator|.
+name|seq_number
+condition|)
+name|outdata
+operator|->
+name|seq
+operator|=
+operator|*
+name|safe
+operator|.
+name|safe_body
+operator|.
+name|seq_number
+expr_stmt|;
+block|}
 name|failure
 label|:
 name|free_KRB_SAFE

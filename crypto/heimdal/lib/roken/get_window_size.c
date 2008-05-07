@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_window_size.c,v 1.9 1999/12/02 16:58:46 joda Exp $"
+literal|"$Id: get_window_size.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -137,11 +137,12 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|get_window_size
 parameter_list|(
 name|int

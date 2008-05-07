@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ruserpass.c,v 1.19 2000/01/08 07:45:11 assar Exp $"
+literal|"$Id: ruserpass.c 16161 2005-10-12 09:44:24Z joda $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -187,7 +187,7 @@ name|guess_domain
 parameter_list|(
 name|char
 modifier|*
-name|hostname
+name|hostname_str
 parameter_list|,
 name|size_t
 name|sz
@@ -216,7 +216,7 @@ if|if
 condition|(
 name|gethostname
 argument_list|(
-name|hostname
+name|hostname_str
 argument_list|,
 name|sz
 argument_list|)
@@ -226,7 +226,7 @@ condition|)
 block|{
 name|strlcpy
 argument_list|(
-name|hostname
+name|hostname_str
 argument_list|,
 literal|""
 argument_list|,
@@ -241,7 +241,7 @@ name|dot
 operator|=
 name|strchr
 argument_list|(
-name|hostname
+name|hostname_str
 argument_list|,
 literal|'.'
 argument_list|)
@@ -280,7 +280,7 @@ name|error
 operator|=
 name|getaddrinfo
 argument_list|(
-name|hostname
+name|hostname_str
 argument_list|,
 name|NULL
 argument_list|,
@@ -296,7 +296,7 @@ condition|(
 name|error
 condition|)
 return|return
-name|hostname
+name|hostname_str
 return|;
 for|for
 control|(
@@ -325,7 +325,7 @@ condition|)
 block|{
 name|strlcpy
 argument_list|(
-name|hostname
+name|hostname_str
 argument_list|,
 name|ai
 operator|->
@@ -345,7 +345,7 @@ name|dot
 operator|=
 name|strchr
 argument_list|(
-name|hostname
+name|hostname_str
 argument_list|,
 literal|'.'
 argument_list|)
@@ -363,7 +363,7 @@ literal|1
 return|;
 else|else
 return|return
-name|hostname
+name|hostname_str
 return|;
 block|}
 end_function
@@ -1231,6 +1231,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|doencrypt
+operator|==
+literal|0
+operator|&&
 name|sec_request_prot
 argument_list|(
 name|tokval

@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sock_principal.c,v 1.16 2001/07/26 09:05:30 assar Exp $"
+literal|"$Id: sock_principal.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_sock_to_principal
 parameter_list|(
 name|krb5_context

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: write_pid.c,v 1.6 2001/09/02 23:58:15 assar Exp $"
+literal|"$Id: write_pid.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_include
@@ -61,6 +61,7 @@ end_include
 begin_function
 name|char
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|pid_file_write
 parameter_list|(
 specifier|const
@@ -149,6 +150,7 @@ end_function
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|pid_file_delete
 parameter_list|(
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: log.c,v 1.31 2002/09/05 14:59:14 joda Exp $"
+literal|"$Id: log.c 19088 2006-11-21 08:08:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,10 +28,10 @@ name|int
 name|max
 decl_stmt|;
 name|krb5_log_log_func_t
-name|log
+name|log_func
 decl_stmt|;
 name|krb5_log_close_func_t
-name|close
+name|close_func
 decl_stmt|;
 name|void
 modifier|*
@@ -58,11 +58,6 @@ name|facility
 modifier|*
 name|fp
 decl_stmt|;
-name|f
-operator|->
-name|len
-operator|++
-expr_stmt|;
 name|fp
 operator|=
 name|realloc
@@ -71,9 +66,13 @@ name|f
 operator|->
 name|val
 argument_list|,
+operator|(
 name|f
 operator|->
 name|len
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -93,6 +92,11 @@ condition|)
 return|return
 name|NULL
 return|;
+name|f
+operator|->
+name|len
+operator|++
+expr_stmt|;
 name|f
 operator|->
 name|val
@@ -366,6 +370,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_initlog
 parameter_list|(
 name|krb5_context
@@ -462,6 +467,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_addlog_func
 parameter_list|(
 name|krb5_context
@@ -478,10 +484,10 @@ name|int
 name|max
 parameter_list|,
 name|krb5_log_log_func_t
-name|log
+name|log_func
 parameter_list|,
 name|krb5_log_close_func_t
-name|close
+name|close_func
 parameter_list|,
 name|void
 modifier|*
@@ -530,15 +536,15 @@ name|max
 expr_stmt|;
 name|fp
 operator|->
-name|log
+name|log_func
 operator|=
-name|log
+name|log_func
 expr_stmt|;
 name|fp
 operator|->
-name|close
+name|close_func
 operator|=
-name|close
+name|close_func
 expr_stmt|;
 name|fp
 operator|->
@@ -571,7 +577,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|time
+name|timestr
 parameter_list|,
 specifier|const
 name|char
@@ -808,7 +814,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|time
+name|timestr
 parameter_list|,
 specifier|const
 name|char
@@ -867,7 +873,7 @@ name|fd
 argument_list|,
 literal|"%s %s\n"
 argument_list|,
-name|time
+name|timestr
 argument_list|,
 name|msg
 argument_list|)
@@ -880,6 +886,7 @@ name|keep_open
 operator|==
 literal|0
 condition|)
+block|{
 name|fclose
 argument_list|(
 name|f
@@ -887,6 +894,13 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
+name|f
+operator|->
+name|fd
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1047,6 +1061,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_addlog_dest
 parameter_list|(
 name|krb5_context
@@ -1261,7 +1276,7 @@ name|strncmp
 argument_list|(
 name|p
 argument_list|,
-literal|"FILE:"
+literal|"FILE"
 argument_list|,
 literal|4
 argument_list|)
@@ -1380,6 +1395,11 @@ name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|fn
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -1423,6 +1443,11 @@ name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|fn
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -1461,12 +1486,28 @@ name|strncmp
 argument_list|(
 name|p
 argument_list|,
-literal|"DEVICE="
+literal|"DEVICE"
 argument_list|,
 literal|6
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|p
+index|[
+literal|6
+index|]
+operator|==
+literal|':'
+operator|||
+name|p
+index|[
+literal|6
+index|]
+operator|==
+literal|'='
+operator|)
 condition|)
 block|{
 name|ret
@@ -1673,6 +1714,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_openlog
 parameter_list|(
 name|krb5_context
@@ -1812,6 +1854,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_closelog
 parameter_list|(
 name|krb5_context
@@ -1849,7 +1892,7 @@ index|[
 name|i
 index|]
 operator|.
-name|close
+name|close_func
 operator|)
 operator|(
 name|fac
@@ -1861,6 +1904,43 @@ index|]
 operator|.
 name|data
 operator|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fac
+operator|->
+name|val
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fac
+operator|->
+name|program
+argument_list|)
+expr_stmt|;
+name|fac
+operator|->
+name|val
+operator|=
+name|NULL
+expr_stmt|;
+name|fac
+operator|->
+name|len
+operator|=
+literal|0
+expr_stmt|;
+name|fac
+operator|->
+name|program
+operator|=
+name|NULL
+expr_stmt|;
+name|free
+argument_list|(
+name|fac
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -1885,6 +1965,7 @@ end_define
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_vlog_msg
 parameter_list|(
 name|krb5_context
@@ -2079,7 +2160,7 @@ index|[
 name|i
 index|]
 operator|.
-name|log
+name|log_func
 operator|)
 operator|(
 name|buf
@@ -2122,6 +2203,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_vlog
 parameter_list|(
 name|krb5_context
@@ -2177,6 +2259,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_log_msg
 parameter_list|(
 name|krb5_context
@@ -2258,6 +2341,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_log
 parameter_list|(
 name|krb5_context

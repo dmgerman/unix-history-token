@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: afslib.c,v 1.6 1999/12/02 16:58:40 joda Exp $"
+literal|"$Id: afslib.c 7463 1999-12-02 16:58:55Z joda $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

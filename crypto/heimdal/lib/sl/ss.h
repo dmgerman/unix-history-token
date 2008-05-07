@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: ss.h,v 1.3 2000/05/25 00:15:21 assar Exp $ */
+comment|/* $Id: ss.h 8294 2000-05-25 00:15:21Z assar $ */
 end_comment
 
 begin_comment

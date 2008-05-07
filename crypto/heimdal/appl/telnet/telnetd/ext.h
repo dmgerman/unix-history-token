@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/* $Id: ext.h,v 1.23 2001/08/29 00:45:22 assar Exp $ */
+comment|/* $Id: ext.h 15841 2005-08-08 13:34:26Z lha $ */
 end_comment
 
 begin_ifndef
@@ -154,8 +154,10 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
 name|terminaltype
+index|[
+literal|41
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -689,7 +691,6 @@ name|cleanopen
 parameter_list|(
 name|char
 modifier|*
-name|line
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -961,13 +962,11 @@ begin_function_decl
 name|void
 name|writenet
 parameter_list|(
-name|unsigned
-name|char
+specifier|const
+name|void
 modifier|*
-name|ptr
 parameter_list|,
-name|int
-name|len
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

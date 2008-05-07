@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: warnerr.c,v 1.15 2001/07/09 14:56:51 assar Exp $"
+literal|"$Id: warnerr.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,6 +42,7 @@ end_include
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|warnerr
 parameter_list|(
 name|int

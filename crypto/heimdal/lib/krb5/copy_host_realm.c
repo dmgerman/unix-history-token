@@ -12,17 +12,18 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: copy_host_realm.c,v 1.4 2001/05/14 06:14:45 assar Exp $"
+literal|"$Id: copy_host_realm.c 22057 2007-11-11 15:13:13Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Copy the list of realms from `from' to `to'.  */
+comment|/**  * Copy the list of realms from `from' to `to'.  *  * @param context Kerberos 5 context.  * @param from list of realms to copy from.  * @param to list of realms to copy to, free list of krb5_free_host_realm().  *  * @return Returns 0 to indicate success. Otherwise an kerberos et  * error code is returned, see krb5_get_error_message().  *  * @ingroup krb5  */
 end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_copy_host_realm
 parameter_list|(
 name|krb5_context

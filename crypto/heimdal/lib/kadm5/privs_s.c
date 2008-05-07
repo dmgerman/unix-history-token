@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: privs_s.c,v 1.2 1999/12/02 17:05:07 joda Exp $"
+literal|"$Id: privs_s.c 17445 2006-05-05 10:37:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -25,7 +25,7 @@ name|void
 modifier|*
 name|server_handle
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|privs
 parameter_list|)

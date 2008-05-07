@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: logwtmp.c,v 1.15 2000/09/19 13:17:05 assar Exp $"
+literal|"$Id: logwtmp.c 9079 2000-09-19 13:17:20Z assar $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

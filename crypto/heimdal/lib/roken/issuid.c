@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: issuid.c,v 1.4 2001/08/27 23:08:34 assar Exp $"
+literal|"$Id: issuid.c 15131 2005-05-13 07:42:03Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -36,6 +36,7 @@ end_include
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|issuid
 parameter_list|(
 name|void
@@ -51,8 +52,9 @@ return|return
 name|issetugid
 argument_list|()
 return|;
-endif|#
-directive|endif
+else|#
+directive|else
+comment|/* !HAVE_ISSETUGID */
 if|#
 directive|if
 name|defined
@@ -104,6 +106,9 @@ directive|endif
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
+comment|/* HAVE_ISSETUGID */
 block|}
 end_function
 

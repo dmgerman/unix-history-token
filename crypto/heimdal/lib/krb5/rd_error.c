@@ -12,18 +12,20 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_error.c,v 1.6 2001/05/15 06:35:10 assar Exp $"
+literal|"$Id: rd_error.c 21057 2007-06-12 17:22:31Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rd_error
 parameter_list|(
 name|krb5_context
 name|context
 parameter_list|,
+specifier|const
 name|krb5_data
 modifier|*
 name|msg
@@ -61,9 +63,16 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 name|result
 operator|->
 name|error_code
@@ -78,6 +87,7 @@ end_function
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_free_error_contents
 parameter_list|(
 name|krb5_context
@@ -93,11 +103,25 @@ argument_list|(
 name|error
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+name|error
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|error
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_free_error
 parameter_list|(
 name|krb5_context
@@ -125,6 +149,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_error_from_rd_error
 parameter_list|(
 name|krb5_context

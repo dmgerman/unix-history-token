@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: test_alname.c,v 1.4 2003/04/17 05:46:45 lha Exp $"
+literal|"$Id: test_alname.c 15474 2005-06-17 04:48:02Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -37,7 +37,7 @@ parameter_list|(
 name|krb5_context
 name|context
 parameter_list|,
-name|krb5_realm
+name|krb5_const_realm
 name|realm
 parameter_list|,
 specifier|const
@@ -359,7 +359,7 @@ name|krb5_realm
 name|realm
 decl_stmt|;
 name|int
-name|optind
+name|optidx
 init|=
 literal|0
 decl_stmt|;
@@ -399,7 +399,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|optidx
 argument_list|)
 condition|)
 name|usage
@@ -434,11 +434,11 @@ expr_stmt|;
 block|}
 name|argc
 operator|-=
-name|optind
+name|optidx
 expr_stmt|;
 name|argv
 operator|+=
-name|optind
+name|optidx
 expr_stmt|;
 if|if
 condition|(

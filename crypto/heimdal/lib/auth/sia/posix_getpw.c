@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: posix_getpw.c,v 1.1 1999/03/21 17:07:02 joda Exp $"
+literal|"$Id: posix_getpw.c 5680 1999-03-21 17:07:02Z joda $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

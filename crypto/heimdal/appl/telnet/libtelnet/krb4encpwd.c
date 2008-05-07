@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb4encpwd.c,v 1.19 2001/02/15 04:20:52 assar Exp $"
+literal|"$Id: krb4encpwd.c 22071 2007-11-14 20:04:50Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1501,7 +1501,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* make sure its NULL terminated */
+comment|/* make sure it's NULL terminated */
 name|buflen
 operator|-=
 literal|1

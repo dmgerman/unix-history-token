@@ -55,6 +55,7 @@ end_comment
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|gethostname
 parameter_list|(
 name|char

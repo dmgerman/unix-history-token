@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getnameinfo.c,v 1.4 2001/07/09 15:14:19 assar Exp $"
+literal|"$Id: getnameinfo.c 15412 2005-06-16 16:53:09Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -315,6 +315,7 @@ end_comment
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|getnameinfo
 parameter_list|(
 specifier|const
@@ -415,7 +416,7 @@ specifier|const
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 init|=
 operator|(
 specifier|const
@@ -431,18 +432,18 @@ argument_list|(
 name|AF_INET
 argument_list|,
 operator|&
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 argument_list|)
 argument_list|,
-name|sin
+name|sin4
 operator|->
 name|sin_port
 argument_list|,

@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify_init.c,v 1.17 2002/08/20 14:47:59 joda Exp $"
+literal|"$Id: verify_init.c 15555 2005-07-06 00:48:16Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_init_creds_opt_init
 parameter_list|(
 name|krb5_verify_init_creds_opt
@@ -44,6 +45,7 @@ end_function
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_init_creds_opt_set_ap_req_nofail
 parameter_list|(
 name|krb5_verify_init_creds_opt
@@ -127,6 +129,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_verify_init_creds
 parameter_list|(
 name|krb5_context
@@ -162,9 +165,6 @@ name|local_ccache
 init|=
 name|NULL
 decl_stmt|;
-name|krb5_keytab_entry
-name|entry
-decl_stmt|;
 name|krb5_creds
 modifier|*
 name|new_creds
@@ -190,19 +190,6 @@ name|krb5_data_zero
 argument_list|(
 operator|&
 name|req
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|entry
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|entry
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -566,14 +553,6 @@ name|krb5_data_free
 argument_list|(
 operator|&
 name|req
-argument_list|)
-expr_stmt|;
-name|krb5_kt_free_entry
-argument_list|(
-name|context
-argument_list|,
-operator|&
-name|entry
 argument_list|)
 expr_stmt|;
 if|if

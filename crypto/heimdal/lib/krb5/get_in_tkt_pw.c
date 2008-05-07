@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_in_tkt_pw.c,v 1.16 2001/05/14 06:14:48 assar Exp $"
+literal|"$Id: get_in_tkt_pw.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_password_key_proc
 parameter_list|(
 name|krb5_context
@@ -101,7 +102,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|des_read_pw_string
+name|UI_UTIL_read_pw_string
 argument_list|(
 name|buf
 argument_list|,
@@ -172,6 +173,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_get_in_tkt_with_password
 parameter_list|(
 name|krb5_context

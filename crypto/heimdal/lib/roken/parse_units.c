@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_units.c,v 1.14 2001/09/04 09:56:00 assar Exp $"
+literal|"$Id: parse_units.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_include
@@ -598,6 +598,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|parse_units
 parameter_list|(
 specifier|const
@@ -700,6 +701,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|parse_flags
 parameter_list|(
 specifier|const
@@ -769,21 +771,16 @@ function_decl|)
 parameter_list|(
 name|char
 modifier|*
-name|s
 parameter_list|,
 name|size_t
-name|len
 parameter_list|,
 name|int
-name|div
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|,
 name|int
-name|rem
 parameter_list|)
 parameter_list|,
 name|int
@@ -793,10 +790,8 @@ name|update
 function_decl|)
 parameter_list|(
 name|int
-name|in
 parameter_list|,
 name|unsigned
-name|mult
 parameter_list|)
 parameter_list|,
 specifier|const
@@ -855,9 +850,9 @@ name|u
 control|)
 block|{
 name|int
-name|div
+name|divisor
 decl_stmt|;
-name|div
+name|divisor
 operator|=
 name|num
 operator|/
@@ -867,7 +862,7 @@ name|mult
 expr_stmt|;
 if|if
 condition|(
-name|div
+name|divisor
 condition|)
 block|{
 name|num
@@ -895,7 +890,7 @@ name|s
 argument_list|,
 name|len
 argument_list|,
-name|div
+name|divisor
 argument_list|,
 name|u
 operator|->
@@ -913,6 +908,24 @@ condition|)
 return|return
 name|tmp
 return|;
+if|if
+condition|(
+name|tmp
+operator|>
+name|len
+condition|)
+block|{
+name|len
+operator|=
+literal|0
+expr_stmt|;
+name|s
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 name|len
 operator|-=
 name|tmp
@@ -921,6 +934,7 @@ name|s
 operator|+=
 name|tmp
 expr_stmt|;
+block|}
 name|ret
 operator|+=
 name|tmp
@@ -946,7 +960,7 @@ name|size_t
 name|len
 parameter_list|,
 name|int
-name|div
+name|divisor
 parameter_list|,
 specifier|const
 name|char
@@ -966,11 +980,11 @@ name|len
 argument_list|,
 literal|"%u %s%s%s"
 argument_list|,
-name|div
+name|divisor
 argument_list|,
 name|name
 argument_list|,
-name|div
+name|divisor
 operator|==
 literal|1
 condition|?
@@ -1047,6 +1061,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_units
 parameter_list|(
 name|int
@@ -1089,6 +1104,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_units_approx
 parameter_list|(
 name|int
@@ -1131,6 +1147,7 @@ end_function
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|print_units_table
 parameter_list|(
 specifier|const
@@ -1344,7 +1361,7 @@ name|size_t
 name|len
 parameter_list|,
 name|int
-name|div
+name|divisor
 parameter_list|,
 specifier|const
 name|char
@@ -1400,6 +1417,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_flags
 parameter_list|(
 name|int
@@ -1442,6 +1460,7 @@ end_function
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|print_flags_table
 parameter_list|(
 specifier|const

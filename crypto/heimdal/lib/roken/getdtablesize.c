@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getdtablesize.c,v 1.11 2001/06/20 00:00:38 joda Exp $"
+literal|"$Id: getdtablesize.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -170,6 +170,7 @@ end_endif
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|getdtablesize
 parameter_list|(
 name|void

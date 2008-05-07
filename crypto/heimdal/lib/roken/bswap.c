@@ -29,7 +29,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bswap.c,v 1.3 2001/05/18 15:32:11 joda Exp $"
+literal|"$Id: bswap.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,6 +43,7 @@ end_ifndef
 begin_function
 name|unsigned
 name|int
+name|ROKEN_LIB_FUNCTION
 name|bswap32
 parameter_list|(
 name|unsigned
@@ -100,6 +101,7 @@ end_ifndef
 begin_function
 name|unsigned
 name|short
+name|ROKEN_LIB_FUNCTION
 name|bswap16
 parameter_list|(
 name|unsigned

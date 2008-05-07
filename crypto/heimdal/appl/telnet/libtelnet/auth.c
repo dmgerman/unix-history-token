@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth.c,v 1.25 2002/01/18 12:58:48 joda Exp $"
+literal|"$Id: auth.c 10809 2002-01-18 12:58:49Z joda $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

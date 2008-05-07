@@ -16,14 +16,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: asn1_glue.c,v 1.7 1999/12/02 17:05:07 joda Exp $"
+literal|"$Id: asn1_glue.c 21745 2007-07-31 16:11:25Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
-name|krb5_principal2principalname
+name|KRB5_LIB_FUNCTION
+name|_krb5_principal2principalname
 parameter_list|(
 name|PrincipalName
 modifier|*
@@ -50,8 +51,12 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|principalname2krb5_principal
+name|KRB5_LIB_FUNCTION
+name|_krb5_principalname2krb5_principal
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
 name|krb5_principal
 modifier|*
 name|principal
@@ -77,6 +82,15 @@ name|p
 argument_list|)
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|copy_PrincipalName
 argument_list|(
 operator|&
@@ -97,6 +111,17 @@ argument_list|(
 name|realm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|realm
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 operator|*
 name|principal
 operator|=

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: popen.c,v 1.26 2002/04/02 11:57:39 joda Exp $"
+literal|"$Id: popen.c 10900 2002-04-02 11:57:39Z joda $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

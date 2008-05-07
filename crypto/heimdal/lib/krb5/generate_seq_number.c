@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: generate_seq_number.c,v 1.8 2001/05/08 14:05:37 assar Exp $"
+literal|"$Id: generate_seq_number.c 17442 2006-05-05 09:31:15Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_generate_seq_number
 parameter_list|(
 name|krb5_context
@@ -29,7 +30,7 @@ name|krb5_keyblock
 modifier|*
 name|key
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|seqno
 parameter_list|)
@@ -41,7 +42,7 @@ name|krb5_keyblock
 modifier|*
 name|subkey
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|q
 decl_stmt|;
 name|u_char

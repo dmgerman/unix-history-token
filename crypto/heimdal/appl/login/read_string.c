@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: read_string.c,v 1.4 2000/06/21 02:09:36 assar Exp $"
+literal|"$Id: read_string.c 18156 2006-09-22 15:42:39Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -39,6 +39,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NSIG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NSIG
+value|47
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|read_string
@@ -63,7 +81,13 @@ name|struct
 name|sigaction
 name|sigs
 index|[
-literal|47
+name|NSIG
+index|]
+decl_stmt|;
+name|int
+name|oksigs
+index|[
+name|NSIG
 index|]
 decl_stmt|;
 name|struct
@@ -103,6 +127,19 @@ decl_stmt|;
 name|memset
 argument_list|(
 operator|&
+name|oksigs
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|oksigs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
 name|sa
 argument_list|,
 literal|0
@@ -137,7 +174,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
@@ -163,6 +200,8 @@ name|i
 operator|!=
 name|SIGALRM
 condition|)
+if|if
+condition|(
 name|sigaction
 argument_list|(
 name|i
@@ -176,6 +215,15 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|oksigs
+index|[
+name|i
+index|]
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -389,7 +437,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
@@ -411,9 +459,10 @@ operator|++
 control|)
 if|if
 condition|(
+name|oksigs
+index|[
 name|i
-operator|!=
-name|SIGALRM
+index|]
 condition|)
 name|sigaction
 argument_list|(

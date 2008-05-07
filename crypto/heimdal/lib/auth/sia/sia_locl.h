@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: sia_locl.h,v 1.3 2001/09/13 01:15:34 assar Exp $ */
+comment|/* $Id: sia_locl.h 10688 2001-09-13 01:15:34Z assar $ */
 end_comment
 
 begin_ifndef

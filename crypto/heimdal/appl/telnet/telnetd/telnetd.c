@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnetd.c,v 1.69.6.1 2004/03/22 18:17:25 lha Exp $"
+literal|"$Id: telnetd.c 21748 2007-07-31 18:57:20Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -111,6 +111,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB5
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Authenticator
+value|k5_Authenticator
+end_define
+
+begin_include
+include|#
+directive|include
+file|<krb5.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|Authenticator
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -126,67 +156,30 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_undef
-undef|#
-directive|undef
-name|NOERROR
-end_undef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|require_encryption
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|STREAMSPTY
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stropts.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_UIO_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SYS_UIO_H */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_STREAM_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/stream.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -510,7 +503,8 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|void
+name|int
+name|error_code
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -529,6 +523,12 @@ ifdef|#
 directive|ifdef
 name|AUTHENTICATION
 literal|"a:X:z"
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
+literal|"e"
 endif|#
 directive|endif
 ifdef|#
@@ -559,24 +559,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|des_check_key
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -636,16 +618,6 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-name|des_check_key
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Kludge for Mac NCSA telnet 2.6 /bg */
 endif|#
 directive|endif
 name|pfrontp
@@ -728,6 +700,29 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"--help"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|usage
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -930,7 +925,9 @@ expr_stmt|;
 break|break;
 block|}
 name|usage
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 break|break;
@@ -1030,7 +1027,9 @@ block|}
 else|else
 block|{
 name|usage
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
 block|}
@@ -1038,6 +1037,19 @@ break|break;
 endif|#
 directive|endif
 comment|/* DIAGNOSTICS */
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
+case|case
+literal|'e'
+case|:
+name|require_encryption
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'h'
 case|:
@@ -1143,7 +1155,9 @@ operator|)
 condition|)
 block|{
 name|usage
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
 block|}
@@ -1307,7 +1321,9 @@ case|case
 literal|'?'
 case|:
 name|usage
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
@@ -1343,7 +1359,9 @@ literal|1
 condition|)
 block|{
 name|usage
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -1439,7 +1457,9 @@ literal|0
 condition|)
 block|{
 name|usage
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
 block|}
@@ -1968,7 +1988,8 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|void
+name|int
+name|exit_code
 parameter_list|)
 block|{
 name|fprintf
@@ -1976,6 +1997,20 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: telnetd"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" [--help]"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" [--version]"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2101,7 +2136,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|exit_code
 argument_list|)
 expr_stmt|;
 block|}
@@ -2309,6 +2344,42 @@ condition|)
 block|{
 name|encrypt_wait
 argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|require_encryption
+condition|)
+block|{
+while|while
+condition|(
+name|encrypt_delay
+argument_list|()
+condition|)
+if|if
+condition|(
+name|telnet_spin
+argument_list|()
+condition|)
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"Failed while waiting for encryption"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|encrypt_is_encrypting
+argument_list|()
+condition|)
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"Encryption required but not turned on by client"
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -2778,11 +2849,16 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|terminaltype
 argument_list|,
 name|first
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|terminaltype
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3225,6 +3301,11 @@ directive|endif
 name|init_env
 argument_list|()
 expr_stmt|;
+comment|/* begin server processing */
+comment|/*      * Initialize the slc mapping table.      */
+name|get_slc_defaults
+argument_list|()
+expr_stmt|;
 comment|/*      * get terminal type.      */
 operator|*
 name|user_name
@@ -3248,6 +3329,9 @@ argument_list|(
 literal|"TERM"
 argument_list|,
 name|terminaltype
+index|[
+literal|0
+index|]
 condition|?
 name|terminaltype
 else|:
@@ -3304,7 +3388,6 @@ block|}
 endif|#
 directive|endif
 comment|/* _SC_CRAY_SECURE_SYS */
-comment|/* begin server processing */
 name|my_telnet
 argument_list|(
 name|net
@@ -3391,42 +3474,67 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|2
 argument_list|,
 name|f
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
-name|strcpy
-argument_list|(
-name|buf
-operator|+
+name|size_t
+name|len
+init|=
 name|strcspn
 argument_list|(
 name|buf
 argument_list|,
 literal|"\r\n"
 argument_list|)
-argument_list|,
-literal|"\r\n"
-argument_list|)
-expr_stmt|;
-name|writenet
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|buf
-argument_list|,
+decl_stmt|;
+if|if
+condition|(
+name|len
+operator|==
 name|strlen
 argument_list|(
 name|buf
 argument_list|)
+condition|)
+block|{
+comment|/* there's no newline */
+name|writenet
+argument_list|(
+name|buf
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* replace newline with \r\n */
+name|buf
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|writenet
+argument_list|(
+name|buf
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|writenet
+argument_list|(
+literal|"\r\n"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|fclose
 argument_list|(
@@ -3493,10 +3601,6 @@ decl_stmt|;
 name|time_t
 name|timeout
 decl_stmt|;
-comment|/*      * Initialize the slc mapping table.      */
-name|get_slc_defaults
-argument_list|()
-expr_stmt|;
 comment|/*      * Do some tests where it is desireable to wait for a response.      * Rather than doing them slowly, one at a time, do them all      * at once.      */
 if|if
 condition|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: kpasswd_locl.h,v 1.13 2002/09/10 20:03:48 joda Exp $ */
+comment|/* $Id: kpasswd_locl.h 11444 2002-09-10 20:03:49Z joda $ */
 end_comment
 
 begin_ifndef

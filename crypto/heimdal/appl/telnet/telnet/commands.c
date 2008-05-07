@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: commands.c,v 1.72 2002/08/28 21:04:59 joda Exp $"
+literal|"$Id: commands.c 16224 2005-10-22 17:17:44Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -249,6 +249,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -367,6 +371,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -6191,7 +6199,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -6201,7 +6209,7 @@ name|shellp
 argument_list|,
 name|shellname
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|perror
@@ -7458,6 +7466,9 @@ argument_list|,
 literal|':'
 argument_list|)
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* XXX - should be k_gethostname? */
 name|gethostname
 argument_list|(
@@ -7495,9 +7506,6 @@ name|ai
 decl_stmt|,
 modifier|*
 name|a
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|memset
 argument_list|(
@@ -7585,6 +7593,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|error
+operator|=
 name|asprintf
 argument_list|(
 operator|&
@@ -7597,6 +7607,14 @@ argument_list|,
 name|cp2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|free
 argument_list|(
 name|ep
@@ -7615,6 +7633,7 @@ operator|*
 operator|)
 name|cp
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * If USER is not defined, but LOGNAME is, then add 	 * USER with the value from LOGNAME.  By default, we 	 * don't export the USER variable. 	 */
 if|if
@@ -9740,6 +9759,10 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|line
 index|[
 literal|0
@@ -9762,6 +9785,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|line
 index|[
 literal|0

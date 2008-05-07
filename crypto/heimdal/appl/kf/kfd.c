@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kfd.c,v 1.11 2003/04/16 15:40:24 lha Exp $"
+literal|"$Id: kfd.c 15246 2005-05-27 13:47:20Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -492,6 +492,10 @@ operator|)
 operator|&&
 name|islower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|version
 index|[
 literal|3
@@ -1147,8 +1151,12 @@ argument_list|(
 name|ccname
 argument_list|)
 argument_list|,
-literal|"FILE:/tmp/krb5cc_%u"
+literal|"FILE:/tmp/krb5cc_%lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pwd
 operator|->
 name|pw_uid

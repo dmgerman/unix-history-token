@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_time.c,v 1.6 2003/03/07 15:51:06 lha Exp $"
+literal|"$Id: parse_time.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -145,6 +145,7 @@ end_decl_stmt
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|parse_time
 parameter_list|(
 specifier|const
@@ -173,6 +174,7 @@ end_function
 
 begin_function
 name|size_t
+name|ROKEN_LIB_FUNCTION
 name|unparse_time
 parameter_list|(
 name|int
@@ -203,6 +205,7 @@ end_function
 
 begin_function
 name|size_t
+name|ROKEN_LIB_FUNCTION
 name|unparse_time_approx
 parameter_list|(
 name|int
@@ -233,6 +236,7 @@ end_function
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|print_time_table
 parameter_list|(
 name|FILE

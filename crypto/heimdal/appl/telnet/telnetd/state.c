@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: state.c,v 1.14.12.1 2004/06/21 08:21:58 lha Exp $"
+literal|"$Id: state.c 18110 2006-09-19 08:25:20Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1220,7 +1220,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|encrypt_send_support
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1247,9 +1249,11 @@ function_decl|(
 modifier|*
 name|func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 init|=
-literal|0
+name|NULL
 function_decl|;
 comment|/*      * process input from peer.      */
 name|DIAG
@@ -2770,12 +2774,9 @@ name|TELOPT_TTYPE
 case|:
 block|{
 comment|/* Yaaaay! */
-specifier|static
 name|char
-name|terminalname
-index|[
-literal|41
-index|]
+modifier|*
+name|p
 decl_stmt|;
 if|if
 condition|(
@@ -2805,20 +2806,20 @@ block|{
 return|return;
 comment|/* ??? XXX but, this is the most robust */
 block|}
-name|terminaltype
+name|p
 operator|=
-name|terminalname
+name|terminaltype
 expr_stmt|;
 while|while
 condition|(
 operator|(
-name|terminaltype
+name|p
 operator|<
 operator|(
-name|terminalname
+name|terminaltype
 operator|+
 sizeof|sizeof
-name|terminalname
+name|terminaltype
 operator|-
 literal|1
 operator|)
@@ -2854,7 +2855,7 @@ argument_list|)
 expr_stmt|;
 block|}
 operator|*
-name|terminaltype
+name|p
 operator|++
 operator|=
 name|c
@@ -2862,13 +2863,9 @@ expr_stmt|;
 comment|/* accumulate name */
 block|}
 operator|*
-name|terminaltype
+name|p
 operator|=
 literal|0
-expr_stmt|;
-name|terminaltype
-operator|=
-name|terminalname
 expr_stmt|;
 break|break;
 block|}
@@ -3765,6 +3762,17 @@ break|break;
 case|case
 name|ENCRYPT_END
 case|:
+if|if
+condition|(
+name|require_encryption
+condition|)
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"Output encryption is not possible to turn off"
+argument_list|)
+expr_stmt|;
 name|encrypt_end
 argument_list|()
 expr_stmt|;
@@ -3785,6 +3793,17 @@ case|case
 name|ENCRYPT_REQEND
 case|:
 comment|/* 	     * We can always send an REQEND so that we cannot 	     * get stuck encrypting.  We should only get this 	     * if we have been able to get in the correct mode 	     * anyhow. 	     */
+if|if
+condition|(
+name|require_encryption
+condition|)
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"Input encryption is not possible to turn off"
+argument_list|)
+expr_stmt|;
 name|encrypt_request_end
 argument_list|()
 expr_stmt|;

@@ -12,17 +12,18 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: eai_to_heim_errno.c,v 1.3.8.1 2004/02/13 16:15:16 lha Exp $"
+literal|"$Id: eai_to_heim_errno.c 22065 2007-11-11 16:41:06Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * convert the getaddrinfo error code in `eai_errno' into a  * krb5_error_code. `system_error' should have the value of the errno  * after the failed call.  */
+comment|/**  * Convert the getaddrinfo() error code to a Kerberos et error code.  *  * @param eai_errno contains the error code from getaddrinfo().  * @param system_error should have the value of errno after the failed getaddrinfo().  *  * @return Kerberos error code representing the EAI errors.  *  * @ingroup krb5_error  */
 end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_eai_to_heim_errno
 parameter_list|(
 name|int
@@ -135,8 +136,13 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  * Convert the gethostname() error code (h_error) to a Kerberos et  * error code.  *  * @param eai_errno contains the error code from gethostname().  *  * @return Kerberos error code representing the gethostname errors.  *  * @ingroup krb5_error  */
+end_comment
+
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_h_errno_to_heim_errno
 parameter_list|(
 name|int

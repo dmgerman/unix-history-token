@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ecalloc.c,v 1.1 2001/06/17 12:09:37 assar Exp $"
+literal|"$Id: ecalloc.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_comment
@@ -53,6 +53,7 @@ end_comment
 begin_function
 name|void
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|ecalloc
 parameter_list|(
 name|size_t

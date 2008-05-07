@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rsh.c,v 1.71 2003/04/16 20:37:20 joda Exp $"
+literal|"$Id: rsh.c 21516 2007-07-12 12:47:23Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -199,6 +199,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -207,6 +221,25 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|use_only_broken
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -257,6 +290,12 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB5
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -273,6 +312,11 @@ init|=
 literal|2
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  */
@@ -294,7 +338,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|loop
+name|rsh_loop
 parameter_list|(
 name|int
 name|s
@@ -326,6 +370,11 @@ literal|2
 condition|)
 name|init_ivecs
 argument_list|(
+literal|1
+argument_list|,
+name|errsock
+operator|!=
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1342,6 +1391,10 @@ decl_stmt|;
 name|krb5_flags
 name|ap_opts
 decl_stmt|;
+name|char
+modifier|*
+name|str
+decl_stmt|;
 name|status
 operator|=
 name|krb5_sname_to_principal
@@ -1417,15 +1470,8 @@ name|length
 operator|=
 name|asprintf
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|cksum_data
-operator|.
-name|data
+name|str
 argument_list|,
 literal|"%u:%s%s%s"
 argument_list|,
@@ -1447,6 +1493,30 @@ name|cmd
 argument_list|,
 name|remote_user
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|str
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: failed to allocate command"
+argument_list|,
+name|hostname
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|cksum_data
+operator|.
+name|data
+operator|=
+name|str
 expr_stmt|;
 name|ap_opts
 operator|=
@@ -2900,7 +2970,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|loop
+name|rsh_loop
 argument_list|(
 name|s
 argument_list|,
@@ -2996,8 +3066,12 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc %u failed"
+literal|"malloc %lu failed"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -3022,7 +3096,7 @@ operator|++
 name|i
 control|)
 block|{
-name|strcat
+name|strlcat
 argument_list|(
 name|tmp
 argument_list|,
@@ -3030,13 +3104,17 @@ name|argv
 index|[
 name|i
 index|]
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strlcat
 argument_list|(
 name|tmp
 argument_list|,
 literal|" "
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 block|}
@@ -3046,7 +3124,7 @@ name|argc
 operator|>
 literal|0
 condition|)
-name|strcat
+name|strlcat
 argument_list|(
 name|tmp
 argument_list|,
@@ -3056,6 +3134,8 @@ name|argc
 operator|-
 literal|1
 index|]
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3646,9 +3726,6 @@ name|size_t
 name|cmd_len
 parameter_list|,
 name|int
-name|do_errsock
-parameter_list|,
-name|int
 function_decl|(
 modifier|*
 name|auth_func
@@ -4131,7 +4208,20 @@ block|,
 operator|&
 name|do_forward
 block|,
-literal|"Forward credentials (krb5)"
+literal|"Forward credentials [krb5]"
+block|}
+block|,
+block|{
+literal|"forwardable"
+block|,
+literal|'F'
+block|,
+name|arg_flag
+block|,
+operator|&
+name|do_forwardable
+block|,
+literal|"Forward forwardable credentials [krb5]"
 block|}
 block|,
 block|{
@@ -4148,31 +4238,48 @@ literal|"Don't forward credentials"
 block|}
 block|,
 block|{
-literal|"forwardable"
+literal|"unique"
 block|,
-literal|'F'
+literal|'u'
 block|,
 name|arg_flag
 block|,
 operator|&
-name|do_forwardable
+name|do_unique_tkfile
 block|,
-literal|"Forward forwardable credentials"
+literal|"Use unique remote credentials cache [krb5]"
+block|}
+block|,
+block|{
+literal|"tkfile"
+block|,
+literal|'U'
+block|,
+name|arg_string
+block|,
+operator|&
+name|unique_tkfile
+block|,
+literal|"Specifies remote credentials cache [krb5]"
+block|}
+block|,
+block|{
+literal|"protocol"
+block|,
+literal|'P'
+block|,
+name|arg_string
+block|,
+operator|&
+name|protocol_version_str
+block|,
+literal|"Protocol version [krb5]"
+block|,
+literal|"protocol"
 block|}
 block|,
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
 block|{
 literal|"broken"
 block|,
@@ -4186,6 +4293,17 @@ block|,
 literal|"Use only priv port"
 block|}
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 block|{
 literal|"encrypt"
 block|,
@@ -4212,37 +4330,6 @@ block|,
 literal|"Don't encrypt connection"
 block|,
 name|NULL
-block|}
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KRB5
-block|{
-literal|"unique"
-block|,
-literal|'u'
-block|,
-name|arg_flag
-block|,
-operator|&
-name|do_unique_tkfile
-block|,
-literal|"Use unique remote tkfile (krb5)"
-block|}
-block|,
-block|{
-literal|"tkfile"
-block|,
-literal|'U'
-block|,
-name|arg_string
-block|,
-operator|&
-name|unique_tkfile
-block|,
-literal|"Use that remote tkfile (krb5)"
 block|}
 block|,
 endif|#
@@ -4316,21 +4403,11 @@ block|,
 literal|"Don't open stderr"
 block|}
 block|,
-block|{
-literal|"protocol"
-block|,
-literal|'P'
-block|,
-name|arg_string
-block|,
-operator|&
-name|protocol_version_str
-block|,
-literal|"Protocol version"
-block|,
-literal|"protocol"
-block|}
-block|,
+ifdef|#
+directive|ifdef
+name|KRB5
+endif|#
+directive|endif
 block|{
 literal|"version"
 block|,
@@ -4635,6 +4712,9 @@ return|return
 literal|0
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|KRB5
 if|if
 condition|(
 name|protocol_version_str
@@ -4728,9 +4808,6 @@ name|v
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|KRB5
 name|status
 operator|=
 name|krb5_init_context
@@ -4918,11 +4995,16 @@ if|if
 condition|(
 name|do_unique_tkfile
 condition|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|tkfile
 argument_list|,
 literal|"-u "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tkfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5257,8 +5339,6 @@ name|cmd
 argument_list|,
 name|cmd_len
 argument_list|,
-name|do_errsock
-argument_list|,
 name|send_krb5_auth
 argument_list|)
 expr_stmt|;
@@ -5466,8 +5546,6 @@ argument_list|,
 name|cmd
 argument_list|,
 name|cmd_len
-argument_list|,
-name|do_errsock
 argument_list|,
 name|send_krb4_auth
 argument_list|)

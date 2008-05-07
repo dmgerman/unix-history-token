@@ -29,7 +29,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: strlcpy.c,v 1.6 2002/08/20 09:42:08 joda Exp $"
+literal|"$Id: strlcpy.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,6 +42,7 @@ end_ifndef
 
 begin_function
 name|size_t
+name|ROKEN_LIB_FUNCTION
 name|strlcpy
 parameter_list|(
 name|char

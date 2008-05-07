@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: nt_gss_client.c,v 1.4 2000/08/09 20:53:07 assar Exp $"
+literal|"$Id: nt_gss_client.c 21522 2007-07-12 13:15:04Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -92,21 +92,18 @@ decl_stmt|;
 name|gss_buffer_desc
 name|name_token
 decl_stmt|;
+name|char
+modifier|*
+name|str
+decl_stmt|;
 name|name_token
 operator|.
 name|length
 operator|=
 name|asprintf
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|name_token
-operator|.
-name|value
+name|str
 argument_list|,
 literal|"%s@%s"
 argument_list|,
@@ -114,6 +111,25 @@ name|service
 argument_list|,
 name|hostname
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|str
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"out of memory"
+argument_list|)
+expr_stmt|;
+name|name_token
+operator|.
+name|value
+operator|=
+name|str
 expr_stmt|;
 name|maj_stat
 operator|=

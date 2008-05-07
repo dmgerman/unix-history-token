@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: strncasecmp.c,v 1.3 2003/04/14 11:46:04 lha Exp $"
+literal|"$Id: strncasecmp.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -54,6 +54,7 @@ end_ifndef
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|strncasecmp
 parameter_list|(
 specifier|const

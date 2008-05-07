@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: set_default_realm.c,v 1.13 2001/09/18 09:43:31 joda Exp $"
+literal|"$Id: set_default_realm.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -139,6 +139,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_set_default_realm
 parameter_list|(
 name|krb5_context

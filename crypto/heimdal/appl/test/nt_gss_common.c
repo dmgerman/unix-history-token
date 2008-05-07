@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: nt_gss_common.c,v 1.3 1999/12/02 17:04:57 joda Exp $"
+literal|"$Id: nt_gss_common.c 17450 2006-05-05 11:11:43Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -55,7 +55,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|len
 decl_stmt|;
 name|OM_uint32
@@ -194,7 +194,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|len
 decl_stmt|;
 if|if

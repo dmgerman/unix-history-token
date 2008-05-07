@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_princs_c.c,v 1.4 2000/07/11 16:00:19 joda Exp $"
+literal|"$Id: get_princs_c.c 15484 2005-06-17 05:21:07Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,7 +28,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|exp
+name|expression
 parameter_list|,
 name|char
 modifier|*
@@ -113,20 +113,20 @@ name|krb5_store_int32
 argument_list|(
 name|sp
 argument_list|,
-name|exp
+name|expression
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|exp
+name|expression
 condition|)
 name|krb5_store_string
 argument_list|(
 name|sp
 argument_list|,
-name|exp
+name|expression
 argument_list|)
 expr_stmt|;
 name|ret

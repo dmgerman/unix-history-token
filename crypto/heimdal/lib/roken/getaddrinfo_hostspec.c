@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getaddrinfo_hostspec.c,v 1.3 2000/07/15 12:50:32 joda Exp $"
+literal|"$Id: getaddrinfo_hostspec.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -40,6 +40,7 @@ end_comment
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|roken_getaddrinfo_hostspec2
 parameter_list|(
 specifier|const
@@ -343,6 +344,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|roken_getaddrinfo_hostspec
 parameter_list|(
 specifier|const

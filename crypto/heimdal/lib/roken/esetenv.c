@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: esetenv.c,v 1.3 2001/01/27 05:28:38 assar Exp $"
+literal|"$Id: esetenv.c 15502 2005-06-21 18:56:15Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,6 +42,7 @@ end_include
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|esetenv
 parameter_list|(
 specifier|const
@@ -62,17 +63,15 @@ if|if
 condition|(
 name|setenv
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
+name|rk_UNCONST
+argument_list|(
 name|var
+argument_list|)
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
+name|rk_UNCONST
+argument_list|(
 name|val
+argument_list|)
 argument_list|,
 name|rewrite
 argument_list|)

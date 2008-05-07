@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_in_tkt_with_keytab.c,v 1.6 2001/05/14 06:14:48 assar Exp $"
+literal|"$Id: get_in_tkt_with_keytab.c 15477 2005-06-17 04:56:44Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_keytab_key_proc
 parameter_list|(
 name|krb5_context
@@ -43,11 +44,10 @@ name|krb5_keytab_key_proc_args
 modifier|*
 name|args
 init|=
-operator|(
-name|krb5_keytab_key_proc_args
-operator|*
-operator|)
+name|rk_UNCONST
+argument_list|(
 name|keyseed
+argument_list|)
 decl_stmt|;
 name|krb5_keytab
 name|keytab
@@ -159,6 +159,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_get_in_tkt_with_keytab
 parameter_list|(
 name|krb5_context
@@ -197,40 +198,10 @@ name|ret_as_reply
 parameter_list|)
 block|{
 name|krb5_keytab_key_proc_args
-modifier|*
 name|a
 decl_stmt|;
 name|a
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|a
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|a
-operator|==
-name|NULL
-condition|)
-block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"malloc: out of memory"
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
-return|;
-block|}
-name|a
-operator|->
+operator|.
 name|principal
 operator|=
 name|creds
@@ -238,7 +209,7 @@ operator|->
 name|client
 expr_stmt|;
 name|a
-operator|->
+operator|.
 name|keytab
 operator|=
 name|keytab
@@ -258,6 +229,7 @@ name|pre_auth_types
 argument_list|,
 name|krb5_keytab_key_proc
 argument_list|,
+operator|&
 name|a
 argument_list|,
 name|NULL

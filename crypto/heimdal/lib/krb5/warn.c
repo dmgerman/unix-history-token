@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: warn.c,v 1.14 2003/04/16 16:13:08 lha Exp $"
+literal|"$Id: warn.c 19086 2006-11-21 08:06:40Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -367,6 +367,7 @@ end_define
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_vwarn
 parameter_list|(
 name|krb5_context
@@ -418,6 +419,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_warn
 parameter_list|(
 name|krb5_context
@@ -464,6 +466,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_vwarnx
 parameter_list|(
 name|krb5_context
@@ -512,6 +515,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_warnx
 parameter_list|(
 name|krb5_context
@@ -555,6 +559,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_verr
 parameter_list|(
 name|krb5_context
@@ -615,6 +620,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_err
 parameter_list|(
 name|krb5_context
@@ -668,6 +674,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_verrx
 parameter_list|(
 name|krb5_context
@@ -725,6 +732,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_errx
 parameter_list|(
 name|krb5_context
@@ -775,6 +783,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_vabort
 parameter_list|(
 name|krb5_context
@@ -830,6 +839,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_abort
 parameter_list|(
 name|krb5_context
@@ -878,6 +888,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_vabortx
 parameter_list|(
 name|krb5_context
@@ -930,6 +941,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_abortx
 parameter_list|(
 name|krb5_context
@@ -975,6 +987,7 @@ end_block
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_set_warn_dest
 parameter_list|(
 name|krb5_context
@@ -993,6 +1006,24 @@ name|fac
 expr_stmt|;
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|krb5_log_facility
+modifier|*
+name|KRB5_LIB_FUNCTION
+name|krb5_get_warn_dest
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|)
+block|{
+return|return
+name|context
+operator|->
+name|warn_dest
 return|;
 block|}
 end_function

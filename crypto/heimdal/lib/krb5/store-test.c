@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: store-test.c,v 1.1 2001/05/11 16:06:25 joda Exp $"
+literal|"$Id: store-test.c 16344 2005-12-02 15:15:43Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -413,6 +413,13 @@ argument_list|,
 name|principal
 argument_list|)
 expr_stmt|;
+name|krb5_free_principal
+argument_list|(
+name|context
+argument_list|,
+name|principal
+argument_list|)
+expr_stmt|;
 name|nerr
 operator|+=
 name|compare
@@ -428,6 +435,11 @@ literal|"\x0\x0\x0\x6"
 literal|"foobar"
 argument_list|,
 literal|26
+argument_list|)
+expr_stmt|;
+name|krb5_free_context
+argument_list|(
+name|context
 argument_list|)
 expr_stmt|;
 return|return

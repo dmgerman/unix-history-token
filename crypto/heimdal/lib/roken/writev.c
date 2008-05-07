@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: writev.c,v 1.3 1999/12/02 16:58:54 joda Exp $"
+literal|"$Id: writev.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -36,6 +36,7 @@ end_include
 
 begin_function
 name|ssize_t
+name|ROKEN_LIB_FUNCTION
 name|writev
 parameter_list|(
 name|int

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utmp_login.c,v 1.18 2001/02/08 16:08:26 assar Exp $"
+literal|"$Id: utmp_login.c 9661 2001-02-08 16:08:47Z assar $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

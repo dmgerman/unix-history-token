@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_bytes-test.c,v 1.3 2001/09/04 09:56:00 assar Exp $"
+literal|"$Id: parse_bytes-test.c 10655 2001-09-04 09:56:00Z assar $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

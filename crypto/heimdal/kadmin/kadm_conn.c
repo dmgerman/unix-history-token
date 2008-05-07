@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2000 - 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -29,7 +29,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadm_conn.c,v 1.14 2002/10/21 13:21:24 joda Exp $"
+literal|"$Id: kadm_conn.c 16007 2005-09-01 18:49:57Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -145,13 +145,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|do_kerberos4
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -170,24 +163,6 @@ argument_list|,
 literal|749
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KRB4
-if|if
-condition|(
-name|do_kerberos4
-condition|)
-name|add_kadm_port
-argument_list|(
-name|context
-argument_list|,
-literal|"kerberos-master"
-argument_list|,
-literal|751
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1195,11 +1170,6 @@ name|ai_next
 control|)
 block|{
 name|int
-name|one
-init|=
-literal|1
-decl_stmt|;
-name|int
 name|s
 init|=
 name|socket
@@ -1235,53 +1205,20 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SO_REUSEADDR
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SETSOCKOPT
-argument_list|)
-if|if
-condition|(
-name|setsockopt
+name|socket_set_reuseaddr
 argument_list|(
 name|s
 argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_REUSEADDR
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|one
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|one
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|krb5_warn
-argument_list|(
-name|context
-argument_list|,
-name|errno
-argument_list|,
-literal|"setsockopt"
+literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|socket_set_ipv6only
+argument_list|(
+name|s
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bind
