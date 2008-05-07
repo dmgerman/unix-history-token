@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: base64.c,v 1.5 2001/05/28 17:33:41 joda Exp $"
+literal|"$Id: base64.c 15506 2005-06-23 10:47:57Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -48,6 +48,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|base64_chars
 index|[]
@@ -65,6 +66,7 @@ name|char
 name|c
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -102,6 +104,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|base64_encode
 parameter_list|(
 specifier|const
@@ -476,6 +479,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|base64_decode
 parameter_list|(
 specifier|const

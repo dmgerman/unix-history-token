@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: inet_pton.c,v 1.3 2000/07/27 04:56:13 assar Exp $"
+literal|"$Id: inet_pton.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -31,11 +31,12 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|inet_pton
 parameter_list|(
 name|int

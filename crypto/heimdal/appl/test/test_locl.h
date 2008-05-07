@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: test_locl.h,v 1.9 2000/08/27 04:29:54 assar Exp $ */
+comment|/* $Id: test_locl.h 12797 2003-09-09 03:38:51Z lha $ */
 end_comment
 
 begin_ifdef
@@ -244,6 +244,14 @@ specifier|extern
 name|char
 modifier|*
 name|service
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|mech
 decl_stmt|;
 end_decl_stmt
 

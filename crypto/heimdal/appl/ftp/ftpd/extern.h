@@ -649,7 +649,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|cell
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -662,6 +663,21 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|do_destroy_tickets
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|k5ccname
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -807,6 +823,13 @@ begin_decl_stmt
 specifier|extern
 name|off_t
 name|byte_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ccc_passed
 decl_stmt|;
 end_decl_stmt
 

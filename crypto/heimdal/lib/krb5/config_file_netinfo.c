@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: config_file_netinfo.c,v 1.3 2001/05/14 06:14:45 assar Exp $"
+literal|"$Id: config_file_netinfo.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -544,6 +544,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_config_parse_file
 parameter_list|(
 name|krb5_context

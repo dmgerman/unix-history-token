@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: vwarn.c,v 1.10 2001/01/25 12:41:39 assar Exp $"
+literal|"$Id: vwarn.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,6 +42,7 @@ end_include
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|vwarn
 parameter_list|(
 specifier|const

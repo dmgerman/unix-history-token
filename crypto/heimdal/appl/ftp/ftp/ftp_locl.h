@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: ftp_locl.h,v 1.37 2002/09/10 20:03:46 joda Exp $ */
+comment|/* $Id: ftp_locl.h 11444 2002-09-10 20:03:49Z joda $ */
 end_comment
 
 begin_ifndef

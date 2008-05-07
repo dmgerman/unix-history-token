@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: admin.h,v 1.18 2000/08/04 11:26:21 joda Exp $ */
+comment|/* $Id: admin.h 20237 2007-02-16 23:54:34Z lha $ */
 end_comment
 
 begin_ifndef
@@ -179,6 +179,34 @@ define|#
 directive|define
 name|KRB5_KDB_NEW_PRINC
 value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KDB_OK_AS_DELEGATE
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KDB_TRUSTED_FOR_DELEGATION
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KDB_ALLOW_KERBEROS4
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KDB_ALLOW_DIGEST
+value|0x00080000
 end_define
 
 begin_define
@@ -456,6 +484,76 @@ name|krb5_tl_data
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|KRB5_TL_LAST_PWD_CHANGE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_TL_MOD_PRINC
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_TL_KADM_DATA
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_TL_KADM5_E_DATA
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_TL_RB1_CHALLENGE
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_TL_SECURID_STATE
+value|0x0006
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_TL_PASSWORD
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_TL_EXTENSION
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_TL_PKINIT_ACL
+value|0x0009
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_TL_ALIASES
+value|0x000a
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -495,7 +593,7 @@ name|char
 modifier|*
 name|policy
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|aux_attributes
 decl_stmt|;
 name|krb5_deltat
@@ -541,22 +639,22 @@ name|char
 modifier|*
 name|policy
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pw_min_life
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pw_max_life
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pw_min_length
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pw_min_classes
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pw_history_num
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|policy_refcnt
 decl_stmt|;
 block|}
@@ -766,7 +864,7 @@ typedef|typedef
 struct|struct
 name|_kadm5_config_params
 block|{
-name|u_int32_t
+name|uint32_t
 name|mask
 decl_stmt|;
 comment|/* Client and server fields */
@@ -825,7 +923,7 @@ comment|/* unimplemented functions */
 end_comment
 
 begin_endif
-unit|kadm5_ret_t  kadm5_decrypt_key(void *server_handle, 		  kadm5_principal_ent_t entry, int32_t 		  ktype, int32_t stype, int32_t 		  kvno, krb5_keyblock *keyblock, 		  krb5_keysalt *keysalt, int *kvnop);  kadm5_ret_t kadm5_create_policy(void *server_handle, 		    kadm5_policy_ent_t policy, u_int32_t mask);   kadm5_ret_t kadm5_delete_policy(void *server_handle, char *policy);   kadm5_ret_t kadm5_modify_policy(void *server_handle, 		    kadm5_policy_ent_t policy,  		    u_int32_t mask);  kadm5_ret_t kadm5_get_policy(void *server_handle, char *policy, kadm5_policy_ent_t ent);   kadm5_ret_t kadm5_get_policies(void *server_handle, char *exp, 		   char ***pols, int *count);  void  kadm5_free_policy_ent(kadm5_policy_ent_t policy);
+unit|kadm5_ret_t  kadm5_decrypt_key(void *server_handle, 		  kadm5_principal_ent_t entry, int32_t 		  ktype, int32_t stype, int32_t 		  kvno, krb5_keyblock *keyblock, 		  krb5_keysalt *keysalt, int *kvnop);  kadm5_ret_t kadm5_create_policy(void *server_handle, 		    kadm5_policy_ent_t policy, uint32_t mask);   kadm5_ret_t kadm5_delete_policy(void *server_handle, char *policy);   kadm5_ret_t kadm5_modify_policy(void *server_handle, 		    kadm5_policy_ent_t policy,  		    uint32_t mask);  kadm5_ret_t kadm5_get_policy(void *server_handle, char *policy, kadm5_policy_ent_t ent);   kadm5_ret_t kadm5_get_policies(void *server_handle, char *exp, 		   char ***pols, int *count);  void  kadm5_free_policy_ent(kadm5_policy_ent_t policy);
 endif|#
 directive|endif
 end_endif

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: free_host_realm.c,v 1.4 1999/12/02 17:05:09 joda Exp $"
+literal|"$Id: free_host_realm.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -23,6 +23,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_free_host_realm
 parameter_list|(
 name|krb5_context

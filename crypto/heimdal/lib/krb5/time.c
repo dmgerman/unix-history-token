@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,10 +12,88 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: time.c,v 1.5 2001/05/02 10:06:11 joda Exp $"
+literal|"$Id: time.c 14308 2004-10-13 17:57:11Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Set the absolute time that the caller knows the kdc has so the  * kerberos library can calculate the relative diffrence beteen the  * KDC time and local system time.  */
+end_comment
+
+begin_function
+name|krb5_error_code
+name|KRB5_LIB_FUNCTION
+name|krb5_set_real_time
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_timestamp
+name|sec
+parameter_list|,
+name|int32_t
+name|usec
+parameter_list|)
+block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|tv
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|context
+operator|->
+name|kdc_sec_offset
+operator|=
+name|sec
+operator|-
+name|tv
+operator|.
+name|tv_sec
+expr_stmt|;
+name|context
+operator|->
+name|kdc_usec_offset
+operator|=
+name|usec
+operator|-
+name|tv
+operator|.
+name|tv_usec
+expr_stmt|;
+if|if
+condition|(
+name|context
+operator|->
+name|kdc_usec_offset
+operator|<
+literal|0
+condition|)
+block|{
+name|context
+operator|->
+name|kdc_sec_offset
+operator|--
+expr_stmt|;
+name|context
+operator|->
+name|kdc_usec_offset
+operator|+=
+literal|1000000
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * return ``corrected'' time in `timeret'.  */
@@ -23,6 +101,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_timeofday
 parameter_list|(
 name|krb5_context
@@ -57,12 +136,13 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_us_timeofday
 parameter_list|(
 name|krb5_context
 name|context
 parameter_list|,
-name|int32_t
+name|krb5_timestamp
 modifier|*
 name|sec
 parameter_list|,
@@ -110,6 +190,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_format_time
 parameter_list|(
 name|krb5_context
@@ -157,6 +238,12 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tm
+operator|==
+name|NULL
+operator|||
 name|strftime
 argument_list|(
 name|s
@@ -175,6 +262,22 @@ name|date_fmt
 argument_list|,
 name|tm
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+name|len
+argument_list|,
+literal|"%ld"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|t
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -184,6 +287,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_string_to_deltat
 parameter_list|(
 specifier|const
@@ -214,7 +318,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|EINVAL
+name|KRB5_DELTAT_BADFORMAT
 return|;
 return|return
 literal|0

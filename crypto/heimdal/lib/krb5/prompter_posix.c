@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: prompter_posix.c,v 1.7 2002/09/16 17:32:11 nectar Exp $"
+literal|"$Id: prompter_posix.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|int
+name|KRB5_LIB_FUNCTION
 name|krb5_prompter_posix
 parameter_list|(
 name|krb5_context
@@ -75,6 +76,17 @@ argument_list|,
 name|banner
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|name
+operator|||
+name|banner
+condition|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -101,7 +113,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|des_read_pw_string
+name|UI_UTIL_read_pw_string
 argument_list|(
 name|prompts
 index|[

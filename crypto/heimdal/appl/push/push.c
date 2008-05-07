@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: push.c,v 1.47.2.1 2004/06/21 10:54:46 lha Exp $"
+literal|"$Id: push.c 14850 2005-04-19 18:00:17Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1376,6 +1376,26 @@ name|now
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|from_line_length
+operator|<
+literal|0
+operator|||
+name|from_line_length
+operator|>
+sizeof|sizeof
+argument_list|(
+name|from_line
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"snprintf failed"
+argument_list|)
+expr_stmt|;
 name|out_len
 operator|=
 name|snprintf
@@ -1397,6 +1417,13 @@ condition|(
 name|out_len
 operator|<
 literal|0
+operator|||
+name|out_len
+operator|>
+sizeof|sizeof
+argument_list|(
+name|out_buf
+argument_list|)
 condition|)
 name|errx
 argument_list|(
@@ -2732,6 +2759,13 @@ condition|(
 name|out_len
 operator|<
 literal|0
+operator|||
+name|out_len
+operator|>
+sizeof|sizeof
+argument_list|(
+name|out_buf
+argument_list|)
 condition|)
 name|errx
 argument_list|(

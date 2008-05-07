@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: common_glue.c,v 1.5 2000/03/23 22:58:26 assar Exp $"
+literal|"$Id: common_glue.c 17445 2006-05-05 10:37:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -40,6 +40,7 @@ parameter_list|,
 name|krb5_principal
 name|princ
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|password
@@ -111,9 +112,10 @@ parameter_list|,
 name|kadm5_principal_ent_t
 name|princ
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mask
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|password
@@ -223,7 +225,7 @@ parameter_list|,
 name|kadm5_principal_ent_t
 name|out
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mask
 parameter_list|)
 block|{
@@ -257,7 +259,7 @@ parameter_list|,
 name|kadm5_principal_ent_t
 name|princ
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mask
 parameter_list|)
 block|{
@@ -361,7 +363,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|exp
+name|expression
 parameter_list|,
 name|char
 modifier|*
@@ -382,7 +384,7 @@ argument_list|,
 operator|(
 name|server_handle
 operator|,
-name|exp
+name|expression
 operator|,
 name|princs
 operator|,
@@ -401,7 +403,7 @@ name|void
 modifier|*
 name|server_handle
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|privs
 parameter_list|)

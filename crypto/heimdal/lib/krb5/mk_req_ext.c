@@ -12,14 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_req_ext.c,v 1.26.4.1 2003/09/18 20:34:30 lha Exp $"
+literal|"$Id: mk_req_ext.c 19511 2006-12-27 12:07:22Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
-name|krb5_mk_req_internal
+name|_krb5_mk_req_internal
 parameter_list|(
 name|krb5_context
 name|context
@@ -150,18 +150,10 @@ if|if
 condition|(
 name|ret
 condition|)
-return|return
-name|ret
-return|;
+goto|goto
+name|out
+goto|;
 block|}
-if|#
-directive|if
-literal|0
-block|{
-comment|/* This is somewhat bogus since we're possibly overwriting a          value specified by the user, but it's the easiest way to make          the code use a compatible enctype */
-block|Ticket ticket;       krb5_keytype ticket_keytype;        ret = decode_Ticket(in_creds->ticket.data,  			  in_creds->ticket.length,&ticket,  			  NULL);       krb5_enctype_to_keytype (context, 			       ticket.enc_part.etype,&ticket_keytype);        if (ticket_keytype == in_creds->session.keytype) 	  krb5_auth_setenctype(context,  			       ac, 			       ticket.enc_part.etype);       free_Ticket(&ticket);   }
-endif|#
-directive|endif
 name|krb5_free_keyblock
 argument_list|(
 name|context
@@ -171,6 +163,8 @@ operator|->
 name|keyblock
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|krb5_copy_keyblock
 argument_list|(
 name|context
@@ -186,7 +180,14 @@ operator|->
 name|keyblock
 argument_list|)
 expr_stmt|;
-comment|/* it's unclear what type of checksum we can use.  try the best one, except:    * a) if it's configured differently for the current realm, or    * b) if the session key is des-cbc-crc    */
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* it's unclear what type of checksum we can use.  try the best one, except:      * a) if it's configured differently for the current realm, or      * b) if the session key is des-cbc-crc      */
 if|if
 condition|(
 name|in_data
@@ -239,6 +240,30 @@ operator|->
 name|keytype
 operator|==
 name|ETYPE_ARCFOUR_HMAC_MD5
+operator|||
+name|ac
+operator|->
+name|keyblock
+operator|->
+name|keytype
+operator|==
+name|ETYPE_ARCFOUR_HMAC_MD5_56
+operator|||
+name|ac
+operator|->
+name|keyblock
+operator|->
+name|keytype
+operator|==
+name|ETYPE_DES_CBC_MD4
+operator|||
+name|ac
+operator|->
+name|keyblock
+operator|->
+name|keytype
+operator|==
+name|ETYPE_DES_CBC_MD5
 condition|)
 block|{
 comment|/* this is to make MS kdc happy */
@@ -292,9 +317,9 @@ if|if
 condition|(
 name|ret
 condition|)
-return|return
-name|ret
-return|;
+goto|goto
+name|out
+goto|;
 name|ret
 operator|=
 name|krb5_create_checksum
@@ -340,6 +365,13 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|out
+goto|;
 name|ret
 operator|=
 name|krb5_build_authenticator
@@ -379,9 +411,9 @@ if|if
 condition|(
 name|ret
 condition|)
-return|return
-name|ret
-return|;
+goto|goto
+name|out
+goto|;
 name|ret
 operator|=
 name|krb5_build_ap_req
@@ -403,6 +435,8 @@ argument_list|,
 name|outbuf
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 if|if
 condition|(
 name|auth_context
@@ -424,6 +458,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_mk_req_extended
 parameter_list|(
 name|krb5_context
@@ -451,7 +486,7 @@ name|outbuf
 parameter_list|)
 block|{
 return|return
-name|krb5_mk_req_internal
+name|_krb5_mk_req_internal
 argument_list|(
 name|context
 argument_list|,

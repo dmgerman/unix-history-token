@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getarg.c,v 1.46 2002/08/20 16:23:07 joda Exp $"
+literal|"$Id: getarg.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_include
@@ -1011,6 +1011,7 @@ end_function
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|arg_printusage
 parameter_list|(
 name|struct
@@ -1930,7 +1931,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|add_string
 parameter_list|(
 name|getarg_strings
@@ -1942,8 +1943,11 @@ modifier|*
 name|value
 parameter_list|)
 block|{
-name|s
-operator|->
+name|char
+modifier|*
+modifier|*
+name|strings
+decl_stmt|;
 name|strings
 operator|=
 name|realloc
@@ -1969,6 +1973,42 @@ name|strings
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strings
+operator|==
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|s
+operator|->
+name|strings
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|strings
+operator|=
+name|NULL
+expr_stmt|;
+name|s
+operator|->
+name|num_strings
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
+name|s
+operator|->
+name|strings
+operator|=
+name|strings
+expr_stmt|;
 name|s
 operator|->
 name|strings
@@ -1985,6 +2025,9 @@ operator|->
 name|num_strings
 operator|++
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -2370,6 +2413,7 @@ case|case
 name|arg_strings
 case|:
 block|{
+return|return
 name|add_string
 argument_list|(
 operator|(
@@ -2384,9 +2428,6 @@ name|goptarg
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 case|case
@@ -3038,6 +3079,7 @@ operator|==
 name|arg_strings
 condition|)
 block|{
+return|return
 name|add_string
 argument_list|(
 operator|(
@@ -3053,9 +3095,6 @@ name|value
 argument_list|,
 name|goptarg
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 elseif|else
@@ -3132,6 +3171,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|getarg
 parameter_list|(
 name|struct
@@ -3330,6 +3370,7 @@ end_function
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|free_getarg_strings
 parameter_list|(
 name|getarg_strings

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 Kungliga Tekniska Högskolan  * (Royal Institut
 end_comment
 
 begin_comment
-comment|/* $Id: rx.h,v 1.4 1999/12/02 17:05:00 joda Exp $ */
+comment|/* $Id: rx.h 17447 2006-05-05 10:52:01Z lha $ */
 end_comment
 
 begin_ifndef
@@ -93,20 +93,20 @@ begin_struct
 struct|struct
 name|rx_header
 block|{
-name|u_int32_t
+name|uint32_t
 name|epoch
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|connid
 decl_stmt|;
 comment|/* And channel ID */
-name|u_int32_t
+name|uint32_t
 name|callid
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|seqno
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|serialno
 decl_stmt|;
 name|u_char
@@ -121,11 +121,11 @@ decl_stmt|;
 name|u_char
 name|secindex
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|reserved
 decl_stmt|;
 comment|/* ??? verifier? */
-name|u_int16_t
+name|uint16_t
 name|serviceid
 decl_stmt|;
 comment|/* This should be the other way around according to everything but */

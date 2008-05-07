@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 - 2003 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: afssysdefs.h,v 1.26 2003/02/08 22:55:55 assar Exp $ */
+comment|/* $Id: afssysdefs.h 14102 2004-08-09 13:41:32Z lha $ */
 end_comment
 
 begin_comment
@@ -274,6 +274,35 @@ end_endif
 begin_comment
 comment|/* __FreeBSD__ */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__DragonFly__
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AFS_SYSCALL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AFS_SYSCALL
+value|339
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

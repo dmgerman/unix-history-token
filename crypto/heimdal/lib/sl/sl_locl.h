@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997, 1998 Kungliga Tekniska Högskolan 
 end_comment
 
 begin_comment
-comment|/* $Id: sl_locl.h,v 1.6 1999/12/02 16:58:55 joda Exp $ */
+comment|/* $Id: sl_locl.h 19517 2006-12-27 20:27:00Z lha $ */
 end_comment
 
 begin_ifdef
@@ -46,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1994 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Id: extern.h,v 1.19 2000/09/19 13:15:12 assar Exp $ */
+comment|/* $Id: extern.h 9075 2000-09-19 13:15:12Z assar $ */
 end_comment
 
 begin_include

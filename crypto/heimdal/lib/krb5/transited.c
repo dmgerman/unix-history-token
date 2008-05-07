@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: transited.c,v 1.10.2.3 2003/10/22 06:07:41 lha Exp $"
+literal|"$Id: transited.c 21745 2007-07-31 16:11:25Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -159,9 +159,9 @@ block|{
 specifier|const
 name|char
 modifier|*
-name|tmp
+name|str
 decl_stmt|;
-name|tmp
+name|str
 operator|=
 name|from
 expr_stmt|;
@@ -171,7 +171,7 @@ name|to
 expr_stmt|;
 name|to
 operator|=
-name|tmp
+name|str
 expr_stmt|;
 block|}
 if|if
@@ -258,6 +258,24 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|tmp
 operator|->
 name|next
@@ -359,9 +377,18 @@ name|p
 operator|==
 name|from
 condition|)
+block|{
+name|r
+operator|->
+name|next
+operator|=
+name|path
+expr_stmt|;
+comment|/* XXX */
 return|return
 name|KRB5KDC_ERR_POLICY
 return|;
+block|}
 if|if
 condition|(
 name|strncmp
@@ -391,6 +418,24 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|tmp
 operator|->
 name|next
@@ -709,7 +754,19 @@ name|tmp
 decl_stmt|;
 name|size_t
 name|len
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|prev_realm
+operator|==
+name|NULL
+condition|)
+name|prev_realm
+operator|=
+name|client_realm
+expr_stmt|;
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|r
@@ -723,16 +780,6 @@ name|prev_realm
 argument_list|)
 operator|+
 literal|1
-decl_stmt|;
-if|if
-condition|(
-name|prev_realm
-operator|==
-name|NULL
-condition|)
-name|prev_realm
-operator|=
-name|client_realm
 expr_stmt|;
 name|tmp
 operator|=
@@ -1276,6 +1323,24 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|memcpy
 argument_list|(
 name|tmp
@@ -1365,6 +1430,30 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+operator|*
+name|realms
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|memcpy
 argument_list|(
 name|tmp
@@ -1439,6 +1528,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_domain_x500_decode
 parameter_list|(
 name|krb5_context
@@ -1756,6 +1846,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_domain_x500_encode
 parameter_list|(
 name|char
@@ -1964,6 +2055,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_check_transited
 parameter_list|(
 name|krb5_context
@@ -2128,6 +2220,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_check_transited_realms
 parameter_list|(
 name|krb5_context

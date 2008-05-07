@@ -9,10 +9,16 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: derived-key-test.c,v 1.1 2001/03/12 07:44:52 assar Exp $"
+literal|"$Id: derived-key-test.c 16342 2005-12-02 14:14:43Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1263,6 +1269,7 @@ end_struct
 
 begin_function
 name|int
+name|KRB5_LIB_FUNCTION
 name|main
 parameter_list|(
 name|int
@@ -1518,7 +1525,19 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|krb5_free_keyblock
+argument_list|(
+name|context
+argument_list|,
+name|dkey
+argument_list|)
+expr_stmt|;
 block|}
+name|krb5_free_context
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|val
 return|;

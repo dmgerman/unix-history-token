@@ -22,7 +22,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.33.2.1 2003/08/20 16:43:14 lha Exp $"
+literal|"$Id: main.c 16160 2005-10-12 09:42:47Z joda $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -173,7 +173,22 @@ block|,
 operator|&
 name|ftp_do_gss_bindings
 block|,
-literal|"Use GSS-API bindings"
+literal|"Don't use GSS-API bindings"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"gss-delegate"
+block|,
+literal|0
+block|,
+name|arg_negative_flag
+block|,
+operator|&
+name|ftp_do_gss_delegate
+block|,
+literal|"Disable delegation of GSS-API credentials"
 block|,
 name|NULL
 block|}
@@ -208,6 +223,19 @@ block|,
 literal|"Disable kerberos authentication"
 block|,
 name|NULL
+block|}
+block|,
+block|{
+literal|"encrypt"
+block|,
+literal|'x'
+block|,
+name|arg_flag
+block|,
+operator|&
+name|doencrypt
+block|,
+literal|"Encrypt command and data channel if possible"
 block|}
 block|,
 block|{

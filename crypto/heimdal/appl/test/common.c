@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: common.c,v 1.11 2000/08/27 04:29:34 assar Exp $"
+literal|"$Id: common.c 12796 2003-09-09 03:38:04Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -59,6 +59,15 @@ modifier|*
 name|service
 init|=
 name|SERVICE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|mech
+init|=
+literal|"krb5"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,6 +128,21 @@ block|,
 literal|"keytab to use"
 block|,
 literal|"keytab"
+block|}
+block|,
+block|{
+literal|"mech"
+block|,
+literal|'m'
+block|,
+name|arg_string
+block|,
+operator|&
+name|mech
+block|,
+literal|"gssapi mech to use"
+block|,
+literal|"mech"
 block|}
 block|,
 block|{

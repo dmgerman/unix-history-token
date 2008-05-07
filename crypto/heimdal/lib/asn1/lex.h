@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: lex.h,v 1.5 2000/07/01 20:21:34 assar Exp $ */
+comment|/* $Id: lex.h 15617 2005-07-12 06:27:42Z lha $ */
 end_comment
 
 begin_include
@@ -38,6 +38,13 @@ begin_empty_stmt
 unit|)))
 empty_stmt|;
 end_empty_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|error_flag
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int

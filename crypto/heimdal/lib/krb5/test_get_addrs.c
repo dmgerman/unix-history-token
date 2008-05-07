@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: test_get_addrs.c,v 1.4 2002/08/23 03:42:54 assar Exp $"
+literal|"$Id: test_get_addrs.c 15474 2005-06-17 04:48:02Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -226,7 +226,7 @@ name|krb5_addresses
 name|addrs
 decl_stmt|;
 name|int
-name|optind
+name|optidx
 init|=
 literal|0
 decl_stmt|;
@@ -262,7 +262,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|optidx
 argument_list|)
 condition|)
 name|usage
@@ -297,11 +297,11 @@ expr_stmt|;
 block|}
 name|argc
 operator|-=
-name|optind
+name|optidx
 expr_stmt|;
 name|argv
 operator|+=
-name|optind
+name|optidx
 expr_stmt|;
 name|ret
 operator|=

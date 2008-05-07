@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 - 2002 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: xdbm.h,v 1.15 2002/05/17 16:02:22 joda Exp $ */
+comment|/* $Id: xdbm.h 10986 2002-05-17 16:02:22Z joda $ */
 end_comment
 
 begin_comment

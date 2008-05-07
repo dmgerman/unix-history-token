@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2001 Kungliga Tekniska Högskolan  * (Royal Institut
 end_comment
 
 begin_comment
-comment|/* $Id: rcp_locl.h,v 1.3 2001/01/29 05:59:24 assar Exp $ */
+comment|/* $Id: rcp_locl.h 15285 2005-05-29 18:24:43Z lha $ */
 end_comment
 
 begin_ifdef
@@ -138,6 +138,12 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_CP
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -145,11 +151,22 @@ name|_PATH_CP
 value|"/bin/cp"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|_PATH_RSH
+end_undef
+
 begin_define
 define|#
 directive|define
 name|_PATH_RSH
-value|"/usr/bin/rsh"
+value|BINDIR "/rsh"
 end_define
 
 end_unit

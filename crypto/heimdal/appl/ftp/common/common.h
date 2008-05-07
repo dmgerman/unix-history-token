@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999 Kungliga Tekniska Högs
 end_comment
 
 begin_comment
-comment|/* $Id: common.h,v 1.12 1999/12/02 16:58:29 joda Exp $ */
+comment|/* $Id: common.h 7463 1999-12-02 16:58:55Z joda $ */
 end_comment
 
 begin_ifdef

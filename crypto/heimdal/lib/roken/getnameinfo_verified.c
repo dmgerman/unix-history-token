@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getnameinfo_verified.c,v 1.6 2002/09/05 01:36:27 assar Exp $"
+literal|"$Id: getnameinfo_verified.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -40,6 +40,7 @@ end_comment
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|getnameinfo_verified
 parameter_list|(
 specifier|const

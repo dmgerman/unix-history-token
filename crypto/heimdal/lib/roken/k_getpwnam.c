@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: k_getpwnam.c,v 1.9 1999/12/02 16:58:47 joda Exp $"
+literal|"$Id: k_getpwnam.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -59,6 +59,7 @@ begin_function
 name|struct
 name|passwd
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|k_getpwnam
 parameter_list|(
 specifier|const

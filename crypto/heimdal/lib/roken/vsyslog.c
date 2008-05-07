@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: vsyslog.c,v 1.6 2000/05/22 22:09:25 assar Exp $"
+literal|"$Id: vsyslog.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -97,6 +97,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|vsyslog
 parameter_list|(
 name|int

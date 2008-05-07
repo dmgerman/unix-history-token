@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: codec.c,v 1.7 2001/05/16 22:08:08 assar Exp $"
+literal|"$Id: codec.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_decode_EncTicketPart
 parameter_list|(
 name|krb5_context
@@ -58,6 +59,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_encode_EncTicketPart
 parameter_list|(
 name|krb5_context
@@ -96,6 +98,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_decode_EncASRepPart
 parameter_list|(
 name|krb5_context
@@ -135,6 +138,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_encode_EncASRepPart
 parameter_list|(
 name|krb5_context
@@ -173,6 +177,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_decode_EncTGSRepPart
 parameter_list|(
 name|krb5_context
@@ -212,6 +217,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_encode_EncTGSRepPart
 parameter_list|(
 name|krb5_context
@@ -250,6 +256,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_decode_EncAPRepPart
 parameter_list|(
 name|krb5_context
@@ -289,6 +296,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_encode_EncAPRepPart
 parameter_list|(
 name|krb5_context
@@ -327,6 +335,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_decode_Authenticator
 parameter_list|(
 name|krb5_context
@@ -366,6 +375,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_encode_Authenticator
 parameter_list|(
 name|krb5_context
@@ -404,6 +414,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_decode_EncKrbCredPart
 parameter_list|(
 name|krb5_context
@@ -443,6 +454,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_encode_EncKrbCredPart
 parameter_list|(
 name|krb5_context
@@ -481,6 +493,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_decode_ETYPE_INFO
 parameter_list|(
 name|krb5_context
@@ -520,6 +533,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_encode_ETYPE_INFO
 parameter_list|(
 name|krb5_context
@@ -543,6 +557,85 @@ parameter_list|)
 block|{
 return|return
 name|encode_ETYPE_INFO
+argument_list|(
+name|data
+argument_list|,
+name|length
+argument_list|,
+name|t
+argument_list|,
+name|len
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|krb5_error_code
+name|KRB5_LIB_FUNCTION
+name|krb5_decode_ETYPE_INFO2
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|length
+parameter_list|,
+name|ETYPE_INFO2
+modifier|*
+name|t
+parameter_list|,
+name|size_t
+modifier|*
+name|len
+parameter_list|)
+block|{
+return|return
+name|decode_ETYPE_INFO2
+argument_list|(
+name|data
+argument_list|,
+name|length
+argument_list|,
+name|t
+argument_list|,
+name|len
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|krb5_error_code
+name|KRB5_LIB_FUNCTION
+name|krb5_encode_ETYPE_INFO2
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|length
+parameter_list|,
+name|ETYPE_INFO2
+modifier|*
+name|t
+parameter_list|,
+name|size_t
+modifier|*
+name|len
+parameter_list|)
+block|{
+return|return
+name|encode_ETYPE_INFO2
 argument_list|(
 name|data
 argument_list|,

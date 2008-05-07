@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: make-print-version.c,v 1.3 2003/01/02 15:31:38 joda Exp $"
+literal|"$Id: make-print-version.c 18765 2006-10-21 17:37:32Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_ifdef
@@ -106,6 +112,30 @@ condition|)
 return|return
 literal|1
 return|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"--version"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"some version"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|f
 operator|=
 name|fopen

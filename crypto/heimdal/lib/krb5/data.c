@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,13 +12,18 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: data.c,v 1.17 2003/03/25 22:07:17 lha Exp $"
+literal|"$Id: data.c 22064 2007-11-11 16:28:14Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/**  * Reset the (potentially uninitalized) krb5_data structure.  *  * @param p krb5_data to reset.  *  * @ingroup krb5  */
+end_comment
+
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_data_zero
 parameter_list|(
 name|krb5_data
@@ -41,8 +46,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Free the content of krb5_data structure, its ok to free a zeroed  * structure. When done, the structure will be zeroed.  *   * @param p krb5_data to free.  *  * @ingroup krb5  */
+end_comment
+
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_data_free
 parameter_list|(
 name|krb5_data
@@ -65,17 +75,21 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
+name|krb5_data_zero
+argument_list|(
 name|p
-operator|->
-name|length
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Same as krb5_data_free().  *   * @param context Kerberos 5 context.  * @param data krb5_data to free.  *  * @ingroup krb5  */
+end_comment
+
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_free_data_contents
 parameter_list|(
 name|krb5_context
@@ -94,8 +108,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Free krb5_data (and its content).  *   * @param context Kerberos 5 context.  * @param p krb5_data to free.  *  * @ingroup krb5  */
+end_comment
+
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_free_data
 parameter_list|(
 name|krb5_context
@@ -119,8 +138,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Allocate data of and krb5_data.  *   * @param p krb5_data to free.  * @param len size to allocate.  *  * @return Returns 0 to indicate success. Otherwise an kerberos et  * error code is returned.  *  * @ingroup krb5  */
+end_comment
+
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_data_alloc
 parameter_list|(
 name|krb5_data
@@ -165,8 +189,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Grow (or shrink) the content of krb5_data to a new size.  *   * @param p krb5_data to free.  * @param len new size.  *  * @return Returns 0 to indicate success. Otherwise an kerberos et  * error code is returned.  *  * @ingroup krb5  */
+end_comment
+
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_data_realloc
 parameter_list|(
 name|krb5_data
@@ -220,8 +249,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Copy the data of len into the krb5_data.  *   * @param p krb5_data to copy into.  * @param data data to copy..  * @param len new size.  *  * @return Returns 0 to indicate success. Otherwise an kerberos et  * error code is returned.  *  * @ingroup krb5  */
+end_comment
+
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_data_copy
 parameter_list|(
 name|krb5_data
@@ -285,8 +319,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Copy the data into a newly allocated krb5_data.  *   * @param context Kerberos 5 context.  * @param indata the krb5_data data to copy  * @param outdata new krb5_date to copy too. Free with krb5_free_data().  *  * @return Returns 0 to indicate success. Otherwise an kerberos et  * error code is returned.  *  * @ingroup krb5  */
+end_comment
+
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_copy_data
 parameter_list|(
 name|krb5_context
@@ -335,7 +374,7 @@ return|;
 block|}
 name|ret
 operator|=
-name|copy_octet_string
+name|der_copy_octet_string
 argument_list|(
 name|indata
 argument_list|,
@@ -359,9 +398,72 @@ operator|*
 name|outdata
 argument_list|)
 expr_stmt|;
+operator|*
+name|outdata
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 return|return
 name|ret
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Compare to data.  *   * @param data1 krb5_data to compare  * @param data2 krb5_data to compare  *  * @return return the same way as memcmp(), useful when sorting.  *  * @ingroup krb5  */
+end_comment
+
+begin_function
+name|int
+name|KRB5_LIB_FUNCTION
+name|krb5_data_cmp
+parameter_list|(
+specifier|const
+name|krb5_data
+modifier|*
+name|data1
+parameter_list|,
+specifier|const
+name|krb5_data
+modifier|*
+name|data2
+parameter_list|)
+block|{
+if|if
+condition|(
+name|data1
+operator|->
+name|length
+operator|!=
+name|data2
+operator|->
+name|length
+condition|)
+return|return
+name|data1
+operator|->
+name|length
+operator|-
+name|data2
+operator|->
+name|length
+return|;
+return|return
+name|memcmp
+argument_list|(
+name|data1
+operator|->
+name|data
+argument_list|,
+name|data2
+operator|->
+name|data
+argument_list|,
+name|data1
+operator|->
+name|length
+argument_list|)
 return|;
 block|}
 end_function

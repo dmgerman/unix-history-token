@@ -9,19 +9,25 @@ directive|include
 file|"ftp_locl.h"
 end_include
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$Id: kauth.c 15666 2005-07-19 17:08:11Z lha $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB4
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<krb.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: kauth.c,v 1.20 1999/12/02 16:58:29 joda Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 name|void
@@ -614,64 +620,6 @@ end_function
 
 begin_function
 name|void
-name|klist
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-block|{
-name|int
-name|ret
-decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|!=
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"usage: %s\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|code
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-block|}
-name|ret
-operator|=
-name|command
-argument_list|(
-literal|"SITE KLIST"
-argument_list|)
-expr_stmt|;
-name|code
-operator|=
-operator|(
-name|ret
-operator|==
-name|COMPLETE
-operator|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|kdestroy
 parameter_list|(
 name|int
@@ -791,6 +739,25 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+end_if
+
 begin_function
 name|void
 name|afslog
@@ -867,6 +834,22 @@ operator|)
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|ftp_afslog_placeholder
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

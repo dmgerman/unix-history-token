@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: h_errno.c,v 1.1 2001/08/08 03:47:23 assar Exp $"
+literal|"$Id: h_errno.c 10442 2001-08-08 03:47:23Z assar $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

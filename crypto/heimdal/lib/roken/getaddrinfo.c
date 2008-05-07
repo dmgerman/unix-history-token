@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getaddrinfo.c,v 1.12 2001/08/17 13:06:57 joda Exp $"
+literal|"$Id: getaddrinfo.c 15417 2005-06-16 17:49:29Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -534,7 +534,7 @@ block|{
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 decl_stmt|;
 name|struct
 name|in_addr
@@ -561,7 +561,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|sin4
 argument_list|)
 expr_stmt|;
 name|a
@@ -573,7 +573,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|sin4
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -588,7 +588,7 @@ condition|)
 return|return
 name|EAI_MEMORY
 return|;
-name|sin
+name|sin4
 operator|=
 operator|(
 expr|struct
@@ -601,30 +601,30 @@ name|ai_addr
 expr_stmt|;
 name|memset
 argument_list|(
-name|sin
+name|sin4
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|sin4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_port
 operator|=
 name|port
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 operator|=
@@ -1724,6 +1724,7 @@ end_comment
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|getaddrinfo
 parameter_list|(
 specifier|const

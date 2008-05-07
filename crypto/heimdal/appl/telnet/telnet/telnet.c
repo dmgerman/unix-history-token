@@ -9,27 +9,10 @@ directive|include
 file|"telnet_locl.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_TERMCAP_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<termcap.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnet.c,v 1.34 2002/05/03 10:19:43 joda Exp $"
+literal|"$Id: telnet.c 16285 2005-11-03 18:38:57Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1777,7 +1760,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a buffer returned by tgetent(), this routine will turn  * the pipe seperated list of names in the buffer into an array  * of pointers to null terminated names.  We toss out any bad,  * duplicate, or verbose names (names with spaces).  */
+comment|/*  * Given a buffer returned by tgetent(), this routine will turn  * the pipe separated list of names in the buffer into an array  * of pointers to null terminated names.  We toss out any bad,  * duplicate, or verbose names (names with spaces).  */
 end_comment
 
 begin_decl_stmt
@@ -2110,6 +2093,9 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 		 * Skip entries with spaces or non-ascii values. 		 * Convert lower case letters to upper case. 		 */
+undef|#
+directive|undef
+name|ISASCII
 define|#
 directive|define
 name|ISASCII
@@ -2152,6 +2138,10 @@ name|cp
 operator|=
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 expr_stmt|;
@@ -5265,6 +5255,25 @@ end_decl_stmt
 begin_decl_stmt
 name|unsigned
 name|char
+specifier|const
+modifier|*
+specifier|const
+name|slc_reply_eom
+init|=
+operator|&
+name|slc_reply
+index|[
+sizeof|sizeof
+argument_list|(
+name|slc_reply
+argument_list|)
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|char
 modifier|*
 name|slc_replyp
 decl_stmt|;
@@ -5322,6 +5331,20 @@ name|cc_t
 name|value
 parameter_list|)
 block|{
+comment|/* A sequence of up to 6 bytes my be written for this member of the SLC 	 * suboption list by this function.  The end of negotiation command, 	 * which is written by slc_end_reply(), will require 2 additional 	 * bytes.  Do not proceed unless there is sufficient space for these 	 * items. 	 */
+if|if
+condition|(
+operator|&
+name|slc_replyp
+index|[
+literal|6
+operator|+
+literal|2
+index|]
+operator|>
+name|slc_reply_eom
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
@@ -5391,6 +5414,18 @@ block|{
 name|int
 name|len
 decl_stmt|;
+comment|/* The end of negotiation command requires 2 bytes. */
+if|if
+condition|(
+operator|&
+name|slc_replyp
+index|[
+literal|2
+index|]
+operator|>
+name|slc_reply_eom
+condition|)
+return|return;
 operator|*
 name|slc_replyp
 operator|++
@@ -5784,7 +5819,7 @@ begin_define
 define|#
 directive|define
 name|OPT_REPLY_SIZE
-value|256
+value|(2 * SUBBUFSIZE)
 end_define
 
 begin_decl_stmt
@@ -6059,6 +6094,8 @@ operator|+
 operator|(
 name|vp
 condition|?
+literal|2
+operator|*
 name|strlen
 argument_list|(
 operator|(
@@ -6071,6 +6108,8 @@ else|:
 literal|0
 operator|)
 operator|+
+literal|2
+operator|*
 name|strlen
 argument_list|(
 operator|(
@@ -6218,6 +6257,19 @@ operator|++
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|opt_replyp
+operator|+
+operator|(
+literal|2
+operator|+
+literal|2
+operator|)
+operator|>
+name|opt_replyend
+condition|)
+return|return;
 switch|switch
 condition|(
 name|c
@@ -6271,6 +6323,21 @@ name|vp
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|opt_replyp
+operator|+
+operator|(
+literal|1
+operator|+
+literal|2
+operator|+
+literal|2
+operator|)
+operator|>
+name|opt_replyend
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|OLD_ENVIRON
@@ -6407,13 +6474,22 @@ block|{
 name|int
 name|len
 decl_stmt|;
+if|if
+condition|(
+name|opt_replyp
+operator|+
+literal|2
+operator|>
+name|opt_replyend
+condition|)
+return|return;
 name|len
 operator|=
 name|opt_replyp
-operator|-
-name|opt_reply
 operator|+
 literal|2
+operator|-
+name|opt_reply
 expr_stmt|;
 if|if
 condition|(
@@ -7165,7 +7241,7 @@ operator|!=
 name|IAC
 condition|)
 block|{
-comment|/* 		     * This is an error.  We only expect to get 		     * "IAC IAC" or "IAC SE".  Several things may 		     * have happend.  An IAC was not doubled, the 		     * IAC SE was left off, or another option got 		     * inserted into the suboption are all possibilities. 		     * If we assume that the IAC was not doubled, 		     * and really the IAC SE was left off, we could 		     * get into an infinate loop here.  So, instead, 		     * we terminate the suboption, and process the 		     * partial suboption if we can. 		     */
+comment|/* 		     * This is an error.  We only expect to get 		     * "IAC IAC" or "IAC SE".  Several things may 		     * have happened.  An IAC was not doubled, the 		     * IAC SE was left off, or another option got 		     * inserted into the suboption are all possibilities. 		     * If we assume that the IAC was not doubled, 		     * and really the IAC SE was left off, we could 		     * get into an infinite loop here.  So, instead, 		     * we terminate the suboption, and process the 		     * partial suboption if we can. 		     */
 name|SB_ACCUM
 argument_list|(
 name|IAC
@@ -8092,6 +8168,17 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|auth_has_failed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX should be somewhere else */
+end_comment
+
 begin_comment
 comment|/*  * Select from tty and network...  */
 end_comment
@@ -8330,10 +8417,6 @@ operator|&&
 name|wantencryption
 condition|)
 block|{
-specifier|extern
-name|int
-name|auth_has_failed
-decl_stmt|;
 name|time_t
 name|timeout
 init|=
@@ -8407,7 +8490,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nAuthentication negotation has failed,\n"
+literal|"\nAuthentication negotiation has failed,\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -8518,9 +8601,23 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|telnet_spin
 argument_list|()
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nServer disconnected.\n"
+argument_list|)
 expr_stmt|;
+name|Exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

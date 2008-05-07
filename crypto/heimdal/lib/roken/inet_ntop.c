@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: inet_ntop.c,v 1.5 2001/04/04 23:58:01 assar Exp $"
+literal|"$Id: inet_ntop.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -31,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_comment
@@ -498,6 +498,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|inet_ntop
 parameter_list|(
 name|int

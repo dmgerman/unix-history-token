@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/* $Id: ring.h,v 1.4 2000/02/06 05:15:47 assar Exp $ */
+comment|/* $Id: ring.h 7853 2000-02-06 05:15:47Z assar $ */
 end_comment
 
 begin_comment

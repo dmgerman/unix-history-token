@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: destroy_s.c,v 1.6 2000/05/12 15:23:13 assar Exp $"
+literal|"$Id: destroy_s.c 12880 2003-09-19 00:25:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -128,7 +128,7 @@ name|context
 operator|->
 name|db
 operator|->
-name|destroy
+name|hdb_destroy
 argument_list|(
 name|kcontext
 argument_list|,

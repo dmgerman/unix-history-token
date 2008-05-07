@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: util.c,v 1.39 2003/04/14 11:55:27 lha Exp $"
+literal|"$Id: util.c 21745 2007-07-31 16:11:25Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -63,6 +63,30 @@ name|kdb_attrs
 index|[]
 init|=
 block|{
+block|{
+literal|"allow-digest"
+block|,
+name|KRB5_KDB_ALLOW_DIGEST
+block|}
+block|,
+block|{
+literal|"allow-kerberos4"
+block|,
+name|KRB5_KDB_ALLOW_KERBEROS4
+block|}
+block|,
+block|{
+literal|"trusted-for-delegation"
+block|,
+name|KRB5_KDB_TRUSTED_FOR_DELEGATION
+block|}
+block|,
+block|{
+literal|"ok-as-delegate"
+block|,
+name|KRB5_KDB_OK_AS_DELEGATE
+block|}
+block|,
 block|{
 literal|"new-princ"
 block|,
@@ -328,7 +352,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unable to parse '%s'\n"
+literal|"Unable to parse \"%s\"\n"
 argument_list|,
 name|resp
 argument_list|)
@@ -586,6 +610,19 @@ name|tm
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|tm2
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tm2
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcasecmp
@@ -653,27 +690,31 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* Do it on the end of the day */
-name|tm2
-operator|.
-name|tm_hour
-operator|=
-literal|23
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
 expr_stmt|;
-name|tm2
-operator|.
-name|tm_min
-operator|=
-literal|59
-expr_stmt|;
-name|tm2
-operator|.
-name|tm_sec
-operator|=
-literal|59
-expr_stmt|;
+comment|/* XXX this is really a bit optimistic, we should really complain        if there was a problem parsing the time */
 if|if
 condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|&&
 name|strptime
 argument_list|(
 name|p
@@ -710,6 +751,28 @@ operator|=
 name|tm2
 operator|.
 name|tm_sec
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Do it on the end of the day */
+name|tm
+operator|.
+name|tm_hour
+operator|=
+literal|23
+expr_stmt|;
+name|tm
+operator|.
+name|tm_min
+operator|=
+literal|59
+expr_stmt|;
+name|tm
+operator|.
+name|tm_sec
+operator|=
+literal|59
 expr_stmt|;
 block|}
 operator|*
@@ -787,33 +850,29 @@ return|return
 literal|0
 return|;
 block|}
-elseif|else
 if|if
 condition|(
 operator|*
 name|resp
-operator|==
+operator|!=
 literal|'?'
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Print date on format YYYY-mm-dd [hh:mm:ss]\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unable to parse time '%s'\n"
+literal|"Unable to parse time \"%s\"\n"
 argument_list|,
 name|resp
 argument_list|)
 expr_stmt|;
-block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Print date on format YYYY-mm-dd [hh:mm:ss]\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -1145,7 +1204,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unable to parse time '%s'\n"
+literal|"Unable to parse time \"%s\"\n"
 argument_list|,
 name|resp
 argument_list|)
@@ -1888,7 +1947,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* loop over all principals matching exp */
+comment|/*  * Loop over all principals matching exp.  If any of calls to `func'  * failes, the first error is returned when all principals are  * processed.  */
 end_comment
 
 begin_function
@@ -1898,7 +1957,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|exp
+name|exp_str
 parameter_list|,
 name|int
 function_decl|(
@@ -1934,7 +1993,13 @@ name|int
 name|i
 decl_stmt|;
 name|krb5_error_code
+name|saved_ret
+init|=
+literal|0
+decl_stmt|,
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|krb5_principal
 name|princ_ent
@@ -1947,7 +2012,7 @@ name|is_expr
 operator|=
 name|is_expression
 argument_list|(
-name|exp
+name|exp_str
 argument_list|)
 expr_stmt|;
 if|if
@@ -1960,7 +2025,7 @@ name|kadm5_get_principals
 argument_list|(
 name|kadm_handle
 argument_list|,
-name|exp
+name|exp_str
 argument_list|,
 operator|&
 name|princs
@@ -2011,7 +2076,7 @@ index|]
 operator|=
 name|strdup
 argument_list|(
-name|exp
+name|exp_str
 argument_list|)
 expr_stmt|;
 if|if
@@ -2119,6 +2184,12 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|krb5_warn
 argument_list|(
 name|context
@@ -2135,6 +2206,17 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|saved_ret
+operator|==
+literal|0
+condition|)
+name|saved_ret
+operator|=
+name|ret
+expr_stmt|;
+block|}
 name|krb5_free_principal
 argument_list|(
 name|context
@@ -2143,6 +2225,20 @@ name|princ_ent
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+operator|&&
+name|saved_ret
+operator|!=
+literal|0
+condition|)
+name|ret
+operator|=
+name|saved_ret
+expr_stmt|;
 name|kadm5_free_name_list
 argument_list|(
 name|kadm_handle
@@ -2154,7 +2250,7 @@ name|num_princs
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function
@@ -2255,8 +2351,10 @@ argument_list|,
 name|osig
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -2264,8 +2362,10 @@ return|return
 literal|1
 return|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s [%s]:"
 argument_list|,
 name|prompt
@@ -2453,7 +2553,7 @@ specifier|const
 name|char
 modifier|*
 modifier|*
-name|err
+name|error
 parameter_list|)
 block|{
 specifier|const
@@ -2484,7 +2584,7 @@ literal|16
 condition|)
 block|{
 operator|*
-name|err
+name|error
 operator|=
 literal|"bad length, should be 16 for DES key"
 expr_stmt|;
@@ -2549,7 +2649,7 @@ literal|0
 condition|)
 block|{
 operator|*
-name|err
+name|error
 operator|=
 literal|"non-hex character"
 expr_stmt|;
@@ -2643,6 +2743,30 @@ argument_list|(
 literal|8
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|key_data
+index|[
+name|i
+index|]
+operator|.
+name|key_data_contents
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+operator|*
+name|error
+operator|=
+literal|"malloc"
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|memcpy
 argument_list|(
 name|key_data

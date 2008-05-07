@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ss.c,v 1.6 2000/05/25 00:14:58 assar Exp $"
+literal|"$Id: ss.c 15429 2005-06-16 19:24:11Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -281,7 +281,7 @@ name|void
 name|ss_error
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|,
 name|long
 name|code
@@ -308,7 +308,7 @@ name|com_err_va
 argument_list|(
 name|subsystems
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|name
@@ -333,7 +333,7 @@ name|void
 name|ss_perror
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|,
 name|long
 name|code
@@ -346,7 +346,7 @@ parameter_list|)
 block|{
 name|ss_error
 argument_list|(
-name|index
+name|idx
 argument_list|,
 name|code
 argument_list|,
@@ -363,7 +363,7 @@ name|int
 name|ss_execute_command
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|,
 name|char
 modifier|*
@@ -394,7 +394,7 @@ name|sl_command
 argument_list|(
 name|subsystems
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|table
@@ -424,7 +424,7 @@ name|int
 name|ss_execute_line
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|,
 specifier|const
 name|char
@@ -478,7 +478,7 @@ name|sl_command
 argument_list|(
 name|subsystems
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|table
@@ -513,7 +513,7 @@ name|int
 name|ss_listen
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|char
@@ -526,7 +526,7 @@ name|strlen
 argument_list|(
 name|subsystems
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|name
@@ -550,7 +550,7 @@ name|prompt
 argument_list|,
 name|subsystems
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|name
@@ -567,7 +567,7 @@ name|sl_loop
 argument_list|(
 name|subsystems
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|table
@@ -597,7 +597,7 @@ name|char
 modifier|*
 modifier|*
 name|argv
-comment|/* , int index, void *info */
+comment|/* , int idx, void *info */
 parameter_list|)
 block|{
 name|sl_help
@@ -605,7 +605,7 @@ argument_list|(
 name|subsystems
 index|[
 literal|0
-comment|/* index */
+comment|/* idx */
 index|]
 operator|.
 name|table

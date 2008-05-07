@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 Kungliga Tekniska Högskolan  * (Royal Institut
 end_comment
 
 begin_comment
-comment|/* $Id: parse_time.h,v 1.4 1999/12/02 16:58:51 joda Exp $ */
+comment|/* $Id: parse_time.h 14773 2005-04-12 11:29:18Z lha $ */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,46 @@ define|#
 directive|define
 name|__PARSE_TIME_H__
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ROKEN_LIB_FUNCTION
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+value|_stdcall
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

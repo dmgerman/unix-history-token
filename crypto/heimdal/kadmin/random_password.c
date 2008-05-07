@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: random_password.c,v 1.4 2001/02/15 04:20:53 assar Exp $"
+literal|"$Id: random_password.c 21745 2007-07-31 16:11:25Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -301,6 +301,11 @@ name|rleft
 init|=
 literal|0
 decl_stmt|;
+operator|*
+name|pw
+operator|=
+name|NULL
+expr_stmt|;
 name|classes
 operator|=
 name|malloc
@@ -314,6 +319,13 @@ name|classes
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|classes
+operator|==
+name|NULL
+condition|)
+return|return;
 name|va_start
 argument_list|(
 name|ap
@@ -418,7 +430,14 @@ name|pw
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|classes
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 for|for
 control|(
 name|i

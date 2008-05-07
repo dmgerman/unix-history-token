@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_ad_tkt.c,v 1.4 2001/06/18 13:11:05 assar Exp $"
+literal|"$Id: get_ad_tkt.c 10113 2001-06-18 13:11:33Z assar $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -8,7 +8,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: globals.c,v 1.8 2000/11/15 22:56:08 assar Exp $"
+literal|"$Id: globals.c 16160 2005-10-12 09:42:47Z joda $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -125,6 +125,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* glob local file names */
+end_comment
+
+begin_decl_stmt
+name|int
+name|doencrypt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* try to use encryption */
 end_comment
 
 begin_decl_stmt

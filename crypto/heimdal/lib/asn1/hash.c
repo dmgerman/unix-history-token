@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: hash.c,v 1.8 1999/12/02 17:05:02 joda Exp $"
+literal|"$Id: hash.c 17016 2006-04-07 22:16:00Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -115,6 +115,15 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|htab
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 for|for
 control|(
 name|i
@@ -137,19 +146,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|htab
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-name|NULL
-return|;
-block|}
-else|else
-block|{
 name|htab
 operator|->
 name|cmp
@@ -171,7 +167,6 @@ expr_stmt|;
 return|return
 name|htab
 return|;
-block|}
 block|}
 end_function
 
@@ -745,6 +740,10 @@ name|i
 operator|+=
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftp.c,v 1.75.2.1 2004/08/20 14:59:06 lha Exp $"
+literal|"$Id: ftp.c 16650 2006-01-24 08:16:08Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -307,6 +307,11 @@ name|hostname
 operator|=
 name|hostnamebuf
 expr_stmt|;
+name|s
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|a
@@ -463,6 +468,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|s
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 break|break;
@@ -474,7 +484,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|s
 operator|<
 literal|0
 condition|)
@@ -754,13 +764,13 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|user
+name|userstr
 decl_stmt|,
 modifier|*
 name|pass
 decl_stmt|,
 modifier|*
-name|acct
+name|acctstr
 decl_stmt|;
 name|int
 name|n
@@ -798,11 +808,11 @@ name|pw
 operator|->
 name|pw_name
 expr_stmt|;
-name|user
+name|userstr
 operator|=
 name|pass
 operator|=
-name|acct
+name|acctstr
 operator|=
 literal|0
 expr_stmt|;
@@ -833,13 +843,13 @@ argument_list|(
 name|host
 argument_list|,
 operator|&
-name|user
+name|userstr
 argument_list|,
 operator|&
 name|pass
 argument_list|,
 operator|&
-name|acct
+name|acctstr
 argument_list|)
 operator|<
 literal|0
@@ -858,7 +868,7 @@ return|;
 block|}
 while|while
 condition|(
-name|user
+name|userstr
 operator|==
 name|NULL
 condition|)
@@ -926,12 +936,12 @@ name|tmp
 operator|==
 literal|'\0'
 condition|)
-name|user
+name|userstr
 operator|=
 name|myname
 expr_stmt|;
 else|else
-name|user
+name|userstr
 operator|=
 name|tmp
 expr_stmt|;
@@ -940,7 +950,7 @@ name|strlcpy
 argument_list|(
 name|username
 argument_list|,
-name|user
+name|userstr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -954,7 +964,7 @@ name|command
 argument_list|(
 literal|"USER %s"
 argument_list|,
-name|user
+name|userstr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1000,7 +1010,7 @@ operator|(
 operator|!
 name|strcmp
 argument_list|(
-name|user
+name|userstr
 argument_list|,
 literal|"ftp"
 argument_list|)
@@ -1008,7 +1018,7 @@ operator|||
 operator|!
 name|strcmp
 argument_list|(
-name|user
+name|userstr
 argument_list|,
 literal|"anonymous"
 argument_list|)
@@ -1088,7 +1098,7 @@ name|pass
 operator|=
 name|defaultpass
 expr_stmt|;
-name|des_read_pw_string
+name|UI_UTIL_read_pw_string
 argument_list|(
 name|tmp
 argument_list|,
@@ -1135,13 +1145,13 @@ block|{
 name|aflag
 operator|++
 expr_stmt|;
-name|acct
+name|acctstr
 operator|=
 name|tmp
 expr_stmt|;
-name|des_read_pw_string
+name|UI_UTIL_read_pw_string
 argument_list|(
-name|acct
+name|acctstr
 argument_list|,
 literal|128
 argument_list|,
@@ -1156,7 +1166,7 @@ name|command
 argument_list|(
 literal|"ACCT %s"
 argument_list|,
-name|acct
+name|acctstr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1183,7 +1193,7 @@ condition|(
 operator|!
 name|aflag
 operator|&&
-name|acct
+name|acctstr
 operator|!=
 name|NULL
 condition|)
@@ -1191,7 +1201,7 @@ name|command
 argument_list|(
 literal|"ACCT %s"
 argument_list|,
-name|acct
+name|acctstr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1751,6 +1761,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|buf
 index|[
 literal|0
@@ -2023,9 +2037,9 @@ condition|)
 block|{
 name|char
 modifier|*
-name|p
+name|q
 decl_stmt|;
-name|p
+name|q
 operator|=
 name|strchr
 argument_list|(
@@ -2036,17 +2050,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|q
 condition|)
 block|{
-name|p
+name|q
 operator|++
 expr_stmt|;
 name|strlcpy
 argument_list|(
 name|pasv
 argument_list|,
-name|p
+name|q
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2054,7 +2068,7 @@ name|pasv
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|p
+name|q
 operator|=
 name|strrchr
 argument_list|(
@@ -2065,10 +2079,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|q
 condition|)
 operator|*
-name|p
+name|q
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -3185,6 +3199,10 @@ name|SEEK_SET
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3865,11 +3883,13 @@ block|{
 name|FILE
 modifier|*
 name|fout
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|din
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 function_decl|(
@@ -5539,7 +5559,7 @@ parameter_list|(
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 parameter_list|,
 specifier|const
 name|char
@@ -5665,24 +5685,24 @@ return|;
 block|}
 name|memset
 argument_list|(
-name|sin
+name|sin4
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|sin4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 operator|.
@@ -5711,7 +5731,7 @@ operator||
 name|a3
 argument_list|)
 expr_stmt|;
-name|sin
+name|sin4
 operator|->
 name|sin_port
 operator|=
@@ -6271,7 +6291,7 @@ block|{
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 init|=
 operator|(
 expr|struct
@@ -6286,7 +6306,7 @@ name|a
 init|=
 name|ntohl
 argument_list|(
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 operator|.
@@ -6299,7 +6319,7 @@ name|p
 init|=
 name|ntohs
 argument_list|(
-name|sin
+name|sin4
 operator|->
 name|sin_port
 argument_list|)
@@ -7356,6 +7376,8 @@ parameter_list|)
 block|{
 name|sighand
 name|oldintr
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|secndflag
@@ -7737,6 +7759,10 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|oldintr
+condition|)
 name|signal
 argument_list|(
 name|SIGINT

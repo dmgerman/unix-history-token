@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: getarg.h,v 1.12 2002/04/18 08:50:08 joda Exp $ */
+comment|/* $Id: getarg.h 14776 2005-04-13 05:52:27Z lha $ */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,46 @@ include|#
 directive|include
 file|<stddef.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ROKEN_LIB_FUNCTION
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+value|_stdcall
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -160,6 +200,7 @@ end_typedef
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|getarg
 parameter_list|(
 name|struct
@@ -187,6 +228,7 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ROKEN_LIB_FUNCTION
 name|arg_printusage
 parameter_list|(
 name|struct
@@ -212,6 +254,7 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ROKEN_LIB_FUNCTION
 name|free_getarg_strings
 parameter_list|(
 name|getarg_strings

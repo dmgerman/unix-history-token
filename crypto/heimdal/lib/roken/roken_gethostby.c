@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: roken_gethostby.c,v 1.5 1999/12/05 13:16:44 assar Exp $"
+literal|"$Id: roken_gethostby.c 21157 2007-06-18 22:03:13Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -31,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_undef
@@ -457,6 +457,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|roken_gethostby_setup
 parameter_list|(
 specifier|const
@@ -478,6 +479,8 @@ name|NULL
 decl_stmt|;
 name|int
 name|proxy_port
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -599,7 +602,7 @@ name|s
 decl_stmt|;
 name|struct
 name|sockaddr_in
-name|sin
+name|addr
 decl_stmt|;
 name|char
 modifier|*
@@ -638,7 +641,7 @@ return|return
 name|NULL
 return|;
 comment|/* no configured host */
-name|sin
+name|addr
 operator|=
 name|dns_addr
 expr_stmt|;
@@ -702,11 +705,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|addr
 argument_list|)
 argument_list|)
 operator|<
@@ -886,6 +889,8 @@ modifier|*
 name|addr_list
 index|[
 name|MAX_ADDRS
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -1117,6 +1122,7 @@ begin_function
 name|struct
 name|hostent
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|roken_gethostbyaddr
 parameter_list|(
 specifier|const

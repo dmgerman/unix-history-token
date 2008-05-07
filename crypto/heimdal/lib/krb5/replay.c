@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: replay.c,v 1.9 2001/07/03 19:33:13 assar Exp $"
+literal|"$Id: replay.c 17047 2006-04-10 17:13:49Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -37,6 +37,7 @@ end_struct
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_resolve
 parameter_list|(
 name|krb5_context
@@ -88,6 +89,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_resolve_type
 parameter_list|(
 name|krb5_context
@@ -103,6 +105,11 @@ modifier|*
 name|type
 parameter_list|)
 block|{
+operator|*
+name|id
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -168,6 +175,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_resolve_full
 parameter_list|(
 name|krb5_context
@@ -186,6 +194,11 @@ block|{
 name|krb5_error_code
 name|ret
 decl_stmt|;
+operator|*
+name|id
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -243,6 +256,25 @@ operator|+
 literal|5
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|krb5_rc_close
+argument_list|(
+name|context
+argument_list|,
+operator|*
+name|id
+argument_list|)
+expr_stmt|;
+operator|*
+name|id
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
@@ -253,6 +285,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_default_name
 parameter_list|(
 name|krb5_context
@@ -269,6 +302,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_default_type
 parameter_list|(
 name|krb5_context
@@ -283,6 +317,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_default
 parameter_list|(
 name|krb5_context
@@ -329,6 +364,7 @@ end_struct
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_initialize
 parameter_list|(
 name|krb5_context
@@ -426,6 +462,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_recover
 parameter_list|(
 name|krb5_context
@@ -443,6 +480,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_destroy
 parameter_list|(
 name|krb5_context
@@ -504,6 +542,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_close
 parameter_list|(
 name|krb5_context
@@ -673,6 +712,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_store
 parameter_list|(
 name|krb5_context
@@ -960,6 +1000,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_expunge
 parameter_list|(
 name|krb5_context
@@ -977,6 +1018,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_get_lifespan
 parameter_list|(
 name|krb5_context
@@ -1063,6 +1105,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_get_name
 parameter_list|(
 name|krb5_context
@@ -1084,6 +1127,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_FUNCTION
 name|krb5_rc_get_type
 parameter_list|(
 name|krb5_context
@@ -1101,6 +1145,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_get_server_rcache
 parameter_list|(
 name|krb5_context

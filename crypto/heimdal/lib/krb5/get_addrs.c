@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_addrs.c,v 1.45 2003/01/25 15:19:49 lha Exp $"
+literal|"$Id: get_addrs.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1131,6 +1131,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_get_all_client_addrs
 parameter_list|(
 name|krb5_context
@@ -1177,6 +1178,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_get_all_server_addrs
 parameter_list|(
 name|krb5_context

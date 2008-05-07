@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bump_pw_expire.c,v 1.1 2000/07/24 03:47:54 assar Exp $"
+literal|"$Id: bump_pw_expire.c 8797 2000-07-24 03:47:54Z assar $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

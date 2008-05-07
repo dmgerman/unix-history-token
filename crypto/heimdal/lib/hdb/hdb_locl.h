@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: hdb_locl.h,v 1.18.4.1 2003/09/10 22:04:39 lha Exp $ */
+comment|/* $Id: hdb_locl.h 22209 2007-12-07 19:03:41Z lha $ */
 end_comment
 
 begin_ifndef
@@ -163,6 +163,20 @@ include|#
 directive|include
 file|<hdb-private.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|HDB_DEFAULT_DB
+value|HDB_DB_DIR "/heimdal"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDB_DB_FORMAT_ENTRY
+value|"hdb/db-format"
+end_define
 
 begin_endif
 endif|#

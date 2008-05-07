@@ -85,6 +85,14 @@ name|port
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|eflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -368,6 +376,19 @@ block|,
 block|{
 name|NULL
 block|,
+literal|'e'
+block|,
+name|arg_flag
+block|,
+operator|&
+name|eflag
+block|,
+literal|"passed to rsh"
+block|}
+block|,
+block|{
+name|NULL
+block|,
 literal|'f'
 block|,
 name|arg_flag
@@ -598,9 +619,20 @@ comment|/* Follow "protocol", send data. */
 name|response
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|userid
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"setuid failed"
 argument_list|)
 expr_stmt|;
 name|source
@@ -622,9 +654,20 @@ name|tflag
 condition|)
 block|{
 comment|/* Receive data. */
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|userid
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"setuid failed"
 argument_list|)
 expr_stmt|;
 name|sink
@@ -930,6 +973,9 @@ name|src
 condition|)
 block|{
 comment|/* remote to remote */
+name|int
+name|ret
+decl_stmt|;
 operator|*
 name|src
 operator|++
@@ -1000,14 +1046,22 @@ name|suser
 argument_list|)
 condition|)
 continue|continue;
+name|ret
+operator|=
 name|asprintf
 argument_list|(
 operator|&
 name|bp
 argument_list|,
-literal|"%s %s -l %s -n %s %s '%s%s%s:%s'"
+literal|"%s%s %s -l %s -n %s %s '%s%s%s:%s'"
 argument_list|,
 name|_PATH_RSH
+argument_list|,
+name|eflag
+condition|?
+literal|" -e"
+else|:
+literal|""
 argument_list|,
 name|host
 argument_list|,
@@ -1037,14 +1091,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|ret
+operator|=
 name|asprintf
 argument_list|(
 operator|&
 name|bp
 argument_list|,
-literal|"exec %s %s -n %s %s '%s%s%s:%s'"
+literal|"exec %s%s %s -n %s %s '%s%s%s:%s'"
 argument_list|,
 name|_PATH_RSH
+argument_list|,
+name|eflag
+condition|?
+literal|" -e"
+else|:
+literal|""
 argument_list|,
 name|argv
 index|[
@@ -1075,9 +1137,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|bp
+name|ret
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -1110,6 +1173,8 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1121,12 +1186,9 @@ name|cmd
 argument_list|,
 name|targ
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bp
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -1180,9 +1242,20 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|userid
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"setuid failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1245,6 +1318,9 @@ name|i
 operator|++
 control|)
 block|{
+name|int
+name|ret
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1262,6 +1338,8 @@ operator|)
 condition|)
 block|{
 comment|/* Local to local. */
+name|ret
+operator|=
 name|asprintf
 argument_list|(
 operator|&
@@ -1298,9 +1376,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bp
+name|ret
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -1417,6 +1496,8 @@ argument_list|)
 condition|)
 continue|continue;
 block|}
+name|ret
+operator|=
 name|asprintf
 argument_list|(
 operator|&
@@ -1431,9 +1512,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bp
+name|ret
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -1488,9 +1570,18 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|seteuid
 argument_list|(
 literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|close
@@ -1754,6 +1845,9 @@ goto|goto
 name|next
 goto|;
 block|}
+undef|#
+directive|undef
+name|MODEMASK
 define|#
 directive|define
 name|MODEMASK
@@ -4343,6 +4437,18 @@ operator|=
 name|port
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|eflag
+condition|)
+name|args
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|"-e"
+expr_stmt|;
 if|if
 condition|(
 name|remuser

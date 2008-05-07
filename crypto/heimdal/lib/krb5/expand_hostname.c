@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: expand_hostname.c,v 1.11 2001/09/18 09:35:47 joda Exp $"
+literal|"$Id: expand_hostname.c 22229 2007-12-08 21:40:59Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -81,6 +81,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_expand_hostname
 parameter_list|(
 name|krb5_context
@@ -110,6 +111,28 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|context
+operator|->
+name|flags
+operator|&
+name|KRB5_CTX_F_DNS_CANONICALIZE_HOSTNAME
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+name|copy_hostname
+argument_list|(
+name|context
+argument_list|,
+name|orig_hostname
+argument_list|,
+name|new_hostname
+argument_list|)
+return|;
 name|memset
 argument_list|(
 operator|&
@@ -339,6 +362,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_expand_hostname_realms
 parameter_list|(
 name|krb5_context
@@ -379,6 +403,30 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|context
+operator|->
+name|flags
+operator|&
+name|KRB5_CTX_F_DNS_CANONICALIZE_HOSTNAME
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+name|vanilla_hostname
+argument_list|(
+name|context
+argument_list|,
+name|orig_hostname
+argument_list|,
+name|new_hostname
+argument_list|,
+name|realms
+argument_list|)
+return|;
 name|memset
 argument_list|(
 operator|&

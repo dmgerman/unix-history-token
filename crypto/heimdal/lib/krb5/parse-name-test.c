@@ -9,10 +9,16 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse-name-test.c,v 1.3.4.1 2004/03/22 19:27:36 joda Exp $"
+literal|"$Id: parse-name-test.c 16342 2005-12-02 14:14:43Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -352,6 +358,7 @@ end_struct
 
 begin_function
 name|int
+name|KRB5_LIB_FUNCTION
 name|main
 parameter_list|(
 name|int
@@ -1017,6 +1024,11 @@ name|princ
 argument_list|)
 expr_stmt|;
 block|}
+name|krb5_free_context
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|val
 return|;

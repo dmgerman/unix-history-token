@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 1999 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: kuser_locl.h,v 1.13 2003/01/21 14:13:51 nectar Exp $ */
+comment|/* $Id: kuser_locl.h 20458 2007-04-19 20:41:27Z lha $ */
 end_comment
 
 begin_ifndef
@@ -225,23 +225,6 @@ include|#
 directive|include
 file|<krb5.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KRB4
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<krb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

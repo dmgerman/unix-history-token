@@ -22,7 +22,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: timeval.c,v 1.1 2000/03/03 09:02:42 assar Exp $"
+literal|"$Id: timeval.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -44,6 +44,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|timevalfix
 parameter_list|(
 name|struct
@@ -103,6 +104,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|timevaladd
 parameter_list|(
 name|struct
@@ -147,6 +149,7 @@ end_comment
 
 begin_function
 name|void
+name|ROKEN_LIB_FUNCTION
 name|timevalsub
 parameter_list|(
 name|struct

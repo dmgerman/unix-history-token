@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: private.h,v 1.15 2002/08/16 20:57:44 joda Exp $ */
+comment|/* $Id: private.h 22211 2007-12-07 19:27:27Z lha $ */
 end_comment
 
 begin_ifndef
@@ -34,6 +34,7 @@ modifier|*
 parameter_list|,
 name|krb5_principal
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -49,8 +50,9 @@ modifier|*
 parameter_list|,
 name|kadm5_principal_ent_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -100,7 +102,7 @@ name|krb5_principal
 parameter_list|,
 name|kadm5_principal_ent_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 name|kadm5_ret_t
@@ -134,7 +136,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -149,7 +151,7 @@ modifier|*
 parameter_list|,
 name|kadm5_principal_ent_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 name|kadm5_ret_t
@@ -271,7 +273,7 @@ decl_stmt|;
 name|int
 name|log_fd
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|version
 decl_stmt|;
 name|struct
@@ -384,6 +386,52 @@ name|kadm5_client_context
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|kadm5_ad_context
+block|{
+name|krb5_context
+name|context
+decl_stmt|;
+name|krb5_boolean
+name|my_context
+decl_stmt|;
+name|struct
+name|kadm_func
+name|funcs
+decl_stmt|;
+comment|/* */
+name|kadm5_config_params
+name|config
+decl_stmt|;
+name|krb5_principal
+name|caller
+decl_stmt|;
+name|krb5_ccache
+name|ccache
+decl_stmt|;
+name|char
+modifier|*
+name|client_name
+decl_stmt|;
+name|char
+modifier|*
+name|realm
+decl_stmt|;
+name|void
+modifier|*
+name|ldap_conn
+decl_stmt|;
+name|char
+modifier|*
+name|base_dn
+decl_stmt|;
+block|}
+name|kadm5_ad_context
+typedef|;
+end_typedef
+
 begin_enum
 enum|enum
 name|kadm_ops
@@ -425,13 +473,6 @@ define|#
 directive|define
 name|KADMIN_OLD_APPL_VERSION
 value|"KADM0.0"
-end_define
-
-begin_define
-define|#
-directive|define
-name|KADM5_LOG_SIGNAL
-value|HDB_DB_DIR "/signal"
 end_define
 
 begin_include

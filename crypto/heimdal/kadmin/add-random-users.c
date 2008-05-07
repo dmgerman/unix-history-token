@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: add-random-users.c,v 1.6 2001/09/20 09:17:33 assar Exp $"
+literal|"$Id: add-random-users.c 19213 2006-12-04 23:36:36Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -143,28 +143,14 @@ block|{
 name|size_t
 name|len
 decl_stmt|;
-if|if
-condition|(
 name|buf
 index|[
-name|strlen
+name|strcspn
 argument_list|(
 name|buf
+argument_list|,
+literal|"\r\n"
 argument_list|)
-operator|-
-literal|1
-index|]
-operator|==
-literal|'\n'
-condition|)
-name|buf
-index|[
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
 index|]
 operator|=
 literal|'\0'
@@ -266,6 +252,21 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s is an empty file, no words to try"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
 operator|*
 name|ret_w
 operator|=
@@ -686,7 +687,7 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|optind
+name|optidx
 init|=
 literal|0
 decl_stmt|;
@@ -734,7 +735,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|optidx
 argument_list|)
 condition|)
 name|usage
@@ -772,11 +773,11 @@ argument_list|)
 expr_stmt|;
 name|argc
 operator|-=
-name|optind
+name|optidx
 expr_stmt|;
 name|argv
 operator|+=
-name|optind
+name|optidx
 expr_stmt|;
 if|if
 condition|(

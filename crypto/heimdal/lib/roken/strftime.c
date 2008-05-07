@@ -20,6 +20,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEST_STRPFTIME
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"strpftime-test.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -29,7 +46,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: strftime.c,v 1.13 2002/08/20 12:42:37 joda Exp $"
+literal|"$Id: strftime.c 21896 2007-08-09 08:46:08Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -436,6 +453,7 @@ end_comment
 
 begin_function
 name|size_t
+name|ROKEN_LIB_FUNCTION
 name|strftime
 parameter_list|(
 name|char
@@ -1085,12 +1103,10 @@ name|int
 operator|)
 name|mktime
 argument_list|(
-operator|(
-expr|struct
+name|rk_UNCONST
+argument_list|(
 name|tm
-operator|*
-operator|)
-name|tm
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

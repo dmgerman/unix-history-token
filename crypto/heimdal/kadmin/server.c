@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: server.c,v 1.38 2003/01/29 12:33:05 lha Exp $"
+literal|"$Id: server.c 17611 2006-06-02 22:10:21Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -95,7 +95,7 @@ modifier|*
 name|password
 decl_stmt|,
 modifier|*
-name|exp
+name|expression
 decl_stmt|;
 name|krb5_keyblock
 modifier|*
@@ -966,6 +966,15 @@ operator|->
 name|context
 argument_list|,
 name|princ
+argument_list|)
+expr_stmt|;
+name|krb5_free_principal
+argument_list|(
+name|context
+operator|->
+name|context
+argument_list|,
+name|princ2
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1841,6 +1850,9 @@ case|case
 name|kadm_get_privs
 case|:
 block|{
+name|uint32_t
+name|privs
+decl_stmt|;
 name|ret
 operator|=
 name|kadm5_get_privs
@@ -1848,7 +1860,7 @@ argument_list|(
 name|kadm_handle
 argument_list|,
 operator|&
-name|mask
+name|privs
 argument_list|)
 expr_stmt|;
 name|krb5_storage_free
@@ -1874,11 +1886,11 @@ name|ret
 operator|==
 literal|0
 condition|)
-name|krb5_store_int32
+name|krb5_store_uint32
 argument_list|(
 name|sp
 argument_list|,
-name|mask
+name|privs
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1920,7 +1932,7 @@ argument_list|(
 name|sp
 argument_list|,
 operator|&
-name|exp
+name|expression
 argument_list|)
 expr_stmt|;
 if|if
@@ -1932,7 +1944,7 @@ name|fail
 goto|;
 block|}
 else|else
-name|exp
+name|expression
 operator|=
 name|NULL
 expr_stmt|;
@@ -1948,9 +1960,9 @@ name|client
 argument_list|,
 name|op
 argument_list|,
-name|exp
+name|expression
 condition|?
-name|exp
+name|expression
 else|:
 literal|"*"
 argument_list|)
@@ -1973,7 +1985,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|exp
+name|expression
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1986,7 +1998,7 @@ name|kadm5_get_principals
 argument_list|(
 name|kadm_handle
 argument_list|,
-name|exp
+name|expression
 argument_list|,
 operator|&
 name|princs
@@ -1997,7 +2009,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|exp
+name|expression
 argument_list|)
 expr_stmt|;
 name|krb5_storage_free
@@ -2799,13 +2811,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|do_kerberos4
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|krb5_error_code
 name|kadmind_loop
@@ -2889,6 +2894,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* this v4 test could probably also go away */
 if|if
 condition|(
 name|len
@@ -2910,40 +2916,57 @@ operator|+
 literal|'A'
 condition|)
 block|{
-name|len
-operator|>>=
-literal|16
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KRB4
-if|if
-condition|(
-name|do_kerberos4
-condition|)
-name|handle_v4
+name|unsigned
+name|char
+name|v4reply
+index|[]
+init|=
+block|{
+literal|0x00
+block|,
+literal|0x0c
+block|,
+literal|'K'
+block|,
+literal|'Y'
+block|,
+literal|'O'
+block|,
+literal|'U'
+block|,
+literal|'L'
+block|,
+literal|'O'
+block|,
+literal|'S'
+block|,
+literal|'E'
+block|,
+literal|0x95
+block|,
+literal|0xb7
+block|,
+literal|0xa7
+block|,
+literal|0x08
+comment|/* KADM_BAD_VER */
+block|}
+decl_stmt|;
+name|krb5_net_write
 argument_list|(
 name|context
 argument_list|,
-name|keytab
-argument_list|,
-name|len
-argument_list|,
+operator|&
 name|fd
-argument_list|)
-expr_stmt|;
-else|else
-name|krb5_errx
+argument_list|,
+name|v4reply
+argument_list|,
+sizeof|sizeof
 argument_list|(
-name|context
-argument_list|,
-literal|1
-argument_list|,
-literal|"version 4 kadmin is disabled"
+name|v4reply
+argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
 name|krb5_errx
 argument_list|(
 name|context
@@ -2953,8 +2976,6 @@ argument_list|,
 literal|"packet appears to be version 4"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{

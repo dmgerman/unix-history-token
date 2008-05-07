@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: make_cmds.c,v 1.7 2001/02/20 01:44:55 assar Exp $"
+literal|"$Id: make_cmds.c 15430 2005-06-16 19:25:45Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -395,6 +395,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|q
 decl_stmt|;
 name|p
 operator|=
@@ -549,13 +552,6 @@ name|cl
 decl_stmt|,
 modifier|*
 name|xl
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|q
 decl_stmt|;
 for|for
 control|(
@@ -966,7 +962,7 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|optind
+name|optidx
 init|=
 literal|0
 decl_stmt|;
@@ -991,7 +987,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|optidx
 argument_list|)
 condition|)
 name|usage
@@ -1028,7 +1024,7 @@ if|if
 condition|(
 name|argc
 operator|==
-name|optind
+name|optidx
 condition|)
 name|usage
 argument_list|(
@@ -1039,7 +1035,7 @@ name|filename
 operator|=
 name|argv
 index|[
-name|optind
+name|optidx
 index|]
 expr_stmt|;
 name|yyin

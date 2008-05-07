@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: base64-test.c,v 1.2 2001/05/29 13:12:21 assar Exp $"
+literal|"$Id: base64-test.c 21005 2007-06-08 01:54:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -31,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<roken.h>
+file|"roken.h"
 end_include
 
 begin_include
@@ -255,12 +255,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"failed test %d: len %d != %d\n"
+literal|"failed test %d: len %lu != %lu\n"
 argument_list|,
 name|numtest
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|t
 operator|->
 name|len

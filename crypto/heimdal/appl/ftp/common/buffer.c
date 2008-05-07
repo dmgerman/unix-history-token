@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: buffer.c,v 1.4 2000/10/23 04:49:25 joda Exp $"
+literal|"$Id: buffer.c 9129 2000-10-23 04:49:25Z joda $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

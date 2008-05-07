@@ -8,7 +8,7 @@ comment|/*  * hash.h. Header file for hash table functions  */
 end_comment
 
 begin_comment
-comment|/* $Id: hash.h,v 1.3 1999/12/02 17:05:02 joda Exp $ */
+comment|/* $Id: hash.h 7464 1999-12-02 17:05:13Z joda $ */
 end_comment
 
 begin_struct

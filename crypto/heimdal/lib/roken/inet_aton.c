@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: inet_aton.c,v 1.13 1999/12/05 13:26:20 assar Exp $"
+literal|"$Id: inet_aton.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -40,6 +40,7 @@ end_comment
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|inet_aton
 parameter_list|(
 specifier|const

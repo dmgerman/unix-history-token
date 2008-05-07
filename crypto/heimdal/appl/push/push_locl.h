@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998 Kungliga Tekniska Högskolan  * (Royal In
 end_comment
 
 begin_comment
-comment|/* $Id: push_locl.h,v 1.6 1999/12/02 16:58:33 joda Exp $ */
+comment|/* $Id: push_locl.h 7463 1999-12-02 16:58:55Z joda $ */
 end_comment
 
 begin_ifdef

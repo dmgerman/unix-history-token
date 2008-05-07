@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: common.c,v 1.26.2.1 2003/04/23 18:03:20 lha Exp $"
+literal|"$Id: common.c 15461 2005-06-16 22:52:33Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -770,7 +770,7 @@ name|cells
 parameter_list|,
 name|int
 modifier|*
-name|index
+name|idx
 parameter_list|)
 block|{
 name|FILE
@@ -790,7 +790,7 @@ name|int
 name|ind
 init|=
 operator|*
-name|index
+name|idx
 decl_stmt|;
 name|f
 operator|=
@@ -998,7 +998,7 @@ name|f
 argument_list|)
 expr_stmt|;
 operator|*
-name|index
+name|idx
 operator|=
 name|ind
 expr_stmt|;
@@ -1014,6 +1014,7 @@ specifier|static
 name|int
 name|afslog_cells
 parameter_list|(
+name|struct
 name|kafs_data
 modifier|*
 name|data
@@ -1100,6 +1101,7 @@ begin_function
 name|int
 name|_kafs_afslog_all_local_cells
 parameter_list|(
+name|struct
 name|kafs_data
 modifier|*
 name|data
@@ -1124,7 +1126,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|index
+name|idx
 init|=
 literal|0
 decl_stmt|;
@@ -1176,7 +1178,7 @@ operator|&
 name|cells
 argument_list|,
 operator|&
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 block|}
@@ -1188,7 +1190,7 @@ operator|&
 name|cells
 argument_list|,
 operator|&
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 name|find_cells
@@ -1199,7 +1201,7 @@ operator|&
 name|cells
 argument_list|,
 operator|&
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 name|find_cells
@@ -1210,7 +1212,7 @@ operator|&
 name|cells
 argument_list|,
 operator|&
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 name|find_cells
@@ -1221,7 +1223,7 @@ operator|&
 name|cells
 argument_list|,
 operator|&
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 name|find_cells
@@ -1232,7 +1234,7 @@ operator|&
 name|cells
 argument_list|,
 operator|&
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 name|find_cells
@@ -1243,7 +1245,29 @@ operator|&
 name|cells
 argument_list|,
 operator|&
-name|index
+name|idx
+argument_list|)
+expr_stmt|;
+name|find_cells
+argument_list|(
+name|_PATH_OPENAFS_MACOSX_THESECELLS
+argument_list|,
+operator|&
+name|cells
+argument_list|,
+operator|&
+name|idx
+argument_list|)
+expr_stmt|;
+name|find_cells
+argument_list|(
+name|_PATH_OPENAFS_MACOSX_THISCELL
+argument_list|,
+operator|&
+name|cells
+argument_list|,
+operator|&
+name|idx
 argument_list|)
 expr_stmt|;
 name|find_cells
@@ -1254,7 +1278,7 @@ operator|&
 name|cells
 argument_list|,
 operator|&
-name|index
+name|idx
 argument_list|)
 expr_stmt|;
 name|find_cells
@@ -1265,7 +1289,29 @@ operator|&
 name|cells
 argument_list|,
 operator|&
-name|index
+name|idx
+argument_list|)
+expr_stmt|;
+name|find_cells
+argument_list|(
+name|_PATH_ARLA_OPENBSD_THESECELLS
+argument_list|,
+operator|&
+name|cells
+argument_list|,
+operator|&
+name|idx
+argument_list|)
+expr_stmt|;
+name|find_cells
+argument_list|(
+name|_PATH_ARLA_OPENBSD_THISCELL
+argument_list|,
+operator|&
+name|cells
+argument_list|,
+operator|&
+name|idx
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1276,7 +1322,7 @@ name|data
 argument_list|,
 name|cells
 argument_list|,
-name|index
+name|idx
 argument_list|,
 name|uid
 argument_list|,
@@ -1285,7 +1331,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|index
+name|idx
 operator|>
 literal|0
 condition|)
@@ -1294,7 +1340,7 @@ argument_list|(
 name|cells
 index|[
 operator|--
-name|index
+name|idx
 index|]
 argument_list|)
 expr_stmt|;
@@ -1314,6 +1360,7 @@ specifier|static
 name|int
 name|file_find_cell
 parameter_list|(
+name|struct
 name|kafs_data
 modifier|*
 name|data
@@ -1382,6 +1429,17 @@ operator|=
 name|fopen
 argument_list|(
 name|_PATH_OPENAFS_DEBIAN_CELLSERVDB
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|F
+operator|=
+name|fopen
+argument_list|(
+name|_PATH_OPENAFS_MACOSX_CELLSERVDB
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1591,13 +1649,14 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the realm associated with cell. Do this by opening    /usr/vice/etc/CellServDB and getting the realm-of-host for the    first VL-server for the cell.     This does not work when the VL-server is living in one realm, but    the cell it is serving is living in another realm.     Return 0 on success, -1 otherwise.    */
+comment|/* Find the realm associated with cell. Do this by opening CellServDB    file and getting the realm-of-host for the first VL-server for the    cell.     This does not work when the VL-server is living in one realm, but    the cell it is serving is living in another realm.     Return 0 on success, -1 otherwise.    */
 end_comment
 
 begin_function
 name|int
 name|_kafs_realm_of_cell
 parameter_list|(
+name|struct
 name|kafs_data
 modifier|*
 name|data
@@ -1707,6 +1766,7 @@ specifier|static
 name|int
 name|_kafs_try_get_cred
 parameter_list|(
+name|struct
 name|kafs_data
 modifier|*
 name|data
@@ -1824,6 +1884,7 @@ begin_function
 name|int
 name|_kafs_get_cred
 parameter_list|(
+name|struct
 name|kafs_data
 modifier|*
 name|data
@@ -1868,7 +1929,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-comment|/* We're about to find the the realm that holds the key for afs in      * the specified cell. The problem is that null-instance      * afs-principals are common and that hitting the wrong realm might      * yield the wrong afs key. The following assumptions were made.      *      * Any realm passed to us is preferred.      *      * If there is a realm with the same name as the cell, it is most      * likely the correct realm to talk to.      *      * In most (maybe even all) cases the database servers of the cell      * will live in the realm we are looking for.      *      * Try the local realm, but if the previous cases fail, this is      * really a long shot.      *      */
+comment|/* We're about to find the realm that holds the key for afs in      * the specified cell. The problem is that null-instance      * afs-principals are common and that hitting the wrong realm might      * yield the wrong afs key. The following assumptions were made.      *      * Any realm passed to us is preferred.      *      * If there is a realm with the same name as the cell, it is most      * likely the correct realm to talk to.      *      * In most (maybe even all) cases the database servers of the cell      * will live in the realm we are looking for.      *      * Try the local realm, but if the previous cases fail, this is      * really a long shot.      *      */
 comment|/* comments on the ordering of these tests */
 comment|/* If the user passes a realm, she probably knows something we don't      * know and we should try afs@realm_hint.      */
 if|if

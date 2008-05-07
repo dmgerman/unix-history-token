@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_reply-test.c,v 1.2 2002/09/04 03:25:06 assar Exp $"
+literal|"$Id: parse_reply-test.c 15287 2005-05-29 21:21:12Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -417,6 +417,7 @@ expr_stmt|;
 name|p1
 operator|=
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -467,6 +468,10 @@ name|ret
 operator|=
 name|mprotect
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|p2
 argument_list|,
 name|pagesize
@@ -521,6 +526,10 @@ name|ret
 operator|=
 name|munmap
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|p1
 argument_list|,
 literal|2

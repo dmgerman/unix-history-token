@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: marshall.c,v 1.6 1999/12/02 17:05:06 joda Exp $"
+literal|"$Id: marshall.c 21745 2007-07-31 16:11:25Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -415,7 +415,7 @@ parameter_list|,
 name|kadm5_principal_ent_t
 name|princ
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mask
 parameter_list|)
 block|{
@@ -832,7 +832,7 @@ parameter_list|,
 name|kadm5_principal_ent_t
 name|princ
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mask
 parameter_list|)
 block|{
@@ -868,7 +868,7 @@ parameter_list|,
 name|kadm5_principal_ent_t
 name|princ
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mask
 parameter_list|)
 block|{
@@ -1294,6 +1294,17 @@ name|key_data
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|princ
+operator|->
+name|key_data
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 for|for
 control|(
 name|i
@@ -1379,6 +1390,15 @@ name|tp
 argument_list|)
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|tp
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|kadm5_ret_tl_data
 argument_list|(
 name|sp
@@ -1445,7 +1465,7 @@ parameter_list|,
 name|kadm5_principal_ent_t
 name|princ
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|mask
 parameter_list|)
@@ -1576,15 +1596,22 @@ argument_list|(
 name|in
 argument_list|)
 decl_stmt|;
+name|int32_t
+name|mask
+decl_stmt|;
 name|krb5_ret_int32
 argument_list|(
 name|sp
 argument_list|,
 operator|&
+name|mask
+argument_list|)
+expr_stmt|;
 name|params
 operator|->
 name|mask
-argument_list|)
+operator|=
+name|mask
 expr_stmt|;
 if|if
 condition|(

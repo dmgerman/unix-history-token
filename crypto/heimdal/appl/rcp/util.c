@@ -51,7 +51,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: util.c,v 1.6 2001/09/04 14:35:58 assar Exp $"
+literal|"$Id: util.c 17878 2006-08-08 21:43:58Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -200,12 +200,18 @@ block|{
 name|int
 name|c
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|cp
 decl_stmt|;
 name|cp
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|cp0
 expr_stmt|;
 do|do
@@ -340,12 +346,18 @@ return|;
 case|case
 literal|0
 case|:
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|setuid
 argument_list|(
 name|userid
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|_exit
+argument_list|(
+literal|127
 argument_list|)
 expr_stmt|;
 name|execl

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: hostent_find_fqdn.c,v 1.2 2001/07/10 11:58:23 assar Exp $"
+literal|"$Id: hostent_find_fqdn.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,6 +42,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|hostent_find_fqdn
 parameter_list|(
 specifier|const

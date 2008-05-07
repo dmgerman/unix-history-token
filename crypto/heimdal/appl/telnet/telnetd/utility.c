@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utility.c,v 1.27 2001/09/03 05:54:17 assar Exp $"
+literal|"$Id: utility.c 15844 2005-08-08 13:36:16Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -988,12 +988,12 @@ begin_function
 name|void
 name|writenet
 parameter_list|(
-name|unsigned
-name|char
+specifier|const
+name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -1018,6 +1018,23 @@ name|netflush
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+operator|&
+name|netobuf
+index|[
+name|BUFSIZ
+index|]
+operator|-
+name|nfrontp
+operator|)
+operator|<
+name|len
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 name|memmove
 argument_list|(
 name|nfrontp
@@ -1395,10 +1412,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * This is split on two lines so that SCCS will not see the M  * between two % signs and expand it...  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -1406,8 +1419,7 @@ name|fmtstr
 index|[]
 init|=
 block|{
-literal|"%l:%M"
-literal|"%P on %A, %d %B %Y"
+literal|"%l:%M%P on %A, %d %B %Y"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1541,10 +1553,6 @@ block|{
 case|case
 literal|'t'
 case|:
-ifdef|#
-directive|ifdef
-name|STREAMSPTY
-comment|/* names are like /dev/pts/2 -- we want pts/2 */
 name|slash
 operator|=
 name|strchr
@@ -1556,19 +1564,6 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|slash
-operator|=
-name|strrchr
-argument_list|(
-name|line
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|slash

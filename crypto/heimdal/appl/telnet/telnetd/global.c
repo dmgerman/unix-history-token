@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: global.c,v 1.13 2001/07/19 16:00:42 assar Exp $"
+literal|"$Id: global.c 14939 2005-04-24 20:59:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -130,8 +130,10 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
 name|terminaltype
+index|[
+literal|41
+index|]
 decl_stmt|;
 end_decl_stmt
 

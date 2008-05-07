@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: seteuid.c,v 1.10 1999/12/02 16:58:52 joda Exp $"
+literal|"$Id: seteuid.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -53,6 +53,7 @@ end_include
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|seteuid
 parameter_list|(
 name|uid_t

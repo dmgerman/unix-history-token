@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_req.c,v 1.7 2002/05/24 15:21:00 joda Exp $"
+literal|"$Id: mk_req.c 17445 2006-05-05 10:37:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -53,7 +53,7 @@ name|char
 modifier|*
 name|realm
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|checksum
 parameter_list|)
 block|{

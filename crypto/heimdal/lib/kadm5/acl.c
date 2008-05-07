@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: acl.c,v 1.13 2001/08/24 04:01:42 assar Exp $"
+literal|"$Id: acl.c 17445 2006-05-05 10:37:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -89,7 +89,7 @@ name|char
 modifier|*
 name|s
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|privs
 parameter_list|)
@@ -132,7 +132,7 @@ begin_function
 name|kadm5_ret_t
 name|_kadm5_privs_to_string
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|privs
 parameter_list|,
 name|char
@@ -400,7 +400,7 @@ name|strtok_r
 argument_list|(
 name|NULL
 argument_list|,
-literal|"\n"
+literal|" \t\n"
 argument_list|,
 operator|&
 name|foo

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002 Kungliga Tekniska Högskolan  * (Royal Institut
 end_comment
 
 begin_comment
-comment|/* $Id: ndbm_wrap.h,v 1.1 2002/04/30 16:37:20 joda Exp $ */
+comment|/* $Id: ndbm_wrap.h 14773 2005-04-12 11:29:18Z lha $ */
 end_comment
 
 begin_ifndef
@@ -30,6 +30,46 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ROKEN_LIB_FUNCTION
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+value|_stdcall
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -174,6 +214,7 @@ end_endif
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|dbm_clearerr
 parameter_list|(
 name|DBM
@@ -184,6 +225,7 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ROKEN_LIB_FUNCTION
 name|dbm_close
 parameter_list|(
 name|DBM
@@ -194,6 +236,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|dbm_delete
 parameter_list|(
 name|DBM
@@ -206,6 +249,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|dbm_error
 parameter_list|(
 name|DBM
@@ -216,6 +260,7 @@ end_function_decl
 
 begin_function_decl
 name|datum
+name|ROKEN_LIB_FUNCTION
 name|dbm_fetch
 parameter_list|(
 name|DBM
@@ -228,6 +273,7 @@ end_function_decl
 
 begin_function_decl
 name|datum
+name|ROKEN_LIB_FUNCTION
 name|dbm_firstkey
 parameter_list|(
 name|DBM
@@ -238,6 +284,7 @@ end_function_decl
 
 begin_function_decl
 name|datum
+name|ROKEN_LIB_FUNCTION
 name|dbm_nextkey
 parameter_list|(
 name|DBM
@@ -249,6 +296,7 @@ end_function_decl
 begin_function_decl
 name|DBM
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|dbm_open
 parameter_list|(
 specifier|const
@@ -264,6 +312,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ROKEN_LIB_FUNCTION
 name|dbm_store
 parameter_list|(
 name|DBM

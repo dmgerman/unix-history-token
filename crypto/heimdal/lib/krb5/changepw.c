@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: changepw.c,v 1.38.2.1 2004/06/21 08:38:10 lha Exp $"
+literal|"$Id: changepw.c 21505 2007-07-12 12:28:38Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -69,6 +69,10 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
+name|char
+modifier|*
+name|str
+decl_stmt|;
 name|va_start
 argument_list|(
 name|args
@@ -82,15 +86,8 @@ name|length
 operator|=
 name|vasprintf
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|d
-operator|->
-name|data
+name|str
 argument_list|,
 name|fmt
 argument_list|,
@@ -101,6 +98,12 @@ name|va_end
 argument_list|(
 name|args
 argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|data
+operator|=
+name|str
 expr_stmt|;
 block|}
 end_function
@@ -134,6 +137,7 @@ parameter_list|,
 name|int
 name|sock
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|passwd
@@ -245,7 +249,10 @@ name|passwd_data
 operator|.
 name|data
 operator|=
+name|rk_UNCONST
+argument_list|(
 name|passwd
+argument_list|)
 expr_stmt|;
 name|passwd_data
 operator|.
@@ -568,6 +575,7 @@ parameter_list|,
 name|int
 name|sock
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|passwd
@@ -670,7 +678,10 @@ name|newpasswd
 operator|.
 name|data
 operator|=
+name|rk_UNCONST
+argument_list|(
 name|passwd
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1127,7 +1138,7 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|pkt_len
 decl_stmt|,
 name|pkt_ver
@@ -1374,10 +1385,13 @@ argument_list|(
 name|result_string
 argument_list|,
 literal|"server %s sent to too short message "
-literal|"(%d bytes)"
+literal|"(%ld bytes)"
 argument_list|,
 name|host
 argument_list|,
+operator|(
+name|long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -2030,6 +2044,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -2073,6 +2088,7 @@ function_decl|;
 end_typedef
 
 begin_struct
+specifier|static
 struct|struct
 name|kpwd_proc
 block|{
@@ -2208,6 +2224,7 @@ parameter_list|,
 name|krb5_principal
 name|targprinc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|newpw
@@ -2260,13 +2277,26 @@ literal|0
 decl_stmt|;
 name|krb5_realm
 name|realm
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|targprinc
+condition|)
+name|realm
+operator|=
+name|targprinc
+operator|->
+name|realm
+expr_stmt|;
+else|else
+name|realm
+operator|=
 name|creds
 operator|->
 name|client
 operator|->
 name|realm
-decl_stmt|;
+expr_stmt|;
 name|ret
 operator|=
 name|krb5_auth_con_init
@@ -2808,6 +2838,7 @@ name|ret
 operator|==
 name|KRB5_KDC_UNREACH
 condition|)
+block|{
 name|krb5_set_error_string
 argument_list|(
 name|context
@@ -2818,6 +2849,12 @@ argument_list|,
 name|realm
 argument_list|)
 expr_stmt|;
+operator|*
+name|result_code
+operator|=
+name|KRB5_KPASSWD_HARDERROR
+expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
@@ -2831,6 +2868,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_change_password
 parameter_list|(
 name|krb5_context
@@ -2840,6 +2878,7 @@ name|krb5_creds
 modifier|*
 name|creds
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|newpw
@@ -2930,6 +2969,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_set_password
 parameter_list|(
 name|krb5_context
@@ -2939,6 +2979,7 @@ name|krb5_creds
 modifier|*
 name|creds
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|newpw
@@ -3059,7 +3100,7 @@ name|context
 argument_list|,
 name|creds
 argument_list|,
-name|targprinc
+name|principal
 argument_list|,
 name|newpw
 argument_list|,
@@ -3114,6 +3155,7 @@ end_comment
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_set_password_using_ccache
 parameter_list|(
 name|krb5_context
@@ -3122,6 +3164,7 @@ parameter_list|,
 name|krb5_ccache
 name|ccache
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|newpw
@@ -3390,6 +3433,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
+name|KRB5_LIB_FUNCTION
 name|krb5_passwd_result_to_string
 parameter_list|(
 name|krb5_context

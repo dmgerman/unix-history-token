@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth_context.c,v 1.59 2002/09/02 17:11:02 joda Exp $"
+literal|"$Id: auth_context.c 21745 2007-07-31 16:11:25Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_init
 parameter_list|(
 name|krb5_context
@@ -174,6 +175,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_free
 parameter_list|(
 name|krb5_context
@@ -285,6 +287,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setflags
 parameter_list|(
 name|krb5_context
@@ -311,6 +314,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getflags
 parameter_list|(
 name|krb5_context
@@ -339,6 +343,92 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
+name|krb5_auth_con_addflags
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_auth_context
+name|auth_context
+parameter_list|,
+name|int32_t
+name|addflags
+parameter_list|,
+name|int32_t
+modifier|*
+name|flags
+parameter_list|)
+block|{
+if|if
+condition|(
+name|flags
+condition|)
+operator|*
+name|flags
+operator|=
+name|auth_context
+operator|->
+name|flags
+expr_stmt|;
+name|auth_context
+operator|->
+name|flags
+operator||=
+name|addflags
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|krb5_error_code
+name|KRB5_LIB_FUNCTION
+name|krb5_auth_con_removeflags
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_auth_context
+name|auth_context
+parameter_list|,
+name|int32_t
+name|removeflags
+parameter_list|,
+name|int32_t
+modifier|*
+name|flags
+parameter_list|)
+block|{
+if|if
+condition|(
+name|flags
+condition|)
+operator|*
+name|flags
+operator|=
+name|auth_context
+operator|->
+name|flags
+expr_stmt|;
+name|auth_context
+operator|->
+name|flags
+operator|&=
+operator|~
+name|removeflags
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setaddrs
 parameter_list|(
 name|krb5_context
@@ -376,7 +466,10 @@ operator|->
 name|local_address
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
 name|auth_context
 operator|->
 name|local_address
@@ -388,7 +481,13 @@ argument_list|(
 name|krb5_address
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|krb5_copy_address
 argument_list|(
 name|context
@@ -421,7 +520,10 @@ operator|->
 name|remote_address
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
 name|auth_context
 operator|->
 name|remote_address
@@ -433,7 +535,13 @@ argument_list|(
 name|krb5_address
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|krb5_copy_address
 argument_list|(
 name|context
@@ -454,6 +562,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_genaddrs
 parameter_list|(
 name|krb5_context
@@ -780,6 +889,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setaddrs_from_fd
 parameter_list|(
 name|krb5_context
@@ -849,6 +959,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getaddrs
 parameter_list|(
 name|krb5_context
@@ -1047,6 +1158,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getkey
 parameter_list|(
 name|krb5_context
@@ -1078,6 +1190,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getlocalsubkey
 parameter_list|(
 name|krb5_context
@@ -1109,6 +1222,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getremotesubkey
 parameter_list|(
 name|krb5_context
@@ -1140,6 +1254,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setkey
 parameter_list|(
 name|krb5_context
@@ -1186,6 +1301,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setlocalsubkey
 parameter_list|(
 name|krb5_context
@@ -1232,6 +1348,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_generatelocalsubkey
 parameter_list|(
 name|krb5_context
@@ -1254,11 +1371,15 @@ name|subkey
 decl_stmt|;
 name|ret
 operator|=
-name|krb5_generate_subkey
+name|krb5_generate_subkey_extended
 argument_list|(
 name|context
 argument_list|,
 name|key
+argument_list|,
+name|auth_context
+operator|->
+name|keytype
 argument_list|,
 operator|&
 name|subkey
@@ -1300,6 +1421,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setremotesubkey
 parameter_list|(
 name|krb5_context
@@ -1346,6 +1468,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setcksumtype
 parameter_list|(
 name|krb5_context
@@ -1372,6 +1495,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getcksumtype
 parameter_list|(
 name|krb5_context
@@ -1400,6 +1524,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setkeytype
 parameter_list|(
 name|krb5_context
@@ -1426,6 +1551,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getkeytype
 parameter_list|(
 name|krb5_context
@@ -1459,13 +1585,14 @@ literal|0
 end_if
 
 begin_endif
-unit|krb5_error_code krb5_auth_con_setenctype(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_enctype etype) {     if(auth_context->keyblock) 	krb5_free_keyblock(context, auth_context->keyblock);     ALLOC(auth_context->keyblock, 1);     if(auth_context->keyblock == NULL) 	return ENOMEM;     auth_context->keyblock->keytype = etype;     return 0; }  krb5_error_code krb5_auth_con_getenctype(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_enctype *etype) {     krb5_abortx(context, "unimplemented krb5_auth_getenctype called"); }
+unit|krb5_error_code KRB5_LIB_FUNCTION krb5_auth_con_setenctype(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_enctype etype) {     if(auth_context->keyblock) 	krb5_free_keyblock(context, auth_context->keyblock);     ALLOC(auth_context->keyblock, 1);     if(auth_context->keyblock == NULL) 	return ENOMEM;     auth_context->keyblock->keytype = etype;     return 0; }  krb5_error_code KRB5_LIB_FUNCTION krb5_auth_con_getenctype(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_enctype *etype) {     krb5_abortx(context, "unimplemented krb5_auth_getenctype called"); }
 endif|#
 directive|endif
 end_endif
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getlocalseqnumber
 parameter_list|(
 name|krb5_context
@@ -1494,6 +1621,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setlocalseqnumber
 parameter_list|(
 name|krb5_context
@@ -1520,6 +1648,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_getremoteseqnumber
 parameter_list|(
 name|krb5_context
@@ -1548,6 +1677,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setremoteseqnumber
 parameter_list|(
 name|krb5_context
@@ -1574,6 +1704,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getauthenticator
 parameter_list|(
 name|krb5_context
@@ -1637,6 +1768,7 @@ end_function
 
 begin_function
 name|void
+name|KRB5_LIB_FUNCTION
 name|krb5_free_authenticator
 parameter_list|(
 name|krb5_context
@@ -1669,6 +1801,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setuserkey
 parameter_list|(
 name|krb5_context
@@ -1715,6 +1848,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_getrcache
 parameter_list|(
 name|krb5_context
@@ -1743,6 +1877,7 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|KRB5_LIB_FUNCTION
 name|krb5_auth_con_setrcache
 parameter_list|(
 name|krb5_context
@@ -1778,7 +1913,7 @@ comment|/* not implemented */
 end_comment
 
 begin_endif
-unit|krb5_error_code krb5_auth_con_initivector(krb5_context context, 			  krb5_auth_context auth_context) {     krb5_abortx(context, "unimplemented krb5_auth_con_initivector called"); }   krb5_error_code krb5_auth_con_setivector(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_pointer ivector) {     krb5_abortx(context, "unimplemented krb5_auth_con_setivector called"); }
+unit|krb5_error_code KRB5_LIB_FUNCTION krb5_auth_con_initivector(krb5_context context, 			  krb5_auth_context auth_context) {     krb5_abortx(context, "unimplemented krb5_auth_con_initivector called"); }   krb5_error_code KRB5_LIB_FUNCTION krb5_auth_con_setivector(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_pointer ivector) {     krb5_abortx(context, "unimplemented krb5_auth_con_setivector called"); }
 endif|#
 directive|endif
 end_endif

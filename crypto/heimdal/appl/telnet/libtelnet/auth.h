@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: auth.h,v 1.4 1998/06/09 19:24:41 joda Exp $ */
+comment|/* $Id: auth.h 5027 1998-06-09 19:25:40Z joda $ */
 end_comment
 
 begin_ifndef

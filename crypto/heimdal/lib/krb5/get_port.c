@@ -12,13 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_port.c,v 1.8 2001/01/27 19:24:34 joda Exp $"
+literal|"$Id: get_port.c 13863 2004-05-25 21:46:46Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|int
+name|KRB5_LIB_FUNCTION
 name|krb5_getportbyname
 parameter_list|(
 name|krb5_context

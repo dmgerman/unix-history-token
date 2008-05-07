@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: telnet_locl.h,v 1.21 2001/12/20 20:39:52 joda Exp $ */
+comment|/* $Id: telnet_locl.h 18776 2006-10-21 19:14:13Z lha $ */
 end_comment
 
 begin_ifdef
@@ -135,14 +135,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* termios.h *must* be included before curses.h */
+comment|/* termios.h *must* be included before curses.h, but not on Solaris 9,    at least, where we end up with    "/usr/include/term.h", line 1060: incomplete struct/union/enum termio: Ottyb */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
 name|HAVE_TERMIOS_H
-end_ifdef
+operator|&&
+operator|!
+name|defined
+name|__sun
+end_if
 
 begin_include
 include|#
@@ -160,11 +165,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SOCKS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|HAVE_CURSES_H
 argument_list|)
 end_if
@@ -173,6 +173,38 @@ begin_include
 include|#
 directive|include
 file|<curses.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_TERM_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<term.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_TERMCAP_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<termcap.h>
 end_include
 
 begin_endif
@@ -199,26 +231,6 @@ begin_include
 include|#
 directive|include
 file|<sys/termio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_TERMCAP_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<termcap.h>
 end_include
 
 begin_endif
@@ -640,22 +652,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<roken.h>
-end_include
-
-begin_comment
-comment|/* krb.h? */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -721,6 +717,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<roken.h>
+end_include
 
 begin_include
 include|#

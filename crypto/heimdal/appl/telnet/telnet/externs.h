@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988, 1990, 1993  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: externs.h,v 1.25 2002/08/28 20:58:23 joda Exp $ */
+comment|/* $Id: externs.h 21734 2007-07-31 01:55:45Z lha $ */
 end_comment
 
 begin_ifndef
@@ -722,6 +722,22 @@ begin_comment
 comment|/* For error conditions. */
 end_comment
 
+begin_function_decl
+name|int
+name|Scheduler
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|scheduler_lockout_tty
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* authenc.c */
 end_comment
@@ -1199,15 +1215,6 @@ end_comment
 begin_function_decl
 name|void
 name|tninit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usage
 parameter_list|(
 name|void
 parameter_list|)

@@ -35,7 +35,7 @@ end_ifndef
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gettimeofday.c,v 1.8 1999/12/02 16:58:46 joda Exp $"
+literal|"$Id: gettimeofday.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -46,6 +46,7 @@ end_comment
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|gettimeofday
 parameter_list|(
 name|struct

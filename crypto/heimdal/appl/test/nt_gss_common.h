@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Ro
 end_comment
 
 begin_comment
-comment|/* $Id: nt_gss_common.h,v 1.2 1999/12/02 17:04:57 joda Exp $ */
+comment|/* $Id: nt_gss_common.h 7464 1999-12-02 17:05:13Z joda $ */
 end_comment
 
 begin_function_decl

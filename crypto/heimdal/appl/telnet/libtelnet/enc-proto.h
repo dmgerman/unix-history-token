@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: enc-proto.h,v 1.11 2002/01/18 12:58:49 joda Exp $ */
+comment|/* $Id: enc-proto.h 10809 2002-01-18 12:58:49Z joda $ */
 end_comment
 
 begin_if

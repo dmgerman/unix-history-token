@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Ro
 end_comment
 
 begin_comment
-comment|/* $Id: gss_common.h,v 1.5 1999/12/02 17:04:56 joda Exp $ */
+comment|/* $Id: gss_common.h 14661 2005-03-19 03:13:14Z lha $ */
 end_comment
 
 begin_function_decl
@@ -109,6 +109,30 @@ begin_empty_stmt
 unit|)))
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+name|gss_OID
+name|select_mech
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_gss_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|gss_name_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

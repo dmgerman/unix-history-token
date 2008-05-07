@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: destroy_c.c,v 1.3 1999/12/02 17:05:05 joda Exp $"
+literal|"$Id: destroy_c.c 13198 2003-12-07 19:01:39Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -51,6 +51,32 @@ argument_list|(
 name|context
 operator|->
 name|sock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|context
+operator|->
+name|client_name
+condition|)
+name|free
+argument_list|(
+name|context
+operator|->
+name|client_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|context
+operator|->
+name|service_name
+condition|)
+name|free
+argument_list|(
+name|context
+operator|->
+name|service_name
 argument_list|)
 expr_stmt|;
 if|if

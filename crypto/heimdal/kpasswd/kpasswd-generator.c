@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2000 - 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kpasswd-generator.c,v 1.5 2001/07/31 02:44:42 assar Exp $"
+literal|"$Id: kpasswd-generator.c 19233 2006-12-06 08:04:05Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -103,28 +103,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
 name|buf
 index|[
-name|strlen
+name|strcspn
 argument_list|(
 name|buf
+argument_list|,
+literal|"\r\n"
 argument_list|)
-operator|-
-literal|1
-index|]
-operator|==
-literal|'\n'
-condition|)
-name|buf
-index|[
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
 index|]
 operator|=
 literal|'\0'
@@ -173,6 +159,21 @@ operator|*
 name|ret_w
 operator|=
 name|w
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s is an empty file, no words to try"
+argument_list|,
+name|filename
+argument_list|)
 expr_stmt|;
 return|return
 name|n
@@ -305,6 +306,7 @@ name|nwords
 index|]
 decl_stmt|;
 name|krb5_get_init_creds_opt
+modifier|*
 name|opt
 decl_stmt|;
 name|krb5_creds
@@ -328,15 +330,16 @@ decl_stmt|,
 modifier|*
 name|new_pwd
 decl_stmt|;
-name|krb5_get_init_creds_opt_init
+name|krb5_get_init_creds_opt_alloc
 argument_list|(
+name|context
+argument_list|,
 operator|&
 name|opt
 argument_list|)
 expr_stmt|;
 name|krb5_get_init_creds_opt_set_tkt_life
 argument_list|(
-operator|&
 name|opt
 argument_list|,
 literal|300
@@ -344,7 +347,6 @@ argument_list|)
 expr_stmt|;
 name|krb5_get_init_creds_opt_set_forwardable
 argument_list|(
-operator|&
 name|opt
 argument_list|,
 name|FALSE
@@ -352,7 +354,6 @@ argument_list|)
 expr_stmt|;
 name|krb5_get_init_creds_opt_set_proxiable
 argument_list|(
-operator|&
 name|opt
 argument_list|,
 name|FALSE
@@ -428,7 +429,6 @@ literal|0
 argument_list|,
 literal|"kadmin/changepw"
 argument_list|,
-operator|&
 name|opt
 argument_list|)
 expr_stmt|;
@@ -480,7 +480,6 @@ literal|0
 argument_list|,
 literal|"kadmin/changepw"
 argument_list|,
-operator|&
 name|opt
 argument_list|)
 expr_stmt|;
@@ -553,12 +552,19 @@ argument_list|(
 name|new_pwd
 argument_list|)
 expr_stmt|;
-name|krb5_free_creds_contents
+name|krb5_free_cred_contents
 argument_list|(
 name|context
 argument_list|,
 operator|&
 name|cred
+argument_list|)
+expr_stmt|;
+name|krb5_get_init_creds_opt_free
+argument_list|(
+name|context
+argument_list|,
+name|opt
 argument_list|)
 expr_stmt|;
 block|}

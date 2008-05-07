@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_bytes.c,v 1.4 2003/03/07 15:51:53 lha Exp $"
+literal|"$Id: parse_bytes.c 14773 2005-04-12 11:29:18Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -172,6 +172,7 @@ end_decl_stmt
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|parse_bytes
 parameter_list|(
 specifier|const
@@ -200,6 +201,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_bytes
 parameter_list|(
 name|int
@@ -230,6 +232,7 @@ end_function
 
 begin_function
 name|int
+name|ROKEN_LIB_FUNCTION
 name|unparse_bytes_short
 parameter_list|(
 name|int

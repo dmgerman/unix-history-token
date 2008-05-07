@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gai_strerror.c,v 1.2.20.1 2004/01/15 18:14:17 lha Exp $"
+literal|"$Id: gai_strerror.c 15837 2005-08-05 09:31:35Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,6 +42,7 @@ block|{
 name|int
 name|code
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str
@@ -147,8 +148,10 @@ comment|/*  *  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
+name|ROKEN_LIB_FUNCTION
 name|gai_strerror
 parameter_list|(
 name|int

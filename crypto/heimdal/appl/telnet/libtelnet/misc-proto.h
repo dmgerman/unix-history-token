@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: misc-proto.h,v 1.9 2000/11/15 23:00:21 assar Exp $ */
+comment|/* $Id: misc-proto.h 9187 2000-11-15 23:00:21Z assar $ */
 end_comment
 
 begin_ifndef

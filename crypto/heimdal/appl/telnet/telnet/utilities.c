@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utilities.c,v 1.25 2001/08/29 00:45:21 assar Exp $"
+literal|"$Id: utilities.c 10587 2001-08-29 00:45:23Z assar $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

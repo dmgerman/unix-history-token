@@ -9,10 +9,16 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: name-45-test.c,v 1.3.2.1 2003/05/06 16:49:14 joda Exp $"
+literal|"$Id: name-45-test.c 19763 2007-01-08 13:35:49Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -197,7 +203,7 @@ block|,
 block|{
 literal|"foo"
 block|,
-literal|"bar"
+literal|"bar2"
 block|,
 literal|"BAZ"
 block|,
@@ -208,7 +214,7 @@ block|,
 block|{
 literal|"foo"
 block|,
-literal|"bar"
+literal|"bar2"
 block|}
 block|,
 name|NULL
@@ -221,7 +227,7 @@ block|,
 block|{
 literal|"foo"
 block|,
-literal|"bar"
+literal|"bar2"
 block|,
 literal|"BAZ"
 block|,
@@ -232,7 +238,7 @@ block|,
 block|{
 literal|"foo"
 block|,
-literal|"bar"
+literal|"bar2"
 block|}
 block|,
 literal|"[libdefaults]\n"
@@ -250,7 +256,7 @@ block|,
 block|{
 literal|"foo"
 block|,
-literal|"bar"
+literal|"bar2"
 block|,
 literal|"BAZ"
 block|,
@@ -261,7 +267,7 @@ block|,
 block|{
 literal|"foo5"
 block|,
-literal|"bar.baz"
+literal|"bar2.baz"
 block|}
 block|,
 literal|"[realms]\n"
@@ -272,7 +278,7 @@ literal|"				foo = foo5\n"
 literal|"			}\n"
 literal|"		}\n"
 literal|"		v4_instance_convert = {\n"
-literal|"			bar = bar.baz\n"
+literal|"			bar2 = bar2.baz\n"
 literal|"		}\n"
 literal|"  }\n"
 block|,
@@ -563,11 +569,61 @@ decl_stmt|;
 name|krb5_error_code
 name|ret
 decl_stmt|;
+name|char
+name|hostname
+index|[
+literal|1024
+index|]
+decl_stmt|;
 name|int
 name|val
 init|=
 literal|0
 decl_stmt|;
+name|setprogname
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|gethostname
+argument_list|(
+name|hostname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|strstr
+argument_list|(
+name|hostname
+argument_list|,
+literal|"kth.se"
+argument_list|)
+operator|!=
+name|NULL
+operator|||
+name|strstr
+argument_list|(
+name|hostname
+argument_list|,
+literal|"su.se"
+argument_list|)
+operator|!=
+name|NULL
+operator|)
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|t
@@ -884,6 +940,11 @@ name|val
 operator|=
 literal|1
 expr_stmt|;
+name|krb5_free_context
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 block|}
@@ -891,7 +952,14 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_free_context
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 name|strcmp
@@ -1175,6 +1243,11 @@ name|val
 operator|=
 literal|1
 expr_stmt|;
+name|krb5_free_context
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 block|}
@@ -1190,6 +1263,11 @@ argument_list|,
 name|princ
 argument_list|)
 expr_stmt|;
+name|krb5_free_context
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|krb5_free_principal
@@ -1197,6 +1275,11 @@ argument_list|(
 name|context
 argument_list|,
 name|princ
+argument_list|)
+expr_stmt|;
+name|krb5_free_context
+argument_list|(
+name|context
 argument_list|)
 expr_stmt|;
 block|}

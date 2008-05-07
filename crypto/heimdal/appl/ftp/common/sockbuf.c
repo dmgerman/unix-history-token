@@ -46,7 +46,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sockbuf.c,v 1.3 1999/12/02 16:58:29 joda Exp $"
+literal|"$Id: sockbuf.c 7463 1999-12-02 16:58:55Z joda $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

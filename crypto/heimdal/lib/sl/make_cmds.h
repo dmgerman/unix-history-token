@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: make_cmds.h,v 1.3 2000/06/27 02:36:56 assar Exp $ */
+comment|/* $Id: make_cmds.h 8467 2000-06-27 02:36:56Z assar $ */
 end_comment
 
 begin_ifndef

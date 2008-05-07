@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getaddrinfo-test.c,v 1.4 2001/02/20 01:44:54 assar Exp $"
+literal|"$Id: getaddrinfo-test.c 15930 2005-08-12 13:42:17Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -370,7 +370,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"\t(family = %d, socktype = %d, protocol = %d, "
+literal|"\tfamily = %d, socktype = %d, protocol = %d, "
 literal|"address = \"%s\", port = %d"
 argument_list|,
 name|r
@@ -441,7 +441,7 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|optind
+name|optidx
 init|=
 literal|0
 decl_stmt|;
@@ -480,7 +480,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|optidx
 argument_list|)
 condition|)
 name|usage
@@ -522,11 +522,11 @@ return|;
 block|}
 name|argc
 operator|-=
-name|optind
+name|optidx
 expr_stmt|;
 name|argv
 operator|+=
-name|optind
+name|optidx
 expr_stmt|;
 if|if
 condition|(

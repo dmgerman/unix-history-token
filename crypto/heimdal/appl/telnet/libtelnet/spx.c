@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: spx.c,v 1.17 1999/09/16 20:41:34 assar Exp $"
+literal|"$Id: spx.c 22071 2007-11-14 20:04:50Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2304,7 +2304,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* make sure its NULL terminated */
+comment|/* make sure it's NULL terminated */
 name|buflen
 operator|-=
 literal|1

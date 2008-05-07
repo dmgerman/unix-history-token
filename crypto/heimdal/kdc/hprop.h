@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: hprop.h,v 1.13 2001/01/26 15:54:19 joda Exp $ */
+comment|/* $Id: hprop.h 16378 2005-12-12 12:40:12Z lha $ */
 end_comment
 
 begin_ifndef
@@ -97,7 +97,7 @@ parameter_list|,
 name|HDB
 modifier|*
 parameter_list|,
-name|hdb_entry
+name|hdb_entry_ex
 modifier|*
 parameter_list|,
 name|void
@@ -136,7 +136,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|des_cblock
+name|DES_cblock
 name|key
 decl_stmt|;
 name|int
