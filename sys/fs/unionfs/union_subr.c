@@ -307,7 +307,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the cached vnode. (only VDIR)  */
+comment|/*  * Get the cached vnode.  */
 end_comment
 
 begin_function
@@ -315,7 +315,7 @@ specifier|static
 name|struct
 name|vnode
 modifier|*
-name|unionfs_get_cached_vdir
+name|unionfs_get_cached_vnode
 parameter_list|(
 name|struct
 name|vnode
@@ -373,7 +373,7 @@ name|VSOCK
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_get_cached_vdir: v_type != VDIR/VSOCK"
+literal|"unionfs_get_cached_vnode: v_type != VDIR/VSOCK"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -398,7 +398,7 @@ name|VSOCK
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_get_cached_vdir: v_type != VDIR/VSOCK"
+literal|"unionfs_get_cached_vnode: v_type != VDIR/VSOCK"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -518,7 +518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add the new vnode into cache. (only VDIR)  */
+comment|/*  * Add the new vnode into cache.  */
 end_comment
 
 begin_function
@@ -526,7 +526,7 @@ specifier|static
 name|struct
 name|vnode
 modifier|*
-name|unionfs_ins_cached_vdir
+name|unionfs_ins_cached_vnode
 parameter_list|(
 name|struct
 name|unionfs_node
@@ -585,7 +585,7 @@ name|VSOCK
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_ins_cached_vdir: v_type != VDIR/VSOCK"
+literal|"unionfs_ins_cached_vnode: v_type != VDIR/VSOCK"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -616,7 +616,7 @@ name|VSOCK
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_ins_cached_vdir: v_type != VDIR/VSOCK"
+literal|"unionfs_ins_cached_vnode: v_type != VDIR/VSOCK"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -754,13 +754,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove the vnode. (only VDIR)  */
+comment|/*  * Remove the vnode.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|unionfs_rem_cached_vdir
+name|unionfs_rem_cached_vnode
 parameter_list|(
 name|struct
 name|unionfs_node
@@ -782,7 +782,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_rem_cached_vdir: null node"
+literal|"unionfs_rem_cached_vnode: null node"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -795,7 +795,7 @@ name|NULLVP
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_rem_cached_vdir: null parent vnode"
+literal|"unionfs_rem_cached_vnode: null parent vnode"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -812,7 +812,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_rem_cached_vdir: null hash"
+literal|"unionfs_rem_cached_vnode: null hash"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -827,6 +827,22 @@ name|unp
 argument_list|,
 name|un_hash
 argument_list|)
+expr_stmt|;
+name|unp
+operator|->
+name|un_hash
+operator|.
+name|le_next
+operator|=
+name|NULL
+expr_stmt|;
+name|unp
+operator|->
+name|un_hash
+operator|.
+name|le_prev
+operator|=
+name|NULL
 expr_stmt|;
 name|VI_UNLOCK
 argument_list|(
@@ -995,7 +1011,7 @@ name|path
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* check the vdir cache */
+comment|/* check the cache */
 if|if
 condition|(
 name|path
@@ -1019,7 +1035,7 @@ condition|)
 block|{
 name|vp
 operator|=
-name|unionfs_get_cached_vdir
+name|unionfs_get_cached_vnode
 argument_list|(
 name|uppervp
 argument_list|,
@@ -1440,7 +1456,7 @@ condition|)
 operator|*
 name|vpp
 operator|=
-name|unionfs_ins_cached_vdir
+name|unionfs_ins_cached_vnode
 argument_list|(
 name|unp
 argument_list|,
@@ -1579,10 +1595,24 @@ block|{
 name|int
 name|vfslocked
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 name|struct
 name|unionfs_node
 modifier|*
 name|unp
+decl_stmt|,
+modifier|*
+name|unp_t1
+decl_stmt|,
+modifier|*
+name|unp_t2
+decl_stmt|;
+name|struct
+name|unionfs_node_hashhead
+modifier|*
+name|hd
 decl_stmt|;
 name|struct
 name|unionfs_node_status
@@ -1715,31 +1745,19 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|unp
-operator|->
-name|un_path
-operator|!=
-name|NULL
-operator|&&
 name|dvp
 operator|!=
 name|NULLVP
 operator|&&
-operator|(
-name|vp
+name|unp
 operator|->
-name|v_type
-operator|==
-name|VDIR
-operator|||
-name|vp
-operator|->
-name|v_type
-operator|==
-name|VSOCK
-operator|)
+name|un_hash
+operator|.
+name|le_prev
+operator|!=
+name|NULL
 condition|)
-name|unionfs_rem_cached_vdir
+name|unionfs_rem_cached_vnode
 argument_list|(
 name|unp
 argument_list|,
@@ -1866,6 +1884,67 @@ name|un_hashtbl
 operator|!=
 name|NULL
 condition|)
+block|{
+for|for
+control|(
+name|count
+operator|=
+literal|0
+init|;
+name|count
+operator|<=
+name|unp
+operator|->
+name|un_hashmask
+condition|;
+name|count
+operator|++
+control|)
+block|{
+name|hd
+operator|=
+name|unp
+operator|->
+name|un_hashtbl
+operator|+
+name|count
+expr_stmt|;
+name|LIST_FOREACH_SAFE
+argument_list|(
+argument|unp_t1
+argument_list|,
+argument|hd
+argument_list|,
+argument|un_hash
+argument_list|,
+argument|unp_t2
+argument_list|)
+block|{
+name|LIST_REMOVE
+argument_list|(
+name|unp_t1
+argument_list|,
+name|un_hash
+argument_list|)
+expr_stmt|;
+name|unp_t1
+operator|->
+name|un_hash
+operator|.
+name|le_next
+operator|=
+name|NULL
+expr_stmt|;
+name|unp_t1
+operator|->
+name|un_hash
+operator|.
+name|le_prev
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
 name|hashdestroy
 argument_list|(
 name|unp
@@ -1879,6 +1958,7 @@ operator|->
 name|un_hashmask
 argument_list|)
 expr_stmt|;
+block|}
 name|LIST_FOREACH_SAFE
 argument_list|(
 argument|unsp
