@@ -174,7 +174,7 @@ name|struct
 name|__sbuf
 name|_bf
 decl_stmt|;
-comment|/* the buffer (at least 1 byte, if !NULL) */
+comment|/* (*) the buffer (at least 1 byte, if !NULL) */
 name|int
 name|_lbfsize
 decl_stmt|;
