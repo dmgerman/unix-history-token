@@ -202,7 +202,8 @@ name|zphys_addr
 decl_stmt|;
 name|size_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|size
 decl_stmt|;
 name|len
@@ -313,7 +314,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/*  	 * z_id field is stored in the third pointer. We therefor skip the two 	 * first bytes.  	 * 	 * Pointer to the z_phys structure is the next last pointer. Therefore 	 * go back two bytes from the end. 	 */
+comment|/*  	 * z_id field is stored in the third pointer. We therefore skip the two 	 * first bytes.  	 * 	 * Pointer to the z_phys structure is the next last pointer. Therefore 	 * go back two bytes from the end. 	 */
 name|dataptr
 operator|=
 name|znodeptr
