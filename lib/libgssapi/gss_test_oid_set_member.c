@@ -36,7 +36,7 @@ modifier|*
 name|present
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 operator|*
@@ -61,7 +61,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|_gss_oid_equal
+name|gss_oid_equal
 argument_list|(
 name|member
 argument_list|,

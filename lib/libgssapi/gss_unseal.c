@@ -49,6 +49,10 @@ name|output_message_buffer
 argument_list|,
 name|conf_state
 argument_list|,
+operator|(
+name|gss_qop_t
+operator|*
+operator|)
 name|qop_state
 argument_list|)
 operator|)

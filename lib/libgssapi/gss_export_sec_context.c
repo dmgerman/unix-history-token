@@ -39,6 +39,12 @@ directive|include
 file|"context.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"utils.h"
+end_include
+
 begin_function
 name|OM_uint32
 name|gss_export_sec_context
@@ -83,6 +89,11 @@ decl_stmt|;
 name|gss_buffer_desc
 name|buf
 decl_stmt|;
+name|_gss_buffer_zero
+argument_list|(
+name|interprocess_token
+argument_list|)
+expr_stmt|;
 name|major_status
 operator|=
 name|m
@@ -158,6 +169,11 @@ name|value
 condition|)
 block|{
 comment|/* 			 * We are in trouble here - the context is 			 * already gone. This is allowed as long as we 			 * set the caller's context_handle to 			 * GSS_C_NO_CONTEXT, which we did above. 			 * Return GSS_S_FAILURE. 			 */
+name|_gss_buffer_zero
+argument_list|(
+name|interprocess_token
+argument_list|)
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -245,6 +261,19 @@ name|minor_status
 argument_list|,
 operator|&
 name|buf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|_gss_mg_error
+argument_list|(
+name|m
+argument_list|,
+name|major_status
+argument_list|,
+operator|*
+name|minor_status
 argument_list|)
 expr_stmt|;
 block|}

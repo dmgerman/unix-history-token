@@ -70,23 +70,28 @@ end_struct
 
 begin_function_decl
 specifier|extern
-name|struct
-name|_gss_mechanism_name
-modifier|*
+name|OM_uint32
 name|_gss_find_mn
 parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
 name|struct
 name|_gss_name
 modifier|*
-name|name
 parameter_list|,
 name|gss_OID
-name|mech
+parameter_list|,
+name|struct
+name|_gss_mechanism_name
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|struct
 name|_gss_name
 modifier|*

@@ -39,6 +39,12 @@ directive|include
 file|"name.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"utils.h"
+end_include
+
 begin_comment
 comment|/*  * The implementation must reserve static storage for a  * gss_OID_desc object containing the value  * {10, (void *)"\x2a\x86\x48\x86\xf7\x12"  * "\x01\x02\x01\x01"},  * corresponding to an object-identifier value of  * {iso(1) member-body(2) United States(840) mit(113554)  * infosys(1) gssapi(2) generic(1) user_name(1)}.  The constant  * GSS_C_NT_USER_NAME should be initialized to point  * to that gss_OID_desc.  */
 end_comment
@@ -54,6 +60,9 @@ block|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 literal|"\x2a\x86\x48\x86\xf7\x12\x01\x02\x01\x01"
 block|}
@@ -85,6 +94,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 literal|"\x2a\x86\x48\x86\xf7\x12\x01\x02\x01\x02"
 block|}
 decl_stmt|;
@@ -114,6 +126,9 @@ block|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 literal|"\x2a\x86\x48\x86\xf7\x12\x01\x02\x01\x03"
 block|}
@@ -145,6 +160,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 literal|"\x2b\x06\x01\x05\x06\x02"
 block|}
 decl_stmt|;
@@ -174,6 +192,9 @@ block|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 literal|"\x2a\x86\x48\x86\xf7\x12\x01\x02\x01\x04"
 block|}
@@ -205,6 +226,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 literal|"\x2b\x06\01\x05\x06\x03"
 block|}
 decl_stmt|;
@@ -235,6 +259,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 literal|"\x2b\x06\x01\x05\x06\x04"
 block|}
 decl_stmt|;
@@ -264,6 +291,9 @@ block|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 literal|"\x2a\x86\x48\x86\xf7\x12\x01\x02\x02\x01"
 block|}
@@ -319,11 +349,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|struct
-name|_gss_mechanism_name
-modifier|*
+name|OM_uint32
 name|_gss_find_mn
 parameter_list|(
+name|OM_uint32
+modifier|*
+name|minor_status
+parameter_list|,
 name|struct
 name|_gss_name
 modifier|*
@@ -331,12 +363,16 @@ name|name
 parameter_list|,
 name|gss_OID
 name|mech
+parameter_list|,
+name|struct
+name|_gss_mechanism_name
+modifier|*
+modifier|*
+name|output_mn
 parameter_list|)
 block|{
 name|OM_uint32
 name|major_status
-decl_stmt|,
-name|minor_status
 decl_stmt|;
 name|struct
 name|_gss_mech_switch
@@ -348,6 +384,11 @@ name|_gss_mechanism_name
 modifier|*
 name|mn
 decl_stmt|;
+operator|*
+name|output_mn
+operator|=
+name|NULL
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|mn
@@ -359,7 +400,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|_gss_oid_equal
+name|gss_oid_equal
 argument_list|(
 name|mech
 argument_list|,
@@ -388,7 +429,7 @@ name|value
 condition|)
 return|return
 operator|(
-literal|0
+name|GSS_S_BAD_NAME
 operator|)
 return|;
 name|m
@@ -405,7 +446,7 @@ name|m
 condition|)
 return|return
 operator|(
-literal|0
+name|GSS_S_BAD_MECH
 operator|)
 return|;
 name|mn
@@ -426,7 +467,7 @@ name|mn
 condition|)
 return|return
 operator|(
-literal|0
+name|GSS_S_FAILURE
 operator|)
 return|;
 name|major_status
@@ -435,7 +476,6 @@ name|m
 operator|->
 name|gm_import_name
 argument_list|(
-operator|&
 name|minor_status
 argument_list|,
 operator|&
@@ -467,8 +507,20 @@ expr_stmt|;
 if|if
 condition|(
 name|major_status
+operator|!=
+name|GSS_S_COMPLETE
 condition|)
 block|{
+name|_gss_mg_error
+argument_list|(
+name|m
+argument_list|,
+name|major_status
+argument_list|,
+operator|*
+name|minor_status
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|mn
@@ -476,7 +528,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|major_status
 operator|)
 return|;
 block|}
@@ -508,9 +560,14 @@ name|gmn_link
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|output_mn
+operator|=
+name|mn
+expr_stmt|;
 return|return
 operator|(
-name|mn
+name|GSS_S_COMPLETE
 operator|)
 return|;
 block|}
@@ -535,9 +592,6 @@ name|gss_name_t
 name|new_mn
 parameter_list|)
 block|{
-name|OM_uint32
-name|minor_status
-decl_stmt|;
 name|struct
 name|_gss_name
 modifier|*

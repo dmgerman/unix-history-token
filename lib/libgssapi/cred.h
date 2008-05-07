@@ -51,9 +51,6 @@ begin_struct
 struct|struct
 name|_gss_cred
 block|{
-name|gss_cred_usage_t
-name|gc_usage
-decl_stmt|;
 name|struct
 name|_gss_mechanism_cred_list
 name|gc_mc

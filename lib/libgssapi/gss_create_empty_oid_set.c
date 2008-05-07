@@ -45,7 +45,7 @@ expr_stmt|;
 operator|*
 name|oid_set
 operator|=
-literal|0
+name|GSS_C_NO_OID_SET
 expr_stmt|;
 name|set
 operator|=

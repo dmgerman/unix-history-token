@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -815,50 +821,123 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|OM_uint32
-name|_gsskrb5_register_acceptor_identity
+name|_gss_inquire_sec_context_by_oid
 parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor_status */
 specifier|const
-name|char
-modifier|*
-comment|/* identity */
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|OM_uint32
-name|_gss_krb5_copy_ccache
-parameter_list|(
-name|OM_uint32
-modifier|*
-parameter_list|,
-comment|/* minor_status */
-name|gss_cred_id_t
-parameter_list|,
-comment|/* cred_handle */
-name|struct
-name|krb5_ccache_data
-modifier|*
-comment|/* out */
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|OM_uint32
-name|_gss_krb5_compat_des3_mic
-parameter_list|(
-name|OM_uint32
-modifier|*
-parameter_list|,
-comment|/* minor_status */
 name|gss_ctx_id_t
 parameter_list|,
 comment|/* context_handle */
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* desired_object */
+name|gss_buffer_set_t
+modifier|*
+comment|/* result */
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|OM_uint32
+name|_gss_inquire_cred_by_oid
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* bminor_status */
+specifier|const
+name|gss_cred_id_t
+parameter_list|,
+comment|/* cred_handle, */
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* desired_object */
+name|gss_buffer_set_t
+modifier|*
+comment|/* data_set */
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|OM_uint32
+name|_gss_set_sec_context_option
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_ctx_id_t
+modifier|*
+parameter_list|,
+comment|/* context */
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* option to set */
+specifier|const
+name|gss_buffer_t
+comment|/* option value */
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|OM_uint32
+name|_gss_set_cred_option
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_cred_id_t
+modifier|*
+parameter_list|,
+comment|/* cred */
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* option to set */
+specifier|const
+name|gss_buffer_t
+comment|/* option value */
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|OM_uint32
+name|_gss_pseudo_random
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_ctx_id_t
+parameter_list|,
+comment|/* context */
 name|int
-comment|/* flag */
+parameter_list|,
+comment|/* PRF key */
+specifier|const
+name|gss_buffer_t
+parameter_list|,
+comment|/* PRF input */
+name|ssize_t
+parameter_list|,
+comment|/* desired output length */
+name|gss_buffer_t
+comment|/* PRF output */
 parameter_list|)
 function_decl|;
 end_typedef
@@ -873,6 +952,11 @@ argument|_gss_mech_switch
 argument_list|)
 name|gm_link
 expr_stmt|;
+specifier|const
+name|char
+modifier|*
+name|gm_name_prefix
+decl_stmt|;
 name|gss_OID_desc
 name|gm_mech_oid
 decl_stmt|;
@@ -996,17 +1080,25 @@ name|_gss_duplicate_name_t
 modifier|*
 name|gm_duplicate_name
 decl_stmt|;
-name|_gsskrb5_register_acceptor_identity
+name|_gss_inquire_sec_context_by_oid
 modifier|*
-name|gm_krb5_register_acceptor_identity
+name|gm_inquire_sec_context_by_oid
 decl_stmt|;
-name|_gss_krb5_copy_ccache
+name|_gss_inquire_cred_by_oid
 modifier|*
-name|gm_krb5_copy_ccache
+name|gm_inquire_cred_by_oid
 decl_stmt|;
-name|_gss_krb5_compat_des3_mic
+name|_gss_set_sec_context_option
 modifier|*
-name|gm_krb5_compat_des3_mic
+name|gm_set_sec_context_option
+decl_stmt|;
+name|_gss_set_cred_option
+modifier|*
+name|gm_set_cred_option
+decl_stmt|;
+name|_gss_pseudo_random
+modifier|*
+name|gm_pseudo_random
 decl_stmt|;
 block|}
 struct|;
@@ -1055,6 +1147,25 @@ modifier|*
 name|_gss_find_mech_switch
 parameter_list|(
 name|gss_OID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|_gss_mg_error
+parameter_list|(
+name|struct
+name|_gss_mech_switch
+modifier|*
+name|m
+parameter_list|,
+name|OM_uint32
+name|maj
+parameter_list|,
+name|OM_uint32
+name|min
 parameter_list|)
 function_decl|;
 end_function_decl

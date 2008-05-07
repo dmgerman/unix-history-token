@@ -85,7 +85,7 @@ expr_stmt|;
 operator|*
 name|context_handle
 operator|=
-literal|0
+name|GSS_C_NO_CONTEXT
 expr_stmt|;
 comment|/* 	 * We added an oid to the front of the token in 	 * gss_export_sec_context. 	 */
 name|p
@@ -252,6 +252,16 @@ operator|!=
 name|GSS_S_COMPLETE
 condition|)
 block|{
+name|_gss_mg_error
+argument_list|(
+name|m
+argument_list|,
+name|major_status
+argument_list|,
+operator|*
+name|minor_status
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|ctx

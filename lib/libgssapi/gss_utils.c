@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_gss_oid_equal
+name|gss_oid_equal
 parameter_list|(
 specifier|const
 name|gss_OID
@@ -160,6 +160,12 @@ operator|->
 name|elements
 condition|)
 block|{
+name|to_oid
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -245,6 +251,12 @@ operator|*
 name|minor_status
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|to_buf
+operator|->
+name|length
+operator|=
+literal|0
 expr_stmt|;
 return|return
 name|GSS_S_FAILURE

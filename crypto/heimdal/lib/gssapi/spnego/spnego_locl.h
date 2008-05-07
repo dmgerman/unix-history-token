@@ -7,6 +7,10 @@ begin_comment
 comment|/* $Id: spnego_locl.h 19411 2006-12-18 15:42:03Z lha $ */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -168,12 +172,6 @@ begin_include
 include|#
 directive|include
 file|"spnego_asn1.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mech/utils.h"
 end_include
 
 begin_include

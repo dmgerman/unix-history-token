@@ -140,7 +140,7 @@ expr_stmt|;
 operator|*
 name|cred_handle
 operator|=
-literal|0
+name|GSS_C_NO_CREDENTIAL
 expr_stmt|;
 return|return
 operator|(

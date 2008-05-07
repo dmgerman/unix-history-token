@@ -41,6 +41,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|set
+operator|&&
 operator|*
 name|set
 condition|)
@@ -73,7 +75,7 @@ expr_stmt|;
 operator|*
 name|set
 operator|=
-literal|0
+name|GSS_C_NO_OID_SET
 expr_stmt|;
 block|}
 return|return

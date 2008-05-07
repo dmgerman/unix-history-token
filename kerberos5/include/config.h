@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* include/config.h.  Generated automatically by configure.  */
+comment|/* include/config.h.  Generated from config.h.in by configure.  */
 end_comment
 
 begin_comment
-comment|/* include/config.h.in.  Generated automatically from configure.in by autoheader.  */
+comment|/* include/config.h.in.  Generated from configure.in by autoheader.  */
 end_comment
 
 begin_comment
@@ -41,125 +41,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|BINDIR
-value|"/usr/bin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIBDIR
-value|"/usr/lib"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LIBEXECDIR
-value|"/usr/libexec"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBINDIR
-value|"/usr/sbin"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCONFDIR
-value|"/etc"
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT8_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT16_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT32_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT64_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT8_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT16_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT32_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT64_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT8_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT16_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT32_T
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT64_T
-value|1
-end_define
-
 begin_comment
 comment|/* Maximum values on all known systems */
 end_comment
@@ -178,6 +59,108 @@ name|MaxPathLen
 value|(1024+4)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUILD_KRB5_LIB
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KRB5_LIB_FUNCTION
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32_
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KRB5_LIB_FUNCTION
+value|_export _stdcall
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KRB5_LIB_FUNCTION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUILD_ROKEN_LIB
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ROKEN_LIB_FUNCTION
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32_
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+value|_export _stdcall
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ROKEN_LIB_FUNCTION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Define if you want authentication support in telnet. */
 end_comment
@@ -187,6 +170,17 @@ define|#
 directive|define
 name|AUTHENTICATION
 value|1
+end_define
+
+begin_comment
+comment|/* path to bin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BINDIR
+value|"/usr/bin"
 end_define
 
 begin_comment
@@ -228,6 +222,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if want to use the weak AFS string to key functions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_AFS_STRING_TO_KEY
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you want have a thread safe libraries */
+end_comment
+
+begin_comment
+comment|/* #undef ENABLE_PTHREAD_SUPPORT */
+end_comment
+
+begin_comment
 comment|/* Define if you want encryption support in telnet. */
 end_comment
 
@@ -261,9 +274,12 @@ begin_comment
 comment|/* define if prototype of gethostbyaddr is compatible with struct hostent    *gethostbyaddr(const void *, size_t, int) */
 end_comment
 
-begin_comment
-comment|/* #undef GETHOSTBYADDR_PROTO_COMPATIBLE */
-end_comment
+begin_define
+define|#
+directive|define
+name|GETHOSTBYADDR_PROTO_COMPATIBLE
+value|1
+end_define
 
 begin_comment
 comment|/* define if prototype of gethostbyname is compatible with struct hostent    *gethostbyname(const char *) */
@@ -307,12 +323,15 @@ comment|/* #undef HAVE_ALTZONE */
 end_comment
 
 begin_comment
-comment|/* define if your system declares altzone */
+comment|/* Define to 1 if you have the `arc4random' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_ALTZONE_DECLARATION */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_ARC4RANDOM
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<arpa/ftp.h> header file. */
@@ -457,6 +476,14 @@ directive|define
 name|HAVE_CHOWN
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the function `closefrom'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CLOSEFROM */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<config.h> header file. */
@@ -616,6 +643,132 @@ comment|/* #undef HAVE_DB_NDBM */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `altzone', and to 0 if you    don't. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_ALTZONE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `environ', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_ENVIRON
+value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `h_errlist', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_H_ERRLIST
+value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `h_errno', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_H_ERRNO
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `h_nerr', and to 0 if you don't.    */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DECL_H_NERR */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `optarg', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_OPTARG
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `opterr', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_OPTERR
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `optind', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_OPTIND
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `optopt', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_OPTOPT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `timezone', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_TIMEZONE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `_res', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL__RES
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `__progname', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL___PROGNAME
+value|0
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<dirent.h> header file. */
 end_comment
 
@@ -660,6 +813,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `door_create' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DOOR_CREATE */
+end_comment
+
+begin_comment
 comment|/* Define if you have the function `ecalloc'. */
 end_comment
 
@@ -684,14 +845,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_EMALLOC */
-end_comment
-
-begin_comment
-comment|/* define if your system declares environ */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ENVIRON_DECLARATION */
 end_comment
 
 begin_comment
@@ -824,14 +977,6 @@ begin_comment
 comment|/* Define if el_init takes four arguments. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500024
-end_if
-
 begin_define
 define|#
 directive|define
@@ -839,21 +984,13 @@ name|HAVE_FOUR_VALUED_EL_INIT
 value|1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* define if krb_put_int takes four arguments. */
+comment|/* Have -framework Security */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_FOUR_VALUED_KRB_PUT_INT
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_FRAMEWORK_SECURITY */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `freeaddrinfo' function. */
@@ -1089,27 +1226,27 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `getprogname' function. */
+comment|/* Define to 1 if you have the `getpeereid' function. */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|430002
-operator|&&
-name|__FreeBSD_version
-operator|<
-literal|500000
-operator|)
-operator|||
-expr|\
-name|__FreeBSD_version
-operator|>=
-literal|500019
-end_if
+begin_define
+define|#
+directive|define
+name|HAVE_GETPEEREID
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `getpeerucred' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETPEERUCRED */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `getprogname' function. */
+end_comment
 
 begin_define
 define|#
@@ -1118,22 +1255,9 @@ name|HAVE_GETPROGNAME
 value|1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Define to 1 if you have the `getpwnam_r' function. */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500112
-end_if
 
 begin_define
 define|#
@@ -1141,11 +1265,6 @@ directive|define
 name|HAVE_GETPWNAM_R
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `getrlimit' function. */
@@ -1233,25 +1352,12 @@ begin_comment
 comment|/* Define to 1 if you have the `grantpt' function. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500100
-end_if
-
 begin_define
 define|#
 directive|define
 name|HAVE_GRANTPT
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<grp.h> header file. */
@@ -1287,14 +1393,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if your system declares h_errlist */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_H_ERRLIST_DECLARATION */
-end_comment
-
-begin_comment
 comment|/* Define if you have the `h_errno' variable. */
 end_comment
 
@@ -1306,33 +1404,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if your system declares h_errno */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_H_ERRNO_DECLARATION
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the `h_nerr' variable. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_H_NERR
-value|1
-end_define
-
 begin_comment
-comment|/* define if your system declares h_nerr */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_H_NERR_DECLARATION */
+comment|/* #undef HAVE_H_NERR */
 end_comment
 
 begin_comment
@@ -1424,6 +1500,50 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if the system has the type `int16_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INT16_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `int32_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INT32_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `int64_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INT64_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `int8_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INT8_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
@@ -1476,44 +1596,15 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `krb_disable_debug' function. */
+comment|/* Define if you want to use the Kerberos Credentials Manager. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_KRB_DISABLE_DEBUG */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `krb_enable_debug' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_KRB_ENABLE_DEBUG */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `krb_get_kdc_time_diff' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_KRB_GET_KDC_TIME_DIFF */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `krb_get_our_ip_for_realm' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_KRB_GET_OUR_IP_FOR_REALM */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `krb_kdctimeofday' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_KRB_KDCTIMEOFDAY */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_KCM
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<libutil.h> header file. */
@@ -1716,12 +1807,9 @@ begin_comment
 comment|/* Define to 1 if you have the<netinet6/in6_var.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_NETINET6_IN6_VAR_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_NETINET6_IN6_VAR_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<netinet/in6.h> header file. */
@@ -1822,14 +1910,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if you have hash functions like md4_finito() */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_OLD_HASH_NAMES */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `on_exit' function. */
 end_comment
 
@@ -1856,50 +1936,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_OPENSSL
-value|1
-end_define
-
-begin_comment
-comment|/* define if your system declares optarg */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_OPTARG_DECLARATION
-value|1
-end_define
-
-begin_comment
-comment|/* define if your system declares opterr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_OPTERR_DECLARATION
-value|1
-end_define
-
-begin_comment
-comment|/* define if your system declares optind */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_OPTIND_DECLARATION
-value|1
-end_define
-
-begin_comment
-comment|/* define if your system declares optopt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_OPTOPT_DECLARATION
 value|1
 end_define
 
@@ -1931,6 +1967,28 @@ comment|/* #undef HAVE_PIDFILE */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `poll' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_POLL
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<poll.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_POLL_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<pthread.h> header file. */
 end_comment
 
@@ -1945,25 +2003,12 @@ begin_comment
 comment|/* Define to 1 if you have the `ptsname' function. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500100
-end_if
-
 begin_define
 define|#
 directive|define
 name|HAVE_PTSNAME
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<pty.h> header file. */
@@ -2073,12 +2118,26 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `res_ndestroy' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RES_NDESTROY
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `res_nsearch' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_RES_NSEARCH */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_RES_NSEARCH
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `res_search' function. */
@@ -2262,36 +2321,12 @@ begin_comment
 comment|/* Define to 1 if you have the `setprogname' function. */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|430002
-operator|&&
-name|__FreeBSD_version
-operator|<
-literal|500000
-operator|)
-operator|||
-expr|\
-name|__FreeBSD_version
-operator|>=
-literal|500019
-end_if
-
 begin_define
 define|#
 directive|define
 name|HAVE_SETPROGNAME
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `setregid' function. */
@@ -2491,25 +2526,12 @@ begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500028
-end_if
-
 begin_define
 define|#
 directive|define
 name|HAVE_STDINT_H
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<stdlib.h> header file. */
@@ -3305,6 +3327,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/ucred.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_UCRED_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/uio.h> header file. */
 end_comment
 
@@ -3401,7 +3434,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `timegm' function. */
+comment|/* Define if you have the function `timegm'. */
 end_comment
 
 begin_define
@@ -3419,17 +3452,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_TIMEZONE
-value|1
-end_define
-
-begin_comment
-comment|/* define if your system declares timezone */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_TIMEZONE_DECLARATION
 value|1
 end_define
 
@@ -3483,6 +3505,61 @@ comment|/* #undef HAVE_UDB_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if the system has the type `uint16_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT16_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uint32_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT32_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uint64_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT64_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uint8_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINT8_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uintptr_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINTPTR_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `umask' function. */
 end_comment
 
@@ -3519,25 +3596,12 @@ begin_comment
 comment|/* Define to 1 if you have the `unlockpt' function. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500100
-end_if
-
 begin_define
 define|#
 directive|define
 name|HAVE_UNLOCKPT
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define if you have the function `unsetenv'. */
@@ -3601,6 +3665,50 @@ begin_define
 define|#
 directive|define
 name|HAVE_UTMP_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `u_int16_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT16_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `u_int32_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT32_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `u_int64_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT64_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `u_int8_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT8_T
 value|1
 end_define
 
@@ -3829,17 +3937,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if your system declares _res */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE__RES_DECLARATION
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `_scrsize' function. */
 end_comment
 
@@ -3870,14 +3967,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if your system declares __progname */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE___PROGNAME_DECLARATION */
-end_comment
-
-begin_comment
 comment|/* Define if you have the hesiod package. */
 end_comment
 
@@ -3905,44 +3994,37 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if krb_mk_req takes const char * */
+comment|/* path to lib */
 end_comment
 
-begin_comment
-comment|/* #undef KRB_MK_REQ_CONST */
-end_comment
+begin_define
+define|#
+directive|define
+name|LIBDIR
+value|"/usr/lib"
+end_define
 
 begin_comment
-comment|/* This is the krb4 sendauth version. */
+comment|/* path to libexec */
 end_comment
 
-begin_comment
-comment|/* #undef KRB_SENDAUTH_VERS */
-end_comment
+begin_define
+define|#
+directive|define
+name|LIBEXECDIR
+value|"/usr/libexec"
+end_define
 
 begin_comment
-comment|/* Define to zero if your krb.h doesn't */
+comment|/* path to localstate */
 end_comment
 
-begin_comment
-comment|/* #undef KRB_VERIFY_NOT_SECURE */
-end_comment
-
-begin_comment
-comment|/* Define to one if your krb.h doesn't */
-end_comment
-
-begin_comment
-comment|/* #undef KRB_VERIFY_SECURE */
-end_comment
-
-begin_comment
-comment|/* Define to two if your krb.h doesn't */
-end_comment
-
-begin_comment
-comment|/* #undef KRB_VERIFY_SECURE_FAIL */
-end_comment
+begin_define
+define|#
+directive|define
+name|LOCALSTATEDIR
+value|"/var/heimdal"
+end_define
 
 begin_comment
 comment|/* define if the system is missing a prototype for asnprintf() */
@@ -3970,6 +4052,17 @@ end_comment
 begin_comment
 comment|/* #undef NEED_CRYPT_PROTO */
 end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for daemon() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED_DAEMON_PROTO
+value|1
+end_define
 
 begin_comment
 comment|/* define if the system is missing a prototype for gethostname() */
@@ -4012,11 +4105,27 @@ comment|/* #undef NEED_INET_ATON_PROTO */
 end_comment
 
 begin_comment
+comment|/* define if the system is missing a prototype for iruserok() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_IRUSEROK_PROTO */
+end_comment
+
+begin_comment
 comment|/* define if the system is missing a prototype for mkstemp() */
 end_comment
 
 begin_comment
 comment|/* #undef NEED_MKSTEMP_PROTO */
+end_comment
+
+begin_comment
+comment|/* define if the system is missing a prototype for SecKeyGetCSPHandle() */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_SECKEYGETCSPHANDLE_PROTO */
 end_comment
 
 begin_comment
@@ -4160,6 +4269,22 @@ comment|/* #undef NEED_VSNPRINTF_PROTO */
 end_comment
 
 begin_comment
+comment|/* Define if you don't wan't support for AFS. */
+end_comment
+
+begin_comment
+comment|/* #undef NO_AFS */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+end_comment
+
+begin_comment
+comment|/* #undef NO_MINUS_C_MINUS_O */
+end_comment
+
+begin_comment
 comment|/* Define if you don't want to use mmap. */
 end_comment
 
@@ -4187,6 +4312,14 @@ comment|/* #undef OPENLDAP */
 end_comment
 
 begin_comment
+comment|/* Define if you want support for hdb ldap module */
+end_comment
+
+begin_comment
+comment|/* #undef OPENLDAP_MODULE */
+end_comment
+
+begin_comment
 comment|/* define if prototype of openlog is compatible with void openlog(const char    *, int, int) */
 end_comment
 
@@ -4201,9 +4334,12 @@ begin_comment
 comment|/* Define if you want OTP support in applications. */
 end_comment
 
-begin_comment
-comment|/* #undef OTP */
-end_comment
+begin_define
+define|#
+directive|define
+name|OTP
+value|1
+end_define
 
 begin_comment
 comment|/* Name of package */
@@ -4224,7 +4360,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|"heimdal-bugs@pdc.kth.se"
+value|"heimdal-bugs@h5l.org"
 end_define
 
 begin_comment
@@ -4246,7 +4382,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"Heimdal 0.6.3 (FreeBSD)"
+value|"Heimdal 1.1"
 end_define
 
 begin_comment
@@ -4268,7 +4404,18 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.6.3"
+value|"1.1"
+end_define
+
+begin_comment
+comment|/* Define to enable PKINIT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKINIT
+value|1
 end_define
 
 begin_comment
@@ -4307,6 +4454,25 @@ value|void
 end_define
 
 begin_comment
+comment|/* path to sbin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBINDIR
+value|"/usr/sbin"
+end_define
+
+begin_comment
+comment|/* Define if you want to use samba socket wrappers. */
+end_comment
+
+begin_comment
+comment|/* #undef SOCKET_WRAPPER_REPLACE */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */
 end_comment
 
@@ -4324,6 +4490,17 @@ end_comment
 begin_comment
 comment|/* #undef STREAMSPTY */
 end_comment
+
+begin_comment
+comment|/* path to sysconf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCONFDIR
+value|"/etc"
+end_define
 
 begin_comment
 comment|/* Define to what version of SunOS you are running. */
@@ -4360,7 +4537,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.6.3"
+value|"1.1"
 end_define
 
 begin_comment
@@ -4386,9 +4563,12 @@ begin_comment
 comment|/* Define to 1 if the X Window System is missing or not being used. */
 end_comment
 
-begin_comment
-comment|/* #undef X_DISPLAY_MISSING */
-end_comment
+begin_define
+define|#
+directive|define
+name|X_DISPLAY_MISSING
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a    `char[]'. */
@@ -4445,12 +4625,23 @@ comment|/* #undef gid_t */
 end_comment
 
 begin_comment
-comment|/* Define as `__inline' if that's what the C compiler calls it, or to nothing    if it is not supported. */
+comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
 
 begin_comment
 comment|/* #undef inline */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define this to what the type mode_t should be. */
@@ -4461,7 +4652,7 @@ comment|/* #undef mode_t */
 end_comment
 
 begin_comment
-comment|/* Define to `long' if<sys/types.h> does not define. */
+comment|/* Define to `long int' if<sys/types.h> does not define. */
 end_comment
 
 begin_comment
@@ -4485,7 +4676,7 @@ comment|/* #undef sig_atomic_t */
 end_comment
 
 begin_comment
-comment|/* Define to `unsigned' if<sys/types.h> does not define. */
+comment|/* Define to `unsigned int' if<sys/types.h> does not define. */
 end_comment
 
 begin_comment
@@ -4500,87 +4691,6 @@ begin_comment
 comment|/* #undef uid_t */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KRB_PUT_INT
-parameter_list|(
-name|F
-parameter_list|,
-name|T
-parameter_list|,
-name|L
-parameter_list|,
-name|S
-parameter_list|)
-value|krb_put_int((F), (T), (L), (S))
-end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENCRYPTION
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|AUTHENTICATION
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Set this to the default system lead string for telnetd  * can contain %-escapes: %s=sysname, %m=machine, %r=os-release  * %v=os-version, %t=tty, %h=hostname, %d=date and time  */
-end_comment
-
-begin_comment
-comment|/* #undef USE_IM */
-end_comment
-
-begin_comment
-comment|/* Used with login -p */
-end_comment
-
-begin_comment
-comment|/* #undef LOGIN_ARGS */
-end_comment
-
-begin_comment
-comment|/* set this to a sensible login */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOGIN_PATH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LOGIN_PATH
-value|BINDIR "/login"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4592,46 +4702,6 @@ include|#
 directive|include
 file|"roken_rename.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_KRB_KDCTIMEOFDAY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|krb_kdctimeofday
-parameter_list|(
-name|X
-parameter_list|)
-value|gettimeofday((X), NULL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_KRB_GET_KDC_TIME_DIFF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|krb_get_kdc_time_diff
-parameter_list|()
-value|(0)
-end_define
 
 begin_endif
 endif|#
@@ -4689,19 +4759,7 @@ name|X
 parameter_list|,
 name|Y
 parameter_list|)
-value|isoc_realloc((X), (Y))
-end_define
-
-begin_define
-define|#
-directive|define
-name|isoc_realloc
-parameter_list|(
-name|X
-parameter_list|,
-name|Y
-parameter_list|)
-value|((X) ? realloc((X), (Y)) : malloc(Y))
+value|rk_realloc((X), (Y))
 end_define
 
 begin_endif
@@ -4820,6 +4878,71 @@ define|#
 directive|define
 name|__STDC__
 value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|AUTHENTICATION
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Set this to the default system lead string for telnetd   * can contain %-escapes: %s=sysname, %m=machine, %r=os-release  * %v=os-version, %t=tty, %h=hostname, %d=date and time  */
+end_comment
+
+begin_comment
+comment|/* #undef USE_IM */
+end_comment
+
+begin_comment
+comment|/* Used with login -p */
+end_comment
+
+begin_comment
+comment|/* #undef LOGIN_ARGS */
+end_comment
+
+begin_comment
+comment|/* set this to a sensible login */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOGIN_PATH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOGIN_PATH
+value|BINDIR "/login"
 end_define
 
 begin_endif

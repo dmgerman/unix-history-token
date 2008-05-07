@@ -35,6 +35,30 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SSIZE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__ssize_t
+name|ssize_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SSIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -2048,66 +2072,300 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * kerberos mechanism specific functions  */
+comment|/*  * Other extensions and helper functions.  */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|krb5_ccache_data
-struct_decl|;
-end_struct_decl
+begin_function_decl
+name|int
+name|gss_oid_equal
+parameter_list|(
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* first OID to compare */
+specifier|const
+name|gss_OID
+comment|/* second OID to compare */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_release_oid
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_OID
+modifier|*
+comment|/* oid to free */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_decapsulate_token
+parameter_list|(
+specifier|const
+name|gss_buffer_t
+parameter_list|,
+comment|/* mechanism independent token */
+name|gss_OID
+parameter_list|,
+comment|/* desired mechanism */
+name|gss_buffer_t
+comment|/* decapsulated mechanism dependant token */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_encapsulate_token
+parameter_list|(
+specifier|const
+name|gss_buffer_t
+parameter_list|,
+comment|/* mechanism dependant token */
+name|gss_OID
+parameter_list|,
+comment|/* desired mechanism */
+name|gss_buffer_t
+comment|/* encapsulated mechanism independent token */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_duplicate_oid
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* oid to copy */
+name|gss_OID
+modifier|*
+comment|/* result */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_oid_to_str
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_OID
+parameter_list|,
+comment|/* oid to convert */
+name|gss_buffer_t
+comment|/* buffer to contain string */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|gss_buffer_set_desc_struct
+block|{
+name|size_t
+name|count
+decl_stmt|;
+name|gss_buffer_desc
+modifier|*
+name|elements
+decl_stmt|;
+block|}
+name|gss_buffer_set_desc
+operator|,
+typedef|*
+name|gss_buffer_set_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
 directive|define
-name|GSS_C_KRB5_COMPAT_DES3_MIC
-value|1
+name|GSS_C_NO_BUFFER_SET
+value|((gss_buffer_set_t) 0)
 end_define
 
 begin_function_decl
 name|OM_uint32
-name|gsskrb5_register_acceptor_identity
+name|gss_create_empty_buffer_set
 parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_buffer_set_t
+modifier|*
+comment|/* location for new buffer set */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_add_buffer_set_member
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_buffer_t
+parameter_list|,
+comment|/* buffer to add */
+name|gss_buffer_set_t
+modifier|*
+comment|/* set to add to */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_release_buffer_set
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_buffer_set_t
+modifier|*
+comment|/* set to release */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_inquire_sec_context_by_oid
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor_status */
 specifier|const
-name|char
-modifier|*
-comment|/* identity */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|OM_uint32
-name|gss_krb5_copy_ccache
-parameter_list|(
-name|OM_uint32
-modifier|*
-parameter_list|,
-comment|/* minor_status */
-name|gss_cred_id_t
-parameter_list|,
-comment|/* cred_handle */
-name|struct
-name|krb5_ccache_data
-modifier|*
-comment|/* out */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|OM_uint32
-name|gss_krb5_compat_des3_mic
-parameter_list|(
-name|OM_uint32
-modifier|*
-parameter_list|,
-comment|/* minor_status */
 name|gss_ctx_id_t
 parameter_list|,
 comment|/* context_handle */
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* desired_object */
+name|gss_buffer_set_t
+modifier|*
+comment|/* result */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_inquire_cred_by_oid
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor_status */
+specifier|const
+name|gss_cred_id_t
+parameter_list|,
+comment|/* cred_handle */
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* desired_object */
+name|gss_buffer_set_t
+modifier|*
+comment|/* result */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_set_sec_context_option
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_ctx_id_t
+modifier|*
+parameter_list|,
+comment|/* context */
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* option to set */
+specifier|const
+name|gss_buffer_t
+comment|/* option value */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_set_cred_option
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_cred_id_t
+modifier|*
+parameter_list|,
+comment|/* cred */
+specifier|const
+name|gss_OID
+parameter_list|,
+comment|/* option to set */
+specifier|const
+name|gss_buffer_t
+comment|/* option value */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_pseudo_random
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_ctx_id_t
+parameter_list|,
+comment|/* context handle */
 name|int
-comment|/* flag */
+name|prf_key
+parameter_list|,
+comment|/* XXX */
+specifier|const
+name|gss_buffer_t
+parameter_list|,
+comment|/* data to seed generator */
+name|ssize_t
+parameter_list|,
+comment|/* amount of data required */
+name|gss_buffer_t
+comment|/* buffer for result */
 parameter_list|)
 function_decl|;
 end_function_decl
