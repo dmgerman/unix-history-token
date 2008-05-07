@@ -232,6 +232,11 @@ begin_function_decl
 name|void
 name|sparc64_counter_init
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|bus_space_tag_t
 name|tag
 parameter_list|,

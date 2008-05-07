@@ -708,6 +708,7 @@ begin_function
 name|void
 name|iommu_init
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -720,7 +721,7 @@ parameter_list|,
 name|int
 name|tsbsize
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|iovabase
 parameter_list|,
 name|int
@@ -733,7 +734,7 @@ decl_stmt|;
 name|vm_offset_t
 name|offs
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|end
 decl_stmt|;
 name|int
@@ -5117,10 +5118,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int64_t
-name|tag
-decl_stmt|,
+name|uint64_t
 name|data
+decl_stmt|,
+name|tag
 decl_stmt|;
 name|IS_LOCK_ASSERT
 argument_list|(
