@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/hypervisorvar.h>
 end_include
 

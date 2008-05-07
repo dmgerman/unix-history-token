@@ -89,17 +89,17 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/bus_common.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|SUN4V
 end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<machine/bus_common.h>
+end_include
 
 begin_include
 include|#
@@ -1002,6 +1002,9 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SUN4V
 block|}
 elseif|else
 if|if
@@ -1020,6 +1023,8 @@ name|intr
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * If we got intr from a property, it may or may not be an intpin. 	 * For on-board devices, it frequently is not, and is completely out 	 * of the valid intpin range. For PCI slots, it hopefully is, otherwise 	 * we will have trouble interfacing with non-OFW buses such as cardbus. 	 * Since we cannot tell which it is without violating layering, we 	 * will always use the route_interrupt method, and treat exceptions on 	 * the level they become apparent. 	 */
 return|return
