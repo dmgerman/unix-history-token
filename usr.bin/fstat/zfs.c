@@ -291,6 +291,9 @@ name|vnodeptr
 argument_list|,
 name|znodeptr
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|)
 condition|)
