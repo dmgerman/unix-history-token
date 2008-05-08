@@ -1,18 +1,57 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  chardata.c  *  *  */
+comment|/* Copyright (c) 1998-2003 Thai Open Source Software Center Ltd    See the file COPYING for copying permission.     chardata.c */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EXPAT_CONFIG_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<expat_config.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CHECK_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<check.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"minicheck.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_include

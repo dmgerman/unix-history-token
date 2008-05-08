@@ -3,6 +3,16 @@ begin_comment
 comment|/* Copyright (c) 1998, 1999 Thai Open Source Software Center Ltd    See the file COPYING for copying permission. */
 end_comment
 
+begin_comment
+comment|/* This file is included! */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XML_TOK_IMPL_C
+end_ifdef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -156,7 +166,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanComment
@@ -352,7 +362,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanDecl
@@ -585,7 +595,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|checkPiTarget
@@ -757,7 +767,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanPi
@@ -1082,7 +1092,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanCdataSection
@@ -1211,7 +1221,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|cdataSectionTok
@@ -1573,7 +1583,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanEndTag
@@ -1804,7 +1814,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanHexCharRef
@@ -1945,7 +1955,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanCharRef
@@ -2111,7 +2121,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanRef
@@ -2268,7 +2278,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanAtts
@@ -2916,7 +2926,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanLt
@@ -3428,7 +3438,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|contentTok
@@ -3937,7 +3947,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanPercent
@@ -3972,7 +3982,8 @@ operator|==
 name|end
 condition|)
 return|return
-name|XML_TOK_PARTIAL
+operator|-
+name|XML_TOK_PERCENT
 return|;
 switch|switch
 condition|(
@@ -4087,7 +4098,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanPoundName
@@ -4231,7 +4242,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|scanLit
@@ -4381,7 +4392,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|prologTok
@@ -5477,7 +5488,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|attributeValueTok
@@ -5762,7 +5773,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|entityValueTok
@@ -6061,7 +6072,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|ignoreSectionTok
@@ -6357,7 +6368,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|isPublicId
@@ -6580,7 +6591,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|getAtts
@@ -7012,7 +7023,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|PREFIX
 function|(
 name|charRefNumber
@@ -7289,7 +7300,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|predefinedEntityName
@@ -7582,7 +7593,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|sameName
@@ -7851,7 +7862,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|nameMatchesAscii
@@ -7932,7 +7943,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|PREFIX
 function|(
 name|nameLength
@@ -8031,9 +8042,14 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+call|(
+name|int
+call|)
+argument_list|(
 name|ptr
 operator|-
 name|start
+argument_list|)
 return|;
 block|}
 block|}
@@ -8045,7 +8061,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|FASTCALL
+name|PTRFASTCALL
 name|PREFIX
 function|(
 name|skipS
@@ -8107,7 +8123,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|FASTCALL
+name|PTRCALL
 name|PREFIX
 function|(
 name|updatePosition
@@ -8181,7 +8197,7 @@ operator|->
 name|columnNumber
 operator|=
 operator|(
-name|unsigned
+name|XML_Size
 operator|)
 operator|-
 literal|1
@@ -8241,7 +8257,7 @@ operator|->
 name|columnNumber
 operator|=
 operator|(
-name|unsigned
+name|XML_Size
 operator|)
 operator|-
 literal|1
@@ -8307,6 +8323,15 @@ undef|#
 directive|undef
 name|CHECK_NMSTRT_CASES
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XML_TOK_IMPL_C */
+end_comment
 
 end_unit
 

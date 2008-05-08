@@ -200,7 +200,7 @@ name|prolog_state
 block|{
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRCALL
 modifier|*
 name|handler
 function_decl|)
