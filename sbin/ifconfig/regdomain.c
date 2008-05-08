@@ -2364,7 +2364,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: %s at line %d"
+literal|"%s: %s at line %ld"
 argument_list|,
 name|__func__
 argument_list|,
