@@ -9,11 +9,28 @@ directive|include
 file|"codepage.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|WIN32
-end_ifdef
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__WATCOMC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__NT__
+argument_list|)
+operator|)
+operator|)
+end_if
 
 begin_define
 define|#
@@ -114,7 +131,8 @@ operator|<
 name|MAX_LEADBYTES
 condition|;
 name|i
-operator|++
+operator|+=
+literal|2
 control|)
 block|{
 name|int
@@ -168,7 +186,7 @@ name|i
 index|]
 init|;
 name|j
-operator|<
+operator|<=
 name|lim
 condition|;
 name|j

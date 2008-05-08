@@ -3,6 +3,12 @@ begin_comment
 comment|/* Copyright (c) 1998, 1999 Thai Open Source Software Center Ltd    See the file COPYING for copying permission. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -30,10 +36,46 @@ directive|include
 file|"macconfig.h"
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__amigaos4__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"amigaconfig.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__WATCOMC__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"watcomconfig.h"
+end_include
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EXPAT_CONFIG_H
+end_ifdef
 
 begin_include
 include|#
@@ -46,9 +88,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* ndef COMPILED_FROM_DSP */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"expat_external.h"
+end_include
 
 begin_include
 include|#
@@ -220,7 +273,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|isNever
 parameter_list|(
 specifier|const
@@ -243,7 +296,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|utf8_isName2
 parameter_list|(
 specifier|const
@@ -277,7 +330,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|utf8_isName3
 parameter_list|(
 specifier|const
@@ -318,7 +371,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|utf8_isNmstrt2
 parameter_list|(
 specifier|const
@@ -352,7 +405,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|utf8_isNmstrt3
 parameter_list|(
 specifier|const
@@ -393,7 +446,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|utf8_isInvalid2
 parameter_list|(
 specifier|const
@@ -425,7 +478,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|utf8_isInvalid3
 parameter_list|(
 specifier|const
@@ -457,7 +510,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|utf8_isInvalid4
 parameter_list|(
 specifier|const
@@ -505,7 +558,7 @@ directive|ifdef
 name|XML_MIN_SIZE
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|byteType
 function_decl|)
@@ -521,7 +574,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isNameMin
 function_decl|)
@@ -537,7 +590,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isNmstrtMin
 function_decl|)
@@ -553,7 +606,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|byteToAscii
 function_decl|)
@@ -569,7 +622,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRCALL
 modifier|*
 name|charMatches
 function_decl|)
@@ -590,7 +643,7 @@ directive|endif
 comment|/* XML_MIN_SIZE */
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isName2
 function_decl|)
@@ -606,7 +659,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isName3
 function_decl|)
@@ -622,7 +675,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isName4
 function_decl|)
@@ -638,7 +691,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isNmstrt2
 function_decl|)
@@ -654,7 +707,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isNmstrt3
 function_decl|)
@@ -670,7 +723,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isNmstrt4
 function_decl|)
@@ -686,7 +739,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isInvalid2
 function_decl|)
@@ -702,7 +755,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isInvalid3
 function_decl|)
@@ -718,7 +771,7 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|FASTCALL
+name|PTRFASTCALL
 modifier|*
 name|isInvalid4
 function_decl|)
@@ -907,7 +960,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|sb_byteType
 parameter_list|(
 specifier|const
@@ -989,7 +1042,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|sb_byteToAscii
 parameter_list|(
 specifier|const
@@ -1167,7 +1220,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|sb_charMatches
 parameter_list|(
 specifier|const
@@ -1231,11 +1284,23 @@ parameter_list|)
 value|normal_ ## ident
 end_define
 
+begin_define
+define|#
+directive|define
+name|XML_TOK_IMPL_C
+end_define
+
 begin_include
 include|#
 directive|include
 file|"xmltok_impl.c"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|XML_TOK_IMPL_C
+end_undef
 
 begin_undef
 undef|#
@@ -1317,7 +1382,7 @@ end_enum
 begin_function
 specifier|static
 name|void
-name|FASTCALL
+name|PTRCALL
 name|utf8_toUtf8
 parameter_list|(
 specifier|const
@@ -1456,7 +1521,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|FASTCALL
+name|PTRCALL
 name|utf8_toUtf16
 parameter_list|(
 specifier|const
@@ -1989,7 +2054,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|FASTCALL
+name|PTRCALL
 name|latin1_toUtf8
 parameter_list|(
 specifier|const
@@ -2143,7 +2208,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|FASTCALL
+name|PTRCALL
 name|latin1_toUtf16
 parameter_list|(
 specifier|const
@@ -2307,7 +2372,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|FASTCALL
+name|PTRCALL
 name|ascii_toUtf8
 parameter_list|(
 specifier|const
@@ -2461,7 +2526,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|unicode_byte_type
 parameter_list|(
 name|char
@@ -2548,7 +2613,7 @@ parameter_list|(
 name|E
 parameter_list|)
 define|\
-value|static void  FASTCALL \ E ## toUtf8(const ENCODING *enc, \             const char **fromP, const char *fromLim, \             char **toP, const char *toLim) \ { \   const char *from; \   for (from = *fromP; from != fromLim; from += 2) { \     int plane; \     unsigned char lo2; \     unsigned char lo = GET_LO(from); \     unsigned char hi = GET_HI(from); \     switch (hi) { \     case 0: \       if (lo< 0x80) { \         if (*toP == toLim) { \           *fromP = from; \           return; \         } \         *(*toP)++ = lo; \         break; \       } \
+value|static void  PTRCALL \ E ## toUtf8(const ENCODING *enc, \             const char **fromP, const char *fromLim, \             char **toP, const char *toLim) \ { \   const char *from; \   for (from = *fromP; from != fromLim; from += 2) { \     int plane; \     unsigned char lo2; \     unsigned char lo = GET_LO(from); \     unsigned char hi = GET_HI(from); \     switch (hi) { \     case 0: \       if (lo< 0x80) { \         if (*toP == toLim) { \           *fromP = from; \           return; \         } \         *(*toP)++ = lo; \         break; \       } \
 comment|/* fall through */
 value|\     case 0x1: case 0x2: case 0x3: \     case 0x4: case 0x5: case 0x6: case 0x7: \       if (toLim -  *toP< 2) { \         *fromP = from; \         return; \       } \       *(*toP)++ = ((lo>> 6) | (hi<< 2) |  UTF8_cval2); \       *(*toP)++ = ((lo& 0x3f) | 0x80); \       break; \     default: \       if (toLim -  *toP< 3)  { \         *fromP = from; \         return; \       } \
 comment|/* 16 bits divided 4, 6, 6 amongst 3 bytes */
@@ -2563,7 +2628,7 @@ parameter_list|(
 name|E
 parameter_list|)
 define|\
-value|static void  FASTCALL \ E ## toUtf16(const ENCODING *enc, \              const char **fromP, const char *fromLim, \              unsigned short **toP, const unsigned short *toLim) \ { \
+value|static void  PTRCALL \ E ## toUtf16(const ENCODING *enc, \              const char **fromP, const char *fromLim, \              unsigned short **toP, const unsigned short *toLim) \ { \
 comment|/* Avoid copying first half only of surrogate */
 value|\   if (fromLim - *fromP> ((toLim - *toP)<< 1) \&& (GET_HI(fromLim - 2)& 0xF8) == 0xD8) \     fromLim -= 2; \   for (; *fromP != fromLim&& *toP != toLim; *fromP += 2) \     *(*toP)++ = (GET_HI(*fromP)<< 8) | GET_LO(*fromP); \ }
 end_define
@@ -2772,7 +2837,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|little2_byteType
 parameter_list|(
 specifier|const
@@ -2800,7 +2865,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|little2_byteToAscii
 parameter_list|(
 specifier|const
@@ -2828,7 +2893,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|little2_charMatches
 parameter_list|(
 specifier|const
@@ -2861,7 +2926,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|little2_isNameMin
 parameter_list|(
 specifier|const
@@ -2889,7 +2954,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|little2_isNmstrtMin
 parameter_list|(
 specifier|const
@@ -3056,11 +3121,23 @@ parameter_list|)
 value|LITTLE2_IS_NMSTRT_CHAR_MINBPC(enc, p)
 end_define
 
+begin_define
+define|#
+directive|define
+name|XML_TOK_IMPL_C
+end_define
+
 begin_include
 include|#
 directive|include
 file|"xmltok_impl.c"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|XML_TOK_IMPL_C
+end_undef
 
 begin_undef
 undef|#
@@ -3408,7 +3485,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|big2_byteType
 parameter_list|(
 specifier|const
@@ -3436,7 +3513,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|big2_byteToAscii
 parameter_list|(
 specifier|const
@@ -3464,7 +3541,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|big2_charMatches
 parameter_list|(
 specifier|const
@@ -3497,7 +3574,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|big2_isNameMin
 parameter_list|(
 specifier|const
@@ -3525,7 +3602,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|big2_isNmstrtMin
 parameter_list|(
 specifier|const
@@ -3692,11 +3769,23 @@ parameter_list|)
 value|BIG2_IS_NMSTRT_CHAR_MINBPC(enc, p)
 end_define
 
+begin_define
+define|#
+directive|define
+name|XML_TOK_IMPL_C
+end_define
+
 begin_include
 include|#
 directive|include
 file|"xmltok_impl.c"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|XML_TOK_IMPL_C
+end_undef
 
 begin_undef
 undef|#
@@ -4070,7 +4159,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|FASTCALL
+name|PTRCALL
 name|initUpdatePosition
 parameter_list|(
 specifier|const
@@ -4113,7 +4202,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
 name|toAscii
 parameter_list|(
 specifier|const
@@ -4225,7 +4313,6 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
 name|parsePseudoAttribute
 parameter_list|(
 specifier|const
@@ -5420,6 +5507,7 @@ end_function
 
 begin_function
 name|int
+name|FASTCALL
 name|XmlUtf8Encode
 parameter_list|(
 name|int
@@ -5695,6 +5783,7 @@ end_function
 
 begin_function
 name|int
+name|FASTCALL
 name|XmlUtf16Encode
 parameter_list|(
 name|int
@@ -5804,22 +5893,9 @@ name|struct
 name|normal_encoding
 name|normal
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|CONVERTER
 name|convert
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|userData
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
+decl_stmt|;
 name|void
 modifier|*
 name|userData
@@ -5874,7 +5950,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|unknown_isName
 parameter_list|(
 specifier|const
@@ -5943,7 +6019,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|unknown_isNmstrt
 parameter_list|(
 specifier|const
@@ -6012,7 +6088,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRFASTCALL
 name|unknown_isInvalid
 parameter_list|(
 specifier|const
@@ -6072,7 +6148,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|FASTCALL
+name|PTRCALL
 name|unknown_toUtf8
 parameter_list|(
 specifier|const
@@ -6283,7 +6359,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|FASTCALL
+name|PTRCALL
 name|unknown_toUtf16
 parameter_list|(
 specifier|const
@@ -6442,21 +6518,8 @@ name|int
 modifier|*
 name|table
 parameter_list|,
-name|int
-function_decl|(
-modifier|*
+name|CONVERTER
 name|convert
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|userData
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|p
-parameter_list|)
 parameter_list|,
 name|void
 modifier|*
@@ -6471,6 +6534,11 @@ name|unknown_encoding
 modifier|*
 name|e
 init|=
+operator|(
+expr|struct
+name|unknown_encoding
+operator|*
+operator|)
 name|mem
 decl_stmt|;
 for|for
@@ -7312,6 +7380,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|encodingNames
 index|[]
 init|=
@@ -7424,12 +7493,12 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
 name|initScan
 parameter_list|(
 specifier|const
 name|ENCODING
 modifier|*
+specifier|const
 modifier|*
 name|encodingTable
 parameter_list|,
@@ -7951,11 +8020,23 @@ parameter_list|)
 value|x
 end_define
 
+begin_define
+define|#
+directive|define
+name|XML_TOK_NS_C
+end_define
+
 begin_include
 include|#
 directive|include
 file|"xmltok_ns.c"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|XML_TOK_NS_C
+end_undef
 
 begin_undef
 undef|#
@@ -7995,11 +8076,23 @@ parameter_list|)
 value|x ## _ns
 end_define
 
+begin_define
+define|#
+directive|define
+name|XML_TOK_NS_C
+end_define
+
 begin_include
 include|#
 directive|include
 file|"xmltok_ns.c"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|XML_TOK_NS_C
+end_undef
 
 begin_undef
 undef|#
@@ -8026,21 +8119,8 @@ name|int
 modifier|*
 name|table
 parameter_list|,
-name|int
-function_decl|(
-modifier|*
+name|CONVERTER
 name|convert
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|userData
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|p
-parameter_list|)
 parameter_list|,
 name|void
 modifier|*

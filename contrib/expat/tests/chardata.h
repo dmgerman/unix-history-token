@@ -3,41 +3,34 @@ begin_comment
 comment|/* chardata.h     Interface to some helper routines used to accumulate and check text    and attribute content. */
 end_comment
 
-begin_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|XML_CHARDATA_H
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|XML_CHARDATA_H
 value|1
-end_define
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|XML_VERSION
-end_ifndef
-
-begin_include
 include|#
 directive|include
 file|"expat.h"
-end_include
-
-begin_comment
 comment|/* need XML_Char */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_typedef
 typedef|typedef
 struct|struct
 block|{
@@ -54,9 +47,6 @@ decl_stmt|;
 block|}
 name|CharData
 typedef|;
-end_typedef
-
-begin_function_decl
 name|void
 name|CharData_Init
 parameter_list|(
@@ -65,9 +55,6 @@ modifier|*
 name|storage
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|CharData_AppendString
 parameter_list|(
@@ -81,9 +68,6 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|CharData_AppendXMLChars
 parameter_list|(
@@ -100,9 +84,6 @@ name|int
 name|len
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|CharData_CheckString
 parameter_list|(
@@ -116,9 +97,6 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|CharData_CheckXMLChars
 parameter_list|(
@@ -132,16 +110,19 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
+endif|#
+directive|endif
+comment|/* XML_CHARDATA_H */
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* XML_CHARDATA_H */
-end_comment
 
 end_unit
 

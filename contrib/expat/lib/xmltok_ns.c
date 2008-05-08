@@ -1,4 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* Copyright (c) 1998, 1999 Thai Open Source Software Center Ltd    See the file COPYING for copying permission. */
+end_comment
+
+begin_comment
+comment|/* This file is included! */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XML_TOK_NS_C
+end_ifdef
+
 begin_function
 specifier|const
 name|ENCODING
@@ -109,6 +123,7 @@ specifier|static
 specifier|const
 name|ENCODING
 modifier|*
+specifier|const
 name|NS
 argument_list|(
 name|encodings
@@ -179,7 +194,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|NS
 function|(
 name|initScanProlog
@@ -237,7 +252,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|NS
 function|(
 name|initScanContent
@@ -612,6 +627,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XML_TOK_NS_C */
+end_comment
 
 end_unit
 

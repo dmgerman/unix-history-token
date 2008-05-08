@@ -3,6 +3,12 @@ begin_comment
 comment|/* Copyright (c) 1998, 1999 Thai Open Source Software Center Ltd    See the file COPYING for copying permission. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -30,10 +36,46 @@ directive|include
 file|"macconfig.h"
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__amigaos4__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"amigaconfig.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__WATCOMC__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"watcomconfig.h"
+end_include
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EXPAT_CONFIG_H
+end_ifdef
 
 begin_include
 include|#
@@ -46,9 +88,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* ndef COMPILED_FROM_DSP */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"expat_external.h"
+end_include
 
 begin_include
 include|#
@@ -360,6 +413,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XML_DTD
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -384,6 +443,11 @@ literal|'\0'
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -412,6 +476,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XML_DTD
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -438,6 +508,11 @@ literal|'\0'
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -720,7 +795,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|int
-name|FASTCALL
+name|PTRCALL
 name|PROLOG_HANDLER
 parameter_list|(
 name|PROLOG_STATE
@@ -880,7 +955,7 @@ end_function_decl
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|prolog0
 parameter_list|(
 name|PROLOG_STATE
@@ -1026,7 +1101,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|prolog1
 parameter_list|(
 name|PROLOG_STATE
@@ -1142,7 +1217,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|prolog2
 parameter_list|(
 name|PROLOG_STATE
@@ -1218,7 +1293,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|doctype0
 parameter_list|(
 name|PROLOG_STATE
@@ -1285,7 +1360,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|doctype1
 parameter_list|(
 name|PROLOG_STATE
@@ -1413,7 +1488,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|doctype2
 parameter_list|(
 name|PROLOG_STATE
@@ -1477,7 +1552,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|doctype3
 parameter_list|(
 name|PROLOG_STATE
@@ -1541,7 +1616,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|doctype4
 parameter_list|(
 name|PROLOG_STATE
@@ -1617,7 +1692,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|doctype5
 parameter_list|(
 name|PROLOG_STATE
@@ -1681,7 +1756,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|internalSubset
 parameter_list|(
 name|PROLOG_STATE
@@ -1876,6 +1951,12 @@ expr_stmt|;
 return|return
 name|XML_ROLE_DOCTYPE_NONE
 return|;
+case|case
+name|XML_TOK_NONE
+case|:
+return|return
+name|XML_ROLE_NONE
+return|;
 block|}
 return|return
 name|common
@@ -1897,7 +1978,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|externalSubset0
 parameter_list|(
 name|PROLOG_STATE
@@ -1958,7 +2039,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|externalSubset1
 parameter_list|(
 name|PROLOG_STATE
@@ -2084,7 +2165,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity0
 parameter_list|(
 name|PROLOG_STATE
@@ -2160,7 +2241,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity1
 parameter_list|(
 name|PROLOG_STATE
@@ -2224,7 +2305,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity2
 parameter_list|(
 name|PROLOG_STATE
@@ -2346,7 +2427,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity3
 parameter_list|(
 name|PROLOG_STATE
@@ -2410,7 +2491,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity4
 parameter_list|(
 name|PROLOG_STATE
@@ -2474,7 +2555,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity5
 parameter_list|(
 name|PROLOG_STATE
@@ -2565,7 +2646,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity6
 parameter_list|(
 name|PROLOG_STATE
@@ -2635,7 +2716,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity7
 parameter_list|(
 name|PROLOG_STATE
@@ -2757,7 +2838,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity8
 parameter_list|(
 name|PROLOG_STATE
@@ -2821,7 +2902,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity9
 parameter_list|(
 name|PROLOG_STATE
@@ -2885,7 +2966,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|entity10
 parameter_list|(
 name|PROLOG_STATE
@@ -2948,7 +3029,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|notation0
 parameter_list|(
 name|PROLOG_STATE
@@ -3012,7 +3093,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|notation1
 parameter_list|(
 name|PROLOG_STATE
@@ -3116,7 +3197,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|notation2
 parameter_list|(
 name|PROLOG_STATE
@@ -3180,7 +3261,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|notation3
 parameter_list|(
 name|PROLOG_STATE
@@ -3250,7 +3331,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|notation4
 parameter_list|(
 name|PROLOG_STATE
@@ -3331,7 +3412,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist0
 parameter_list|(
 name|PROLOG_STATE
@@ -3398,7 +3479,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist1
 parameter_list|(
 name|PROLOG_STATE
@@ -3476,7 +3557,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist2
 parameter_list|(
 name|PROLOG_STATE
@@ -3521,6 +3602,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|types
 index|[]
 init|=
@@ -3656,7 +3738,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist3
 parameter_list|(
 name|PROLOG_STATE
@@ -3726,7 +3808,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist4
 parameter_list|(
 name|PROLOG_STATE
@@ -3802,7 +3884,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist5
 parameter_list|(
 name|PROLOG_STATE
@@ -3866,7 +3948,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist6
 parameter_list|(
 name|PROLOG_STATE
@@ -3930,7 +4012,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist7
 parameter_list|(
 name|PROLOG_STATE
@@ -4010,7 +4092,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist8
 parameter_list|(
 name|PROLOG_STATE
@@ -4165,7 +4247,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|attlist9
 parameter_list|(
 name|PROLOG_STATE
@@ -4229,7 +4311,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|element0
 parameter_list|(
 name|PROLOG_STATE
@@ -4296,7 +4378,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|element1
 parameter_list|(
 name|PROLOG_STATE
@@ -4430,7 +4512,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|element2
 parameter_list|(
 name|PROLOG_STATE
@@ -4584,7 +4666,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|element3
 parameter_list|(
 name|PROLOG_STATE
@@ -4684,7 +4766,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|element4
 parameter_list|(
 name|PROLOG_STATE
@@ -4751,7 +4833,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|element5
 parameter_list|(
 name|PROLOG_STATE
@@ -4833,7 +4915,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|element6
 parameter_list|(
 name|PROLOG_STATE
@@ -4948,7 +5030,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|element7
 parameter_list|(
 name|PROLOG_STATE
@@ -5166,7 +5248,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|condSect0
 parameter_list|(
 name|PROLOG_STATE
@@ -5270,7 +5352,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|condSect1
 parameter_list|(
 name|PROLOG_STATE
@@ -5340,7 +5422,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|condSect2
 parameter_list|(
 name|PROLOG_STATE
@@ -5413,7 +5495,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|declClose
 parameter_list|(
 name|PROLOG_STATE
@@ -5480,7 +5562,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|FASTCALL
+name|PTRCALL
 name|error
 parameter_list|(
 name|PROLOG_STATE
