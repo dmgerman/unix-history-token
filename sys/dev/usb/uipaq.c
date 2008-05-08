@@ -402,6 +402,16 @@ block|{
 block|{
 name|USB_VENDOR_HTC
 block|,
+name|USB_PRODUCT_HTC_PPC6700MODEM
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_HTC
+block|,
 name|USB_PRODUCT_HTC_SMARTPHONE
 block|}
 block|,
