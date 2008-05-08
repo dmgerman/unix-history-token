@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: com_right.h,v 1.11 2000/07/31 01:11:08 assar Exp $ */
+comment|/* $Id: com_right.h 14551 2005-02-03 08:45:13Z lha $ */
 end_comment
 
 begin_comment
@@ -83,63 +83,54 @@ name|_et_list
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
 name|com_right
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|et_list
-operator|*
+modifier|*
 name|list
-operator|,
+parameter_list|,
 name|long
 name|code
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|initialize_error_table_r
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|et_list
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|free_error_table
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|et_list
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

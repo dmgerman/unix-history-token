@@ -22,7 +22,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: com_err.c,v 1.18 2002/03/10 23:07:01 assar Exp $"
+literal|"$Id: com_err.c 14930 2005-04-24 19:43:06Z lha $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -108,9 +108,14 @@ name|code
 operator|<
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|msg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+argument_list|)
 argument_list|,
 literal|"Unknown error %ld"
 argument_list|,
@@ -138,7 +143,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|msg
 argument_list|,
@@ -148,27 +153,18 @@ sizeof|sizeof
 argument_list|(
 name|msg
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|snprintf
+argument_list|(
 name|msg
-index|[
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|msg
 argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|sprintf
-argument_list|(
-name|msg
 argument_list|,
 literal|"Unknown error %ld"
 argument_list|,

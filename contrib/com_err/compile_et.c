@@ -32,7 +32,7 @@ literal|0
 end_if
 
 begin_endif
-unit|RCSID("$Id: compile_et.c,v 1.16 2002/08/20 12:44:51 joda Exp $");
+unit|RCSID("$Id: compile_et.c 15426 2005-06-16 19:21:42Z lha $");
 endif|#
 directive|endif
 end_endif
@@ -75,7 +75,7 @@ end_function_decl
 
 begin_decl_stmt
 name|long
-name|base
+name|base_id
 decl_stmt|;
 end_decl_stmt
 
@@ -697,7 +697,7 @@ name|ec
 operator|->
 name|name
 argument_list|,
-name|base
+name|base_id
 operator|+
 name|ec
 operator|->
@@ -741,7 +741,7 @@ literal|"#define ERROR_TABLE_BASE_%s %ld\n"
 argument_list|,
 name|name
 argument_list|,
-name|base
+name|base_id
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -881,7 +881,7 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
-name|optind
+name|optidx
 init|=
 literal|0
 decl_stmt|;
@@ -906,7 +906,7 @@ argument_list|,
 name|argv
 argument_list|,
 operator|&
-name|optind
+name|optidx
 argument_list|)
 condition|)
 name|usage
@@ -925,7 +925,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|optind
+name|optidx
 operator|==
 name|argc
 condition|)
@@ -938,7 +938,7 @@ name|filename
 operator|=
 name|argv
 index|[
-name|optind
+name|optidx
 index|]
 expr_stmt|;
 name|yyin
@@ -986,7 +986,7 @@ name|p
 operator|=
 name|filename
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|Basename
 argument_list|,
@@ -997,18 +997,6 @@ argument_list|(
 name|Basename
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|Basename
-index|[
-sizeof|sizeof
-argument_list|(
-name|Basename
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|Basename
 index|[

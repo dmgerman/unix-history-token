@@ -8,7 +8,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: com_err.h,v 1.9 2001/05/11 20:03:36 assar Exp $ */
+comment|/* $Id: com_err.h 15566 2005-07-07 14:58:07Z lha $ */
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ directive|include
 file|<com_right.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|void
@@ -70,38 +76,32 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
 name|error_message
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|init_error_table
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|long
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -159,59 +159,47 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|errf
 name|set_com_err_hook
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|errf
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|errf
 name|reset_com_err_hook
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
 name|error_table_name
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|num
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|add_to_error_table
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|et_list
-operator|*
+modifier|*
 name|new_table
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
