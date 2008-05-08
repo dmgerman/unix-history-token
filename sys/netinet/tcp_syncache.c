@@ -2533,7 +2533,8 @@ name|tcps_sc_reset
 operator|++
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -2551,13 +2552,12 @@ name|NULL
 argument_list|)
 operator|)
 condition|)
-block|{
 name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: RST with invalid SEQ %u != IRS %u "
-literal|"(+WND %u), segment ignored\n"
+literal|"%s; %s: RST with invalid SEQ %u != "
+literal|"IRS %u (+WND %u), segment ignored\n"
 argument_list|,
 name|s
 argument_list|,
