@@ -2261,13 +2261,6 @@ name|Sync
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* Should not be needed. */
-block|if (op& BUS_DMASYNC_POSTREAD) { 		ecache_flush((vm_offset_t)map->buf, 		    (vm_offset_t)map->buf + map->buflen - 1); 	}
-endif|#
-directive|endif
 if|if
 condition|(
 name|op
