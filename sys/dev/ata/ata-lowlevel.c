@@ -1001,6 +1001,15 @@ argument_list|)
 expr_stmt|;
 name|begin_finished
 label|:
+if|if
+condition|(
+name|ch
+operator|->
+name|dma
+operator|.
+name|unload
+condition|)
+block|{
 name|ch
 operator|->
 name|dma
@@ -1010,6 +1019,7 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ATA_OP_FINISHED
 return|;

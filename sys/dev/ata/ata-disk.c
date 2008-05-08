@@ -545,6 +545,14 @@ operator|->
 name|dma
 operator|.
 name|max_iosize
+condition|?
+name|ch
+operator|->
+name|dma
+operator|.
+name|max_iosize
+else|:
+name|DFLTPHYS
 expr_stmt|;
 name|adp
 operator|->
