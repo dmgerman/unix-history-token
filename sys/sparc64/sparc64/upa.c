@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pcpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/resource.h>
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<machine/bus_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
 end_include
 
 begin_include
