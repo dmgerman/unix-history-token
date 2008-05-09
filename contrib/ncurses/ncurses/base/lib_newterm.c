@@ -59,7 +59,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newterm.c,v 1.68 2008/01/12 20:24:40 tom Exp $"
+literal|"$Id: lib_newterm.c,v 1.69 2008/04/12 18:15:04 tom Exp $"
 argument_list|)
 end_macro
 
@@ -341,13 +341,6 @@ decl_stmt|;
 name|int
 name|errret
 decl_stmt|;
-name|int
-name|slk_format
-init|=
-name|_nc_globals
-operator|.
-name|slk_format
-decl_stmt|;
 name|SCREEN
 modifier|*
 name|current
@@ -377,6 +370,11 @@ name|ifp
 operator|)
 argument_list|)
 expr_stmt|;
+name|_nc_lock_global
+argument_list|(
+name|set_SP
+argument_list|)
+expr_stmt|;
 comment|/* this loads the capability entry, then sets LINES and COLS */
 if|if
 condition|(
@@ -392,17 +390,17 @@ argument_list|,
 operator|&
 name|errret
 argument_list|)
-operator|==
+operator|!=
 name|ERR
 condition|)
 block|{
-name|result
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
+name|int
+name|slk_format
+init|=
+name|_nc_globals
+operator|.
+name|slk_format
+decl_stmt|;
 comment|/* 	 * This actually allocates the screen structure, and saves the original 	 * terminal settings. 	 */
 name|current
 operator|=
@@ -428,23 +426,11 @@ operator|>=
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|USE_REENTRANT
-name|SP
-operator|->
-name|_ESCDELAY
-operator|=
+name|set_escdelay
+argument_list|(
 name|value
+argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ESCDELAY
-operator|=
-name|value
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -654,6 +640,11 @@ name|SP
 expr_stmt|;
 block|}
 block|}
+name|_nc_unlock_global
+argument_list|(
+name|set_SP
+argument_list|)
+expr_stmt|;
 name|returnSP
 argument_list|(
 name|result

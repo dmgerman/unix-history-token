@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_data.c,v 1.39 2008/01/13 01:21:59 tom Exp $"
+literal|"$Id: lib_data.c,v 1.43 2008/03/29 21:16:49 tom Exp $"
 argument_list|)
 end_macro
 
@@ -397,6 +397,9 @@ comment|/* tgetent_index */
 literal|0
 block|,
 comment|/* tgetent_sequence */
+literal|0
+block|,
+comment|/* _nc_windowlist */
 if|#
 directive|if
 name|USE_HOME_TERMINFO
@@ -462,9 +465,6 @@ comment|/* tracetry_buf */
 literal|0
 block|,
 comment|/* tracetry_used */
-ifndef|#
-directive|ifndef
-name|USE_TERMLIB
 block|{
 name|CHARS_0s
 block|,
@@ -479,9 +479,6 @@ operator|-
 literal|1
 block|,
 comment|/* traceatr_color_last */
-endif|#
-directive|endif
-comment|/* USE_TERMLIB */
 endif|#
 directive|endif
 comment|/* TRACE */
@@ -666,6 +663,137 @@ directive|ifdef
 name|USE_PTHREADS
 end_ifdef
 
+begin_function
+specifier|static
+name|void
+name|init_global_mutexes
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
+name|bool
+name|initialized
+init|=
+name|FALSE
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|initialized
+condition|)
+block|{
+name|initialized
+operator|=
+name|TRUE
+expr_stmt|;
+name|_nc_mutex_init
+argument_list|(
+operator|&
+name|_nc_globals
+operator|.
+name|mutex_set_SP
+argument_list|)
+expr_stmt|;
+name|_nc_mutex_init
+argument_list|(
+operator|&
+name|_nc_globals
+operator|.
+name|mutex_use_screen
+argument_list|)
+expr_stmt|;
+name|_nc_mutex_init
+argument_list|(
+operator|&
+name|_nc_globals
+operator|.
+name|mutex_use_window
+argument_list|)
+expr_stmt|;
+name|_nc_mutex_init
+argument_list|(
+operator|&
+name|_nc_globals
+operator|.
+name|mutex_windowlist
+argument_list|)
+expr_stmt|;
+name|_nc_mutex_init
+argument_list|(
+operator|&
+name|_nc_globals
+operator|.
+name|mutex_tst_tracef
+argument_list|)
+expr_stmt|;
+name|_nc_mutex_init
+argument_list|(
+operator|&
+name|_nc_globals
+operator|.
+name|mutex_tracef
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Use recursive mutexes if we have them - they're part of Unix98.  * For the cases where we do not, _nc_mutex_trylock() is used to avoid a  * deadlock, at the expense of memory leaks and unexpected failures that  * may not be handled by typical clients.  *  * FIXME - need configure check for PTHREAD_MUTEX_RECURSIVE, define it to  * PTHREAD_MUTEX_NORMAL if not supported.  */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_mutex_init
+argument_list|(
+argument|pthread_mutex_t * obj
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|pthread_mutexattr_t
+name|recattr
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|recattr
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|recattr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pthread_mutexattr_settype
+argument_list|(
+operator|&
+name|recattr
+argument_list|,
+name|PTHREAD_MUTEX_RECURSIVE
+argument_list|)
+expr_stmt|;
+name|pthread_mutex_init
+argument_list|(
+name|obj
+argument_list|,
+operator|&
+name|recattr
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
@@ -676,12 +804,15 @@ end_macro
 begin_macro
 name|_nc_mutex_lock
 argument_list|(
-argument|pthread_mutex_t *obj
+argument|pthread_mutex_t * obj
 argument_list|)
 end_macro
 
 begin_block
 block|{
+name|init_global_mutexes
+argument_list|()
+expr_stmt|;
 return|return
 name|pthread_mutex_lock
 argument_list|(
@@ -701,12 +832,15 @@ end_macro
 begin_macro
 name|_nc_mutex_trylock
 argument_list|(
-argument|pthread_mutex_t *obj
+argument|pthread_mutex_t * obj
 argument_list|)
 end_macro
 
 begin_block
 block|{
+name|init_global_mutexes
+argument_list|()
+expr_stmt|;
 return|return
 name|pthread_mutex_trylock
 argument_list|(
@@ -726,12 +860,15 @@ end_macro
 begin_macro
 name|_nc_mutex_unlock
 argument_list|(
-argument|pthread_mutex_t *obj
+argument|pthread_mutex_t * obj
 argument_list|)
 end_macro
 
 begin_block
 block|{
+name|init_global_mutexes
+argument_list|()
+expr_stmt|;
 return|return
 name|pthread_mutex_unlock
 argument_list|(

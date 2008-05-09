@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_addch.c,v 1.108 2008/02/03 18:50:27 tom Exp $"
+literal|"$Id: lib_addch.c,v 1.111 2008/03/29 18:48:02 tom Exp $"
 argument_list|)
 end_macro
 
@@ -857,6 +857,11 @@ name|ch
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|if_EXT_COLORS
+argument_list|(
+argument|int pair = GetPair(CHDEREF(ch))
+argument_list|)
+empty_stmt|;
 name|SetChar
 argument_list|(
 name|CHDEREF
@@ -867,6 +872,19 @@ argument_list|,
 name|result
 argument_list|,
 name|attrs
+argument_list|)
+expr_stmt|;
+name|if_EXT_COLORS
+argument_list|(
+name|SetPair
+argument_list|(
+name|CHDEREF
+argument_list|(
+name|ch
+argument_list|)
+argument_list|,
+name|pair
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|WINDOW_EXT
@@ -1544,6 +1562,19 @@ argument_list|,
 name|AttrOf
 argument_list|(
 name|ch
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|if_EXT_COLORS
+argument_list|(
+name|SetPair
+argument_list|(
+name|sch
+argument_list|,
+name|GetPair
+argument_list|(
+name|ch
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
