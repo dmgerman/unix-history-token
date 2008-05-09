@@ -141,7 +141,7 @@ name|kt
 operator|=
 name|kgdb_thr_lookup_tid
 argument_list|(
-name|ptid_get_tid
+name|ptid_get_pid
 argument_list|(
 name|inferior_ptid
 argument_list|)
@@ -503,7 +503,7 @@ name|kt
 operator|=
 name|kgdb_thr_lookup_tid
 argument_list|(
-name|ptid_get_tid
+name|ptid_get_pid
 argument_list|(
 name|inferior_ptid
 argument_list|)
