@@ -124,16 +124,30 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|rtalloc_mpath
+name|rtalloc_mpath_fib
 parameter_list|(
 name|struct
 name|route
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|rtalloc_mpath
+parameter_list|(
+name|_route
+parameter_list|,
+name|_hash
+parameter_list|)
+value|rtalloc_mpath_fib((_route), (_hash), 0)
+end_define
 
 begin_function_decl
 name|struct

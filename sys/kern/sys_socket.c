@@ -872,11 +872,15 @@ literal|'r'
 condition|)
 name|error
 operator|=
-name|rtioctl
+name|rtioctl_fib
 argument_list|(
 name|cmd
 argument_list|,
 name|data
+argument_list|,
+name|so
+operator|->
+name|so_fibnum
 argument_list|)
 expr_stmt|;
 else|else

@@ -2620,6 +2620,7 @@ argument_list|(
 name|sin
 argument_list|)
 expr_stmt|;
+comment|/* XXX MRT use table 0 for this sort of thing */
 name|error
 operator|=
 name|rtrequest

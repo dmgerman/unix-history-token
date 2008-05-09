@@ -931,6 +931,16 @@ name|inp_socket
 operator|=
 name|so
 expr_stmt|;
+name|inp
+operator|->
+name|inp_inc
+operator|.
+name|inc_fibnum
+operator|=
+name|so
+operator|->
+name|so_fibnum
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -2971,6 +2981,12 @@ operator|=
 name|ip_rtaddr
 argument_list|(
 name|faddr
+argument_list|,
+name|inp
+operator|->
+name|inp_inc
+operator|.
+name|inc_fibnum
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If we found a route, use the address corresponding to 		 * the outgoing interface. 		 *  		 * Otherwise assume faddr is reachable on a directly connected 		 * network and try to find a corresponding interface to take 		 * the source address from. 		 */

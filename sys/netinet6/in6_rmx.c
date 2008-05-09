@@ -1632,7 +1632,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Initialize our routing tree.  */
+comment|/*  * Initialize our routing tree.  * XXX MRT When off == 0, we are being called from vfs_export.c  * so just set up their table and leave. (we know what the correct  * value should be so just use that).. FIX AFTER RELENG_7 is MFC'd  * see also comments in in_inithead() vfs_export.c and domain.h  */
 end_comment
 
 begin_function
@@ -1660,32 +1660,32 @@ name|rn_inithead
 argument_list|(
 name|head
 argument_list|,
-name|off
+name|offsetof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|,
+name|sin6_addr
+argument_list|)
+operator|<<
+literal|3
 argument_list|)
 condition|)
 return|return
 literal|0
 return|;
+comment|/* See above */
 if|if
 condition|(
-name|head
-operator|!=
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|rt_tables
-index|[
-name|AF_INET6
-index|]
+name|off
+operator|==
+literal|0
 condition|)
-comment|/* BOGUS! */
+comment|/* See above */
 return|return
 literal|1
 return|;
-comment|/* only do this for the real routing table */
+comment|/* only do the rest for the real thing */
 name|rnh
 operator|=
 operator|*

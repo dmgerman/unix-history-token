@@ -5066,9 +5066,11 @@ operator|*
 name|dst
 argument_list|)
 expr_stmt|;
-name|rtalloc
+name|in_rtalloc
 argument_list|(
 name|ro
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6117,10 +6119,12 @@ name|fin
 operator|->
 name|fin_src
 expr_stmt|;
-name|rtalloc
+name|in_rtalloc
 argument_list|(
 operator|&
 name|iproute
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

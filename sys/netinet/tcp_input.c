@@ -2141,7 +2141,7 @@ name|rcvif
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the INPCB does not exist then all data in the incoming 	 * segment is discarded and an appropriate RST is sent back. 	 */
+comment|/* 	 * If the INPCB does not exist then all data in the incoming 	 * segment is discarded and an appropriate RST is sent back. 	 * XXX MRT Send RST using which routing table? 	 */
 if|if
 condition|(
 name|inp

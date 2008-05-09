@@ -973,7 +973,7 @@ end_function
 
 begin_function
 name|void
-name|rtalloc_mpath
+name|rtalloc_mpath_fib
 parameter_list|(
 name|struct
 name|route
@@ -982,6 +982,9 @@ name|ro
 parameter_list|,
 name|int
 name|hash
+parameter_list|,
+name|u_int
+name|fibnum
 parameter_list|)
 block|{
 name|struct
@@ -1024,7 +1027,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|=
-name|rtalloc1
+name|rtalloc1_fib
 argument_list|(
 operator|&
 name|ro
@@ -1034,6 +1037,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0UL
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 comment|/* if the route does not exist or it is not multipath, don't care */

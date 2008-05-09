@@ -674,6 +674,17 @@ begin_comment
 comment|/* socket's incomplete queue length */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_SETFIB
+value|0x1014
+end_define
+
+begin_comment
+comment|/* use this FIB to route */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

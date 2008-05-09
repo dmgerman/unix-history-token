@@ -1170,6 +1170,17 @@ name|ICMP_MINLEN
 operator|+
 name|icmplen
 expr_stmt|;
+comment|/* XXX MRT  make the outgoing packet use the same FIB 	 * that was associated with the incoming packet 	 */
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|n
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|icp
 operator|=
 name|mtod
@@ -1526,6 +1537,9 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+name|int
+name|fibnum
+decl_stmt|;
 comment|/* 	 * Locate icmp structure in mbuf, and check 	 * that not corrupted and of at least minimum length. 	 */
 ifdef|#
 directive|ifdef
@@ -2838,7 +2852,21 @@ name|icmp_ip
 operator|.
 name|ip_dst
 expr_stmt|;
-name|rtredirect
+for|for
+control|(
+name|fibnum
+operator|=
+literal|0
+init|;
+name|fibnum
+operator|<
+name|rt_numfibs
+condition|;
+name|fibnum
+operator|++
+control|)
+block|{
+name|in_rtredirect
 argument_list|(
 operator|(
 expr|struct
@@ -2874,8 +2902,11 @@ operator|*
 operator|)
 operator|&
 name|icmpgw
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
+block|}
 name|pfctlinput
 argument_list|(
 name|PRC_REDIRECT_HOST
@@ -3306,6 +3337,11 @@ argument_list|(
 name|ip
 operator|->
 name|ip_dst
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

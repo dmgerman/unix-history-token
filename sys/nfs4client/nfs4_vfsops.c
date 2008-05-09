@@ -3886,10 +3886,13 @@ name|rc_name
 expr_stmt|;
 endif|#
 directive|endif
-name|rtalloc
+comment|/* XXX MRT NFS uses table 0 */
+name|in_rtalloc
 argument_list|(
 operator|&
 name|ro
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

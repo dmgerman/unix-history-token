@@ -509,6 +509,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -573,7 +575,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-name|rtrequest
+name|in_rtrequest
 argument_list|(
 name|RTM_DELETE
 argument_list|,
@@ -592,6 +594,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|rt
+operator|->
+name|rt_fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -1703,6 +1709,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|int
+name|fibnum
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|m
@@ -1775,6 +1786,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|fibnum
+operator|=
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1783,9 +1801,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Look for a cached arp (ll) entry. */
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+name|fibnum
+operator|=
+name|rt0
+operator|->
+name|rt_fibnum
+expr_stmt|;
 name|error
 operator|=
-name|rt_check
+name|in_rt_check
 argument_list|(
 operator|&
 name|rt
@@ -1794,6 +1825,8 @@ operator|&
 name|rt0
 argument_list|,
 name|dst
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -1840,7 +1873,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * We enter this block in case if rt0 was NULL, 		 * or if rt found by rt_check() didn't have llinfo. 		 */
+comment|/* 		 * We enter this block if rt0 was NULL, 		 * or if rt found by in_rt_check() didn't have llinfo. 		 * we should get a cloned route, which since it should 		 * come from the local interface should have a ll entry. 		 * if may be incoplete but that's ok. 		 * XXXMRT if we haven't found a fibnum is that OK? 		 */
 name|rt
 operator|=
 name|arplookup
@@ -1857,6 +1890,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -2695,6 +2730,19 @@ name|bridged
 init|=
 literal|0
 decl_stmt|;
+name|u_int
+name|fibnum
+decl_stmt|;
+name|u_int
+name|goodfib
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|firstpass
+init|=
+literal|1
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_CARP
@@ -3199,6 +3247,21 @@ condition|)
 goto|goto
 name|reply
 goto|;
+comment|/* 	 * We look for any FIBs that has this address to find 	 * the interface etc. 	 * For sanity checks that are FIB independent we abort the loop. 	 */
+for|for
+control|(
+name|fibnum
+operator|=
+literal|0
+init|;
+name|fibnum
+operator|<
+name|rt_numfibs
+condition|;
+name|fibnum
+operator|++
+control|)
+block|{
 name|rt
 operator|=
 name|arplookup
@@ -3216,13 +3279,30 @@ operator|.
 name|s_addr
 argument_list|,
 literal|0
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|rt
-operator|!=
+operator|==
 name|NULL
+condition|)
+continue|continue;
+name|sdl
+operator|=
+name|SDL
+argument_list|(
+name|rt
+operator|->
+name|rt_gateway
+argument_list|)
+expr_stmt|;
+comment|/* Only call this once */
+if|if
+condition|(
+name|firstpass
 condition|)
 block|{
 name|sin
@@ -3255,6 +3335,7 @@ operator|&
 name|sin
 argument_list|)
 expr_stmt|;
+block|}
 name|la
 operator|=
 operator|(
@@ -3278,15 +3359,13 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-goto|goto
-name|reply
-goto|;
+continue|continue;
 block|}
-block|}
-else|else
-goto|goto
-name|reply
-goto|;
+if|if
+condition|(
+name|firstpass
+condition|)
+block|{
 comment|/* The following is not an error when doing bridging. */
 if|if
 condition|(
@@ -3324,7 +3403,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: %s is on %s but got reply from %*D on %s\n"
+literal|"arp: %s is on %s "
+literal|"but got reply from %*D "
+literal|"on %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3362,19 +3443,8 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-goto|goto
-name|reply
-goto|;
+break|break;
 block|}
-name|sdl
-operator|=
-name|SDL
-argument_list|(
-name|rt
-operator|->
-name|rt_gateway
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sdl
@@ -3414,7 +3484,8 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"arp: %s moved from %*D to %*D on %s\n"
+literal|"arp: %s moved from %*D to %*D "
+literal|"on %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3472,8 +3543,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: %*D attempts to modify "
-literal|"permanent entry for %s on %s\n"
+literal|"arp: %*D attempts to "
+literal|"modify permanent entry "
+literal|"for %s on %s\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3500,12 +3572,10 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-goto|goto
-name|reply
-goto|;
+break|break;
 block|}
 block|}
-comment|/* 	 * sanity check for the address length. 	 * XXX this does not work for protocols with variable address 	 * length. -is 	 */
+comment|/* 			 * sanity check for the address length. 			 * XXX this does not work for protocols 			 * with variable address length. -is 			 */
 if|if
 condition|(
 name|sdl
@@ -3567,7 +3637,8 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"arp from %*D: addr len: new %d, i/f %d (ignored)"
+literal|"arp from %*D: addr len: "
+literal|"new %d, i/f %d (ignored)"
 argument_list|,
 name|ifp
 operator|->
@@ -3598,10 +3669,18 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-goto|goto
-name|reply
-goto|;
+break|break;
 block|}
+name|firstpass
+operator|=
+literal|0
+expr_stmt|;
+name|goodfib
+operator|=
+name|fibnum
+expr_stmt|;
+block|}
+comment|/* Copy in the information received. */
 operator|(
 name|void
 operator|)
@@ -3626,7 +3705,7 @@ operator|->
 name|ar_hln
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we receive an arp from a token-ring station over 	 * a token-ring nic then try to save the source 	 * routing info. 	 */
+comment|/* 		 * If we receive an arp from a token-ring station over 		 * a token-ring nic then try to save the source routing info. 		 * XXXMRT Only minimal Token Ring support for MRT. 		 * Only do this on the first pass as if modifies the mbuf. 		 */
 if|if
 condition|(
 name|ifp
@@ -3648,6 +3727,13 @@ name|iso88025_sockaddr_dl_data
 modifier|*
 name|trld
 decl_stmt|;
+comment|/* force the fib loop to end after this pass */
+name|fibnum
+operator|=
+name|rt_numfibs
+operator|-
+literal|1
+expr_stmt|;
 name|th
 operator|=
 operator|(
@@ -3739,7 +3825,7 @@ argument_list|(
 name|TR_RCF_BCST_MASK
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Set up source routing information for 			 * reply packet (XXX) 			 */
+comment|/* 				 * Set up source routing information for 				 * reply packet (XXX) 				 */
 name|m
 operator|->
 name|m_data
@@ -3895,8 +3981,11 @@ argument_list|,
 name|rt
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* end of FIB loop */
 name|reply
 label|:
+comment|/* 	 * Decide if we have to respond to something. 	 */
 if|if
 condition|(
 name|op
@@ -3917,7 +4006,7 @@ operator|.
 name|s_addr
 condition|)
 block|{
-comment|/* I am the target */
+comment|/* Shortcut.. the receiving interface is the target. */
 operator|(
 name|void
 operator|)
@@ -3958,6 +4047,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* It's not asking for our address. But it still may 		 * be something we should answer. 		 * 		 * XXX MRT 		 * We assume that link level info is independent of 		 * the table used and so we use whichever we can and don't 		 * have a better option. 		 */
+comment|/* Have we been asked to proxy for the target. */
 name|rt
 operator|=
 name|arplookup
@@ -3969,6 +4060,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|SIN_PROXY
+argument_list|,
+name|goodfib
 argument_list|)
 expr_stmt|;
 if|if
@@ -3978,6 +4071,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Nope, only intersted now if proxying everything. */
 name|struct
 name|sockaddr_in
 name|sin
@@ -4018,9 +4112,10 @@ name|sin_addr
 operator|=
 name|itaddr
 expr_stmt|;
+comment|/* XXX MRT use table 0 for arp reply  */
 name|rt
 operator|=
-name|rtalloc1
+name|in_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -4033,6 +4128,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4111,9 +4208,10 @@ name|sin_addr
 operator|=
 name|isaddr
 expr_stmt|;
+comment|/* XXX MRT use table 0 for arp checks */
 name|rt
 operator|=
-name|rtalloc1
+name|in_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -4126,6 +4224,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4521,6 +4621,9 @@ name|create
 parameter_list|,
 name|int
 name|proxy
+parameter_list|,
+name|int
+name|fibnum
 parameter_list|)
 block|{
 name|struct
@@ -4585,7 +4688,7 @@ name|SIN_PROXY
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|in_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -4598,6 +4701,8 @@ argument_list|,
 name|create
 argument_list|,
 literal|0UL
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if

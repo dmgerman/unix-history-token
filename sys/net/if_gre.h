@@ -80,6 +80,10 @@ decl_stmt|;
 name|int
 name|gre_flags
 decl_stmt|;
+name|u_int
+name|gre_fibnum
+decl_stmt|;
+comment|/* use this fib for envelopes */
 name|struct
 name|in_addr
 name|g_src

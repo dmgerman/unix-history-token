@@ -5300,9 +5300,10 @@ operator|&
 name|defmask
 argument_list|)
 expr_stmt|;
+comment|/* XXX MRT just table 0 */
 name|error
 operator|=
-name|rtrequest
+name|rtrequest_fib
 argument_list|(
 name|RTM_ADD
 argument_list|,
@@ -5338,6 +5339,8 @@ name|RTF_STATIC
 operator|)
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

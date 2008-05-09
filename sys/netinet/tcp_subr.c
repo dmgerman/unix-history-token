@@ -2281,6 +2281,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 *  reuse the mbuf.  		 * XXX MRT We inherrit the FIB, which is lucky. 		 */
 name|m_freem
 argument_list|(
 name|m
@@ -5973,6 +5974,16 @@ name|inc_faddr
 operator|=
 name|faddr
 expr_stmt|;
+name|inc
+operator|.
+name|inc_fibnum
+operator|=
+name|inp
+operator|->
+name|inp_inc
+operator|.
+name|inc_fibnum
+expr_stmt|;
 name|mtu
 operator|=
 name|ntohs
@@ -7655,12 +7666,16 @@ name|inc
 operator|->
 name|inc_faddr
 expr_stmt|;
-name|rtalloc_ign
+name|in_rtalloc_ign
 argument_list|(
 operator|&
 name|sro
 argument_list|,
 name|RTF_CLONING
+argument_list|,
+name|inc
+operator|->
+name|inc_fibnum
 argument_list|)
 expr_stmt|;
 block|}

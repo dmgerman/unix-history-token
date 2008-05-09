@@ -781,6 +781,21 @@ begin_comment
 comment|/* protocol-specific */
 end_comment
 
+begin_comment
+comment|/*  * For RELENG_{6,7} steal these flags for limited multiple routing table  * support. In RELENG_8 and beyond, use just one flag and a tag.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FIB
+value|0xF0000000
+end_define
+
+begin_comment
+comment|/* steal some bits to store fib number. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -813,7 +828,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_SKIP_FIREWALL|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_SKIP_FIREWALL|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC|M_FIB)
 end_define
 
 begin_comment
@@ -1224,7 +1239,7 @@ name|u_long
 name|m_mhlen
 decl_stmt|;
 comment|/* length of data in a header mbuf */
-comment|/* Number of mbtypes (gives # elems in mbtypes[] array: */
+comment|/* Number of mbtypes (gives # elems in mbtypes[] array) */
 name|short
 name|m_numtypes
 decl_stmt|;
@@ -4335,6 +4350,51 @@ operator|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/* XXX temporary FIB methods probably eventually use tags.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FIBSHIFT
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FIBMASK
+value|0x0F
+end_define
+
+begin_comment
+comment|/* get the fib from an mbuf and if it is not set, return the default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_GETFIB
+parameter_list|(
+name|_m
+parameter_list|)
+define|\
+value|((((_m)->m_flags& M_FIB)>> M_FIBSHIFT)& M_FIBMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_SETFIB
+parameter_list|(
+name|_m
+parameter_list|,
+name|_fib
+parameter_list|)
+value|do {						\ 	_m->m_flags&= ~M_FIB;					   	\ 	_m->m_flags |= (((_fib)<< M_FIBSHIFT)& M_FIB);  \ } while (0)
+end_define
 
 begin_endif
 endif|#

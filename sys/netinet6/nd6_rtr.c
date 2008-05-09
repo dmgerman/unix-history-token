@@ -8432,6 +8432,9 @@ name|rnh
 init|=
 name|rt_tables
 index|[
+literal|0
+index|]
+index|[
 name|AF_INET6
 index|]
 decl_stmt|;

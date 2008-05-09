@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -284,6 +290,9 @@ define|#
 directive|define
 name|sc_ro
 value|__sc_ro46.__sc_ro4
+name|u_int
+name|sc_fibnum
+decl_stmt|;
 specifier|const
 name|struct
 name|encaptab
@@ -836,6 +845,16 @@ operator|->
 name|if_softc
 operator|=
 name|sc
+expr_stmt|;
+name|sc
+operator|->
+name|sc_fibnum
+operator|=
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_fibnum
 expr_stmt|;
 comment|/* 	 * Set the name manually rather then using if_initname because 	 * we don't conform to the default naming convention for interfaces. 	 */
 name|strlcpy
@@ -2286,12 +2305,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|rtalloc
+name|rtalloc_fib
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_ro
+argument_list|,
+name|sc
+operator|->
+name|sc_fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -2320,6 +2343,15 @@ name|ENETUNREACH
 return|;
 block|}
 block|}
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|sc
+operator|->
+name|sc_fibnum
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_opackets
@@ -2642,7 +2674,7 @@ name|in
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|rtalloc1_fib
 argument_list|(
 operator|(
 expr|struct
@@ -2655,6 +2687,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+name|sc
+operator|->
+name|sc_fibnum
 argument_list|)
 expr_stmt|;
 if|if

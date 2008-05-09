@@ -3828,13 +3828,16 @@ block|}
 block|,
 comment|/* 174 = freebsd6_pwrite */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|setfib_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|setfib
 block|,
 name|AUE_NULL
 block|,
@@ -3845,7 +3848,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 175 = nosys */
+comment|/* 175 = setfib */
 block|{
 name|AS
 argument_list|(

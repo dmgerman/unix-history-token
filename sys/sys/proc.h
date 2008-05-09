@@ -2247,6 +2247,10 @@ name|char
 name|p_nice
 decl_stmt|;
 comment|/* (c) Process "nice" value. */
+name|int
+name|p_fibnum
+decl_stmt|;
+comment|/* in this routing domain XXX MRT */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define

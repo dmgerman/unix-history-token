@@ -1076,9 +1076,10 @@ name|r
 operator|.
 name|r_dst
 expr_stmt|;
+comment|/* XXX MRT 0 as a default.. need the m here to get fib */
 name|rt
 operator|=
-name|rtalloc1
+name|rtalloc1_fib
 argument_list|(
 operator|(
 expr|struct
@@ -1091,6 +1092,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|RTF_CLONING
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1245,9 +1248,10 @@ name|r
 operator|.
 name|r_src
 expr_stmt|;
+comment|/* XXX MRT 0 as a default  revisit.  need the mbuf for fib*/
 name|rt
 operator|=
-name|rtalloc1
+name|rtalloc1_fib
 argument_list|(
 operator|(
 expr|struct
@@ -1260,6 +1264,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|RTF_CLONING
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

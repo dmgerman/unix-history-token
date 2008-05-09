@@ -5073,6 +5073,35 @@ literal|5
 expr_stmt|;
 break|break;
 block|}
+comment|/* setfib */
+case|case
+literal|175
+case|:
+block|{
+name|struct
+name|setfib_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fibnum
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 comment|/* ntp_adjtime */
 case|case
 literal|176

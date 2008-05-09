@@ -223,9 +223,9 @@ name|u_int8_t
 name|inc_len
 decl_stmt|;
 name|u_int16_t
-name|inc_pad
+name|inc_fibnum
 decl_stmt|;
-comment|/* XXX alignment for in_endpoints */
+comment|/* XXX was pad, 16 bits is plenty */
 comment|/* protocol dependent part */
 name|struct
 name|in_endpoints

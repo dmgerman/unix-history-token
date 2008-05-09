@@ -389,6 +389,10 @@ block|}
 modifier|*
 name|so_accf
 struct|;
+name|int
+name|so_fibnum
+decl_stmt|;
+comment|/* routing domain for this socket */
 block|}
 struct|;
 end_struct

@@ -1030,6 +1030,10 @@ block|,
 name|TOK_UNREACH6
 block|,
 name|TOK_RESET6
+block|,
+name|TOK_FIB
+block|,
+name|TOK_SETFIB
 block|, }
 enum|;
 end_enum
@@ -1442,6 +1446,12 @@ name|TOK_NAT
 block|}
 block|,
 block|{
+literal|"setfib"
+block|,
+name|TOK_SETFIB
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
@@ -1605,6 +1615,12 @@ block|{
 literal|"frag"
 block|,
 name|TOK_FRAG
+block|}
+block|,
+block|{
+literal|"fib"
+block|,
+name|TOK_FIB
 block|}
 block|,
 block|{
@@ -7442,6 +7458,19 @@ name|arg1
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|O_SETFIB
+case|:
+name|PRINT_UINT_ARG
+argument_list|(
+literal|"setfib "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -8525,6 +8554,19 @@ case|:
 name|printf
 argument_list|(
 literal|" frag"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_FIB
+case|:
+name|printf
+argument_list|(
+literal|" fib %u"
+argument_list|,
+name|cmd
+operator|->
+name|arg1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13635,7 +13677,7 @@ literal|"\n"
 literal|"RULE-BODY:	check-state [PARAMS] | ACTION [PARAMS] ADDR [OPTION_LIST]\n"
 literal|"ACTION:	check-state | allow | count | deny | unreach{,6} CODE |\n"
 literal|"               skipto N | {divert|tee} PORT | forward ADDR |\n"
-literal|"               pipe N | queue N | nat N\n"
+literal|"               pipe N | queue N | nat N | setfib FIB\n"
 literal|"PARAMS: 	[log [logamount LOGLIMIT]] [altq QUEUE_NAME]\n"
 literal|"ADDR:		[ MAC dst src ether_type ] \n"
 literal|"		[ ip from IPADDR [ PORT ] to IPADDR [ PORTLIST ] ]\n"
@@ -13651,7 +13693,7 @@ literal|"	{dst-port|src-port} LIST |\n"
 literal|"	estab | frag | {gid|uid} N | icmptypes LIST | in | out | ipid LIST |\n"
 literal|"	iplen LIST | ipoptions SPEC | ipprecedence | ipsec | iptos SPEC |\n"
 literal|"	ipttl LIST | ipversion VER | keep-state | layer2 | limit ... |\n"
-literal|"	icmp6types LIST | ext6hdr LIST | flow-id N[,N] |\n"
+literal|"	icmp6types LIST | ext6hdr LIST | flow-id N[,N] | fib FIB |\n"
 literal|"	mac ... | mac-type LIST | proto LIST | {recv|xmit|via} {IF|IPADDR} |\n"
 literal|"	setup | {tcpack|tcpseq|tcpwin} NN | tcpflags SPEC | tcpoptions SPEC |\n"
 literal|"	tcpdatalen LIST | verrevpath | versrcreach | antispoof\n"
@@ -25122,6 +25164,89 @@ operator|--
 expr_stmt|;
 comment|/* go back... */
 break|break;
+case|case
+name|TOK_SETFIB
+case|:
+block|{
+name|int
+name|numfibs
+decl_stmt|;
+name|action
+operator|->
+name|opcode
+operator|=
+name|O_SETFIB
+expr_stmt|;
+name|NEED1
+argument_list|(
+literal|"missing fib number"
+argument_list|)
+expr_stmt|;
+name|action
+operator|->
+name|arg1
+operator|=
+name|strtoul
+argument_list|(
+operator|*
+name|av
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"net.fibs"
+argument_list|,
+operator|&
+name|numfibs
+argument_list|,
+operator|&
+name|i
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"fibs not suported.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|action
+operator|->
+name|arg1
+operator|>=
+name|numfibs
+condition|)
+comment|/* Temporary */
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"fib too large.\n"
+argument_list|)
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+break|break;
+block|}
 default|default:
 name|errx
 argument_list|(
@@ -28039,6 +28164,40 @@ name|tag
 argument_list|)
 expr_stmt|;
 block|}
+name|ac
+operator|--
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|TOK_FIB
+case|:
+name|NEED1
+argument_list|(
+literal|"fib requires fib number"
+argument_list|)
+expr_stmt|;
+name|fill_cmd
+argument_list|(
+name|cmd
+argument_list|,
+name|O_FIB
+argument_list|,
+literal|0
+argument_list|,
+name|strtoul
+argument_list|(
+operator|*
+name|av
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;

@@ -536,9 +536,9 @@ comment|/* 173 = freebsd6_pread */
 literal|"freebsd6_pwrite"
 block|,
 comment|/* 174 = freebsd6_pwrite */
-literal|"#175"
+literal|"setfib"
 block|,
-comment|/* 175 = nosys */
+comment|/* 175 = setfib */
 literal|"ntp_adjtime"
 block|,
 comment|/* 176 = ntp_adjtime */

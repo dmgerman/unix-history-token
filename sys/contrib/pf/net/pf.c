@@ -8084,7 +8084,20 @@ endif|#
 directive|endif
 argument|pf_mtag->tag = rtag;  	if (r != NULL&& r->rtableid>=
 literal|0
-argument|) 		pf_mtag->rtableid = r->rtableid;
+argument|)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|{ 		M_SETFIB(m, r->rtableid);
+endif|#
+directive|endif
+argument|pf_mtag->rtableid = r->rtableid;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ALTQ
@@ -8245,7 +8258,20 @@ endif|#
 directive|endif
 argument|if (r->rtableid>=
 literal|0
-argument|) 		pf_mtag->rtableid = r->rtableid;
+argument|)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|{ 		M_SETFIB(m0, r->rtableid);
+endif|#
+directive|endif
+argument|pf_mtag->rtableid = r->rtableid;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ALTQ
@@ -8407,7 +8433,21 @@ argument|); 	if (tag>
 literal|0
 argument|) 		pf_mtag->tag = tag; 	if (rtableid>=
 literal|0
-argument|) 		pf_mtag->rtableid = rtableid;  	return (
+argument|)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|{ 		M_SETFIB(m, rtableid);
+endif|#
+directive|endif
+argument|pf_mtag->rtableid = rtableid;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|}
+endif|#
+directive|endif
+argument|return (
 literal|0
 argument|); }  static void pf_step_into_anchor(int *depth, struct pf_ruleset **rs, int n,     struct pf_rule **r, struct pf_rule **a,  int *match) { 	struct pf_anchor_stackframe	*f;  	(*r)->anchor->match =
 literal|0
@@ -9087,7 +9127,9 @@ argument|rtalloc_ign(&ro, (RTF_CLONING | RTF_PRCLONING));
 else|#
 directive|else
 comment|/* !RTF_PRCLONING */
-argument|rtalloc_ign(&ro, RTF_CLONING);
+argument|in_rtalloc_ign(&ro, RTF_CLONING,
+literal|0
+argument|);
 endif|#
 directive|endif
 else|#
@@ -17658,7 +17700,11 @@ argument|if (kif != NULL&& kif->pfik_ifp->if_type == IFT_ENC) 		goto out;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|rtalloc_ign((struct route *)&ro, RTF_CLONING);
+comment|/* XXX MRT not always INET */
+comment|/* stick with table 0 though */
+argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro, RTF_CLONING,
+literal|0
+argument|); 	else 		rtalloc_ign((struct route *)&ro, RTF_CLONING);
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
@@ -17733,7 +17779,9 @@ argument|rtalloc_ign((struct route *)&ro, (RTF_CLONING|RTF_PRCLONING));
 else|#
 directive|else
 comment|/* !RTF_PRCLONING */
-argument|rtalloc_ign((struct route *)&ro, RTF_CLONING);
+argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro, RTF_CLONING,
+literal|0
+argument|); 	else 		rtalloc_ign((struct route *)&ro, RTF_CLONING);
 endif|#
 directive|endif
 else|#
@@ -17792,7 +17840,9 @@ endif|#
 directive|endif
 argument|return; 	} else { 		if ((r->rt == PF_REPLYTO) == (r->direction == dir)) 			return; 		m0 = *m; 	}  	if (m0->m_len< sizeof(struct ip)) { 		DPFPRINTF(PF_DEBUG_URGENT, 		    (
 literal|"pf_route: m0->m_len< sizeof(struct ip)\n"
-argument|)); 		goto bad; 	}  	ip = mtod(m0, struct ip *);  	ro =&iproute; 	bzero((caddr_t)ro, sizeof(*ro)); 	dst = satosin(&ro->ro_dst); 	dst->sin_family = AF_INET; 	dst->sin_len = sizeof(*dst); 	dst->sin_addr = ip->ip_dst;  	if (r->rt == PF_FASTROUTE) { 		rtalloc(ro); 		if (ro->ro_rt ==
+argument|)); 		goto bad; 	}  	ip = mtod(m0, struct ip *);  	ro =&iproute; 	bzero((caddr_t)ro, sizeof(*ro)); 	dst = satosin(&ro->ro_dst); 	dst->sin_family = AF_INET; 	dst->sin_len = sizeof(*dst); 	dst->sin_addr = ip->ip_dst;  	if (r->rt == PF_FASTROUTE) { 		in_rtalloc(ro,
+literal|0
+argument|); 		if (ro->ro_rt ==
 literal|0
 argument|) { 			ipstat.ips_noroute++; 			goto bad; 		}  		ifp = ro->ro_rt->rt_ifp; 		ro->ro_rt->rt_use++;  		if (ro->ro_rt->rt_flags& RTF_GATEWAY) 			dst = satosin(ro->ro_rt->rt_gateway); 	} else { 		if (TAILQ_EMPTY(&r->rpool.list)) { 			DPFPRINTF(PF_DEBUG_URGENT, 			    (
 literal|"pf_route: TAILQ_EMPTY(&r->rpool.list)\n"

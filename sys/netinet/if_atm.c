@@ -1395,6 +1395,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* link level on table 0 XXX MRT */
 if|if
 condition|(
 name|rt
