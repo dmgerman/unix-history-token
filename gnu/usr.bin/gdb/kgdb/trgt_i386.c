@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<objfiles.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<regcache.h>
 end_include
 
