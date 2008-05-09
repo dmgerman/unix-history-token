@@ -154,6 +154,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|CORE_ADDR
+name|linker_files_addr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|CORE_ADDR
+name|kernel_file_addr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|target_so_ops
 name|kld_so_ops
@@ -207,7 +221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look for a matching file checking for debug suffixes before the raw file:  * - filename + ".symbols" (e.g. foo.ko.symbols)  * - filename + ".debug" (e.g. foo.ko.debug)  * - filename (e.g. foo.ko)  */
+comment|/*  * Look for a matching file checking for debug suffixes before the raw file:  * - filename + ".debug" (e.g. foo.ko.debug)  * - filename (e.g. foo.ko)  */
 end_comment
 
 begin_decl_stmt
@@ -356,11 +370,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|exec_bfd
+condition|)
+block|{
 name|kernel_dir
 operator|=
 name|dirname
 argument_list|(
-name|kernel
+name|bfd_get_filename
+argument_list|(
+name|exec_bfd
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -397,6 +419,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -582,6 +605,10 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+name|linker_files_addr
+operator|==
+literal|0
+operator|||
 name|off_address
 operator|==
 literal|0
@@ -610,9 +637,9 @@ for|for
 control|(
 name|kld
 operator|=
-name|kgdb_parse
+name|read_pointer
 argument_list|(
-literal|"linker_files.tqh_first"
+name|linker_files_addr
 argument_list|)
 init|;
 name|kld
@@ -1083,6 +1110,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|kgdb_add_kld_cmd
 parameter_list|(
@@ -1103,6 +1131,16 @@ decl_stmt|;
 name|CORE_ADDR
 name|base_addr
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|exec_bfd
+condition|)
+name|error
+argument_list|(
+literal|"No kernel symbol file"
+argument_list|)
+expr_stmt|;
 comment|/* Try to open the raw path to handle absolute paths first. */
 name|snprintf
 argument_list|(
@@ -1315,6 +1353,33 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|linker_files_addr
+operator|==
+literal|0
+operator|||
+name|kernel_file_addr
+operator|==
+literal|0
+operator|||
+name|off_address
+operator|==
+literal|0
+operator|||
+name|off_filename
+operator|==
+literal|0
+operator|||
+name|off_next
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|head
 operator|=
 name|NULL
@@ -1327,18 +1392,18 @@ expr_stmt|;
 comment|/* 	 * Walk the list of linker files creating so_list entries for 	 * each non-kernel file. 	 */
 name|kernel
 operator|=
-name|kgdb_parse
+name|read_pointer
 argument_list|(
-literal|"linker_kernel_file"
+name|kernel_file_addr
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|kld
 operator|=
-name|kgdb_parse
+name|read_pointer
 argument_list|(
-literal|"linker_files.tqh_first"
+name|linker_files_addr
 argument_list|)
 init|;
 name|kld
@@ -1785,6 +1850,76 @@ block|}
 end_function
 
 begin_function
+name|void
+name|kld_new_objfile
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|have_partial_symbols
+argument_list|()
+condition|)
+return|return;
+comment|/* 	 * Compute offsets of relevant members in struct linker_file 	 * and the addresses of global variables.  Don't warn about 	 * kernels that don't have 'pathname' in the linker_file 	 * struct since 6.x kernels don't have it. 	 */
+name|off_address
+operator|=
+name|kgdb_parse
+argument_list|(
+literal|"&((struct linker_file *)0)->address"
+argument_list|)
+expr_stmt|;
+name|off_filename
+operator|=
+name|kgdb_parse
+argument_list|(
+literal|"&((struct linker_file *)0)->filename"
+argument_list|)
+expr_stmt|;
+name|off_pathname
+operator|=
+name|kgdb_parse_quiet
+argument_list|(
+literal|"&((struct linker_file *)0)->pathname"
+argument_list|)
+expr_stmt|;
+name|off_next
+operator|=
+name|kgdb_parse
+argument_list|(
+literal|"&((struct linker_file *)0)->link.tqe_next"
+argument_list|)
+expr_stmt|;
+name|module_path_addr
+operator|=
+name|kgdb_parse
+argument_list|(
+literal|"linker_path"
+argument_list|)
+expr_stmt|;
+name|linker_files_addr
+operator|=
+name|kgdb_parse
+argument_list|(
+literal|"&linker_files.tqh_first"
+argument_list|)
+expr_stmt|;
+name|kernel_file_addr
+operator|=
+name|kgdb_parse
+argument_list|(
+literal|"&linker_kernel_file"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|load_klds_stub
@@ -1816,7 +1951,28 @@ end_function
 
 begin_function
 name|void
-name|kgdb_kld_init
+name|kld_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|catch_errors
+argument_list|(
+name|load_klds_stub
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|RETURN_MASK_ALL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|initialize_kld_target
 parameter_list|(
 name|void
 parameter_list|)
@@ -1826,57 +1982,6 @@ name|cmd_list_element
 modifier|*
 name|c
 decl_stmt|;
-comment|/* Compute offsets of relevant members in struct linker_file. */
-name|off_address
-operator|=
-name|kgdb_parse
-argument_list|(
-literal|"&((struct linker_file *)0)->address"
-argument_list|)
-expr_stmt|;
-name|off_filename
-operator|=
-name|kgdb_parse
-argument_list|(
-literal|"&((struct linker_file *)0)->filename"
-argument_list|)
-expr_stmt|;
-name|off_pathname
-operator|=
-name|kgdb_parse
-argument_list|(
-literal|"&((struct linker_file *)0)->pathname"
-argument_list|)
-expr_stmt|;
-name|off_next
-operator|=
-name|kgdb_parse
-argument_list|(
-literal|"&((struct linker_file *)0)->link.tqe_next"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|off_address
-operator|==
-literal|0
-operator|||
-name|off_filename
-operator|==
-literal|0
-operator|||
-name|off_next
-operator|==
-literal|0
-condition|)
-return|return;
-name|module_path_addr
-operator|=
-name|kgdb_parse
-argument_list|(
-literal|"linker_path"
-argument_list|)
-expr_stmt|;
 name|kld_so_ops
 operator|.
 name|relocate_section_addresses
@@ -1935,17 +2040,6 @@ name|current_target_so_ops
 operator|=
 operator|&
 name|kld_so_ops
-expr_stmt|;
-name|catch_errors
-argument_list|(
-name|load_klds_stub
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|RETURN_MASK_ALL
-argument_list|)
 expr_stmt|;
 name|c
 operator|=

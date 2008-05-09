@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<objfiles.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<regcache.h>
 end_include
 
@@ -118,6 +124,13 @@ include|#
 directive|include
 file|"kgdb.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ofs_fix
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -307,6 +320,38 @@ literal|"XXX: %s\n"
 argument_list|,
 name|__func__
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|kgdb_trgt_new_objfile
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
+block|{
+comment|/* 	 * In revision 1.117 of i386/i386/exception.S trap handlers 	 * were changed to pass trapframes by reference rather than 	 * by value.  Detect this by seeing if the first instruction 	 * at the 'calltrap' label is a "push %esp" which has the 	 * opcode 0x54. 	 */
+if|if
+condition|(
+name|kgdb_parse
+argument_list|(
+literal|"((char *)calltrap)[0]"
+argument_list|)
+operator|==
+literal|0x54
+condition|)
+name|ofs_fix
+operator|=
+literal|4
+expr_stmt|;
+else|else
+name|ofs_fix
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -1463,18 +1508,6 @@ name|ofs
 decl_stmt|,
 name|regsz
 decl_stmt|;
-specifier|static
-name|int
-name|ofs_fix
-init|=
-literal|0
-decl_stmt|;
-specifier|static
-name|int
-name|ofs_fixed
-init|=
-literal|0
-decl_stmt|;
 name|regsz
 operator|=
 name|register_size
@@ -1524,31 +1557,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ofs_fixed
-condition|)
-block|{
-comment|/* 		 * In revision 1.117 of i386/i386/exception.S trap handlers 		 * were changed to pass trapframes by reference rather than 		 * by value.  Detect this by seeing if the first instruction 		 * at the 'calltrap' label is a "push %esp" which has the 		 * opcode 0x54. 		 */
-if|if
-condition|(
-name|kgdb_parse
-argument_list|(
-literal|"((char *)calltrap)[0]"
-argument_list|)
-operator|==
-literal|0x54
-condition|)
-name|ofs_fix
-operator|=
-literal|4
-expr_stmt|;
-name|ofs_fixed
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|ofs
 operator|=
 operator|(

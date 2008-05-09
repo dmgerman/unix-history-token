@@ -1098,6 +1098,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|kgdb_trgt_new_objfile
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
+block|{ }
+end_function
+
 begin_struct
 struct|struct
 name|kgdb_frame_cache
