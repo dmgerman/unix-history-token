@@ -696,7 +696,7 @@ begin_define
 define|#
 directive|define
 name|NCURSES_VERSION_STRING
-value|"5.6.20080209"
+value|"5.6.20080503"
 end_define
 
 begin_define
