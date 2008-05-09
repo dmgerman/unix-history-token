@@ -756,6 +756,11 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
+name|d_flags
+operator|=
+name|D_TRACKCLOSE
+block|,
+operator|.
 name|d_open
 operator|=
 name|bpfopen
