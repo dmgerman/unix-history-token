@@ -5850,13 +5850,13 @@ name|fbsd_core_ops
 operator|.
 name|to_longname
 operator|=
-literal|"FreeBSD core thread."
+literal|"FreeBSD multithreaded core dump file"
 expr_stmt|;
 name|fbsd_core_ops
 operator|.
 name|to_doc
 operator|=
-literal|"FreeBSD threads support for core files."
+literal|"Use a core file as a target.  Specify the filename of the core file."
 expr_stmt|;
 name|fbsd_core_ops
 operator|.
@@ -6439,6 +6439,16 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* similarly we allow this target to be completely skipped.  This is used    by kgdb which uses its own core target. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|fbsdcoreops_suppress_target
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|_initialize_thread_db
@@ -6446,6 +6456,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|fbsdcoreops_suppress_target
+condition|)
+return|return;
 name|init_fbsd_thread_ops
 argument_list|()
 expr_stmt|;
