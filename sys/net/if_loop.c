@@ -982,7 +982,7 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
-comment|/* 	 * Let BPF see incoming packet in the following manner: 	 *  - Emulated packet loopback for a simplex interface  	 *    (net/if_ethersubr.c) 	 *	-> passes it to ifp's BPF 	 *  - IPv4/v6 multicast packet loopback (netinet(6)/ip(6)_output.c) 	 *	-> not passes it to any BPF 	 *  - Normal packet loopback from myself to myself (net/if_loop.c) 	 *	-> passes to lo0's BPF (even in case of IPv6, where ifp!=lo0) 	 */
+comment|/* 	 * Let BPF see incoming packet in the following manner: 	 *  - Emulated packet loopback for a simplex interface 	 *    (net/if_ethersubr.c) 	 *	-> passes it to ifp's BPF 	 *  - IPv4/v6 multicast packet loopback (netinet(6)/ip(6)_output.c) 	 *	-> not passes it to any BPF 	 *  - Normal packet loopback from myself to myself (net/if_loop.c) 	 *	-> passes to lo0's BPF (even in case of IPv6, where ifp!=lo0) 	 */
 if|if
 condition|(
 name|hlen
