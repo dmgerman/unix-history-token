@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -119,53 +119,9 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_twait.c,v 1.54 2007/08/11 16:32:48 tom Exp $"
+literal|"$Id: lib_twait.c,v 1.57 2008/05/03 21:35:57 tom Exp $"
 argument_list|)
 end_macro
-
-begin_if
-if|#
-directive|if
-name|HAVE_GETTIMEOFDAY
-end_if
-
-begin_define
-define|#
-directive|define
-name|PRECISE_GETTIME
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TimeType
-value|struct timeval
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PRECISE_GETTIME
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TimeType
-value|time_t
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -457,6 +413,8 @@ end_macro
 begin_macro
 name|_nc_timed_wait
 argument_list|(
+argument|SCREEN *sp
+argument_list|,
 argument|int mode
 argument_list|,
 argument|int milliseconds
@@ -696,7 +654,7 @@ index|]
 operator|.
 name|fd
 operator|=
-name|SP
+name|sp
 operator|->
 name|_ifd
 expr_stmt|;
@@ -724,7 +682,7 @@ operator|&&
 operator|(
 name|fd
 operator|=
-name|SP
+name|sp
 operator|->
 name|_mouse_fd
 operator|)
@@ -1229,7 +1187,7 @@ condition|)
 block|{
 name|FD_SET
 argument_list|(
-name|SP
+name|sp
 operator|->
 name|_ifd
 argument_list|,
@@ -1239,7 +1197,7 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-name|SP
+name|sp
 operator|->
 name|_ifd
 operator|+
@@ -1257,7 +1215,7 @@ operator|&&
 operator|(
 name|fd
 operator|=
-name|SP
+name|sp
 operator|->
 name|_mouse_fd
 operator|)
@@ -1859,7 +1817,7 @@ operator|&&
 operator|(
 name|fd
 operator|=
-name|SP
+name|sp
 operator|->
 name|_mouse_fd
 operator|)
@@ -1888,7 +1846,7 @@ operator|)
 operator|&&
 name|FD_ISSET
 argument_list|(
-name|SP
+name|sp
 operator|->
 name|_ifd
 argument_list|,

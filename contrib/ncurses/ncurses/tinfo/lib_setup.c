@@ -86,7 +86,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_setup.c,v 1.102 2008/01/19 21:07:45 tom Exp $"
+literal|"$Id: lib_setup.c,v 1.105 2008/05/03 22:41:42 tom Exp $"
 argument_list|)
 end_macro
 
@@ -566,7 +566,7 @@ end_macro
 begin_macro
 name|_nc_handle_sigwinch
 argument_list|(
-argument|int update
+argument|SCREEN *sp
 argument_list|)
 end_macro
 
@@ -576,12 +576,6 @@ name|SCREEN
 modifier|*
 name|scan
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|update
-expr_stmt|;
-comment|/* no longer used */
 if|if
 condition|(
 name|_nc_globals
@@ -595,14 +589,13 @@ name|have_sigwinch
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
+name|each_screen
+argument_list|(
 name|scan
-operator|=
-name|_nc_screen_chain
-expr_stmt|;
-while|while
-condition|(
-name|scan
-condition|)
+argument_list|)
+control|)
 block|{
 name|scan
 operator|->
@@ -610,19 +603,13 @@ name|_sig_winch
 operator|=
 name|TRUE
 expr_stmt|;
-name|scan
-operator|=
-name|scan
-operator|->
-name|_next_screen
-expr_stmt|;
 block|}
 block|}
 return|return
 operator|(
-name|SP
+name|sp
 condition|?
-name|SP
+name|sp
 operator|->
 name|_sig_winch
 else|:
@@ -684,6 +671,8 @@ end_macro
 begin_macro
 name|_nc_get_screensize
 argument_list|(
+argument|SCREEN *sp
+argument_list|,
 argument|int *linep
 argument_list|,
 argument|int *colp
@@ -942,11 +931,11 @@ operator|*
 name|linep
 operator|=
 operator|(
-name|SP
+name|sp
 operator|!=
 literal|0
 operator|&&
-name|SP
+name|sp
 operator|->
 name|_filtered
 operator|)
@@ -1105,11 +1094,11 @@ directive|if
 name|USE_REENTRANT
 if|if
 condition|(
-name|SP
+name|sp
 operator|!=
 literal|0
 condition|)
-name|SP
+name|sp
 operator|->
 name|_TABSIZE
 operator|=
@@ -1151,7 +1140,7 @@ end_macro
 begin_macro
 name|_nc_update_screensize
 argument_list|(
-argument|void
+argument|SCREEN *sp
 argument_list|)
 end_macro
 
@@ -1175,6 +1164,8 @@ name|new_cols
 decl_stmt|;
 name|_nc_get_screensize
 argument_list|(
+name|sp
+argument_list|,
 operator|&
 name|new_lines
 argument_list|,
@@ -1185,11 +1176,11 @@ expr_stmt|;
 comment|/*      * See is_term_resized() and resizeterm().      * We're doing it this way because those functions belong to the upper      * ncurses library, while this resides in the lower terminfo library.      */
 if|if
 condition|(
-name|SP
+name|sp
 operator|!=
 literal|0
 operator|&&
-name|SP
+name|sp
 operator|->
 name|_resize
 operator|!=
@@ -1210,7 +1201,7 @@ operator|!=
 name|old_cols
 operator|)
 condition|)
-name|SP
+name|sp
 operator|->
 name|_resize
 argument_list|(
@@ -1219,7 +1210,7 @@ argument_list|,
 name|new_cols
 argument_list|)
 expr_stmt|;
-name|SP
+name|sp
 operator|->
 name|_sig_winch
 operator|=
@@ -2286,6 +2277,8 @@ name|USE_REENTRANT
 name|_nc_get_screensize
 argument_list|(
 name|SP
+argument_list|,
+name|SP
 condition|?
 operator|&
 operator|(
@@ -2322,6 +2315,8 @@ else|#
 directive|else
 name|_nc_get_screensize
 argument_list|(
+name|SP
+argument_list|,
 operator|&
 name|LINES
 argument_list|,

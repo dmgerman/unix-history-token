@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: use_window.c,v 1.3 2008/01/13 00:36:22 tom Exp $"
+literal|"$Id: use_window.c,v 1.7 2008/05/03 14:09:38 tom Exp $"
 argument_list|)
 end_macro
 
@@ -36,7 +36,7 @@ end_macro
 begin_macro
 name|_nc_lock_window
 argument_list|(
-argument|WINDOW *win
+argument|const WINDOW *win
 argument_list|)
 end_macro
 
@@ -53,19 +53,10 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|each_window
+argument_list|(
 name|p
-operator|=
-name|_nc_windows
-init|;
-name|p
-operator|!=
-literal|0
-condition|;
-name|p
-operator|=
-name|p
-operator|->
-name|next
+argument_list|)
 control|)
 block|{
 if|if
@@ -93,11 +84,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|_nc_unlock_global
-argument_list|(
-name|windowlist
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -111,7 +97,7 @@ end_macro
 begin_macro
 name|_nc_unlock_window
 argument_list|(
-argument|WINDOW *win
+argument|const WINDOW *win
 argument_list|)
 end_macro
 
@@ -121,26 +107,12 @@ name|WINDOWLIST
 modifier|*
 name|p
 decl_stmt|;
-name|_nc_lock_global
-argument_list|(
-name|windowlist
-argument_list|)
-expr_stmt|;
 for|for
 control|(
+name|each_window
+argument_list|(
 name|p
-operator|=
-name|_nc_windows
-init|;
-name|p
-operator|!=
-literal|0
-condition|;
-name|p
-operator|=
-name|p
-operator|->
-name|next
+argument_list|)
 control|)
 block|{
 if|if
@@ -193,7 +165,7 @@ name|use_window
 argument_list|(
 argument|WINDOW *win
 argument_list|,
-argument|NCURSES_CALLBACK func
+argument|NCURSES_WINDOW_CB func
 argument_list|,
 argument|void *data
 argument_list|)

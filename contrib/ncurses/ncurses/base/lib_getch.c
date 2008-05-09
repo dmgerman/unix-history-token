@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_getch.c,v 1.82 2008/01/19 21:07:30 tom Exp $"
+literal|"$Id: lib_getch.c,v 1.87 2008/05/03 22:42:10 tom Exp $"
 argument_list|)
 end_macro
 
@@ -35,6 +35,16 @@ if|#
 directive|if
 name|USE_REENTRANT
 end_if
+
+begin_define
+define|#
+directive|define
+name|GetEscdelay
+parameter_list|(
+name|sp
+parameter_list|)
+value|(sp)->_ESCDELAY
+end_define
 
 begin_function
 name|NCURSES_EXPORT
@@ -52,9 +62,10 @@ block|{
 return|return
 name|SP
 condition|?
+name|GetEscdelay
+argument_list|(
 name|SP
-operator|->
-name|_ESCDELAY
+argument_list|)
 else|:
 literal|1000
 return|;
@@ -65,6 +76,16 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|GetEscdelay
+parameter_list|(
+name|sp
+parameter_list|)
+value|ESCDELAY
+end_define
 
 begin_macro
 name|NCURSES_EXPORT_VAR
@@ -196,6 +217,10 @@ specifier|static
 name|int
 name|check_mouse_activity
 argument_list|(
+name|SCREEN
+operator|*
+name|sp
+argument_list|,
 name|int
 name|delay
 name|EVENTLIST_2nd
@@ -215,7 +240,7 @@ name|USE_SYSMOUSE
 if|if
 condition|(
 operator|(
-name|SP
+name|sp
 operator|->
 name|_mouse_type
 operator|==
@@ -223,11 +248,11 @@ name|M_SYSMOUSE
 operator|)
 operator|&&
 operator|(
-name|SP
+name|sp
 operator|->
 name|_sysmouse_head
 operator|<
-name|SP
+name|sp
 operator|->
 name|_sysmouse_tail
 operator|)
@@ -243,6 +268,8 @@ name|rc
 operator|=
 name|_nc_timed_wait
 argument_list|(
+name|sp
+argument_list|,
 name|TWAIT_MASK
 argument_list|,
 name|delay
@@ -264,7 +291,7 @@ name|USE_SYSMOUSE
 if|if
 condition|(
 operator|(
-name|SP
+name|sp
 operator|->
 name|_mouse_type
 operator|==
@@ -272,11 +299,11 @@ name|M_SYSMOUSE
 operator|)
 operator|&&
 operator|(
-name|SP
+name|sp
 operator|->
 name|_sysmouse_head
 operator|<
-name|SP
+name|sp
 operator|->
 name|_sysmouse_tail
 operator|)
@@ -313,13 +340,15 @@ name|NCURSES_INLINE
 name|int
 name|fifo_peek
 parameter_list|(
-name|void
+name|SCREEN
+modifier|*
+name|sp
 parameter_list|)
 block|{
 name|int
 name|ch
 init|=
-name|SP
+name|sp
 operator|->
 name|_fifo
 index|[
@@ -352,7 +381,9 @@ name|NCURSES_INLINE
 name|int
 name|fifo_pull
 parameter_list|(
-name|void
+name|SCREEN
+modifier|*
+name|sp
 parameter_list|)
 block|{
 name|int
@@ -360,7 +391,7 @@ name|ch
 decl_stmt|;
 name|ch
 operator|=
-name|SP
+name|sp
 operator|->
 name|_fifo
 index|[
@@ -414,7 +445,9 @@ argument_list|)
 condition|)
 block|{
 name|_nc_fifo_dump
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 name|_nc_unlock_global
 argument_list|(
@@ -436,7 +469,10 @@ name|NCURSES_INLINE
 name|int
 name|fifo_push
 argument_list|(
-name|EVENTLIST_0th
+name|SCREEN
+operator|*
+name|sp
+name|EVENTLIST_2nd
 argument_list|(
 name|_nc_eventlist
 operator|*
@@ -498,7 +534,7 @@ operator|||
 name|USE_SYSMOUSE
 operator|||
 operator|(
-name|SP
+name|sp
 operator|->
 name|_mouse_fd
 operator|>=
@@ -512,6 +548,8 @@ name|mask
 operator|=
 name|check_mouse_activity
 argument_list|(
+name|sp
+argument_list|,
 operator|-
 literal|1
 name|EVENTLIST_2nd
@@ -540,8 +578,10 @@ literal|"fifo_push: ungetch KEY_EVENT"
 operator|)
 argument_list|)
 expr_stmt|;
-name|ungetch
+name|_nc_ungetch
 argument_list|(
+name|sp
+argument_list|,
 name|KEY_EVENT
 argument_list|)
 expr_stmt|;
@@ -558,7 +598,7 @@ operator|||
 name|USE_SYSMOUSE
 if|if
 condition|(
-name|SP
+name|sp
 operator|->
 name|_mouse_fd
 operator|>=
@@ -569,6 +609,8 @@ name|mask
 operator|=
 name|check_mouse_activity
 argument_list|(
+name|sp
+argument_list|,
 operator|-
 literal|1
 name|EVENTLIST_2nd
@@ -588,7 +630,7 @@ name|USE_EMX_MOUSE
 if|if
 condition|(
 operator|(
-name|SP
+name|sp
 operator|->
 name|_mouse_fd
 operator|>=
@@ -602,11 +644,11 @@ literal|2
 operator|)
 condition|)
 block|{
-name|SP
+name|sp
 operator|->
 name|_mouse_event
 argument_list|(
-name|SP
+name|sp
 argument_list|)
 expr_stmt|;
 name|ch
@@ -627,7 +669,7 @@ name|USE_SYSMOUSE
 if|if
 condition|(
 operator|(
-name|SP
+name|sp
 operator|->
 name|_mouse_type
 operator|==
@@ -635,21 +677,21 @@ name|M_SYSMOUSE
 operator|)
 operator|&&
 operator|(
-name|SP
+name|sp
 operator|->
 name|_sysmouse_head
 operator|<
-name|SP
+name|sp
 operator|->
 name|_sysmouse_tail
 operator|)
 condition|)
 block|{
-name|SP
+name|sp
 operator|->
 name|_mouse_event
 argument_list|(
-name|SP
+name|sp
 argument_list|)
 expr_stmt|;
 name|ch
@@ -665,7 +707,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|SP
+name|sp
 operator|->
 name|_mouse_type
 operator|==
@@ -683,11 +725,11 @@ operator|==
 name|EINTR
 condition|)
 block|{
-name|SP
+name|sp
 operator|->
 name|_mouse_event
 argument_list|(
-name|SP
+name|sp
 argument_list|)
 expr_stmt|;
 name|ch
@@ -714,7 +756,7 @@ name|n
 operator|=
 name|read
 argument_list|(
-name|SP
+name|sp
 operator|->
 name|_ifd
 argument_list|,
@@ -771,7 +813,7 @@ argument_list|,
 operator|(
 literal|"read(%d,&ch,1)=%d, errno=%d"
 operator|,
-name|SP
+name|sp
 operator|->
 name|_ifd
 operator|,
@@ -797,7 +839,7 @@ name|n
 operator|)
 argument_list|)
 expr_stmt|;
-name|SP
+name|sp
 operator|->
 name|_fifo
 index|[
@@ -806,7 +848,7 @@ index|]
 operator|=
 name|ch
 expr_stmt|;
-name|SP
+name|sp
 operator|->
 name|_fifohold
 operator|=
@@ -856,7 +898,9 @@ argument_list|)
 condition|)
 block|{
 name|_nc_fifo_dump
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 name|_nc_unlock_global
 argument_list|(
@@ -878,12 +922,14 @@ name|NCURSES_INLINE
 name|void
 name|fifo_clear
 parameter_list|(
-name|void
+name|SCREEN
+modifier|*
+name|sp
 parameter_list|)
 block|{
 name|memset
 argument_list|(
-name|SP
+name|sp
 operator|->
 name|_fifo
 argument_list|,
@@ -891,7 +937,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|SP
+name|sp
 operator|->
 name|_fifo
 argument_list|)
@@ -911,20 +957,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|kgetch
-argument_list|(
-name|EVENTLIST_0th
-argument_list|(
+parameter_list|(
+name|SCREEN
+modifier|*
+name|EVENTLIST_2nd
+parameter_list|(
 name|_nc_eventlist
-operator|*
+modifier|*
 name|evl
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -956,6 +1004,12 @@ end_macro
 
 begin_block
 block|{
+name|SCREEN
+modifier|*
+name|sp
+init|=
+name|SP
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
@@ -993,7 +1047,7 @@ name|win
 operator|==
 literal|0
 operator|||
-name|SP
+name|sp
 operator|==
 literal|0
 condition|)
@@ -1026,7 +1080,9 @@ operator|*
 name|result
 operator|=
 name|fifo_pull
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 name|returnCode
 argument_list|(
@@ -1078,22 +1134,22 @@ operator|-
 literal|1
 operator|&&
 operator|!
-name|SP
+name|sp
 operator|->
 name|_notty
 operator|&&
 operator|!
-name|SP
+name|sp
 operator|->
 name|_raw
 operator|&&
 operator|!
-name|SP
+name|sp
 operator|->
 name|_cbreak
 operator|&&
 operator|!
-name|SP
+name|sp
 operator|->
 name|_called_wgetch
 condition|)
@@ -1105,7 +1161,7 @@ name|MAXCOLUMNS
 index|]
 decl_stmt|,
 modifier|*
-name|sp
+name|bufp
 decl_stmt|;
 name|int
 name|rc
@@ -1119,7 +1175,7 @@ literal|"filling queue in cooked mode"
 operator|)
 argument_list|)
 expr_stmt|;
-name|SP
+name|sp
 operator|->
 name|_called_wgetch
 operator|=
@@ -1136,7 +1192,7 @@ argument_list|,
 name|MAXCOLUMNS
 argument_list|)
 expr_stmt|;
-name|SP
+name|sp
 operator|->
 name|_called_wgetch
 operator|=
@@ -1154,14 +1210,16 @@ name|KEY_EVENT
 condition|)
 endif|#
 directive|endif
-name|ungetch
+name|_nc_ungetch
 argument_list|(
+name|sp
+argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|sp
+name|bufp
 operator|=
 name|buf
 operator|+
@@ -1170,16 +1228,18 @@ argument_list|(
 name|buf
 argument_list|)
 init|;
-name|sp
+name|bufp
 operator|>
 name|buf
 condition|;
-name|sp
+name|bufp
 operator|--
 control|)
-name|ungetch
+name|_nc_ungetch
 argument_list|(
 name|sp
+argument_list|,
+name|bufp
 index|[
 operator|-
 literal|1
@@ -1210,7 +1270,9 @@ operator|*
 name|result
 operator|=
 name|fifo_pull
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 name|returnCode
 argument_list|(
@@ -1231,12 +1293,14 @@ name|win
 operator|->
 name|_use_keypad
 operator|!=
-name|SP
+name|sp
 operator|->
 name|_keypad_on
 condition|)
 name|_nc_keypad
 argument_list|(
+name|sp
+argument_list|,
 name|win
 operator|->
 name|_use_keypad
@@ -1268,7 +1332,7 @@ name|_delay
 operator|>=
 literal|0
 operator|||
-name|SP
+name|sp
 operator|->
 name|_cbreak
 operator|>
@@ -1302,7 +1366,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SP
+name|sp
 operator|->
 name|_cbreak
 operator|>
@@ -1311,7 +1375,7 @@ condition|)
 name|delay
 operator|=
 operator|(
-name|SP
+name|sp
 operator|->
 name|_cbreak
 operator|-
@@ -1361,6 +1425,8 @@ name|rc
 operator|=
 name|check_mouse_activity
 argument_list|(
+argument|sp
+argument_list|,
 argument|delay EVENTLIST_2nd(evl)
 argument_list|)
 expr_stmt|;
@@ -1422,10 +1488,7 @@ name|ch
 operator|=
 name|kgetch
 argument_list|(
-name|EVENTLIST_1st
-argument_list|(
-name|evl
-argument_list|)
+argument|sp EVENTLIST_2nd(evl)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1440,18 +1503,18 @@ name|runcount
 expr_stmt|;
 if|if
 condition|(
-name|SP
+name|sp
 operator|->
 name|_mouse_inline
 argument_list|(
-name|SP
+name|sp
 argument_list|)
 condition|)
 break|break;
 block|}
 if|if
 condition|(
-name|SP
+name|sp
 operator|->
 name|_maxclick
 operator|<
@@ -1472,7 +1535,9 @@ name|rc
 operator|=
 name|check_mouse_activity
 argument_list|(
-argument|SP->_maxclick 					     EVENTLIST_2nd(evl)
+argument|sp
+argument_list|,
+argument|sp->_maxclick 					     EVENTLIST_2nd(evl)
 argument_list|)
 operator|)
 operator|!=
@@ -1487,7 +1552,7 @@ operator|)
 operator|)
 operator|||
 operator|!
-name|SP
+name|sp
 operator|->
 name|_mouse_parse
 argument_list|(
@@ -1513,8 +1578,10 @@ operator|==
 name|KEY_EVENT
 condition|)
 block|{
-name|ungetch
+name|_nc_ungetch
 argument_list|(
+name|sp
+argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
@@ -1547,8 +1614,10 @@ operator|==
 name|KEY_EVENT
 condition|)
 block|{
-name|ungetch
+name|_nc_ungetch
 argument_list|(
+name|sp
+argument_list|,
 name|KEY_MOUSE
 argument_list|)
 expr_stmt|;
@@ -1559,8 +1628,10 @@ endif|#
 directive|endif
 block|{
 comment|/* mouse event sequence ended by keystroke, store keystroke */
-name|ungetch
+name|_nc_ungetch
 argument_list|(
+name|sp
+argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
@@ -1582,16 +1653,15 @@ literal|1
 condition|)
 name|fifo_push
 argument_list|(
-name|EVENTLIST_1st
-argument_list|(
-name|evl
+argument|sp EVENTLIST_2nd(evl)
 argument_list|)
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|ch
 operator|=
 name|fifo_pull
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1608,12 +1678,14 @@ if|if
 condition|(
 name|_nc_handle_sigwinch
 argument_list|(
-name|FALSE
+name|sp
 argument_list|)
 condition|)
 block|{
 name|_nc_update_screensize
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 comment|/* resizeterm can push KEY_RESIZE */
 if|if
@@ -1626,7 +1698,9 @@ operator|*
 name|result
 operator|=
 name|fifo_pull
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 name|returnCode
 argument_list|(
@@ -1653,7 +1727,7 @@ block|}
 comment|/*      * If echo() is in effect, display the printable version of the      * key on the screen.  Carriage return and backspace are treated      * specially by Solaris curses:      *      * If carriage return is defined as a function key in the      * terminfo, e.g., kent, then Solaris may return either ^J (or ^M      * if nonl() is set) or KEY_ENTER depending on the echo() mode.       * We echo before translating carriage return based on nonl(),      * since the visual result simply moves the cursor to column 0.      *      * Backspace is a different matter.  Solaris curses does not      * translate it to KEY_BACKSPACE if kbs=^H.  This does not depend      * on the stty modes, but appears to be a hardcoded special case.      * This is a difference from ncurses, which uses the terminfo entry.      * However, we provide the same visual result as Solaris, moving the      * cursor to the left.      */
 if|if
 condition|(
-name|SP
+name|sp
 operator|->
 name|_echo
 operator|&&
@@ -1703,7 +1777,7 @@ operator|==
 literal|'\r'
 operator|)
 operator|&&
-name|SP
+name|sp
 operator|->
 name|_nl
 condition|)
@@ -1790,6 +1864,12 @@ end_macro
 
 begin_block
 block|{
+name|SCREEN
+modifier|*
+name|sp
+init|=
+name|SP
+decl_stmt|;
 name|int
 name|code
 decl_stmt|;
@@ -1819,7 +1899,7 @@ argument|win
 argument_list|,
 argument|&value
 argument_list|,
-argument|SP->_use_meta 		      EVENTLIST_2nd(evl)
+argument|sp->_use_meta 		      EVENTLIST_2nd(evl)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1861,6 +1941,12 @@ end_macro
 
 begin_block
 block|{
+name|SCREEN
+modifier|*
+name|sp
+init|=
+name|SP
+decl_stmt|;
 name|int
 name|code
 decl_stmt|;
@@ -1890,9 +1976,9 @@ operator|&
 name|value
 argument_list|,
 operator|(
-name|SP
+name|sp
 condition|?
-name|SP
+name|sp
 operator|->
 name|_use_meta
 else|:
@@ -1935,7 +2021,10 @@ specifier|static
 name|int
 name|kgetch
 argument_list|(
-name|EVENTLIST_0th
+name|SCREEN
+operator|*
+name|sp
+name|EVENTLIST_2nd
 argument_list|(
 name|_nc_eventlist
 operator|*
@@ -1955,7 +2044,10 @@ decl_stmt|;
 name|int
 name|timeleft
 init|=
-name|ESCDELAY
+name|GetEscdelay
+argument_list|(
+name|sp
+argument_list|)
 decl_stmt|;
 name|TR
 argument_list|(
@@ -1968,7 +2060,7 @@ argument_list|)
 expr_stmt|;
 name|ptr
 operator|=
-name|SP
+name|sp
 operator|->
 name|_keytry
 expr_stmt|;
@@ -1983,7 +2075,7 @@ condition|(
 name|cooked_key_in_fifo
 argument_list|()
 operator|&&
-name|SP
+name|sp
 operator|->
 name|_fifo
 index|[
@@ -2007,10 +2099,7 @@ name|ch
 operator|=
 name|fifo_push
 argument_list|(
-name|EVENTLIST_1st
-argument_list|(
-name|evl
-argument_list|)
+argument|sp EVENTLIST_2nd(evl)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2047,7 +2136,9 @@ expr_stmt|;
 comment|/* the keys stay uninterpreted */
 return|return
 name|fifo_pull
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 return|;
 comment|/* Remove KEY_EVENT from the queue */
 block|}
@@ -2057,7 +2148,9 @@ block|}
 name|ch
 operator|=
 name|fifo_peek
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2187,7 +2280,9 @@ operator|==
 name|tail
 condition|)
 name|fifo_clear
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 else|else
 name|head
@@ -2231,6 +2326,8 @@ name|rc
 operator|=
 name|check_mouse_activity
 argument_list|(
+argument|sp
+argument_list|,
 argument|timeleft EVENTLIST_2nd(evl)
 argument_list|)
 expr_stmt|;
@@ -2287,7 +2384,9 @@ block|}
 name|ch
 operator|=
 name|fifo_pull
-argument_list|()
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 name|peek
 operator|=
