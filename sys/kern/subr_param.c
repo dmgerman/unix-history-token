@@ -346,16 +346,37 @@ name|_kern
 argument_list|,
 name|OID_AUTO
 argument_list|,
+name|hz
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|hz
+argument_list|,
+literal|0
+argument_list|,
+literal|"ticks/second"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
 name|maxswzone
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|maxswzone
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"max swmeta KVA storage"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -369,14 +390,14 @@ name|OID_AUTO
 argument_list|,
 name|maxbcache
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|maxbcache
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"max buffer cache KVA storage"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -390,14 +411,14 @@ name|OID_AUTO
 argument_list|,
 name|maxtsiz
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|maxtsiz
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"max text size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -411,14 +432,14 @@ name|OID_AUTO
 argument_list|,
 name|dfldsiz
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|dfldsiz
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"initial data size limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -432,14 +453,14 @@ name|OID_AUTO
 argument_list|,
 name|maxdsiz
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|maxdsiz
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"max data size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -453,14 +474,14 @@ name|OID_AUTO
 argument_list|,
 name|dflssiz
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|dflssiz
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"initial stack size limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -474,14 +495,14 @@ name|OID_AUTO
 argument_list|,
 name|maxssiz
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|maxssiz
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"max stack size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -495,14 +516,14 @@ name|OID_AUTO
 argument_list|,
 name|sgrowsiz
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|sgrowsiz
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"amount to grow stack"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
