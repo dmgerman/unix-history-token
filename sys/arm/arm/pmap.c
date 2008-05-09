@@ -15583,6 +15583,30 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	Increase the starting virtual address of the given mapping if a  *	different alignment might result in more superpage mappings.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_align_superpage
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_ooffset_t
+name|offset
+parameter_list|,
+name|vm_offset_t
+modifier|*
+name|addr
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/*  * Map a set of physical memory pages into the kernel virtual  * address space. Return a pointer to where it is mapped. This  * routine is intended to be used for mapping device memory,  * NOT real memory.  */
 end_comment
 
