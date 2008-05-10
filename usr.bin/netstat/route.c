@@ -710,7 +710,10 @@ decl_stmt|;
 name|int
 name|numfibs
 decl_stmt|;
-name|i
+name|size_t
+name|intsize
+decl_stmt|;
+name|intsize
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -727,7 +730,7 @@ operator|&
 name|fibnum
 argument_list|,
 operator|&
-name|i
+name|intsize
 argument_list|,
 name|NULL
 argument_list|,
@@ -751,7 +754,7 @@ operator|&
 name|numfibs
 argument_list|,
 operator|&
-name|i
+name|intsize
 argument_list|,
 name|NULL
 argument_list|,
