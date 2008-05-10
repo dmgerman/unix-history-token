@@ -144,6 +144,12 @@ directive|ifndef
 name|ROUTETABLES
 end_ifndef
 
+begin_undef
+undef|#
+directive|undef
+name|RT_MAXFIBS
+end_undef
+
 begin_define
 define|#
 directive|define
