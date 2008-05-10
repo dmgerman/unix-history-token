@@ -10041,6 +10041,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|sbunlock
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|kern_writev
@@ -10057,10 +10065,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-goto|goto
-name|done
-goto|;
 name|sbytes
 operator|+=
 name|td
@@ -10070,6 +10077,9 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|done
 label|:
