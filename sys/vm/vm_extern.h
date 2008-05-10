@@ -352,6 +352,8 @@ name|vm_offset_t
 modifier|*
 parameter_list|,
 name|vm_size_t
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -431,17 +431,15 @@ name|kmi
 operator|->
 name|clean_eva
 argument_list|,
-operator|(
 name|nbuf
 operator|*
 name|BKVASIZE
-operator|)
 operator|+
-operator|(
 name|nswbuf
 operator|*
 name|MAXPHYS
-operator|)
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|buffer_map
@@ -460,11 +458,11 @@ name|kmi
 operator|->
 name|buffer_eva
 argument_list|,
-operator|(
 name|nbuf
 operator|*
 name|BKVASIZE
-operator|)
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|buffer_map
@@ -489,11 +487,11 @@ name|kmi
 operator|->
 name|pager_eva
 argument_list|,
-operator|(
 name|nswbuf
 operator|*
 name|MAXPHYS
-operator|)
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|pager_map
@@ -514,7 +512,6 @@ argument_list|,
 operator|&
 name|maxaddr
 argument_list|,
-operator|(
 name|exec_map_entries
 operator|*
 operator|(
@@ -526,7 +523,8 @@ operator|*
 literal|3
 operator|)
 operator|)
-operator|)
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|pipe_map
@@ -542,6 +540,8 @@ operator|&
 name|maxaddr
 argument_list|,
 name|maxpipekva
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: Mbuf system machine-specific initializations should 	 *      go here, if anywhere. 	 */
