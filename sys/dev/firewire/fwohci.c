@@ -10887,6 +10887,16 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
+name|fwohci_set_intr
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|fc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Now stopping all DMA channel */
 name|OWRITE
 argument_list|(
@@ -14767,9 +14777,9 @@ argument|]; 	int dsiz[
 literal|2
 argument|];  	ir =&dbch->xferq; 	if (ir->buf == NULL&& (dbch->xferq.flag& FWXFERQ_EXTBUF) ==
 literal|0
-argument|) { 		db_tr->buf = fwdma_malloc_size(dbch->dmat,&db_tr->dma_map, 			ir->psize,&dbuf[
+argument|) { 		if (db_tr->buf == NULL) { 			db_tr->buf = fwdma_malloc_size(dbch->dmat,&db_tr->dma_map, ir->psize,&dbuf[
 literal|0
-argument|], BUS_DMA_NOWAIT); 		if (db_tr->buf == NULL) 			return(ENOMEM); 		db_tr->dbcnt =
+argument|], 			    BUS_DMA_NOWAIT); 			if (db_tr->buf == NULL) 				return(ENOMEM); 		} 		db_tr->dbcnt =
 literal|1
 argument|; 		dsiz[
 literal|0
