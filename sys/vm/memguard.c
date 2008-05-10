@@ -680,6 +680,8 @@ operator|(
 name|vm_size_t
 operator|)
 name|size
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|memguard_map
