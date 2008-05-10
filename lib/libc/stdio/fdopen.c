@@ -127,10 +127,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|static
-name|int
-name|nofile
-decl_stmt|;
 name|int
 name|flags
 decl_stmt|,
@@ -140,17 +136,6 @@ name|fdflags
 decl_stmt|,
 name|tmp
 decl_stmt|;
-if|if
-condition|(
-name|nofile
-operator|==
-literal|0
-condition|)
-name|nofile
-operator|=
-name|getdtablesize
-argument_list|()
-expr_stmt|;
 comment|/* 	 * File descriptors are a full int, but _file is only a short. 	 * If we get a valid file descriptor that is greater than 	 * SHRT_MAX, then the fd will get sign-extended into an 	 * invalid file descriptor.  Handle this case by failing the 	 * open. 	 */
 if|if
 condition|(
