@@ -17,6 +17,21 @@ end_define
 
 begin_function_decl
 name|void
+name|ddb_capture
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ddb_script
 parameter_list|(
 name|int
