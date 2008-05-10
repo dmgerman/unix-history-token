@@ -518,6 +518,14 @@ name|struct
 name|task
 name|ndis_scantask
 decl_stmt|;
+name|struct
+name|task
+name|ndis_authtask
+decl_stmt|;
+name|struct
+name|task
+name|ndis_assoctask
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
