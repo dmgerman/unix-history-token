@@ -392,12 +392,16 @@ condition|)
 block|{
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_AR_BSD
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"ar (BSD)"
@@ -450,12 +454,16 @@ condition|)
 block|{
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_AR_GNU
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"ar (GNU/SVR4)"
@@ -893,6 +901,8 @@ if|if
 condition|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|==
 name|ARCHIVE_FORMAT_AR_GNU
@@ -1129,6 +1139,8 @@ if|if
 condition|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|==
 name|ARCHIVE_FORMAT_AR_BSD

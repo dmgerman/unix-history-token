@@ -1782,12 +1782,16 @@ name|archive_write_ustar_finish_entry
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR_USTAR
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"POSIX ustar"
