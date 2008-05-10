@@ -379,11 +379,12 @@ operator|=
 name|archive_write_vtable
 argument_list|()
 expr_stmt|;
+comment|/* 	 * The value 10240 here matches the traditional tar default, 	 * but is otherwise arbitrary. 	 * TODO: Set the default block size from the format selected. 	 */
 name|a
 operator|->
 name|bytes_per_block
 operator|=
-name|ARCHIVE_DEFAULT_BYTES_PER_BLOCK
+literal|10240
 expr_stmt|;
 name|a
 operator|->
