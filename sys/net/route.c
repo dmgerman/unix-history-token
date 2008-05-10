@@ -144,12 +144,6 @@ directive|ifndef
 name|ROUTETABLES
 end_ifndef
 
-begin_undef
-undef|#
-directive|undef
-name|RT_MAXFIBS
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -172,6 +166,13 @@ end_else
 begin_comment
 comment|/* while we use 4 bits in the mbuf flags,   * we are limited to 16   */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RT_MAXFIBS
+value|16
+end_define
 
 begin_if
 if|#
@@ -499,7 +500,7 @@ decl_stmt|;
 name|int
 name|fam
 decl_stmt|;
-comment|/* whack teh tunable ints into  line. */
+comment|/* whack the tunable ints into  line. */
 if|if
 condition|(
 name|rt_numfibs

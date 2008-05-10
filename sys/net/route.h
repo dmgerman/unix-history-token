@@ -144,13 +144,6 @@ parameter_list|)
 value|((r) / (RTM_RTTUNIT / PR_SLOWHZ))
 end_define
 
-begin_define
-define|#
-directive|define
-name|RT_MAXFIBS
-value|16
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -1412,9 +1405,7 @@ name|struct
 name|radix_node_head
 modifier|*
 name|rt_tables
-index|[
-name|RT_MAXFIBS
-index|]
+index|[]
 index|[
 name|AF_MAX
 operator|+
