@@ -4212,7 +4212,7 @@ comment|/* initial value */
 end_comment
 
 begin_else
-unit|for (i = 0; i< len; i++) { 		for (data = *buf++, bit = 0; bit< 8; bit++, data>>= 1) 			carry = (crc ^ data)& 1; 			crc>>= 1; 			if (carry) 				crc = (crc ^ ETHER_CRC_POLY_LE); 	}  	return (crc); }
+unit|for (i = 0; i< len; i++) { 		for (data = *buf++, bit = 0; bit< 8; bit++, data>>= 1) { 			carry = (crc ^ data)& 1; 			crc>>= 1; 			if (carry) 				crc = (crc ^ ETHER_CRC_POLY_LE); 		} 	}  	return (crc); }
 else|#
 directive|else
 end_else
