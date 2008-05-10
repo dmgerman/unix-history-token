@@ -53,16 +53,6 @@ decl_stmt|;
 name|ino_t
 name|skip_file_ino
 decl_stmt|;
-comment|/* Utility:  Pointer to a block of nulls. */
-specifier|const
-name|unsigned
-name|char
-modifier|*
-name|nulls
-decl_stmt|;
-name|size_t
-name|null_length
-decl_stmt|;
 comment|/* 	 * Used by archive_read_data() to track blocks and copy 	 * data to client buffers, filling gaps with zero bytes. 	 */
 specifier|const
 name|char
@@ -91,10 +81,6 @@ name|archive_skip_callback
 modifier|*
 name|client_skipper
 decl_stmt|;
-name|archive_write_callback
-modifier|*
-name|client_writer
-decl_stmt|;
 name|archive_close_callback
 modifier|*
 name|client_closer
@@ -103,21 +89,6 @@ name|void
 modifier|*
 name|client_data
 decl_stmt|;
-comment|/* 	 * Blocking information.  Note that bytes_in_last_block is 	 * misleadingly named; I should find a better name.  These 	 * control the final output from all compressors, including 	 * compression_none. 	 */
-name|int
-name|bytes_per_block
-decl_stmt|;
-name|int
-name|bytes_in_last_block
-decl_stmt|;
-comment|/* 	 * These control whether data within a gzip/bzip2 compressed 	 * stream gets padded or not.  If pad_uncompressed is set, 	 * the data will be padded to a full block before being 	 * compressed.  The pad_uncompressed_byte determines the value 	 * that will be used for padding.  Note that these have no 	 * effect on compression "none." 	 */
-name|int
-name|pad_uncompressed
-decl_stmt|;
-name|int
-name|pad_uncompressed_byte
-decl_stmt|;
-comment|/* TODO: Support this. */
 comment|/* File offset of beginning of most recently-read header. */
 name|off_t
 name|header_position
@@ -233,7 +204,7 @@ name|decompressor_t
 modifier|*
 name|decompressor
 decl_stmt|;
-comment|/* 	 * Format detection is mostly the same as compression 	 * detection, with two significant differences: The bidders 	 * use the read_ahead calls above to examine the stream rather 	 * than having the supervisor hand them a block of data to 	 * examine, and the auction is repeated for every header. 	 * Winning bidders should set the archive_format and 	 * archive_format_name appropriately.  Bid routines should 	 * check archive_format and decline to bid if the format of 	 * the last header was incompatible. 	 * 	 * Again, write support is considerably simpler because there's 	 * no need for an auction. 	 */
+comment|/* 	 * Format detection is mostly the same as compression 	 * detection, with one significant difference: The bidders 	 * use the read_ahead calls above to examine the stream rather 	 * than having the supervisor hand them a block of data to 	 * examine. 	 */
 struct|struct
 name|archive_format_descriptor
 block|{
@@ -323,74 +294,6 @@ modifier|*
 name|format
 decl_stmt|;
 comment|/* Active format. */
-comment|/* 	 * Pointers to format-specific functions for writing.  They're 	 * initialized by archive_write_set_format_XXX() calls. 	 */
-name|int
-function_decl|(
-modifier|*
-name|format_init
-function_decl|)
-parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* Only used on write. */
-name|int
-function_decl|(
-modifier|*
-name|format_finish
-function_decl|)
-parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|format_finish_entry
-function_decl|)
-parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|format_write_header
-function_decl|)
-parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|,
-name|struct
-name|archive_entry
-modifier|*
-parameter_list|)
-function_decl|;
-name|ssize_t
-function_decl|(
-modifier|*
-name|format_write_data
-function_decl|)
-parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|buff
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
 comment|/* 	 * Various information needed by archive_extract. 	 */
 name|struct
 name|extract
