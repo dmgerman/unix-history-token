@@ -2505,6 +2505,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|fc
+operator|->
+name|arq
+operator|!=
+literal|0
+operator|&&
+name|fc
+operator|->
+name|arq
+operator|->
+name|maxq
+operator|>
+literal|0
+condition|)
+name|fw_drain_txq
+argument_list|(
+name|fc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|err
 operator|=
@@ -2559,7 +2580,7 @@ operator|->
 name|busprobe_callout
 argument_list|)
 expr_stmt|;
-comment|/* XXX xfree_free and untimeout on all xfers */
+comment|/* XXX xfer_free and untimeout on all xfers */
 for|for
 control|(
 name|fwdev
