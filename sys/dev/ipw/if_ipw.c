@@ -12873,11 +12873,20 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
 name|ieee80211_start_all
 argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+comment|/* start all vap's */
 block|}
 end_function
 
