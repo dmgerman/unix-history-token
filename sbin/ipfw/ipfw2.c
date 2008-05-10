@@ -25171,6 +25171,14 @@ block|{
 name|int
 name|numfibs
 decl_stmt|;
+name|size_t
+name|intsize
+init|=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
 name|action
 operator|->
 name|opcode
@@ -25206,7 +25214,7 @@ operator|&
 name|numfibs
 argument_list|,
 operator|&
-name|i
+name|intsize
 argument_list|,
 name|NULL
 argument_list|,

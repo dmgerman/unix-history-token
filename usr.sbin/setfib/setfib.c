@@ -90,7 +90,7 @@ decl_stmt|;
 name|int
 name|numfibs
 decl_stmt|;
-name|int
+name|size_t
 name|intsize
 init|=
 sizeof|sizeof
