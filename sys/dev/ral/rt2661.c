@@ -7715,7 +7715,6 @@ name|rate
 argument_list|,
 name|isshort
 argument_list|)
-expr_stmt|;
 operator|+
 name|ieee80211_ack_duration
 argument_list|(
