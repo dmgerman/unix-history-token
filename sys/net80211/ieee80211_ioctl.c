@@ -15486,13 +15486,21 @@ operator|->
 name|i_val
 condition|)
 block|{
-if|#
-directive|if
+if|if
+condition|(
+operator|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_DFS
+operator|)
+operator|==
 literal|0
-comment|/* XXX no capability */
-block|if ((vap->iv_caps& IEEE80211_C_DFS) == 0) 				return EOPNOTSUPP;
-endif|#
-directive|endif
+condition|)
+return|return
+name|EOPNOTSUPP
+return|;
 comment|/* NB: DFS requires 11h support */
 if|if
 condition|(
