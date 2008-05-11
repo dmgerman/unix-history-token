@@ -6198,7 +6198,9 @@ name|msgConfirm
 argument_list|(
 literal|"You've already written out your changes - if you\n"
 literal|"wish to overwrite them, you'll have to restart\n"
-literal|"sysinstall first."
+literal|"%s first."
+argument_list|,
+name|StartName
 argument_list|)
 expr_stmt|;
 block|}
