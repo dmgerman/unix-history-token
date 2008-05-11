@@ -960,14 +960,16 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Writing sysinstall variables to file..\n"
+literal|"Writing %s variables to file..\n"
+argument_list|,
+name|StartName
 argument_list|)
 expr_stmt|;
 name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/sysinstall.vars"
+literal|"/etc/sade.vars"
 argument_list|,
 literal|"w"
 argument_list|)
@@ -980,7 +982,9 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to write to /etc/sysinstall.vars: %s"
+literal|"Unable to write to /etc/%s.vars: %s"
+argument_list|,
+name|StartName
 argument_list|,
 name|strerror
 argument_list|(
