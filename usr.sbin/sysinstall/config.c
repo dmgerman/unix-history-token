@@ -809,7 +809,7 @@ literal|"Attempting to rebuild your /etc/fstab file.  Warning: If you had\n"
 literal|"any CD devices in use before running %s then they may NOT\n"
 literal|"be found by this run!"
 argument_list|,
-name|StartName
+name|ProgName
 argument_list|)
 expr_stmt|;
 block|}

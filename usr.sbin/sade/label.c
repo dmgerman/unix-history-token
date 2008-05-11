@@ -6195,7 +6195,7 @@ literal|"You've already written out your changes - if you\n"
 literal|"wish to overwrite them, you'll have to restart\n"
 literal|"%s first."
 argument_list|,
-name|StartName
+name|ProgName
 argument_list|)
 expr_stmt|;
 block|}

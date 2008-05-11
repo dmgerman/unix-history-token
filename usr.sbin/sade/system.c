@@ -1033,7 +1033,7 @@ name|FILENAME_MAX
 argument_list|,
 literal|"/usr/src/usr.sbin/%s/help/%s.hlp"
 argument_list|,
-name|StartName
+name|ProgName
 argument_list|,
 name|file
 argument_list|)
@@ -1056,7 +1056,7 @@ name|FILENAME_MAX
 argument_list|,
 literal|"/usr/src/usr.sbin/%s/help/%s.TXT"
 argument_list|,
-name|StartName
+name|ProgName
 argument_list|,
 name|file
 argument_list|)

@@ -962,7 +962,7 @@ name|msgDebug
 argument_list|(
 literal|"Writing %s variables to file..\n"
 argument_list|,
-name|StartName
+name|ProgName
 argument_list|)
 expr_stmt|;
 name|fp
@@ -984,7 +984,7 @@ name|msgConfirm
 argument_list|(
 literal|"Unable to write to /etc/%s.vars: %s"
 argument_list|,
-name|StartName
+name|ProgName
 argument_list|,
 name|strerror
 argument_list|(

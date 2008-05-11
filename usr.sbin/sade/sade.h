@@ -1337,6 +1337,19 @@ begin_comment
 comment|/* Which name we were started as */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ProgName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Program's proper name */
+end_comment
+
 begin_comment
 comment|/* Important chunks. */
 end_comment
