@@ -179,8 +179,8 @@ end_comment
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|ieee80211_txampdu_update_pps
 parameter_list|(
 name|struct
@@ -223,8 +223,8 @@ end_comment
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|ieee80211_txampdu_count_packet
 parameter_list|(
 name|struct
@@ -295,8 +295,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
 name|__inline
+name|int
 name|ieee80211_txampdu_getpps
 parameter_list|(
 name|struct
