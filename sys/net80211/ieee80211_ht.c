@@ -7081,25 +7081,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* batimeout */
-name|args
-index|[
-literal|3
-index|]
-operator|=
-name|SM
-argument_list|(
-literal|0
-argument_list|,
-name|IEEE80211_BASEQ_START
-argument_list|)
-operator||
-name|SM
-argument_list|(
-literal|0
-argument_list|,
-name|IEEE80211_BASEQ_FRAG
-argument_list|)
-expr_stmt|;
 comment|/* NB: do first so there's no race against reply */
 if|if
 condition|(
@@ -7179,6 +7160,28 @@ operator|=
 name|dialogtoken
 expr_stmt|;
 comment|/* allocate token */
+comment|/* NB: after calling ic_addba_request so driver can set seqstart */
+name|args
+index|[
+literal|3
+index|]
+operator|=
+name|SM
+argument_list|(
+name|tap
+operator|->
+name|txa_seqstart
+argument_list|,
+name|IEEE80211_BASEQ_START
+argument_list|)
+operator||
+name|SM
+argument_list|(
+literal|0
+argument_list|,
+name|IEEE80211_BASEQ_FRAG
+argument_list|)
+expr_stmt|;
 return|return
 name|ic
 operator|->
