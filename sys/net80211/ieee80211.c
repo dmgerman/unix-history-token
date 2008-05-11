@@ -104,40 +104,71 @@ specifier|const
 name|char
 modifier|*
 name|ieee80211_phymode_name
-index|[]
+index|[
+name|IEEE80211_MODE_MAX
+index|]
 init|=
 block|{
+index|[
+name|IEEE80211_MODE_AUTO
+index|]
+operator|=
 literal|"auto"
 block|,
-comment|/* IEEE80211_MODE_AUTO */
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|=
 literal|"11a"
 block|,
-comment|/* IEEE80211_MODE_11A */
+index|[
+name|IEEE80211_MODE_11B
+index|]
+operator|=
 literal|"11b"
 block|,
-comment|/* IEEE80211_MODE_11B */
+index|[
+name|IEEE80211_MODE_11G
+index|]
+operator|=
 literal|"11g"
 block|,
-comment|/* IEEE80211_MODE_11G */
+index|[
+name|IEEE80211_MODE_FH
+index|]
+operator|=
 literal|"FH"
 block|,
-comment|/* IEEE80211_MODE_FH */
+index|[
+name|IEEE80211_MODE_TURBO_A
+index|]
+operator|=
 literal|"turboA"
 block|,
-comment|/* IEEE80211_MODE_TURBO_A */
+index|[
+name|IEEE80211_MODE_TURBO_G
+index|]
+operator|=
 literal|"turboG"
 block|,
-comment|/* IEEE80211_MODE_TURBO_G */
+index|[
+name|IEEE80211_MODE_STURBO_A
+index|]
+operator|=
 literal|"sturboA"
 block|,
-comment|/* IEEE80211_MODE_STURBO_A */
+index|[
+name|IEEE80211_MODE_11NA
+index|]
+operator|=
 literal|"11na"
 block|,
-comment|/* IEEE80211_MODE_11NA */
+index|[
+name|IEEE80211_MODE_11NG
+index|]
+operator|=
 literal|"11ng"
-block|,
-comment|/* IEEE80211_MODE_11NG */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
