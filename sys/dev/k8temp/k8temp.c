@@ -1089,7 +1089,7 @@ argument_list|)
 expr_stmt|;
 name|temp
 operator|=
-name|max
+name|MAX
 argument_list|(
 name|auxtemp
 index|[
@@ -1132,7 +1132,7 @@ argument_list|)
 expr_stmt|;
 name|temp
 operator|=
-name|max
+name|MAX
 argument_list|(
 name|auxtemp
 index|[
