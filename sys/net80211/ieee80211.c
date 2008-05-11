@@ -1861,7 +1861,7 @@ operator||=
 name|IEEE80211_F_DOTH
 expr_stmt|;
 comment|/* XXX out of caps, just ena */
-comment|/* XXX out of caps, just ena */
+comment|/* NB: DFS support only makes sense for ap mode right now */
 if|if
 condition|(
 name|vap
@@ -1869,6 +1869,14 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_HOSTAP
+operator|&&
+operator|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_DFS
+operator|)
 condition|)
 name|vap
 operator|->

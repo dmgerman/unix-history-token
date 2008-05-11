@@ -2680,6 +2680,17 @@ begin_comment
 comment|/* CAPABILITY: monitor mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_DFS
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: DFS/radar avail*/
+end_comment
+
 begin_comment
 comment|/* 0x20000 available */
 end_comment
