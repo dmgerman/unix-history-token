@@ -105,7 +105,9 @@ specifier|const
 name|char
 modifier|*
 name|ieee80211_phymode_name
-index|[]
+index|[
+name|IEEE80211_MODE_MAX
+index|]
 decl_stmt|;
 end_decl_stmt
 
