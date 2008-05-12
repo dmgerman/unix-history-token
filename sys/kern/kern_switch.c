@@ -1812,7 +1812,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|td
+name|td2
 operator|->
 name|td_lastcpu
 operator|==
