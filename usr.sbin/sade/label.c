@@ -6193,7 +6193,7 @@ name|msgConfirm
 argument_list|(
 literal|"You've already written out your changes - if you\n"
 literal|"wish to overwrite them, you'll have to restart\n"
-literal|"sysinstall first."
+literal|"sade first."
 argument_list|)
 expr_stmt|;
 block|}
@@ -6203,12 +6203,9 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"WARNING:  This should only be used when modifying an EXISTING\n"
-literal|"installation.  If you are installing FreeBSD for the first time\n"
-literal|"then you should simply type Q when you're finished here and your\n"
-literal|"changes will be committed in one batch automatically at the end of\n"
-literal|"these questions.\n\n"
-literal|"Are you absolutely sure you want to do this now?"
+literal|"WARNING:  You are about to modify an EXISTING\n"
+literal|"installation.\n\n"
+literal|"Are you absolutely sure you want to continue?"
 argument_list|)
 condition|)
 block|{

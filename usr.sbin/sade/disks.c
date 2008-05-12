@@ -2747,13 +2747,10 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"WARNING:  This should only be used when modifying an EXISTING\n"
-literal|"installation.  If you are installing FreeBSD for the first time\n"
-literal|"then you should simply type Q when you're finished here and your\n"
-literal|"changes will be committed in one batch automatically at the end of\n"
-literal|"these questions.  If you're adding a disk, you should NOT write\n"
-literal|"from this screen, you should do it from the label editor.\n\n"
-literal|"Are you absolutely sure you want to do this now?"
+literal|"WARNING:  You are about to modify an EXISTING installation.\n"
+literal|"You should simply type Q when you are finished\n"
+literal|"here and write to the disk from the label editor.\n\n"
+literal|"Are you absolutely sure you want to continue?"
 argument_list|)
 condition|)
 block|{
