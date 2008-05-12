@@ -2171,7 +2171,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ts
+name|ts2
 operator|->
 name|ts_thread
 operator|->
