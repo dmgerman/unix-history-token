@@ -2458,6 +2458,9 @@ name|ic
 operator|->
 name|ic_caps
 operator|=
+name|IEEE80211_C_STA
+comment|/* station mode supported */
+operator||
 name|IEEE80211_C_MONITOR
 comment|/* monitor mode supported */
 operator||

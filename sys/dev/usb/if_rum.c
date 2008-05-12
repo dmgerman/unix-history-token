@@ -3506,6 +3506,9 @@ name|ic
 operator|->
 name|ic_caps
 operator|=
+name|IEEE80211_C_STA
+comment|/* station mode supported */
+operator||
 name|IEEE80211_C_IBSS
 comment|/* IBSS mode supported */
 operator||

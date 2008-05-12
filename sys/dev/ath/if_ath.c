@@ -2991,6 +2991,9 @@ name|ic
 operator|->
 name|ic_caps
 operator|=
+name|IEEE80211_C_STA
+comment|/* station mode */
+operator||
 name|IEEE80211_C_IBSS
 comment|/* ibss, nee adhoc, mode */
 operator||

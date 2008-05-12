@@ -2562,6 +2562,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_C_STA
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* CAPABILITY: STA available */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_C_FF
 value|0x00000040
 end_define
@@ -2692,7 +2703,7 @@ comment|/* CAPABILITY: DFS/radar avail*/
 end_comment
 
 begin_comment
-comment|/* 0x20000 available */
+comment|/* 0x7c0000 available */
 end_comment
 
 begin_define
@@ -2790,6 +2801,14 @@ end_comment
 begin_comment
 comment|/* XXX protection/barker? */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_OPMODE
+define|\
+value|(IEEE80211_C_STA | IEEE80211_C_IBSS | IEEE80211_C_HOSTAP | \ 	 IEEE80211_C_AHDEMO | IEEE80211_C_MONITOR | IEEE80211_C_WDS)
+end_define
 
 begin_comment
 comment|/*  * ic_htcaps/iv_htcaps: HT-specific device/driver capabilities  *  * NB: the low 16-bits are the 802.11 definitions, the upper  *     16-bits are used to define s/w/driver capabilities.  */

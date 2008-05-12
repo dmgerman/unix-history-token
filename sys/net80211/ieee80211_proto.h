@@ -109,6 +109,17 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|ieee80211_opcap
+index|[
+name|IEEE80211_OPMODE_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|ieee80211_proto_attach

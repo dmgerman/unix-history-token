@@ -3766,6 +3766,8 @@ name|ic
 operator|->
 name|ic_caps
 operator|=
+name|IEEE80211_C_STA
+operator||
 name|IEEE80211_C_IBSS
 expr_stmt|;
 name|setbit
