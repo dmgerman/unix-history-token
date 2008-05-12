@@ -552,7 +552,8 @@ name|ieee80211_plcp2rate
 parameter_list|(
 name|uint8_t
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_phytype
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -566,6 +567,9 @@ name|uint8_t
 name|ieee80211_rate2plcp
 parameter_list|(
 name|int
+parameter_list|,
+name|enum
+name|ieee80211_phytype
 parameter_list|)
 function_decl|;
 end_function_decl
