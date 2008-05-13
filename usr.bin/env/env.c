@@ -199,7 +199,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-iP:S:v"
+literal|"-iP:S:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -249,6 +249,46 @@ name|argc
 argument_list|,
 operator|&
 name|argv
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+if|if
+condition|(
+name|env_verbosity
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"#env unset:\t%s\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|rtrn
+operator|=
+name|unsetenv
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rtrn
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"unsetenv %s"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -537,8 +577,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: env [-iv] [-P utilpath] [-S string] [name=value ...]"
-literal|" [utility [argument ...]]\n"
+literal|"usage: env [-iv] [-P utilpath] [-S string] [-u name]\n"
+literal|"           [name=value ...] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
