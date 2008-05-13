@@ -95,18 +95,6 @@ directive|include
 file|<sys/unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<compat/linux/linux_emul.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/linux/linux_futex.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -146,6 +134,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<compat/linux/linux_emul.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<compat/linux/linux_futex.h>
+end_include
 
 begin_decl_stmt
 name|struct
@@ -290,6 +290,12 @@ operator|->
 name|pdeath_signal
 operator|=
 literal|0
+expr_stmt|;
+name|em
+operator|->
+name|robust_futexes
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -596,6 +602,11 @@ name|elf_linux_sysvec
 argument_list|)
 condition|)
 return|return;
+name|release_futexes
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* find the emuldata */
 name|em
 operator|=
