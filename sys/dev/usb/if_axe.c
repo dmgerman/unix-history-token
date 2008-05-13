@@ -254,6 +254,16 @@ block|}
 block|,
 block|{
 block|{
+name|USB_VENDOR_APPLE
+block|,
+name|USB_PRODUCT_APPLE_ETHERNET
+block|}
+block|,
+name|AX772
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_ASIX
 block|,
 name|USB_PRODUCT_ASIX_AX88172
@@ -1249,6 +1259,10 @@ block|}
 if|if
 condition|(
 name|val
+operator|&&
+name|val
+operator|!=
+literal|0xffff
 condition|)
 name|sc
 operator|->
