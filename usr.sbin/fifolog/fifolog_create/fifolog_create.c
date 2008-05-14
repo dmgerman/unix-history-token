@@ -12,6 +12,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -46,6 +58,30 @@ directive|define
 name|DEF_RECCNT
 value|(24 * 60 * 60)
 end_define
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: fifolog_create [-l record-size] "
+literal|"[-r record-count] [-s size] file\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -178,12 +214,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -201,12 +233,8 @@ name|argc
 operator|!=
 literal|1
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

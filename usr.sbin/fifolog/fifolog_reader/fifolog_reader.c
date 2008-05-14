@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<regex.h>
 end_include
 
@@ -317,7 +323,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|2
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -350,18 +356,6 @@ name|fifolog_reader
 modifier|*
 name|fl
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|time
 argument_list|(
 operator|&
@@ -590,6 +584,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+name|Usage
+argument_list|()
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -637,24 +643,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"Begin time not before End time"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|argv
-index|[
-literal|0
-index|]
-operator|==
-name|NULL
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage: %s [options] fifolog"
-argument_list|,
-name|progname
 argument_list|)
 expr_stmt|;
 name|fl

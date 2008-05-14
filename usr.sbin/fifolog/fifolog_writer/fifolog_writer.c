@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -62,6 +68,30 @@ include|#
 directive|include
 file|"libfifolog.h"
 end_include
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"fifolog_writer [-w write-rate] [-s sync-rate] "
+literal|"[-z compression] file\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -193,12 +223,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -216,12 +242,8 @@ name|argc
 operator|!=
 literal|1
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -229,12 +251,8 @@ name|z_opt
 operator|>
 literal|9
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -242,12 +260,8 @@ name|w_opt
 operator|>
 name|s_opt
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 name|f
 operator|=
