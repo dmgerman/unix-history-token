@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Copyright (C) 2008 Jason Evans<jasone@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer  *    unmodified other than the allowable addition of one or more  *    copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  ******************************************************************************  *  * cpp macro implementation of left-leaning red-black trees.  All operations  * are done non-recursively.  Parent pointers are not used, and color bits are  * stored in the least significant bit of right-child pointers, thus making  * node linkage as compact as is possible for red-black trees.  *  * Some macros use a comparison function pointer, which is expected to have the  * following prototype:  *  *   int (a_cmp *)(a_type *a_node, a_type *a_other);  *                         ^^^^^^  *                      or a_key  *  * Interpretation of comparision function return values:  *  *   -1 : a_node<  a_other  *    0 : a_node == a_other  *    1 : a_node>  a_other  *  * In all cases, the a_node or a_key macro argument is the first argument to the  * comparison function, which makes it possible to write comparison functions  * that treat the first argument specially.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * Copyright (C) 2008 Jason Evans<jasone@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer  *    unmodified other than the allowable addition of one or more  *    copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  ******************************************************************************  *  * cpp macro implementation of left-leaning red-black trees.  *  * Usage:  *  *   (Optional, see assert(3).)  *   #define NDEBUG  *  *   (Required.)  *   #include<assert.h>  *   #include<rb.h>  *   ...  *  * All operations are done non-recursively.  Parent pointers are not used, and  * color bits are stored in the least significant bit of right-child pointers,  * thus making node linkage as compact as is possible for red-black trees.  *  * Some macros use a comparison function pointer, which is expected to have the  * following prototype:  *  *   int (a_cmp *)(a_type *a_node, a_type *a_other);  *                         ^^^^^^  *                      or a_key  *  * Interpretation of comparision function return values:  *  *   -1 : a_node<  a_other  *    0 : a_node == a_other  *    1 : a_node>  a_other  *  * In all cases, the a_node or a_key macro argument is the first argument to the  * comparison function, which makes it possible to write comparison functions  * that treat the first argument specially.  *  ******************************************************************************/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RB_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RB_H_
+end_define
 
 begin_include
 include|#
@@ -16,16 +28,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* To disable assertions, #define NDEBUG before #include'ing rb.h. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
 
 begin_comment
 comment|/* Node structure. */
@@ -724,7 +726,7 @@ name|a_tree
 parameter_list|,
 name|a_var
 parameter_list|)
-value|{	\
+value|{		\
 comment|/* Compute the maximum possible tree depth (3X the black height). */
 value|\     unsigned rbp_f_height;						\     rbp_black_height(a_type, a_field, a_tree, rbp_f_height);		\     rbp_f_height *= 3;							\     {									\
 comment|/* Initialize the path to contain the left spine.             */
@@ -866,6 +868,15 @@ value|\
 comment|/* path, or the path is empty.                        */
 value|\ 		for (rbp_fr_depth--; rbp_fr_depth> 0; rbp_fr_depth--) {\ 		    if (rbp_right_get(a_type, a_field,			\ 		      rbp_fr_path[rbp_fr_depth-1])			\ 		      == rbp_fr_path[rbp_fr_depth]) {			\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 	}								\     }									\ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RB_H_ */
+end_comment
 
 end_unit
 
