@@ -96,7 +96,7 @@ name|vm_paddr_t
 name|is_ptsb
 decl_stmt|;
 comment|/* (r) TSB physical address */
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|is_tsb
 decl_stmt|;
@@ -105,11 +105,11 @@ name|int
 name|is_tsbsize
 decl_stmt|;
 comment|/* (r) 0 = 8K, ... */
-name|u_int64_t
+name|uint64_t
 name|is_pmaxaddr
 decl_stmt|;
 comment|/* (r) max. physical address */
-name|u_int64_t
+name|uint64_t
 name|is_dvmabase
 decl_stmt|;
 comment|/* (r) */
@@ -202,18 +202,24 @@ begin_function_decl
 name|void
 name|iommu_init
 parameter_list|(
+specifier|const
 name|char
 modifier|*
+name|name
 parameter_list|,
 name|struct
 name|iommu_state
 modifier|*
+name|is
 parameter_list|,
 name|int
+name|tsbsize
 parameter_list|,
-name|u_int32_t
+name|uint32_t
+name|iovabase
 parameter_list|,
 name|int
+name|resvpg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -225,6 +231,7 @@ parameter_list|(
 name|struct
 name|iommu_state
 modifier|*
+name|is
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -236,8 +243,10 @@ parameter_list|(
 name|struct
 name|iommu_state
 modifier|*
+name|is
 parameter_list|,
 name|vm_offset_t
+name|phys
 parameter_list|)
 function_decl|;
 end_function_decl

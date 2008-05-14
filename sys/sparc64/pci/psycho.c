@@ -1497,7 +1497,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Match other Psycho's that are already configured against 	 * the base physical address. This will be the same for a 	 * pair of devices that share register space. 	 */
+comment|/* 	 * Match other Psycho's that are already configured against 	 * the base physical address.  This will be the same for a 	 * pair of devices that share register space. 	 */
 name|osc
 operator|=
 name|NULL
@@ -2162,7 +2162,7 @@ operator|&
 name|range
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure that the expected ranges are present. The OFW_PCI_CS_MEM64 	 * one is not currently used though. 	 */
+comment|/* 	 * Make sure that the expected ranges are present.  The 	 * OFW_PCI_CS_MEM64 one is not currently used though. 	 */
 if|if
 condition|(
 name|nrange
@@ -2350,7 +2350,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PSYCHO_DEBUG
-comment|/* 			 * Enable all interrupts and clear all interrupt 			 * states. This aids the debugging of interrupt 			 * routing problems. 			 */
+comment|/* 			 * Enable all interrupts and clear all interrupt 			 * states.  This aids the debugging of interrupt 			 * routing problems. 			 */
 name|device_printf
 argument_list|(
 name|dev
@@ -2583,6 +2583,11 @@ comment|/* PSYCHO_MAP_WAKEUP */
 comment|/* Initialize the counter-timer. */
 name|sparc64_counter_init
 argument_list|(
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
 name|rman_get_bustag
 argument_list|(
 name|sc
@@ -2770,7 +2775,7 @@ name|sc_is
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Register a PCI bus error interrupt handler according to which 	 * half this is. Hummingbird/Sabre don't have a PCI bus B error 	 * interrupt but they are also only used for PCI bus A. 	 */
+comment|/* 	 * Register a PCI bus error interrupt handler according to which 	 * half this is.  Hummingbird/Sabre don't have a PCI bus B error 	 * interrupt but they are also only used for PCI bus A. 	 */
 name|psycho_set_intr
 argument_list|(
 name|sc
@@ -3185,7 +3190,7 @@ name|ofw_pci_intr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * On E250 the interrupt map entry for the EBus bridge is wrong, 	 * causing incorrect interrupts to be assigned to some devices on 	 * the EBus. Work around it by changing our copy of the interrupt 	 * map mask to perform a full comparison of the INO. That way 	 * the interrupt map entry for the EBus bridge won't match at all 	 * and the INOs specified in the "interrupts" properties of the 	 * EBus devices will be used directly instead. 	 */
+comment|/* 	 * On E250 the interrupt map entry for the EBus bridge is wrong, 	 * causing incorrect interrupts to be assigned to some devices on 	 * the EBus.  Work around it by changing our copy of the interrupt 	 * map mask to perform a full comparison of the INO.  That way 	 * the interrupt map entry for the EBus bridge won't match at all 	 * and the INOs specified in the "interrupts" properties of the 	 * EBus devices will be used directly instead. 	 */
 if|if
 condition|(
 name|strcmp
@@ -3759,7 +3764,7 @@ argument_list|,
 name|PSR_UE_AFS
 argument_list|)
 expr_stmt|;
-comment|/* 	 * On the UltraSPARC-IIi/IIe, IOMMU misses/protection faults cause 	 * the AFAR to be set to the physical address of the TTE entry that 	 * was invalid/write protected. Call into the iommu code to have 	 * them decoded to virtual I/O addresses. 	 */
+comment|/* 	 * On the UltraSPARC-IIi/IIe, IOMMU misses/protection faults cause 	 * the AFAR to be set to the physical address of the TTE entry that 	 * was invalid/write protected.  Call into the IOMMU code to have 	 * them decoded to virtual I/O addresses. 	 */
 if|if
 condition|(
 operator|(
@@ -4152,10 +4157,6 @@ name|uint32_t
 name|dvmabase
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|struct
 name|iommu_state
 modifier|*
@@ -4224,50 +4225,14 @@ name|is_dtcmp
 operator|=
 name|PSR_IOMMU_TLB_CMP_DIAG
 expr_stmt|;
-comment|/* Give us a nice name... */
-name|name
-operator|=
-name|malloc
+name|iommu_init
 argument_list|(
-literal|32
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"%s: could not malloc iommu name"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|name
-argument_list|,
-literal|32
-argument_list|,
-literal|"%s dvma"
-argument_list|,
 name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|iommu_init
-argument_list|(
-name|name
 argument_list|,
 name|is
 argument_list|,
@@ -4366,7 +4331,7 @@ index|[
 name|OFW_PCI_CS_CONFIG
 index|]
 expr_stmt|;
-comment|/* 	 * The Hummingbird and Sabre bridges are picky in that they 	 * only allow their config space to be accessed using the 	 * "native" width of the respective register being accessed 	 * and return semi-random other content of their config space 	 * otherwise. Given that the PCI specs don't say anything 	 * about such a (unusual) limitation and lots of stuff expects 	 * to be able to access the contents of the config space at 	 * any width we allow just that. We do this by using a copy 	 * of the header of the bridge (the rest is all zero anyway) 	 * read during attach (expect for PCIR_STATUS) in order to 	 * simplify things. 	 * The Psycho bridges contain a dupe of their header at 0x80 	 * which we nullify that way also. 	 */
+comment|/* 	 * The Hummingbird and Sabre bridges are picky in that they 	 * only allow their config space to be accessed using the 	 * "native" width of the respective register being accessed 	 * and return semi-random other content of their config space 	 * otherwise.  Given that the PCI specs don't say anything 	 * about such a (unusual) limitation and lots of stuff expects 	 * to be able to access the contents of the config space at 	 * any width we allow just that.  We do this by using a copy 	 * of the header of the bridge (the rest is all zero anyway) 	 * read during attach (expect for PCIR_STATUS) in order to 	 * simplify things. 	 * The Psycho bridges contain a dupe of their header at 0x80 	 * which we nullify that way also. 	 */
 if|if
 condition|(
 name|bus
@@ -4903,7 +4868,7 @@ operator|(
 name|mintr
 operator|)
 return|;
-comment|/* 	 * If this is outside of the range for an intpin, it's likely a full 	 * INO, and no mapping is required at all; this happens on the U30, 	 * where there's no interrupt map at the Psycho node. Fortunately, 	 * there seem to be no INOs in the intpin range on this boxen, so 	 * this easy heuristics will do. 	 */
+comment|/* 	 * If this is outside of the range for an intpin, it's likely a full 	 * INO, and no mapping is required at all; this happens on the U30, 	 * where there's no interrupt map at the Psycho node.  Fortunately, 	 * there seem to be no INOs in the intpin range on this boxen, so 	 * this easy heuristics will do. 	 */
 if|if
 condition|(
 name|pin
@@ -4915,7 +4880,7 @@ operator|(
 name|pin
 operator|)
 return|;
-comment|/* 	 * Guess the INO; we always assume that this is a non-OBIO 	 * device, and that pin is a "real" intpin number. Determine 	 * the mapping register to be used by the slot number. 	 * We only need to do this on E450s, it seems; here, the slot numbers 	 * for bus A are one-based, while those for bus B seemingly have an 	 * offset of 2 (hence the factor of 3 below). 	 */
+comment|/* 	 * Guess the INO; we always assume that this is a non-OBIO 	 * device, and that pin is a "real" intpin number.  Determine 	 * the mapping register to be used by the slot number. 	 * We only need to do this on E450s, it seems; here, the slot numbers 	 * for bus A are one-based, while those for bus B seemingly have an 	 * offset of 2 (hence the factor of 3 below). 	 */
 name|intrmap
 operator|=
 name|PSR_PCIA0_INT_MAP
@@ -5395,7 +5360,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * The Sabre-APB-combination has a bug where it does not drain 	 * DMA write data for devices behind additional PCI-PCI bridges 	 * underneath the APB PCI-PCI bridge. The workaround is to do 	 * a read on the farest PCI-PCI bridge followed by a read of the 	 * PCI DMA write sync register of the Sabre. 	 * XXX installing the wrapper for an affected device and the 	 * actual workaround in psycho_dmasync() should be moved to 	 * psycho(4)-specific bus_dma_tag_create() and bus_dmamap_sync() 	 * methods, respectively, once DMA tag creation is newbus'ified, 	 * so the workaround isn't only applied for interrupt handlers 	 * but also for polling(4) callbacks. 	 */
+comment|/* 	 * The Sabre-APB-combination has a bug where it does not drain 	 * DMA write data for devices behind additional PCI-PCI bridges 	 * underneath the APB PCI-PCI bridge.  The workaround is to do 	 * a read on the farest PCI-PCI bridge followed by a read of the 	 * PCI DMA write sync register of the Sabre. 	 * XXX installing the wrapper for an affected device and the 	 * actual workaround in psycho_dmasync() should be moved to 	 * psycho(4)-specific bus_dma_tag_create() and bus_dmamap_sync() 	 * methods, respectively, once DMA tag creation is newbus'ified, 	 * so the workaround isn't only applied for interrupt handlers 	 * but also for polling(4) callbacks. 	 */
 if|if
 condition|(
 name|sc
@@ -5982,7 +5947,7 @@ operator|==
 name|SYS_RES_IRQ
 condition|)
 block|{
-comment|/* 		 * XXX: Don't accept blank ranges for now, only single 		 * interrupts. The other case should not happen with the 		 * MI PCI code... 		 * XXX: This may return a resource that is out of the 		 * range that was specified. Is this correct...? 		 */
+comment|/* 		 * XXX: Don't accept blank ranges for now, only single 		 * interrupts.  The other case should not happen with 		 * the MI PCI code... 		 * XXX: This may return a resource that is out of the 		 * range that was specified.  Is this correct...? 		 */
 if|if
 condition|(
 name|start

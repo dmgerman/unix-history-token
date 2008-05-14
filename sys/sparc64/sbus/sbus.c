@@ -1039,10 +1039,6 @@ decl_stmt|;
 name|bus_size_t
 name|size
 decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|u_long
 name|vec
 decl_stmt|;
@@ -1726,53 +1722,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* give us a nice name.. */
-name|name
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-literal|32
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"%s: cannot malloc iommu name"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|name
-argument_list|,
-literal|32
-argument_list|,
-literal|"%s dvma"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Note: the SBus IOMMU ignores the high bits of an address, so a NULL 	 * DMA pointer will be translated by the first page of the IOTSB. 	 * To detect bugs we'll allocate and ignore the first entry. 	 */
 name|iommu_init
 argument_list|(
-name|name
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 operator|&
 name|sc
@@ -2222,6 +2178,11 @@ expr_stmt|;
 comment|/* Initialize the counter-timer. */
 name|sparc64_counter_init
 argument_list|(
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
 name|rman_get_bustag
 argument_list|(
 name|sc
