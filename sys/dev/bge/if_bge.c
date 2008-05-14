@@ -9328,39 +9328,30 @@ operator|->
 name|bge_dev
 argument_list|)
 argument_list|,
-comment|/* parent */
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* highaddr */
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* filter, filterarg */
-name|MAXBSIZE
-argument_list|,
-name|BGE_NSEG_NEW
-argument_list|,
-comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-comment|/* maxsegsize */
 literal|0
 argument_list|,
-comment|/* flags */
-name|NULL
+name|BUS_SPACE_MAXSIZE_32BIT
+argument_list|,
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* lockfunc, lockarg */
+name|NULL
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -9391,7 +9382,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Create tag for RX mbufs. 	 */
+comment|/* 	 * Create tag for mbufs. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -16227,11 +16218,13 @@ condition|)
 block|{
 name|m
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 name|m
 argument_list|,
 name|M_DONTWAIT
+argument_list|,
+name|BGE_NSEG_NEW
 argument_list|)
 expr_stmt|;
 if|if
