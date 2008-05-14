@@ -13248,7 +13248,7 @@ name|BGE_FLAG_WIRESPEED
 value|0x00000004
 define|#
 directive|define
-name|BGE_FLAG_EEPROM
+name|BGE_FLAG_EADDR
 value|0x00000008
 define|#
 directive|define
@@ -13310,10 +13310,6 @@ define|#
 directive|define
 name|BGE_FLAG_CRC_BUG
 value|0x08000000
-define|#
-directive|define
-name|BGE_FLAG_NO_EEPROM
-value|0x10000000
 define|#
 directive|define
 name|BGE_FLAG_5788
