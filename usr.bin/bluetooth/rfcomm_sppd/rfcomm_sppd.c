@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * rfcomm_sppd.c  *  * Copyright (c) 2003 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: rfcomm_sppd.c,v 1.4 2003/09/07 18:15:55 max Exp $  * $FreeBSD$  */
+comment|/*  * rfcomm_sppd.c  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 2003 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: rfcomm_sppd.c,v 1.4 2003/09/07 18:15:55 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -738,8 +742,6 @@ block|{
 if|if
 condition|(
 name|background
-operator|||
-name|doserver
 condition|)
 name|usage
 argument_list|()
@@ -793,8 +795,8 @@ decl_stmt|;
 name|bdaddr_t
 name|bt_addr_any
 decl_stmt|;
-name|sdp_lan_profile_t
-name|lan
+name|sdp_sp_profile_t
+name|sp
 decl_stmt|;
 name|void
 modifier|*
@@ -808,26 +810,6 @@ name|acceptsock
 decl_stmt|,
 name|aaddrlen
 decl_stmt|;
-if|if
-condition|(
-name|channel
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* XXX: should check if selected channel is unused */
-name|channel
-operator|=
-operator|(
-name|getpid
-argument_list|()
-operator|%
-literal|30
-operator|)
-operator|+
-literal|1
-expr_stmt|;
-block|}
 name|acceptsock
 operator|=
 name|socket
@@ -850,6 +832,19 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"Could not create socket"
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|bt_addr_any
+argument_list|,
+name|NG_HCI_BDADDR_ANY
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bt_addr_any
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -879,6 +874,22 @@ operator|.
 name|rfcomm_family
 operator|=
 name|AF_BLUETOOTH
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|ma
+operator|.
+name|rfcomm_bdaddr
+argument_list|,
+operator|&
+name|bt_addr_any
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bt_addr_any
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ma
 operator|.
@@ -912,7 +923,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not bind socket -- channel %d in use?"
+literal|"Could not bind socket on channel %d"
 argument_list|,
 name|channel
 argument_list|)
@@ -934,6 +945,46 @@ literal|1
 argument_list|,
 literal|"Could not listen on socket"
 argument_list|)
+expr_stmt|;
+name|aaddrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ma
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|getsockname
+argument_list|(
+name|acceptsock
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|ma
+argument_list|,
+operator|&
+name|aaddrlen
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Could not get socket name"
+argument_list|)
+expr_stmt|;
+name|channel
+operator|=
+name|ma
+operator|.
+name|rfcomm_channel
 expr_stmt|;
 name|ss
 operator|=
@@ -987,34 +1038,21 @@ expr_stmt|;
 name|memset
 argument_list|(
 operator|&
-name|lan
+name|sp
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|lan
+name|sp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|lan
+name|sp
 operator|.
 name|server_channel
 operator|=
 name|channel
-expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|bt_addr_any
-argument_list|,
-name|NG_HCI_BDADDR_ANY
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bt_addr_any
-argument_list|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1022,7 +1060,7 @@ name|sdp_register_service
 argument_list|(
 name|ss
 argument_list|,
-name|service
+name|SDP_SERVICE_CLASS_SERIAL_PORT
 argument_list|,
 operator|&
 name|bt_addr_any
@@ -1032,11 +1070,11 @@ name|void
 operator|*
 operator|)
 operator|&
-name|lan
+name|sp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|lan
+name|sp
 argument_list|)
 argument_list|,
 operator|&
@@ -2421,7 +2459,7 @@ literal|"\t-b         Run in background\n"
 expr|\
 literal|"\t-c channel RFCOMM channel to connect to or listen on\n"
 expr|\
-literal|"\t-t tty     TTY name (required in background or server mode)\n"
+literal|"\t-t tty     TTY name (required in background mode)\n"
 expr|\
 literal|"\t-S         Server mode\n"
 expr|\
