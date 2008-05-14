@@ -3792,6 +3792,14 @@ name|end
 argument_list|,
 literal|"gz"
 argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|end
+argument_list|,
+literal|"bz2"
+argument_list|)
 condition|)
 return|return
 name|ZCAT
