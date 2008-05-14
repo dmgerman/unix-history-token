@@ -1100,7 +1100,8 @@ name|tp
 operator|=
 name|TAILQ_NEXT
 argument_list|(
-name|tp
+operator|&
+name|tty
 argument_list|,
 name|t_list
 argument_list|)
