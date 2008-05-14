@@ -1191,6 +1191,19 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|int
+name|mask_C1
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mask characters from 0x80 - 0x9F */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|send_to_all
 decl_stmt|;
 end_decl_stmt
@@ -1842,7 +1855,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46Aa:b:cCdf:kl:m:nop:P:sS:uv"
+literal|"468Aa:b:cCdf:kl:m:nop:P:sS:uv"
 argument_list|)
 operator|)
 operator|!=
@@ -1875,6 +1888,14 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+literal|'8'
+case|:
+name|mask_C1
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 literal|'A'
 case|:
@@ -3787,7 +3808,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: syslogd [-46ACcdknosuv] [-a allowed_peer]"
+literal|"usage: syslogd [-468ACcdknosuv] [-a allowed_peer]"
 argument_list|,
 literal|"               [-b bind_address] [-f config_file]"
 argument_list|,
@@ -3990,6 +4011,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|mask_C1
+operator|&&
 operator|(
 name|c
 operator|&
