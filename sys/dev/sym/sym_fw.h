@@ -183,11 +183,13 @@ begin_struct
 struct|struct
 name|sym_fw
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 comment|/* Name we want to print out	*/
+specifier|const
 name|u32
 modifier|*
 name|a_base
@@ -197,12 +199,14 @@ name|int
 name|a_size
 decl_stmt|;
 comment|/* Size of script A		*/
+specifier|const
 name|struct
 name|sym_fwa_ofs
 modifier|*
 name|a_ofs
 decl_stmt|;
 comment|/* Useful offsets in script A	*/
+specifier|const
 name|u32
 modifier|*
 name|b_base
@@ -212,6 +216,7 @@ name|int
 name|b_size
 decl_stmt|;
 comment|/* Size of script B		*/
+specifier|const
 name|struct
 name|sym_fwb_ofs
 modifier|*
@@ -229,6 +234,7 @@ name|struct
 name|sym_hcb
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sym_fw
 modifier|*
@@ -263,7 +269,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|{								\ 	name,							\ 	(u32 *)&fw##a_scr, sizeof(fw##a_scr),&fw##a_ofs,	\ 	(u32 *)&fw##b_scr, sizeof(fw##b_scr),&fw##b_ofs,	\ 	fw##_setup, fw##_patch					\ }
+value|{								\ 	name,							\ 	(const u32 *)&fw##a_scr, sizeof(fw##a_scr),&fw##a_ofs,\ 	(const u32 *)&fw##b_scr, sizeof(fw##b_scr),&fw##b_ofs,\ 	fw##_setup, fw##_patch					\ }
 end_define
 
 begin_comment

@@ -154,6 +154,7 @@ name|unsigned
 name|short
 name|revision_id
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name

@@ -3529,6 +3529,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sym_scsi_bus_mode
@@ -3579,6 +3580,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|Tekram_sync
 index|[
@@ -5543,15 +5545,6 @@ comment|/* 	 *  Chip and controller indentification. 	 */
 name|device_t
 name|device
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-name|char
-name|inst_name
-index|[
-literal|8
-index|]
-decl_stmt|;
 comment|/* 	 *  Initial value of some IO register bits. 	 *  These values are assumed to have been set by BIOS, and may 	 *  be used to probe adapter implementation differences. 	 */
 name|u_char
 name|sv_scntl0
@@ -5746,6 +5739,7 @@ parameter_list|(
 name|hcb_p
 name|np
 parameter_list|,
+specifier|const
 name|struct
 name|sym_fw
 modifier|*
@@ -5762,6 +5756,7 @@ name|hcb_p
 name|np
 parameter_list|)
 function_decl|;
+specifier|const
 name|char
 modifier|*
 name|fw_name
@@ -5993,6 +5988,7 @@ end_comment
 begin_function
 specifier|static
 name|__inline
+specifier|const
 name|char
 modifier|*
 name|sym_name
@@ -6002,9 +5998,12 @@ name|np
 parameter_list|)
 block|{
 return|return
+name|device_get_nameunit
+argument_list|(
 name|np
 operator|->
-name|inst_name
+name|device
+argument_list|)
 return|;
 block|}
 end_function
@@ -6104,6 +6103,8 @@ file|<dev/sym/sym_fw1.h>
 end_include
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|sym_fwa_ofs
 name|sym_fw1a_ofs
@@ -6118,6 +6119,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|sym_fwb_ofs
 name|sym_fw1b_ofs
@@ -6177,6 +6180,8 @@ file|<dev/sym/sym_fw2.h>
 end_include
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|sym_fwa_ofs
 name|sym_fw2a_ofs
@@ -6191,6 +6196,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|sym_fwb_ofs
 name|sym_fw2b_ofs
@@ -6865,6 +6872,7 @@ parameter_list|(
 name|hcb_p
 name|np
 parameter_list|,
+specifier|const
 name|struct
 name|sym_fw
 modifier|*
@@ -6875,6 +6883,7 @@ name|u32
 modifier|*
 name|pa
 decl_stmt|;
+specifier|const
 name|u_short
 modifier|*
 name|po
@@ -6886,6 +6895,7 @@ comment|/* 	 *  Build the bus address table for script A 	 *  from the script A 
 name|po
 operator|=
 operator|(
+specifier|const
 name|u_short
 operator|*
 operator|)
@@ -6945,6 +6955,7 @@ comment|/* 	 *  Same for script B. 	 */
 name|po
 operator|=
 operator|(
+specifier|const
 name|u_short
 operator|*
 operator|)
@@ -7021,6 +7032,7 @@ parameter_list|(
 name|hcb_p
 name|np
 parameter_list|,
+specifier|const
 name|struct
 name|sym_fw
 modifier|*
@@ -7103,6 +7115,7 @@ parameter_list|(
 name|hcb_p
 name|np
 parameter_list|,
+specifier|const
 name|struct
 name|sym_fw
 modifier|*
@@ -7176,6 +7189,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|sym_fw
 name|sym_fw1
@@ -7200,6 +7214,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|sym_fw
 name|sym_fw2
@@ -7219,11 +7234,13 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|sym_fw
 modifier|*
 name|sym_find_firmware
 parameter_list|(
+specifier|const
 name|struct
 name|sym_pci_chip
 modifier|*
@@ -8880,6 +8897,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|struct
 name|sym_pci_chip
 modifier|*
@@ -9546,6 +9564,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u32
 name|div_10M
 index|[]
@@ -18502,7 +18521,7 @@ name|comp_ccbq
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|union
@@ -19311,7 +19330,7 @@ name|qtmp
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|union
@@ -32607,6 +32626,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 specifier|static
+specifier|const
 name|struct
 name|sym_pci_chip
 name|sym_pci_dev_table
@@ -33299,6 +33319,7 @@ define|\
 value|(sizeof(sym_pci_dev_table) / sizeof(sym_pci_dev_table[0]))
 comment|/*  *  Look up the chip table.  *  *  Return a pointer to the chip entry if found,  *  zero otherwise.  */
 specifier|static
+specifier|const
 name|struct
 name|sym_pci_chip
 modifier|*
@@ -33308,6 +33329,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|sym_pci_chip
 modifier|*
@@ -33405,6 +33427,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|sym_pci_chip
 modifier|*
@@ -33463,6 +33486,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|sym_pci_chip
 modifier|*
@@ -33485,6 +33509,7 @@ name|struct
 name|sym_nvram
 name|nvram
 decl_stmt|;
+specifier|const
 name|struct
 name|sym_fw
 modifier|*
@@ -33567,6 +33592,13 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|device_set_softc
+argument_list|(
+name|dev
+argument_list|,
+name|np
+argument_list|)
+expr_stmt|;
 name|SYM_LOCK_INIT
 argument_list|()
 expr_stmt|;
@@ -33591,15 +33623,6 @@ operator|->
 name|device
 operator|=
 name|dev
-expr_stmt|;
-name|np
-operator|->
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 name|np
 operator|->
@@ -33727,27 +33750,6 @@ name|attach_failed
 goto|;
 endif|#
 directive|endif
-comment|/* 	 * Edit its name. 	 */
-name|snprintf
-argument_list|(
-name|np
-operator|->
-name|inst_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|np
-operator|->
-name|inst_name
-argument_list|)
-argument_list|,
-literal|"sym%d"
-argument_list|,
-name|np
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
 comment|/* 	 *  Initialize the CCB free and busy queues. 	 */
 name|sym_que_init
 argument_list|(
@@ -35230,7 +35232,7 @@ name|free_ccbq
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|cp
@@ -35505,6 +35507,15 @@ condition|)
 name|SYM_LOCK_DESTROY
 argument_list|()
 expr_stmt|;
+name|device_set_softc
+argument_list|(
+name|np
+operator|->
+name|device
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|sym_mfree_dma
 argument_list|(
 name|np
@@ -35636,9 +35647,12 @@ literal|"sym"
 argument_list|,
 name|np
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|np
 operator|->
-name|unit
+name|device
+argument_list|)
 argument_list|,
 operator|&
 name|np
@@ -36692,6 +36706,7 @@ block|}
 block|}
 comment|/*  *  Dump TEKRAM format NVRAM for debugging purpose.  */
 specifier|static
+specifier|const
 name|u_char
 name|Tekram_boot_delay
 index|[
