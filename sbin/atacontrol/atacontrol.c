@@ -1382,6 +1382,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|prchan
+condition|)
 name|err
 argument_list|(
 literal|1
@@ -1389,6 +1395,8 @@ argument_list|,
 literal|"ioctl(IOCATADEVICES)"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|prchan
