@@ -3693,6 +3693,12 @@ name|object
 operator|==
 name|NULL
 operator|||
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_DEVICE
+operator|||
 operator|(
 name|object
 operator|->
