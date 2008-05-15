@@ -185,6 +185,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|uint64_t
+name|OM_uint64
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|gss_OID_desc_struct
 block|{
