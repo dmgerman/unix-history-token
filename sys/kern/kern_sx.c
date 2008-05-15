@@ -208,6 +208,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|sx_recurse
+value|lock_object.lo_data
+end_define
+
+begin_define
+define|#
+directive|define
 name|sx_recursed
 parameter_list|(
 name|sx

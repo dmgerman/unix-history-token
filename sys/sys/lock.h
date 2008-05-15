@@ -259,17 +259,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LO_ENROLLPEND
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* On the pending enroll list. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LO_CLASSMASK
 value|0x0f000000
 end_define
@@ -852,6 +841,10 @@ parameter_list|(
 name|struct
 name|lock_object
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1151,9 +1144,11 @@ directive|define
 name|WITNESS_INIT
 parameter_list|(
 name|lock
+parameter_list|,
+name|type
 parameter_list|)
 define|\
-value|witness_init((lock))
+value|witness_init((lock), (type))
 end_define
 
 begin_define
@@ -1373,6 +1368,8 @@ directive|define
 name|WITNESS_INIT
 parameter_list|(
 name|lock
+parameter_list|,
+name|type
 parameter_list|)
 end_define
 

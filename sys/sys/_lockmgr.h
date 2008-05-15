@@ -44,10 +44,6 @@ specifier|volatile
 name|uintptr_t
 name|lk_lock
 decl_stmt|;
-specifier|volatile
-name|unsigned
-name|lk_recurse
-decl_stmt|;
 name|int
 name|lk_timo
 decl_stmt|;

@@ -173,6 +173,13 @@ name|thread
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|lk_recurse
+value|lock_object.lo_data
+end_define
+
 begin_comment
 comment|/*  * Function prototipes.  Routines that start with an underscore are not part  * of the public interface and might be wrappered with a macro.  */
 end_comment

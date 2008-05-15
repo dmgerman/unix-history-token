@@ -25,32 +25,19 @@ modifier|*
 name|lo_name
 decl_stmt|;
 comment|/* Individual lock name. */
-specifier|const
-name|char
-modifier|*
-name|lo_type
-decl_stmt|;
-comment|/* General lock type. */
 name|u_int
 name|lo_flags
 decl_stmt|;
-union|union
-block|{
-comment|/* Data for witness. */
-name|STAILQ_ENTRY
-argument_list|(
-argument|lock_object
-argument_list|)
-name|lod_list
-expr_stmt|;
+name|u_int
+name|lo_data
+decl_stmt|;
+comment|/* General class specific data. */
 name|struct
 name|witness
 modifier|*
-name|lod_witness
+name|lo_witness
 decl_stmt|;
-block|}
-name|lo_witness_data
-union|;
+comment|/* Data for witness. */
 block|}
 struct|;
 end_struct

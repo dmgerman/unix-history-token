@@ -167,6 +167,13 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|rw_recurse
+value|lock_object.lo_data
+end_define
+
 begin_comment
 comment|/* Very simple operations on rw_lock. */
 end_comment

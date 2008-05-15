@@ -31,10 +31,6 @@ specifier|volatile
 name|uintptr_t
 name|sx_lock
 decl_stmt|;
-specifier|volatile
-name|unsigned
-name|sx_recurse
-decl_stmt|;
 block|}
 struct|;
 end_struct

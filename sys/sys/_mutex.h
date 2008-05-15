@@ -33,11 +33,6 @@ name|uintptr_t
 name|mtx_lock
 decl_stmt|;
 comment|/* Owner and flags. */
-specifier|volatile
-name|u_int
-name|mtx_recurse
-decl_stmt|;
-comment|/* Number of recursive holds. */
 block|}
 struct|;
 end_struct

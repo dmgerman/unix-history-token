@@ -654,6 +654,13 @@ define|\
 value|mtx_unlock_spin((tdp)->td_lock)
 end_define
 
+begin_define
+define|#
+directive|define
+name|mtx_recurse
+value|lock_object.lo_data
+end_define
+
 begin_comment
 comment|/*  * We define our machine-independent (unoptimized) mutex micro-operations  * here, if they are not already defined in the machine-dependent mutex.h   */
 end_comment
