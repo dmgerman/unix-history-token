@@ -164,7 +164,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**************** MACHINE DEPENDENT PART STARTS HERE *************************  *  * This section defines a function tone() which causes a tone of given  * frequency and duration from the ISA console speaker.  * Another function endtone() is defined to force sound off, and there is  * also a rest() entry point to do pauses.  *  * Audible sound is generated using the Programmable Interval Timer (PIT) and  * Programmable Peripheral Interface (PPI) attached to the ISA speaker. The  * PPI controls whether sound is passed through at all; the PIT's channel 2 is  * used to generate clicks (a square wave) of whatever frequency is desired.  */
+comment|/*  **************** MACHINE DEPENDENT PART STARTS HERE *************************  * This section defines a function tone() which causes a tone of given  * frequency and duration from the ISA console speaker.  * Another function endtone() is defined to force sound off, and there is  * also a rest() entry point to do pauses.  *  * Audible sound is generated using the Programmable Interval Timer (PIT) and  * Programmable Peripheral Interface (PPI) attached to the ISA speaker. The  * PPI controls whether sound is passed through at all; the PIT's channel 2 is  * used to generate clicks (a square wave) of whatever frequency is desired.  */
 end_comment
 
 begin_define
@@ -253,7 +253,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* emit tone of frequency thz for given number of centisecs */
+comment|/*   * Emit tone of frequency thz for given number of centisecs   */
 end_comment
 
 begin_function
@@ -261,16 +261,14 @@ specifier|static
 name|void
 name|tone
 parameter_list|(
-name|thz
-parameter_list|,
-name|centisecs
-parameter_list|)
 name|unsigned
 name|int
 name|thz
-decl_stmt|,
+parameter_list|,
+name|unsigned
+name|int
 name|centisecs
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|sps
@@ -338,7 +336,7 @@ expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
-comment|/*      * Set timeout to endtone function, then give up the timeslice.      * This is so other processes can execute while the tone is being      * emitted.      */
+comment|/* 	 * Set timeout to endtone function, then give up the timeslice. 	 * This is so other processes can execute while the tone is being 	 * emitted. 	 */
 name|timo
 operator|=
 name|centisecs
@@ -384,7 +382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* rest for given number of centisecs */
+comment|/*  * Rest for given number of centisecs   */
 end_comment
 
 begin_function
@@ -392,16 +390,14 @@ specifier|static
 name|void
 name|rest
 parameter_list|(
-name|centisecs
-parameter_list|)
 name|int
 name|centisecs
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|timo
 decl_stmt|;
-comment|/*      * Set timeout to endrest function, then give up the timeslice.      * This is so other processes can execute while the rest is being      * waited out.      */
+comment|/* 	 * Set timeout to endrest function, then give up the timeslice. 	 * This is so other processes can execute while the rest is being 	 * waited out. 	 */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -450,7 +446,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************** PLAY STRING INTERPRETER BEGINS HERE **********************  *  * Play string interpretation is modelled on IBM BASIC 2.0's PLAY statement;  * M[LNS] are missing; the ~ synonym and the _ slur mark and the octave-  * tracking facility are added.  * Requires tone(), rest(), and endtone(). String play is not interruptible  * except possibly at physical block boundaries.  */
+comment|/*  **************** PLAY STRING INTERPRETER BEGINS HERE **********************  * Play string interpretation is modelled on IBM BASIC 2.0's PLAY statement;  * M[LNS] are missing; the ~ synonym and the _ slur mark and the octave-  * tracking facility are added.  * Requires tone(), rest(), and endtone(). String play is not interruptible  * except possibly at physical block boundaries.  */
 end_comment
 
 begin_typedef
@@ -982,7 +978,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* play tone of proper duration for current rhythm signature */
+comment|/*   * Play tone of proper duration for current rhythm signature   */
 end_comment
 
 begin_function
@@ -990,19 +986,15 @@ specifier|static
 name|void
 name|playtone
 parameter_list|(
-name|pitch
-parameter_list|,
-name|value
-parameter_list|,
-name|sustain
-parameter_list|)
 name|int
 name|pitch
-decl_stmt|,
+parameter_list|,
+name|int
 name|value
-decl_stmt|,
+parameter_list|,
+name|int
 name|sustain
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1167,7 +1159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* interpret and play an item from a notation string */
+comment|/*  * Interpret and play an item from a notation string   */
 end_comment
 
 begin_function
@@ -1175,17 +1167,13 @@ specifier|static
 name|void
 name|playstring
 parameter_list|(
-name|cp
-parameter_list|,
-name|slen
-parameter_list|)
 name|char
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|slen
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pitch
@@ -1341,7 +1329,7 @@ name|slen
 operator|--
 expr_stmt|;
 block|}
-comment|/* 	     * If octave-tracking mode is on, and there has been no octave- 	     * setting prefix, find the version of the current letter note 	     * closest to the last regardless of octave. 	     */
+comment|/* 			 * If octave-tracking mode is on, and there has been no octave- 			 * setting prefix, find the version of the current letter note 			 * closest to the last regardless of octave. 			 */
 if|if
 condition|(
 name|octtrack
@@ -1948,7 +1936,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************* UNIX DRIVER HOOKS BEGIN HERE **************************  *  * This section implements driver hooks to run playstring() and the tone(),  * endtone(), and rest() functions defined above.  */
+comment|/*  * ****************** UNIX DRIVER HOOKS BEGIN HERE **************************  * This section implements driver hooks to run playstring() and the tone(),  * endtone(), and rest() functions defined above.  */
 end_comment
 
 begin_decl_stmt
