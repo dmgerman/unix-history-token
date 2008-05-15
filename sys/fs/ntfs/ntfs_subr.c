@@ -1953,7 +1953,7 @@ literal|"ntnode"
 argument_list|,
 literal|0
 argument_list|,
-name|LK_EXCLUSIVE
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_init
