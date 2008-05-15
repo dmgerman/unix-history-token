@@ -185,7 +185,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|off_t
 parameter_list|)
