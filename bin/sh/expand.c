@@ -3081,6 +3081,36 @@ label|:
 comment|/* jump here after setting a variable with ${var=text} */
 if|if
 condition|(
+name|varflags
+operator|&
+name|VSLINENO
+condition|)
+block|{
+name|set
+operator|=
+literal|1
+expr_stmt|;
+name|special
+operator|=
+literal|0
+expr_stmt|;
+name|val
+operator|=
+name|var
+expr_stmt|;
+name|p
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* temporarily overwrite '=' to have \0 				   terminated string */
+block|}
+elseif|else
+if|if
+condition|(
 name|special
 condition|)
 block|{
@@ -3635,6 +3665,15 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+name|p
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|'='
+expr_stmt|;
+comment|/* recover overwritten '=' */
 if|if
 condition|(
 name|subtype
