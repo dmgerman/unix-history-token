@@ -177,6 +177,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|xflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* extended display, includes all socket buffer info */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|zflag
 decl_stmt|;
 end_decl_stmt

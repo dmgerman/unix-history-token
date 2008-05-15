@@ -243,6 +243,14 @@ name|sb_mbcnt
 decl_stmt|;
 comment|/* (c/d) chars of mbufs used */
 name|u_int
+name|sb_mcnt
+decl_stmt|;
+comment|/* (c/d) number of mbufs in buffer */
+name|u_int
+name|sb_ccnt
+decl_stmt|;
+comment|/* (c/d) number of clusters in buffer */
+name|u_int
 name|sb_mbmax
 decl_stmt|;
 comment|/* (c/d) max chars of mbufs to use */
@@ -838,6 +846,12 @@ name|u_int
 name|sb_mbcnt
 decl_stmt|;
 name|u_int
+name|sb_mcnt
+decl_stmt|;
+name|u_int
+name|sb_ccnt
+decl_stmt|;
+name|u_int
 name|sb_mbmax
 decl_stmt|;
 name|int
@@ -992,7 +1006,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt += (m)->m_ext.ext_size; \ }
+value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	(sb)->sb_mcnt += 1; \ 	if ((m)->m_flags& M_EXT) { \ 		(sb)->sb_mbcnt += (m)->m_ext.ext_size; \ 		(sb)->sb_ccnt += 1; \ 	} \ }
 end_define
 
 begin_comment
@@ -1008,7 +1022,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ 	if ((sb)->sb_sndptr == (m)) { \ 		(sb)->sb_sndptr = NULL; \ 		(sb)->sb_sndptroff = 0; \ 	} \ 	if ((sb)->sb_sndptroff != 0) \ 		(sb)->sb_sndptroff -= (m)->m_len; \ }
+value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	(sb)->sb_mcnt -= 1; \ 	if ((m)->m_flags& M_EXT) { \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ 		(sb)->sb_ccnt -= 1; \ 	} \ 	if ((sb)->sb_sndptr == (m)) { \ 		(sb)->sb_sndptr = NULL; \ 		(sb)->sb_sndptroff = 0; \ 	} \ 	if ((sb)->sb_sndptroff != 0) \ 		(sb)->sb_sndptroff -= (m)->m_len; \ }
 end_define
 
 begin_comment
