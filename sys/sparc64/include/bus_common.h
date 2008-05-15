@@ -88,7 +88,7 @@ value|0x000000018LL
 end_define
 
 begin_comment
-comment|/* SBUS slot # */
+comment|/* SBus slot # */
 end_comment
 
 begin_define
