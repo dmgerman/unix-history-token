@@ -177,7 +177,11 @@ name|level
 parameter_list|,
 name|char
 modifier|*
-name|objname
+name|ilockname
+parameter_list|,
+name|char
+modifier|*
+name|lockname
 parameter_list|,
 name|struct
 name|thread
@@ -325,6 +329,8 @@ operator|&
 name|smb_vclist
 argument_list|,
 name|SMBL_SM
+argument_list|,
+literal|"smbsm ilock"
 argument_list|,
 literal|"smbsm"
 argument_list|,
@@ -1069,7 +1075,11 @@ name|level
 parameter_list|,
 name|char
 modifier|*
-name|objname
+name|ilockname
+parameter_list|,
+name|char
+modifier|*
+name|lockname
 parameter_list|,
 name|struct
 name|thread
@@ -1092,7 +1102,7 @@ name|cp
 operator|->
 name|co_interlock
 argument_list|,
-name|objname
+name|ilockname
 argument_list|)
 expr_stmt|;
 name|lockinit
@@ -1104,7 +1114,7 @@ name|co_lock
 argument_list|,
 name|PZERO
 argument_list|,
-name|objname
+name|lockname
 argument_list|,
 literal|0
 argument_list|,
@@ -2037,6 +2047,8 @@ name|vcp
 argument_list|)
 argument_list|,
 name|SMBL_VC
+argument_list|,
+literal|"smb_vc ilock"
 argument_list|,
 literal|"smb_vc"
 argument_list|,
@@ -3807,6 +3819,8 @@ name|ssp
 argument_list|)
 argument_list|,
 name|SMBL_SHARE
+argument_list|,
+literal|"smbss ilock"
 argument_list|,
 literal|"smbss"
 argument_list|,
