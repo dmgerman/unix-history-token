@@ -136,7 +136,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"linux_syscalls.h"
+file|"linux32_syscalls.h"
 end_include
 
 begin_decl_stmt
@@ -146,12 +146,12 @@ name|nsyscalls
 init|=
 sizeof|sizeof
 argument_list|(
-name|linux_syscallnames
+name|linux32_syscallnames
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|linux_syscallnames
+name|linux32_syscallnames
 index|[
 literal|0
 index|]
@@ -290,7 +290,7 @@ end_comment
 
 begin_function
 name|void
-name|i386_linux_syscall_entry
+name|amd64_linux32_syscall_entry
 parameter_list|(
 name|struct
 name|trussinfo
@@ -362,7 +362,7 @@ name|syscall_num
 operator|=
 name|regs
 operator|.
-name|r_eax
+name|r_rax
 expr_stmt|;
 name|fsc
 operator|.
@@ -386,7 +386,7 @@ operator|)
 condition|?
 name|NULL
 else|:
-name|linux_syscallnames
+name|linux32_syscallnames
 index|[
 name|syscall_num
 index|]
@@ -476,7 +476,7 @@ index|]
 operator|=
 name|regs
 operator|.
-name|r_ebx
+name|r_rbx
 expr_stmt|;
 name|fsc
 operator|.
@@ -487,7 +487,7 @@ index|]
 operator|=
 name|regs
 operator|.
-name|r_ecx
+name|r_rcx
 expr_stmt|;
 name|fsc
 operator|.
@@ -498,7 +498,7 @@ index|]
 operator|=
 name|regs
 operator|.
-name|r_edx
+name|r_rdx
 expr_stmt|;
 name|fsc
 operator|.
@@ -509,7 +509,7 @@ index|]
 operator|=
 name|regs
 operator|.
-name|r_esi
+name|r_rsi
 expr_stmt|;
 name|fsc
 operator|.
@@ -520,7 +520,7 @@ index|]
 operator|=
 name|regs
 operator|.
-name|r_edi
+name|r_rdi
 expr_stmt|;
 name|sc
 operator|=
@@ -1177,7 +1177,7 @@ end_decl_stmt
 
 begin_function
 name|long
-name|i386_linux_syscall_exit
+name|amd64_linux32_syscall_exit
 parameter_list|(
 name|struct
 name|trussinfo
@@ -1269,7 +1269,7 @@ name|retval
 operator|=
 name|regs
 operator|.
-name|r_eax
+name|r_rax
 expr_stmt|;
 name|errorp
 operator|=
@@ -1278,7 +1278,7 @@ operator|!
 operator|(
 name|regs
 operator|.
-name|r_eflags
+name|r_rflags
 operator|&
 name|PSL_C
 operator|)
