@@ -729,6 +729,28 @@ name|DHCP_ACK
 value|5
 end_define
 
+begin_comment
+comment|/* NFS read/write block size */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BOOTP_BLOCKSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BOOTP_BLOCKSIZE
+value|8192
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -5827,13 +5849,13 @@ name|args
 operator|->
 name|rsize
 operator|=
-literal|8192
+name|BOOTP_BLOCKSIZE
 expr_stmt|;
 name|args
 operator|->
 name|wsize
 operator|=
-literal|8192
+name|BOOTP_BLOCKSIZE
 expr_stmt|;
 name|args
 operator|->
