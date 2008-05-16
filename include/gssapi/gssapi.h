@@ -1105,11 +1105,9 @@ define|\
 value|(1ul<< (GSS_C_SUPPLEMENTARY_OFFSET + 4))
 end_define
 
-begin_comment
-comment|/*  * Finally, function prototypes for the GSS-API routines.  */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
+comment|/*  * Finally, function prototypes for the GSS-API routines.  */
 name|OM_uint32
 name|gss_acquire_cred
 parameter_list|(
@@ -2376,6 +2374,10 @@ comment|/* buffer for result */
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
