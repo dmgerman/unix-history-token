@@ -640,6 +640,11 @@ name|task
 name|sc_restarttask
 decl_stmt|;
 comment|/* reset firmware task */
+name|struct
+name|task
+name|sc_bmiss_task
+decl_stmt|;
+comment|/* beacon miss */
 comment|/* Eeprom info */
 name|uint8_t
 name|cap
