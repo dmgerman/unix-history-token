@@ -12070,6 +12070,17 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fdp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 name|kif
 operator|=
 name|malloc
