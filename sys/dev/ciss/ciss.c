@@ -12215,39 +12215,6 @@ operator|.
 name|target_lun
 argument_list|)
 expr_stmt|;
-comment|/* firmware does not support commands> 10 bytes */
-if|if
-condition|(
-name|csio
-operator|->
-name|cdb_len
-operator|>
-literal|12
-comment|/*CISS_CDB_BUFFER_SIZE*/
-condition|)
-block|{
-name|debug
-argument_list|(
-literal|3
-argument_list|,
-literal|"  command too large (%d> %d)"
-argument_list|,
-name|csio
-operator|->
-name|cdb_len
-argument_list|,
-name|CISS_CDB_BUFFER_SIZE
-argument_list|)
-expr_stmt|;
-name|csio
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_CMP_ERR
-expr_stmt|;
-block|}
 comment|/* check that the CDB pointer is not to a physical address */
 if|if
 condition|(
