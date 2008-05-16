@@ -4973,7 +4973,7 @@ name|ib
 operator|->
 name|callout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|ib

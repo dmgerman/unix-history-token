@@ -2646,7 +2646,7 @@ name|sc
 operator|->
 name|mfi_watchdog_callout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_reset

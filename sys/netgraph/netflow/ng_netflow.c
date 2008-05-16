@@ -637,7 +637,7 @@ name|priv
 operator|->
 name|exp_callout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 comment|/* Allocate memory and set up flow cache */
