@@ -566,7 +566,7 @@ value|id_to_sem(x)
 end_define
 
 begin_comment
-comment|/*  * available semaphores go here, this includes sem_init and any semaphores  * created via sem_open that have not yet been unlinked.  */
+comment|/*  * Available semaphores go here, this includes sem_init and any semaphores  * created via sem_open that have not yet been unlinked.  */
 end_comment
 
 begin_macro
@@ -589,7 +589,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * semaphores still in use but have been sem_unlink()'d go here.  */
+comment|/*  * Semaphores still in use but have been sem_unlink()'d go here.  */
 end_comment
 
 begin_macro
@@ -808,19 +808,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|ksem
-operator|*
-name|id_to_sem
-argument_list|(
-argument|semid_t id
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 specifier|static
@@ -1103,7 +1090,7 @@ name|ENAMETOOLONG
 operator|)
 return|;
 block|}
-comment|/* name must start with a '/' but not contain one. */
+comment|/* Name must start with a '/' but not contain one. */
 if|if
 condition|(
 operator|*
@@ -1393,11 +1380,8 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|kern_sem_init
 argument_list|(
 name|td
@@ -1412,10 +1396,6 @@ name|uap
 operator|->
 name|idp
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -2474,27 +2454,6 @@ name|kuser
 operator|*
 name|sem_getuser
 argument_list|(
-expr|struct
-name|proc
-operator|*
-name|p
-argument_list|,
-expr|struct
-name|ksem
-operator|*
-name|ks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|kuser
-operator|*
-name|sem_getuser
-argument_list|(
 argument|struct proc *p
 argument_list|,
 argument|struct ksem *ks
@@ -2696,20 +2655,16 @@ specifier|static
 name|void
 name|sem_enter
 parameter_list|(
-name|p
-parameter_list|,
-name|ks
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ksem
 modifier|*
 name|ks
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|kuser
@@ -3166,7 +3121,7 @@ argument_list|(
 name|id
 argument_list|)
 expr_stmt|;
-comment|/* this is not a valid operation for unnamed sems */
+comment|/* 	 * This is not a valid operation for unnamed sems. 	 */
 if|if
 condition|(
 name|ks
@@ -3557,7 +3512,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* We allow a null timespec (wait forever). */
+comment|/* 	 * We allow a null timespec (wait forever). 	 */
 if|if
 condition|(
 name|uap
