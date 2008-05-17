@@ -4307,9 +4307,6 @@ comment|/* !UFS_EXTATTR_AUTOSTART */
 endif|#
 directive|endif
 comment|/* !UFS_EXTATTR */
-ifndef|#
-directive|ifndef
-name|QUOTA
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -4326,8 +4323,6 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -5373,18 +5368,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|ump
-operator|->
-name|um_quotas
-index|[
-name|i
-index|]
-operator|==
-name|NULLVP
-condition|)
-continue|continue;
 name|quotaoff
 argument_list|(
 name|td
