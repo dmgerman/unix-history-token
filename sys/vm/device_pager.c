@@ -530,7 +530,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Allocate object and associate it with the pager. 		 */
+comment|/* 		 * Allocate object and associate it with the pager.  Initialize 		 * the object's pg_color based upon the physical address of the 		 * device's memory. 		 */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -544,6 +544,28 @@ argument_list|(
 name|OBJT_DEVICE
 argument_list|,
 name|pindex
+argument_list|)
+expr_stmt|;
+name|object1
+operator|->
+name|flags
+operator||=
+name|OBJ_COLORED
+expr_stmt|;
+name|object1
+operator|->
+name|pg_color
+operator|=
+name|atop
+argument_list|(
+name|paddr
+argument_list|)
+operator|-
+name|OFF_TO_IDX
+argument_list|(
+name|off
+operator|-
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|mtx_lock
