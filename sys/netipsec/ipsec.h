@@ -77,17 +77,47 @@ directive|include
 file|<netipsec/keydb.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec_osdep.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPSEC_SPLASSERT_SOFTNET
+parameter_list|(
+name|_m
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* XXX-BZ remove me */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPSEC_ASSERT
+parameter_list|(
+name|_c
+parameter_list|,
+name|_m
+parameter_list|)
+value|KASSERT(_c, _m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPSEC_IS_PRIVILEGED_SO
+parameter_list|(
+name|_so
+parameter_list|)
+define|\
+value|((_so)->so_cred != NULL&& \ 	 priv_check_cred((_so)->so_cred, PRIV_NETINET_IPSEC, 0) \ 	 == 0)
+end_define
 
 begin_comment
 comment|/*  * Security Policy Index  * Ensure that both address families in the "src" and "dst" are same.  * When the value of the ul_proto is ICMPv6, the port field in "src"  * specifies ICMPv6 type, and the port field in "dst" specifies ICMPv6 code.  */
