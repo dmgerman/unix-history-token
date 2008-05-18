@@ -7762,7 +7762,13 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+operator|*
+name|bo
+operator|==
+name|LIST_FIRST
+argument_list|(
+name|slp
+argument_list|)
 operator|)
 return|;
 block|}
