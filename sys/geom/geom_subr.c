@@ -2507,6 +2507,22 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|pp
+operator|->
+name|flags
+operator|&
+name|G_PF_WITHER
+operator|)
+argument_list|,
+operator|(
+literal|"g_new_provider_event but withered"
+operator|)
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|mp
@@ -3025,7 +3041,7 @@ name|KASSERT
 argument_list|(
 name|pp
 operator|->
-name|acw
+name|ace
 operator|==
 literal|0
 argument_list|,
