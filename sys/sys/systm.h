@@ -1750,23 +1750,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Cyclic clock function type definition used to hook the cyclic   * subsystem into the appropriate timer interrupt.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|cyclic_clock_func_t
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_function_decl
 name|void
 name|hardclock

@@ -1273,24 +1273,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|uint64_t
-name|dtrace_gethrtime
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint64_t
-name|dtrace_gethrestime
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_else
 else|#
 directive|else
