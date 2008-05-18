@@ -2449,9 +2449,9 @@ return|return
 operator|(
 name|devsoftc
 operator|.
-name|async_proc
-operator|!=
-name|NULL
+name|inuse
+operator|==
+literal|1
 operator|)
 return|;
 block|}
