@@ -9028,26 +9028,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|vm_offset_t
-name|pmap_addr_hint
-parameter_list|(
-name|vm_object_t
-name|obj
-parameter_list|,
-name|vm_offset_t
-name|addr
-parameter_list|,
-name|vm_size_t
-name|size
-parameter_list|)
-block|{
-return|return
-name|addr
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  *	Increase the starting virtual address of the given mapping if a  *	different alignment might result in more superpage mappings.  */
 end_comment

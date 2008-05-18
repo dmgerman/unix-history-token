@@ -538,22 +538,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|vm_offset_t
-name|pmap_addr_hint
-parameter_list|(
-name|vm_object_t
-name|obj
-parameter_list|,
-name|vm_offset_t
-name|addr
-parameter_list|,
-name|vm_size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define

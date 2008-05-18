@@ -1055,37 +1055,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|vm_offset_t
-name|pmap_addr_hint
-parameter_list|(
-name|vm_object_t
-name|obj
-parameter_list|,
-name|vm_offset_t
-name|addr
-parameter_list|,
-name|vm_size_t
-name|size
-parameter_list|)
-block|{
-return|return
-operator|(
-name|MMU_ADDR_HINT
-argument_list|(
-name|mmu_obj
-argument_list|,
-name|obj
-argument_list|,
-name|addr
-argument_list|,
-name|size
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  *	Increase the starting virtual address of the given mapping if a  *	different alignment might result in more superpage mappings.  */
 end_comment
@@ -1107,7 +1076,21 @@ parameter_list|,
 name|vm_size_t
 name|size
 parameter_list|)
-block|{ }
+block|{
+name|MMU_ALIGN_SUPERPAGE
+argument_list|(
+name|mmu_obj
+argument_list|,
+name|object
+argument_list|,
+name|offset
+argument_list|,
+name|addr
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
