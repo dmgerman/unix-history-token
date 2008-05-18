@@ -384,6 +384,18 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|kdtrace_proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kdtrace_thread
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|cpuset
 struct_decl|;
 end_struct_decl
@@ -812,6 +824,16 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* (a) lock profiling objects. */
+name|struct
+name|kdtrace_thread
+modifier|*
+name|td_dtrace
+decl_stmt|;
+comment|/* (*) DTrace-specific data. */
+name|int
+name|td_errno
+decl_stmt|;
+comment|/* Error returned by last syscall. */
 block|}
 struct|;
 end_struct
@@ -2328,6 +2350,12 @@ argument_list|)
 name|p_mqnotifier
 expr_stmt|;
 comment|/* (c) mqueue notifiers.*/
+name|struct
+name|kdtrace_proc
+modifier|*
+name|p_dtrace
+decl_stmt|;
+comment|/* (*) DTrace-specific data. */
 block|}
 struct|;
 end_struct
