@@ -1289,11 +1289,6 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1531,6 +1526,11 @@ operator|->
 name|ifm_addrs
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|RTM_IFANNOUNCE
@@ -1595,6 +1595,11 @@ block|}
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2119,6 +2124,11 @@ block|}
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 break|break;
