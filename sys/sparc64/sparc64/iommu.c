@@ -8,11 +8,25 @@ comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights rese
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: sbus.c,v 1.13 1999/05/23 07:24:02 mrg Exp  *	from: @(#)sbus.c	8.1 (Berkeley) 6/11/93  *	from: NetBSD: iommu.c,v 1.42 2001/08/06 22:02:58 eeh Exp  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: sbus.c,v 1.13 1999/05/23 07:24:02 mrg Exp  *	from: @(#)sbus.c	8.1 (Berkeley) 6/11/93  *	from: NetBSD: iommu.c,v 1.42 2001/08/06 22:02:58 eeh Exp  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * UltraSPARC IOMMU support; used by both the sbus and pci code.  * Currently, the IOTSBs are synchronized, because determining the bus the map  * is to be loaded for is not possible with the current busdma code.  * The code is structured so that the IOMMUs can be easily divorced when that  * is fixed.  *  * TODO:  * - As soon as there is a newbus way to get a parent dma tag, divorce the  *   IOTSBs.  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all). Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work. Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  * - Add bounce buffers to support machines with more than 16GB of RAM.  */
+comment|/*  * UltraSPARC IOMMU support; used by both the PCI and SBus code.  * Currently, the IOTSBs are synchronized, because determining the bus the map  * is to be loaded for is not possible with the current busdma code.  * The code is structured so that the IOMMUs can be easily divorced when that  * is fixed.  *  * TODO:  * - As soon as there is a newbus way to get a parent dma tag, divorce the  *   IOTSBs.  * - Support sub-page boundaries.  * - Fix alignment handling for small allocations (the possible page offset  *   of malloc()ed memory is not handled at all).  Revise interaction of  *   alignment with the load_mbuf and load_uio functions.  * - Handle lowaddr and highaddr in some way, and try to work out a way  *   for filter callbacks to work.  Currently, only lowaddr is honored  *   in that no addresses above it are considered at all.  * - Implement BUS_DMA_ALLOCNOW in bus_dma_tag_create as far as possible.  * - Check the possible return values and callback error arguments;  *   the callback currently gets called in error conditions where it should  *   not be.  * - When running out of DVMA space, return EINPROGRESS in the non-  *   BUS_DMA_NOWAIT case and delay the callback until sufficient space  *   becomes available.  * - Use the streaming cache unless BUS_DMA_COHERENT is specified; do not  *   flush the streaming cache when coherent mappings are synced.  * - Add bounce buffers to support machines with more than 16GB of RAM.  */
 end_comment
 
 begin_include
@@ -264,7 +278,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|iommu_tsb
 decl_stmt|;
@@ -313,7 +327,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_8((is)->is_bustag, (is)->is_bushandle, 		\ 	    (is)->reg + (off))
+value|bus_space_read_8((is)->is_bustag, (is)->is_bushandle,		\ 	    (is)->reg + (off))
 end_define
 
 begin_define
@@ -330,7 +344,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|bus_space_write_8((is)->is_bustag, (is)->is_bushandle, 		\ 	    (is)->reg + (off), (v))
+value|bus_space_write_8((is)->is_bustag, (is)->is_bushandle,		\ 	    (is)->reg + (off), (v))
 end_define
 
 begin_define
@@ -493,7 +507,7 @@ value|mtx_unlock(&iommu_mtx)
 end_define
 
 begin_comment
-comment|/* Flush a page from the TLB. No locking required, since this is atomic. */
+comment|/* Flush a page from the TLB.  No locking required, since this is atomic. */
 end_comment
 
 begin_function
@@ -540,7 +554,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush a page from the streaming buffer. No locking required, since this is  * atomic.  */
+comment|/*  * Flush a page from the streaming buffer.  No locking required, since this  * is atomic.  */
 end_comment
 
 begin_function
@@ -574,7 +588,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|is
@@ -601,11 +614,10 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/*  * Flush an address from the streaming buffer(s); this is an asynchronous  * operation. To make sure that it has completed, iommu_strbuf_sync() needs  * to be called. No locking required.  */
+comment|/*  * Flush an address from the streaming buffer(s); this is an asynchronous  * operation.  To make sure that it has completed, iommu_strbuf_sync() needs  * to be called.  No locking required.  */
 end_comment
 
 begin_function
@@ -808,13 +820,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * initialise the UltraSPARC IOMMU (SBus or PCI):  *	- allocate and setup the iotsb.  *	- enable the IOMMU  *	- initialise the streaming buffers (if they exist)  *	- create a private DVMA map.  */
+comment|/*  * initialise the UltraSPARC IOMMU (PCI or SBus):  *	- allocate and setup the iotsb.  *	- enable the IOMMU  *	- initialise the streaming buffers (if they exist)  *	- create a private DVMA map.  */
 end_comment
 
 begin_function
 name|void
 name|iommu_init
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -827,7 +840,7 @@ parameter_list|,
 name|int
 name|tsbsize
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|iovabase
 parameter_list|,
 name|int
@@ -845,13 +858,13 @@ decl_stmt|;
 name|vm_offset_t
 name|offs
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|end
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Setup the iommu. 	 * 	 * The sun4u iommu is part of the SBUS or PCI controller so we 	 * will deal with it here.. 	 * 	 * The IOMMU address space always ends at 0xffffe000, but the starting 	 * address depends on the size of the map.  The map size is 1024 * 2 ^ 	 * is->is_tsbsize entries, where each entry is 8 bytes.  The start of 	 * the map can be calculated by (0xffffe000<< (8 + is->is_tsbsize)). 	 */
+comment|/* 	 * Setup the iommu. 	 * 	 * The sun4u iommu is part of the PCI or SBus controller so we 	 * will deal with it here.. 	 * 	 * The IOMMU address space always ends at 0xffffe000, but the starting 	 * address depends on the size of the map.  The map size is 1024 * 2 ^ 	 * is->is_tsbsize entries, where each entry is 8 bytes.  The start of 	 * the map can be calculated by (0xffffe000<< (8 + is->is_tsbsize)). 	 */
 name|is
 operator|->
 name|is_cr
@@ -1017,7 +1030,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"iommu_init: can't initialize dvma rman"
+literal|"%s: could not initialize DVMA rman"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Allocate memory for I/O page tables.  They need to be 		 * physically contiguous. 		 */
@@ -1049,7 +1064,9 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"iommu_init: contigmalloc failed"
+literal|"%s: contigmalloc failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|iommu_ptsb
@@ -1102,8 +1119,10 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"iommu_init: secondary IOMMU state does not "
+literal|"%s: secondary IOMMU state does not "
 literal|"match primary"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1313,7 +1332,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enter a mapping into the TSB. No locking required, since each TSB slot is  * uniquely assigned to a single map.  */
+comment|/*  * Enter a mapping into the TSB.  No locking required, since each TSB slot is  * uniquely assigned to a single map.  */
 end_comment
 
 begin_function
@@ -1351,7 +1370,9 @@ operator|->
 name|is_dvmabase
 argument_list|,
 operator|(
-literal|"iommu_enter: va %#lx not in DVMA space"
+literal|"%s: va %#lx not in DVMA space"
+operator|,
+name|__func__
 operator|,
 name|va
 operator|)
@@ -1364,7 +1385,9 @@ operator|<
 name|IOMMU_MAXADDR
 argument_list|,
 operator|(
-literal|"iommu_enter: XXX: physical address too large (%#lx)"
+literal|"%s: XXX: physical address too large (%#lx)"
+operator|,
+name|__func__
 operator|,
 name|pa
 operator|)
@@ -1435,7 +1458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove mappings created by iommu_enter. Flush the streaming buffer, but do  * not synchronize it. Returns whether a streaming buffer flush was performed.  */
+comment|/*  * Remove mappings created by iommu_enter().  Flush the streaming buffer,  * but do not synchronize it.  Returns whether a streaming buffer flush  * was performed.  */
 end_comment
 
 begin_function
@@ -1481,7 +1504,9 @@ operator|->
 name|is_dvmabase
 argument_list|,
 operator|(
-literal|"iommu_remove: va 0x%lx not in DVMA space"
+literal|"%s: va 0x%lx not in DVMA space"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|u_long
@@ -1499,7 +1524,9 @@ operator|>=
 name|va
 argument_list|,
 operator|(
-literal|"iommu_remove: va 0x%lx + len 0x%lx wraps"
+literal|"%s: va 0x%lx + len 0x%lx wraps"
+operator|,
+name|__func__
 operator|,
 operator|(
 name|long
@@ -1713,7 +1740,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Streaming buffer flushes: 	 * 	 *   1 Tell strbuf to flush by storing va to strbuf_pgflush.  If 	 *     we're not on a cache line boundary (64-bits): 	 *   2 Store 0 in flag 	 *   3 Store pointer to flag in flushsync 	 *   4 wait till flushsync becomes 0x1 	 * 	 * If it takes more than .5 sec, something 	 * went wrong. 	 */
+comment|/* 	 * Streaming buffer flushes: 	 * 	 *   1 Tell strbuf to flush by storing va to strbuf_pgflush.  If 	 *     we're not on a cache line boundary (64-bits): 	 *   2 Store 0 in flag 	 *   3 Store pointer to flag in flushsync 	 *   4 wait till flushsync becomes 0x1 	 * 	 * If it takes more than .5 sec, something went wrong. 	 */
 operator|*
 name|is
 operator|->
@@ -1808,7 +1835,7 @@ name|tv_sec
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * 0.5s is the recommended timeout from the U2S manual. The actual 	 * time required should be smaller by at least a factor of 1000. 	 * We have no choice but to busy-wait. 	 */
+comment|/* 	 * 0.5s is the recommended timeout from the U2S manual.  The actual 	 * time required should be smaller by at least a factor of 1000. 	 * We have no choice but to busy-wait. 	 */
 name|end
 operator|.
 name|tv_usec
@@ -1886,7 +1913,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"iommu_strbuf_flush_done: flush timeout %ld, %ld at %#lx"
+literal|"%s: flush timeout %ld, %ld at %#lx"
+argument_list|,
+name|__func__
 argument_list|,
 operator|*
 name|is
@@ -1943,7 +1972,7 @@ name|bus_size_t
 name|size
 parameter_list|)
 block|{
-comment|/* 	 * This cannot be enabled yet, as many driver are still missing 	 * bus_dmamap_sync() calls. As soon as there is a BUS_DMA_STREAMING 	 * flag, this should be reenabled conditionally on it. 	 */
+comment|/* 	 * This cannot be enabled yet, as many driver are still missing 	 * bus_dmamap_sync() calls.  As soon as there is a BUS_DMA_STREAMING 	 * flag, this should be reenabled conditionally on it. 	 */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -1982,7 +2011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate DVMA virtual memory for a map. The map may not be on a queue, so  * that it can be freely modified.  */
+comment|/*  * Allocate DVMA virtual memory for a map.  The map may not be on a queue,  * so that it can be freely modified.  */
 end_comment
 
 begin_function
@@ -2028,7 +2057,9 @@ operator|->
 name|dm_onq
 argument_list|,
 operator|(
-literal|"iommu_dvma_valloc: map on queue!"
+literal|"%s: map on queue!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2096,7 +2127,9 @@ name|IO_PAGE_SIZE
 condition|)
 name|panic
 argument_list|(
-literal|"iommu_dvmamap_load: illegal boundary specified"
+literal|"%s: illegal boundary specified"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|res
@@ -2290,7 +2323,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"iommu_dvma_vfree_res: resource busy!"
+literal|"%s: resource busy!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2565,7 +2600,9 @@ operator|->
 name|dm_onq
 argument_list|,
 operator|(
-literal|"iommu_dvma_vfindseg: map on queue!"
+literal|"%s: map on queue!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2855,7 +2892,9 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"iommu_dvma_vallocseg: allocation failed unexpectedly!"
+literal|"%s: allocation failed unexpectedly!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2908,7 +2947,7 @@ name|error
 decl_stmt|,
 name|mflags
 decl_stmt|;
-comment|/* 	 * XXX: This will break for 32 bit transfers on machines with more than 	 * 16G (1<< 34 bytes) of memory. 	 */
+comment|/* 	 * XXX: This will break for 32 bit transfers on machines with more 	 * than 16G (1<< 34 bytes) memory. 	 */
 if|if
 condition|(
 operator|(
@@ -3020,7 +3059,7 @@ name|dm_flags
 operator||=
 name|DMF_COHERENT
 expr_stmt|;
-comment|/* 	 * Try to preallocate DVMA space. If this fails, it is retried at load 	 * time. 	 */
+comment|/* 	 * Try to preallocate DVMA space.  If this fails, it is retried at 	 * load time. 	 */
 name|iommu_dvma_valloc
 argument_list|(
 name|dt
@@ -3191,7 +3230,7 @@ name|dm_flags
 operator||=
 name|DMF_COHERENT
 expr_stmt|;
-comment|/* 	 * Preallocate DVMA space; if this fails now, it is retried at load 	 * time. Through bus_dmamap_load_mbuf() and bus_dmamap_load_uio(), it 	 * is possible to have multiple discontiguous segments in a single map, 	 * which is handled by allocating additional resources, instead of 	 * increasing the size, to avoid fragmentation. 	 * Clamp preallocation to IOMMU_MAX_PRE. In some situations we can 	 * handle more; that case is handled by reallocating at map load time. 	 */
+comment|/* 	 * Preallocate DVMA space; if this fails now, it is retried at load 	 * time.  Through bus_dmamap_load_mbuf() and bus_dmamap_load_uio(), 	 * it is possible to have multiple discontiguous segments in a single 	 * map, which is handled by allocating additional resources, instead 	 * of increasing the size, to avoid fragmentation. 	 * Clamp preallocation to IOMMU_MAX_PRE.  In some situations we can 	 * handle more; that case is handled by reallocating at map load time. 	 */
 name|totsz
 operator|=
 name|ulmin
@@ -3258,8 +3297,10 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"iommu_dvmamap_create: bogus preallocation size "
-literal|", nsegments = %d, maxpre = %d, maxsize = %lu"
+literal|"%s: bogus preallocation size , nsegments = %d, "
+literal|"maxpre = %d, maxsize = %lu"
+operator|,
+name|__func__
 operator|,
 name|dt
 operator|->
@@ -3401,7 +3442,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * IOMMU DVMA operations, common to SBUS and PCI.  */
+comment|/*  * IOMMU DVMA operations, common to PCI and SBus.  */
 end_comment
 
 begin_function
@@ -3486,7 +3527,9 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"iommu_dvmamap_load_buffer: buflen == 0!"
+literal|"%s: buflen == 0!"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3747,7 +3790,7 @@ operator|(
 name|EFBIG
 operator|)
 return|;
-comment|/* 			 * No extra alignment here - the common practice in the 			 * busdma code seems to be that only the first segment 			 * needs to satisfy the alignment constraints (and that 			 * only for bus_dmamem_alloc()ed maps). It is assumed 			 * that such tags have maxsegsize>= maxsize. 			 */
+comment|/* 			 * No extra alignment here - the common practice in 			 * the busdma code seems to be that only the first 			 * segment needs to satisfy the alignment constraints 			 * (and that only for bus_dmamem_alloc()ed maps). 			 * It is assumed that such tags have maxsegsize>= 			 * maxsize. 			 */
 name|esize
 operator|=
 name|ulmin
@@ -3869,7 +3912,9 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"iommu_dvmamap_load: map still in use\n"
+literal|"%s: map still in use\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4095,7 +4140,9 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"iommu_dvmamap_load_mbuf: map still in use\n"
+literal|"%s: map still in use\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4388,7 +4435,9 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"iommu_dvmamap_load_mbuf: map still in use\n"
+literal|"%s: map still in use\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4527,9 +4576,19 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
+name|IS_UNLOCK
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+name|IS_UNLOCK
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
 name|map
 operator|->
 name|dm_flags
@@ -4541,11 +4600,6 @@ operator|*
 name|nsegs
 expr_stmt|;
 block|}
-name|IS_UNLOCK
-argument_list|(
-name|is
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4642,7 +4696,9 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"iommu_dvmamap_load_uio: map still in use\n"
+literal|"%s: map still in use\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5093,7 +5149,7 @@ name|r
 operator|->
 name|dr_used
 expr_stmt|;
-comment|/* if we have a streaming buffer, flush it here first */
+comment|/* 			 * If we have a streaming buffer, flush it here 			 * first. 			 */
 while|while
 condition|(
 name|len
@@ -5204,10 +5260,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int64_t
-name|tag
-decl_stmt|,
+name|uint64_t
 name|data
+decl_stmt|,
+name|tag
 decl_stmt|;
 name|IS_LOCK_ASSERT
 argument_list|(
@@ -5237,7 +5293,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"iommu_diag: tte entry %#lx"
+literal|"%s: tte entry %#lx"
+argument_list|,
+name|__func__
 argument_list|,
 name|IOMMU_GET_TTE
 argument_list|(
@@ -5319,8 +5377,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"iommu_diag: tag %d: %#lx, vpn %#lx, err %lx; "
+literal|"%s: tag %d: %#lx, vpn %#lx, err %lx; "
 literal|"data %#lx, pa %#lx, v %d, c %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|i
 argument_list|,

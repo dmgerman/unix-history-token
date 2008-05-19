@@ -66,13 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -114,19 +114,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus_private.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus_common.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<machine/bus_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/iommureg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/iommuvar.h>
 end_include
 
 begin_include
@@ -163,12 +169,6 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/iommuvar.h>
 end_include
 
 begin_include
@@ -273,7 +273,7 @@ name|struct
 name|psycho_softc
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|bus_addr_t
 modifier|*
@@ -1053,7 +1053,6 @@ condition|;
 name|desc
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|strcmp
@@ -1072,7 +1071,6 @@ operator|(
 name|desc
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|NULL
@@ -1294,15 +1292,15 @@ name|psycho_desc
 modifier|*
 name|desc
 decl_stmt|;
-name|phandle_t
-name|child
-decl_stmt|,
-name|node
-decl_stmt|;
 name|uint64_t
 name|csr
 decl_stmt|,
 name|dr
+decl_stmt|;
+name|phandle_t
+name|child
+decl_stmt|,
+name|node
 decl_stmt|;
 name|uint32_t
 name|dvmabase
@@ -1564,7 +1562,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Match other Psycho's that are already configured against 	 * the base physical address. This will be the same for a 	 * pair of devices that share register space. 	 */
+comment|/* 	 * Match other Psycho's that are already configured against 	 * the base physical address.  This will be the same for a 	 * pair of devices that share register space. 	 */
 name|osc
 operator|=
 name|NULL
@@ -1769,7 +1767,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s, impl %d, version %d, ign %#x, bus %c\n"
+literal|"%s, impl %d, version %d, IGN %#x, bus %c\n"
 argument_list|,
 name|desc
 operator|->
@@ -2255,7 +2253,7 @@ operator|&
 name|range
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure that the expected ranges are present. The PCI_CS_MEM64 	 * one is not currently used though. 	 */
+comment|/* 	 * Make sure that the expected ranges are present.  The 	 * OFW_PCI_CS_MEM64 one is not currently used though. 	 */
 if|if
 condition|(
 name|nrange
@@ -2350,7 +2348,7 @@ argument_list|,
 name|sc_link
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Register a PCI bus error interrupt handler according to which 	 * half this is. Hummingbird/Sabre don't have a PCI bus B error 	 * interrupt but they are also only used for PCI bus A. 	 */
+comment|/* 	 * Register a PCI bus error interrupt handler according to which 	 * half this is.  Hummingbird/Sabre don't have a PCI bus B error 	 * interrupt but they are also only used for PCI bus A. 	 */
 name|psycho_set_intr
 argument_list|(
 name|sc
@@ -2372,7 +2370,7 @@ argument_list|,
 name|psycho_pci_bus
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're a Hummingbird/Sabre or the first of a pair of Psycho's to 	 * arrive here, start up the IOMMU. 	 */
+comment|/* 	 * If we're a Hummingbird/Sabre or the first of a pair of Psychos 	 * to arrive here, do the interrupt setup and start up the IOMMU. 	 */
 if|if
 condition|(
 name|osc
@@ -2468,6 +2466,11 @@ comment|/* PSYCHO_MAP_WAKEUP */
 comment|/* Initialize the counter-timer. */
 name|sparc64_counter_init
 argument_list|(
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
 name|sc
 operator|->
 name|sc_bustag
@@ -2496,6 +2499,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3114,7 +3119,7 @@ name|ofw_pci_intr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * On E250 the interrupt map entry for the EBus bridge is wrong, 	 * causing incorrect interrupts to be assigned to some devices on 	 * the EBus. Work around it by changing our copy of the interrupt 	 * map mask to perform a full comparison of the INO. That way 	 * the interrupt map entry for the EBus bridge won't match at all 	 * and the INOs specified in the "interrupts" properties of the 	 * EBus devices will be used directly instead. 	 */
+comment|/* 	 * On E250 the interrupt map entry for the EBus bridge is wrong, 	 * causing incorrect interrupts to be assigned to some devices on 	 * the EBus.  Work around it by changing our copy of the interrupt 	 * map mask to perform a full comparison of the INO.  That way 	 * the interrupt map entry for the EBus bridge won't match at all 	 * and the INOs specified in the "interrupts" properties of the 	 * EBus devices will be used directly instead. 	 */
 if|if
 condition|(
 name|strcmp
@@ -3337,7 +3342,7 @@ name|psycho_softc
 modifier|*
 name|sc
 parameter_list|,
-name|int
+name|u_int
 name|ino
 parameter_list|,
 name|bus_addr_t
@@ -3371,7 +3376,7 @@ name|found
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Hunt thru OBIO first. */
+comment|/* Hunt through OBIO first. */
 name|diag
 operator|=
 name|PSYCHO_READ8
@@ -3645,7 +3650,7 @@ argument_list|,
 name|PSR_UE_AFS
 argument_list|)
 expr_stmt|;
-comment|/* 	 * On the UltraSPARC-IIi/IIe, IOMMU misses/protection faults cause 	 * the AFAR to be set to the physical address of the TTE entry that 	 * was invalid/write protected. Call into the iommu code to have 	 * them decoded to virtual I/O addresses. 	 */
+comment|/* 	 * On the UltraSPARC-IIi/IIe, IOMMU misses/protection faults cause 	 * the AFAR to be set to the physical address of the TTE entry that 	 * was invalid/write protected.  Call into the IOMMU code to have 	 * them decoded to virtual I/O addresses. 	 */
 if|if
 condition|(
 operator|(
@@ -3990,10 +3995,6 @@ name|uint32_t
 name|dvmabase
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|struct
 name|iommu_state
 modifier|*
@@ -4056,50 +4057,14 @@ name|is_dtcmp
 operator|=
 name|PSR_IOMMU_TLB_CMP_DIAG
 expr_stmt|;
-comment|/* Give us a nice name... */
-name|name
-operator|=
-name|malloc
+name|iommu_init
 argument_list|(
-literal|32
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"%s: could not malloc iommu name"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|name
-argument_list|,
-literal|32
-argument_list|,
-literal|"%s dvma"
-argument_list|,
 name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|iommu_init
-argument_list|(
-name|name
 argument_list|,
 name|is
 argument_list|,
@@ -4175,10 +4140,9 @@ name|uint16_t
 name|shrt
 decl_stmt|;
 name|uint32_t
-name|wrd
-decl_stmt|;
-name|uint32_t
 name|r
+decl_stmt|,
+name|wrd
 decl_stmt|;
 name|int
 name|i
@@ -4577,7 +4541,7 @@ operator|(
 name|mintr
 operator|)
 return|;
-comment|/* 	 * If this is outside of the range for an intpin, it's likely a full 	 * INO, and no mapping is required at all; this happens on the U30,  	 * where there's no interrupt map at the Psycho node. Fortunately, 	 * there seem to be no INOs in the intpin range on this boxen, so 	 * this easy heuristics will do. 	 */
+comment|/* 	 * If this is outside of the range for an intpin, it's likely a full 	 * INO, and no mapping is required at all; this happens on the U30, 	 * where there's no interrupt map at the Psycho node.  Fortunately, 	 * there seem to be no INOs in the intpin range on this boxen, so 	 * this easy heuristics will do. 	 */
 if|if
 condition|(
 name|pin
@@ -4589,7 +4553,7 @@ operator|(
 name|pin
 operator|)
 return|;
-comment|/* 	 * Guess the INO; we always assume that this is a non-OBIO 	 * device, and that pin is a "real" intpin number. Determine 	 * the mapping register to be used by the slot number. 	 * We only need to do this on E450s, it seems; here, the slot numbers 	 * for bus A are one-based, while those for bus B seemingly have an 	 * offset of 2 (hence the factor of 3 below). 	 */
+comment|/* 	 * Guess the INO; we always assume that this is a non-OBIO 	 * device, and that pin is a "real" intpin number.  Determine 	 * the mapping register to be used by the slot number. 	 * We only need to do this on E450s, it seems; here, the slot numbers 	 * for bus A are one-based, while those for bus B seemingly have an 	 * offset of 2 (hence the factor of 3 below). 	 */
 name|intrmap
 operator|=
 name|PSR_PCIA0_INT_MAP
@@ -5038,7 +5002,7 @@ name|pci_clr
 operator|=
 name|intrclrptr
 expr_stmt|;
-comment|/* 	 * The Sabre-APB-combination has a bug where it does not drain 	 * DMA write data for devices behind additional PCI-PCI bridges 	 * underneath the APB PCI-PCI bridge. The workaround is to do 	 * a read on the farest PCI-PCI bridge followed by a read of the 	 * PCI DMA write sync register of the Sabre. 	 * XXX installing the workaround for an affected device and the 	 * actual workaround in psycho_intr_stub() should be moved to 	 * psycho(4)-specific bus_dma_tag_create() and bus_dmamap_sync() 	 * methods, respectively, once we make use of BUS_GET_DMA_TAG(), 	 * so the workaround isn't only applied for interrupt handlers 	 * but also for polling(4) callbacks. 	 */
+comment|/* 	 * The Sabre-APB-combination has a bug where it does not drain 	 * DMA write data for devices behind additional PCI-PCI bridges 	 * underneath the APB PCI-PCI bridge.  The workaround is to do 	 * a read on the farest PCI-PCI bridge followed by a read of the 	 * PCI DMA write sync register of the Sabre. 	 * XXX installing the workaround for an affected device and the 	 * actual workaround in psycho_intr_stub() should be moved to 	 * psycho(4)-specific bus_dma_tag_create() and bus_dmamap_sync() 	 * methods, respectively, once we make use of BUS_GET_DMA_TAG(), 	 * so the workaround isn't only applied for interrupt handlers 	 * but also for polling(4) callbacks. 	 */
 if|if
 condition|(
 name|sc
@@ -5506,7 +5470,7 @@ operator|==
 name|SYS_RES_IRQ
 condition|)
 block|{
-comment|/* 		 * XXX: Don't accept blank ranges for now, only single 		 * interrupts. The other case should not happen with the 		 * MI PCI code... 		 * XXX: This may return a resource that is out of the 		 * range that was specified. Is this correct...? 		 */
+comment|/* 		 * XXX: Don't accept blank ranges for now, only single 		 * interrupts.  The other case should not happen with 		 * the MI PCI code... 		 * XXX: This may return a resource that is out of the 		 * range that was specified.  Is this correct...? 		 */
 if|if
 condition|(
 name|start
@@ -6001,7 +5965,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 return|return

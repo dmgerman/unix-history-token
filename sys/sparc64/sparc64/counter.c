@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 by Thomas Moestl<tmm@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002 by Thomas Moestl<tmm@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -145,19 +159,12 @@ name|CTR_LIMIT
 value|0x08
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|unsigned
-name|int
+name|timecounter_get_t
 name|counter_get_timecount
-parameter_list|(
-name|struct
-name|timecounter
-modifier|*
-name|tc
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -177,13 +184,18 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is called from the psycho and sbus drivers. It does not directly attach  * to the nexus because it shares register space with the bridge in question.  */
+comment|/*  * This is called from the psycho and sbus drivers.  It does not directly  * attach to the nexus because it shares register space with the bridge in  * question.  */
 end_comment
 
 begin_function
 name|void
 name|sparc64_counter_init
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|bus_space_tag_t
 name|tag
 parameter_list|,
@@ -209,7 +221,7 @@ argument_list|(
 literal|"initializing counter-timer\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Turn off interrupts from both counters. Set the limit to the maximum 	 * value (although that should not change anything with CTLR_INTEN and 	 * CTLR_PERIODIC off). 	 */
+comment|/* 	 * Turn off interrupts from both counters.  Set the limit to the 	 * maximum value (although that should not change anything with 	 * CTLR_INTEN and CTLR_PERIODIC off). 	 */
 name|bus_space_write_8
 argument_list|(
 name|tag
@@ -319,7 +331,12 @@ name|tc
 operator|->
 name|tc_name
 operator|=
-literal|"counter-timer"
+name|strdup
+argument_list|(
+name|name
+argument_list|,
+name|M_DEVBUF
+argument_list|)
 expr_stmt|;
 name|tc
 operator|->
