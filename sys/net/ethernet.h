@@ -16,7 +16,7 @@ name|_NET_ETHERNET_H_
 end_define
 
 begin_comment
-comment|/*  * Somce basic Ethernet constants.  */
+comment|/*  * Some basic Ethernet constants.  */
 end_comment
 
 begin_define
@@ -677,7 +677,7 @@ value|0x3C03
 end_define
 
 begin_comment
-comment|/* 3Com NBP Connect repsonse not registered */
+comment|/* 3Com NBP Connect response not registered */
 end_comment
 
 begin_define
@@ -754,7 +754,7 @@ value|0x3C0A
 end_define
 
 begin_comment
-comment|/* 3Com NBP Delete Netbios name not registered */
+comment|/* 3Com NBP Delete NetBIOS name not registered */
 end_comment
 
 begin_define
@@ -2356,7 +2356,7 @@ value|0x880B
 end_define
 
 begin_comment
-comment|/* PPP (obsolete by PPPOE) */
+comment|/* PPP (obsolete by PPPoE) */
 end_comment
 
 begin_define
