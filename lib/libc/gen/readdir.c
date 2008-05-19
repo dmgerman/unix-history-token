@@ -110,10 +110,15 @@ modifier|*
 name|_readdir_unlocked
 parameter_list|(
 name|dirp
+parameter_list|,
+name|skip
 parameter_list|)
 name|DIR
 modifier|*
 name|dirp
+decl_stmt|;
+name|int
+name|skip
 decl_stmt|;
 block|{
 name|struct
@@ -288,6 +293,8 @@ operator|->
 name|d_ino
 operator|==
 literal|0
+operator|&&
+name|skip
 condition|)
 continue|continue;
 if|if
@@ -356,6 +363,8 @@ operator|=
 name|_readdir_unlocked
 argument_list|(
 name|dirp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|_pthread_mutex_unlock
@@ -377,6 +386,8 @@ operator|=
 name|_readdir_unlocked
 argument_list|(
 name|dirp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -454,6 +465,8 @@ operator|=
 name|_readdir_unlocked
 argument_list|(
 name|dirp
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|!=
@@ -493,6 +506,8 @@ operator|=
 name|_readdir_unlocked
 argument_list|(
 name|dirp
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|!=
