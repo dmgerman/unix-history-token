@@ -3847,7 +3847,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: sockstat [-46clu] [-p ports] [-P protocols]\n"
+literal|"Usage: sockstat [-46cLlu] [-p ports] [-P protocols]\n"
 argument_list|)
 expr_stmt|;
 name|exit
