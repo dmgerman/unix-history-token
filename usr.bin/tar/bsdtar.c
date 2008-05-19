@@ -3121,6 +3121,16 @@ literal|0
 index|]
 operator|==
 literal|'-'
+operator|||
+name|src_argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 return|return
 operator|(
