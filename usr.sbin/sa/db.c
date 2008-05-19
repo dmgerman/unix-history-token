@@ -211,7 +211,7 @@ literal|0
 argument_list|,
 name|DB_BTREE
 argument_list|,
-name|NULL
+name|bti
 argument_list|)
 operator|)
 operator|==
@@ -337,7 +337,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"invalid version size %d in %s"
+literal|"invalid version size %zd in %s"
 argument_list|,
 name|data
 operator|.
