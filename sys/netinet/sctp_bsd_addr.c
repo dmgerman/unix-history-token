@@ -460,6 +460,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function
 name|void
 name|sctp_gather_internal_ifa_flags
@@ -571,6 +577,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

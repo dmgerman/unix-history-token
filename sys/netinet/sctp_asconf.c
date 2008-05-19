@@ -3924,14 +3924,16 @@ name|iph
 argument_list|)
 operator|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|iph
 operator|->
 name|ip_v
-operator|==
-name|IPVERSION
 condition|)
+block|{
+case|case
+name|IPVERSION
+case|:
 block|{
 name|struct
 name|sockaddr_in
@@ -3995,20 +3997,16 @@ name|sh
 operator|->
 name|src_port
 expr_stmt|;
+break|break;
 block|}
-elseif|else
-if|if
-condition|(
-name|iph
-operator|->
-name|ip_v
-operator|==
-operator|(
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
 name|IPV6_VERSION
 operator|>>
 literal|4
-operator|)
-condition|)
+case|:
 block|{
 name|struct
 name|ip6_hdr
@@ -4084,7 +4082,7 @@ name|sh
 operator|->
 name|src_port
 expr_stmt|;
-comment|/* Get the scopes in properly to the sin6 addr's */
+comment|/* 				 * Get the scopes in properly to the sin6 				 * addr's 				 */
 comment|/* we probably don't need these operations */
 operator|(
 name|void
@@ -4101,9 +4099,11 @@ argument_list|,
 name|ip6_use_defzone
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
+endif|#
+directive|endif
+default|default:
 comment|/* unknown address type */
 name|from
 operator|=
@@ -5451,6 +5451,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|net
@@ -5492,6 +5495,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 		 * if the newly added address does not relate routing 		 * information, we skip. 		 */
 if|if
 condition|(
@@ -8396,6 +8401,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function
 specifier|static
 name|uint32_t
@@ -8557,6 +8568,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * address management functions  */
 end_comment
@@ -8691,7 +8707,7 @@ name|ifa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * check address scope if address is out of scope, don't queue 	 * anything... note: this would leave the address on both inp and 	 * asoc lists 	 */
-if|if
+switch|switch
 condition|(
 name|ifa
 operator|->
@@ -8700,9 +8716,14 @@ operator|.
 name|sa
 operator|.
 name|sa_family
-operator|==
-name|AF_INET6
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
 block|{
 name|struct
 name|sockaddr_in6
@@ -8803,20 +8824,13 @@ condition|)
 block|{
 return|return;
 block|}
+break|break;
 block|}
-elseif|else
-if|if
-condition|(
-name|ifa
-operator|->
-name|address
-operator|.
-name|sa
-operator|.
-name|sa_family
-operator|==
+endif|#
+directive|endif
+case|case
 name|AF_INET
-condition|)
+case|:
 block|{
 name|struct
 name|sockaddr_in
@@ -8908,9 +8922,9 @@ condition|)
 block|{
 return|return;
 block|}
+break|break;
 block|}
-else|else
-block|{
+default|default:
 comment|/* else, not AF_INET or AF_INET6, so skip */
 return|return;
 block|}
@@ -9491,7 +9505,7 @@ block|{
 continue|continue;
 block|}
 comment|/* Same checks again for assoc */
-if|if
+switch|switch
 condition|(
 name|ifa
 operator|->
@@ -9500,9 +9514,14 @@ operator|.
 name|sa
 operator|.
 name|sa_family
-operator|==
-name|AF_INET6
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
 block|{
 comment|/* invalid if we're not a v6 endpoint */
 name|struct
@@ -9611,20 +9630,13 @@ block|{
 continue|continue;
 block|}
 block|}
+break|break;
 block|}
-elseif|else
-if|if
-condition|(
-name|ifa
-operator|->
-name|address
-operator|.
-name|sa
-operator|.
-name|sa_family
-operator|==
+endif|#
+directive|endif
+case|case
 name|AF_INET
-condition|)
+case|:
 block|{
 comment|/* invalid if we are a v6 only endpoint */
 name|struct
@@ -9749,9 +9761,9 @@ return|return;
 else|else
 continue|continue;
 block|}
+break|break;
 block|}
-else|else
-block|{
+default|default:
 comment|/* invalid address family */
 name|cnt_invalid
 operator|++
@@ -9767,6 +9779,7 @@ condition|)
 return|return;
 else|else
 continue|continue;
+break|break;
 block|}
 if|if
 condition|(
