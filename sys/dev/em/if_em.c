@@ -294,7 +294,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"6.9.0"
+literal|"6.9.2"
 decl_stmt|;
 end_decl_stmt
 
@@ -1094,6 +1094,18 @@ block|{
 literal|0x8086
 block|,
 name|E1000_DEV_ID_ICH9_IFE_G
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_ICH9_BM
 block|,
 name|PCI_ANY_ID
 block|,
@@ -12928,7 +12940,20 @@ comment|/* 	 * And setup the interrupt handlers 	 */
 comment|/* First slot to RX */
 argument|if ((error = bus_setup_intr(dev, adapter->res[
 literal|0
-argument|], 	    INTR_TYPE_NET | INTR_MPSAFE, NULL, em_msix_rx, adapter,&adapter->tag[
+argument|],
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|700000
+argument|INTR_TYPE_NET | INTR_MPSAFE, NULL, em_msix_rx, adapter,
+else|#
+directive|else
+comment|/* 6.X */
+argument|INTR_TYPE_NET | INTR_MPSAFE, em_msix_rx, adapter,
+endif|#
+directive|endif
+argument|&adapter->tag[
 literal|0
 argument|])) !=
 literal|0
@@ -12938,7 +12963,20 @@ argument|); 		return (error); 	}
 comment|/* Next TX */
 argument|if ((error = bus_setup_intr(dev, adapter->res[
 literal|1
-argument|], 	    INTR_TYPE_NET | INTR_MPSAFE, NULL, em_msix_tx, adapter,&adapter->tag[
+argument|],
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|700000
+argument|INTR_TYPE_NET | INTR_MPSAFE, NULL, em_msix_tx, adapter,
+else|#
+directive|else
+comment|/* 6.X */
+argument|INTR_TYPE_NET | INTR_MPSAFE, em_msix_tx, adapter,
+endif|#
+directive|endif
+argument|&adapter->tag[
 literal|1
 argument|])) !=
 literal|0
@@ -12948,7 +12986,20 @@ argument|); 		return (error); 	}
 comment|/* And Link */
 argument|if ((error = bus_setup_intr(dev, adapter->res[
 literal|2
-argument|], 	    INTR_TYPE_NET | INTR_MPSAFE, NULL, em_msix_link, adapter,&adapter->tag[
+argument|],
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|700000
+argument|INTR_TYPE_NET | INTR_MPSAFE, NULL, em_msix_link, adapter,
+else|#
+directive|else
+comment|/* 6.X */
+argument|INTR_TYPE_NET | INTR_MPSAFE, em_msix_link, adapter,
+endif|#
+directive|endif
+argument|&adapter->tag[
 literal|2
 argument|])) !=
 literal|0
