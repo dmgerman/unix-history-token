@@ -761,6 +761,8 @@ operator|.
 name|d_flags
 operator|=
 name|D_NEEDGIANT
+operator||
+name|D_TRACKCLOSE
 block|,
 operator|.
 name|d_open
