@@ -105,12 +105,6 @@ index|[
 name|PSYCHO_NRANGE
 index|]
 decl_stmt|;
-name|u_int
-name|sc_pci_secbus
-decl_stmt|;
-name|u_int
-name|sc_pci_subbus
-decl_stmt|;
 name|struct
 name|rman
 name|sc_pci_mem_rman
@@ -118,6 +112,9 @@ decl_stmt|;
 name|struct
 name|rman
 name|sc_pci_io_rman
+decl_stmt|;
+name|uint8_t
+name|sc_pci_secbus
 decl_stmt|;
 name|uint8_t
 name|sc_pci_hpbcfg

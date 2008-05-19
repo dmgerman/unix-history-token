@@ -652,7 +652,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ask the bridge for the bus number - in some cases, we need to 	 * renumber buses, so the firmware information cannot be trusted. 	 */
 name|busno
 operator|=
 name|pcib_get_bus
