@@ -2930,6 +2930,11 @@ literal|"Can't allocate memory"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
 block|}
 operator|*
 name|buff
