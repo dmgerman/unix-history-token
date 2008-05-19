@@ -13,6 +13,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * This material, written by Henry Spencer, was released by him  * into the public domain and is thus not subject to any copyright.  */
+end_comment
+
 begin_include
 include|#
 directive|include
