@@ -622,6 +622,12 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
+name|sc
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -1980,7 +1986,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"unknown cause why?"
+literal|"unknown cause why?\n"
 argument_list|)
 expr_stmt|;
 return|return
