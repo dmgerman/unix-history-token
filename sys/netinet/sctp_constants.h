@@ -34,6 +34,17 @@ name|__sctp_constants_h__
 end_define
 
 begin_comment
+comment|/* IANA assigned port number for SCTP over UDP encapsulation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_OVER_UDP_TUNNELING_PORT
+value|9899
+end_define
+
+begin_comment
 comment|/* Number of packets to get before sack sent by default */
 end_comment
 
@@ -1280,6 +1291,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* default MULTIPLE_ASCONF mode enable(1)/disable(0) value (sysctl) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_MULTIPLE_ASCONFS
+value|0
+end_define
 
 begin_comment
 comment|/* default MOBILITY_BASE mode enable(1)/disable(0) value (sysctl) */

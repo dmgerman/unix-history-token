@@ -306,7 +306,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|sctp_pathmtu_adjustment
 parameter_list|(

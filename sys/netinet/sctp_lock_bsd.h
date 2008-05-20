@@ -93,7 +93,7 @@ define|#
 directive|define
 name|SCTP_INP_INFO_LOCK_DESTROY
 parameter_list|()
-value|do { \         if(rw_wowned(sctppcbinfo.ipi_ep_mtx)) { \              rw_wunlock(&sctppcbinfo.ipi_ep_mtx); \         } \         rw_destroy(sctppcbinfo.ipi_ep_mtx); \       }  while (0)
+value|do { \         if(rw_wowned(&sctppcbinfo.ipi_ep_mtx)) { \              rw_wunlock(&sctppcbinfo.ipi_ep_mtx); \         } \         rw_destroy(&sctppcbinfo.ipi_ep_mtx); \       }  while (0)
 end_define
 
 begin_define
@@ -151,7 +151,7 @@ define|#
 directive|define
 name|SCTP_IPI_ADDR_DESTROY
 parameter_list|()
-value|do  { \         if(rw_wowned(sctppcbinfo.ipi_addr_mtx)) { \              rw_wunlock(&sctppcbinfo.ipi_addr_mtx); \         } \ 	rw_destroy(&sctppcbinfo.ipi_addr_mtx) \       }  while (0)
+value|do  { \         if(rw_wowned(&sctppcbinfo.ipi_addr_mtx)) { \              rw_wunlock(&sctppcbinfo.ipi_addr_mtx); \         } \ 	rw_destroy(&sctppcbinfo.ipi_addr_mtx); \       }  while (0)
 end_define
 
 begin_define

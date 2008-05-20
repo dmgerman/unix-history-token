@@ -563,6 +563,9 @@ name|sctp_zone_t
 name|ipi_zone_strmoq
 decl_stmt|;
 name|sctp_zone_t
+name|ipi_zone_asconf
+decl_stmt|;
+name|sctp_zone_t
 name|ipi_zone_asconf_ack
 decl_stmt|;
 name|struct
@@ -1206,12 +1209,12 @@ name|int
 name|SCTP6_ARE_ADDR_EQUAL
 parameter_list|(
 name|struct
-name|in6_addr
+name|sockaddr_in6
 modifier|*
 name|a
 parameter_list|,
 name|struct
-name|in6_addr
+name|sockaddr_in6
 modifier|*
 name|b
 parameter_list|)

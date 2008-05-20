@@ -788,6 +788,8 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|uint32_t
+parameter_list|,
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -860,6 +862,8 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|uint32_t
+parameter_list|,
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1274,6 +1278,28 @@ parameter_list|)
 define|\
 value|do { \ 	atomic_add_int(&stcb->asoc.total_output_queue_size,sz); \ 	if ((stcb->sctp_socket != NULL)&& \ 	    ((stcb->sctp_ep->sctp_flags& SCTP_PCB_FLAGS_TCPTYPE) || \ 	     (stcb->sctp_ep->sctp_flags& SCTP_PCB_FLAGS_IN_TCPPOOL))) { \ 		atomic_add_int(&stcb->sctp_socket->so_snd.sb_cc,sz); \ 	} \ } while (0)
 end_define
+
+begin_comment
+comment|/* new functions to start/stop udp tunneling */
+end_comment
+
+begin_function_decl
+name|void
+name|sctp_over_udp_stop
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sctp_over_udp_start
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
