@@ -103,7 +103,7 @@ modifier|*
 name|name
 parameter_list|,
 name|int
-name|write
+name|dowrite
 parameter_list|)
 block|{
 name|char
@@ -159,7 +159,7 @@ name|open
 argument_list|(
 name|path
 argument_list|,
-name|write
+name|dowrite
 condition|?
 name|O_RDWR
 else|:
@@ -668,7 +668,7 @@ modifier|*
 name|ident
 parameter_list|,
 name|int
-name|write
+name|dowrite
 parameter_list|,
 name|char
 modifier|*
@@ -778,7 +778,7 @@ name|pp
 operator|->
 name|lg_name
 argument_list|,
-name|write
+name|dowrite
 argument_list|)
 expr_stmt|;
 if|if
