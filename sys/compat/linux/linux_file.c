@@ -4616,12 +4616,6 @@ name|l_sysid
 operator|=
 literal|0
 expr_stmt|;
-name|bsd_flock
-operator|->
-name|l_sysid
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
