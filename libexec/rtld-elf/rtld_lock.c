@@ -553,7 +553,7 @@ begin_define
 define|#
 directive|define
 name|RTLD_LOCK_CNT
-value|2
+value|3
 end_define
 
 begin_struct
@@ -595,6 +595,18 @@ operator|&
 name|rtld_locks
 index|[
 literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|rtld_lock_t
+name|rtld_phdr_lock
+init|=
+operator|&
+name|rtld_locks
+index|[
+literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
