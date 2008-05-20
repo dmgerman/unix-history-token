@@ -1630,29 +1630,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_PCB_FLAGS_NEEDS_MAPPED_V4
+name|SCTP_PCB_FLAGS_BLOCKING_IO
 value|0x08000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_PCB_FLAGS_BLOCKING_IO
+name|SCTP_PCB_FLAGS_SOCKET_GONE
 value|0x10000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_PCB_FLAGS_SOCKET_GONE
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_PCB_FLAGS_SOCKET_ALLGONE
-value|0x40000000
+value|0x20000000
 end_define
 
 begin_comment
@@ -1663,7 +1656,7 @@ begin_define
 define|#
 directive|define
 name|SCTP_PCB_COPY_FLAGS
-value|0x0e000004
+value|(SCTP_PCB_FLAGS_BOUNDALL|\ 					 SCTP_PCB_FLAGS_WAKEINPUT|\ 					 SCTP_PCB_FLAGS_BOUND_V6)
 end_define
 
 begin_comment
@@ -1819,6 +1812,13 @@ define|#
 directive|define
 name|SCTP_PCB_FLAGS_EXPLICIT_EOR
 value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_NEEDS_MAPPED_V4
+value|0x00800000
 end_define
 
 begin_comment
