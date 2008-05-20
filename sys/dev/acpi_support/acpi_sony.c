@@ -205,6 +205,16 @@ block|}
 block|,
 comment|/*shares [\GL03]&0x8 flag*/
 block|{
+literal|"azp"
+block|,
+literal|"GAZP"
+block|,
+literal|"AZPW"
+block|,
+literal|"Audio Power"
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
