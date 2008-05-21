@@ -683,6 +683,12 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* (*) Thread name. */
+name|struct
+name|file
+modifier|*
+name|td_fpop
+decl_stmt|;
+comment|/* (k) file referencing cdev under op */
 define|#
 directive|define
 name|td_endzero

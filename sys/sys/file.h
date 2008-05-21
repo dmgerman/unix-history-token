@@ -479,7 +479,7 @@ comment|/* seekable / nonsequential */
 end_comment
 
 begin_comment
-comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (f) protected with mtx_lock(mtx_pool_find(fp))  * none	not locked  */
+comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (f) protected with mtx_lock(mtx_pool_find(fp))  * (d) cdevpriv_mtx  * none	not locked  */
 end_comment
 
 begin_struct
@@ -536,6 +536,12 @@ name|off_t
 name|f_nextoff
 decl_stmt|;
 comment|/* next expected read/write offset. */
+name|struct
+name|cdev_privdata
+modifier|*
+name|f_cdevpriv
+decl_stmt|;
+comment|/* (d) Private data for the cdev. */
 comment|/* 	 *  DFLAG_SEEKABLE specific fields 	 */
 name|off_t
 name|f_offset
