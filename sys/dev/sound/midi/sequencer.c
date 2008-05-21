@@ -2257,12 +2257,6 @@ operator|->
 name|seq_lock
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|SEQ_DEBUG
 argument_list|(
 literal|2
