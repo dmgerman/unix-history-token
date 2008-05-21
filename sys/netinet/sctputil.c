@@ -7862,6 +7862,8 @@ endif|#
 directive|endif
 name|int
 name|did_output
+decl_stmt|,
+name|type
 decl_stmt|;
 name|struct
 name|sctp_iterator
@@ -8036,6 +8038,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|type
+operator|=
+name|tmr
+operator|->
+name|type
+expr_stmt|;
 if|if
 condition|(
 name|inp
@@ -9847,6 +9855,10 @@ argument_list|,
 name|SCTP_CALLED_DIRECTLY_NOCMPSET
 argument_list|)
 expr_stmt|;
+name|inp
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|out_no_decr
 goto|;
@@ -9950,16 +9962,9 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"Timer now complete (type %d)\n"
 argument_list|,
-name|tmr
-operator|->
 name|type
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|inp
-condition|)
-block|{ 	}
 block|}
 end_function
 
