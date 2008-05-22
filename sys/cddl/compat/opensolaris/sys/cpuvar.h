@@ -25,11 +25,90 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/cpuvar_defs.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|cyc_cpu
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|cpuid
+decl_stmt|;
+name|struct
+name|cyc_cpu
+modifier|*
+name|cpu_cyclic
+decl_stmt|;
+name|uint32_t
+name|cpu_flags
+decl_stmt|;
+name|uint_t
+name|cpu_intr_actv
+decl_stmt|;
+name|uintptr_t
+name|cpu_profile_pc
+decl_stmt|;
+name|uintptr_t
+name|cpu_profile_upc
+decl_stmt|;
+name|uintptr_t
+name|cpu_dtrace_caller
+decl_stmt|;
+comment|/* DTrace: caller, if any */
+name|hrtime_t
+name|cpu_dtrace_chillmark
+decl_stmt|;
+comment|/* DTrace: chill mark time */
+name|hrtime_t
+name|cpu_dtrace_chilled
+decl_stmt|;
+comment|/* DTrace: total chill time */
+block|}
+name|solaris_cpu_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Some code may choose to redefine this if pcpu_t would be more useful. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cpu_t
+value|solaris_cpu_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|cpu_id
+value|cpuid
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|solaris_cpu_t
+name|solaris_cpu
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -93,6 +172,13 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|kmutex_t
+name|cpu_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -103,179 +189,118 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * DTrace flags.  */
+comment|/*  * Flags in the CPU structure.  *  * These are protected by cpu_lock (except during creation).  *  * Offlined-CPUs have three stages of being offline:  *  * CPU_ENABLE indicates that the CPU is participating in I/O interrupts  * that can be directed at a number of different CPUs.  If CPU_ENABLE  * is off, the CPU will not be given interrupts that can be sent elsewhere,  * but will still get interrupts from devices associated with that CPU only,  * and from other CPUs.  *  * CPU_OFFLINE indicates that the dispatcher should not allow any threads  * other than interrupt threads to run on that CPU.  A CPU will not have  * CPU_OFFLINE set if there are any bound threads (besides interrupts).  *  * CPU_QUIESCED is set if p_offline was able to completely turn idle the  * CPU and it will not have to run interrupt threads.  In this case it'll  * stay in the idle loop until CPU_QUIESCED is turned off.  *  * CPU_FROZEN is used only by CPR to mark CPUs that have been successfully  * suspended (in the suspend path), or have yet to be resumed (in the resume  * case).  *  * On some platforms CPUs can be individually powered off.  * The following flags are set for powered off CPUs: CPU_QUIESCED,  * CPU_OFFLINE, and CPU_POWEROFF.  The following flags are cleared:  * CPU_RUNNING, CPU_READY, CPU_EXISTS, and CPU_ENABLE.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_NOFAULT
-value|0x0001
+name|CPU_RUNNING
+value|0x001
 end_define
 
 begin_comment
-comment|/* Don't fault */
+comment|/* CPU running */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_DROP
-value|0x0002
+name|CPU_READY
+value|0x002
 end_define
 
 begin_comment
-comment|/* Drop this ECB */
+comment|/* CPU ready for cross-calls */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_BADADDR
-value|0x0004
+name|CPU_QUIESCED
+value|0x004
 end_define
 
 begin_comment
-comment|/* DTrace fault: bad address */
+comment|/* CPU will stay in idle */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_BADALIGN
-value|0x0008
+name|CPU_EXISTS
+value|0x008
 end_define
 
 begin_comment
-comment|/* DTrace fault: bad alignment */
+comment|/* CPU is configured */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_DIVZERO
-value|0x0010
+name|CPU_ENABLE
+value|0x010
 end_define
 
 begin_comment
-comment|/* DTrace fault: divide by zero */
+comment|/* CPU enabled for interrupts */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_ILLOP
-value|0x0020
+name|CPU_OFFLINE
+value|0x020
 end_define
 
 begin_comment
-comment|/* DTrace fault: illegal operation */
+comment|/* CPU offline via p_online */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_NOSCRATCH
-value|0x0040
+name|CPU_POWEROFF
+value|0x040
 end_define
 
 begin_comment
-comment|/* DTrace fault: out of scratch */
+comment|/* CPU is powered off */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_KPRIV
-value|0x0080
+name|CPU_FROZEN
+value|0x080
 end_define
 
 begin_comment
-comment|/* DTrace fault: bad kernel access */
+comment|/* CPU is frozen via CPR suspend */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_UPRIV
-value|0x0100
+name|CPU_SPARE
+value|0x100
 end_define
 
 begin_comment
-comment|/* DTrace fault: bad user access */
+comment|/* CPU offline available for use */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_DTRACE_TUPOFLOW
-value|0x0200
+name|CPU_FAULTED
+value|0x200
 end_define
 
 begin_comment
-comment|/* DTrace fault: tuple stack overflow */
+comment|/* CPU offline diagnosed faulty */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__sparc
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPU_DTRACE_FAKERESTORE
-value|0x0400
-end_define
-
-begin_comment
-comment|/* pid provider hint to getreg */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|CPU_DTRACE_ENTRY
-value|0x0800
-end_define
-
-begin_comment
-comment|/* pid provider hint to ustack() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_DTRACE_BADSTACK
-value|0x1000
-end_define
-
-begin_comment
-comment|/* DTrace fault: bad stack */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_DTRACE_FAULT
-value|(CPU_DTRACE_BADADDR | CPU_DTRACE_BADALIGN | \ 				CPU_DTRACE_DIVZERO | CPU_DTRACE_ILLOP | \ 				CPU_DTRACE_NOSCRATCH | CPU_DTRACE_KPRIV | \ 				CPU_DTRACE_UPRIV | CPU_DTRACE_TUPOFLOW | \ 				CPU_DTRACE_BADSTACK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_DTRACE_ERROR
-value|(CPU_DTRACE_FAULT | CPU_DTRACE_DROP)
-end_define
 
 begin_typedef
 typedef|typedef

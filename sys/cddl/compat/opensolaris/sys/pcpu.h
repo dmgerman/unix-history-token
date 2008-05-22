@@ -23,16 +23,9 @@ begin_typedef
 typedef|typedef
 name|struct
 name|pcpu
-name|cpu_t
+name|pcpu_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|cpu_id
-value|pc_cpuid
-end_define
 
 begin_endif
 endif|#

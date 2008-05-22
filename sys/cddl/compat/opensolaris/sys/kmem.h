@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vmem.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/uma.h>
 end_include
 
@@ -138,6 +132,13 @@ block|}
 name|kmem_cache_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|vmem_t
+value|void
+end_define
 
 begin_function_decl
 name|void
