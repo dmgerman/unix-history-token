@@ -1813,6 +1813,8 @@ literal|"VHPT bucket lock"
 argument_list|,
 name|NULL
 argument_list|,
+name|MTX_NOWITNESS
+operator||
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
