@@ -2087,6 +2087,9 @@ name|cpu_unbind
 parameter_list|(
 name|processorid_t
 name|cpu_id
+parameter_list|,
+name|boolean_t
+name|force
 parameter_list|)
 function_decl|;
 specifier|extern

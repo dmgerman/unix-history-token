@@ -42,6 +42,34 @@ comment|/*  * DTrace Dynamic Tracing Software: Kernel Implementation Interfaces 
 include|#
 directive|include
 file|<sys/dtrace.h>
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+ifdef|#
+directive|ifdef
+name|__sparcv9
+typedef|typedef
+name|uint32_t
+name|pc_t
+typedef|;
+else|#
+directive|else
+typedef|typedef
+name|uintptr_t
+name|pc_t
+typedef|;
+endif|#
+directive|endif
+typedef|typedef
+name|u_long
+name|greg_t
+typedef|;
+endif|#
+directive|endif
 comment|/*  * DTrace Implementation Constants and Typedefs  */
 define|#
 directive|define
@@ -222,7 +250,6 @@ typedef|typedef
 struct|struct
 name|dtrace_probekey
 block|{
-specifier|const
 name|char
 modifier|*
 name|dtpk_prov
@@ -233,7 +260,6 @@ modifier|*
 name|dtpk_pmatch
 decl_stmt|;
 comment|/* provider matching function */
-specifier|const
 name|char
 modifier|*
 name|dtpk_mod
@@ -244,7 +270,6 @@ modifier|*
 name|dtpk_mmatch
 decl_stmt|;
 comment|/* module matching function */
-specifier|const
 name|char
 modifier|*
 name|dtpk_func
@@ -255,7 +280,6 @@ modifier|*
 name|dtpk_fmatch
 decl_stmt|;
 comment|/* func matching function */
-specifier|const
 name|char
 modifier|*
 name|dtpk_name
@@ -1416,10 +1440,26 @@ comment|/*  * DTrace Consumer State  *  * Each DTrace consumer has an associated
 struct|struct
 name|dtrace_state
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|dev_t
 name|dts_dev
 decl_stmt|;
 comment|/* device */
+else|#
+directive|else
+name|struct
+name|cdev
+modifier|*
+name|dts_dev
+decl_stmt|;
+comment|/* device */
+endif|#
+directive|endif
 name|int
 name|dts_necbs
 decl_stmt|;
@@ -1481,11 +1521,27 @@ modifier|*
 name|dts_aggregations
 decl_stmt|;
 comment|/* aggregation array */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|vmem_t
 modifier|*
 name|dts_aggid_arena
 decl_stmt|;
 comment|/* arena for aggregation IDs */
+else|#
+directive|else
+name|struct
+name|unrhdr
+modifier|*
+name|dts_aggid_arena
+decl_stmt|;
+comment|/* arena for aggregation IDs */
+endif|#
+directive|endif
 name|uint64_t
 name|dts_errors
 decl_stmt|;
@@ -1799,12 +1855,15 @@ name|void
 modifier|*
 name|dtrace_casptr
 parameter_list|(
+specifier|volatile
 name|void
 modifier|*
 parameter_list|,
+specifier|volatile
 name|void
 modifier|*
 parameter_list|,
+specifier|volatile
 name|void
 modifier|*
 parameter_list|)
@@ -2012,11 +2071,21 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 specifier|extern
 name|hrtime_t
 name|dtrace_gethrestime
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__sparc

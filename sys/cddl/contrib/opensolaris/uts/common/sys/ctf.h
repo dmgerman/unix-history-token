@@ -19,12 +19,26 @@ directive|define
 name|_CTF_H
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_pragma
 pragma|#
 directive|pragma
 name|ident
 literal|"%Z%%M%	%I%	%E% SMI"
 end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

@@ -81,7 +81,6 @@ typedef|typedef
 struct|struct
 name|ctf_sect
 block|{
-specifier|const
 name|char
 modifier|*
 name|cts_name
@@ -95,12 +94,27 @@ name|ulong_t
 name|cts_flags
 decl_stmt|;
 comment|/* section flags (ELF SHF_... value) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 specifier|const
 name|void
 modifier|*
 name|cts_data
 decl_stmt|;
 comment|/* pointer to section data */
+else|#
+directive|else
+name|void
+modifier|*
+name|cts_data
+decl_stmt|;
+comment|/* pointer to section data */
+endif|#
+directive|endif
 name|size_t
 name|cts_size
 decl_stmt|;
