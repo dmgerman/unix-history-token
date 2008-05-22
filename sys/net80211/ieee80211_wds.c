@@ -1609,22 +1609,6 @@ operator|->
 name|iv_bss
 expr_stmt|;
 comment|/* NB: no reference held */
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_flags_ext
-operator|&
-name|IEEE80211_FEXT_SWBMISS
-condition|)
-name|callout_stop
-argument_list|(
-operator|&
-name|vap
-operator|->
-name|iv_swbmiss
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 literal|0
