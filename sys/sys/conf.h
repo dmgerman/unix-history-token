@@ -1562,6 +1562,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GID_TTY
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|GID_OPERATOR
 value|5
 end_define
