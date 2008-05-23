@@ -157,6 +157,8 @@ function_decl|)
 parameter_list|(
 name|linker_file_t
 parameter_list|,
+name|int
+parameter_list|,
 name|linker_symval_t
 modifier|*
 parameter_list|,
@@ -500,19 +502,7 @@ name|linker_file_function_listall
 parameter_list|(
 name|linker_file_t
 parameter_list|,
-name|int
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|linker_file_t
-parameter_list|,
-name|linker_symval_t
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
+name|linker_function_nameval_callback_t
 parameter_list|,
 name|void
 modifier|*
@@ -1220,6 +1210,75 @@ name|_lf
 parameter_list|,
 name|Elf_Size
 name|_symidx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|linker_ctf
+block|{
+specifier|const
+name|uint8_t
+modifier|*
+name|ctftab
+decl_stmt|;
+comment|/* Decompressed CTF data. */
+name|int
+name|ctfcnt
+decl_stmt|;
+comment|/* Number of CTF data bytes. */
+specifier|const
+name|Elf_Sym
+modifier|*
+name|symtab
+decl_stmt|;
+comment|/* Ptr to the symbol table. */
+name|int
+name|nsym
+decl_stmt|;
+comment|/* Number of symbols. */
+specifier|const
+name|char
+modifier|*
+name|strtab
+decl_stmt|;
+comment|/* Ptr to the string table. */
+name|int
+name|strcnt
+decl_stmt|;
+comment|/* Number of string bytes. */
+name|uint32_t
+modifier|*
+modifier|*
+name|ctfoffp
+decl_stmt|;
+comment|/* Ptr to array of obj/fnc offsets. */
+name|uint32_t
+modifier|*
+modifier|*
+name|typoffp
+decl_stmt|;
+comment|/* Ptr to array of type offsets. */
+name|long
+modifier|*
+name|typlenp
+decl_stmt|;
+comment|/* Ptr to number of type data entries. */
+block|}
+name|linker_ctf_t
+typedef|;
+end_typedef
+
+begin_function_decl
+name|int
+name|linker_ctf_get
+parameter_list|(
+name|linker_file_t
+parameter_list|,
+name|linker_ctf_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
