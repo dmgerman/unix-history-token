@@ -2024,6 +2024,17 @@ index|]
 argument_list|,
 literal|"vol"
 argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|token
+index|[
+name|j
+index|]
+argument_list|,
+literal|"volume"
+argument_list|)
 condition|)
 block|{
 name|j
