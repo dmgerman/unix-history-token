@@ -124,9 +124,6 @@ directive|include
 file|<umem.h>
 include|#
 directive|include
-file|<vmem.h>
-include|#
-directive|include
 file|<fsshare.h>
 include|#
 directive|include
