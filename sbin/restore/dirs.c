@@ -570,7 +570,7 @@ name|sprintf
 argument_list|(
 name|dirfile
 argument_list|,
-literal|"%s/rstdir%d"
+literal|"%s/rstdir%ld"
 argument_list|,
 name|tmpdir
 argument_list|,
@@ -683,7 +683,7 @@ name|sprintf
 argument_list|(
 name|modefile
 argument_list|,
-literal|"%s/rstmode%d"
+literal|"%s/rstmode%ld"
 argument_list|,
 name|tmpdir
 argument_list|,
@@ -2848,7 +2848,7 @@ name|sprintf
 argument_list|(
 name|modefile
 argument_list|,
-literal|"%s/rstmode%d"
+literal|"%s/rstmode%ld"
 argument_list|,
 name|tmpdir
 argument_list|,
