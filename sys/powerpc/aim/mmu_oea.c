@@ -2917,6 +2917,16 @@ index|]
 operator|=
 name|sdr
 expr_stmt|;
+name|tlbia
+argument_list|()
+expr_stmt|;
+name|trcp
+index|[
+literal|0
+index|]
+operator|=
+literal|0x1007
+expr_stmt|;
 block|}
 end_function
 
@@ -4511,12 +4521,6 @@ name|trace
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|tlbia
-argument_list|()
 expr_stmt|;
 end_expr_stmt
 
