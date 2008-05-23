@@ -15,6 +15,12 @@ directive|define
 name|_SYS_CLIST_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_comment
 comment|/*  * Clists are character lists, which is a variable length linked list  * of cblocks, with a count of the number of characters in the list.  */
 end_comment
