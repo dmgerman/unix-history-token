@@ -167,6 +167,19 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_TTYCONS
+argument_list|,
+literal|"tty console"
+argument_list|,
+literal|"tty console handling"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -3218,7 +3231,7 @@ name|malloc
 argument_list|(
 name|size
 argument_list|,
-name|M_TTYS
+name|M_TTYCONS
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -3309,7 +3322,7 @@ name|free
 argument_list|(
 name|consbuf
 argument_list|,
-name|M_TTYS
+name|M_TTYCONS
 argument_list|)
 expr_stmt|;
 name|consbuf

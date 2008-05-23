@@ -84,6 +84,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CLIST
+argument_list|,
+literal|"clist"
+argument_list|,
+literal|"clist queue blocks"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -458,7 +471,7 @@ sizeof|sizeof
 expr|*
 name|cbp
 argument_list|,
-name|M_TTYS
+name|M_CLIST
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -483,7 +496,7 @@ sizeof|sizeof
 expr|*
 name|cbp
 argument_list|,
-name|M_TTYS
+name|M_CLIST
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -685,7 +698,7 @@ argument_list|(
 name|cblock_alloc
 argument_list|()
 argument_list|,
-name|M_TTYS
+name|M_CLIST
 argument_list|)
 expr_stmt|;
 name|ctotcount

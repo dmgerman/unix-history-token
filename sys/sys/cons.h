@@ -21,6 +21,12 @@ name|consdev
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|tty
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|void
@@ -256,6 +262,31 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|msgbuf
+name|consmsgbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Message buffer for constty. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tty
+modifier|*
+name|constty
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Temporary virtual console. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -400,6 +431,27 @@ end_function_decl
 begin_function_decl
 name|int
 name|cnunavailable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|constty_set
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|constty_clear
 parameter_list|(
 name|void
 parameter_list|)
