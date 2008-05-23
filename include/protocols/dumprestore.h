@@ -205,9 +205,13 @@ name|c_mtime
 decl_stmt|;
 comment|/* last modified time, seconds */
 name|int32_t
+name|c_extsize
+decl_stmt|;
+comment|/* external attribute size */
+name|int32_t
 name|c_spare4
 index|[
-literal|7
+literal|6
 index|]
 decl_stmt|;
 comment|/* old block pointers */

@@ -19,6 +19,24 @@ directive|define
 name|_SYS_EXTATTR_H_
 end_define
 
+begin_comment
+comment|/*  * Defined name spaces for extended attributes.  Numeric constants are passed  * via system calls, but a user-friendly string is also defined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTATTR_NAMESPACE_EMPTY
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTATTR_NAMESPACE_EMPTY_STRING
+value|"empty"
+end_define
+
 begin_define
 define|#
 directive|define
@@ -45,6 +63,17 @@ define|#
 directive|define
 name|EXTATTR_NAMESPACE_SYSTEM_STRING
 value|"system"
+end_define
+
+begin_comment
+comment|/*  * The following macro is designed to initialize an array that maps  * extended-attribute namespace values to their names, e.g.,  * char *extattr_namespace_names[] = EXTATTR_NAMESPACE_NAMES;  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTATTR_NAMESPACE_NAMES
+value|{ \ 	EXTATTR_NAMESPACE_EMPTY_STRING, \ 	EXTATTR_NAMESPACE_USER_STRING, \ 	EXTATTR_NAMESPACE_SYSTEM_STRING }
 end_define
 
 begin_ifdef
