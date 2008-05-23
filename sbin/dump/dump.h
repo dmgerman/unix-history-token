@@ -314,6 +314,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|rsync_friendly
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* be friendly with rsync */
+end_comment
+
+begin_decl_stmt
+name|int
 name|notify
 decl_stmt|;
 end_decl_stmt

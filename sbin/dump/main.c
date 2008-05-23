@@ -546,6 +546,10 @@ name|level
 operator|=
 literal|'0'
 expr_stmt|;
+name|rsync_friendly
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -575,7 +579,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789aB:b:C:cD:d:f:h:LnP:Ss:T:uWw"
+literal|"0123456789aB:b:C:cD:d:f:h:LnP:RrSs:T:uWw"
 argument_list|)
 operator|)
 operator|!=
@@ -809,6 +813,36 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'r'
+case|:
+comment|/* store slightly less data to be friendly to rsync */
+if|if
+condition|(
+name|rsync_friendly
+operator|<
+literal|1
+condition|)
+name|rsync_friendly
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+comment|/* store even less data to be friendlier to rsync */
+if|if
+condition|(
+name|rsync_friendly
+operator|<
+literal|2
+condition|)
+name|rsync_friendly
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+case|case
 literal|'S'
 case|:
 comment|/* exit after estimating # of tapes */
@@ -1002,6 +1036,37 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|X_STARTUP
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|rsync_friendly
+operator|&&
+operator|(
+name|level
+operator|>
+literal|'0'
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s %s\n"
+argument_list|,
+literal|"rsync friendly options"
+argument_list|,
+literal|"can be used only with level 0 dumps."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1893,6 +1958,25 @@ name|TS_TAPE
 expr_stmt|;
 if|if
 condition|(
+name|rsync_friendly
+condition|)
+block|{
+comment|/* don't store real dump times */
+name|spcl
+operator|.
+name|c_date
+operator|=
+literal|0
+expr_stmt|;
+name|spcl
+operator|.
+name|c_ddate
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|spcl
 operator|.
 name|c_date
@@ -1939,6 +2023,11 @@ if|if
 condition|(
 operator|!
 name|Tflag
+operator|&&
+operator|(
+operator|!
+name|rsync_friendly
+operator|)
 condition|)
 name|getdumptime
 argument_list|()
