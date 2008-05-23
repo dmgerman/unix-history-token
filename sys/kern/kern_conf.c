@@ -899,6 +899,23 @@ expr_stmt|;
 name|dev_lock
 argument_list|()
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|dev
+operator|->
+name|si_threadcount
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"%s threadcount is wrong"
+operator|,
+name|dev
+operator|->
+name|si_name
+operator|)
+argument_list|)
+expr_stmt|;
 name|dev
 operator|->
 name|si_threadcount
