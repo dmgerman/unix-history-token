@@ -225,6 +225,22 @@ block|,
 name|amd64_syscall_exit
 block|}
 block|,
+block|{
+literal|"FreeBSD ELF32"
+block|,
+name|amd64_fbsd32_syscall_entry
+block|,
+name|amd64_fbsd32_syscall_exit
+block|}
+block|,
+block|{
+literal|"Linux ELF32"
+block|,
+name|amd64_linux32_syscall_entry
+block|,
+name|amd64_linux32_syscall_exit
+block|}
+block|,
 endif|#
 directive|endif
 ifdef|#
