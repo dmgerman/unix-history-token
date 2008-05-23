@@ -135,12 +135,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|shdr
-operator|.
-name|sh_type
-operator|!=
-name|SHT_STRTAB
-operator|||
+comment|/*shdr.sh_type != SHT_STRTAB || */
 name|offset
 operator|>=
 name|shdr
