@@ -406,6 +406,11 @@ operator|-
 literal|1
 condition|)
 block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|loop
@@ -447,7 +452,7 @@ argument_list|)
 expr_stmt|;
 name|wait
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
