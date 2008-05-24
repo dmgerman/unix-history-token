@@ -153,7 +153,7 @@ comment|/* name of the file for doing rewrite of dumpdates */
 end_comment
 
 begin_decl_stmt
-name|char
+name|int
 name|lastlevel
 decl_stmt|;
 end_decl_stmt
@@ -163,7 +163,7 @@ comment|/* dump level of previous dump */
 end_comment
 
 begin_decl_stmt
-name|char
+name|int
 name|level
 decl_stmt|;
 end_decl_stmt
@@ -1015,7 +1015,7 @@ operator|+
 literal|3
 index|]
 decl_stmt|;
-name|char
+name|int
 name|dd_level
 decl_stmt|;
 name|time_t
@@ -1087,6 +1087,32 @@ parameter_list|)
 define|\
 value|if (ddatev != NULL) \ 		for (ddp = ddatev[i = 0]; i< nddates; ddp = ddatev[++i])
 end_define
+
+begin_define
+define|#
+directive|define
+name|DUMPOUTFMT
+value|"%-32s %d %s"
+end_define
+
+begin_comment
+comment|/* for printf */
+end_comment
+
+begin_comment
+comment|/* name, level, ctime(date) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DUMPINFMT
+value|"%32s %d %[^\n]\n"
+end_define
+
+begin_comment
+comment|/* inverse for scanf */
+end_comment
 
 begin_function_decl
 name|void

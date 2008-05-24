@@ -544,7 +544,7 @@ argument_list|)
 expr_stmt|;
 name|level
 operator|=
-literal|'0'
+literal|0
 expr_stmt|;
 name|rsync_friendly
 operator|=
@@ -624,7 +624,13 @@ literal|'9'
 case|:
 name|level
 operator|=
+literal|10
+operator|*
+name|level
+operator|+
 name|ch
+operator|-
+literal|'0'
 expr_stmt|;
 break|break;
 case|case
@@ -917,7 +923,8 @@ literal|1
 expr_stmt|;
 name|lastlevel
 operator|=
-literal|'?'
+operator|-
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1051,7 +1058,7 @@ operator|&&
 operator|(
 name|level
 operator|>
-literal|'0'
+literal|0
 operator|)
 condition|)
 block|{
@@ -1947,8 +1954,6 @@ operator|.
 name|c_level
 operator|=
 name|level
-operator|-
-literal|'0'
 expr_stmt|;
 name|spcl
 operator|.
@@ -2012,7 +2017,7 @@ expr_stmt|;
 block|}
 name|msg
 argument_list|(
-literal|"Date of this level %c dump: %s"
+literal|"Date of this level %d dump: %s"
 argument_list|,
 name|level
 argument_list|,
@@ -2068,9 +2073,23 @@ name|t
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|lastlevel
+operator|<
+literal|0
+condition|)
 name|msg
 argument_list|(
-literal|"Date of last level %c dump: %s"
+literal|"Date of last (level unknown) dump: %s"
+argument_list|,
+name|tmsg
+argument_list|)
+expr_stmt|;
+else|else
+name|msg
+argument_list|(
+literal|"Date of last level %d dump: %s"
 argument_list|,
 name|lastlevel
 argument_list|,

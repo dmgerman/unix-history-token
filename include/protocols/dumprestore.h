@@ -401,40 +401,6 @@ begin_comment
 comment|/* end of volume marker */
 end_comment
 
-begin_comment
-comment|/*  * flag values  */
-end_comment
-
-begin_comment
-comment|/* None at the moment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUMPOUTFMT
-value|"%-32s %c %s"
-end_define
-
-begin_comment
-comment|/* for printf */
-end_comment
-
-begin_comment
-comment|/* name, level, ctime(date) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUMPINFMT
-value|"%32s %c %[^\n]\n"
-end_define
-
-begin_comment
-comment|/* inverse for scanf */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

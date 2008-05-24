@@ -561,7 +561,7 @@ directive|ifdef
 name|FDEBUG
 name|msg
 argument_list|(
-literal|"Looking for name %s in dumpdates = %s for level = %c\n"
+literal|"Looking for name %s in dumpdates = %s for level = %d\n"
 argument_list|,
 name|fname
 argument_list|,
@@ -580,7 +580,7 @@ literal|0
 expr_stmt|;
 name|lastlevel
 operator|=
-literal|'0'
+literal|0
 expr_stmt|;
 name|initdumptimes
 argument_list|()
@@ -1004,7 +1004,7 @@ expr_stmt|;
 block|}
 name|msg
 argument_list|(
-literal|"level %c dump on %s"
+literal|"level %d dump on %s"
 argument_list|,
 name|level
 argument_list|,
@@ -1155,7 +1155,7 @@ directive|ifdef
 name|FDEBUG
 name|msg
 argument_list|(
-literal|"getrecord: %s %c %s"
+literal|"getrecord: %s %d %s"
 argument_list|,
 name|ddatep
 operator|->
