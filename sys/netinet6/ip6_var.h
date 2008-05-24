@@ -1353,6 +1353,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|ip6_savecontrol_v4
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|void
 name|ip6_savecontrol
