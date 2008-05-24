@@ -935,17 +935,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_function_decl
-specifier|extern
-name|void
-name|zone_drain
-parameter_list|(
-name|uma_zone_t
-name|zone
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|kmem_cache_reap_now
