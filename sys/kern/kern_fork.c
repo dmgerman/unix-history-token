@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -170,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -220,6 +232,97 @@ include|#
 directive|include
 file|<vm/uma.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/dtrace_bsd.h>
+end_include
+
+begin_decl_stmt
+name|dtrace_fork_func_t
+name|dtrace_fasttrap_fork
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|proc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|create
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|create
+argument_list|,
+literal|0
+argument_list|,
+literal|"struct proc *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|create
+argument_list|,
+literal|1
+argument_list|,
+literal|"struct proc *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|create
+argument_list|,
+literal|2
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -2593,6 +2696,23 @@ operator|->
 name|p_pfsflags
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+comment|/* 	 * Tell the DTrace fasttrap provider about the new process 	 * if it has registered an interest. 	 */
+if|if
+condition|(
+name|dtrace_fasttrap_fork
+condition|)
+name|dtrace_fasttrap_fork
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * This begins the section where we must prevent the parent 	 * from being swapped. 	 */
 name|_PHOLD
 argument_list|(
@@ -2919,6 +3039,25 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p1
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|create
+argument_list|,
+name|p2
+argument_list|,
+name|p1
+argument_list|,
+name|flags
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Preserve synchronization semantics of vfork.  If waiting for 	 * child to exec or exit, set P_PPWAIT on child, and sleep on our 	 * proc (in case of exit). 	 */

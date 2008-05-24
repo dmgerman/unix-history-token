@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -146,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -261,6 +273,178 @@ end_define
 begin_comment
 comment|/* NSIG for osig* syscalls.  XXX. */
 end_comment
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|proc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_send
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_send
+argument_list|,
+literal|0
+argument_list|,
+literal|"struct thread *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_send
+argument_list|,
+literal|1
+argument_list|,
+literal|"struct proc *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_send
+argument_list|,
+literal|2
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_clear
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_clear
+argument_list|,
+literal|0
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_clear
+argument_list|,
+literal|1
+argument_list|,
+literal|"ksiginfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_discard
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_discard
+argument_list|,
+literal|0
+argument_list|,
+literal|"struct thread *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_discard
+argument_list|,
+literal|1
+argument_list|,
+literal|"struct proc *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_discard
+argument_list|,
+literal|2
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -6438,6 +6622,25 @@ name|ksi_signo
 operator|=
 name|sig
 expr_stmt|;
+name|SDT_PROBE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_clear
+argument_list|,
+name|sig
+argument_list|,
+name|ksi
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ksi
@@ -10179,6 +10382,25 @@ operator|->
 name|td_sigqueue
 expr_stmt|;
 block|}
+name|SDT_PROBE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_send
+argument_list|,
+name|td
+argument_list|,
+name|p
+argument_list|,
+name|sig
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the signal is being ignored, 	 * then we forget about it immediately. 	 * (Note: we don't set SIGCONT in ps_sigignore, 	 * and if it is set to SIG_IGN, 	 * action will be SIG_DFL here.) 	 */
 name|mtx_lock
 argument_list|(
@@ -10200,6 +10422,25 @@ name|sig
 argument_list|)
 condition|)
 block|{
+name|SDT_PROBE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|signal_discard
+argument_list|,
+name|ps
+argument_list|,
+name|td
+argument_list|,
+name|sig
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
