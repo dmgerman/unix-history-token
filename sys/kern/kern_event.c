@@ -5568,6 +5568,8 @@ decl_stmt|,
 name|nkev
 decl_stmt|,
 name|error
+decl_stmt|,
+name|influx
 decl_stmt|;
 name|int
 name|haskqglobal
@@ -5924,6 +5926,10 @@ argument_list|,
 name|kn_tqe
 argument_list|)
 expr_stmt|;
+name|influx
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|count
@@ -5975,6 +5981,21 @@ name|kq_state
 operator||=
 name|KQ_FLUXWAIT
 expr_stmt|;
+if|if
+condition|(
+name|influx
+condition|)
+block|{
+name|influx
+operator|=
+literal|0
+expr_stmt|;
+name|KQ_FLUX_WAKEUP
+argument_list|(
+name|kq
+argument_list|)
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|msleep
@@ -6247,6 +6268,10 @@ argument_list|(
 name|kn
 argument_list|)
 expr_stmt|;
+name|influx
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 operator|*
@@ -6334,6 +6359,10 @@ argument_list|(
 name|kn
 argument_list|)
 expr_stmt|;
+name|influx
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* we are returning a copy to the user */
 name|kevp
@@ -6352,6 +6381,10 @@ operator|==
 name|KQ_NEVENTS
 condition|)
 block|{
+name|influx
+operator|=
+literal|0
+expr_stmt|;
 name|KQ_UNLOCK_FLUX
 argument_list|(
 name|kq
