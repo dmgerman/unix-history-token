@@ -1501,11 +1501,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-name|IPSEC_SPLASSERT_SOFTNET
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
 name|sav
 operator|=
 name|isr

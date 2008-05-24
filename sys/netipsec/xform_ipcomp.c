@@ -525,11 +525,6 @@ name|hlen
 init|=
 name|IPCOMP_HLENGTH
 decl_stmt|;
-name|IPSEC_SPLASSERT_SOFTNET
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
 comment|/* Get crypto descriptors */
 name|crp
 operator|=
@@ -1531,11 +1526,6 @@ name|ipcomp
 modifier|*
 name|ipcomp
 decl_stmt|;
-name|IPSEC_SPLASSERT_SOFTNET
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
 name|sav
 operator|=
 name|isr

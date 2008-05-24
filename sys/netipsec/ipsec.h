@@ -86,19 +86,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|IPSEC_SPLASSERT_SOFTNET
-parameter_list|(
-name|_m
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* XXX-BZ remove me */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IPSEC_ASSERT
 parameter_list|(
 name|_c

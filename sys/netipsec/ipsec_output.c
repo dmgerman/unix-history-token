@@ -305,11 +305,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|IPSEC_SPLASSERT_SOFTNET
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
 name|m
@@ -822,11 +817,6 @@ name|secasvar
 modifier|*
 name|sav
 decl_stmt|;
-name|IPSEC_SPLASSERT_SOFTNET
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
 name|IPSECREQUEST_LOCK_ASSERT
 argument_list|(
 name|isr

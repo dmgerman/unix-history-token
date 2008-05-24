@@ -2213,11 +2213,6 @@ name|cryptop
 modifier|*
 name|crp
 decl_stmt|;
-name|IPSEC_SPLASSERT_SOFTNET
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
 name|sav
@@ -3892,11 +3887,6 @@ name|newah
 modifier|*
 name|ah
 decl_stmt|;
-name|IPSEC_SPLASSERT_SOFTNET
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
 name|sav
 operator|=
 name|isr
