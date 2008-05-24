@@ -437,6 +437,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PCI_PRODUCT_LSI_SAS1078DE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_LSI_SAS1078DE
+value|0x007C
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PCIM_CMD_SERRESPEN
 end_ifndef
 
@@ -821,6 +839,9 @@ name|PCI_PRODUCT_LSI_SAS1068E
 case|:
 case|case
 name|PCI_PRODUCT_LSI_SAS1078
+case|:
+case|case
+name|PCI_PRODUCT_LSI_SAS1078DE
 case|:
 name|desc
 operator|=
@@ -1698,6 +1719,9 @@ name|PCI_PRODUCT_LSI_SAS1068E
 case|:
 case|case
 name|PCI_PRODUCT_LSI_SAS1078
+case|:
+case|case
+name|PCI_PRODUCT_LSI_SAS1078DE
 case|:
 name|mpt
 operator|->
