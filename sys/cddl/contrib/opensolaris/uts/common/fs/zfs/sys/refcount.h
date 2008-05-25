@@ -26,6 +26,10 @@ name|ident
 literal|"%Z%%M%	%I%	%E% SMI"
 end_pragma
 
+begin_empty
+empty|#include_next<sys/refcount.h>
+end_empty
+
 begin_include
 include|#
 directive|include
@@ -209,7 +213,7 @@ name|holder_tag
 parameter_list|)
 function_decl|;
 name|void
-name|refcount_init
+name|refcount_sysinit
 parameter_list|(
 name|void
 parameter_list|)
@@ -314,7 +318,7 @@ define|\
 value|atomic_add_64_nv(&(rc)->rc_count, -number)
 define|#
 directive|define
-name|refcount_init
+name|refcount_sysinit
 parameter_list|()
 define|#
 directive|define

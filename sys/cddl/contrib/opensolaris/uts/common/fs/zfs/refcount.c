@@ -107,7 +107,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|refcount_init
+name|refcount_sysinit
 parameter_list|(
 name|void
 parameter_list|)

@@ -3679,7 +3679,7 @@ name|spa_mode
 operator|=
 name|mode
 expr_stmt|;
-name|refcount_init
+name|refcount_sysinit
 argument_list|()
 expr_stmt|;
 name|unique_init
