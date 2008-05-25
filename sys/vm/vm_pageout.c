@@ -850,6 +850,27 @@ begin_comment
 comment|/* XXX max # of wired pages system-wide */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_wired
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vm_page_max_wired
+argument_list|,
+literal|0
+argument_list|,
+literal|"System-wide limit to wired page count"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|#
 directive|if
