@@ -671,17 +671,9 @@ name|NULL
 expr_stmt|;
 name|catch
 operator|=
-operator|(
-name|pri
-operator|)
-condition|?
-operator|(
 name|pri
 operator|&
 name|PCATCH
-operator|)
-else|:
-literal|0
 expr_stmt|;
 name|pri
 operator|&=
