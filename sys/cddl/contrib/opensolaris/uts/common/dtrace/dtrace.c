@@ -12515,6 +12515,9 @@ index|]
 operator|.
 name|dttk_value
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DOODAD
 if|if
 condition|(
 name|LO_CLASSINDEX
@@ -12568,6 +12571,8 @@ name|SX_UNLOCKED
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 break|break;
 case|case
 name|DIF_SUBR_MUTEX_OWNER
