@@ -57,6 +57,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -523,7 +529,7 @@ name|f_flag
 decl_stmt|;
 comment|/* see fcntl.h */
 specifier|volatile
-name|int
+name|u_int
 name|f_count
 decl_stmt|;
 comment|/* reference count */
@@ -986,7 +992,8 @@ name|fhold
 parameter_list|(
 name|fp
 parameter_list|)
-value|atomic_add_int(&(fp)->f_count, 1)
+define|\
+value|(refcount_acquire(&(fp)->f_count))
 end_define
 
 begin_define
@@ -999,7 +1006,7 @@ parameter_list|,
 name|td
 parameter_list|)
 define|\
-value|(atomic_fetchadd_int(&(fp)->f_count, -1)<= 1 ? _fdrop((fp), (td)) : 0)
+value|(refcount_release(&(fp)->f_count) ? _fdrop((fp), (td)) : 0)
 end_define
 
 begin_decl_stmt
