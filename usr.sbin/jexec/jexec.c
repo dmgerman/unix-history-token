@@ -303,7 +303,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"jail_attach(): Cant convert %s to jid"
+literal|"jail_attach(): Cannot convert %s to jid"
 argument_list|,
 name|argv
 index|[
