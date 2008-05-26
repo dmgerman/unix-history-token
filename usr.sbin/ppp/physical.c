@@ -463,23 +463,6 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOI4B
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"i4b.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|NONETGRAPH
 end_ifndef
 
@@ -628,20 +611,6 @@ name|devices
 index|[]
 init|=
 block|{
-ifndef|#
-directive|ifndef
-name|NOI4B
-comment|/*    * This must come before ``tty'' so that the probe routine is    * able to identify it as a more specific type of terminal device.    */
-block|{
-name|i4b_Create
-block|,
-name|i4b_iov2device
-block|,
-name|i4b_DeviceSize
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 name|tty_Create
 block|,
