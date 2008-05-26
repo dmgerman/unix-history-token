@@ -3116,10 +3116,10 @@ operator|||
 name|uap
 operator|->
 name|cpusetsize
-operator|*
-name|NBBY
 operator|>
 name|CPU_MAXSIZE
+operator|/
+name|NBBY
 condition|)
 return|return
 operator|(
@@ -3516,10 +3516,10 @@ operator|||
 name|uap
 operator|->
 name|cpusetsize
-operator|*
-name|NBBY
 operator|>
 name|CPU_MAXSIZE
+operator|/
+name|NBBY
 condition|)
 return|return
 operator|(
