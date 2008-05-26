@@ -15678,7 +15678,7 @@ operator|||
 operator|(
 name|tp
 operator|->
-name|t_flags
+name|t_state
 operator|&
 name|TS_GONE
 operator|)
