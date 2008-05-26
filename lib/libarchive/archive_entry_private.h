@@ -15,32 +15,49 @@ directive|define
 name|ARCHIVE_ENTRY_PRIVATE_H_INCLUDED
 end_define
 
+begin_include
+include|#
+directive|include
+file|"archive_string.h"
+end_include
+
 begin_comment
-comment|/*  * Handle wide character (i.e., Unicode) and non-wide character  * strings transparently.  *  */
+comment|/*  * Handle wide character (i.e., Unicode) and non-wide character  * strings transparently.  */
 end_comment
 
 begin_struct
 struct|struct
 name|aes
 block|{
-specifier|const
-name|char
-modifier|*
+name|struct
+name|archive_string
 name|aes_mbs
 decl_stmt|;
-name|char
-modifier|*
-name|aes_mbs_alloc
+name|struct
+name|archive_string
+name|aes_utf8
 decl_stmt|;
 specifier|const
 name|wchar_t
 modifier|*
 name|aes_wcs
 decl_stmt|;
-name|wchar_t
-modifier|*
-name|aes_wcs_alloc
+comment|/* Bitmap of which of the above are valid.  Because we're lazy 	 * about malloc-ing and reusing the underlying storage, we 	 * can't rely on NULL pointers to indicate whether a string 	 * has been set. */
+name|int
+name|aes_set
 decl_stmt|;
+define|#
+directive|define
+name|AES_SET_MBS
+value|1
+define|#
+directive|define
+name|AES_SET_UTF8
+value|2
+define|#
+directive|define
+name|AES_SET_WCS
+value|4
 block|}
 struct|;
 end_struct
@@ -228,6 +245,21 @@ name|aes
 name|ae_uname
 decl_stmt|;
 comment|/* Name of owner */
+name|unsigned
+name|char
+name|ae_hardlinkset
+decl_stmt|;
+name|unsigned
+name|char
+name|ae_symlinkset
+decl_stmt|;
+comment|/* Not used within libarchive; useful for some clients. */
+name|struct
+name|aes
+name|ae_sourcepath
+decl_stmt|;
+comment|/* Path this entry is sourced from. */
+comment|/* ACL support. */
 name|struct
 name|ae_acl
 modifier|*
@@ -246,6 +278,7 @@ name|wchar_t
 modifier|*
 name|acl_text_w
 decl_stmt|;
+comment|/* extattr support. */
 name|struct
 name|ae_xattr
 modifier|*
@@ -256,6 +289,7 @@ name|ae_xattr
 modifier|*
 name|xattr_p
 decl_stmt|;
+comment|/* Miscellaneous. */
 name|char
 name|strmode
 index|[

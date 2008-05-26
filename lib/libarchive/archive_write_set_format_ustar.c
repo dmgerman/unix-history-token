@@ -1828,6 +1828,8 @@ index|]
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|,
+name|ret2
 decl_stmt|;
 name|struct
 name|ustar
@@ -1883,7 +1885,7 @@ if|if
 condition|(
 name|AE_IFDIR
 operator|==
-name|archive_entry_mode
+name|archive_entry_filetype
 argument_list|(
 name|entry
 argument_list|)
@@ -2009,15 +2011,15 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-name|ARCHIVE_OK
+operator|<
+name|ARCHIVE_WARN
 condition|)
 return|return
 operator|(
 name|ret
 operator|)
 return|;
-name|ret
+name|ret2
 operator|=
 call|(
 name|a
@@ -2036,15 +2038,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-name|ARCHIVE_OK
+name|ret2
+operator|<
+name|ARCHIVE_WARN
 condition|)
 return|return
 operator|(
-name|ret
+name|ret2
 operator|)
 return|;
+if|if
+condition|(
+name|ret2
+operator|<
+name|ret
+condition|)
+name|ret
+operator|=
+name|ret2
+expr_stmt|;
 name|ustar
 operator|->
 name|entry_bytes_remaining
@@ -2072,7 +2084,7 @@ operator|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_OK
+name|ret
 operator|)
 return|;
 block|}
@@ -2204,7 +2216,7 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the separator we found is the first '/', find 		 * the next one.  (This is a pathological case that 		 * occurs for paths of exactly 101 bytes that start with 		 * '/'; it occurs because the separating '/' is not 		 * stored explicitly and the reconstruction assumes that 		 * an empty prefix means there is no '/' separator.) 		 */
+comment|/* 		 * Look for the next '/' if we chose the first character 		 * as the separator.  (ustar format doesn't permit 		 * an empty prefix.) 		 */
 if|if
 condition|(
 name|p
@@ -2222,13 +2234,14 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If there is no path separator, or the prefix or 		 * remaining name are too large, return an error. 		 */
+comment|/* Fail if the name won't fit. */
 if|if
 condition|(
 operator|!
 name|p
 condition|)
 block|{
+comment|/* No separator. */
 name|archive_set_error
 argument_list|(
 operator|&
@@ -2243,7 +2256,36 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* 			 * The only feasible separator is a final '/'; 			 * this would result in a non-empty prefix and 			 * an empty name, which POSIX doesn't 			 * explicity forbid, but it just feels wrong. 			 */
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ENAMETOOLONG
+argument_list|,
+literal|"Pathname too long"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 elseif|else
@@ -2256,6 +2298,7 @@ operator|+
 name|USTAR_prefix_size
 condition|)
 block|{
+comment|/* Prefix is too long. */
 name|archive_set_error
 argument_list|(
 operator|&
@@ -2270,7 +2313,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 else|else
@@ -2380,7 +2423,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 name|copy_length
 operator|=
@@ -2448,7 +2491,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 name|copy_length
 operator|=
@@ -2519,7 +2562,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 name|copy_length
 operator|=
@@ -2575,7 +2618,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 if|if
@@ -2613,7 +2656,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 if|if
@@ -2651,7 +2694,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 if|if
@@ -2689,7 +2732,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 if|if
@@ -2727,7 +2770,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 if|if
@@ -2782,7 +2825,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 if|if
@@ -2820,7 +2863,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 block|}
@@ -2955,7 +2998,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 block|}
 block|}

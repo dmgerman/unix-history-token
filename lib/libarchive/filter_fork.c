@@ -9,6 +9,29 @@ directive|include
 file|"archive_platform.h"
 end_include
 
+begin_comment
+comment|/* This capability is only available on POSIX systems. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_PIPE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_VFORK
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_FCNTL
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -703,6 +726,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(HAVE_PIPE)&& defined(HAVE_VFORK)&& defined(HAVE_FCNTL) */
+end_comment
 
 end_unit
 

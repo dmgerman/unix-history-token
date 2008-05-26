@@ -17,6 +17,74 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* This capability is only available on POSIX systems. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_PIPE
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|HAVE_VFORK
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|HAVE_FCNTL
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * On non-Posix systems, allow the program to build, but choke if  * this function is actually invoked.  */
+end_comment
+
+begin_function
+name|int
+name|archive_read_support_compression_program
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|_a
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cmd
+parameter_list|)
+block|{
+name|archive_set_error
+argument_list|(
+name|_a
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"External compression programs not supported on this platform"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1569,6 +1637,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(HAVE_PIPE) || !defined(HAVE_VFORK) || !defined(HAVE_FCNTL) */
+end_comment
 
 end_unit
 
