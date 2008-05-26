@@ -507,7 +507,7 @@ name|char
 modifier|*
 name|tar_opts
 init|=
-literal|"+Bb:C:cf:HhI:jkLlmnOoPprtT:UuvW:wX:xyZz"
+literal|"+Bb:C:cf:HhI:jkLlmnOoPprts:ST:UuvW:wX:xyZz"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,6 +553,8 @@ block|,
 name|OPTION_NO_SAME_PERMISSIONS
 block|,
 name|OPTION_NULL
+block|,
+name|OPTION_NUMERIC_OWNER
 block|,
 name|OPTION_ONE_FILE_SYSTEM
 block|,
@@ -1010,6 +1012,16 @@ block|,
 name|NULL
 block|,
 name|OPTION_NULL
+block|}
+block|,
+block|{
+literal|"numeric-owner"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NUMERIC_OWNER
 block|}
 block|,
 block|{
@@ -2074,6 +2086,16 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_NUMERIC_OWNER
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|option_numeric_owner
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'O'
 case|:
 comment|/* GNU tar */
@@ -2195,6 +2217,50 @@ argument_list|,
 name|opt
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* NetBSD pax-as-tar */
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_SPARSE
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+comment|/* NetBSD pax-as-tar */
+if|#
+directive|if
+name|HAVE_REGEX_H
+name|add_substitution
+argument_list|(
+name|bsdtar
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"-s is not supported by this version of bsdtar"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|OPTION_STRIP_COMPONENTS
@@ -2906,6 +2972,16 @@ argument_list|(
 name|bsdtar
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HAVE_REGEX_H
+name|cleanup_substitution
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bsdtar

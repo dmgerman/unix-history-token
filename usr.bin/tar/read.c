@@ -300,6 +300,13 @@ argument_list|,
 literal|'t'
 argument_list|)
 expr_stmt|;
+name|unmatched_inclusions_warn
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|"Not found in archive"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -324,6 +331,13 @@ argument_list|(
 name|bsdtar
 argument_list|,
 literal|'x'
+argument_list|)
+expr_stmt|;
+name|unmatched_inclusions_warn
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|"Not found in archive"
 argument_list|)
 expr_stmt|;
 comment|/* Restore old SIGINFO + SIGUSR1 handlers. */
@@ -685,6 +699,28 @@ operator|==
 name|ARCHIVE_FATAL
 condition|)
 break|break;
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|option_numeric_owner
+condition|)
+block|{
+name|archive_entry_set_uname
+argument_list|(
+name|entry
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|archive_entry_set_gname
+argument_list|(
+name|entry
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Exclude entries that are too old. 		 */
 name|st
 operator|=

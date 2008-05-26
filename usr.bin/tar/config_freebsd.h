@@ -349,6 +349,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_REGEX_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SETLOCALE
 value|1
 end_define
