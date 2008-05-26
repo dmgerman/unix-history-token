@@ -163,6 +163,18 @@ end_include
 begin_define
 define|#
 directive|define
+name|_WANT_FILE
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_define
+define|#
+directive|define
 name|_KERNEL
 end_define
 
@@ -176,12 +188,6 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
 end_include
 
 begin_include

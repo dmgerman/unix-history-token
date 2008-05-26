@@ -78,20 +78,18 @@ end_include
 begin_define
 define|#
 directive|define
-name|_KERNEL
+name|_WANT_FILE
 end_define
+
+begin_comment
+comment|/* make file.h give us 'struct file' */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|_KERNEL
-end_undef
 
 begin_include
 include|#

@@ -484,6 +484,29 @@ begin_comment
 comment|/* seekable / nonsequential */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_FILE
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (f) protected with mtx_lock(mtx_pool_find(fp))  * (d) cdevpriv_mtx  * none	not locked  */
 end_comment
@@ -582,7 +605,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* _KERNEL || _WANT_FILE */
 end_comment
 
 begin_comment
