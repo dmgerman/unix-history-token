@@ -5554,6 +5554,16 @@ condition|(
 name|seenalrm
 condition|)
 block|{
+comment|/* last packet sent, timeout reached? */
+if|if
+condition|(
+name|npackets
+operator|&&
+name|ntransmitted
+operator|>=
+name|npackets
+condition|)
+break|break;
 name|retransmit
 argument_list|()
 expr_stmt|;
@@ -6003,6 +6013,10 @@ argument_list|(
 name|nreceived
 operator|==
 literal|0
+condition|?
+literal|2
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6155,7 +6169,7 @@ name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|onint
+name|onsignal
 argument_list|)
 expr_stmt|;
 operator|(
