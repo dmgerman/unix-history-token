@@ -47,9 +47,19 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__fcntl
+argument_list|,
+name|fcntl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
-name|fcntl
+name|__fcntl
 parameter_list|(
 name|int
 name|fd
