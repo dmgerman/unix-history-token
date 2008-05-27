@@ -130,6 +130,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+modifier|*
+name|memrchr
+argument_list|(
+specifier|const
+name|void
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|size_t
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|memcmp
 argument_list|(
