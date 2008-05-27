@@ -827,7 +827,7 @@ literal|"                  [-D displayfile] [-m mtreefile] [-o originpath]"
 argument_list|,
 literal|"                  -c comment -d description -f packlist pkg-filename"
 argument_list|,
-literal|"       pkg_create [-EGYNRhvxy] -b pkg-name [pkg-filename]"
+literal|"       pkg_create [-EGYNRhnvxy] -b pkg-name [pkg-filename]"
 argument_list|)
 expr_stmt|;
 name|exit
