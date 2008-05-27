@@ -2846,7 +2846,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 		 * If the lock was released while waiting for the turnstile 		 * chain lock retry. 		 */
+comment|/* 		 * Check for the waiters flags about this rwlock. 		 * If the lock was released, without maintain any pending 		 * waiters queue, simply try to acquire it. 		 * If a pending waiters queue is present, claim the lock 		 * ownership and maintain the pending queue. 		 */
 name|x
 operator|=
 name|v
