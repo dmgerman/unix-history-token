@@ -56,6 +56,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslimits.h>
 end_include
 
@@ -1746,6 +1758,10 @@ modifier|*
 name|plist
 parameter_list|)
 block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|char
 name|tball
 index|[
@@ -1841,6 +1857,37 @@ argument_list|,
 name|suff
 argument_list|)
 expr_stmt|;
+comment|/*      * If the package tarball exists already, and we are running in `no      * clobber' mode, skip this package.      */
+if|if
+condition|(
+name|stat
+argument_list|(
+name|tball
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|Regenerate
+operator|==
+name|FALSE
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Skipping package '%s'.  It already exists.\n"
+argument_list|,
+name|tball
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|args
 index|[
 name|nargs

@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"EGYNORhjvxyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:S:o:b:"
+literal|"EGYNnORhjvxyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:S:o:b:"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,6 +245,14 @@ name|int
 name|Recursive
 init|=
 name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Regenerate
+init|=
+name|TRUE
 decl_stmt|;
 end_decl_stmt
 
@@ -649,6 +657,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+name|Regenerate
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -799,7 +815,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_create [-YNOhjvyz] [-C conflicts] [-P pkgs] [-p prefix]"
+literal|"usage: pkg_create [-YNOhjnvyz] [-C conflicts] [-P pkgs] [-p prefix]"
 argument_list|,
 literal|"                  [-i iscript] [-I piscript] [-k dscript] [-K pdscript]"
 argument_list|,
