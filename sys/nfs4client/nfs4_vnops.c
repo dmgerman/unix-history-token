@@ -13238,9 +13238,15 @@ name|error
 operator|==
 name|ENOLCK
 condition|)
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
+block|}
 if|if
 condition|(
 name|nfs4_sigintr
