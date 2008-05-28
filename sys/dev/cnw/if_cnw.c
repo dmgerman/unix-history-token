@@ -233,6 +233,10 @@ directive|include
 file|<dev/cnw/if_cnwreg.h>
 end_include
 
+begin_comment
+comment|/*  * Let these be patchable variables, initialized from macros that can  * be set in the kernel config file. Someone with lots of spare time  * could probably write a nice Netwave configuration program to do  * this a little bit more elegantly :-).  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -296,11 +300,19 @@ begin_comment
 comment|/* Scramble key */
 end_comment
 
+begin_comment
+comment|/*  * The card appears to work much better when we only allow one packet  * "in the air" at a time.  This is done by not allowing another packet  * on the card, even if there is room.  Turning this off will allow the  * driver to stuff packets on the card as soon as a transmit buffer is  * available.  This does increase the number of collisions, though.  * We can que a second packet if there are transmit buffers available,  * but we do not actually send the packet until the last packet has  * been written.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ONE_AT_A_TIME
 end_define
+
+begin_comment
+comment|/*  * Netwave cards choke if we try to use io memory address>= 0x400.  * Even though, CIS tuple does not talk about this.  * Use memory mapped access.  */
+end_comment
 
 begin_ifndef
 ifndef|#
