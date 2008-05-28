@@ -3243,12 +3243,23 @@ argument_list|(
 name|i_dev
 argument_list|)
 expr_stmt|;
+comment|/* 			 * destroy_dev() might sleep, so release pcm lock 			 * here and rely on pcm cv serialization. 			 */
+name|pcm_unlock
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|snd_clone_unref
 argument_list|(
 name|i_dev
+argument_list|)
+expr_stmt|;
+name|pcm_lock
+argument_list|(
+name|d
 argument_list|)
 expr_stmt|;
 block|}
