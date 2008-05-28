@@ -940,7 +940,7 @@ name|k
 operator|->
 name|wk_flags
 operator|&
-name|IEEE80211_KEY_SWCRYPT
+name|IEEE80211_KEY_SWENCRYPT
 condition|)
 block|{
 if|if
@@ -1015,7 +1015,7 @@ name|k
 operator|->
 name|wk_flags
 operator|&
-name|IEEE80211_KEY_SWMIC
+name|IEEE80211_KEY_SWENMIC
 operator|)
 condition|)
 block|{
@@ -1447,7 +1447,7 @@ name|k
 operator|->
 name|wk_flags
 operator|&
-name|IEEE80211_KEY_SWCRYPT
+name|IEEE80211_KEY_SWDECRYPT
 operator|)
 operator|&&
 operator|!
@@ -1569,15 +1569,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|force
-operator|||
 operator|(
 name|k
 operator|->
 name|wk_flags
 operator|&
-name|IEEE80211_KEY_SWMIC
+name|IEEE80211_KEY_SWDEMIC
 operator|)
+operator|||
+name|force
 condition|)
 block|{
 name|struct

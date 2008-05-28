@@ -2818,9 +2818,9 @@ operator|->
 name|wk_flags
 operator|&
 operator|(
-name|IEEE80211_KEY_SWCRYPT
+name|IEEE80211_KEY_SWENCRYPT
 operator||
-name|IEEE80211_KEY_SWMIC
+name|IEEE80211_KEY_SWENMIC
 operator|)
 condition|)
 block|{

@@ -775,7 +775,7 @@ name|k
 operator|->
 name|wk_flags
 operator|&
-name|IEEE80211_KEY_SWCRYPT
+name|IEEE80211_KEY_SWENCRYPT
 operator|)
 operator|&&
 operator|!
@@ -891,7 +891,7 @@ name|k
 operator|->
 name|wk_flags
 operator|&
-name|IEEE80211_KEY_SWCRYPT
+name|IEEE80211_KEY_SWDECRYPT
 operator|)
 operator|&&
 operator|!

@@ -143,14 +143,24 @@ value|0x04
 comment|/* key used for WPA group operation */
 define|#
 directive|define
-name|IEEE80211_KEY_SWCRYPT
+name|IEEE80211_KEY_SWENCRYPT
 value|0x10
-comment|/* host-based encrypt/decrypt */
+comment|/* host-based encrypt */
 define|#
 directive|define
-name|IEEE80211_KEY_SWMIC
+name|IEEE80211_KEY_SWDECRYPT
 value|0x20
-comment|/* host-based enmic/demic */
+comment|/* host-based decrypt */
+define|#
+directive|define
+name|IEEE80211_KEY_SWENMIC
+value|0x40
+comment|/* host-based enmic */
+define|#
+directive|define
+name|IEEE80211_KEY_SWDEMIC
+value|0x80
+comment|/* host-based demic */
 name|ieee80211_keyix
 name|wk_keyix
 decl_stmt|;
@@ -210,6 +220,21 @@ name|IEEE80211_KEY_COMMON
 comment|/* common flags passed in by apps */
 define|\
 value|(IEEE80211_KEY_XMIT | IEEE80211_KEY_RECV | IEEE80211_KEY_GROUP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_KEY_SWCRYPT
+define|\
+value|(IEEE80211_KEY_SWENCRYPT | IEEE80211_KEY_SWDECRYPT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_KEY_SWMIC
+value|(IEEE80211_KEY_SWENMIC | IEEE80211_KEY_SWDEMIC)
 end_define
 
 begin_define
