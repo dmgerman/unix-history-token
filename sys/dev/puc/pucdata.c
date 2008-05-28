@@ -4665,6 +4665,8 @@ name|port
 operator|>>
 literal|1
 operator|)
+operator|*
+literal|4
 expr_stmt|;
 return|return
 operator|(
