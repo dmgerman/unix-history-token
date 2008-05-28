@@ -2530,10 +2530,6 @@ modifier|*
 name|scan
 decl_stmt|;
 name|int
-name|checkscanlist
-init|=
-literal|0
-decl_stmt|,
 name|result
 decl_stmt|;
 name|scan
@@ -2747,7 +2743,7 @@ name|ic_flags
 operator||=
 name|IEEE80211_F_SCAN
 expr_stmt|;
-comment|/* NB: need to use supplied flags in check below */
+comment|/* NB: need to use supplied flags in check */
 name|ss
 operator|->
 name|ss_flags
@@ -2756,19 +2752,8 @@ name|flags
 operator|&
 literal|0xff
 expr_stmt|;
-name|checkscanlist
+name|result
 operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|checkscanlist
-condition|)
-block|{
-if|if
-condition|(
 name|ss
 operator|->
 name|ss_ops
@@ -2779,9 +2764,7 @@ name|ss
 argument_list|,
 name|vap
 argument_list|)
-condition|)
-block|{
-comment|/* found an ap, just clear the flag */
+expr_stmt|;
 name|ic
 operator|->
 name|ic_flags
@@ -2789,6 +2772,21 @@ operator|&=
 operator|~
 name|IEEE80211_F_SCAN
 expr_stmt|;
+name|SCAN_PRIVATE
+argument_list|(
+name|ss
+argument_list|)
+operator|->
+name|ss_iflags
+operator|&=
+operator|~
+name|ISCAN_DISCARD
+expr_stmt|;
+if|if
+condition|(
+name|result
+condition|)
+block|{
 name|ieee80211_notify_scan_done
 argument_list|(
 name|vap
@@ -2803,14 +2801,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* no ap, clear the flag before starting a scan */
-name|ic
-operator|->
-name|ic_flags
-operator|&=
-operator|~
-name|IEEE80211_F_SCAN
-expr_stmt|;
+block|}
 block|}
 name|result
 operator|=
