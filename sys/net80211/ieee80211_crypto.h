@@ -209,6 +209,12 @@ modifier|*
 name|wk_private
 decl_stmt|;
 comment|/* private cipher state */
+name|uint8_t
+name|wk_macaddr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -495,13 +501,6 @@ parameter_list|,
 name|struct
 name|ieee80211_key
 modifier|*
-parameter_list|,
-specifier|const
-name|uint8_t
-name|macaddr
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
 parameter_list|)
 function_decl|;
 end_function_decl
