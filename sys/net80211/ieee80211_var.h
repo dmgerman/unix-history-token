@@ -2374,6 +2374,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FEXT_RESUME
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* STATUS: start on resume */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FEXT_DFS
 value|0x00000800
 end_define
