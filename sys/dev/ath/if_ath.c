@@ -21280,6 +21280,7 @@ name|m0
 argument_list|)
 expr_stmt|;
 comment|/* honor classification */
+comment|/* XXX use txparams instead of fixed values */
 comment|/* 	 * Calculate Atheros packet type from IEEE80211 packet header, 	 * setup for rate calculations, and select h/w transmit queue. 	 */
 switch|switch
 condition|(
@@ -21445,7 +21446,7 @@ operator|=
 name|HAL_PKT_TYPE_NORMAL
 expr_stmt|;
 comment|/* default */
-comment|/* 		 * Data frames: multicast frames go out at a fixed rate, 		 * otherwise consult the rate control module for the 		 * rate to use. 		 */
+comment|/* 		 * Data frames: multicast frames go out at a fixed rate, 		 * EAPOL frames use the mgmt frame rate; otherwise consult 		 * the rate control module for the rate to use. 		 */
 if|if
 condition|(
 name|ismcast
@@ -21487,6 +21488,55 @@ name|try0
 operator|=
 literal|1
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|m0
+operator|->
+name|m_flags
+operator|&
+name|M_EAPOL
+condition|)
+block|{
+comment|/* XXX? maybe always use long preamble? */
+name|rix
+operator|=
+name|an
+operator|->
+name|an_mgmtrix
+expr_stmt|;
+name|txrate
+operator|=
+name|rt
+operator|->
+name|info
+index|[
+name|rix
+index|]
+operator|.
+name|rateCode
+expr_stmt|;
+if|if
+condition|(
+name|shortPreamble
+condition|)
+name|txrate
+operator||=
+name|rt
+operator|->
+name|info
+index|[
+name|rix
+index|]
+operator|.
+name|shortPreamble
+expr_stmt|;
+name|try0
+operator|=
+name|ATH_TXMAXTRY
+expr_stmt|;
+comment|/* XXX?too many? */
 block|}
 else|else
 block|{
