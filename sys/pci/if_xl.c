@@ -5615,12 +5615,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|sc
-operator|->
-name|xl_unit
-operator|=
-name|unit
-expr_stmt|;
 name|callout_init_mtx
 argument_list|(
 operator|&

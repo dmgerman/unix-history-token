@@ -3038,10 +3038,6 @@ name|xl_tmpmap
 decl_stmt|;
 comment|/* spare DMA map */
 name|u_int8_t
-name|xl_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|xl_type
 decl_stmt|;
 name|u_int32_t
