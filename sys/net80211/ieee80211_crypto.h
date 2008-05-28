@@ -516,6 +516,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ieee80211_crypto_reload_keys
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Template for a supported cipher.  Ciphers register with the  * crypto code and are typically loaded as separate modules  * (the null cipher is always present).  * XXX may need refcnts  */
 end_comment
