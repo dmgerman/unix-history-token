@@ -3642,22 +3642,29 @@ operator|->
 name|if_flags
 argument_list|)
 expr_stmt|;
+comment|/*  	 * NB: the order of these is important: 	 * o stop the chip so no more interrupts will fire 	 * o call the 802.11 layer before detaching the hal to 	 *   insure callbacks into the driver to delete global 	 *   key cache entries can be handled 	 * o free the taskqueue which drains any pending tasks 	 * o reclaim the bpf tap now that we know nothing will use 	 *   it (e.g. rx processing from the task q thread) 	 * o reclaim the tx queue data structures after calling 	 *   the 802.11 layer as we'll get called back to reclaim 	 *   node state and potentially want to use them 	 * o to cleanup the tx queues the hal is called, so detach 	 *   it last 	 * Other than that, it's straightforward... 	 */
 name|ath_stop
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|bpfdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-comment|/*  	 * NB: the order of these is important: 	 * o call the 802.11 layer before detaching the hal to 	 *   insure callbacks into the driver to delete global 	 *   key cache entries can be handled 	 * o reclaim the tx queue data structures after calling 	 *   the 802.11 layer as we'll get called back to reclaim 	 *   node state and potentially want to use them 	 * o to cleanup the tx queues the hal is called, so detach 	 *   it last 	 * Other than that, it's straightforward... 	 */
 name|ieee80211_ifdetach
 argument_list|(
 name|ifp
 operator|->
 name|if_l2com
+argument_list|)
+expr_stmt|;
+name|taskqueue_free
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|)
+expr_stmt|;
+name|bpfdetach
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3684,13 +3691,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|taskqueue_free
-argument_list|(
-name|sc
-operator|->
-name|sc_tq
-argument_list|)
-expr_stmt|;
 name|ath_rate_detach
 argument_list|(
 name|sc
@@ -3715,6 +3715,7 @@ operator|->
 name|sc_ah
 argument_list|)
 expr_stmt|;
+comment|/* NB: sets chip in full sleep */
 name|if_free
 argument_list|(
 name|ifp
