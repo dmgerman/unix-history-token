@@ -762,6 +762,10 @@ argument_list|(
 literal|"nfsrv3_access: v3 proc called on a v2 connection"
 argument_list|)
 expr_stmt|;
+name|vfslocked
+operator|=
+literal|0
+expr_stmt|;
 name|fhp
 operator|=
 operator|&
@@ -6608,6 +6612,10 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|vfslocked
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|mrq
 operator|=
@@ -22094,6 +22102,10 @@ name|panic
 argument_list|(
 literal|"nfsrv_pathconf: v3 proc called on a v2 connection"
 argument_list|)
+expr_stmt|;
+name|vfslocked
+operator|=
+literal|0
 expr_stmt|;
 name|fhp
 operator|=
