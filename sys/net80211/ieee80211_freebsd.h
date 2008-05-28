@@ -51,8 +51,20 @@ end_comment
 
 begin_typedef
 typedef|typedef
+struct|struct
+block|{
+name|char
+name|name
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* e.g. "ath0_com_lock" */
 name|struct
 name|mtx
+name|mtx
+decl_stmt|;
+block|}
 name|ieee80211_com_lock_t
 typedef|;
 end_typedef
@@ -66,8 +78,17 @@ name|_ic
 parameter_list|,
 name|_name
 parameter_list|)
-define|\
-value|mtx_init(&(_ic)->ic_comlock, _name, "802.11 com lock", \ 	    MTX_DEF | MTX_RECURSE)
+value|do {				\ 	ieee80211_com_lock_t *cl =&(_ic)->ic_comlock;			\ 	snprintf(cl->name, sizeof(cl->name), "%s_com_lock", _name);	\ 	mtx_init(&cl->mtx, cl->name, NULL, MTX_DEF | MTX_RECURSE);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_LOCK_OBJ
+parameter_list|(
+name|_ic
+parameter_list|)
+value|(&(_ic)->ic_comlock.mtx)
 end_define
 
 begin_define
@@ -77,7 +98,7 @@ name|IEEE80211_LOCK_DESTROY
 parameter_list|(
 name|_ic
 parameter_list|)
-value|mtx_destroy(&(_ic)->ic_comlock)
+value|mtx_destroy(IEEE80211_LOCK_OBJ(_ic))
 end_define
 
 begin_define
@@ -87,7 +108,7 @@ name|IEEE80211_LOCK
 parameter_list|(
 name|_ic
 parameter_list|)
-value|mtx_lock(&(_ic)->ic_comlock)
+value|mtx_lock(IEEE80211_LOCK_OBJ(_ic))
 end_define
 
 begin_define
@@ -97,7 +118,7 @@ name|IEEE80211_UNLOCK
 parameter_list|(
 name|_ic
 parameter_list|)
-value|mtx_unlock(&(_ic)->ic_comlock)
+value|mtx_unlock(IEEE80211_LOCK_OBJ(_ic))
 end_define
 
 begin_define
@@ -108,7 +129,7 @@ parameter_list|(
 name|_ic
 parameter_list|)
 define|\
-value|mtx_assert(&(_ic)->ic_comlock, MA_OWNED)
+value|mtx_assert(IEEE80211_LOCK_OBJ(_ic), MA_OWNED)
 end_define
 
 begin_comment
@@ -144,7 +165,17 @@ name|_nt
 parameter_list|,
 name|_name
 parameter_list|)
-value|do {			\ 	ieee80211_node_lock_t *nl =&(_nt)->nt_nodelock;		\ 	snprintf(nl->name, sizeof(nl->name), "%s_node_lock", _name);	\ 	mtx_init(&nl->mtx, NULL, nl->name, MTX_DEF | MTX_RECURSE);	\ } while (0)
+value|do {			\ 	ieee80211_node_lock_t *nl =&(_nt)->nt_nodelock;		\ 	snprintf(nl->name, sizeof(nl->name), "%s_node_lock", _name);	\ 	mtx_init(&nl->mtx, nl->name, NULL, MTX_DEF | MTX_RECURSE);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_LOCK_OBJ
+parameter_list|(
+name|_nt
+parameter_list|)
+value|(&(_nt)->nt_nodelock.mtx)
 end_define
 
 begin_define
@@ -155,7 +186,7 @@ parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_destroy(&(_nt)->nt_nodelock.mtx)
+value|mtx_destroy(IEEE80211_NODE_LOCK_OBJ(_nt))
 end_define
 
 begin_define
@@ -166,7 +197,7 @@ parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_lock(&(_nt)->nt_nodelock.mtx)
+value|mtx_lock(IEEE80211_NODE_LOCK_OBJ(_nt))
 end_define
 
 begin_define
@@ -177,7 +208,7 @@ parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_owned(&(_nt)->nt_nodelock.mtx)
+value|mtx_owned(IEEE80211_NODE_LOCK_OBJ(_nt))
 end_define
 
 begin_define
@@ -188,7 +219,7 @@ parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_unlock(&(_nt)->nt_nodelock.mtx)
+value|mtx_unlock(IEEE80211_NODE_LOCK_OBJ(_nt))
 end_define
 
 begin_define
@@ -199,7 +230,7 @@ parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_assert(&(_nt)->nt_nodelock.mtx, MA_OWNED)
+value|mtx_assert(IEEE80211_NODE_LOCK_OBJ(_nt), MA_OWNED)
 end_define
 
 begin_comment
@@ -235,7 +266,17 @@ name|_nt
 parameter_list|,
 name|_name
 parameter_list|)
-value|do {		\ 	ieee80211_scan_lock_t *sl =&(_nt)->nt_scanlock;		\ 	snprintf(sl->name, sizeof(sl->name), "%s_scan_lock", _name);	\ 	mtx_init(&sl->mtx, NULL, sl->name, MTX_DEF);			\ } while (0)
+value|do {		\ 	ieee80211_scan_lock_t *sl =&(_nt)->nt_scanlock;		\ 	snprintf(sl->name, sizeof(sl->name), "%s_scan_lock", _name);	\ 	mtx_init(&sl->mtx, sl->name, NULL, MTX_DEF);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_NODE_ITERATE_LOCK_OBJ
+parameter_list|(
+name|_nt
+parameter_list|)
+value|(&(_nt)->nt_scanlock.mtx)
 end_define
 
 begin_define
@@ -246,7 +287,7 @@ parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_destroy(&(_nt)->nt_scanlock.mtx)
+value|mtx_destroy(IEEE80211_NODE_ITERATE_LOCK_OBJ(_nt))
 end_define
 
 begin_define
@@ -257,7 +298,7 @@ parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_lock(&(_nt)->nt_scanlock.mtx)
+value|mtx_lock(IEEE80211_NODE_ITERATE_LOCK_OBJ(_nt))
 end_define
 
 begin_define
@@ -268,7 +309,7 @@ parameter_list|(
 name|_nt
 parameter_list|)
 define|\
-value|mtx_unlock(&(_nt)->nt_scanlock.mtx)
+value|mtx_unlock(IEEE80211_NODE_ITERATE_LOCK_OBJ(_nt))
 end_define
 
 begin_define

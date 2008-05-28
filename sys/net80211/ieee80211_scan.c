@@ -358,10 +358,10 @@ name|ss
 operator|->
 name|ss_scan_timer
 argument_list|,
-operator|&
+name|IEEE80211_LOCK_OBJ
+argument_list|(
 name|ic
-operator|->
-name|ic_comlock
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)

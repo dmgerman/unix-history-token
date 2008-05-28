@@ -1193,7 +1193,9 @@ name|IEEE80211_LOCK_INIT
 argument_list|(
 name|ic
 argument_list|,
-literal|"ieee80211com"
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
