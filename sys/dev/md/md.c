@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/linker.h>
 end_include
 
@@ -6396,7 +6402,7 @@ argument_list|(
 operator|&
 name|mdctl_cdevsw
 argument_list|,
-name|MAXMINOR
+name|INT_MAX
 argument_list|,
 name|UID_ROOT
 argument_list|,

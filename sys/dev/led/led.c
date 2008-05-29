@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -1546,10 +1552,7 @@ name|new_unrhdr
 argument_list|(
 literal|0
 argument_list|,
-name|minor2unit
-argument_list|(
-name|MAXMINOR
-argument_list|)
+name|INT_MAX
 argument_list|,
 name|NULL
 argument_list|)

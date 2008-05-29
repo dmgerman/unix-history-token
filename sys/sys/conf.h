@@ -890,13 +890,6 @@ name|NUMCDEVSW
 value|256
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXMINOR
-value|0xffff00ffU
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|module
