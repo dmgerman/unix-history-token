@@ -332,11 +332,6 @@ operator|.
 name|m_ceiling
 operator|=
 literal|0
-block|,
-operator|.
-name|m_flags
-operator|=
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
