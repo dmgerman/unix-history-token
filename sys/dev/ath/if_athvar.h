@@ -1008,8 +1008,13 @@ comment|/* use staggered beacons */
 name|sc_wmetkipmic
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* can do WME+TKIP MIC */
+name|sc_resume_up
+range|:
+literal|1
+decl_stmt|;
+comment|/* on resume, start all vaps */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
