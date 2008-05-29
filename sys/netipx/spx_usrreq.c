@@ -2028,7 +2028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is structurally similar to the tcp reassembly routine but its  * function is somewhat different:  It merely queues packets up, and  * suppresses duplicates.  */
+comment|/*  * This is structurally similar to the tcp reassembly routine but its  * function is somewhat different: it merely queues packets up, and  * suppresses duplicates.  */
 end_comment
 
 begin_function
@@ -4549,7 +4549,7 @@ name|CUNIT
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If in persist timeout with window of 0, send a probe.  Otherwise, 	 * if window is small but nonzero and timer expired, send what we can 	 * and go into transmit state. 	 */
+comment|/* 	 * If in persist timeout with window of 0, send a probe.  Otherwise, 	 * if window is small but non-zero and timer expired, send what we 	 * can and go into transmit state. 	 */
 if|if
 condition|(
 name|cb
@@ -4812,7 +4812,7 @@ name|send
 goto|;
 block|}
 block|}
-comment|/* 	 * Many comments from tcp_output.c are appropriate here including ... 	 * If send window is too small, there is data to transmit, and no 	 * retransmit or persist is pending, then go to persist state.  If 	 * nothing happens soon, send when timer expires: if window is 	 * nonzero, transmit what we can, otherwise send a probe. 	 */
+comment|/* 	 * Many comments from tcp_output.c are appropriate here including ... 	 * If send window is too small, there is data to transmit, and no 	 * retransmit or persist is pending, then go to persist state.  If 	 * nothing happens soon, send when timer expires: if window is 	 * non-zero, transmit what we can, otherwise send a probe. 	 */
 if|if
 condition|(
 name|so
@@ -8877,7 +8877,7 @@ name|cb
 operator|->
 name|s_mtu
 expr_stmt|;
-comment|/* Try to expand fast to full complement of large packets. */
+comment|/* 	 * Try to expand fast to full complement of large packets. 	 */
 name|cb
 operator|->
 name|s_ssthresh
@@ -8909,7 +8909,7 @@ name|spx
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* But allow for lots of little packets as well. */
+comment|/* 	 * But allow for lots of little packets as well. 	 */
 name|cb
 operator|->
 name|s_cwmx
