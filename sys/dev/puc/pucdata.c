@@ -2158,9 +2158,11 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"Oxford Semiconductor OX16PCI954 UARTs"
+literal|"Oxford Semiconductor OX16PCI954 UARTs 4-port type 1"
 block|,
 name|DEFAULT_RCLK
+operator|*
+literal|10
 block|,
 name|PUC_PORT_4S
 block|,
@@ -2180,9 +2182,11 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"Oxford Semiconductor OX16PCI954 UARTs"
+literal|"Oxford Semiconductor OX16PCI954 UARTs 4-port type 2"
 block|,
 name|DEFAULT_RCLK
+operator|*
+literal|10
 block|,
 name|PUC_PORT_4S
 block|,
