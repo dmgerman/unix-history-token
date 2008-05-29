@@ -68,9 +68,6 @@ decl_stmt|;
 name|int
 name|hard_vers
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
 name|u_char
 name|enaddr
 index|[

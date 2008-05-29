@@ -902,15 +902,6 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-name|sc
-operator|->
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* 	 * based on the amount of memory we have, allocate our tx and rx 	 * resources. 	 */
 name|factor
 operator|=
@@ -1419,13 +1410,11 @@ name|ie_debug
 operator|&
 name|IED_RINT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: rint\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"rint\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1463,13 +1452,11 @@ name|ie_debug
 operator|&
 name|IED_TINT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: tint\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"tint\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1504,13 +1491,11 @@ name|ie_debug
 operator|&
 name|IED_RNR
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: rnr\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"rnr\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1538,13 +1523,11 @@ operator|&
 name|IED_CNA
 operator|)
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: cna\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"cna\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1886,22 +1869,27 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|ifp
+decl_stmt|;
 name|int
 name|status
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
@@ -1943,24 +1931,18 @@ operator|&
 name|IE_XS_LATECOLL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: late collision\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"late collision\n"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_collisions
 operator|++
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_oerrors
@@ -1975,17 +1957,13 @@ operator|&
 name|IE_XS_NOCARRIER
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: no carrier\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"no carrier\n"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_oerrors
@@ -2000,17 +1978,13 @@ operator|&
 name|IE_XS_LOSTCTS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: lost CTS\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"lost CTS\n"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_oerrors
@@ -2025,17 +1999,13 @@ operator|&
 name|IE_XS_UNDERRUN
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: DMA underrun\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"DMA underrun\n"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_oerrors
@@ -2050,25 +2020,19 @@ operator|&
 name|IE_XS_EXCMAX
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: too many collisions\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"too many collisions\n"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_collisions
 operator|+=
 literal|16
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_oerrors
@@ -2077,15 +2041,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_opackets
 operator|++
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_collisions
@@ -2136,8 +2096,6 @@ name|IE_STAT_COMPL
 expr_stmt|;
 name|iestart
 argument_list|(
-name|sc
-operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
@@ -2725,11 +2683,13 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ie%d: receive descriptors out of sync at %d\n"
+literal|"%s: receive descriptors out of sync at %d\n"
 argument_list|,
 name|sc
 operator|->
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|,
 name|sc
 operator|->
@@ -2871,9 +2831,6 @@ return|;
 comment|/* 	 * Snarf the Ethernet header. 	 */
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sc
 operator|->
 name|cbuffs
@@ -3650,13 +3607,11 @@ operator|&
 name|IED_READFRAME
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: frame from ether %6D type %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"frame from ether %6D type %x\n"
 argument_list|,
 name|eh
 operator|->
@@ -3783,11 +3738,13 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ie%d: receive descriptors out of sync at %d\n"
+literal|"%s: receive descriptors out of sync at %d\n"
 argument_list|,
 name|sc
 operator|->
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|,
 name|sc
 operator|->
@@ -5506,23 +5463,28 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|ifp
+decl_stmt|;
 name|int
 name|s
 init|=
 name|splimp
 argument_list|()
 decl_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: reset\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"reset\n"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_flags
@@ -5532,8 +5494,6 @@ name|IFF_UP
 expr_stmt|;
 name|ieioctl
 argument_list|(
-name|sc
-operator|->
 name|ifp
 argument_list|,
 name|SIOCSIFFLAGS
@@ -5557,13 +5517,11 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: abort commands timed out\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"abort commands timed out\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5581,13 +5539,11 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: disable commands timed out\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"disable commands timed out\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5608,8 +5564,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_flags
@@ -5618,8 +5572,6 @@ name|IFF_UP
 expr_stmt|;
 name|ieioctl
 argument_list|(
-name|sc
-operator|->
 name|ifp
 argument_list|,
 name|SIOCSIFFLAGS
@@ -5953,13 +5905,13 @@ operator|&
 name|IE_TDR_XCVR
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: transceiver problem\n"
-argument_list|,
 name|sc
 operator|->
-name|unit
+name|ifp
+argument_list|,
+literal|"transceiver problem\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5971,13 +5923,13 @@ operator|&
 name|IE_TDR_OPEN
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: TDR detected an open %d clocks away\n"
-argument_list|,
 name|sc
 operator|->
-name|unit
+name|ifp
+argument_list|,
+literal|"TDR detected an open %d clocks away\n"
 argument_list|,
 name|result
 operator|&
@@ -5993,13 +5945,13 @@ operator|&
 name|IE_TDR_SHORT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: TDR detected a short %d clocks away\n"
-argument_list|,
 name|sc
 operator|->
-name|unit
+name|ifp
+argument_list|,
+literal|"TDR detected a short %d clocks away\n"
 argument_list|,
 name|result
 operator|&
@@ -6009,13 +5961,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: TDR returned unknown status %x\n"
-argument_list|,
 name|sc
 operator|->
-name|unit
+name|ifp
+argument_list|,
+literal|"TDR returned unknown status %x\n"
 argument_list|,
 name|result
 argument_list|)
@@ -6653,13 +6605,13 @@ name|IE_STAT_OK
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: multicast address setup command failed\n"
-argument_list|,
 name|sc
 operator|->
-name|unit
+name|ifp
+argument_list|,
+literal|"multicast address setup command failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6699,6 +6651,15 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|ifp
+decl_stmt|;
 specifier|volatile
 name|struct
 name|ie_sys_ctl_block
@@ -6714,13 +6675,6 @@ name|ptr
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|int
-name|unit
-init|=
-name|sc
-operator|->
-name|unit
 decl_stmt|;
 name|ptr
 operator|=
@@ -6833,11 +6787,11 @@ name|IE_STAT_OK
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: configure command failed\n"
+name|ifp
 argument_list|,
-name|unit
+literal|"configure command failed\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6893,8 +6847,6 @@ operator|*
 operator|)
 name|IF_LLADDR
 argument_list|(
-name|sc
-operator|->
 name|ifp
 argument_list|)
 argument_list|,
@@ -6953,14 +6905,12 @@ name|IE_STAT_OK
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"ie%d: individual address "
-literal|"setup command failed\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"individual address "
+literal|"setup command failed\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7274,8 +7224,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
@@ -7283,8 +7231,6 @@ operator||=
 name|IFF_DRV_RUNNING
 expr_stmt|;
 comment|/* tell higher levels 							 * we're here */
-name|sc
-operator|->
 name|ifp
 operator|->
 name|if_drv_flags
