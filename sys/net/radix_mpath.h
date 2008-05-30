@@ -76,7 +76,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|u_int32_t
 name|rn_mpath_count
 parameter_list|(
 name|struct
@@ -130,7 +130,7 @@ name|struct
 name|route
 modifier|*
 parameter_list|,
-name|int
+name|u_int32_t
 parameter_list|,
 name|u_int
 parameter_list|)

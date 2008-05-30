@@ -176,7 +176,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|u_int32_t
 name|rn_mpath_count
 parameter_list|(
 name|struct
@@ -185,7 +185,7 @@ modifier|*
 name|rn
 parameter_list|)
 block|{
-name|int
+name|u_int32_t
 name|i
 decl_stmt|;
 name|i
@@ -980,7 +980,7 @@ name|route
 modifier|*
 name|ro
 parameter_list|,
-name|int
+name|u_int32_t
 name|hash
 parameter_list|,
 name|u_int
@@ -995,7 +995,7 @@ decl_stmt|,
 modifier|*
 name|rn
 decl_stmt|;
-name|int
+name|u_int32_t
 name|n
 decl_stmt|;
 comment|/* 	 * XXX we don't attempt to lookup cached route again; what should 	 * be done for sendto(3) case? 	 */
