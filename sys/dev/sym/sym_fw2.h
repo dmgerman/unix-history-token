@@ -720,6 +720,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|SYM_FWA_SCR
 name|SYM_FWA_SCR
@@ -3342,6 +3343,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|SYM_FWB_SCR
 name|SYM_FWB_SCR
