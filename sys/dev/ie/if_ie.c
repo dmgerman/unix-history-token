@@ -1412,6 +1412,8 @@ name|IED_RINT
 condition|)
 name|if_printf
 argument_list|(
+name|sc
+operator|->
 name|ifp
 argument_list|,
 literal|"rint\n"
@@ -1454,6 +1456,8 @@ name|IED_TINT
 condition|)
 name|if_printf
 argument_list|(
+name|sc
+operator|->
 name|ifp
 argument_list|,
 literal|"tint\n"
@@ -1493,6 +1497,8 @@ name|IED_RNR
 condition|)
 name|if_printf
 argument_list|(
+name|sc
+operator|->
 name|ifp
 argument_list|,
 literal|"rnr\n"
@@ -1525,6 +1531,8 @@ operator|)
 condition|)
 name|if_printf
 argument_list|(
+name|sc
+operator|->
 name|ifp
 argument_list|,
 literal|"cna\n"
