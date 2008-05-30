@@ -5099,6 +5099,12 @@ name|sc
 operator|->
 name|ifp
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
 name|ifp
 operator|->
 name|if_flags
@@ -5126,6 +5132,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ifp
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|sc
 operator|->
 name|ndis_80211
@@ -5143,6 +5156,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|NDIS_UNLOCK
