@@ -751,6 +751,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
+name|int
+name|__fcntl_compat
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|__fsync
 parameter_list|(
@@ -1454,7 +1468,7 @@ break|break;
 default|default:
 name|ret
 operator|=
-name|__sys_fcntl
+name|__fcntl_compat
 argument_list|(
 name|fd
 argument_list|,

@@ -43,6 +43,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|__fcntl_compat
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|_fcntl
@@ -332,7 +348,7 @@ default|default:
 comment|/* Might want to make va_arg use a union */
 name|ret
 operator|=
-name|__sys_fcntl
+name|__fcntl_compat
 argument_list|(
 name|fd
 argument_list|,

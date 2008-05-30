@@ -50,7 +50,7 @@ end_include
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__fcntl
+name|__fcntl_compat
 argument_list|,
 name|fcntl
 argument_list|)
@@ -59,7 +59,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|__fcntl
+name|__fcntl_compat
 parameter_list|(
 name|int
 name|fd
