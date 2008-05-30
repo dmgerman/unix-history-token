@@ -81,30 +81,6 @@ directive|include
 file|<sys/errno.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NRND
-argument_list|)
-operator|&&
-name|NRND
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/rnd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -172,7 +148,7 @@ file|<dev/snc/dp83932var.h>
 end_include
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|sncwatchdog
 parameter_list|(
@@ -184,7 +160,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|sncinit
 parameter_list|(
@@ -195,7 +171,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|int
 name|sncstop
 parameter_list|(
@@ -208,7 +184,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|int
 name|sncioctl
 parameter_list|(
@@ -227,7 +203,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|sncstart
 parameter_list|(
@@ -240,7 +216,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|sncreset
 parameter_list|(
@@ -253,7 +229,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|caminitialise
 parameter_list|(
@@ -265,7 +241,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|camentry
 parameter_list|(
@@ -283,7 +259,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|camprogram
 parameter_list|(
@@ -295,7 +271,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|initialise_tda
 parameter_list|(
@@ -307,7 +283,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|initialise_rda
 parameter_list|(
@@ -319,7 +295,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|initialise_rra
 parameter_list|(
@@ -337,7 +313,7 @@ name|SNCDEBUG
 end_ifdef
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|camdump
 parameter_list|(
@@ -355,7 +331,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|sonictxint
 parameter_list|(
@@ -367,7 +343,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|void
 name|sonicrxint
 parameter_list|(
@@ -379,7 +355,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|u_int
 name|sonicput
 parameter_list|(
@@ -400,7 +376,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|int
 name|sonic_read
 parameter_list|(
@@ -416,7 +392,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hide
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -480,45 +456,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NetBSD
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|NetBSD
-operator|<=
-literal|199714
-end_if
-
-begin_decl_stmt
-name|struct
-name|cfdriver
-name|snc_cd
-init|=
-block|{
-name|NULL
-block|,
-literal|"snc"
-block|,
-name|DV_IFNET
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -979,37 +916,6 @@ argument_list|,
 name|myea
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NRND
-argument_list|)
-operator|&&
-name|NRND
-operator|>
-literal|0
-name|rnd_attach_source
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|rnd_source
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
-name|RND_TYPE_NET
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1168,7 +1074,7 @@ block|}
 end_function
 
 begin_function
-name|hide
+specifier|static
 name|int
 name|sncioctl
 parameter_list|(
@@ -1207,7 +1113,7 @@ decl_stmt|;
 name|int
 name|s
 init|=
-name|splhardnet
+name|splimp
 argument_list|()
 decl_stmt|,
 name|err
@@ -1456,7 +1362,7 @@ comment|/*  * Encapsulate a packet of type family for the local net.  */
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|sncstart
 parameter_list|(
@@ -1634,7 +1540,7 @@ comment|/*  * reset and restart the SONIC.  Called in case of fatal  * hardware/
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|sncreset
 parameter_list|(
@@ -1660,7 +1566,7 @@ block|}
 end_function
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|sncinit
 parameter_list|(
@@ -1698,7 +1604,7 @@ comment|/* already running */
 return|return;
 name|s
 operator|=
-name|splhardnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|NIC_PUT
@@ -1953,7 +1859,7 @@ comment|/*  * close down an interface and free its buffers  * Called on final cl
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|int
 name|sncstop
 parameter_list|(
@@ -1973,7 +1879,7 @@ decl_stmt|;
 name|int
 name|s
 init|=
-name|splhardnet
+name|splimp
 argument_list|()
 decl_stmt|;
 comment|/* stick chip in reset */
@@ -2087,7 +1993,7 @@ comment|/*  * Called if any Tx packets remain unsent after 5 seconds,  * In all 
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|sncwatchdog
 parameter_list|(
@@ -2212,7 +2118,7 @@ comment|/*  * stuff packet into sonic (at splnet)  */
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|u_int
 name|sonicput
 parameter_list|(
@@ -2681,7 +2587,7 @@ comment|/*  * CAM support  */
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|caminitialise
 parameter_list|(
@@ -2824,7 +2730,7 @@ block|}
 end_function
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|camentry
 parameter_list|(
@@ -2979,7 +2885,7 @@ block|}
 end_function
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|camprogram
 parameter_list|(
@@ -3258,7 +3164,7 @@ name|SNCDEBUG
 end_ifdef
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|camdump
 parameter_list|(
@@ -3397,7 +3303,7 @@ directive|endif
 end_endif
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|initialise_tda
 parameter_list|(
@@ -3530,7 +3436,7 @@ block|}
 end_function
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|initialise_rda
 parameter_list|(
@@ -3738,7 +3644,7 @@ block|}
 end_function
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|initialise_rra
 parameter_list|(
@@ -3955,7 +3861,7 @@ name|RXRSRC_WCHI
 argument_list|,
 name|UPPER
 argument_list|(
-name|NBPG
+name|PAGE_SIZE
 operator|/
 literal|2
 argument_list|)
@@ -3976,7 +3882,7 @@ name|RXRSRC_WCLO
 argument_list|,
 name|LOWER
 argument_list|(
-name|NBPG
+name|PAGE_SIZE
 operator|/
 literal|2
 argument_list|)
@@ -4278,32 +4184,6 @@ operator|->
 name|sc_ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NRND
-argument_list|)
-operator|&&
-name|NRND
-operator|>
-literal|0
-if|if
-condition|(
-name|isr
-condition|)
-name|rnd_add_uint32
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|rnd_source
-argument_list|,
-name|isr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 return|return;
 block|}
@@ -4314,7 +4194,7 @@ comment|/*  * Transmit interrupt routine  */
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|sonictxint
 parameter_list|(
@@ -4673,7 +4553,7 @@ comment|/*  * Receive interrupt routine  */
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|void
 name|sonicrxint
 parameter_list|(
@@ -4794,7 +4674,7 @@ operator|&
 name|RCR_PRX
 condition|)
 block|{
-comment|/* XXX: Does PGOFSET require? */
+comment|/* XXX: Does PAGE_MASK require? */
 name|u_int32_t
 name|pkt
 init|=
@@ -4810,7 +4690,7 @@ operator|+
 operator|(
 name|rxpkt_ptr
 operator|&
-name|PGOFSET
+name|PAGE_MASK
 operator|)
 decl_stmt|;
 if|if
@@ -5148,7 +5028,7 @@ comment|/*  * sonic_read -- pull packet off interface and forward to  * appropri
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|int
 name|sonic_read
 parameter_list|(
@@ -5345,7 +5225,7 @@ comment|/*  * munge the received packet into an mbuf chain  */
 end_comment
 
 begin_function
-name|hide
+specifier|static
 name|struct
 name|mbuf
 modifier|*

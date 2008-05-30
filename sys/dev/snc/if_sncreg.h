@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|SNEC_NMEMS
-value|(NBPG * 2)
+value|(PAGE_SIZE * 2)
 end_define
 
 begin_comment
