@@ -3950,7 +3950,6 @@ name|rx_bd_mbuf_alloc_size
 operator|=
 name|MCLBYTES
 expr_stmt|;
-empty_stmt|;
 endif|#
 directive|endif
 name|sc
