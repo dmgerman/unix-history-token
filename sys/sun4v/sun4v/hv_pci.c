@@ -281,13 +281,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ofw_pci_intr_pending_t
-name|hvpci_intr_pending
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|device_method_t
 name|hv_pcib_methods
 index|[]
@@ -435,14 +428,6 @@ argument_list|(
 name|ofw_bus_get_node
 argument_list|,
 name|hvpci_get_node
-argument_list|)
-block|,
-comment|/* ofw_pci interface */
-name|DEVMETHOD
-argument_list|(
-name|ofw_pci_intr_pending
-argument_list|,
-name|hvpci_intr_pending
 argument_list|)
 block|,
 block|{
@@ -1611,27 +1596,6 @@ operator|->
 name|hs_node
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|hvpci_intr_pending
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|ofw_pci_intr_t
-name|intr
-parameter_list|)
-block|{
-comment|/* XXX - implement */
-name|panic
-argument_list|(
-literal|"unimplemnted"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
