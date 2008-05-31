@@ -287,6 +287,17 @@ end_if
 begin_define
 define|#
 directive|define
+name|OS_REG_UNSWAPPED
+parameter_list|(
+name|_reg
+parameter_list|)
+define|\
+value|(((_reg)>= 0x4000&& (_reg)< 0x5000) || \ 	 ((_reg)>= 0x7000&& (_reg)< 0x8000))
+end_define
+
+begin_define
+define|#
+directive|define
 name|OS_REG_WRITE
 parameter_list|(
 name|_ah
@@ -295,7 +306,7 @@ name|_reg
 parameter_list|,
 name|_val
 parameter_list|)
-value|do {				\ 	if ( (_reg)>= 0x4000&& (_reg)< 0x5000)			\ 		bus_space_write_4((bus_space_tag_t)(_ah)->ah_st,	\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val));	\ 	else								\ 		bus_space_write_stream_4((bus_space_tag_t)(_ah)->ah_st,	\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val));	\ } while (0)
+value|do {				\ 	if (OS_REG_UNSWAPPED(_reg))					\ 		bus_space_write_4((bus_space_tag_t)(_ah)->ah_st,	\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val));	\ 	else								\ 		bus_space_write_stream_4((bus_space_tag_t)(_ah)->ah_st,	\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg), (_val));	\ } while (0)
 end_define
 
 begin_define
@@ -308,7 +319,7 @@ parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|(((_reg)>= 0x4000&& (_reg)< 0x5000) ?			\ 		bus_space_read_4((bus_space_tag_t)(_ah)->ah_st,		\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg)) :		\ 		bus_space_read_stream_4((bus_space_tag_t)(_ah)->ah_st,	\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg)))
+value|(OS_REG_UNSWAPPED(_reg) ?					\ 		bus_space_read_4((bus_space_tag_t)(_ah)->ah_st,		\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg)) :		\ 		bus_space_read_stream_4((bus_space_tag_t)(_ah)->ah_st,	\ 		    (bus_space_handle_t)(_ah)->ah_sh, (_reg)))
 end_define
 
 begin_else
@@ -319,6 +330,16 @@ end_else
 begin_comment
 comment|/* _BYTE_ORDER == _LITTLE_ENDIAN */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_REG_UNSWAPPED
+parameter_list|(
+name|_reg
+parameter_list|)
+value|(0)
+end_define
 
 begin_define
 define|#
