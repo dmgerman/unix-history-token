@@ -1107,107 +1107,189 @@ index|[]
 init|=
 block|{
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET1_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE_LAN
 block|,
 literal|"NVIDIA nForce MCP Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET2_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE2_LAN
 block|,
-literal|"NVIDIA nForce MCP2 Networking Adapter"
+literal|"NVIDIA nForce2 MCP2 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET3_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE2_400_LAN1
 block|,
-literal|"NVIDIA nForce MCP3 Networking Adapter"
+literal|"NVIDIA nForce2 400 MCP4 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET4_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE2_400_LAN2
 block|,
-literal|"NVIDIA nForce MCP4 Networking Adapter"
+literal|"NVIDIA nForce2 400 MCP5 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET5_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE3_LAN1
 block|,
-literal|"NVIDIA nForce MCP5 Networking Adapter"
+literal|"NVIDIA nForce3 MCP3 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET6_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE3_250_LAN
 block|,
-literal|"NVIDIA nForce MCP6 Networking Adapter"
+literal|"NVIDIA nForce3 250 MCP6 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET7_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE3_LAN4
 block|,
-literal|"NVIDIA nForce MCP7 Networking Adapter"
+literal|"NVIDIA nForce3 MCP7 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET8_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE4_LAN1
 block|,
-literal|"NVIDIA nForce MCP8 Networking Adapter"
+literal|"NVIDIA nForce4 CK804 MCP8 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET9_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE4_LAN2
 block|,
-literal|"NVIDIA nForce MCP9 Networking Adapter"
+literal|"NVIDIA nForce4 CK804 MCP9 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET10_DEVICEID
+name|PCI_PRODUCT_NVIDIA_MCP04_LAN1
 block|,
-literal|"NVIDIA nForce MCP10 Networking Adapter"
+literal|"NVIDIA nForce MCP04 Networking Adapter"
+block|}
+block|,
+comment|// MCP10
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP04_LAN2
+block|,
+literal|"NVIDIA nForce MCP04 Networking Adapter"
+block|}
+block|,
+comment|// MCP11
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_NFORCE430_LAN1
+block|,
+literal|"NVIDIA nForce 430 MCP12 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET11_DEVICEID
+name|PCI_PRODUCT_NVIDIA_NFORCE430_LAN2
 block|,
-literal|"NVIDIA nForce MCP11 Networking Adapter"
+literal|"NVIDIA nForce 430 MCP13 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET12_DEVICEID
+name|PCI_PRODUCT_NVIDIA_MCP55_LAN1
 block|,
-literal|"NVIDIA nForce MCP12 Networking Adapter"
+literal|"NVIDIA nForce MCP55 Networking Adapter"
 block|}
 block|,
 block|{
-name|NVIDIA_VENDORID
+name|PCI_VENDOR_NVIDIA
 block|,
-name|NFORCE_MCPNET13_DEVICEID
+name|PCI_PRODUCT_NVIDIA_MCP55_LAN2
 block|,
-literal|"NVIDIA nForce MCP13 Networking Adapter"
+literal|"NVIDIA nForce MCP55 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP61_LAN1
+block|,
+literal|"NVIDIA nForce MCP61 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP61_LAN2
+block|,
+literal|"NVIDIA nForce MCP61 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP61_LAN3
+block|,
+literal|"NVIDIA nForce MCP61 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP61_LAN4
+block|,
+literal|"NVIDIA nForce MCP61 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP65_LAN1
+block|,
+literal|"NVIDIA nForce MCP65 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP65_LAN2
+block|,
+literal|"NVIDIA nForce MCP65 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP65_LAN3
+block|,
+literal|"NVIDIA nForce MCP65 Networking Adapter"
+block|}
+block|,
+block|{
+name|PCI_VENDOR_NVIDIA
+block|,
+name|PCI_PRODUCT_NVIDIA_MCP65_LAN4
+block|,
+literal|"NVIDIA nForce MCP65 Networking Adapter"
 block|}
 block|,
 block|{
