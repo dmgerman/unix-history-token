@@ -4389,8 +4389,8 @@ name|in_addr
 modifier|*
 name|ip_dst
 parameter_list|,
-name|u_char
-name|ip_p
+name|u_short
+name|ip_id
 parameter_list|,
 name|u_short
 modifier|*
@@ -4439,7 +4439,7 @@ name|in_addr
 modifier|*
 name|ip_dst
 parameter_list|,
-name|u_char
+name|u_short
 name|ip_id
 parameter_list|,
 name|u_short
