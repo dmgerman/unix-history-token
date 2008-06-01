@@ -6330,12 +6330,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|ap
-operator|->
-name|a_cred
-operator|!=
-name|NOCRED
-operator|&&
 operator|(
 name|ap
 operator|->
@@ -6346,6 +6340,7 @@ operator|!=
 name|de
 operator|->
 name|de_uid
+operator|)
 operator|||
 name|uid
 operator|!=
@@ -6369,7 +6364,6 @@ name|ap
 operator|->
 name|a_cred
 argument_list|)
-operator|)
 operator|)
 condition|)
 block|{
@@ -6425,12 +6419,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|ap
-operator|->
-name|a_cred
-operator|!=
-name|NOCRED
-operator|&&
 name|ap
 operator|->
 name|a_cred
