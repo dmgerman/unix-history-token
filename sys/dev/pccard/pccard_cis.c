@@ -3973,8 +3973,6 @@ name|int
 name|idx
 decl_stmt|,
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|u_int
 name|reg
@@ -4017,10 +4015,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 name|intface
 operator|=
@@ -4179,10 +4175,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 name|cfe
 operator|->
@@ -4263,10 +4257,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 name|power
 operator|=
@@ -4332,38 +4324,31 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
+operator|++
 argument_list|)
 expr_stmt|;
-name|idx
-operator|++
-expr_stmt|;
-comment|/* for each bit */
 for|for
 control|(
-name|j
-operator|=
-literal|0
 init|;
-name|j
-operator|<
-literal|7
+name|reg
 condition|;
-name|j
-operator|++
+name|reg
+operator|>>=
+literal|1
 control|)
 block|{
-comment|/* if the bit is set */
+comment|/* set bit -> read */
 if|if
 condition|(
 operator|(
 name|reg
-operator|>>
-name|j
-operator|)
 operator|&
-literal|0x01
+literal|1
+operator|)
+operator|==
+literal|0
 condition|)
-block|{
+continue|continue;
 comment|/* skip over bytes */
 do|do
 block|{
@@ -4374,12 +4359,10 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
+operator|++
 argument_list|)
 expr_stmt|;
-name|idx
-operator|++
-expr_stmt|;
-comment|/* 								 * until 								 * non-extensi 								 * on byte 								 */
+comment|/* 							 * until non-extension 							 * byte 							 */
 block|}
 do|while
 condition|(
@@ -4388,7 +4371,6 @@ operator|&
 literal|0x80
 condition|)
 do|;
-block|}
 block|}
 block|}
 block|}
@@ -4405,10 +4387,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4482,10 +4462,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 name|cfe
 operator|->
@@ -4544,10 +4522,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 name|cfe
 operator|->
@@ -4648,10 +4624,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4727,10 +4701,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4864,10 +4836,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 name|cfe
 operator|->
@@ -5138,10 +5108,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 name|cfe
 operator|->
@@ -5482,10 +5450,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 name|cfe
 operator|->
@@ -5558,10 +5524,8 @@ argument_list|(
 name|tuple
 argument_list|,
 name|idx
-argument_list|)
-expr_stmt|;
-name|idx
 operator|++
+argument_list|)
 expr_stmt|;
 block|}
 block|}
