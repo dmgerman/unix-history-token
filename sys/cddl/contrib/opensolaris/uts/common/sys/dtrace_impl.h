@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -1570,6 +1570,12 @@ name|hrtime_t
 name|dts_laststatus
 decl_stmt|;
 comment|/* time of last status */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|cyclic_id_t
 name|dts_cleaner
 decl_stmt|;
@@ -1578,6 +1584,20 @@ name|cyclic_id_t
 name|dts_deadman
 decl_stmt|;
 comment|/* deadman cyclic */
+else|#
+directive|else
+name|struct
+name|callout
+name|dts_cleaner
+decl_stmt|;
+comment|/* Cleaning callout. */
+name|struct
+name|callout
+name|dts_deadman
+decl_stmt|;
+comment|/* Deadman callout. */
+endif|#
+directive|endif
 name|hrtime_t
 name|dts_alive
 decl_stmt|;
