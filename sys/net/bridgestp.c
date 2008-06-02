@@ -3392,7 +3392,7 @@ name|bstp_pdu_bettersame
 argument_list|(
 name|bp
 argument_list|,
-name|BSTP_INFO_RECIEVED
+name|BSTP_INFO_RECEIVED
 argument_list|)
 condition|)
 name|bp
@@ -3462,7 +3462,7 @@ name|bp
 operator|->
 name|bp_infois
 operator|=
-name|BSTP_INFO_RECIEVED
+name|BSTP_INFO_RECEIVED
 expr_stmt|;
 name|bstp_assign_roles
 argument_list|(
@@ -3808,13 +3808,13 @@ if|if
 condition|(
 name|newinfo
 operator|==
-name|BSTP_INFO_RECIEVED
+name|BSTP_INFO_RECEIVED
 operator|&&
 name|bp
 operator|->
 name|bp_infois
 operator|==
-name|BSTP_INFO_RECIEVED
+name|BSTP_INFO_RECEIVED
 operator|&&
 name|bstp_info_cmp
 argument_list|(
@@ -4181,7 +4181,7 @@ name|bp
 operator|->
 name|bp_infois
 operator|!=
-name|BSTP_INFO_RECIEVED
+name|BSTP_INFO_RECEIVED
 condition|)
 continue|continue;
 name|pv
@@ -4485,7 +4485,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|BSTP_INFO_RECIEVED
+name|BSTP_INFO_RECEIVED
 case|:
 if|if
 condition|(
@@ -9287,7 +9287,7 @@ name|bp
 operator|->
 name|bp_infois
 operator|==
-name|BSTP_INFO_RECIEVED
+name|BSTP_INFO_RECEIVED
 condition|)
 block|{
 name|bp
