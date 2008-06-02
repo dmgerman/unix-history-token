@@ -387,6 +387,14 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* media selector.  */
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
+name|struct
+name|callout
+name|timer
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -410,6 +418,36 @@ comment|/* Values to be compared against.  */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|FE_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->lock, MA_OWNED)
+end_define
 
 begin_decl_stmt
 specifier|extern
