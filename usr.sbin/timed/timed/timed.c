@@ -497,7 +497,7 @@ decl_stmt|;
 name|u_short
 name|port
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 ifdef|#
