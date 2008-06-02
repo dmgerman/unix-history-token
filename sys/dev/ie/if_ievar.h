@@ -237,6 +237,10 @@ name|u_short
 name|irq_encoded
 decl_stmt|;
 comment|/* encoded interrupt on IEE16 */
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -259,6 +263,36 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|sc->iomem
+end_define
+
+begin_define
+define|#
+directive|define
+name|IE_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IE_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IE_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->lock, MA_OWNED)
 end_define
 
 begin_function_decl
