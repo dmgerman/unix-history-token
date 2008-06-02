@@ -536,9 +536,16 @@ name|nitems
 operator|==
 literal|1
 condition|)
-block|{
 return|return
-name|set_zone_menu
+operator|(
+name|contp
+operator|->
+name|menu
+index|[
+literal|0
+index|]
+operator|.
+name|fire
 argument_list|(
 operator|&
 name|contp
@@ -548,8 +555,8 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|)
 return|;
-block|}
 comment|/* It's amazing how much good grammar really matters... */
 if|if
 condition|(
