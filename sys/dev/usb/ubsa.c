@@ -962,6 +962,13 @@ name|ubsa_products
 index|[]
 init|=
 block|{
+comment|/* AnyData ADU-500A */
+block|{
+name|USB_VENDOR_ANYDATA
+block|,
+name|USB_PRODUCT_ANYDATA_ADU_500A
+block|}
+block|,
 comment|/* AnyData ADU-E100A/H */
 block|{
 name|USB_VENDOR_ANYDATA
