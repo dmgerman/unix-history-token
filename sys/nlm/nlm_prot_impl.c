@@ -2843,12 +2843,6 @@ name|time_uptime
 operator|+
 name|NLM_IDLE_TIMEOUT
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|nlm_global_lock
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 name|nlm_host_unmonitor
