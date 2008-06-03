@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: timer.c,v 1.64.12.13 2006/01/04 23:50:21 marka Exp $ */
+comment|/* $Id: timer.c,v 1.64.12.17 2007/10/24 01:08:01 marka Exp $ */
 end_comment
 
 begin_include
@@ -2343,6 +2343,9 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+name|isc_boolean_t
+name|idle
+decl_stmt|;
 comment|/* 	 * The caller must be holding the manager lock. 	 */
 while|while
 condition|(
@@ -2512,7 +2515,20 @@ operator|=
 name|ISC_FALSE
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+name|idle
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|LOCK
+argument_list|(
+operator|&
+name|timer
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2537,6 +2553,24 @@ operator|>=
 literal|0
 condition|)
 block|{
+name|idle
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
+name|UNLOCK
+argument_list|(
+operator|&
+name|timer
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|idle
+condition|)
+block|{
 name|type
 operator|=
 name|ISC_TIMEREVENT_IDLE
@@ -2552,7 +2586,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Idle timer has been touched; reschedule. 				 */
+comment|/* 					 * Idle timer has been touched; 					 * reschedule. 					 */
 name|XTRACEID
 argument_list|(
 name|isc_msgcat_get
@@ -2577,6 +2611,7 @@ name|need_schedule
 operator|=
 name|ISC_TRUE
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

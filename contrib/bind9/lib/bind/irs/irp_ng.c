@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp_ng.c,v 1.1.206.1 2004/03/09 08:33:37 marka Exp $"
+literal|"$Id: irp_ng.c,v 1.1.206.2 2006/12/07 04:52:50 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -926,13 +926,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|memput
-argument_list|(
-name|body
-argument_list|,
-name|bodylen
-argument_list|)
-expr_stmt|;
 name|code
 operator|=
 name|irs_irp_read_response
@@ -960,6 +953,13 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|memput
+argument_list|(
+name|body
+argument_list|,
+name|bodylen
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rval

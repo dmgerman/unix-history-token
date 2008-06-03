@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: update.c,v 1.88.2.5.2.29 2006/01/06 00:01:42 marka Exp $ */
+comment|/* $Id: update.c,v 1.88.2.5.2.35 2008/01/17 23:45:27 tbox Exp $ */
 end_comment
 
 begin_include
@@ -247,7 +247,7 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|do {							\ 		const char *_what = "failed";			\ 		result = (code);				\ 		switch (result) {				\ 		case DNS_R_NXDOMAIN:				\ 		case DNS_R_YXDOMAIN:				\ 		case DNS_R_YXRRSET:				\ 		case DNS_R_NXRRSET:				\ 			_what = "unsuccessful";			\ 		}						\ 		update_log(client, zone, LOGLEVEL_PROTOCOL,   	\ 			      "update %s: %s (%s)", _what,	\ 		      	      msg, isc_result_totext(result));	\ 		if (result != ISC_R_SUCCESS) goto failure;	\ 	} while (0)
+value|do {							\ 		const char *_what = "failed";			\ 		result = (code);				\ 		switch (result) {				\ 		case DNS_R_NXDOMAIN:				\ 		case DNS_R_YXDOMAIN:				\ 		case DNS_R_YXRRSET:				\ 		case DNS_R_NXRRSET:				\ 			_what = "unsuccessful";			\ 		}						\ 		update_log(client, zone, LOGLEVEL_PROTOCOL,   	\ 			      "update %s: %s (%s)", _what,	\ 			      msg, isc_result_totext(result));	\ 		if (result != ISC_R_SUCCESS) goto failure;	\ 	} while (0)
 end_define
 
 begin_define
@@ -2936,22 +2936,38 @@ name|result
 operator|==
 name|ISC_R_NOTFOUND
 condition|)
+block|{
+name|dns_diff_clear
+argument_list|(
+operator|&
+name|trash
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|DNS_R_NXRRSET
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
+block|{
+name|dns_diff_clear
+argument_list|(
+operator|&
+name|trash
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|result
 operator|)
 return|;
+block|}
 comment|/* A new unique type begins here. */
 while|while
 condition|(
@@ -3067,6 +3083,12 @@ name|db
 argument_list|,
 operator|&
 name|node
+argument_list|)
+expr_stmt|;
+name|dns_diff_clear
+argument_list|(
+operator|&
+name|trash
 argument_list|)
 expr_stmt|;
 return|return
@@ -6326,6 +6348,18 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|dst_key_isprivate
+argument_list|(
+name|keys
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+continue|continue;
 comment|/* Calculate the signature, creating a RRSIG RDATA. */
 name|CHECK
 argument_list|(

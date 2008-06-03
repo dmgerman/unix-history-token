@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: resource.c,v 1.11.206.1 2004/03/06 08:15:01 marka Exp $ */
+comment|/* $Id: resource.c,v 1.11.206.3 2008/01/26 23:45:31 tbox Exp $ */
 end_comment
 
 begin_include
@@ -372,7 +372,6 @@ operator|=
 name|value
 expr_stmt|;
 block|}
-comment|/* 	 * The BIND 8 documentation reports: 	 * 	 *	Note: on some operating systems the server cannot set an 	 *	unlimited value and cannot determine the maximum number of 	 *	open files the kernel can support. On such systems, choosing 	 *	unlimited will cause the server to use the larger of the 	 *	rlim_max for RLIMIT_NOFILE and the value returned by 	 *	sysconf(_SC_OPEN_MAX). If the actual kernel limit is larger 	 *	than this value, use limit files to specify the limit 	 *	explicitly. 	 * 	 * The CHANGES for 8.1.2-T3A also mention: 	 * 	 *	352. [bug] Because of problems with setting an infinite 	 *	rlim_max for RLIMIT_NOFILE on some systems, previous versions 	 *	of the server implemented "limit files unlimited" by setting 	 *	the limit to the value returned by sysconf(_SC_OPEN_MAX).  The 	 *	server will now use RLIM_INFINITY on systems which allow it. 	 * 	 * At some point the BIND 8 server stopped using SC_OPEN_MAX for this 	 * purpose at all, but it isn't clear to me when or why, as my access 	 * to the CVS archive is limited at the time of this writing.  What 	 * BIND 8 *does* do is to set RLIMIT_NOFILE to either RLIMIT_INFINITY 	 * on a half dozen operating systems or to FD_SETSIZE on the rest, 	 * the latter of which is probably fewer than the real limit.  (Note 	 * that libisc's socket module will have problems with any fd over 	 * FD_SETSIZE.  This should be fixed in the socket module, not a 	 * limitation here.  BIND 8's eventlib also has a problem, making 	 * its RLIMIT_INFINITY setting useless, because it closes and ignores 	 * any fd over FD_SETSIZE.) 	 * 	 * More troubling is the reference to some operating systems not being 	 * able to set an unlimited value for the number of open files.  I'd 	 * hate to put in code that is really only there to support archaic 	 * systems that the rest of libisc won't work on anyway.  So what this 	 * extremely verbose comment is here to say is the following: 	 * 	 *   I'm aware there might be an issue with not limiting the value 	 *   for RLIMIT_NOFILE on some systems, but since I don't know yet 	 *   what those systems are and what the best workaround is (use 	 *   sysconf()?  rlim_max from getrlimit()?  FD_SETSIZE?) so nothing 	 *   is currently being done to clamp the value for open files. 	 */
 name|rl
 operator|.
 name|rlim_cur
@@ -404,7 +403,59 @@ operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
-else|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPEN_MAX
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+comment|/* 	 * The Darwin kernel doesn't accept RLIM_INFINITY for rlim_cur; the 	 * maximum possible value is OPEN_MAX.  BIND8 used to use 	 * sysconf(_SC_OPEN_MAX) for such a case, but this value is much 	 * smaller than OPEN_MAX and is not really effective. 	 */
+if|if
+condition|(
+name|resource
+operator|==
+name|isc_resource_openfiles
+operator|&&
+name|rlim_value
+operator|==
+name|RLIM_INFINITY
+condition|)
+block|{
+name|rl
+operator|.
+name|rlim_cur
+operator|=
+name|OPEN_MAX
+expr_stmt|;
+name|unixresult
+operator|=
+name|setrlimit
+argument_list|(
+name|unixresource
+argument_list|,
+operator|&
+name|rl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unixresult
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ISC_R_SUCCESS
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|isc__errno2result

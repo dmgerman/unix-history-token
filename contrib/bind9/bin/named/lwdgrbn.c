@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2006  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: lwdgrbn.c,v 1.11.208.5 2006/01/04 23:50:19 marka Exp $ */
+comment|/* $Id: lwdgrbn.c,v 1.11.208.6 2006/12/07 04:52:50 marka Exp $ */
 end_comment
 
 begin_include
@@ -1016,27 +1016,6 @@ sizeof|sizeof
 argument_list|(
 operator|*
 name|oldrdatas
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|newlens
-operator|!=
-name|NULL
-condition|)
-name|isc_mem_put
-argument_list|(
-name|mctx
-argument_list|,
-name|newlens
-argument_list|,
-name|used
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|oldlens
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: app.c,v 1.43.2.3.8.5 2004/03/08 02:08:05 marka Exp $ */
+comment|/* $Id: app.c,v 1.43.2.3.8.8 2008/01/17 23:45:28 tbox Exp $ */
 end_comment
 
 begin_include
@@ -223,6 +223,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|isc_boolean_t
 name|want_shutdown
 init|=
@@ -236,6 +237,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|isc_boolean_t
 name|want_reload
 init|=
@@ -1298,7 +1300,7 @@ operator|||
 name|call_timer_dispatch
 condition|)
 block|{
-comment|/* 			 * We call isc__timermgr_dispatch() only when 			 * necessary, in order to reduce overhead.  If the 			 * select() call indicates a timeout, we need the 			 * dispatch.  Even if not, if we set the 0-timeout  			 * for the select() call, we need to check the timer 			 * events.  In the 'readytasks' case, there may be no 			 * timeout event actually, but there is no other way 			 * to reduce the overhead. 			 * Note that we do not have to worry about the case 			 * where a new timer is inserted during the select() 			 * call, since this loop only runs in the non-thread 			 * mode. 			 */
+comment|/* 			 * We call isc__timermgr_dispatch() only when 			 * necessary, in order to reduce overhead.  If the 			 * select() call indicates a timeout, we need the 			 * dispatch.  Even if not, if we set the 0-timeout 			 * for the select() call, we need to check the timer 			 * events.  In the 'readytasks' case, there may be no 			 * timeout event actually, but there is no other way 			 * to reduce the overhead. 			 * Note that we do not have to worry about the case 			 * where a new timer is inserted during the select() 			 * call, since this loop only runs in the non-thread 			 * mode. 			 */
 name|isc__timermgr_dispatch
 argument_list|()
 expr_stmt|;

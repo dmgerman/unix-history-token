@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2006-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: master.c,v 1.122.2.8.2.14 2004/05/05 01:32:16 marka Exp $ */
+comment|/* $Id: master.c,v 1.122.2.8.2.25 2008/01/24 13:06:47 marka Exp $ */
 end_comment
 
 begin_include
@@ -650,7 +650,7 @@ parameter_list|,
 name|result
 parameter_list|)
 define|\
-value|((result != ISC_R_SUCCESS)&& \ 		((lctx)->options& DNS_MASTER_MANYERRORS) != 0)
+value|((result != ISC_R_SUCCESS)&& \ 		 (result != ISC_R_IOERROR)&& \ 		 ((lctx)->options& DNS_MASTER_MANYERRORS) != 0)
 end_define
 
 begin_define
@@ -5229,6 +5229,16 @@ argument_list|,
 name|rhs
 argument_list|)
 expr_stmt|;
+name|range
+operator|=
+name|lhs
+operator|=
+name|gtype
+operator|=
+name|rhs
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* RANGE */
 name|GETTOKEN
 argument_list|(
@@ -6490,7 +6500,7 @@ argument_list|,
 name|__LINE__
 argument_list|,
 literal|"%s:%lu: isc_lex_gettoken() returned "
-literal|"unexpeced token type (%d)"
+literal|"unexpected token type (%d)"
 argument_list|,
 name|source
 argument_list|,
@@ -8078,9 +8088,8 @@ block|{
 name|dns_rdata_rrsig_t
 name|sig
 decl_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -8093,6 +8102,13 @@ operator|&
 name|sig
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 if|if
@@ -9282,12 +9298,6 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 label|:
-if|if
-condition|(
-name|lctx
-operator|!=
-name|NULL
-condition|)
 name|dns_loadctx_detach
 argument_list|(
 operator|&
@@ -9462,12 +9472,6 @@ return|;
 block|}
 name|cleanup
 label|:
-if|if
-condition|(
-name|lctx
-operator|!=
-name|NULL
-condition|)
 name|dns_loadctx_detach
 argument_list|(
 operator|&
@@ -9930,12 +9934,6 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 label|:
-if|if
-condition|(
-name|lctx
-operator|!=
-name|NULL
-condition|)
 name|dns_loadctx_detach
 argument_list|(
 operator|&
@@ -10116,12 +10114,6 @@ return|;
 block|}
 name|cleanup
 label|:
-if|if
-condition|(
-name|lctx
-operator|!=
-name|NULL
-condition|)
 name|dns_loadctx_detach
 argument_list|(
 operator|&

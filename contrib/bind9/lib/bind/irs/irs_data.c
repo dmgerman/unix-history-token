@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irs_data.c,v 1.3.2.2.4.4 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: irs_data.c,v 1.3.2.2.4.6 2007/08/27 03:40:01 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -635,11 +635,22 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|keylock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 name|once
 operator|=
 literal|1

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: getipnode.c,v 1.30.2.4.2.6 2005/04/29 00:03:32 marka Exp $ */
+comment|/* $Id: getipnode.c,v 1.30.2.4.2.10 2007/08/28 07:19:18 tbox Exp $ */
 end_comment
 
 begin_include
@@ -2712,6 +2712,14 @@ decl_stmt|;
 name|size_t
 name|cpsize
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WIN32
+name|InitSockets
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -2741,11 +2749,21 @@ argument_list|,
 name|have_v6
 argument_list|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|WIN32
+name|DestroySockets
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Set to zero.  Used as loop terminators below. 	 */
@@ -3376,6 +3394,14 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WIN32
+name|DestroySockets
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|s
@@ -3411,6 +3437,14 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WIN32
+name|DestroySockets
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-

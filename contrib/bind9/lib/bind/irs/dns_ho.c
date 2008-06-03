@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_ho.c,v 1.5.2.7.4.8 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: dns_ho.c,v 1.5.2.7.4.9 2006/12/07 04:00:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5132,16 +5132,20 @@ condition|(
 name|bp
 operator|+
 name|n
-operator|>=
+operator|>
 operator|&
 name|pvt
 operator|->
 name|hostbuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|pvt
 operator|->
 name|hostbuf
+argument_list|)
+operator|-
+literal|1
 index|]
 condition|)
 block|{
@@ -5731,16 +5735,20 @@ condition|(
 name|bp
 operator|+
 name|addrlen
-operator|>=
+operator|>
 operator|&
 name|pvt
 operator|->
 name|hostbuf
 index|[
 sizeof|sizeof
+argument_list|(
 name|pvt
 operator|->
 name|hostbuf
+argument_list|)
+operator|-
+literal|1
 index|]
 condition|)
 return|return

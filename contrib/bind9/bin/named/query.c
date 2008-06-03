@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.198.2.13.4.43 2006/08/31 03:57:11 marka Exp $ */
+comment|/* $Id: query.c,v 1.198.2.13.4.53 2008/01/17 23:45:27 tbox Exp $ */
 end_comment
 
 begin_include
@@ -2585,7 +2585,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* 	 * This limits our searching to the zone where the first name 	 * (the query target) was looked for.  This prevents following 	 * CNAMES or DNAMES into other zones and prevents returning  	 * additional data from other zones. 	 */
+comment|/* 	 * This limits our searching to the zone where the first name 	 * (the query target) was looked for.  This prevents following 	 * CNAMES or DNAMES into other zones and prevents returning 	 * additional data from other zones. 	 */
 if|if
 condition|(
 operator|!
@@ -7279,6 +7279,10 @@ parameter_list|,
 name|dns_dbnode_t
 modifier|*
 name|node
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
 parameter_list|)
 block|{
 name|dns_name_t
@@ -7349,7 +7353,7 @@ name|db
 argument_list|,
 name|node
 argument_list|,
-name|NULL
+name|version
 argument_list|,
 name|dns_rdatatype_ds
 argument_list|,
@@ -7379,7 +7383,7 @@ name|db
 argument_list|,
 name|node
 argument_list|,
-name|NULL
+name|version
 argument_list|,
 name|dns_rdatatype_nsec
 argument_list|,
@@ -7558,6 +7562,10 @@ parameter_list|,
 name|dns_db_t
 modifier|*
 name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
 parameter_list|,
 name|dns_name_t
 modifier|*
@@ -7742,7 +7750,7 @@ name|db
 argument_list|,
 name|name
 argument_list|,
-name|NULL
+name|version
 argument_list|,
 name|dns_rdatatype_nsec
 argument_list|,
@@ -8074,6 +8082,10 @@ name|dns_db_t
 modifier|*
 name|db
 parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
 name|dns_name_t
 modifier|*
 modifier|*
@@ -8257,6 +8269,8 @@ argument_list|(
 name|client
 argument_list|,
 name|db
+argument_list|,
+name|version
 argument_list|,
 name|client
 operator|->
@@ -11396,6 +11410,8 @@ argument_list|,
 name|db
 argument_list|,
 name|node
+argument_list|,
+name|version
 argument_list|)
 expr_stmt|;
 block|}
@@ -11720,6 +11736,8 @@ argument_list|,
 name|db
 argument_list|,
 name|node
+argument_list|,
+name|version
 argument_list|)
 expr_stmt|;
 block|}
@@ -11823,6 +11841,8 @@ argument_list|(
 name|client
 argument_list|,
 name|db
+argument_list|,
+name|version
 argument_list|,
 operator|&
 name|fname
@@ -11971,6 +11991,8 @@ argument_list|(
 name|client
 argument_list|,
 name|db
+argument_list|,
+name|version
 argument_list|,
 name|client
 operator|->
@@ -13155,6 +13177,68 @@ name|ISC_R_NOMORE
 condition|)
 block|{
 comment|/* 				 * XXXRTH  If this is a secure zone and we 				 * didn't find any SIGs, we should generate 				 * an error unless we were searching for 				 * glue.  Ugh. 				 */
+if|if
+condition|(
+operator|!
+name|is_zone
+condition|)
+block|{
+name|authoritative
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|dns_rdatasetiter_destroy
+argument_list|(
+operator|&
+name|rdsiter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|RECURSIONOK
+argument_list|(
+name|client
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|query_recurse
+argument_list|(
+name|client
+argument_list|,
+name|qtype
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+name|client
+operator|->
+name|query
+operator|.
+name|attributes
+operator||=
+name|NS_QUERYATTR_RECURSING
+expr_stmt|;
+else|else
+name|QUERY_ERROR
+argument_list|(
+name|DNS_R_SERVFAIL
+argument_list|)
+expr_stmt|;
+block|}
+goto|goto
+name|addauth
+goto|;
+block|}
 comment|/* 				 * We were searching for SIG records in 				 * a nonsecure zone.  Send a "no error, 				 * no data" response. 				 */
 comment|/* 				 * Add SOA. 				 */
 name|result
@@ -13255,6 +13339,35 @@ else|else
 name|noqname
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* 		 * BIND 8 priming queries need the additional section. 		 */
+if|if
+condition|(
+name|is_zone
+operator|&&
+name|qtype
+operator|==
+name|dns_rdatatype_ns
+operator|&&
+name|dns_name_equal
+argument_list|(
+name|client
+operator|->
+name|query
+operator|.
+name|qname
+argument_list|,
+name|dns_rootname
+argument_list|)
+condition|)
+name|client
+operator|->
+name|query
+operator|.
+name|attributes
+operator|&=
+operator|~
+name|NS_QUERYATTR_NOADDITIONAL
 expr_stmt|;
 name|query_addrrset
 argument_list|(
@@ -13404,6 +13517,8 @@ argument_list|(
 name|client
 argument_list|,
 name|db
+argument_list|,
+name|version
 argument_list|,
 name|dns_fixedname_name
 argument_list|(
@@ -13953,6 +14068,9 @@ decl_stmt|;
 name|dns_rdatatype_t
 name|qtype
 decl_stmt|;
+name|isc_boolean_t
+name|want_ad
+decl_stmt|;
 name|CTRACE
 argument_list|(
 literal|"ns_query_start"
@@ -14426,6 +14544,28 @@ operator|&=
 operator|~
 name|NS_QUERYATTR_SECURE
 expr_stmt|;
+comment|/* 	 * Set 'want_ad' if the client has set AD in the query. 	 * This allows AD to be returned on queries without DO set. 	 */
+if|if
+condition|(
+operator|(
+name|message
+operator|->
+name|flags
+operator|&
+name|DNS_MESSAGEFLAG_AD
+operator|)
+operator|!=
+literal|0
+condition|)
+name|want_ad
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+else|else
+name|want_ad
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 comment|/* 	 * This is an ordinary query. 	 */
 name|result
 operator|=
@@ -14462,11 +14602,12 @@ expr_stmt|;
 comment|/* 	 * Set AD.  We must clear it if we add non-validated data to a 	 * response. 	 */
 if|if
 condition|(
+name|WANTDNSSEC
+argument_list|(
 name|client
-operator|->
-name|view
-operator|->
-name|enablednssec
+argument_list|)
+operator|||
+name|want_ad
 condition|)
 name|message
 operator|->

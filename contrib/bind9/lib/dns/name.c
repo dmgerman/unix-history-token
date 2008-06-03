@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: name.c,v 1.127.2.7.2.16 2006/03/02 00:37:20 marka Exp $ */
+comment|/* $Id: name.c,v 1.127.2.7.2.17 2006/12/07 07:02:45 marka Exp $ */
 end_comment
 
 begin_include
@@ -7602,8 +7602,6 @@ decl_stmt|;
 comment|/* Bytes of compressed name data used */
 name|unsigned
 name|int
-name|hops
-decl_stmt|,
 name|nused
 decl_stmt|,
 name|labels
@@ -7643,7 +7641,10 @@ decl_stmt|;
 name|isc_boolean_t
 name|downcase
 decl_stmt|;
-comment|/* 	 * Copy the possibly-compressed name at source into target, 	 * decompressing it. 	 */
+name|isc_boolean_t
+name|seen_pointer
+decl_stmt|;
+comment|/* 	 * Copy the possibly-compressed name at source into target, 	 * decompressing it.  Loop prevention is performed by checking 	 * the new pointer against biggest_pointer. 	 */
 name|REQUIRE
 argument_list|(
 name|VALID_NAME
@@ -7761,10 +7762,6 @@ name|labels
 operator|=
 literal|0
 expr_stmt|;
-name|hops
-operator|=
-literal|0
-expr_stmt|;
 name|done
 operator|=
 name|ISC_FALSE
@@ -7779,6 +7776,10 @@ expr_stmt|;
 name|nused
 operator|=
 literal|0
+expr_stmt|;
+name|seen_pointer
+operator|=
+name|ISC_FALSE
 expr_stmt|;
 comment|/* 	 * Find the maximum number of uncompressed target name 	 * bytes we are willing to generate.  This is the smaller 	 * of the available target buffer length and the 	 * maximum legal domain name length (255). 	 */
 name|nmax
@@ -7843,9 +7844,8 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|hops
-operator|==
-literal|0
+operator|!
+name|seen_pointer
 condition|)
 name|cused
 operator|++
@@ -8077,20 +8077,10 @@ name|base
 operator|+
 name|current
 expr_stmt|;
-name|hops
-operator|++
+name|seen_pointer
+operator|=
+name|ISC_TRUE
 expr_stmt|;
-if|if
-condition|(
-name|hops
-operator|>
-name|DNS_POINTER_MAXHOPS
-condition|)
-return|return
-operator|(
-name|DNS_R_TOOMANYHOPS
-operator|)
-return|;
 name|state
 operator|=
 name|fw_start

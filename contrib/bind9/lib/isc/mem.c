@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: mem.c,v 1.98.2.7.2.7 2005/03/17 03:58:32 marka Exp $ */
+comment|/* $Id: mem.c,v 1.98.2.7.2.12 2007/11/26 23:45:51 tbox Exp $ */
 end_comment
 
 begin_include
@@ -698,7 +698,7 @@ parameter_list|,
 name|e
 parameter_list|)
 define|\
-value|do { \ 		if ((isc_mem_debugging& (ISC_MEM_DEBUGTRACE | \ 					  ISC_MEM_DEBUGRECORD)) != 0&& \ 		     b != NULL) \ 		         add_trace_entry(a, b, c, d, e); \ 	} while (0)
+value|do { \ 		if ((isc_mem_debugging& (ISC_MEM_DEBUGTRACE | \ 					  ISC_MEM_DEBUGRECORD)) != 0&& \ 		     b != NULL) \ 			 add_trace_entry(a, b, c, d, e); \ 	} while (0)
 end_define
 
 begin_define
@@ -1344,7 +1344,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-comment|/*  	 * round down to ALIGNMENT_SIZE 	 */
+comment|/* 	 * round down to ALIGNMENT_SIZE 	 */
 return|return
 operator|(
 name|size
@@ -4196,6 +4196,14 @@ operator|->
 name|freelists
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ctx
+operator|->
+name|basic_table
+operator|!=
+name|NULL
+condition|)
 call|(
 name|ctx
 operator|->
@@ -6414,6 +6422,18 @@ name|size_t
 name|lowater
 parameter_list|)
 block|{
+name|isc_boolean_t
+name|callwater
+init|=
+name|ISC_FALSE
+decl_stmt|;
+name|isc_mem_water_t
+name|oldwater
+decl_stmt|;
+name|void
+modifier|*
+name|oldwater_arg
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_CONTEXT
@@ -6437,6 +6457,18 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|oldwater
+operator|=
+name|ctx
+operator|->
+name|water
+expr_stmt|;
+name|oldwater_arg
+operator|=
+name|ctx
+operator|->
+name|water_arg
+expr_stmt|;
 if|if
 condition|(
 name|water
@@ -6444,6 +6476,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|callwater
+operator|=
+name|ctx
+operator|->
+name|hi_called
+expr_stmt|;
 name|ctx
 operator|->
 name|water
@@ -6477,6 +6515,40 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|ctx
+operator|->
+name|hi_called
+operator|&&
+operator|(
+name|ctx
+operator|->
+name|water
+operator|!=
+name|water
+operator|||
+name|ctx
+operator|->
+name|water_arg
+operator|!=
+name|water_arg
+operator|||
+name|ctx
+operator|->
+name|inuse
+operator|<
+name|lowater
+operator|||
+name|lowater
+operator|==
+literal|0U
+operator|)
+condition|)
+name|callwater
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 name|ctx
 operator|->
 name|water
@@ -6514,6 +6586,23 @@ operator|&
 name|ctx
 operator|->
 name|lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|callwater
+operator|&&
+name|oldwater
+operator|!=
+name|NULL
+condition|)
+call|(
+name|oldwater
+call|)
+argument_list|(
+name|oldwater_arg
+argument_list|,
+name|ISC_MEM_LOWATER
 argument_list|)
 expr_stmt|;
 block|}
