@@ -300,7 +300,7 @@ index|[
 name|LINUX_MAX_UTSNAME
 index|]
 init|=
-literal|"2.4.2"
+literal|"2.6.16"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,7 +309,7 @@ specifier|static
 name|int
 name|linux_use_linux26
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
