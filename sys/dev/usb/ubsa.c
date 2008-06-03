@@ -1018,6 +1018,13 @@ block|,
 name|USB_PRODUCT_NOVATEL_U740
 block|}
 block|,
+comment|/* Dell version of the above */
+block|{
+name|USB_VENDOR_DELL
+block|,
+name|USB_PRODUCT_DELL_U740
+block|}
+block|,
 comment|/* Novatel Wireless Merlin v740 */
 block|{
 name|USB_VENDOR_NOVATEL
