@@ -99,13 +99,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ctty"
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_TTY
-operator||
-name|D_NEEDGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -199,12 +192,6 @@ name|sx_sunlock
 argument_list|(
 operator|&
 name|clone_drain_lock
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|sx_slock
@@ -320,12 +307,6 @@ name|sx_sunlock
 argument_list|(
 operator|&
 name|proctree_lock
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
