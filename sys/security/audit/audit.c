@@ -1051,7 +1051,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Drain the audit queue and close the log at shutdown.  Note that this can  * be called both from the system shutdown path and also from audit  * configuration syscalls, so 'arg' and 'howto' are ignored.  */
+comment|/*  * Drain the audit queue and close the log at shutdown.  Note that this can  * be called both from the system shutdown path and also from audit  * configuration syscalls, so 'arg' and 'howto' are ignored.  *  * XXXRW: In FreeBSD 7.x and 8.x, this fails to wait for the record queue to  * drain before returning, which could lead to lost records on shutdown.  */
 end_comment
 
 begin_function
