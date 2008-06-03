@@ -542,6 +542,12 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|int
+name|ndis_tx_timer
+decl_stmt|;
+name|int
+name|ndis_hang_timer
+decl_stmt|;
 block|}
 struct|;
 end_struct
