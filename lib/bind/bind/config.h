@@ -74,6 +74,18 @@ begin_comment
 comment|/* #undef POSIX_GETGRNAM_R */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_MEMMOVE
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_MEMCHR
+end_define
+
 begin_comment
 comment|/* #undef NEED_SETGROUPENT */
 end_comment
