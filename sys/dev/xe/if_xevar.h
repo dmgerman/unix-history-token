@@ -39,6 +39,9 @@ name|struct
 name|callout
 name|wdog_timer
 decl_stmt|;
+name|int
+name|tx_timeout
+decl_stmt|;
 name|struct
 name|mtx
 name|lock
