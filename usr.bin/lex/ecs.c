@@ -401,7 +401,6 @@ operator|++
 name|j
 control|)
 block|{
-specifier|register
 name|int
 name|ccl_char
 decl_stmt|;

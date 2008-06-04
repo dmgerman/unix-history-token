@@ -876,7 +876,6 @@ name|mark_beginning_as_normal
 parameter_list|(
 name|mach
 parameter_list|)
-specifier|register
 name|int
 name|mach
 decl_stmt|;

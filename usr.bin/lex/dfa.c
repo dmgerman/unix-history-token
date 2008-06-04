@@ -234,7 +234,6 @@ name|int
 name|nacc
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -262,7 +261,6 @@ index|[
 name|i
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|type
 init|=
@@ -271,7 +269,6 @@ index|[
 name|ns
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|ar
 init|=
@@ -368,13 +365,11 @@ name|int
 name|ds
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|register
 name|int
 name|num_associated_rules
 init|=
@@ -419,7 +414,6 @@ operator|++
 name|i
 control|)
 block|{
-specifier|register
 name|int
 name|rule_num
 init|=
@@ -571,7 +565,6 @@ name|state
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -726,7 +719,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|stkpos
 decl_stmt|,
@@ -2031,7 +2023,6 @@ operator|!
 name|useecs
 condition|)
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -2439,7 +2430,6 @@ name|didsort
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,

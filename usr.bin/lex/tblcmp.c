@@ -41,7 +41,6 @@ name|mkentry
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|int
 operator|*
 operator|,
@@ -516,7 +515,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|tmp
@@ -710,7 +708,6 @@ name|void
 name|expand_nxt_chk
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|old_max
 init|=
@@ -789,11 +786,9 @@ name|numtrans
 decl_stmt|;
 block|{
 comment|/* Firstfree is the position of the first possible occurrence of two 	 * consecutive unused records in the chk and nxt arrays. 	 */
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|state_ptr
@@ -801,7 +796,6 @@ decl_stmt|,
 modifier|*
 name|chk_ptr
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|ptr_to_last_entry_in_state
@@ -1003,7 +997,6 @@ name|void
 name|inittbl
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1226,7 +1219,6 @@ name|deflink
 parameter_list|,
 name|totaltrans
 parameter_list|)
-specifier|register
 name|int
 modifier|*
 name|state
@@ -1241,7 +1233,6 @@ decl_stmt|,
 name|totaltrans
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|minec
 decl_stmt|,
@@ -2265,11 +2256,9 @@ decl_stmt|,
 name|transnum
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|state_ptr
@@ -2489,7 +2478,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2506,7 +2494,6 @@ decl_stmt|,
 modifier|*
 name|protp
 decl_stmt|;
-specifier|register
 name|int
 name|numdiff
 init|=

@@ -41,7 +41,6 @@ name|hashfunct
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|char
 index|[]
 operator|,
@@ -111,7 +110,6 @@ name|table
 parameter_list|,
 name|table_size
 parameter_list|)
-specifier|register
 name|char
 name|sym
 index|[]
@@ -140,7 +138,6 @@ argument_list|,
 name|table_size
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|hash_entry
 modifier|*
@@ -151,13 +148,11 @@ index|[
 name|hash_val
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|hash_entry
 modifier|*
 name|new_entry
 decl_stmt|;
-specifier|register
 name|struct
 name|hash_entry
 modifier|*
@@ -402,7 +397,6 @@ name|table
 parameter_list|,
 name|table_size
 parameter_list|)
-specifier|register
 name|char
 name|sym
 index|[]
@@ -449,7 +443,6 @@ block|,
 literal|0
 block|, 		}
 decl_stmt|;
-specifier|register
 name|struct
 name|hash_entry
 modifier|*
@@ -511,7 +504,6 @@ name|str
 parameter_list|,
 name|hash_size
 parameter_list|)
-specifier|register
 name|char
 name|str
 index|[]
@@ -520,11 +512,9 @@ name|int
 name|hash_size
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|hashval
 decl_stmt|;
-specifier|register
 name|int
 name|locstr
 decl_stmt|;

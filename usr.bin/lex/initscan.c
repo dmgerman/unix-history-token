@@ -18638,11 +18638,9 @@ define|\
 value|if ( yyleng> 0 ) \ 		yy_current_buffer->yy_at_bol = \ 				(yytext[yyleng - 1] == '\n'); \ 	YY_USER_ACTION
 name|YY_DECL
 block|{
-specifier|register
 name|yy_state_type
 name|yy_current_state
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|yy_cp
@@ -18650,7 +18648,6 @@ decl_stmt|,
 modifier|*
 name|yy_bp
 decl_stmt|;
-specifier|register
 name|int
 name|yy_act
 decl_stmt|;
@@ -18793,7 +18790,6 @@ name|yy_match
 label|:
 do|do
 block|{
-specifier|register
 name|YY_CHAR
 name|yy_c
 init|=
@@ -20991,7 +20987,6 @@ directive|line
 number|435
 file|"scan.l"
 block|{
-specifier|register
 name|Char
 modifier|*
 name|nmdefptr
@@ -22662,7 +22657,6 @@ name|int
 name|yy_get_next_buffer
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|dest
@@ -22671,14 +22665,12 @@ name|yy_current_buffer
 operator|->
 name|yy_ch_buf
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|source
 init|=
 name|yytext_ptr
 decl_stmt|;
-specifier|register
 name|int
 name|number_to_move
 decl_stmt|,
@@ -23085,11 +23077,9 @@ name|yy_state_type
 name|yy_get_previous_state
 parameter_list|()
 block|{
-specifier|register
 name|yy_state_type
 name|yy_current_state
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|yy_cp
@@ -23119,7 +23109,6 @@ operator|++
 name|yy_cp
 control|)
 block|{
-specifier|register
 name|YY_CHAR
 name|yy_c
 init|=
@@ -23252,18 +23241,15 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-specifier|register
 name|int
 name|yy_is_jam
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|yy_cp
 init|=
 name|yy_c_buf_p
 decl_stmt|;
-specifier|register
 name|YY_CHAR
 name|yy_c
 init|=
@@ -23383,7 +23369,6 @@ parameter_list|(
 name|int
 name|c
 parameter_list|,
-specifier|register
 name|char
 modifier|*
 name|yy_bp
@@ -23399,7 +23384,6 @@ parameter_list|)
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|yy_bp
@@ -23407,7 +23391,6 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-specifier|register
 name|char
 modifier|*
 name|yy_cp
@@ -23433,7 +23416,6 @@ condition|)
 block|{
 comment|/* need to shift things up to make room */
 comment|/* +2 for EOB chars. */
-specifier|register
 name|int
 name|number_to_move
 init|=
@@ -23441,7 +23423,6 @@ name|yy_n_chars
 operator|+
 literal|2
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|dest
@@ -23458,7 +23439,6 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|source
@@ -25111,7 +25091,6 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -25182,7 +25161,6 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|;
