@@ -3722,6 +3722,7 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
+block|}
 name|callout_reset
 argument_list|(
 operator|&
@@ -3736,7 +3737,6 @@ argument_list|,
 name|scp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
