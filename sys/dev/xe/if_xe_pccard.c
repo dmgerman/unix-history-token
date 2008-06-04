@@ -650,11 +650,6 @@ name|xe_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|xe_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -1157,11 +1152,6 @@ name|xe_softc
 modifier|*
 name|scp
 init|=
-operator|(
-expr|struct
-name|xe_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev

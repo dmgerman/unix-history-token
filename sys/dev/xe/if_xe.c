@@ -183,22 +183,22 @@ begin_struct
 struct|struct
 name|xe_mii_frame
 block|{
-name|u_int8_t
+name|uint8_t
 name|mii_stdelim
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_opcode
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_phyaddr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_regaddr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|mii_turnaround
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|mii_data
 decl_stmt|;
 block|}
@@ -372,7 +372,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|txst1
 parameter_list|)
 function_decl|;
@@ -388,7 +388,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|rst0
 parameter_list|,
 name|uint8_t
@@ -410,7 +410,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|rst0
 parameter_list|)
 function_decl|;
@@ -447,12 +447,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|timeout_t
+name|void
 name|xe_setmedia
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -516,7 +521,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|addr
 parameter_list|,
@@ -602,7 +607,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|bits
 parameter_list|,
 name|int
@@ -649,7 +654,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|xe_phy_readreg
 parameter_list|(
 name|struct
@@ -657,7 +662,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|reg
 parameter_list|)
 function_decl|;
@@ -673,10 +678,10 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|reg
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|data
 parameter_list|)
 function_decl|;
@@ -706,7 +711,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void      xe_reg_dump		(struct xe_softc *scp);
+unit|static void	xe_reg_dump(struct xe_softc *scp);
 endif|#
 directive|endif
 end_endif
@@ -955,7 +960,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOSPC
+operator|)
 return|;
 name|scp
 operator|->
@@ -1062,9 +1069,11 @@ operator|->
 name|if_linkmiblen
 operator|=
 sizeof|sizeof
+argument_list|(
 name|scp
 operator|->
 name|mibdata
+argument_list|)
 expr_stmt|;
 name|scp
 operator|->
@@ -1487,12 +1496,16 @@ name|lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 comment|/* Done */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1648,7 +1661,7 @@ operator|->
 name|mohawk
 condition|)
 block|{
-comment|/*      * set GP1 and GP2 as outputs (bits 2& 3)      * set GP1 low to power on the ML6692 (bit 0)      * set GP2 high to power on the 10Mhz chip (bit 1)      */
+comment|/* 		 * set GP1 and GP2 as outputs (bits 2& 3) 		 * set GP1 low to power on the ML6692 (bit 0) 		 * set GP2 high to power on the 10Mhz chip (bit 1) 		 */
 name|XE_SELECT_PAGE
 argument_list|(
 literal|4
@@ -1784,7 +1797,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|6
+name|ETHER_ADDR_LEN
 condition|;
 name|i
 operator|++
@@ -2069,11 +2082,12 @@ literal|"start\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*    * Loop while there are packets to be sent, and space to send them.    */
-while|while
-condition|(
-literal|1
-condition|)
+comment|/* 	 * Loop while there are packets to be sent, and space to send 	 * them. 	 */
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 comment|/* Suck a packet off the send queue */
 name|IF_DEQUEUE
@@ -2093,7 +2107,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*        * We are using the !OACTIVE flag to indicate to the outside world that        * we can accept an additional packet rather than that the transmitter        * is _actually_ active. Indeed, the transmitter may be active, but if        * we haven't filled all the buffers with data then we still want to        * accept more.        */
+comment|/* 			 * We are using the !OACTIVE flag to indicate 			 * to the outside world that we can accept an 			 * additional packet rather than that the 			 * transmitter is _actually_ active. Indeed, 			 * the transmitter may be active, but if we 			 * haven't filled all the buffers with data 			 * then we still want to accept more. 			 */
 name|ifp
 operator|->
 name|if_drv_flags
@@ -2172,7 +2186,6 @@ specifier|static
 name|int
 name|xe_ioctl
 parameter_list|(
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -2228,7 +2241,7 @@ name|if_flags
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * If the interface is marked up and stopped, then start it.  If it is      * marked down and running, then stop it.      */
+comment|/* 		 * If the interface is marked up and stopped, then 		 * start it.  If it is marked down and running, then 		 * stop it. 		 */
 name|XE_LOCK
 argument_list|(
 name|scp
@@ -2318,7 +2331,7 @@ literal|"ioctl: SIOC{ADD,DEL}MULTI\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Multicast list has (maybe) changed; set the hardware filters      * accordingly.      */
+comment|/* 		 * Multicast list has (maybe) changed; set the 		 * hardware filters accordingly. 		 */
 name|XE_LOCK
 argument_list|(
 name|scp
@@ -2358,7 +2371,7 @@ literal|"ioctl: bounce to ifmedia_ioctl\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Someone wants to get/set media options.      */
+comment|/* 		 * Someone wants to get/set media options. 		 */
 name|error
 operator|=
 name|ifmedia_ioctl
@@ -2408,7 +2421,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2427,7 +2442,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|txst1
 parameter_list|)
 block|{
@@ -2436,7 +2451,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|tpr
 decl_stmt|,
 name|sent
@@ -2504,7 +2519,7 @@ name|if_collisions
 operator|+=
 name|coll
 expr_stmt|;
-comment|/* 	 * According to the Xircom manual, Dingo will sometimes manage to 	 * transmit a packet with triggering an interrupt.  If this happens, 	 * we have sent> 1 and the collision count only reflects collisions 	 * on the last packet sent (the one that triggered the interrupt). 	 * Collision stats might therefore be a bit low, but there doesn't 	 * seem to be anything we can do about that. 	 */
+comment|/* 		 * According to the Xircom manual, Dingo will 		 * sometimes manage to transmit a packet with 		 * triggering an interrupt.  If this happens, we have 		 * sent> 1 and the collision count only reflects 		 * collisions on the last packet sent (the one that 		 * triggered the interrupt).  Collision stats might 		 * therefore be a bit low, but there doesn't seem to 		 * be anything we can do about that. 		 */
 switch|switch
 condition|(
 name|coll
@@ -2587,7 +2602,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|rst0
 parameter_list|,
 name|uint8_t
@@ -2614,7 +2629,7 @@ literal|0
 comment|/* Carrier sense lost -- only in 10Mbit HDX mode */
 block|if (txst0& XE_TXST0_NO_CARRIER || !(txst1& XE_TXST1_LINK_STATUS)) {
 comment|/* XXX - Need to update media status here */
-block|device_printf(scp->dev, "no carrier\n"); 	ifp->if_oerrors++; 	scp->mibdata.dot3StatsCarrierSenseErrors++;       }
+block|device_printf(scp->dev, "no carrier\n"); 		ifp->if_oerrors++; 		scp->mibdata.dot3StatsCarrierSenseErrors++; 	}
 endif|#
 directive|endif
 comment|/* Excessive collisions -- try sending again */
@@ -2908,7 +2923,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|rst0
 parameter_list|)
 block|{
@@ -2917,7 +2932,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|esr
 decl_stmt|,
 name|rsr
@@ -2985,7 +3000,7 @@ name|mbuf
 modifier|*
 name|mbp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|len
 decl_stmt|;
 name|len
@@ -3026,7 +3041,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 	 * Allocate mbuf to hold received packet.  If the mbuf header isn't 	 * big enough, we attach an mbuf cluster to hold the packet.  Note the 	 * +=2 to align the packet data on a 32-bit boundary, and the +3 to 	 * allow for the possibility of reading one more byte than the actual 	 * packet length (we always read 16-bit words). 	 * XXX - Surely there's a better way to do this alignment? 	 */
+comment|/* 			 * Allocate mbuf to hold received packet.  If 			 * the mbuf header isn't big enough, we attach 			 * an mbuf cluster to hold the packet.  Note 			 * the +=2 to align the packet data on a 			 * 32-bit boundary, and the +3 to allow for 			 * the possibility of reading one more byte 			 * than the actual packet length (we always 			 * read 16-bit words).  XXX - Surely there's a 			 * better way to do this alignment? 			 */
 name|MGETHDR
 argument_list|(
 name|mbp
@@ -3109,8 +3124,8 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now get the packet in PIO mode, including the Ethernet header but 	 * omitting the trailing CRC. 	 */
-comment|/* 	 * Work around a bug in CE2 cards.  There seems to be a problem with 	 * duplicated and extraneous bytes in the receive buffer, but without 	 * any real documentation for the CE2 it's hard to tell for sure. 	 * XXX - Needs testing on CE2 hardware 	 */
+comment|/* 			 * Now get the packet in PIO mode, including 			 * the Ethernet header but omitting the 			 * trailing CRC. 			 */
+comment|/* 			 * Work around a bug in CE2 cards.  There 			 * seems to be a problem with duplicated and 			 * extraneous bytes in the receive buffer, but 			 * without any real documentation for the CE2 			 * it's hard to tell for sure.  XXX - Needs 			 * testing on CE2 hardware 			 */
 if|if
 condition|(
 name|scp
@@ -3227,7 +3242,7 @@ argument_list|,
 name|XE_EDP
 argument_list|,
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|ehp
@@ -3252,7 +3267,7 @@ argument_list|,
 name|XE_EDP
 argument_list|,
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|ehp
@@ -3315,7 +3330,6 @@ name|if_ipackets
 operator|++
 expr_stmt|;
 block|}
-comment|/* Packet alignment error -- drop packet */
 elseif|else
 if|if
 condition|(
@@ -3324,6 +3338,7 @@ operator|&
 name|XE_RSR_ALIGN_ERROR
 condition|)
 block|{
+comment|/* Packet alignment error -- drop packet */
 name|device_printf
 argument_list|(
 name|scp
@@ -3426,7 +3441,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|psr
 decl_stmt|,
 name|isr
@@ -3639,7 +3654,6 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3807,7 +3821,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/*    * Some card/media combos aren't always possible -- filter those out here.    */
+comment|/* 	 * Some card/media combos aren't always possible -- filter 	 * those out here. 	 */
 if|if
 condition|(
 operator|(
@@ -3862,7 +3876,9 @@ name|scp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3945,7 +3961,6 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3970,7 +3985,7 @@ name|scp
 init|=
 name|xscp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bmcr
 decl_stmt|,
 name|bmsr
@@ -4042,7 +4057,7 @@ name|IFM_ETHER
 operator||
 name|IFM_AUTO
 expr_stmt|;
-comment|/*      * Autoselection is really awful.  It goes something like this:      *      * Wait until the transmitter goes idle (2sec timeout).      * Reset card      *   IF a 100Mbit PHY exists      *     Start NWAY autonegotiation (3.5sec timeout)      *     IF that succeeds      *       Select 100baseTX or 10baseT, whichever was detected      *     ELSE      *       Reset card      *       IF a 100Mbit PHY exists      *         Try to force a 100baseTX link (3sec timeout)      *         IF that succeeds      *           Select 100baseTX      *         ELSE      *           Disable the PHY      *         ENDIF      *       ENDIF      *     ENDIF      *   ENDIF      * IF nothing selected so far      *   IF a 100Mbit PHY exists      *     Select 10baseT      *   ELSE      *     Select 10baseT or 10base2, whichever is connected      *   ENDIF      * ENDIF      */
+comment|/* 		 * Autoselection is really awful.  It goes something like this: 		 * 		 * Wait until the transmitter goes idle (2sec timeout). 		 * Reset card 		 *   IF a 100Mbit PHY exists 		 *     Start NWAY autonegotiation (3.5sec timeout) 		 *     IF that succeeds 		 *       Select 100baseTX or 10baseT, whichever was detected 		 *     ELSE 		 *       Reset card 		 *       IF a 100Mbit PHY exists 		 *         Try to force a 100baseTX link (3sec timeout) 		 *         IF that succeeds 		 *           Select 100baseTX 		 *         ELSE 		 *           Disable the PHY 		 *         ENDIF 		 *       ENDIF 		 *     ENDIF 		 *   ENDIF 		 * IF nothing selected so far 		 *   IF a 100Mbit PHY exists 		 *     Select 10baseT 		 *   ELSE 		 *     Select 10baseT or 10base2, whichever is connected 		 *   ENDIF 		 * ENDIF 		 */
 switch|switch
 condition|(
 name|scp
@@ -4287,7 +4302,7 @@ literal|"Autonegotiation complete!\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX - Shouldn't have to do this, but (on my hub at least) the 	 * XXX - transmitter won't work after a successful autoneg.  So we see  	 * XXX - what the negotiation result was and force that mode.  I'm 	 * XXX - sure there is an easy fix for this. 	 */
+comment|/* 				 * XXX - Shouldn't have to do this, 				 * but (on my hub at least) the 				 * transmitter won't work after a 				 * successful autoneg.  So we see what 				 * the negotiation result was and 				 * force that mode.  I'm sure there is 				 * an easy fix for this. 				 */
 if|if
 condition|(
 name|lpar
@@ -4343,7 +4358,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	   * XXX - Bit of a hack going on in here. 	   * XXX - This is derived from Ken Hughes patch to the Linux driver 	   * XXX - to make it work with 10Mbit _autonegotiated_ links on CE3B 	   * XXX - cards.  What's a CE3B and how's it differ from a plain CE3? 	   * XXX - these are the things we need to find out. 	   */
+comment|/* 					 * XXX - Bit of a hack going 					 * on in here.  This is 					 * derived from Ken Hughes 					 * patch to the Linux driver 					 * to make it work with 10Mbit 					 * _autonegotiated_ links on 					 * CE3B cards.  What's a CE3B 					 * and how's it differ from a 					 * plain CE3?  these are the 					 * things we need to find out. 					 */
 name|xe_phy_writereg
 argument_list|(
 name|scp
@@ -4398,9 +4413,13 @@ operator|=
 name|XE_AUTONEG_NONE
 expr_stmt|;
 comment|/* END HACK */
-comment|/*XE_OUTB(XE_MSR, XE_INB(XE_MSR)& ~0x08);*/
-comment|/* Disable PHY? */
-comment|/*scp->autoneg_status = XE_AUTONEG_FAIL;*/
+if|#
+directive|if
+literal|0
+comment|/* Display PHY? */
+block|XE_OUTB(XE_MSR, XE_INB(XE_MSR)& ~0x08); 					scp->autoneg_status = XE_AUTONEG_FAIL;
+endif|#
+directive|endif
 block|}
 block|}
 else|else
@@ -4587,6 +4606,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* Disable PHY? */
 name|XE_OUTB
 argument_list|(
 name|XE_MSR
@@ -4600,7 +4620,6 @@ operator|~
 literal|0x08
 argument_list|)
 expr_stmt|;
-comment|/* Disable PHY? */
 name|scp
 operator|->
 name|autoneg_status
@@ -4610,7 +4629,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/*      * If we got down here _and_ autoneg_status is XE_AUTONEG_FAIL, then      * either autonegotiation failed, or never got started to begin with.  In      * either case, select a suitable 10Mbit media and hope it works.  We      * don't need to reset the card again, since it will have been done      * already by the big switch above.      */
+comment|/* 		 * If we got down here _and_ autoneg_status is 		 * XE_AUTONEG_FAIL, then either autonegotiation 		 * failed, or never got started to begin with.  In 		 * either case, select a suitable 10Mbit media and 		 * hope it works.  We don't need to reset the card 		 * again, since it will have been done already by the 		 * big switch above. 		 */
 if|if
 condition|(
 name|scp
@@ -4739,7 +4758,7 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-comment|/*      * If a specific media has been requested, we just reset the card and      * select it (one small exception -- if 100baseTX is requested by there is       * no PHY, we fall back to 10baseT operation).      */
+comment|/* 	 * If a specific media has been requested, we just reset the 	 * card and select it (one small exception -- if 100baseTX is 	 * requested but there is no PHY, we fall back to 10baseT 	 * operation). 	 */
 case|case
 name|IFM_100_TX
 case|:
@@ -4849,6 +4868,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* Disable PHY */
 name|XE_OUTB
 argument_list|(
 name|XE_MSR
@@ -4862,7 +4882,6 @@ operator|~
 literal|0x08
 argument_list|)
 expr_stmt|;
-comment|/* Disable PHY */
 block|}
 name|XE_SELECT_PAGE
 argument_list|(
@@ -4919,7 +4938,7 @@ name|IFM_10_2
 expr_stmt|;
 break|break;
 block|}
-comment|/*    * Finally, the LEDs are set to match whatever media was chosen and the    * transmitter is unblocked.     */
+comment|/* 	 * Finally, the LEDs are set to match whatever media was 	 * chosen and the transmitter is unblocked. 	 */
 name|DEVPRINTF
 argument_list|(
 literal|2
@@ -5133,13 +5152,13 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-comment|/*    * Shut off interrupts.    */
+comment|/* 	 * Shut off interrupts. 	 */
 name|xe_disable_intr
 argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-comment|/*    * Power down.    */
+comment|/* 	 * Power down. 	 */
 name|XE_SELECT_PAGE
 argument_list|(
 literal|4
@@ -5164,7 +5183,7 @@ operator|->
 name|mohawk
 condition|)
 block|{
-comment|/*      * set GP1 and GP2 as outputs (bits 2& 3)      * set GP1 high to power on the ML6692 (bit 0)      * set GP2 low to power on the 10Mhz chip (bit 1)      */
+comment|/* 		 * set GP1 and GP2 as outputs (bits 2& 3) 		 * set GP1 high to power on the ML6692 (bit 0) 		 * set GP2 low to power on the 10Mhz chip (bit 1) 		 */
 name|XE_SELECT_PAGE
 argument_list|(
 literal|4
@@ -5182,7 +5201,7 @@ name|XE_GPR0_GP1_OUT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * ~IFF_DRV_RUNNING == interface down.    */
+comment|/* 	 * ~IFF_DRV_RUNNING == interface down. 	 */
 name|scp
 operator|->
 name|ifp
@@ -5300,7 +5319,7 @@ argument_list|,
 literal|0x11
 argument_list|)
 expr_stmt|;
-comment|/* Unmask master int enable bit */
+comment|/* Unmask master int enable */
 block|}
 block|}
 block|}
@@ -5367,7 +5386,7 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-comment|/* Mask the master int enable bit */
+comment|/* Mask the master int enable */
 block|}
 block|}
 end_function
@@ -5541,7 +5560,7 @@ name|count
 operator|<
 literal|10
 condition|)
-comment|/* First 9 use Individual Addresses for exact matching */
+comment|/* 			 * First 9 use Individual Addresses for exact 			 * matching. 			 */
 name|xe_set_addr
 argument_list|(
 name|scp
@@ -5676,7 +5695,7 @@ operator|<
 literal|10
 condition|)
 block|{
-comment|/* Full in any unused Individual Addresses with our MAC address */
+comment|/* 		 * Full in any unused Individual Addresses with our 		 * MAC address. 		 */
 for|for
 control|(
 name|i
@@ -5756,8 +5775,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|scp
@@ -5801,7 +5819,7 @@ operator|==
 literal|0x10
 condition|)
 block|{
-comment|/* Hash table full - enable promiscuous multicast matching */
+comment|/* 			 * Hash table full - enable 			 * promiscuous multicast matching 			 */
 name|XE_SELECT_PAGE
 argument_list|(
 literal|0x42
@@ -5913,7 +5931,6 @@ name|XE_SWC1_ALLMULTI
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|XE_SELECT_PAGE
 argument_list|(
 literal|0
@@ -5936,7 +5953,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|addr
 parameter_list|,
@@ -5944,7 +5961,7 @@ name|unsigned
 name|idx
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|page
 decl_stmt|,
 name|reg
@@ -5952,7 +5969,7 @@ decl_stmt|;
 name|unsigned
 name|i
 decl_stmt|;
-comment|/*    * Individual Addresses are stored in registers 8-F of pages 0x50-0x57.  IA1    * therefore starts at register 0xE on page 0x50.  The expressions below    * compute the starting page and register for any IA index> 0.    */
+comment|/* 	 * Individual Addresses are stored in registers 8-F of pages 	 * 0x50-0x57.  IA1 therefore starts at register 0xE on page 	 * 0x50.  The expressions below compute the starting page and 	 * register for any IA index> 0. 	 */
 operator|--
 name|idx
 expr_stmt|;
@@ -6003,7 +6020,7 @@ name|reg
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*    * Copy the IA bytes.  Note that the byte order is reversed for Mohawk and    * Dingo wrt. CE2 hardware.    */
+comment|/* 	 * Copy the IA bytes.  Note that the byte order is reversed 	 * for Mohawk and Dingo wrt. CE2 hardware. 	 */
 name|XE_SELECT_PAGE
 argument_list|(
 name|page
@@ -6017,7 +6034,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|6
+name|ETHER_ADDR_LEN
 condition|;
 name|i
 operator|++
@@ -6155,7 +6172,7 @@ argument_list|)
 operator|&
 literal|0x3F
 expr_stmt|;
-comment|/* Top 3 bits of hash give register - 8, bottom 3 give bit within register */
+comment|/* 	 * Top 3 bits of hash give register - 8, bottom 3 give bit 	 * within register. 	 */
 name|byte
 operator|=
 name|hash
@@ -6242,11 +6259,11 @@ name|unsigned
 name|char
 name|wantbyte
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|data
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|savebyte
 index|[
 literal|2
@@ -6378,7 +6395,9 @@ operator|+
 literal|2
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* Send packet length to card */
 name|XE_OUTW
@@ -6388,7 +6407,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/*    * Write packet to card using PIO (code stolen from the ed driver)    */
+comment|/* 	 * Write packet to card using PIO (code stolen from the ed driver) 	 */
 name|wantbyte
 operator|=
 literal|0
@@ -6476,7 +6495,7 @@ argument_list|,
 name|XE_EDP
 argument_list|,
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|data
@@ -6505,7 +6524,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* Save last byte, if necessary */
+comment|/* Save last byte, if needed */
 name|savebyte
 index|[
 literal|0
@@ -6527,7 +6546,7 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-comment|/*    * Send last byte of odd-length packets    */
+comment|/* 	 * Send last byte of odd-length packets 	 */
 if|if
 condition|(
 name|wantbyte
@@ -6542,7 +6561,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*    * Can just tell CE3 cards to send; short packets will be padded out with    * random cruft automatically.  For CE2, manually pad the packet with    * garbage; it will be sent when the required number or bytes have been    * delivered to the card.    */
+comment|/* 	 * Can just tell CE3 cards to send; short packets will be 	 * padded out with random cruft automatically.  For CE2, 	 * manually pad the packet with garbage; it will be sent when 	 * the required number of bytes have been delivered to the 	 * card. 	 */
 if|if
 condition|(
 name|scp
@@ -6605,7 +6624,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6653,7 +6674,6 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6722,7 +6742,7 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 name|status
@@ -6761,7 +6781,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 else|else
@@ -6806,13 +6828,16 @@ operator|&
 name|PHY_BMCR_RESET
 condition|)
 empty_stmt|;
+comment|/* nothing */
 name|XE_MII_DUMP
 argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -6832,7 +6857,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|bits
 parameter_list|,
 name|int
@@ -6948,7 +6973,7 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-comment|/*    * Set up frame for RX.    */
+comment|/* 	 * Set up frame for RX. 	 */
 name|frame
 operator|->
 name|mii_stdelim
@@ -6985,7 +7010,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*    * Turn on data xmit.    */
+comment|/* 	 * Turn on data xmit. 	 */
 name|XE_MII_SET
 argument_list|(
 name|XE_MII_DIR
@@ -6996,7 +7021,7 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-comment|/*	    * Send command/address info.    */
+comment|/*	 	 * Send command/address info. 	 */
 name|xe_mii_send
 argument_list|(
 name|scp
@@ -7102,7 +7127,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*    * Now try reading data bits. If the ack failed, we still    * need to clock through 16 cycles to keep the PHY(s) in sync.    */
+comment|/* 	 * Now try reading data bits. If the ack failed, we still 	 * need to clock through 16 cycles to keep the PHY(s) in sync. 	 */
 if|if
 condition|(
 name|ack
@@ -7272,7 +7297,7 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-comment|/*    * Set up frame for TX.    */
+comment|/* 	 * Set up frame for TX. 	 */
 name|frame
 operator|->
 name|mii_stdelim
@@ -7296,7 +7321,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*		    * Turn on data output.    */
+comment|/*		 	 * Turn on data output. 	 */
 name|XE_MII_SET
 argument_list|(
 name|XE_MII_DIR
@@ -7394,7 +7419,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*    * Turn off xmit.    */
+comment|/* 	 * Turn off xmit. 	 */
 name|XE_MII_CLR
 argument_list|(
 name|XE_MII_DIR
@@ -7414,7 +7439,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|xe_phy_readreg
 parameter_list|(
 name|struct
@@ -7422,7 +7447,7 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|reg
 parameter_list|)
 block|{
@@ -7489,10 +7514,10 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|reg
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|data
 parameter_list|)
 block|{
@@ -7541,7 +7566,6 @@ operator|&
 name|frame
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7645,7 +7669,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void xe_reg_dump(struct xe_softc *scp) {   int page, i;    device_printf(scp->dev, "Common registers: ");   for (i = 0; i< 8; i++) {     printf(" %2.2x", XE_INB(i));   }   printf("\n");    for (page = 0; page<= 8; page++) {     device_printf(scp->dev, "Register page %2.2x: ", page);     XE_SELECT_PAGE(page);     for (i = 8; i< 16; i++) {       printf(" %2.2x", XE_INB(i));     }     printf("\n");   }    for (page = 0x10; page< 0x5f; page++) {     if ((page>= 0x11&& page<= 0x3f) || 	(page == 0x41) || 	(page>= 0x43&& page<= 0x4f) || 	(page>= 0x59))       continue;     device_printf(scp->dev, "Register page %2.2x: ", page);     XE_SELECT_PAGE(page);     for (i = 8; i< 16; i++) {       printf(" %2.2x", XE_INB(i));     }     printf("\n");   } }
+unit|void xe_reg_dump(struct xe_softc *scp) { 	int page, i;  	device_printf(scp->dev, "Common registers: "); 	for (i = 0; i< 8; i++) { 		printf(" %2.2x", XE_INB(i)); 	} 	printf("\n");  	for (page = 0; page<= 8; page++) { 		device_printf(scp->dev, "Register page %2.2x: ", page); 		XE_SELECT_PAGE(page); 		for (i = 8; i< 16; i++) { 			printf(" %2.2x", XE_INB(i)); 		} 		printf("\n"); 	}  	for (page = 0x10; page< 0x5f; page++) { 		if ((page>= 0x11&& page<= 0x3f) || 		    (page == 0x41) || 		    (page>= 0x43&& page<= 0x4f) || 		    (page>= 0x59)) 			continue; 		device_printf(scp->dev, "Register page %2.2x: ", page); 		XE_SELECT_PAGE(page); 		for (i = 8; i< 16; i++) { 			printf(" %2.2x", XE_INB(i)); 		} 		printf("\n"); 	} }
 endif|#
 directive|endif
 end_endif
@@ -7714,10 +7738,10 @@ name|sc
 operator|->
 name|port_rid
 argument_list|,
-literal|0
+literal|0ul
 argument_list|,
 operator|~
-literal|0
+literal|0ul
 argument_list|,
 literal|16
 argument_list|,
@@ -7788,10 +7812,9 @@ name|sc
 operator|->
 name|port_res
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
-comment|/* we failed */
 if|if
 condition|(
 operator|(
@@ -7808,7 +7831,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* good */
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -7888,7 +7910,7 @@ operator|->
 name|ce2
 condition|)
 block|{
-comment|/* 	     * Find contiguous I/O port for the Ethernet function on CEM2 and 	     * CEM3 cards.  We allocate window 0 wherever pccard has decided 	     * it should be, then find an available window adjacent to it for 	     * the second function.  Not sure that both windows are actually 	     * needed. 	     */
+comment|/* 		 * Find contiguous I/O port for the Ethernet function 		 * on CEM2 and CEM3 cards.  We allocate window 0 		 * wherever pccard has decided it should be, then find 		 * an available window adjacent to it for the second 		 * function.  Not sure that both windows are actually 		 * needed. 		 */
 name|DEVPRINTF
 argument_list|(
 literal|1
@@ -7922,10 +7944,10 @@ name|sc
 operator|->
 name|ce2_port_rid
 argument_list|,
-literal|0
+literal|0ul
 argument_list|,
 operator|~
-literal|0
+literal|0ul
 argument_list|,
 literal|8
 argument_list|,
@@ -7934,10 +7956,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|ce2_port_res
+operator|==
+name|NULL
 condition|)
 block|{
 name|DEVPRINTF
@@ -7957,7 +7980,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|sc
@@ -8038,10 +8063,9 @@ name|sc
 operator|->
 name|port_res
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
-comment|/* Failed, try again if possible */
 if|if
 condition|(
 name|bus_get_resource_start
@@ -8058,7 +8082,6 @@ operator|==
 name|start
 condition|)
 break|break;
-comment|/* Success! */
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -8078,7 +8101,7 @@ name|sc
 operator|->
 name|port_res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|DEVPRINTF
@@ -8140,7 +8163,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|sc
@@ -8169,10 +8194,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|irq_res
+operator|==
+name|NULL
 condition|)
 block|{
 name|DEVPRINTF
@@ -8192,7 +8218,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 return|return
@@ -8255,7 +8283,7 @@ name|sc
 operator|->
 name|intrhand
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -8282,7 +8310,7 @@ name|sc
 operator|->
 name|port_res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -8309,7 +8337,7 @@ name|sc
 operator|->
 name|ce2_port_res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -8336,7 +8364,7 @@ name|sc
 operator|->
 name|irq_res
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -8355,9 +8383,8 @@ name|sc
 operator|->
 name|ifp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
-return|return;
 block|}
 end_function
 

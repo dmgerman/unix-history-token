@@ -59,7 +59,7 @@ decl_stmt|;
 name|u_char
 name|enaddr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 specifier|const
@@ -113,7 +113,7 @@ comment|/* Silicon revision */
 name|int
 name|tx_queued
 decl_stmt|;
-comment|/* Packets currently waiting to transmit */
+comment|/* Transmit packets currently waiting */
 name|int
 name|tx_tpr
 decl_stmt|;
@@ -122,11 +122,11 @@ name|int
 name|tx_timeouts
 decl_stmt|;
 comment|/* Count of transmit timeouts */
-name|u_int16_t
+name|uint16_t
 name|tx_min
 decl_stmt|;
-comment|/* Smallest packet we can send without padding */
-name|u_int16_t
+comment|/* Smallest packet for no padding */
+name|uint16_t
 name|tx_thres
 decl_stmt|;
 comment|/* Threshold bytes for early transmit */
@@ -161,7 +161,7 @@ comment|/* 1 = Card has Dingo (CEM56) silicon */
 name|u_char
 name|phy_ok
 decl_stmt|;
-comment|/* 1 = MII-compliant PHY found and initialised */
+comment|/* 1 = MII-compliant PHY found */
 name|u_char
 name|gone
 decl_stmt|;
