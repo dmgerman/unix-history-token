@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2006 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2006,2007 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey                     2006                       *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey                                                *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,27 +26,30 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: db_iterator.c,v 1.5 2006/12/16 19:06:42 tom Exp $"
+literal|"$Id: db_iterator.c,v 1.6 2007/04/22 00:00:26 tom Exp $"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-specifier|static
-name|bool
-name|have_tic_directory
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|HaveTicDirectory
+value|_nc_globals.have_tic_directory
+end_define
 
-begin_decl_stmt
-specifier|static
-name|bool
-name|keep_tic_directory
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|KeepTicDirectory
+value|_nc_globals.keep_tic_directory
+end_define
+
+begin_define
+define|#
+directive|define
+name|TicDirectory
+value|_nc_globals.tic_directory
+end_define
 
 begin_comment
 comment|/*  * Record the "official" location of the terminfo directory, according to  * the place where we're writing to, or the normal default, if not.  */
@@ -68,18 +71,10 @@ end_macro
 
 begin_block
 block|{
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|result
-init|=
-name|TERMINFO
-decl_stmt|;
 if|if
 condition|(
 operator|!
-name|keep_tic_directory
+name|KeepTicDirectory
 condition|)
 block|{
 if|if
@@ -89,11 +84,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|result
+name|TicDirectory
 operator|=
 name|path
 expr_stmt|;
-name|have_tic_directory
+name|HaveTicDirectory
 operator|=
 name|TRUE
 expr_stmt|;
@@ -102,7 +97,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|have_tic_directory
+name|HaveTicDirectory
 operator|&&
 name|use_terminfo_vars
 argument_list|()
@@ -134,7 +129,7 @@ return|;
 block|}
 block|}
 return|return
-name|result
+name|TicDirectory
 return|;
 block|}
 end_block
@@ -164,7 +159,7 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
-name|keep_tic_directory
+name|KeepTicDirectory
 operator|=
 name|TRUE
 expr_stmt|;
@@ -175,22 +170,19 @@ begin_comment
 comment|/*  * Process the list of :-separated directories, looking for the terminal type.  * We don't use strtok because it does not show us empty tokens.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|this_db_list
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|ThisDbList
+value|_nc_globals.dbi_list
+end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|size_db_list
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|ThisDbSize
+value|_nc_globals.dbi_size
+end_define
 
 begin_comment
 comment|/*  * Cleanup.  */
@@ -214,18 +206,18 @@ begin_block
 block|{
 if|if
 condition|(
-name|this_db_list
+name|ThisDbList
 operator|!=
 literal|0
 condition|)
 block|{
 name|FreeAndNull
 argument_list|(
-name|this_db_list
+name|ThisDbList
 argument_list|)
 expr_stmt|;
 block|}
-name|size_db_list
+name|ThisDbSize
 operator|=
 literal|0
 expr_stmt|;
@@ -262,17 +254,17 @@ condition|)
 block|{
 name|FreeIfNeeded
 argument_list|(
-name|this_db_list
+name|ThisDbList
 argument_list|)
 expr_stmt|;
-name|this_db_list
+name|ThisDbList
 operator|=
 name|strdup
 argument_list|(
 name|source
 argument_list|)
 expr_stmt|;
-name|size_db_list
+name|ThisDbSize
 operator|=
 name|strlen
 argument_list|(
@@ -282,16 +274,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|this_db_list
+name|ThisDbList
 operator|!=
 literal|0
 operator|&&
-name|size_db_list
+name|ThisDbSize
 operator|&&
 operator|*
 name|offset
 operator|<
-name|size_db_list
+name|ThisDbSize
 condition|)
 block|{
 specifier|static
@@ -305,7 +297,7 @@ name|char
 modifier|*
 name|result
 init|=
-name|this_db_list
+name|ThisDbList
 operator|+
 operator|*
 name|offset
@@ -360,7 +352,7 @@ name|offset
 operator|=
 name|marker
 operator|-
-name|this_db_list
+name|ThisDbList
 expr_stmt|;
 block|}
 if|if
@@ -373,9 +365,9 @@ operator|&&
 name|result
 operator|!=
 operator|(
-name|this_db_list
+name|ThisDbList
 operator|+
-name|size_db_list
+name|ThisDbSize
 operator|)
 condition|)
 name|result
@@ -476,7 +468,7 @@ name|dbdTIC
 case|:
 if|if
 condition|(
-name|have_tic_directory
+name|HaveTicDirectory
 condition|)
 name|result
 operator|=

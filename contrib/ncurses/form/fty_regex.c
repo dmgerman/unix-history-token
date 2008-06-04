@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_regex.c,v 1.19 2006/04/22 21:33:05 tom Exp $"
+literal|"$Id: fty_regex.c,v 1.21 2007/10/13 19:33:50 tom Exp $"
 argument_list|)
 end_macro
 
@@ -275,16 +275,11 @@ name|preg
 decl_stmt|;
 name|preg
 operator|=
-operator|(
-name|RegExp_Arg
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
+name|typeMalloc
 argument_list|(
 name|RegExp_Arg
-argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -292,6 +287,18 @@ condition|(
 name|preg
 condition|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CREATE
+argument_list|(
+literal|"RegExp_Arg %p"
+argument_list|)
+operator|,
+name|preg
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -300,16 +307,11 @@ name|preg
 operator|->
 name|pRegExp
 operator|=
-operator|(
-name|regex_t
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
+name|typeMalloc
 argument_list|(
 name|regex_t
-argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|!=
@@ -335,22 +337,29 @@ operator|)
 argument_list|)
 condition|)
 block|{
+name|T
+argument_list|(
+operator|(
+name|T_CREATE
+argument_list|(
+literal|"regex_t %p"
+argument_list|)
+operator|,
+name|preg
+operator|->
+name|pRegExp
+operator|)
+argument_list|)
+expr_stmt|;
 name|preg
 operator|->
 name|refCount
 operator|=
-operator|(
-name|unsigned
-name|long
-operator|*
-operator|)
-name|malloc
+name|typeMalloc
 argument_list|(
-expr|sizeof
-operator|(
-name|unsigned
-name|long
-operator|)
+argument|unsigned long
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -426,16 +435,11 @@ name|pArg
 decl_stmt|;
 name|pArg
 operator|=
-operator|(
-name|RegExp_Arg
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
+name|typeMalloc
 argument_list|(
 name|RegExp_Arg
-argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -448,6 +452,18 @@ name|blen
 init|=
 name|RX_INCREMENT
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CREATE
+argument_list|(
+literal|"RegExp_Arg %p"
+argument_list|)
+operator|,
+name|pArg
+operator|)
+argument_list|)
+expr_stmt|;
 name|pArg
 operator|->
 name|compiled_expression
@@ -458,18 +474,11 @@ name|pArg
 operator|->
 name|refCount
 operator|=
-operator|(
-name|unsigned
-name|long
-operator|*
-operator|)
-name|malloc
+name|typeMalloc
 argument_list|(
-expr|sizeof
-operator|(
-name|unsigned
-name|long
-operator|)
+argument|unsigned long
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -487,12 +496,10 @@ name|char
 modifier|*
 name|buf
 init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
+name|typeMalloc
 argument_list|(
+name|char
+argument_list|,
 name|blen
 argument_list|)
 decl_stmt|;

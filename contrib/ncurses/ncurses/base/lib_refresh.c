@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_refresh.c,v 1.34 2006/05/27 19:21:19 tom Exp $"
+literal|"$Id: lib_refresh.c,v 1.41 2007/09/29 20:39:34 tom Exp $"
 argument_list|)
 end_macro
 
@@ -155,9 +155,9 @@ name|NCURSES_SIZE_T
 name|limit_x
 decl_stmt|;
 name|NCURSES_SIZE_T
-name|i
+name|src_row
 decl_stmt|,
-name|j
+name|src_col
 decl_stmt|;
 name|NCURSES_SIZE_T
 name|begx
@@ -166,9 +166,9 @@ name|NCURSES_SIZE_T
 name|begy
 decl_stmt|;
 name|NCURSES_SIZE_T
-name|m
+name|dst_row
 decl_stmt|,
-name|n
+name|dst_col
 decl_stmt|;
 if|#
 directive|if
@@ -195,10 +195,12 @@ directive|ifdef
 name|TRACE
 if|if
 condition|(
-name|_nc_tracing
-operator|&
+name|USE_TRACEF
+argument_list|(
 name|TRACE_UPDATE
+argument_list|)
 condition|)
+block|{
 name|_tracedump
 argument_list|(
 literal|"...win"
@@ -206,6 +208,12 @@ argument_list|,
 name|win
 argument_list|)
 expr_stmt|;
+name|_nc_unlock_global
+argument_list|(
+name|tracef
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* TRACE */
@@ -302,14 +310,14 @@ operator|~
 name|_HASMOVED
 expr_stmt|;
 comment|/*      * Microtweaking alert!  This double loop is one of the genuine      * hot spots in the code.  Even gcc doesn't seem to do enough      * common-subexpression chunking to make it really tense,      * so we'll force the issue.      */
-comment|/* limit(n) */
+comment|/* limit(dst_col) */
 name|limit_x
 operator|=
 name|win
 operator|->
 name|_maxx
 expr_stmt|;
-comment|/* limit(j) */
+comment|/* limit(src_col) */
 if|if
 condition|(
 name|limit_x
@@ -330,11 +338,11 @@ name|begx
 expr_stmt|;
 for|for
 control|(
-name|i
+name|src_row
 operator|=
 literal|0
 operator|,
-name|m
+name|dst_row
 operator|=
 name|begy
 operator|+
@@ -342,22 +350,22 @@ name|win
 operator|->
 name|_yoffset
 init|;
-name|i
+name|src_row
 operator|<=
 name|win
 operator|->
 name|_maxy
 operator|&&
-name|m
+name|dst_row
 operator|<=
 name|newscr
 operator|->
 name|_maxy
 condition|;
-name|i
+name|src_row
 operator|++
 operator|,
-name|m
+name|dst_row
 operator|++
 control|)
 block|{
@@ -372,7 +380,7 @@ name|newscr
 operator|->
 name|_line
 index|[
-name|m
+name|dst_row
 index|]
 decl_stmt|;
 specifier|register
@@ -386,7 +394,7 @@ name|win
 operator|->
 name|_line
 index|[
-name|i
+name|src_row
 index|]
 decl_stmt|;
 if|if
@@ -399,7 +407,7 @@ name|_NOCHANGE
 condition|)
 block|{
 name|int
-name|last
+name|last_src
 init|=
 name|oline
 operator|->
@@ -407,36 +415,76 @@ name|lastchar
 decl_stmt|;
 if|if
 condition|(
-name|last
+name|last_src
 operator|>
 name|limit_x
 condition|)
-name|last
+name|last_src
 operator|=
 name|limit_x
 expr_stmt|;
-for|for
-control|(
-name|j
+name|src_col
 operator|=
 name|oline
 operator|->
 name|firstchar
-operator|,
-name|n
+expr_stmt|;
+name|dst_col
 operator|=
-name|j
+name|src_col
 operator|+
 name|begx
+expr_stmt|;
+name|if_WIDEC
+argument_list|(
+argument|{ 		register int j;
+comment|/* 		 * Ensure that we will copy complete multi-column characters 		 * on the left-boundary. 		 */
+argument|if (isWidecExt(oline->text[src_col])) { 		    j =
+literal|1
+argument|+ dst_col - WidecExt(oline->text[src_col]); 		    if (j<
+literal|0
+argument|) 			j =
+literal|0
+argument|; 		    if (dst_col> j) { 			src_col -= (dst_col - j); 			dst_col = j; 		    } 		}
+comment|/* 		 * Ensure that we will copy complete multi-column characters 		 * on the right-boundary. 		 */
+argument|j = last_src; 		if (WidecExt(oline->text[j])) { 		    ++j; 		    while (j<= limit_x) { 			if (isWidecBase(oline->text[j])) { 			    break; 			} else { 			    last_src = j; 			} 			++j; 		    } 		} 	    }
+argument_list|)
+empty_stmt|;
+name|if_WIDEC
+argument_list|(
+argument|{ 		static cchar_t blank = BLANK; 		int last_dst = begx + ((last_src< win->_maxx) 				       ? last_src 				       : win->_maxx); 		int fix_left = dst_col; 		int fix_right = last_dst; 		register int j;
+comment|/* 		 * Check for boundary cases where we may overwrite part of a 		 * multi-column character.  For those, wipe the remainder of 		 * the character to blanks. 		 */
+argument|j = dst_col; 		if (isWidecExt(nline->text[j])) {
+comment|/* 		     * On the left, we only care about multi-column characters 		     * that extend into the changed region. 		     */
+argument|fix_left =
+literal|1
+argument|+ j - WidecExt(nline->text[j]); 		    if (fix_left<
+literal|0
+argument|) 			fix_left =
+literal|0
+argument|;
+comment|/* only if cell is corrupt */
+argument|}  		j = last_dst; 		if (WidecExt(nline->text[j]) !=
+literal|0
+argument|) {
+comment|/* 		     * On the right, any multi-column character is a problem, 		     * unless it happens to be contained in the change, and 		     * ending at the right boundary of the change.  The 		     * computation for 'fix_left' accounts for the left-side of 		     * this character.  Find the end of the character. 		     */
+argument|++j; 		    while (j<= newscr->_maxx&& isWidecExt(nline->text[j])) { 			fix_right = j++; 		    } 		}
+comment|/* 		 * The analysis is simpler if we do the clearing afterwards. 		 * Do that now. 		 */
+argument|if (fix_left< dst_col || fix_right> last_dst) { 		    for (j = fix_left; j<= fix_right; ++j) { 			nline->text[j] = blank; 			CHANGED_CELL(nline, j); 		    } 		} 	    }
+argument_list|)
+empty_stmt|;
+comment|/* 	     * Copy the changed text. 	     */
+for|for
+control|(
 init|;
-name|j
+name|src_col
 operator|<=
-name|last
+name|last_src
 condition|;
-name|j
+name|src_col
 operator|++
 operator|,
-name|n
+name|dst_col
 operator|++
 control|)
 block|{
@@ -449,14 +497,14 @@ name|oline
 operator|->
 name|text
 index|[
-name|j
+name|src_col
 index|]
 argument_list|,
 name|nline
 operator|->
 name|text
 index|[
-name|n
+name|dst_col
 index|]
 argument_list|)
 condition|)
@@ -465,21 +513,21 @@ name|nline
 operator|->
 name|text
 index|[
-name|n
+name|dst_col
 index|]
 operator|=
 name|oline
 operator|->
 name|text
 index|[
-name|j
+name|src_col
 index|]
 expr_stmt|;
 name|CHANGED_CELL
 argument_list|(
 name|nline
 argument_list|,
-name|n
+name|dst_col
 argument_list|)
 expr_stmt|;
 block|}
@@ -505,6 +553,7 @@ operator|->
 name|oldindex
 operator|=
 operator|(
+operator|(
 name|oind
 operator|==
 name|_NEWINDEX
@@ -512,6 +561,7 @@ operator|)
 condition|?
 name|_NEWINDEX
 else|:
+operator|(
 name|begy
 operator|+
 name|oind
@@ -519,6 +569,8 @@ operator|+
 name|win
 operator|->
 name|_yoffset
+operator|)
+operator|)
 expr_stmt|;
 block|}
 endif|#
@@ -540,7 +592,7 @@ name|oline
 operator|->
 name|oldindex
 operator|=
-name|i
+name|src_row
 argument_list|)
 expr_stmt|;
 block|}
@@ -614,10 +666,12 @@ directive|ifdef
 name|TRACE
 if|if
 condition|(
-name|_nc_tracing
-operator|&
+name|USE_TRACEF
+argument_list|(
 name|TRACE_UPDATE
+argument_list|)
 condition|)
+block|{
 name|_tracedump
 argument_list|(
 literal|"newscr"
@@ -625,6 +679,12 @@ argument_list|,
 name|newscr
 argument_list|)
 expr_stmt|;
+name|_nc_unlock_global
+argument_list|(
+name|tracef
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* TRACE */

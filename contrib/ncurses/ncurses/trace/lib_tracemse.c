@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2002,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracemse.c,v 1.12 2005/06/11 19:53:50 tom Exp $"
+literal|"$Id: lib_tracemse.c,v 1.13 2007/04/21 21:23:00 tom Exp $"
 argument_list|)
 end_macro
 
@@ -29,6 +29,13 @@ ifdef|#
 directive|ifdef
 name|TRACE
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|my_buffer
+value|_nc_globals.tracemse_buf
+end_define
 
 begin_macro
 name|NCURSES_EXPORT
@@ -46,34 +53,14 @@ end_macro
 
 begin_block
 block|{
-comment|/*      * hmm - format is no longer than 80 columns, there are 5 numbers that      * could at most have 10 digits, and the mask contains no more than 32 bits      * with each bit representing less than 15 characters.  Usually the whole      * string is less than 80 columns, but this buffer size is an absolute      * limit.      */
-specifier|static
-name|char
-name|buf
-index|[
-literal|80
-operator|+
-operator|(
-literal|5
-operator|*
-literal|10
-operator|)
-operator|+
-operator|(
-literal|32
-operator|*
-literal|15
-operator|)
-index|]
-decl_stmt|;
 operator|(
 name|void
 operator|)
 name|sprintf
 argument_list|(
-name|buf
+name|my_buffer
 argument_list|,
-literal|"id %2d  at (%2d, %2d, %2d) state %4lx = {"
+name|TRACEMSE_FMT
 argument_list|,
 name|ep
 operator|->
@@ -108,7 +95,7 @@ name|m
 parameter_list|,
 name|s
 parameter_list|)
-value|if ((ep->bstate& m) == m) strcat(strcat(buf, s), ", ")
+value|if ((ep->bstate& m) == m) strcat(strcat(my_buffer, s), ", ")
 name|SHOW
 argument_list|(
 name|BUTTON1_RELEASED
@@ -387,11 +374,11 @@ directive|undef
 name|SHOW
 if|if
 condition|(
-name|buf
+name|my_buffer
 index|[
 name|strlen
 argument_list|(
-name|buf
+name|my_buffer
 argument_list|)
 operator|-
 literal|1
@@ -399,11 +386,11 @@ index|]
 operator|==
 literal|' '
 condition|)
-name|buf
+name|my_buffer
 index|[
 name|strlen
 argument_list|(
-name|buf
+name|my_buffer
 argument_list|)
 operator|-
 literal|2
@@ -416,14 +403,14 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|my_buffer
 argument_list|,
 literal|"}"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|buf
+name|my_buffer
 operator|)
 return|;
 block|}

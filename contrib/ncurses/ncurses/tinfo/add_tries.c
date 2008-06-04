@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2000,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Thomas E. Dickey<dickey@clark.net> 1998                        *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Thomas E. Dickey            1998-on                             *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: add_tries.c,v 1.5 2005/11/20 01:32:48 tom Exp $"
+literal|"$Id: add_tries.c,v 1.8 2006/12/30 23:15:26 tom Exp $"
 argument_list|)
 end_macro
 
@@ -51,14 +51,14 @@ end_define
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
-argument|void
+argument|int
 argument_list|)
 end_macro
 
 begin_macro
 name|_nc_add_to_try
 argument_list|(
-argument|struct tries **tree
+argument|TRIES ** tree
 argument_list|,
 argument|const char *str
 argument_list|,
@@ -68,14 +68,7 @@ end_macro
 
 begin_block
 block|{
-specifier|static
-name|bool
-name|out_of_memory
-init|=
-name|FALSE
-decl_stmt|;
-name|struct
-name|tries
+name|TRIES
 modifier|*
 name|ptr
 decl_stmt|,
@@ -96,6 +89,26 @@ operator|*
 operator|)
 name|str
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"_nc_add_to_try(%p, %s, %u)"
+argument_list|)
+operator|,
+operator|*
+name|tree
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|str
+argument_list|)
+operator|,
+name|code
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|txt
@@ -107,13 +120,15 @@ name|txt
 operator|==
 literal|'\0'
 operator|||
-name|out_of_memory
-operator|||
 name|code
 operator|==
 literal|0
 condition|)
-return|return;
+name|returnCode
+argument_list|(
+name|ERR
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -199,7 +214,11 @@ name|value
 operator|=
 name|code
 expr_stmt|;
-return|return;
+name|returnCode
+argument_list|(
+name|OK
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -229,8 +248,7 @@ name|sibling
 operator|=
 name|typeCalloc
 argument_list|(
-expr|struct
-name|tries
+name|TRIES
 argument_list|,
 literal|1
 argument_list|)
@@ -239,11 +257,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|out_of_memory
-operator|=
-name|TRUE
+name|returnCode
+argument_list|(
+name|ERR
+argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|savedptr
 operator|=
@@ -285,8 +303,7 @@ operator|)
 operator|=
 name|typeCalloc
 argument_list|(
-expr|struct
-name|tries
+name|TRIES
 argument_list|,
 literal|1
 argument_list|)
@@ -298,11 +315,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|out_of_memory
-operator|=
-name|TRUE
+name|returnCode
+argument_list|(
+name|ERR
+argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|SET_TRY
 argument_list|(
@@ -331,8 +348,7 @@ name|child
 operator|=
 name|typeCalloc
 argument_list|(
-expr|struct
-name|tries
+name|TRIES
 argument_list|,
 literal|1
 argument_list|)
@@ -350,10 +366,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|out_of_memory
-operator|=
-name|TRUE
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -377,7 +389,11 @@ name|ptr
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+name|returnCode
+argument_list|(
+name|ERR
+argument_list|)
+expr_stmt|;
 block|}
 name|SET_TRY
 argument_list|(
@@ -399,7 +415,11 @@ name|value
 operator|=
 name|code
 expr_stmt|;
-return|return;
+name|returnCode
+argument_list|(
+name|OK
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
