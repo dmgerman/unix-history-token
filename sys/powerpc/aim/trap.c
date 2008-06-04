@@ -1329,6 +1329,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"   lr              = 0x%x\n"
+argument_list|,
+name|frame
+operator|->
+name|lr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"   curthread       = %p\n"
 argument_list|,
 name|curthread
