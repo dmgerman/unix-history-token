@@ -450,6 +450,11 @@ modifier|*
 modifier|*
 name|nargv
 decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|v
+decl_stmt|;
 name|struct
 name|sigaction
 name|sa
@@ -1209,14 +1214,8 @@ name|pamh
 argument_list|,
 name|PAM_USER
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
-name|p
+name|v
 argument_list|)
 expr_stmt|;
 if|if
@@ -1227,7 +1226,7 @@ name|PAM_SUCCESS
 condition|)
 name|user
 operator|=
-name|p
+name|v
 expr_stmt|;
 else|else
 name|syslog
