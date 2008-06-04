@@ -86,7 +86,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|RESCUE
+name|STATIC_GEOM_CLASSES
 end_ifdef
 
 begin_define

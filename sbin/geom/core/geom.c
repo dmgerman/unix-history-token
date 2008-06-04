@@ -152,7 +152,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|RESCUE
+name|STATIC_GEOM_CLASSES
 end_ifdef
 
 begin_decl_stmt
@@ -2488,7 +2488,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|RESCUE
+name|STATIC_GEOM_CLASSES
 end_ifndef
 
 begin_function
@@ -2869,7 +2869,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !RESCUE */
+comment|/* !STATIC_GEOM_CLASSES */
 end_comment
 
 begin_comment
@@ -3164,7 +3164,7 @@ expr_stmt|;
 block|}
 ifndef|#
 directive|ifndef
-name|RESCUE
+name|STATIC_GEOM_CLASSES
 name|load_library
 argument_list|()
 expr_stmt|;
@@ -3223,7 +3223,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !RESCUE */
+comment|/* !STATIC_GEOM_CLASSES */
 name|set_class_name
 argument_list|()
 expr_stmt|;
