@@ -78,14 +78,6 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/* Device */
-name|bus_space_tag_t
-name|bst
-decl_stmt|;
-comment|/* Bus space tag for card */
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
-comment|/* Bus space handle for card */
 name|void
 modifier|*
 name|intrhand
@@ -219,7 +211,7 @@ name|XE_INB
 parameter_list|(
 name|r
 parameter_list|)
-value|bus_space_read_1(scp->bst, scp->bsh, (r))
+value|bus_read_1(scp->port_res, (r))
 end_define
 
 begin_define
@@ -229,7 +221,7 @@ name|XE_INW
 parameter_list|(
 name|r
 parameter_list|)
-value|bus_space_read_2(scp->bst, scp->bsh, (r))
+value|bus_read_2(scp->port_res, (r))
 end_define
 
 begin_define
@@ -241,7 +233,7 @@ name|r
 parameter_list|,
 name|b
 parameter_list|)
-value|bus_space_write_1(scp->bst, scp->bsh, (r), (b))
+value|bus_write_1(scp->port_res, (r), (b))
 end_define
 
 begin_define
@@ -253,7 +245,7 @@ name|r
 parameter_list|,
 name|w
 parameter_list|)
-value|bus_space_write_2(scp->bst, scp->bsh, (r), (w))
+value|bus_write_2(scp->port_res, (r), (w))
 end_define
 
 begin_define
@@ -264,49 +256,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|XE_OUTB(XE_PR, (p))
-end_define
-
-begin_comment
-comment|/*  * Horrid stuff for accessing CIS tuples  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CISTPL_BUFSIZE
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|CISTPL_TYPE
-parameter_list|(
-name|tpl
-parameter_list|)
-value|bus_space_read_1(bst, bsh, tpl + 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CISTPL_LEN
-parameter_list|(
-name|tpl
-parameter_list|)
-value|bus_space_read_1(bst, bsh, tpl + 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CISTPL_DATA
-parameter_list|(
-name|tpl
-parameter_list|,
-name|pos
-parameter_list|)
-value|bus_space_read_1(bst, bsh, tpl+ 4 + ((pos)<<1))
 end_define
 
 begin_function_decl
