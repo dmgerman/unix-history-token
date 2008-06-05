@@ -1642,6 +1642,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
+operator||
+name|LK_NOWITNESS
 argument_list|)
 expr_stmt|;
 name|mtx_lock
