@@ -76,6 +76,10 @@ begin_comment
 comment|/*  * Control Character Defaults  */
 end_comment
 
+begin_comment
+comment|/*  * XXX: A lot of code uses lowercase characters, but control-character  * conversion is actually only valid when applied to uppercase  * characters. We just treat lowercase characters as if they were  * inserted as uppercase.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -83,14 +87,14 @@ name|CTRL
 parameter_list|(
 name|x
 parameter_list|)
-value|(x&037)
+value|((x)>= 'a'&& (x)<= 'z' ? \ 	((x) - 'a' + 1) : (((x) - 'A' + 1)& 0x7f))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CEOF
-value|CTRL('d')
+value|CTRL('D')
 end_define
 
 begin_define
@@ -108,35 +112,35 @@ begin_define
 define|#
 directive|define
 name|CERASE
-value|0177
+value|CTRL('?')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CERASE2
-value|CTRL('h')
+value|CTRL('H')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CINTR
-value|CTRL('c')
+value|CTRL('C')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CSTATUS
-value|CTRL('t')
+value|CTRL('T')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CKILL
-value|CTRL('u')
+value|CTRL('U')
 end_define
 
 begin_define
@@ -150,18 +154,14 @@ begin_define
 define|#
 directive|define
 name|CQUIT
-value|034
+value|CTRL('\\')
 end_define
-
-begin_comment
-comment|/* FS, ^\ */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUSP
-value|CTRL('z')
+value|CTRL('Z')
 end_define
 
 begin_define
@@ -175,49 +175,49 @@ begin_define
 define|#
 directive|define
 name|CDSUSP
-value|CTRL('y')
+value|CTRL('Y')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CSTART
-value|CTRL('q')
+value|CTRL('Q')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CSTOP
-value|CTRL('s')
+value|CTRL('S')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CLNEXT
-value|CTRL('v')
+value|CTRL('V')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDISCARD
-value|CTRL('o')
+value|CTRL('O')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CWERASE
-value|CTRL('w')
+value|CTRL('W')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CREPRINT
-value|CTRL('r')
+value|CTRL('R')
 end_define
 
 begin_define
