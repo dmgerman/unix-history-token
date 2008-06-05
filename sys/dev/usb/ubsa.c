@@ -1067,6 +1067,13 @@ block|,
 name|USB_PRODUCT_OPTION_GT3GPLUS
 block|}
 block|,
+comment|/* Option GlobeTrotter Max 3.6 */
+block|{
+name|USB_VENDOR_OPTION
+block|,
+name|USB_PRODUCT_OPTION_GTMAX36
+block|}
+block|,
 comment|/* Huawei Mobile */
 block|{
 name|USB_VENDOR_HUAWEI
