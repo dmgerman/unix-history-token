@@ -101,16 +101,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
-end_include
-
-begin_comment
-comment|/* TIOCOUTQ */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/uio.h>
 end_include
 
@@ -118,6 +108,12 @@ begin_include
 include|#
 directive|include
 file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
