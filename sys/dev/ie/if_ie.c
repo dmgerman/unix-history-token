@@ -1228,13 +1228,15 @@ name|if_init
 operator|=
 name|ieinit
 expr_stmt|;
+name|IFQ_SET_MAXLEN
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
-operator|.
-name|ifq_maxlen
-operator|=
+argument_list|,
 name|IFQ_MAXLEN
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7462,7 +7464,7 @@ operator||
 name|IFF_ALLMULTI
 operator|)
 expr_stmt|;
-name|ieinit
+name|ieinit_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -7502,7 +7504,7 @@ operator||
 name|IFF_ALLMULTI
 operator|)
 expr_stmt|;
-name|ieinit
+name|ieinit_locked
 argument_list|(
 name|sc
 argument_list|)
