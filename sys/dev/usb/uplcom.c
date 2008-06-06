@@ -837,6 +837,17 @@ block|,
 name|TYPE_PL2303
 block|}
 block|,
+comment|/* TrendNet TU-S9 */
+block|{
+name|USB_VENDOR_PROLIFIC
+block|,
+name|USB_PRODUCT_PROLIFIC_PL2303
+block|,
+literal|0x400
+block|,
+name|TYPE_PL2303X
+block|}
+block|,
 comment|/* ST Lab USB-SERIAL-4 */
 block|{
 name|USB_VENDOR_PROLIFIC
