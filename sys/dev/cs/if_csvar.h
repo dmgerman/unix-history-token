@@ -76,30 +76,12 @@ name|int
 name|port_rid
 decl_stmt|;
 comment|/* resource id for port range */
-name|int
-name|port_used
-decl_stmt|;
-comment|/* nonzero if ports used */
 name|struct
 name|resource
 modifier|*
 name|port_res
 decl_stmt|;
 comment|/* resource for port range */
-name|int
-name|mem_rid
-decl_stmt|;
-comment|/* resource id for memory range */
-name|int
-name|mem_used
-decl_stmt|;
-comment|/* nonzero if memory used */
-name|struct
-name|resource
-modifier|*
-name|mem_res
-decl_stmt|;
-comment|/* resource for memory range */
 name|int
 name|irq_rid
 decl_stmt|;

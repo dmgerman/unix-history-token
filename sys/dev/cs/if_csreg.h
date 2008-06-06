@@ -2885,17 +2885,6 @@ value|2
 end_define
 
 begin_comment
-comment|/* Device name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CS_NAME
-value|"cs"
-end_define
-
-begin_comment
 comment|/*  * It would appear that for pccards (well, the IBM EtherJet PCMCIA card) that  * are connected to card bus bridges there's a problem.  For reading the  * value back you have to go into 8 bit mode.  The Linux driver also uses  * this trick.  This may be a bug in the card and how it handles fast 16-bit  * read after a write.  */
 end_comment
 

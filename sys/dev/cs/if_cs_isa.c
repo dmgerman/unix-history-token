@@ -274,26 +274,6 @@ argument_list|,
 name|CS_89x0_IO_PORTS
 argument_list|)
 expr_stmt|;
-comment|/* XXX mem appears to not be used at all */
-if|if
-condition|(
-name|sc
-operator|->
-name|mem_used
-condition|)
-name|cs_alloc_memory
-argument_list|(
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|mem_rid
-argument_list|,
-name|sc
-operator|->
-name|mem_used
-argument_list|)
-expr_stmt|;
 name|cs_alloc_irq
 argument_list|(
 name|dev
