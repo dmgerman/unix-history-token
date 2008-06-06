@@ -589,6 +589,10 @@ name|time_t
 name|nh_idle_timeout
 decl_stmt|;
 comment|/* (s) Time at which host is idle */
+name|time_t
+name|nh_rpc_create_time
+decl_stmt|;
+comment|/* (s) Time we create RPC client */
 name|struct
 name|sysctl_ctx_list
 name|nh_sysctl
@@ -3782,6 +3786,46 @@ name|struct
 name|timeval
 name|zero
 decl_stmt|;
+comment|/*  	 * We can't hold onto RPC handles for too long - the async 	 * call/reply protocol used by some NLM clients makes it hard 	 * to tell when they change port numbers (e.g. after a 	 * reboot). Note that if a client reboots while it isn't 	 * holding any locks, it won't bother to notify us. We 	 * expire the RPC handles after two minutes. 	 */
+if|if
+condition|(
+name|host
+operator|->
+name|nh_rpc
+operator|&&
+name|time_uptime
+operator|>
+name|host
+operator|->
+name|nh_rpc_create_time
+operator|+
+literal|2
+operator|*
+literal|60
+condition|)
+block|{
+name|CLIENT
+modifier|*
+name|client
+decl_stmt|;
+name|client
+operator|=
+name|host
+operator|->
+name|nh_rpc
+expr_stmt|;
+name|host
+operator|->
+name|nh_rpc
+operator|=
+name|NULL
+expr_stmt|;
+name|CLNT_DESTROY
+argument_list|(
+name|client
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|host
@@ -3850,13 +3894,11 @@ operator|&
 name|zero
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Monitor the host - if it reboots, the address of 		 * its NSM might change so we must discard our RPC 		 * handle. 		 */
-name|nlm_host_monitor
-argument_list|(
 name|host
-argument_list|,
-literal|0
-argument_list|)
+operator|->
+name|nh_rpc_create_time
+operator|=
+name|time_uptime
 expr_stmt|;
 block|}
 return|return
