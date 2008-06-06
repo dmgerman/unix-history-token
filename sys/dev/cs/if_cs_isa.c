@@ -221,8 +221,6 @@ argument_list|(
 name|dev
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|cs_release_resources
@@ -273,8 +271,6 @@ argument_list|,
 name|sc
 operator|->
 name|irq_rid
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
