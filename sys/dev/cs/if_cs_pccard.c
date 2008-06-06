@@ -166,8 +166,6 @@ init|=
 name|PCCARD_FUNCTION_UNSPEC
 decl_stmt|;
 comment|/* Make sure we're a network function */
-name|error
-operator|=
 name|pccard_get_function
 argument_list|(
 name|dev
@@ -176,17 +174,6 @@ operator|&
 name|fcn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 if|if
 condition|(
 name|fcn
