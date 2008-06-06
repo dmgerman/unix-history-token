@@ -157,9 +157,6 @@ name|pccard_product
 modifier|*
 name|pp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|uint32_t
 name|fcn
 init|=

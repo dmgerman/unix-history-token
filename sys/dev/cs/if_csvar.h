@@ -193,22 +193,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cs_alloc_memory
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|rid
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|cs_alloc_irq
 parameter_list|(
 name|device_t
@@ -216,9 +200,6 @@ name|dev
 parameter_list|,
 name|int
 name|rid
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -262,12 +243,6 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|driver_intr_t
-name|csintr
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

@@ -187,11 +187,9 @@ condition|)
 goto|goto
 name|end
 goto|;
-comment|/* If we had some other problem. */
+comment|/* If we've matched, or there's no PNP ID, probe chip */
 if|if
 condition|(
-operator|!
-operator|(
 name|error
 operator|==
 literal|0
@@ -199,11 +197,7 @@ operator|||
 name|error
 operator|==
 name|ENOENT
-operator|)
 condition|)
-goto|goto
-name|end
-goto|;
 name|error
 operator|=
 name|cs_cs89x0_probe
