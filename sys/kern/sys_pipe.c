@@ -1092,13 +1092,13 @@ name|rpipe
 operator|->
 name|pipe_present
 operator|=
-literal|1
+name|PIPE_ACTIVE
 expr_stmt|;
 name|wpipe
 operator|->
 name|pipe_present
 operator|=
-literal|1
+name|PIPE_ACTIVE
 expr_stmt|;
 comment|/* 	 * Eventually, the MAC Framework may initialize the label 	 * in ctor or init, but for now we do it elswhere to avoid 	 * blocking in ctor or init. 	 */
 name|pp
@@ -4341,12 +4341,11 @@ block|}
 comment|/* 	 * detect loss of pipe read side, issue SIGPIPE if lost. 	 */
 if|if
 condition|(
-operator|(
-operator|!
 name|wpipe
 operator|->
 name|pipe_present
-operator|)
+operator|!=
+name|PIPE_ACTIVE
 operator|||
 operator|(
 name|wpipe
@@ -5793,10 +5792,11 @@ operator|)
 condition|)
 if|if
 condition|(
-operator|!
 name|wpipe
 operator|->
 name|pipe_present
+operator|!=
+name|PIPE_ACTIVE
 operator|||
 operator|(
 name|wpipe
@@ -5856,12 +5856,11 @@ operator|&
 name|PIPE_EOF
 operator|)
 operator|||
-operator|(
-operator|!
 name|wpipe
 operator|->
 name|pipe_present
-operator|)
+operator|!=
+name|PIPE_ACTIVE
 operator|||
 operator|(
 name|wpipe
@@ -6487,8 +6486,8 @@ condition|(
 name|ppipe
 operator|->
 name|pipe_present
-operator|!=
-literal|0
+operator|==
+name|PIPE_ACTIVE
 condition|)
 block|{
 name|pipeselwakeup
@@ -6540,13 +6539,14 @@ name|cpipe
 operator|->
 name|pipe_present
 operator|=
-literal|0
+name|PIPE_CLOSING
 expr_stmt|;
 name|pipeunlock
 argument_list|(
 name|cpipe
 argument_list|)
 expr_stmt|;
+comment|/* 	 * knlist_clear() may sleep dropping the PIPE_MTX. Set the 	 * PIPE_FINALIZED, that allows other end to free the 	 * pipe_pair, only after the knotes are completely dismantled. 	 */
 name|knlist_clear
 argument_list|(
 operator|&
@@ -6558,6 +6558,12 @@ name|si_note
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|cpipe
+operator|->
+name|pipe_present
+operator|=
+name|PIPE_FINALIZED
 expr_stmt|;
 name|knlist_destroy
 argument_list|(
@@ -6576,7 +6582,7 @@ name|ppipe
 operator|->
 name|pipe_present
 operator|==
-literal|0
+name|PIPE_FINALIZED
 condition|)
 block|{
 name|PIPE_UNLOCK
@@ -6681,12 +6687,13 @@ name|pipe_wfiltops
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|cpipe
 operator|->
 name|pipe_peer
 operator|->
 name|pipe_present
+operator|!=
+name|PIPE_ACTIVE
 condition|)
 block|{
 comment|/* other end of pipe has been closed */
@@ -6909,12 +6916,11 @@ operator|&
 name|PIPE_EOF
 operator|)
 operator|||
-operator|(
-operator|!
 name|wpipe
 operator|->
 name|pipe_present
-operator|)
+operator|!=
+name|PIPE_ACTIVE
 operator|||
 operator|(
 name|wpipe
@@ -7006,12 +7012,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|!
 name|wpipe
 operator|->
 name|pipe_present
-operator|)
+operator|!=
+name|PIPE_ACTIVE
 operator|||
 operator|(
 name|wpipe
