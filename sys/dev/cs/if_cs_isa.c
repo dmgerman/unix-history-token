@@ -161,8 +161,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 comment|/* Check isapnp ids */
 name|error
@@ -318,9 +316,6 @@ argument_list|,
 name|cs_isa_attach
 argument_list|)
 block|,
-ifdef|#
-directive|ifdef
-name|CS_HAS_DETACH
 name|DEVMETHOD
 argument_list|(
 name|device_detach
@@ -328,8 +323,6 @@ argument_list|,
 name|cs_detach
 argument_list|)
 block|,
-endif|#
-directive|endif
 block|{
 literal|0
 block|,
