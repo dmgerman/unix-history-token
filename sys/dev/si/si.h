@@ -1069,9 +1069,6 @@ name|callout_handle
 name|lstart_ch
 decl_stmt|;
 comment|/* For canceling our timeout */
-ifdef|#
-directive|ifdef
-name|SI_DEBUG
 name|int
 name|sp_debug
 decl_stmt|;
@@ -1082,8 +1079,6 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1135,15 +1130,8 @@ begin_comment
 comment|/* lstart timeout pending		*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SS_INLSTART
-value|0x0200
-end_define
-
 begin_comment
-comment|/* running an lstart induced t_oproc	*/
+comment|/*			0x0200	--					*/
 end_comment
 
 begin_comment
