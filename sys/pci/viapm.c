@@ -250,7 +250,7 @@ parameter_list|(
 name|port
 parameter_list|)
 define|\
-value|((u_char)bus_space_read_1(viapm->st, viapm->sh, port))
+value|((u_char)bus_read_1(viapm->iores, port))
 end_define
 
 begin_define
@@ -263,7 +263,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|(bus_space_write_1(viapm->st, viapm->sh, port, (u_char)(val)))
+value|(bus_write_1(viapm->iores, port, (u_char)(val)))
 end_define
 
 begin_define
@@ -347,12 +347,6 @@ name|type
 decl_stmt|;
 name|u_int32_t
 name|base
-decl_stmt|;
-name|bus_space_tag_t
-name|st
-decl_stmt|;
-name|bus_space_handle_t
-name|sh
 decl_stmt|;
 name|int
 name|iorid
@@ -1433,28 +1427,6 @@ goto|goto
 name|error
 goto|;
 block|}
-name|viapm
-operator|->
-name|st
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|viapm
-operator|->
-name|iores
-argument_list|)
-expr_stmt|;
-name|viapm
-operator|->
-name|sh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|viapm
-operator|->
-name|iores
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notyet
@@ -1543,6 +1515,8 @@ operator|->
 name|irqres
 argument_list|,
 name|INTR_TYPE_MISC
+operator||
+name|INTR_MPSAFE
 argument_list|,
 operator|(
 name|driver_intr_t
@@ -1850,28 +1824,6 @@ goto|goto
 name|error
 goto|;
 block|}
-name|viapm
-operator|->
-name|st
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|viapm
-operator|->
-name|iores
-argument_list|)
-expr_stmt|;
-name|viapm
-operator|->
-name|sh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|viapm
-operator|->
-name|iores
-argument_list|)
-expr_stmt|;
 name|VIAPM_OUTB
 argument_list|(
 name|GPIO_DIR

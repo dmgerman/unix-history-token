@@ -560,12 +560,6 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
-name|bus_space_tag_t
-name|smbst
-decl_stmt|;
-name|bus_space_handle_t
-name|smbsh
-decl_stmt|;
 name|device_t
 name|smbus
 decl_stmt|;
@@ -620,7 +614,7 @@ parameter_list|,
 specifier|register
 parameter_list|)
 define|\
-value|(bus_space_read_1(nfsmb->smbst, nfsmb->smbsh, register))
+value|(bus_read_1(nfsmb->res, register))
 end_define
 
 begin_define
@@ -635,7 +629,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|(bus_space_write_1(nfsmb->smbst, nfsmb->smbsh, register, value))
+value|(bus_write_1(nfsmb->res, register, value))
 end_define
 
 begin_function_decl
@@ -884,28 +878,6 @@ operator|)
 return|;
 block|}
 block|}
-name|nfsmbsub_sc
-operator|->
-name|smbst
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|nfsmbsub_sc
-operator|->
-name|res
-argument_list|)
-expr_stmt|;
-name|nfsmbsub_sc
-operator|->
-name|smbsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|nfsmbsub_sc
-operator|->
-name|res
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -1071,28 +1043,6 @@ operator|)
 return|;
 block|}
 block|}
-name|nfsmb_sc
-operator|->
-name|smbst
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|nfsmb_sc
-operator|->
-name|res
-argument_list|)
-expr_stmt|;
-name|nfsmb_sc
-operator|->
-name|smbsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|nfsmb_sc
-operator|->
-name|res
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&

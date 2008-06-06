@@ -888,6 +888,8 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_MISC
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,

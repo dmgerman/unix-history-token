@@ -48,14 +48,6 @@ name|int
 name|io_rid
 decl_stmt|;
 comment|/* i/o port bus id */
-name|bus_space_tag_t
-name|io_bst
-decl_stmt|;
-comment|/* bus space tag */
-name|bus_space_handle_t
-name|io_bsh
-decl_stmt|;
-comment|/* bus space handle */
 name|struct
 name|resource
 modifier|*
