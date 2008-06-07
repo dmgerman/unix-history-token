@@ -69,13 +69,25 @@ directive|include
 file|"btxv86.h"
 end_include
 
-begin_decl_stmt
+begin_struct
 specifier|static
+struct|struct
+block|{
 name|struct
 name|bios_smap
-name|smap
+name|_smap_entry
 decl_stmt|;
-end_decl_stmt
+name|char
+name|pad
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Bad BIOS writer, no cookie! */
+block|}
+name|smap
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|static
