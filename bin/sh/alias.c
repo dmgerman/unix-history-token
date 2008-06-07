@@ -134,6 +134,7 @@ name|STATIC
 name|int
 name|unalias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -148,6 +149,7 @@ modifier|*
 modifier|*
 name|hashalias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -357,6 +359,7 @@ name|STATIC
 name|int
 name|unalias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -989,6 +992,7 @@ modifier|*
 modifier|*
 name|hashalias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
