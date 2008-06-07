@@ -1005,11 +1005,14 @@ argument_list|)
 argument_list|,
 literal|"%.*s%s"
 argument_list|,
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|target
-operator|)
+argument_list|)
 argument_list|,
 name|target
 argument_list|,
