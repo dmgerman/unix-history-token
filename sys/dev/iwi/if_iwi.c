@@ -767,8 +767,14 @@ modifier|*
 name|iwi_node_alloc
 parameter_list|(
 name|struct
-name|ieee80211_node_table
+name|ieee80211vap
 modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5359,9 +5365,16 @@ modifier|*
 name|iwi_node_alloc
 parameter_list|(
 name|struct
-name|ieee80211_node_table
+name|ieee80211vap
 modifier|*
-name|nt
+name|vap
+parameter_list|,
+specifier|const
+name|uint8_t
+name|mac
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 block|{
 name|struct
@@ -5395,6 +5408,7 @@ condition|)
 return|return
 name|NULL
 return|;
+comment|/* XXX assign sta table entry for adhoc */
 name|in
 operator|->
 name|in_station

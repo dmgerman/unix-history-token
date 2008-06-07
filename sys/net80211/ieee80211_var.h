@@ -882,8 +882,14 @@ name|ic_node_alloc
 function_decl|)
 parameter_list|(
 name|struct
-name|ieee80211_node_table
+name|ieee80211vap
 modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
 parameter_list|)
 function_decl|;
 name|void
