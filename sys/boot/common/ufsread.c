@@ -1192,9 +1192,11 @@ operator|-
 name|NDADDR
 argument_list|)
 operator|/
+operator|(
 name|n
 operator|*
 name|DBPERVBLK
+operator|)
 expr_stmt|;
 name|vbaddr
 operator|=
