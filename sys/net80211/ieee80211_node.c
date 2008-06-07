@@ -9399,7 +9399,7 @@ name|ni
 argument_list|,
 name|resp
 argument_list|,
-name|IEEE80211_REASON_ASSOC_TOOMANY
+name|IEEE80211_STATUS_TOOMANY
 argument_list|)
 expr_stmt|;
 name|ieee80211_node_leave
