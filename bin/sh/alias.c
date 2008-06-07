@@ -59,12 +59,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"input.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"output.h"
 end_include
 
