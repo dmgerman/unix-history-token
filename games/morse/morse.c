@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * Taught to send *real* morse by Lyndon Nerenberg (VE7TCP/VE6BBM)  *<lyndon@orthanc.com>  */
+comment|/*  * Taught to send *real* morse by Lyndon Nerenberg (VE6BBM)  *<lyndon@orthanc.ca>  */
 end_comment
 
 begin_ifndef
@@ -2367,7 +2367,18 @@ name|s
 operator|==
 literal|'.'
 condition|?
+operator|*
+operator|(
+name|s
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'\0'
+condition|?
 literal|"dit"
+else|:
+literal|"di"
 else|:
 literal|"dah"
 argument_list|)
