@@ -2815,7 +2815,6 @@ name|all_lower
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|char
 operator|*
 operator|)
@@ -2834,7 +2833,6 @@ name|all_upper
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|char
 operator|*
 operator|)
@@ -2909,7 +2907,6 @@ name|copy_string
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 specifier|const
 name|char
 operator|*
@@ -2930,7 +2927,6 @@ name|copy_unsigned_string
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|Char
 operator|*
 operator|)
@@ -3623,7 +3619,6 @@ name|mark_beginning_as_normal
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|int
 operator|)
 argument_list|)
@@ -4054,7 +4049,6 @@ name|addsym
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|char
 index|[]
 operator|,
@@ -4122,7 +4116,6 @@ name|findsym
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|char
 index|[]
 operator|,
