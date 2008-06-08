@@ -1310,7 +1310,7 @@ begin_struct
 struct|struct
 name|l_dirent
 block|{
-name|l_long
+name|l_ulong
 name|d_ino
 decl_stmt|;
 name|l_off_t
@@ -2017,9 +2017,6 @@ name|linux_dirent
 operator|.
 name|d_ino
 operator|=
-operator|(
-name|l_long
-operator|)
 name|bdp
 operator|->
 name|d_fileno
