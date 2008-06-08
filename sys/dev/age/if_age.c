@@ -2158,7 +2158,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * PCI VPD capability exists, but it seems that it's 		 * not in the standard form as stated in PCI VPD 		 * specification such that driver could not use 		 * pci_get_vpd_readonly(9) with keyword 'NA'. 		 * Search VPD data starting at address 0x0100. The data 		 * chwould be used as initializers to set AGE_PAR0, 		 * AGE_PAR1 register including other PCI configuration 		 * registers. 		 */
+comment|/* 		 * PCI VPD capability exists, but it seems that it's 		 * not in the standard form as stated in PCI VPD 		 * specification such that driver could not use 		 * pci_get_vpd_readonly(9) with keyword 'NA'. 		 * Search VPD data starting at address 0x0100. The data 		 * should be used as initializers to set AGE_PAR0, 		 * AGE_PAR1 register including other PCI configuration 		 * registers. 		 */
 name|word
 operator|=
 literal|0
