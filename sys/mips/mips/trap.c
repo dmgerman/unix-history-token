@@ -572,7 +572,7 @@ operator|,
 comment|/* trap exception */
 function_decl|MipsKernGenException
 operator|,
-comment|/* viritual coherence exception inst */
+comment|/* virtual coherence exception inst */
 function_decl|MipsKernGenException
 operator|,
 comment|/* floating point exception */
@@ -623,7 +623,7 @@ operator|,
 comment|/* reserved */
 function_decl|MipsKernGenException
 operator|,
-comment|/* viritual coherence exception data */
+comment|/* virtual coherence exception data */
 comment|/*  * The user exception handlers.  */
 function_decl|MipsUserIntr
 operator|,
@@ -762,7 +762,7 @@ literal|"arithmetic overflow"
 block|,
 literal|"trap"
 block|,
-literal|"viritual coherency instruction"
+literal|"virtual coherency instruction"
 block|,
 literal|"floating point"
 block|,
@@ -796,7 +796,7 @@ literal|"reserved 29"
 block|,
 literal|"reserved 30"
 block|,
-literal|"viritual coherency data"
+literal|"virtual coherency data"
 block|, }
 decl_stmt|;
 end_decl_stmt

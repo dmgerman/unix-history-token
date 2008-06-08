@@ -410,7 +410,7 @@ value|(((x)& PTE_FRAME)<< PTE_SHIFT)
 end_define
 
 begin_comment
-comment|/* User viritual to pte offset in page table */
+comment|/* User virtual to pte offset in page table */
 end_comment
 
 begin_define
