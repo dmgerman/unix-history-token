@@ -1707,6 +1707,17 @@ name|enable_4dplus
 block|}
 block|,
 block|{
+name|MOUSE_MODEL_SYNAPTICS
+block|,
+comment|/* Synaptics Touchpad */
+literal|0xc0
+block|,
+name|MOUSE_SYNAPTICS_PACKETSIZE
+block|,
+name|enable_synaptics
+block|}
+block|,
+block|{
 name|MOUSE_MODEL_INTELLI
 block|,
 comment|/* Microsoft IntelliMouse */
@@ -1748,17 +1759,6 @@ block|,
 name|MOUSE_PS2VERSA_PACKETSIZE
 block|,
 name|enable_versapad
-block|}
-block|,
-block|{
-name|MOUSE_MODEL_SYNAPTICS
-block|,
-comment|/* Synaptics Touchpad */
-literal|0xc0
-block|,
-name|MOUSE_SYNAPTICS_PACKETSIZE
-block|,
-name|enable_synaptics
 block|}
 block|,
 block|{
