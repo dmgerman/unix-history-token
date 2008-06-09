@@ -1534,16 +1534,12 @@ literal|6
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|next
-operator|=
 name|strchr
 argument_list|(
 name|line
 argument_list|,
 literal|'='
 argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)
@@ -3910,7 +3906,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|comma1
+name|comma2
 operator|==
 name|NULL
 condition|)
