@@ -168,6 +168,10 @@ name|dflag
 init|=
 literal|0
 decl_stmt|,
+name|Dflag
+init|=
+literal|0
+decl_stmt|,
 name|vflag
 init|=
 literal|0
@@ -396,7 +400,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:df:himNP:Rrs:tuvxy"
+literal|"b:dDf:himNP:Rrs:tuvxy"
 argument_list|)
 operator|)
 operator|!=
@@ -460,6 +464,14 @@ case|case
 literal|'d'
 case|:
 name|dflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+name|Dflag
 operator|=
 literal|1
 expr_stmt|;
