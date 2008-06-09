@@ -1504,17 +1504,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCSI_TTY
-value|_IOWR('S', 127, struct si_pstat)
-end_define
-
-begin_comment
-comment|/* get tty struct */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IOCTL_MAX
 value|127
 end_define
