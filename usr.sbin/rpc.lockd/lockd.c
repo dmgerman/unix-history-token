@@ -1543,6 +1543,9 @@ condition|(
 name|kernel_lockd
 condition|)
 block|{
+name|init_nsm
+argument_list|()
+expr_stmt|;
 name|client_pid
 operator|=
 name|client_request
