@@ -414,18 +414,6 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|pthread_cleanup_pop
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|pthread_cleanup_push
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|pthread_cond_broadcast
 end_undef
 

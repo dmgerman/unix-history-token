@@ -530,7 +530,7 @@ block|{
 name|struct
 name|pthread_cleanup
 modifier|*
-name|next
+name|prev
 decl_stmt|;
 name|void
 function_decl|(
@@ -540,7 +540,6 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
-name|args
 parameter_list|)
 function_decl|;
 name|void
@@ -548,7 +547,7 @@ modifier|*
 name|routine_arg
 decl_stmt|;
 name|int
-name|onstack
+name|onheap
 decl_stmt|;
 block|}
 struct|;
@@ -565,7 +564,7 @@ name|func
 parameter_list|,
 name|arg
 parameter_list|)
-value|{		\ 	struct pthread_cleanup __cup;			\ 							\ 	__cup.routine = func;				\ 	__cup.routine_arg = arg;			\ 	__cup.onstack = 1;				\ 	__cup.next = (td)->cleanup;			\ 	(td)->cleanup =&__cup;
+value|{		\ 	struct pthread_cleanup __cup;			\ 							\ 	__cup.routine = func;				\ 	__cup.routine_arg = arg;			\ 	__cup.onheap = 0;				\ 	__cup.prev = (td)->cleanup;			\ 	(td)->cleanup =&__cup;
 end_define
 
 begin_define
@@ -578,7 +577,7 @@ parameter_list|,
 name|exec
 parameter_list|)
 define|\
-value|(td)->cleanup = __cup.next;			\ 	if ((exec) != 0)				\ 		__cup.routine(__cup.routine_arg);	\ }
+value|(td)->cleanup = __cup.prev;			\ 	if ((exec) != 0)				\ 		__cup.routine(__cup.routine_arg);	\ }
 end_define
 
 begin_struct
@@ -2398,6 +2397,34 @@ name|int
 name|_sched_yield
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pthread_cleanup_push
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pthread_cleanup_pop
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
