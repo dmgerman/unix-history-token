@@ -1002,6 +1002,18 @@ block|,
 name|TYPE_PL2303X
 block|}
 block|,
+comment|/* Belkin F5U257 */
+block|{
+name|USB_VENDOR_BELKIN
+block|,
+name|USB_PRODUCT_BELKIN_F5U257
+block|,
+operator|-
+literal|1
+block|,
+name|TYPE_PL2303X
+block|}
+block|,
 block|{
 literal|0
 block|,
