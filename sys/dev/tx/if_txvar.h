@@ -236,21 +236,19 @@ name|device_t
 name|dev
 decl_stmt|;
 name|struct
-name|callout_handle
-name|stat_ch
+name|callout
+name|timer
 decl_stmt|;
-name|u_int32_t
-name|unit
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
+name|int
+name|tx_timeout
 decl_stmt|;
 name|void
 modifier|*
 name|sc_ih
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_st
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_sh
 decl_stmt|;
 name|bus_dma_tag_t
 name|mtag
@@ -366,6 +364,36 @@ name|epic_softc_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|EPIC_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPIC_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPIC_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->lock, MA_OWNED)
+end_define
+
 begin_struct
 struct|struct
 name|epic_type
@@ -396,7 +424,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->sc_st, (sc)->sc_sh, (reg), (val))
+value|bus_write_4((sc)->res, (reg), (val))
 end_define
 
 begin_define
@@ -411,7 +439,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2((sc)->sc_st, (sc)->sc_sh, (reg), (val))
+value|bus_write_2((sc)->res, (reg), (val))
 end_define
 
 begin_define
@@ -426,7 +454,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1((sc)->sc_st, (sc)->sc_sh, (reg), (val))
+value|bus_write_1((sc)->res, (reg), (val))
 end_define
 
 begin_define
@@ -439,7 +467,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->sc_st, (sc)->sc_sh, (reg))
+value|bus_read_4((sc)->res, (reg))
 end_define
 
 begin_define
@@ -452,7 +480,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2((sc)->sc_st, (sc)->sc_sh, (reg))
+value|bus_read_2((sc)->res, (reg))
 end_define
 
 begin_define
@@ -465,7 +493,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1((sc)->sc_st, (sc)->sc_sh, (reg))
+value|bus_read_1((sc)->res, (reg))
 end_define
 
 begin_define
