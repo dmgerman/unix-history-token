@@ -483,10 +483,6 @@ name|sc_doorbell_lock
 decl_stmt|;
 name|struct
 name|callout
-name|sc_tmo_pcd
-decl_stmt|;
-name|struct
-name|callout
 name|sc_tmo_intrlist
 decl_stmt|;
 name|char
