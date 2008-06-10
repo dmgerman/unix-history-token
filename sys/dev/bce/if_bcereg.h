@@ -341,6 +341,10 @@ begin_comment
 comment|/****************************************************************************/
 end_comment
 
+begin_comment
+comment|/* #define BCE_DEBUG 1 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2046,7 +2050,7 @@ begin_define
 define|#
 directive|define
 name|FW_ACK_TIME_OUT_MS
-value|100
+value|1000
 end_define
 
 begin_define
@@ -27575,10 +27579,6 @@ value|9022
 end_define
 
 begin_comment
-comment|// #define BCE_MAX_MTU		ETHER_MAX_LEN_JUMBO + ETHER_VLAN_ENCAP_LEN	/* 9022 */
-end_comment
-
-begin_comment
 comment|/****************************************************************************/
 end_comment
 
@@ -27916,6 +27916,12 @@ name|max_frame_size
 decl_stmt|;
 name|int
 name|rx_bd_mbuf_alloc_size
+decl_stmt|;
+name|int
+name|rx_bd_mbuf_data_len
+decl_stmt|;
+name|int
+name|rx_bd_mbuf_align_pad
 decl_stmt|;
 name|int
 name|pg_bd_mbuf_alloc_size

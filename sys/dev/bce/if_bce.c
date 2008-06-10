@@ -171,6 +171,29 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* BCE Build Time Options                                                   */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_USE_SPLIT_HEADER
+value|1
+end_define
+
+begin_comment
+comment|/* #define BCE_NVRAM_WRITE_SUPPORT 1 */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
 comment|/* PCI Device ID Table                                                      */
 end_comment
 
@@ -874,6 +897,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -889,6 +918,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -926,6 +960,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -943,6 +983,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1020,6 +1065,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1035,6 +1086,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1638,6 +1694,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -1659,6 +1721,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1720,6 +1787,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -1755,6 +1828,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3942,6 +4020,46 @@ name|rx_bd_mbuf_alloc_size
 operator|=
 name|MHLEN
 expr_stmt|;
+comment|/* Make sure offset is 16 byte aligned for hardware. */
+name|sc
+operator|->
+name|rx_bd_mbuf_align_pad
+operator|=
+name|roundup2
+argument_list|(
+operator|(
+name|MSIZE
+operator|-
+name|MHLEN
+operator|)
+argument_list|,
+literal|16
+argument_list|)
+operator|-
+operator|(
+name|MSIZE
+operator|-
+name|MHLEN
+operator|)
+expr_stmt|;
+name|sc
+operator|->
+name|rx_bd_mbuf_data_len
+operator|=
+name|sc
+operator|->
+name|rx_bd_mbuf_alloc_size
+operator|-
+name|sc
+operator|->
+name|rx_bd_mbuf_align_pad
+expr_stmt|;
+name|sc
+operator|->
+name|pg_bd_mbuf_alloc_size
+operator|=
+name|MCLBYTES
+expr_stmt|;
 else|#
 directive|else
 name|sc
@@ -3950,14 +4068,33 @@ name|rx_bd_mbuf_alloc_size
 operator|=
 name|MCLBYTES
 expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
-name|pg_bd_mbuf_alloc_size
+name|rx_bd_mbuf_align_pad
 operator|=
+name|roundup2
+argument_list|(
+name|MCLBYTES
+argument_list|,
+literal|16
+argument_list|)
+operator|-
 name|MCLBYTES
 expr_stmt|;
+name|sc
+operator|->
+name|rx_bd_mbuf_data_len
+operator|=
+name|sc
+operator|->
+name|rx_bd_mbuf_alloc_size
+operator|-
+name|sc
+operator|->
+name|rx_bd_mbuf_align_pad
+expr_stmt|;
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_snd
@@ -4293,6 +4430,16 @@ operator|->
 name|bce_fw_ver
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+name|printf
+argument_list|(
+literal|"SPLT "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -9918,6 +10065,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 comment|/* Free, unmap and destroy all page buffer descriptor chain pages. */
 for|for
 control|(
@@ -10051,6 +10201,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Unload and destroy the TX mbuf maps. */
 for|for
 control|(
@@ -10231,6 +10383,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 comment|/* Unload and destroy the page mbuf maps. */
 for|for
 control|(
@@ -10321,6 +10476,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Destroy the parent tag */
 if|if
 condition|(
@@ -10499,6 +10656,62 @@ end_comment
 
 begin_comment
 comment|/* hardware.                                                                */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Memory alignment requirements:                                           */
+end_comment
+
+begin_comment
+comment|/* -----------------+----------+----------+                                 */
+end_comment
+
+begin_comment
+comment|/* Data Structure   |   5706   |   5708   |                                 */
+end_comment
+
+begin_comment
+comment|/* -----------------+----------+----------+                                 */
+end_comment
+
+begin_comment
+comment|/* Status Block     | 8 bytes  | 8 bytes  |                                 */
+end_comment
+
+begin_comment
+comment|/* Statistics Block | 8 bytes  | 8 bytes  |                                 */
+end_comment
+
+begin_comment
+comment|/* RX Buffers       | 16 bytes | 16 bytes |                                 */
+end_comment
+
+begin_comment
+comment|/* PG Buffers       |   none   |   none   |                                 */
+end_comment
+
+begin_comment
+comment|/* TX Buffers       |   none   |   none   |                                 */
+end_comment
+
+begin_comment
+comment|/* Chain Pages(1)   |   4KiB   |   4KiB   |                                 */
+end_comment
+
+begin_comment
+comment|/* -----------------+----------+----------+                                 */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* (1) Must align with CPU page size (BCM_PAGE_SZIE).                       */
 end_comment
 
 begin_comment
@@ -11585,6 +11798,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Create a DMA tag for RX mbufs. 	 */
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|max_size
 operator|=
 name|max_seg_size
@@ -11605,6 +11821,16 @@ operator|->
 name|rx_bd_mbuf_alloc_size
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|max_size
+operator|=
+name|max_seg_size
+operator|=
+name|MJUM9BYTES
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -11716,6 +11942,9 @@ name|bce_dma_alloc_exit
 goto|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 comment|/* 	 * Create a DMA tag for the page buffer descriptor chain, 	 * allocate and clear the memory, and fetch the physical 	 * address of the blocks. 	 */
 if|if
 condition|(
@@ -11960,7 +12189,7 @@ name|MCLBYTES
 else|:
 name|sc
 operator|->
-name|rx_bd_mbuf_alloc_size
+name|pg_bd_mbuf_alloc_size
 operator|)
 expr_stmt|;
 if|if
@@ -12074,6 +12303,8 @@ name|bce_dma_alloc_exit
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|bce_dma_alloc_exit
 label|:
 name|DBPRINT
@@ -15196,11 +15427,16 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Free RX buffers. */
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|bce_free_pg_chain
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bce_free_rx_chain
 argument_list|(
 name|sc
@@ -16709,6 +16945,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+name|sc
+operator|->
+name|rx_bd_mbuf_alloc_size
+operator|==
+name|MCLBYTES
+condition|)
 name|m_new
 operator|=
 name|m_getcl
@@ -16718,6 +16962,22 @@ argument_list|,
 name|MT_DATA
 argument_list|,
 name|M_PKTHDR
+argument_list|)
+expr_stmt|;
+else|else
+name|m_new
+operator|=
+name|m_getjcl
+argument_list|(
+name|M_DONTWAIT
+argument_list|,
+name|MT_DATA
+argument_list|,
+name|M_PKTHDR
+argument_list|,
+name|sc
+operator|->
+name|rx_bd_mbuf_alloc_size
 argument_list|)
 expr_stmt|;
 endif|#
@@ -16759,11 +17019,13 @@ operator|=
 name|m
 expr_stmt|;
 block|}
+comment|/* Make sure we have a valid packet header. */
 name|M_ASSERTPKTHDR
 argument_list|(
 name|m_new
 argument_list|)
 expr_stmt|;
+comment|/* Initialize the mbuf size and pad if necessary for alignment. */
 name|m_new
 operator|->
 name|m_pkthdr
@@ -16777,6 +17039,15 @@ operator|=
 name|sc
 operator|->
 name|rx_bd_mbuf_alloc_size
+expr_stmt|;
+name|m_adj
+argument_list|(
+name|m_new
+argument_list|,
+name|sc
+operator|->
+name|rx_bd_mbuf_align_pad
+argument_list|)
 expr_stmt|;
 comment|/* ToDo: Consider calling m_fragment() to test error handling. */
 comment|/* Map the mbuf cluster into device memory. */
@@ -16818,11 +17089,13 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Error mapping mbuf into RX chain!\n"
+literal|"%s(%d): Error mapping mbuf into RX chain (%d)!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
 name|__LINE__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -17030,6 +17303,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
 
 begin_comment
 comment|/****************************************************************************/
@@ -17518,6 +17797,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BCE_USE_SPLIT_HEADER */
+end_comment
 
 begin_comment
 comment|/****************************************************************************/
@@ -18653,6 +18941,9 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 comment|/* Clear the jumbo page chain support. */
 name|CTX_WR
 argument_list|(
@@ -18668,6 +18959,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Free any mbufs still in the RX mbuf chain. */
 for|for
 control|(
@@ -18823,6 +19116,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
 
 begin_comment
 comment|/****************************************************************************/
@@ -19077,12 +19376,15 @@ name|val
 argument_list|)
 expr_stmt|;
 comment|/* Configure the rx_bd and page chain mbuf cluster size. */
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|val
 operator|=
 operator|(
 name|sc
 operator|->
-name|rx_bd_mbuf_alloc_size
+name|rx_bd_mbuf_data_len
 operator|<<
 literal|16
 operator|)
@@ -19091,6 +19393,20 @@ name|sc
 operator|->
 name|pg_bd_mbuf_alloc_size
 expr_stmt|;
+else|#
+directive|else
+name|val
+operator|=
+operator|(
+name|sc
+operator|->
+name|rx_bd_mbuf_data_len
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 name|CTX_WR
 argument_list|(
 name|sc
@@ -19560,6 +19876,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BCE_USE_SPLIT_HEADER */
+end_comment
 
 begin_comment
 comment|/****************************************************************************/
@@ -20129,26 +20454,34 @@ name|l2fhdr
 decl_stmt|;
 name|unsigned
 name|int
-name|pages
-decl_stmt|,
 name|pkt_len
-decl_stmt|,
-name|rem_len
 decl_stmt|;
 name|u16
 name|sw_rx_cons
 decl_stmt|,
 name|sw_rx_cons_idx
 decl_stmt|,
-name|sw_pg_cons
-decl_stmt|,
-name|sw_pg_cons_idx
-decl_stmt|,
 name|hw_rx_cons
 decl_stmt|;
 name|u32
 name|status
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+name|unsigned
+name|int
+name|pages
+decl_stmt|,
+name|rem_len
+decl_stmt|;
+name|u16
+name|sw_pg_cons
+decl_stmt|,
+name|sw_pg_cons_idx
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|BCE_DEBUG
@@ -20204,6 +20537,9 @@ argument_list|,
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 comment|/* Prepare the page chain pages to be accessed by the host CPU. */
 for|for
 control|(
@@ -20235,6 +20571,8 @@ argument_list|,
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Get the hardware's view of the RX consumer index. */
 name|hw_rx_cons
 operator|=
@@ -20254,12 +20592,17 @@ name|sc
 operator|->
 name|rx_cons
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|sw_pg_cons
 operator|=
 name|sc
 operator|->
 name|pg_cons
 expr_stmt|;
+endif|#
+directive|endif
 name|DBPRINT
 argument_list|(
 name|sc
@@ -20448,7 +20791,10 @@ operator|+
 name|ETHER_ALIGN
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check whether the received frame fits in a single 		 * mbuf or not (i.e. packet data + FCS<=  		 * sc->rx_bd_mbuf_alloc_size bytes). 		 */
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+comment|/* 		 * Check whether the received frame fits in a single 		 * mbuf or not (i.e. packet data + FCS<=  		 * sc->rx_bd_mbuf_data_len bytes). 		 */
 if|if
 condition|(
 name|pkt_len
@@ -20675,6 +21021,8 @@ operator|=
 name|pkt_len
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Remove the trailing Ethernet FCS. */
 name|m_adj
 argument_list|(
@@ -20959,12 +21307,17 @@ name|rx_cons
 operator|=
 name|sw_rx_cons
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|sc
 operator|->
 name|pg_cons
 operator|=
 name|sw_pg_cons
 expr_stmt|;
+endif|#
+directive|endif
 name|BCE_UNLOCK
 argument_list|(
 name|sc
@@ -20994,12 +21347,17 @@ name|sc
 operator|->
 name|rx_cons
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|sw_pg_cons
 operator|=
 name|sc
 operator|->
 name|pg_cons
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Refresh hw_cons to see if there's new work */
 if|if
@@ -21021,6 +21379,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* No new packets to process.  Refill the RX and page chains and exit. */
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|sc
 operator|->
 name|pg_cons
@@ -21032,6 +21393,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|rx_cons
@@ -21073,6 +21436,9 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 for|for
 control|(
 name|int
@@ -21103,6 +21469,8 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|DBPRINT
 argument_list|(
 name|sc
@@ -22004,7 +22372,38 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Calculate and program the hardware Ethernet MTU size. */
+comment|/*  	 * Calculate and program the hardware Ethernet MTU  	 * size. Be generous on the receive if we have room. 	 */
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_mtu
+operator|<=
+operator|(
+name|sc
+operator|->
+name|rx_bd_mbuf_data_len
+operator|+
+name|sc
+operator|->
+name|pg_bd_mbuf_alloc_size
+operator|)
+condition|)
+name|ether_mtu
+operator|=
+name|sc
+operator|->
+name|rx_bd_mbuf_data_len
+operator|+
+name|sc
+operator|->
+name|pg_bd_mbuf_alloc_size
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|ifp
@@ -22013,15 +22412,16 @@ name|if_mtu
 operator|<=
 name|sc
 operator|->
-name|pg_bd_mbuf_alloc_size
+name|rx_bd_mbuf_data_len
 condition|)
-comment|/* Be generous on receive if we have room. */
 name|ether_mtu
 operator|=
 name|sc
 operator|->
-name|pg_bd_mbuf_alloc_size
+name|rx_bd_mbuf_data_len
 expr_stmt|;
+endif|#
+directive|endif
 else|else
 name|ether_mtu
 operator|=
@@ -22093,13 +22493,22 @@ name|sc
 argument_list|,
 name|BCE_INFO_LOAD
 argument_list|,
-literal|"%s(): rx_bd_mbuf_alloc_size = %d, pg_bd_mbuf_alloc_size = %d\n"
+literal|"%s(): rx_bd_mbuf_alloc_size = %d, rx_bce_mbuf_data_len = %d, "
+literal|"rx_bd_mbuf_align_pad = %d, pg_bd_mbuf_alloc_size = %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|sc
 operator|->
 name|rx_bd_mbuf_alloc_size
+argument_list|,
+name|sc
+operator|->
+name|rx_bd_mbuf_data_len
+argument_list|,
+name|sc
+operator|->
+name|rx_bd_mbuf_align_pad
 argument_list|,
 name|sc
 operator|->
@@ -22112,12 +22521,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 comment|/* Init page buffer descriptor chain. */
 name|bce_init_pg_chain
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Init RX buffer descriptor chain. */
 name|bce_init_rx_chain
 argument_list|(
@@ -24020,6 +24434,98 @@ operator|&=
 operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+comment|/* No buffer allocation size changes are necessary. */
+else|#
+directive|else
+comment|/* Recalculate our buffer allocation sizes. */
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_mtu
+operator|+
+name|ETHER_HDR_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
+operator|+
+name|ETHER_CRC_LEN
+operator|)
+operator|>
+name|MCLBYTES
+condition|)
+block|{
+name|sc
+operator|->
+name|rx_bd_mbuf_alloc_size
+operator|=
+name|MJUM9BYTES
+expr_stmt|;
+name|sc
+operator|->
+name|rx_bd_mbuf_align_pad
+operator|=
+name|roundup2
+argument_list|(
+name|MJUM9BYTES
+argument_list|,
+literal|16
+argument_list|)
+operator|-
+name|MJUM9BYTES
+expr_stmt|;
+name|sc
+operator|->
+name|rx_bd_mbuf_data_len
+operator|=
+name|sc
+operator|->
+name|rx_bd_mbuf_alloc_size
+operator|-
+name|sc
+operator|->
+name|rx_bd_mbuf_align_pad
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|rx_bd_mbuf_alloc_size
+operator|=
+name|MCLBYTES
+expr_stmt|;
+name|sc
+operator|->
+name|rx_bd_mbuf_align_pad
+operator|=
+name|roundup2
+argument_list|(
+name|MCLBYTES
+argument_list|,
+literal|16
+argument_list|)
+operator|-
+name|MCLBYTES
+expr_stmt|;
+name|sc
+operator|->
+name|rx_bd_mbuf_data_len
+operator|=
+name|sc
+operator|->
+name|rx_bd_mbuf_alloc_size
+operator|-
+name|sc
+operator|->
+name|rx_bd_mbuf_align_pad
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|bce_init_locked
 argument_list|(
 name|sc
@@ -26386,11 +26892,16 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Top off the receive and page chains. */
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|bce_fill_pg_chain
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bce_fill_rx_chain
 argument_list|(
 name|sc
@@ -27042,6 +27553,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
+
 begin_comment
 comment|/****************************************************************************/
 end_comment
@@ -27149,6 +27666,11 @@ name|error
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/****************************************************************************/
@@ -29305,6 +29827,9 @@ argument_list|,
 literal|"Dump tx_bd chain"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -29334,6 +29859,8 @@ argument_list|,
 literal|"Dump page chain"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -30066,6 +30593,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
+
 begin_comment
 comment|/****************************************************************************/
 end_comment
@@ -30177,6 +30710,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/****************************************************************************/
@@ -30571,6 +31109,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
+
 begin_comment
 comment|/****************************************************************************/
 end_comment
@@ -30683,6 +31227,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/****************************************************************************/
@@ -32748,6 +33297,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+end_ifdef
+
 begin_comment
 comment|/****************************************************************************/
 end_comment
@@ -32917,6 +33472,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/****************************************************************************/
@@ -34527,6 +35087,9 @@ argument_list|,
 name|val_lo
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|val_hi
 operator|=
 name|BCE_ADDR_HI
@@ -34554,6 +35117,8 @@ argument_list|,
 name|val_lo
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|val_hi
 operator|=
 name|BCE_ADDR_HI
@@ -34608,6 +35173,9 @@ argument_list|,
 name|val_lo
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|val_hi
 operator|=
 name|BCE_ADDR_HI
@@ -34635,6 +35203,8 @@ argument_list|,
 name|val_lo
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BCE_PRINTF
 argument_list|(
 literal|"         0x%08X - (sc->interrupts_generated) h/w intrs\n"
@@ -34814,6 +35384,9 @@ operator|->
 name|free_rx_bd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
 name|BCE_PRINTF
 argument_list|(
 literal|"     0x%04X(0x%04X) - (sc->pg_prod) page producer index\n"
@@ -34883,6 +35456,8 @@ operator|->
 name|max_pg_bd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BCE_PRINTF
 argument_list|(
 literal|"         0x%08X - (sc->mbuf_alloc_failed) "
@@ -36139,15 +36714,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|bce_dump_pgbd
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|bce_dump_tx_mbuf_chain
 argument_list|(
 name|sc
@@ -36164,15 +36730,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|USABLE_RX_BD
-argument_list|)
-expr_stmt|;
-name|bce_dump_pg_mbuf_chain
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|USABLE_PG_BD
 argument_list|)
 expr_stmt|;
 name|bce_dump_l2fhdr
@@ -36212,15 +36769,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|USABLE_RX_BD
-argument_list|)
-expr_stmt|;
-name|bce_dump_pg_chain
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|USABLE_PG_BD
 argument_list|)
 expr_stmt|;
 name|bce_dump_status_block
@@ -36263,6 +36811,38 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BCE_USE_SPLIT_HEADER
+name|bce_dump_pgbd
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|bce_dump_pg_mbuf_chain
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|USABLE_PG_BD
+argument_list|)
+expr_stmt|;
+name|bce_dump_pg_chain
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|USABLE_PG_BD
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|bce_dump_status_block
 argument_list|(
