@@ -1578,6 +1578,16 @@ block|,
 block|{
 literal|0x103C
 block|,
+literal|0x3223
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P800"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
 literal|0x3225
 block|,
 name|CISS_BOARD_SA5
