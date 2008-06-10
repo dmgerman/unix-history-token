@@ -4450,11 +4450,19 @@ argument_list|(
 name|csize
 argument_list|)
 condition|)
+block|{
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|base_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 comment|/* Allocate. */
 name|ret
@@ -11187,6 +11195,8 @@ operator|<
 name|bin
 operator|->
 name|regs_mask_nelms
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
@@ -11223,9 +11233,19 @@ expr_stmt|;
 if|if
 condition|(
 name|remainder
-operator|!=
+operator|==
 literal|0
 condition|)
+name|run
+operator|->
+name|regs_mask
+index|[
+name|i
+index|]
+operator|=
+name|UINT_MAX
+expr_stmt|;
+else|else
 block|{
 comment|/* The last element has spare bits that need to be unset. */
 name|run
