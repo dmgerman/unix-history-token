@@ -356,8 +356,9 @@ decl_stmt|;
 name|int
 name|ndis_rescnt
 decl_stmt|;
-name|kspin_lock
-name|ndis_spinlock
+name|struct
+name|mtx
+name|ndis_mtx
 decl_stmt|;
 name|uint8_t
 name|ndis_irql
@@ -559,7 +560,7 @@ name|NDIS_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|KeAcquireSpinLock(&(_sc)->ndis_spinlock, \&(_sc)->ndis_irql);
+value|mtx_lock(&(_sc)->ndis_mtx)
 end_define
 
 begin_define
@@ -569,7 +570,7 @@ name|NDIS_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|KeReleaseSpinLock(&(_sc)->ndis_spinlock, \ 				    (_sc)->ndis_irql);
+value|mtx_unlock(&(_sc)->ndis_mtx)
 end_define
 
 end_unit
