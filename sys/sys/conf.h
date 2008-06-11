@@ -157,7 +157,7 @@ modifier|*
 name|si_cred
 decl_stmt|;
 comment|/* cached clone-time credential */
-name|u_int
+name|int
 name|si_drv0
 decl_stmt|;
 name|int
@@ -701,6 +701,17 @@ end_define
 
 begin_comment
 comment|/* driver want Giant */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_NEEDMINOR
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* driver uses clone_create() */
 end_comment
 
 begin_comment

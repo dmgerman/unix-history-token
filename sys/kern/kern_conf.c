@@ -2455,6 +2455,16 @@ name|udev
 operator|=
 name|y
 expr_stmt|;
+if|if
+condition|(
+name|csw
+operator|->
+name|d_flags
+operator|&
+name|D_NEEDMINOR
+condition|)
+block|{
+comment|/* We may want to return an existing device */
 name|LIST_FOREACH
 argument_list|(
 argument|si2
@@ -2483,6 +2493,7 @@ operator|(
 name|si2
 operator|)
 return|;
+block|}
 block|}
 block|}
 name|si
@@ -4708,6 +4719,19 @@ literal|"Too high unit (0x%x) in clone_create"
 operator|,
 operator|*
 name|up
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|csw
+operator|->
+name|d_flags
+operator|&
+name|D_NEEDMINOR
+argument_list|,
+operator|(
+literal|"clone_create() on cdevsw without minor numbers"
 operator|)
 argument_list|)
 expr_stmt|;

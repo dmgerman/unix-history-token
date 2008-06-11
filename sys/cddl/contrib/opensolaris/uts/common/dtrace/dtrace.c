@@ -69033,6 +69033,11 @@ operator|=
 name|D_VERSION
 block|,
 operator|.
+name|d_flags
+operator|=
+name|D_NEEDMINOR
+block|,
+operator|.
 name|d_close
 operator|=
 name|dtrace_close

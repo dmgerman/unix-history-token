@@ -118,11 +118,9 @@ define|#
 directive|define
 name|NTNOHASH
 parameter_list|(
-name|device
-parameter_list|,
 name|inum
 parameter_list|)
-value|(&ntfs_nthashtbl[(minor(device) + (inum))& ntfs_nthash])
+value|(&ntfs_nthashtbl[(inum)& ntfs_nthash])
 end_define
 
 begin_decl_stmt
@@ -263,7 +261,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|ip
 argument_list|,
-argument|NTNOHASH(dev, inum)
+argument|NTNOHASH(inum)
 argument_list|,
 argument|i_hash
 argument_list|)
@@ -327,10 +325,6 @@ name|ipp
 operator|=
 name|NTNOHASH
 argument_list|(
-name|ip
-operator|->
-name|i_dev
-argument_list|,
 name|ip
 operator|->
 name|i_number

@@ -595,6 +595,8 @@ operator|=
 name|D_PSEUDO
 operator||
 name|D_NEEDGIANT
+operator||
+name|D_NEEDMINOR
 block|,
 operator|.
 name|d_open

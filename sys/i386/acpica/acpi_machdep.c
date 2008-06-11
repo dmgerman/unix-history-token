@@ -346,6 +346,8 @@ operator|.
 name|d_flags
 operator|=
 name|D_TRACKCLOSE
+operator||
+name|D_NEEDMINOR
 block|,
 operator|.
 name|d_open
