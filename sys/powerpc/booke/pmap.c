@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 2007 Semihalf, Rafal Jaworowski<raj@semihalf.com>  
 end_comment
 
 begin_comment
-comment|/*   * VM layout notes:   *   * Kernel and user threads run within one common virtual address space   * defined by AS=0.   *   * Virtual address space layout:   * -----------------------------   * 0x0000_0000 - 0xbfff_efff	: user process   * 0xc000_0000 - 0xc1ff_ffff	: kerel reserved   *   0xc000_0000 - kernelend	: kernel code&data   *   0xc1ff_c000 - 0xc200_0000	: kstack0   * 0xc200_0000 - 0xffef_ffff	: KVA   *   0xc200_0000 - 0xc200_3fff : reserved for page zero/copy   *   0xc200_4000 - ptbl buf end: reserved for ptbl bufs   *   ptbl buf end- 0xffef_ffff	: actual free KVA space   * 0xfff0_0000 - 0xffff_ffff	: I/O devices region   */
+comment|/*   * VM layout notes:   *   * Kernel and user threads run within one common virtual address space   * defined by AS=0.   *   * Virtual address space layout:   * -----------------------------   * 0x0000_0000 - 0xbfff_efff	: user process   * 0xc000_0000 - 0xc1ff_ffff	: kernel reserved   *   0xc000_0000 - kernelend	: kernel code&data   *   0xc1ff_c000 - 0xc200_0000	: kstack0   * 0xc200_0000 - 0xffef_ffff	: KVA   *   0xc200_0000 - 0xc200_3fff : reserved for page zero/copy   *   0xc200_4000 - ptbl buf end: reserved for ptbl bufs   *   ptbl buf end- 0xffef_ffff	: actual free KVA space   * 0xfff0_0000 - 0xffff_ffff	: I/O devices region   */
 end_comment
 
 begin_include
