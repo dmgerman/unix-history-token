@@ -674,6 +674,24 @@ argument_list|,
 name|ATA_LF_UNLOCK
 argument_list|)
 expr_stmt|;
+comment|/* allocate DMA resources if DMA HW present*/
+if|if
+condition|(
+name|ch
+operator|->
+name|dma
+operator|.
+name|alloc
+condition|)
+name|ch
+operator|->
+name|dma
+operator|.
+name|alloc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* setup interrupt delivery */
 name|rid
 operator|=
