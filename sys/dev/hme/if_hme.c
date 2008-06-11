@@ -4743,14 +4743,12 @@ condition|)
 block|{
 name|m
 operator|=
-name|m_collapse
+name|m_defrag
 argument_list|(
 operator|*
 name|m0
 argument_list|,
 name|M_DONTWAIT
-argument_list|,
-name|HME_NTXSEGS
 argument_list|)
 expr_stmt|;
 if|if
