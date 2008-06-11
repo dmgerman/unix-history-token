@@ -10,7 +10,7 @@ file|<sys/callout.h>
 end_include
 
 begin_comment
-comment|/*  * Number of receive and transmit descriptors. For each receive descriptor,  * an mbuf cluster is allocated and set up to receive a packet, and a dma map  * is created. Therefore, this number should not be too high to not waste  * memory.  * TX descriptors have no static cost, except for the memory directly allocated  * for them. TX queue elements (the number of which is fixed by HME_NTXQ) hold  * the software state for a transmit job; each has a dmamap allocated for it.  * There may be multiple descriptors allocated to a single queue element.  * HME_NTXQ is completely arbitrary.  */
+comment|/*  * Number of receive and transmit descriptors. For each receive descriptor,  * an mbuf cluster is allocated and set up to receive a packet, and a dma map  * is created. Therefore, this number should not be too high to not waste  * memory.  * TX descriptors have no static cost, except for the memory directly allocated  * for them. TX queue elements (the number of which is fixed by HME_NTXQ) hold  * the software state for a transmit job; each has a dmamap allocated for it.  * There may be multiple descriptors allocated to a single queue element.  * HME_NTXQ and HME_NTXSEGS are completely arbitrary.  */
 end_comment
 
 begin_define
@@ -24,14 +24,21 @@ begin_define
 define|#
 directive|define
 name|HME_NTXDESC
-value|128
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
 name|HME_NTXQ
-value|(HME_NTXDESC / 2)
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|HME_NTXSEGS
+value|16
 end_define
 
 begin_comment
@@ -117,17 +124,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* Value for htx_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HTXF_MAPPED
-value|1
-end_define
-
 begin_struct
 struct|struct
 name|hme_ring
@@ -184,12 +180,6 @@ index|[
 name|HME_NTXQ
 index|]
 decl_stmt|;
-name|bus_dma_segment_t
-name|rb_txsegs
-index|[
-name|HME_NTXQ
-index|]
-decl_stmt|;
 name|struct
 name|hme_txdq
 name|rb_txfreeq
@@ -233,7 +223,7 @@ comment|/* MII media control */
 name|u_char
 name|sc_enaddr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|struct
@@ -317,10 +307,22 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* MII instance -> PHY map */
-name|int
-name|sc_pci
+name|u_int
+name|sc_flags
 decl_stmt|;
-comment|/* XXXXX -- PCI buses are LE. */
+define|#
+directive|define
+name|HME_LINK
+value|(1<< 0)
+comment|/* link is up */
+define|#
+directive|define
+name|HME_PCI
+value|(1<< 1)
+comment|/* PCI busses are little-endian */
+name|int
+name|sc_ifflags
+decl_stmt|;
 name|int
 name|sc_csum_features
 decl_stmt|;
@@ -328,9 +330,6 @@ comment|/* Ring descriptor */
 name|struct
 name|hme_ring
 name|sc_rb
-decl_stmt|;
-name|int
-name|sc_debug
 decl_stmt|;
 name|struct
 name|mtx
