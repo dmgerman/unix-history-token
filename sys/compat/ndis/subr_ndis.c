@@ -4717,6 +4717,10 @@ expr_stmt|;
 if|if
 condition|(
 name|ifp
+operator|!=
+name|NULL
+operator|&&
+name|ifp
 operator|->
 name|if_flags
 operator|&
@@ -4820,6 +4824,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ifp
+operator|!=
+name|NULL
+operator|&&
 name|ifp
 operator|->
 name|if_flags
