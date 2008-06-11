@@ -166,6 +166,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp_lro.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/udp.h>
 end_include
 
@@ -263,12 +269,6 @@ begin_include
 include|#
 directive|include
 file|"ixgbe_api.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tcp_lro.h"
 end_include
 
 begin_comment
