@@ -7028,6 +7028,11 @@ name|unit
 operator|<<
 literal|7
 decl_stmt|;
+name|int
+name|timeout
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|AHCI_PM
@@ -7050,11 +7055,6 @@ name|work
 operator|+
 name|ATA_AHCI_CT_OFFSET
 operator|)
-decl_stmt|;
-name|int
-name|timeout
-init|=
-literal|0
 decl_stmt|;
 comment|/* kick controller into sane state if needed */
 name|ata_ahci_restart
@@ -7192,10 +7192,8 @@ argument_list|(
 literal|150000
 argument_list|)
 expr_stmt|;
-name|timeout
-operator|=
-literal|0
-expr_stmt|;
+endif|#
+directive|endif
 do|do
 block|{
 name|DELAY
@@ -7250,8 +7248,6 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|ATA_INL
 argument_list|(
