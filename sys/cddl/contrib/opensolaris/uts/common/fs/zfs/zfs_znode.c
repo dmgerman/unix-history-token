@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -1277,56 +1277,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|major
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|major
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)(((u_int)(x)>> 8)&0xff))
-end_define
-
-begin_comment
-comment|/* major number */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|minor
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|minor
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)((x)&0xffff00ff))
-end_define
-
-begin_comment
-comment|/* minor number */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Create special expldev for ZFS private use.  * Can't use standard expldev since it doesn't do  * what we want.  The standard expldev() takes a  * dev32_t in LP64 and expands it to a long dev_t.  * We need an interface that takes a dev32_t in ILP32  * and expands it to a long dev_t.  */
 end_comment
@@ -1346,7 +1296,7 @@ operator|(
 operator|(
 name|uint64_t
 operator|)
-name|major
+name|umajor
 argument_list|(
 name|dev
 argument_list|)
@@ -1354,7 +1304,7 @@ operator|<<
 name|NBITSMINOR64
 operator|)
 operator||
-name|minor
+name|uminor
 argument_list|(
 name|dev
 argument_list|)

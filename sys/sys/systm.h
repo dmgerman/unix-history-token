@@ -2686,18 +2686,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|int
-name|minor
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|x
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|dev_t
 name|dev2udev
 parameter_list|(
