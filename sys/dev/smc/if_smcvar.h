@@ -40,6 +40,9 @@ decl_stmt|;
 name|u_int
 name|smc_mask
 decl_stmt|;
+name|u_int
+name|smc_shutdown
+decl_stmt|;
 comment|/* Resources */
 name|int
 name|smc_usemem
