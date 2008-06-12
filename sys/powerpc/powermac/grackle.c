@@ -697,6 +697,8 @@ name|int
 name|nmem
 decl_stmt|,
 name|i
+decl_stmt|,
+name|error
 decl_stmt|;
 name|node
 operator|=
@@ -1001,18 +1003,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|panic
 argument_list|(
-name|dev
-argument_list|,
-literal|"failed to set up io range management\n"
+literal|"grackle_attach: failed to set up I/O rman"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 block|}
 if|if
 condition|(
@@ -1050,8 +1045,8 @@ name|rm_descr
 operator|=
 literal|"Grackle PCI Memory"
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|rman_init
 argument_list|(
 operator|&
@@ -1059,20 +1054,24 @@ name|sc
 operator|->
 name|sc_mem_rman
 argument_list|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed to init mem range resources\n"
+literal|"rman_init() failed. error = %d\n"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|error
 operator|)
 return|;
 block|}
@@ -1090,8 +1089,8 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
+name|error
+operator|=
 name|rman_manage_region
 argument_list|(
 operator|&
@@ -1120,20 +1119,24 @@ index|]
 operator|->
 name|size_lo
 argument_list|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed to set up memory range management\n"
+literal|"rman_manage_region() failed. error = %d\n"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|error
 operator|)
 return|;
 block|}

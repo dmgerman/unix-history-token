@@ -1175,6 +1175,8 @@ literal|3
 index|]
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|quirks
 decl_stmt|;
 name|sc
@@ -1255,8 +1257,8 @@ name|rm_descr
 operator|=
 literal|"MacIO Device Memory"
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|rman_init
 argument_list|(
 operator|&
@@ -1264,23 +1266,29 @@ name|sc
 operator|->
 name|sc_mem_rman
 argument_list|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed to init mem range resources\n"
+literal|"rman_init() failed. error = %d\n"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|error
 operator|)
 return|;
 block|}
+name|error
+operator|=
 name|rman_manage_region
 argument_list|(
 operator|&
@@ -1295,6 +1303,26 @@ operator|->
 name|sc_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"rman_manage_region() failed. error = %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* 	 * Iterate through the sub-devices 	 */
 for|for
 control|(
