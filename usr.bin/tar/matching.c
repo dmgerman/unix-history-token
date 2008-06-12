@@ -690,7 +690,7 @@ expr_stmt|;
 name|matching
 operator|->
 name|inclusions_unmatched_count
-operator|++
+operator|--
 expr_stmt|;
 return|return
 operator|(
