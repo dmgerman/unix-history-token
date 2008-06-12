@@ -841,9 +841,9 @@ argument_list|,
 name|OBJ_NEEDGIANT
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VI_LOCK
 argument_list|(
-name|object
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -856,9 +856,9 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Object has been created while we were sleeping 			 */
-name|VM_OBJECT_UNLOCK
+name|VI_UNLOCK
 argument_list|(
-name|object
+name|vp
 argument_list|)
 expr_stmt|;
 name|vm_object_destroy
@@ -876,8 +876,14 @@ name|v_object
 operator|=
 name|object
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
+block|{
 name|object
 operator|->
 name|ref_count
@@ -888,6 +894,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+block|}
 name|vref
 argument_list|(
 name|vp
