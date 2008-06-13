@@ -45,12 +45,6 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
-name|bus_space_tag_t
-name|bst
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
 name|u_short
 name|irq_no
 decl_stmt|;
@@ -112,6 +106,17 @@ name|tx_last
 decl_stmt|;
 comment|/* Pointer to beginning of last	*/
 comment|/* frame in the chain.		*/
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
+name|struct
+name|callout
+name|timer
+decl_stmt|;
+name|int
+name|tx_timeout
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -254,7 +259,7 @@ name|sc
 parameter_list|,
 name|off
 parameter_list|)
-value|(bus_space_read_1((sc)->bst, (sc)->bsh, off))
+value|(bus_read_1((sc)->ioport, off))
 end_define
 
 begin_define
@@ -266,7 +271,7 @@ name|sc
 parameter_list|,
 name|off
 parameter_list|)
-value|(bus_space_read_2((sc)->bst, (sc)->bsh, off))
+value|(bus_read_2((sc)->ioport, off))
 end_define
 
 begin_define
@@ -281,7 +286,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1((sc)->bst, (sc)->bsh, off, val)
+value|bus_write_1((sc)->ioport, off, val)
 end_define
 
 begin_define
@@ -296,7 +301,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2((sc)->bst, (sc)->bsh, off, val)
+value|bus_write_2((sc)->ioport, off, val)
 end_define
 
 begin_define
@@ -313,7 +318,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_1((sc)->bst, (sc)->bsh, off, addr, count)
+value|bus_write_multi_1((sc)->ioport, off, addr, count)
 end_define
 
 begin_define
@@ -330,7 +335,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_2((sc)->bst, (sc)->bsh, off, addr, count)
+value|bus_write_multi_2((sc)->ioport, off, addr, count)
 end_define
 
 begin_define
@@ -347,7 +352,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_4((sc)->bst, (sc)->bsh, off, addr, count)
+value|bus_write_multi_4((sc)->ioport, off, addr, count)
 end_define
 
 begin_define
@@ -364,7 +369,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_1((sc)->bst, (sc)->bsh, off, addr, count)
+value|bus_read_multi_1((sc)->ioport, off, addr, count)
 end_define
 
 begin_define
@@ -381,7 +386,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_2((sc)->bst, (sc)->bsh, off, addr, count)
+value|bus_read_multi_2((sc)->ioport, off, addr, count)
 end_define
 
 begin_define
@@ -398,7 +403,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_4((sc)->bst, (sc)->bsh, off, addr, count)
+value|bus_read_multi_4((sc)->ioport, off, addr, count)
 end_define
 
 begin_define
@@ -406,9 +411,9 @@ define|#
 directive|define
 name|EX_LOCK
 parameter_list|(
-name|_sc
+name|sc
 parameter_list|)
-value|mtx_lock(&(_sc)->sc_mtx)
+value|mtx_lock(&(sc)->lock)
 end_define
 
 begin_define
@@ -416,30 +421,9 @@ define|#
 directive|define
 name|EX_UNLOCK
 parameter_list|(
-name|_sc
+name|sc
 parameter_list|)
-value|mtx_unlock(&(_sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EX_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|)
-define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->dev), \ 	    MTX_NETWORK_LOCK, MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EX_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&_sc->sc_mtx);
+value|mtx_unlock(&(sc)->lock)
 end_define
 
 begin_define
@@ -447,19 +431,9 @@ define|#
 directive|define
 name|EX_ASSERT_LOCKED
 parameter_list|(
-name|_sc
+name|sc
 parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_OWNED);
-end_define
-
-begin_define
-define|#
-directive|define
-name|EX_ASSERT_UNLOCKED
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_NOTOWNED);
+value|mtx_assert(&(sc)->lock, MA_OWNED)
 end_define
 
 end_unit
