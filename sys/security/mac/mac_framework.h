@@ -749,7 +749,7 @@ parameter_list|,
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -761,6 +761,7 @@ parameter_list|(
 name|struct
 name|ipq
 modifier|*
+name|q
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -772,6 +773,7 @@ parameter_list|(
 name|struct
 name|ipq
 modifier|*
+name|q
 parameter_list|,
 name|int
 parameter_list|)
@@ -790,7 +792,7 @@ parameter_list|,
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -802,7 +804,7 @@ parameter_list|(
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|,
 name|struct
 name|mbuf
@@ -824,7 +826,7 @@ parameter_list|,
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|)
 function_decl|;
 end_function_decl

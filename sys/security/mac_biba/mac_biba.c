@@ -5286,12 +5286,12 @@ parameter_list|,
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ipqlabel
+name|qlabel
 parameter_list|)
 block|{
 name|struct
@@ -5313,7 +5313,7 @@ name|dest
 operator|=
 name|SLOT
 argument_list|(
-name|ipqlabel
+name|qlabel
 argument_list|)
 expr_stmt|;
 name|biba_copy_effective
@@ -5344,12 +5344,12 @@ parameter_list|,
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ipqlabel
+name|qlabel
 parameter_list|)
 block|{
 name|struct
@@ -5364,7 +5364,7 @@ name|a
 operator|=
 name|SLOT
 argument_list|(
-name|ipqlabel
+name|qlabel
 argument_list|)
 expr_stmt|;
 name|b
@@ -5395,12 +5395,12 @@ parameter_list|(
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ipqlabel
+name|qlabel
 parameter_list|,
 name|struct
 name|mbuf
@@ -5425,7 +5425,7 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-name|ipqlabel
+name|qlabel
 argument_list|)
 expr_stmt|;
 name|dest
@@ -5464,12 +5464,12 @@ parameter_list|,
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ipqlabel
+name|qlabel
 parameter_list|)
 block|{
 comment|/* NOOP: we only accept matching labels, so no need to update */
