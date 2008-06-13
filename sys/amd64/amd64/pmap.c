@@ -12503,14 +12503,13 @@ name|firstpte
 decl_stmt|,
 name|oldpte
 decl_stmt|,
+name|pa
+decl_stmt|,
 modifier|*
 name|pte
 decl_stmt|;
 name|vm_offset_t
 name|oldpteva
-decl_stmt|;
-name|vm_paddr_t
-name|pa
 decl_stmt|;
 name|vm_page_t
 name|mpte
@@ -12626,13 +12625,19 @@ operator|~
 name|PG_RW
 expr_stmt|;
 block|}
-comment|/* 	 * Examine each of the other PTEs in the specified PTP.  Abort if this 	 * PTE maps an unexpected physical page or does not have identical 	 * characteristics to the first PTE. 	 */
+comment|/* 	 * Examine each of the other PTEs in the specified PTP.  Abort if this 	 * PTE maps an unexpected 4KB physical page or does not have identical 	 * characteristics to the first PTE. 	 */
 name|pa
 operator|=
 operator|(
 name|newpde
 operator|&
+operator|(
 name|PG_PS_FRAME
+operator||
+name|PG_A
+operator||
+name|PG_V
+operator|)
 operator|)
 operator|+
 name|NBPDR
@@ -12669,7 +12674,13 @@ condition|(
 operator|(
 name|oldpte
 operator|&
+operator|(
 name|PG_FRAME
+operator||
+name|PG_A
+operator||
+name|PG_V
+operator|)
 operator|)
 operator|!=
 name|pa
