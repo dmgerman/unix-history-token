@@ -456,6 +456,12 @@ name|USB_PRODUCT_DLINK2_WUA1340
 block|}
 block|,
 block|{
+name|USB_VENDOR_DLINK2
+block|,
+name|USB_PRODUCT_DLINK2_DWA111
+block|}
+block|,
+block|{
 name|USB_VENDOR_GIGABYTE
 block|,
 name|USB_PRODUCT_GIGABYTE_GNWB01GS
