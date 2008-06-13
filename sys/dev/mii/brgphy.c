@@ -1060,7 +1060,7 @@ operator|->
 name|if_softc
 expr_stmt|;
 block|}
-comment|/* Todo: Need to add additional controllers such as 5787F */
+comment|/* Todo: Need to add additional controllers such as 5906& 5787F */
 comment|/* The 590x chips are 10/100 only. */
 if|if
 condition|(
@@ -1130,6 +1130,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Read the PHY's capabilities. */
 name|sc
 operator|->
 name|mii_capabilities
@@ -1393,7 +1394,7 @@ argument_list|(
 literal|"1000baseSX-FDX, "
 argument_list|)
 expr_stmt|;
-comment|/* 2.5G support is a software enabled feature on the 5708S */
+comment|/* 2.5G support is a software enabled feature on the 5708S and 5709S. */
 if|if
 condition|(
 name|bce_sc
@@ -1917,6 +1918,30 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Sets the PHY link speed.                                                 */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   None                                                                   */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1953,6 +1978,7 @@ literal|0
 decl_stmt|,
 name|gig
 decl_stmt|;
+comment|/* Calculate the value for the BMCR register. */
 switch|switch
 condition|(
 name|IFM_SUBTYPE
@@ -1994,6 +2020,7 @@ name|BRGPHY_S10
 expr_stmt|;
 break|break;
 block|}
+comment|/* Calculate duplex settings for 1000BasetT/1000BaseX. */
 if|if
 condition|(
 operator|(
@@ -2021,11 +2048,13 @@ operator|=
 name|BRGPHY_1000CTL_AHD
 expr_stmt|;
 block|}
+comment|/* Force loopback to disconnect PHY for Ethernet medium. */
 name|brgphy_enable_loopback
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Disable 1000BaseT advertisements. */
 name|PHY_WRITE
 argument_list|(
 name|sc
@@ -2035,15 +2064,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|PHY_WRITE
-argument_list|(
-name|sc
-argument_list|,
-name|BRGPHY_MII_BMCR
-argument_list|,
-name|bmcr
-argument_list|)
-expr_stmt|;
+comment|/* Disable 10/100 advertisements. */
 name|PHY_WRITE
 argument_list|(
 name|sc
@@ -2053,6 +2074,17 @@ argument_list|,
 name|BRGPHY_SEL_TYPE
 argument_list|)
 expr_stmt|;
+comment|/* Write forced link speed. */
+name|PHY_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|BRGPHY_MII_BMCR
+argument_list|,
+name|bmcr
+argument_list|)
+expr_stmt|;
+comment|/* If 10/100 only then configuration is complete. */
 if|if
 condition|(
 operator|(
@@ -2076,6 +2108,7 @@ condition|)
 goto|goto
 name|brgphy_setmedia_exit
 goto|;
+comment|/* Set duplex speed advertisement for 1000BaseT/1000BaseX. */
 name|PHY_WRITE
 argument_list|(
 name|sc
@@ -2085,6 +2118,7 @@ argument_list|,
 name|gig
 argument_list|)
 expr_stmt|;
+comment|/* Restart auto-negotiation for 1000BaseT/1000BaseX. */
 name|PHY_WRITE
 argument_list|(
 name|sc
@@ -2098,6 +2132,7 @@ operator||
 name|BRGPHY_BMCR_STARTNEG
 argument_list|)
 expr_stmt|;
+comment|/* If not 5701 PHY then configuration is complete. */
 if|if
 condition|(
 name|bsc
@@ -2150,15 +2185,35 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the media status based on the PHY settings. */
+comment|/****************************************************************************/
 end_comment
 
 begin_comment
-comment|/* IFM_FLAG0 = 0 (RX flow control disabled | 1 (enabled) */
+comment|/* Set the media status based on the PHY settings.                          */
 end_comment
 
 begin_comment
-comment|/* IFM_FLAG1 = 0 (TX flow control disabled | 1 (enabled) */
+comment|/* IFM_FLAG0 = 0 (RX flow control disabled) | 1 (enabled)                   */
+end_comment
+
+begin_comment
+comment|/* IFM_FLAG1 = 0 (TX flow control disabled) | 1 (enabled)                   */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   None                                                                   */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
 end_comment
 
 begin_function
@@ -2550,7 +2605,6 @@ argument_list|,
 name|BRGPHY_5708S_PG0_1000X_STAT1
 argument_list|)
 expr_stmt|;
-comment|/* Todo: Create #defines for hard coded values */
 switch|switch
 condition|(
 name|xstat
@@ -3710,6 +3764,59 @@ end_function
 begin_function
 specifier|static
 name|void
+name|brgphy_fixup_disable_early_dac
+parameter_list|(
+name|struct
+name|mii_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|uint32_t
+name|val
+decl_stmt|;
+name|PHY_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|BRGPHY_MII_DSP_ADDR_REG
+argument_list|,
+literal|0x0f08
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|PHY_READ
+argument_list|(
+name|sc
+argument_list|,
+name|BRGPHY_MII_DSP_RW_PORT
+argument_list|)
+expr_stmt|;
+name|val
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+name|PHY_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|BRGPHY_MII_DSP_RW_PORT
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|brgphy_ethernet_wirespeed
 parameter_list|(
 name|struct
@@ -3977,12 +4084,13 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+comment|/* Perform a standard PHY reset. */
 name|mii_phy_reset
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Handle any PHY specific procedures to finish the reset. */
+comment|/* Handle any PHY specific procedures following the reset. */
 switch|switch
 condition|(
 name|bsc
@@ -4491,6 +4599,57 @@ name|BRGPHY_5708S_DIG_PG0
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|BCE_CHIP_NUM
+argument_list|(
+name|bce_sc
+argument_list|)
+operator|==
+name|BCE_CHIP_NUM_5709
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|BCE_CHIP_REV
+argument_list|(
+name|bce_sc
+argument_list|)
+operator|==
+name|BCE_CHIP_REV_Ax
+operator|)
+operator|||
+operator|(
+name|BCE_CHIP_REV
+argument_list|(
+name|bce_sc
+argument_list|)
+operator|==
+name|BCE_CHIP_REV_Bx
+operator|)
+condition|)
+name|brgphy_fixup_disable_early_dac
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|brgphy_jumbo_settings
+argument_list|(
+name|sc
+argument_list|,
+name|ifp
+operator|->
+name|if_mtu
+argument_list|)
+expr_stmt|;
+name|brgphy_ethernet_wirespeed
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
