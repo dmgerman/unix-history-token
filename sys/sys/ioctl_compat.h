@@ -15,34 +15,11 @@ directive|define
 name|_SYS_IOCTL_COMPAT_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/ttychars.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ttydev.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USE_OLD_TTY
+name|_KERNEL
 end_ifdef
-
-begin_warning
-warning|#
-directive|warning
-literal|"Old BSD tty API used and depends on COMPAT_43TTY. Use termios.h instead"
-end_warning
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -157,51 +134,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_OLD_TTY
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|TIOCGETD
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TIOCGETD
-value|_IOR('t', 0, int)
-end_define
-
-begin_comment
-comment|/* get line discipline */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|TIOCSETD
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TIOCSETD
-value|_IOW('t', 1, int)
-end_define
-
-begin_comment
-comment|/* set line discipline */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -223,11 +155,6 @@ end_define
 begin_comment
 comment|/* set line discipline */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -948,6 +875,19 @@ end_define
 
 begin_comment
 comment|/* for hp300 -- sans int arg */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
+comment|/* XXX publish these so stty(1) can still report them */
 end_comment
 
 begin_define

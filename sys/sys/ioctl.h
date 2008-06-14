@@ -139,34 +139,5 @@ begin_comment
 comment|/* !_SYS_IOCTL_H_ */
 end_comment
 
-begin_comment
-comment|/*  * Keep outside _SYS_IOCTL_H_  * Compatibility with old terminal driver  *  * Source level -> #define USE_OLD_TTY  * Kernel level -> options COMPAT_43TTY  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_OLD_TTY
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_43TTY
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl_compat.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 end_unit
 
