@@ -357,7 +357,7 @@ name|SCTP_INP_RLOCK
 parameter_list|(
 name|_inp
 parameter_list|)
-value|do { 					\ 	if(sctp_logging_level& SCTP_LOCK_LOGGING_ENABLE) sctp_log_lock(_inp, (struct sctp_tcb *)NULL, SCTP_LOG_LOCK_INP);\         mtx_lock(&(_inp)->inp_mtx);                                     \ } while (0)
+value|do { 					\ 	if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LOCK_LOGGING_ENABLE) sctp_log_lock(_inp, (struct sctp_tcb *)NULL, SCTP_LOG_LOCK_INP);\         mtx_lock(&(_inp)->inp_mtx);                                     \ } while (0)
 end_define
 
 begin_define
@@ -367,7 +367,7 @@ name|SCTP_INP_WLOCK
 parameter_list|(
 name|_inp
 parameter_list|)
-value|do { 					\ 	if(sctp_logging_level& SCTP_LOCK_LOGGING_ENABLE) sctp_log_lock(_inp, (struct sctp_tcb *)NULL, SCTP_LOG_LOCK_INP);\         mtx_lock(&(_inp)->inp_mtx);                                     \ } while (0)
+value|do { 					\ 	if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LOCK_LOGGING_ENABLE) sctp_log_lock(_inp, (struct sctp_tcb *)NULL, SCTP_LOG_LOCK_INP);\         mtx_lock(&(_inp)->inp_mtx);                                     \ } while (0)
 end_define
 
 begin_else
@@ -475,7 +475,7 @@ parameter_list|(
 name|_inp
 parameter_list|)
 define|\
-value|do {								\ 	if(sctp_logging_level& SCTP_LOCK_LOGGING_ENABLE) sctp_log_lock(_inp, (struct sctp_tcb *)NULL, SCTP_LOG_LOCK_CREATE); \ 		mtx_lock(&(_inp)->inp_create_mtx);			\ 	} while (0)
+value|do {								\ 	if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LOCK_LOGGING_ENABLE) sctp_log_lock(_inp, (struct sctp_tcb *)NULL, SCTP_LOG_LOCK_CREATE); \ 		mtx_lock(&(_inp)->inp_create_mtx);			\ 	} while (0)
 end_define
 
 begin_else
@@ -567,7 +567,7 @@ name|SCTP_TCB_LOCK
 parameter_list|(
 name|_tcb
 parameter_list|)
-value|do {					\ 	if(sctp_logging_level& SCTP_LOCK_LOGGING_ENABLE)  sctp_log_lock(_tcb->sctp_ep, _tcb, SCTP_LOG_LOCK_TCB);          \ 	mtx_lock(&(_tcb)->tcb_mtx);                                     \ } while (0)
+value|do {					\ 	if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LOCK_LOGGING_ENABLE)  sctp_log_lock(_tcb->sctp_ep, _tcb, SCTP_LOG_LOCK_TCB);          \ 	mtx_lock(&(_tcb)->tcb_mtx);                                     \ } while (0)
 end_define
 
 begin_else

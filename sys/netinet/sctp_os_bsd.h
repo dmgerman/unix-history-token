@@ -793,7 +793,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|if(sctp_logging_level& SCTP_LTRACE_CHUNK_ENABLE) CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
+value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_CHUNK_ENABLE) CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
 end_define
 
 begin_else
@@ -844,7 +844,7 @@ name|file
 parameter_list|,
 name|err
 parameter_list|)
-value|if(sctp_logging_level& SCTP_LTRACE_ERROR_ENABLE) \                                                          printf("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     m, inp, stcb, net, file, __LINE__, err);
+value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \                                                          printf("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     m, inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_define
@@ -862,7 +862,7 @@ name|file
 parameter_list|,
 name|err
 parameter_list|)
-value|if(sctp_logging_level& SCTP_LTRACE_ERROR_ENABLE) \                                                           printf("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     inp, stcb, net, file, __LINE__, err);
+value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \                                                           printf("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_else
