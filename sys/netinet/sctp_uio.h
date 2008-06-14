@@ -3066,7 +3066,7 @@ name|_x
 parameter_list|,
 name|_d
 parameter_list|)
-value|atomic_add_int(&sctpstat._x, _d)
+value|atomic_add_int(&SCTP_BASE_STAT(_x), _d)
 end_define
 
 begin_define
@@ -3078,7 +3078,7 @@ name|_x
 parameter_list|,
 name|_d
 parameter_list|)
-value|atomic_subtract_int(&sctpstat._x, _d)
+value|atomic_subtract_int(&SCTP_BASE_STAT(_x), _d)
 end_define
 
 begin_comment

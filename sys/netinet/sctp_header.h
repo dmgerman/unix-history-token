@@ -51,6 +51,13 @@ directive|include
 file|<netinet/sctp_constants.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|SCTP_PACKED
+value|__attribute__((packed))
+end_define
+
 begin_comment
 comment|/*  * Parameter structures  */
 end_comment
@@ -1764,6 +1771,12 @@ directive|define
 name|SCTP_MIN_V4_OVERHEAD
 value|(sizeof(struct ip) + \ 			      sizeof(struct sctphdr))
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SCTP_PACKED
+end_undef
 
 begin_endif
 endif|#

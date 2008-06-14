@@ -1108,7 +1108,10 @@ directive|ifdef
 name|SCTP_LOCK_LOGGING
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_LOCK_LOGGING_ENABLE
 condition|)

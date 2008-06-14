@@ -51,6 +51,12 @@ directive|include
 file|<netinet/sctp_constants.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_sysctl.h>
+end_include
+
 begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
@@ -664,6 +670,53 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|sctp_base_info
+block|{
+comment|/* 	 * All static structures that anchor the system must be here. 	 */
+name|struct
+name|sctp_epinfo
+name|sctppcbinfo
+decl_stmt|;
+name|struct
+name|sctpstat
+name|sctpstat
+decl_stmt|;
+name|struct
+name|sctp_sysctl
+name|sctpsysctl
+decl_stmt|;
+name|uint8_t
+name|first_time
+decl_stmt|;
+name|char
+name|sctp_pcb_initialized
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCTP_PACKET_LOGGING
+argument_list|)
+name|int
+name|packet_log_writers
+decl_stmt|;
+name|int
+name|packet_log_end
+decl_stmt|;
+name|uint8_t
+name|packet_log_buffer
+index|[
+name|SCTP_PACKET_LOG_SIZE
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*-  * Here we have all the relevant information for each SCTP entity created. We  * will need to modify this as approprate. We also need to figure out how to  * access /dev/random.  */
 end_comment
@@ -1190,11 +1243,15 @@ name|_KERNEL
 argument_list|)
 end_if
 
+begin_comment
+comment|/* Attention Julian, this is the extern that  * goes with the base info. sctp_pcb.c has  * the real definition.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
-name|sctp_epinfo
-name|sctppcbinfo
+name|sctp_base_info
+name|system_base_info
 decl_stmt|;
 end_decl_stmt
 
@@ -1907,6 +1964,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|sctp_pcb_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sctp_pcb_finish
 parameter_list|(
 name|void
 parameter_list|)

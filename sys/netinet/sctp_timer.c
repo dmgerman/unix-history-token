@@ -227,12 +227,18 @@ if|if
 condition|(
 name|cur_rtt
 operator|<
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_early_fr_msec
+argument_list|)
 condition|)
 block|{
 name|cur_rtt
 operator|=
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_early_fr_msec
+argument_list|)
 expr_stmt|;
 block|}
 name|cur_rtt
@@ -425,7 +431,10 @@ block|}
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_EARLYFR_LOGGING_ENABLE
 condition|)
@@ -836,9 +845,15 @@ comment|/* 				 * Add debug message here if destination is 				 * not in PF stat
 comment|/* Stop any running T3 timers here? */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|&&
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_pf
+argument_list|)
 condition|)
 block|{
 name|net
@@ -911,7 +926,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_THRESHOLD_LOGGING
 condition|)
@@ -955,7 +973,10 @@ else|else
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_THRESHOLD_LOGGING
 condition|)
@@ -1710,7 +1731,10 @@ name|min_errors_net
 operator|->
 name|mtu
 operator|*
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_pf
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2501,7 +2525,10 @@ literal|1000
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 operator|(
 name|SCTP_EARLYFR_LOGGING_ENABLE
@@ -2632,7 +2659,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 operator|(
 name|SCTP_EARLYFR_LOGGING_ENABLE
@@ -2814,7 +2844,10 @@ comment|/* 			 * found one to mark: If it is less than 			 * DATAGRAM_ACKED it M
 comment|/* validate its been outstanding long enough */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 operator|(
 name|SCTP_EARLYFR_LOGGING_ENABLE
@@ -2873,7 +2906,10 @@ block|{
 comment|/* 				 * we have reached a chunk that was sent 				 * some seconds past our min.. forget it we 				 * will find no more to send. 				 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 operator|(
 name|SCTP_EARLYFR_LOGGING_ENABLE
@@ -2943,7 +2979,10 @@ block|{
 comment|/* 					 * ok it was sent after our boundary 					 * time. 					 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 operator|(
 name|SCTP_EARLYFR_LOGGING_ENABLE
@@ -3195,7 +3234,10 @@ name|TSN_seq
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 operator|(
 name|SCTP_EARLYFR_LOGGING_ENABLE
@@ -3271,7 +3313,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FLIGHT_LOGGING_ENABLE
 condition|)
@@ -3335,7 +3380,10 @@ name|asoc
 operator|.
 name|peers_rwnd
 operator|+=
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_peer_chunk_oh
+argument_list|)
 expr_stmt|;
 block|}
 name|chk
@@ -3473,7 +3521,10 @@ block|}
 comment|/* 			 * CMT: Do not allow FRs on retransmitted TSNs. 			 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|==
 literal|1
 condition|)
@@ -3545,7 +3596,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 operator|(
 name|SCTP_EARLYFR_LOGGING_ENABLE
@@ -3885,7 +3939,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FLIGHT_LOGGING_ENABLE
 condition|)
@@ -4201,7 +4258,10 @@ name|num_mk
 decl_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -4220,7 +4280,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_CWND_LOGGING_ENABLE
 condition|)
@@ -4320,9 +4383,15 @@ block|}
 comment|/* 	 * JRS 5/14/07 - If CMT PF is on and the destination if not already 	 * in PF state, set the destination to PF state and store the 	 * current time as the time that the destination was last active. In 	 * addition, find an alternate destination with PF-based 	 * find_alt_net(). 	 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|&&
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_pf
+argument_list|)
 condition|)
 block|{
 if|if
@@ -4376,7 +4445,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * CMT: Using RTX_SSTHRESH policy for CMT. If CMT is being 		 * used, then pick dest with largest ssthresh for any 		 * retransmission. 		 */
@@ -4789,9 +4861,15 @@ block|}
 elseif|else
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|&&
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_pf
+argument_list|)
 operator|&&
 operator|(
 name|net
@@ -4938,7 +5016,10 @@ block|}
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_CWND_MONITOR_ENABLE
 condition|)
@@ -7321,7 +7402,10 @@ if|if
 condition|(
 name|cnt_sent
 operator|>=
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_hb_maxburst
+argument_list|)
 condition|)
 break|break;
 block|}
@@ -8265,9 +8349,10 @@ expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|sctppcbinfo
-operator|.
+name|SCTP_BASE_INFO
+argument_list|(
 name|iteratorhead
+argument_list|)
 argument_list|,
 name|it
 argument_list|,

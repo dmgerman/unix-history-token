@@ -39,6 +39,13 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|SCTP_PACKED
+value|__attribute__((packed))
+end_define
+
 begin_comment
 comment|/*  * SCTP protocol - RFC2960.  */
 end_comment
@@ -65,12 +72,7 @@ decl_stmt|;
 comment|/* Adler32 C-Sum */
 comment|/* chunks follow... */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -96,12 +98,7 @@ decl_stmt|;
 comment|/* chunk length */
 comment|/* optional params follow */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -122,12 +119,7 @@ name|param_length
 decl_stmt|;
 comment|/* parameter length */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1042,12 +1034,7 @@ name|length
 decl_stmt|;
 comment|/* optional cause-specific info may follow */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1059,7 +1046,7 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_INVALID_STRE 						 * AM */
+comment|/* code=SCTP_ERROR_INVALID_STREAM */
 name|uint16_t
 name|stream_id
 decl_stmt|;
@@ -1068,12 +1055,7 @@ name|uint16_t
 name|reserved
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1085,19 +1067,14 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_MISSING_PARA 						 * M */
+comment|/* code=SCTP_ERROR_MISSING_PARAM */
 name|uint32_t
 name|num_missing_params
 decl_stmt|;
-comment|/* number of missing 						 * parameters */
+comment|/* number of missing parameters */
 comment|/* uint16_t param_type's follow */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1109,18 +1086,13 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_STALE_COOKIE 						 *  */
+comment|/* code=SCTP_ERROR_STALE_COOKIE */
 name|uint32_t
 name|stale_time
 decl_stmt|;
 comment|/* time in usec of staleness */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1132,14 +1104,9 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_OUT_OF_RESOU 						 * RCES */
+comment|/* code=SCTP_ERROR_OUT_OF_RESOURCES */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1151,14 +1118,9 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_UNRESOLVABLE 						 * _ADDR */
+comment|/* code=SCTP_ERROR_UNRESOLVABLE_ADDR */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1170,19 +1132,14 @@ name|struct
 name|sctp_error_cause
 name|cause
 decl_stmt|;
-comment|/* code=SCTP_ERROR_UNRECOG_CHUN 						 * K */
+comment|/* code=SCTP_ERROR_UNRECOG_CHUNK */
 name|struct
 name|sctp_chunkhdr
 name|ch
 decl_stmt|;
 comment|/* header from chunk in error */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1490,6 +1447,13 @@ define|#
 directive|define
 name|SCTP_DATA_UNORDERED
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DATA_SACK_IMMEDIATELY
+value|0x08
 end_define
 
 begin_comment
@@ -2110,6 +2074,12 @@ directive|define
 name|SCTP_LOG_AT_SEND_2_OUTQ
 value|0x08000000
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SCTP_PACKED
+end_undef
 
 begin_endif
 endif|#
