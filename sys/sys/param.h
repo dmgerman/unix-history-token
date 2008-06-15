@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|603103
+value|603104
 end_define
 
 begin_comment
