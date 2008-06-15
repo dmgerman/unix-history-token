@@ -575,6 +575,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_WCTOMB
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_WMEMCMP
 value|1
 end_define
