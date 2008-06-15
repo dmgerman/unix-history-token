@@ -1198,7 +1198,7 @@ end_comment
 
 begin_function
 specifier|static
-name|size_t
+name|int
 name|my_mbtowc_utf8
 parameter_list|(
 name|wchar_t
@@ -1238,11 +1238,8 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
 operator|-
-literal|2
+literal|1
 operator|)
 return|;
 comment|/* 	 * Decode 1-4 bytes depending on the value of the first byte. 	 */
@@ -1312,11 +1309,8 @@ literal|2
 condition|)
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
 operator|-
-literal|2
+literal|1
 operator|)
 return|;
 if|if
@@ -1334,10 +1328,9 @@ literal|0x80
 condition|)
 return|return
 operator|(
-name|size_t
-operator|)
 operator|-
 literal|1
+operator|)
 return|;
 operator|*
 name|pwc
@@ -1386,11 +1379,8 @@ literal|3
 condition|)
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
 operator|-
-literal|2
+literal|1
 operator|)
 return|;
 if|if
@@ -1408,10 +1398,9 @@ literal|0x80
 condition|)
 return|return
 operator|(
-name|size_t
-operator|)
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -1428,10 +1417,9 @@ literal|0x80
 condition|)
 return|return
 operator|(
-name|size_t
-operator|)
 operator|-
 literal|1
+operator|)
 return|;
 operator|*
 name|pwc
@@ -1493,11 +1481,8 @@ literal|4
 condition|)
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
 operator|-
-literal|2
+literal|1
 operator|)
 return|;
 if|if
@@ -1515,10 +1500,9 @@ literal|0x80
 condition|)
 return|return
 operator|(
-name|size_t
-operator|)
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -1535,10 +1519,9 @@ literal|0x80
 condition|)
 return|return
 operator|(
-name|size_t
-operator|)
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -1555,10 +1538,9 @@ literal|0x80
 condition|)
 return|return
 operator|(
-name|size_t
-operator|)
 operator|-
 literal|1
+operator|)
 return|;
 operator|*
 name|pwc
@@ -1617,9 +1599,6 @@ block|}
 comment|/* Invalid first byte. */
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
 operator|-
 literal|1
 operator|)
@@ -1654,7 +1633,7 @@ name|char
 modifier|*
 name|src
 decl_stmt|;
-name|size_t
+name|int
 name|n
 decl_stmt|;
 name|int
@@ -1738,20 +1717,8 @@ break|break;
 if|if
 condition|(
 name|n
-operator|==
-operator|(
-name|size_t
-operator|)
-operator|-
-literal|1
-operator|||
-name|n
-operator|==
-operator|(
-name|size_t
-operator|)
-operator|-
-literal|2
+operator|<
+literal|0
 condition|)
 block|{
 name|free
