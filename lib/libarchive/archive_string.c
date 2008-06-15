@@ -944,7 +944,7 @@ name|wchar_t
 parameter_list|)
 parameter_list|)
 block|{
-name|size_t
+name|int
 name|n
 decl_stmt|;
 name|char
@@ -1044,9 +1044,6 @@ if|if
 condition|(
 name|n
 operator|==
-operator|(
-name|size_t
-operator|)
 operator|-
 literal|1
 condition|)
