@@ -909,9 +909,6 @@ comment|/* Unicode has no codes larger than 0x1fffff. */
 comment|/* 	 * Awkward point:  UTF-8<-> wchar_t conversions 	 * can actually fail. 	 */
 return|return
 operator|(
-operator|(
-name|size_t
-operator|)
 operator|-
 literal|1
 operator|)
