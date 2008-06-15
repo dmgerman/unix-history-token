@@ -3397,6 +3397,14 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* Don't hold a non-regular file open. */
+if|if
+condition|(
+name|mtree
+operator|->
+name|fd
+operator|>=
+literal|0
+condition|)
 name|close
 argument_list|(
 name|mtree
