@@ -607,15 +607,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|sctp_pcbinfo_cleanup
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|sctp_flush
 parameter_list|(

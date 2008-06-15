@@ -546,6 +546,9 @@ name|struct
 name|sctpiterators
 name|iteratorhead
 decl_stmt|;
+name|int
+name|threads_must_exit
+decl_stmt|;
 comment|/* ep zone info */
 name|sctp_zone_t
 name|ipi_zone_ep
