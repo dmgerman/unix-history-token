@@ -1657,7 +1657,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"(pwd; /bin/cat +CONTENTS) | %s %s %s -S"
+literal|"(pwd; /bin/cat +CONTENTS) | %s %s %s %s -S"
 argument_list|,
 name|PkgAddCmd
 argument_list|,
@@ -1670,6 +1670,12 @@ argument_list|,
 name|PrefixRecursive
 condition|?
 name|prefixArg
+else|:
+literal|""
+argument_list|,
+name|KeepPackage
+condition|?
+literal|"-K"
 else|:
 literal|""
 argument_list|)
