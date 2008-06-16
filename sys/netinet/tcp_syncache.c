@@ -7239,6 +7239,8 @@ condition|(
 name|sch
 operator|->
 name|sch_reseed
+operator|+
+name|SYNCOOKIE_LIFETIME
 operator|<
 name|time_uptime
 condition|)
