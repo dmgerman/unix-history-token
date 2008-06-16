@@ -77,10 +77,9 @@ begin_struct
 struct|struct
 name|cdev
 block|{
-name|struct
-name|cdev_priv
+name|void
 modifier|*
-name|si_priv
+name|__si_reserved
 decl_stmt|;
 name|u_int
 name|si_flags

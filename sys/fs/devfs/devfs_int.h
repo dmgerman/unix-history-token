@@ -146,6 +146,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|cdev2priv
+parameter_list|(
+name|c
+parameter_list|)
+value|member2struct(cdev_priv, cdp_c, c)
+end_define
+
 begin_function_decl
 name|struct
 name|cdev
