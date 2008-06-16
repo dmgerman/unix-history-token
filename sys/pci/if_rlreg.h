@@ -4365,6 +4365,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RT_DEVICEID_8139D
+value|0x8039
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT_DEVICEID_8129
 value|0x8129
 end_define
