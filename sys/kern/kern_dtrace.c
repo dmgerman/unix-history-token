@@ -393,47 +393,5 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KDB
-end_ifndef
-
-begin_comment
-comment|/*  * This is a stub for the kernel debugger for the DTrace actions to call  * when the kernel has been built without KDB.  */
-end_comment
-
-begin_function
-name|void
-name|kdb_enter
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|why
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|msg
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Cannot enter kernel debugger - No KDB in kernel.\n%s - %s\n"
-argument_list|,
-name|why
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 end_unit
 
