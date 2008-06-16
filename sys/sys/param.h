@@ -1200,6 +1200,25 @@ define|\
 value|((db)<< (PAGE_SHIFT - DEV_BSHIFT))
 end_define
 
+begin_comment
+comment|/*  * Given the pointer x to the member m of the struct s, return  * a pointer to the containing structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|member2struct
+parameter_list|(
+name|s
+parameter_list|,
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|((struct s *)(void *)((char *)(x) - offsetof(struct s, m)))
+end_define
+
 begin_endif
 endif|#
 directive|endif
