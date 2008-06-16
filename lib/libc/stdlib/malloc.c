@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2006-2008 Jason Evans<jasone@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer as  *    the first lines of this file unmodified other than the possible  *    addition of one or more copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *******************************************************************************  *  * This allocator implementation is designed to provide scalable performance  * for multi-threaded programs on multi-processor systems.  The following  * features are included for this purpose:  *  *   + Multiple arenas are used if there are multiple CPUs, which reduces lock  *     contention and cache sloshing.  *  *   + Cache line sharing between arenas is avoided for internal data  *     structures.  *  *   + Memory is managed in chunks and runs (chunks can be split into runs),  *     rather than as individual pages.  This provides a constant-time  *     mechanism for associating allocations with particular arenas.  *  * Allocation requests are rounded up to the nearest size class, and no record  * of the original request size is maintained.  Allocations are broken into  * categories according to size class.  Assuming runtime defaults, 4 kB pages  * and a 16 byte quantum on a 32-bit system, the size classes in each category  * are as follows:  *  *   |=====================================|  *   | Category | Subcategory    |    Size |  *   |=====================================|  *   | Small    | Tiny           |       2 |  *   |          |                |       4 |  *   |          |                |       8 |  *   |          |----------------+---------|  *   |          | Quantum-spaced |      16 |  *   |          |                |      32 |  *   |          |                |      48 |  *   |          |                |     ... |  *   |          |                |     480 |  *   |          |                |     496 |  *   |          |                |     512 |  *   |          |----------------+---------|  *   |          | Sub-page       |    1 kB |  *   |          |                |    2 kB |  *   |=====================================|  *   | Large                     |    4 kB |  *   |                           |    8 kB |  *   |                           |   12 kB |  *   |                           |     ... |  *   |                           | 1004 kB |  *   |                           | 1008 kB |  *   |                           | 1012 kB |  *   |=====================================|  *   | Huge                      |    1 MB |  *   |                           |    2 MB |  *   |                           |    3 MB |  *   |                           |     ... |  *   |=====================================|  *  * A different mechanism is used for each category:  *  *   Small : Each size class is segregated into its own set of runs.  Each run  *           maintains a bitmap of which regions are free/allocated.  *  *   Large : Each allocation is backed by a dedicated run.  Metadata are stored  *           in the associated arena chunk header maps.  *  *   Huge : Each allocation is backed by a dedicated contiguous set of chunks.  *          Metadata are stored in a separate red-black tree.  *  *******************************************************************************  */
+comment|/*-  * Copyright (C) 2006-2008 Jason Evans<jasone@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer as  *    the first lines of this file unmodified other than the possible  *    addition of one or more copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *******************************************************************************  *  * This allocator implementation is designed to provide scalable performance  * for multi-threaded programs on multi-processor systems.  The following  * features are included for this purpose:  *  *   + Multiple arenas are used if there are multiple CPUs, which reduces lock  *     contention and cache sloshing.  *  *   + Cache line sharing between arenas is avoided for internal data  *     structures.  *  *   + Memory is managed in chunks and runs (chunks can be split into runs),  *     rather than as individual pages.  This provides a constant-time  *     mechanism for associating allocations with particular arenas.  *  * Allocation requests are rounded up to the nearest size class, and no record  * of the original request size is maintained.  Allocations are broken into  * categories according to size class.  Assuming runtime defaults, 4 kB pages  * and a 16 byte quantum on a 32-bit system, the size classes in each category  * are as follows:  *  *   |=====================================|  *   | Category | Subcategory    |    Size |  *   |=====================================|  *   | Small    | Tiny           |       2 |  *   |          |                |       4 |  *   |          |                |       8 |  *   |          |----------------+---------|  *   |          | Quantum-spaced |      16 |  *   |          |                |      32 |  *   |          |                |      48 |  *   |          |                |     ... |  *   |          |                |     480 |  *   |          |                |     496 |  *   |          |                |     512 |  *   |          |----------------+---------|  *   |          | Sub-page       |    1 kB |  *   |          |                |    2 kB |  *   |=====================================|  *   | Large                     |    4 kB |  *   |                           |    8 kB |  *   |                           |   12 kB |  *   |                           |     ... |  *   |                           | 1008 kB |  *   |                           | 1012 kB |  *   |                           | 1016 kB |  *   |=====================================|  *   | Huge                      |    1 MB |  *   |                           |    2 MB |  *   |                           |    3 MB |  *   |                           |     ... |  *   |=====================================|  *  * A different mechanism is used for each category:  *  *   Small : Each size class is segregated into its own set of runs.  Each run  *           maintains a bitmap of which regions are free/allocated.  *  *   Large : Each allocation is backed by a dedicated run.  Metadata are stored  *           in the associated arena chunk header maps.  *  *   Huge : Each allocation is backed by a dedicated contiguous set of chunks.  *          Metadata are stored in a separate red-black tree.  *  *******************************************************************************  */
 end_comment
 
 begin_comment
@@ -147,12 +147,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/tree.h>
 end_include
 
 begin_include
@@ -315,6 +309,12 @@ begin_include
 include|#
 directive|include
 file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rb.h"
 end_include
 
 begin_ifdef
@@ -508,6 +508,37 @@ begin_ifdef
 ifdef|#
 directive|ifdef
 name|__arm__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|QUANTUM_2POW_MIN
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_PTR_2POW
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_TLS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips__
 end_ifdef
 
 begin_define
@@ -1068,16 +1099,16 @@ struct|struct
 name|extent_node_s
 block|{
 comment|/* Linkage for the size/address-ordered tree. */
-name|RB_ENTRY
+name|rb_node
 argument_list|(
-argument|extent_node_s
+argument|extent_node_t
 argument_list|)
 name|link_szad
 expr_stmt|;
 comment|/* Linkage for the address-ordered tree. */
-name|RB_ENTRY
+name|rb_node
 argument_list|(
-argument|extent_node_s
+argument|extent_node_t
 argument_list|)
 name|link_ad
 expr_stmt|;
@@ -1096,39 +1127,13 @@ end_struct
 
 begin_typedef
 typedef|typedef
-name|struct
-name|extent_tree_szad_s
-name|extent_tree_szad_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|RB_HEAD
+name|rb_tree
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
-name|extent_node_s
+argument|extent_node_t
 argument_list|)
+name|extent_tree_t
 expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|struct
-name|extent_tree_ad_s
-name|extent_tree_ad_t
-typedef|;
 end_typedef
-
-begin_expr_stmt
-name|RB_HEAD
-argument_list|(
-name|extent_tree_ad_s
-argument_list|,
-name|extent_node_s
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/******************************************************************************/
@@ -1214,12 +1219,19 @@ name|arena_t
 modifier|*
 name|arena
 decl_stmt|;
-comment|/* Linkage for the arena's chunk tree. */
-name|RB_ENTRY
+comment|/* Linkage for the arena's chunks_all tree. */
+name|rb_node
 argument_list|(
-argument|arena_chunk_s
+argument|arena_chunk_t
 argument_list|)
-name|link
+name|link_all
+expr_stmt|;
+comment|/* Linkage for the arena's chunks_dirty tree. */
+name|rb_node
+argument_list|(
+argument|arena_chunk_t
+argument_list|)
+name|link_dirty
 expr_stmt|;
 comment|/* 	 * Number of pages in use.  This is maintained in order to make 	 * detection of empty chunks fast. 	 */
 name|size_t
@@ -1230,7 +1242,7 @@ name|size_t
 name|ndirty
 decl_stmt|;
 comment|/* 	 * Tree of extent nodes that are embedded in the arena chunk header 	 * page(s).  These nodes are used by arena_chunk_node_alloc(). 	 */
-name|extent_tree_ad_t
+name|extent_tree_t
 name|nodes
 decl_stmt|;
 name|extent_node_t
@@ -1251,21 +1263,13 @@ end_struct
 
 begin_typedef
 typedef|typedef
-name|struct
-name|arena_chunk_tree_s
-name|arena_chunk_tree_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|RB_HEAD
+name|rb_tree
 argument_list|(
-name|arena_chunk_tree_s
-argument_list|,
-name|arena_chunk_s
+argument|arena_chunk_t
 argument_list|)
+name|arena_chunk_tree_t
 expr_stmt|;
-end_expr_stmt
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -1280,9 +1284,9 @@ struct|struct
 name|arena_run_s
 block|{
 comment|/* Linkage for run trees. */
-name|RB_ENTRY
+name|rb_node
 argument_list|(
-argument|arena_run_s
+argument|arena_run_t
 argument_list|)
 name|link
 expr_stmt|;
@@ -1325,21 +1329,13 @@ end_struct
 
 begin_typedef
 typedef|typedef
-name|struct
-name|arena_run_tree_s
-name|arena_run_tree_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|RB_HEAD
+name|rb_tree
 argument_list|(
-name|arena_run_tree_s
-argument_list|,
-name|arena_run_s
+argument|arena_run_t
 argument_list|)
+name|arena_run_tree_t
 expr_stmt|;
-end_expr_stmt
+end_typedef
 
 begin_struct
 struct|struct
@@ -1415,11 +1411,15 @@ name|stats
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Tree of chunks this arena manages. 	 */
+comment|/* Tree of all chunks this arena manages. */
 name|arena_chunk_tree_t
-name|chunks
+name|chunks_all
 decl_stmt|;
-comment|/* 	 * In order to avoid rapid chunk allocation/deallocation when an arena 	 * oscillates right on the cusp of needing a new chunk, cache the most 	 * recently freed chunk.  The spare is left in the arena's chunk tree 	 * until it is deleted. 	 * 	 * There is one spare chunk per arena, rather than one spare total, in 	 * order to avoid interactions between multiple threads that could make 	 * a single spare inadequate. 	 */
+comment|/* 	 * Tree of dirty-page-containing chunks this arena manages.  This tree 	 * is maintained in addition to chunks_all in order to make 	 * deallocation O(lg d), where 'd' is the size of chunks_dirty. 	 * 	 * Without this tree, deallocation would be O(a), where 'a' is the size 	 * of chunks_all.  Since dirty pages are purged in descending memory 	 * order, it would not be difficult to trigger something approaching 	 * worst case behavior with a series of large deallocations. 	 */
+name|arena_chunk_tree_t
+name|chunks_dirty
+decl_stmt|;
+comment|/* 	 * In order to avoid rapid chunk allocation/deallocation when an arena 	 * oscillates right on the cusp of needing a new chunk, cache the most 	 * recently freed chunk.  The spare is left in the arena's chunk trees 	 * until it is deleted. 	 * 	 * There is one spare chunk per arena, rather than one spare total, in 	 * order to avoid interactions between multiple threads that could make 	 * a single spare inadequate. 	 */
 name|arena_chunk_t
 modifier|*
 name|spare
@@ -1429,14 +1429,14 @@ name|size_t
 name|ndirty
 decl_stmt|;
 comment|/* 	 * Trees of this arena's available runs.  Two trees are maintained 	 * using one set of nodes, since one is needed for first-best-fit run 	 * allocation, and the other is needed for coalescing. 	 */
-name|extent_tree_szad_t
+name|extent_tree_t
 name|runs_avail_szad
 decl_stmt|;
-name|extent_tree_ad_t
+name|extent_tree_t
 name|runs_avail_ad
 decl_stmt|;
 comment|/* Tree of this arena's allocated (in-use) runs. */
-name|extent_tree_ad_t
+name|extent_tree_t
 name|runs_alloced_ad
 decl_stmt|;
 ifdef|#
@@ -1660,7 +1660,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|extent_tree_ad_t
+name|extent_tree_t
 name|huge
 decl_stmt|;
 end_decl_stmt
@@ -1724,14 +1724,14 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|extent_tree_szad_t
+name|extent_tree_t
 name|dss_chunks_szad
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|extent_tree_ad_t
+name|extent_tree_t
 name|dss_chunks_ad
 decl_stmt|;
 end_decl_stmt
@@ -4452,11 +4452,19 @@ argument_list|(
 name|csize
 argument_list|)
 condition|)
+block|{
+name|malloc_mutex_unlock
+argument_list|(
+operator|&
+name|base_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 comment|/* Allocate. */
 name|ret
@@ -5226,15 +5234,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate red-black tree code for size/address-ordered extents. */
+comment|/* Wrap red-black tree macros in functions. */
 end_comment
 
 begin_macro
-name|RB_GENERATE_STATIC
+name|rb_wrap
 argument_list|(
-argument|extent_tree_szad_s
+argument|__unused static
 argument_list|,
-argument|extent_node_s
+argument|extent_tree_szad_
+argument_list|,
+argument|extent_tree_t
+argument_list|,
+argument|extent_node_t
 argument_list|,
 argument|link_szad
 argument_list|,
@@ -5296,15 +5308,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate red-black tree code for address-ordered extents. */
+comment|/* Wrap red-black tree macros in functions. */
 end_comment
 
 begin_macro
-name|RB_GENERATE_STATIC
+name|rb_wrap
 argument_list|(
-argument|extent_tree_ad_s
+argument|__unused static
 argument_list|,
-argument|extent_node_s
+argument|extent_tree_ad_
+argument_list|,
+argument|extent_tree_t
+argument_list|,
+argument|extent_node_t
 argument_list|,
 argument|link_ad
 argument_list|,
@@ -5569,6 +5585,21 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+comment|/* 	 * sbrk() uses a signed increment argument, so take care not to 	 * interpret a huge allocation request as a negative increment. 	 */
+if|if
+condition|(
+operator|(
+name|intptr_t
+operator|)
+name|size
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|malloc_mutex_lock
 argument_list|(
 operator|&
@@ -5765,10 +5796,8 @@ argument_list|)
 expr_stmt|;
 name|node
 operator|=
-name|RB_NFIND
+name|extent_tree_szad_nsearch
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
@@ -5792,10 +5821,8 @@ operator|->
 name|addr
 decl_stmt|;
 comment|/* Remove node from the tree. */
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
@@ -5811,10 +5838,8 @@ operator|==
 name|size
 condition|)
 block|{
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|dss_chunks_ad
 argument_list|,
@@ -5864,10 +5889,8 @@ name|size
 operator|-=
 name|size
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_szad_insert
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
@@ -6395,10 +6418,8 @@ operator|)
 expr_stmt|;
 name|node
 operator|=
-name|RB_NFIND
+name|extent_tree_ad_nsearch
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|dss_chunks_ad
 argument_list|,
@@ -6423,10 +6444,8 @@ name|addr
 condition|)
 block|{
 comment|/* 		 * Coalesce chunk with the following address range.  This does 		 * not change the position within dss_chunks_ad, so only 		 * remove/insert from/into dss_chunks_szad. 		 */
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
@@ -6445,10 +6464,8 @@ name|size
 operator|+=
 name|size
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_szad_insert
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
@@ -6499,20 +6516,16 @@ name|size
 operator|=
 name|size
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_ad_insert
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|dss_chunks_ad
 argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_szad_insert
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
@@ -6523,10 +6536,8 @@ block|}
 comment|/* Try to coalesce backward. */
 name|prev
 operator|=
-name|RB_PREV
+name|extent_tree_ad_prev
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|dss_chunks_ad
 argument_list|,
@@ -6560,30 +6571,24 @@ name|chunk
 condition|)
 block|{
 comment|/* 		 * Coalesce chunk with the previous address range.  This does 		 * not change the position within dss_chunks_ad, so only 		 * remove/insert node from/into dss_chunks_szad. 		 */
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
 name|prev
 argument_list|)
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|dss_chunks_ad
 argument_list|,
 name|prev
 argument_list|)
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
@@ -6606,10 +6611,8 @@ name|prev
 operator|->
 name|size
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_szad_insert
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
@@ -6774,20 +6777,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|dss_chunks_szad
 argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|dss_chunks_ad
 argument_list|,
@@ -7412,17 +7411,38 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate red-black tree code for arena chunks. */
+comment|/* Wrap red-black tree macros in functions. */
 end_comment
 
 begin_macro
-name|RB_GENERATE_STATIC
+name|rb_wrap
 argument_list|(
-argument|arena_chunk_tree_s
+argument|__unused static
 argument_list|,
-argument|arena_chunk_s
+argument|arena_chunk_tree_all_
 argument_list|,
-argument|link
+argument|arena_chunk_tree_t
+argument_list|,
+argument|arena_chunk_t
+argument_list|,
+argument|link_all
+argument_list|,
+argument|arena_chunk_comp
+argument_list|)
+end_macro
+
+begin_macro
+name|rb_wrap
+argument_list|(
+argument|__unused static
+argument_list|,
+argument|arena_chunk_tree_dirty_
+argument_list|,
+argument|arena_chunk_tree_t
+argument_list|,
+argument|arena_chunk_t
+argument_list|,
+argument|link_dirty
 argument_list|,
 argument|arena_chunk_comp
 argument_list|)
@@ -7492,15 +7512,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate red-black tree code for arena runs. */
+comment|/* Wrap red-black tree macros in functions. */
 end_comment
 
 begin_macro
-name|RB_GENERATE_STATIC
+name|rb_wrap
 argument_list|(
-argument|arena_run_tree_s
+argument|__unused static
 argument_list|,
-argument|arena_run_s
+argument|arena_run_tree_
+argument_list|,
+argument|arena_run_tree_t
+argument_list|,
+argument|arena_run_t
 argument_list|,
 argument|link
 argument_list|,
@@ -7525,10 +7549,8 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|RB_MIN
+name|extent_tree_ad_first
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|chunk
 operator|->
@@ -7541,10 +7563,8 @@ name|ret
 operator|!=
 name|NULL
 condition|)
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|chunk
 operator|->
@@ -7640,10 +7660,8 @@ operator|*
 operator|)
 name|node
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_ad_insert
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|chunk
 operator|->
@@ -8898,6 +8916,8 @@ modifier|*
 name|chunk
 decl_stmt|;
 name|size_t
+name|old_ndirty
+decl_stmt|,
 name|run_ind
 decl_stmt|,
 name|total_pages
@@ -8929,6 +8949,12 @@ argument_list|(
 name|run
 argument_list|)
 expr_stmt|;
+name|old_ndirty
+operator|=
+name|chunk
+operator|->
+name|ndirty
+expr_stmt|;
 name|nodeA
 operator|=
 name|arena_chunk_node_alloc
@@ -8948,10 +8974,8 @@ name|size
 operator|=
 name|size
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_ad_insert
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -8968,10 +8992,8 @@ name|run
 expr_stmt|;
 name|nodeB
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9184,10 +9206,8 @@ name|CHUNK_MAP_LARGE
 expr_stmt|;
 block|}
 comment|/* Keep track of trailing unused pages for later use. */
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9229,10 +9249,8 @@ name|size
 operator|-=
 name|size
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_szad_insert
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9245,10 +9263,8 @@ block|}
 else|else
 block|{
 comment|/* Remove nodeB from runs_avail_*. */
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9270,6 +9286,28 @@ operator|->
 name|pages_used
 operator|+=
 name|need_pages
+expr_stmt|;
+if|if
+condition|(
+name|chunk
+operator|->
+name|ndirty
+operator|==
+literal|0
+operator|&&
+name|old_ndirty
+operator|>
+literal|0
+condition|)
+name|arena_chunk_tree_dirty_remove
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|chunks_dirty
+argument_list|,
+name|chunk
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -9360,14 +9398,12 @@ name|arena
 operator|=
 name|arena
 expr_stmt|;
-name|RB_INSERT
+name|arena_chunk_tree_all_insert
 argument_list|(
-name|arena_chunk_tree_s
-argument_list|,
 operator|&
 name|arena
 operator|->
-name|chunks
+name|chunks_all
 argument_list|,
 name|chunk
 argument_list|)
@@ -9421,7 +9457,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the tree of unused extent nodes. */
-name|RB_INIT
+name|extent_tree_ad_new
 argument_list|(
 operator|&
 name|chunk
@@ -9493,10 +9529,8 @@ operator|<<
 name|pagesize_2pow
 operator|)
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_szad_insert
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9505,10 +9539,8 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_ad_insert
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9554,16 +9586,39 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|RB_REMOVE
+name|arena_chunk_tree_all_remove
 argument_list|(
-name|arena_chunk_tree_s
-argument_list|,
 operator|&
 name|chunk
 operator|->
 name|arena
 operator|->
-name|chunks
+name|chunks_all
+argument_list|,
+name|arena
+operator|->
+name|spare
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arena
+operator|->
+name|spare
+operator|->
+name|ndirty
+operator|>
+literal|0
+condition|)
+block|{
+name|arena_chunk_tree_dirty_remove
+argument_list|(
+operator|&
+name|chunk
+operator|->
+name|arena
+operator|->
+name|chunks_dirty
 argument_list|,
 name|arena
 operator|->
@@ -9580,6 +9635,7 @@ name|spare
 operator|->
 name|ndirty
 expr_stmt|;
+block|}
 name|chunk_dealloc
 argument_list|(
 operator|(
@@ -9607,7 +9663,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * Remove run from the runs trees, regardless of whether this chunk 	 * will be cached, so that the arena does not use it.  Dirty page 	 * flushing only uses the chunks tree, so leaving this chunk in that 	 * tree is sufficient for that purpose. 	 */
+comment|/* 	 * Remove run from the runs trees, regardless of whether this chunk 	 * will be cached, so that the arena does not use it.  Dirty page 	 * flushing only uses the chunks_dirty tree, so leaving this chunk in 	 * the chunks_* trees is sufficient for that purpose. 	 */
 name|key
 operator|.
 name|addr
@@ -9631,10 +9687,8 @@ operator|)
 expr_stmt|;
 name|node
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9651,10 +9705,8 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9663,10 +9715,8 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9766,10 +9816,8 @@ name|size
 expr_stmt|;
 name|node
 operator|=
-name|RB_NFIND
+name|extent_tree_szad_nsearch
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -9889,6 +9937,11 @@ name|arena_chunk_t
 modifier|*
 name|chunk
 decl_stmt|;
+name|size_t
+name|i
+decl_stmt|,
+name|npages
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MALLOC_DEBUG
@@ -9899,13 +9952,15 @@ name|ndirty
 operator|=
 literal|0
 expr_stmt|;
-name|RB_FOREACH
+name|rb_foreach_begin
 argument_list|(
+argument|arena_chunk_t
+argument_list|,
+argument|link_all
+argument_list|,
+argument|&arena->chunks_all
+argument_list|,
 argument|chunk
-argument_list|,
-argument|arena_chunk_tree_s
-argument_list|,
-argument|&arena->chunks
 argument_list|)
 block|{
 name|ndirty
@@ -9915,6 +9970,57 @@ operator|->
 name|ndirty
 expr_stmt|;
 block|}
+name|rb_foreach_end
+argument_list|(
+argument|arena_chunk_t
+argument_list|,
+argument|link_all
+argument_list|,
+argument|&arena->chunks_all
+argument_list|,
+argument|chunk
+argument_list|)
+name|assert
+argument_list|(
+name|ndirty
+operator|==
+name|arena
+operator|->
+name|ndirty
+argument_list|)
+expr_stmt|;
+name|ndirty
+operator|=
+literal|0
+expr_stmt|;
+name|rb_foreach_begin
+argument_list|(
+argument|arena_chunk_t
+argument_list|,
+argument|link_dirty
+argument_list|,
+argument|&arena->chunks_dirty
+argument_list|,
+argument|chunk
+argument_list|)
+block|{
+name|ndirty
+operator|+=
+name|chunk
+operator|->
+name|ndirty
+expr_stmt|;
+block|}
+name|rb_foreach_end
+argument_list|(
+argument|arena_chunk_t
+argument_list|,
+argument|link_dirty
+argument_list|,
+argument|&arena->chunks_dirty
+argument_list|,
+argument|chunk
+argument_list|)
 name|assert
 argument_list|(
 name|ndirty
@@ -9947,28 +10053,37 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Iterate downward through chunks until enough dirty memory has been 	 * purged. 	 */
-name|RB_FOREACH_REVERSE
-argument_list|(
-argument|chunk
-argument_list|,
-argument|arena_chunk_tree_s
-argument_list|,
-argument|&arena->chunks
-argument_list|)
-block|{
-if|if
+comment|/* 	 * Iterate downward through chunks until enough dirty memory has been 	 * purged.  Terminate as soon as possible in order to minimize the 	 * number of system calls, even if a chunk has only been partially 	 * purged. 	 */
+while|while
 condition|(
-name|chunk
+name|arena
 operator|->
 name|ndirty
 operator|>
-literal|0
+operator|(
+name|opt_dirty_max
+operator|>>
+literal|1
+operator|)
 condition|)
 block|{
-name|size_t
-name|i
-decl_stmt|;
+name|chunk
+operator|=
+name|arena_chunk_tree_dirty_last
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|chunks_dirty
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|chunk
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -9977,14 +10092,23 @@ name|chunk_npages
 operator|-
 literal|1
 init|;
-name|i
-operator|>=
-name|arena_chunk_header_npages
+name|chunk
+operator|->
+name|ndirty
+operator|>
+literal|0
 condition|;
 name|i
 operator|--
 control|)
 block|{
+name|assert
+argument_list|(
+name|i
+operator|>=
+name|arena_chunk_header_npages
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|chunk
@@ -9997,9 +10121,6 @@ operator|&
 name|CHUNK_MAP_DIRTY
 condition|)
 block|{
-name|size_t
-name|npages
-decl_stmt|;
 name|chunk
 operator|->
 name|map
@@ -10012,16 +10133,6 @@ name|CHUNK_MAP_LARGE
 operator||
 name|CHUNK_MAP_POS_MASK
 operator|)
-expr_stmt|;
-name|chunk
-operator|->
-name|ndirty
-operator|--
-expr_stmt|;
-name|arena
-operator|->
-name|ndirty
-operator|--
 expr_stmt|;
 comment|/* Find adjacent dirty run(s). */
 for|for
@@ -10067,17 +10178,19 @@ operator||
 name|CHUNK_MAP_POS_MASK
 operator|)
 expr_stmt|;
+block|}
 name|chunk
 operator|->
 name|ndirty
-operator|--
+operator|-=
+name|npages
 expr_stmt|;
 name|arena
 operator|->
 name|ndirty
-operator|--
+operator|-=
+name|npages
 expr_stmt|;
-block|}
 name|madvise
 argument_list|(
 operator|(
@@ -10136,9 +10249,28 @@ operator|>>
 literal|1
 operator|)
 condition|)
-return|return;
+break|break;
 block|}
 block|}
+if|if
+condition|(
+name|chunk
+operator|->
+name|ndirty
+operator|==
+literal|0
+condition|)
+block|{
+name|arena_chunk_tree_dirty_remove
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|chunks_dirty
+argument_list|,
+name|chunk
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -10193,10 +10325,8 @@ name|run
 expr_stmt|;
 name|nodeB
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10213,10 +10343,8 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10347,17 +10475,39 @@ index|]
 operator||=
 name|CHUNK_MAP_DIRTY
 expr_stmt|;
+block|}
+if|if
+condition|(
 name|chunk
 operator|->
 name|ndirty
-operator|++
+operator|==
+literal|0
+condition|)
+block|{
+name|arena_chunk_tree_dirty_insert
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|chunks_dirty
+argument_list|,
+name|chunk
+argument_list|)
+expr_stmt|;
+block|}
+name|chunk
+operator|->
+name|ndirty
+operator|+=
+name|run_pages
 expr_stmt|;
 name|arena
 operator|->
 name|ndirty
-operator|++
+operator|+=
+name|run_pages
 expr_stmt|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -10420,10 +10570,8 @@ operator|)
 expr_stmt|;
 name|nodeC
 operator|=
-name|RB_NFIND
+name|extent_tree_ad_nsearch
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10449,10 +10597,8 @@ name|addr
 condition|)
 block|{
 comment|/* 		 * Coalesce forward.  This does not change the position within 		 * runs_avail_ad, so only remove/insert from/into 		 * runs_avail_szad. 		 */
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10477,10 +10623,8 @@ name|size
 operator|+=
 name|size
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_szad_insert
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10504,10 +10648,8 @@ block|}
 else|else
 block|{
 comment|/* 		 * Coalescing forward failed, so insert nodeB into runs_avail_*. 		 */
-name|RB_INSERT
+name|extent_tree_szad_insert
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10516,10 +10658,8 @@ argument_list|,
 name|nodeB
 argument_list|)
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_ad_insert
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10532,10 +10672,8 @@ block|}
 comment|/* Try to coalesce backward. */
 name|nodeA
 operator|=
-name|RB_PREV
+name|extent_tree_ad_prev
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10575,10 +10713,8 @@ name|run
 condition|)
 block|{
 comment|/* 		 * Coalesce with previous run.  This does not change nodeB's 		 * position within runs_avail_ad, so only remove/insert 		 * from/into runs_avail_szad. 		 */
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10587,10 +10723,8 @@ argument_list|,
 name|nodeA
 argument_list|)
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10599,10 +10733,8 @@ argument_list|,
 name|nodeA
 argument_list|)
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_szad_remove
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10627,10 +10759,8 @@ name|nodeA
 operator|->
 name|size
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_szad_insert
 argument_list|(
-name|extent_tree_szad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10791,10 +10921,8 @@ name|oldsize
 operator|-
 name|newsize
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_ad_insert
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10919,10 +11047,8 @@ name|oldsize
 operator|-
 name|newsize
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_ad_insert
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -10979,30 +11105,26 @@ decl_stmt|,
 name|remainder
 decl_stmt|;
 comment|/* Look for a usable run. */
-if|if
-condition|(
-operator|(
 name|run
 operator|=
-name|RB_MIN
+name|arena_run_tree_first
 argument_list|(
-name|arena_run_tree_s
-argument_list|,
 operator|&
 name|bin
 operator|->
 name|runs
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|run
 operator|!=
 name|NULL
 condition|)
 block|{
 comment|/* run is guaranteed to have available space. */
-name|RB_REMOVE
+name|arena_run_tree_remove
 argument_list|(
-name|arena_run_tree_s
-argument_list|,
 operator|&
 name|bin
 operator|->
@@ -11075,6 +11197,8 @@ operator|<
 name|bin
 operator|->
 name|regs_mask_nelms
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
@@ -11111,9 +11235,19 @@ expr_stmt|;
 if|if
 condition|(
 name|remainder
-operator|!=
+operator|==
 literal|0
 condition|)
+name|run
+operator|->
+name|regs_mask
+index|[
+name|i
+index|]
+operator|=
+name|UINT_MAX
+expr_stmt|;
+else|else
 block|{
 comment|/* The last element has spare bits that need to be unset. */
 name|run
@@ -12831,10 +12965,8 @@ name|ret
 expr_stmt|;
 name|node
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -12885,10 +13017,8 @@ name|ret
 expr_stmt|;
 name|node
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -13483,10 +13613,8 @@ name|ptr
 expr_stmt|;
 name|node
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -13620,10 +13748,8 @@ argument_list|)
 expr_stmt|;
 name|node
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|huge
 argument_list|,
@@ -13809,10 +13935,8 @@ literal|1
 condition|)
 block|{
 comment|/* 			 * This block's conditional is necessary because if the 			 * run only contains one region, then it never gets 			 * inserted into the non-full runs tree. 			 */
-name|RB_REMOVE
+name|arena_run_tree_remove
 argument_list|(
-name|arena_run_tree_s
-argument_list|,
 operator|&
 name|bin
 operator|->
@@ -13915,10 +14039,8 @@ literal|0
 condition|)
 block|{
 comment|/* Insert runcur. */
-name|RB_INSERT
+name|arena_run_tree_insert
 argument_list|(
-name|arena_run_tree_s
-argument_list|,
 operator|&
 name|bin
 operator|->
@@ -13938,10 +14060,8 @@ name|run
 expr_stmt|;
 block|}
 else|else
-name|RB_INSERT
+name|arena_run_tree_insert
 argument_list|(
-name|arena_run_tree_s
-argument_list|,
 operator|&
 name|bin
 operator|->
@@ -14028,10 +14148,8 @@ name|ptr
 expr_stmt|;
 name|node
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -14423,10 +14541,8 @@ endif|#
 directive|endif
 name|node
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -14567,10 +14683,8 @@ endif|#
 directive|endif
 name|nodeC
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -14632,10 +14746,8 @@ name|ptr
 expr_stmt|;
 name|nodeA
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -14671,10 +14783,8 @@ operator|)
 expr_stmt|;
 name|nodeB
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -14699,10 +14809,8 @@ name|nodeB
 operator|->
 name|size
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|arena
 operator|->
@@ -15441,12 +15549,20 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Initialize chunks. */
-name|RB_INIT
+name|arena_chunk_tree_all_new
 argument_list|(
 operator|&
 name|arena
 operator|->
-name|chunks
+name|chunks_all
+argument_list|)
+expr_stmt|;
+name|arena_chunk_tree_dirty_new
+argument_list|(
+operator|&
+name|arena
+operator|->
+name|chunks_dirty
 argument_list|)
 expr_stmt|;
 name|arena
@@ -15461,7 +15577,7 @@ name|ndirty
 operator|=
 literal|0
 expr_stmt|;
-name|RB_INIT
+name|extent_tree_szad_new
 argument_list|(
 operator|&
 name|arena
@@ -15469,7 +15585,7 @@ operator|->
 name|runs_avail_szad
 argument_list|)
 expr_stmt|;
-name|RB_INIT
+name|extent_tree_ad_new
 argument_list|(
 operator|&
 name|arena
@@ -15477,7 +15593,7 @@ operator|->
 name|runs_avail_ad
 argument_list|)
 expr_stmt|;
-name|RB_INIT
+name|extent_tree_ad_new
 argument_list|(
 operator|&
 name|arena
@@ -15532,7 +15648,7 @@ name|runcur
 operator|=
 name|NULL
 expr_stmt|;
-name|RB_INIT
+name|arena_run_tree_new
 argument_list|(
 operator|&
 name|bin
@@ -15614,7 +15730,7 @@ name|runcur
 operator|=
 name|NULL
 expr_stmt|;
-name|RB_INIT
+name|arena_run_tree_new
 argument_list|(
 operator|&
 name|bin
@@ -15713,7 +15829,7 @@ name|runcur
 operator|=
 name|NULL
 expr_stmt|;
-name|RB_INIT
+name|arena_run_tree_new
 argument_list|(
 operator|&
 name|bin
@@ -16020,10 +16136,8 @@ operator|&
 name|huge_mtx
 argument_list|)
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_ad_insert
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|huge
 argument_list|,
@@ -16367,10 +16481,8 @@ operator|&
 name|huge_mtx
 argument_list|)
 expr_stmt|;
-name|RB_INSERT
+name|extent_tree_ad_insert
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|huge
 argument_list|,
@@ -16629,10 +16741,8 @@ name|ptr
 expr_stmt|;
 name|node
 operator|=
-name|RB_FIND
+name|extent_tree_ad_search
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|huge
 argument_list|,
@@ -16656,10 +16766,8 @@ operator|==
 name|ptr
 argument_list|)
 expr_stmt|;
-name|RB_REMOVE
+name|extent_tree_ad_remove
 argument_list|(
-name|extent_tree_ad_s
-argument_list|,
 operator|&
 name|huge
 argument_list|,
@@ -18570,7 +18678,7 @@ operator|&
 name|huge_mtx
 argument_list|)
 expr_stmt|;
-name|RB_INIT
+name|extent_tree_ad_new
 argument_list|(
 operator|&
 name|huge
@@ -18600,13 +18708,13 @@ name|dss_max
 operator|=
 name|dss_base
 expr_stmt|;
-name|RB_INIT
+name|extent_tree_szad_new
 argument_list|(
 operator|&
 name|dss_chunks_szad
 argument_list|)
 expr_stmt|;
-name|RB_INIT
+name|extent_tree_ad_new
 argument_list|(
 operator|&
 name|dss_chunks_ad
