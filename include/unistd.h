@@ -2145,6 +2145,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|execvpe
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|pid_t
 name|fork
 parameter_list|(
