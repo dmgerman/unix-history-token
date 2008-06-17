@@ -216,6 +216,7 @@ value|"/usr/libexec/pt_chown"
 end_define
 
 begin_function
+specifier|static
 name|int
 name|__use_pts
 parameter_list|(
