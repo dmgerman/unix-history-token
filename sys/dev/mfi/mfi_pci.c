@@ -388,6 +388,20 @@ literal|0x1000
 block|,
 literal|0x0060
 block|,
+literal|0x1028
+block|,
+literal|0xffff
+block|,
+name|MFI_FLAGS_1078
+block|,
+literal|"Dell PERC 6"
+block|}
+block|,
+block|{
+literal|0x1000
+block|,
+literal|0x0060
+block|,
 literal|0xffff
 block|,
 literal|0xffff
