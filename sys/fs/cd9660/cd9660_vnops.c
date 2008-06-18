@@ -2333,6 +2333,14 @@ name|uio
 operator|->
 name|uio_offset
 expr_stmt|;
+name|idp
+operator|->
+name|uio_off
+operator|=
+name|uio
+operator|->
+name|uio_offset
+expr_stmt|;
 if|if
 condition|(
 operator|(
