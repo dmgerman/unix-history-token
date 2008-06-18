@@ -1346,6 +1346,11 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|struct
+name|lock_object
+modifier|*
+name|lock
+decl_stmt|;
 name|boolean_t
 name|comma
 decl_stmt|;
@@ -1367,6 +1372,17 @@ else|else
 name|td
 operator|=
 name|kdb_thread
+expr_stmt|;
+name|lock
+operator|=
+operator|(
+expr|struct
+name|lock_object
+operator|*
+operator|)
+name|td
+operator|->
+name|td_lock
 expr_stmt|;
 name|db_printf
 argument_list|(
@@ -1714,6 +1730,17 @@ argument_list|,
 name|td
 operator|->
 name|td_priority
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|" container lock: %s (%p)\n"
+argument_list|,
+name|lock
+operator|->
+name|lo_name
+argument_list|,
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
