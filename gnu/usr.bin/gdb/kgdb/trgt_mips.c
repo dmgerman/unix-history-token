@@ -129,7 +129,7 @@ name|kt
 operator|=
 name|kgdb_thr_lookup_tid
 argument_list|(
-name|ptid_get_tid
+name|ptid_get_pid
 argument_list|(
 name|inferior_ptid
 argument_list|)
@@ -441,6 +441,18 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|kgdb_trgt_new_objfile
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
+block|{ }
 end_function
 
 begin_struct
