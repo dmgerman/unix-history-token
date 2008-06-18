@@ -1081,18 +1081,14 @@ literal|256
 index|]
 decl_stmt|;
 name|int
+name|first
+init|=
+literal|1
+decl_stmt|,
 name|found
 init|=
 literal|0
 decl_stmt|;
-comment|/* Emit start of PCI device table */
-name|fprintf
-argument_list|(
-name|ofp
-argument_list|,
-literal|"#define NDIS_PCI_DEV_TABLE"
-argument_list|)
-expr_stmt|;
 comment|/* Find manufacturer name */
 name|manf
 operator|=
@@ -1291,6 +1287,26 @@ name|found
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|first
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* Emit start of PCI device table */
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|"#define NDIS_PCI_DEV_TABLE"
+argument_list|)
+expr_stmt|;
+name|first
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|retry
 label|:
 comment|/* 	 * Now run through all the device names listed 	 * in the manufacturer section and dump out the 	 * device descriptions and vendor/device IDs. 	 */
@@ -1460,6 +1476,10 @@ literal|256
 index|]
 decl_stmt|;
 name|int
+name|first
+init|=
+literal|1
+decl_stmt|,
 name|found
 init|=
 literal|0
@@ -1662,6 +1682,13 @@ name|found
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|first
+operator|==
+literal|1
+condition|)
+block|{
 comment|/* Emit start of PCMCIA device table */
 name|fprintf
 argument_list|(
@@ -1670,6 +1697,11 @@ argument_list|,
 literal|"#define NDIS_PCMCIA_DEV_TABLE"
 argument_list|)
 expr_stmt|;
+name|first
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|retry
 label|:
 comment|/* 	 * Now run through all the device names listed 	 * in the manufacturer section and dump out the 	 * device descriptions and vendor/device IDs. 	 */
