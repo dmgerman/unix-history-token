@@ -192,6 +192,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|TCPOPT_PAD
+value|0
+end_define
+
+begin_comment
+comment|/* padding after EOL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_PAD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCPOPT_NOP
 value|1
 end_define
