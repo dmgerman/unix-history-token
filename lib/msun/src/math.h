@@ -2776,17 +2776,19 @@ name|__pure2
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|long double	fmodl(long double, long double);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|long
+name|double
+name|fmodl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|long
