@@ -504,7 +504,7 @@ literal|"Intel 82945GM (945GM GMCH) SVGA controller"
 block|}
 block|,
 block|{
-literal|0x27A28086
+literal|0x27AE8086
 block|,
 name|CHIP_I915
 block|,
