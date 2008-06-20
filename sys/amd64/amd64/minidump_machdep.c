@@ -990,7 +990,7 @@ for|for
 control|(
 name|va
 operator|=
-name|KERNBASE
+name|VM_MIN_KERNEL_ADDRESS
 init|;
 name|va
 operator|<
@@ -1450,7 +1450,7 @@ name|mdhdr
 operator|.
 name|kernbase
 operator|=
-name|KERNBASE
+name|VM_MIN_KERNEL_ADDRESS
 expr_stmt|;
 name|mdhdr
 operator|.
@@ -1667,7 +1667,7 @@ for|for
 control|(
 name|va
 operator|=
-name|KERNBASE
+name|VM_MIN_KERNEL_ADDRESS
 init|;
 name|va
 operator|<
