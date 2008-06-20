@@ -1900,7 +1900,7 @@ if|if
 condition|(
 name|va
 operator|>=
-name|KERNBASE
+name|VM_MIN_KERNEL_ADDRESS
 condition|)
 block|{
 comment|/* 		 * Don't allow user-mode faults in kernel address space. 		 */
