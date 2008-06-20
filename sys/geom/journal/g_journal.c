@@ -444,7 +444,7 @@ name|g_journal_parallel_flushes
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of flush I/O requests send in parallel"
+literal|"Number of flush I/O requests to send in parallel"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -465,7 +465,7 @@ name|g_journal_accept_immediately
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of I/O requests accepted immediatelly"
+literal|"Number of I/O requests accepted immediately"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -486,7 +486,7 @@ name|g_journal_parallel_copies
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of copy I/O requests send in parallel"
+literal|"Number of copy I/O requests to send in parallel"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6036,7 +6036,7 @@ literal|0
 argument_list|,
 name|bp
 argument_list|,
-literal|"[copy] Error while writting data (error=%d)"
+literal|"[copy] Error while writing data (error=%d)"
 argument_list|,
 name|bp
 operator|->
@@ -6812,7 +6812,7 @@ literal|0
 argument_list|,
 name|bp
 argument_list|,
-literal|"[flush] Error while writting data (error=%d)"
+literal|"[flush] Error while writing data (error=%d)"
 argument_list|,
 name|bp
 operator|->
