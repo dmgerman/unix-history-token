@@ -114,6 +114,11 @@ name|int
 name|called
 decl_stmt|;
 comment|/* infinite recursion preventer */
+name|uint32_t
+name|key
+decl_stmt|;
+comment|/* key included in outgoing GRE packets */
+comment|/* zero means none */
 name|wccp_ver_t
 name|wccp_ver
 decl_stmt|;
@@ -144,6 +149,13 @@ name|u_int16_t
 name|ptype
 decl_stmt|;
 comment|/* protocol type of payload typically 				   Ether protocol type*/
+name|uint32_t
+name|options
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* optional options */
 comment|/*  *  from here on: fields are optional, presence indicated by flags  * 	u_int_16 checksum	checksum (one-complements of GRE header 				and payload 				Present if (ck_pres | rt_pres == 1). 				Valid if (ck_pres == 1). 	u_int_16 offset		offset from start of routing filed to 				first octet of active SRE (see below). 				Present if (ck_pres | rt_pres == 1). 				Valid if (rt_pres == 1). 	u_int_32 key		inserted by encapsulator e.g. for 				authentication 				Present if (key_pres ==1 ). 	u_int_32 seq_num	Sequence number to allow for packet order 				Present if (seq_pres ==1 ). 	struct gre_sre[] routing Routing fileds (see below) 				Present if (rt_pres == 1)  */
 block|}
 name|__packed
@@ -207,6 +219,13 @@ define|#
 directive|define
 name|gi_flags
 value|gi_g.flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|gi_options
+value|gi_g.options
 end_define
 
 begin_define
@@ -446,6 +465,20 @@ define|#
 directive|define
 name|GREGPROTO
 value|_IOWR('i', 106, struct ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GREGKEY
+value|_IOWR('i', 107, struct ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GRESKEY
+value|_IOW('i', 108, struct ifreq)
 end_define
 
 begin_ifdef
