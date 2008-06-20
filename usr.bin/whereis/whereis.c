@@ -1464,6 +1464,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 			 * Not everything below PATH_PORTS is of 			 * interest.  First, all dot files and 			 * directories (e. g. .snap) can be ignored. 			 * Also, all subdirectories starting with a 			 * capital letter are not going to be 			 * examined, as they are used for internal 			 * purposes (Mk, Tools, ...).  This also 			 * matches a possible CVS subdirectory. 			 * Finally, the distfiles subdirectory is also 			 * special, and should not be considered to 			 * avoid false matches. 			 */
 if|if
 condition|(
 name|dirp
@@ -1475,18 +1476,38 @@ index|]
 operator|==
 literal|'.'
 operator|||
+comment|/* 			     * isupper() not used on purpose: the 			     * check is supposed to default to the C 			     * locale instead of the current user's 			     * locale. 			     */
+operator|(
+name|dirp
+operator|->
+name|d_name
+index|[
+literal|0
+index|]
+operator|>=
+literal|'A'
+operator|&&
+name|dirp
+operator|->
+name|d_name
+index|[
+literal|0
+index|]
+operator|<=
+literal|'Z'
+operator|)
+operator|||
 name|strcmp
 argument_list|(
 name|dirp
 operator|->
 name|d_name
 argument_list|,
-literal|"CVS"
+literal|"distfiles"
 argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* ignore dot entries and CVS subdir */
 continue|continue;
 if|if
 condition|(
