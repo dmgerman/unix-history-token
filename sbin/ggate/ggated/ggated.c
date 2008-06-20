@@ -958,7 +958,7 @@ name|NULL
 condition|)
 name|g_gate_xlog
 argument_list|(
-literal|"No enough memory."
+literal|"Not enough memory."
 argument_list|)
 expr_stmt|;
 name|ex
@@ -980,7 +980,7 @@ name|NULL
 condition|)
 name|g_gate_xlog
 argument_list|(
-literal|"No enough memory."
+literal|"Not enough memory."
 argument_list|)
 expr_stmt|;
 comment|/* Made 'and' here. */
