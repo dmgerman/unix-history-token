@@ -2353,10 +2353,38 @@ operator|->
 name|option_link
 condition|)
 block|{
-comment|/* Note: link(2) doesn't create parent directories. */
-name|archive_entry_set_hardlink
+name|struct
+name|archive_entry
+modifier|*
+name|t
+decl_stmt|;
+comment|/* Save the original entry in case we need it later. */
+name|t
+operator|=
+name|archive_entry_clone
 argument_list|(
 name|entry
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|==
+name|NULL
+condition|)
+name|cpio_errc
+argument_list|(
+literal|1
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Can't create link"
+argument_list|)
+expr_stmt|;
+comment|/* Note: link(2) doesn't create parent directories, 		 * so we use archive_write_header() instead. */
+name|archive_entry_set_hardlink
+argument_list|(
+name|t
 argument_list|,
 name|srcpath
 argument_list|)
@@ -2369,7 +2397,12 @@ name|cpio
 operator|->
 name|archive
 argument_list|,
-name|entry
+name|t
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|t
 argument_list|)
 expr_stmt|;
 if|if
@@ -2406,6 +2439,37 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EXDEV
+if|if
+condition|(
+name|r
+operator|!=
+name|ARCHIVE_OK
+operator|&&
+name|archive_errno
+argument_list|(
+name|cpio
+operator|->
+name|archive
+argument_list|)
+operator|==
+name|EXDEV
+condition|)
+block|{
+comment|/* Cross-device link:  Just fall through and use 			 * the original entry to copy the file over. */
+name|cpio_warnc
+argument_list|(
+literal|0
+argument_list|,
+literal|"Copying file instead"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
