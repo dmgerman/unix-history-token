@@ -6062,7 +6062,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -6211,7 +6211,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -6308,7 +6308,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
