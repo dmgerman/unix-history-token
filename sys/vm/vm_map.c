@@ -1062,7 +1062,7 @@ argument_list|,
 operator|(
 name|VM_MAX_KERNEL_ADDRESS
 operator|-
-name|KERNBASE
+name|VM_MIN_KERNEL_ADDRESS
 operator|)
 operator|/
 name|PAGE_SIZE
