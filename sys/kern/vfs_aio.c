@@ -2771,7 +2771,12 @@ while|while
 condition|(
 name|num_aio_procs
 operator|<
+name|MIN
+argument_list|(
 name|target_aio_procs
+argument_list|,
+name|max_aio_procs
+argument_list|)
 condition|)
 name|aio_newproc
 argument_list|(
