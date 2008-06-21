@@ -184,7 +184,7 @@ name|char
 modifier|*
 name|cpio_opts
 init|=
-literal|"AaBC:F:O:cdE:f:H:hijLlmopR:rtuvW:yZz"
+literal|"0AaBC:F:O:cdE:f:H:hijLlmopR:rtuvW:yZz"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,6 +293,16 @@ block|,
 name|NULL
 block|,
 literal|'d'
+block|}
+block|,
+block|{
+literal|"null"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'0'
 block|}
 block|,
 block|{
