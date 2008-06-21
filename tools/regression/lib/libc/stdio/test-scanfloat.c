@@ -132,9 +132,13 @@ name|f
 init|=
 literal|0.0
 decl_stmt|;
+name|char
+modifier|*
+name|endp
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"1..3\n"
+literal|"1..4\n"
 argument_list|)
 expr_stmt|;
 name|buf
@@ -1564,6 +1568,37 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"ok 3 - scanfloat\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Tests specific to strtod(). 	 */
+name|assert
+argument_list|(
+name|strtod
+argument_list|(
+literal|"0xy"
+argument_list|,
+operator|&
+name|endp
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|strcmp
+argument_list|(
+literal|"xy"
+argument_list|,
+name|endp
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 4 - scanfloat\n"
 argument_list|)
 expr_stmt|;
 return|return
