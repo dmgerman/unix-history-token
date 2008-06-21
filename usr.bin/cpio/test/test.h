@@ -11,18 +11,77 @@ begin_comment
 comment|/*  * The goal of this file (and the matching test.c) is to  * simplify the very repetitive test-*.c test programs.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_FILE_OFFSET_BITS
-end_ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_CONFIG_H
+argument_list|)
+end_if
 
-begin_define
-define|#
-directive|define
-name|_FILE_OFFSET_BITS
-value|64
-end_define
+begin_comment
+comment|/* Most POSIX platforms use the 'configure' script to build config.h */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"../../config.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Building as part of FreeBSD system requires a pre-built config.h. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"../config_freebsd.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Win32 can't run the 'configure' script. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"../config_windows.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Warn if the library hasn't been (automatically or manually) configured. */
+end_comment
+
+begin_error
+error|#
+directive|error
+error|Oops: No config.h and no pre-built configuration in test.h.
+end_error
 
 begin_endif
 endif|#
@@ -105,83 +164,6 @@ include|#
 directive|include
 file|<dmalloc.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_CONFIG_H
-argument_list|)
-end_if
-
-begin_comment
-comment|/* Most POSIX platforms use the 'configure' script to build config.h */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"../../config.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
-
-begin_comment
-comment|/* Building as part of FreeBSD system requires a pre-built config.h. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"../config_freebsd.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-end_elif
-
-begin_comment
-comment|/* Win32 can't run the 'configure' script. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"../config_windows.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Warn if the library hasn't been (automatically or manually) configured. */
-end_comment
-
-begin_error
-error|#
-directive|error
-error|Oops: No config.h and no pre-built configuration in test.h.
-end_error
 
 begin_endif
 endif|#
@@ -357,6 +339,30 @@ directive|define
 name|assertEmptyFile
 define|\
 value|test_setup(__FILE__, __LINE__);test_assert_empty_file
+end_define
+
+begin_comment
+comment|/* Assert that a file exists; supports printf-style arguments. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertFileExists
+define|\
+value|test_setup(__FILE__, __LINE__);test_assert_file_exists
+end_define
+
+begin_comment
+comment|/* Assert that a file exists; supports printf-style arguments. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertFileNotExists
+define|\
+value|test_setup(__FILE__, __LINE__);test_assert_file_not_exists
 end_define
 
 begin_comment
@@ -624,6 +630,32 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|test_assert_file_exists
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|test_assert_file_not_exists
+parameter_list|(
 specifier|const
 name|char
 modifier|*
