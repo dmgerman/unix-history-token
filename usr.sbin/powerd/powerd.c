@@ -1742,6 +1742,15 @@ literal|"adaptive"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"adp"
+argument_list|)
+operator|==
+literal|0
 condition|)
 operator|*
 name|mode
