@@ -31,6 +31,20 @@ name|DONT_KNOW
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXIT_DELAY
+value|10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_EXIT_DELAY
+value|999999
+end_define
+
 begin_function_decl
 specifier|extern
 name|void
