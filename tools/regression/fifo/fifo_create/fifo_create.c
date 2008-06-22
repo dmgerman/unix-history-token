@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2008 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -52,7 +52,7 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/*  * Simple regression test for the creation and destruction of POSIX fifos in  * the file system name space.  Using a specially created directory, create  * a fifo in it and check that the following properties are present, as  * specified in IEEE Std 1003.1, 2004 Edition:  *  * - When mkfifo() is called, on success, a fifo is created.  *  * - On an error, no fifo is created. (XXX: Not tested)  *  * - The mode bits on the fifo are a product of combining the umask and  *   requested mode.  *  * - The fifo's owner will be the processes effective user ID. (XXX: Not  *   tested)  *  * - The fifo's group will be the parent directory's group or the effective  *   group ID of the process.  For historical reasons, BSD prefers the group  *   ID of the process, so we will generate an error if it's not that. (XXX:  *   Not tested)  *  * - The st_atime, st_ctime, st_mtime of the fifo will be set appropriately,  *   and st_ctime and st_mtime on the directory will be updated. (XXX: We  *   test they are updated, not correct)  *  * - EEXIST is returned if the named file already exists.  *  * In addition, we check that we can unlink the fifo, and that if we do, it  * disappears.  *  * This test must run as root in order to usefully frob the process  * credential to test permission parts.  */
+comment|/*  * Simple regression test for the creation and destruction of POSIX fifos in  * the file system name space.  Using a specially created directory, create  * a fifo in it and check that the following properties are present, as  * specified in IEEE Std 1003.1, 2004 Edition:  *  * - When mkfifo() or mknod(S_IFIFO) is called, on success, a fifo is  *   created.  *  * - On an error, no fifo is created. (XXX: Not tested)  *  * - The mode bits on the fifo are a product of combining the umask and  *   requested mode.  *  * - The fifo's owner will be the processes effective user ID. (XXX: Not  *   tested)  *  * - The fifo's group will be the parent directory's group or the effective  *   group ID of the process.  For historical reasons, BSD prefers the group  *   ID of the process, so we will generate an error if it's not that. (XXX:  *   Not tested)  *  * - The st_atime, st_ctime, st_mtime of the fifo will be set appropriately,  *   and st_ctime and st_mtime on the directory will be updated. (XXX: We  *   test they are updated, not correct)  *  * - EEXIST is returned if the named file already exists.  *  * In addition, we check that we can unlink the fifo, and that if we do, it  * disappears.  *  * This test must run as root in order to usefully frob the process  * credential to test permission parts.  */
 end_comment
 
 begin_comment
@@ -86,7 +86,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Basic creation tests: verify that mkfifo() creates a fifo, that the time  * stamps on the directory are updated, that if we try twice we get EEXIST,  * and that we can unlink it.  */
+comment|/*  * Basic creation tests: verify that mkfifo(2) (or mknod(2)) creates a fifo,  * that the time stamps on the directory are updated, that if we try twice we  * get EEXIST, and that we can unlink it.  */
 end_comment
 
 begin_function
@@ -94,7 +94,8 @@ specifier|static
 name|void
 name|fifo_create_test
 parameter_list|(
-name|void
+name|int
+name|use_mkfifo
 parameter_list|)
 block|{
 name|struct
@@ -105,6 +106,11 @@ name|dirsb
 decl_stmt|,
 name|fifosb
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|testname
+decl_stmt|;
 name|char
 name|path
 index|[
@@ -114,12 +120,20 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Sleep to make sure that the time stamp on the directory will be 	 * updated. 	 */
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
+if|if
+condition|(
+name|use_mkfifo
+condition|)
+name|testname
+operator|=
+literal|"mkfifo"
 expr_stmt|;
+else|else
+name|testname
+operator|=
+literal|"mknod"
+expr_stmt|;
+comment|/* 	 * Sleep to make sure that the time stamp on the directory will be 	 * updated. 	 */
 if|if
 condition|(
 name|stat
@@ -137,9 +151,16 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: stat: %s"
+literal|"basic_create_test: %s: stat: %s"
+argument_list|,
+name|testname
 argument_list|,
 name|temp_dir
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -153,6 +174,11 @@ argument_list|,
 name|temp_dir
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|use_mkfifo
+condition|)
+block|{
 if|if
 condition|(
 name|mkfifo
@@ -169,11 +195,44 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: mkfifo: %s"
+literal|"basic_create_test: %s: %s"
+argument_list|,
+name|testname
 argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|mknod
+argument_list|(
+name|path
+argument_list|,
+name|S_IFIFO
+operator||
+literal|0600
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"basic_create_test: %s: %s"
+argument_list|,
+name|testname
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|stat
@@ -208,7 +267,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: stat: %s"
+literal|"basic_create_test: %s: stat: %s"
+argument_list|,
+name|testname
 argument_list|,
 name|path
 argument_list|)
@@ -240,10 +301,17 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: mkfifo produced non-fifo"
+literal|"basic_create_test: %s produced non-fifo"
+argument_list|,
+name|testname
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|use_mkfifo
+condition|)
+block|{
 if|if
 condition|(
 name|mkfifo
@@ -260,9 +328,40 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: dup mkfifo succeeded"
+literal|"basic_create_test: dup %s succeeded"
+argument_list|,
+name|testname
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|mknod
+argument_list|(
+name|path
+argument_list|,
+name|S_IFIFO
+operator||
+literal|0600
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"basic_create_test: dup %s succeeded"
+argument_list|,
+name|testname
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|errno
@@ -274,7 +373,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: dup mkfifo unexpected error"
+literal|"basic_create_test: dup %s unexpected error"
+argument_list|,
+name|testname
 argument_list|)
 expr_stmt|;
 if|if
@@ -311,7 +412,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: stat: %s"
+literal|"basic_create_test: %s: stat: %s"
+argument_list|,
+name|testname
 argument_list|,
 name|temp_dir
 argument_list|)
@@ -341,8 +444,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: old_dirsb.st_ctime == "
+literal|"basic_create_test: %s: old_dirsb.st_ctime == "
 literal|"dirsb.st_ctime"
+argument_list|,
+name|testname
 argument_list|)
 expr_stmt|;
 block|}
@@ -370,8 +475,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: old_dirsb.st_mtime == "
+literal|"basic_create_test: %s: old_dirsb.st_mtime == "
 literal|"dirsb.st_mtime"
+argument_list|,
+name|testname
 argument_list|)
 expr_stmt|;
 block|}
@@ -389,7 +496,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: unlink: %s"
+literal|"basic_create_test: %s: unlink: %s"
+argument_list|,
+name|testname
 argument_list|,
 name|path
 argument_list|)
@@ -411,7 +520,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: unlink failed to unlink"
+literal|"basic_create_test: %s: unlink failed to unlink"
+argument_list|,
+name|testname
 argument_list|)
 expr_stmt|;
 if|if
@@ -425,7 +536,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"basic_create_test: unlink unexpected error"
+literal|"basic_create_test: %s: unlink unexpected error"
+argument_list|,
+name|testname
 argument_list|)
 expr_stmt|;
 block|}
@@ -542,7 +655,8 @@ specifier|static
 name|void
 name|fifo_permission_test
 parameter_list|(
-name|void
+name|int
+name|use_mkfifo
 parameter_list|)
 block|{
 specifier|const
@@ -561,6 +675,11 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|testname
+decl_stmt|;
 name|struct
 name|stat
 name|sb
@@ -570,6 +689,19 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|use_mkfifo
+condition|)
+name|testname
+operator|=
+literal|"mkfifo"
+expr_stmt|;
+else|else
+name|testname
+operator|=
+literal|"mknod"
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|path
@@ -619,6 +751,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|use_mkfifo
+condition|)
+block|{
+if|if
+condition|(
 name|mkfifo
 argument_list|(
 name|path
@@ -635,7 +772,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"fifo_permission_test: %08o %08o %08o\n"
+literal|"fifo_permission_test: %s: %08o "
+literal|"%08o %08o\n"
+argument_list|,
+name|testname
 argument_list|,
 name|ptp
 operator|->
@@ -650,6 +790,50 @@ operator|->
 name|pt_mode
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|mknod
+argument_list|(
+name|path
+argument_list|,
+name|S_IFIFO
+operator||
+name|ptp
+operator|->
+name|pt_reqmode
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"fifo_permission_test: %s: %08o "
+literal|"%08o %08o\n"
+argument_list|,
+name|testname
+argument_list|,
+name|ptp
+operator|->
+name|pt_umask
+argument_list|,
+name|ptp
+operator|->
+name|pt_reqmode
+argument_list|,
+name|ptp
+operator|->
+name|pt_mode
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|stat
@@ -684,7 +868,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"fifo_permission_test: %s"
+literal|"fifo_permission_test: %s: %s"
+argument_list|,
+name|testname
 argument_list|,
 name|path
 argument_list|)
@@ -714,8 +900,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"fifo_permission_test: %08o %08o %08o "
+literal|"fifo_permission_test: %s: %08o %08o %08o "
 literal|"got %08o"
+argument_list|,
+name|testname
 argument_list|,
 name|ptp
 operator|->
@@ -749,7 +937,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"fifo_permission_test: unlink: %s"
+literal|"fifo_permission_test: %s: unlink: %s"
+argument_list|,
+name|testname
 argument_list|,
 name|path
 argument_list|)
@@ -776,6 +966,9 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|geteuid
@@ -837,12 +1030,32 @@ argument_list|,
 literal|"chdir"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Run each test twice, once with mknod(2) and a second time with 	 * mkfifo(2).  Historically, BSD has not allowed mknod(2) to be used 	 * to create fifos, but the Single UNIX Specification requires it. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|2
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|fifo_create_test
-argument_list|()
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
 name|fifo_permission_test
-argument_list|()
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
