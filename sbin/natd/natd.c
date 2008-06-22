@@ -5863,10 +5863,8 @@ name|parms
 parameter_list|)
 block|{
 name|char
+modifier|*
 name|buf
-index|[
-literal|128
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -5942,16 +5940,23 @@ name|aliaslink
 init|=
 name|NULL
 decl_stmt|;
-name|strlcpy
-argument_list|(
 name|buf
-argument_list|,
+operator|=
+name|strdup
+argument_list|(
 name|parms
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"redirect_port: strdup() failed"
 argument_list|)
 expr_stmt|;
 comment|/*  * Extract protocol.  */
@@ -6516,6 +6521,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6530,10 +6540,8 @@ name|parms
 parameter_list|)
 block|{
 name|char
+modifier|*
 name|buf
-index|[
-literal|128
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -6563,16 +6571,23 @@ name|protoent
 modifier|*
 name|protoent
 decl_stmt|;
-name|strlcpy
-argument_list|(
 name|buf
-argument_list|,
+operator|=
+name|strdup
+argument_list|(
 name|parms
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"redirect_port: strdup() failed"
 argument_list|)
 expr_stmt|;
 comment|/*  * Extract protocol.  */
@@ -6732,6 +6747,11 @@ argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6746,10 +6766,8 @@ name|parms
 parameter_list|)
 block|{
 name|char
+modifier|*
 name|buf
-index|[
-literal|128
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -6776,16 +6794,23 @@ name|alias_link
 modifier|*
 name|aliaslink
 decl_stmt|;
-name|strlcpy
-argument_list|(
 name|buf
-argument_list|,
+operator|=
+name|strdup
+argument_list|(
 name|parms
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"redirect_port: strdup() failed"
 argument_list|)
 expr_stmt|;
 comment|/*  * Extract local address.  */
@@ -6954,6 +6979,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
