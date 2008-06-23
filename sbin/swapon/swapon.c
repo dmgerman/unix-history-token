@@ -236,6 +236,10 @@ decl_stmt|,
 name|hflag
 init|=
 literal|0
+decl_stmt|,
+name|qflag
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -308,7 +312,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AadghklmsU"
+literal|"AadghklmqsU"
 argument_list|)
 operator|)
 operator|!=
@@ -426,6 +430,24 @@ case|:
 name|hflag
 operator|=
 literal|'M'
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+if|if
+condition|(
+name|which_prog
+operator|==
+name|SWAPON
+operator|||
+name|which_prog
+operator|==
+name|SWAPOFF
+condition|)
+name|qflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -550,6 +572,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s: %sing %s as swap device\n"
@@ -570,6 +598,7 @@ operator|->
 name|fs_spec
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -812,7 +841,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-a | file ...\n"
+literal|"-aq | file ...\n"
 argument_list|)
 expr_stmt|;
 break|break;
