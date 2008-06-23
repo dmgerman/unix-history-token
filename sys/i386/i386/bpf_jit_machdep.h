@@ -221,7 +221,7 @@ comment|/*  * native Instruction Macros  */
 end_comment
 
 begin_comment
-comment|/* mov r32,i32 */
+comment|/* movl i32,r32 */
 end_comment
 
 begin_define
@@ -229,15 +229,15 @@ define|#
 directive|define
 name|MOVid
 parameter_list|(
-name|r32
-parameter_list|,
 name|i32
+parameter_list|,
+name|r32
 parameter_list|)
 value|do {						\ 	emitm(&stream, (11<< 4) | (1<< 3) | (r32& 0x7), 1);		\ 	emitm(&stream, i32, 4);						\ } while (0)
 end_define
 
 begin_comment
-comment|/* mov dr32,sr32 */
+comment|/* movl sr32,dr32 */
 end_comment
 
 begin_define
@@ -245,15 +245,15 @@ define|#
 directive|define
 name|MOVrd
 parameter_list|(
-name|dr32
-parameter_list|,
 name|sr32
+parameter_list|,
+name|dr32
 parameter_list|)
 value|do {						\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream,							\ 	    (3<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* mov dr32,sr32[off] */
+comment|/* movl off(sr32),dr32 */
 end_comment
 
 begin_define
@@ -261,17 +261,17 @@ define|#
 directive|define
 name|MOVodd
 parameter_list|(
-name|dr32
+name|off
 parameter_list|,
 name|sr32
 parameter_list|,
-name|off
+name|dr32
 parameter_list|)
 value|do {					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream,							\ 	    (1<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ 	emitm(&stream, off, 1);						\ } while (0)
 end_define
 
 begin_comment
-comment|/* mov dr32,sr32[or32] */
+comment|/* movl (sr32,or32,1),dr32 */
 end_comment
 
 begin_define
@@ -279,17 +279,17 @@ define|#
 directive|define
 name|MOVobd
 parameter_list|(
-name|dr32
-parameter_list|,
 name|sr32
 parameter_list|,
 name|or32
+parameter_list|,
+name|dr32
 parameter_list|)
 value|do {					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream, ((dr32& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* mov dr16,sr32[or32] */
+comment|/* movw (sr32,or32,1),dr16 */
 end_comment
 
 begin_define
@@ -297,17 +297,17 @@ define|#
 directive|define
 name|MOVobw
 parameter_list|(
-name|dr32
-parameter_list|,
 name|sr32
 parameter_list|,
 name|or32
+parameter_list|,
+name|dr16
 parameter_list|)
-value|do {					\ 	emitm(&stream, 0x66, 1);					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream, ((dr32& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
+value|do {					\ 	emitm(&stream, 0x66, 1);					\ 	emitm(&stream, (8<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream, ((dr16& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* mov dr8,sr32[or32] */
+comment|/* movb (sr32,or32,1),dr8 */
 end_comment
 
 begin_define
@@ -315,17 +315,17 @@ define|#
 directive|define
 name|MOVobb
 parameter_list|(
-name|dr8
-parameter_list|,
 name|sr32
 parameter_list|,
 name|or32
+parameter_list|,
+name|dr8
 parameter_list|)
 value|do {					\ 	emitm(&stream, 0x8a, 1);					\ 	emitm(&stream, ((dr8& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* mov [dr32][or32],sr32 */
+comment|/* movl sr32,(dr32,or32,1) */
 end_comment
 
 begin_define
@@ -333,17 +333,17 @@ define|#
 directive|define
 name|MOVomd
 parameter_list|(
+name|sr32
+parameter_list|,
 name|dr32
 parameter_list|,
 name|or32
-parameter_list|,
-name|sr32
 parameter_list|)
 value|do {					\ 	emitm(&stream, 0x89, 1);					\ 	emitm(&stream, ((sr32& 0x7)<< 3) | 4, 1);			\ 	emitm(&stream, ((or32& 0x7)<< 3) | (dr32& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* bswap dr32 */
+comment|/* bswapl dr32 */
 end_comment
 
 begin_define
@@ -357,7 +357,7 @@ value|do {						\ 	emitm(&stream, 0xf, 1);						\ 	emitm(&stream, (0x19<< 3) | d
 end_define
 
 begin_comment
-comment|/* xchg al,ah */
+comment|/* xchgb %al,%ah */
 end_comment
 
 begin_define
@@ -369,7 +369,7 @@ value|do {							\ 	emitm(&stream, 0x86, 1);					\ 	emitm(&stream, 0xc4, 1);				
 end_define
 
 begin_comment
-comment|/* push r32 */
+comment|/* pushl r32 */
 end_comment
 
 begin_define
@@ -383,7 +383,7 @@ value|do {							\ 	emitm(&stream, (5<< 4) | (0<< 3) | (r32& 0x7), 1);		\ } whil
 end_define
 
 begin_comment
-comment|/* pop r32 */
+comment|/* popl r32 */
 end_comment
 
 begin_define
@@ -409,7 +409,7 @@ value|do {						\ 	emitm(&stream, 0xc9, 1);					\ 	emitm(&stream, 0xc3, 1);					
 end_define
 
 begin_comment
-comment|/* add dr32,sr32 */
+comment|/* addl sr32,dr32 */
 end_comment
 
 begin_define
@@ -417,15 +417,15 @@ define|#
 directive|define
 name|ADDrd
 parameter_list|(
-name|dr32
-parameter_list|,
 name|sr32
+parameter_list|,
+name|dr32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x03, 1);					\ 	emitm(&stream,							\ 	    (3<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);	\ } while (0)
 end_define
 
 begin_comment
-comment|/* add eax,i32 */
+comment|/* addl i32,%eax */
 end_comment
 
 begin_define
@@ -439,7 +439,7 @@ value|do {						\ 	emitm(&stream, 0x05, 1);					\ 	emitm(&stream, i32, 4);						
 end_define
 
 begin_comment
-comment|/* add r32,i32 */
+comment|/* addl i32,r32 */
 end_comment
 
 begin_define
@@ -447,15 +447,15 @@ define|#
 directive|define
 name|ADDid
 parameter_list|(
-name|r32
-parameter_list|,
 name|i32
+parameter_list|,
+name|r32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x81, 1);					\ 	emitm(&stream, (24<< 3) | r32, 1);				\ 	emitm(&stream, i32, 4);						\ } while (0)
 end_define
 
 begin_comment
-comment|/* add r32,i8 */
+comment|/* addl i8,r32 */
 end_comment
 
 begin_define
@@ -463,15 +463,15 @@ define|#
 directive|define
 name|ADDib
 parameter_list|(
-name|r32
-parameter_list|,
 name|i8
+parameter_list|,
+name|r32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x83, 1);					\ 	emitm(&stream, (24<< 3) | r32, 1);				\ 	emitm(&stream, i8, 1);						\ } while (0)
 end_define
 
 begin_comment
-comment|/* sub dr32,sr32 */
+comment|/* subl sr32,dr32 */
 end_comment
 
 begin_define
@@ -479,15 +479,15 @@ define|#
 directive|define
 name|SUBrd
 parameter_list|(
-name|dr32
-parameter_list|,
 name|sr32
+parameter_list|,
+name|dr32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x2b, 1);					\ 	emitm(&stream,							\ 	    (3<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* sub eax,i32 */
+comment|/* subl i32,%eax */
 end_comment
 
 begin_define
@@ -501,7 +501,7 @@ value|do {						\ 	emitm(&stream, 0x2d, 1);					\ 	emitm(&stream, i32, 4);						
 end_define
 
 begin_comment
-comment|/* mul r32 */
+comment|/* mull r32 */
 end_comment
 
 begin_define
@@ -515,7 +515,7 @@ value|do {							\ 	emitm(&stream, 0xf7, 1);					\ 	emitm(&stream, (7<< 5) | (r3
 end_define
 
 begin_comment
-comment|/* div r32 */
+comment|/* divl r32 */
 end_comment
 
 begin_define
@@ -529,7 +529,7 @@ value|do {							\ 	emitm(&stream, 0xf7, 1);					\ 	emitm(&stream, (15<< 4) | (r
 end_define
 
 begin_comment
-comment|/* and r8,i8 */
+comment|/* andb i8,r8 */
 end_comment
 
 begin_define
@@ -537,15 +537,15 @@ define|#
 directive|define
 name|ANDib
 parameter_list|(
-name|r8
-parameter_list|,
 name|i8
+parameter_list|,
+name|r8
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x80, 1);					\ 	emitm(&stream, (7<< 5) | r8, 1);				\ 	emitm(&stream, i8, 1);						\ } while (0)
 end_define
 
 begin_comment
-comment|/* and r32,i32 */
+comment|/* andl i32,r32 */
 end_comment
 
 begin_define
@@ -553,15 +553,15 @@ define|#
 directive|define
 name|ANDid
 parameter_list|(
-name|r32
-parameter_list|,
 name|i32
+parameter_list|,
+name|r32
 parameter_list|)
 value|do {						\ 	if (r32 == EAX) {						\ 		emitm(&stream, 0x25, 1);				\ 		emitm(&stream, i32, 4);					\ 	} else {							\ 		emitm(&stream, 0x81, 1);				\ 		emitm(&stream, (7<< 5) | r32, 1);			\ 		emitm(&stream, i32, 4);					\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/* and dr32,sr32 */
+comment|/* andl sr32,dr32 */
 end_comment
 
 begin_define
@@ -569,15 +569,15 @@ define|#
 directive|define
 name|ANDrd
 parameter_list|(
-name|dr32
-parameter_list|,
 name|sr32
+parameter_list|,
+name|dr32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x23, 1);					\ 	emitm(&stream,							\ 	    (3<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* or dr32,sr32 */
+comment|/* orl sr32,dr32 */
 end_comment
 
 begin_define
@@ -585,15 +585,15 @@ define|#
 directive|define
 name|ORrd
 parameter_list|(
-name|dr32
-parameter_list|,
 name|sr32
+parameter_list|,
+name|dr32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x0b, 1);					\ 	emitm(&stream,							\ 	    (3<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* or r32,i32 */
+comment|/* orl i32,r32 */
 end_comment
 
 begin_define
@@ -601,15 +601,15 @@ define|#
 directive|define
 name|ORid
 parameter_list|(
-name|r32
-parameter_list|,
 name|i32
+parameter_list|,
+name|r32
 parameter_list|)
 value|do {						\ 	if (r32 == EAX) {						\ 		emitm(&stream, 0x0d, 1);				\ 		emitm(&stream, i32, 4);					\ 	} else {							\ 		emitm(&stream, 0x81, 1);				\ 		emitm(&stream, (25<< 3) | r32, 1);			\ 		emitm(&stream, i32, 4);					\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/* shl r32,i8 */
+comment|/* shll i8,r32 */
 end_comment
 
 begin_define
@@ -617,15 +617,15 @@ define|#
 directive|define
 name|SHLib
 parameter_list|(
-name|r32
-parameter_list|,
 name|i8
+parameter_list|,
+name|r32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0xc1, 1);					\ 	emitm(&stream, (7<< 5) | (r32& 0x7), 1);			\ 	emitm(&stream, i8, 1);						\ } while (0)
 end_define
 
 begin_comment
-comment|/* shl dr32,cl */
+comment|/* shll %cl,dr32 */
 end_comment
 
 begin_define
@@ -639,7 +639,7 @@ value|do {						\ 	emitm(&stream, 0xd3, 1);					\ 	emitm(&stream, (7<< 5) | (dr3
 end_define
 
 begin_comment
-comment|/* shr r32,i8 */
+comment|/* shrl i8,r32 */
 end_comment
 
 begin_define
@@ -647,15 +647,15 @@ define|#
 directive|define
 name|SHRib
 parameter_list|(
-name|r32
-parameter_list|,
 name|i8
+parameter_list|,
+name|r32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0xc1, 1);					\ 	emitm(&stream, (29<< 3) | (r32& 0x7), 1);			\ 	emitm(&stream, i8, 1);						\ } while (0)
 end_define
 
 begin_comment
-comment|/* shr dr32,cl */
+comment|/* shrl %cl,dr32 */
 end_comment
 
 begin_define
@@ -669,7 +669,7 @@ value|do {						\ 	emitm(&stream, 0xd3, 1);					\ 	emitm(&stream, (29<< 3) | (dr
 end_define
 
 begin_comment
-comment|/* neg r32 */
+comment|/* negl r32 */
 end_comment
 
 begin_define
@@ -683,7 +683,7 @@ value|do {							\ 	emitm(&stream, 0xf7, 1);					\ 	emitm(&stream, (27<< 3) | (r
 end_define
 
 begin_comment
-comment|/* cmp dr32,sr32[off] */
+comment|/* cmpl off(sr32),dr32 */
 end_comment
 
 begin_define
@@ -691,17 +691,17 @@ define|#
 directive|define
 name|CMPodd
 parameter_list|(
-name|dr32
+name|off
 parameter_list|,
 name|sr32
 parameter_list|,
-name|off
+name|dr32
 parameter_list|)
 value|do {					\ 	emitm(&stream, (3<< 4) | 3 | (1<< 3), 1);			\ 	emitm(&stream,							\ 	    (1<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ 	emitm(&stream, off, 1);						\ } while (0)
 end_define
 
 begin_comment
-comment|/* cmp dr32,sr32 */
+comment|/* cmpl sr32,dr32 */
 end_comment
 
 begin_define
@@ -709,15 +709,15 @@ define|#
 directive|define
 name|CMPrd
 parameter_list|(
-name|dr32
-parameter_list|,
 name|sr32
+parameter_list|,
+name|dr32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x3b, 1);					\ 	emitm(&stream,							\ 	    (3<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ } while (0)
 end_define
 
 begin_comment
-comment|/* cmp dr32,i32 */
+comment|/* cmpl i32,dr32 */
 end_comment
 
 begin_define
@@ -725,15 +725,15 @@ define|#
 directive|define
 name|CMPid
 parameter_list|(
-name|dr32
-parameter_list|,
 name|i32
+parameter_list|,
+name|dr32
 parameter_list|)
 value|do {						\ 	if (dr32 == EAX){						\ 		emitm(&stream, 0x3d, 1);				\ 		emitm(&stream, i32, 4);					\ 	} else {							\ 		emitm(&stream, 0x81, 1);				\ 		emitm(&stream, (0x1f<< 3) | (dr32& 0x7), 1);		\ 		emitm(&stream, i32, 4);					\ 	}								\ } while (0)
 end_define
 
 begin_comment
-comment|/* jne off32 */
+comment|/* jne off8 */
 end_comment
 
 begin_define
@@ -859,7 +859,7 @@ value|do {							\ 	emitm(&stream, 0xe9, 1);					\ 	emitm(&stream, off32, 4);			
 end_define
 
 begin_comment
-comment|/* xor eax,eax */
+comment|/* xorl %eax,%eax */
 end_comment
 
 begin_define
@@ -871,7 +871,7 @@ value|do {							\ 	emitm(&stream, 0x31, 1);					\ 	emitm(&stream, 0xc0, 1);				
 end_define
 
 begin_comment
-comment|/* xor edx,edx */
+comment|/* xorl %edx,%edx */
 end_comment
 
 begin_define
