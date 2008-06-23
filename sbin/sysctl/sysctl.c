@@ -184,6 +184,8 @@ name|int
 name|qflag
 decl_stmt|,
 name|xflag
+decl_stmt|,
+name|warncount
 decl_stmt|;
 end_decl_stmt
 
@@ -540,6 +542,10 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|warncount
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|argc
@@ -556,7 +562,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|warncount
 argument_list|)
 expr_stmt|;
 block|}
@@ -1416,6 +1422,9 @@ literal|"%s"
 argument_list|,
 name|string
 argument_list|)
+expr_stmt|;
+name|warncount
+operator|++
 expr_stmt|;
 return|return;
 block|}
