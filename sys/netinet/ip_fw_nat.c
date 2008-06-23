@@ -1392,7 +1392,14 @@ name|lib
 argument_list|,
 name|c
 argument_list|,
-name|MCLBYTES
+name|mcl
+operator|->
+name|m_len
+operator|+
+name|M_TRAILINGSPACE
+argument_list|(
+name|mcl
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1406,7 +1413,14 @@ name|lib
 argument_list|,
 name|c
 argument_list|,
-name|MCLBYTES
+name|mcl
+operator|->
+name|m_len
+operator|+
+name|M_TRAILINGSPACE
+argument_list|(
+name|mcl
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1414,6 +1428,10 @@ condition|(
 name|retval
 operator|!=
 name|PKT_ALIAS_OK
+operator|&&
+name|retval
+operator|!=
+name|PKT_ALIAS_FOUND_HEADER_FRAGMENT
 condition|)
 block|{
 comment|/* XXX - should i add some logging? */
