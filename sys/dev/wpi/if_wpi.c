@@ -284,6 +284,13 @@ parameter_list|)
 value|do { if (wpi_debug& n) printf x; } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|WPI_DEBUG_SET
+value|(wpi_debug != 0)
+end_define
+
 begin_enum
 enum|enum
 block|{
@@ -355,10 +362,11 @@ enum|;
 end_enum
 
 begin_decl_stmt
+specifier|static
 name|int
 name|wpi_debug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -379,6 +387,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"wpi debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.wpi"
+argument_list|,
+operator|&
+name|wpi_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -406,6 +425,13 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_DEBUG_SET
+value|0
 end_define
 
 begin_endif
@@ -1602,6 +1628,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WPI_DEBUG
+end_ifdef
+
 begin_function_decl
 specifier|static
 specifier|const
@@ -1613,6 +1645,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2898,7 +2935,7 @@ if|if
 condition|(
 name|bootverbose
 operator|||
-name|wpi_debug
+name|WPI_DEBUG_SET
 condition|)
 name|device_printf
 argument_list|(
@@ -3304,7 +3341,7 @@ if|if
 condition|(
 name|bootverbose
 operator|||
-name|wpi_debug
+name|WPI_DEBUG_SET
 condition|)
 name|device_printf
 argument_list|(
@@ -3575,7 +3612,7 @@ if|if
 condition|(
 name|bootverbose
 operator|||
-name|wpi_debug
+name|WPI_DEBUG_SET
 condition|)
 block|{
 name|device_printf
@@ -5587,6 +5624,10 @@ condition|(
 name|ntries
 operator|==
 literal|100
+operator|&&
+name|wpi_debug
+operator|>
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -6153,6 +6194,10 @@ condition|(
 name|ntries
 operator|==
 literal|100
+operator|&&
+name|wpi_debug
+operator|>
+literal|0
 condition|)
 name|device_printf
 argument_list|(
@@ -9032,6 +9077,9 @@ case|case
 name|WPI_START_SCAN
 case|:
 block|{
+ifdef|#
+directive|ifdef
+name|WPI_DEBUG
 name|struct
 name|wpi_start_scan
 modifier|*
@@ -9048,6 +9096,8 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
+endif|#
+directive|endif
 name|DPRINTFN
 argument_list|(
 name|WPI_DEBUG_SCANNING
@@ -9074,6 +9124,9 @@ case|case
 name|WPI_STOP_SCAN
 case|:
 block|{
+ifdef|#
+directive|ifdef
+name|WPI_DEBUG
 name|struct
 name|wpi_stop_scan
 modifier|*
@@ -9090,6 +9143,8 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|ieee80211vap
 modifier|*
@@ -13765,6 +13820,9 @@ operator|.
 name|esslen
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WPI_DEBUG
 if|if
 condition|(
 name|wpi_debug
@@ -13804,6 +13862,8 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Build a probe request frame.  Most of the following code is a 	 * copy& paste of what is done in net80211. 	 */
 name|wh
@@ -17186,12 +17246,15 @@ index|[
 name|WPI_MAX_CHAN_PER_BAND
 index|]
 decl_stmt|;
+name|struct
+name|ieee80211_channel
+modifier|*
+name|c
+decl_stmt|;
 name|int
 name|chan
 decl_stmt|,
 name|i
-decl_stmt|,
-name|offset
 decl_stmt|,
 name|passive
 decl_stmt|;
@@ -17280,11 +17343,18 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|offset
+name|c
 operator|=
+operator|&
+name|ic
+operator|->
+name|ic_channels
+index|[
 name|ic
 operator|->
 name|ic_nchans
+operator|++
+index|]
 expr_stmt|;
 comment|/* is active scan allowed on this channel? */
 if|if
@@ -17315,24 +17385,14 @@ literal|0
 condition|)
 block|{
 comment|/* 2GHz band */
-name|ic
+name|c
 operator|->
-name|ic_channels
-index|[
-name|offset
-index|]
-operator|.
 name|ic_ieee
 operator|=
 name|chan
 expr_stmt|;
-name|ic
+name|c
 operator|->
-name|ic_channels
-index|[
-name|offset
-index|]
-operator|.
 name|ic_freq
 operator|=
 name|ieee80211_ieee2mhz
@@ -17342,40 +17402,35 @@ argument_list|,
 name|IEEE80211_CHAN_2GHZ
 argument_list|)
 expr_stmt|;
-name|ic
+name|c
 operator|->
-name|ic_channels
-index|[
-name|offset
-index|]
-operator|.
 name|ic_flags
 operator|=
 name|IEEE80211_CHAN_B
 operator||
 name|passive
 expr_stmt|;
-name|offset
-operator|++
-expr_stmt|;
+name|c
+operator|=
+operator|&
 name|ic
 operator|->
 name|ic_channels
 index|[
-name|offset
+name|ic
+operator|->
+name|ic_nchans
+operator|++
 index|]
-operator|.
+expr_stmt|;
+name|c
+operator|->
 name|ic_ieee
 operator|=
 name|chan
 expr_stmt|;
-name|ic
+name|c
 operator|->
-name|ic_channels
-index|[
-name|offset
-index|]
-operator|.
 name|ic_freq
 operator|=
 name|ieee80211_ieee2mhz
@@ -17385,21 +17440,13 @@ argument_list|,
 name|IEEE80211_CHAN_2GHZ
 argument_list|)
 expr_stmt|;
-name|ic
+name|c
 operator|->
-name|ic_channels
-index|[
-name|offset
-index|]
-operator|.
 name|ic_flags
 operator|=
 name|IEEE80211_CHAN_G
 operator||
 name|passive
-expr_stmt|;
-name|offset
-operator|++
 expr_stmt|;
 block|}
 else|else
@@ -17413,24 +17460,14 @@ operator|<=
 literal|14
 condition|)
 continue|continue;
-name|ic
+name|c
 operator|->
-name|ic_channels
-index|[
-name|offset
-index|]
-operator|.
 name|ic_ieee
 operator|=
 name|chan
 expr_stmt|;
-name|ic
+name|c
 operator|->
-name|ic_channels
-index|[
-name|offset
-index|]
-operator|.
 name|ic_freq
 operator|=
 name|ieee80211_ieee2mhz
@@ -17440,21 +17477,13 @@ argument_list|,
 name|IEEE80211_CHAN_5GHZ
 argument_list|)
 expr_stmt|;
-name|ic
+name|c
 operator|->
-name|ic_channels
-index|[
-name|offset
-index|]
-operator|.
 name|ic_flags
 operator|=
 name|IEEE80211_CHAN_A
 operator||
 name|passive
-expr_stmt|;
-name|offset
-operator|++
 expr_stmt|;
 block|}
 comment|/* save maximum allowed power for this channel */
@@ -17472,12 +17501,6 @@ index|]
 operator|.
 name|maxpwr
 expr_stmt|;
-name|ic
-operator|->
-name|ic_nchans
-operator|=
-name|offset
-expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -17490,9 +17513,14 @@ directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"adding chan %d flags=0x%x maxpwr=%d, offset %d\n"
+literal|"adding chan %d (%dMHz) flags=0x%x maxpwr=%d"
+literal|" passive=%d, offset %d\n"
 operator|,
 name|chan
+operator|,
+name|c
+operator|->
+name|ic_freq
 operator|,
 name|channels
 index|[
@@ -17508,7 +17536,19 @@ index|[
 name|chan
 index|]
 operator|,
-name|offset
+operator|(
+name|c
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_CHAN_PASSIVE
+operator|)
+operator|!=
+literal|0
+operator|,
+name|ic
+operator|->
+name|ic_nchans
 operator|)
 argument_list|)
 expr_stmt|;
