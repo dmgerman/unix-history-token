@@ -335,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|KERNBASE
-value|KVADDR(KPML4I, KPDPI, 0, 0)
+value|MAX(0xffffffff80000000ul, VM_MIN_KERNEL_ADDRESS)
 end_define
 
 begin_define
