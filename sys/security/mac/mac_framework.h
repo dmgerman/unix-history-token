@@ -1358,23 +1358,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_posixsem_check_destroy
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
-name|ksem
-modifier|*
-name|ks
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mac_posixsem_check_getvalue
 parameter_list|(
 name|struct

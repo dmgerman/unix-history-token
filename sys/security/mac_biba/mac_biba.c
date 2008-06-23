@@ -14382,11 +14382,6 @@ operator|=
 name|biba_pipe_relabel
 block|,
 operator|.
-name|mpo_posixsem_check_destroy
-operator|=
-name|biba_posixsem_check_write
-block|,
-operator|.
 name|mpo_posixsem_check_getvalue
 operator|=
 name|biba_posixsem_check_rdonly
