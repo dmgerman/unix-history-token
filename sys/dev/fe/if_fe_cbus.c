@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -1341,24 +1335,6 @@ operator|->
 name|port_res
 operator|=
 name|res
-expr_stmt|;
-name|sc
-operator|->
-name|iot
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|res
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|ioh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|res
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

@@ -249,12 +249,6 @@ name|resource
 modifier|*
 name|port_res
 decl_stmt|;
-name|bus_space_tag_t
-name|iot
-decl_stmt|;
-name|bus_space_handle_t
-name|ioh
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -394,6 +388,9 @@ decl_stmt|;
 name|struct
 name|callout
 name|timer
+decl_stmt|;
+name|int
+name|tx_timeout
 decl_stmt|;
 block|}
 struct|;
@@ -664,7 +661,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_1((sc)->iot, (sc)->ioh, (port))
+value|bus_read_1((sc)->port_res, (port))
 end_define
 
 begin_define
@@ -679,7 +676,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1((sc)->iot, (sc)->ioh, (port), (value))
+value|bus_write_1((sc)->port_res, (port), (value))
 end_define
 
 begin_define
@@ -692,7 +689,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_2((sc)->iot, (sc)->ioh, (port))
+value|bus_read_2((sc)->port_res, (port))
 end_define
 
 begin_define
@@ -707,7 +704,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_2((sc)->iot, (sc)->ioh, (port), (value))
+value|bus_write_2((sc)->port_res, (port), (value))
 end_define
 
 begin_define
@@ -724,7 +721,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_1((sc)->iot, (sc)->ioh, (port), (addr), (count))
+value|bus_read_multi_1((sc)->port_res, (port), (addr), (count))
 end_define
 
 begin_define
@@ -741,7 +738,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_1((sc)->iot, (sc)->ioh, (port), (addr), (count))
+value|bus_write_multi_1((sc)->port_res, (port), (addr), (count))
 end_define
 
 begin_define
@@ -758,7 +755,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_2((sc)->iot, (sc)->ioh, (port), (addr), (count))
+value|bus_read_multi_2((sc)->port_res, (port), (addr), (count))
 end_define
 
 begin_define
@@ -775,7 +772,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_2((sc)->iot, (sc)->ioh, (port), (addr), (count))
+value|bus_write_multi_2((sc)->port_res, (port), (addr), (count))
 end_define
 
 begin_define
@@ -792,7 +789,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_region_1((sc)->iot, (sc)->ioh, (port), (addr), (count))
+value|bus_read_region_1((sc)->port_res, (port), (addr), (count))
 end_define
 
 begin_define
@@ -809,7 +806,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_region_1((sc)->iot, (sc)->ioh, (port), (addr), (count))
+value|bus_write_region_1((sc)->port_res, (port), (addr), (count))
 end_define
 
 end_unit
