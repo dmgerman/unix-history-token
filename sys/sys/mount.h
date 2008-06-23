@@ -607,6 +607,11 @@ modifier|*
 name|mnt_gjprovider
 decl_stmt|;
 comment|/* gjournal provider name */
+name|struct
+name|lock
+name|mnt_explock
+decl_stmt|;
+comment|/* vfs_export walkers lock */
 block|}
 struct|;
 end_struct
