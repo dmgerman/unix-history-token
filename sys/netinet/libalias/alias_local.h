@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|LINK_TABLE_OUT_SIZE
-value|101
+value|4001
 end_define
 
 begin_define
@@ -200,10 +200,6 @@ name|lastCleanupTime
 decl_stmt|;
 comment|/* Last time 						 * IncrementalCleanup()  */
 comment|/* was called                      */
-name|int
-name|houseKeepingResidual
-decl_stmt|;
-comment|/* used by HouseKeeping()          */
 name|int
 name|deleteAllLinks
 decl_stmt|;
