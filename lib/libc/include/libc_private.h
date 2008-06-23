@@ -611,6 +611,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* execve() with PATH processing to implement posix_spawnp() */
+end_comment
+
+begin_function_decl
+name|int
+name|_execvpe
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

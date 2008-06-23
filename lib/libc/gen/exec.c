@@ -123,6 +123,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -678,7 +684,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|execvpe
+name|_execvpe
 argument_list|(
 name|name
 argument_list|,
@@ -1249,7 +1255,7 @@ end_function
 
 begin_function
 name|int
-name|execvpe
+name|_execvpe
 parameter_list|(
 specifier|const
 name|char

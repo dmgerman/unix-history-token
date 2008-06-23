@@ -83,6 +83,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -849,7 +855,7 @@ if|if
 condition|(
 name|use_env_path
 condition|)
-name|execvpe
+name|_execvpe
 argument_list|(
 name|path
 argument_list|,
