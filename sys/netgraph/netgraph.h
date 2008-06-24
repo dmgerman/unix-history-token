@@ -66,11 +66,22 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"opt_netgraph.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* debugging options */
