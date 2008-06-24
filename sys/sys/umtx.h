@@ -372,8 +372,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_MAX
+name|UMTX_OP_MUTEX_WAIT
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MUTEX_WAKE
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|19
 end_define
 
 begin_comment
