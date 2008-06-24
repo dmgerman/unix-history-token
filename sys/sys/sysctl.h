@@ -1473,6 +1473,23 @@ define|\
 value|sysctl_add_oid(ctx, parent, nbr, name, (access),			    \ 	ptr, arg, handler, fmt, __DESCR(descr))
 end_define
 
+begin_comment
+comment|/*  * A macro to generate a read-only sysctl to indicate the presense of optional  * kernel features.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FEATURE
+parameter_list|(
+name|name
+parameter_list|,
+name|desc
+parameter_list|)
+define|\
+value|SYSCTL_INT(_kern_features, OID_AUTO, name, CTLFLAG_RD, 0, 1, desc)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -3033,6 +3050,14 @@ begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_kern
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_features
 argument_list|)
 expr_stmt|;
 end_expr_stmt
