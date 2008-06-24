@@ -824,6 +824,13 @@ name|mode
 operator|=
 name|opt
 expr_stmt|;
+name|cpio
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
+expr_stmt|;
 break|break;
 case|case
 name|OPTION_QUIET
