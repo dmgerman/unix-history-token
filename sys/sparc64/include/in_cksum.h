@@ -97,7 +97,7 @@ name|__ret
 decl_stmt|,
 name|__tmp
 decl_stmt|;
-asm|__asm(
+asm|__asm __volatile(
 literal|"sll %2, 16, %0\n"
 literal|"sll %3, 16, %1\n"
 literal|"addcc %0, %1, %0\n"
@@ -154,7 +154,7 @@ block|{
 name|u_long
 name|__tmp
 decl_stmt|;
-asm|__asm(
+asm|__asm __volatile(
 literal|"addcc %0, %3, %0\n"
 literal|"addccc %0, %4, %0\n"
 literal|"addc %0, 0, %0\n"
@@ -238,8 +238,8 @@ parameter_list|,
 name|mod
 parameter_list|)
 define|\
-value|"lduw [" #addr " + " #offs "], " #tmp "\n" \     "add" # mod " " #sum ", " #tmp ", " #sum "\n"
-asm|__asm(
+value|"lduw [" #addr " + " #offs "], " #tmp "\n"				\     "add" # mod " " #sum ", " #tmp ", " #sum "\n"
+asm|__asm __volatile(
 literal|"and %5, 3, %3\n"
 literal|"andn %5, 3, %1\n"
 literal|"brz,pt %3, 0f\n"
