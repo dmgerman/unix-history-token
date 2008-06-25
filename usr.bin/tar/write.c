@@ -815,6 +815,10 @@ name|struct
 name|archive
 modifier|*
 parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
 name|int
 name|fd
 parameter_list|)
@@ -3841,6 +3845,8 @@ name|bsdtar
 argument_list|,
 name|a
 argument_list|,
+name|entry
+argument_list|,
 name|fd
 argument_list|)
 condition|)
@@ -4398,6 +4404,11 @@ name|archive
 modifier|*
 name|a
 parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
+name|entry
+parameter_list|,
 name|int
 name|fd
 parameter_list|)
@@ -4504,7 +4515,12 @@ name|bsdtar
 argument_list|,
 literal|0
 argument_list|,
-literal|"Truncated write; file may have grown while being archived."
+literal|"%s: Truncated write; file may have grown while being archived."
+argument_list|,
+name|archive_entry_pathname
+argument_list|(
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
