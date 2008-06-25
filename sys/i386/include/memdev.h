@@ -50,13 +50,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_MEMDEV
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 end_unit
 
