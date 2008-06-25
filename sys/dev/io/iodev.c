@@ -203,7 +203,7 @@ argument_list|(
 operator|&
 name|io_cdevsw
 argument_list|,
-name|CDEV_MINOR_IO
+literal|0
 argument_list|,
 name|UID_ROOT
 argument_list|,

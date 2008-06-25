@@ -6,13 +6,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDEV_MAJOR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|CDEV_MINOR_MEM
 value|0
 end_define
