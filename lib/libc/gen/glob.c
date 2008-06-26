@@ -494,10 +494,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|Char
 modifier|*
 name|g_strchr
 parameter_list|(
+specifier|const
 name|Char
 modifier|*
 parameter_list|,
@@ -1250,17 +1252,8 @@ condition|(
 operator|(
 name|ptr
 operator|=
-operator|(
-specifier|const
-name|Char
-operator|*
-operator|)
 name|g_strchr
 argument_list|(
-operator|(
-name|Char
-operator|*
-operator|)
 name|ptr
 argument_list|,
 name|LBRACE
@@ -2121,10 +2114,6 @@ name|EOS
 operator|||
 name|g_strchr
 argument_list|(
-operator|(
-name|Char
-operator|*
-operator|)
 name|qpatnext
 operator|+
 literal|1
@@ -4246,10 +4235,12 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|Char
 modifier|*
 name|g_strchr
 parameter_list|(
+specifier|const
 name|Char
 modifier|*
 name|str
