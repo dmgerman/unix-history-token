@@ -2066,6 +2066,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|IFNET_WLOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&ifnet_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFNET_RLOCK
 parameter_list|()
 value|IFNET_WLOCK()
@@ -2097,54 +2105,51 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|struct
+name|ifnet
+modifier|*
 name|ifnet_byindex
 parameter_list|(
+name|u_short
 name|idx
 parameter_list|)
-value|ifindex_table[(idx)].ife_ifnet
-end_define
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Given the index, ifaddr_byindex() returns the one and only  * link-level ifaddr for the interface. You are not supposed to use  * it to traverse the list of addresses associated to the interface.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|struct
+name|ifaddr
+modifier|*
 name|ifaddr_byindex
 parameter_list|(
+name|u_short
 name|idx
 parameter_list|)
-value|ifnet_byindex(idx)->if_addr
-end_define
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|struct
+name|cdev
+modifier|*
 name|ifdev_byindex
 parameter_list|(
+name|u_short
 name|idx
 parameter_list|)
-value|ifindex_table[(idx)].ife_dev
-end_define
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
 name|struct
 name|ifnethead
 name|ifnet
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ifindex_entry
-modifier|*
-name|ifindex_table
 decl_stmt|;
 end_decl_stmt
 
