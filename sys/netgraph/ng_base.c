@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -700,7 +706,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ng_worklist_remove
+name|ng_worklist_add
 parameter_list|(
 name|node_p
 name|node
@@ -744,17 +750,6 @@ name|struct
 name|ng_queue
 modifier|*
 name|ngq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ng_setisr
-parameter_list|(
-name|node_p
-name|node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6491,7 +6486,7 @@ comment|/*  * Definition of the bits fields in the ng_queue flag word.  * Define
 end_comment
 
 begin_comment
-comment|/*-  Safety Barrier--------+ (adjustable to suit taste) (not used yet)                        |                        V +-------+-------+-------+-------+-------+-------+-------+-------+   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |   | |A|c|t|i|v|e| |R|e|a|d|e|r| |C|o|u|n|t| | | | | | | | | |P|A|   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |O|W| +-------+-------+-------+-------+-------+-------+-------+-------+   \___________________________ ____________________________/ | |                             V                                | |                   [active reader count]                      | |                                                              | |             Operation Pending -------------------------------+ |                                                                |           Active Writer ---------------------------------------+   */
+comment|/*-  Safety Barrier--------+ (adjustable to suit taste) (not used yet)                        |                        V +-------+-------+-------+-------+-------+-------+-------+-------+   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |   | |A|c|t|i|v|e| |R|e|a|d|e|r| |C|o|u|n|t| | | | | | | | | |P|A|   | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |O|W| +-------+-------+-------+-------+-------+-------+-------+-------+   \___________________________ ____________________________/ | |                             V                                | |                   [active reader count]                      | |                                                              | |             Operation Pending -------------------------------+ |                                                                |           Active Writer ---------------------------------------+  Node queue has such semantics: - All flags modifications are atomic. - Reader count can be incremented only if there is no writer or pending flags.   As soon as this can't be done with single operation, it is implemented with   spin loop and atomic_cmpset(). - Writer flag can be set only if there is no any bits set.   It is implemented with atomic_cmpset(). - Pending flag can be set any time, but to avoid collision on queue processing   all queue fields are protected by the mutex. - Queue processing thread reads queue holding the mutex, but releases it while   processing. When queue is empty pending flag is removed. */
 end_comment
 
 begin_define
@@ -6643,7 +6638,7 @@ parameter_list|(
 name|QP
 parameter_list|)
 define|\
-value|(QUEUE_ACTIVE(QP)&& 						\ 	((HEAD_IS_READER(QP)) ? QUEUED_READER_CAN_PROCEED(QP) :		\ 				QUEUED_WRITER_CAN_PROCEED(QP)))
+value|((HEAD_IS_READER(QP)) ? QUEUED_READER_CAN_PROCEED(QP) :		\ 				QUEUED_WRITER_CAN_PROCEED(QP))
 end_define
 
 begin_define
@@ -6661,7 +6656,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Taking into account the current state of the queue and node, possibly take  * the next entry off the queue and return it. Return NULL if there was  * nothing we could return, either because there really was nothing there, or  * because the node was in a state where it cannot yet process the next item  * on the queue.  *  * This MUST MUST MUST be called with the mutex held.  */
+comment|/*  * Taking into account the current state of the queue and node, possibly take  * the next entry off the queue and return it. Return NULL if there was  * nothing we could return, either because there really was nothing there, or  * because the node was in a state where it cannot yet process the next item  * on the queue.  */
 end_comment
 
 begin_function
@@ -6683,9 +6678,7 @@ block|{
 name|item_p
 name|item
 decl_stmt|;
-name|u_int
-name|add_arg
-decl_stmt|;
+comment|/* This MUST be called with the mutex held. */
 name|mtx_assert
 argument_list|(
 operator|&
@@ -6696,7 +6689,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is nothing queued, then just return. 	 * No point in continuing. 	 * XXXGL: assert this? 	 */
+comment|/* If there is nothing queued, then just return. */
 if|if
 condition|(
 operator|!
@@ -6745,23 +6738,26 @@ name|ngq
 argument_list|)
 condition|)
 block|{
-if|if
+while|while
 condition|(
-operator|!
-name|QUEUED_READER_CAN_PROCEED
-argument_list|(
-name|ngq
-argument_list|)
+literal|1
 condition|)
 block|{
-comment|/* 			 * It's a reader but we can't use it. 			 * We are stalled so make sure we don't 			 * get called again until something changes. 			 */
-name|ng_worklist_remove
-argument_list|(
+name|long
+name|t
+init|=
 name|ngq
 operator|->
-name|q_node
-argument_list|)
-expr_stmt|;
+name|q_flags
+decl_stmt|;
+if|if
+condition|(
+name|t
+operator|&
+name|WRITER_ACTIVE
+condition|)
+block|{
+comment|/* There is writer, reader can't proceed. */
 name|CTR4
 argument_list|(
 name|KTR_NET
@@ -6781,9 +6777,7 @@ name|ngq
 operator|->
 name|q_node
 argument_list|,
-name|ngq
-operator|->
-name|q_flags
+name|t
 argument_list|)
 expr_stmt|;
 return|return
@@ -6792,11 +6786,28 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 		 * Head of queue is a reader and we have no write active. 		 * We don't care how many readers are already active. 		 * Add the correct increment for the reader count. 		 */
-name|add_arg
-operator|=
+if|if
+condition|(
+name|atomic_cmpset_acq_long
+argument_list|(
+operator|&
+name|ngq
+operator|->
+name|q_flags
+argument_list|,
+name|t
+argument_list|,
+name|t
+operator|+
 name|READER_INCREMENT
+argument_list|)
+condition|)
+break|break;
+name|cpu_spinwait
+argument_list|()
 expr_stmt|;
+block|}
+comment|/* We have got reader lock for the node. */
 operator|*
 name|rw
 operator|=
@@ -6806,40 +6817,37 @@ block|}
 elseif|else
 if|if
 condition|(
-name|QUEUED_WRITER_CAN_PROCEED
+name|atomic_cmpset_acq_long
 argument_list|(
+operator|&
 name|ngq
+operator|->
+name|q_flags
+argument_list|,
+name|OP_PENDING
+argument_list|,
+name|OP_PENDING
+operator|+
+name|WRITER_ACTIVE
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * There is a pending write, no readers and no active writer. 		 * This means we can go ahead with the pending writer. Note 		 * the fact that we now have a writer, ready for when we take 		 * it off the queue. 		 * 		 * We don't need to worry about a possible collision with the 		 * fasttrack reader. 		 * 		 * The fasttrack thread may take a long time to discover that we 		 * are running so we would have an inconsistent state in the 		 * flags for a while. Since we ignore the reader count 		 * entirely when the WRITER_ACTIVE flag is set, this should 		 * not matter (in fact it is defined that way). If it tests 		 * the flag before this operation, the OP_PENDING flag 		 * will make it fail, and if it tests it later, the 		 * WRITER_ACTIVE flag will do the same. If it is SO slow that 		 * we have actually completed the operation, and neither flag 		 * is set by the time that it tests the flags, then it is 		 * actually ok for it to continue. If it completes and we've 		 * finished and the read pending is set it still fails. 		 * 		 * So we can just ignore it,  as long as we can ensure that the 		 * transition from WRITE_PENDING state to the WRITER_ACTIVE 		 * state is atomic. 		 * 		 * After failing, first it will be held back by the mutex, then 		 * when it can proceed, it will queue its request, then it 		 * would arrive at this function. Usually it will have to 		 * leave empty handed because the ACTIVE WRITER bit will be 		 * set. 		 * 		 * Adjust the flags for the new active writer. 		 */
-name|add_arg
-operator|=
-name|WRITER_ACTIVE
-expr_stmt|;
+comment|/* We have got writer lock for the node. */
 operator|*
 name|rw
 operator|=
 name|NGQRW_W
 expr_stmt|;
-comment|/* 		 * We want to write "active writer, no readers " Now go make 		 * it true. In fact there may be a number in the readers 		 * count but we know it is not true and will be fixed soon. 		 * We will fix the flags for the next pending entry in a 		 * moment. 		 */
 block|}
 else|else
 block|{
-comment|/* 		 * We can't dequeue anything.. return and say so. Probably we 		 * have a write pending and the readers count is non zero. If 		 * we got here because a reader hit us just at the wrong 		 * moment with the fasttrack code, and put us in a strange 		 * state, then it will be coming through in just a moment, 		 * (just as soon as we release the mutex) and keep things 		 * moving. 		 * Make sure we remove ourselves from the work queue. It 		 * would be a waste of effort to do all this again. 		 */
-name|ng_worklist_remove
-argument_list|(
-name|ngq
-operator|->
-name|q_node
-argument_list|)
-expr_stmt|;
+comment|/* There is somebody other, writer can't proceed. */
 name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%20s: node [%x] (%p) can't dequeue anything; "
-literal|"queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) queued writer "
+literal|"can't proceed; queue flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6879,36 +6887,6 @@ name|item
 operator|->
 name|el_next
 expr_stmt|;
-name|CTR6
-argument_list|(
-name|KTR_NET
-argument_list|,
-literal|"%20s: node [%x] (%p) dequeued item %p with flags 0x%lx; "
-literal|"queue flags 0x%lx"
-argument_list|,
-name|__func__
-argument_list|,
-name|ngq
-operator|->
-name|q_node
-operator|->
-name|nd_ID
-argument_list|,
-name|ngq
-operator|->
-name|q_node
-argument_list|,
-name|item
-argument_list|,
-name|item
-operator|->
-name|el_flags
-argument_list|,
-name|ngq
-operator|->
-name|q_flags
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ngq
@@ -6923,12 +6901,6 @@ name|el_next
 operator|)
 condition|)
 block|{
-comment|/* 		 * that was the last entry in the queue so set the 'last 		 * pointer up correctly and make sure the pending flag is 		 * clear. 		 */
-name|add_arg
-operator|+=
-operator|-
-name|OP_PENDING
-expr_stmt|;
 name|ngq
 operator|->
 name|last
@@ -6940,36 +6912,14 @@ operator|->
 name|queue
 operator|)
 expr_stmt|;
-comment|/* 		 * Whatever flag was set will be cleared and 		 * the new acive field will be set by the add as well, 		 * so we don't need to change add_arg. 		 * But we know we don't need to be on the work list. 		 */
-name|atomic_add_long
+name|atomic_clear_long
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_flags
 argument_list|,
-name|add_arg
-argument_list|)
-expr_stmt|;
-name|ng_worklist_remove
-argument_list|(
-name|ngq
-operator|->
-name|q_node
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Since there is still something on the queue 		 * we don't need to change the PENDING flag. 		 */
-name|atomic_add_long
-argument_list|(
-operator|&
-name|ngq
-operator|->
-name|q_flags
-argument_list|,
-name|add_arg
+name|OP_PENDING
 argument_list|)
 expr_stmt|;
 block|}
@@ -7015,7 +6965,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Queue a packet to be picked up by someone else.  * We really don't care who, but we can't or don't want to hang around  * to process it ourselves. We are probably an interrupt routine..  * If the queue could be run, flag the netisr handler to start.  */
+comment|/*  * Queue a packet to be picked up later by someone else.  * If the queue could be run now, add node to the queue handler's worklist.  */
 end_comment
 
 begin_function
@@ -7036,16 +6986,6 @@ name|int
 name|rw
 parameter_list|)
 block|{
-name|mtx_assert
-argument_list|(
-operator|&
-name|ngq
-operator|->
-name|q_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rw
@@ -7070,12 +7010,39 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* maybe not needed */
+name|NG_QUEUE_LOCK
+argument_list|(
+name|ngq
+argument_list|)
+expr_stmt|;
+comment|/* Set OP_PENDING flag and enqueue the item. */
+name|atomic_set_long
+argument_list|(
+operator|&
+name|ngq
+operator|->
+name|q_flags
+argument_list|,
+name|OP_PENDING
+argument_list|)
+expr_stmt|;
 operator|*
 name|ngq
 operator|->
 name|last
 operator|=
 name|item
+expr_stmt|;
+name|ngq
+operator|->
+name|last
+operator|=
+operator|&
+operator|(
+name|item
+operator|->
+name|el_next
+operator|)
 expr_stmt|;
 name|CTR5
 argument_list|(
@@ -7104,62 +7071,6 @@ else|:
 literal|"READER"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If it was the first item in the queue then we need to 	 * set the last pointer and the type flags. 	 */
-if|if
-condition|(
-name|ngq
-operator|->
-name|last
-operator|==
-operator|&
-operator|(
-name|ngq
-operator|->
-name|queue
-operator|)
-condition|)
-block|{
-name|atomic_add_long
-argument_list|(
-operator|&
-name|ngq
-operator|->
-name|q_flags
-argument_list|,
-name|OP_PENDING
-argument_list|)
-expr_stmt|;
-name|CTR3
-argument_list|(
-name|KTR_NET
-argument_list|,
-literal|"%20s: node [%x] (%p) set OP_PENDING"
-argument_list|,
-name|__func__
-argument_list|,
-name|ngq
-operator|->
-name|q_node
-operator|->
-name|nd_ID
-argument_list|,
-name|ngq
-operator|->
-name|q_node
-argument_list|)
-expr_stmt|;
-block|}
-name|ngq
-operator|->
-name|last
-operator|=
-operator|&
-operator|(
-name|item
-operator|->
-name|el_next
-operator|)
-expr_stmt|;
 comment|/* 	 * We can take the worklist lock with the node locked 	 * BUT NOT THE REVERSE! 	 */
 if|if
 condition|(
@@ -7168,18 +7079,23 @@ argument_list|(
 name|ngq
 argument_list|)
 condition|)
-name|ng_setisr
+name|ng_worklist_add
 argument_list|(
 name|ngq
 operator|->
 name|q_node
 argument_list|)
 expr_stmt|;
+name|NG_QUEUE_UNLOCK
+argument_list|(
+name|ngq
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * This function 'cheats' in that it first tries to 'grab' the use of the  * node, without going through the mutex. We can do this becasue of the  * semantics of the lock. The semantics include a clause that says that the  * value of the readers count is invalid if the WRITER_ACTIVE flag is set. It  * also says that the WRITER_ACTIVE flag cannot be set if the readers count  * is not zero. Note that this talks about what is valid to SET the  * WRITER_ACTIVE flag, because from the moment it is set, the value if the  * reader count is immaterial, and not valid. The two 'pending' flags have a  * similar effect, in that If they are orthogonal to the two active fields in  * how they are set, but if either is set, the attempted 'grab' need to be  * backed out because there is earlier work, and we maintain ordering in the  * queue. The result of this is that the reader request can try obtain use of  * the node with only a single atomic addition, and without any of the mutex  * overhead. If this fails the operation degenerates to the same as for other  * cases.  *  */
+comment|/* Acquire reader lock on node. If node is busy, queue the packet. */
 end_comment
 
 begin_function
@@ -7213,28 +7129,42 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* ######### Hack alert ######### */
-name|atomic_add_long
+comment|/* Reader needs node without writer and pending items. */
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|long
+name|t
+init|=
+name|ngq
+operator|->
+name|q_flags
+decl_stmt|;
+if|if
+condition|(
+name|t
+operator|&
+name|NGQ_RMASK
+condition|)
+break|break;
+comment|/* Node is not ready for reader. */
+if|if
+condition|(
+name|atomic_cmpset_acq_long
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_flags
 argument_list|,
+name|t
+argument_list|,
+name|t
+operator|+
 name|READER_INCREMENT
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ngq
-operator|->
-name|q_flags
-operator|&
-name|NGQ_RMASK
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* Successfully grabbed node */
@@ -7242,7 +7172,7 @@ name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%20s: node [%x] (%p) fast acquired item %p"
+literal|"%20s: node [%x] (%p) acquired item %p"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7265,80 +7195,12 @@ name|item
 operator|)
 return|;
 block|}
-comment|/* undo the damage if we didn't succeed */
-name|atomic_subtract_long
-argument_list|(
-operator|&
-name|ngq
-operator|->
-name|q_flags
-argument_list|,
-name|READER_INCREMENT
-argument_list|)
+name|cpu_spinwait
+argument_list|()
 expr_stmt|;
-comment|/* ######### End Hack alert ######### */
-name|NG_QUEUE_LOCK
-argument_list|(
-name|ngq
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Try again. Another processor (or interrupt for that matter) may 	 * have removed the last queued item that was stopping us from 	 * running, between the previous test, and the moment that we took 	 * the mutex. (Or maybe a writer completed.) 	 * Even if another fast-track reader hits during this period 	 * we don't care as multiple readers is OK. 	 */
-if|if
-condition|(
-operator|(
-name|ngq
-operator|->
-name|q_flags
-operator|&
-name|NGQ_RMASK
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|atomic_add_long
-argument_list|(
-operator|&
-name|ngq
-operator|->
-name|q_flags
-argument_list|,
-name|READER_INCREMENT
-argument_list|)
-expr_stmt|;
-name|NG_QUEUE_UNLOCK
-argument_list|(
-name|ngq
-argument_list|)
-expr_stmt|;
-name|CTR4
-argument_list|(
-name|KTR_NET
-argument_list|,
-literal|"%20s: node [%x] (%p) slow acquired item %p"
-argument_list|,
-name|__func__
-argument_list|,
-name|ngq
-operator|->
-name|q_node
-operator|->
-name|nd_ID
-argument_list|,
-name|ngq
-operator|->
-name|q_node
-argument_list|,
-name|item
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|item
-operator|)
-return|;
 block|}
-comment|/* 	 * and queue the request for later. 	 */
+empty_stmt|;
+comment|/* Queue the request for later. */
 name|ng_queue_rw
 argument_list|(
 name|ngq
@@ -7348,11 +7210,6 @@ argument_list|,
 name|NGQRW_R
 argument_list|)
 expr_stmt|;
-name|NG_QUEUE_UNLOCK
-argument_list|(
-name|ngq
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -7360,6 +7217,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Acquire writer lock on node. If node is busy, queue the packet. */
+end_comment
 
 begin_function
 specifier|static
@@ -7392,67 +7253,23 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|restart
-label|:
-name|NG_QUEUE_LOCK
-argument_list|(
-name|ngq
-argument_list|)
-expr_stmt|;
-comment|/* 	 * If there are no readers, no writer, and no pending packets, then 	 * we can just go ahead. In all other situations we need to queue the 	 * request 	 */
+comment|/* Writer needs completely idle node. */
 if|if
 condition|(
-operator|(
+name|atomic_cmpset_acq_long
+argument_list|(
+operator|&
 name|ngq
 operator|->
 name|q_flags
-operator|&
-name|NGQ_WMASK
-operator|)
-operator|==
+argument_list|,
 literal|0
-condition|)
-block|{
-comment|/* collision could happen *HERE* */
-name|atomic_add_long
-argument_list|(
-operator|&
-name|ngq
-operator|->
-name|q_flags
 argument_list|,
 name|WRITER_ACTIVE
 argument_list|)
-expr_stmt|;
-name|NG_QUEUE_UNLOCK
-argument_list|(
-name|ngq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ngq
-operator|->
-name|q_flags
-operator|&
-name|READER_MASK
 condition|)
 block|{
-comment|/* Collision with fast-track reader */
-name|atomic_subtract_long
-argument_list|(
-operator|&
-name|ngq
-operator|->
-name|q_flags
-argument_list|,
-name|WRITER_ACTIVE
-argument_list|)
-expr_stmt|;
-goto|goto
-name|restart
-goto|;
-block|}
+comment|/* Successfully grabbed node */
 name|CTR4
 argument_list|(
 name|KTR_NET
@@ -7480,7 +7297,7 @@ name|item
 operator|)
 return|;
 block|}
-comment|/* 	 * and queue the request for later. 	 */
+comment|/* Queue the request for later. */
 name|ng_queue_rw
 argument_list|(
 name|ngq
@@ -7488,11 +7305,6 @@ argument_list|,
 name|item
 argument_list|,
 name|NGQRW_W
-argument_list|)
-expr_stmt|;
-name|NG_QUEUE_UNLOCK
-argument_list|(
-name|ngq
 argument_list|)
 expr_stmt|;
 return|return
@@ -7549,15 +7361,19 @@ comment|/* We've gone from, 0 to 1 item in the queue */
 end_comment
 
 begin_comment
-unit|atomic_add_long(&ngq->q_flags, OP_PENDING);  		CTR3(KTR_NET, "%20s: node [%x] (%p) set OP_PENDING", __func__, 		    ngq->q_node->nd_ID, ngq->q_node); 	}; 	ngq->queue = item; 	CTR5(KTR_NET, "%20s: node [%x] (%p) requeued item %p as WRITER", 	    __func__, ngq->q_node->nd_ID, ngq->q_node, item );
+unit|atomic_set_long(&ngq->q_flags, OP_PENDING);  		CTR3(KTR_NET, "%20s: node [%x] (%p) set OP_PENDING", __func__, 		    ngq->q_node->nd_ID, ngq->q_node); 	}; 	ngq->queue = item; 	CTR5(KTR_NET, "%20s: node [%x] (%p) requeued item %p as WRITER", 	    __func__, ngq->q_node->nd_ID, ngq->q_node, item );
 comment|/* Reverse what we did above. That downgrades us back to reader */
 end_comment
 
 begin_endif
-unit|atomic_add_long(&ngq->q_flags, READER_INCREMENT - WRITER_ACTIVE); 	if (NEXT_QUEUED_ITEM_CAN_PROCEED(ngq)) 		ng_setisr(ngq->q_node); 	mtx_unlock_spin(&(ngq->q_mtx));  	return; }
+unit|atomic_add_long(&ngq->q_flags, READER_INCREMENT - WRITER_ACTIVE); 	if (QUEUE_ACTIVE(ngq)&& NEXT_QUEUED_ITEM_CAN_PROCEED(ngq)) 		ng_worklist_add(ngq->q_node); 	mtx_unlock_spin(&(ngq->q_mtx));  	return; }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Release reader lock. */
+end_comment
 
 begin_function
 specifier|static
@@ -7571,7 +7387,7 @@ modifier|*
 name|ngq
 parameter_list|)
 block|{
-name|atomic_subtract_long
+name|atomic_subtract_rel_long
 argument_list|(
 operator|&
 name|ngq
@@ -7583,6 +7399,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Release writer lock. */
+end_comment
 
 begin_function
 specifier|static
@@ -7596,7 +7416,7 @@ modifier|*
 name|ngq
 parameter_list|)
 block|{
-name|atomic_subtract_long
+name|atomic_clear_rel_long
 argument_list|(
 operator|&
 name|ngq
@@ -7608,6 +7428,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Purge node queue. Called on node shutdown. */
+end_comment
 
 begin_function
 specifier|static
@@ -7674,14 +7498,13 @@ operator|->
 name|queue
 operator|)
 expr_stmt|;
-name|atomic_add_long
+name|atomic_clear_long
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_flags
 argument_list|,
-operator|-
 name|OP_PENDING
 argument_list|)
 expr_stmt|;
@@ -7765,14 +7588,6 @@ name|ngq
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Take us off the work queue if we are there. 	 * We definately have no work to be done. 	 */
-name|ng_worklist_remove
-argument_list|(
-name|ngq
-operator|->
-name|q_node
-argument_list|)
-expr_stmt|;
 name|NG_QUEUE_UNLOCK
 argument_list|(
 name|ngq
@@ -8106,32 +7921,13 @@ condition|(
 name|queue
 condition|)
 block|{
-comment|/* Put it on the queue for that node*/
-ifdef|#
-directive|ifdef
-name|NETGRAPH_DEBUG
-name|_ngi_check
-argument_list|(
-name|item
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|item
 operator|->
 name|depth
 operator|=
 literal|1
 expr_stmt|;
-name|NG_QUEUE_LOCK
-argument_list|(
-name|ngq
-argument_list|)
-expr_stmt|;
+comment|/* Put it on the queue for that node*/
 name|ng_queue_rw
 argument_list|(
 name|ngq
@@ -8139,11 +7935,6 @@ argument_list|,
 name|item
 argument_list|,
 name|rw
-argument_list|)
-expr_stmt|;
-name|NG_QUEUE_UNLOCK
-argument_list|(
-name|ngq
 argument_list|)
 expr_stmt|;
 return|return
@@ -8206,20 +7997,6 @@ else|:
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|NETGRAPH_DEBUG
-name|_ngi_check
-argument_list|(
-name|item
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|NGI_GET_NODE
 argument_list|(
 name|item
@@ -8245,21 +8022,15 @@ name|rw
 argument_list|)
 expr_stmt|;
 comment|/* drops r/w lock when done */
-comment|/* 	 * If the node goes away when we remove the reference, 	 * whatever we just did caused it.. whatever we do, DO NOT 	 * access the node again! 	 */
+comment|/* If something is waiting on queue and ready, schedule it. */
 if|if
 condition|(
-name|NG_NODE_UNREF
+name|QUEUE_ACTIVE
 argument_list|(
-name|node
+name|ngq
 argument_list|)
-operator|==
-literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|NG_QUEUE_LOCK
 argument_list|(
 name|ngq
@@ -8267,12 +8038,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|QUEUE_ACTIVE
+argument_list|(
+name|ngq
+argument_list|)
+operator|&&
 name|NEXT_QUEUED_ITEM_CAN_PROCEED
 argument_list|(
 name|ngq
 argument_list|)
 condition|)
-name|ng_setisr
+name|ng_worklist_add
 argument_list|(
 name|ngq
 operator|->
@@ -8282,6 +8058,13 @@ expr_stmt|;
 name|NG_QUEUE_UNLOCK
 argument_list|(
 name|ngq
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Node may go away as soon as we remove the reference. 	 * Whatever we do, DO NOT access the node again! 	 */
+name|NG_NODE_UNREF
+argument_list|(
+name|node
 argument_list|)
 expr_stmt|;
 return|return
@@ -13025,20 +12808,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|item_p
-name|item
-decl_stmt|;
-name|node_p
-name|node
-init|=
-name|NULL
-decl_stmt|;
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
+name|node_p
+name|node
+decl_stmt|;
+comment|/* Get node from the worklist. */
 name|NG_WORKLIST_LOCK
 argument_list|()
 expr_stmt|;
@@ -13061,13 +12840,6 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-name|node
-operator|->
-name|nd_flags
-operator|&=
-operator|~
-name|NGF_WORKQ
-expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -13103,6 +12875,9 @@ init|;
 condition|;
 control|)
 block|{
+name|item_p
+name|item
+decl_stmt|;
 name|int
 name|rw
 decl_stmt|;
@@ -13134,6 +12909,16 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|atomic_clear_int
+argument_list|(
+operator|&
+name|node
+operator|->
+name|nd_flags
+argument_list|,
+name|NGF_WORKQ
+argument_list|)
+expr_stmt|;
 name|NG_QUEUE_UNLOCK
 argument_list|(
 operator|&
@@ -13188,89 +12973,6 @@ block|}
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|ng_worklist_remove
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-block|{
-name|mtx_assert
-argument_list|(
-operator|&
-name|node
-operator|->
-name|nd_input_queue
-operator|.
-name|q_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|NG_WORKLIST_LOCK
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|node
-operator|->
-name|nd_flags
-operator|&
-name|NGF_WORKQ
-condition|)
-block|{
-name|node
-operator|->
-name|nd_flags
-operator|&=
-operator|~
-name|NGF_WORKQ
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|ng_worklist
-argument_list|,
-name|node
-argument_list|,
-name|nd_work
-argument_list|)
-expr_stmt|;
-name|NG_WORKLIST_UNLOCK
-argument_list|()
-expr_stmt|;
-name|NG_NODE_UNREF
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-name|CTR3
-argument_list|(
-name|KTR_NET
-argument_list|,
-literal|"%20s: node [%x] (%p) removed from worklist"
-argument_list|,
-name|__func__
-argument_list|,
-name|node
-operator|->
-name|nd_ID
-argument_list|,
-name|node
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|NG_WORKLIST_UNLOCK
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_comment
 comment|/*  * XXX  * It's posible that a debugging NG_NODE_REF may need  * to be outside the mutex zone  */
 end_comment
@@ -13278,7 +12980,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ng_setisr
+name|ng_worklist_add
 parameter_list|(
 name|node_p
 name|node
@@ -13310,12 +13012,22 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * If we are not already on the work queue, 		 * then put us on. 		 */
+name|atomic_set_int
+argument_list|(
+operator|&
 name|node
 operator|->
 name|nd_flags
-operator||=
+argument_list|,
 name|NGF_WORKQ
+argument_list|)
 expr_stmt|;
+name|NG_NODE_REF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* XXX fafe in mutex? */
 name|NG_WORKLIST_LOCK
 argument_list|()
 expr_stmt|;
@@ -13332,12 +13044,11 @@ expr_stmt|;
 name|NG_WORKLIST_UNLOCK
 argument_list|()
 expr_stmt|;
-name|NG_NODE_REF
+name|schednetisr
 argument_list|(
-name|node
+name|NETISR_NETGRAPH
 argument_list|)
 expr_stmt|;
-comment|/* XXX fafe in mutex? */
 name|CTR3
 argument_list|(
 name|KTR_NET
@@ -13355,6 +13066,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|CTR3
 argument_list|(
 name|KTR_NET
@@ -13370,11 +13082,7 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-name|schednetisr
-argument_list|(
-name|NETISR_NETGRAPH
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 end_function
 
