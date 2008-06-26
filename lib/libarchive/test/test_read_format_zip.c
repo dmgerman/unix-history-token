@@ -236,7 +236,7 @@ name|a
 argument_list|,
 name|buff
 argument_list|,
-literal|18
+literal|19
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -299,7 +299,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|18
+name|ARCHIVE_WARN
 argument_list|,
 name|archive_read_data
 argument_list|(
@@ -307,7 +307,7 @@ name|a
 argument_list|,
 name|buff
 argument_list|,
-literal|18
+literal|19
 argument_list|)
 argument_list|)
 expr_stmt|;
