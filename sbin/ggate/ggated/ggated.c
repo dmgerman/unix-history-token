@@ -3687,6 +3687,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* NOTREACHED */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -3992,6 +3998,12 @@ name|req
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* NOTREACHED */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
