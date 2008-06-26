@@ -436,6 +436,17 @@ begin_comment
 comment|/* Experiencing a timeout */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSSTA_LOCKTIMEO
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Experiencing a lockd timeout */
+end_comment
+
 begin_comment
 comment|/*  * XXX to allow amd to include nfs.h without nfsproto.h  */
 end_comment

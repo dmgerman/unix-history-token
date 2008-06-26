@@ -217,6 +217,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|kernel_lockd_client
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|pid_t
 name|client_pid
 decl_stmt|;
@@ -757,6 +763,10 @@ name|kernel_lockd
 operator|=
 name|FALSE
 expr_stmt|;
+name|kernel_lockd_client
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|modfind
@@ -796,6 +806,23 @@ block|}
 else|else
 block|{
 name|kernel_lockd
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|kernel_lockd
+condition|)
+block|{
+if|if
+condition|(
+name|getosreldate
+argument_list|()
+operator|>=
+literal|800040
+condition|)
+name|kernel_lockd_client
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1096,7 +1123,13 @@ condition|(
 name|kernel_lockd
 condition|)
 block|{
-comment|/* 		 * For the kernel lockd case, we run a cut-down RPC 		 * service on a local-domain socket. The kernel's RPC 		 * server will pass what it can't handle (mainly 		 * client replies) down to us. This can go away 		 * entirely if/when we move the client side of NFS 		 * locking into the kernel. 		 */
+if|if
+condition|(
+operator|!
+name|kernel_lockd_client
+condition|)
+block|{
+comment|/* 			 * For the case where we have a kernel lockd but it 			 * doesn't provide client locking, we run a cut-down 			 * RPC service on a local-domain socket. The kernel's 			 * RPC server will pass what it can't handle (mainly 			 * client replies) down to us. 			 */
 name|struct
 name|sockaddr_un
 name|sun
@@ -1291,6 +1324,7 @@ argument_list|,
 literal|"Can't register service for local lockd socket"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 		 * We need to look up the addresses so that we can 		 * hand uaddrs (ascii encoded address+port strings) to 		 * the kernel. 		 */
 name|nc_handle
@@ -1543,6 +1577,12 @@ condition|(
 name|kernel_lockd
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|kernel_lockd_client
+condition|)
+block|{
 name|init_nsm
 argument_list|()
 expr_stmt|;
@@ -1551,7 +1591,7 @@ operator|=
 name|client_request
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Create a child process to enter the kernel and then 		 * wait for RPCs on our local domain socket. 		 */
+comment|/* 			 * Create a child process to enter the kernel and then 			 * wait for RPCs on our local domain socket. 			 */
 if|if
 condition|(
 operator|!
@@ -1573,6 +1613,22 @@ else|else
 name|svc_run
 argument_list|()
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * The kernel lockd implementation provides 			 * both client and server so we don't need to 			 * do anything else. 			 */
+name|nlm_syscall
+argument_list|(
+name|debug_level
+argument_list|,
+name|grace_period
+argument_list|,
+name|naddrs
+argument_list|,
+name|addrs
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
