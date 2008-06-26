@@ -323,7 +323,7 @@ name|testp
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"1..%d\n"
+literal|"1..%td\n"
 argument_list|,
 name|SET_COUNT
 argument_list|(
