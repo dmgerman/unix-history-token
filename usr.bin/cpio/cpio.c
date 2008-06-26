@@ -2396,6 +2396,14 @@ argument_list|,
 name|srcpath
 argument_list|)
 expr_stmt|;
+comment|/* This is a straight link that carries no data. */
+name|archive_entry_set_size
+argument_list|(
+name|t
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|archive_write_header
