@@ -43,20 +43,6 @@ directive|include
 file|<sys/libkern.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__SSP__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__SSP_ALL__
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|long
 name|__stack_chk_guard
@@ -185,11 +171,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
