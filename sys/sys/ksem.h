@@ -38,49 +38,10 @@ directive|include
 file|<sys/condvar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_struct
-struct|struct
-name|kuser
-block|{
-name|pid_t
-name|ku_pid
-decl_stmt|;
-name|LIST_ENTRY
-argument_list|(
-argument|kuser
-argument_list|)
-name|ku_next
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|ksem
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|ksem
-argument_list|)
-name|ks_entry
-expr_stmt|;
-comment|/* global list entry */
-name|int
-name|ks_onlist
-decl_stmt|;
-comment|/* boolean if on a list (ks_entry) */
-name|char
-modifier|*
-name|ks_name
-decl_stmt|;
-comment|/* if named, this is the name */
 name|int
 name|ks_ref
 decl_stmt|;
@@ -111,14 +72,26 @@ name|int
 name|ks_waiters
 decl_stmt|;
 comment|/* number of waiters */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|kuser
-argument_list|)
-name|ks_users
-expr_stmt|;
-comment|/* pids using this sem */
+name|int
+name|ks_flags
+decl_stmt|;
+comment|/* 	 * Values maintained solely to make this a better-behaved file 	 * descriptor for fstat() to run on. 	 * 	 * XXX: dubious 	 */
+name|struct
+name|timespec
+name|ks_atime
+decl_stmt|;
+name|struct
+name|timespec
+name|ks_mtime
+decl_stmt|;
+name|struct
+name|timespec
+name|ks_ctime
+decl_stmt|;
+name|struct
+name|timespec
+name|ks_birthtime
+decl_stmt|;
 name|struct
 name|label
 modifier|*
@@ -128,6 +101,28 @@ comment|/* MAC label */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|KS_ANONYMOUS
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Anonymous (unnamed) semaphore. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KS_DEAD
+value|0x0002
+end_define
+
+begin_comment
+comment|/* No new waiters allowed. */
+end_comment
 
 begin_endif
 endif|#
