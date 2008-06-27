@@ -11540,6 +11540,17 @@ value|0x1645
 end_define
 
 begin_comment
+comment|/*  * Sun PCI vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUN_VENDORID
+value|0x108e
+end_define
+
+begin_comment
 comment|/*  * Offset of MAC address inside EEPROM.  */
 end_comment
 
@@ -12839,6 +12850,10 @@ define|#
 directive|define
 name|BGE_FLAG_JUMBO
 value|0x00000002
+define|#
+directive|define
+name|BGE_FLAG_EEPROM
+value|0x00000004
 define|#
 directive|define
 name|BGE_FLAG_MSI
