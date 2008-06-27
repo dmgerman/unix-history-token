@@ -7690,6 +7690,12 @@ goto|goto
 name|out
 goto|;
 block|}
+name|est_get_id16
+argument_list|(
+operator|&
+name|saved_id16
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7721,12 +7727,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|est_get_id16
-argument_list|(
-operator|&
-name|saved_id16
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|est_set_id16
@@ -7838,26 +7838,18 @@ operator|++
 name|j
 expr_stmt|;
 block|}
+block|}
+block|}
 comment|/* restore saved setting */
 name|est_set_id16
 argument_list|(
 name|dev
 argument_list|,
-name|sets
-index|[
-name|i
-index|]
-operator|.
-name|spec
-index|[
-literal|0
-index|]
+name|saved_id16
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 comment|/* Mark end of table with a terminator. */
 name|bzero
 argument_list|(
