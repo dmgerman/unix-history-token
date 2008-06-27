@@ -405,6 +405,9 @@ comment|/* .PHONY */
 name|Posix
 block|,
 comment|/* .POSIX */
+name|MakefileDeps
+block|,
+comment|/* .MAKEFILEDEPS */
 name|Precious
 block|,
 comment|/* .PRECIOUS */
@@ -591,6 +594,14 @@ block|,
 name|Attribute
 block|,
 name|OP_MAKE
+block|}
+block|,
+block|{
+literal|".MAKEFILEDEPS"
+block|,
+name|MakefileDeps
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3354,6 +3365,14 @@ argument_list|(
 name|ln
 argument_list|)
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MakefileDeps
+case|:
+name|mfAutoDeps
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
