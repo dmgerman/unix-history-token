@@ -123,6 +123,8 @@ literal|"r"
 operator|(
 name|b
 operator|)
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
@@ -187,6 +189,8 @@ literal|"r"
 operator|(
 name|c
 operator|)
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
@@ -361,6 +365,8 @@ literal|"1"
 operator|(
 name|ip
 operator|)
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
