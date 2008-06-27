@@ -5668,9 +5668,15 @@ name|old_nfs_reclaim
 decl_stmt|;
 name|int
 name|v4_used
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|int
 name|v6_used
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|nlm_socket
