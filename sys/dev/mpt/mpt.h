@@ -2585,6 +2585,12 @@ comment|/* Shutdown Event Handler. */
 name|eventhandler_tag
 name|eh
 decl_stmt|;
+comment|/* Userland management interface. */
+name|struct
+name|cdev
+modifier|*
+name|cdev
+decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|mpt_softc
