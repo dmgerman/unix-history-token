@@ -354,6 +354,19 @@ directive|endif
 end_endif
 
 begin_function_decl
+name|int
+name|intr_bind
+parameter_list|(
+name|int
+name|vec
+parameter_list|,
+name|u_char
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|intr_setup
 parameter_list|(
