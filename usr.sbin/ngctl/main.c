@@ -176,6 +176,7 @@ specifier|static
 name|int
 name|DoParseCommand
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|line
@@ -1352,10 +1353,6 @@ if|if
 condition|(
 name|DoParseCommand
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|buf
 argument_list|)
 operator|==
@@ -1802,6 +1799,7 @@ specifier|static
 name|int
 name|DoParseCommand
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|line
@@ -1831,6 +1829,10 @@ index|]
 operator|=
 name|strtok
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|line
 argument_list|,
 name|WHITESPACE
