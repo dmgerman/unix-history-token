@@ -321,7 +321,7 @@ parameter_list|)
 define|\
 value|do {									\     const char *xname = (NAME);						\
 comment|/* Hack to avoid writing lots of rtl in				\        FUNCTION_PROFILER_EPILOGUE ().  */
-value|\     if (*xname == '.'&& strcmp(xname + 1, "mexitcount") == 0)		\       {									\ 	if (flag_pic)							\ 	  fprintf ((FILE), "*%s@GOT(%%ebx)", xname);			\ 	else								\ 	  fprintf ((FILE), "%s", xname);				\       }									\     else 								\       {									\ 	  if (xname[0] == '%')						\ 	    xname += 2;							\ 	  if (xname[0] == '*')						\ 	    xname += 1;							\ 	  else								\ 	    fputs (user_label_prefix, FILE);				\ 	  fputs (xname, FILE);						\       }									\ } while (0)
+value|\     if (*xname == '.'&& strcmp(xname + 1, "mexitcount") == 0)		\       {									\ 	if (flag_pic)							\ 	  fprintf ((FILE), "*%s@GOT(%%ebx)", xname);			\ 	else								\ 	  fprintf ((FILE), "%s", xname);				\       }									\     else								\       {									\ 	  if (xname[0] == '%')						\ 	    xname += 2;							\ 	  if (xname[0] == '*')						\ 	    xname += 1;							\ 	  else								\ 	    fputs (user_label_prefix, FILE);				\ 	  fputs (xname, FILE);						\       }									\ } while (0)
 end_define
 
 begin_comment
@@ -478,7 +478,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     fprintf (asm_out_file, "%s %d,0,0,", ASM_STABN_OP, N_LBRAC);	\     assemble_name (asm_out_file, NAME);					\         fputc ('-', asm_out_file);					\         assemble_name (asm_out_file,					\ 	      	 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asm_out_file, "\n");					\   } while (0)
+value|do {									\     fprintf (asm_out_file, "%s %d,0,0,", ASM_STABN_OP, N_LBRAC);	\     assemble_name (asm_out_file, NAME);					\         fputc ('-', asm_out_file);					\         assemble_name (asm_out_file,					\ 		 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asm_out_file, "\n");					\   } while (0)
 end_define
 
 begin_undef
