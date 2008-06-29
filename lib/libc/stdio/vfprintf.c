@@ -1982,7 +1982,7 @@ parameter_list|(
 name|val
 parameter_list|)
 define|\
-value|n2 = 0; \ 	cp = fmt; \ 	while (is_digit(*cp)) { \ 		n2 = 10 * n2 + to_digit(*cp); \ 		cp++; \ 	} \ 	if (*cp == '$') { \ 		int hold = nextarg; \ 		if (argtable == NULL) { \ 			argtable = statargtable; \ 			__find_arguments (fmt0, orgap,&argtable); \ 		} \ 		nextarg = n2; \ 		val = GETARG (int); \ 		nextarg = hold; \ 		fmt = ++cp; \ 	} else { \ 		val = GETARG (int); \ 	}
+value|n2 = 0; \ 	cp = fmt; \ 	while (is_digit(*cp)) { \ 		n2 = 10 * n2 + to_digit(*cp); \ 		cp++; \ 	} \ 	if (*cp == '$') { \ 		int hold = nextarg; \ 		if (argtable == NULL) { \ 			argtable = statargtable; \ 			if (__find_arguments (fmt0, orgap,&argtable)) { \ 				ret = EOF; \ 				goto error; \ 			} \ 		} \ 		nextarg = n2; \ 		val = GETARG (int); \ 		nextarg = hold; \ 		fmt = ++cp; \ 	} else { \ 		val = GETARG (int); \ 	}
 name|thousands_sep
 operator|=
 literal|'\0'
@@ -2493,6 +2493,8 @@ name|argtable
 operator|=
 name|statargtable
 expr_stmt|;
+if|if
+condition|(
 name|__find_arguments
 argument_list|(
 name|fmt0
@@ -2502,7 +2504,16 @@ argument_list|,
 operator|&
 name|argtable
 argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+name|EOF
 expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 block|}
 goto|goto
 name|rflag

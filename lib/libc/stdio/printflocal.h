@@ -306,7 +306,7 @@ comment|/* Handle positional parameters. */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|__find_arguments
 parameter_list|(
 specifier|const
@@ -324,7 +324,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|__find_warguments
 parameter_list|(
 specifier|const
