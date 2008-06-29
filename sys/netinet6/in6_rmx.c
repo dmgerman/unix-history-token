@@ -1109,19 +1109,21 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|rtq_timeout
+name|rtq_timeoutt
 init|=
 name|RTQ_TIMEOUT
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+expr|struct
 name|callout
-name|rtq_timer
-decl_stmt|;
-end_decl_stmt
+name|rtq
+operator|-
+name|timer6
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1176,7 +1178,7 @@ name|nextstop
 operator|=
 name|time_uptime
 operator|+
-name|rtq_timeout
+name|rtq_timeout6
 expr_stmt|;
 name|arg
 operator|.
@@ -1210,7 +1212,7 @@ argument_list|(
 name|rnh
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attempt to be somewhat dynamic about this: 	 * If there are ``too many'' routes sitting around taking up space, 	 * then crank down the timeout, and see if we can't make some more 	 * go away.  However, we make sure that we will never adjust more 	 * than once in rtq_timeout seconds, to keep from cranking down too 	 * hard. 	 */
+comment|/* 	 * Attempt to be somewhat dynamic about this: 	 * If there are ``too many'' routes sitting around taking up space, 	 * then crank down the timeout, and see if we can't make some more 	 * go away.  However, we make sure that we will never adjust more 	 * than once in rtq_timeout6 seconds, to keep from cranking down too 	 * hard. 	 */
 if|if
 condition|(
 operator|(
@@ -1230,7 +1232,7 @@ name|time_uptime
 operator|-
 name|last_adjusted_timeout
 operator|>=
-name|rtq_timeout
+name|rtq_timeout6
 operator|)
 operator|&&
 name|rtq_reallyold
@@ -1334,7 +1336,9 @@ expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|rtq_timer
+name|rtq
+operator|-
+name|timer6
 argument_list|,
 name|tvtohz
 argument_list|(
@@ -1712,7 +1716,9 @@ expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
-name|rtq_timer
+name|rtq
+operator|-
+name|timer6
 argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
