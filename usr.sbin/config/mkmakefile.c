@@ -3683,7 +3683,7 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"${%s_%c%s}\n\t${NORMAL_CTFCONVERT}"
+literal|"${%s_%c%s}\n.if defined(NORMAL_CTFCONVERT)&& !empty(NORMAL_CTFCONVERT)\n\t${NORMAL_CTFCONVERT}\n.endif"
 argument_list|,
 name|ftype
 argument_list|,
