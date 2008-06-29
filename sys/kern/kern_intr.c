@@ -1689,18 +1689,11 @@ name|u_char
 name|cpu
 decl_stmt|;
 name|int
-name|error
-decl_stmt|;
-name|int
 name|n
 decl_stmt|;
 name|mask
 operator|=
 name|m
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 name|cpu
 operator|=
@@ -1789,7 +1782,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
