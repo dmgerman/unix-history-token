@@ -188,7 +188,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: cron [-j jitter] [-J rootjitter] "
-literal|"[-s] [-o] [-x debugflag[,...]]\n"
+literal|"[-m mailto] [-s] [-o] [-x debugflag[,...]]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1899,7 +1899,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"j:J:osx:"
+literal|"j:J:m:osx:"
 argument_list|)
 operator|)
 operator|!=
@@ -1992,6 +1992,14 @@ literal|"bad value for root jitter: %s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|defmailto
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
