@@ -813,6 +813,17 @@ begin_comment
 comment|/* Can set thread scheduler params. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_SCHED_CPUSET
+value|206
+end_define
+
+begin_comment
+comment|/* Can manipulate cpusets. */
+end_comment
+
 begin_comment
 comment|/*  * POSIX semaphore privileges.  */
 end_comment

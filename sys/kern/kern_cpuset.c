@@ -1005,9 +1005,11 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|suser
+name|priv_check
 argument_list|(
 name|curthread
+argument_list|,
+name|PRIV_SCHED_CPUSET
 argument_list|)
 expr_stmt|;
 if|if
