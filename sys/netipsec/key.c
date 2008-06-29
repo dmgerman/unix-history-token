@@ -33379,7 +33379,9 @@ end_function
 begin_function
 name|void
 name|key_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
