@@ -1109,21 +1109,19 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|rtq_timeoutt
+name|rtq_timeout6
 init|=
 name|RTQ_TIMEOUT
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-expr|struct
+name|struct
 name|callout
-name|rtq
-operator|-
-name|timer6
-expr_stmt|;
-end_expr_stmt
+name|rtq_timer6
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -1336,9 +1334,7 @@ expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|rtq
-operator|-
-name|timer6
+name|rtq_timer6
 argument_list|,
 name|tvtohz
 argument_list|(
@@ -1716,9 +1712,7 @@ expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
-name|rtq
-operator|-
-name|timer6
+name|rtq_timer6
 argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
