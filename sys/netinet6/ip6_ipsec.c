@@ -227,6 +227,12 @@ directive|include
 file|<netinet6/ip6_ipsec.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/ip6_var.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -441,7 +447,7 @@ condition|)
 block|{
 name|ip6stat
 operator|.
-name|ips_cantforward
+name|ip6s_cantforward
 operator|++
 expr_stmt|;
 return|return
