@@ -571,7 +571,7 @@ label|:
 if|#
 directive|if
 literal|0
-block|static struct netconfig *loopnconf; 	static char *hostname;
+block|static struct netconfig *loopnconf; 	static char *localhostname;
 comment|/* VARIABLES PROTECTED BY loopnconf_lock: loopnconf */
 block|mutex_lock(&loopnconf_lock); 	if (loopnconf == NULL) { 		struct netconfig *nconf, *tmpnconf = NULL; 		void *nc_handle; 		int fd;  		nc_handle = setnetconfig(); 		if (nc_handle == NULL) {
 comment|/* fails to open netconfig file */
@@ -584,9 +584,9 @@ endif|#
 directive|endif
 block|strcmp(nconf->nc_protofmly, NC_INET) == 0)&& 			    (nconf->nc_semantics == NC_TPI_COTS || 			     nconf->nc_semantics == NC_TPI_COTS_ORD)) { 				fd = __rpc_nconf2fd(nconf);
 comment|/* 				 * Can't create a socket, assume that 				 * this family isn't configured in the kernel. 				 */
-block|if (fd< 0) 					continue; 				_close(fd); 				tmpnconf = nconf; 				if (!strcmp(nconf->nc_protofmly, NC_INET)) 					hostname = IN4_LOCALHOST_STRING; 				else 					hostname = IN6_LOCALHOST_STRING; 			} 		} 		if (tmpnconf == NULL) { 			rpc_createerr.cf_stat = RPC_UNKNOWNPROTO; 			mutex_unlock(&loopnconf_lock); 			return (NULL); 		} 		loopnconf = getnetconfigent(tmpnconf->nc_netid);
+block|if (fd< 0) 					continue; 				_close(fd); 				tmpnconf = nconf; 				if (!strcmp(nconf->nc_protofmly, NC_INET)) 					localhostname = IN4_LOCALHOST_STRING; 				else 					localhostname = IN6_LOCALHOST_STRING; 			} 		} 		if (tmpnconf == NULL) { 			rpc_createerr.cf_stat = RPC_UNKNOWNPROTO; 			mutex_unlock(&loopnconf_lock); 			return (NULL); 		} 		loopnconf = getnetconfigent(tmpnconf->nc_netid);
 comment|/* loopnconf is never freed */
-block|endnetconfig(nc_handle); 	} 	mutex_unlock(&loopnconf_lock); 	client = getclnthandle(hostname, loopnconf, NULL); 	return (client);
+block|endnetconfig(nc_handle); 	} 	mutex_unlock(&loopnconf_lock); 	client = getclnthandle(localhostname, loopnconf, NULL); 	return (client);
 else|#
 directive|else
 return|return
