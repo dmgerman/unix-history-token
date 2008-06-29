@@ -362,15 +362,11 @@ directive|ifndef
 name|NKPT
 end_ifndef
 
-begin_comment
-comment|/* 240 page tables needed to map 16G (120B "struct vm_page", 2M page tables). */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|NKPT
-value|240
+value|2288
 end_define
 
 begin_endif
@@ -393,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|NKPDPE
-value|1
+value|5
 end_define
 
 begin_comment
@@ -496,11 +492,11 @@ begin_define
 define|#
 directive|define
 name|KPDPI
-value|(NPDPEPG-2)
+value|(NPDPEPG-6)
 end_define
 
 begin_comment
-comment|/* kernbase at -2GB */
+comment|/* kernel map starts at -6GB */
 end_comment
 
 begin_comment
