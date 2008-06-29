@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_pcb.h>
 end_include
 
@@ -433,7 +439,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|ipstat
+name|ip6stat
 operator|.
 name|ips_cantforward
 operator|++
