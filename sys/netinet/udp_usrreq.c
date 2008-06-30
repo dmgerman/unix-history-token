@@ -822,7 +822,7 @@ name|udp_in6
 decl_stmt|;
 endif|#
 directive|endif
-name|INP_WLOCK_ASSERT
+name|INP_RLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1825,7 +1825,7 @@ operator|->
 name|uh_sport
 condition|)
 continue|continue;
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2033,7 +2033,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2090,7 +2090,7 @@ operator|&
 name|udp_in
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -2158,7 +2158,7 @@ operator|&
 name|udp_in
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -2342,7 +2342,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Check the minimum TTL for socket. 	 */
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2384,7 +2384,7 @@ operator|&
 name|udp_in
 argument_list|)
 expr_stmt|;
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2402,7 +2402,7 @@ if|if
 condition|(
 name|inp
 condition|)
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
