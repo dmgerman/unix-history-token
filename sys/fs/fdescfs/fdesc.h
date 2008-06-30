@@ -9,6 +9,17 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/* Private mount flags for fdescfs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FMNT_UNMOUNTF
+value|0x01
+end_define
+
 begin_struct
 struct|struct
 name|fdescmount
@@ -19,6 +30,9 @@ modifier|*
 name|f_root
 decl_stmt|;
 comment|/* Root node */
+name|int
+name|flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -82,6 +96,14 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|fdesc_hashmtx
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -109,12 +131,21 @@ name|fdesc_init
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vfs_uninit_t
+name|fdesc_uninit
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|int
 name|fdesc_allocvp
 parameter_list|(
 name|fdntype
+parameter_list|,
+name|unsigned
 parameter_list|,
 name|int
 parameter_list|,
