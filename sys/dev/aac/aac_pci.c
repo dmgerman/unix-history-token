@@ -1958,9 +1958,13 @@ name|aac_ident
 modifier|*
 name|id
 decl_stmt|;
-name|debug_called
+name|fwprintf
 argument_list|(
-literal|1
+name|NULL
+argument_list|,
+name|HBA_FLAGS_DBG_FUNCTION_ENTRY_B
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -2029,9 +2033,13 @@ decl_stmt|;
 name|u_int32_t
 name|command
 decl_stmt|;
-name|debug_called
+name|fwprintf
 argument_list|(
-literal|1
+name|NULL
+argument_list|,
+name|HBA_FLAGS_DBG_FUNCTION_ENTRY_B
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialise softc. 	 */
@@ -2317,9 +2325,11 @@ block|{
 case|case
 name|AAC_HWIF_I960RX
 case|:
-name|debug
+name|fwprintf
 argument_list|(
-literal|2
+name|sc
+argument_list|,
+name|HBA_FLAGS_DBG_INIT_B
 argument_list|,
 literal|"set hardware up for i960Rx"
 argument_list|)
@@ -2334,9 +2344,11 @@ break|break;
 case|case
 name|AAC_HWIF_STRONGARM
 case|:
-name|debug
+name|fwprintf
 argument_list|(
-literal|2
+name|sc
+argument_list|,
+name|HBA_FLAGS_DBG_INIT_B
 argument_list|,
 literal|"set hardware up for StrongARM"
 argument_list|)
@@ -2351,9 +2363,11 @@ break|break;
 case|case
 name|AAC_HWIF_FALCON
 case|:
-name|debug
+name|fwprintf
 argument_list|(
-literal|2
+name|sc
+argument_list|,
+name|HBA_FLAGS_DBG_INIT_B
 argument_list|,
 literal|"set hardware up for Falcon/PPC"
 argument_list|)
@@ -2368,9 +2382,11 @@ break|break;
 case|case
 name|AAC_HWIF_RKT
 case|:
-name|debug
+name|fwprintf
 argument_list|(
-literal|2
+name|sc
+argument_list|,
+name|HBA_FLAGS_DBG_INIT_B
 argument_list|,
 literal|"set hardware up for Rocket/MIPS"
 argument_list|)

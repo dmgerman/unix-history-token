@@ -288,7 +288,7 @@ decl_stmt|;
 name|int
 name|ad_sectors
 decl_stmt|;
-name|u_int32_t
+name|u_int64_t
 name|ad_size
 decl_stmt|;
 name|int
@@ -923,6 +923,35 @@ value|bus_space_read_1 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
 
 begin_comment
+comment|/* fib context (IOCTL) */
+end_comment
+
+begin_struct
+struct|struct
+name|aac_fib_context
+block|{
+name|u_int32_t
+name|unique
+decl_stmt|;
+name|int
+name|ctx_idx
+decl_stmt|;
+name|int
+name|ctx_wrap
+decl_stmt|;
+name|struct
+name|aac_fib_context
+modifier|*
+name|next
+decl_stmt|,
+modifier|*
+name|prev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Per-controller structure.  */
 end_comment
 
@@ -997,6 +1026,9 @@ define|#
 directive|define
 name|AAC_STATE_AIF_SLEEPER
 value|(1<<3)
+name|int
+name|aac_open_cnt
+decl_stmt|;
 name|struct
 name|FsaRevision
 name|aac_revision
@@ -1092,19 +1124,6 @@ expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aac_command
-argument_list|)
-name|aac_aif
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|TAILQ_HEAD(,aac_command) aac_norm;
-endif|#
-directive|endif
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
 argument|aac_event
 argument_list|)
 name|aac_ev_cmfree
@@ -1172,17 +1191,22 @@ name|mtx
 name|aac_aifq_lock
 decl_stmt|;
 name|struct
-name|aac_aif_command
+name|aac_fib
 name|aac_aifq
 index|[
 name|AAC_AIFQ_LENGTH
 index|]
 decl_stmt|;
 name|int
-name|aac_aifq_head
+name|aifq_idx
 decl_stmt|;
 name|int
-name|aac_aifq_tail
+name|aifq_filled
+decl_stmt|;
+name|struct
+name|aac_fib_context
+modifier|*
+name|fibctx
 decl_stmt|;
 name|struct
 name|selinfo
@@ -1294,6 +1318,11 @@ directive|define
 name|AAC_FLAGS_ARRAY_64BIT
 value|(1<< 13)
 comment|/* 64-bit array size */
+define|#
+directive|define
+name|AAC_FLAGS_LBA_64BIT
+value|(1<< 14)
+comment|/* 64-bit LBA support */
 name|u_int32_t
 name|supported_options
 decl_stmt|;
@@ -1624,22 +1653,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Debugging levels:  *  0 - quiet, only emit warnings  *  1 - noisy, emit major function points and things done  *  2 - extremely noisy, emit trace items in loops, etc.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|AAC_DEBUG
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|aac_debug_enable
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
-name|debug
+name|fwprintf
 parameter_list|(
-name|level
+name|sc
+parameter_list|,
+name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
@@ -1647,18 +1681,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {								\ 	if (level<=AAC_DEBUG) printf("%s: " fmt "\n", __func__ , ##args); \ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|debug_called
-parameter_list|(
-name|level
-parameter_list|)
-define|\
-value|do {								\ 	if (level<= AAC_DEBUG) printf("%s: called\n", __func__);	\ 	} while (0)
+value|do {									\ 	if (!aac_debug_enable)						\ 		break;							\ 	if (sc != NULL)							\ 		device_printf(((struct aac_softc *)sc)->aac_dev,	\ 		    "%s: " fmt "\n", __func__, ##args);			\ 	else								\ 		printf("%s: " fmt "\n", __func__, ##args);		\ } while(0)
 end_define
 
 begin_function_decl
@@ -1752,23 +1775,16 @@ end_else
 begin_define
 define|#
 directive|define
-name|debug
+name|fwprintf
 parameter_list|(
-name|level
+name|sc
+parameter_list|,
+name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
 name|args
 modifier|...
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|debug_called
-parameter_list|(
-name|level
 parameter_list|)
 end_define
 

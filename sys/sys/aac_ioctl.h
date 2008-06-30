@@ -172,6 +172,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FSACTL_LNX_SEND_RAW_SRB
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2067, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FSACTL_LNX_GET_COMM_PERF_DATA
 value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2084, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
 end_define
@@ -251,6 +258,20 @@ define|#
 directive|define
 name|FSACTL_LNX_AIF_THREAD
 value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2127, \ 					METHOD_NEITHER, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_SEND_LARGE_FIB
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2138, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_GET_FEATURES
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2139, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
 end_define
 
 begin_comment
@@ -349,6 +370,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FSACTL_SEND_RAW_SRB
+value|_IO('8', 19)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FSACTL_GET_COMM_PERF_DATA
 value|_IO('8', 36)
 end_define
@@ -428,6 +456,20 @@ define|#
 directive|define
 name|FSACTL_AIF_THREAD
 value|_IO('8', 79)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_SEND_LARGE_FIB
+value|_IO('8', 90)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_GET_FEATURES
+value|_IO('8', 91)
 end_define
 
 begin_define
@@ -603,6 +645,62 @@ name|u_int32_t
 name|UnMapped
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Features, asked from the tools to know if the driver  * supports drives>2TB  */
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+struct|struct
+block|{
+name|u_int32_t
+name|largeLBA
+range|:
+literal|1
+decl_stmt|;
+comment|/* disk support greater 2TB */
+name|u_int32_t
+name|fReserved
+range|:
+literal|31
+decl_stmt|;
+block|}
+name|fBits
+struct|;
+name|u_int32_t
+name|fValue
+decl_stmt|;
+block|}
+name|featuresState
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|aac_features
+block|{
+name|featuresState
+name|feat
+decl_stmt|;
+name|u_int32_t
+name|data
+index|[
+literal|31
+index|]
+decl_stmt|;
+name|u_int32_t
+name|reserved
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+name|__packed
 struct|;
 end_struct
 
