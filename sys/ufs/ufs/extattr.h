@@ -288,6 +288,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/_sx.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -357,12 +363,6 @@ end_struct
 
 begin_struct_decl
 struct_decl|struct
-name|lock
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|ucred
 struct_decl|;
 end_struct_decl
@@ -372,7 +372,7 @@ struct|struct
 name|ufs_extattr_per_mount
 block|{
 name|struct
-name|lock
+name|sx
 name|uepm_lock
 decl_stmt|;
 name|struct
