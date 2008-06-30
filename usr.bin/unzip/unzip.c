@@ -178,6 +178,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|t_opt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* test */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|u_opt
 decl_stmt|;
 end_decl_stmt
@@ -216,6 +227,17 @@ begin_decl_stmt
 specifier|static
 name|int
 name|tty
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* error flag for -t */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|test_failed
 decl_stmt|;
 end_decl_stmt
 
@@ -1316,7 +1338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ensure that all directories leading up to (but not including) the  * specified path exist.  *  * XXX inefficient.  */
+comment|/*  * Ensure that all directories leading up to (but not including) the  * specified path exist.  *  * XXX inefficient + modifies the file in-place  */
 end_comment
 
 begin_function
@@ -2531,6 +2553,111 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Extract to memory to check CRC  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|test
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
+name|e
+parameter_list|)
+block|{
+name|ssize_t
+name|len
+decl_stmt|;
+if|if
+condition|(
+name|S_ISDIR
+argument_list|(
+name|archive_entry_filetype
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+condition|)
+return|return;
+name|info
+argument_list|(
+literal|"%s "
+argument_list|,
+name|archive_entry_pathname
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|len
+operator|=
+name|archive_read_data
+argument_list|(
+name|a
+argument_list|,
+name|buffer
+argument_list|,
+sizeof|sizeof
+name|buffer
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+comment|/* nothing */
+empty_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+condition|)
+block|{
+name|info
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|++
+name|test_failed
+expr_stmt|;
+block|}
+else|else
+block|{
+name|info
+argument_list|(
+literal|"OK\n"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* shouldn't be necessary, but it doesn't hurt */
+name|ac
+argument_list|(
+name|archive_read_data_skip
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Main loop: open the zipfile, iterate over its contents and decide what  * to do with each entry.  */
 end_comment
 
@@ -2637,6 +2764,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|t_opt
+condition|)
+name|test
+argument_list|(
+name|a
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|l_opt
 condition|)
 name|list
@@ -2687,6 +2826,19 @@ argument_list|,
 name|fn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t_opt
+operator|&&
+name|test_failed
+condition|)
+name|errorx
+argument_list|(
+literal|"%d checksum error(s) found."
+argument_list|,
+name|test_failed
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2702,7 +2854,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: unzip [-ajLlnoqu] [-d dir] zipfile\n"
+literal|"usage: unzip [-ajLlnoqtu] [-d dir] zipfile\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2747,7 +2899,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ad:jLlnoqux:"
+literal|"ad:jLlnoqtux:"
 argument_list|)
 operator|)
 operator|!=
@@ -2819,6 +2971,14 @@ case|case
 literal|'q'
 case|:
 name|q_opt
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|t_opt
 operator|=
 literal|1
 expr_stmt|;
