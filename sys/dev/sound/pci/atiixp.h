@@ -105,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|ATI_IXP_SB600_ID
-value|0x4384
+value|0x4382
 end_define
 
 begin_define
