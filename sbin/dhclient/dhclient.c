@@ -14211,6 +14211,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|setsid
+argument_list|()
+expr_stmt|;
 name|dup2
 argument_list|(
 name|nullfd
