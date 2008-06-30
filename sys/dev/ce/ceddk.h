@@ -252,6 +252,10 @@ name|unsigned
 name|char
 name|debug
 decl_stmt|;
+name|unsigned
+name|char
+name|debug_shadow
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
