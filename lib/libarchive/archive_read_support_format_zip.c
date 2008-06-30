@@ -2690,7 +2690,15 @@ name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"ZIP data CRC error"
+literal|"ZIP bad CRC: 0x%lx should be 0x%lx"
+argument_list|,
+name|zip
+operator|->
+name|entry_crc32
+argument_list|,
+name|zip
+operator|->
+name|crc32
 argument_list|)
 expr_stmt|;
 return|return
