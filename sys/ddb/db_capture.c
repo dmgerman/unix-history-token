@@ -287,7 +287,7 @@ name|_debug_ddb_capture
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|bytes
+name|bufoff
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -318,6 +318,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum value for debug.ddb.capture.bufsize"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_debug_ddb_capture
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|inprogress
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|db_capture_inprogress
+argument_list|,
+literal|0
+argument_list|,
+literal|"DDB output capture in progress"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
