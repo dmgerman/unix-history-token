@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2002,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -49,7 +49,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tstp.c,v 1.32 2006/04/01 19:31:34 tom Exp $"
+literal|"$Id: lib_tstp.c,v 1.37 2008/05/03 16:24:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -555,15 +555,13 @@ name|int
 name|sig
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|nested
-decl_stmt|;
 comment|/*      * Actually, doing any sort of I/O from within an signal handler is      * "unsafe".  But we'll _try_ to clean up the screen and terminal      * settings on the way out.      */
 if|if
 condition|(
 operator|!
-name|nested
+name|_nc_globals
+operator|.
+name|cleanup_nested
 operator|++
 operator|&&
 operator|(
@@ -638,21 +636,18 @@ block|{
 name|SCREEN
 modifier|*
 name|scan
-init|=
-name|_nc_screen_chain
 decl_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|each_screen
+argument_list|(
 name|scan
-condition|)
+argument_list|)
+control|)
 block|{
 if|if
 condition|(
-name|SP
-operator|!=
-literal|0
-operator|&&
-name|SP
+name|scan
 operator|->
 name|_ofp
 operator|!=
@@ -662,20 +657,20 @@ name|isatty
 argument_list|(
 name|fileno
 argument_list|(
-name|SP
+name|scan
 operator|->
 name|_ofp
 argument_list|)
 argument_list|)
 condition|)
 block|{
-name|SP
+name|scan
 operator|->
 name|_cleanup
 operator|=
 name|TRUE
 expr_stmt|;
-name|SP
+name|scan
 operator|->
 name|_outch
 operator|=
@@ -701,12 +696,6 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* in case we have an atexit! */
-name|scan
-operator|=
-name|scan
-operator|->
-name|_next_screen
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -734,11 +723,11 @@ name|sig
 name|GCC_UNUSED
 parameter_list|)
 block|{
-name|_nc_handle_sigwinch
-argument_list|(
-operator|-
+name|_nc_globals
+operator|.
+name|have_sigwinch
+operator|=
 literal|1
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1028,12 +1017,6 @@ end_macro
 
 begin_block
 block|{
-specifier|static
-name|bool
-name|initialized
-init|=
-name|FALSE
-decl_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -1065,9 +1048,9 @@ condition|)
 block|{
 specifier|static
 name|sigaction_t
-name|act
+name|new_sigaction
 decl_stmt|,
-name|oact
+name|old_sigaction
 decl_stmt|;
 if|if
 condition|(
@@ -1075,7 +1058,7 @@ operator|!
 name|enable
 condition|)
 block|{
-name|act
+name|new_sigaction
 operator|.
 name|sa_handler
 operator|=
@@ -1086,17 +1069,17 @@ argument_list|(
 name|SIGTSTP
 argument_list|,
 operator|&
-name|act
+name|new_sigaction
 argument_list|,
 operator|&
-name|oact
+name|old_sigaction
 argument_list|)
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|act
+name|new_sigaction
 operator|.
 name|sa_handler
 operator|!=
@@ -1108,7 +1091,7 @@ argument_list|(
 name|SIGTSTP
 argument_list|,
 operator|&
-name|oact
+name|old_sigaction
 argument_list|,
 name|NULL
 argument_list|)
@@ -1124,13 +1107,13 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|oact
+name|old_sigaction
 argument_list|)
 operator|==
 literal|0
 operator|&&
 operator|(
-name|oact
+name|old_sigaction
 operator|.
 name|sa_handler
 operator|==
@@ -1141,7 +1124,7 @@ block|{
 name|sigemptyset
 argument_list|(
 operator|&
-name|act
+name|new_sigaction
 operator|.
 name|sa_mask
 argument_list|)
@@ -1149,7 +1132,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SA_RESTART
-name|act
+name|new_sigaction
 operator|.
 name|sa_flags
 operator||=
@@ -1158,7 +1141,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SA_RESTART */
-name|act
+name|new_sigaction
 operator|.
 name|sa_handler
 operator|=
@@ -1172,7 +1155,7 @@ argument_list|(
 name|SIGTSTP
 argument_list|,
 operator|&
-name|act
+name|new_sigaction
 argument_list|,
 name|NULL
 argument_list|)
@@ -1193,7 +1176,9 @@ comment|/* !USE_SIGTSTP */
 if|if
 condition|(
 operator|!
-name|initialized
+name|_nc_globals
+operator|.
+name|init_signals
 condition|)
 block|{
 if|if
@@ -1227,7 +1212,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|initialized
+name|_nc_globals
+operator|.
+name|init_signals
 operator|=
 name|TRUE
 expr_stmt|;

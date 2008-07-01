@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2001-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2001-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,9 +38,35 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: visbuf.c,v 1.21 2006/12/02 21:20:28 tom Exp $"
+literal|"$Id: visbuf.c,v 1.26 2007/06/09 17:21:53 tom Exp $"
 argument_list|)
 end_macro
+
+begin_define
+define|#
+directive|define
+name|NormalLen
+parameter_list|(
+name|len
+parameter_list|)
+value|(unsigned) ((len + 1) * 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WideLen
+parameter_list|(
+name|len
+parameter_list|)
+value|(unsigned) ((len + 1) * 4 * MB_CUR_MAX)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TRACE
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -49,11 +75,10 @@ name|char
 name|d_quote
 index|[]
 init|=
-block|{
+name|StringOf
+argument_list|(
 name|D_QUOTE
-block|,
-literal|0
-block|}
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -64,11 +89,10 @@ name|char
 name|l_brace
 index|[]
 init|=
-block|{
+name|StringOf
+argument_list|(
 name|L_BRACE
-block|,
-literal|0
-block|}
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -79,13 +103,17 @@ name|char
 name|r_brace
 index|[]
 init|=
-block|{
+name|StringOf
+argument_list|(
 name|R_BRACE
-block|,
-literal|0
-block|}
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -239,6 +267,36 @@ block|}
 elseif|else
 if|if
 condition|(
+name|UChar
+argument_list|(
+name|c
+argument_list|)
+operator|==
+literal|0x7f
+condition|)
+block|{
+operator|*
+name|tp
+operator|++
+operator|=
+literal|'\\'
+expr_stmt|;
+operator|*
+name|tp
+operator|++
+operator|=
+literal|'^'
+expr_stmt|;
+operator|*
+name|tp
+operator|++
+operator|=
+literal|'?'
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|is7bits
 argument_list|(
 name|c
@@ -387,16 +445,10 @@ name|_nc_trace_buf
 argument_list|(
 name|bufnum
 argument_list|,
-call|(
-name|unsigned
-call|)
+name|NormalLen
 argument_list|(
 name|len
-operator|*
-literal|4
 argument_list|)
-operator|+
-literal|5
 argument_list|)
 expr_stmt|;
 else|#
@@ -407,7 +459,7 @@ name|char
 modifier|*
 name|mybuf
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 name|mybuf
@@ -419,16 +471,10 @@ name|typeRealloc
 argument_list|(
 name|char
 argument_list|,
-call|(
-name|unsigned
-call|)
+name|NormalLen
 argument_list|(
 name|len
-operator|*
-literal|4
 argument_list|)
-operator|+
-literal|5
 argument_list|,
 name|mybuf
 index|[
@@ -735,16 +781,10 @@ name|_nc_trace_buf
 argument_list|(
 name|bufnum
 argument_list|,
-call|(
-name|unsigned
-call|)
+name|WideLen
 argument_list|(
 name|len
-operator|*
-literal|4
 argument_list|)
-operator|+
-literal|5
 argument_list|)
 expr_stmt|;
 else|#
@@ -767,16 +807,10 @@ name|typeRealloc
 argument_list|(
 name|char
 argument_list|,
-call|(
-name|unsigned
-call|)
+name|WideLen
 argument_list|(
 name|len
-operator|*
-literal|4
 argument_list|)
-operator|+
-literal|5
 argument_list|,
 name|mybuf
 index|[
@@ -1319,9 +1353,6 @@ operator|++
 name|j
 control|)
 block|{
-if|if
-condition|(
-operator|(
 name|found
 operator|=
 name|_nc_altcharset_name
@@ -1339,7 +1370,10 @@ name|j
 index|]
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|found
 operator|!=
 literal|0
 condition|)

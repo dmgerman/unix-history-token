@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2003,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tries.c,v 1.22 2005/11/26 20:09:18 tom Exp $"
+literal|"$Id: tries.c,v 1.25 2007/09/29 20:37:13 tom Exp $"
 argument_list|)
 end_macro
 
@@ -38,7 +38,7 @@ end_macro
 begin_macro
 name|_nc_expand_try
 argument_list|(
-argument|struct tries *tree
+argument|TRIES * tree
 argument_list|,
 argument|unsigned code
 argument_list|,
@@ -50,8 +50,7 @@ end_macro
 
 begin_block
 block|{
-name|struct
-name|tries
+name|TRIES
 modifier|*
 name|ptr
 init|=
@@ -157,6 +156,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|ptr
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|result
 index|[
@@ -195,10 +198,12 @@ name|len
 operator|==
 literal|0
 operator|&&
-name|_nc_tracing
-operator|!=
-literal|0
+name|USE_TRACEF
+argument_list|(
+name|TRACE_MAXIMUM
+argument_list|)
 condition|)
+block|{
 name|_tracef
 argument_list|(
 literal|"expand_key %s %s"
@@ -214,6 +219,12 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|_nc_unlock_global
+argument_list|(
+name|tracef
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -237,7 +248,7 @@ end_macro
 begin_macro
 name|_nc_remove_key
 argument_list|(
-argument|struct tries **tree
+argument|TRIES ** tree
 argument_list|,
 argument|unsigned code
 argument_list|)
@@ -335,8 +346,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|struct
-name|tries
+name|TRIES
 modifier|*
 name|to_free
 init|=
@@ -398,7 +408,7 @@ end_macro
 begin_macro
 name|_nc_remove_string
 argument_list|(
-argument|struct tries **tree
+argument|TRIES ** tree
 argument_list|,
 argument|const char *string
 argument_list|)
@@ -505,8 +515,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|tries
+name|TRIES
 modifier|*
 name|to_free
 init|=

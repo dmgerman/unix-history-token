@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2004,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -119,7 +119,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_twait.c,v 1.51 2006/05/27 21:57:43 tom Exp $"
+literal|"$Id: lib_twait.c,v 1.57 2008/05/03 21:35:57 tom Exp $"
 argument_list|)
 end_macro
 
@@ -128,6 +128,10 @@ specifier|static
 name|long
 name|_nc_gettime
 parameter_list|(
+name|TimeType
+modifier|*
+name|t0
+parameter_list|,
 name|bool
 name|first
 parameter_list|)
@@ -137,18 +141,8 @@ name|res
 decl_stmt|;
 if|#
 directive|if
-name|HAVE_GETTIMEOFDAY
-define|#
-directive|define
 name|PRECISE_GETTIME
-value|1
-specifier|static
-name|struct
-name|timeval
-name|t0
-decl_stmt|;
-name|struct
-name|timeval
+name|TimeType
 name|t1
 decl_stmt|;
 name|gettimeofday
@@ -169,6 +163,7 @@ condition|(
 name|first
 condition|)
 block|{
+operator|*
 name|t0
 operator|=
 name|t1
@@ -184,7 +179,7 @@ comment|/* .tv_sec and .tv_usec are unsigned, be careful when subtracting */
 if|if
 condition|(
 name|t0
-operator|.
+operator|->
 name|tv_usec
 operator|>
 name|t1
@@ -192,13 +187,13 @@ operator|.
 name|tv_usec
 condition|)
 block|{
-comment|/* Convert 1s in 1e6 microsecs */
 name|t1
 operator|.
 name|tv_usec
 operator|+=
 literal|1000000
 expr_stmt|;
+comment|/* Convert 1s in 1e6 microsecs */
 name|t1
 operator|.
 name|tv_sec
@@ -213,7 +208,7 @@ operator|.
 name|tv_sec
 operator|-
 name|t0
-operator|.
+operator|->
 name|tv_sec
 operator|)
 operator|*
@@ -225,7 +220,7 @@ operator|.
 name|tv_usec
 operator|-
 name|t0
-operator|.
+operator|->
 name|tv_usec
 operator|)
 operator|/
@@ -234,14 +229,6 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-define|#
-directive|define
-name|PRECISE_GETTIME
-value|0
-specifier|static
-name|time_t
-name|t0
-decl_stmt|;
 name|time_t
 name|t1
 init|=
@@ -259,6 +246,7 @@ condition|(
 name|first
 condition|)
 block|{
+operator|*
 name|t0
 operator|=
 name|t1
@@ -269,6 +257,7 @@ operator|=
 operator|(
 name|t1
 operator|-
+operator|*
 name|t0
 operator|)
 operator|*
@@ -424,6 +413,8 @@ end_macro
 begin_macro
 name|_nc_timed_wait
 argument_list|(
+argument|SCREEN *sp
+argument_list|,
 argument|int mode
 argument_list|,
 argument|int milliseconds
@@ -442,6 +433,11 @@ name|count
 decl_stmt|;
 name|int
 name|result
+init|=
+literal|0
+decl_stmt|;
+name|TimeType
+name|t0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -486,7 +482,6 @@ argument_list|)
 elif|#
 directive|elif
 name|HAVE_SELECT
-specifier|static
 name|fd_set
 name|set
 decl_stmt|;
@@ -560,6 +555,8 @@ directive|endif
 if|#
 directive|if
 name|PRECISE_GETTIME
+operator|&&
+name|HAVE_NANOSLEEP
 name|retry
 label|:
 endif|#
@@ -568,6 +565,9 @@ name|starttime
 operator|=
 name|_nc_gettime
 argument_list|(
+operator|&
+name|t0
+argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
@@ -654,7 +654,7 @@ index|]
 operator|.
 name|fd
 operator|=
-name|SP
+name|sp
 operator|->
 name|_ifd
 expr_stmt|;
@@ -682,7 +682,7 @@ operator|&&
 operator|(
 name|fd
 operator|=
-name|SP
+name|sp
 operator|->
 name|_mouse_fd
 operator|)
@@ -1187,7 +1187,7 @@ condition|)
 block|{
 name|FD_SET
 argument_list|(
-name|SP
+name|sp
 operator|->
 name|_ifd
 argument_list|,
@@ -1197,7 +1197,7 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-name|SP
+name|sp
 operator|->
 name|_ifd
 operator|+
@@ -1215,7 +1215,7 @@ operator|&&
 operator|(
 name|fd
 operator|=
-name|SP
+name|sp
 operator|->
 name|_mouse_fd
 operator|)
@@ -1553,6 +1553,9 @@ name|returntime
 operator|=
 name|_nc_gettime
 argument_list|(
+operator|&
+name|t0
+argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
@@ -1814,7 +1817,7 @@ operator|&&
 operator|(
 name|fd
 operator|=
-name|SP
+name|sp
 operator|->
 name|_mouse_fd
 operator|)
@@ -1843,7 +1846,7 @@ operator|)
 operator|&&
 name|FD_ISSET
 argument_list|(
-name|SP
+name|sp
 operator|->
 name|_ifd
 argument_list|,

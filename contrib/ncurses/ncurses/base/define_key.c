@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: define_key.c,v 1.10 2006/06/17 18:19:48 tom Exp $"
+literal|"$Id: define_key.c,v 1.13 2006/12/30 23:23:31 tom Exp $"
 argument_list|)
 end_macro
 
@@ -80,6 +80,14 @@ operator|>
 literal|0
 condition|)
 block|{
+name|unsigned
+name|ukey
+init|=
+operator|(
+name|unsigned
+operator|)
+name|keycode
+decl_stmt|;
 if|if
 condition|(
 name|str
@@ -115,10 +123,7 @@ operator|->
 name|_keytry
 operator|)
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|keycode
+name|ukey
 argument_list|)
 condition|)
 name|code
@@ -143,9 +148,8 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|_nc_add_to_try
 argument_list|(
 operator|&
@@ -157,16 +161,24 @@ operator|)
 argument_list|,
 name|str
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|keycode
+name|ukey
 argument_list|)
-expr_stmt|;
+operator|==
+name|OK
+condition|)
+block|{
 name|code
 operator|=
 name|OK
 expr_stmt|;
+block|}
+else|else
+block|{
+name|code
+operator|=
+name|ERR
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{

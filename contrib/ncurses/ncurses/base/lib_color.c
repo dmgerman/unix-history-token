@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -32,13 +32,76 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_color.c,v 1.80 2006/11/26 01:33:16 tom Exp $"
+literal|"$Id: lib_color.c,v 1.85 2007/04/07 17:07:28 tom Exp $"
 argument_list|)
 end_macro
 
 begin_comment
 comment|/*  * These should be screen structure members.  They need to be globals for  * historical reasons.  So we assign them in start_color() and also in  * set_term()'s screen-switching logic.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|USE_REENTRANT
+end_if
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_PUBLIC_VAR
+argument_list|(
+argument|COLOR_PAIRS
+argument_list|)
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|SP
+condition|?
+name|SP
+operator|->
+name|_pair_count
+else|:
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_PUBLIC_VAR
+argument_list|(
+argument|COLORS
+argument_list|)
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|SP
+condition|?
+name|SP
+operator|->
+name|_color_count
+else|:
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_macro
 name|NCURSES_EXPORT_VAR
@@ -67,6 +130,11 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -97,11 +165,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAX_PALETTE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|OkColorHi
 parameter_list|(
 name|n
 parameter_list|)
 value|(((n)< COLORS)&& ((n)< max_colors))
+end_define
+
+begin_define
+define|#
+directive|define
+name|InPalette
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)>= 0&& (n)< MAX_PALETTE)
 end_define
 
 begin_comment
@@ -656,9 +741,10 @@ control|)
 block|{
 if|if
 condition|(
+name|InPalette
+argument_list|(
 name|n
-operator|<
-literal|8
+argument_list|)
 condition|)
 block|{
 name|SP
@@ -687,7 +773,7 @@ name|tp
 index|[
 name|n
 operator|%
-literal|8
+name|MAX_PALETTE
 index|]
 expr_stmt|;
 if|if
@@ -1004,22 +1090,32 @@ operator|>
 literal|0
 condition|)
 block|{
-name|COLOR_PAIRS
-operator|=
 name|SP
 operator|->
 name|_pair_count
 operator|=
 name|max_pairs
 expr_stmt|;
-name|COLORS
-operator|=
 name|SP
 operator|->
 name|_color_count
 operator|=
 name|max_colors
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|USE_REENTRANT
+name|COLOR_PAIRS
+operator|=
+name|max_pairs
+expr_stmt|;
+name|COLORS
+operator|=
+name|max_colors
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1737,6 +1833,16 @@ comment|/* force attribute update */
 if|if
 condition|(
 name|initialize_pair
+operator|&&
+name|InPalette
+argument_list|(
+name|f
+argument_list|)
+operator|&&
+name|InPalette
+argument_list|(
+name|b
+argument_list|)
 condition|)
 block|{
 specifier|const
@@ -1750,8 +1856,10 @@ name|hls_palette
 else|:
 name|cga_palette
 decl_stmt|;
-name|T
+name|TR
 argument_list|(
+name|TRACE_ATTRS
+argument_list|,
 operator|(
 literal|"initializing pair: pair = %d, fg=(%d,%d,%d), bg=(%d,%d,%d)"
 operator|,
@@ -2396,8 +2504,10 @@ name|b
 operator|=
 name|c_b
 expr_stmt|;
-name|T
+name|TR
 argument_list|(
+name|TRACE_ATTRS
+argument_list|,
 operator|(
 literal|"...color_content(%d,%d,%d,%d)"
 operator|,
@@ -2571,8 +2681,10 @@ name|b
 operator|=
 name|bg
 expr_stmt|;
-name|T
+name|TR
 argument_list|(
+name|TRACE_ATTRS
+argument_list|,
 operator|(
 literal|"...pair_content(%d,%d,%d)"
 operator|,

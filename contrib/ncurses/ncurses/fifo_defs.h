@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Common macros for lib_getch.c, lib_ungetch.c  *  * $Id: fifo_defs.h,v 1.4 2002/03/16 20:47:50 tom Exp $  */
+comment|/*  * Common macros for lib_getch.c, lib_ungetch.c  *  * $Id: fifo_defs.h,v 1.5 2008/05/03 20:08:16 tom Exp $  */
 end_comment
 
 begin_ifndef
@@ -28,14 +28,14 @@ begin_define
 define|#
 directive|define
 name|head
-value|SP->_fifohead
+value|sp->_fifohead
 end_define
 
 begin_define
 define|#
 directive|define
 name|tail
-value|SP->_fifotail
+value|sp->_fifotail
 end_define
 
 begin_comment
@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|peek
-value|SP->_fifopeek
+value|sp->_fifopeek
 end_define
 
 begin_define
@@ -78,7 +78,7 @@ define|#
 directive|define
 name|t_dec
 parameter_list|()
-value|{ tail == 0 ? tail = FIFO_SIZE-1 : tail--; if (head == tail) fifo_clear();}
+value|{ tail == 0 ? tail = FIFO_SIZE-1 : tail--; if (head == tail) fifo_clear(sp);}
 end_define
 
 begin_define
