@@ -7397,7 +7397,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -7700,7 +7704,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -7855,7 +7863,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -7948,7 +7960,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -8914,7 +8930,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -9122,7 +9142,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -9258,7 +9282,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -9374,7 +9402,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -9541,7 +9573,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -9678,7 +9714,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -9837,7 +9877,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -9951,7 +9995,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -10099,7 +10147,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -10223,7 +10275,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -10358,7 +10414,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -10498,7 +10558,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -10638,7 +10702,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -10825,7 +10893,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
@@ -10951,7 +11023,11 @@ name|__FreeBSD_version
 operator|<
 literal|500000
 block|error = suser (p);
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 block|error = suser (td);
 else|#
 directive|else
@@ -10968,7 +11044,11 @@ name|__FreeBSD_version
 operator|<
 literal|500000
 block|error = suser (p);
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 block|error = suser (td);
 else|#
 directive|else
@@ -11103,7 +11183,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-empty|#elsif __FreeBSD_version< 700000
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|700000
 name|error
 operator|=
 name|suser
