@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -148,7 +154,7 @@ name|smp
 parameter_list|,
 name|td
 parameter_list|)
-value|lockmgr(&smp->sm_hashlock, LK_EXCLUSIVE, NULL, td)
+value|sx_xlock(&smp->sm_hashlock)
 end_define
 
 begin_define
@@ -160,7 +166,7 @@ name|smp
 parameter_list|,
 name|td
 parameter_list|)
-value|lockmgr(&smp->sm_hashlock, LK_RELEASE, NULL, td)
+value|sx_xunlock(&smp->sm_hashlock)
 end_define
 
 begin_decl_stmt
@@ -1511,15 +1517,6 @@ init|=
 name|ap
 operator|->
 name|a_vp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
 decl_stmt|;
 name|struct
 name|vnode

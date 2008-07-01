@@ -149,6 +149,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/_sx.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -254,7 +260,7 @@ name|int
 name|sm_caseopt
 decl_stmt|;
 name|struct
-name|lock
+name|sx
 name|sm_hashlock
 decl_stmt|;
 name|LIST_HEAD
