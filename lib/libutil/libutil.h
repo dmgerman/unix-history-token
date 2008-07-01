@@ -197,6 +197,29 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|hexdump
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|int
+name|length
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hdr
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|login
 parameter_list|(
 name|struct
@@ -1112,6 +1135,45 @@ define|#
 directive|define
 name|HN_AUTOSCALE
 value|0x20
+end_define
+
+begin_comment
+comment|/* hexdump(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HD_COLUMN_MASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|HD_DELIM_MASK
+value|0xff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|HD_OMIT_COUNT
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HD_OMIT_HEX
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HD_OMIT_CHARS
+value|(1<< 18)
 end_define
 
 begin_endif
