@@ -2352,12 +2352,19 @@ argument_list|,
 name|destpath
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Obviously, this only gets invoked in pass mode. 	 */
+comment|/* 	 * Obviously, this only gets invoked in pass mode, since 	 * option_link is nonsense otherwise.  Note that we can't 	 * hardlink dirs, and that if a link operation fails (because 	 * of cross-device restrictions), we'll fall back to copy mode 	 * for that entry. 	 */
 if|if
 condition|(
 name|cpio
 operator|->
 name|option_link
+operator|&&
+name|archive_entry_filetype
+argument_list|(
+name|entry
+argument_list|)
+operator|!=
+name|AE_IFDIR
 condition|)
 block|{
 name|struct
@@ -2388,7 +2395,7 @@ argument_list|,
 literal|"Can't create link"
 argument_list|)
 expr_stmt|;
-comment|/* Note: link(2) doesn't create parent directories, 		 * so we use archive_write_header() instead. */
+comment|/* Note: link(2) doesn't create parent directories, 		 * so we use archive_write_header() instead as a 		 * convenience. */
 name|archive_entry_set_hardlink
 argument_list|(
 name|t
