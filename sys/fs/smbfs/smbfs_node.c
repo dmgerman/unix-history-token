@@ -151,8 +151,6 @@ directive|define
 name|smbfs_hash_lock
 parameter_list|(
 name|smp
-parameter_list|,
-name|td
 parameter_list|)
 value|sx_xlock(&smp->sm_hashlock)
 end_define
@@ -163,8 +161,6 @@ directive|define
 name|smbfs_hash_unlock
 parameter_list|(
 name|smp
-parameter_list|,
-name|td
 parameter_list|)
 value|sx_xunlock(&smp->sm_hashlock)
 end_define
@@ -889,8 +885,6 @@ label|:
 name|smbfs_hash_lock
 argument_list|(
 name|smp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|loop
@@ -956,8 +950,6 @@ expr_stmt|;
 name|smbfs_hash_unlock
 argument_list|(
 name|smp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1060,8 +1052,6 @@ block|}
 name|smbfs_hash_unlock
 argument_list|(
 name|smp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we don't have node attributes, then it is an explicit lookup 	 * for an existing vnode. 	 */
@@ -1303,8 +1293,6 @@ expr_stmt|;
 name|smbfs_hash_lock
 argument_list|(
 name|smp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -1366,8 +1354,6 @@ expr_stmt|;
 name|smbfs_hash_unlock
 argument_list|(
 name|smp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1572,8 +1558,6 @@ expr_stmt|;
 name|smbfs_hash_lock
 argument_list|(
 name|smp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Destroy the vm object and flush associated pages. 	 */
@@ -1649,8 +1633,6 @@ expr_stmt|;
 name|smbfs_hash_unlock
 argument_list|(
 name|smp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
