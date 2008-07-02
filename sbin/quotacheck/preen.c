@@ -297,7 +297,9 @@ end_function_decl
 begin_function
 name|int
 name|checkfstab
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|fstab
