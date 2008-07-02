@@ -688,7 +688,7 @@ argument_list|,
 operator|&
 name|ip6intrq
 argument_list|,
-literal|0
+name|NETISR_MPSAFE
 argument_list|)
 expr_stmt|;
 name|scope6_init
