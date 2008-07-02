@@ -769,9 +769,9 @@ name|VOP_LOCK
 argument_list|(
 name|vp
 argument_list|,
-name|LK_DRAIN
+name|LK_EXCLUSIVE
 operator||
-name|LK_INTERLOCK
+name|LK_RETRY
 argument_list|,
 name|curthread
 argument_list|)
@@ -828,9 +828,9 @@ name|VOP_LOCK
 argument_list|(
 name|vp
 argument_list|,
-name|LK_DRAIN
+name|LK_EXCLUSIVE
 operator||
-name|LK_INTERLOCK
+name|LK_RETRY
 argument_list|,
 name|curthread
 argument_list|)
