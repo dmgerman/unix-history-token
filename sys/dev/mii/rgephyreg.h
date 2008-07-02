@@ -911,7 +911,7 @@ comment|/* 1000base-T HD capable */
 end_comment
 
 begin_comment
-comment|/* RTL8211B(L) */
+comment|/* RTL8211B(L)/RTL8211C(L) */
 end_comment
 
 begin_define
@@ -1018,6 +1018,17 @@ end_define
 
 begin_comment
 comment|/* MDI crossover */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RGEPHY_SSR_ALDPS
+value|0x0008
+end_define
+
+begin_comment
+comment|/* RTL8211C(L) only */
 end_comment
 
 begin_define
