@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -10603,6 +10609,26 @@ name|p
 decl_stmt|,
 name|tmp_pipe
 decl_stmt|;
+name|error
+operator|=
+name|priv_check
+argument_list|(
+name|sopt
+operator|->
+name|sopt_td
+argument_list|,
+name|PRIV_NETINET_DUMMYNET
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* Disallow sets in really-really secure mode. */
 if|if
 condition|(
