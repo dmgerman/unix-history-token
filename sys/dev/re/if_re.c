@@ -6156,6 +6156,15 @@ literal|"re mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* These should only be active if attach succeeded */
+if|if
+condition|(
+name|device_is_attached
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
@@ -6174,15 +6183,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* These should only be active if attach succeeded */
-if|if
-condition|(
-name|device_is_attached
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
 name|RL_LOCK
 argument_list|(
 name|sc
