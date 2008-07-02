@@ -5567,6 +5567,11 @@ operator|=
 name|udp_send
 block|,
 operator|.
+name|pru_soreceive
+operator|=
+name|soreceive_dgram
+block|,
+operator|.
 name|pru_sosend
 operator|=
 name|sosend_dgram
