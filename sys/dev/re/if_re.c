@@ -11661,7 +11661,11 @@ operator|->
 name|rl_if_flags
 operator|)
 operator|&
+operator|(
 name|IFF_PROMISC
+operator||
+name|IFF_ALLMULTI
+operator|)
 operator|)
 operator|!=
 literal|0
