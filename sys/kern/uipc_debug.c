@@ -892,7 +892,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|domainname
+name|domain_name
 parameter_list|,
 name|int
 name|indent
@@ -907,7 +907,7 @@ name|db_printf
 argument_list|(
 literal|"%s at %p\n"
 argument_list|,
-name|domainname
+name|domain_name
 argument_list|,
 name|d
 argument_list|)
