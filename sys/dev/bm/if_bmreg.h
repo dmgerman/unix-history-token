@@ -825,7 +825,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->sc_btag, sc->sc_bhandle, reg, val)
+value|bus_write_4(sc->sc_memr, reg, val)
 end_define
 
 begin_define
@@ -840,7 +840,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(sc->sc_btag, sc->sc_bhandle, reg, val)
+value|bus_write_2(sc->sc_memr, reg, val)
 end_define
 
 begin_define
@@ -855,7 +855,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->sc_btag, sc->sc_bhandle, reg, val)
+value|bus_write_1(sc->sc_memr, reg, val)
 end_define
 
 begin_define
@@ -868,7 +868,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->sc_btag, sc->sc_bhandle, reg)
+value|bus_read_4(sc->sc_memr, reg)
 end_define
 
 begin_define
@@ -881,7 +881,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2(sc->sc_btag, sc->sc_bhandle, reg)
+value|bus_read_2(sc->sc_memr, reg)
 end_define
 
 begin_define
@@ -894,7 +894,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1(sc->sc_btag, sc->sc_bhandle, reg)
+value|bus_read_1(sc->sc_memr, reg)
 end_define
 
 end_unit

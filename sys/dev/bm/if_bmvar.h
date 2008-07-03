@@ -189,12 +189,6 @@ comment|/* macio bus mem resource */
 name|int
 name|sc_memrid
 decl_stmt|;
-name|bus_space_handle_t
-name|sc_bhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_btag
-decl_stmt|;
 name|device_t
 name|sc_miibus
 decl_stmt|;
