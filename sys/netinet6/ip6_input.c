@@ -866,9 +866,6 @@ name|srcrt
 init|=
 literal|0
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* XXX for now */
 ifdef|#
 directive|ifdef
 name|IPSEC

@@ -351,8 +351,7 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
+comment|/* GIANT_REQUIRED; */
 comment|/* XXX bz: ip6_forward_rt */
 ifdef|#
 directive|ifdef
