@@ -2502,7 +2502,7 @@ name|v_page_count
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 	 * Tune settings based on the kernel map's size at this time. 	 */
+comment|/* 	 * Tune settings based on the kmem map's size at this time. 	 */
 name|init_param3
 argument_list|(
 name|vm_kmem_size
