@@ -161,12 +161,6 @@ name|struct
 name|ifmedia
 name|ifmedia
 decl_stmt|;
-name|bus_space_handle_t
-name|oltr_bhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|oltr_btag
-decl_stmt|;
 name|void
 modifier|*
 name|oltr_intrhand
@@ -210,9 +204,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|queue_addr
-decl_stmt|;
-name|int
-name|unit
 decl_stmt|;
 name|int
 name|state
@@ -311,10 +302,14 @@ name|u_long
 name|FunctionalAddress
 decl_stmt|;
 name|struct
-name|callout_handle
-name|oltr_poll_ch
+name|mtx
+name|oltr_lock
 decl_stmt|;
-comment|/*struct callout_handle	oltr_stat_ch;*/
+name|struct
+name|callout
+name|oltr_poll_timer
+decl_stmt|;
+comment|/*struct callout	oltr_stat_timer;*/
 name|void
 modifier|*
 name|work_memory
@@ -328,6 +323,36 @@ define|#
 directive|define
 name|SELF_TEST_POLLS
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLTR_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->oltr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLTR_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->oltr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLTR_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->oltr_lock, MA_OWNED)
 end_define
 
 begin_decl_stmt

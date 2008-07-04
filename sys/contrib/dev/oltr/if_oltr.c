@@ -75,29 +75,6 @@ directive|include
 file|<net/bpf.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BPF_MTAP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|BPF_MTAP
-parameter_list|(
-name|_ifp
-parameter_list|,
-name|_m
-parameter_list|)
-value|do {				\ 	if ((_ifp)->if_bpf)				\ 		bpf_mtap((_ifp), (_m));			\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -563,6 +540,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|oltr_start_locked
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|oltr_close
 name|__P
 argument_list|(
@@ -583,6 +575,21 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|oltr_init_locked
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|oltr_softc
 operator|*
 operator|)
 argument_list|)
@@ -691,6 +698,39 @@ name|IFM_TOKEN
 operator||
 name|IFM_TOK_UTP16
 decl_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|oltr_lock
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|MTX_NETWORK_LOCK
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|callout_init_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|oltr_poll_timer
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|oltr_lock
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/*callout_init_mtx(&sc->oltr_stat_timer,&sc->oltr_lock, 0);*/
 name|ifp
 operator|=
 name|sc
@@ -716,6 +756,14 @@ argument_list|,
 literal|"couldn't if_alloc()"
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|oltr_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -723,7 +771,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Allocate interrupt and DMA channel 	 */
+comment|/* 	 * Allocate interrupt 	 */
 name|sc
 operator|->
 name|irq_rid
@@ -783,61 +831,12 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|bus_setup_intr
+name|mtx_destroy
 argument_list|(
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|irq_res
-argument_list|,
-name|INTR_TYPE_NET
-argument_list|,
-name|NULL
-argument_list|,
-name|oltr_intr
-argument_list|,
-name|sc
-argument_list|,
 operator|&
 name|sc
 operator|->
-name|oltr_intrhand
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"couldn't setup interrupt\n"
-argument_list|)
-expr_stmt|;
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|irq_res
-argument_list|)
-expr_stmt|;
-name|if_free
-argument_list|(
-name|ifp
+name|oltr_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -892,16 +891,16 @@ operator|->
 name|if_flags
 operator|=
 name|IFF_BROADCAST
-operator||
-name|IFF_NEEDSGIANT
 expr_stmt|;
+name|IFQ_SET_MAXLEN
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
-operator|.
-name|ifq_maxlen
-operator|=
+argument_list|,
 name|IFQ_MAXLEN
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Do ifmedia setup. 	 */
 name|ifmedia_init
@@ -1072,6 +1071,80 @@ argument_list|,
 name|ISO88025_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bus_setup_intr
+argument_list|(
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|irq_res
+argument_list|,
+name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
+argument_list|,
+name|NULL
+argument_list|,
+name|oltr_intr
+argument_list|,
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|oltr_intrhand
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"couldn't setup interrupt\n"
+argument_list|)
+expr_stmt|;
+name|iso88025_ifdetach
+argument_list|(
+name|ifp
+argument_list|,
+name|ISO88025_BPF_SUPPORTED
+argument_list|)
+expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|0
+argument_list|,
+name|sc
+operator|->
+name|irq_res
+argument_list|)
+expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|oltr_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1102,6 +1175,11 @@ operator|*
 operator|)
 name|xsc
 decl_stmt|;
+name|OLTR_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|DEBUG_MASK
@@ -1120,6 +1198,11 @@ operator|->
 name|TRlldAdapter
 argument_list|)
 expr_stmt|;
+name|OLTR_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -1128,6 +1211,44 @@ begin_function
 specifier|static
 name|void
 name|oltr_start
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|struct
+name|oltr_softc
+modifier|*
+name|sc
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|OLTR_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|oltr_start_locked
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|OLTR_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|oltr_start_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -1162,8 +1283,6 @@ decl_stmt|,
 name|fragment
 decl_stmt|,
 name|rc
-decl_stmt|,
-name|s
 decl_stmt|;
 comment|/* 	 * Check to see if output is already active 	 */
 if|if
@@ -1187,13 +1306,11 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: tx queue full\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"tx queue full\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -1458,11 +1575,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|rc
 operator|=
 name|TRlldTransmitFrame
@@ -1492,14 +1604,6 @@ name|frame
 index|]
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rc
@@ -1507,13 +1611,11 @@ operator|!=
 name|TRLLD_TRANSMIT_OK
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: TRlldTransmitFrame returned %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"TRlldTransmitFrame returned %d\n"
 argument_list|,
 name|rc
 argument_list|)
@@ -1587,13 +1689,11 @@ name|outloop
 goto|;
 name|nobuffers
 label|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: queue full\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"queue full\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -1629,15 +1729,20 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/*printf("oltr%d: oltr_close\n", sc->unit);*/
+comment|/*if_printf(sc->ifp, "oltr_close\n");*/
 name|oltr_stop
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|tsleep
+name|mtx_sleep
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|oltr_lock
 argument_list|,
 name|PWAIT
 argument_list|,
@@ -1670,14 +1775,7 @@ name|sc
 operator|->
 name|ifp
 decl_stmt|;
-comment|/*printf("oltr%d: oltr_stop\n", sc->unit);*/
-name|ifp
-operator|->
-name|if_flags
-operator|&=
-operator|~
-name|IFF_UP
-expr_stmt|;
+comment|/*if_printf(ifp, "oltr_stop\n");*/
 name|ifp
 operator|->
 name|if_drv_flags
@@ -1704,6 +1802,15 @@ name|state
 operator|=
 name|OL_CLOSING
 expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|oltr_poll_timer
+argument_list|)
+expr_stmt|;
+comment|/*callout_stop(&sc->oltr_stat_timer);*/
 block|}
 end_function
 
@@ -1729,6 +1836,35 @@ operator|*
 operator|)
 name|xsc
 decl_stmt|;
+name|OLTR_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|oltr_init_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|OLTR_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|oltr_init_locked
+parameter_list|(
+name|struct
+name|oltr_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
 name|struct
 name|ifnet
 modifier|*
@@ -1758,8 +1894,6 @@ decl_stmt|,
 name|rc
 init|=
 literal|0
-decl_stmt|,
-name|s
 decl_stmt|;
 name|int
 name|work_size
@@ -1774,22 +1908,15 @@ operator|>
 name|OL_CLOSED
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter not ready\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter not ready\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Initialize Adapter 	 */
 if|if
 condition|(
@@ -1833,63 +1960,53 @@ block|{
 case|case
 name|TRLLD_INIT_NOT_FOUND
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter not found\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter not found\n"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|TRLLD_INIT_UNSUPPORTED
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter not supported by low level driver\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter not supported by low level driver\n"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|TRLLD_INIT_PHYS16
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter memory block above 16M cannot DMA\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter memory block above 16M cannot DMA\n"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|TRLLD_INIT_VERSION
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: low level driver version mismatch\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"low level driver version mismatch\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: unknown init error %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"unknown init error %d\n"
 argument_list|,
 name|rc
 argument_list|)
@@ -1966,13 +2083,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: failed to allocate work memory (%d octets).\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"failed to allocate work memory (%d octets).\n"
 argument_list|,
 name|work_size
 argument_list|)
@@ -2079,13 +2194,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Downloading adapter microcode: "
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Downloading adapter microcode: "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2216,13 +2329,11 @@ literal|" - failed\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter microcode download failed\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter microcode download failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2324,13 +2435,11 @@ operator|!=
 name|OL_CLOSED
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: self-test failed\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"self-test failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2338,29 +2447,18 @@ name|init_failed
 goto|;
 block|}
 comment|/* 	 * Set up adapter poll 	 */
-name|callout_handle_init
+name|callout_reset
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|oltr_poll_ch
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|oltr_poll_ch
-operator|=
-name|timeout
-argument_list|(
-name|oltr_poll
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|sc
+name|oltr_poll_timer
 argument_list|,
 literal|1
+argument_list|,
+name|oltr_poll
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2412,84 +2510,44 @@ break|break;
 case|case
 name|TRLLD_OPEN_STATE
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter not ready for open\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
+literal|"adapter not ready for open\n"
 argument_list|)
 expr_stmt|;
 return|return;
 case|case
 name|TRLLD_OPEN_ADDRESS_ERROR
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: illegal MAC address\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
+literal|"illegal MAC address\n"
 argument_list|)
 expr_stmt|;
 return|return;
 case|case
 name|TRLLD_OPEN_MODE_ERROR
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: illegal open mode\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
+literal|"illegal open mode\n"
 argument_list|)
 expr_stmt|;
 return|return;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: unknown open error (%d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"unknown open error (%d)\n"
 argument_list|,
 name|rc
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2511,9 +2569,14 @@ operator||=
 name|IFF_PROMISC
 expr_stmt|;
 comment|/* 	 * Block on the ring insert and set a timeout 	 */
-name|tsleep
+name|mtx_sleep
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|oltr_lock
 argument_list|,
 name|PWAIT
 argument_list|,
@@ -2592,13 +2655,11 @@ operator|!=
 name|TRLLD_RECEIVE_OK
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter refused receive fragment %d (rc = %d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter refused receive fragment %d (rc = %d)\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2646,16 +2707,7 @@ operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
 comment|/* 	 * Set up adapter statistics poll 	 */
-comment|/*callout_handle_init(&sc->oltr_stat_ch);*/
-comment|/*sc->oltr_stat_ch = timeout(oltr_stat, (void *)sc, 1*hz);*/
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+comment|/*callout_reset(&sc->oltr_stat_timer, 1*hz, oltr_stat, sc);*/
 return|return;
 name|init_failed
 label|:
@@ -2664,14 +2716,6 @@ operator|->
 name|state
 operator|=
 name|OL_DEAD
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -2719,14 +2763,7 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|,
-name|s
 decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|command
@@ -2756,6 +2793,11 @@ break|break;
 case|case
 name|SIOCSIFFLAGS
 case|:
+name|OLTR_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -2765,7 +2807,7 @@ operator|&
 name|IFF_UP
 condition|)
 block|{
-name|oltr_init
+name|oltr_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -2789,6 +2831,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|OLTR_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SIOCGIFMEDIA
@@ -2820,14 +2867,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2857,14 +2896,6 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|DEBUG_MASK
@@ -2877,19 +2908,12 @@ literal|"P"
 argument_list|)
 expr_stmt|;
 comment|/* Set up next adapter poll */
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|oltr_poll_ch
-operator|=
-name|timeout
-argument_list|(
-name|oltr_poll
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|sc
+name|oltr_poll_timer
 argument_list|,
 operator|(
 name|TRlldPoll
@@ -2903,14 +2927,10 @@ name|hz
 operator|/
 literal|1000
 operator|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
+argument_list|,
+name|oltr_poll
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -2943,32 +2963,21 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 comment|/* Set up next adapter poll */
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|oltr_stat_ch
-operator|=
-name|timeout
-argument_list|(
-name|oltr_stat
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|sc
+name|oltr_stat_timer
 argument_list|,
 literal|1
 operator|*
 name|hz
+argument_list|,
+name|oltr_stat
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2990,7 +2999,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/*printf("oltr%d: statistics available immediately...\n", sc->unit);*/
+comment|/*if_printf(sc->ifp, "statistics available immediately...\n");*/
 name|DriverStatistics
 argument_list|(
 operator|(
@@ -3006,14 +3015,6 @@ name|current
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3071,6 +3072,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|OLTR_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|IFM_SUBTYPE
@@ -3143,16 +3149,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-return|return
-operator|(
+name|rc
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
 break|break;
 block|}
+name|OLTR_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|rc
 operator|)
 return|;
 block|}
@@ -3193,7 +3203,12 @@ name|sc
 operator|->
 name|ifmedia
 decl_stmt|;
-comment|/*printf("oltr%d: oltr_ifmedia_sts\n", sc->unit);*/
+comment|/*if_printf(ifp, "oltr_ifmedia_sts\n");*/
+name|OLTR_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_active
@@ -3210,6 +3225,11 @@ argument_list|(
 name|ifm
 operator|->
 name|ifm_media
+argument_list|)
+expr_stmt|;
+name|OLTR_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -3259,13 +3279,11 @@ name|statistics
 operator|->
 name|LineErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Line Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Line Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3284,13 +3302,11 @@ name|statistics
 operator|->
 name|InternalErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Internal Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Internal Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3309,13 +3325,11 @@ name|statistics
 operator|->
 name|BurstErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Burst Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Burst Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3334,13 +3348,11 @@ name|statistics
 operator|->
 name|AbortDelimiters
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Abort Delimiters %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Abort Delimiters %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3359,13 +3371,11 @@ name|statistics
 operator|->
 name|ARIFCIErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: ARIFCI Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"ARIFCI Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3384,13 +3394,11 @@ name|statistics
 operator|->
 name|LostFrames
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Lost Frames %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Lost Frames %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3409,13 +3417,11 @@ name|statistics
 operator|->
 name|CongestionErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Congestion Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Congestion Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3434,13 +3440,11 @@ name|statistics
 operator|->
 name|FrequencyErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Frequency Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Frequency Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3459,13 +3463,11 @@ name|statistics
 operator|->
 name|TokenErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Token Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Token Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3484,13 +3486,11 @@ name|statistics
 operator|->
 name|DMABusErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: DMA Bus Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"DMA Bus Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3509,13 +3509,11 @@ name|statistics
 operator|->
 name|DMAParityErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: DMA Parity Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"DMA Parity Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3534,13 +3532,11 @@ name|statistics
 operator|->
 name|ReceiveLongFrame
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Long frames received %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Long frames received %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3559,13 +3555,11 @@ name|statistics
 operator|->
 name|ReceiveCRCErrors
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Receive CRC Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Receive CRC Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3584,13 +3578,11 @@ name|statistics
 operator|->
 name|ReceiveOverflow
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Recieve overflows %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Recieve overflows %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3609,13 +3601,11 @@ name|statistics
 operator|->
 name|TransmitUnderrun
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Frequency Errors %lu\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Frequency Errors %lu\n"
 argument_list|,
 name|statistics
 operator|->
@@ -3727,6 +3717,11 @@ comment|/* 2 */
 literal|"interrupt"
 block|}
 decl_stmt|;
+name|OLTR_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|Status
@@ -3737,13 +3732,11 @@ block|{
 case|case
 name|TRLLD_STS_ON_WIRE
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: ring insert (%d Mbps - %s)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"ring insert (%d Mbps - %s)\n"
 argument_list|,
 name|Status
 operator|->
@@ -3801,13 +3794,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: self test complete\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"self test complete\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3822,13 +3813,11 @@ operator|&
 name|TRLLD_ST_ERROR
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Adapter self test error %d"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Adapter self test error %d"
 argument_list|,
 name|Status
 operator|->
@@ -3858,13 +3847,11 @@ operator|&
 name|TRLLD_ST_TIMEOUT
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Adapter self test timed out.\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Adapter self test timed out.\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3915,20 +3902,18 @@ argument_list|,
 name|TRLLD_SPEED_16MBPS
 argument_list|)
 expr_stmt|;
-name|oltr_init
+name|oltr_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter init failure 0x%03x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter init failure 0x%03x\n"
 argument_list|,
 name|Status
 operator|->
@@ -3955,13 +3940,11 @@ operator|.
 name|RingStatus
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: Ring status change: "
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"Ring status change: "
 argument_list|)
 expr_stmt|;
 if|if
@@ -4124,13 +4107,11 @@ break|break;
 case|case
 name|TRLLD_STS_ADAPTER_CHECK
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter check (%04x %04x %04x %04x)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter check (%04x %04x %04x %04x)\n"
 argument_list|,
 name|Status
 operator|->
@@ -4184,13 +4165,11 @@ break|break;
 case|case
 name|TRLLD_STS_PROMISCUOUS_STOPPED
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: promiscuous mode "
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"promiscuous mode "
 argument_list|)
 expr_stmt|;
 if|if
@@ -4254,13 +4233,11 @@ break|break;
 case|case
 name|TRLLD_STS_LLD_ERROR
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: low level driver internal error "
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"low level driver internal error "
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4319,13 +4296,11 @@ break|break;
 case|case
 name|TRLLD_STS_ADAPTER_TIMEOUT
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter %s timeout.\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter %s timeout.\n"
 argument_list|,
 name|Timeout
 index|[
@@ -4339,13 +4314,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: driver status Type = %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"driver status Type = %d\n"
 argument_list|,
 name|Status
 operator|->
@@ -4398,13 +4371,18 @@ operator|*
 operator|)
 name|DriverHandle
 decl_stmt|;
-name|printf
+name|OLTR_ASSERT_LOCKED
 argument_list|(
-literal|"oltr%d: adapter closed\n"
-argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
 name|sc
 operator|->
-name|unit
+name|ifp
+argument_list|,
+literal|"adapter closed\n"
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -4469,7 +4447,12 @@ operator|*
 operator|)
 name|FrameHandle
 decl_stmt|;
-comment|/*printf("oltr%d: DriverTransmitFrameCompleted\n", sc->unit);*/
+comment|/*if_printf(ifp, "DriverTransmitFrameCompleted\n");*/
+name|OLTR_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TransmitStatus
@@ -4482,13 +4465,11 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: transmit error %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"transmit error %d\n"
 argument_list|,
 name|TransmitStatus
 argument_list|)
@@ -4519,13 +4500,11 @@ operator|&
 name|IFF_DRV_OACTIVE
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: queue restart\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"queue restart\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -4535,7 +4514,7 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-name|oltr_start
+name|oltr_start_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -4612,8 +4591,6 @@ operator|)
 name|FragmentHandle
 decl_stmt|,
 name|rc
-decl_stmt|,
-name|s
 decl_stmt|;
 name|int
 name|mbuf_offset
@@ -4640,6 +4617,11 @@ index|]
 operator|.
 name|data
 decl_stmt|;
+name|OLTR_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4983,11 +4965,21 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|OLTR_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|iso88025_input
 argument_list|(
 name|ifp
 argument_list|,
 name|m0
+argument_list|)
+expr_stmt|;
+name|OLTR_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -5001,13 +4993,11 @@ operator|!=
 name|TRLLD_RCV_NO_DATA
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: receive error %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"receive error %d\n"
 argument_list|,
 name|ReceiveStatus
 argument_list|)
@@ -5021,11 +5011,6 @@ block|}
 block|}
 name|dropped
 label|:
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|i
 operator|=
 operator|(
@@ -5101,13 +5086,11 @@ operator|!=
 name|TRLLD_RECEIVE_OK
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"oltr%d: adapter refused receive fragment %d (rc = %d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|unit
+literal|"adapter refused receive fragment %d (rc = %d)\n"
 argument_list|,
 name|i
 argument_list|,
@@ -5120,14 +5103,6 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
