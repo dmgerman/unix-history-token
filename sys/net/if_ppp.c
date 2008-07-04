@@ -1084,7 +1084,7 @@ name|pppintr
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NETISR_FORCEQUEUE
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX layering violation - if_ppp can work over any lower 		 * level transport that cares to attach to it. 		 */
@@ -5234,7 +5234,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|PPP_LIST_LOCK
 argument_list|()
@@ -5369,6 +5373,12 @@ block|}
 block|}
 name|PPP_LIST_UNLOCK
 argument_list|()
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 block|}
 end_function

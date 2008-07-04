@@ -1023,7 +1023,7 @@ argument_list|,
 operator|&
 name|atintrq1
 argument_list|,
-name|NETISR_MPSAFE
+literal|0
 argument_list|)
 expr_stmt|;
 name|netisr_register
@@ -1035,7 +1035,7 @@ argument_list|,
 operator|&
 name|atintrq2
 argument_list|,
-name|NETISR_MPSAFE
+literal|0
 argument_list|)
 expr_stmt|;
 name|netisr_register
@@ -1047,7 +1047,7 @@ argument_list|,
 operator|&
 name|aarpintrq
 argument_list|,
-name|NETISR_MPSAFE
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

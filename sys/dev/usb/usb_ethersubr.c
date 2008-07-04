@@ -169,6 +169,12 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* Check the RX queue */
 while|while
 condition|(
@@ -316,6 +322,12 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -344,7 +356,7 @@ name|usbintr
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NETISR_FORCEQUEUE
 argument_list|)
 expr_stmt|;
 name|mtx_init

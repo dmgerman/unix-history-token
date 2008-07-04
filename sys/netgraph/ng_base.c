@@ -11960,7 +11960,7 @@ name|ngintr
 argument_list|,
 name|NULL
 argument_list|,
-name|NETISR_MPSAFE
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;

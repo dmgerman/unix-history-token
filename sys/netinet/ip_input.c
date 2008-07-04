@@ -1305,7 +1305,7 @@ argument_list|,
 operator|&
 name|ipintrq
 argument_list|,
-name|NETISR_MPSAFE
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
