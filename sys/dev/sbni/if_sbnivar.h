@@ -135,6 +135,9 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
 name|u_char
 name|enaddr
 index|[
@@ -242,8 +245,12 @@ name|in_stats
 decl_stmt|;
 comment|/* internal statistics */
 name|struct
-name|callout_handle
+name|callout
 name|wch
+decl_stmt|;
+name|struct
+name|mtx
+name|lock
 decl_stmt|;
 name|struct
 name|sbni_softc
@@ -263,6 +270,36 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SBNI_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBNI_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBNI_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->lock, MA_OWNED)
+end_define
 
 begin_function_decl
 name|void
@@ -286,7 +323,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sbni_attach
 parameter_list|(
 name|struct
@@ -297,6 +334,28 @@ name|int
 parameter_list|,
 name|struct
 name|sbni_flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbni_detach
+parameter_list|(
+name|struct
+name|sbni_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbni_release_resources
+parameter_list|(
+name|struct
+name|sbni_softc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -314,14 +373,16 @@ directive|ifdef
 name|SBNI_DUAL_COMPOUND
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
+name|void
+name|sbni_add
+parameter_list|(
 name|struct
 name|sbni_softc
 modifier|*
-name|sbni_headlist
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|struct
