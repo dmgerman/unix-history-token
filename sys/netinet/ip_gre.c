@@ -750,7 +750,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|netisr_dispatch
+name|netisr_queue
 argument_list|(
 name|isr
 argument_list|,
@@ -1219,7 +1219,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|netisr_dispatch
+name|netisr_queue
 argument_list|(
 name|NETISR_IP
 argument_list|,
