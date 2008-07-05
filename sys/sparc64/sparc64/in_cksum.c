@@ -10,6 +10,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -50,7 +64,7 @@ file|<machine/in_cksum.h>
 end_include
 
 begin_comment
-comment|/*  * Checksum routine for Internet Protocol family headers.  *  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  *  * This implementation is a sparc64 version. Most code was taken over and  * adapted from the i386. Some optimizations were changed to achieve (hopefully)  * better performance.  * This uses 64 bit loads, but 32 bit additions due to the lack of a 64-bit  * add-with-carry operation.  */
+comment|/*  * Checksum routine for Internet Protocol family headers.  *  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  *  * This implementation is a sparc64 version.  Most code was taken over  * and adapted from the i386.  Some optimizations were changed to achieve  * (hopefully) better performance.  * This uses 64-bit loads, but 32-bit additions due to the lack of a 64-bit  * add-with-carry operation.  */
 end_comment
 
 begin_comment
@@ -66,11 +80,11 @@ name|sum
 parameter_list|,
 name|tmp
 parameter_list|)
-value|__asm __volatile( \ 	"sll %2, 16, %1\n" \ 	"addcc %2, %1, %0\n" \ 	"srl %0, 16, %0\n" \ 	"addc %0, 0, %0" : "=r" (sum), "=r" (tmp) : "0" (sum))
+value|__asm __volatile(				\ 	"sll %2, 16, %1\n"						\ 	"addcc %2, %1, %0\n"						\ 	"srl %0, 16, %0\n"						\ 	"addc %0, 0, %0" : "=r" (sum), "=r" (tmp) : "0" (sum))
 end_define
 
 begin_comment
-comment|/*  * Note that some of these macros depend on the flags being preserved between  * calls, so they should not be intermixed with other C statements.  */
+comment|/*  * Note that some of these macros depend on the flags being preserved  * between calls, so they should not be intermixed with other C statements.  */
 end_comment
 
 begin_define
@@ -88,7 +102,7 @@ name|n
 parameter_list|,
 name|mod
 parameter_list|)
-value|__asm __volatile( \ 	"ldx [%3 + " #n "], %1\n" \ 	"add" #mod " %2, %1, %0\n" \ 	"srlx %1, 32, %1\n" \ 	"addccc %0, %1, %0" : "=r" (sum), "=r" (tmp) : "0" (sum), "r" (addr))
+value|__asm __volatile(		\ 	"ldx [%3 + " #n "], %1\n"					\ 	"add" #mod " %2, %1, %0\n"					\ 	"srlx %1, 32, %1\n"						\ 	"addccc %0, %1, %0" : "=r" (sum), "=r" (tmp) : "0" (sum), "r" (addr))
 end_define
 
 begin_define
@@ -106,7 +120,7 @@ name|n
 parameter_list|,
 name|mod
 parameter_list|)
-value|__asm __volatile( \ 	"lduw [%3 + " #n "], %1\n" \ 	"add" #mod " %2, %1, %0\n" \ 	: "=r" (sum), "=r" (tmp) : "0" (sum), "r" (addr))
+value|__asm __volatile(		\ 	"lduw [%3 + " #n "], %1\n"					\ 	"add" #mod " %2, %1, %0\n"					\ 	: "=r" (sum), "=r" (tmp) : "0" (sum), "r" (addr))
 end_define
 
 begin_define
@@ -116,7 +130,7 @@ name|MOP
 parameter_list|(
 name|sum
 parameter_list|)
-value|__asm __volatile( \ 	"addc %1, 0, %0" : "=r" (sum) : "0" (sum))
+value|__asm __volatile(					\ 	"addc %1, 0, %0" : "=r" (sum) : "0" (sum))
 end_define
 
 begin_function
@@ -852,7 +866,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 			 * This mbuf has odd number of bytes. 			 * There could be a word split betwen 			 * this mbuf and the next mbuf. 			 * Save the last byte (to prepend to next mbuf). 			 */
+comment|/* 			 * This mbuf has odd number of bytes. 			 * There could be a word split between 			 * this mbuf and the next mbuf. 			 * Save the last byte (to prepend to next mbuf). 			 */
 name|su
 operator|=
 operator|*
@@ -887,7 +901,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* The last mbuf has odd # of bytes. Follow the 		   standard (the odd byte is shifted left by 8 bits) */
+comment|/* 		 * The last mbuf has odd # of bytes.  Follow the 		 * standard (the odd byte is shifted left by 8 bits). 		 */
 name|sum
 operator|+=
 name|su
