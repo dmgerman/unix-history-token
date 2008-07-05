@@ -123,6 +123,8 @@ literal|"r"
 operator|(
 name|b
 operator|)
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
@@ -187,6 +189,8 @@ literal|"r"
 operator|(
 name|c
 operator|)
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
@@ -222,7 +226,7 @@ name|__tmp3
 decl_stmt|,
 name|__tmp4
 decl_stmt|;
-comment|/* 	 * Use 32 bit memory accesses and additions - addition with carry only 	 * works for 32 bits, and fixing up alignment issues for 64 is probably 	 * more trouble than it's worth. 	 * This may read outside of the ip header, but does not cross a page 	 * boundary in doing so, so that should be OK. 	 * Actually, this specialized implementation might be overkill - using 	 * a generic implementation for both in_cksum_skip and in_cksum_hdr 	 * should not be too much more expensive. 	 */
+comment|/* 	 * Use 32-bit memory accesses and additions - addition with carry only 	 * works for 32 bits, and fixing up alignment issues for 64 is probably 	 * more trouble than it's worth. 	 * This may read outside of the ip header, but does not cross a page 	 * boundary in doing so, so that should be OK. 	 * Actually, this specialized implementation might be overkill - using 	 * a generic implementation for both in_cksum_skip and in_cksum_hdr 	 * should not be too much more expensive. 	 */
 define|#
 directive|define
 name|__LD_ADD
@@ -238,7 +242,7 @@ parameter_list|,
 name|mod
 parameter_list|)
 define|\
-value|"lduw [" #addr " + " #offs "], " #tmp "\n" \     "add" # mod " " #sum ", " #tmp ", " #sum "\n"
+value|"lduw [" #addr " + " #offs "], " #tmp "\n"				\     "add" # mod " " #sum ", " #tmp ", " #sum "\n"
 asm|__asm(
 literal|"and %5, 3, %3\n"
 literal|"andn %5, 3, %1\n"
@@ -361,6 +365,8 @@ literal|"1"
 operator|(
 name|ip
 operator|)
+operator|:
+literal|"cc"
 block|)
 function|;
 end_function
