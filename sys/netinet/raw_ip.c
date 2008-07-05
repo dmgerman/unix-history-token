@@ -645,7 +645,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|raw_append
+name|rip_append
 parameter_list|(
 name|struct
 name|inpcb
@@ -1106,7 +1106,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|raw_append
+name|rip_append
 argument_list|(
 name|last
 argument_list|,
@@ -1136,7 +1136,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|raw_append
+name|rip_append
 argument_list|(
 name|last
 argument_list|,
