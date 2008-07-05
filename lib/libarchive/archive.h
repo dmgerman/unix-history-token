@@ -289,7 +289,7 @@ comment|/*  * The version number is expressed as a single integer that makes it 
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|2005004
+value|2005005
 name|__LA_DECL
 name|int
 name|archive_version_number
@@ -301,7 +301,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING
-value|"libarchive 2.5.4b"
+value|"libarchive 2.5.5"
 name|__LA_DECL
 specifier|const
 name|char
