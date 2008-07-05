@@ -8089,15 +8089,10 @@ argument_list|,
 name|IEEE80211_DELBAPS_TID
 argument_list|)
 operator||
-name|SM
-argument_list|(
 name|args
 index|[
 literal|1
 index|]
-argument_list|,
-name|IEEE80211_DELBAPS_INIT
-argument_list|)
 expr_stmt|;
 name|ADDSHORT
 argument_list|(
