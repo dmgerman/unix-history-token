@@ -50,6 +50,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -765,6 +777,12 @@ decl_stmt|,
 name|hlen
 decl_stmt|;
 comment|/* W/out a hostname a domain-name is nonsense */
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strlen
@@ -774,9 +792,17 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
+block|}
 comment|/* Get the host's unqualified name (strip off the domain) */
 name|snprintf
 argument_list|(
@@ -790,6 +816,12 @@ argument_list|,
 literal|"%s"
 argument_list|,
 name|hostname
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
 argument_list|)
 expr_stmt|;
 name|ptr

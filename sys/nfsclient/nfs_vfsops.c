@@ -2807,6 +2807,12 @@ operator|)
 return|;
 block|}
 comment|/* 	 * This is not really an nfs issue, but it is much easier to 	 * set hostname here and then let the "/etc/rc.xxx" files 	 * mount the right /var based upon its preset value. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|nd
@@ -2850,6 +2856,12 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|inittodr
 argument_list|(
 name|ntohl

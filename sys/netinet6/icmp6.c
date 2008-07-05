@@ -2803,6 +2803,12 @@ argument_list|)
 operator|-
 name|maxlen
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|maxhlen
@@ -2895,6 +2901,12 @@ name|maxhlen
 argument_list|)
 expr_stmt|;
 comment|/* meaningless TTL */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|noff
 operator|=
 sizeof|sizeof
@@ -5410,6 +5422,12 @@ case|case
 name|ICMP6_NI_SUBJ_FQDN
 case|:
 comment|/* 			 * Validate Subject name with gethostname(3). 			 * 			 * The behavior may need some debate, since: 			 * - we are not sure if the node has FQDN as 			 *   hostname (returned by gethostname(3)). 			 * - the code does wildcard match for truncated names. 			 *   however, we are not sure if we want to perform 			 *   wildcard match, if gethostname(3) side has 			 *   truncated hostname. 			 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 name|ni6_nametodns
@@ -5419,6 +5437,12 @@ argument_list|,
 name|hostnamelen
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -5958,6 +5982,12 @@ literal|0
 expr_stmt|;
 comment|/* ditto. */
 comment|/* 		 * XXX do we really have FQDN in variable "hostname"? 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|n
 operator|->
 name|m_next
@@ -5969,6 +5999,12 @@ argument_list|,
 name|hostnamelen
 argument_list|,
 name|oldfqdn
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
 argument_list|)
 expr_stmt|;
 if|if

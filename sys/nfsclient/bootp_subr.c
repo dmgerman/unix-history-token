@@ -7797,6 +7797,12 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|hostname
@@ -7809,6 +7815,12 @@ argument_list|(
 literal|"hostname %s "
 argument_list|,
 name|hostname
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
 argument_list|)
 expr_stmt|;
 name|gctx

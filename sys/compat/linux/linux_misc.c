@@ -3530,6 +3530,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* __i386__ */
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|strlcpy
 argument_list|(
 name|utsname
@@ -3539,6 +3545,12 @@ argument_list|,
 name|domainname
 argument_list|,
 name|LINUX_MAX_UTSNAME
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
 argument_list|)
 expr_stmt|;
 return|return

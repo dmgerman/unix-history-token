@@ -754,6 +754,7 @@ break|break;
 case|case
 name|ISO_SUSP_CFLAG_HOST
 case|:
+comment|/* XXXRW: locking. */
 comment|/* Inserting hostname i.e. "kurt.tools.de" */
 name|inbuf
 operator|=
@@ -993,6 +994,7 @@ break|break;
 case|case
 name|ISO_SUSP_CFLAG_HOST
 case|:
+comment|/* XXXRW: locking. */
 comment|/* Inserting hostname i.e. "kurt.tools.de" */
 name|inbuf
 operator|=

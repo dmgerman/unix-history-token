@@ -2175,6 +2175,7 @@ break|break;
 case|case
 name|SVR4_SI_SRPC_DOMAIN
 case|:
+comment|/* XXXRW: locking? */
 name|str
 operator|=
 name|domainname

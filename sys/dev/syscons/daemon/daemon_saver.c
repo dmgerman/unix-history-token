@@ -1640,6 +1640,7 @@ modifier|*
 name|adp
 parameter_list|)
 block|{
+comment|/* XXXRW: Locking -- these can change! */
 name|messagelen
 operator|=
 name|strlen

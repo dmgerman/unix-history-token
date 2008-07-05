@@ -2366,6 +2366,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|strlcpy
 argument_list|(
 name|buf
@@ -2375,6 +2382,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

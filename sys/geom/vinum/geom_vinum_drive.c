@@ -207,6 +207,12 @@ name|config_length
 operator|=
 name|GV_CFG_LEN
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|hostname
@@ -218,6 +224,12 @@ operator|.
 name|sysname
 argument_list|,
 name|GV_HOSTNAME_LEN
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
 argument_list|)
 expr_stmt|;
 name|strncpy

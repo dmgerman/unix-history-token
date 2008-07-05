@@ -80,6 +80,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -157,6 +169,12 @@ decl_stmt|;
 name|uint32_t
 name|junk
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xdrs
@@ -266,6 +284,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|hostname_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

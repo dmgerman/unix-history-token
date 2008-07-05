@@ -47,6 +47,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|mtx
+name|hostname_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|unsigned
 name|long
 name|hostid
