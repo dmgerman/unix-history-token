@@ -10643,7 +10643,7 @@ end_endif
 begin_function_decl
 specifier|static
 name|void
-name|raw_input
+name|lmc_raw_input
 parameter_list|(
 name|struct
 name|ifnet
@@ -11221,7 +11221,7 @@ end_if
 begin_function_decl
 specifier|static
 name|int
-name|raw_ioctl
+name|lmc_raw_ioctl
 parameter_list|(
 name|struct
 name|ifnet
@@ -11237,7 +11237,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ifnet_ioctl
+name|lmc_ifnet_ioctl
 parameter_list|(
 name|struct
 name|ifnet
@@ -11253,7 +11253,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ifnet_start
+name|lmc_ifnet_start
 parameter_list|(
 name|struct
 name|ifnet
@@ -11265,7 +11265,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|raw_output
+name|lmc_raw_output
 parameter_list|(
 name|struct
 name|ifnet
@@ -11289,7 +11289,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ifnet_watchdog
+name|lmc_ifnet_watchdog
 parameter_list|(
 name|struct
 name|ifnet
@@ -11356,7 +11356,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ifnet_attach
+name|lmc_ifnet_attach
 parameter_list|(
 name|softc_t
 modifier|*
@@ -11367,7 +11367,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ifnet_detach
+name|lmc_ifnet_detach
 parameter_list|(
 name|softc_t
 modifier|*
