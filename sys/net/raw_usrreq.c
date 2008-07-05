@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)raw_usrreq.c	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)raw_usrreq.c	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -109,7 +109,9 @@ end_comment
 begin_function
 name|void
 name|raw_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|LIST_INIT
 argument_list|(
@@ -121,7 +123,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Raw protocol input routine.  Find the socket  * associated with the packet(s) and move them over.  If  * nothing exists for this packet, drop it.  */
+comment|/*  * Raw protocol input routine.  Find the socket associated with the packet(s)  * and move them over.  If nothing exists for this packet, drop it.  */
 end_comment
 
 begin_comment
@@ -132,44 +134,32 @@ begin_function
 name|void
 name|raw_input
 parameter_list|(
-name|m0
-parameter_list|,
-name|proto
-parameter_list|,
-name|src
-parameter_list|,
-name|dst
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|struct
 name|sockproto
 modifier|*
 name|proto
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|src
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
 name|dst
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|rawcb
 modifier|*
 name|rp
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -233,7 +223,7 @@ operator|->
 name|sp_protocol
 condition|)
 continue|continue;
-comment|/* 		 * We assume the lower level routines have 		 * placed the address in a canonical format 		 * suitable for a structure comparison. 		 * 		 * Note that if the lengths are not the same 		 * the comparison will fail at the first byte. 		 */
+comment|/* 		 * We assume the lower level routines have placed the address 		 * in a canonical format suitable for a structure comparison. 		 * 		 * Note that if the lengths are not the same the comparison 		 * will fail at the first byte. 		 */
 define|#
 directive|define
 name|equal
@@ -337,13 +327,11 @@ name|n
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|sorwakeup
 argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|last
@@ -387,13 +375,11 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|sorwakeup
 argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 name|m_freem
@@ -408,7 +394,7 @@ name|rawcb_mtx
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -418,24 +404,18 @@ begin_function
 name|void
 name|raw_ctlinput
 parameter_list|(
-name|cmd
-parameter_list|,
-name|arg
-parameter_list|,
-name|dummy
-parameter_list|)
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|dummy
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -568,7 +548,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Implementors of raw sockets will already have allocated the PCB, 	 * so it must be non-NULL here. 	 */
+comment|/* 	 * Implementors of raw sockets will already have allocated the PCB, 	 *  so it must be non-NULL here. 	 */
 name|KASSERT
 argument_list|(
 name|sotorawcb
@@ -640,7 +620,9 @@ name|td
 parameter_list|)
 block|{
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 end_function
@@ -667,7 +649,9 @@ name|td
 parameter_list|)
 block|{
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 end_function
@@ -760,11 +744,11 @@ name|rcb_faddr
 operator|==
 literal|0
 condition|)
-block|{
 return|return
+operator|(
 name|ENOTCONN
+operator|)
 return|;
-block|}
 name|raw_disconnect
 argument_list|(
 name|rp
@@ -776,7 +760,9 @@ name|so
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -831,11 +817,11 @@ name|rcb_faddr
 operator|==
 literal|0
 condition|)
-block|{
 return|return
+operator|(
 name|ENOTCONN
+operator|)
 return|;
-block|}
 operator|*
 name|nam
 operator|=
@@ -849,7 +835,9 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1083,7 +1071,9 @@ name|so
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1135,7 +1125,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 operator|*
 name|nam
@@ -1150,7 +1142,9 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
