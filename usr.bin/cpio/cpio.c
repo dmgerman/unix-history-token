@@ -2352,7 +2352,7 @@ argument_list|,
 name|destpath
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Obviously, this only gets invoked in pass mode, since 	 * option_link is nonsense otherwise.  Note that we can't 	 * hardlink dirs, and that if a link operation fails (because 	 * of cross-device restrictions), we'll fall back to copy mode 	 * for that entry. 	 */
+comment|/* 	 * Option_link only makes sense in pass mode and for 	 * regular files.  Also note: if a link operation fails 	 * because of cross-device restrictions, we'll fall back 	 * to copy mode for that entry. 	 * 	 * TODO: Test other cpio implementations to see if they 	 * hard-link anything other than regular files here. 	 */
 if|if
 condition|(
 name|cpio
@@ -2363,8 +2363,8 @@ name|archive_entry_filetype
 argument_list|(
 name|entry
 argument_list|)
-operator|!=
-name|AE_IFDIR
+operator|==
+name|AE_IFREG
 condition|)
 block|{
 name|struct
