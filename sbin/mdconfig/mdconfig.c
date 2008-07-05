@@ -293,7 +293,7 @@ literal|"usage: mdconfig -a -t type [-n] [-o [no]option] ... [-f file]\n"
 literal|"                [-s size] [-S sectorsize] [-u unit]\n"
 literal|"                [-x sectors/track] [-y heads/cyl]\n"
 literal|"       mdconfig -d -u unit\n"
-literal|"       mdconfig -l [-n] [-u unit]\n"
+literal|"       mdconfig -l [-v] [-n] [-u unit]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -358,6 +358,8 @@ decl_stmt|,
 name|fd
 decl_stmt|,
 name|i
+decl_stmt|,
+name|vflag
 decl_stmt|;
 name|char
 modifier|*
@@ -407,6 +409,10 @@ argument_list|,
 literal|"could not allocate memory"
 argument_list|)
 expr_stmt|;
+name|vflag
+operator|=
+literal|0
+expr_stmt|;
 name|bzero
 argument_list|(
 name|mdio
@@ -430,7 +436,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:df:lno:s:S:t:u:x:y:"
+literal|"ab:df:lno:s:S:t:u:vx:y:"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1388,6 +1394,23 @@ name|MD_AUTOUNIT
 expr_stmt|;
 break|break;
 case|case
+literal|'v'
+case|:
+if|if
+condition|(
+name|cmdline
+operator|!=
+literal|3
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|vflag
+operator|=
+name|OPT_VERBOSE
+expr_stmt|;
+break|break;
+case|case
 literal|'x'
 case|:
 if|if
@@ -1656,6 +1679,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|OPT_LIST
+operator||
+name|vflag
 argument_list|)
 expr_stmt|;
 block|}
@@ -2165,9 +2190,18 @@ name|OPT_DONE
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|opt
 operator|&
 name|OPT_LIST
+operator|)
+operator|&&
+operator|!
+operator|(
+name|opt
+operator|&
+name|OPT_VERBOSE
+operator|)
 condition|)
 name|printf
 argument_list|(
@@ -2194,6 +2228,13 @@ operator|(
 name|opt
 operator|&
 name|OPT_DONE
+operator|)
+operator|&&
+operator|!
+operator|(
+name|opt
+operator|&
+name|OPT_VERBOSE
 operator|)
 condition|)
 name|printf
