@@ -105,6 +105,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|bpf_zerocopy_buf_reclaimed
+parameter_list|(
+name|struct
+name|bpf_d
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|bpf_zerocopy_canfreebuf
 parameter_list|(

@@ -1499,6 +1499,72 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Notification from the BPF framework that the free buffer has been been  * re-assigned.  This happens when the user ackknowledges the buffer.  */
+end_comment
+
+begin_function
+name|void
+name|bpf_zerocopy_buf_reclaimed
+parameter_list|(
+name|struct
+name|bpf_d
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|struct
+name|zbuf
+modifier|*
+name|zb
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|d
+operator|->
+name|bd_bufmode
+operator|==
+name|BPF_BUFMODE_ZBUF
+argument_list|,
+operator|(
+literal|"bpf_zerocopy_reclaim_buf: not in zbuf mode"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|d
+operator|->
+name|bd_fbuf
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"bpf_zerocopy_buf_reclaimed: NULL free buff"
+operator|)
+argument_list|)
+expr_stmt|;
+name|zb
+operator|=
+operator|(
+expr|struct
+name|zbuf
+operator|*
+operator|)
+name|d
+operator|->
+name|bd_fbuf
+expr_stmt|;
+name|zb
+operator|->
+name|zb_flags
+operator|&=
+operator|~
+name|ZBUF_FLAG_IMMUTABLE
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Query from the BPF framework regarding whether the buffer currently in the  * held position can be moved to the free position, which can be indicated by  * the user process making their generation number equal to the kernel  * generation number.  */
 end_comment
 

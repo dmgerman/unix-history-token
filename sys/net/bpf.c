@@ -1004,6 +1004,56 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * This function gets called when the free buffer is re-assigned.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bpf_buf_reclaimed
+parameter_list|(
+name|struct
+name|bpf_d
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|BPFD_LOCK_ASSERT
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|d
+operator|->
+name|bd_bufmode
+condition|)
+block|{
+case|case
+name|BPF_BUFMODE_BUFFER
+case|:
+return|return;
+case|case
+name|BPF_BUFMODE_ZBUF
+case|:
+name|bpf_zerocopy_buf_reclaimed
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+return|return;
+default|default:
+name|panic
+argument_list|(
+literal|"bpf_buf_reclaimed"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * If the buffer mechanism has a way to decide that a held buffer can be made  * free, then it is exposed via the bpf_canfreebuf() interface.  (1) is  * returned if the buffer can be discarded, (0) is returned if it cannot.  */
 end_comment
 
@@ -2948,6 +2998,11 @@ name|bd_hlen
 operator|=
 literal|0
 expr_stmt|;
+name|bpf_buf_reclaimed
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|BPFD_UNLOCK
 argument_list|(
 name|d
@@ -3637,6 +3692,11 @@ operator|->
 name|bd_hbuf
 operator|=
 name|NULL
+expr_stmt|;
+name|bpf_buf_reclaimed
+argument_list|(
+name|d
+argument_list|)
 expr_stmt|;
 block|}
 name|d
@@ -6765,6 +6825,11 @@ operator|->
 name|bd_hlen
 operator|=
 literal|0
+expr_stmt|;
+name|bpf_buf_reclaimed
+argument_list|(
+name|d
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Figure out how many bytes to move.  If the packet is 	 * greater or equal to the snapshot length, transfer that 	 * much.  Otherwise, transfer the whole packet (unless 	 * we hit the buffer size limit). 	 */
