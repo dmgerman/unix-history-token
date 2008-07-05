@@ -698,6 +698,14 @@ name|ich_arg
 operator|=
 name|dev
 expr_stmt|;
+name|config_intrhook_establish
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_ich
+argument_list|)
+expr_stmt|;
 comment|/* 	 * dev.k8temp.N tree. 	 */
 name|sysctlctx
 operator|=
