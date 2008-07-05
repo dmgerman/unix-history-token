@@ -4356,6 +4356,12 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|entry
+operator|!=
+name|NULL
+condition|)
 name|archive_entry_free
 argument_list|(
 name|entry
