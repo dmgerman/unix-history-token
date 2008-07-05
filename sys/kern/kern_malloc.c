@@ -662,13 +662,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|u_long
 name|vm_kmem_size
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_ULONG
 argument_list|(
 name|_vm
 argument_list|,
@@ -689,13 +689,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|u_int
+specifier|static
+name|u_long
 name|vm_kmem_size_min
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_ULONG
 argument_list|(
 name|_vm
 argument_list|,
@@ -716,13 +717,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|u_int
+specifier|static
+name|u_long
 name|vm_kmem_size_max
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_ULONG
 argument_list|(
 name|_vm
 argument_list|,
@@ -743,6 +745,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|vm_kmem_size_scale
 decl_stmt|;
@@ -2386,7 +2389,7 @@ name|VM_KMEM_SIZE_MIN
 expr_stmt|;
 endif|#
 directive|endif
-name|TUNABLE_INT_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"vm.kmem_size_min"
 argument_list|,
@@ -2422,7 +2425,7 @@ name|VM_KMEM_SIZE_MAX
 expr_stmt|;
 endif|#
 directive|endif
-name|TUNABLE_INT_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"vm.kmem_size_max"
 argument_list|,
@@ -2450,7 +2453,7 @@ directive|ifndef
 name|BURN_BRIDGES
 if|if
 condition|(
-name|TUNABLE_INT_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.vm.kmem.size"
 argument_list|,
@@ -2467,7 +2470,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|TUNABLE_INT_FETCH
+name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"vm.kmem_size"
 argument_list|,
