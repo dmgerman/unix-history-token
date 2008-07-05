@@ -527,6 +527,29 @@ value|i386_memio_free((t), (h), (s))
 end_define
 
 begin_comment
+comment|/*  *      int bus_space_compare (bus_space_tag_t t1, bus_space_handle_t bsh1,  *          bus_space_tag_t t2, bus_space_handle_t bsh2);  *  * Compare two resources.  */
+end_comment
+
+begin_function_decl
+name|int
+name|i386_memio_compare
+parameter_list|(
+name|bus_space_tag_t
+name|t1
+parameter_list|,
+name|bus_space_handle_t
+name|bsh1
+parameter_list|,
+name|bus_space_tag_t
+name|t2
+parameter_list|,
+name|bus_space_handle_t
+name|bsh2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Access methods for bus resources and address space.  */
 end_comment
 
