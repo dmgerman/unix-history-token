@@ -238,6 +238,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VIA_8237_PMU_ID
+value|0x32271106
+end_define
+
+begin_define
+define|#
+directive|define
 name|VIA_CX700_PMU_ID
 value|0x83241106
 end_define
@@ -1178,6 +1185,26 @@ case|:
 name|desc
 operator|=
 literal|"VIA VT8235 Power Management Unit"
+expr_stmt|;
+name|viapm
+operator|->
+name|type
+operator|=
+name|VIAPM_TYP_UNKNOWN
+expr_stmt|;
+name|base_cfgreg
+operator|=
+name|VIAPM_8233_BASE
+expr_stmt|;
+goto|goto
+name|viapro
+goto|;
+case|case
+name|VIA_8237_PMU_ID
+case|:
+name|desc
+operator|=
+literal|"VIA VT8237 Power Management Unit"
 expr_stmt|;
 name|viapm
 operator|->
