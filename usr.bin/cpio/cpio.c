@@ -533,7 +533,19 @@ name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
 expr_stmt|;
-comment|/* TODO: If run by root, set owner as well. */
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|cpio
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_OWNER
+expr_stmt|;
 name|cpio
 operator|->
 name|bytes_per_block
