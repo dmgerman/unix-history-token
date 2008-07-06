@@ -681,7 +681,7 @@ name|sysctl_oid
 modifier|*
 name|sysctlnode
 decl_stmt|;
-comment|/* 	 * Setup intrhook function to create dev.cpu sysctl entries. This is 	 * needed because the cpu driver may be loaded late on boot, before 	 * us. 	 */
+comment|/* 	 * Setup intrhook function to create dev.cpu sysctl entries. This is 	 * needed because the cpu driver may be loaded late on boot, after 	 * us. 	 */
 name|sc
 operator|->
 name|sc_ich
