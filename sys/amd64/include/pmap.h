@@ -366,7 +366,7 @@ begin_define
 define|#
 directive|define
 name|NKPT
-value|2688
+value|32
 end_define
 
 begin_endif
@@ -389,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|NKPDPE
-value|howmany(NKPT, NPDEPG)
+value|6
 end_define
 
 begin_comment
