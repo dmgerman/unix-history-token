@@ -2449,7 +2449,8 @@ name|int
 name|errno
 parameter_list|)
 block|{
-name|INP_WLOCK_ASSERT
+comment|/* 	 * While udp_ctlinput() always calls udp_notify() with a read lock 	 * when invoking it directly, in_pcbnotifyall() currently uses write 	 * locks due to sharing code with TCP.  For now, accept either a read 	 * or a write lock, but a read lock is sufficient. 	 */
+name|INP_LOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -2656,7 +2657,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_WLOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2681,7 +2682,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_WUNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
