@@ -3757,7 +3757,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCSETWF		Set ethernet write filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  *  BIOCGHDRCMPLT	Get "header already complete" flag  *  BIOCSHDRCMPLT	Set "header already complete" flag  *  BIOCGDIRECTION	Get packet direction flag  *  BIOCSDIRECTION	Set packet direction flag  *  BIOCLOCK		Set "locked" flag  *  BIOCFEEDBACK	Set packet feedback mode.  *  BIOCSETZBUF		Set current zero-copy buffer locations.  *  BIOCGETZMAX		Get maximum zero-copy buffer size.  *  BIOCROTZBUF		Force rotation of zero-copy buffer  *  BIOCSETBUFMODE	Set buffer mode.  *  BIOCGETBUFMODE	Get current buffer mode.  */
+comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set read filter.  *  BIOCSETFNR		Set read filter without resetting descriptor.  *  BIOCSETWF		Set write filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  *  BIOCGHDRCMPLT	Get "header already complete" flag  *  BIOCSHDRCMPLT	Set "header already complete" flag  *  BIOCGDIRECTION	Get packet direction flag  *  BIOCSDIRECTION	Set packet direction flag  *  BIOCLOCK		Set "locked" flag  *  BIOCFEEDBACK	Set packet feedback mode.  *  BIOCSETZBUF		Set current zero-copy buffer locations.  *  BIOCGETZMAX		Get maximum zero-copy buffer size.  *  BIOCROTZBUF		Force rotation of zero-copy buffer  *  BIOCSETBUFMODE	Set buffer mode.  *  BIOCGETBUFMODE	Get current buffer mode.  */
 end_comment
 
 begin_comment
@@ -4065,6 +4065,9 @@ break|break;
 comment|/* 	 * Set link layer read filter. 	 */
 case|case
 name|BIOCSETF
+case|:
+case|case
+name|BIOCSETFNR
 case|:
 case|case
 name|BIOCSETWF
@@ -5120,12 +5123,18 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-block|}
+if|if
+condition|(
+name|cmd
+operator|==
+name|BIOCSETF
+condition|)
 name|reset_d
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+block|}
 name|BPFD_UNLOCK
 argument_list|(
 name|d
@@ -5285,12 +5294,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
+if|if
+condition|(
+name|cmd
+operator|==
+name|BIOCSETF
+condition|)
 name|reset_d
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+block|}
 name|BPFD_UNLOCK
 argument_list|(
 name|d

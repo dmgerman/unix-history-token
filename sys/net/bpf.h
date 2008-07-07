@@ -413,6 +413,13 @@ name|BIOCSETZBUF
 value|_IOW('B',129, struct bpf_zbuf)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIOCSETFNR
+value|_IOW('B',130, struct bpf_program)
+end_define
+
 begin_comment
 comment|/* Obsolete */
 end_comment
