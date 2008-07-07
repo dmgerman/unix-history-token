@@ -1274,6 +1274,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|INP_INFO_RUNLOCK
+argument_list|(
+operator|&
+name|udbinfo
+argument_list|)
+expr_stmt|;
 name|udp6_append
 argument_list|(
 name|inp
@@ -1289,12 +1295,6 @@ expr_stmt|;
 name|INP_RUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_RUNLOCK
-argument_list|(
-operator|&
-name|udbinfo
 argument_list|)
 expr_stmt|;
 return|return
