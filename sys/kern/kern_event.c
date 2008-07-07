@@ -5946,12 +5946,6 @@ operator|==
 name|KN_INFLUX
 condition|)
 block|{
-name|kq
-operator|->
-name|kq_state
-operator||=
-name|KQ_FLUXWAIT
-expr_stmt|;
 if|if
 condition|(
 name|influx
@@ -5967,6 +5961,12 @@ name|kq
 argument_list|)
 expr_stmt|;
 block|}
+name|kq
+operator|->
+name|kq_state
+operator||=
+name|KQ_FLUXWAIT
+expr_stmt|;
 name|error
 operator|=
 name|msleep
