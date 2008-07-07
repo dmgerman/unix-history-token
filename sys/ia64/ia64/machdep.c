@@ -6833,13 +6833,23 @@ operator|<
 name|lim
 condition|)
 block|{
-asm|__asm __volatile("fc.i %0" :: "r"(va));
+name|ia64_fc_i
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
 name|va
 operator|+=
 literal|32
 expr_stmt|;
 comment|/* XXX */
 block|}
+name|ia64_sync_i
+argument_list|()
+expr_stmt|;
+name|ia64_srlz_i
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
