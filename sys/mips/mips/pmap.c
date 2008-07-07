@@ -4774,7 +4774,7 @@ block|}
 comment|/* 		 * This index is bogus, but out of the way 		 */
 name|req
 operator|=
-name|VM_ALLOC_SYSTEM
+name|VM_ALLOC_INTERRUPT
 operator||
 name|VM_ALLOC_WIRED
 operator||
