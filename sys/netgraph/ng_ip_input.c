@@ -226,7 +226,7 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-name|netisr_dispatch
+name|netisr_queue
 argument_list|(
 name|NETISR_IP
 argument_list|,
