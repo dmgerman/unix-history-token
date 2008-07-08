@@ -294,6 +294,10 @@ name|icmp6_filter
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*-  * struct inpcb captures the network layer state for TCP, UDP, and raw IPv4  * and IPv6 sockets.  In the case of TCP, further per-connection state is  * hung off of inp_ppcb most of the time.  Almost all fields of struct inpcb  * are static after creation or protected by a per-inpcb rwlock, inp_lock.  A  * few fields also require the global pcbinfo lock for the inpcb to be held,  * when modified, such as the global connection lists and hashes, as well as  * binding information (which affects which hash a connection is on).  This  * model means that connections can be looked up without holding the  * per-connection lock, which is important for performance when attempting to  * find the connection for a packet given its IP and port tuple.  Writing to  * these fields that write locks be held on both the inpcb and global locks.  *  * Key:  * (c) - Constant after initialization  * (i) - Protected by the inpcb lock  * (p) - Protected by the pcbinfo lock for the inpcb  * (s) - Protected by another subsystem's locks  * (x) - Undefined locking  *  * A few other notes:  *  * When a read lock is held, stability of the field is guaranteed; to write  * to a field, a write lock must generally be held.  *  * netinet/netinet6-layer code should not assume that the inp_socket pointer  * is safe to dereference without inp_lock being held, even for protocols  * other than TCP (where the inpcb persists during TIMEWAIT even after the  * socket has been freed), or there may be close(2)-related races.  *  * The inp_vflag field is overloaded, and would otherwise ideally be (c).  */
+end_comment
+
 begin_struct
 struct|struct
 name|inpcb
@@ -304,42 +308,43 @@ argument|inpcb
 argument_list|)
 name|inp_hash
 expr_stmt|;
-comment|/* hash list */
+comment|/* (i/p) hash list */
 name|LIST_ENTRY
 argument_list|(
 argument|inpcb
 argument_list|)
 name|inp_list
 expr_stmt|;
-comment|/* list for all PCBs of this proto */
+comment|/* (i/p) list for all PCBs for proto */
 name|void
 modifier|*
 name|inp_ppcb
 decl_stmt|;
-comment|/* pointer to per-protocol pcb */
+comment|/* (i) pointer to per-protocol pcb */
 name|struct
 name|inpcbinfo
 modifier|*
 name|inp_pcbinfo
 decl_stmt|;
-comment|/* PCB list info */
+comment|/* (c) PCB list info */
 name|struct
 name|socket
 modifier|*
 name|inp_socket
 decl_stmt|;
-comment|/* back pointer to socket */
+comment|/* (i)  back pointer to socket */
 name|u_int32_t
 name|inp_flow
 decl_stmt|;
+comment|/* (i) IPv6 flow information */
 name|int
 name|inp_flags
 decl_stmt|;
-comment|/* generic IP/datagram flags */
+comment|/* (i) generic IP/datagram flags */
 name|u_char
 name|inp_vflag
 decl_stmt|;
-comment|/* IP version flag (v4/v6) */
+comment|/* (i) IP version flag (v4/v6) */
 define|#
 directive|define
 name|INP_IPV4
@@ -376,19 +381,19 @@ comment|/* strong socket reference */
 name|u_char
 name|inp_ip_ttl
 decl_stmt|;
-comment|/* time to live proto */
+comment|/* (i) time to live proto */
 name|u_char
 name|inp_ip_p
 decl_stmt|;
-comment|/* protocol proto */
+comment|/* (c) protocol proto */
 name|u_char
 name|inp_ip_minttl
 decl_stmt|;
-comment|/* minimum TTL or drop */
+comment|/* (i) minimum TTL or drop */
 name|uint32_t
 name|inp_ispare1
 decl_stmt|;
-comment|/* connection id / queue id */
+comment|/* (x) connection id / queue id */
 name|void
 modifier|*
 name|inp_pspare
@@ -396,44 +401,44 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* rtentry / general use */
+comment|/* (x) rtentry / general use */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
 name|inp_inc
 decl_stmt|;
-comment|/* list for this PCB's local port */
+comment|/* (i/p) list for PCB's local port */
 name|struct
 name|label
 modifier|*
 name|inp_label
 decl_stmt|;
-comment|/* MAC label */
+comment|/* (i) MAC label */
 name|struct
 name|inpcbpolicy
 modifier|*
 name|inp_sp
 decl_stmt|;
-comment|/* for IPSEC */
+comment|/* (s) for IPSEC */
 comment|/* Protocol-dependent part; options. */
 struct|struct
 block|{
 name|u_char
 name|inp4_ip_tos
 decl_stmt|;
-comment|/* type of service proto */
+comment|/* (i) type of service proto */
 name|struct
 name|mbuf
 modifier|*
 name|inp4_options
 decl_stmt|;
-comment|/* IP options */
+comment|/* (i) IP options */
 name|struct
 name|ip_moptions
 modifier|*
 name|inp4_moptions
 decl_stmt|;
-comment|/* IP multicast options */
+comment|/* (i) IP multicast options */
 block|}
 name|inp_depend4
 struct|;
@@ -467,31 +472,31 @@ name|inp_moptions
 value|inp_depend4.inp4_moptions
 struct|struct
 block|{
-comment|/* IP options */
+comment|/* (i) IP options */
 name|struct
 name|mbuf
 modifier|*
 name|inp6_options
 decl_stmt|;
-comment|/* IP6 options for outgoing packets */
+comment|/* (i) IP6 options for outgoing packets */
 name|struct
 name|ip6_pktopts
 modifier|*
 name|inp6_outputopts
 decl_stmt|;
-comment|/* IP multicast options */
+comment|/* (i) IP multicast options */
 name|struct
 name|ip6_moptions
 modifier|*
 name|inp6_moptions
 decl_stmt|;
-comment|/* ICMPv6 code type filter */
+comment|/* (i) ICMPv6 code type filter */
 name|struct
 name|icmp6_filter
 modifier|*
 name|inp6_icmp6filt
 decl_stmt|;
-comment|/* IPV6_CHECKSUM setsockopt */
+comment|/* (i) IPV6_CHECKSUM setsockopt */
 name|int
 name|inp6_cksum
 decl_stmt|;
@@ -507,12 +512,13 @@ argument|inpcb
 argument_list|)
 name|inp_portlist
 expr_stmt|;
+comment|/* (i/p) */
 name|struct
 name|inpcbport
 modifier|*
 name|inp_phd
 decl_stmt|;
-comment|/* head of this list */
+comment|/* (i/p) head of this list */
 define|#
 directive|define
 name|inp_zero_size
@@ -520,7 +526,7 @@ value|offsetof(struct inpcb, inp_gencnt)
 name|inp_gen_t
 name|inp_gencnt
 decl_stmt|;
-comment|/* generation count of this instance */
+comment|/* (c) generation count of this instance */
 name|struct
 name|rwlock
 name|inp_lock
