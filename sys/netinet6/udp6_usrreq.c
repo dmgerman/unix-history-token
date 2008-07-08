@@ -4460,6 +4460,16 @@ operator|=
 name|in6_mapped_sockaddr
 block|,
 operator|.
+name|pru_soreceive
+operator|=
+name|soreceive_dgram
+block|,
+operator|.
+name|pru_sosend
+operator|=
+name|sosend_dgram
+block|,
+operator|.
 name|pru_sosetlabel
 operator|=
 name|in_pcbsosetlabel
