@@ -82,6 +82,20 @@ directive|include
 file|<libgeom.h>
 end_include
 
+begin_comment
+comment|/*   * Global pointer to a string that is used to avoid an errorneous free in  * gctl_free.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|nomemmsg
+index|[]
+init|=
+literal|"Could not allocate memory"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|gctl_dump
@@ -439,7 +453,7 @@ name|gctl_set_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Could not allocate memory"
+name|nomemmsg
 argument_list|)
 expr_stmt|;
 if|if
@@ -454,7 +468,7 @@ name|req
 operator|->
 name|error
 operator|=
-literal|"Could not allocate memory"
+name|nomemmsg
 expr_stmt|;
 block|}
 end_function
@@ -527,7 +541,7 @@ name|req
 operator|->
 name|arg
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|req
 operator|->
@@ -678,6 +692,15 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+return|return;
 name|ap
 operator|->
 name|nlen
@@ -822,6 +845,15 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+return|return;
 name|ap
 operator|->
 name|nlen
@@ -940,8 +972,10 @@ name|req
 operator|->
 name|error
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|req
 operator|->
 name|lerror
@@ -973,19 +1007,6 @@ name|error
 operator|)
 return|;
 block|}
-name|memset
-argument_list|(
-name|req
-operator|->
-name|error
-argument_list|,
-literal|0
-argument_list|,
-name|req
-operator|->
-name|lerror
-argument_list|)
-expr_stmt|;
 name|req
 operator|->
 name|lerror
@@ -1146,6 +1167,12 @@ operator|->
 name|error
 operator|!=
 name|NULL
+operator|&&
+name|req
+operator|->
+name|error
+operator|!=
+name|nomemmsg
 condition|)
 name|free
 argument_list|(
