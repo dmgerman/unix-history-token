@@ -2980,7 +2980,7 @@ argument_list|,
 name|RANDOM_NET
 argument_list|)
 expr_stmt|;
-name|netisr_queue
+name|netisr_dispatch
 argument_list|(
 name|isr
 argument_list|,
