@@ -389,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|NKPDPE
-value|6
+value|howmany(NKPT, NPDEPG)
 end_define
 
 begin_comment
@@ -481,11 +481,11 @@ begin_define
 define|#
 directive|define
 name|KPDPI
-value|(NPDPEPG-7)
+value|(NPDPEPG-2)
 end_define
 
 begin_comment
-comment|/* kernel map starts at -7GB */
+comment|/* kernbase at -2GB */
 end_comment
 
 begin_comment
