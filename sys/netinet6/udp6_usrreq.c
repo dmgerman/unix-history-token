@@ -2396,15 +2396,12 @@ argument_list|,
 name|optp
 argument_list|,
 name|inp
-operator|->
-name|in6p_moptions
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
-name|inp
+name|td
 operator|->
-name|in6p_laddr
+name|td_ucred
 argument_list|,
 operator|&
 name|oifp
