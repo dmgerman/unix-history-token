@@ -379,6 +379,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|_udatasel
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|pcb
 name|stoppcbs
@@ -2267,6 +2274,21 @@ name|rcr4
 argument_list|()
 operator||
 name|CR4_PGE
+argument_list|)
+expr_stmt|;
+name|load_ds
+argument_list|(
+name|_udatasel
+argument_list|)
+expr_stmt|;
+name|load_es
+argument_list|(
+name|_udatasel
+argument_list|)
+expr_stmt|;
+name|load_fs
+argument_list|(
+name|_udatasel
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin

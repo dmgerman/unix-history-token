@@ -6649,6 +6649,21 @@ argument_list|,
 name|SEL_UPL
 argument_list|)
 expr_stmt|;
+name|load_ds
+argument_list|(
+name|_udatasel
+argument_list|)
+expr_stmt|;
+name|load_es
+argument_list|(
+name|_udatasel
+argument_list|)
+expr_stmt|;
+name|load_fs
+argument_list|(
+name|_udatasel
+argument_list|)
+expr_stmt|;
 comment|/* setup proc 0's pcb */
 name|thread0
 operator|.
