@@ -42,18 +42,6 @@ name|rcb_socket
 decl_stmt|;
 comment|/* back pointer to socket */
 name|struct
-name|sockaddr
-modifier|*
-name|rcb_faddr
-decl_stmt|;
-comment|/* destination address */
-name|struct
-name|sockaddr
-modifier|*
-name|rcb_laddr
-decl_stmt|;
-comment|/* socket's address */
-name|struct
 name|sockproto
 name|rcb_proto
 decl_stmt|;
@@ -162,17 +150,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|raw_disconnect
-parameter_list|(
-name|struct
-name|rawcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|raw_input
 parameter_list|(
 name|struct
@@ -181,10 +158,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|sockproto
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
