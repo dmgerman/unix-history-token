@@ -201,18 +201,18 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * It is assumed that raw_attach is called 	 * after space has been allocated for the 	 * rawcb. 	 */
-if|if
-condition|(
+comment|/* 	 * It is assumed that raw_attach is called after space has been 	 * allocated for the rawcb; consumer protocols may simply allocate 	 * type struct rawcb, or a wrapper data structure that begins with a 	 * struct rawcb. 	 */
+name|KASSERT
+argument_list|(
 name|rp
-operator|==
-literal|0
-condition|)
-return|return
+operator|!=
+name|NULL
+argument_list|,
 operator|(
-name|ENOBUFS
+literal|"raw_attach: rp == NULL"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|soreserve
