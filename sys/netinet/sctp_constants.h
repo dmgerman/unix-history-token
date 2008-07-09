@@ -4719,6 +4719,11 @@ parameter_list|)
 value|(microuptime(x))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*#if defined(__FreeBSD__) || defined(__APPLE__)*/
 end_comment
@@ -4750,6 +4755,20 @@ end_comment
 begin_comment
 comment|/*#endif				 __FreeBSD__ */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Userspace__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -4809,7 +4828,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* _KERNEL || __Userspace__ */
 end_comment
 
 begin_endif

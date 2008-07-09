@@ -1237,12 +1237,21 @@ directive|include
 file|<netinet/sctp_lock_bsd.h>
 end_include
 
+begin_comment
+comment|/* TODO where to put non-_KERNEL things for __Userspace__? */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Userspace__
 argument_list|)
 end_if
 

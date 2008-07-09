@@ -11387,6 +11387,7 @@ name|time_entered
 operator|.
 name|tv_usec
 expr_stmt|;
+comment|/* 	 * TODO sctp_constants.h needs alternative time macros when _KERNEL 	 * is undefined. 	 */
 if|if
 condition|(
 name|timevalcmp
@@ -26346,9 +26347,10 @@ condition|(
 name|mlen
 operator|<
 operator|(
+name|SCTP_GET_IPV4_LENGTH
+argument_list|(
 name|ip
-operator|->
-name|ip_len
+argument_list|)
 operator|-
 name|iphlen
 operator|)
@@ -26648,7 +26650,12 @@ name|inp
 argument_list|)
 condition|)
 block|{
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_IPSEC
+argument_list|,
 name|ipsec4stat
+argument_list|)
 operator|.
 name|in_polvio
 operator|++

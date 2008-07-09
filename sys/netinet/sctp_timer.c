@@ -45,12 +45,6 @@ directive|ifdef
 name|INET6
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<netinet6/sctp6_var.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -1691,7 +1685,7 @@ name|mnet
 operator|->
 name|cwnd
 expr_stmt|;
-comment|//Useless ?
+comment|/* Useless? */
 block|}
 block|}
 block|}
@@ -7822,7 +7816,12 @@ name|sa6_embedscope
 argument_list|(
 name|sin6
 argument_list|,
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_use_defzone
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

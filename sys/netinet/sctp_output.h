@@ -46,6 +46,11 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Userspace__
+argument_list|)
 end_if
 
 begin_function_decl
@@ -924,6 +929,29 @@ name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL || __Userspace__ */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Userspace__
+argument_list|)
+end_if
 
 begin_function_decl
 name|int

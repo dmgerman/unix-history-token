@@ -3486,6 +3486,11 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Userspace__
+argument_list|)
 end_if
 
 begin_function_decl
@@ -3596,6 +3601,14 @@ operator|(
 name|defined
 argument_list|(
 name|_KERNEL
+argument_list|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|__Userspace__
 argument_list|)
 operator|)
 end_if
