@@ -2239,21 +2239,130 @@ value|0x0fc00
 end_define
 
 begin_comment
-comment|/*  *  Byte offsets into the EEPROM configuration buffer  */
+comment|/*  *  Word offsets into the EEPROM configuration buffer  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ISA_CNF_OFFSET
-value|0x6
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT_NO_MASK
+value|0x000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_NO_MASK
+value|0x0070
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_SA
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCHRDY_ENABLE
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_DMA_SIZE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* 0 16k 1 64k */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISA_AUTO_RxDMA
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_RxDMA
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_BURST
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|STREAM_TRANSFER
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANY_ISA_DMA
+value|(ISA_AUTO_RxDMA | ISA_RxDMA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOOT_PROM_FLAG
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEMORY_MODE
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PACKET_PAGE_BASE
+value|(ISA_CNF_OFFSET + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOOT_ROM_BASE
+value|(ISA_CNF_OFFSET + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOOT_PROM_MASK
+value|(ISA_CNF_OFFSET + 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TX_CTL_OFFSET
-value|(ISA_CNF_OFFSET + 8)
+value|(ISA_CNF_OFFSET + 4)
 end_define
 
 begin_comment
@@ -2264,7 +2373,7 @@ begin_define
 define|#
 directive|define
 name|AUTO_NEG_CNF_OFFSET
-value|(ISA_CNF_OFFSET + 8)
+value|(ISA_CNF_OFFSET + 4)
 end_define
 
 begin_comment
@@ -2272,7 +2381,7 @@ comment|/*  8920 eeprom */
 end_comment
 
 begin_comment
-comment|/*  *  the assumption here is that the bits in the eeprom are generally   *  in the same position as those in the autonegctl register.   *  Of course the IMM bit is not in that register so it must be   *  masked out  */
+comment|/* 	 *  the assumption here is that the bits in the eeprom are generally  	 *  in the same position as those in the autonegctl register.  	 *  Of course the IMM bit is not in that register so it must be  	 *  masked out 	 */
 end_comment
 
 begin_define
@@ -2307,7 +2416,7 @@ begin_define
 define|#
 directive|define
 name|EE_AUTO_NEG_CNF_MASK
-value|(EE_FORCE_FDX | EE_NLP_ENABLE | 	\ 				 EE_AUTO_NEG_ENABLE | EE_ALLOW_FDX)
+value|(EE_FORCE_FDX | EE_NLP_ENABLE | \ 				 EE_AUTO_NEG_ENABLE | EE_ALLOW_FDX)
 end_define
 
 begin_define
@@ -2318,14 +2427,14 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/*  ignore missing media	 */
+comment|/*  ignore missing media */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ADAPTER_CNF_OFFSET
-value|(AUTO_NEG_CNF_OFFSET + 2)
+value|(ISA_CNF_OFFSET + 5)
 end_define
 
 begin_define
@@ -2401,6 +2510,38 @@ end_define
 begin_define
 define|#
 directive|define
+name|A_CNF_WAKE_ENABLED
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_CNF_WAKE_CFG
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_CNF_CAN_WAKE
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_CNF_OPT_FLAGS
+value|0x1800
+end_define
+
+begin_comment
+comment|/* 00 server, 01 DOS 10 multi-user */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|A_CNF_NO_AUTO_POLARITY
 value|0x2000
 end_define
@@ -2422,68 +2563,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|MFG_DATE_OFFSET
+value|(ISA_CNF_OFFSET + 8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PACKET_PAGE_OFFSET
 value|0x8
-end_define
-
-begin_comment
-comment|/*  *  Bit definitions for the ISA configuration word from the EEPROM  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INT_NO_MASK
-value|0x000F
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMA_NO_MASK
-value|0x0070
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISA_DMA_SIZE
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISA_AUTO_RxDMA
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISA_RxDMA
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMA_BURST
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|STREAM_TRANSFER
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ANY_ISA_DMA
-value|(ISA_AUTO_RxDMA | ISA_RxDMA)
 end_define
 
 begin_comment

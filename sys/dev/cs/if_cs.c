@@ -1031,6 +1031,7 @@ argument_list|(
 literal|500000
 argument_list|)
 expr_stmt|;
+comment|/* Bad! */
 block|}
 end_function
 
@@ -1661,8 +1662,6 @@ operator|=
 name|eeprom_buff
 index|[
 name|AUTO_NEG_CNF_OFFSET
-operator|/
-literal|2
 index|]
 expr_stmt|;
 name|sc
@@ -1672,8 +1671,6 @@ operator|=
 name|eeprom_buff
 index|[
 name|ADAPTER_CNF_OFFSET
-operator|/
-literal|2
 index|]
 expr_stmt|;
 name|sc
@@ -1683,8 +1680,6 @@ operator|=
 name|eeprom_buff
 index|[
 name|ISA_CNF_OFFSET
-operator|/
-literal|2
 index|]
 expr_stmt|;
 for|for
@@ -5531,8 +5526,6 @@ break|break;
 case|case
 name|IFM_10_2
 case|:
-name|error
-operator|=
 name|enable_bnc
 argument_list|(
 name|sc
@@ -5542,8 +5535,6 @@ break|break;
 case|case
 name|IFM_10_5
 case|:
-name|error
-operator|=
 name|enable_aui
 argument_list|(
 name|sc
