@@ -1765,9 +1765,7 @@ name|t
 operator|=
 name|in_pcblookup_local
 argument_list|(
-name|inp
-operator|->
-name|inp_pcbinfo
+name|pcbinfo
 argument_list|,
 name|sin
 operator|->
