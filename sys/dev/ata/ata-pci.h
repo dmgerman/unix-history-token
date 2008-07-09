@@ -892,6 +892,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_I82801IB_R1
+value|0x29258086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_I82801IB_S2
 value|0x29268086
 end_define
