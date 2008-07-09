@@ -8126,6 +8126,11 @@ name|ndis_link
 operator|=
 literal|0
 expr_stmt|;
+name|NDIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -8139,6 +8144,11 @@ argument_list|,
 name|IEEE80211_S_SCAN
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|NDIS_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|if_link_state_change
