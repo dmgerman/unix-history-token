@@ -5518,6 +5518,8 @@ name|sc
 operator|->
 name|rl_flags
 operator||=
+name|RL_FLAG_NOJUMBO
+operator||
 name|RL_FLAG_INVMAR
 operator||
 name|RL_FLAG_PHYWAKE
