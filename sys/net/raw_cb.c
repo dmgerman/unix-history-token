@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -81,8 +93,25 @@ name|rawcb_list
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|raw
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Raw socket infrastructure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
-specifier|const
 specifier|static
 name|u_long
 name|raw_sendspace
@@ -91,8 +120,28 @@ name|RAWSNDQ
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_net_raw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|sendspace
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|raw_sendspace
+argument_list|,
+literal|0
+argument_list|,
+literal|"Default raw socket send space"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
-specifier|const
 specifier|static
 name|u_long
 name|raw_recvspace
@@ -100,6 +149,27 @@ init|=
 name|RAWRCVQ
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_net_raw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|recvspace
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|raw_recvspace
+argument_list|,
+literal|0
+argument_list|,
+literal|"Default raw socket receive space"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Allocate a control block and a nominal amount of buffer space for the  * socket.  */
