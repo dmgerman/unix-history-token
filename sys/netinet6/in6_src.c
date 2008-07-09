@@ -698,17 +698,26 @@ name|inp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|mopts
 operator|=
 name|inp
 operator|->
 name|in6p_moptions
 expr_stmt|;
+block|}
 else|else
+block|{
 name|mopts
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 comment|/* 	 * If the source address is explicitly specified by the caller, 	 * check if the requested source address is indeed a unicast address 	 * assigned to the node, and can be used as the packet's source 	 * address.  If everything is okay, use the address as source. 	 */
 if|if
 condition|(
