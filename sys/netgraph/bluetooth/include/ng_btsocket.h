@@ -56,6 +56,17 @@ begin_comment
 comment|/* RFCOMM protocol number */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BLUETOOTH_PROTO_SCO
+value|137
+end_define
+
+begin_comment
+comment|/* SCO protocol number */
+end_comment
+
 begin_comment
 comment|/*  * Bluetooth version of struct sockaddr for raw HCI sockets  */
 end_comment
@@ -528,6 +539,67 @@ value|_IOWR('b', NGM_HCI_NODE_LIST_NAMES, \ 		struct ng_btsocket_hci_raw_node_li
 end_define
 
 begin_comment
+comment|/*  * XXX FIXME: probably does not belong here  * Bluetooth version of struct sockaddr for SCO sockets (SEQPACKET)  */
+end_comment
+
+begin_struct
+struct|struct
+name|sockaddr_sco
+block|{
+name|u_char
+name|sco_len
+decl_stmt|;
+comment|/* total length */
+name|u_char
+name|sco_family
+decl_stmt|;
+comment|/* address family */
+name|bdaddr_t
+name|sco_bdaddr
+decl_stmt|;
+comment|/* address */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* SCO socket options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOL_SCO
+value|0x0209
+end_define
+
+begin_comment
+comment|/* socket options level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_SCO_MTU
+value|1
+end_define
+
+begin_comment
+comment|/* get sockets mtu */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_SCO_CONNINFO
+value|2
+end_define
+
+begin_comment
+comment|/* get HCI connection handle */
+end_comment
+
+begin_comment
 comment|/*  * XXX FIXME: probably does not belong here  * Bluetooth version of struct sockaddr for L2CAP sockets (RAW and SEQPACKET)  */
 end_comment
 
@@ -954,6 +1026,13 @@ define|#
 directive|define
 name|NG_BTSOCKET_L2CAP_NODE_TYPE
 value|"btsock_l2c"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_BTSOCKET_SCO_NODE_TYPE
+value|"btsock_sco"
 end_define
 
 begin_comment

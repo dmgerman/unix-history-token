@@ -78,6 +78,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_bluetooth_sco
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -472,6 +480,15 @@ end_function_decl
 begin_function_decl
 name|u_int32_t
 name|bluetooth_l2cap_ertx_timeout
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int32_t
+name|bluetooth_sco_rtx_timeout
 parameter_list|(
 name|void
 parameter_list|)
