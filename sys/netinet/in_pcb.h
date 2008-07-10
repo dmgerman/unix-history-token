@@ -1784,7 +1784,7 @@ parameter_list|,
 name|struct
 name|in_addr
 parameter_list|,
-name|u_int
+name|u_short
 parameter_list|,
 name|int
 parameter_list|)

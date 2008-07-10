@@ -212,7 +212,7 @@ expr|struct
 name|in6_addr
 operator|*
 operator|,
-name|u_int
+name|u_short
 operator|,
 name|int
 operator|)
