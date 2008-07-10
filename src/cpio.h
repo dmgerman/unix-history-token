@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Extended cpio format from POSIX.1.    Copyright (C) 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation, Inc.,    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Extended cpio format from POSIX.1.    Copyright (C) 1992, 2005 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with this program; if not, write to the Free    Software Foundation, Inc., 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301 USA.  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,13 @@ end_define
 begin_comment
 comment|/* A cpio archive consists of a sequence of files.    Each file has a 76 byte header,    a variable length, NUL terminated filename,    and variable length file data.    A header for a filename "TRAILER!!!" indicates the end of the archive.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPIO_TRAILER_NAME
+value|"TRAILER!!!"
+end_define
 
 begin_comment
 comment|/* All the fields in the header are ISO 646 (approximately ASCII) strings    of octal numbers, left padded, not NUL terminated.     Field Name	Length in Bytes	Notes    c_magic	6		must be "070707"    c_dev	6    c_ino	6    c_mode	6		see below for value    c_uid	6    c_gid	6    c_nlink	6    c_rdev	6		only valid for chr and blk special files    c_mtime	11    c_namesize	6		count includes terminating NUL in pathname    c_filesize	11		must be 0 for FIFOs and directories  */
