@@ -412,6 +412,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"age"
+argument_list|,
+literal|"Attansic/Atheros L1 Gigabit Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"an"
 argument_list|,
 literal|"Aironet 4500/4800 802.11 wireless adapter"
