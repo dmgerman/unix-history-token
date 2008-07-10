@@ -3904,18 +3904,6 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MAC
-name|mac_inpcb_create_mbuf
-argument_list|(
-name|inp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * If the IP_SENDSRCADDR control message was specified, override the 	 * source address for this datagram.  Its use is invalidated if the 	 * address thus specified is incomplete or clobbers other inpcbs. 	 */
 name|laddr
 operator|=
@@ -4443,6 +4431,18 @@ name|ipflags
 operator||=
 name|IP_SENDONES
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_inpcb_create_mbuf
+argument_list|(
+name|inp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Set up checksum and output datagram. 	 */
 if|if
 condition|(
