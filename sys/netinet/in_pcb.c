@@ -1778,6 +1778,8 @@ condition|?
 literal|0
 else|:
 name|INPLOOKUP_WILDCARD
+argument_list|,
+name|cred
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX 	 * This entire block sorely needs a rewrite. 	 */
@@ -1914,6 +1916,8 @@ condition|?
 literal|0
 else|:
 name|wild
+argument_list|,
+name|cred
 argument_list|)
 expr_stmt|;
 if|if
@@ -2322,6 +2326,8 @@ argument_list|,
 name|lport
 argument_list|,
 name|wild
+argument_list|,
+name|cred
 argument_list|)
 condition|)
 do|;
@@ -4196,6 +4202,11 @@ name|lport
 parameter_list|,
 name|int
 name|wild_okay
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
 parameter_list|)
 block|{
 name|struct
