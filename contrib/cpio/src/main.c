@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* main.c - main program and argument processing for cpio.    Copyright (C) 1990, 1991, 1992, 2001, 2003, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation, Inc.,    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* main.c - main program and argument processing for cpio.    Copyright (C) 1990, 1991, 1992, 2001, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with this program; if not, write to the Free    Software Foundation, Inc., 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301 USA.  */
 end_comment
 
 begin_comment
@@ -15,6 +15,12 @@ begin_include
 include|#
 directive|include
 file|<system.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paxlib.h>
 end_include
 
 begin_include
@@ -97,7 +103,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<localedir.h>
+file|<rmt-command.h>
 end_include
 
 begin_enum
@@ -129,6 +135,8 @@ block|,
 name|BLOCK_SIZE_OPTION
 block|,
 name|TO_STDOUT_OPTION
+block|,
+name|HANG_OPTION
 block|,
 name|USAGE_OPTION
 block|,
@@ -184,16 +192,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USAGE_ERROR
-parameter_list|(
-name|args
-parameter_list|)
-value|do { error args; exit(2); } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CHECK_USAGE
 parameter_list|(
 name|cond
@@ -203,7 +201,7 @@ parameter_list|,
 name|mode_opt
 parameter_list|)
 define|\
-value|if (cond) USAGE_ERROR((0, 0, _("%s is meaningless with %s"), opt, mode_opt));
+value|if (cond) \    ERROR((PAXEXIT_FAILURE, 0, _("%s is meaningless with %s"), opt, mode_opt));
 end_define
 
 begin_decl_stmt
@@ -214,6 +212,11 @@ name|options
 index|[]
 init|=
 block|{
+comment|/* ********** */
+define|#
+directive|define
+name|GRID
+value|10
 block|{
 name|NULL
 block|,
@@ -228,7 +231,7 @@ argument_list|(
 literal|"Main operation mode:"
 argument_list|)
 block|,
-literal|10
+name|GRID
 block|}
 block|,
 block|{
@@ -245,7 +248,7 @@ argument_list|(
 literal|"Create the archive (run in copy-out mode)"
 argument_list|)
 block|,
-literal|10
+name|GRID
 block|}
 block|,
 block|{
@@ -261,6 +264,8 @@ name|N_
 argument_list|(
 literal|"Extract files from an archive (run in copy-in mode)"
 argument_list|)
+block|,
+name|GRID
 block|}
 block|,
 block|{
@@ -277,7 +282,7 @@ argument_list|(
 literal|"Run in copy-pass mode"
 argument_list|)
 block|,
-literal|10
+name|GRID
 block|}
 block|,
 block|{
@@ -294,9 +299,17 @@ argument_list|(
 literal|"Print a table of contents of the input"
 argument_list|)
 block|,
-literal|10
+name|GRID
 block|}
 block|,
+undef|#
+directive|undef
+name|GRID
+comment|/* ********** */
+define|#
+directive|define
+name|GRID
+value|100
 block|{
 name|NULL
 block|,
@@ -311,7 +324,7 @@ argument_list|(
 literal|"Operation modifiers valid in any mode:"
 argument_list|)
 block|,
-literal|100
+name|GRID
 block|}
 block|,
 block|{
@@ -331,7 +344,9 @@ argument_list|(
 literal|"Use this FILE-NAME instead of standard input or output. Optional USER and HOST specify the user and host names in case of a remote archive"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -348,7 +363,9 @@ argument_list|(
 literal|"Archive file is local, even if its name contains colons"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -368,7 +385,9 @@ argument_list|(
 literal|"Use given archive FORMAT"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -385,7 +404,9 @@ argument_list|(
 literal|"Set the I/O block size to 5120 bytes"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -405,7 +426,9 @@ argument_list|(
 literal|"Set the I/O block size to BLOCK-SIZE * 512 bytes"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -422,7 +445,9 @@ argument_list|(
 literal|"Use the old portable (ASCII) archive format"
 argument_list|)
 block|,
-literal|0
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -439,7 +464,9 @@ argument_list|(
 literal|"Print a \".\" for each file processed"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -459,7 +486,9 @@ argument_list|(
 literal|"Set the I/O block size to the given NUMBER of bytes"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -479,7 +508,9 @@ argument_list|(
 literal|"Print STRING when the end of a volume of the backup media is reached"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -496,7 +527,9 @@ argument_list|(
 literal|"Only copy files that do not match any of the given patterns"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -513,7 +546,9 @@ argument_list|(
 literal|"In the verbose table of contents listing, show numeric UID and GID"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -533,7 +568,9 @@ argument_list|(
 literal|"Use remote COMMAND instead of rsh"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -550,7 +587,9 @@ argument_list|(
 literal|"Do not print the number of blocks copied"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -567,7 +606,9 @@ argument_list|(
 literal|"Verbosely list the files processed"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 ifdef|#
@@ -587,7 +628,9 @@ argument_list|(
 literal|"Enable debugging info"
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 endif|#
@@ -609,10 +652,19 @@ argument_list|(
 literal|"Control warning display. Currently FLAG is one of 'none', 'truncate', 'all'. Multiple options accumulate."
 argument_list|)
 block|,
-literal|110
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
+undef|#
+directive|undef
+name|GRID
 comment|/* ********** */
+define|#
+directive|define
+name|GRID
+value|200
 block|{
 name|NULL
 block|,
@@ -627,7 +679,7 @@ argument_list|(
 literal|"Operation modifiers valid only in copy-in mode:"
 argument_list|)
 block|,
-literal|200
+name|GRID
 block|}
 block|,
 block|{
@@ -644,24 +696,7 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"In copy-in mode, read additional patterns specifying filenames to extract or list from FILE"
-argument_list|)
-block|,
-literal|210
-block|}
-block|,
-block|{
-literal|"no-absolute-filenames"
-block|,
-name|NO_ABSOLUTE_FILENAMES_OPTION
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|N_
-argument_list|(
-literal|"Create all files relative to the current directory"
+literal|"Read additional patterns specifying filenames to extract or list from FILE"
 argument_list|)
 block|,
 literal|210
@@ -695,7 +730,7 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"When reading a CRC format archive in copy-in mode, only verify the CRC's of each file in the archive, don't actually extract the files"
+literal|"When reading a CRC format archive, only verify the CRC's of each file in the archive, don't actually extract the files"
 argument_list|)
 block|,
 literal|210
@@ -715,7 +750,9 @@ argument_list|(
 literal|"Interactively rename files"
 argument_list|)
 block|,
-literal|210
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -732,7 +769,9 @@ name|OPTION_HIDDEN
 block|,
 literal|""
 block|,
-literal|210
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -749,7 +788,9 @@ argument_list|(
 literal|"Swap both halfwords of words and bytes of halfwords in the data. Equivalent to -sS"
 argument_list|)
 block|,
-literal|210
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -766,7 +807,9 @@ argument_list|(
 literal|"Swap the bytes of each halfword in the files"
 argument_list|)
 block|,
-literal|210
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -783,7 +826,9 @@ argument_list|(
 literal|"Swap the halfwords of each word (4 bytes) in the files"
 argument_list|)
 block|,
-literal|210
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -800,10 +845,19 @@ argument_list|(
 literal|"Extract files to standard output"
 argument_list|)
 block|,
-literal|210
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
+undef|#
+directive|undef
+name|GRID
 comment|/* ********** */
+define|#
+directive|define
+name|GRID
+value|300
 block|{
 name|NULL
 block|,
@@ -818,7 +872,7 @@ argument_list|(
 literal|"Operation modifiers valid only in copy-out mode:"
 argument_list|)
 block|,
-literal|300
+name|GRID
 block|}
 block|,
 block|{
@@ -835,7 +889,9 @@ argument_list|(
 literal|"Append to an existing archive."
 argument_list|)
 block|,
-literal|310
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -855,10 +911,19 @@ argument_list|(
 literal|"Archive filename to use instead of standard output. Optional USER and HOST specify the user and host names in case of a remote archive"
 argument_list|)
 block|,
-literal|310
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
+undef|#
+directive|undef
+name|GRID
 comment|/* ********** */
+define|#
+directive|define
+name|GRID
+value|400
 block|{
 name|NULL
 block|,
@@ -873,7 +938,7 @@ argument_list|(
 literal|"Operation modifiers valid only in copy-pass mode:"
 argument_list|)
 block|,
-literal|400
+name|GRID
 block|}
 block|,
 block|{
@@ -890,10 +955,19 @@ argument_list|(
 literal|"Link files instead of copying them, when  possible"
 argument_list|)
 block|,
-literal|410
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
+undef|#
+directive|undef
+name|GRID
 comment|/* ********** */
+define|#
+directive|define
+name|GRID
+value|500
 block|{
 name|NULL
 block|,
@@ -905,10 +979,73 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"Operation modifiers valid for copy-out and copy-pass modes:"
+literal|"Operation modifiers valid in copy-in and copy-out modes:"
 argument_list|)
 block|,
-literal|500
+name|GRID
+block|}
+block|,
+block|{
+literal|"absolute-filenames"
+block|,
+name|ABSOLUTE_FILENAMES_OPTION
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"Do not strip file system prefix components from the file names"
+argument_list|)
+block|,
+name|GRID
+operator|+
+literal|1
+block|}
+block|,
+block|{
+literal|"no-absolute-filenames"
+block|,
+name|NO_ABSOLUTE_FILENAMES_OPTION
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"Create all files relative to the current directory"
+argument_list|)
+block|,
+name|GRID
+operator|+
+literal|1
+block|}
+block|,
+undef|#
+directive|undef
+name|GRID
+comment|/* ********** */
+define|#
+directive|define
+name|GRID
+value|600
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"Operation modifiers valid in copy-out and copy-pass modes:"
+argument_list|)
+block|,
+name|GRID
 block|}
 block|,
 block|{
@@ -925,7 +1062,9 @@ argument_list|(
 literal|"A list of filenames is terminated by a null character instead of a newline"
 argument_list|)
 block|,
-literal|510
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -945,7 +1084,9 @@ argument_list|(
 literal|"Archive filename to use instead of standard input. Optional USER and HOST specify the user and host names in case of a remote archive"
 argument_list|)
 block|,
-literal|510
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -962,7 +1103,9 @@ argument_list|(
 literal|"Dereference  symbolic  links  (copy  the files that they point to instead of copying the links)."
 argument_list|)
 block|,
-literal|510
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -982,24 +1125,9 @@ argument_list|(
 literal|"Set the ownership of all files created to the specified USER and/or GROUP"
 argument_list|)
 block|,
-literal|510
-block|}
-block|,
-block|{
-literal|"sparse"
-block|,
-name|SPARSE_OPTION
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-name|N_
-argument_list|(
-literal|"Write files with large blocks of zeros as sparse files"
-argument_list|)
-block|,
-literal|510
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -1016,10 +1144,19 @@ argument_list|(
 literal|"Reset the access times of files after reading them"
 argument_list|)
 block|,
-literal|510
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
+undef|#
+directive|undef
+name|GRID
 comment|/* ********** */
+define|#
+directive|define
+name|GRID
+value|700
 block|{
 name|NULL
 block|,
@@ -1031,10 +1168,10 @@ literal|0
 block|,
 name|N_
 argument_list|(
-literal|"Operation modifiers valid for copy-in and copy-pass modes:"
+literal|"Operation modifiers valid in copy-in and copy-pass modes:"
 argument_list|)
 block|,
-literal|600
+name|GRID
 block|}
 block|,
 block|{
@@ -1051,7 +1188,9 @@ argument_list|(
 literal|"Retain previous file modification times when creating files"
 argument_list|)
 block|,
-literal|610
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -1068,7 +1207,9 @@ argument_list|(
 literal|"Create leading directories where needed"
 argument_list|)
 block|,
-literal|610
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -1085,7 +1226,9 @@ argument_list|(
 literal|"Do not change the ownership of the files"
 argument_list|)
 block|,
-literal|610
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
 block|{
@@ -1102,9 +1245,38 @@ argument_list|(
 literal|"Replace all files unconditionally"
 argument_list|)
 block|,
-literal|610
+name|GRID
+operator|+
+literal|1
 block|}
 block|,
+block|{
+literal|"sparse"
+block|,
+name|SPARSE_OPTION
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|N_
+argument_list|(
+literal|"Write files with large blocks of zeros as sparse files"
+argument_list|)
+block|,
+name|GRID
+operator|+
+literal|1
+block|}
+block|,
+undef|#
+directive|undef
+name|GRID
+comment|/* ********** */
+define|#
+directive|define
+name|GRID
+value|800
 block|{
 name|NULL
 block|,
@@ -1119,7 +1291,7 @@ argument_list|(
 literal|"Informative options:"
 argument_list|)
 block|,
-literal|700
+name|GRID
 block|}
 block|,
 block|{
@@ -1196,6 +1368,28 @@ block|}
 block|,
 comment|/* FIXME -V (--dot) conflicts with the default short option for      --version */
 block|{
+literal|"HANG"
+block|,
+name|HANG_OPTION
+block|,
+literal|"SECS"
+block|,
+name|OPTION_ARG_OPTIONAL
+operator||
+name|OPTION_HIDDEN
+block|,
+name|N_
+argument_list|(
+literal|"hang for SECS seconds (default 3600)"
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+undef|#
+directive|undef
+name|GRID
+block|{
 literal|0
 block|,
 literal|0
@@ -1262,8 +1456,8 @@ literal|"   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 literal|"   GNU General Public License for more details.\n"
 literal|"\n"
 literal|"   You should have received a copy of the GNU General Public License\n"
-literal|"   along with GNU cpio; if not, write to the Free Software\n"
-literal|"   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA\n\n"
+literal|"   along with GNU cpio; if not, write to the Free Software Foundation,\n"
+literal|"   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA\n\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1453,6 +1647,11 @@ modifier|*
 name|state
 parameter_list|)
 block|{
+specifier|static
+specifier|volatile
+name|int
+name|_argp_hang
+decl_stmt|;
 switch|switch
 condition|(
 name|key
@@ -1551,18 +1750,16 @@ name|archive_format
 operator|!=
 name|arf_unknown
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
+name|EXIT_FAILURE
+argument_list|,
 name|_
 argument_list|(
 literal|"Archive format multiply defined"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1659,18 +1856,16 @@ name|archive_format
 operator|!=
 name|arf_unknown
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"Archive format multiply defined"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1818,18 +2013,16 @@ name|copy_function
 operator|!=
 literal|0
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"Mode already defined"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|copy_function
@@ -1925,18 +2118,16 @@ name|set_owner_flag
 operator|||
 name|set_group_flag
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"--no-preserve-owner cannot be used with --owner"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|no_chown_flag
@@ -1954,18 +2145,16 @@ name|copy_function
 operator|!=
 literal|0
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"Mode already defined"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|copy_function
@@ -2000,18 +2189,16 @@ name|copy_function
 operator|!=
 literal|0
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"Mode already defined"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|copy_function
@@ -2060,20 +2247,19 @@ if|if
 condition|(
 name|no_chown_flag
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"--owner cannot be used with --no-preserve-owner"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
+else|else
 block|{
 name|char
 modifier|*
@@ -2110,7 +2296,7 @@ name|e
 condition|)
 name|error
 argument_list|(
-literal|2
+name|PAXEXIT_FAILURE
 argument_list|,
 literal|0
 argument_list|,
@@ -2268,6 +2454,33 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+name|HANG_OPTION
+case|:
+name|_argp_hang
+operator|=
+name|atoi
+argument_list|(
+name|arg
+condition|?
+name|arg
+else|:
+literal|"3600"
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|_argp_hang
+operator|--
+operator|>
+literal|0
+condition|)
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 name|argp_state_help
@@ -2404,22 +2617,20 @@ name|argc
 operator|<
 literal|2
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"You must specify one of -oipt options.\nTry `%s --help' or `%s --usage' for more information.\n"
 argument_list|)
-operator|,
+argument_list|,
 name|program_name
-operator|,
+argument_list|,
 name|program_name
-operator|)
 argument_list|)
 expr_stmt|;
 name|xstat
@@ -2469,22 +2680,20 @@ operator|=
 name|process_copy_in
 expr_stmt|;
 else|else
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"You must specify one of -oipt options.\nTry `%s --help' or `%s --usage' for more information.\n"
 argument_list|)
-operator|,
+argument_list|,
 name|program_name
-operator|,
+argument_list|,
 name|program_name
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2542,15 +2751,6 @@ argument_list|(
 name|append_flag
 argument_list|,
 literal|"--append"
-argument_list|,
-literal|"--extract"
-argument_list|)
-expr_stmt|;
-name|CHECK_USAGE
-argument_list|(
-name|sparse_flag
-argument_list|,
-literal|"--sparse"
 argument_list|,
 literal|"--extract"
 argument_list|)
@@ -2623,18 +2823,16 @@ name|archive_name
 operator|&&
 name|input_archive_name
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"Both -I and -F are used in copy-in mode"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2684,18 +2882,16 @@ name|index
 operator|!=
 name|argc
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"Too many arguments"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|archive_des
@@ -2749,6 +2945,15 @@ argument_list|)
 expr_stmt|;
 name|CHECK_USAGE
 argument_list|(
+name|sparse_flag
+argument_list|,
+literal|"--sparse"
+argument_list|,
+literal|"--create"
+argument_list|)
+expr_stmt|;
+name|CHECK_USAGE
+argument_list|(
 name|retain_time_flag
 argument_list|,
 literal|"--preserve-modification-time"
@@ -2761,17 +2966,6 @@ argument_list|(
 name|no_chown_flag
 argument_list|,
 literal|"--no-preserve-owner"
-argument_list|,
-literal|"--create"
-argument_list|)
-expr_stmt|;
-name|CHECK_USAGE
-argument_list|(
-name|set_owner_flag
-operator|||
-name|set_group_flag
-argument_list|,
-literal|"--owner"
 argument_list|,
 literal|"--create"
 argument_list|)
@@ -2814,18 +3008,16 @@ operator|||
 name|output_archive_name
 operator|)
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
-literal|"--append is used but no archive file name is given (use -F or -O options"
+literal|"--append is used but no archive file name is given (use -F or -O options)"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|CHECK_USAGE
@@ -2861,18 +3053,16 @@ name|archive_name
 operator|&&
 name|output_archive_name
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"Both -O and -F are used in copy-out mode"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2900,23 +3090,42 @@ comment|/* Copy pass.  */
 if|if
 condition|(
 name|index
-operator|!=
+operator|<
 name|argc
 operator|-
 literal|1
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"Too many arguments"
 argument_list|)
-operator|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|index
+operator|>
+name|argc
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+name|PAXEXIT_FAILURE
+argument_list|,
+literal|0
+argument_list|,
+name|_
+argument_list|(
+literal|"Not enough arguments"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2925,18 +3134,16 @@ name|archive_format
 operator|!=
 name|arf_unknown
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"Archive format is not specified in copy-pass mode (use --format option)"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|CHECK_USAGE
@@ -3034,18 +3241,16 @@ name|copy_function
 operator|!=
 name|copy_out
 condition|)
-name|USAGE_ERROR
+name|error
 argument_list|(
-operator|(
+name|PAXEXIT_FAILURE
+argument_list|,
 literal|0
-operator|,
-literal|0
-operator|,
+argument_list|,
 name|_
 argument_list|(
 literal|"-F can be used only with --create or --extract"
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|archive_des
@@ -3063,13 +3268,19 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|1
+name|PAXEXIT_FAILURE
 argument_list|,
 name|errno
 argument_list|,
-literal|"%s"
+name|_
+argument_list|(
+literal|"Cannot open %s"
+argument_list|)
 argument_list|,
+name|quotearg_colon
+argument_list|(
 name|archive_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3216,14 +3427,6 @@ name|output_bytes
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Clear the block of zeros.  */
-name|bzero
-argument_list|(
-name|zeros_512
-argument_list|,
-literal|512
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3240,9 +3443,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|HAVE_LOCALE_H
 name|setlocale
 argument_list|(
 name|LC_ALL
@@ -3250,8 +3450,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bindtextdomain
 argument_list|(
 name|PACKAGE
@@ -3271,40 +3469,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__TURBOC__
-name|_fmode
-operator|=
-name|O_BINARY
-expr_stmt|;
-comment|/* Put stdin and stdout in binary mode.  */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__EMX__
-comment|/* gcc on OS/2.  */
-name|_response
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-expr_stmt|;
-name|_wildcard
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|process_args
 argument_list|(
 name|argc
