@@ -15106,6 +15106,7 @@ operator|->
 name|setid
 expr_stmt|;
 return|return
+operator|(
 name|cpuset_setid
 argument_list|(
 name|td
@@ -15113,6 +15114,7 @@ argument_list|,
 operator|&
 name|ap
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -15182,6 +15184,7 @@ operator|->
 name|setid
 expr_stmt|;
 return|return
+operator|(
 name|cpuset_getid
 argument_list|(
 name|td
@@ -15189,6 +15192,7 @@ argument_list|,
 operator|&
 name|ap
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -15266,6 +15270,7 @@ operator|->
 name|mask
 expr_stmt|;
 return|return
+operator|(
 name|cpuset_getaffinity
 argument_list|(
 name|td
@@ -15273,6 +15278,7 @@ argument_list|,
 operator|&
 name|ap
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -15350,6 +15356,7 @@ operator|->
 name|mask
 expr_stmt|;
 return|return
+operator|(
 name|cpuset_setaffinity
 argument_list|(
 name|td
@@ -15357,6 +15364,7 @@ argument_list|,
 operator|&
 name|ap
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
