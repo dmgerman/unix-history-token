@@ -837,6 +837,7 @@ name|segv_handler
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 specifier|static
