@@ -3612,6 +3612,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|pdev
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL pdev"
+operator|)
+argument_list|)
+expr_stmt|;
 name|dev
 operator|=
 name|devfs_alloc
@@ -3693,6 +3704,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|dev_dependsl
+argument_list|(
+name|pdev
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 name|clean_unrhdrl
 argument_list|(
 name|devfs_inos
@@ -3700,13 +3718,6 @@ argument_list|)
 expr_stmt|;
 name|dev_unlock
 argument_list|()
-expr_stmt|;
-name|dev_depends
-argument_list|(
-name|pdev
-argument_list|,
-name|dev
-argument_list|)
 expr_stmt|;
 name|notify_create
 argument_list|(
