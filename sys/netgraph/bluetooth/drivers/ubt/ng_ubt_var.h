@@ -4,7 +4,7 @@ comment|/*  * ng_ubt_var.h  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_ubt_var.h,v 1.2 2003/03/22 23:44:36 max Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_ubt_var.h,v 1.5 2005/10/31 17:57:44 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -87,6 +87,75 @@ value|12
 end_define
 
 begin_comment
+comment|/* Isoc transfers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_UBT_NXFERS
+value|3
+end_define
+
+begin_comment
+comment|/* max xfers to queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_UBT_NFRAMES
+value|10
+end_define
+
+begin_comment
+comment|/* frames per xfer */
+end_comment
+
+begin_struct
+struct|struct
+name|ubt_isoc_xfer
+block|{
+name|usbd_xfer_handle
+name|xfer
+decl_stmt|;
+comment|/* isoc xfer */
+name|void
+modifier|*
+name|buffer
+decl_stmt|;
+comment|/* isoc buffer */
+name|uint16_t
+modifier|*
+name|frlen
+decl_stmt|;
+comment|/* isoc frame length */
+name|int
+name|active
+decl_stmt|;
+comment|/* is xfer active */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ubt_isoc_xfer
+name|ubt_isoc_xfer_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ubt_isoc_xfer
+modifier|*
+name|ubt_isoc_xfer_p
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* USB device softc structure */
 end_comment
 
@@ -99,7 +168,7 @@ name|ng_ubt_node_debug_ep
 name|sc_debug
 decl_stmt|;
 comment|/* debug level */
-name|u_int32_t
+name|uint32_t
 name|sc_flags
 decl_stmt|;
 comment|/* device flags */
@@ -142,25 +211,6 @@ directive|define
 name|UBT_SCO_RECV
 value|(1<< 6)
 comment|/* SCO recv in progress */
-define|#
-directive|define
-name|UBT_CTRL_DEV
-value|(1<< 7)
-comment|/* ctrl device is open */
-define|#
-directive|define
-name|UBT_INTR_DEV
-value|(1<< 8)
-comment|/* intr device is open */
-define|#
-directive|define
-name|UBT_BULK_DEV
-value|(1<< 9)
-comment|/* bulk device is open */
-define|#
-directive|define
-name|UBT_ANY_DEV
-value|(UBT_CTRL_DEV|UBT_INTR_DEV|UBT_BULK_DEV)
 name|ng_ubt_node_stat_ep
 name|sc_stat
 decl_stmt|;
@@ -323,6 +373,11 @@ define|\
 value|MCLBYTES
 comment|/* XXX should be big enough to hold one frame */
 comment|/* Isoc. in pipe (SCO data) */
+name|struct
+name|mbuf
+modifier|*
+name|sc_isoc_in_buffer
+decl_stmt|;
 name|int
 name|sc_isoc_in_ep
 decl_stmt|;
@@ -331,21 +386,14 @@ name|usbd_pipe_handle
 name|sc_isoc_in_pipe
 decl_stmt|;
 comment|/* isoc-in pipe */
-name|usbd_xfer_handle
-name|sc_isoc_in_xfer
+name|ubt_isoc_xfer_t
+name|sc_isoc_in
+index|[
+name|NG_UBT_NXFERS
+index|]
 decl_stmt|;
-comment|/* isoc-in xfer */
-name|void
-modifier|*
-name|sc_isoc_in_buffer
-decl_stmt|;
-comment|/* isoc-in buffer */
-name|u_int16_t
-modifier|*
-name|sc_isoc_in_frlen
-decl_stmt|;
-comment|/* isoc-in. frame length */
-comment|/* Isoc. out pipe (ACL data) */
+comment|/* isoc-in xfers */
+comment|/* Isoc. out pipe (SCO data) */
 name|int
 name|sc_isoc_out_ep
 decl_stmt|;
@@ -354,20 +402,13 @@ name|usbd_pipe_handle
 name|sc_isoc_out_pipe
 decl_stmt|;
 comment|/* isoc-out pipe */
-name|usbd_xfer_handle
-name|sc_isoc_out_xfer
+name|ubt_isoc_xfer_t
+name|sc_isoc_out
+index|[
+name|NG_UBT_NXFERS
+index|]
 decl_stmt|;
-comment|/* isoc-out xfer */
-name|void
-modifier|*
-name|sc_isoc_out_buffer
-decl_stmt|;
-comment|/* isoc-in buffer */
-name|u_int16_t
-modifier|*
-name|sc_isoc_out_frlen
-decl_stmt|;
-comment|/* isoc-out. frame length */
+comment|/* isoc-out xfers */
 name|struct
 name|ng_bt_mbufq
 name|sc_scoq
@@ -377,10 +418,6 @@ name|int
 name|sc_isoc_size
 decl_stmt|;
 comment|/* max. size of isoc. packet */
-name|u_int32_t
-name|sc_isoc_nframes
-decl_stmt|;
-comment|/* num. isoc. frames */
 define|#
 directive|define
 name|UBT_ISOC_BUFFER_SIZE
