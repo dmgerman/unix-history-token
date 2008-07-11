@@ -698,6 +698,60 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/************************************************************************  * Command queue statistics  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CISSQ_FREE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISSQ_NOTIFY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISSQ_COUNT
+value|2
+end_define
+
+begin_struct
+struct|struct
+name|ciss_qstat
+block|{
+name|uint32_t
+name|q_length
+decl_stmt|;
+name|uint32_t
+name|q_max
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_union
+union|union
+name|ciss_statrequest
+block|{
+name|uint32_t
+name|cs_item
+decl_stmt|;
+name|struct
+name|ciss_qstat
+name|cs_qstat
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
 comment|/*  * Note that we'd normally pass the struct in directly, but  * this code is trying to be compatible with other drivers.  */
 end_comment
 
@@ -795,6 +849,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|CCISS_GETQSTATS
+value|_IOWR ('C', 211, union ciss_statrequest)
+end_define
 
 begin_pragma
 pragma|#

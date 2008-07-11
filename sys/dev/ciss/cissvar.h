@@ -7,6 +7,17 @@ begin_comment
 comment|/*  * CISS adapter driver datastructures  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ciss_request
+argument_list|)
+name|cr_qhead_t
+expr_stmt|;
+end_typedef
+
 begin_comment
 comment|/************************************************************************  * Tunable parameters  */
 end_comment
@@ -52,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|CISS_INTERRUPT_COALESCE_DELAY
-value|1000
+value|0
 end_define
 
 begin_define
@@ -105,59 +116,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/************************************************************************  * Command queue statistics  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CISSQ_FREE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|CISSQ_BUSY
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CISSQ_COMPLETE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|CISSQ_NOTIFY
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|CISSQ_COUNT
-value|4
-end_define
-
-begin_struct
-struct|struct
-name|ciss_qstat
-block|{
-name|u_int32_t
-name|q_length
-decl_stmt|;
-name|u_int32_t
-name|q_max
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/************************************************************************  * Driver version.  Only really significant to the ACU interface.  */
 end_comment
 
@@ -180,7 +138,7 @@ begin_struct
 struct|struct
 name|ciss_request
 block|{
-name|TAILQ_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|ciss_request
 argument_list|)
@@ -240,6 +198,11 @@ directive|define
 name|CISS_REQ_DATAIN
 value|(1<<4)
 comment|/* data adapter->host */
+define|#
+directive|define
+name|CISS_REQ_BUSY
+value|(1<<5)
+comment|/* controller has req */
 name|void
 function_decl|(
 modifier|*
@@ -255,6 +218,41 @@ name|void
 modifier|*
 name|cr_private
 decl_stmt|;
+name|int
+name|cr_sg_tag
+decl_stmt|;
+define|#
+directive|define
+name|CISS_SG_MAX
+value|((CISS_SG_FETCH_MAX<< 1) | 0x1)
+define|#
+directive|define
+name|CISS_SG_1
+value|((CISS_SG_FETCH_1<< 1) | 0x01)
+define|#
+directive|define
+name|CISS_SG_2
+value|((CISS_SG_FETCH_2<< 1) | 0x01)
+define|#
+directive|define
+name|CISS_SG_4
+value|((CISS_SG_FETCH_4<< 1) | 0x01)
+define|#
+directive|define
+name|CISS_SG_8
+value|((CISS_SG_FETCH_8<< 1) | 0x01)
+define|#
+directive|define
+name|CISS_SG_16
+value|((CISS_SG_FETCH_16<< 1) | 0x01)
+define|#
+directive|define
+name|CISS_SG_32
+value|((CISS_SG_FETCH_32<< 1) | 0x01)
+define|#
+directive|define
+name|CISS_SG_NONE
+value|((CISS_SG_FETCH_NONE<< 1) | 0x01)
 block|}
 struct|;
 end_struct
@@ -455,6 +453,12 @@ name|ciss_cfg
 decl_stmt|;
 comment|/* config table in adapter memory */
 name|struct
+name|ciss_perf_config
+modifier|*
+name|ciss_perf
+decl_stmt|;
+comment|/* config table for the performant */
+name|struct
 name|ciss_bmic_id_table
 modifier|*
 name|ciss_id
@@ -468,6 +472,9 @@ name|int
 name|ciss_heart_attack
 decl_stmt|;
 comment|/* number of times we have seen this value */
+name|int
+name|ciss_msi
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -476,6 +483,9 @@ decl_stmt|;
 comment|/* interrupt */
 name|int
 name|ciss_irq_rid
+index|[
+name|CISS_MSI_COUNT
+index|]
 decl_stmt|;
 comment|/* resource ID */
 name|void
@@ -495,6 +505,25 @@ name|u_int32_t
 name|ciss_interrupt_mask
 decl_stmt|;
 comment|/* controller interrupt mask bits */
+name|uint64_t
+modifier|*
+name|ciss_reply
+decl_stmt|;
+name|int
+name|ciss_cycle
+decl_stmt|;
+name|int
+name|ciss_rqidx
+decl_stmt|;
+name|bus_dma_tag_t
+name|ciss_reply_dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|ciss_reply_map
+decl_stmt|;
+name|uint32_t
+name|ciss_reply_phys
+decl_stmt|;
 name|int
 name|ciss_max_requests
 decl_stmt|;
@@ -523,37 +552,13 @@ name|u_int32_t
 name|ciss_command_phys
 decl_stmt|;
 comment|/* command array base address */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ciss_request
-argument_list|)
+name|cr_qhead_t
 name|ciss_free
-expr_stmt|;
+decl_stmt|;
 comment|/* requests available for reuse */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ciss_request
-argument_list|)
-name|ciss_busy
-expr_stmt|;
-comment|/* requests in the adapter */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ciss_request
-argument_list|)
-name|ciss_complete
-expr_stmt|;
-comment|/* requests which have been returned by the adapter */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ciss_request
-argument_list|)
+name|cr_qhead_t
 name|ciss_notify
-expr_stmt|;
+decl_stmt|;
 comment|/* requests which are defered for processing */
 name|struct
 name|proc
@@ -932,7 +937,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|static __inline void							\ ciss_initq_ ## name (struct ciss_softc *sc)				\ {									\     TAILQ_INIT(&sc->ciss_ ## name);					\     CISSQ_INIT(sc, index);						\ }									\ static __inline void							\ ciss_enqueue_ ## name (struct ciss_request *cr)				\ {									\     int		s;							\ 									\     s = splcam();							\     TAILQ_INSERT_TAIL(&cr->cr_sc->ciss_ ## name, cr, cr_link);		\     CISSQ_ADD(cr->cr_sc, index);					\     cr->cr_onq = index;							\     splx(s);								\ }									\ static __inline void							\ ciss_requeue_ ## name (struct ciss_request *cr)				\ {									\     int		s;							\ 									\     s = splcam();							\     TAILQ_INSERT_HEAD(&cr->cr_sc->ciss_ ## name, cr, cr_link);		\     CISSQ_ADD(cr->cr_sc, index);					\     cr->cr_onq = index;							\     splx(s);								\ }									\ static __inline struct ciss_request *					\ ciss_dequeue_ ## name (struct ciss_softc *sc)				\ {									\     struct ciss_request	*cr;						\     int			s;						\ 									\     s = splcam();							\     if ((cr = TAILQ_FIRST(&sc->ciss_ ## name)) != NULL) {		\ 	TAILQ_REMOVE(&sc->ciss_ ## name, cr, cr_link);			\ 	CISSQ_REMOVE(sc, index);					\ 	cr->cr_onq = -1;						\     }									\     splx(s);								\     return(cr);								\ }									\ static __inline int							\ ciss_remove_ ## name (struct ciss_request *cr)				\ {									\     int			s, error;					\ 									\     s = splcam();							\     if (cr->cr_onq != index) {						\ 	printf("request on queue %d (expected %d)\n", cr->cr_onq, index);\ 	error = 1;							\     } else {								\ 	TAILQ_REMOVE(&cr->cr_sc->ciss_ ## name, cr, cr_link);		\ 	CISSQ_REMOVE(cr->cr_sc, index);					\ 	cr->cr_onq = -1;						\ 	error = 0;							\     }									\     splx(s);								\     return(error);							\ }									\ struct hack
+value|static __inline void							\ ciss_initq_ ## name (struct ciss_softc *sc)				\ {									\     STAILQ_INIT(&sc->ciss_ ## name);					\     CISSQ_INIT(sc, index);						\ }									\ static __inline void							\ ciss_enqueue_ ## name (struct ciss_request *cr)				\ {									\ 									\     STAILQ_INSERT_TAIL(&cr->cr_sc->ciss_ ## name, cr, cr_link);		\     CISSQ_ADD(cr->cr_sc, index);					\     cr->cr_onq = index;							\ }									\ static __inline void							\ ciss_requeue_ ## name (struct ciss_request *cr)				\ {									\ 									\     STAILQ_INSERT_HEAD(&cr->cr_sc->ciss_ ## name, cr, cr_link);		\     CISSQ_ADD(cr->cr_sc, index);					\     cr->cr_onq = index;							\ }									\ static __inline struct ciss_request *					\ ciss_dequeue_ ## name (struct ciss_softc *sc)				\ {									\     struct ciss_request	*cr;						\ 									\     if ((cr = STAILQ_FIRST(&sc->ciss_ ## name)) != NULL) {		\ 	STAILQ_REMOVE_HEAD(&sc->ciss_ ## name, cr_link);		\ 	CISSQ_REMOVE(sc, index);					\ 	cr->cr_onq = -1;						\     }									\     return(cr);								\ }									\ struct hack
 end_define
 
 begin_expr_stmt
@@ -948,26 +953,6 @@ end_expr_stmt
 begin_expr_stmt
 name|CISSQ_REQUEST_QUEUE
 argument_list|(
-name|busy
-argument_list|,
-name|CISSQ_BUSY
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|CISSQ_REQUEST_QUEUE
-argument_list|(
-name|complete
-argument_list|,
-name|CISSQ_COMPLETE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|CISSQ_REQUEST_QUEUE
-argument_list|(
 name|notify
 argument_list|,
 name|CISSQ_NOTIFY
@@ -975,12 +960,88 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ciss_enqueue_complete
+parameter_list|(
+name|struct
+name|ciss_request
+modifier|*
+name|ac
+parameter_list|,
+name|cr_qhead_t
+modifier|*
+name|head
+parameter_list|)
+block|{
+name|STAILQ_INSERT_TAIL
+argument_list|(
+name|head
+argument_list|,
+name|ac
+argument_list|,
+name|cr_link
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|ciss_request
+operator|*
+name|ciss_dequeue_complete
+argument_list|(
+argument|struct ciss_softc *sc
+argument_list|,
+argument|cr_qhead_t *head
+argument_list|)
+block|{     struct
+name|ciss_request
+operator|*
+name|ac
+block|;
+if|if
+condition|(
+operator|(
+name|ac
+operator|=
+name|STAILQ_FIRST
+argument_list|(
+name|head
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|STAILQ_REMOVE_HEAD
+argument_list|(
+name|head
+argument_list|,
+name|cr_link
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|ac
+operator|)
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/********************************************************************************  * space-fill a character string  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|__inline
 name|void
 name|padstr
@@ -1035,6 +1096,21 @@ block|}
 block|}
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|ciss_report_request
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|_ciss_report_request(a, b, c, __FUNCTION__)
+end_define
 
 end_unit
 
