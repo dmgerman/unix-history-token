@@ -2809,6 +2809,8 @@ operator|.
 name|slice
 operator|>
 name|NDOSPART
+operator|+
+literal|1
 condition|)
 return|return
 operator|-
