@@ -212,7 +212,7 @@ name|unsigned
 name|int
 name|p2
 decl_stmt|;
-comment|/* Make sure this this isn't called when a table already exists. */
+comment|/* Make sure this is not called when a table already exists. */
 if|if
 condition|(
 name|htable
@@ -239,7 +239,7 @@ name|nel
 operator|=
 name|MIN_BUCKETS
 expr_stmt|;
-comment|/* If it's too large, cap it. */
+comment|/* If it is too large, cap it. */
 if|if
 condition|(
 name|nel
@@ -250,7 +250,7 @@ name|nel
 operator|=
 name|MAX_BUCKETS
 expr_stmt|;
-comment|/* If it's is not a power of two in size, round up. */
+comment|/* If it is not a power of two in size, round up. */
 if|if
 condition|(
 operator|(
