@@ -2030,13 +2030,17 @@ operator|&=
 operator|~
 name|GV_PLEX_NEWBORN
 expr_stmt|;
-name|p
-operator|->
 name|state
 operator|=
 name|GV_PLEX_DOWN
 expr_stmt|;
 block|}
+name|p
+operator|->
+name|state
+operator|=
+name|state
+expr_stmt|;
 block|}
 end_function
 
