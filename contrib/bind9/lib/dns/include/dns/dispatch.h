@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.h,v 1.45.2.2.4.5 2007/08/28 07:19:14 tbox Exp $ */
+comment|/* $Id: dispatch.h,v 1.45.2.2.4.5.4.1 2008/05/22 21:11:16 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -110,7 +110,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Attributes for added dispatchers.  *  * Values with the mask 0xffff0000 are application defined.  * Values with the mask 0x0000ffff are library defined.  *  * Insane values (like setting both TCP and UDP) are not caught.  Don't  * do that.  *  * _PRIVATE  *	The dispatcher cannot be shared.  *  * _TCP, _UDP  *	The dispatcher is a TCP or UDP socket.  *  * _IPV4, _IPV6  *	The dispatcher uses an ipv4 or ipv6 socket.  *  * _NOLISTEN  *	The dispatcher should not listen on the socket.  *  * _MAKEQUERY  *	The dispatcher can be used to issue queries to other servers, and  *	accept replies from them.  */
+comment|/*  * Attributes for added dispatchers.  *  * Values with the mask 0xffff0000 are application defined.  * Values with the mask 0x0000ffff are library defined.  *  * Insane values (like setting both TCP and UDP) are not caught.  Don't  * do that.  *  * _PRIVATE  *	The dispatcher cannot be shared.  *  * _TCP, _UDP  *	The dispatcher is a TCP or UDP socket.  *  * _IPV4, _IPV6  *	The dispatcher uses an ipv4 or ipv6 socket.  *  * _NOLISTEN  *	The dispatcher should not listen on the socket.  *  * _MAKEQUERY  *	The dispatcher can be used to issue queries to other servers, and  *	accept replies from them.  *  * _RANDOMPORT  *	Allocate UDP port randomly.  */
 end_comment
 
 begin_define
@@ -167,6 +167,13 @@ define|#
 directive|define
 name|DNS_DISPATCHATTR_CONNECTED
 value|0x00000080U
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_DISPATCHATTR_RANDOMPORT
+value|0x00000100U
 end_define
 
 begin_function_decl
@@ -592,24 +599,6 @@ end_function_decl
 
 begin_comment
 comment|/*  * Inform the dispatcher of a socket receive.  This is used for sockets  * shared between dispatchers and clients.  If the dispatcher fails to copy  * or send the event, nothing happens.  *  * Requires:  * 	disp is valid, and the attribute DNS_DISPATCHATTR_NOLISTEN is set.  * 	event != NULL  */
-end_comment
-
-begin_function_decl
-name|void
-name|dns_dispatch_hash
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*%<  * Feed 'data' to the dispatch query id generator where 'len' is the size  * of 'data'.  */
 end_comment
 
 begin_macro
