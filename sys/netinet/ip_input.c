@@ -5608,14 +5608,6 @@ name|ro
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rtalloc_ign
-argument_list|(
-operator|&
-name|ro
-argument_list|,
-name|RTF_CLONING
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ip_output
