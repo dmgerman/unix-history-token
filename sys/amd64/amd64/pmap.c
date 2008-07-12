@@ -2251,6 +2251,7 @@ name|PG_U
 expr_stmt|;
 block|}
 comment|/* Now set up the direct map space using either 2MB or 1GB pages */
+comment|/* Preset PG_M and PG_A because demotion expects it */
 if|if
 condition|(
 operator|(
@@ -2314,6 +2315,10 @@ operator||
 name|PG_PS
 operator||
 name|PG_G
+operator||
+name|PG_M
+operator||
+name|PG_A
 expr_stmt|;
 block|}
 comment|/* And the direct map space's PDP */
@@ -2421,6 +2426,10 @@ operator||
 name|PG_PS
 operator||
 name|PG_G
+operator||
+name|PG_M
+operator||
+name|PG_A
 expr_stmt|;
 block|}
 block|}
