@@ -9949,7 +9949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Tries to demote a 2MB page mapping.  */
+comment|/*  * Tries to demote a 2MB page mapping.  If demotion fails, the 2MB page  * mapping is invalidated.  */
 end_comment
 
 begin_function
@@ -9994,6 +9994,34 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|oldpde
+operator|=
+operator|*
+name|pde
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|oldpde
+operator|&
+operator|(
+name|PG_PS
+operator||
+name|PG_V
+operator|)
+operator|)
+operator|==
+operator|(
+name|PG_PS
+operator||
+name|PG_V
+operator|)
+argument_list|,
+operator|(
+literal|"pmap_demote_pde: oldpde is missing PG_PS and/or PG_V"
+operator|)
+argument_list|)
+expr_stmt|;
 name|mpte
 operator|=
 name|pmap_lookup_pt_page
@@ -10016,9 +10044,35 @@ argument_list|,
 name|mpte
 argument_list|)
 expr_stmt|;
-elseif|else
+else|else
+block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|oldpde
+operator|&
+name|PG_W
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_demote_pde: page table page for a wired mapping"
+literal|" is missing"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Invalidate the 2MB page mapping and return "failure" if the 		 * mapping was never accessed or the allocation of the new 		 * page table page fails. 		 */
 if|if
 condition|(
+operator|(
+name|oldpde
+operator|&
+name|PG_A
+operator|)
+operator|==
+literal|0
+operator|||
 operator|(
 name|mpte
 operator|=
@@ -10042,23 +10096,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-operator|(
-operator|*
-name|pde
-operator|&
-name|PG_W
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"pmap_demote_pde: page table page for a wired mapping"
-literal|" is missing"
-operator|)
-argument_list|)
-expr_stmt|;
 name|free
 operator|=
 name|NULL
@@ -10111,6 +10148,7 @@ name|FALSE
 operator|)
 return|;
 block|}
+block|}
 name|mptepa
 operator|=
 name|VM_PAGE_TO_PHYS
@@ -10128,11 +10166,6 @@ name|PHYS_TO_DMAP
 argument_list|(
 name|mptepa
 argument_list|)
-expr_stmt|;
-name|oldpde
-operator|=
-operator|*
-name|pde
 expr_stmt|;
 name|newpde
 operator|=
@@ -10157,21 +10190,13 @@ argument_list|(
 operator|(
 name|oldpde
 operator|&
-operator|(
 name|PG_A
-operator||
-name|PG_V
 operator|)
-operator|)
-operator|==
-operator|(
-name|PG_A
-operator||
-name|PG_V
-operator|)
+operator|!=
+literal|0
 argument_list|,
 operator|(
-literal|"pmap_demote_pde: oldpde is missing PG_A and/or PG_V"
+literal|"pmap_demote_pde: oldpde is missing PG_A"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10191,21 +10216,6 @@ name|PG_RW
 argument_list|,
 operator|(
 literal|"pmap_demote_pde: oldpde is missing PG_M"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|oldpde
-operator|&
-name|PG_PS
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"pmap_demote_pde: oldpde is missing PG_PS"
 operator|)
 argument_list|)
 expr_stmt|;
