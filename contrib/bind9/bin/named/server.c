@@ -2392,6 +2392,37 @@ name|DNS_DISPATCHATTR_IPV6
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|isc_sockaddr_getport
+argument_list|(
+operator|&
+name|sa
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|INSIST
+argument_list|(
+name|obj
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|cfg_obj_log
+argument_list|(
+name|obj
+argument_list|,
+name|ns_g_lctx
+argument_list|,
+name|ISC_LOG_INFO
+argument_list|,
+literal|"using specific query-source port suppresses port "
+literal|"randomization and can be insecure."
+argument_list|)
+expr_stmt|;
+block|}
 name|attrmask
 operator|=
 literal|0
@@ -2431,7 +2462,7 @@ name|sa
 argument_list|,
 literal|4096
 argument_list|,
-literal|1000
+literal|1024
 argument_list|,
 literal|32768
 argument_list|,
@@ -11404,6 +11435,9 @@ parameter_list|,
 name|isc_sockaddr_t
 modifier|*
 name|addr
+parameter_list|,
+name|isc_boolean_t
+name|wcardport_ok
 parameter_list|)
 block|{
 name|ns_listenelt_t
@@ -11453,6 +11487,17 @@ name|any_sa6
 argument_list|,
 name|addr
 argument_list|)
+operator|&&
+operator|(
+name|wcardport_ok
+operator|||
+name|isc_sockaddr_getport
+argument_list|(
+name|addr
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|aelt
@@ -11731,6 +11776,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
+comment|/* 		 * We always add non-wildcard address regardless of whether 		 * the port is 'any' (the fourth arg is TRUE): if the port is 		 * specific, we need to add it since it may conflict with a 		 * listening interface; if it's zero, we'll dynamically open 		 * query ports, and some of them may override an existing 		 * wildcard IPv6 port. 		 */
 name|result
 operator|=
 name|add_listenelt
@@ -11741,6 +11787,8 @@ name|list
 argument_list|,
 operator|&
 name|addr
+argument_list|,
+name|ISC_TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11865,6 +11913,8 @@ argument_list|,
 name|list
 argument_list|,
 name|addrp
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11892,6 +11942,8 @@ argument_list|,
 name|list
 argument_list|,
 name|addrp
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 if|if
