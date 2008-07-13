@@ -295,6 +295,16 @@ block|,
 block|{
 name|RT_VENDORID
 block|,
+name|RT_DEVICEID_8139D
+block|,
+name|RL_8139
+block|,
+literal|"RealTek 8139 10/100BaseTX"
+block|}
+block|,
+block|{
+name|RT_VENDORID
+block|,
 name|RT_DEVICEID_8138
 block|,
 name|RL_8139
