@@ -4561,7 +4561,6 @@ name|va
 parameter_list|)
 block|{
 name|pd_entry_t
-modifier|*
 name|pde
 decl_stmt|;
 name|vm_paddr_t
@@ -4590,6 +4589,7 @@ else|else
 block|{
 name|pde
 operator|=
+operator|*
 name|vtopde
 argument_list|(
 name|va
@@ -4597,7 +4597,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|pde
 operator|&
 name|PG_PS
@@ -4606,7 +4605,6 @@ block|{
 name|pa
 operator|=
 operator|(
-operator|*
 name|pde
 operator|&
 name|PG_PS_FRAME
@@ -4621,11 +4619,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 			 * Beware of a concurrent promotion that changes the 			 * PDE at this point!  For example, vtopte() must not 			 * be used to access the PTE because it would use the 			 * new PDE.  It is, however, safe to use the old PDE 			 * because the page table page is preserved by the 			 * promotion. 			 */
 name|pa
 operator|=
 operator|*
-name|vtopte
+name|pmap_pde_to_pte
 argument_list|(
+operator|&
+name|pde
+argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
