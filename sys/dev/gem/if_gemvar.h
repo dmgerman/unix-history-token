@@ -28,11 +28,7 @@ file|<sys/callout.h>
 end_include
 
 begin_comment
-comment|/*  * Misc. definitions for the Sun ``Gem'' Ethernet controller family driver.  */
-end_comment
-
-begin_comment
-comment|/*  * Transmit descriptor list size.  This is arbitrary, but allocate  * enough descriptors for 64 pending transmissions and 16 segments  * per packet. This limit is not actually enforced (packets with more segments  * can be sent, depending on the busdma backend); it is however used as an  * estimate for the tx window size.  */
+comment|/*  * Transmit descriptor list size.  This is arbitrary, but allocate  * enough descriptors for 64 pending transmissions and 16 segments  * per packet.  This limit is not actually enforced (packets with  * more segments can be sent, depending on the busdma backend); it  * is however used as an estimate for the TX window size.  */
 end_comment
 
 begin_define
@@ -81,14 +77,14 @@ value|((x + 1)& GEM_NTXDESC_MASK)
 end_define
 
 begin_comment
-comment|/*  * Receive descriptor list size.  We have one Rx buffer per incoming  * packet, so this logic is a little simpler.  */
+comment|/*  * Receive descriptor list size.  We have one RX buffer per incoming  * packet, so this logic is a little simpler.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GEM_NRXDESC
-value|128
+value|256
 end_define
 
 begin_define
@@ -96,16 +92,6 @@ define|#
 directive|define
 name|GEM_NRXDESC_MASK
 value|(GEM_NRXDESC - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_PREVRX
-parameter_list|(
-name|x
-parameter_list|)
-value|((x - 1)& GEM_NRXDESC_MASK)
 end_define
 
 begin_define
@@ -119,7 +105,7 @@ value|((x + 1)& GEM_NRXDESC_MASK)
 end_define
 
 begin_comment
-comment|/*  * How many ticks to wait until to retry on a RX descriptor that is still owned  * by the hardware.  */
+comment|/*  * How many ticks to wait until to retry on a RX descriptor that is  * still owned by the hardware.  */
 end_comment
 
 begin_define
@@ -130,14 +116,13 @@ value|(hz / 50)
 end_define
 
 begin_comment
-comment|/*  * Control structures are DMA'd to the GEM chip.  We allocate them in  * a single clump that maps to a single DMA segment to make several things  * easier.  */
+comment|/*  * Control structures are DMA'd to the GEM chip.  We allocate them  * in a single clump that maps to a single DMA segment to make  * several things easier.  */
 end_comment
 
 begin_struct
 struct|struct
 name|gem_control_data
 block|{
-comment|/* 	 * The transmit descriptors. 	 */
 name|struct
 name|gem_desc
 name|gcd_txdescs
@@ -145,7 +130,7 @@ index|[
 name|GEM_NTXDESC
 index|]
 decl_stmt|;
-comment|/* 	 * The receive descriptors. 	 */
+comment|/* TX descriptors */
 name|struct
 name|gem_desc
 name|gcd_rxdescs
@@ -153,6 +138,7 @@ index|[
 name|GEM_NRXDESC
 index|]
 decl_stmt|;
+comment|/* RX descriptors */
 block|}
 struct|;
 end_struct
@@ -188,7 +174,7 @@ value|GEM_CDOFF(gcd_rxdescs[(x)])
 end_define
 
 begin_comment
-comment|/*  * Software state for transmit job mbufs (may be elements of mbuf chains).  */
+comment|/*  * software state for transmit job mbufs (may be elements of mbuf chains)  */
 end_comment
 
 begin_struct
@@ -238,29 +224,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Argument structure for busdma callback */
-end_comment
-
-begin_struct
-struct|struct
-name|gem_txdma
-block|{
-name|struct
-name|gem_softc
-modifier|*
-name|txd_sc
-decl_stmt|;
-name|struct
-name|gem_txsoft
-modifier|*
-name|txd_txs
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Software state for receive jobs.  */
+comment|/*  * software state for receive jobs  */
 end_comment
 
 begin_struct
@@ -286,7 +250,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Software state per device.  */
+comment|/*  * software state per device  */
 end_comment
 
 begin_struct
@@ -297,6 +261,10 @@ name|struct
 name|ifnet
 modifier|*
 name|sc_ifp
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_mtx
 decl_stmt|;
 name|device_t
 name|sc_miibus
@@ -314,7 +282,7 @@ comment|/* generic device information */
 name|u_char
 name|sc_enaddr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|struct
@@ -326,59 +294,82 @@ name|struct
 name|callout
 name|sc_rx_ch
 decl_stmt|;
-comment|/* delayed rx callout */
+comment|/* delayed RX callout */
 name|int
 name|sc_wdog_timer
 decl_stmt|;
 comment|/* watchdog timer */
-comment|/* The following bus handles are to be provided by the bus front-end */
+name|void
+modifier|*
+name|sc_ih
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|sc_res
+index|[
+literal|3
+index|]
+decl_stmt|;
+define|#
+directive|define
+name|GEM_RES_INTR
+value|0
+define|#
+directive|define
+name|GEM_RES_BANK1
+value|1
+define|#
+directive|define
+name|GEM_RES_BANK2
+value|2
 name|bus_space_tag_t
-name|sc_bustag
-decl_stmt|;
-comment|/* bus tag */
-name|bus_dma_tag_t
-name|sc_pdmatag
-decl_stmt|;
-comment|/* parent bus dma tag */
-name|bus_dma_tag_t
-name|sc_rdmatag
-decl_stmt|;
-comment|/* RX bus dma tag */
-name|bus_dma_tag_t
-name|sc_tdmatag
-decl_stmt|;
-comment|/* TX bus dma tag */
-name|bus_dma_tag_t
-name|sc_cdmatag
-decl_stmt|;
-comment|/* control data bus dma tag */
-name|bus_dmamap_t
-name|sc_dmamap
-decl_stmt|;
-comment|/* bus dma handle */
-name|bus_space_handle_t
-name|sc_h
-decl_stmt|;
-comment|/* bus space handle for all regs */
-name|int
-name|sc_phys
+name|sc_bt
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* MII instance -> PHY map */
-name|int
-name|sc_mif_config
+name|bus_space_handle_t
+name|sc_bh
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* Selected MII reg setting */
-name|int
-name|sc_pci
+define|#
+directive|define
+name|GEM_BS_BANK1
+value|0
+define|#
+directive|define
+name|GEM_BS_BANK2
+value|1
+name|bus_dma_tag_t
+name|sc_pdmatag
 decl_stmt|;
-comment|/* XXXXX -- PCI buses are LE. */
+comment|/* parent bus DMA tag */
+name|bus_dma_tag_t
+name|sc_rdmatag
+decl_stmt|;
+comment|/* RX bus DMA tag */
+name|bus_dma_tag_t
+name|sc_tdmatag
+decl_stmt|;
+comment|/* TX bus DMA tag */
+name|bus_dma_tag_t
+name|sc_cdmatag
+decl_stmt|;
+comment|/* control data bus DMA tag */
+name|bus_dmamap_t
+name|sc_dmamap
+decl_stmt|;
+comment|/* bus DMA handle */
+name|int
+name|sc_phyad
+decl_stmt|;
+comment|/* PHY to use or -1 for any */
 name|u_int
 name|sc_variant
 decl_stmt|;
-comment|/* which GEM are we dealing with? */
 define|#
 directive|define
 name|GEM_UNKNOWN
@@ -388,22 +379,54 @@ define|#
 directive|define
 name|GEM_SUN_GEM
 value|1
-comment|/* Sun GEM variant */
+comment|/* Sun GEM */
+define|#
+directive|define
+name|GEM_SUN_ERI
+value|2
+comment|/* Sun ERI */
 define|#
 directive|define
 name|GEM_APPLE_GMAC
-value|2
-comment|/* Apple GMAC variant */
+value|3
+comment|/* Apple GMAC */
+define|#
+directive|define
+name|GEM_APPLE_K2_GMAC
+value|4
+comment|/* Apple K2 GMAC */
+define|#
+directive|define
+name|GEM_IS_APPLE
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|((sc)->sc_variant == GEM_APPLE_GMAC ||				\ 	(sc)->sc_variant == GEM_APPLE_K2_GMAC)
 name|u_int
 name|sc_flags
 decl_stmt|;
-comment|/* */
 define|#
 directive|define
-name|GEM_GIGABIT
-value|0x0001
-comment|/* has a gigabit PHY */
-comment|/* 	 * Ring buffer DMA stuff. 	 */
+name|GEM_INITED
+value|(1<< 0)
+comment|/* reset persistent regs init'ed */
+define|#
+directive|define
+name|GEM_LINK
+value|(1<< 1)
+comment|/* link is up */
+define|#
+directive|define
+name|GEM_PCI
+value|(1<< 2)
+comment|/* PCI busses are little-endian */
+define|#
+directive|define
+name|GEM_SERDES
+value|(1<< 3)
+comment|/* use the SERDES */
+comment|/* 	 * ring buffer DMA stuff 	 */
 name|bus_dma_segment_t
 name|sc_cdseg
 decl_stmt|;
@@ -419,7 +442,7 @@ comment|/* control data DMA map */
 name|bus_addr_t
 name|sc_cddma
 decl_stmt|;
-comment|/* 	 * Software state for transmit and receive descriptors. 	 */
+comment|/* 	 * software state for transmit and receive descriptors 	 */
 name|struct
 name|gem_txsoft
 name|sc_txsoft
@@ -434,7 +457,7 @@ index|[
 name|GEM_NRXDESC
 index|]
 decl_stmt|;
-comment|/* 	 * Control data structures. 	 */
+comment|/* 	 * control data structures 	 */
 name|struct
 name|gem_control_data
 modifier|*
@@ -451,50 +474,303 @@ value|sc_control_data->gcd_rxdescs
 name|int
 name|sc_txfree
 decl_stmt|;
-comment|/* number of free Tx descriptors */
+comment|/* number of free TX descriptors */
 name|int
 name|sc_txnext
 decl_stmt|;
-comment|/* next ready Tx descriptor */
+comment|/* next ready TX descriptor */
 name|int
 name|sc_txwin
 decl_stmt|;
-comment|/* Tx descriptors since last Tx int */
+comment|/* TX desc. since last TX intr. */
 name|struct
 name|gem_txsq
 name|sc_txfreeq
 decl_stmt|;
-comment|/* free Tx descsofts */
+comment|/* free TX descsofts */
 name|struct
 name|gem_txsq
 name|sc_txdirtyq
 decl_stmt|;
-comment|/* dirty Tx descsofts */
+comment|/* dirty TX descsofts */
 name|int
 name|sc_rxptr
 decl_stmt|;
-comment|/* next ready RX descriptor/descsoft */
+comment|/* next ready RX desc./descsoft */
 name|int
 name|sc_rxfifosize
 decl_stmt|;
-comment|/* Rx FIFO size (bytes) */
-comment|/* ========== */
-name|int
-name|sc_inited
-decl_stmt|;
-name|int
-name|sc_debug
-decl_stmt|;
+comment|/* RX FIFO size (bytes) */
 name|int
 name|sc_ifflags
 decl_stmt|;
-name|struct
-name|mtx
-name|sc_mtx
+name|int
+name|sc_csum_features
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|GEM_BANKN_BARRIER
+parameter_list|(
+name|n
+parameter_list|,
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|len
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|bus_space_barrier((sc)->sc_bt[(n)], (sc)->sc_bh[(n)],		\ 	    (offs), (len), (flags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK1_BARRIER
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|len
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|GEM_BANKN_BARRIER(GEM_BS_BANK1, (sc), (offs), (len), (flags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK2_BARRIER
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|len
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|GEM_BANKN_BARRIER(GEM_BS_BANK2, (sc), (offs), (len), (flags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANKN_READ_M
+parameter_list|(
+name|n
+parameter_list|,
+name|m
+parameter_list|,
+name|sc
+parameter_list|,
+name|offs
+parameter_list|)
+define|\
+value|bus_space_read_ ## m((sc)->sc_bt[(n)], (sc)->sc_bh[(n)],	\ 	    (offs))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK1_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|)
+define|\
+value|GEM_BANKN_READ_M(GEM_BS_BANK1, 1, (sc), (offs))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK1_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|)
+define|\
+value|GEM_BANKN_READ_M(GEM_BS_BANK1, 2, (sc), (offs))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK1_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|)
+define|\
+value|GEM_BANKN_READ_M(GEM_BS_BANK1, 4, (sc), (offs))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK2_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|)
+define|\
+value|GEM_BANKN_READ_M(GEM_BS_BANK2, 1, (sc), (offs))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK2_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|)
+define|\
+value|GEM_BANKN_READ_M(GEM_BS_BANK2, 2, (sc), (offs))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK2_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|)
+define|\
+value|GEM_BANKN_READ_M(GEM_BS_BANK2, 4, (sc), (offs))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANKN_WRITE_M
+parameter_list|(
+name|n
+parameter_list|,
+name|m
+parameter_list|,
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|bus_space_write_ ## m((sc)->sc_bt[n], (sc)->sc_bh[(n)],		\ 	    (offs), (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK1_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|GEM_BANKN_WRITE_M(GEM_BS_BANK1, 1, (sc), (offs), (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK1_WRITE_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|GEM_BANKN_WRITE_M(GEM_BS_BANK1, 2, (sc), (offs), (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK1_WRITE_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|GEM_BANKN_WRITE_M(GEM_BS_BANK1, 4, (sc), (offs), (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK2_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|GEM_BANKN_WRITE_M(GEM_BS_BANK2, 1, (sc), (offs), (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK2_WRITE_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|GEM_BANKN_WRITE_M(GEM_BS_BANK2, 2, (sc), (offs), (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_BANK2_WRITE_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|offs
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|GEM_BANKN_WRITE_M(GEM_BS_BANK2, 4, (sc), (offs), (v))
+end_define
+
+begin_comment
+comment|/* XXX this should be handled by bus_dma(9). */
+end_comment
 
 begin_define
 define|#
@@ -505,7 +781,8 @@ name|sc
 parameter_list|,
 name|v
 parameter_list|)
-value|(((sc)->sc_pci) ? le64toh(v) : be64toh(v))
+define|\
+value|((((sc)->sc_flags& GEM_PCI) != 0) ? le64toh(v) : be64toh(v))
 end_define
 
 begin_define
@@ -517,7 +794,8 @@ name|sc
 parameter_list|,
 name|v
 parameter_list|)
-value|(((sc)->sc_pci) ? htole64(v) : htobe64(v))
+define|\
+value|((((sc)->sc_flags& GEM_PCI) != 0) ? htole64(v) : htobe64(v))
 end_define
 
 begin_define
@@ -554,7 +832,33 @@ parameter_list|,
 name|ops
 parameter_list|)
 define|\
-value|bus_dmamap_sync((sc)->sc_cdmatag, (sc)->sc_cddmamap, (ops));	\  #define	GEM_INIT_RXDESC(sc, x)						\ do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__m->m_data = __m->m_ext.ext_buf;				\ 	__rxd->gd_addr =						\ 	    GEM_DMA_WRITE((sc), __rxs->rxs_paddr);			\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<<GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ } while (0)
+value|bus_dmamap_sync((sc)->sc_cdmatag, (sc)->sc_cddmamap, (ops));
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_INIT_RXDESC
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__m->m_data = __m->m_ext.ext_buf;				\ 	__rxd->gd_addr =						\ 	    GEM_DMA_WRITE((sc), __rxs->rxs_paddr);			\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<< GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_UPDATE_RXDESC
+parameter_list|(
+name|sc
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<< GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ } while (0)
 end_define
 
 begin_define
@@ -632,6 +936,7 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -643,17 +948,18 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|gem_suspend
+name|gem_intr
 parameter_list|(
-name|struct
-name|gem_softc
+name|void
 modifier|*
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -665,16 +971,19 @@ parameter_list|(
 name|struct
 name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|gem_intr
+name|gem_suspend
 parameter_list|(
-name|void
+name|struct
+name|gem_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -686,6 +995,7 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
+name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -697,21 +1007,12 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
+name|ifp
 parameter_list|,
 name|struct
 name|ifmediareq
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|gem_reset
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
+name|ifmr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -725,25 +1026,13 @@ name|int
 name|gem_mii_readreg
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|int
+name|phy
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|gem_mii_writereg
-parameter_list|(
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
+name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -753,6 +1042,26 @@ name|void
 name|gem_mii_statchg
 parameter_list|(
 name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|gem_mii_writereg
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|phy
+parameter_list|,
+name|int
+name|reg
+parameter_list|,
+name|int
+name|val
 parameter_list|)
 function_decl|;
 end_function_decl
