@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  *  * Fixed and further modified on 5-Sep-1995 by Jukka Ukkonen<jau@funet.fi>.  *  * 11-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              A couple of further fixes to my own earlier "fixes".  *  * 18-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              Added an ability to specify addresses relative to the  *              beginning of a track. This is in fact a variation of  *              doing the simple play_msf() call.  *  * 11-Oct-1995: Serge V.Vakulenko<vak@cronyx.ru>  *              New eject algorithm.  *              Some code style reformatting.  */
+comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  *  * Fixed and further modified on 5-Sep-1995 by Jukka Ukkonen<jau@funet.fi>.  *  * 11-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              A couple of further fixes to my own earlier "fixes".  *  * 18-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              Added an ability to specify addresses relative to the  *              beginning of a track. This is in fact a variation of  *              doing the simple play_msf() call.  *  * 11-Oct-1995: Serge V.Vakulenko<vak@cronyx.ru>  *              New eject algorithm.  *              Some code style reformatting.  *   * 13-Dec-1999: Knut A. Syed<kas@kas.no>  * 		Volume-command modified.  If used with only one  * 		parameter it now sets both channels.  If used without  * 		parameters it will print volume-info.  * 		Version 2.0.1  *  * 27-Jun-2008  Pietro Cerutti<gahr@FreeBSD.org>  * 		Further enhancement to volume. Values not in range 0-255  * 		are now reduced to be in range. This prevents overflow in  * 		the uchar storing the volume (256 -> 0, -20 -> 236, ...).  * 		Version 2.0.2  *  */
 end_comment
 
 begin_include
@@ -123,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.0"
+value|"2.0.2"
 end_define
 
 begin_define
@@ -578,7 +578,7 @@ literal|"volume"
 block|,
 literal|1
 block|,
-literal|"<l><r> | left | right | mute | mono | stereo"
+literal|"<l&r><l><r> | left | right | mute | mono | stereo"
 block|}
 block|,
 block|{
@@ -1554,6 +1554,8 @@ decl_stmt|,
 name|r
 decl_stmt|,
 name|rc
+decl_stmt|,
+name|count
 decl_stmt|;
 switch|switch
 condition|(
@@ -2102,6 +2104,20 @@ return|;
 if|if
 condition|(
 operator|!
+name|strlen
+argument_list|(
+name|arg
+argument_list|)
+condition|)
+return|return
+name|pstatus
+argument_list|(
+literal|"volume"
+argument_list|)
+return|;
+if|if
+condition|(
+operator|!
 name|strncasecmp
 argument_list|(
 name|arg
@@ -2214,10 +2230,8 @@ argument_list|,
 name|CDIOCSETMUTE
 argument_list|)
 return|;
-if|if
-condition|(
-literal|2
-operator|!=
+name|count
+operator|=
 name|sscanf
 argument_list|(
 name|arg
@@ -2230,8 +2244,35 @@ argument_list|,
 operator|&
 name|r
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|count
+operator|==
+literal|1
 condition|)
-block|{
+return|return
+name|setvol
+argument_list|(
+name|l
+argument_list|,
+name|l
+argument_list|)
+return|;
+if|if
+condition|(
+name|count
+operator|==
+literal|2
+condition|)
+return|return
+name|setvol
+argument_list|(
+name|l
+argument_list|,
+name|r
+argument_list|)
+return|;
 name|warnx
 argument_list|(
 literal|"invalid command arguments"
@@ -2241,15 +2282,6 @@ return|return
 operator|(
 literal|0
 operator|)
-return|;
-block|}
-return|return
-name|setvol
-argument_list|(
-name|l
-argument_list|,
-name|r
-argument_list|)
 return|;
 case|case
 name|CMD_SPEED
@@ -6065,6 +6097,38 @@ name|struct
 name|ioc_vol
 name|v
 decl_stmt|;
+name|left
+operator|=
+name|left
+operator|<
+literal|0
+condition|?
+literal|0
+else|:
+name|left
+operator|>
+literal|255
+condition|?
+literal|255
+else|:
+name|left
+expr_stmt|;
+name|right
+operator|=
+name|right
+operator|<
+literal|0
+condition|?
+literal|0
+else|:
+name|right
+operator|>
+literal|255
+condition|?
+literal|255
+else|:
+name|right
+expr_stmt|;
 name|v
 operator|.
 name|vol
