@@ -168,7 +168,7 @@ literal|0
 argument_list|,
 name|NG_BLUETOOTH_VERSION
 argument_list|,
-literal|""
+literal|"Version of the stack"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
