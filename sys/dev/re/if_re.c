@@ -365,7 +365,7 @@ name|RT_DEVICEID_8169
 block|,
 literal|0
 block|,
-literal|"RealTek 8169/8169S/8169SB/8110S/8110SB Gigabit Ethernet"
+literal|"RealTek 8169/8169S/8169SB(L)/8110S/8110SB(L) Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -529,6 +529,14 @@ block|,
 name|RL_8169
 block|,
 literal|"8169SC"
+block|}
+block|,
+block|{
+name|RL_HWREV_8169_8110SBL
+block|,
+name|RL_8169
+block|,
+literal|"8169SBL"
 block|}
 block|,
 block|{
@@ -5571,6 +5579,9 @@ name|RL_HWREV_8169_8110SB
 case|:
 case|case
 name|RL_HWREV_8169_8110SC
+case|:
+case|case
+name|RL_HWREV_8169_8110SBL
 case|:
 name|sc
 operator|->

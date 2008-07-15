@@ -1091,6 +1091,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_HWREV_8169_8110SBL
+value|0x7CC00000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_TXDMA_16BYTES
 value|0x00000000
 end_define
