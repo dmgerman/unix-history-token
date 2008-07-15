@@ -1000,6 +1000,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_HWREV_8168C
+value|0x3C000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8168C_SPIN2
+value|0x3C400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8168CP
+value|0x3C800000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_HWREV_8139
 value|0x60000000
 end_define
@@ -2480,6 +2501,105 @@ begin_comment
 comment|/* enable VLAN tag stripping */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RL_CPLUSCMD_MACSTAT_DIS
+value|0x0080
+end_define
+
+begin_comment
+comment|/* 8168B/C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_CPLUSCMD_ASF
+value|0x0100
+end_define
+
+begin_comment
+comment|/* 8168C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_CPLUSCMD_DBG_SEL
+value|0x0200
+end_define
+
+begin_comment
+comment|/* 8168C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_CPLUSCMD_FORCE_TXFC
+value|0x0400
+end_define
+
+begin_comment
+comment|/* 8168C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_CPLUSCMD_FORCE_RXFC
+value|0x0800
+end_define
+
+begin_comment
+comment|/* 8168C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_CPLUSCMD_FORCE_HDPX
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 8168C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_CPLUSCMD_NORMAL_MODE
+value|0x2000
+end_define
+
+begin_comment
+comment|/* 8168C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_CPLUSCMD_DBG_ENB
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 8168C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_CPLUSCMD_BIST_ENB
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 8168C/CP */
+end_comment
+
 begin_comment
 comment|/* C+ early transmit threshold */
 end_comment
@@ -3156,6 +3276,31 @@ comment|/* TAG data */
 end_comment
 
 begin_comment
+comment|/* RTL8168C/RTL8168CP/RTL8111C/RTL8111CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_TDESC_CMD_UDPCSUMV2
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_TDESC_CMD_TCPCSUMV2
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_TDESC_CMD_IPCSUMV2
+value|0x20000000
+end_define
+
+begin_comment
 comment|/*  * Error bits are valid only on the last descriptor of a frame  * (i.e. RL_TDESC_CMD_EOF == 1)  */
 end_comment
 
@@ -3409,6 +3554,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_RDESC_STAT_UDP
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* UDP, 8168C/CP, 8111C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_RDESC_STAT_TCP
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* TCP, 8168C/CP, 8111C/CP */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_RDESC_STAT_IPSUMBAD
 value|0x00008000
 end_define
@@ -3489,6 +3656,24 @@ end_define
 begin_comment
 comment|/* TAG data */
 end_comment
+
+begin_comment
+comment|/* RTL8168C/RTL8168CP/RTL8111C/RTL8111CP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_RDESC_IPV6
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_RDESC_IPV4
+value|0x40000000
+end_define
 
 begin_define
 define|#
@@ -4132,6 +4317,18 @@ define|#
 directive|define
 name|RL_FLAG_NOJUMBO
 value|0x0010
+define|#
+directive|define
+name|RL_FLAG_PAR
+value|0x0020
+define|#
+directive|define
+name|RL_FLAG_DESCV2
+value|0x0040
+define|#
+directive|define
+name|RL_FLAG_MACSTAT
+value|0x0080
 define|#
 directive|define
 name|RL_FLAG_LINK
