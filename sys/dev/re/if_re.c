@@ -5373,7 +5373,31 @@ name|sc
 argument_list|,
 name|RL_TXCFG
 argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Chip rev. 0x%08x\n"
+argument_list|,
+name|hwrev
 operator|&
+literal|0x7c800000
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"MAC rev. 0x%08x\n"
+argument_list|,
+name|hwrev
+operator|&
+literal|0x00700000
+argument_list|)
+expr_stmt|;
+name|hwrev
+operator|&=
 name|RL_TXCFG_HWREV
 expr_stmt|;
 while|while
@@ -5421,7 +5445,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unknown H/W revision: %08x\n"
+literal|"Unknown H/W revision: 0x%08x\n"
 argument_list|,
 name|hwrev
 argument_list|)
