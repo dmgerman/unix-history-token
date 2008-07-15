@@ -983,12 +983,33 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|filename
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|s
 parameter_list|)
 block|{
+if|if
+condition|(
+name|filename
+operator|==
+name|NULL
+condition|)
 name|printf
 argument_list|(
 literal|"kldload: %s\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"kldload: %s: %s\n"
+argument_list|,
+name|filename
 argument_list|,
 name|s
 argument_list|)
@@ -2882,6 +2903,8 @@ condition|)
 block|{
 name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"Unsupported file layout"
 argument_list|)
 expr_stmt|;
@@ -2913,6 +2936,8 @@ condition|)
 block|{
 name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"Unsupported file version"
 argument_list|)
 expr_stmt|;
@@ -2941,6 +2966,8 @@ condition|)
 block|{
 name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"Unsupported file type"
 argument_list|)
 expr_stmt|;
@@ -2963,6 +2990,8 @@ condition|)
 block|{
 name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"Unsupported machine"
 argument_list|)
 expr_stmt|;
@@ -3027,6 +3056,8 @@ operator|)
 condition|)
 name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"Unreadable program headers"
 argument_list|)
 expr_stmt|;
@@ -3091,6 +3122,8 @@ condition|)
 block|{
 name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"Too many sections"
 argument_list|)
 expr_stmt|;
@@ -3135,6 +3168,8 @@ name|PT_INTERP
 case|:
 name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"Unsupported file type"
 argument_list|)
 expr_stmt|;
@@ -3159,6 +3194,8 @@ condition|)
 block|{
 name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"Object is not dynamically-linked"
 argument_list|)
 expr_stmt|;
@@ -3179,6 +3216,8 @@ condition|)
 block|{
 name|link_elf_error
 argument_list|(
+name|filename
+argument_list|,
 literal|"No sections"
 argument_list|)
 expr_stmt|;
