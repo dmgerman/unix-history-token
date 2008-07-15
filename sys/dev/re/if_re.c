@@ -332,19 +332,9 @@ name|DLINK_VENDORID
 block|,
 name|DLINK_DEVICEID_528T
 block|,
-name|RL_HWREV_8169S
+literal|0
 block|,
 literal|"D-Link DGE-528(T) Gigabit Ethernet Adapter"
-block|}
-block|,
-block|{
-name|DLINK_VENDORID
-block|,
-name|DLINK_DEVICEID_528T
-block|,
-name|RL_HWREV_8169_8110SB
-block|,
-literal|"D-Link DGE-528(T) Rev.B1 Gigabit Ethernet Adapter"
 block|}
 block|,
 block|{
@@ -352,7 +342,7 @@ name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8139
 block|,
-name|RL_HWREV_8139CPLUS
+literal|0
 block|,
 literal|"RealTek 8139C+ 10/100BaseTX"
 block|}
@@ -362,7 +352,7 @@ name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8101E
 block|,
-name|RL_HWREV_8101E
+literal|0
 block|,
 literal|"RealTek 8101E PCIe 10/100baseTX"
 block|}
@@ -372,29 +362,9 @@ name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8168
 block|,
-name|RL_HWREV_8168_SPIN1
+literal|0
 block|,
-literal|"RealTek 8168/8111B PCIe Gigabit Ethernet"
-block|}
-block|,
-block|{
-name|RT_VENDORID
-block|,
-name|RT_DEVICEID_8168
-block|,
-name|RL_HWREV_8168_SPIN2
-block|,
-literal|"RealTek 8168/8111B PCIe Gigabit Ethernet"
-block|}
-block|,
-block|{
-name|RT_VENDORID
-block|,
-name|RT_DEVICEID_8168
-block|,
-name|RL_HWREV_8168_SPIN3
-block|,
-literal|"RealTek 8168/8111B PCIe Gigabit Ethernet"
+literal|"RealTek 8168/8168B/8111B PCIe Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -402,39 +372,9 @@ name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8169
 block|,
-name|RL_HWREV_8169
+literal|0
 block|,
-literal|"RealTek 8169 Gigabit Ethernet"
-block|}
-block|,
-block|{
-name|RT_VENDORID
-block|,
-name|RT_DEVICEID_8169
-block|,
-name|RL_HWREV_8169S
-block|,
-literal|"RealTek 8169S Single-chip Gigabit Ethernet"
-block|}
-block|,
-block|{
-name|RT_VENDORID
-block|,
-name|RT_DEVICEID_8169
-block|,
-name|RL_HWREV_8169_8110SB
-block|,
-literal|"RealTek 8169SB/8110SB Single-chip Gigabit Ethernet"
-block|}
-block|,
-block|{
-name|RT_VENDORID
-block|,
-name|RT_DEVICEID_8169
-block|,
-name|RL_HWREV_8169_8110SC
-block|,
-literal|"RealTek 8169SC/8110SC Single-chip Gigabit Ethernet"
+literal|"RealTek 8169/8169S/8169SB/8110S/8110SB Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -442,19 +382,9 @@ name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8169SC
 block|,
-name|RL_HWREV_8169_8110SC
+literal|0
 block|,
 literal|"RealTek 8169SC/8110SC Single-chip Gigabit Ethernet"
-block|}
-block|,
-block|{
-name|RT_VENDORID
-block|,
-name|RT_DEVICEID_8169
-block|,
-name|RL_HWREV_8110S
-block|,
-literal|"RealTek 8110S Single-chip Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -462,7 +392,7 @@ name|COREGA_VENDORID
 block|,
 name|COREGA_DEVICEID_CGLAPCIGT
 block|,
-name|RL_HWREV_8169S
+literal|0
 block|,
 literal|"Corega CG-LAPCIGT (RTL8169S) Gigabit Ethernet"
 block|}
@@ -472,7 +402,7 @@ name|LINKSYS_VENDORID
 block|,
 name|LINKSYS_DEVICEID_EG1032
 block|,
-name|RL_HWREV_8169S
+literal|0
 block|,
 literal|"Linksys EG1032 (RTL8169S) Gigabit Ethernet"
 block|}
@@ -482,7 +412,7 @@ name|USR_VENDORID
 block|,
 name|USR_DEVICEID_997902
 block|,
-name|RL_HWREV_8169S
+literal|0
 block|,
 literal|"US Robotics 997902 (RTL8169S) Gigabit Ethernet"
 block|}
