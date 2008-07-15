@@ -5102,7 +5102,7 @@ name|sc
 argument_list|,
 name|RL_EECMD
 argument_list|,
-literal|0
+name|RL_EEMODE_OFF
 argument_list|)
 expr_stmt|;
 block|}
@@ -12768,7 +12768,7 @@ name|sc
 argument_list|,
 name|RL_EECMD
 argument_list|,
-literal|0
+name|RL_EEMODE_OFF
 argument_list|)
 expr_stmt|;
 name|v
@@ -13002,7 +13002,7 @@ name|sc
 argument_list|,
 name|RL_EECMD
 argument_list|,
-literal|0
+name|RL_EEMODE_OFF
 argument_list|)
 expr_stmt|;
 name|v
