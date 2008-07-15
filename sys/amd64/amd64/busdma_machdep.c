@@ -2076,16 +2076,6 @@ name|mflags
 operator|=
 name|M_WAITOK
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|BUS_DMA_ZERO
-condition|)
-name|mflags
-operator||=
-name|M_ZERO
-expr_stmt|;
 comment|/* If we succeed, no mapping/bouncing will be required */
 operator|*
 name|mapp
@@ -2122,7 +2112,7 @@ name|nsegments
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|mflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2158,6 +2148,16 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|BUS_DMA_ZERO
+condition|)
+name|mflags
+operator||=
+name|M_ZERO
+expr_stmt|;
 comment|/*  	 * XXX: 	 * (dmat->alignment< dmat->maxsize) is just a quick hack; the exact 	 * alignment guarantees of malloc need to be nailed down, and the 	 * code below should be rewritten to take that into account. 	 * 	 * In the meantime, we'll warn the user if malloc gets it wrong. 	 */
 if|if
 condition|(
@@ -2335,7 +2335,7 @@ name|dmat
 operator|->
 name|flags
 argument_list|,
-name|ENOMEM
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
