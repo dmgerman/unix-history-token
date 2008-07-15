@@ -4004,6 +4004,12 @@ name|resource
 modifier|*
 name|rl_res
 decl_stmt|;
+name|int
+name|rl_res_id
+decl_stmt|;
+name|int
+name|rl_res_type
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
