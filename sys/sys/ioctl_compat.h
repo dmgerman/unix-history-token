@@ -89,18 +89,6 @@ begin_comment
 comment|/*  * Structure for TIOCGETP and TIOCSETP ioctls.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SGTTYB_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_SGTTYB_
-end_define
-
 begin_struct
 struct|struct
 name|sgttyb
@@ -128,11 +116,6 @@ comment|/* mode flags */
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -885,31 +868,6 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
-
-begin_comment
-comment|/* XXX publish these so stty(1) can still report them */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OTTYDISC
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|NETLDISC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTTYDISC
-value|2
-end_define
 
 begin_endif
 endif|#

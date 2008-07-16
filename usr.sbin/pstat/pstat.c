@@ -99,16 +99,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl_compat.h>
-end_include
-
-begin_comment
-comment|/* XXX NTTYDISC is too well hidden */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/tty.h>
 end_include
 
@@ -1778,18 +1768,6 @@ operator|)
 name|printf
 argument_list|(
 literal|"term\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|NTTYDISC
-case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"ntty\n"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -80,16 +80,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/ioctl_compat.h>
-end_include
-
-begin_comment
-comment|/* XXX NTTYDISC is too well hidden */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
@@ -199,17 +189,6 @@ condition|(
 name|ldisc
 condition|)
 block|{
-case|case
-name|NTTYDISC
-case|:
-name|cnt
-operator|+=
-name|printf
-argument_list|(
-literal|"new tty disc; "
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|SLIPDISC
 case|:
