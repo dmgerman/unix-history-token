@@ -3863,7 +3863,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Depending on whether or not the application has bound or connected 	 * the application, we may have to do varying levels of work.  The 	 * optimal case is for a connected UDP socket, as a global lock isn't 	 * required. 	 * 	 * In order to decide which we need, we require stability of the 	 * inpcb binding, which we ensure by acquiring a read lock on the 	 * inpcb.  This doesn't strictly follow the lock order, so we play 	 * the trylock and retry game; note that we may end up with more 	 * conservative locks than required the second time around, so later 	 * assertions have to accept that.  Further analysis of the number of 	 * misses under contention is required. 	 */
+comment|/* 	 * Depending on whether or not the application has bound or connected 	 * the socket, we may have to do varying levels of work.  The optimal 	 * case is for a connected UDP socket, as a global lock isn't 	 * required at all. 	 * 	 * In order to decide which we need, we require stability of the 	 * inpcb binding, which we ensure by acquiring a read lock on the 	 * inpcb.  This doesn't strictly follow the lock order, so we play 	 * the trylock and retry game; note that we may end up with more 	 * conservative locks than required the second time around, so later 	 * assertions have to accept that.  Further analysis of the number of 	 * misses under contention is required. 	 */
 name|sin
 operator|=
 operator|(
