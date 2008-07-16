@@ -2517,8 +2517,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|VR_RXSTAT_RX_OK
+name|VR_RXSTAT_RX_VIDHIT
 value|0x00004000
+end_define
+
+begin_comment
+comment|/* 6105M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VR_RXSTAT_RX_OK
+value|0x00008000
 end_define
 
 begin_define

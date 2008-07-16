@@ -6504,9 +6504,15 @@ condition|(
 operator|(
 name|rxstat
 operator|&
+name|VR_RXSTAT_RX_OK
+operator|)
+operator|==
+literal|0
+operator|||
 operator|(
-name|VR_RXSTAT_RXERR
-operator||
+name|rxstat
+operator|&
+operator|(
 name|VR_RXSTAT_FIRSTFRAG
 operator||
 name|VR_RXSTAT_LASTFRAG
