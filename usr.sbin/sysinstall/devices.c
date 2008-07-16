@@ -594,6 +594,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"jme"
+argument_list|,
+literal|"JMicron JMC250 Gigabit/JMC260 Fast Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"kue"
 argument_list|,
 literal|"Kawasaki LSI USB Ethernet adapter"
