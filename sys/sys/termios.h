@@ -1173,65 +1173,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Commands passed to tcsetattr() for setting the termios structure.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCSANOW
-value|0
-end_define
-
-begin_comment
-comment|/* make change immediate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCSADRAIN
-value|1
-end_define
-
-begin_comment
-comment|/* drain output, then change */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCSAFLUSH
-value|2
-end_define
-
-begin_comment
-comment|/* drain output, flush input */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TCSASOFT
-value|0x10
-end_define
-
-begin_comment
-comment|/* flag - don't alter h.w. state */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Standard speeds  */
 end_comment
 
@@ -1444,6 +1385,65 @@ ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
+
+begin_comment
+comment|/*  * Commands passed to tcsetattr() for setting the termios structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCSANOW
+value|0
+end_define
+
+begin_comment
+comment|/* make change immediate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCSADRAIN
+value|1
+end_define
+
+begin_comment
+comment|/* drain output, then change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCSAFLUSH
+value|2
+end_define
+
+begin_comment
+comment|/* drain output, flush input */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TCSASOFT
+value|0x10
+end_define
+
+begin_comment
+comment|/* flag - don't alter h.w. state */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
