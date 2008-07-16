@@ -200,264 +200,206 @@ comment|/* 28-69 free */
 end_comment
 
 begin_comment
-comment|/* 127-124 compat */
+comment|/* 80-84 slip */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCSBRK
-value|_IO('t', 123)
+name|TIOCGDRAINWAIT
+value|_IOR('t', 86, int)
 end_define
 
 begin_comment
-comment|/* set break bit */
+comment|/* get ttywait timeout */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCCBRK
-value|_IO('t', 122)
+name|TIOCSDRAINWAIT
+value|_IOW('t', 87, int)
 end_define
 
 begin_comment
-comment|/* clear break bit */
+comment|/* set ttywait timeout */
+end_comment
+
+begin_comment
+comment|/* 88 slip, ppp; conflicts */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCSDTR
-value|_IO('t', 121)
+name|TIOCTIMESTAMP
+value|_IOR('t', 89, struct timeval)
 end_define
 
 begin_comment
-comment|/* set data terminal ready */
+comment|/* enable/get timestamp 						 * of last input event */
+end_comment
+
+begin_comment
+comment|/* 70-90 ppp; many conflicts */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCCDTR
-value|_IO('t', 120)
+name|TIOCMGDTRWAIT
+value|_IOR('t', 90, int)
 end_define
 
 begin_comment
-comment|/* clear data terminal ready */
+comment|/* modem: get wait on close */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCGPGRP
-value|_IOR('t', 119, int)
+name|TIOCMSDTRWAIT
+value|_IOW('t', 91, int)
 end_define
 
 begin_comment
-comment|/* get pgrp of tty */
+comment|/* modem: set wait on close */
+end_comment
+
+begin_comment
+comment|/* 90-92 tap; some conflicts */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCSPGRP
-value|_IOW('t', 118, int)
+name|TIOCDRAIN
+value|_IO('t', 94)
 end_define
 
 begin_comment
-comment|/* set pgrp of tty */
-end_comment
-
-begin_comment
-comment|/* 117-116 compat */
+comment|/* wait till output drained */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCOUTQ
-value|_IOR('t', 115, int)
+name|TIOCSIG
+value|_IOWINT('t', 95)
 end_define
 
 begin_comment
-comment|/* output queue size */
+comment|/* pty: generate signal */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCSTI
-value|_IOW('t', 114, char)
+name|TIOCEXT
+value|_IOW('t', 96, int)
 end_define
 
 begin_comment
-comment|/* simulate terminal input */
+comment|/* pty: external processing */
+end_comment
+
+begin_comment
+comment|/* 90-97 tun; some conflicts */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCNOTTY
-value|_IO('t', 113)
+name|TIOCSCTTY
+value|_IO('t', 97)
 end_define
 
 begin_comment
-comment|/* void tty association */
+comment|/* become controlling tty */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCPKT
-value|_IOW('t', 112, int)
+name|TIOCCONS
+value|_IOW('t', 98, int)
 end_define
 
 begin_comment
-comment|/* pty: set/clear packet mode */
+comment|/* become virtual console */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCPKT_DATA
-value|0x00
+name|TIOCGSID
+value|_IOR('t', 99, int)
 end_define
 
 begin_comment
-comment|/* data packet */
+comment|/* get session id */
+end_comment
+
+begin_comment
+comment|/* 100 see consio.h */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCPKT_FLUSHREAD
-value|0x01
+name|TIOCSTAT
+value|_IO('t', 101)
 end_define
 
 begin_comment
-comment|/* flush packet */
+comment|/* simulate ^T status message */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCPKT_FLUSHWRITE
-value|0x02
+name|TIOCUCNTL
+value|_IOW('t', 102, int)
 end_define
 
 begin_comment
-comment|/* flush packet */
+comment|/* pty: set/clr usr cntl mode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCPKT_STOP
-value|0x04
+name|UIOCCMD
+parameter_list|(
+name|n
+parameter_list|)
+value|_IO('u', n)
 end_define
 
 begin_comment
-comment|/* stop output */
+comment|/* usr cntl op "n" */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCPKT_START
-value|0x08
+name|TIOCSWINSZ
+value|_IOW('t', 103, struct winsize)
 end_define
 
 begin_comment
-comment|/* start output */
+comment|/* set window size */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCPKT_NOSTOP
-value|0x10
+name|TIOCGWINSZ
+value|_IOR('t', 104, struct winsize)
 end_define
 
 begin_comment
-comment|/* no more ^S, ^Q */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_DOSTOP
-value|0x20
-end_define
-
-begin_comment
-comment|/* now do ^S ^Q */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_IOCTL
-value|0x40
-end_define
-
-begin_comment
-comment|/* state change of pty driver */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSTOP
-value|_IO('t', 111)
-end_define
-
-begin_comment
-comment|/* stop output, like ^S */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSTART
-value|_IO('t', 110)
-end_define
-
-begin_comment
-comment|/* start output, like ^Q */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCMSET
-value|_IOW('t', 109, int)
-end_define
-
-begin_comment
-comment|/* set all modem bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCMBIS
-value|_IOW('t', 108, int)
-end_define
-
-begin_comment
-comment|/* bis modem bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCMBIC
-value|_IOW('t', 107, int)
-end_define
-
-begin_comment
-comment|/* bic modem bits */
+comment|/* get window size */
 end_comment
 
 begin_define
@@ -594,204 +536,262 @@ end_define
 begin_define
 define|#
 directive|define
-name|TIOCGWINSZ
-value|_IOR('t', 104, struct winsize)
+name|TIOCMBIC
+value|_IOW('t', 107, int)
 end_define
 
 begin_comment
-comment|/* get window size */
+comment|/* bic modem bits */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCSWINSZ
-value|_IOW('t', 103, struct winsize)
+name|TIOCMBIS
+value|_IOW('t', 108, int)
 end_define
 
 begin_comment
-comment|/* set window size */
+comment|/* bis modem bits */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCUCNTL
-value|_IOW('t', 102, int)
+name|TIOCMSET
+value|_IOW('t', 109, int)
 end_define
 
 begin_comment
-comment|/* pty: set/clr usr cntl mode */
+comment|/* set all modem bits */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCSTAT
-value|_IO('t', 101)
+name|TIOCSTART
+value|_IO('t', 110)
 end_define
 
 begin_comment
-comment|/* simulate ^T status message */
+comment|/* start output, like ^Q */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UIOCCMD
-parameter_list|(
-name|n
-parameter_list|)
-value|_IO('u', n)
+name|TIOCSTOP
+value|_IO('t', 111)
 end_define
 
 begin_comment
-comment|/* usr cntl op "n" */
-end_comment
-
-begin_comment
-comment|/* 100 see consio.h */
+comment|/* stop output, like ^S */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCGSID
-value|_IOR('t', 99, int)
+name|TIOCPKT
+value|_IOW('t', 112, int)
 end_define
 
 begin_comment
-comment|/* get session id */
+comment|/* pty: set/clear packet mode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCCONS
-value|_IOW('t', 98, int)
+name|TIOCPKT_DATA
+value|0x00
 end_define
 
 begin_comment
-comment|/* become virtual console */
+comment|/* data packet */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCSCTTY
-value|_IO('t', 97)
+name|TIOCPKT_FLUSHREAD
+value|0x01
 end_define
 
 begin_comment
-comment|/* become controlling tty */
-end_comment
-
-begin_comment
-comment|/* 97-90 tun; some conflicts */
+comment|/* flush packet */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCEXT
-value|_IOW('t', 96, int)
+name|TIOCPKT_FLUSHWRITE
+value|0x02
 end_define
 
 begin_comment
-comment|/* pty: external processing */
+comment|/* flush packet */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCSIG
-value|_IOWINT('t', 95)
+name|TIOCPKT_STOP
+value|0x04
 end_define
 
 begin_comment
-comment|/* pty: generate signal */
+comment|/* stop output */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCDRAIN
-value|_IO('t', 94)
+name|TIOCPKT_START
+value|0x08
 end_define
 
 begin_comment
-comment|/* wait till output drained */
-end_comment
-
-begin_comment
-comment|/* 92-90 tap; some conflicts */
+comment|/* start output */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCMSDTRWAIT
-value|_IOW('t', 91, int)
+name|TIOCPKT_NOSTOP
+value|0x10
 end_define
 
 begin_comment
-comment|/* modem: set wait on close */
+comment|/* no more ^S, ^Q */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCMGDTRWAIT
-value|_IOR('t', 90, int)
+name|TIOCPKT_DOSTOP
+value|0x20
 end_define
 
 begin_comment
-comment|/* modem: get wait on close */
-end_comment
-
-begin_comment
-comment|/* 90-70 ppp; many conflicts */
+comment|/* now do ^S ^Q */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCTIMESTAMP
-value|_IOR('t', 89, struct timeval)
+name|TIOCPKT_IOCTL
+value|0x40
 end_define
 
 begin_comment
-comment|/* enable/get timestamp 						 * of last input event */
-end_comment
-
-begin_comment
-comment|/* 88 slip, ppp; conflicts */
+comment|/* state change of pty driver */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCSDRAINWAIT
-value|_IOW('t', 87, int)
+name|TIOCNOTTY
+value|_IO('t', 113)
 end_define
 
 begin_comment
-comment|/* set ttywait timeout */
+comment|/* void tty association */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCGDRAINWAIT
-value|_IOR('t', 86, int)
+name|TIOCSTI
+value|_IOW('t', 114, char)
 end_define
 
 begin_comment
-comment|/* get ttywait timeout */
+comment|/* simulate terminal input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCOUTQ
+value|_IOR('t', 115, int)
+end_define
+
+begin_comment
+comment|/* output queue size */
 end_comment
 
 begin_comment
-comment|/* 84-80 slip */
+comment|/* 116-117 compat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSPGRP
+value|_IOW('t', 118, int)
+end_define
+
+begin_comment
+comment|/* set pgrp of tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCGPGRP
+value|_IOR('t', 119, int)
+end_define
+
+begin_comment
+comment|/* get pgrp of tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCCDTR
+value|_IO('t', 120)
+end_define
+
+begin_comment
+comment|/* clear data terminal ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSDTR
+value|_IO('t', 121)
+end_define
+
+begin_comment
+comment|/* set data terminal ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCCBRK
+value|_IO('t', 122)
+end_define
+
+begin_comment
+comment|/* clear break bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSBRK
+value|_IO('t', 123)
+end_define
+
+begin_comment
+comment|/* set break bit */
+end_comment
+
+begin_comment
+comment|/* 124-127 compat */
 end_comment
 
 begin_define
