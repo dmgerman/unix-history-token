@@ -131,6 +131,10 @@ name|interpreted
 decl_stmt|;
 comment|/* flag - this executable is interpreted */
 name|char
+name|opened
+decl_stmt|;
+comment|/* flag - we have opened executable vnode */
+name|char
 modifier|*
 name|interpreter_name
 decl_stmt|;
