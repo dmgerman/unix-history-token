@@ -1667,14 +1667,6 @@ name|ftp_close_method
 argument_list|)
 expr_stmt|;
 comment|/* BSD 4.4 function! */
-name|fp
-operator|->
-name|_file
-operator|=
-name|n
-operator|->
-name|fd_ctrl
-expr_stmt|;
 block|}
 if|if
 condition|(
