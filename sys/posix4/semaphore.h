@@ -19,6 +19,12 @@ directive|define
 name|_SEMAPHORE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/_limits.h>
+end_include
+
 begin_comment
 comment|/* Opaque type definition. */
 end_comment
@@ -49,12 +55,8 @@ begin_define
 define|#
 directive|define
 name|SEM_VALUE_MAX
-value|(~0U)
+value|__INT_MAX
 end_define
-
-begin_comment
-comment|/* Equivalent to UINT_MAX. */
-end_comment
 
 begin_ifndef
 ifndef|#
