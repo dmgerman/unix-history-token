@@ -649,7 +649,7 @@ literal|"        yyval = yyvsp[1-yym];"
 block|,
 literal|"    else"
 block|,
-literal|"    memset(&yyval, 0, sizeof yyval);"
+literal|"        memset(&yyval, 0, sizeof yyval);"
 block|,
 literal|"    switch (yyn)"
 block|,
