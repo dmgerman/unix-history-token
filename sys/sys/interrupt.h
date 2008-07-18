@@ -783,20 +783,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|thread
-modifier|*
-name|intr_handler_thread
-parameter_list|(
-name|struct
-name|intr_handler
-modifier|*
-name|ih
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

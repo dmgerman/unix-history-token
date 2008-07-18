@@ -40,21 +40,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|int
-name|task_drv_fn_t
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|,
-name|int
-name|pending
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_struct
 struct|struct
 name|task
@@ -74,33 +59,11 @@ name|u_short
 name|ta_priority
 decl_stmt|;
 comment|/* Priority */
-name|uint16_t
-name|ta_ppending
-decl_stmt|;
-comment|/* previous pending value */
-name|uint8_t
-name|ta_rc
-decl_stmt|;
-comment|/* last return code */
-name|uint8_t
-name|ta_flags
-decl_stmt|;
-comment|/* flag state */
-union|union
-block|{
 name|task_fn_t
 modifier|*
-name|_ta_func
+name|ta_func
 decl_stmt|;
 comment|/* task handler */
-name|task_drv_fn_t
-modifier|*
-name|_ta_drv_func
-decl_stmt|;
-comment|/* task handler */
-block|}
-name|u
-union|;
 name|void
 modifier|*
 name|ta_context
@@ -109,41 +72,6 @@ comment|/* argument for handler */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|ta_func
-value|u._ta_func
-end_define
-
-begin_define
-define|#
-directive|define
-name|ta_drv_func
-value|u._ta_drv_func
-end_define
-
-begin_define
-define|#
-directive|define
-name|TA_COMPLETE
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TA_NO_DEQUEUE
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TA_REFERENCED
-value|(1<< 0)
-end_define
 
 begin_endif
 endif|#
