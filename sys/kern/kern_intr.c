@@ -7629,5 +7629,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_function
+name|struct
+name|thread
+modifier|*
+name|intr_handler_thread
+parameter_list|(
+name|struct
+name|intr_handler
+modifier|*
+name|ih
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ih
+operator|->
+name|ih_event
+operator|->
+name|ie_thread
+operator|->
+name|it_thread
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

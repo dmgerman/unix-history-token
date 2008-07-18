@@ -62,13 +62,6 @@ begin_comment
 comment|/*  * # of exact address filters.  The first one is used for the station address,  * the rest are available for multicast addresses.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|EXACT_ADDR_FILTERS
-value|8
-end_define
-
 begin_function
 specifier|static
 specifier|inline
@@ -725,20 +718,15 @@ name|F_XGMAC_STOP_EN
 expr_stmt|;
 if|if
 condition|(
-name|is_10G
-argument_list|(
-name|adap
-argument_list|)
-operator|||
+operator|!
 name|mac
 operator|->
 name|multiport
 condition|)
 name|val
 operator||=
-name|F_PCS_RESET_
+name|F_XG2G_RESET_
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|uses_xaui
@@ -749,15 +737,11 @@ condition|)
 name|val
 operator||=
 name|F_PCS_RESET_
-operator||
-name|F_XG2G_RESET_
 expr_stmt|;
 else|else
 name|val
 operator||=
 name|F_RGMII_RESET_
-operator||
-name|F_XG2G_RESET_
 expr_stmt|;
 name|t3_write_reg
 argument_list|(
@@ -1350,7 +1334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	t3_mac_set_num_ucast - set the number of unicast addresses needed  *	@mac: the MAC handle  *	@n: number of unicast addresses needed  *  *	Specify the number of exact address filters that should be reserved for  *	unicast addresses.  Caller should reload the unicast and multicast  *	addresses after calling this.  */
+comment|/**  *	t3_mac_set_num_ucast - set the number of unicast addresses needed  *	@mac: the MAC handle  *	@n: number of unicast addresses needed  *  *	Specify the number of exact address filters that should be reserved for  *	unicast addresses.  Caller should reload the unicast and multicast  *	addresses after calling this.  *  *	Generally, this is 1 with the first one used for the station address,  *	and the rest are available for multicast addresses.  */
 end_comment
 
 begin_function

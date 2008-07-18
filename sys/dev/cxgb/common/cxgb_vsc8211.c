@@ -81,6 +81,10 @@ name|VSC8211_INTR_STATUS
 init|=
 literal|26
 block|,
+name|VSC8211_LED_CTRL
+init|=
+literal|27
+block|,
 name|VSC8211_AUX_CTRL_STAT
 init|=
 literal|28
@@ -1863,10 +1867,21 @@ name|val
 operator|&
 name|VSC_CTRL_MEDIA_MODE_HI
 condition|)
+block|{
+comment|/* copper interface, just need to configure the LEDs */
 return|return
+name|mdio_write
+argument_list|(
+name|phy
+argument_list|,
 literal|0
+argument_list|,
+name|VSC8211_LED_CTRL
+argument_list|,
+literal|0x100
+argument_list|)
 return|;
-comment|/* copper interface, done */
+block|}
 name|phy
 operator|->
 name|caps

@@ -117,6 +117,33 @@ name|sge_rspq
 struct_decl|;
 end_struct_decl
 
+begin_enum
+enum|enum
+block|{
+name|TP_TMR_RES
+init|=
+literal|200
+block|,
+comment|/* TP timer resolution in usec */
+name|MAX_NPORTS
+init|=
+literal|4
+block|,
+comment|/* max # of ports */
+name|TP_SRAM_OFFSET
+init|=
+literal|4096
+block|,
+comment|/* TP SRAM content offset in eeprom */
+name|TP_SRAM_LEN
+init|=
+literal|2112
+block|,
+comment|/* TP SRAM content offset in eeprom */
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|t3_mbuf_hdr
@@ -1850,6 +1877,20 @@ define|#
 directive|define
 name|ADVERTISE_1000XPAUSE
 value|ANAR_X_PAUSE_SYM
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADVERTISE_CSMA
+value|ANAR_CSMA
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADVERTISE_NPAGE
+value|ANAR_NP
 end_define
 
 begin_comment

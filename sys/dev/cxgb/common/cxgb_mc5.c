@@ -1608,7 +1608,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialization that requires the OS and protocol layers to already  * be intialized goes here.  */
+comment|/**  *	t3_mc5_init - initialize MC5 and the TCAM  *	@mc5: the MC5 handle  *	@nservers: desired number the TCP servers (listening ports)  *	@nfilters: desired number of HW filters (classifiers)  *	@nroutes: desired number of routes  *  *	Initialize MC5 and the TCAM and partition the TCAM for the requested  *	number of servers, filters, and routes.  The number of routes is  *	typically 0 except for specialized uses of the T3 adapters.  */
 end_comment
 
 begin_function
@@ -1691,14 +1691,6 @@ return|;
 if|if
 condition|(
 name|nfilters
-operator|&&
-name|adap
-operator|->
-name|params
-operator|.
-name|rev
-operator|<
-name|T3_REV_C
 condition|)
 name|mc5
 operator|->
@@ -2019,7 +2011,7 @@ name|mc5
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|err
 return|;
 block|}
 end_function
