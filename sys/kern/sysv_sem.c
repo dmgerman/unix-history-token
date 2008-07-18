@@ -6249,6 +6249,21 @@ goto|goto
 name|done2
 goto|;
 block|}
+comment|/* 		 * Renew the semaphore's pointer after wakeup since 		 * during msleep sem_base may have been modified and semptr 		 * is not valid any more 		 */
+name|semptr
+operator|=
+operator|&
+name|semakptr
+operator|->
+name|u
+operator|.
+name|sem_base
+index|[
+name|sopptr
+operator|->
+name|sem_num
+index|]
+expr_stmt|;
 comment|/* 		 * The semaphore is still alive.  Readjust the count of 		 * waiting processes. 		 */
 if|if
 condition|(
