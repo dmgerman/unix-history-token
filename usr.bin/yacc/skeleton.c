@@ -100,6 +100,8 @@ init|=
 block|{
 literal|"#include<stdlib.h>"
 block|,
+literal|"#include<string.h>"
+block|,
 literal|"#ifndef lint"
 block|,
 literal|"#ifdef __unused"
@@ -641,7 +643,13 @@ literal|"#endif"
 block|,
 literal|"    yym = yylen[yyn];"
 block|,
-literal|"    yyval = yyvsp[1-yym];"
+literal|"    if (yym)"
+block|,
+literal|"        yyval = yyvsp[1-yym];"
+block|,
+literal|"    else"
+block|,
+literal|"    memset(&yyval, 0, sizeof yyval);"
 block|,
 literal|"    switch (yyn)"
 block|,
