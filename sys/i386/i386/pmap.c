@@ -19419,7 +19419,7 @@ name|pte
 operator|=
 name|vtopte
 argument_list|(
-name|va
+name|tmpva
 argument_list|)
 expr_stmt|;
 if|if
