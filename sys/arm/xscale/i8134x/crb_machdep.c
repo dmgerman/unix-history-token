@@ -460,14 +460,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
-name|clean_sva
-decl_stmt|,
-name|clean_eva
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pv_addr
 name|systempage
