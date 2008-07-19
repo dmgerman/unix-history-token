@@ -3668,6 +3668,15 @@ argument_list|,
 name|ia_hash
 argument_list|)
 expr_stmt|;
+else|else
+comment|/*  				 * If oldaddr family is not AF_INET (e.g.  				 * interface has been just created) in_control  				 * does not call LIST_REMOVE, and we end up  				 * with bogus ia entries in hash 				 */
+name|LIST_REMOVE
+argument_list|(
+name|ia
+argument_list|,
+name|ia_hash
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
