@@ -6708,11 +6708,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|error
 operator|=
 name|vfs_hash_get
@@ -6952,10 +6947,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|lockmgr
 argument_list|(
 name|vp
@@ -7011,7 +7002,7 @@ name|ino
 argument_list|,
 name|flags
 argument_list|,
-name|td
+name|curthread
 argument_list|,
 name|vpp
 argument_list|,
