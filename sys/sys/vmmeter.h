@@ -173,7 +173,7 @@ comment|/* (q) pages inactive */
 name|u_int
 name|v_cache_count
 decl_stmt|;
-comment|/* (f) pages on buffer cache queue */
+comment|/* (f) pages on cache queue */
 name|u_int
 name|v_cache_min
 decl_stmt|;
@@ -244,39 +244,6 @@ name|vmmeter
 name|cnt
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Return TRUE if we are under our reserved low-free-pages threshold  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|vm_page_count_reserved
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|cnt
-operator|.
-name|v_free_reserved
-operator|>
-operator|(
-name|cnt
-operator|.
-name|v_free_count
-operator|+
-name|cnt
-operator|.
-name|v_cache_count
-operator|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Return TRUE if we are under our severe low-free-pages threshold  *  * This routine is typically used at the user<->system interface to determine  * whether we need to block in order to avoid a low memory deadlock.  */
