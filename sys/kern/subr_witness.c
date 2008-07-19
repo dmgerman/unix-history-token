@@ -3822,6 +3822,15 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -3942,6 +3951,12 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
 
 begin_function
 specifier|static
