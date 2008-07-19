@@ -198,12 +198,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|copy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -211,12 +214,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|do_move
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -224,12 +230,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|fastcopy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -241,6 +250,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -654,13 +664,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|do_move
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|from
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|to
@@ -1149,13 +1162,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fastcopy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|from
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|to
@@ -1774,13 +1790,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|copy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|from
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|to
@@ -2198,6 +2217,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
