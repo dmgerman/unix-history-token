@@ -189,30 +189,7 @@ modifier|*
 name|tod_offload_mod
 decl_stmt|;
 comment|/* TCP offload module */
-name|int
-function_decl|(
-modifier|*
-name|tod_open
-function_decl|)
-parameter_list|(
-name|struct
-name|toedev
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|tod_close
-function_decl|)
-parameter_list|(
-name|struct
-name|toedev
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
+comment|/* 	 * This TOE device is capable of offloading the connection for socket so 	 */
 name|int
 function_decl|(
 modifier|*
@@ -230,6 +207,7 @@ modifier|*
 name|so
 parameter_list|)
 function_decl|;
+comment|/* 	 * Establish a connection to nam using the TOE device dev 	 */
 name|int
 function_decl|(
 modifier|*
@@ -257,6 +235,7 @@ modifier|*
 name|nam
 parameter_list|)
 function_decl|;
+comment|/* 	 * Send an mbuf down to the toe device  	 */
 name|int
 function_decl|(
 modifier|*
@@ -274,6 +253,7 @@ modifier|*
 name|m
 parameter_list|)
 function_decl|;
+comment|/* 	 * Receive an array of mbufs from the TOE device dev  	 */
 name|int
 function_decl|(
 modifier|*
@@ -295,6 +275,7 @@ name|int
 name|n
 parameter_list|)
 function_decl|;
+comment|/* 	 * Device specific ioctl interface 	 */
 name|int
 function_decl|(
 modifier|*
@@ -315,6 +296,7 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
+comment|/* 	 * Update L2 entry in toedev  	 */
 name|void
 function_decl|(
 modifier|*
@@ -332,6 +314,7 @@ modifier|*
 name|neigh
 parameter_list|)
 function_decl|;
+comment|/* 	 * Failover from one toe device to another 	 */
 name|void
 function_decl|(
 modifier|*
