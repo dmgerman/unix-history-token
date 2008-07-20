@@ -105,13 +105,13 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Revision: 2.27 $"
+literal|"$Revision: 2.31 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_empty
-empty|#ident "$Revision: 2.27 $"
+empty|#ident "$Revision: 2.31 $"
 end_empty
 
 begin_endif
@@ -595,7 +595,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sqdghmpAtvT:F:P:"
+literal|"sqdghmAtvT:F:P:"
 argument_list|)
 operator|)
 operator|!=
@@ -926,7 +926,7 @@ operator|++
 expr_stmt|;
 name|msglog
 argument_list|(
-literal|"version 2.25"
+literal|"version 2.31"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -994,7 +994,7 @@ name|logbad
 argument_list|(
 literal|0
 argument_list|,
-literal|"usage: routed [-sqdghmpAtv] [-T tracefile]"
+literal|"usage: routed [-sqdghmAtv] [-T tracefile]"
 literal|" [-F net[,metric]] [-P parms]"
 argument_list|)
 expr_stmt|;
@@ -3698,6 +3698,11 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ftrace
@@ -3721,6 +3726,13 @@ argument_list|,
 name|ftrace
 argument_list|)
 expr_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3730,6 +3742,11 @@ name|ftrace
 argument_list|,
 name|p
 argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
@@ -3744,11 +3761,6 @@ name|ftrace
 argument_list|)
 expr_stmt|;
 block|}
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3795,13 +3807,6 @@ name|char
 modifier|*
 name|p1
 decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* look for the oldest slot in the table 	 * or the slot for the bad router. 	 */
 name|ms
 operator|=
@@ -3955,12 +3960,24 @@ name|p1
 operator|++
 control|)
 continue|continue;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|vsyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
 name|p1
 argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
@@ -3973,6 +3990,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3982,6 +4006,11 @@ name|ftrace
 argument_list|,
 name|p
 argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
@@ -3996,11 +4025,6 @@ name|ftrace
 argument_list|)
 expr_stmt|;
 block|}
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4041,6 +4065,11 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4049,6 +4078,13 @@ argument_list|(
 literal|"routed: "
 argument_list|,
 name|stderr
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4060,6 +4096,11 @@ name|stderr
 argument_list|,
 name|p
 argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
@@ -4079,11 +4120,6 @@ operator|)
 name|fflush
 argument_list|(
 name|stderr
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|args
 argument_list|)
 expr_stmt|;
 if|if
