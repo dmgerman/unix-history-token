@@ -211,7 +211,7 @@ name|sysctl_msec_to_ticks
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"time to establish connection"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -244,7 +244,7 @@ name|sysctl_msec_to_ticks
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"time before keepalive probes begin"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -277,7 +277,7 @@ name|sysctl_msec_to_ticks
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"time between keepalive probes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
