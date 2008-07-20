@@ -137,7 +137,7 @@ name|ipxcksum
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"compute ipx checksum"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -171,7 +171,7 @@ name|ipxprintfs
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"printing forwarding information"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -201,7 +201,7 @@ name|ipxforwarding
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"do ipx forwarding"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -231,7 +231,7 @@ name|ipxnetbios
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"propagate netbios over ipx"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
