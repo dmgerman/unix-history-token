@@ -2048,13 +2048,6 @@ operator|=
 name|maxbuf
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* 	 * Do not allow the buffer_map to be more then 1/2 the size of the 	 * kernel_map. 	 */
-block|if (nbuf> (kernel_map->max_offset - kernel_map->min_offset) /  	    (BKVASIZE * 2)) { 		nbuf = (kernel_map->max_offset - kernel_map->min_offset) /  		    (BKVASIZE * 2); 		printf("Warning: nbufs capped at %d\n", nbuf); 	}
-endif|#
-directive|endif
 comment|/* 	 * swbufs are used as temporary holders for I/O, such as paging I/O. 	 * We have no less then 16 and no more then 256. 	 */
 name|nswbuf
 operator|=
