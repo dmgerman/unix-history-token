@@ -2958,12 +2958,7 @@ condition|)
 block|{
 name|ia
 operator|=
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* 		 * If route is known our src addr is taken from the i/f, 		 * else punt. 		 * 		 * Find out route to destination 		 */
 if|if
@@ -2998,7 +2993,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|bzero
@@ -3051,7 +3046,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ia
 operator|=
@@ -3071,7 +3066,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3151,7 +3146,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
