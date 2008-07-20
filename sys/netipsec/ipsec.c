@@ -499,7 +499,7 @@ name|policy
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"IPsec default policy."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -520,7 +520,7 @@ name|ip4_esp_trans_deflev
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default ESP transport mode level"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -541,7 +541,7 @@ name|ip4_esp_net_deflev
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default ESP tunnel mode level."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -562,7 +562,7 @@ name|ip4_ah_trans_deflev
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"AH transfer mode default level."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -583,7 +583,7 @@ name|ip4_ah_net_deflev
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"AH tunnel mode default level."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -604,7 +604,7 @@ name|ah_cleartos
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"If set clear type-of-service field when doing AH computation."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -625,7 +625,7 @@ name|ip4_ah_offsetmask
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"If not set clear offset field mask when doing AH computation."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -646,7 +646,7 @@ name|ip4_ipsec_dfbit
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Do not fragment bit on encap."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -667,7 +667,7 @@ name|ip4_ipsec_ecn
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Explicit Congestion Notification handling."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -688,28 +688,7 @@ name|ipsec_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_inet_ipsec
-argument_list|,
-name|IPSECCTL_ESP_RANDPAD
-argument_list|,
-name|esp_randpad
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|ip4_esp_randpad
-argument_list|,
-literal|0
-argument_list|,
-literal|""
+literal|"Enable IPsec debugging output when set."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -730,7 +709,7 @@ name|crypto_support
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Crypto driver selection."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -751,7 +730,7 @@ name|ipsec4stat
 argument_list|,
 name|ipsecstat
 argument_list|,
-literal|""
+literal|"IPsec IPv4 statistics."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -890,15 +869,6 @@ begin_comment
 comment|/* ECN ignore(-1)/forbidden(0)/allowed(1) */
 end_comment
 
-begin_decl_stmt
-name|int
-name|ip6_esp_randpad
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -936,7 +906,7 @@ name|compat_ipsecstats_sysctl
 argument_list|,
 literal|"S"
 argument_list|,
-literal|""
+literal|"IPsec IPv6 statistics."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -968,7 +938,7 @@ name|policy
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"IPsec default policy."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -989,7 +959,7 @@ name|ip6_esp_trans_deflev
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default ESP transport mode level."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1010,7 +980,7 @@ name|ip6_esp_net_deflev
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default ESP tunnel mode level."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1031,7 +1001,7 @@ name|ip6_ah_trans_deflev
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"AH transfer mode default level."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1052,7 +1022,7 @@ name|ip6_ah_net_deflev
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"AH tunnel mode default level."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1073,7 +1043,7 @@ name|ip6_ipsec_ecn
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Explicit Congestion Notification handling."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1094,28 +1064,7 @@ name|ipsec_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_inet6_ipsec6
-argument_list|,
-name|IPSECCTL_ESP_RANDPAD
-argument_list|,
-name|esp_randpad
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|ip6_esp_randpad
-argument_list|,
-literal|0
-argument_list|,
-literal|""
+literal|"Enable IPsec debugging output when set."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1136,7 +1085,7 @@ name|ipsec6stat
 argument_list|,
 name|ipsecstat
 argument_list|,
-literal|""
+literal|"IPsec IPv6 statistics."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

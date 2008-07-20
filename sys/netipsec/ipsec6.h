@@ -88,13 +88,6 @@ name|ip6_ipsec_ecn
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_esp_randpad
-decl_stmt|;
-end_decl_stmt
-
 begin_struct_decl
 struct_decl|struct
 name|inpcb
