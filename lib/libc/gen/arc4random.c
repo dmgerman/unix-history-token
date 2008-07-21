@@ -501,7 +501,7 @@ argument_list|)
 expr_stmt|;
 name|arc4_count
 operator|=
-literal|400000
+literal|1600000
 expr_stmt|;
 block|}
 end_function
@@ -746,6 +746,10 @@ argument_list|(
 operator|&
 name|rs
 argument_list|)
+expr_stmt|;
+name|rs_stired
+operator|=
+literal|1
 expr_stmt|;
 name|THREAD_UNLOCK
 argument_list|()
