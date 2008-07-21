@@ -17,12 +17,6 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|tcpcb
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|socket
 struct_decl|;
 end_struct_decl
@@ -76,18 +70,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|tcphdr
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|tcpopt
-struct_decl|;
-end_struct_decl
 
 begin_ifndef
 ifndef|#
