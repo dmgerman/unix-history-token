@@ -89,6 +89,30 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_comment
+comment|/*  * Elf32_xhdr structures can only be used if sys/elf32.h is included, so  * check for the existence of one of the macros defined in sys/elf32.h.  *  * The presense of the ELF32_R_TYPE macro via machine/elf.h has been verified  * on amd64 6.3, ia64 7.0 and sparc64 7.0.  The absence of the macro has been  * verified on alpha 6.2.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ELF32_R_TYPE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ELF32_SUPPORTED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -154,6 +178,11 @@ directive|if
 name|__ELF_WORD_SIZE
 operator|>
 literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 end_if
 
 begin_define
@@ -243,6 +272,11 @@ directive|if
 name|__ELF_WORD_SIZE
 operator|>
 literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -594,6 +628,11 @@ directive|if
 name|__ELF_WORD_SIZE
 operator|>
 literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 case|case
 name|TYPE_ELF32
 case|:
@@ -944,9 +983,21 @@ name|struct
 name|exec
 name|aout
 decl_stmt|;
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|>
+literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 name|Elf32_Ehdr
 name|elf32
 decl_stmt|;
+endif|#
+directive|endif
 name|Elf_Ehdr
 name|elf
 decl_stmt|;
@@ -1085,6 +1136,11 @@ directive|if
 name|__ELF_WORD_SIZE
 operator|>
 literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 if|if
 condition|(
 operator|(
