@@ -708,9 +708,8 @@ condition|(
 operator|!
 name|rs_stired
 operator|||
-operator|--
 name|arc4_count
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -820,6 +819,10 @@ argument_list|(
 operator|&
 name|rs
 argument_list|)
+expr_stmt|;
+name|arc4_count
+operator|-=
+literal|4
 expr_stmt|;
 name|THREAD_UNLOCK
 argument_list|()
