@@ -9262,6 +9262,23 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
+name|VNASSERT
+argument_list|(
+operator|(
+name|flags
+operator|&
+name|LK_TYPE_MASK
+operator|)
+operator|!=
+literal|0
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"vget: invalid lock operation"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
