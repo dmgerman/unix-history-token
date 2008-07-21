@@ -2808,7 +2808,7 @@ condition|)
 block|{
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
-name|shutdown_final
+name|shutdown_post_sync
 argument_list|,
 name|mpt
 operator|->
