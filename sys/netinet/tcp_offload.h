@@ -658,18 +658,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|tcp_offload_twstart_disconnect
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-name|tp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|tcpcb
 modifier|*
