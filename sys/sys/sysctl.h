@@ -1306,6 +1306,56 @@ value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|(access),	    \ 	ptr,
 end_define
 
 begin_comment
+comment|/* Oid for a quad.  The pointer must be non NULL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_QUAD
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_QUAD|(access), \ 		ptr, val, sysctl_handle_quad, "Q", __DESCR(descr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_QUAD
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_QUAD|(access),	    \ 	ptr, 0, sysctl_handle_quad, "Q", __DESCR(descr))
+end_define
+
+begin_comment
 comment|/* Oid for an opaque object.  Specified by a pointer and a length. */
 end_comment
 

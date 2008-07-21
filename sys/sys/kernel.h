@@ -946,6 +946,63 @@ parameter_list|)
 value|getenv_ulong((path), (var))
 end_define
 
+begin_comment
+comment|/*  * quad  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|tunable_quad_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|tunable_quad
+block|{
+specifier|const
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|quad_t
+modifier|*
+name|var
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_QUAD
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|)
+define|\
+value|static struct tunable_quad __CONCAT(__tunable_quad_, __LINE__) = { \ 		(path),						\ 		(var),						\ 	};							\ 	SYSINIT(__CONCAT(__Tunable_init_, __LINE__),		\ 	    SI_SUB_TUNABLES, SI_ORDER_MIDDLE, tunable_quad_init, \&__CONCAT(__tunable_quad_, __LINE__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_QUAD_FETCH
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|)
+value|getenv_quad((path), (var))
+end_define
+
 begin_function_decl
 specifier|extern
 name|void
