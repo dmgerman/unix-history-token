@@ -2171,7 +2171,8 @@ name|CTR6
 argument_list|(
 name|KTR_TOM
 argument_list|,
-literal|"t3_push_frames: wr_avail=%d mbuf_wrs[%d]=%d tail=%p sndptr=%p sndptroff=%d"
+literal|"t3_push_frames: wr_avail=%d mbuf_wrs[%d]=%d"
+literal|" tail=%p sndptr=%p sndptroff=%d"
 argument_list|,
 name|toep
 operator|->
@@ -2203,7 +2204,8 @@ name|CTR4
 argument_list|(
 name|KTR_TOM
 argument_list|,
-literal|"t3_push_frames: total_bytes=%d tp_m_last=%p tailbuf=%p snd_una=0x%08x"
+literal|"t3_push_frames: total_bytes=%d"
+literal|" tp_m_last=%p tailbuf=%p snd_una=0x%08x"
 argument_list|,
 name|total_bytes
 argument_list|,
@@ -2225,7 +2227,8 @@ name|CTR3
 argument_list|(
 name|KTR_TOM
 argument_list|,
-literal|"t3_push_frames: total_bytes=%d tp_m_last=%p snd_una=0x%08x"
+literal|"t3_push_frames: total_bytes=%d"
+literal|" tp_m_last=%p snd_una=0x%08x"
 argument_list|,
 name|total_bytes
 argument_list|,
@@ -2276,7 +2279,8 @@ name|CTR6
 argument_list|(
 name|KTR_TOM
 argument_list|,
-literal|"t3_push_frames: pa=0x%zx len=%d pa=0x%zx len=%d pa=0x%zx len=%d"
+literal|"t3_push_frames: pa=0x%zx len=%d pa=0x%zx"
+literal|" len=%d pa=0x%zx len=%d"
 argument_list|,
 name|segs
 index|[
@@ -2350,7 +2354,8 @@ name|CTR4
 argument_list|(
 name|KTR_TOM
 argument_list|,
-literal|"t3_push_frames: pa=0x%zx len=%d pa=0x%zx len=%d"
+literal|"t3_push_frames: pa=0x%zx len=%d pa=0x%zx"
+literal|" len=%d"
 argument_list|,
 name|segs
 index|[
