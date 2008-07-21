@@ -15412,7 +15412,7 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
-name|syncache_offload_add
+name|tcp_offload_syncache_add
 argument_list|(
 operator|&
 name|inc
@@ -17199,7 +17199,7 @@ name|sack
 argument_list|)
 expr_stmt|;
 return|return
-name|syncache_offload_expand
+name|tcp_offload_syncache_expand
 argument_list|(
 operator|&
 name|inc
