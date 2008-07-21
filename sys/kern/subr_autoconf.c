@@ -156,10 +156,17 @@ decl_stmt|;
 name|long
 name|offset
 decl_stmt|;
+if|if
+condition|(
+name|warned
+operator|<
+literal|6
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"run_interrupt_driven_hooks: still waiting after %d seconds "
-literal|"for"
+literal|"run_interrupt_driven_hooks: still waiting after %d "
+literal|"seconds for"
 argument_list|,
 name|warned
 operator|*
@@ -220,6 +227,18 @@ block|}
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|KASSERT
+argument_list|(
+name|warned
+operator|<
+literal|6
+argument_list|,
+operator|(
+literal|"run_interrupt_driven_config_hooks: waited too long"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -324,10 +343,6 @@ name|hz
 argument_list|)
 operator|==
 name|EWOULDBLOCK
-operator|&&
-name|warned
-operator|<
-literal|5
 condition|)
 block|{
 name|mtx_unlock
