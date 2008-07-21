@@ -435,7 +435,7 @@ name|opts
 init|=
 name|vfsp
 operator|->
-name|mnt_opt
+name|mnt_optnew
 decl_stmt|;
 name|int
 name|error
