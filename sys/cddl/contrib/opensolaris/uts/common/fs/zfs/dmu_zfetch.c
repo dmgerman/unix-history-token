@@ -897,7 +897,7 @@ name|zs
 operator|->
 name|zst_last
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 block|}
 end_function
@@ -2271,7 +2271,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|lbolt
+name|LBOLT
 operator|-
 name|zs
 operator|->
@@ -2790,7 +2790,7 @@ name|newstream
 operator|->
 name|zst_last
 operator|=
-name|lbolt
+name|LBOLT
 expr_stmt|;
 name|mutex_init
 argument_list|(
