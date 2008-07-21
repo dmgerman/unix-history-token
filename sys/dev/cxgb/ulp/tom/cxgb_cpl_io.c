@@ -11651,59 +11651,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|enter_timewait_disconnect
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-name|tp
-parameter_list|)
-block|{
-comment|/* 	 * Bump rcv_nxt for the peer FIN.  We don't do this at the time we 	 * process peer_close because we don't want to carry the peer FIN in 	 * the socket's receive queue and if we increment rcv_nxt without 	 * having the FIN in the receive queue we'll confuse facilities such 	 * as SIOCINQ. 	 */
-name|inp_wlock
-argument_list|(
-name|tp
-operator|->
-name|t_inpcb
-argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|rcv_nxt
-operator|++
-expr_stmt|;
-name|tp
-operator|->
-name|ts_recent_age
-operator|=
-literal|0
-expr_stmt|;
-comment|/* defeat recycling */
-name|tp
-operator|->
-name|t_srtt
-operator|=
-literal|0
-expr_stmt|;
-comment|/* defeat tcp_update_metrics */
-name|inp_wunlock
-argument_list|(
-name|tp
-operator|->
-name|t_inpcb
-argument_list|)
-expr_stmt|;
-name|tcp_offload_twstart_disconnect
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * For TCP DDP a PEER_CLOSE may also be an implicit RX_DDP_COMPLETE.  This  * function deals with the data that may be reported along with the FIN.  * Returns -1 if no further processing of the PEER_CLOSE is needed,>= 0 to  * perform normal FIN-related processing.  In the latter case 1 indicates that  * there was an implicit RX_DDP_COMPLETE and the skb should not be freed, 0 the  * skb can be freed.  */
 end_comment
@@ -12819,7 +12766,7 @@ operator|==
 name|TCP_TIMEWAIT
 condition|)
 block|{
-name|enter_timewait_disconnect
+name|enter_timewait
 argument_list|(
 name|tp
 argument_list|)
