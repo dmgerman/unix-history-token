@@ -459,6 +459,13 @@ name|rpcclnt_ticks
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|fake_wchan
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -2734,13 +2741,13 @@ expr_stmt|;
 name|tsleep
 argument_list|(
 operator|&
-name|lbolt
+name|fake_wchan
 argument_list|,
 name|PSOCK
 argument_list|,
 literal|"rpccon"
 argument_list|,
-literal|0
+name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -8673,13 +8680,13 @@ return|;
 name|tsleep
 argument_list|(
 operator|&
-name|lbolt
+name|fake_wchan
 argument_list|,
 name|PSOCK
 argument_list|,
 literal|"nfscancel"
 argument_list|,
-literal|0
+name|hz
 argument_list|)
 expr_stmt|;
 block|}

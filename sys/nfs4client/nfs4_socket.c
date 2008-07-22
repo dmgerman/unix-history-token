@@ -1061,7 +1061,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if ((nmp->nm_flag& NFSMNT_NFSV3)&& 		    error == NFSERR_TRYLATER) { 			m_freem(mrep); 			error = 0; 			waituntil = time_second + trylater_delay; 			while (time_second< waituntil) 				(void) tsleep(&lbolt, PSOCK, "nqnfstry", 0); 			trylater_delay *= nfs_backoff[trylater_cnt]; 			if (trylater_cnt< NFS_NBACKOFF - 1) 				trylater_cnt++; 			goto tryagain; 		}
+block|if ((nmp->nm_flag& NFSMNT_NFSV3)&& 		    error == NFSERR_TRYLATER) { 			m_freem(mrep); 			error = 0; 			waituntil = time_second + trylater_delay; 			while (time_second< waituntil) 				(void) tsleep(&fake_wchan, PSOCK, "nqnfstry", hz); 			trylater_delay *= nfs_backoff[trylater_cnt]; 			if (trylater_cnt< NFS_NBACKOFF - 1) 				trylater_cnt++; 			goto tryagain; 		}
 endif|#
 directive|endif
 goto|goto

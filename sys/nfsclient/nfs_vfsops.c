@@ -570,6 +570,13 @@ name|nfs_sysctl
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|fake_wchan
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * nfs vfs operations.  */
 end_comment
@@ -3972,17 +3979,14 @@ name|void
 operator|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
-name|lbolt
+name|fake_wchan
 argument_list|,
 name|PSOCK
 argument_list|,
 literal|"nfscon"
 argument_list|,
-literal|0
+name|hz
 argument_list|)
 expr_stmt|;
 block|}
