@@ -1886,6 +1886,7 @@ name|ENOSPC
 operator|)
 return|;
 comment|/* Check that there's a Driver Descriptor Record (DDR). */
+comment|/* XXX Tivo APM drives do not have a DDR */
 name|buf
 operator|=
 name|g_read_data
