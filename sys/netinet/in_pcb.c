@@ -5820,7 +5820,6 @@ begin_function
 name|void
 name|inp_4tuple_get
 parameter_list|(
-specifier|const
 name|struct
 name|inpcb
 modifier|*
@@ -5854,6 +5853,8 @@ operator|=
 name|inp
 operator|->
 name|inp_laddr
+operator|.
+name|s_addr
 expr_stmt|;
 operator|*
 name|faddr
@@ -5861,6 +5862,8 @@ operator|=
 name|inp
 operator|->
 name|inp_faddr
+operator|.
+name|s_addr
 expr_stmt|;
 operator|*
 name|lp

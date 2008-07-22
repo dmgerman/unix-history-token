@@ -1099,7 +1099,6 @@ begin_function_decl
 name|void
 name|inp_4tuple_get
 parameter_list|(
-specifier|const
 name|struct
 name|inpcb
 modifier|*
