@@ -185,7 +185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This call reserves memory for the audit record.  Memory must be guaranteed  * before any auditable event can be generated.  The au_record structure  * maintains a reference to the memory allocated above and also the list of  * tokens associated with this record  */
+comment|/*  * This call reserves memory for the audit record.  Memory must be guaranteed  * before any auditable event can be generated.  The au_record structure  * maintains a reference to the memory allocated above and also the list of  * tokens associated with this record.  */
 end_comment
 
 begin_function
