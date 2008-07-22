@@ -619,7 +619,7 @@ begin_define
 define|#
 directive|define
 name|FD_VNODE1_TOKENS
-value|do {					\ 	if (ARG_IS_VALID(kar, ARG_VNODE1)) {				\ 		if (ARG_IS_VALID(kar, ARG_FD)) {			\ 			tok = au_to_arg32(1, "fd", ar->ar_arg_fd);	\ 			kau_write(rec, tok);				\ 		}							\ 		tok = au_to_attr32(&ar->ar_arg_vnode1);			\ 		kau_write(rec, tok);					\ 	} else {							\ 		if (ARG_IS_VALID(kar, ARG_FD)) {			\ 			tok = au_to_arg32(1, "non-file: fd",		\ 			    ar->ar_arg_fd);				\ 			kau_write(rec, tok);				\ 		}							\ 	}								\ } while (0)
+value|do {						\ 	if (ARG_IS_VALID(kar, ARG_VNODE1)) {				\ 		if (ARG_IS_VALID(kar, ARG_FD)) {			\ 			tok = au_to_arg32(1, "fd", ar->ar_arg_fd);	\ 			kau_write(rec, tok);				\ 		}							\ 		tok = au_to_attr32(&ar->ar_arg_vnode1);			\ 		kau_write(rec, tok);					\ 	} else {							\ 		if (ARG_IS_VALID(kar, ARG_FD)) {			\ 			tok = au_to_arg32(1, "non-file: fd",		\ 			    ar->ar_arg_fd);				\ 			kau_write(rec, tok);				\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -631,7 +631,7 @@ name|argn
 parameter_list|)
 value|do {					\ 	if ((ar->ar_arg_pid> 0)
 comment|/* Reference a single process */
-value|\&& (ARG_IS_VALID(kar, ARG_PROCESS))) {			\ 		tok = au_to_process32_ex(ar->ar_arg_auid,		\ 		    ar->ar_arg_euid, ar->ar_arg_egid,			\ 		    ar->ar_arg_ruid, ar->ar_arg_rgid,			\ 		    ar->ar_arg_pid, ar->ar_arg_asid,			\&ar->ar_arg_termid_addr);				\ 		kau_write(rec, tok);					\ 	} else if (ARG_IS_VALID(kar, ARG_PID)) {			\ 		tok = au_to_arg32(argn, "process", ar->ar_arg_pid);	\ 		kau_write(rec, tok);					\ 	}								\ } while (0)								\  #define	EXTATTR_TOKENS	do {						\ 	if (ARG_IS_VALID(kar, ARG_VALUE)) {				\ 		switch (ar->ar_arg_value) {				\ 		case EXTATTR_NAMESPACE_USER:				\ 			tok = au_to_text(EXTATTR_NAMESPACE_USER_STRING);\ 			break;						\ 		case EXTATTR_NAMESPACE_SYSTEM:				\ 			tok = au_to_text(EXTATTR_NAMESPACE_SYSTEM_STRING);\ 			break;						\ 		default:						\ 			tok = au_to_arg32(3, "attrnamespace",		\ 			    ar->ar_arg_value);				\ 			break;						\ 		}							\ 		kau_write(rec, tok);					\ 	}								\
+value|\&& (ARG_IS_VALID(kar, ARG_PROCESS))) {			\ 		tok = au_to_process32_ex(ar->ar_arg_auid,		\ 		    ar->ar_arg_euid, ar->ar_arg_egid,			\ 		    ar->ar_arg_ruid, ar->ar_arg_rgid,			\ 		    ar->ar_arg_pid, ar->ar_arg_asid,			\&ar->ar_arg_termid_addr);				\ 		kau_write(rec, tok);					\ 	} else if (ARG_IS_VALID(kar, ARG_PID)) {			\ 		tok = au_to_arg32(argn, "process", ar->ar_arg_pid);	\ 		kau_write(rec, tok);					\ 	}								\ } while (0)								\  #define	EXTATTR_TOKENS do {						\ 	if (ARG_IS_VALID(kar, ARG_VALUE)) {				\ 		switch (ar->ar_arg_value) {				\ 		case EXTATTR_NAMESPACE_USER:				\ 			tok = au_to_text(EXTATTR_NAMESPACE_USER_STRING);\ 			break;						\ 		case EXTATTR_NAMESPACE_SYSTEM:				\ 			tok = au_to_text(EXTATTR_NAMESPACE_SYSTEM_STRING);\ 			break;						\ 		default:						\ 			tok = au_to_arg32(3, "attrnamespace",		\ 			    ar->ar_arg_value);				\ 			break;						\ 		}							\ 		kau_write(rec, tok);					\ 	}								\
 comment|/* attrname is in the text field */
 value|\ 	if (ARG_IS_VALID(kar, ARG_TEXT)) {				\ 		tok = au_to_text(ar->ar_arg_text);			\ 		kau_write(rec, tok);					\ 	}								\ } while (0)
 end_define
