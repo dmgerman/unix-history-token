@@ -913,35 +913,37 @@ begin_comment
 comment|/*  * System initialization  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|interfaces
+name|interfaces
 argument_list|,
-argument|SI_SUB_INIT_IF
+name|SI_SUB_INIT_IF
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|if_init
+name|if_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|interface_check
+name|interface_check
 argument_list|,
-argument|SI_SUB_PROTO_IF
+name|SI_SUB_PROTO_IF
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|if_check
+name|if_check
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DEFINE

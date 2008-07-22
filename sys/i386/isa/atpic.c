@@ -2455,21 +2455,23 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|atpic_init
+name|atpic_init
 argument_list|,
-argument|SI_SUB_INTR
+name|SI_SUB_INTR
 argument_list|,
-argument|SI_ORDER_SECOND +
+name|SI_ORDER_SECOND
+operator|+
 literal|1
 argument_list|,
-argument|atpic_init
+name|atpic_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void

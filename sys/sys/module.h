@@ -295,7 +295,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|MODULE_METADATA(_md_##name, MDT_MODULE,&data, #name);		\ 	SYSINIT(name##module, sub, order, module_register_init,&data)	\ 	struct __hack
+value|MODULE_METADATA(_md_##name, MDT_MODULE,&data, #name);		\ 	SYSINIT(name##module, sub, order, module_register_init,&data);	\ 	struct __hack
 end_define
 
 begin_define

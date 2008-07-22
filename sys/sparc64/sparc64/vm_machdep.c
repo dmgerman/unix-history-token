@@ -261,20 +261,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|sock_sf
+name|sock_sf
 argument_list|,
-argument|SI_SUB_MBUF
+name|SI_SUB_MBUF
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|sf_buf_init
+name|sf_buf_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Expanded sf_freelist head. Really an SLIST_HEAD() in disguise, with the  * sf_freelist head with the sf_lock mutex.  */

@@ -1067,20 +1067,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|acpiwakeup
+name|acpiwakeup
 argument_list|,
-argument|SI_SUB_KMEM
+name|SI_SUB_KMEM
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|acpi_alloc_wakeup_handler
+name|acpi_alloc_wakeup_handler
 argument_list|,
 literal|0
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

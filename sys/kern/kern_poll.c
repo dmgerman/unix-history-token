@@ -1205,20 +1205,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|device_poll
+name|device_poll
 argument_list|,
-argument|SI_SUB_CLOCKS
+name|SI_SUB_CLOCKS
 argument_list|,
-argument|SI_ORDER_MIDDLE
+name|SI_ORDER_MIDDLE
 argument_list|,
-argument|init_device_poll
+name|init_device_poll
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Hook from hardclock. Tries to schedule a netisr, but keeps track  * of lost ticks due to the previous handler taking too long.  * Normally, this should not happen, because polling handler should  * run for a short time. However, in some cases (e.g. when there are  * changes in link status etc.) the drivers take a very long time  * (even in the order of milliseconds) to reset and reconfigure the  * device, causing apparent lost polls.  *  * The first part of the code is just for debugging purposes, and tries  * to count how often hardclock ticks are shorter than they should,  * meaning either stray interrupts or delayed events.  */
@@ -2446,20 +2447,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|idlepoll
+name|idlepoll
 argument_list|,
-argument|SI_SUB_KTHREAD_VM
+name|SI_SUB_KTHREAD_VM
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|kproc_start
+name|kproc_start
 argument_list|,
-argument|&idlepoll_kp
+operator|&
+name|idlepoll_kp
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

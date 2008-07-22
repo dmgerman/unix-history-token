@@ -104,20 +104,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|domain
+name|domain
 argument_list|,
-argument|SI_SUB_PROTO_DOMAIN
+name|SI_SUB_PROTO_DOMAIN
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|domaininit
+name|domaininit
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -130,20 +131,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|domainfin
+name|domainfin
 argument_list|,
-argument|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_PROTO_IFATTACHDOMAIN
 argument_list|,
-argument|SI_ORDER_FIRST
+name|SI_ORDER_FIRST
 argument_list|,
-argument|domainfinalize
+name|domainfinalize
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
