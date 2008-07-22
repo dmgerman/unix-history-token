@@ -598,21 +598,21 @@ begin_define
 define|#
 directive|define
 name|VNODE1_TOKENS
-value|do {						\ 	if (ARG_IS_VALID(kar, ARG_VNODE1)) {  				\ 		tok = au_to_attr32(&ar->ar_arg_vnode1);			\ 		kau_write(rec, tok);					\ 	}								\ } while (0)
+value|do {						\ 	if (ARG_IS_VALID(kar, ARG_VNODE1)) {				\ 		tok = au_to_attr32(&ar->ar_arg_vnode1);			\ 		kau_write(rec, tok);					\ 	}								\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UPATH1_VNODE1_TOKENS
-value|do {					\ 	if (ARG_IS_VALID(kar, ARG_UPATH1)) {  				\ 		UPATH1_TOKENS;						\ 	}								\ 	if (ARG_IS_VALID(kar, ARG_VNODE1)) {  				\ 		tok = au_to_attr32(&ar->ar_arg_vnode1);			\ 		kau_write(rec, tok);					\ 	}								\ } while (0)
+value|do {					\ 	if (ARG_IS_VALID(kar, ARG_UPATH1)) {				\ 		UPATH1_TOKENS;						\ 	}								\ 	if (ARG_IS_VALID(kar, ARG_VNODE1)) {				\ 		tok = au_to_attr32(&ar->ar_arg_vnode1);			\ 		kau_write(rec, tok);					\ 	}								\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VNODE2_TOKENS
-value|do {						\ 	if (ARG_IS_VALID(kar, ARG_VNODE2)) {  				\ 		tok = au_to_attr32(&ar->ar_arg_vnode2);			\ 		kau_write(rec, tok);					\ 	}								\ } while (0)
+value|do {						\ 	if (ARG_IS_VALID(kar, ARG_VNODE2)) {				\ 		tok = au_to_attr32(&ar->ar_arg_vnode2);			\ 		kau_write(rec, tok);					\ 	}								\ } while (0)
 end_define
 
 begin_define

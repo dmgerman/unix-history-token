@@ -3679,7 +3679,7 @@ argument_list|,
 name|AUT_SOCKINET32
 argument_list|)
 expr_stmt|;
-comment|/* 	 * BSM defines the family field as 16 bits, but many operating 	 * systems have an 8-bit sin_family field.  Extend to 16 bits before 	 * writing into the token.  Assume that both the port and the address 	 * in the sockaddr_in are already in network byte order, but family 	 * is in local byte order. 	 * 	 * XXXRW: Should a name space conversion be taking place on the value 	 * of sin_family?  	 */
+comment|/* 	 * BSM defines the family field as 16 bits, but many operating 	 * systems have an 8-bit sin_family field.  Extend to 16 bits before 	 * writing into the token.  Assume that both the port and the address 	 * in the sockaddr_in are already in network byte order, but family 	 * is in local byte order. 	 * 	 * XXXRW: Should a name space conversion be taking place on the value 	 * of sin_family? 	 */
 name|family
 operator|=
 name|so
@@ -3787,7 +3787,7 @@ argument_list|,
 name|AUT_SOCKINET128
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In Darwin, sin6_family is one octet, but BSM defines the token  	 * to store two. So we copy in a 0 first.  	 */
+comment|/* 	 * In Darwin, sin6_family is one octet, but BSM defines the token 	 * to store two. So we copy in a 0 first. 	 */
 name|ADD_U_CHAR
 argument_list|(
 name|dptr
