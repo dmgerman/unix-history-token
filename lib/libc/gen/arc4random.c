@@ -114,6 +114,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KEYSIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
 name|THREAD_LOCK
 parameter_list|()
 define|\
@@ -359,11 +366,11 @@ name|void
 parameter_list|)
 block|{
 name|int
+name|done
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|n
-decl_stmt|,
-name|done
 decl_stmt|;
 struct|struct
 block|{
@@ -377,22 +384,10 @@ decl_stmt|;
 name|u_int8_t
 name|rnd
 index|[
-literal|128
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|timeval
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-name|pid_t
-argument_list|)
+name|KEYSIZE
 index|]
 decl_stmt|;
 block|}
-name|__packed
 name|rdat
 struct|;
 name|fd
@@ -426,16 +421,10 @@ argument_list|,
 operator|&
 name|rdat
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|rdat
-argument_list|)
+name|KEYSIZE
 argument_list|)
 operator|==
-sizeof|sizeof
-argument_list|(
-name|rdat
-argument_list|)
+name|KEYSIZE
 condition|)
 name|done
 operator|=
@@ -450,7 +439,6 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* !done?  Ah, what the heck. We'll just take whatever was on the 	 * stack... */
 if|if
 condition|(
 operator|!
@@ -477,6 +465,7 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
+comment|/* We'll just take whatever was on the stack too... */
 block|}
 name|arc4_addrandom
 argument_list|(
@@ -487,10 +476,7 @@ operator|)
 operator|&
 name|rdat
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|rdat
-argument_list|)
+name|KEYSIZE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Throw away the first N bytes of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  N=768 is based on 	 * suggestions in the paper "(Not So) Random Shuffles of RC4" 	 * by Ilya Mironov. 	 */
