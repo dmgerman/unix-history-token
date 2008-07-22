@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|RANDOMDEV
-value|"/dev/urandom"
+value|"/dev/random"
 end_define
 
 begin_define
