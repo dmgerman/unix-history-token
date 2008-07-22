@@ -1287,7 +1287,7 @@ operator|=
 name|kau_open
 argument_list|()
 expr_stmt|;
-comment|/* Create the subject token */
+comment|/* 	 * Create the subject token. 	 */
 switch|switch
 condition|(
 name|ar
@@ -5745,7 +5745,6 @@ name|ARG_POSIX_IPC_PERM
 argument_list|)
 condition|)
 block|{
-comment|/* Create an ipc_perm token */
 name|struct
 name|ipc_perm
 name|perm
@@ -5966,7 +5965,6 @@ name|ARG_POSIX_IPC_PERM
 argument_list|)
 condition|)
 block|{
-comment|/* Create an ipc_perm token */
 name|struct
 name|ipc_perm
 name|perm
@@ -6336,7 +6334,7 @@ operator|->
 name|ar_event
 argument_list|)
 expr_stmt|;
-comment|/* Write the subject token so it is properly freed here. */
+comment|/* 		 * Write the subject token so it is properly freed here. 		 */
 name|kau_write
 argument_list|(
 name|rec
