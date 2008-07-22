@@ -158,7 +158,7 @@ name|int
 name|ncr53c9x_debug
 init|=
 name|NCR_SHOWMISC
-comment|/*|NCR_SHOWPHASE|NCR_SHOWTRAC|NCR_SHOWCMDS*/
+comment|/* | NCR_SHOWPHASE | NCR_SHOWTRAC | NCR_SHOWCMDS */
 decl_stmt|;
 end_decl_stmt
 
@@ -184,33 +184,17 @@ end_endif
 begin_function_decl
 specifier|static
 name|void
-name|ncr53c9x_select
+name|ncr53c9x_abort
 parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|,
 name|struct
 name|ncr53c9x_ecb
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ncr53c9x_reselect
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
+name|ecb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -218,35 +202,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ncr53c9x_scsi_reset
+name|ncr53c9x_dequeue
 parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ncr53c9x_poll
-parameter_list|(
+name|sc
+parameter_list|,
 name|struct
-name|cam_sim
+name|ncr53c9x_ecb
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ncr53c9x_sched
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
+name|ecb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -259,10 +225,30 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|,
 name|struct
 name|ncr53c9x_ecb
 modifier|*
+name|ecb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ncr53c9x_free_ecb
+parameter_list|(
+name|struct
+name|ncr53c9x_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ncr53c9x_ecb
+modifier|*
+name|ecb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -275,6 +261,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -287,6 +274,120 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ncr53c9x_poll
+parameter_list|(
+name|struct
+name|cam_sim
+modifier|*
+name|sim
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ncr53c9x_rdfifo
+parameter_list|(
+name|struct
+name|ncr53c9x_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|how
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ncr53c9x_reselect
+parameter_list|(
+name|struct
+name|ncr53c9x_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|message
+parameter_list|,
+name|int
+name|tagtype
+parameter_list|,
+name|int
+name|tagid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ncr53c9x_sense
+parameter_list|(
+name|struct
+name|ncr53c9x_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ncr53c9x_ecb
+modifier|*
+name|ecb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ncr53c9x_scsi_reset
+parameter_list|(
+name|struct
+name|ncr53c9x_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ncr53c9x_sched
+parameter_list|(
+name|struct
+name|ncr53c9x_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ncr53c9x_select
+parameter_list|(
+name|struct
+name|ncr53c9x_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ncr53c9x_ecb
+modifier|*
+name|ecb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -318,94 +419,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ncr53c9x_abort
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
-parameter_list|,
-name|struct
-name|ncr53c9x_ecb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ncr53c9x_dequeue
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
-parameter_list|,
-name|struct
-name|ncr53c9x_ecb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ncr53c9x_sense
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
-parameter_list|,
-name|struct
-name|ncr53c9x_ecb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ncr53c9x_free_ecb
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
-parameter_list|,
-name|struct
-name|ncr53c9x_ecb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|ncr53c9x_wrfifo
 parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|,
 name|u_char
 modifier|*
+name|p
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ncr53c9x_rdfifo
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
-parameter_list|,
-name|int
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -420,6 +446,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -434,6 +461,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_tinfo
 modifier|*
+name|sc
 parameter_list|,
 name|int64_t
 name|lun
@@ -443,45 +471,50 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|ncr53c9x_readregs
 parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
-name|int
-name|ncr53c9x_stp2cpb
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
+specifier|inline
 name|void
 name|ncr53c9x_setsync
 parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|,
 name|struct
 name|ncr53c9x_tinfo
 modifier|*
+name|ti
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|int
+name|ncr53c9x_stp2cpb
+parameter_list|(
+name|struct
+name|ncr53c9x_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|period
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -509,7 +542,7 @@ name|sc
 parameter_list|,
 name|size
 parameter_list|)
-value|do { \ 		NCR_WRITE_REG((sc), NCR_TCL, (size)); 			\ 		NCR_WRITE_REG((sc), NCR_TCM, (size)>> 8);		\ 		if ((sc->sc_cfg2& NCRCFG2_FE) || 			\ 		    (sc->sc_rev == NCR_VARIANT_FAS366)) {		\ 			NCR_WRITE_REG((sc), NCR_TCH, (size)>> 16);	\ 		}							\ 		if (sc->sc_rev == NCR_VARIANT_FAS366) {			\ 			NCR_WRITE_REG(sc, NCR_RCH, 0);			\ 		}							\ } while (0)
+value|do {					\ 		NCR_WRITE_REG((sc), NCR_TCL, (size));			\ 		NCR_WRITE_REG((sc), NCR_TCM, (size)>> 8);		\ 		if ((sc->sc_cfg2& NCRCFG2_FE) ||			\ 		    (sc->sc_rev == NCR_VARIANT_FAS366)) {		\ 			NCR_WRITE_REG((sc), NCR_TCH, (size)>> 16);	\ 		}							\ 		if (sc->sc_rev == NCR_VARIANT_FAS366) {			\ 			NCR_WRITE_REG(sc, NCR_RCH, 0);			\ 		}							\ } while (0)
 end_define
 
 begin_ifndef
@@ -526,7 +559,7 @@ parameter_list|(
 name|ms
 parameter_list|)
 define|\
-value|(((ms)< 0x20000)  ? \ 	    ((ms +0u) / 1000u) * hz : \ 	    ((ms +0u) * hz) /1000u)
+value|(((ms)< 0x20000) ? \ 	    ((ms +0u) / 1000u) * hz : \ 	    ((ms +0u) * hz) /1000u)
 end_define
 
 begin_endif
@@ -753,7 +786,7 @@ literal|16
 else|:
 literal|8
 expr_stmt|;
-comment|/* 	 * Allocate SCSI message buffers. 	 * Front-ends can override allocation to avoid alignment 	 * handling in the DMA engines. Note that that ncr53c9x_msgout() 	 * can request a 1 byte DMA transfer. 	 */
+comment|/* 	 * Allocate SCSI message buffers. 	 * Front-ends can override allocation to avoid alignment 	 * handling in the DMA engines.  Note that ncr53c9x_msgout() 	 * can request a 1 byte DMA transfer. 	 */
 if|if
 condition|(
 name|sc
@@ -967,7 +1000,7 @@ operator|->
 name|sc_freq
 argument_list|)
 expr_stmt|;
-comment|/* The value *must not* be == 1. Make it 2 */
+comment|/* The value *must not* be == 1.  Make it 2. */
 if|if
 condition|(
 name|sc
@@ -982,7 +1015,7 @@ name|sc_ccf
 operator|=
 literal|2
 expr_stmt|;
-comment|/* 	 * The recommended timeout is 250ms. This register is loaded 	 * with a value calculated as follows, from the docs: 	 * 	 *		(timout period) x (CLK frequency) 	 *	reg = ------------------------------------- 	 *		 8192 x (Clock Conversion Factor) 	 * 	 * Since CCF has a linear relation to CLK, this generally computes 	 * to the constant of 153. 	 */
+comment|/* 	 * The recommended timeout is 250ms.  This register is loaded 	 * with a value calculated as follows, from the docs: 	 * 	 *		(timout period) x (CLK frequency) 	 *	reg = ------------------------------------- 	 *		 8192 x (Clock Conversion Factor) 	 * 	 * Since CCF has a linear relation to CLK, this generally computes 	 * to the constant of 153. 	 */
 name|sc
 operator|->
 name|sc_timeout
@@ -1007,14 +1040,14 @@ operator|->
 name|sc_ccf
 operator|)
 expr_stmt|;
-comment|/* CCF register only has 3 bits; 0 is actually 8 */
+comment|/* The CCF register only has 3 bits; 0 is actually 8. */
 name|sc
 operator|->
 name|sc_ccf
 operator|&=
 literal|7
 expr_stmt|;
-comment|/* 	 * Register with CAM 	 */
+comment|/* 	 * Register with CAM. 	 */
 name|devq
 operator|=
 name|cam_simq_alloc
@@ -1185,11 +1218,19 @@ name|sc_path
 operator|=
 name|path
 expr_stmt|;
-comment|/* Reset state& bus */
+comment|/* Reset state and bus. */
 if|#
 directive|if
 literal|0
 block|sc->sc_cfflags = sc->sc_dev.dv_cfdata->cf_flags;
+else|#
+directive|else
+name|sc
+operator|->
+name|sc_cfflags
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 name|sc
@@ -1546,7 +1587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the generic ncr53c9x reset function. It does not reset the SCSI bus,  * only this controller, but kills any on-going commands, and also stops  * and resets the DMA.  *  * After reset, registers are loaded with the defaults from the attach  * routine above.  */
+comment|/*  * This is the generic ncr53c9x reset function.  It does not reset the SCSI  * bus, only this controller, but kills any on-going commands, and also stops  * and resets the DMA.  *  * After reset, registers are loaded with the defaults from the attach  * routine above.  */
 end_comment
 
 begin_function
@@ -1559,13 +1600,13 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* reset DMA first */
+comment|/* Reset DMA first. */
 name|NCRDMA_RESET
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* reset SCSI chip */
+comment|/* Reset SCSI chip. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -1585,7 +1626,7 @@ argument_list|(
 literal|500
 argument_list|)
 expr_stmt|;
-comment|/* do these backwards, and fall through */
+comment|/* Do these backwards, and fall through. */
 switch|switch
 condition|(
 name|sc
@@ -1623,6 +1664,7 @@ operator|->
 name|sc_cfg4
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|NCR_VARIANT_AM53C974
 case|:
@@ -1661,6 +1703,7 @@ operator|->
 name|sc_cfg3
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|NCR_VARIANT_ESP100A
 case|:
@@ -1681,6 +1724,7 @@ operator|->
 name|sc_cfg2
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|NCR_VARIANT_ESP100
 case|:
@@ -1771,7 +1815,7 @@ name|sc_cfg2
 operator|=
 literal|0
 expr_stmt|;
-comment|/* NCRCFG2_HMEFE| NCRCFG2_HME32 */
+comment|/* NCRCFG2_HMEFE | NCRCFG2_HME32 */
 name|NCR_WRITE_REG
 argument_list|(
 name|sc
@@ -1833,8 +1877,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"unknown revision code, "
-literal|"assuming ESP100\n"
+literal|"unknown revision code, assuming ESP100\n"
 argument_list|)
 expr_stmt|;
 name|NCR_WRITE_REG
@@ -1902,14 +1945,14 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|device_printf(sc->sc_dev, "ncr53c9x_reset: revision %d\n", 	       sc->sc_rev); 	device_printf(sc->sc_dev, "ncr53c9x_reset: cfg1 0x%x, cfg2 0x%x, " 	    "cfg3 0x%x, ccf 0x%x, timeout 0x%x\n", 	    sc->sc_cfg1, sc->sc_cfg2, sc->sc_cfg3, sc->sc_ccf, sc->sc_timeout);
+block|device_printf(sc->sc_dev, "ncr53c9x_reset: revision %d\n", 	    sc->sc_rev); 	device_printf(sc->sc_dev, "ncr53c9x_reset: cfg1 0x%x, cfg2 0x%x, " 	    "cfg3 0x%x, ccf 0x%x, timeout 0x%x\n", 	    sc->sc_cfg1, sc->sc_cfg2, sc->sc_cfg3, sc->sc_ccf, sc->sc_timeout);
 endif|#
 directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*  * Reset the SCSI bus, but not the chip  */
+comment|/*  * Reset the SCSI bus, but not the chip.  */
 end_comment
 
 begin_function
@@ -1966,7 +2009,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize ncr53c9x state machine  */
+comment|/*  * Initialize ncr53c9x state machine.  */
 end_comment
 
 begin_function
@@ -1991,6 +2034,11 @@ name|struct
 name|ncr53c9x_linfo
 modifier|*
 name|li
+decl_stmt|;
+name|struct
+name|ncr53c9x_tinfo
+modifier|*
+name|ti
 decl_stmt|;
 name|int
 name|i
@@ -2127,7 +2175,7 @@ name|ecb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Cancel outstanding disconnected commands on each LUN */
+comment|/* Cancel outstanding disconnected commands on each LUN. */
 for|for
 control|(
 name|r
@@ -2172,7 +2220,7 @@ name|untagged
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 					 * XXXXXXX 					 * 					 * Should we terminate a command 					 * that never reached the disk? 					 */
+comment|/* 					 * XXX 					 * 					 * Should we terminate a command 					 * that never reached the disk? 					 */
 name|li
 operator|->
 name|busy
@@ -2260,7 +2308,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * reset the chip to a known state 	 */
+comment|/* 	 * Reset the chip to a known state. 	 */
 name|ncr53c9x_reset
 argument_list|(
 name|sc
@@ -2312,11 +2360,8 @@ name|r
 operator|++
 control|)
 block|{
-name|struct
-name|ncr53c9x_tinfo
-modifier|*
 name|ti
-init|=
+operator|=
 operator|&
 name|sc
 operator|->
@@ -2324,7 +2369,7 @@ name|sc_tinfo
 index|[
 name|r
 index|]
-decl_stmt|;
+expr_stmt|;
 comment|/* XXX - config flags per target: low bits: no reselect; high bits: no synch */
 name|ti
 operator|->
@@ -2335,8 +2380,9 @@ operator|(
 name|sc
 operator|->
 name|sc_minsync
+operator|!=
+literal|0
 operator|&&
-operator|!
 operator|(
 name|sc
 operator|->
@@ -2356,6 +2402,8 @@ literal|8
 operator|)
 operator|)
 operator|)
+operator|==
+literal|0
 operator|)
 condition|?
 literal|0
@@ -2379,10 +2427,12 @@ literal|7
 operator|)
 operator|)
 operator|)
-condition|?
-name|T_RSELECTOFF
-else|:
+operator|==
 literal|0
+condition|?
+literal|0
+else|:
+name|T_RSELECTOFF
 operator|)
 expr_stmt|;
 ifdef|#
@@ -2459,12 +2509,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the NCR registers, and save their contents for later use.  * NCR_STAT, NCR_STEP& NCR_INTR are mostly zeroed out when reading  * NCR_INTR - so make sure it is the last read.  *  * I think that (from reading the docs) most bits in these registers  * only make sense when he DMA CSR has an interrupt showing. Call only  * if an interrupt is pending.  */
+comment|/*  * Read the NCR registers, and save their contents for later use.  * NCR_STAT, NCR_STEP& NCR_INTR are mostly zeroed out when reading  * NCR_INTR - so make sure it is the last read.  *  * I think that (from reading the docs) most bits in these registers  * only make sense when the DMA CSR has an interrupt showing.  Call only  * if an interrupt is pending.  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|ncr53c9x_readregs
 parameter_list|(
@@ -2485,7 +2535,7 @@ argument_list|,
 name|NCR_STAT
 argument_list|)
 expr_stmt|;
-comment|/* Only the stepo bits are of interest */
+comment|/* Only the step bits are of interest. */
 name|sc
 operator|->
 name|sc_espstep
@@ -2564,7 +2614,6 @@ operator|&
 name|NCRINTR_DIS
 operator|)
 condition|?
-comment|/* Disconnected */
 name|BUSFREE_PHASE
 else|:
 name|sc
@@ -2605,7 +2654,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|ncr53c9x_stp2cpb
 parameter_list|(
@@ -2644,7 +2693,7 @@ argument_list|)
 operator|<
 name|period
 condition|)
-comment|/* Correct round-down error */
+comment|/* Correct round-down error. */
 name|v
 operator|++
 expr_stmt|;
@@ -2658,7 +2707,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|ncr53c9x_setsync
 parameter_list|(
@@ -2831,16 +2880,24 @@ modifier|*
 name|ecb
 parameter_list|)
 block|{
+name|struct
+name|ncr53c9x_tinfo
+modifier|*
+name|ti
+decl_stmt|;
+name|u_char
+modifier|*
+name|cmd
+decl_stmt|;
+name|size_t
+name|dmasize
+decl_stmt|;
 name|int
-name|target
-init|=
-name|ecb
-operator|->
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_id
+name|clen
+decl_stmt|,
+name|selatn3
+decl_stmt|,
+name|selatns
 decl_stmt|;
 name|int
 name|lun
@@ -2853,28 +2910,16 @@ name|ccb_h
 operator|.
 name|target_lun
 decl_stmt|;
-name|struct
-name|ncr53c9x_tinfo
-modifier|*
-name|ti
-decl_stmt|;
 name|int
-name|tiflags
-decl_stmt|;
-name|u_char
-modifier|*
-name|cmd
-decl_stmt|;
-name|int
-name|clen
-decl_stmt|;
-name|int
-name|selatn3
-decl_stmt|,
-name|selatns
-decl_stmt|;
-name|size_t
-name|dmasize
+name|target
+init|=
+name|ecb
+operator|->
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|target_id
 decl_stmt|;
 name|NCR_TRACE
 argument_list|(
@@ -2919,12 +2964,6 @@ index|[
 name|target
 index|]
 expr_stmt|;
-name|tiflags
-operator|=
-name|ti
-operator|->
-name|flags
-expr_stmt|;
 name|sc
 operator|->
 name|sc_state
@@ -2954,7 +2993,7 @@ name|timeout
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The docs say the target register is never reset, and I 	 * can't think of a better place to set it 	 */
+comment|/* 	 * The docs say the target register is never reset, and I 	 * can't think of a better place to set it. 	 */
 if|if
 condition|(
 name|sc
@@ -3079,7 +3118,7 @@ operator||
 name|NCRCMD_DMA
 argument_list|)
 expr_stmt|;
-comment|/* And get the targets attention */
+comment|/* And get the target's attention */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -3173,13 +3212,13 @@ name|sc_features
 operator|&
 name|NCR_F_SELATN3
 condition|)
-comment|/* use SELATN3 to send tag messages */
+comment|/* Use SELATN3 to send tag messages. */
 name|selatn3
 operator|=
 literal|1
 expr_stmt|;
 else|else
-comment|/* We don't have SELATN3; use SELATNS to send tags */
+comment|/* We don't have SELATN3; use SELATNS to send tags. */
 name|selatns
 operator|=
 literal|1
@@ -3194,7 +3233,7 @@ operator|&
 name|T_NEGOTIATE
 condition|)
 block|{
-comment|/* We have to use SELATNS to send sync/wide messages */
+comment|/* We have to use SELATNS to send sync/wide messages. */
 name|selatn3
 operator|=
 literal|0
@@ -3222,7 +3261,7 @@ condition|(
 name|selatn3
 condition|)
 block|{
-comment|/* We'll use tags with SELATN3 */
+comment|/* We'll use tags with SELATN3. */
 name|clen
 operator|=
 name|ecb
@@ -3277,7 +3316,7 @@ comment|/* msg[2] */
 block|}
 else|else
 block|{
-comment|/* We don't have tags, or will send messages with SELATNS */
+comment|/* We don't have tags, or will send messages with SELATNS. */
 name|clen
 operator|=
 name|ecb
@@ -3300,7 +3339,9 @@ argument_list|(
 name|lun
 argument_list|,
 operator|(
-name|tiflags
+name|ti
+operator|->
+name|flags
 operator|&
 name|T_RSELECTOFF
 operator|)
@@ -3323,7 +3364,7 @@ operator|!
 name|selatns
 condition|)
 block|{
-comment|/* setup DMA transfer for command */
+comment|/* Setup DMA transfer for command. */
 name|dmasize
 operator|=
 name|clen
@@ -3340,7 +3381,7 @@ name|sc_cmdp
 operator|=
 name|cmd
 expr_stmt|;
-comment|/* Program the SCSI counter */
+comment|/* Program the SCSI counter. */
 name|NCR_SET_COUNT
 argument_list|(
 name|sc
@@ -3348,7 +3389,7 @@ argument_list|,
 name|dmasize
 argument_list|)
 expr_stmt|;
-comment|/* load the count in */
+comment|/* Load the count in. */
 comment|/* if (sc->sc_rev != NCR_VARIANT_FAS366) */
 name|NCRCMD
 argument_list|(
@@ -3359,7 +3400,7 @@ operator||
 name|NCRCMD_DMA
 argument_list|)
 expr_stmt|;
-comment|/* And get the targets attention */
+comment|/* And get the target's attention. */
 if|if
 condition|(
 name|selatn3
@@ -3425,7 +3466,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Who am I?  This is where we tell the target that we are 	 * happy for it to disconnect etc. 	 */
-comment|/* Now get the command into the FIFO */
+comment|/* Now get the command into the FIFO. */
 name|ncr53c9x_wrfifo
 argument_list|(
 name|sc
@@ -3435,7 +3476,7 @@ argument_list|,
 name|clen
 argument_list|)
 expr_stmt|;
-comment|/* And get the targets attention */
+comment|/* And get the target's attention. */
 if|if
 condition|(
 name|selatns
@@ -3448,7 +3489,7 @@ literal|"SELATNS \n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Arbitrate, select and stop after IDENTIFY message */
+comment|/* Arbitrate, select and stop after IDENTIFY message. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -3528,7 +3569,6 @@ argument_list|,
 name|free_links
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3632,7 +3672,7 @@ comment|/*  * DRIVER FUNCTIONS CALLABLE FROM HIGHER LEVEL DRIVERS:  */
 end_comment
 
 begin_comment
-comment|/*  * Start a SCSI-command  * This function is called by the higher level SCSI-driver to queue/run  * SCSI-commands.  */
+comment|/*  * Start a SCSI-command.  * This function is called by the higher level SCSI-driver to queue/run  * SCSI-commands.  */
 end_comment
 
 begin_function
@@ -3651,14 +3691,47 @@ name|ccb
 parameter_list|)
 block|{
 name|struct
-name|ncr53c9x_softc
+name|ccb_pathinq
 modifier|*
-name|sc
+name|cpi
+decl_stmt|;
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+decl_stmt|;
+name|struct
+name|ccb_trans_settings
+modifier|*
+name|cts
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_scsi
+modifier|*
+name|scsi
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_spi
+modifier|*
+name|spi
 decl_stmt|;
 name|struct
 name|ncr53c9x_ecb
 modifier|*
 name|ecb
+decl_stmt|;
+name|struct
+name|ncr53c9x_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
+name|ncr53c9x_tinfo
+modifier|*
+name|ti
+decl_stmt|;
+name|int
+name|target
 decl_stmt|;
 name|NCR_TRACE
 argument_list|(
@@ -3759,17 +3832,13 @@ return|return;
 case|case
 name|XPT_PATH_INQ
 case|:
-block|{
-name|struct
-name|ccb_pathinq
-modifier|*
 name|cpi
-init|=
+operator|=
 operator|&
 name|ccb
 operator|->
 name|cpi
-decl_stmt|;
+expr_stmt|;
 name|cpi
 operator|->
 name|version_num
@@ -3945,26 +4014,18 @@ name|ccb
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 case|case
 name|XPT_GET_TRAN_SETTINGS
 case|:
-block|{
-name|struct
-name|ccb_trans_settings
-modifier|*
 name|cts
-init|=
+operator|=
 operator|&
 name|ccb
 operator|->
 name|cts
-decl_stmt|;
-name|struct
-name|ncr53c9x_tinfo
-modifier|*
+expr_stmt|;
 name|ti
-init|=
+operator|=
 operator|&
 name|sc
 operator|->
@@ -3976,31 +4037,25 @@ name|ccb_h
 operator|.
 name|target_id
 index|]
-decl_stmt|;
-name|struct
-name|ccb_trans_settings_scsi
-modifier|*
+expr_stmt|;
 name|scsi
-init|=
+operator|=
 operator|&
 name|cts
 operator|->
 name|proto_specific
 operator|.
 name|scsi
-decl_stmt|;
-name|struct
-name|ccb_trans_settings_spi
-modifier|*
+expr_stmt|;
 name|spi
-init|=
+operator|=
 operator|&
 name|cts
 operator|->
 name|xport_specific
 operator|.
 name|spi
-decl_stmt|;
+expr_stmt|;
 name|cts
 operator|->
 name|protocol
@@ -4181,7 +4236,6 @@ name|ccb
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 case|case
 name|XPT_ABORT
 case|:
@@ -4253,12 +4307,6 @@ expr_stmt|;
 case|case
 name|XPT_SCSI_IO
 case|:
-block|{
-name|struct
-name|ccb_scsiio
-modifier|*
-name|csio
-decl_stmt|;
 if|if
 condition|(
 name|ccb
@@ -4354,7 +4402,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Initialize ecb */
+comment|/* Initialize ecb. */
 name|ecb
 operator|->
 name|ccb
@@ -4528,35 +4576,26 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|XPT_SET_TRAN_SETTINGS
 case|:
-block|{
-name|struct
-name|ccb_trans_settings
-modifier|*
 name|cts
-init|=
+operator|=
 operator|&
 name|ccb
 operator|->
 name|cts
-decl_stmt|;
-name|int
+expr_stmt|;
 name|target
-init|=
+operator|=
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|target_id
-decl_stmt|;
-name|struct
-name|ncr53c9x_tinfo
-modifier|*
+expr_stmt|;
 name|ti
-init|=
+operator|=
 operator|&
 name|sc
 operator|->
@@ -4564,31 +4603,25 @@ name|sc_tinfo
 index|[
 name|target
 index|]
-decl_stmt|;
-name|struct
-name|ccb_trans_settings_scsi
-modifier|*
+expr_stmt|;
 name|scsi
-init|=
+operator|=
 operator|&
 name|cts
 operator|->
 name|proto_specific
 operator|.
 name|scsi
-decl_stmt|;
-name|struct
-name|ccb_trans_settings_spi
-modifier|*
+expr_stmt|;
 name|spi
-init|=
+operator|=
 operator|&
 name|cts
 operator|->
 name|xport_specific
 operator|.
 name|spi
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4861,7 +4894,6 @@ name|ccb
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 default|default:
 name|device_printf
 argument_list|(
@@ -4968,7 +5000,7 @@ comment|/*  * LOW LEVEL SCSI UTILITIES  */
 end_comment
 
 begin_comment
-comment|/*  * Schedule a scsi operation.  This has now been pulled out of the interrupt  * handler so that we may call it from ncr53c9x_scsipi_request and  * ncr53c9x_done.  This may save us an unnecessary interrupt just to get  * things going.  Should only be called when state == NCR_IDLE and at bio pl.  */
+comment|/*  * Schedule a SCSI operation.  This has now been pulled out of the interrupt  * handler so that we may call it from ncr53c9x_scsipi_request and  * ncr53c9x_done.  This may save us an unnecessary interrupt just to get  * things going.  Should only be called when state == NCR_IDLE and at bio pl.  */
 end_comment
 
 begin_function
@@ -4988,19 +5020,18 @@ modifier|*
 name|ecb
 decl_stmt|;
 name|struct
-name|ncr53c9x_tinfo
-modifier|*
-name|ti
-decl_stmt|;
-name|struct
 name|ncr53c9x_linfo
 modifier|*
 name|li
 decl_stmt|;
-name|int
-name|lun
+name|struct
+name|ncr53c9x_tinfo
+modifier|*
+name|ti
 decl_stmt|;
 name|int
+name|lun
+decl_stmt|,
 name|tag
 decl_stmt|;
 name|NCR_TRACE
@@ -5274,7 +5305,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Try to issue this as an un-tagged command */
+comment|/* Try to issue this as an untagged command. */
 if|if
 condition|(
 name|li
@@ -5320,7 +5351,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* We need to issue this untagged command now */
+comment|/* 				 * We need to issue this untagged command 				 * now. 				 */
 name|ecb
 operator|=
 name|li
@@ -5330,7 +5361,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Not ready yet */
+comment|/* not ready, yet */
 continue|continue;
 block|}
 block|}
@@ -5483,6 +5514,7 @@ expr_stmt|;
 break|break;
 block|}
 else|else
+block|{
 name|NCR_TRACE
 argument_list|(
 operator|(
@@ -5506,6 +5538,7 @@ name|target_lun
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -5536,6 +5569,11 @@ operator|->
 name|ccb
 decl_stmt|;
 name|struct
+name|ncr53c9x_linfo
+modifier|*
+name|li
+decl_stmt|;
+name|struct
 name|ncr53c9x_tinfo
 modifier|*
 name|ti
@@ -5555,11 +5593,6 @@ operator|->
 name|cmd
 operator|.
 name|cmd
-decl_stmt|;
-name|struct
-name|ncr53c9x_linfo
-modifier|*
-name|li
 decl_stmt|;
 name|int
 name|lun
@@ -5593,7 +5626,7 @@ operator|.
 name|target_id
 index|]
 expr_stmt|;
-comment|/* Next, setup a request sense command block */
+comment|/* Next, setup a REQUEST SENSE command block. */
 name|memset
 argument_list|(
 name|ss
@@ -5723,7 +5756,7 @@ name|untagged
 operator|=
 name|ecb
 expr_stmt|;
-comment|/* must be executed first to fix C/A */
+comment|/* Must be executed first to fix C/A. */
 name|li
 operator|->
 name|busy
@@ -5814,14 +5847,14 @@ operator|->
 name|ccb
 decl_stmt|;
 name|struct
-name|ncr53c9x_tinfo
-modifier|*
-name|ti
-decl_stmt|;
-name|struct
 name|ncr53c9x_linfo
 modifier|*
 name|li
+decl_stmt|;
+name|struct
+name|ncr53c9x_tinfo
+modifier|*
+name|ti
 decl_stmt|;
 name|int
 name|lun
@@ -5980,7 +6013,7 @@ name|CAM_AUTOSENSE_FAIL
 expr_stmt|;
 else|else
 block|{
-comment|/* First, save the return values */
+comment|/* First, save the return values. */
 name|ccb
 operator|->
 name|csio
@@ -6117,7 +6150,7 @@ operator|==
 name|CAM_SEL_TIMEOUT
 condition|)
 block|{
-comment|/* Selection timeout -- discard this LUN if empty */
+comment|/* Selection timeout -- discard this LUN if empty. */
 if|if
 condition|(
 name|li
@@ -6201,14 +6234,14 @@ name|ecb
 parameter_list|)
 block|{
 name|struct
-name|ncr53c9x_tinfo
-modifier|*
-name|ti
-decl_stmt|;
-name|struct
 name|ncr53c9x_linfo
 modifier|*
 name|li
+decl_stmt|;
+name|struct
+name|ncr53c9x_tinfo
+modifier|*
+name|ti
 decl_stmt|;
 name|int64_t
 name|lun
@@ -6455,7 +6488,7 @@ comment|/*  * INTERRUPT/PROTOCOL ENGINE  */
 end_comment
 
 begin_comment
-comment|/*  * Schedule an outgoing message by prioritizing it, and asserting  * attention on the bus. We can only do this when we are the initiator  * else there will be an illegal command interrupt.  */
+comment|/*  * Schedule an outgoing message by prioritizing it, and asserting  * attention on the bus.  We can only do this when we are the initiator  * else there will be an illegal command interrupt.  */
 end_comment
 
 begin_define
@@ -6465,8 +6498,7 @@ name|ncr53c9x_sched_msgout
 parameter_list|(
 name|m
 parameter_list|)
-define|\
-value|do {							\ 		NCR_MSGS(("ncr53c9x_sched_msgout %x %d", m, __LINE__));	\ 		NCRCMD(sc, NCRCMD_SETATN);			\ 		sc->sc_flags |= NCR_ATN;			\ 		sc->sc_msgpriq |= (m);				\ 	} while (0)
+value|do {					\ 	NCR_MSGS(("ncr53c9x_sched_msgout %x %d", m, __LINE__));		\ 	NCRCMD(sc, NCRCMD_SETATN);					\ 	sc->sc_flags |= NCR_ATN;					\ 	sc->sc_msgpriq |= (m);						\ } while (0)
 end_define
 
 begin_function
@@ -6530,14 +6562,14 @@ name|int
 name|how
 parameter_list|)
 block|{
+name|u_char
+modifier|*
+name|ibuf
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|n
-decl_stmt|;
-name|u_char
-modifier|*
-name|buf
 decl_stmt|;
 switch|switch
 condition|(
@@ -6547,7 +6579,7 @@ block|{
 case|case
 name|NCR_RDFIFO_START
 case|:
-name|buf
+name|ibuf
 operator|=
 name|sc
 operator|->
@@ -6563,7 +6595,7 @@ break|break;
 case|case
 name|NCR_RDFIFO_CONTINUE
 case|:
-name|buf
+name|ibuf
 operator|=
 name|sc
 operator|->
@@ -6580,7 +6612,7 @@ argument_list|(
 literal|"ncr53c9x_rdfifo: bad flag"
 argument_list|)
 expr_stmt|;
-break|break;
+comment|/* NOTREACHED */
 block|}
 comment|/* 	 * XXX buffer (sc_imess) size for message 	 */
 name|n
@@ -6620,7 +6652,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|buf
+name|ibuf
 index|[
 name|i
 index|]
@@ -6650,7 +6682,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|buf
+name|ibuf
 index|[
 name|i
 operator|++
@@ -6692,7 +6724,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|buf
+name|ibuf
 index|[
 name|i
 index|]
@@ -6717,15 +6749,17 @@ literal|0
 ifdef|#
 directive|ifdef
 name|NCR53C9X_DEBUG
-block|{ 		int j;  		NCR_TRACE(("\n[rdfifo %s (%d):", 		    (how == NCR_RDFIFO_START) ? "start" : "cont", 		    (int)sc->sc_imlen)); 		if (ncr53c9x_debug& NCR_SHOWTRAC) { 			for (j = 0; j< sc->sc_imlen; j++) 				printf(" %02x", sc->sc_imess[j]); 			printf("]\n"); 		} 	}
+block|NCR_TRACE(("\n[rdfifo %s (%d):", 	    (how == NCR_RDFIFO_START) ? "start" : "cont", (int)sc->sc_imlen)); 	if (ncr53c9x_debug& NCR_SHOWTRAC) { 		for (i = 0; i< sc->sc_imlen; i++) 			printf(" %02x", sc->sc_imess[i]); 		printf("]\n"); 	}
 endif|#
 directive|endif
 endif|#
 directive|endif
 return|return
+operator|(
 name|sc
 operator|->
 name|sc_imlen
+operator|)
 return|;
 block|}
 end_function
@@ -6868,13 +6902,6 @@ name|int
 name|tagid
 parameter_list|)
 block|{
-name|u_char
-name|selid
-decl_stmt|,
-name|target
-decl_stmt|,
-name|lun
-decl_stmt|;
 name|struct
 name|ncr53c9x_ecb
 modifier|*
@@ -6883,14 +6910,21 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
+name|ncr53c9x_linfo
+modifier|*
+name|li
+decl_stmt|;
+name|struct
 name|ncr53c9x_tinfo
 modifier|*
 name|ti
 decl_stmt|;
-name|struct
-name|ncr53c9x_linfo
-modifier|*
-name|li
+name|u_char
+name|lun
+decl_stmt|,
+name|selid
+decl_stmt|,
+name|target
 decl_stmt|;
 if|if
 condition|(
@@ -6969,7 +7003,7 @@ name|message
 operator|&
 literal|0x07
 expr_stmt|;
-comment|/* 	 * Search wait queue for disconnected cmd 	 * The list should be short, so I haven't bothered with 	 * any more sophisticated structures than a simple 	 * singly linked list. 	 */
+comment|/* 	 * Search wait queue for disconnected command. 	 * The list should be short, so I haven't bothered with 	 * any more sophisticated structures than a simple 	 * singly linked list. 	 */
 name|ti
 operator|=
 operator|&
@@ -6989,7 +7023,7 @@ argument_list|,
 name|lun
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We can get as far as the LUN with the IDENTIFY 	 * message.  Check to see if we're running an 	 * un-tagged command.  Otherwise ack the IDENTIFY 	 * and wait for a tag message. 	 */
+comment|/* 	 * We can get as far as the LUN with the IDENTIFY 	 * message.  Check to see if we're running an 	 * untagged command.  Otherwise ack the IDENTIFY 	 * and wait for a tag message. 	 */
 if|if
 condition|(
 name|li
@@ -7023,7 +7057,7 @@ operator|!=
 name|MSG_SIMPLE_Q_TAG
 condition|)
 block|{
-comment|/* Wait for tag to come by */
+comment|/* Wait for tag to come by. */
 name|sc
 operator|->
 name|sc_state
@@ -7177,7 +7211,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* From NetBSD.  These should go into CAM at some point */
+comment|/* From NetBSD; these should go into CAM at some point. */
 end_comment
 
 begin_define
@@ -7240,7 +7274,9 @@ index|]
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -7257,7 +7293,9 @@ index|]
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -7283,16 +7321,20 @@ operator|+
 literal|2
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Get an incoming message as initiator.  *  * The SCSI bus must already be in MESSAGE_IN_PHASE and there is a  * byte in the FIFO  */
+comment|/*  * Get an incoming message as initiator.  *  * The SCSI bus must already be in MESSAGE_IN_PHASE and there is a  * byte in the FIFO.  */
 end_comment
 
 begin_function
@@ -7306,6 +7348,30 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|struct
+name|ncr53c9x_ecb
+modifier|*
+name|ecb
+decl_stmt|;
+name|struct
+name|ncr53c9x_linfo
+modifier|*
+name|li
+decl_stmt|;
+name|struct
+name|ncr53c9x_tinfo
+modifier|*
+name|ti
+decl_stmt|;
+name|u_char
+modifier|*
+name|pb
+decl_stmt|;
+name|int
+name|lun
+decl_stmt|,
+name|plen
+decl_stmt|;
 name|NCR_TRACE
 argument_list|(
 operator|(
@@ -7340,7 +7406,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Prepare for a new message.  A message should (according 	 * to the SCSI standard) be transmitted in one single 	 * MESSAGE_IN_PHASE. If we have been in some other phase, 	 * then this is a new message. 	 */
+comment|/* 	 * Prepare for a new message.  A message should (according 	 * to the SCSI standard) be transmitted in one single 	 * MESSAGE_IN_PHASE.  If we have been in some other phase, 	 * then this is a new message. 	 */
 if|if
 condition|(
 name|sc
@@ -7448,13 +7514,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|u_char
-modifier|*
-name|pb
-decl_stmt|;
-name|int
-name|plen
-decl_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -7496,7 +7555,6 @@ name|sc
 operator|->
 name|sc_imlen
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -7511,7 +7569,7 @@ goto|goto
 name|gotit
 goto|;
 block|}
-comment|/* Ack what we have so far */
+comment|/* Acknowledge what we have so far. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -7540,8 +7598,7 @@ name|sc_state
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* We got a complete message, flush the imess, */
-comment|/* XXX nobody uses imlen below */
+comment|/* 	 * We got a complete message, flush the imess. 	 * XXX nobody uses imlen below. 	 */
 name|sc
 operator|->
 name|sc_imlen
@@ -7556,24 +7613,6 @@ operator|->
 name|sc_state
 condition|)
 block|{
-name|struct
-name|ncr53c9x_ecb
-modifier|*
-name|ecb
-decl_stmt|;
-name|struct
-name|ncr53c9x_tinfo
-modifier|*
-name|ti
-decl_stmt|;
-name|struct
-name|ncr53c9x_linfo
-modifier|*
-name|li
-decl_stmt|;
-name|int
-name|lun
-decl_stmt|;
 case|case
 name|NCR_CONNECTED
 case|:
@@ -8026,7 +8065,7 @@ name|sc_state
 operator|=
 name|NCR_DISCONNECT
 expr_stmt|;
-comment|/* 			 * Mark the fact that all bytes have moved. The 			 * target may not bother to do a SAVE POINTERS 			 * at this stage. This flag will set the residual 			 * count to zero on MSG COMPLETE. 			 */
+comment|/* 			 * Mark the fact that all bytes have moved.  The 			 * target may not bother to do a SAVE POINTERS 			 * at this stage.  This flag will set the residual 			 * count to zero on MSG COMPLETE. 			 */
 if|if
 condition|(
 name|sc
@@ -8258,20 +8297,6 @@ block|}
 block|}
 else|else
 block|{
-name|int
-name|p
-decl_stmt|;
-name|p
-operator|=
-name|ncr53c9x_stp2cpb
-argument_list|(
-name|sc
-argument_list|,
-name|ti
-operator|->
-name|period
-argument_list|)
-expr_stmt|;
 name|ti
 operator|->
 name|period
@@ -8280,7 +8305,14 @@ name|ncr53c9x_cpb2stp
 argument_list|(
 name|sc
 argument_list|,
-name|p
+name|ncr53c9x_stp2cpb
+argument_list|(
+name|sc
+argument_list|,
+name|ti
+operator|->
+name|period
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8344,7 +8376,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* we are sync */
+comment|/* We are sync. */
 name|ti
 operator|->
 name|flags
@@ -8501,6 +8533,7 @@ argument_list|(
 literal|"unrecognized MESSAGE; sending REJECT\n"
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 name|reject
 label|:
 name|ncr53c9x_sched_msgout
@@ -8514,7 +8547,7 @@ break|break;
 case|case
 name|NCR_IDENTIFIED
 case|:
-comment|/* 		 * IDENTIFY message was received and queue tag is expected now 		 */
+comment|/* 		 * IDENTIFY message was received and queue tag is expected 		 * now. 		 */
 if|if
 condition|(
 operator|(
@@ -8664,6 +8697,7 @@ literal|"unexpected MESSAGE IN; "
 literal|"sending DEVICE RESET\n"
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 name|reset
 label|:
 name|ncr53c9x_sched_msgout
@@ -8679,9 +8713,8 @@ argument_list|(
 name|SEND_ABORT
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
-comment|/* if we have more messages to send set ATN */
+comment|/* If we have more messages to send set ATN. */
 if|if
 condition|(
 name|sc
@@ -8695,7 +8728,7 @@ argument_list|,
 name|NCRCMD_SETATN
 argument_list|)
 expr_stmt|;
-comment|/* Ack last message byte */
+comment|/* Acknowledge last message byte. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -8721,7 +8754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send the highest priority, scheduled message  */
+comment|/*  * Send the highest priority, scheduled message.  */
 end_comment
 
 begin_function
@@ -8748,6 +8781,14 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NCR53C9X_DEBUG
+name|int
+name|i
+decl_stmt|;
+endif|#
+directive|endif
 name|NCR_TRACE
 argument_list|(
 operator|(
@@ -8763,7 +8804,7 @@ name|sc_prevphase
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX - the NCR_ATN flag is not in sync with the actual ATN 	 *	 condition on the SCSI bus. The 53c9x chip 	 *	 automatically turns off ATN before sending the 	 *	 message byte.  (See also the comment below in the 	 *	 default case when picking out a message to send.) 	 */
+comment|/* 	 * XXX - the NCR_ATN flag is not in sync with the actual ATN 	 *	 condition on the SCSI bus.  The 53c9x chip 	 *	 automatically turns off ATN before sending the 	 *	 message byte.  (See also the comment below in the 	 *	 default case when picking out a message to send.) 	 */
 if|if
 condition|(
 name|sc
@@ -8853,7 +8894,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Pick up highest priority message */
+comment|/* Pick up highest priority message. */
 name|sc
 operator|->
 name|sc_msgout
@@ -9253,7 +9294,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-comment|/* We can re-start sync negotiation */
+comment|/* We can re-start sync negotiation. */
 name|ti
 operator|->
 name|flags
@@ -9320,7 +9361,7 @@ name|MSG_MESSAGE_REJECT
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 			 * We normally do not get here, since the chip 			 * automatically turns off ATN before the last 			 * byte of a message is sent to the target. 			 * However, if the target rejects our (multi-byte) 			 * message early by switching to MSG IN phase 			 * ATN remains on, so the target may return to 			 * MSG OUT phase. If there are no scheduled messages 			 * left we send a NO-OP. 			 * 			 * XXX - Note that this leaves no useful purpose for 			 * the NCR_ATN flag. 			 */
+comment|/* 			 * We normally do not get here, since the chip 			 * automatically turns off ATN before the last 			 * byte of a message is sent to the target. 			 * However, if the target rejects our (multi-byte) 			 * message early by switching to MSG IN phase 			 * ATN remains on, so the target may return to 			 * MSG OUT phase.  If there are no scheduled messages 			 * left we send a NO-OP. 			 * 			 * XXX - Note that this leaves no useful purpose for 			 * the NCR_ATN flag. 			 */
 name|sc
 operator|->
 name|sc_flags
@@ -9337,7 +9378,6 @@ index|]
 operator|=
 name|MSG_NOOP
 expr_stmt|;
-break|break;
 block|}
 name|sc
 operator|->
@@ -9350,7 +9390,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|NCR53C9X_DEBUG
 if|if
 condition|(
 name|ncr53c9x_debug
@@ -9358,9 +9398,6 @@ operator|&
 name|NCR_SHOWMSGS
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|NCR_MSGS
 argument_list|(
 operator|(
@@ -9416,7 +9453,7 @@ operator|==
 name|NCR_VARIANT_FAS366
 condition|)
 block|{
-comment|/* 		 * XXX fifo size 		 */
+comment|/* 		 * XXX FIFO size 		 */
 name|ncr53c9x_flushfifo
 argument_list|(
 name|sc
@@ -9445,7 +9482,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* (re)send the message */
+comment|/* (Re)send the message. */
 name|size
 operator|=
 name|min
@@ -9479,7 +9516,7 @@ operator|&
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* Program the SCSI counter */
+comment|/* Program the SCSI counter. */
 name|NCR_SET_COUNT
 argument_list|(
 name|sc
@@ -9487,7 +9524,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* Load the count in and start the message-out transfer */
+comment|/* Load the count in and start the message-out transfer. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -9516,7 +9553,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the most critical part of the driver, and has to know  * how to deal with *all* error conditions and phases from the SCSI  * bus. If there are no errors and the DMA was active, then call the  * DMA pseudo-interrupt handler. If this returns 1, then that was it  * and we can return from here without further processing.  *  * Most of this needs verifying.  */
+comment|/*  * This is the most critical part of the driver, and has to know  * how to deal with *all* error conditions and phases from the SCSI  * bus.  If there are no errors and the DMA was active, then call the  * DMA pseudo-interrupt handler.  If this returns 1, then that was it  * and we can return from here without further processing.  *  * Most of this needs verifying.  */
 end_comment
 
 begin_function
@@ -9541,15 +9578,31 @@ modifier|*
 name|ecb
 decl_stmt|;
 name|struct
+name|ncr53c9x_linfo
+modifier|*
+name|li
+decl_stmt|;
+name|struct
 name|ncr53c9x_tinfo
 modifier|*
 name|ti
+decl_stmt|;
+name|struct
+name|timeval
+name|cur
+decl_stmt|,
+name|wait
 decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|nfifo
+decl_stmt|;
+name|u_char
+name|msg
 decl_stmt|;
 name|NCR_INTS
 argument_list|(
@@ -9587,8 +9640,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * At the moment, only a SCSI Bus Reset or Illegal 	 * Command are classed as errors. A disconnect is a 	 * valid condition, and we let the code check is the 	 * "NCR_BUSFREE_OK" flag was set before declaring it 	 * and error. 	 * 	 * Also, the status register tells us about "Gross 	 * Errors" and "Parity errors". Only the Gross Error 	 * is really bad, and the parity errors are dealt 	 * with later 	 * 	 * TODO 	 *	If there are too many parity error, go to slow 	 *	cable mode ? 	 */
-comment|/* SCSI Reset */
+comment|/* 	 * At the moment, only a SCSI Bus Reset or Illegal 	 * Command are classed as errors.  A disconnect is a 	 * valid condition, and we let the code check is the 	 * "NCR_BUSFREE_OK" flag was set before declaring it 	 * and error. 	 * 	 * Also, the status register tells us about "Gross 	 * Errors" and "Parity errors".  Only the Gross Error 	 * is really bad, and the parity errors are dealt 	 * with later. 	 * 	 * TODO 	 *	If there are too many parity error, go to slow 	 *	cable mode? 	 */
 if|if
 condition|(
 operator|(
@@ -9656,7 +9708,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Restart everything */
+comment|/* Restart everything. */
 goto|goto
 name|out
 goto|;
@@ -9701,7 +9753,7 @@ expr_stmt|;
 define|#
 directive|define
 name|NCRINTR_ERR
-value|(NCRINTR_SBR|NCRINTR_ILL)
+value|(NCRINTR_SBR | NCRINTR_ILL)
 if|if
 condition|(
 name|sc
@@ -9730,7 +9782,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Gross Error; no target ? */
+comment|/* Gross Error; no target? */
 if|if
 condition|(
 name|NCR_READ_REG
@@ -9846,7 +9898,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* illegal command, out of sync ? */
+comment|/* Illegal command, out of sync? */
 name|device_printf
 argument_list|(
 name|sc
@@ -9905,7 +9957,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Restart everything */
+comment|/* Restart everything. */
 goto|goto
 name|out
 goto|;
@@ -9927,17 +9979,12 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|int
-name|r
-init|=
+if|if
+condition|(
 name|NCRDMA_INTR
 argument_list|(
 name|sc
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|r
 operator|==
 operator|-
 literal|1
@@ -10063,7 +10110,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * The DMA operation was started for 				 * a DATA transfer. Print a diagnostic 				 * if the DMA counter and TC bit 				 * appear to be out of sync. 				 * 				 * XXX This is fatal and usually means that 				 *     the DMA engine is hopelessly out of 				 *     sync with reality.  A disk is likely 				 *     getting spammed at this point. 				 */
+comment|/* 				 * The DMA operation was started for 				 * a DATA transfer.  Print a diagnostic 				 * if the DMA counter and TC bit 				 * appear to be out of sync. 				 * 				 * XXX This is fatal and usually means that 				 *     the DMA engine is hopelessly out of 				 *     sync with reality.  A disk is likely 				 *     getting spammed at this point. 				 */
 name|device_printf
 argument_list|(
 name|sc
@@ -10210,7 +10257,7 @@ argument_list|)
 expr_stmt|;
 comment|/*			DELAY(1); */
 block|}
-comment|/* 		 * This command must (apparently) be issued within 		 * 250mS of a disconnect. So here you are... 		 */
+comment|/* 		 * This command must (apparently) be issued within 		 * 250mS of a disconnect.  So here you are... 		 */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -10234,12 +10281,6 @@ goto|;
 case|case
 name|NCR_SELECTING
 case|:
-block|{
-name|struct
-name|ncr53c9x_linfo
-modifier|*
-name|li
-decl_stmt|;
 name|ecb
 operator|->
 name|ccb
@@ -10250,7 +10291,7 @@ name|status
 operator|=
 name|CAM_SEL_TIMEOUT
 expr_stmt|;
-comment|/* Selection timeout -- discard all LUNs if empty */
+comment|/* Selection timeout -- discard all LUNs if empty. */
 name|ti
 operator|=
 operator|&
@@ -10332,7 +10373,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Restart the search at the beginning 					 */
+comment|/* 					 * Restart the search at the beginning. 					 */
 name|li
 operator|=
 name|LIST_FIRST
@@ -10358,7 +10399,6 @@ block|}
 goto|goto
 name|finish
 goto|;
-block|}
 case|case
 name|NCR_CONNECTED
 case|:
@@ -10437,7 +10477,7 @@ name|T_SYNCMODE
 operator|)
 expr_stmt|;
 block|}
-comment|/* it may be OK to disconnect */
+comment|/* It may be OK to disconnect. */
 if|if
 condition|(
 operator|(
@@ -10607,7 +10647,7 @@ goto|;
 case|case
 name|NCR_RESELECTED
 case|:
-comment|/* 		 * we must be continuing a message ? 		 */
+comment|/* 		 * We must be continuing a message? 		 */
 name|device_printf
 argument_list|(
 name|sc
@@ -10655,10 +10695,8 @@ operator|!=
 name|MESSAGE_IN_PHASE
 condition|)
 block|{
-name|int
 name|i
-init|=
-operator|(
+operator|=
 name|NCR_READ_REG
 argument_list|(
 name|sc
@@ -10667,9 +10705,8 @@ name|NCR_FFLAG
 argument_list|)
 operator|&
 name|NCRFIFO_FF
-operator|)
-decl_stmt|;
-comment|/* 			 * Things are seriously screwed up. 			 * Pull the brakes, i.e. reset 			 */
+expr_stmt|;
+comment|/* 			 * Things are seriously screwed up. 			 * Pull the brakes, i.e. reset. 			 */
 name|device_printf
 argument_list|(
 name|sc
@@ -10677,12 +10714,12 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"target didn't send tag: %d "
-literal|"bytes in fifo\n"
+literal|"bytes in FIFO\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* Drain and display fifo */
+comment|/* Drain and display FIFO. */
 while|while
 condition|(
 name|i
@@ -10861,7 +10898,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 			 * The C90 only inhibits FIFO writes until reselection 			 * is complete instead of waiting until the interrupt 			 * status register has been read.  So, if the reselect 			 * happens while we were entering command bytes (for 			 * another target) some of those bytes can appear in 			 * the FIFO here, after the interrupt is taken. 			 * 			 * To remedy this situation, pull the Selection ID 			 * and Identify message from the FIFO directly, and 			 * ignore any extraneous fifo contents. Also, set 			 * a flag that allows one Illegal Command Interrupt 			 * to occur which the chip also generates as a result 			 * of writing to the FIFO during a reselect. 			 */
+comment|/* 			 * The C90 only inhibits FIFO writes until reselection 			 * is complete instead of waiting until the interrupt 			 * status register has been read.  So, if the reselect 			 * happens while we were entering command bytes (for 			 * another target) some of those bytes can appear in 			 * the FIFO here, after the interrupt is taken. 			 * 			 * To remedy this situation, pull the Selection ID 			 * and Identify message from the FIFO directly, and 			 * ignore any extraneous FIFO contents.  Also, set 			 * a flag that allows one Illegal Command Interrupt 			 * to occur which the chip also generates as a result 			 * of writing to the FIFO during a reselect. 			 */
 if|if
 condition|(
 name|sc
@@ -10923,7 +10960,7 @@ operator|!=
 literal|2
 condition|)
 block|{
-comment|/* Flush the rest */
+comment|/* Flush the rest. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -10948,7 +10985,7 @@ name|nfifo
 operator|=
 literal|2
 expr_stmt|;
-comment|/* We fixed it.. */
+comment|/* We fixed it... */
 block|}
 else|else
 name|nfifo
@@ -11029,7 +11066,7 @@ name|sc_selid
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Handle identify message */
+comment|/* Handle IDENTIFY message. */
 name|ncr53c9x_msgin
 argument_list|(
 name|sc
@@ -11083,12 +11120,12 @@ block|}
 goto|goto
 name|shortcut
 goto|;
-comment|/* ie. next phase expected soon */
+comment|/* i.e. next phase expected soon */
 block|}
 define|#
 directive|define
 name|NCRINTR_DONE
-value|(NCRINTR_FC|NCRINTR_BS)
+value|(NCRINTR_FC | NCRINTR_BS)
 if|if
 condition|(
 operator|(
@@ -11160,7 +11197,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 				 * The target did not respond with a 				 * message out phase - probably an old 				 * device that doesn't recognize ATN. 				 * Clear ATN and just continue, the 				 * target should be in the command 				 * phase. 				 * XXXX check for command phase? 				 */
+comment|/* 				 * The target did not respond with a 				 * message out phase - probably an old 				 * device that doesn't recognize ATN. 				 * Clear ATN and just continue, the 				 * target should be in the command 				 * phase. 				 * XXX check for command phase? 				 */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -11292,7 +11329,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Could not do ATN3 so send TAG */
+comment|/* Could not do ATN3 so send TAG. */
 name|ncr53c9x_sched_msgout
 argument_list|(
 name|SEND_TAG
@@ -11310,7 +11347,7 @@ break|break;
 case|case
 literal|3
 case|:
-comment|/* 				 * Grr, this is supposed to mean 				 * "target left command phase  prematurely". 				 * It seems to happen regularly when 				 * sync mode is on. 				 * Look at FIFO to see if command went out. 				 * (Timing problems?) 				 */
+comment|/* 				 * Grr, this is supposed to mean 				 * "target left command phase prematurely". 				 * It seems to happen regularly when 				 * sync mode is on. 				 * Look at FIFO to see if command went out. 				 * (Timing problems?) 				 */
 if|if
 condition|(
 name|sc
@@ -11328,7 +11365,7 @@ name|sc_cmdlen
 operator|==
 literal|0
 condition|)
-comment|/* Hope for the best.. */
+comment|/* Hope for the best... */
 break|break;
 block|}
 elseif|else
@@ -11348,7 +11385,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Hope for the best.. */
+comment|/* Hope for the best... */
 break|break;
 block|}
 name|printf
@@ -11420,7 +11457,7 @@ goto|;
 case|case
 literal|2
 case|:
-comment|/* Select stuck at Command Phase */
+comment|/* Select stuck at Command Phase. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -11495,7 +11532,7 @@ operator|->
 name|sc_espstep
 argument_list|)
 expr_stmt|;
-comment|/* So far, everything went fine */
+comment|/* So far, everything went fine. */
 break|break;
 block|}
 name|sc
@@ -11504,7 +11541,7 @@ name|sc_prevphase
 operator|=
 name|INVALID_PHASE
 expr_stmt|;
-comment|/* ?? */
+comment|/* ??? */
 comment|/* Do an implicit RESTORE POINTERS. */
 name|sc
 operator|->
@@ -11610,9 +11647,6 @@ literal|0
 condition|)
 block|{
 comment|/* "Initiate Command Complete Steps" in progress */
-name|u_char
-name|msg
-decl_stmt|;
 name|sc
 operator|->
 name|sc_flags
@@ -11813,7 +11847,7 @@ expr_stmt|;
 goto|goto
 name|shortcut
 goto|;
-comment|/* ie. wait for disconnect */
+comment|/* i.e. wait for disconnect */
 block|}
 break|break;
 default|default:
@@ -12083,7 +12117,7 @@ comment|/* i.e. expect data to be ready */
 case|case
 name|COMMAND_PHASE
 case|:
-comment|/* 		 * Send the command block. Normally we don't see this 		 * phase because the SEL_ATN command takes care of 		 * all this. However, we end up here if either the 		 * target or we wanted to exchange some more messages 		 * first (e.g. to start negotiations). 		 */
+comment|/* 		 * Send the command block.  Normally we don't see this 		 * phase because the SEL_ATN command takes care of 		 * all this.  However, we end up here if either the 		 * target or we wanted to exchange some more messages 		 * first (e.g. to start negotiations). 		 */
 name|NCR_PHASE
 argument_list|(
 operator|(
@@ -12133,7 +12167,7 @@ operator|&
 name|NCR_F_DMASELECT
 condition|)
 block|{
-comment|/* setup DMA transfer for command */
+comment|/* Setup DMA transfer for command. */
 name|size
 operator|=
 name|ecb
@@ -12180,7 +12214,7 @@ operator|&
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* Program the SCSI counter */
+comment|/* Program the SCSI counter. */
 name|NCR_SET_COUNT
 argument_list|(
 name|sc
@@ -12188,7 +12222,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* load the count in */
+comment|/* Load the count in. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -12198,7 +12232,7 @@ operator||
 name|NCRCMD_DMA
 argument_list|)
 expr_stmt|;
-comment|/* start the command transfer */
+comment|/* Start the command transfer. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -12391,7 +12425,7 @@ operator|&=
 operator|~
 name|ECB_TENTATIVE_DONE
 expr_stmt|;
-comment|/* Program the SCSI counter */
+comment|/* Program the SCSI counter. */
 name|NCR_SET_COUNT
 argument_list|(
 name|sc
@@ -12399,7 +12433,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* load the count in */
+comment|/* Load the count in. */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -12409,7 +12443,7 @@ operator||
 name|NCRCMD_DMA
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Note that if `size' is 0, we've already transceived 		 * all the bytes we want but we're still in DATA PHASE. 		 * Apparently, the device needs padding. Also, a 		 * transfer size of 0 means "maximum" to the chip 		 * DMA logic. 		 */
+comment|/* 		 * Note that if `size' is 0, we've already transceived 		 * all the bytes we want but we're still in DATA PHASE. 		 * Apparently, the device needs padding.  Also, a 		 * transfer size of 0 means "maximum" to the chip 		 * DMA logic. 		 */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -12539,14 +12573,7 @@ name|out
 goto|;
 name|shortcut
 label|:
-comment|/* 	 * The idea is that many of the SCSI operations take very little 	 * time, and going away and getting interrupted is too high an 	 * overhead to pay. For example, selecting, sending a message 	 * and command and then doing some work can be done in one "pass". 	 * 	 * The delay is a heuristic. It is 2 when at 20MHz, 2 at 25MHz and 1 	 * at 40MHz. This needs testing. 	 */
-block|{
-name|struct
-name|timeval
-name|wait
-decl_stmt|,
-name|cur
-decl_stmt|;
+comment|/* 	 * The idea is that many of the SCSI operations take very little 	 * time, and going away and getting interrupted is too high an 	 * overhead to pay.  For example, selecting, sending a message 	 * and command and then doing some work can be done in one "pass". 	 * 	 * The delay is a heuristic.  It is 2 when at 20MHz, 2 at 25MHz and 1 	 * at 40MHz. This needs testing. 	 */
 name|microtime
 argument_list|(
 operator|&
@@ -12622,7 +12649,6 @@ operator|.
 name|tv_usec
 condition|)
 do|;
-block|}
 goto|goto
 name|out
 goto|;
@@ -12634,20 +12660,16 @@ specifier|static
 name|void
 name|ncr53c9x_abort
 parameter_list|(
-name|sc
-parameter_list|,
-name|ecb
-parameter_list|)
 name|struct
 name|ncr53c9x_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ncr53c9x_ecb
 modifier|*
 name|ecb
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 2 secs for the abort */
 name|ecb
@@ -12900,7 +12922,7 @@ operator|&
 name|ECB_ABORT
 condition|)
 block|{
-comment|/* abort timed out */
+comment|/* Abort timed out. */
 name|printf
 argument_list|(
 literal|" AGAIN\n"
@@ -12916,7 +12938,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* abort the operation that has timed out */
+comment|/* Abort the operation that has timed out. */
 name|printf
 argument_list|(
 literal|"\n"
@@ -12937,7 +12959,7 @@ argument_list|,
 name|ecb
 argument_list|)
 expr_stmt|;
-comment|/* Disable sync mode if stuck in a data phase */
+comment|/* Disable sync mode if stuck in a data phase. */
 if|if
 condition|(
 name|ecb
@@ -13044,22 +13066,24 @@ operator|)
 name|arg
 decl_stmt|;
 name|struct
+name|ncr53c9x_linfo
+modifier|*
+name|li
+decl_stmt|;
+name|struct
 name|ncr53c9x_tinfo
 modifier|*
 name|ti
 decl_stmt|;
-name|struct
-name|ncr53c9x_linfo
-modifier|*
-name|li
+name|time_t
+name|old
 decl_stmt|;
 name|int
 name|t
 decl_stmt|;
 comment|/* Delete any structures that have not been used in 10min. */
-name|time_t
 name|old
-init|=
+operator|=
 name|time_second
 operator|-
 operator|(
@@ -13067,7 +13091,7 @@ literal|10
 operator|*
 literal|60
 operator|)
-decl_stmt|;
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -13171,7 +13195,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* Restart the search at the beginning */
+comment|/* Restart the search at the beginning. */
 name|li
 operator|=
 name|LIST_FIRST
