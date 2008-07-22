@@ -457,6 +457,9 @@ operator|!
 name|done
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|gettimeofday
 argument_list|(
 operator|&
@@ -490,7 +493,7 @@ name|rdat
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Throw away the first N bytes of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  N=512 is based on 	 * suggestions in the paper "(Not So) Random Shuffles of RC4" 	 * by Ilya Mironov. 	 */
+comment|/* 	 * Throw away the first N bytes of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  N=768 is based on 	 * suggestions in the paper "(Not So) Random Shuffles of RC4" 	 * by Ilya Mironov. 	 */
 if|if
 condition|(
 name|rs_initialized
@@ -506,7 +509,7 @@ literal|0
 init|;
 name|n
 operator|<
-literal|512
+literal|768
 condition|;
 name|n
 operator|++
