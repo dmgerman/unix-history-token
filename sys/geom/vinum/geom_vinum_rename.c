@@ -624,6 +624,21 @@ argument_list|,
 name|GV_MAXDRIVENAME
 argument_list|)
 expr_stmt|;
+name|strncpy
+argument_list|(
+name|d
+operator|->
+name|hdr
+operator|->
+name|label
+operator|.
+name|name
+argument_list|,
+name|newname
+argument_list|,
+name|GV_MAXDRIVENAME
+argument_list|)
+expr_stmt|;
 comment|/* XXX can we rename providers here? */
 name|LIST_FOREACH
 argument_list|(
