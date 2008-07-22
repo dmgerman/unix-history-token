@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20071129_0050"
+value|"20080420_0052"
 end_define
 
 begin_define
@@ -162,6 +162,43 @@ name|sc
 parameter_list|)
 value|mtx_owned((sc)->lock)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|HDAC_MSI_ENABLED
+end_undef
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|700026
+operator|||
+expr|\
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|700000
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|602106
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HDAC_MSI_ENABLED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -591,8 +628,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DELL_D630_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(DELL, 0x01f9)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DELL_D820_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(DELL, 0x01cc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DELL_V1500_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(DELL, 0x0228)
 end_define
 
 begin_define
@@ -708,8 +759,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASUS_M5200_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(ASUS, 0x1993)
+name|ASUS_A8X_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x1153)
 end_define
 
 begin_define
@@ -722,15 +773,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASUS_A8JC_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(ASUS, 0x1153)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASUS_P1AH2_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(ASUS, 0x81cb)
+name|ASUS_W6F_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x1263)
 end_define
 
 begin_define
@@ -743,15 +787,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASUS_A7T_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(ASUS, 0x13c2)
+name|ASUS_F3JC_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x1338)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASUS_W6F_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(ASUS, 0x1263)
+name|ASUS_G2K_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x1339)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASUS_A7T_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x13c2)
 end_define
 
 begin_define
@@ -764,22 +815,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASUS_F3JC_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(ASUS, 0x1338)
+name|ASUS_M5200_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x1993)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASUS_M2V_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(ASUS, 0x81e7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASUS_M2N_SUBVENDOR
-value|HDA_MODEL_CONSTRUCT(ASUS, 0x8234)
+name|ASUS_P1AH2_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x81cb)
 end_define
 
 begin_define
@@ -792,8 +836,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASUS_M2V_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x81e7)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASUS_P5BWD_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ASUS, 0x81ec)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASUS_M2N_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x8234)
 end_define
 
 begin_define
@@ -2743,6 +2801,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_STAC9205
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x76a0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9872AK
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7662)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_STACXXXX
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0xffff)
 end_define
@@ -3037,6 +3109,18 @@ block|{
 name|HDA_CODEC_STAC9271D
 block|,
 literal|"Sigmatel STAC9271D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9205
+block|,
+literal|"Sigmatel STAC9205"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9872AK
+block|,
+literal|"Sigmatel STAC9872AK"
 block|}
 block|,
 block|{
@@ -3458,6 +3542,60 @@ block|{
 literal|5
 block|,
 literal|7
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|DELL_D630_SUBVENDOR
+block|,
+name|HDA_CODEC_STAC9205
+block|,
+name|HDAC_HP_SWITCH_CTRL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|10
+block|,
+block|{
+literal|13
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|DELL_V1500_SUBVENDOR
+block|,
+name|HDA_CODEC_STAC9205
+block|,
+name|HDAC_HP_SWITCH_CTRL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|10
+block|,
+block|{
+literal|13
 block|,
 operator|-
 literal|1
@@ -8209,11 +8347,9 @@ name|irq_rid
 operator|=
 literal|0x0
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|602106
+ifdef|#
+directive|ifdef
+name|HDAC_MSI_ENABLED
 if|if
 condition|(
 operator|(
@@ -8460,11 +8596,9 @@ operator|->
 name|irq_res
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|602106
+ifdef|#
+directive|ifdef
+name|HDAC_MSI_ENABLED
 if|if
 condition|(
 operator|(
@@ -10574,6 +10708,39 @@ name|config
 operator||=
 operator|(
 name|HDA_CONFIG_DEFAULTCONF_DEVICE_LINE_OUT
+operator||
+name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_FIXED
+operator|)
+expr_stmt|;
+break|break;
+case|case
+literal|12
+case|:
+case|case
+literal|14
+case|:
+case|case
+literal|16
+case|:
+case|case
+literal|31
+case|:
+case|case
+literal|32
+case|:
+name|config
+operator|&=
+operator|~
+operator|(
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MASK
+operator||
+name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_MASK
+operator|)
+expr_stmt|;
+name|config
+operator||=
+operator|(
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_MIC_IN
 operator||
 name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_FIXED
 operator|)
@@ -19499,11 +19666,9 @@ argument|));
 argument_list|)
 empty_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|602106
+ifdef|#
+directive|ifdef
+name|HDAC_MSI_ENABLED
 if|if
 condition|(
 name|resource_int_value
@@ -21380,6 +21545,16 @@ literal|0
 block|}
 block|,
 block|{
+name|ASUS_G2K_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC660
+block|,
+name|HDA_QUIRK_GPIO0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|ASUS_M5200_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC880
@@ -21430,7 +21605,7 @@ literal|0
 block|}
 block|,
 block|{
-name|ASUS_A8JC_SUBVENDOR
+name|ASUS_A8X_SUBVENDOR
 block|,
 name|HDA_CODEC_AD1986A
 block|,
@@ -21441,16 +21616,6 @@ block|}
 block|,
 block|{
 name|ASUS_F3JC_SUBVENDOR
-block|,
-name|HDA_CODEC_ALC861
-block|,
-name|HDA_QUIRK_OVREF
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ASUS_W6F_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC861
 block|,
@@ -21520,6 +21685,26 @@ block|,
 name|HDA_QUIRK_GPIO0
 operator||
 name|HDA_QUIRK_GPIO1
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|DELL_D630_SUBVENDOR
+block|,
+name|HDA_CODEC_STAC9205
+block|,
+name|HDA_QUIRK_GPIO0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|DELL_V1500_SUBVENDOR
+block|,
+name|HDA_CODEC_STAC9205
+block|,
+name|HDA_QUIRK_GPIO0
 block|,
 literal|0
 block|}
@@ -22717,6 +22902,62 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|subvendor
+operator|==
+name|ASUS_A8X_SUBVENDOR
+condition|)
+block|{
+comment|/* 			 * This is just plain ridiculous.. There 			 * are several A8 series that share the same 			 * pci id but works differently (EAPD). 			 */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|26
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+operator|&&
+name|w
+operator|->
+name|type
+operator|==
+name|HDA_PARAM_AUDIO_WIDGET_CAP_TYPE_PIN_COMPLEX
+operator|&&
+operator|(
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|config
+operator|&
+name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_MASK
+operator|)
+operator|!=
+name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_NONE
+condition|)
+name|devinfo
+operator|->
+name|function
+operator|.
+name|audio
+operator|.
+name|quirks
+operator|&=
+operator|~
+name|HDA_QUIRK_EAPDINV
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|HDA_CODEC_AD1988
@@ -22976,6 +23217,68 @@ operator|->
 name|ctlflags
 operator||=
 name|SOUND_MASK_SPEAKER
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|HDA_CODEC_STAC9205
+case|:
+if|if
+condition|(
+operator|(
+name|subvendor
+operator|==
+name|DELL_V1500_SUBVENDOR
+operator|)
+operator|||
+operator|(
+name|subvendor
+operator|==
+name|DELL_D630_SUBVENDOR
+operator|)
+condition|)
+block|{
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|29
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|selconn
+operator|=
+literal|1
+expr_stmt|;
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|30
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|selconn
+operator|=
+literal|1
 expr_stmt|;
 block|}
 break|break;
