@@ -6119,6 +6119,9 @@ break|break;
 case|case
 name|AUE_SYSCTL
 case|:
+case|case
+name|AUE_SYSCTL_NONADMIN
+case|:
 if|if
 condition|(
 name|ARG_IS_VALID
