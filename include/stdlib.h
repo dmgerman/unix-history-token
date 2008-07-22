@@ -1409,6 +1409,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__uint32_t
+name|arc4random_uniform
+parameter_list|(
+name|__uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|getbsize
