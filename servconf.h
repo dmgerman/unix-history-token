@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.79 2006/08/14 12:40:25 dtucker Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.80 2007/02/19 10:45:58 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -632,6 +632,8 @@ modifier|*
 parameter_list|,
 name|ServerOptions
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

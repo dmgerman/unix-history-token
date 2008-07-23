@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.155 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.156 2007/01/22 13:06:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1636,7 +1636,7 @@ condition|(
 operator|!
 name|isatty
 argument_list|(
-name|STDERR_FILENO
+name|STDOUT_FILENO
 argument_list|)
 condition|)
 name|showprogress

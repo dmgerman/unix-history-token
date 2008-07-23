@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.176 2006/10/11 12:38:03 markus Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.178 2007/02/20 10:25:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2829,6 +2829,10 @@ decl_stmt|,
 name|ver
 decl_stmt|,
 name|allowed
+decl_stmt|,
+name|window
+decl_stmt|,
+name|packetmax
 decl_stmt|;
 name|socklen_t
 name|addrlen
@@ -3940,6 +3944,30 @@ argument_list|(
 name|client_fd
 argument_list|)
 expr_stmt|;
+name|window
+operator|=
+name|CHAN_SES_WINDOW_DEFAULT
+expr_stmt|;
+name|packetmax
+operator|=
+name|CHAN_SES_PACKET_DEFAULT
+expr_stmt|;
+if|if
+condition|(
+name|cctx
+operator|->
+name|want_tty
+condition|)
+block|{
+name|window
+operator|>>=
+literal|1
+expr_stmt|;
+name|packetmax
+operator|>>=
+literal|1
+expr_stmt|;
+block|}
 name|c
 operator|=
 name|channel_new
@@ -3963,9 +3991,9 @@ index|[
 literal|2
 index|]
 argument_list|,
-name|CHAN_SES_WINDOW_DEFAULT
+name|window
 argument_list|,
-name|CHAN_SES_PACKET_DEFAULT
+name|packetmax
 argument_list|,
 name|CHAN_EXTENDED_WRITE
 argument_list|,

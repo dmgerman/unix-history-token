@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.113 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.114 2007/03/01 10:28:02 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -352,19 +352,6 @@ modifier|*
 name|authctxt
 parameter_list|)
 block|{
-comment|/* challenge-response is implemented via keyboard interactive */
-if|if
-condition|(
-name|options
-operator|.
-name|challenge_response_authentication
-condition|)
-name|options
-operator|.
-name|kbd_interactive_authentication
-operator|=
-literal|1
-expr_stmt|;
 name|dispatch_init
 argument_list|(
 operator|&

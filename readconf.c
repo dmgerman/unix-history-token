@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.c,v 1.159 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: readconf.c,v 1.161 2007/01/21 01:45:35 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -1595,6 +1595,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|activep
+operator|&&
 operator|*
 name|intptr
 operator|==

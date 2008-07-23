@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.89 2006/11/07 10:31:31 markus Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.90 2007/02/19 10:45:58 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -3273,6 +3273,36 @@ argument_list|,
 name|pwent
 operator|->
 name|pw_shell
+argument_list|)
+expr_stmt|;
+name|buffer_put_string
+argument_list|(
+name|m
+argument_list|,
+operator|&
+name|options
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|options
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|banner
+operator|!=
+name|NULL
+condition|)
+name|buffer_put_cstring
+argument_list|(
+name|m
+argument_list|,
+name|options
+operator|.
+name|banner
 argument_list|)
 expr_stmt|;
 name|out

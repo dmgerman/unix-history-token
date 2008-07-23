@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-chall.c,v 1.31 2006/08/05 08:28:24 dtucker Exp $ */
+comment|/* $OpenBSD: auth2-chall.c,v 1.32 2007/01/03 03:01:40 stevesk Exp $ */
 end_comment
 
 begin_comment

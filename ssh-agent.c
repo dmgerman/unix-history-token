@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.153 2006/10/06 02:29:19 djm Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.154 2007/02/28 00:55:30 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -2159,6 +2159,15 @@ operator|->
 name|death
 condition|)
 block|{
+name|debug
+argument_list|(
+literal|"expiring key '%s'"
+argument_list|,
+name|id
+operator|->
+name|comment
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3722,10 +3731,6 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* kill dead keys */
-name|reaper
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|buffer_len
@@ -5351,6 +5356,10 @@ decl_stmt|,
 name|fd
 decl_stmt|,
 name|ch
+decl_stmt|,
+name|result
+decl_stmt|,
+name|saved_errno
 decl_stmt|;
 name|u_int
 name|nalloc
@@ -5419,6 +5428,10 @@ operator|*
 sizeof|sizeof
 name|pid
 index|]
+decl_stmt|;
+name|struct
+name|timeval
+name|tv
 decl_stmt|;
 comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
@@ -6491,6 +6504,18 @@ condition|(
 literal|1
 condition|)
 block|{
+name|tv
+operator|.
+name|tv_sec
+operator|=
+literal|10
+expr_stmt|;
+name|tv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 name|prepare_select
 argument_list|(
 operator|&
@@ -6506,8 +6531,8 @@ operator|&
 name|nalloc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|result
+operator|=
 name|select
 argument_list|(
 name|max_fd
@@ -6520,15 +6545,28 @@ name|writesetp
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+operator|&
+name|tv
 argument_list|)
+expr_stmt|;
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
+name|reaper
+argument_list|()
+expr_stmt|;
+comment|/* remove expired keys */
+if|if
+condition|(
+name|result
 operator|<
 literal|0
 condition|)
 block|{
 if|if
 condition|(
-name|errno
+name|saved_errno
 operator|==
 name|EINTR
 condition|)
@@ -6539,11 +6577,18 @@ literal|"select: %s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|saved_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|result
+operator|>
+literal|0
+condition|)
 name|after_select
 argument_list|(
 name|readsetp

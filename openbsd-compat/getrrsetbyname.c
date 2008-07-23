@@ -1107,6 +1107,15 @@ name|fail
 goto|;
 block|}
 comment|/* allocate memory for signatures */
+if|if
+condition|(
+name|rrset
+operator|->
+name|rri_nsigs
+operator|>
+literal|0
+condition|)
+block|{
 name|rrset
 operator|->
 name|rri_sigs
@@ -1140,6 +1149,7 @@ expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 block|}
 comment|/* copy answers& signatures */
 for|for

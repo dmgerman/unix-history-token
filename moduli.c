@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.19 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.20 2007/02/24 03:30:11 ray Exp $ */
 end_comment
 
 begin_comment
@@ -1906,6 +1906,8 @@ argument_list|(
 name|lp
 argument_list|,
 name|QLINESIZE
+operator|+
+literal|1
 argument_list|,
 name|in
 argument_list|)
@@ -1913,20 +1915,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|int
-name|ll
-init|=
-name|strlen
-argument_list|(
-name|lp
-argument_list|)
-decl_stmt|;
 name|count_in
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ll
+name|strlen
+argument_list|(
+name|lp
+argument_list|)
 operator|<
 literal|14
 operator|||

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.93 2006/09/30 17:48:22 ray Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.96 2007/01/03 04:09:15 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -867,6 +867,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -907,6 +911,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 specifier|static
@@ -1521,7 +1529,7 @@ name|char
 modifier|*
 name|ret
 decl_stmt|;
-name|int
+name|size_t
 name|len
 init|=
 name|strlen
@@ -1554,6 +1562,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p1
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|&&
 name|p1
 index|[
 name|strlen

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.64 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.65 2006/11/23 01:35:11 ray Exp $ */
 end_comment
 
 begin_comment
@@ -2860,6 +2860,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
 operator|(
 operator|*
 name|lineno

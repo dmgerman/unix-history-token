@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.155 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.160 2007/01/21 01:41:54 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -1840,18 +1840,10 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|c
-operator|==
-name|EOF
-condition|)
+comment|/* We reached EOF */
 return|return
 operator|-
 literal|1
-return|;
-return|return
-name|pos
 return|;
 block|}
 end_function
@@ -3021,7 +3013,7 @@ name|cp
 operator|==
 literal|'#'
 condition|)
-continue|continue ;
+continue|continue;
 name|i
 operator|=
 name|strtol
@@ -5595,7 +5587,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -e          Convert OpenSSH to IETF SECSH key file.\n"
+literal|"  -e          Convert OpenSSH to RFC 4716 key file.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5637,7 +5629,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -i          Convert IETF SECSH to OpenSSH key file.\n"
+literal|"  -i          Convert RFC 4716 to OpenSSH key file.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5768,12 +5760,12 @@ name|int
 name|main
 parameter_list|(
 name|int
-name|ac
+name|argc
 parameter_list|,
 name|char
 modifier|*
 modifier|*
-name|av
+name|argv
 parameter_list|)
 block|{
 name|char
@@ -5896,7 +5888,7 @@ name|__progname
 operator|=
 name|ssh_get_progname
 argument_list|(
-name|av
+name|argv
 index|[
 literal|0
 index|]
@@ -5907,7 +5899,7 @@ argument_list|()
 expr_stmt|;
 name|log_init
 argument_list|(
-name|av
+name|argv
 index|[
 literal|0
 index|]
@@ -5984,9 +5976,9 @@ name|opt
 operator|=
 name|getopt
 argument_list|(
-name|ac
+name|argc
 argument_list|,
-name|av
+name|argv
 argument_list|,
 literal|"degiqpclBHvxXyF:b:f:t:U:D:P:N:C:r:g:R:T:G:M:S:a:W:"
 argument_list|)
@@ -6475,7 +6467,7 @@ block|}
 comment|/* reinit */
 name|log_init
 argument_list|(
-name|av
+name|argv
 index|[
 literal|0
 index|]
@@ -6491,7 +6483,7 @@ if|if
 condition|(
 name|optind
 operator|<
-name|ac
+name|argc
 condition|)
 block|{
 name|printf

@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: version.h,v 1.48 2006/11/07 10:31:31 markus Exp $ */
+comment|/* $OpenBSD: version.h,v 1.49 2007/03/06 10:13:14 djm Exp $ */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SSH_VERSION
-value|"OpenSSH_4.5"
+value|"OpenSSH_4.6"
 end_define
 
 begin_define

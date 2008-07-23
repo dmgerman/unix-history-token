@@ -216,9 +216,13 @@ condition|(
 name|ret
 operator|==
 name|INT_MAX
+operator|||
+name|ret
+operator|<
+literal|0
 condition|)
 block|{
-comment|/* shouldn't happen */
+comment|/* Bad length */
 goto|goto
 name|fail
 goto|;

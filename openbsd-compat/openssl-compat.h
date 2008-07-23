@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.h,v 1.6 2006/02/22 11:24:47 dtucker Exp $ */
+comment|/* $Id: openssl-compat.h,v 1.7 2007/03/05 07:25:20 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -198,6 +198,35 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OpenSSL 0.9.8e returns cipher key len not context key len */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|OPENSSL_VERSION_NUMBER
+operator|==
+literal|0x0090805fL
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|EVP_CIPHER_CTX_key_length
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->key_len)
+end_define
 
 begin_endif
 endif|#

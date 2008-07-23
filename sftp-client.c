@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.75 2006/10/22 02:25:50 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.76 2007/01/22 11:32:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -5889,6 +5889,11 @@ name|xfree
 argument_list|(
 name|ack
 argument_list|)
+expr_stmt|;
+name|status
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|done
