@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.89 2007/06/11 09:14:00 markus Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.96 2008/06/15 20:06:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -233,6 +233,19 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|void
+name|channel_filter_cleanup_fn
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|u_char
 modifier|*
 name|channel_outfilter_fn
@@ -250,6 +263,105 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/* Channel success/failure callbacks */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|channel_confirm_cb
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|Channel
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|channel_confirm_abandon_cb
+parameter_list|(
+name|struct
+name|Channel
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|channel_confirm
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|channel_confirm
+argument_list|)
+name|entry
+expr_stmt|;
+name|channel_confirm_cb
+modifier|*
+name|cb
+decl_stmt|;
+name|channel_confirm_abandon_cb
+modifier|*
+name|abandon_cb
+decl_stmt|;
+name|void
+modifier|*
+name|ctx
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|channel_confirms
+argument_list|,
+name|channel_confirm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Context for non-blocking connects */
+end_comment
+
+begin_struct
+struct|struct
+name|channel_connect
+block|{
+name|char
+modifier|*
+name|host
+decl_stmt|;
+name|int
+name|port
+decl_stmt|;
+name|struct
+name|addrinfo
+modifier|*
+name|ai
+decl_stmt|,
+modifier|*
+name|aitop
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -382,11 +494,11 @@ comment|/* type */
 comment|/* callback */
 name|channel_callback_fn
 modifier|*
-name|confirm
+name|open_confirm
 decl_stmt|;
 name|void
 modifier|*
-name|confirm_ctx
+name|open_confirm_ctx
 decl_stmt|;
 name|channel_callback_fn
 modifier|*
@@ -394,6 +506,10 @@ name|detach_user
 decl_stmt|;
 name|int
 name|detach_close
+decl_stmt|;
+name|struct
+name|channel_confirms
+name|status_confirms
 decl_stmt|;
 comment|/* filter */
 name|channel_infilter_fn
@@ -404,10 +520,23 @@ name|channel_outfilter_fn
 modifier|*
 name|output_filter
 decl_stmt|;
+name|void
+modifier|*
+name|filter_ctx
+decl_stmt|;
+name|channel_filter_cleanup_fn
+modifier|*
+name|filter_cleanup
+decl_stmt|;
+comment|/* keep boundaries */
 name|int
 name|datagram
 decl_stmt|;
-comment|/* keep boundaries */
+comment|/* non-blocking connect */
+name|struct
+name|channel_connect
+name|connect_ctx
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -674,6 +803,8 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
@@ -746,7 +877,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|channel_register_confirm
+name|channel_register_open_confirm
 parameter_list|(
 name|int
 parameter_list|,
@@ -769,6 +900,30 @@ name|channel_infilter_fn
 modifier|*
 parameter_list|,
 name|channel_outfilter_fn
+modifier|*
+parameter_list|,
+name|channel_filter_cleanup_fn
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|channel_register_status_confirm
+parameter_list|(
+name|int
+parameter_list|,
+name|channel_confirm_cb
+modifier|*
+parameter_list|,
+name|channel_confirm_abandon_cb
+modifier|*
+parameter_list|,
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -946,6 +1101,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|channel_input_status_confirm
+parameter_list|(
+name|int
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* file descriptor handling (read/write) */
 end_comment
@@ -1107,6 +1276,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|channel_print_adm_permitted_opens
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|channel_input_port_forward_request
 parameter_list|(
@@ -1118,7 +1296,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|Channel
+modifier|*
 name|channel_connect_to
 parameter_list|(
 specifier|const
@@ -1126,15 +1305,28 @@ name|char
 modifier|*
 parameter_list|,
 name|u_short
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|Channel
+modifier|*
 name|channel_connect_by_listen_address
 parameter_list|(
 name|u_short
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1356,6 +1548,20 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|chan_rcvd_eow
+parameter_list|(
+name|Channel
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* SSH2-only */
+end_comment
 
 begin_function_decl
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mac.c,v 1.14 2007/06/07 19:37:34 pvalchev Exp $ */
+comment|/* $OpenBSD: mac.c,v 1.15 2008/06/13 00:51:47 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -683,6 +683,9 @@ name|mac
 operator|->
 name|mac_len
 argument_list|,
+operator|(
+name|u_long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|m

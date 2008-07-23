@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: match.c,v 1.26 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: match.c,v 1.27 2008/06/10 23:06:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -482,7 +482,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * returns 0 if we get a negative match for the hostname or the ip  * or if we get no match at all.  returns 1 otherwise.  */
+comment|/*  * returns 0 if we get a negative match for the hostname or the ip  * or if we get no match at all.  returns -1 on error, or 1 on  * successful match.  */
 end_comment
 
 begin_function
@@ -510,28 +510,36 @@ name|mhost
 decl_stmt|,
 name|mip
 decl_stmt|;
-comment|/* negative ipaddr match */
+comment|/* error in ipaddr match */
 if|if
 condition|(
 operator|(
 name|mip
 operator|=
-name|match_hostname
+name|addr_match_list
 argument_list|(
 name|ipaddr
 argument_list|,
 name|patterns
-argument_list|,
-name|strlen
-argument_list|(
-name|patterns
-argument_list|)
 argument_list|)
 operator|)
 operator|==
 operator|-
+literal|2
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+elseif|else
+if|if
+condition|(
+name|mip
+operator|==
+operator|-
 literal|1
 condition|)
+comment|/* negative ip address match */
 return|return
 literal|0
 return|;

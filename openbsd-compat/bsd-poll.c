@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-poll.c,v 1.2 2008/02/29 02:57:47 dtucker Exp $ */
+comment|/* $Id: bsd-poll.c,v 1.3 2008/04/04 05:16:36 djm Exp $ */
 end_comment
 
 begin_comment
@@ -39,6 +39,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#

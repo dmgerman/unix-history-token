@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.h,v 1.26 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: key.h,v 1.27 2008/06/11 21:01:35 grunk Exp $ */
 end_comment
 
 begin_comment
@@ -72,6 +72,8 @@ block|{
 name|SSH_FP_HEX
 block|,
 name|SSH_FP_BUBBLEBABBLE
+block|,
+name|SSH_FP_RANDOMART
 block|}
 enum|;
 end_enum

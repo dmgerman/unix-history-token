@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.h,v 1.17 2007/08/07 07:32:53 djm Exp $ */
+comment|/* $OpenBSD: clientloop.h,v 1.22 2008/06/12 15:19:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -99,9 +99,6 @@ parameter_list|,
 name|char
 modifier|*
 modifier|*
-parameter_list|,
-name|dispatch_fn
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -120,6 +117,80 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Escape filter for protocol 2 sessions */
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|client_new_escape_filter_ctx
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|client_filter_cleanup
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|client_simple_escape_filter
+parameter_list|(
+name|Channel
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Global request confirmation callbacks */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|global_confirm_cb
+parameter_list|(
+name|int
+parameter_list|,
+name|u_int32_t
+name|seq
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+name|void
+name|client_register_global_confirm
+parameter_list|(
+name|global_confirm_cb
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Multiplexing protocol version */
 end_comment
 
@@ -127,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|SSHMUX_VER
-value|1
+value|2
 end_define
 
 begin_comment
@@ -210,6 +281,35 @@ end_define
 begin_comment
 comment|/* Request agent forwarding */
 end_comment
+
+begin_function_decl
+name|void
+name|muxserver_listen
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|muxserver_accept_control
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|muxclient
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

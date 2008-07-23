@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.157 2007/09/25 23:48:57 canacar Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.159 2008/06/28 14:05:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1478,6 +1478,9 @@ name|int
 name|datafellows
 decl_stmt|;
 name|int
+name|odatafellows
+decl_stmt|;
+name|int
 name|ok
 init|=
 operator|-
@@ -1531,6 +1534,10 @@ name|e
 operator|->
 name|request
 argument_list|)
+expr_stmt|;
+name|odatafellows
+operator|=
+name|datafellows
 expr_stmt|;
 if|if
 condition|(
@@ -1717,6 +1724,10 @@ name|xfree
 argument_list|(
 name|signature
 argument_list|)
+expr_stmt|;
+name|datafellows
+operator|=
+name|odatafellows
 expr_stmt|;
 block|}
 end_function
@@ -2744,10 +2755,6 @@ goto|goto
 name|send
 goto|;
 block|}
-name|success
-operator|=
-literal|1
-expr_stmt|;
 while|while
 condition|(
 name|buffer_len
@@ -2761,6 +2768,9 @@ condition|)
 block|{
 switch|switch
 condition|(
+operator|(
+name|type
+operator|=
 name|buffer_get_char
 argument_list|(
 operator|&
@@ -2768,6 +2778,7 @@ name|e
 operator|->
 name|request
 argument_list|)
+operator|)
 condition|)
 block|{
 case|case
@@ -2798,9 +2809,33 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-break|break;
+name|error
+argument_list|(
+literal|"process_add_identity: "
+literal|"Unknown constraint type %d"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|comment
+argument_list|)
+expr_stmt|;
+name|key_free
+argument_list|(
+name|k
+argument_list|)
+expr_stmt|;
+goto|goto
+name|send
+goto|;
 block|}
 block|}
+name|success
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|lifetime
@@ -3201,6 +3236,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|type
+decl_stmt|,
 name|version
 decl_stmt|,
 name|success
@@ -3268,6 +3305,9 @@ condition|)
 block|{
 switch|switch
 condition|(
+operator|(
+name|type
+operator|=
 name|buffer_get_char
 argument_list|(
 operator|&
@@ -3275,6 +3315,7 @@ name|e
 operator|->
 name|request
 argument_list|)
+operator|)
 condition|)
 block|{
 case|case
@@ -3305,7 +3346,27 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-break|break;
+name|error
+argument_list|(
+literal|"process_add_smartcard_key: "
+literal|"Unknown constraint type %d"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|sc_reader_id
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|pin
+argument_list|)
+expr_stmt|;
+goto|goto
+name|send
+goto|;
 block|}
 block|}
 if|if
@@ -5093,6 +5154,10 @@ operator|||
 name|errno
 operator|==
 name|EINTR
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
 operator|)
 condition|)
 continue|continue;
@@ -5186,6 +5251,10 @@ operator|||
 name|errno
 operator|==
 name|EINTR
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
 operator|)
 condition|)
 continue|continue;

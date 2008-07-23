@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.162 2008/01/01 09:06:39 dtucker Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.163 2008/06/13 18:55:22 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -2161,6 +2161,10 @@ condition|(
 name|errno
 operator|==
 name|EAGAIN
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
 condition|)
 block|{
 operator|(
@@ -3089,9 +3093,10 @@ decl_stmt|;
 name|off_t
 name|i
 decl_stmt|,
-name|amt
-decl_stmt|,
 name|statbytes
+decl_stmt|;
+name|size_t
+name|amt
 decl_stmt|;
 name|int
 name|fd
@@ -3256,6 +3261,28 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+if|if
+condition|(
+name|stb
+operator|.
+name|st_size
+operator|<
+literal|0
+condition|)
+block|{
+name|run_err
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|name
+argument_list|,
+literal|"Negative file size"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3631,6 +3658,9 @@ if|if
 condition|(
 name|i
 operator|+
+operator|(
+name|off_t
+operator|)
 name|amt
 operator|>
 name|stb

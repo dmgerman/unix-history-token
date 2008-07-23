@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.c,v 1.165 2008/01/19 23:09:49 djm Exp $ */
+comment|/* $OpenBSD: readconf.c,v 1.167 2008/06/26 11:46:31 grunk Exp $ */
 end_comment
 
 begin_comment
@@ -310,6 +310,8 @@ block|,
 name|oLocalCommand
 block|,
 name|oPermitLocalCommand
+block|,
+name|oVisualHostKey
 block|,
 name|oDeprecated
 block|,
@@ -848,6 +850,12 @@ block|{
 literal|"permitlocalcommand"
 block|,
 name|oPermitLocalCommand
+block|}
+block|,
+block|{
+literal|"visualhostkey"
+block|,
+name|oVisualHostKey
 block|}
 block|,
 block|{
@@ -4479,6 +4487,19 @@ goto|goto
 name|parse_flag
 goto|;
 case|case
+name|oVisualHostKey
+case|:
+name|intptr
+operator|=
+operator|&
+name|options
+operator|->
+name|visual_host_key
+expr_stmt|;
+goto|goto
+name|parse_flag
+goto|;
+case|case
 name|oDeprecated
 case|:
 name|debug
@@ -5244,6 +5265,13 @@ expr_stmt|;
 name|options
 operator|->
 name|permit_local_command
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|options
+operator|->
+name|visual_host_key
 operator|=
 operator|-
 literal|1
@@ -6145,6 +6173,21 @@ condition|)
 name|options
 operator|->
 name|permit_local_command
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|->
+name|visual_host_key
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|visual_host_key
 operator|=
 literal|0
 expr_stmt|;

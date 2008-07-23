@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.41 2008/03/26 21:28:14 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.43 2008/06/10 23:06:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/sys-queue.h"
 end_include
 
 begin_include
@@ -1109,7 +1115,7 @@ expr_stmt|;
 name|opts
 operator|++
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|match_host_and_ip
 argument_list|(
@@ -1119,10 +1125,47 @@ name|remote_ip
 argument_list|,
 name|patterns
 argument_list|)
-operator|!=
-literal|1
 condition|)
 block|{
+case|case
+literal|1
+case|:
+name|xfree
+argument_list|(
+name|patterns
+argument_list|)
+expr_stmt|;
+comment|/* Host name matches. */
+goto|goto
+name|next_option
+goto|;
+case|case
+operator|-
+literal|1
+case|:
+name|debug
+argument_list|(
+literal|"%.100s, line %lu: invalid criteria"
+argument_list|,
+name|file
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+name|auth_debug_add
+argument_list|(
+literal|"%.100s, line %lu: "
+literal|"invalid criteria"
+argument_list|,
+name|file
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+literal|0
+case|:
 name|xfree
 argument_list|(
 name|patterns
@@ -1151,20 +1194,12 @@ argument_list|,
 name|remote_host
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 comment|/* deny access */
 return|return
 literal|0
 return|;
-block|}
-name|xfree
-argument_list|(
-name|patterns
-argument_list|)
-expr_stmt|;
-comment|/* Host name matches. */
-goto|goto
-name|next_option
-goto|;
 block|}
 name|cp
 operator|=

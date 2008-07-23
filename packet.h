@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.46 2008/02/22 20:44:02 dtucker Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.49 2008/07/10 18:08:11 markus Exp $ */
 end_comment
 
 begin_comment
@@ -34,6 +34,17 @@ end_include
 begin_function_decl
 name|void
 name|packet_set_connection
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_set_timeout
 parameter_list|(
 name|int
 parameter_list|,
@@ -399,6 +410,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|packet_get_string_ptr
+parameter_list|(
+name|u_int
+modifier|*
+name|length_ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|packet_disconnect
 parameter_list|(
 specifier|const
@@ -522,6 +545,9 @@ modifier|*
 parameter_list|,
 name|u_int32_t
 modifier|*
+parameter_list|,
+name|u_int64_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -537,6 +563,8 @@ parameter_list|,
 name|u_int64_t
 parameter_list|,
 name|u_int32_t
+parameter_list|,
+name|u_int64_t
 parameter_list|)
 function_decl|;
 end_function_decl

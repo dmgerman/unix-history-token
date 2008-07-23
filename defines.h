@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.146 2008/02/28 08:22:04 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.151 2008/07/04 13:10:49 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2267,24 +2267,6 @@ begin_comment
 comment|/* !defined(__GNUC__) || (__GNUC__< 2) */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__dead
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__dead
-value|__attribute__((noreturn))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -3252,6 +3234,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FSID_HAS_VAL
+end_ifdef
+
+begin_comment
+comment|/* encode f_fsid into a 64 bit value  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSID_TO_ULONG
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|((((u_int64_t)(f).val[0]& 0xffffffffUL)<< 32) | \ 	    ((f).val[1]& 0xffffffffUL))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FSID_TO_ULONG
+parameter_list|(
+name|f
+parameter_list|)
+value|((f))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -4041,6 +4064,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EWOULDBLOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EWOULDBLOCK
+value|EAGAIN
+end_define
 
 begin_endif
 endif|#

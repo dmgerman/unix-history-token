@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.148 2008/02/22 20:44:02 dtucker Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.153 2008/06/30 12:15:39 djm Exp $ */
 end_comment
 
 begin_comment
@@ -106,6 +106,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/sys-queue.h"
 end_include
 
 begin_include
@@ -482,6 +488,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* "Soft" max buffer size. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|no_more_sessions
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disallow further sessions. */
 end_comment
 
 begin_comment
@@ -1665,6 +1684,10 @@ operator|&&
 name|errno
 operator|!=
 name|EAGAIN
+operator|&&
+name|errno
+operator|!=
+name|EWOULDBLOCK
 condition|)
 block|{
 name|verbose
@@ -1749,9 +1772,15 @@ operator|==
 name|EINTR
 operator|||
 operator|(
+operator|(
 name|errno
 operator|==
 name|EAGAIN
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
+operator|)
 operator|&&
 operator|!
 name|child_terminated
@@ -1883,9 +1912,15 @@ operator|==
 name|EINTR
 operator|||
 operator|(
+operator|(
 name|errno
 operator|==
 name|EAGAIN
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
+operator|)
 operator|&&
 operator|!
 name|child_terminated
@@ -2060,6 +2095,10 @@ operator|||
 name|errno
 operator|==
 name|EAGAIN
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
 operator|)
 condition|)
 block|{
@@ -3762,9 +3801,6 @@ name|Channel
 modifier|*
 name|c
 decl_stmt|;
-name|int
-name|sock
-decl_stmt|;
 name|char
 modifier|*
 name|target
@@ -3806,7 +3842,8 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"server_request_direct_tcpip: originator %s port %d, target %s port %d"
+literal|"server_request_direct_tcpip: originator %s port %d, target %s "
+literal|"port %d"
 argument_list|,
 name|originator
 argument_list|,
@@ -3818,18 +3855,17 @@ name|target_port
 argument_list|)
 expr_stmt|;
 comment|/* XXX check permission */
-name|sock
+name|c
 operator|=
 name|channel_connect_to
 argument_list|(
 name|target
 argument_list|,
 name|target_port
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|target
+argument_list|,
+literal|"direct-tcpip"
+argument_list|,
+literal|"direct-tcpip"
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -3837,39 +3873,9 @@ argument_list|(
 name|originator
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sock
-operator|<
-literal|0
-condition|)
-return|return
-name|NULL
-return|;
-name|c
-operator|=
-name|channel_new
+name|xfree
 argument_list|(
-literal|"direct-tcpip"
-argument_list|,
-name|SSH_CHANNEL_CONNECTING
-argument_list|,
-name|sock
-argument_list|,
-name|sock
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-name|CHAN_TCP_WINDOW_DEFAULT
-argument_list|,
-name|CHAN_TCP_PACKET_DEFAULT
-argument_list|,
-literal|0
-argument_list|,
-literal|"direct-tcpip"
-argument_list|,
-literal|1
+name|target
 argument_list|)
 expr_stmt|;
 return|return
@@ -4053,6 +4059,10 @@ argument_list|,
 name|sys_tun_infilter
 argument_list|,
 name|sys_tun_outfilter
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4097,6 +4107,18 @@ expr_stmt|;
 name|packet_check_eom
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|no_more_sessions
+condition|)
+block|{
+name|packet_disconnect
+argument_list|(
+literal|"Possible attack: attempt to open a session "
+literal|"after additional sessions disabled"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * A server session has no fd to read or write until a 	 * CHANNEL_REQUEST for a shell is made, so we set the type to 	 * SSH_CHANNEL_LARVAL.  Additionally, a callback for handling all 	 * CHANNEL_REQUEST messages is registered. 	 */
 name|c
 operator|=
@@ -4682,6 +4704,28 @@ name|cancel_address
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|rtype
+argument_list|,
+literal|"no-more-sessions@openssh.com"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|no_more_sessions
+operator|=
+literal|1
+expr_stmt|;
+name|success
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|want_reply
@@ -4795,6 +4839,28 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|rtype
+argument_list|,
+literal|"eow@openssh.com"
+argument_list|)
+condition|)
+block|{
+name|packet_check_eom
+argument_list|()
+expr_stmt|;
+name|chan_rcvd_eow
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
 name|c
 operator|->
 name|type
@@ -4806,6 +4872,18 @@ operator|->
 name|type
 operator|==
 name|SSH_CHANNEL_OPEN
+operator|)
+operator|&&
+name|strcmp
+argument_list|(
+name|c
+operator|->
+name|ctype
+argument_list|,
+literal|"session"
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|success
 operator|=
@@ -4948,15 +5026,23 @@ operator|&
 name|server_input_global_request
 argument_list|)
 expr_stmt|;
-comment|/* client_alive */
+name|dispatch_set
+argument_list|(
+name|SSH2_MSG_CHANNEL_SUCCESS
+argument_list|,
+operator|&
+name|channel_input_status_confirm
+argument_list|)
+expr_stmt|;
 name|dispatch_set
 argument_list|(
 name|SSH2_MSG_CHANNEL_FAILURE
 argument_list|,
 operator|&
-name|server_input_keep_alive
+name|channel_input_status_confirm
 argument_list|)
 expr_stmt|;
+comment|/* client_alive */
 name|dispatch_set
 argument_list|(
 name|SSH2_MSG_REQUEST_SUCCESS

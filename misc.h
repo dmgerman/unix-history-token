@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.h,v 1.37 2007/12/27 14:22:08 dtucker Exp $ */
+comment|/* $OpenBSD: misc.h,v 1.38 2008/06/12 20:38:28 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -211,6 +211,33 @@ name|void
 name|sanitise_stdfd
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ms_subtract_diff
+parameter_list|(
+name|struct
+name|timeval
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ms_to_timeval
+parameter_list|(
+name|struct
+name|timeval
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

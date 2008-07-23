@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.94 2007/10/29 04:08:08 dtucker Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.99 2008/07/10 18:08:11 markus Exp $ */
 end_comment
 
 begin_comment
@@ -129,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/dh.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/sys-queue.h"
 end_include
 
 begin_include
@@ -5131,6 +5137,19 @@ name|auth_method
 operator|=
 literal|"publickey"
 expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|pubkey_authentication
+operator|&&
+name|allowed
+operator|!=
+literal|1
+condition|)
+name|auth_clear_options
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|MM_HOSTKEY
@@ -5187,6 +5206,19 @@ name|chost
 argument_list|,
 name|key
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|rhosts_rsa_authentication
+operator|&&
+name|allowed
+operator|!=
+literal|1
+condition|)
+name|auth_clear_options
+argument_list|()
 expr_stmt|;
 name|auth_method
 operator|=
@@ -5294,7 +5326,7 @@ name|allowed
 condition|?
 literal|"allowed"
 else|:
-literal|"disallowed"
+literal|"not allowed"
 argument_list|)
 expr_stmt|;
 name|buffer_clear
@@ -6466,11 +6498,12 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|session_unused
+argument_list|(
 name|s
 operator|->
-name|used
-operator|=
-literal|0
+name|self
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -8598,6 +8631,8 @@ name|packets
 decl_stmt|;
 name|u_int64_t
 name|blocks
+decl_stmt|,
+name|bytes
 decl_stmt|;
 name|debug3
 argument_list|(
@@ -8802,6 +8837,14 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
+name|bytes
+operator|=
+name|buffer_get_int64
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
 name|packet_set_state
 argument_list|(
 name|MODE_OUT
@@ -8811,6 +8854,8 @@ argument_list|,
 name|blocks
 argument_list|,
 name|packets
+argument_list|,
+name|bytes
 argument_list|)
 expr_stmt|;
 name|seqnr
@@ -8837,6 +8882,14 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
+name|bytes
+operator|=
+name|buffer_get_int64
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
 name|packet_set_state
 argument_list|(
 name|MODE_IN
@@ -8846,6 +8899,8 @@ argument_list|,
 name|blocks
 argument_list|,
 name|packets
+argument_list|,
+name|bytes
 argument_list|)
 expr_stmt|;
 name|skip

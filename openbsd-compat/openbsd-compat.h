@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.43 2007/06/25 12:15:13 dtucker Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.46 2008/06/08 17:32:29 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -478,6 +478,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_FMT_SCALED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FMT_SCALED_STRSIZE
+value|7
+end_define
+
+begin_function_decl
+name|int
+name|fmt_scaled
+parameter_list|(
+name|long
+name|long
+name|number
+parameter_list|,
+name|char
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -776,6 +809,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bsd-statvfs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bsd-waitpid.h"
 end_include
 
@@ -844,6 +883,49 @@ end_endif
 begin_comment
 comment|/* !HAVE_ARC4RANDOM */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ARC4RANDOM_BUF
+end_ifndef
+
+begin_function_decl
+name|void
+name|arc4random_buf
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ARC4RANDOM_UNIFORM
+end_ifndef
+
+begin_function_decl
+name|u_int32_t
+name|arc4random_uniform
+parameter_list|(
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.82 2008/02/13 22:38:17 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.85 2008/06/10 04:50:25 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -166,6 +166,17 @@ end_define
 
 begin_comment
 comment|/* Default for MaxAuthTries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_SESSIONS_MAX
+value|10
+end_define
+
+begin_comment
+comment|/* Default for MaxSessions */
 end_comment
 
 begin_comment
@@ -385,6 +396,9 @@ comment|/* If true, compression is allowed */
 name|int
 name|allow_tcp_forwarding
 decl_stmt|;
+name|int
+name|allow_agent_forwarding
+decl_stmt|;
 name|u_int
 name|num_allow_users
 decl_stmt|;
@@ -470,6 +484,9 @@ name|max_startups
 decl_stmt|;
 name|int
 name|max_authtries
+decl_stmt|;
+name|int
+name|max_sessions
 decl_stmt|;
 name|char
 modifier|*
@@ -649,6 +666,16 @@ name|ServerOptions
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dump_config
+parameter_list|(
+name|ServerOptions
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

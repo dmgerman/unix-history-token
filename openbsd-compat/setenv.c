@@ -73,7 +73,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|offset
 parameter_list|)
@@ -263,7 +263,7 @@ name|char
 modifier|*
 name|C
 decl_stmt|;
-name|int
+name|size_t
 name|l_value
 decl_stmt|,
 name|offset
@@ -601,7 +601,7 @@ modifier|*
 modifier|*
 name|P
 decl_stmt|;
-name|int
+name|size_t
 name|offset
 decl_stmt|;
 while|while

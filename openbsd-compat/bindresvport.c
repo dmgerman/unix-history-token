@@ -113,12 +113,12 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|in
 decl_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
-name|sin6
+name|in6
 decl_stmt|;
 name|u_int16_t
 modifier|*
@@ -214,7 +214,7 @@ operator|==
 name|AF_INET
 condition|)
 block|{
-name|sin
+name|in
 operator|=
 operator|(
 expr|struct
@@ -234,7 +234,7 @@ expr_stmt|;
 name|portp
 operator|=
 operator|&
-name|sin
+name|in
 operator|->
 name|sin_port
 expr_stmt|;
@@ -247,7 +247,7 @@ operator|==
 name|AF_INET6
 condition|)
 block|{
-name|sin6
+name|in6
 operator|=
 operator|(
 expr|struct
@@ -267,7 +267,7 @@ expr_stmt|;
 name|portp
 operator|=
 operator|&
-name|sin6
+name|in6
 operator|->
 name|sin6_port
 expr_stmt|;

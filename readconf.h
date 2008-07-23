@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.72 2008/01/19 23:09:49 djm Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.74 2008/06/26 11:46:31 grunk Exp $ */
 end_comment
 
 begin_comment
@@ -362,6 +362,9 @@ name|local_command
 decl_stmt|;
 name|int
 name|permit_local_command
+decl_stmt|;
+name|int
+name|visual_host_key
 decl_stmt|;
 block|}
 name|Options

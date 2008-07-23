@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: umac.c,v 1.2 2007/09/12 19:39:19 stevesk Exp $ */
+comment|/* $OpenBSD: umac.c,v 1.3 2008/05/12 20:52:20 pvalchev Exp $ */
 end_comment
 
 begin_comment
@@ -423,6 +423,14 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__LITTLE_ENDIAN__
+operator|)
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -485,6 +493,15 @@ operator|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __LITTLE_ENDIAN */
+end_comment
 
 begin_endif
 endif|#
@@ -658,7 +675,7 @@ value|AES_set_encrypt_key((u_char *)(key),UMAC_KEY_LEN*8,int_key)
 end_define
 
 begin_comment
-comment|/* The user-supplied UMAC key is stretched using AES in a counter  * mode to supply all random bits needed by UMAC. The kdf function takes  * an AES internal key representation 'key' and writes a stream of  * 'nbytes' bytes to the memory pointed at by 'buffer_ptr'. Each distinct  * 'ndx' causes a distinct byte stream.  */
+comment|/* The user-supplied UMAC key is stretched using AES in a counter  * mode to supply all random bits needed by UMAC. The kdf function takes  * an AES internal key representation 'key' and writes a stream of  * 'nbytes' bytes to the memory pointed at by 'bufp'. Each distinct  * 'ndx' causes a distinct byte stream.  */
 end_comment
 
 begin_function
@@ -668,7 +685,7 @@ name|kdf
 parameter_list|(
 name|void
 modifier|*
-name|buffer_ptr
+name|bufp
 parameter_list|,
 name|aes_int_key
 name|key
@@ -704,7 +721,7 @@ operator|(
 name|UINT8
 operator|*
 operator|)
-name|buffer_ptr
+name|bufp
 decl_stmt|;
 name|int
 name|i
@@ -3861,6 +3878,14 @@ begin_comment
 comment|/* ---------------------------------------------------------------------- */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__LITTLE_ENDIAN__
+operator|)
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -3987,14 +4012,6 @@ do|;
 block|}
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__LITTLE_ENDIAN__
-operator|)
-end_if
 
 begin_define
 define|#
@@ -6335,16 +6352,22 @@ name|bytes_hashed
 decl_stmt|,
 name|bytes_remaining
 decl_stmt|;
-name|UINT8
-name|nh_result
+name|UINT64
+name|result_buf
 index|[
 name|STREAMS
-operator|*
-sizeof|sizeof
-argument_list|(
-name|UINT64
-argument_list|)
 index|]
+decl_stmt|;
+name|UINT8
+modifier|*
+name|nh_result
+init|=
+operator|(
+name|UINT8
+operator|*
+operator|)
+operator|&
+name|result_buf
 decl_stmt|;
 if|if
 condition|(
@@ -6590,16 +6613,22 @@ name|res
 parameter_list|)
 comment|/* Incorporate any pending data, pad, and generate tag */
 block|{
-name|UINT8
-name|nh_result
+name|UINT64
+name|result_buf
 index|[
 name|STREAMS
-operator|*
-sizeof|sizeof
-argument_list|(
-name|UINT64
-argument_list|)
 index|]
+decl_stmt|;
+name|UINT8
+modifier|*
+name|nh_result
+init|=
+operator|(
+name|UINT8
+operator|*
+operator|)
+operator|&
+name|result_buf
 decl_stmt|;
 if|if
 condition|(

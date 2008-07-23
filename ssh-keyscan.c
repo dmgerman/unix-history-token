@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.75 2007/12/27 14:22:08 dtucker Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.76 2008/04/30 10:14:03 djm Exp $ */
 end_comment
 
 begin_comment
@@ -249,12 +249,12 @@ begin_decl_stmt
 name|int
 name|get_keytypes
 init|=
-name|KT_RSA1
+name|KT_RSA
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Get only RSA1 keys by default */
+comment|/* Get only RSA keys by default */
 end_comment
 
 begin_decl_stmt
@@ -3542,6 +3542,10 @@ operator|||
 name|errno
 operator|==
 name|EINTR
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
 operator|)
 condition|)
 empty_stmt|;

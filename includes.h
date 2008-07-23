@@ -784,6 +784,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_comment
 comment|/*  * On HP-UX 11.11, shadow.h and prot.h provide conflicting declarations  * of getspnam when _INCLUDE__STDC__ is defined, so we unset it here.  */
 end_comment

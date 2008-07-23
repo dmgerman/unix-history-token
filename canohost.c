@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.c,v 1.62 2007/12/27 14:22:08 dtucker Exp $ */
+comment|/* $OpenBSD: canohost.c,v 1.63 2008/06/12 00:03:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -399,7 +399,7 @@ name|getaddrinfo
 argument_list|(
 name|name
 argument_list|,
-literal|"0"
+name|NULL
 argument_list|,
 operator|&
 name|hints
