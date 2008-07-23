@@ -174,6 +174,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_WANT_FILE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -185,6 +202,11 @@ define|#
 directive|define
 name|KERNEL
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -215,6 +237,23 @@ directive|include
 file|<sys/file.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_WANT_FILE
+end_undef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_undef
 undef|#
 directive|undef
@@ -226,6 +265,11 @@ undef|#
 directive|undef
 name|KERNEL
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
