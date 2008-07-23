@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.272 2008/01/19 23:02:40 djm Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.273 2008/04/02 21:36:51 markus Exp $ */
 end_comment
 
 begin_comment
@@ -13957,13 +13957,6 @@ argument_list|(
 name|sock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ai
-operator|->
-name|ai_next
-condition|)
-continue|continue;
 for|for
 control|(
 name|n
