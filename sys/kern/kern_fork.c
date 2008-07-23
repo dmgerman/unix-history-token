@@ -1872,6 +1872,13 @@ name|p_endcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pargs_hold
+argument_list|(
+name|p2
+operator|->
+name|p_args
+argument_list|)
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p1
@@ -2193,13 +2200,6 @@ argument_list|(
 name|p2
 operator|->
 name|p_ucred
-argument_list|)
-expr_stmt|;
-name|pargs_hold
-argument_list|(
-name|p2
-operator|->
-name|p_args
 argument_list|)
 expr_stmt|;
 if|if
