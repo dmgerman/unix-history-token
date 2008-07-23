@@ -27,12 +27,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_warning
-warning|#
-directive|warning
-warning|_KERNEL defined
-end_warning
-
 begin_include
 include|#
 directive|include
