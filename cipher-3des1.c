@@ -49,24 +49,11 @@ directive|include
 file|"log.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|OPENSSL_VERSION_NUMBER
-operator|<
-literal|0x00906000L
-end_if
-
-begin_define
-define|#
-directive|define
-name|SSH_OLD_EVP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
+end_include
 
 begin_comment
 comment|/*  * This is used by SSH1:  *  * What kind of triple DES are these 2 routines?  *  * Why is there a redundant initialization vector?  *  * If only iv3 was used, then, this would till effect have been  * outer-cbc. However, there is also a private iv1 == iv2 which  * perhaps makes differential analysis easier. On the other hand, the  * private iv1 probably makes the CRC-32 attack ineffective. This is a  * result of that there is no longer any known iv1 to use when  * choosing the X block.  */

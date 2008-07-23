@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.90 2007/02/19 10:45:58 dtucker Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.91 2007/05/17 20:52:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2222,6 +2222,14 @@ expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTERM
+argument_list|,
+operator|&
+name|monitor_child_handler
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
 argument_list|,
 operator|&
 name|monitor_child_handler

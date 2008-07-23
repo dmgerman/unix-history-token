@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.138 2006/09/21 13:13:30 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.143 2007/08/09 04:37:52 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -237,11 +237,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXSYMLINKS
-end_ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_DECL_MAXSYMLINKS
+argument_list|)
+operator|&&
+name|HAVE_DECL_MAXSYMLINKS
+operator|==
+literal|0
+end_if
 
 begin_define
 define|#
@@ -1742,42 +1749,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_CSHELL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_CSHELL
-value|"/bin/csh"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SHELLS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_SHELLS
-value|"/etc/shells"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2375,6 +2346,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ATTRIBUTE__NONNULL__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__nonnull__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__nonnull__
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* *-*-nto-qnx doesn't define this macro in the system headers */
 end_comment
@@ -2550,11 +2551,18 @@ begin_comment
 comment|/* CMSG_FIRSTHDR */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|offsetof
-end_ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_DECL_OFFSETOF
+argument_list|)
+operator|&&
+name|HAVE_DECL_OFFSETOF
+operator|==
+literal|0
+end_if
 
 begin_define
 define|#
@@ -3833,11 +3841,31 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_LIBIAF
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SET_ID
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BROKEN_LIBIAF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_LIBIAF
+end_define
 
 begin_define
 define|#

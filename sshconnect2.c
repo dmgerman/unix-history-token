@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.162 2006/08/30 00:06:51 dtucker Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.164 2007/05/17 23:53:41 jolan Exp $ */
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -6522,6 +6528,11 @@ name|pkalg
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|,
+name|myname
+index|[
+name|NI_MAXHOST
+index|]
 decl_stmt|;
 specifier|const
 name|char
@@ -6641,12 +6652,64 @@ block|}
 comment|/* figure out a name for the client host */
 name|p
 operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|packet_connection_is_on_socket
+argument_list|()
+condition|)
+name|p
+operator|=
 name|get_local_name
 argument_list|(
 name|packet_get_connection_in
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|gethostname
+argument_list|(
+name|myname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|myname
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"userauth_hostbased: gethostname: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|p
+operator|=
+name|xstrdup
+argument_list|(
+name|myname
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|p

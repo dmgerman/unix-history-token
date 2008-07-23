@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.88 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.89 2007/06/11 09:14:00 markus Exp $ */
 end_comment
 
 begin_comment
@@ -448,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|CHAN_SES_WINDOW_DEFAULT
-value|(4*CHAN_SES_PACKET_DEFAULT)
+value|(64*CHAN_SES_PACKET_DEFAULT)
 end_define
 
 begin_define
@@ -462,7 +462,7 @@ begin_define
 define|#
 directive|define
 name|CHAN_TCP_WINDOW_DEFAULT
-value|(4*CHAN_TCP_PACKET_DEFAULT)
+value|(64*CHAN_TCP_PACKET_DEFAULT)
 end_define
 
 begin_define

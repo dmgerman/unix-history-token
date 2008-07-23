@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufbn.c,v 1.5 2007/02/14 14:32:00 stevesk Exp $*/
+comment|/* $OpenBSD: bufbn.c,v 1.6 2007/06/02 09:04:58 djm Exp $*/
 end_comment
 
 begin_comment
@@ -837,6 +837,11 @@ block|{
 name|error
 argument_list|(
 literal|"buffer_get_bignum2_ret: BN_bin2bn failed"
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|bin
 argument_list|)
 expr_stmt|;
 return|return

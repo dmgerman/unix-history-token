@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.h,v 1.7 2007/03/05 07:25:20 dtucker Exp $ */
+comment|/* $Id: openssl-compat.h,v 1.10 2007/06/14 13:47:31 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -79,6 +79,54 @@ ifdef|#
 directive|ifdef
 name|USE_BUILTIN_RIJNDAEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"rijndael.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|AES_KEY
+value|rijndael_ctx
+end_define
+
+begin_define
+define|#
+directive|define
+name|AES_BLOCK_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|AES_encrypt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|rijndael_encrypt(c, a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AES_set_encrypt_key
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|rijndael_set_key(c, (char *)a, b, 1)
+end_define
 
 begin_define
 define|#

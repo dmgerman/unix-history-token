@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server.c,v 1.71 2007/01/03 07:22:36 stevesk Exp $ */
+comment|/* $OpenBSD: sftp-server.c,v 1.73 2007/05/17 07:55:29 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1371,11 +1371,21 @@ argument_list|(
 name|handle
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|handle_bytes_read
 argument_list|(
 name|handle
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|handle_bytes_write
 argument_list|(
 name|handle
@@ -3342,6 +3352,11 @@ literal|"set \"%s\" size %llu"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|a
 operator|->
 name|size
@@ -3668,6 +3683,11 @@ literal|"set \"%s\" size %llu"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|a
 operator|->
 name|size
@@ -5864,6 +5884,13 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+name|buf
+index|[
+literal|4
+operator|*
+literal|4096
+index|]
 decl_stmt|;
 specifier|extern
 name|char
@@ -6249,6 +6276,28 @@ argument_list|,
 name|set_size
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Ensure that we can read a full buffer and handle 		 * the worst-case length packet it can generate, 		 * otherwise apply backpressure by stopping reads. 		 */
+if|if
+condition|(
+name|buffer_check_alloc
+argument_list|(
+operator|&
+name|iqueue
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+operator|&&
+name|buffer_check_alloc
+argument_list|(
+operator|&
+name|oqueue
+argument_list|,
+name|SFTP_MAX_MSG_LENGTH
+argument_list|)
+condition|)
 name|FD_SET
 argument_list|(
 name|in
@@ -6331,14 +6380,6 @@ name|rset
 argument_list|)
 condition|)
 block|{
-name|char
-name|buf
-index|[
-literal|4
-operator|*
-literal|4096
-index|]
-decl_stmt|;
 name|len
 operator|=
 name|read
@@ -6468,7 +6509,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* process requests from client */
+comment|/* 		 * Process requests from client if we can fit the results 		 * into the output buffer, otherwise stop processing input 		 * and let the output queue drain. 		 */
+if|if
+condition|(
+name|buffer_check_alloc
+argument_list|(
+operator|&
+name|oqueue
+argument_list|,
+name|SFTP_MAX_MSG_LENGTH
+argument_list|)
+condition|)
 name|process
 argument_list|()
 expr_stmt|;

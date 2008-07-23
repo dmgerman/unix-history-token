@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.268 2007/01/03 03:01:40 stevesk Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.270 2007/06/25 08:20:03 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -6933,7 +6933,25 @@ index|]
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|force
 decl_stmt|;
+name|force
+operator|=
+name|c
+operator|->
+name|isatty
+operator|&&
+name|c
+operator|->
+name|detach_close
+operator|&&
+name|c
+operator|->
+name|istate
+operator|!=
+name|CHAN_INPUT_CLOSED
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -6944,9 +6962,7 @@ operator|-
 literal|1
 operator|&&
 operator|(
-name|c
-operator|->
-name|detach_close
+name|force
 operator|||
 name|FD_ISSET
 argument_list|(
@@ -6996,15 +7012,7 @@ operator|==
 name|EAGAIN
 operator|&&
 operator|!
-operator|(
-name|c
-operator|->
-name|isatty
-operator|&&
-name|c
-operator|->
-name|detach_close
-operator|)
+name|force
 operator|)
 operator|)
 condition|)
@@ -8222,6 +8230,23 @@ name|CHAN_CLOSE_RCVD
 operator|)
 operator|)
 operator|&&
+operator|(
+operator|(
+name|c
+operator|->
+name|local_window_max
+operator|-
+name|c
+operator|->
+name|local_window
+operator|>
+name|c
+operator|->
+name|local_maxpacket
+operator|*
+literal|3
+operator|)
+operator|||
 name|c
 operator|->
 name|local_window
@@ -8231,6 +8256,7 @@ operator|->
 name|local_window_max
 operator|/
 literal|2
+operator|)
 operator|&&
 name|c
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.21 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.22 2007/06/07 19:37:34 pvalchev Exp $ */
 end_comment
 
 begin_comment
@@ -71,7 +71,7 @@ define|#
 directive|define
 name|KEX_DEFAULT_MAC
 define|\
-value|"hmac-md5,hmac-sha1,hmac-ripemd160," \ 	"hmac-ripemd160@openssh.com," \ 	"hmac-sha1-96,hmac-md5-96"
+value|"hmac-md5,hmac-sha1,umac-64@openssh.com,hmac-ripemd160," \ 	"hmac-ripemd160@openssh.com," \ 	"hmac-sha1-96,hmac-md5-96"
 end_define
 
 begin_define

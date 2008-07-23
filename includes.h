@@ -222,7 +222,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_PATHS
+name|HAVE_PATHS_H
 end_ifdef
 
 begin_include

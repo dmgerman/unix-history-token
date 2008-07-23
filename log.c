@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.c,v 1.39 2006/08/18 09:13:25 deraadt Exp $ */
+comment|/* $OpenBSD: log.c,v 1.40 2007/05/17 07:50:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_if
@@ -1121,6 +1127,11 @@ name|pri
 init|=
 name|LOG_INFO
 decl_stmt|;
+name|int
+name|saved_errno
+init|=
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|level
@@ -1410,6 +1421,10 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
 block|}
 end_function
 

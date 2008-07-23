@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.c,v 1.68 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: key.c,v 1.69 2007/07/12 05:48:05 ray Exp $ */
 end_comment
 
 begin_comment
@@ -806,11 +806,7 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.349 2007/02/21 11:00:05 dtucker Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.351 2007/05/22 10:18:52 djm Exp $ */
 end_comment
 
 begin_comment
@@ -6032,6 +6032,19 @@ argument_list|(
 operator|&
 name|options
 argument_list|)
+expr_stmt|;
+comment|/* challenge-response is implemented via keyboard interactive */
+if|if
+condition|(
+name|options
+operator|.
+name|challenge_response_authentication
+condition|)
+name|options
+operator|.
+name|kbd_interactive_authentication
+operator|=
+literal|1
 expr_stmt|;
 comment|/* set default channel AF */
 name|channel_set_af

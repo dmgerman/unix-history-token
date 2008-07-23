@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.145 2006/09/19 21:14:08 markus Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.148 2007/06/07 19:37:34 pvalchev Exp $ */
 end_comment
 
 begin_comment
@@ -2504,17 +2504,9 @@ index|]
 operator|->
 name|comp
 expr_stmt|;
-name|memset
+name|mac_clear
 argument_list|(
 name|mac
-operator|->
-name|key
-argument_list|,
-literal|0
-argument_list|,
-name|mac
-operator|->
-name|key_len
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -2626,11 +2618,12 @@ name|comp
 expr_stmt|;
 if|if
 condition|(
+name|mac_init
+argument_list|(
 name|mac
-operator|->
-name|md
-operator|!=
-name|NULL
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|mac
 operator|->
@@ -2676,7 +2669,7 @@ name|crypt_type
 argument_list|)
 expr_stmt|;
 comment|/* Deleting the keys does not gain extra security */
-comment|/* memset(enc->iv,  0, enc->block_size); 	   memset(enc->key, 0, enc->key_len); */
+comment|/* memset(enc->iv,  0, enc->block_size); 	   memset(enc->key, 0, enc->key_len); 	   memset(mac->key, 0, mac->key_len); */
 if|if
 condition|(
 operator|(
@@ -5425,11 +5418,6 @@ expr_stmt|;
 name|cleanup_exit
 argument_list|(
 literal|255
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|msg
 argument_list|)
 expr_stmt|;
 break|break;

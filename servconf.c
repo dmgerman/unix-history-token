@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.c,v 1.170 2007/03/01 10:28:02 dtucker Exp $ */
+comment|/* $OpenBSD: servconf.c,v 1.172 2007/04/23 10:15:39 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -3419,15 +3419,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|debug
-argument_list|(
-literal|"address '%s' arg '%s'"
-argument_list|,
-name|address
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7473,21 +7464,6 @@ name|filename
 argument_list|,
 name|bad_options
 argument_list|)
-expr_stmt|;
-comment|/* challenge-response is implemented via keyboard interactive */
-if|if
-condition|(
-name|options
-operator|->
-name|challenge_response_authentication
-operator|==
-literal|1
-condition|)
-name|options
-operator|->
-name|kbd_interactive_authentication
-operator|=
-literal|1
 expr_stmt|;
 block|}
 end_function

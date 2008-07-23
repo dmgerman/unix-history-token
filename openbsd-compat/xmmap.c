@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002 Tim Rice.  All rights reserved.  * MAP_FAILED c
 end_comment
 
 begin_comment
-comment|/* $Id: xmmap.c,v 1.12 2006/08/24 09:58:36 dtucker Exp $ */
+comment|/* $Id: xmmap.c,v 1.14 2007/06/11 02:52:24 djm Exp $ */
 end_comment
 
 begin_include
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include

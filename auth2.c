@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.114 2007/03/01 10:28:02 dtucker Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.115 2007/04/14 22:01:58 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -1256,13 +1256,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|DELIM
-value|","
-end_define
 
 begin_function
 specifier|static

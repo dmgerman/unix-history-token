@@ -120,7 +120,7 @@ name|open
 argument_list|(
 literal|"/dev/null"
 argument_list|,
-literal|"r"
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|==

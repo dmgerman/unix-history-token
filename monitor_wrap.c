@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.55 2007/02/19 10:45:58 dtucker Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.57 2007/06/07 19:37:34 pvalchev Exp $ */
 end_comment
 
 begin_comment
@@ -2410,7 +2410,7 @@ name|name
 operator|==
 name|NULL
 operator|||
-name|mac_init
+name|mac_setup
 argument_list|(
 name|mac
 argument_list|,
@@ -2424,7 +2424,7 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: can not init mac %s"
+literal|"%s: can not setup mac %s"
 argument_list|,
 name|__func__
 argument_list|,

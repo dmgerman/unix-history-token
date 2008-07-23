@@ -423,18 +423,9 @@ name|spw
 operator|!=
 name|NULL
 condition|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_LIBIAF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_LIBIAF
-argument_list|)
+ifdef|#
+directive|ifdef
+name|USE_LIBIAF
 name|passwd
 operator|=
 name|get_iaf_password
@@ -452,7 +443,7 @@ name|sp_pwdp
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_LIBIAF&& !BROKEN_LIBIAF */
+comment|/* USE_LIBIAF */
 else|#
 directive|else
 name|passwd
@@ -545,18 +536,9 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_LIBIAF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_LIBIAF
-argument_list|)
+ifdef|#
+directive|ifdef
+name|USE_LIBIAF
 name|free
 argument_list|(
 name|passwd
@@ -564,7 +546,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_LIBIAF&& !BROKEN_LIBIAF */
+comment|/* USE_LIBIAF */
 if|if
 condition|(
 name|locked

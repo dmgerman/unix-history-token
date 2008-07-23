@@ -305,13 +305,9 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_LIBIAF
-argument_list|)
+ifdef|#
+directive|ifdef
+name|USE_LIBIAF
 if|if
 condition|(
 name|authctxt
@@ -452,15 +448,11 @@ begin_comment
 comment|/* 	NOTE: ia_get_logpwd() allocates memory for arg 2 	functions that call shadow_pw() will need to free  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_LIBIAF
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_LIBIAF
+end_ifdef
 
 begin_function
 name|char
@@ -539,7 +531,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !BROKEN_LIBIAF */
+comment|/* USE_LIBIAF */
 end_comment
 
 begin_endif

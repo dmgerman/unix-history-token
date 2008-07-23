@@ -6028,7 +6028,7 @@ argument_list|()
 expr_stmt|;
 name|do_pam_setcred
 argument_list|(
-literal|0
+name|use_privsep
 argument_list|)
 expr_stmt|;
 block|}
@@ -6229,7 +6229,7 @@ argument_list|()
 expr_stmt|;
 name|do_pam_setcred
 argument_list|(
-literal|0
+name|use_privsep
 argument_list|)
 expr_stmt|;
 block|}
@@ -6271,18 +6271,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* _AIX */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_LIBIAF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_LIBIAF
-argument_list|)
+ifdef|#
+directive|ifdef
+name|USE_LIBIAF
 if|if
 condition|(
 name|set_id
@@ -6303,7 +6294,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* HAVE_LIBIAF&& !BROKEN_LIBIAF */
+comment|/* USE_LIBIAF */
 comment|/* Permanently switch to the desired uid. */
 name|permanently_set_uid
 argument_list|(
@@ -11396,7 +11387,29 @@ condition|(
 name|authctxt
 operator|==
 name|NULL
-operator|||
+condition|)
+return|return;
+ifdef|#
+directive|ifdef
+name|USE_PAM
+if|if
+condition|(
+name|options
+operator|.
+name|use_pam
+condition|)
+block|{
+name|sshpam_cleanup
+argument_list|()
+expr_stmt|;
+name|sshpam_thread_cleanup
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
 operator|!
 name|authctxt
 operator|->
@@ -11437,25 +11450,6 @@ condition|)
 name|ssh_gssapi_cleanup_creds
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|USE_PAM
-if|if
-condition|(
-name|options
-operator|.
-name|use_pam
-condition|)
-block|{
-name|sshpam_cleanup
-argument_list|()
-expr_stmt|;
-name|sshpam_thread_cleanup
-argument_list|()
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* remove agent socket */

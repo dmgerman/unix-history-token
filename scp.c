@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.156 2007/01/22 13:06:21 djm Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.160 2007/08/06 19:16:06 sobrado Exp $ */
 end_comment
 
 begin_comment
@@ -150,6 +150,31 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRNVIS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_VIS_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<vis.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2826,6 +2851,11 @@ name|buf
 index|[
 literal|2048
 index|]
+decl_stmt|,
+name|encname
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 name|int
 name|len
@@ -2887,29 +2917,6 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|strchr
-argument_list|(
-name|name
-argument_list|,
-literal|'\n'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|run_err
-argument_list|(
-literal|"%s: skipping, filename contains a newline"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-goto|goto
-name|next
-goto|;
-block|}
-if|if
-condition|(
 operator|(
 name|fd
 operator|=
@@ -2918,6 +2925,8 @@ argument_list|(
 name|name
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_NONBLOCK
 argument_list|,
 literal|0
 argument_list|)
@@ -2928,6 +2937,37 @@ condition|)
 goto|goto
 name|syserr
 goto|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|name
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|strnvis
+argument_list|(
+name|encname
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|encname
+argument_list|)
+argument_list|,
+name|VIS_NL
+argument_list|)
+expr_stmt|;
+name|name
+operator|=
+name|encname
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|fstat
@@ -2959,6 +2999,11 @@ goto|goto
 name|next
 goto|;
 block|}
+name|unset_nonblock
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|stb
@@ -5467,6 +5512,18 @@ name|wrerr
 operator|==
 name|NO
 operator|&&
+operator|(
+operator|!
+name|exists
+operator|||
+name|S_ISREG
+argument_list|(
+name|stb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
+operator|&&
 name|ftruncate
 argument_list|(
 name|ofd
@@ -5942,7 +5999,7 @@ name|stderr
 argument_list|,
 literal|"usage: scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file]\n"
 literal|"           [-l limit] [-o ssh_option] [-P port] [-S program]\n"
-literal|"           [[user@]host1:]file1 [...] [[user@]host2:]file2\n"
+literal|"           [[user@]host1:]file1 ... [[user@]host2:]file2\n"
 argument_list|)
 expr_stmt|;
 name|exit

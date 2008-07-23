@@ -853,7 +853,7 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-comment|/* 	 * Don't perform checks for root account (PermitRootLogin controls 	 * logins via * ssh) or if running as non-root user (since 	 * loginrestrictions will always fail due to insufficient privilege). 	 */
+comment|/* 	 * Don't perform checks for root account (PermitRootLogin controls 	 * logins via ssh) or if running as non-root user (since 	 * loginrestrictions will always fail due to insufficient privilege). 	 */
 if|if
 condition|(
 name|pw

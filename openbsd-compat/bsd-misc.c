@@ -9,6 +9,12 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -59,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -755,6 +767,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rem
+operator|!=
+name|NULL
+condition|)
 name|TIMEVAL_TO_TIMESPEC
 argument_list|(
 argument|&tremain

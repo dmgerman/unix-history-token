@@ -556,7 +556,7 @@ argument_list|(
 name|sshpam_thread_status
 argument_list|)
 condition|)
-name|fatal
+name|sigdie
 argument_list|(
 literal|"PAM: authentication thread exited unexpectedly"
 argument_list|)
@@ -570,7 +570,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|fatal
+name|sigdie
 argument_list|(
 literal|"PAM: authentication thread exited uncleanly"
 argument_list|)
@@ -3228,24 +3228,13 @@ return|;
 block|}
 name|ctxt
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 expr|*
 name|ctxt
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|ctxt
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ctxt
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Start the authentication thread */
@@ -4730,6 +4719,8 @@ name|msg
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|input
@@ -4739,6 +4730,15 @@ name|input
 argument_list|,
 name|stdin
 argument_list|)
+operator|==
+name|NULL
+condition|)
+name|input
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -5326,10 +5326,10 @@ condition|(
 operator|(
 name|reply
 operator|=
-name|malloc
+name|calloc
 argument_list|(
 name|n
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -5345,21 +5345,6 @@ operator|(
 name|PAM_CONV_ERR
 operator|)
 return|;
-name|memset
-argument_list|(
-name|reply
-argument_list|,
-literal|0
-argument_list|,
-name|n
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|reply
-argument_list|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.c,v 1.3 2006/09/01 05:38:41 djm Exp $ */
+comment|/* $Id: port-linux.c,v 1.4 2007/06/27 22:48:03 djm Exp $ */
 end_comment
 
 begin_comment
@@ -258,6 +258,7 @@ argument_list|,
 name|pwname
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
 name|fatal
 argument_list|(
@@ -385,6 +386,7 @@ argument_list|,
 name|pwname
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
 name|fatal
 argument_list|(

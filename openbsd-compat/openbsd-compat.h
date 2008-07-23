@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.42 2006/09/03 12:44:50 dtucker Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.43 2007/06/25 12:15:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -777,6 +777,12 @@ begin_include
 include|#
 directive|include
 file|"bsd-waitpid.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bsd-poll.h"
 end_include
 
 begin_ifndef
