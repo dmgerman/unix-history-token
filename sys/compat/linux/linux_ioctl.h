@@ -1984,6 +1984,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_TIOCSPTLCK
+value|0x5431
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_FIONCLEX
 value|0x5450
 end_define
