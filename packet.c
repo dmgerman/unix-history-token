@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.148 2007/06/07 19:37:34 pvalchev Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.151 2008/02/22 20:44:02 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -450,6 +450,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|after_authentication
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|keep_alive_timeouts
 init|=
 literal|0
 decl_stmt|;
@@ -5235,6 +5243,10 @@ argument_list|(
 name|seqnr_p
 argument_list|)
 expr_stmt|;
+name|keep_alive_timeouts
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|type
@@ -5257,6 +5269,11 @@ block|{
 case|case
 name|SSH2_MSG_IGNORE
 case|:
+name|debug3
+argument_list|(
+literal|"Received SSH2_MSG_IGNORE"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SSH2_MSG_DEBUG

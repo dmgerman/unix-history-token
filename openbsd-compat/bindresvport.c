@@ -4,7 +4,7 @@ comment|/* This file has be substantially modified from the original OpenBSD sou
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: bindresvport.c,v 1.16 2005/04/01 07:44:03 otto Exp $	*/
+comment|/*	$OpenBSD: bindresvport.c,v 1.17 2005/12/21 01:40:22 millert Exp $	*/
 end_comment
 
 begin_comment

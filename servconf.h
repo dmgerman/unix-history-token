@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.80 2007/02/19 10:45:58 dtucker Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.82 2008/02/13 22:38:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -167,6 +167,17 @@ end_define
 begin_comment
 comment|/* Default for MaxAuthTries */
 end_comment
+
+begin_comment
+comment|/* Magic name for internal sftp-server */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTERNAL_SFTP_NAME
+value|"internal-sftp"
+end_define
 
 begin_typedef
 typedef|typedef
@@ -498,6 +509,10 @@ name|permit_tun
 decl_stmt|;
 name|int
 name|num_permitted_opens
+decl_stmt|;
+name|char
+modifier|*
+name|chroot_directory
 decl_stmt|;
 block|}
 name|ServerOptions

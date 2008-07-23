@@ -336,6 +336,16 @@ argument_list|,
 name|GTK_WIN_POS_CENTER
 argument_list|)
 expr_stmt|;
+name|gtk_window_set_keep_above
+argument_list|(
+name|GTK_WINDOW
+argument_list|(
+name|dialog
+argument_list|)
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 name|gtk_label_set_line_wrap
 argument_list|(
 name|GTK_LABEL

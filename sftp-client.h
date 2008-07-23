@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.14 2005/04/26 12:59:02 jmc Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.15 2008/01/11 07:22:28 chl Exp $ */
 end_comment
 
 begin_comment
@@ -240,29 +240,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Get file attributes of open file 'handle' */
-end_comment
-
-begin_function_decl
-name|Attrib
-modifier|*
-name|do_fstat
-parameter_list|(
-name|struct
-name|sftp_conn
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Set file attributes of 'path' */
 end_comment
 
@@ -359,25 +336,6 @@ name|sftp_conn
 modifier|*
 parameter_list|,
 name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Return target of symlink 'path' - caller must free result */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|do_readlink
-parameter_list|(
-name|struct
-name|sftp_conn
 modifier|*
 parameter_list|,
 name|char

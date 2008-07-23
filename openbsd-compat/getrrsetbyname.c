@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: getrrsetbyname.c,v 1.10 2005/03/30 02:58:28 tedu Exp $ */
+comment|/* $OpenBSD: getrrsetbyname.c,v 1.11 2007/10/11 18:36:41 jakob Exp $ */
 end_comment
 
 begin_comment
@@ -1051,7 +1051,7 @@ name|rrset
 operator|->
 name|rri_rdclass
 argument_list|,
-name|T_SIG
+name|T_RRSIG
 argument_list|)
 expr_stmt|;
 comment|/* allocate memory for answers */
@@ -1207,7 +1207,7 @@ name|rr
 operator|->
 name|type
 operator|==
-name|T_SIG
+name|T_RRSIG
 condition|)
 name|rdata
 operator|=

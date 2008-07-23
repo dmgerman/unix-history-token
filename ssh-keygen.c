@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.160 2007/01/21 01:41:54 stevesk Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.165 2008/01/19 22:37:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/pem.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
 end_include
 
 begin_include
@@ -625,24 +631,17 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strchr
+name|buf
+index|[
+name|strcspn
 argument_list|(
 name|buf
 argument_list|,
-literal|'\n'
+literal|"\n"
 argument_list|)
-condition|)
-operator|*
-name|strchr
-argument_list|(
-name|buf
-argument_list|,
-literal|'\n'
-argument_list|)
+index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -2742,7 +2741,7 @@ literal|0
 decl_stmt|,
 name|num
 init|=
-literal|1
+literal|0
 decl_stmt|,
 name|invalid
 init|=
@@ -2921,23 +2920,20 @@ name|f
 argument_list|)
 condition|)
 block|{
-name|i
-operator|=
-name|strlen
-argument_list|(
-name|line
-argument_list|)
-operator|-
-literal|1
-expr_stmt|;
 if|if
 condition|(
+operator|(
+name|cp
+operator|=
+name|strchr
+argument_list|(
 name|line
-index|[
-name|i
-index|]
-operator|!=
+argument_list|,
 literal|'\n'
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|error
@@ -2945,6 +2941,8 @@ argument_list|(
 literal|"line %d too long: %.40s..."
 argument_list|,
 name|num
+operator|+
+literal|1
 argument_list|,
 name|line
 argument_list|)
@@ -2969,10 +2967,8 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
-name|line
-index|[
-name|i
-index|]
+operator|*
+name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -3285,6 +3281,7 @@ name|FILE
 modifier|*
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3417,8 +3414,6 @@ index|]
 decl_stmt|;
 name|int
 name|c
-decl_stmt|,
-name|i
 decl_stmt|,
 name|skip
 init|=
@@ -3689,26 +3684,20 @@ name|in
 argument_list|)
 condition|)
 block|{
-name|num
-operator|++
-expr_stmt|;
-name|i
-operator|=
-name|strlen
-argument_list|(
-name|line
-argument_list|)
-operator|-
-literal|1
-expr_stmt|;
 if|if
 condition|(
+operator|(
+name|cp
+operator|=
+name|strchr
+argument_list|(
 name|line
-index|[
-name|i
-index|]
-operator|!=
+argument_list|,
 literal|'\n'
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|error
@@ -3716,6 +3705,8 @@ argument_list|(
 literal|"line %d too long: %.40s..."
 argument_list|,
 name|num
+operator|+
+literal|1
 argument_list|,
 name|line
 argument_list|)
@@ -3730,6 +3721,9 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+name|num
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|skip
@@ -3741,10 +3735,8 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
-name|line
-index|[
-name|i
-index|]
+operator|*
+name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -4125,7 +4117,7 @@ name|print_host
 argument_list|(
 name|out
 argument_list|,
-name|cp
+name|name
 argument_list|,
 name|public
 argument_list|,
@@ -4254,7 +4246,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s is not a valid known_host file.\n"
+literal|"%s is not a valid known_hosts file.\n"
 argument_list|,
 name|identity_file
 argument_list|)
@@ -5275,24 +5267,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|strchr
+name|new_comment
+index|[
+name|strcspn
 argument_list|(
 name|new_comment
 argument_list|,
-literal|'\n'
+literal|"\n"
 argument_list|)
-condition|)
-operator|*
-name|strchr
-argument_list|(
-name|new_comment
-argument_list|,
-literal|'\n'
-argument_list|)
+index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 comment|/* Save the file using the new passphrase. */
@@ -5523,7 +5508,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [options]\n"
+literal|"usage: %s [options]\n"
 argument_list|,
 name|__progname
 argument_list|)

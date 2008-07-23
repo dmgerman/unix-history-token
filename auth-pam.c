@@ -2824,18 +2824,26 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|debug
-argument_list|(
-literal|"PAM: cleanup"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sshpam_handle
 operator|==
 name|NULL
+operator|||
+operator|(
+name|use_privsep
+operator|&&
+operator|!
+name|mm_is_monitor
+argument_list|()
+operator|)
 condition|)
 return|return;
+name|debug
+argument_list|(
+literal|"PAM: cleanup"
+argument_list|)
+expr_stmt|;
 name|pam_set_item
 argument_list|(
 name|sshpam_handle
@@ -2856,6 +2864,11 @@ condition|(
 name|sshpam_cred_established
 condition|)
 block|{
+name|debug
+argument_list|(
+literal|"PAM: deleting credentials"
+argument_list|)
+expr_stmt|;
 name|pam_setcred
 argument_list|(
 name|sshpam_handle
@@ -2873,6 +2886,11 @@ condition|(
 name|sshpam_session_open
 condition|)
 block|{
+name|debug
+argument_list|(
+literal|"PAM: closing session"
+argument_list|)
+expr_stmt|;
 name|pam_close_session
 argument_list|(
 name|sshpam_handle

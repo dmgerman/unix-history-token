@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.c,v 1.4 2007/06/27 22:48:03 djm Exp $ */
+comment|/* $Id: port-linux.c,v 1.5 2008/03/26 20:27:21 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -76,7 +76,6 @@ comment|/* Wrapper around is_selinux_enabled() to log its return value once only
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ssh_selinux_enabled
 parameter_list|(

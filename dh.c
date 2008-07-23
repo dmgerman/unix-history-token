@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dh.c,v 1.44 2006/11/07 13:02:07 markus Exp $ */
+comment|/* $OpenBSD: dh.c,v 1.45 2007/09/27 00:15:57 ray Exp $ */
 end_comment
 
 begin_comment
@@ -923,7 +923,7 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"invalid public DH value: negativ"
+literal|"invalid public DH value: negative"
 argument_list|)
 expr_stmt|;
 return|return
@@ -964,12 +964,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s: BN_new failed"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+literal|0
 return|;
+block|}
 if|if
 condition|(
 operator|!

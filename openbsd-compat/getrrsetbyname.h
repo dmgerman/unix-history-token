@@ -90,14 +90,14 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|T_SIG
+name|T_RRSIG
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|T_SIG
-value|24
+name|T_RRSIG
+value|46
 end_define
 
 begin_endif

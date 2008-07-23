@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth1.c,v 1.70 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: auth1.c,v 1.71 2007/09/21 08:15:29 djm Exp $ */
 end_comment
 
 begin_comment

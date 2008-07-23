@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.74 2006/10/06 02:29:19 djm Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.75 2007/12/27 14:22:08 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1996,7 +1996,7 @@ literal|"getaddrinfo %s: %s"
 argument_list|,
 name|host
 argument_list|,
-name|gai_strerror
+name|ssh_gai_strerror
 argument_list|(
 name|gaierr
 argument_list|)

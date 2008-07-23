@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.155 2007/03/19 12:16:42 dtucker Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.157 2007/09/25 23:48:57 canacar Exp $ */
 end_comment
 
 begin_comment
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/md5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
 end_include
 
 begin_include
@@ -2280,6 +2286,10 @@ argument_list|(
 name|version
 argument_list|)
 decl_stmt|;
+name|Identity
+modifier|*
+name|id
+decl_stmt|;
 name|int
 name|type
 decl_stmt|,
@@ -2809,20 +2819,22 @@ name|lifetime
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|id
+operator|=
 name|lookup_identity
 argument_list|(
 name|k
 argument_list|,
 name|version
 argument_list|)
+operator|)
 operator|==
 name|NULL
 condition|)
 block|{
-name|Identity
-modifier|*
 name|id
-init|=
+operator|=
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -2830,30 +2842,12 @@ argument_list|(
 name|Identity
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|id
 operator|->
 name|key
 operator|=
 name|k
-expr_stmt|;
-name|id
-operator|->
-name|comment
-operator|=
-name|comment
-expr_stmt|;
-name|id
-operator|->
-name|death
-operator|=
-name|death
-expr_stmt|;
-name|id
-operator|->
-name|confirm
-operator|=
-name|confirm
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -2883,10 +2877,30 @@ argument_list|)
 expr_stmt|;
 name|xfree
 argument_list|(
+name|id
+operator|->
 name|comment
 argument_list|)
 expr_stmt|;
 block|}
+name|id
+operator|->
+name|comment
+operator|=
+name|comment
+expr_stmt|;
+name|id
+operator|->
+name|death
+operator|=
+name|death
+expr_stmt|;
+name|id
+operator|->
+name|confirm
+operator|=
+name|confirm
+expr_stmt|;
 name|send
 label|:
 name|buffer_put_int
@@ -5371,7 +5385,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [options] [command [args ...]]\n"
+literal|"usage: %s [options] [command [arg ...]]\n"
 argument_list|,
 name|__progname
 argument_list|)

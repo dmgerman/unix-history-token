@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.h,v 1.5 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: sftp.h,v 1.7 2008/02/08 23:24:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -384,6 +384,39 @@ directive|define
 name|SSH2_FX_MAX
 value|8
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|passwd
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|sftp_server_main
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|sftp_server_cleanup_exit
+argument_list|(
+name|int
+argument_list|)
+name|__dead
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

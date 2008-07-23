@@ -223,6 +223,11 @@ literal|0
 condition|)
 block|{
 comment|/* Bad length */
+name|free
+argument_list|(
+name|string
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;

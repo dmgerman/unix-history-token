@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-none.c,v 1.13 2006/08/05 07:52:52 dtucker Exp $ */
+comment|/* $OpenBSD: auth2-none.c,v 1.14 2007/08/23 03:22:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -398,11 +404,24 @@ name|banner
 operator|==
 name|NULL
 operator|||
+name|strcasecmp
+argument_list|(
+name|options
+operator|.
+name|banner
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+operator|||
 operator|(
 name|datafellows
 operator|&
 name|SSH_BUG_BANNER
 operator|)
+operator|!=
+literal|0
 condition|)
 return|return;
 if|if

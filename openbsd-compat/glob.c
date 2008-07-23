@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: glob.c,v 1.25 2005/08/08 08:05:34 espie Exp $ */
+comment|/*	$OpenBSD: glob.c,v 1.26 2005/11/28 17:50:12 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -103,6 +103,12 @@ operator|||
 name|HAVE_DECL_GLOB_NOMATCH
 operator|==
 literal|0
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|BROKEN_GLOB
+argument_list|)
 end_if
 
 begin_function
@@ -614,9 +620,6 @@ specifier|static
 name|int
 name|glob3
 parameter_list|(
-name|Char
-modifier|*
-parameter_list|,
 name|Char
 modifier|*
 parameter_list|,
@@ -2712,8 +2715,6 @@ name|pathend_last
 argument_list|,
 name|pattern
 argument_list|,
-name|pattern_last
-argument_list|,
 name|p
 argument_list|,
 name|pattern_last
@@ -2753,10 +2754,6 @@ parameter_list|,
 name|Char
 modifier|*
 name|pattern
-parameter_list|,
-name|Char
-modifier|*
-name|pattern_last
 parameter_list|,
 name|Char
 modifier|*

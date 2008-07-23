@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.65 2006/11/23 01:35:11 ray Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.67 2008/01/01 08:47:04 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_ifdef
@@ -459,6 +465,37 @@ return|return
 operator|(
 literal|0
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|ssh_gai_strerror
+parameter_list|(
+name|int
+name|gaierr
+parameter_list|)
+block|{
+if|if
+condition|(
+name|gaierr
+operator|==
+name|EAI_SYSTEM
+condition|)
+return|return
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+return|;
+return|return
+name|gai_strerror
+argument_list|(
+name|gaierr
+argument_list|)
 return|;
 block|}
 end_function

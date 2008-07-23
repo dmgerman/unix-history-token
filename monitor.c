@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.91 2007/05/17 20:52:13 djm Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.94 2007/10/29 04:08:08 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -3283,6 +3283,8 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 name|buffer_put_string
 argument_list|(
 name|m
@@ -3313,8 +3315,6 @@ operator|.
 name|banner
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 name|debug3
 argument_list|(
 literal|"%s: sending MONITOR_ANS_PWNAM: %d"
@@ -6682,6 +6682,8 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|mm_send_fd
 argument_list|(
 name|sock
@@ -6690,7 +6692,10 @@ name|s
 operator|->
 name|ptyfd
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|||
 name|mm_send_fd
 argument_list|(
 name|sock
@@ -6698,6 +6703,16 @@ argument_list|,
 name|s
 operator|->
 name|ttyfd
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: send fds failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* make sure nothing uses fd 0 */
@@ -7786,6 +7801,20 @@ operator|&
 name|mm_session_close
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PAM
+if|if
+condition|(
+name|options
+operator|.
+name|use_pam
+condition|)
+name|sshpam_cleanup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|waitpid

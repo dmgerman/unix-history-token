@@ -245,6 +245,9 @@ argument_list|(
 literal|"failed to close from lowest fd"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

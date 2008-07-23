@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.h,v 1.10 2007/06/14 13:47:31 dtucker Exp $ */
+comment|/* $Id: openssl-compat.h,v 1.12 2008/02/28 08:22:04 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,41 @@ include|#
 directive|include
 file|<openssl/evp.h>
 end_include
+
+begin_comment
+comment|/* OPENSSL_free() is Free() in versions before OpenSSL 0.9.6 */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_VERSION_NUMBER
+argument_list|)
+operator|||
+operator|(
+name|OPENSSL_VERSION_NUMBER
+operator|<
+literal|0x0090600f
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_free
+parameter_list|(
+name|x
+parameter_list|)
+value|Free(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

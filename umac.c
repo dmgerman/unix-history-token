@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: umac.c,v 1.1 2007/06/07 19:37:34 pvalchev Exp $ */
+comment|/* $OpenBSD: umac.c,v 1.2 2007/09/12 19:39:19 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -76,6 +76,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
 end_include
 
 begin_include
@@ -6825,7 +6831,7 @@ name|ctx
 operator|->
 name|free_ptr
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|ctx
 argument_list|)
@@ -6873,7 +6879,7 @@ name|octx
 operator|=
 name|ctx
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.57 2007/06/07 19:37:34 pvalchev Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.60 2007/10/29 04:08:08 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1106,17 +1106,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|buffer_free
-argument_list|(
-operator|&
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|pw
+operator|=
 name|NULL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|pw
 operator|=
@@ -1223,6 +1219,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 comment|/* copy options block as a Match directive may have changed some */
 name|newopts
 operator|=
@@ -3732,6 +3730,9 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 operator|*
 name|ptyfd
 operator|=
@@ -3741,7 +3742,12 @@ name|pmonitor
 operator|->
 name|m_recvfd
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+operator|-
+literal|1
+operator|||
+operator|(
 operator|*
 name|ttyfd
 operator|=
@@ -3750,6 +3756,17 @@ argument_list|(
 name|pmonitor
 operator|->
 name|m_recvfd
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: receive fds failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Success */

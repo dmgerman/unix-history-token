@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openbsd-compat/openssl-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdarg.h>
 end_include
 

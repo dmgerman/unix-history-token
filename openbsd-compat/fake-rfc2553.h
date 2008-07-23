@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: fake-rfc2553.h,v 1.13 2006/07/24 03:51:52 djm Exp $ */
+comment|/* $Id: fake-rfc2553.h,v 1.14 2008/02/25 09:21:20 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -615,7 +615,7 @@ name|gai_strerror
 parameter_list|(
 name|a
 parameter_list|)
-value|(ssh_gai_strerror(a))
+value|(_ssh_compat_gai_strerror(a))
 end_define
 
 begin_function_decl

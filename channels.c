@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.270 2007/06/25 08:20:03 dtucker Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.272 2008/01/19 23:02:40 djm Exp $ */
 end_comment
 
 begin_comment
@@ -11455,6 +11455,10 @@ literal|"0.0.0.0"
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|is_client
+operator|==
+literal|0
 operator|)
 operator|||
 operator|*
@@ -11602,7 +11606,7 @@ name|packet_disconnect
 argument_list|(
 literal|"getaddrinfo: fatal error: %s"
 argument_list|,
-name|gai_strerror
+name|ssh_gai_strerror
 argument_list|(
 name|r
 argument_list|)
@@ -11618,7 +11622,7 @@ literal|"getaddrinfo(%.64s): %s"
 argument_list|,
 name|addr
 argument_list|,
-name|gai_strerror
+name|ssh_gai_strerror
 argument_list|(
 name|r
 argument_list|)
@@ -12958,7 +12962,7 @@ literal|"connect_to %.100s: unknown host (%s)"
 argument_list|,
 name|host
 argument_list|,
-name|gai_strerror
+name|ssh_gai_strerror
 argument_list|(
 name|gaierr
 argument_list|)
@@ -13748,7 +13752,7 @@ name|error
 argument_list|(
 literal|"getaddrinfo: %.100s"
 argument_list|,
-name|gai_strerror
+name|ssh_gai_strerror
 argument_list|(
 name|gaierr
 argument_list|)
@@ -14641,7 +14645,7 @@ literal|"%.100s: unknown host. (%s)"
 argument_list|,
 name|buf
 argument_list|,
-name|gai_strerror
+name|ssh_gai_strerror
 argument_list|(
 name|gaierr
 argument_list|)

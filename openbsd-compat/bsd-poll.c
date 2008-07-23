@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-poll.c,v 1.1 2007/06/25 12:15:13 dtucker Exp $ */
+comment|/* $Id: bsd-poll.c,v 1.2 2008/02/29 02:57:47 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -20,11 +20,6 @@ operator|!
 name|defined
 argument_list|(
 name|HAVE_POLL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SELECT
 argument_list|)
 end_if
 

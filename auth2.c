@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.115 2007/04/14 22:01:58 stevesk Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.116 2007/09/29 00:25:51 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -321,20 +321,6 @@ modifier|*
 name|authmethods_get
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|user_key_allowed
-parameter_list|(
-name|struct
-name|passwd
-modifier|*
-parameter_list|,
-name|Key
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

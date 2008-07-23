@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.164 2007/05/17 23:53:41 jolan Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.165 2008/01/19 23:09:49 djm Exp $ */
 end_comment
 
 begin_comment
@@ -539,6 +539,9 @@ name|rekey_limit
 condition|)
 name|packet_set_rekey_limit
 argument_list|(
+operator|(
+name|u_int32_t
+operator|)
 name|options
 operator|.
 name|rekey_limit

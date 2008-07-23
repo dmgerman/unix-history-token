@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.45 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.46 2008/02/22 20:44:02 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -672,6 +672,13 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|max_packet_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|keep_alive_timeouts
 decl_stmt|;
 end_decl_stmt
 
