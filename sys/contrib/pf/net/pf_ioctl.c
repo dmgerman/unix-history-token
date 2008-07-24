@@ -8052,7 +8052,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-comment|/* ROUTEING */
+comment|/* ROUTING */
 if|if
 condition|(
 name|rule
