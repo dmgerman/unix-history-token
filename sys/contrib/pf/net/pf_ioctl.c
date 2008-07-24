@@ -8060,6 +8060,12 @@ operator|->
 name|rtableid
 operator|>
 literal|0
+operator|&&
+name|rule
+operator|->
+name|rtableid
+operator|<
+name|rt_numfibs
 condition|)
 else|#
 directive|else
@@ -9690,7 +9696,11 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 comment|/* ROUTING */
-literal|1
+name|newrule
+operator|->
+name|rtableid
+operator|<
+name|rt_numfibs
 condition|)
 else|#
 directive|else

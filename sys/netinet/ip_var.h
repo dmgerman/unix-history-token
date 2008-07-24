@@ -901,6 +901,9 @@ name|ip_rtaddr
 parameter_list|(
 name|struct
 name|in_addr
+parameter_list|,
+name|u_int
+name|fibnum
 parameter_list|)
 function_decl|;
 end_function_decl

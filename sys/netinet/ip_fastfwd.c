@@ -281,11 +281,16 @@ name|dest
 operator|.
 name|s_addr
 expr_stmt|;
-name|rtalloc_ign
+name|in_rtalloc_ign
 argument_list|(
 name|ro
 argument_list|,
 name|RTF_CLONING
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Route there and interface still up? 	 */

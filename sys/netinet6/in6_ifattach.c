@@ -3452,6 +3452,9 @@ if|if
 condition|(
 name|rt_tables
 index|[
+literal|0
+index|]
+index|[
 name|AF_INET6
 index|]
 operator|!=
@@ -3461,6 +3464,9 @@ block|{
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|rt_tables
+index|[
+literal|0
+index|]
 index|[
 name|AF_INET6
 index|]
@@ -3510,6 +3516,9 @@ block|}
 name|RADIX_NODE_HEAD_UNLOCK
 argument_list|(
 name|rt_tables
+index|[
+literal|0
+index|]
 index|[
 name|AF_INET6
 index|]

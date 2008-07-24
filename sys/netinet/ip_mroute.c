@@ -1322,6 +1322,9 @@ name|cmd
 parameter_list|,
 name|caddr_t
 name|data
+parameter_list|,
+name|int
+name|fibnum
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2561,6 +2564,9 @@ name|cmd
 parameter_list|,
 name|caddr_t
 name|data
+parameter_list|,
+name|int
+name|fibnum
 parameter_list|)
 block|{
 name|int

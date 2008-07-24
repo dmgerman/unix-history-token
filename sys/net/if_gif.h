@@ -212,6 +212,9 @@ union|;
 name|int
 name|gif_flags
 decl_stmt|;
+name|u_int
+name|gif_fibnum
+decl_stmt|;
 specifier|const
 name|struct
 name|encaptab

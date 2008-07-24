@@ -736,6 +736,28 @@ name|dom
 operator|->
 name|dom_next
 control|)
+block|{
+name|KASSERT
+argument_list|(
+operator|(
+operator|(
+name|i
+operator|==
+name|AF_INET
+operator|)
+operator|||
+operator|(
+name|i
+operator|==
+name|AF_INET6
+operator|)
+operator|)
+argument_list|,
+operator|(
+literal|"unexpected protocol in vfs_hang_addrlist"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dom
@@ -749,6 +771,7 @@ operator|->
 name|dom_rtattach
 condition|)
 block|{
+comment|/* 				 * XXX MRT  				 * The INET and INET6 domains know the 				 * offset already. We don't need to send it 				 * So we just use it as a flag to say that 				 * we are or are not setting up a real routing 				 * table. Only IP and IPV6 need have this 				 * be 0 so all other protocols can stay the  				 * same (ABI compatible). 				 */
 name|dom
 operator|->
 name|dom_rtattach
@@ -766,12 +789,11 @@ index|[
 name|i
 index|]
 argument_list|,
-name|dom
-operator|->
-name|dom_rtoffset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(

@@ -935,6 +935,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+comment|/* XXX MRT 0 for routing */
 name|ia
 operator|=
 name|ip_rtaddr
@@ -942,6 +943,11 @@ argument_list|(
 name|ipaddr
 operator|.
 name|sin_addr
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1178,6 +1184,11 @@ argument_list|(
 name|ipaddr
 operator|.
 name|sin_addr
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 operator|)
 operator|==

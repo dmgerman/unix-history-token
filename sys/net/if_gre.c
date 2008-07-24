@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -829,6 +835,16 @@ operator|->
 name|called
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|gre_fibnum
+operator|=
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_fibnum
 expr_stmt|;
 name|sc
 operator|->
@@ -1842,6 +1858,16 @@ goto|goto
 name|end
 goto|;
 block|}
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|sc
+operator|->
+name|gre_fibnum
+argument_list|)
+expr_stmt|;
+comment|/* The envelope may use a different FIB */
 name|gh
 operator|=
 name|mtod
@@ -3734,9 +3760,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|rtalloc
+name|rtalloc_fib
 argument_list|(
 name|ro
+argument_list|,
+name|sc
+operator|->
+name|gre_fibnum
 argument_list|)
 expr_stmt|;
 comment|/* 	 * check if this returned a route at all and this route is no 	 * recursion to ourself 	 */

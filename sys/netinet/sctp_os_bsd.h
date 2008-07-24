@@ -1835,7 +1835,7 @@ name|ro
 parameter_list|,
 name|vrf_id
 parameter_list|)
-value|rtalloc_ign((struct route *)ro, 0UL)
+value|in_rtalloc_ign((struct route *)ro, 0UL, vrf_id)
 end_define
 
 begin_comment

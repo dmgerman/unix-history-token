@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -721,6 +727,16 @@ name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|gif_fibnum
+operator|=
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_fibnum
 expr_stmt|;
 name|GIF2IFP
 argument_list|(
@@ -2002,6 +2018,15 @@ condition|)
 name|af
 operator|=
 name|AF_LINK
+expr_stmt|;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|sc
+operator|->
+name|gif_fibnum
+argument_list|)
 expr_stmt|;
 comment|/* inner AF-specific encapsulation */
 comment|/* XXX should we check if our outer source is legal? */

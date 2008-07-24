@@ -264,6 +264,12 @@ comment|/* arg1=tag number */
 name|O_TAGGED
 block|,
 comment|/* arg1=tag number */
+name|O_SETFIB
+block|,
+comment|/* arg1=FIB number */
+name|O_FIB
+block|,
+comment|/* arg1=FIB desired fib number */
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -1103,6 +1109,9 @@ name|dst_port
 decl_stmt|;
 name|u_int16_t
 name|src_port
+decl_stmt|;
+name|u_int8_t
+name|fib
 decl_stmt|;
 name|u_int8_t
 name|proto

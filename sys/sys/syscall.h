@@ -1026,6 +1026,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYS_setfib
+value|175
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYS_ntp_adjtime
 value|176
 end_define

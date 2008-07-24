@@ -163,7 +163,7 @@ block|,
 operator|.
 name|dom_rtattach
 operator|=
-name|rn_inithead
+name|at_inithead
 block|,
 operator|.
 name|dom_rtoffset

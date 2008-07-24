@@ -310,6 +310,20 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|ipx_inithead
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -355,7 +369,7 @@ block|,
 operator|.
 name|dom_rtattach
 operator|=
-name|rn_inithead
+name|ipx_inithead
 block|,
 operator|.
 name|dom_rtoffset
@@ -373,6 +387,34 @@ operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* shim to adapt arguments */
+end_comment
+
+begin_function
+name|int
+name|ipx_inithead
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|head
+parameter_list|,
+name|int
+name|offset
+parameter_list|)
+block|{
+return|return
+name|rn_inithead
+argument_list|(
+name|head
+argument_list|,
+name|offset
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_expr_stmt
 name|DOMAIN_SET

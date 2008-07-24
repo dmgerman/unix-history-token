@@ -902,6 +902,15 @@ name|ip
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|sc
+operator|->
+name|gif_fibnum
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dst
@@ -1008,7 +1017,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|rtalloc_ign
+name|in_rtalloc_ign
 argument_list|(
 operator|&
 name|sc
@@ -1016,6 +1025,10 @@ operator|->
 name|gif_ro
 argument_list|,
 literal|0
+argument_list|,
+name|sc
+operator|->
+name|gif_fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -1816,9 +1829,10 @@ name|ip
 operator|->
 name|ip_src
 expr_stmt|;
+comment|/* XXX MRT  check for the interface we would use on output */
 name|rt
 operator|=
-name|rtalloc1
+name|in_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -1831,6 +1845,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+name|sc
+operator|->
+name|gif_fibnum
 argument_list|)
 expr_stmt|;
 if|if

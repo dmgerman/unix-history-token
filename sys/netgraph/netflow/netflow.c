@@ -1091,12 +1091,15 @@ name|r
 operator|.
 name|r_dst
 expr_stmt|;
-name|rtalloc_ign
+comment|/* XXX MRT 0 as a default.. need the m here to get fib */
+name|rtalloc_ign_fib
 argument_list|(
 operator|&
 name|ro
 argument_list|,
 name|RTF_CLONING
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1279,14 +1282,17 @@ name|r
 operator|.
 name|r_src
 expr_stmt|;
-name|rtalloc_ign
+name|rtalloc_ign_fib
 argument_list|(
 operator|&
 name|ro
 argument_list|,
 name|RTF_CLONING
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* XXX MRT */
 if|if
 condition|(
 name|ro
