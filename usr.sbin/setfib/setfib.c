@@ -309,10 +309,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|syscall
+name|setfib
 argument_list|(
-literal|175
-argument_list|,
 operator|(
 name|int
 operator|)
