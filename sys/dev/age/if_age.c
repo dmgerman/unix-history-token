@@ -2711,12 +2711,8 @@ argument_list|,
 name|GPHY_CTRL_RST
 argument_list|)
 expr_stmt|;
-name|pause
+name|DELAY
 argument_list|(
-literal|"agephy"
-argument_list|,
-name|hz
-operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
@@ -2729,12 +2725,8 @@ argument_list|,
 name|GPHY_CTRL_CLR
 argument_list|)
 expr_stmt|;
-name|pause
+name|DELAY
 argument_list|(
-literal|"agephy"
-argument_list|,
-name|hz
-operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
