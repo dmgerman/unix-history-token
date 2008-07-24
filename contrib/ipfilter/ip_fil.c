@@ -4556,5 +4556,41 @@ return|;
 block|}
 end_function
 
+begin_function
+name|u_32_t
+name|ipf_random
+parameter_list|()
+block|{
+specifier|static
+name|int
+name|seeded
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * Choose a non-random seed so that "randomness" can be "tested." 	 */
+if|if
+condition|(
+name|seeded
+operator|==
+literal|0
+condition|)
+block|{
+name|srand
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|seeded
+operator|=
+literal|1
+expr_stmt|;
+block|}
+return|return
+name|rand
+argument_list|()
+return|;
+block|}
+end_function
+
 end_unit
 

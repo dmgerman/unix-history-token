@@ -1508,6 +1508,19 @@ name|np
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|np
+operator|->
+name|in_flags
+operator|&
+name|IPN_SEQUENTIAL
+condition|)
+name|printf
+argument_list|(
+literal|" sequential"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
