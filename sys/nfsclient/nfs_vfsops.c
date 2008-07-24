@@ -4012,8 +4012,6 @@ name|nmp
 operator|->
 name|nm_hostname
 argument_list|,
-name|argp
-operator|->
 name|hostname
 argument_list|,
 sizeof|sizeof
