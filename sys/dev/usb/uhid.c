@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/clist.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -120,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -145,6 +145,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ttycom.h>
 end_include
 
 begin_include

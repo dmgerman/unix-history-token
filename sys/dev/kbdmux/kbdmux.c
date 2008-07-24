@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/clist.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -125,12 +131,6 @@ begin_include
 include|#
 directive|include
 file|<sys/taskqueue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/tty.h>
 end_include
 
 begin_include
