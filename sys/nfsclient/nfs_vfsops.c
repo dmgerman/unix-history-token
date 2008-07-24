@@ -484,6 +484,11 @@ name|struct
 name|nfs_args
 modifier|*
 name|argp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hostname
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3017,6 +3022,11 @@ name|struct
 name|nfs_args
 modifier|*
 name|argp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hostname
 parameter_list|)
 block|{
 name|int
@@ -3991,6 +4001,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|hostname
+condition|)
+block|{
 name|strlcpy
 argument_list|(
 name|nmp
@@ -4029,6 +4044,7 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4452,6 +4468,8 @@ name|nmp
 argument_list|,
 operator|&
 name|args
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5145,6 +5163,8 @@ argument_list|,
 name|nmp
 argument_list|,
 name|argp
+argument_list|,
+name|hst
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For Connection based sockets (TCP,...) defer the connect until 	 * the first request, in case the server is not responding. 	 */
