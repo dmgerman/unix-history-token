@@ -166,7 +166,7 @@ name|ipxsendspace
 argument_list|,
 literal|0
 argument_list|,
-literal|"ipx send buffer space"
+literal|"Send buffer space"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -196,7 +196,7 @@ name|ipxrecvspace
 argument_list|,
 literal|0
 argument_list|,
-literal|"ipx receive buffer space"
+literal|"Receive buffer space"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
