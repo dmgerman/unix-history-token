@@ -187,8 +187,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOGIN_SETCPUMASK
+value|0x0200
+end_define
+
+begin_comment
+comment|/* set user cpumask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LOGIN_SETALL
-value|0x01ff
+value|0x03ff
 end_define
 
 begin_comment
