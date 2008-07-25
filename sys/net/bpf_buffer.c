@@ -124,7 +124,7 @@ name|bpf_bufsize
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum capture buffer size in bytes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -154,7 +154,7 @@ name|bpf_maxbufsize
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default capture buffer in bytes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
