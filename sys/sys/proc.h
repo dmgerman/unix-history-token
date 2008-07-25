@@ -4172,18 +4172,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pargs_free
-parameter_list|(
-name|struct
-name|pargs
-modifier|*
-name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pargs_hold
 parameter_list|(
 name|struct

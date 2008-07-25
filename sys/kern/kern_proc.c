@@ -995,6 +995,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|pargs_free
+parameter_list|(
+name|struct
+name|pargs
+modifier|*
+name|pa
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Other process lists  */
 end_comment
@@ -6226,6 +6239,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pargs_free
 parameter_list|(
