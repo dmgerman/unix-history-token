@@ -1811,7 +1811,7 @@ operator|&
 name|waittime
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If the lock is alredy held by curthread in 			 * exclusive way avoid a deadlock. 			 */
+comment|/* 			 * If the lock is already held by curthread in 			 * exclusive way avoid a deadlock. 			 */
 if|if
 condition|(
 name|LK_HOLDER
@@ -1826,7 +1826,7 @@ name|LOCK_LOG2
 argument_list|(
 name|lk
 argument_list|,
-literal|"%s: %p alredy held in exclusive mode"
+literal|"%s: %p already held in exclusive mode"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2209,7 +2209,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If curthread alredy holds the lock and this one is 		 * allowed to recurse, simply recurse on it. 		 */
+comment|/* 		 * If curthread already holds the lock and this one is 		 * allowed to recurse, simply recurse on it. 		 */
 if|if
 condition|(
 name|lockmgr_xlocked
@@ -3076,7 +3076,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Trying to drain a lock we alredy own will result in a 		 * deadlock. 		 */
+comment|/* 		 * Trying to drain a lock we already own will result in a 		 * deadlock. 		 */
 if|if
 condition|(
 name|lockmgr_xlocked
@@ -3637,7 +3637,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the owner is alredy LK_KERNPROC just skip the whole operation. 	 */
+comment|/* 	 * If the owner is already LK_KERNPROC just skip the whole operation. 	 */
 if|if
 condition|(
 name|LK_HOLDER
