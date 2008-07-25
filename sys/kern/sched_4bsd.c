@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -2316,6 +2322,17 @@ name|td_lock
 operator|=
 operator|&
 name|sched_lock
+expr_stmt|;
+name|childtd
+operator|->
+name|td_cpuset
+operator|=
+name|cpuset_ref
+argument_list|(
+name|td
+operator|->
+name|td_cpuset
+argument_list|)
 expr_stmt|;
 name|sched_newthread
 argument_list|(
@@ -5396,6 +5413,18 @@ name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|sched_affinity
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{ }
 end_function
 
 begin_define

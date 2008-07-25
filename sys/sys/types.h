@@ -468,6 +468,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|__cpuwhich_t
+name|cpuwhich_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__cpulevel_t
+name|cpulevel_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__cpusetid_t
+name|cpusetid_t
+typedef|;
+end_typedef
+
 begin_ifndef
 ifndef|#
 directive|ifndef

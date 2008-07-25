@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -1678,6 +1684,13 @@ operator|->
 name|td_flags
 operator|=
 name|TDF_INMEM
+expr_stmt|;
+name|td
+operator|->
+name|td_cpuset
+operator|=
+name|cpuset_thread0
+argument_list|()
 expr_stmt|;
 name|p
 operator|->
