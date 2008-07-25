@@ -651,8 +651,8 @@ comment|/* 	 * First, let's check the see if the database is alright 	 * Note: -
 ifdef|#
 directive|ifdef
 name|HAVE_PWDB_C
-if|if
-condition|(
+name|rc
+operator|=
 name|pwdb
 argument_list|(
 literal|"-C"
@@ -663,11 +663,15 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
+expr_stmt|;
+comment|/* Check only */
+if|if
+condition|(
+name|rc
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* Check only */
 else|#
 directive|else
 block|{
