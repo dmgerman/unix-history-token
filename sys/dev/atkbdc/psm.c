@@ -10111,7 +10111,7 @@ name|verbose
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Verbosity level"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10141,7 +10141,7 @@ name|psmhz
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Frequency of the softcallout (in hz)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10171,7 +10171,7 @@ name|psmerrsecs
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of seconds during which packets will dropped after a sync error"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10201,7 +10201,7 @@ name|psmerrusecs
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Microseconds to add to psmerrsecs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10231,7 +10231,7 @@ name|psmsecs
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max number of seconds between soft interrupts"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10261,7 +10261,7 @@ name|psmusecs
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Microseconds to add to psmsecs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10291,7 +10291,7 @@ name|pkterrthresh
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of error packets allowed before reinitializing the mouse"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10321,7 +10321,7 @@ name|tap_threshold
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Button tap threshold"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10351,7 +10351,7 @@ name|tap_timeout
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Tap timeout for touchpads"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
