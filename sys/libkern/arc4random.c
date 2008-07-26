@@ -310,6 +310,12 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|arc4_i
+operator|=
+name|arc4_j
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Reset for next reseed cycle. */
 name|arc4_t_reseed
 operator|=
