@@ -3860,10 +3860,10 @@ directive|ifdef
 name|HAVE_ARC4RANDOM
 name|delay
 operator|=
-name|arc4random
-argument_list|()
-operator|%
+name|arc4random_uniform
+argument_list|(
 name|MAX_RA_DELAY_TIME
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
@@ -7444,10 +7444,8 @@ directive|ifdef
 name|HAVE_ARC4RANDOM
 name|interval
 operator|+=
-name|arc4random
-argument_list|()
-operator|%
-operator|(
+name|arc4random_uniform
+argument_list|(
 name|rai
 operator|->
 name|maxinterval
@@ -7455,7 +7453,7 @@ operator|-
 name|rai
 operator|->
 name|mininterval
-operator|)
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
