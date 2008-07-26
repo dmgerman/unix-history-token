@@ -2769,14 +2769,12 @@ else|#
 directive|else
 name|interval
 operator|=
-name|arc4random
-argument_list|()
-operator|%
-operator|(
+name|arc4random_uniform
+argument_list|(
 name|MAX_RTR_SOLICITATION_DELAY
 operator|*
 name|MILLION
-operator|)
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
