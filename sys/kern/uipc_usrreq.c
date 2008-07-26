@@ -477,7 +477,7 @@ name|unpst_sendspace
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default stream send space."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -498,7 +498,7 @@ name|unpst_recvspace
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default stream receive space."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -519,7 +519,7 @@ name|unpdg_sendspace
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default datagram send space."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -540,7 +540,7 @@ name|unpdg_recvspace
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Default datagram receive space."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -561,7 +561,7 @@ name|unp_rights
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"File descriptors in flight."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8979,7 +8979,7 @@ name|unp_recycled
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of unreachable sockets claimed by the garbage collector."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9007,7 +9007,7 @@ name|unp_taskcount
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of times the garbage collector has run."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
