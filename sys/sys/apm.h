@@ -40,6 +40,20 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|APM_ENT_NAMELEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_ENT_TYPELEN
+value|32
+end_define
+
 begin_comment
 comment|/* Partition Map Entry Record. */
 end_comment
@@ -70,13 +84,13 @@ decl_stmt|;
 name|char
 name|ent_name
 index|[
-literal|32
+name|APM_ENT_NAMELEN
 index|]
 decl_stmt|;
 name|char
 name|ent_type
 index|[
-literal|32
+name|APM_ENT_TYPELEN
 index|]
 decl_stmt|;
 block|}
