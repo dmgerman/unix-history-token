@@ -9655,15 +9655,7 @@ operator|.
 name|is_ps_badaid
 operator|++
 expr_stmt|;
-name|IEEE80211_SEND_MGMT
-argument_list|(
-name|ni
-argument_list|,
-name|IEEE80211_FC0_SUBTYPE_DEAUTH
-argument_list|,
-name|IEEE80211_REASON_NOT_ASSOCED
-argument_list|)
-expr_stmt|;
+comment|/* 		 * NB: We used to deauth the station but it turns out 		 * the Blackberry Curve 8230 (and perhaps other devices)  		 * sometimes send the wrong AID when WME is negotiated. 		 * Being more lenient here seems ok as we already check 		 * the station is associated and we only return frames 		 * queued for the station (i.e. we don't use the AID). 		 */
 return|return;
 block|}
 comment|/* Okay, take the first queued packet and put it out... */
