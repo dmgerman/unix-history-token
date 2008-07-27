@@ -1588,26 +1588,20 @@ comment|/* get name of recipient.  this is MAILTO if set to a 			 * valid local 
 if|if
 condition|(
 name|mailto
+operator|==
+name|NULL
 condition|)
 block|{
-comment|/* MAILTO was present in the environment 				 */
+comment|/* MAILTO not present, set to USER, 				 * unless globally overriden. 				 */
 if|if
 condition|(
-operator|!
-operator|*
-name|mailto
+name|defmailto
 condition|)
-block|{
-comment|/* ... but it's empty. set to NULL 					 */
 name|mailto
 operator|=
-name|NULL
+name|defmailto
 expr_stmt|;
-block|}
-block|}
 else|else
-block|{
-comment|/* MAILTO not present, set to USER. 				 */
 name|mailto
 operator|=
 name|usernm
@@ -1617,6 +1611,11 @@ comment|/* if we are supposed to be mailing, MAILTO will 			 * be non-NULL.  onl
 if|if
 condition|(
 name|mailto
+operator|&&
+operator|*
+name|mailto
+operator|!=
+literal|'\0'
 condition|)
 block|{
 specifier|register
