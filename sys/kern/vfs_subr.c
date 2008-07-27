@@ -10175,7 +10175,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
@@ -10872,7 +10872,7 @@ block|{
 name|int
 name|recycled
 decl_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
@@ -10991,7 +10991,7 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
