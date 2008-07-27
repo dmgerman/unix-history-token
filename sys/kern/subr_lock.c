@@ -551,6 +551,9 @@ name|int
 name|ticks
 decl_stmt|;
 name|uintmax_t
+name|cnt_wait_max
+decl_stmt|;
+name|uintmax_t
 name|cnt_max
 decl_stmt|;
 name|uintmax_t
@@ -1166,11 +1169,17 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%6ju %12ju %12ju %11ju %5ju %5ju %12ju %12ju %s:%d (%s:%s)\n"
+literal|"%8ju %9ju %11ju %11ju %11ju %6ju %6ju %2ju %6ju %s:%d (%s:%s)\n"
 argument_list|,
 name|lp
 operator|->
 name|cnt_max
+operator|/
+literal|1000
+argument_list|,
+name|lp
+operator|->
+name|cnt_wait_max
 operator|/
 literal|1000
 argument_list|,
@@ -1441,6 +1450,24 @@ name|l
 operator|->
 name|cnt_max
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|->
+name|cnt_wait_max
+operator|>
+name|dst
+operator|->
+name|cnt_wait_max
+condition|)
+name|dst
+operator|->
+name|cnt_wait_max
+operator|=
+name|l
+operator|->
+name|cnt_wait_max
+expr_stmt|;
 name|dst
 operator|->
 name|cnt_tot
@@ -1631,9 +1658,11 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\n%6s %12s %12s %11s %5s %5s %12s %12s %s\n"
+literal|"\n%8s %9s %11s %11s %11s %6s %6s %2s %6s %s\n"
 argument_list|,
 literal|"max"
+argument_list|,
+literal|"wait_max"
 argument_list|,
 literal|"total"
 argument_list|,
@@ -2737,6 +2766,24 @@ operator|->
 name|cnt_max
 operator|=
 name|holdtime
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|->
+name|lpo_waittime
+operator|>
+name|lp
+operator|->
+name|cnt_wait_max
+condition|)
+name|lp
+operator|->
+name|cnt_wait_max
+operator|=
+name|l
+operator|->
+name|lpo_waittime
 expr_stmt|;
 name|lp
 operator|->
