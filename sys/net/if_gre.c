@@ -1046,12 +1046,12 @@ modifier|*
 name|ip
 decl_stmt|;
 name|u_short
-name|ip_id
+name|gre_ip_id
 init|=
 literal|0
 decl_stmt|;
 name|uint8_t
-name|ip_tos
+name|gre_ip_tos
 init|=
 literal|0
 decl_stmt|;
@@ -1727,13 +1727,13 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-name|ip_tos
+name|gre_ip_tos
 operator|=
 name|ip
 operator|->
 name|ip_tos
 expr_stmt|;
-name|ip_id
+name|gre_ip_id
 operator|=
 name|ip
 operator|->
@@ -1750,7 +1750,7 @@ name|INET6
 case|case
 name|AF_INET6
 case|:
-name|ip_id
+name|gre_ip_id
 operator|=
 name|ip_newid
 argument_list|()
@@ -2007,7 +2007,7 @@ operator|)
 operator|->
 name|ip_tos
 operator|=
-name|ip_tos
+name|gre_ip_tos
 expr_stmt|;
 operator|(
 operator|(
@@ -2020,7 +2020,7 @@ operator|)
 operator|->
 name|ip_id
 operator|=
-name|ip_id
+name|gre_ip_id
 expr_stmt|;
 name|gh
 operator|->
