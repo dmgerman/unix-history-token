@@ -1434,6 +1434,9 @@ begin_decl_stmt
 name|char
 modifier|*
 name|ProgramName
+decl_stmt|,
+modifier|*
+name|defmailto
 decl_stmt|;
 end_decl_stmt
 
@@ -1534,6 +1537,9 @@ index|[]
 decl_stmt|,
 modifier|*
 name|ProgramName
+decl_stmt|,
+modifier|*
+name|defmailto
 decl_stmt|;
 end_decl_stmt
 
