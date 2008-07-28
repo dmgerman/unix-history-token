@@ -186,12 +186,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_object.h>
 end_include
 
@@ -408,13 +402,6 @@ name|kernel_pt_table
 index|[
 name|NUM_KERNEL_PTS
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|sa1_cache_clean_addr
 decl_stmt|;
 end_decl_stmt
 
