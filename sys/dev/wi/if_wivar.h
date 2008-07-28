@@ -260,6 +260,15 @@ name|int
 name|sc_sta_firmware_ver
 decl_stmt|;
 comment|/* Station firmware */
+name|unsigned
+name|int
+name|sc_nic_id
+decl_stmt|;
+comment|/* Type of NIC */
+name|char
+modifier|*
+name|sc_nic_name
+decl_stmt|;
 name|int
 name|wi_bus_type
 decl_stmt|;
