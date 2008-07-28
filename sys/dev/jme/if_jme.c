@@ -11226,7 +11226,7 @@ name|jme_flags
 operator|&
 name|JME_FLAG_FASTETH
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 break|break;
