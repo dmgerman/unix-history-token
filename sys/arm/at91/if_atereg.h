@@ -383,23 +383,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ETH_HSH
+name|ETH_HSL
 value|0x90
 end_define
 
 begin_comment
-comment|/* EMAC Hash Address High [63:32] */
+comment|/* EMAC Hash Address Low [31:0] */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ETH_HSL
+name|ETH_HSH
 value|0x94
 end_define
 
 begin_comment
-comment|/* EMAC Hash Address Low [31:0] */
+comment|/* EMAC Hash Address High [63:32] */
 end_comment
 
 begin_define
