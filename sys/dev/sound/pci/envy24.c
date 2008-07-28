@@ -12815,7 +12815,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* allocate interupt resource */
+comment|/* allocate interrupt resource */
 name|sc
 operator|->
 name|irqid

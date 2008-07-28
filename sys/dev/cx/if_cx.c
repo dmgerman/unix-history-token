@@ -1918,7 +1918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Activate interupt handler from DDK.  */
+comment|/*  * Activate interrupt handler from DDK.  */
 end_comment
 
 begin_function

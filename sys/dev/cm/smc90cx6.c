@@ -2154,7 +2154,7 @@ name|sc_intmask
 operator||=
 name|CM_RI
 expr_stmt|;
-comment|/* this also clears the RI flag interupt: */
+comment|/* this also clears the RI flag interrupt: */
 name|PUTREG
 argument_list|(
 name|CMCMD
@@ -2751,7 +2751,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s: spurious RX interupt or sender 0 "
+literal|"%s: spurious RX interrupt or sender 0 "
 literal|" (ignored)\n"
 argument_list|,
 name|ifp
@@ -2812,7 +2812,7 @@ name|sc_rx_act
 operator|=
 name|buffer
 expr_stmt|;
-comment|/* 					 * Start receiver on other receive 					 * buffer. This also clears the RI 					 * interupt flag. 					 */
+comment|/* 					 * Start receiver on other receive 					 * buffer. This also clears the RI 					 * interrupt flag. 					 */
 name|PUTREG
 argument_list|(
 name|CMCMD

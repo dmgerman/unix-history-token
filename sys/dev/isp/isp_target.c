@@ -6322,7 +6322,7 @@ break|break;
 case|case
 name|CT_BDR_MSG
 case|:
-comment|/* 		 * Bus Device Reset message received or the SCSI Bus has 		 * been Reset; the firmware has gone to Bus Free. 		 * 		 * The firmware generates an async mailbox interupt to 		 * notify us of this and returns outstanding CTIOs with this 		 * status. These CTIOs are handled in that same way as 		 * CT_ABORTED ones, so just fall through here. 		 */
+comment|/* 		 * Bus Device Reset message received or the SCSI Bus has 		 * been Reset; the firmware has gone to Bus Free. 		 * 		 * The firmware generates an async mailbox interrupt to 		 * notify us of this and returns outstanding CTIOs with this 		 * status. These CTIOs are handled in that same way as 		 * CT_ABORTED ones, so just fall through here. 		 */
 name|fmsg
 operator|=
 literal|"Bus Device Reset"
@@ -6780,7 +6780,7 @@ break|break;
 case|case
 name|CT_BDR_MSG
 case|:
-comment|/* 		 * Target Reset function received. 		 * 		 * The firmware generates an async mailbox interupt to 		 * notify us of this and returns outstanding CTIOs with this 		 * status. These CTIOs are handled in that same way as 		 * CT_ABORTED ones, so just fall through here. 		 */
+comment|/* 		 * Target Reset function received. 		 * 		 * The firmware generates an async mailbox interrupt to 		 * notify us of this and returns outstanding CTIOs with this 		 * status. These CTIOs are handled in that same way as 		 * CT_ABORTED ones, so just fall through here. 		 */
 name|fmsg
 operator|=
 literal|"TARGET RESET"

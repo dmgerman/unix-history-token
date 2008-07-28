@@ -425,7 +425,7 @@ comment|/* pages to kbytes */
 end_comment
 
 begin_comment
-comment|/**  * @brief Mapping of ki_stat in struct kinfo_proc to the linux state  *  * The linux procfs state field displays one of the characters RSDZTW to  * denote running, sleeping in an interruptible wait, waiting in an  * uninteruptible disk sleep, a zombie process, process is being traced  * or stopped, or process is paging respectively.  *  * Our struct kinfo_proc contains the variable ki_stat which contains a  * value out of SIDL, SRUN, SSLEEP, SSTOP, SZOMB, SWAIT and SLOCK.  *  * This character array is used with ki_stati-1 as an index and tries to  * map our states to suitable linux states.  */
+comment|/**  * @brief Mapping of ki_stat in struct kinfo_proc to the linux state  *  * The linux procfs state field displays one of the characters RSDZTW to  * denote running, sleeping in an interruptible wait, waiting in an  * uninterruptible disk sleep, a zombie process, process is being traced  * or stopped, or process is paging respectively.  *  * Our struct kinfo_proc contains the variable ki_stat which contains a  * value out of SIDL, SRUN, SSLEEP, SSTOP, SZOMB, SWAIT and SLOCK.  *  * This character array is used with ki_stati-1 as an index and tries to  * map our states to suitable linux states.  */
 end_comment
 
 begin_decl_stmt

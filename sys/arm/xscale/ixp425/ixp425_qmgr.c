@@ -1284,7 +1284,7 @@ name|uint32_t
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* Set the interupt source if this queue is in the range 0-31 */
+comment|/* Set the interrupt source if this queue is in the range 0-31 */
 if|if
 condition|(
 name|qId
@@ -2486,7 +2486,7 @@ comment|/* Calculate the checkMask and checkValue for this q */
 block|aqm_calc_statuscheck(sc, qId, srcSel);
 endif|#
 directive|endif
-comment|/* Set the interupt source if this queue is in the range 0-31 */
+comment|/* Set the interrupt source if this queue is in the range 0-31 */
 if|if
 condition|(
 name|qId

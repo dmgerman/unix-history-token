@@ -1104,7 +1104,7 @@ return|return
 name|ENXIO
 return|;
 block|}
-comment|/* register interupt routine */
+comment|/* register interrupt routine */
 if|if
 condition|(
 name|bus_setup_intr

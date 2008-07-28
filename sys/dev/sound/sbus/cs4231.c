@@ -3247,7 +3247,7 @@ operator||
 name|CS_MODE2
 argument_list|)
 expr_stmt|;
-comment|/* enable interupts& clear CSR */
+comment|/* enable interrupts& clear CSR */
 name|cs4231_write
 argument_list|(
 name|sc

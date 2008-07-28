@@ -202,7 +202,7 @@ name|sc_ipac
 operator|==
 literal|0
 condition|)
-comment|/* HSCX/ISAC interupt routine */
+comment|/* HSCX/ISAC interrupt routine */
 block|{
 name|u_char
 name|was_hscx_irq
@@ -1486,7 +1486,7 @@ operator|.
 name|irq
 condition|)
 block|{
-comment|/* tear down interupt handler */
+comment|/* tear down interrupt handler */
 name|bus_teardown_intr
 argument_list|(
 name|dev

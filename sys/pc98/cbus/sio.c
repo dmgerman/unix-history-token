@@ -5403,7 +5403,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Enable the interrupt gate and disable device interupts.  This 	 * should leave the device driving the interrupt line low and 	 * guarantee an edge trigger if an interrupt can be generated. 	 */
+comment|/* 	 * Enable the interrupt gate and disable device interrupts.  This 	 * should leave the device driving the interrupt line low and 	 * guarantee an edge trigger if an interrupt can be generated. 	 */
 comment|/* EXTRA DELAY? */
 name|sio_setreg
 argument_list|(

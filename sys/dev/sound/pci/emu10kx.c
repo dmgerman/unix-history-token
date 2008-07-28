@@ -5566,7 +5566,7 @@ name|irq_func
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* other interupt handlers may use this INTE value */
+comment|/* other interrupt handlers may use this INTE value */
 for|for
 control|(
 name|i

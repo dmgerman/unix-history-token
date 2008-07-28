@@ -6823,7 +6823,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 * Place the request for the upload interrupt in the last descriptor 	 * in the chain. This way, if we're chaining several packets at once, 	 * we'll only get an interupt once for the whole chain rather than 	 * once for each packet. 	 */
+comment|/* 	 * Place the request for the upload interrupt in the last descriptor 	 * in the chain. This way, if we're chaining several packets at once, 	 * we'll only get an interrupt once for the whole chain rather than 	 * once for each packet. 	 */
 name|MY_TXCTL
 argument_list|(
 name|cur_tx

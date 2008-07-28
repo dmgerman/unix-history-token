@@ -1139,7 +1139,7 @@ operator|.
 name|irq
 argument_list|)
 expr_stmt|;
-comment|/* register interupt routine */
+comment|/* register interrupt routine */
 if|if
 condition|(
 name|bus_setup_intr
