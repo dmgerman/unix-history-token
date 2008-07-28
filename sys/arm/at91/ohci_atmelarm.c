@@ -610,7 +610,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * turn on the clocks from the AT91's point of view.  Keep the unit in reset. 	 */
-comment|//	bus_space_write_4(sc->sc_ohci.iot, sc->sc_ohci.ioh, OHCI_CONTROL, 0);
 name|at91_pmc_clock_enable
 argument_list|(
 name|sc
