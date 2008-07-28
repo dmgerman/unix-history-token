@@ -5154,12 +5154,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 operator|(
 name|op
 operator|&
 name|BUS_DMASYNC_PREWRITE
 operator|)
-operator|||
+operator|&&
 operator|(
 operator|(
 operator|(
