@@ -12502,7 +12502,7 @@ name|FREE_VAR
 parameter_list|(
 name|var
 parameter_list|)
-value|if (var) { (void)REGEX_FREE ((void *)var); var = NULL; } else
+value|if (var) { REGEX_FREE (var); var = NULL; } else
 end_define
 
 begin_define
@@ -19595,6 +19595,10 @@ operator|.
 name|buffer
 condition|)
 return|return
+operator|(
+name|char
+operator|*
+operator|)
 name|gettext
 argument_list|(
 literal|"No previous regular expression"

@@ -2318,12 +2318,45 @@ directive|else
 end_else
 
 begin_comment
-comment|/* ! WOE32 */
+comment|/* !__CYGWIN32__&& !WOE32 */
 end_comment
 
 begin_comment
-comment|/* As far as I know, just Macintosh OS X can make it here,    * but since the OS X fold just folds a-z into A-Z or visa-versa, I'm just    * allowing it to be used for any case insensitive system which we aren't    * yet making other specific folds or exceptions for (basically, anything    * case insensitive other than Windows, where \ and C:\ style absolute paths    * also need to be accounted for).    *    * Under Mac OS X, filenames are case-insensitive.    */
+comment|/* As far as I know, only Macintosh OS X& VMS make it here, but any    * platform defining FILENAMES_CASE_INSENSITIVE which isn't WOE32 or    * piggy-backing the same could, in theory.  Since the OS X fold just folds    * A-Z into a-z, I'm just allowing it to be used for any case insensitive    * system which we aren't yet making other specific folds or exceptions for.    * WOE32 needs its own class since \ and C:\ style absolute paths also need    * to be accounted for.    */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_VMS_FILENAMES
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FOLD_FN_CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|(VMS_filename_classes[(unsigned char) (c)])
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|VMS_filename_classes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -2343,6 +2376,11 @@ name|OSX_filename_classes
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

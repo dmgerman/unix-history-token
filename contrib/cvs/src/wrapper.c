@@ -234,9 +234,6 @@ name|wrap_setup_already_done
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 if|if
 condition|(
 operator|!
@@ -244,8 +241,6 @@ name|current_parsed_root
 operator|->
 name|isremote
 condition|)
-endif|#
-directive|endif
 block|{
 name|char
 modifier|*
@@ -742,16 +737,17 @@ begin_comment
 comment|/*  * Remove fmt str specifier other than %% or %s. And allow  * only max_s %s specifiers  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|wrap_clean_fmt_str
-argument_list|(
-argument|char *fmt
-argument_list|,
-argument|int max_s
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|int
+name|max_s
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -819,9 +815,8 @@ name|fmt
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Open a file and read lines, feeding each line to a line parser. Arrange  * for keeping a temporary list of wrappers at the end, if the "temp"  * argument is set.  */
@@ -1410,7 +1405,7 @@ block|{
 case|case
 literal|'f'
 case|:
-comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see http://www.cvshome.org/docs/infowrapper.html).  */
+comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see 	       http://ximbiot.com/cvs/cvshome/docs/infowrapper.html).  */
 name|error
 argument_list|(
 literal|1
@@ -1467,7 +1462,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see http://www.cvshome.org/docs/infowrapper.html).  */
+comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see 	       http://ximbiot.com/cvs/cvshome/docs/infowrapper.html).  */
 name|error
 argument_list|(
 literal|1

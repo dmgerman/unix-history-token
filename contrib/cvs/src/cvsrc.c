@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 david d zuhn  *   * Written by david d `zoo' zuhn while at Cygnus Support  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1993 david d zuhn  *   * Written by david d `zoo' zuhn while at Cygnus Support  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *  */
 end_comment
 
 begin_include
@@ -387,7 +387,7 @@ name|line
 operator|+
 name|command_len
 argument_list|,
-literal|"\t \n"
+literal|"\t \n\r"
 argument_list|)
 init|;
 name|optstart
@@ -398,7 +398,7 @@ name|strtok
 argument_list|(
 name|NULL
 argument_list|,
-literal|"\t \n"
+literal|"\t \n\r"
 argument_list|)
 control|)
 block|{

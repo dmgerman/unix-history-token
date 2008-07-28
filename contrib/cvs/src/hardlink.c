@@ -13,6 +13,12 @@ directive|include
 file|"cvs.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PRESERVE_PERMISSIONS_SUPPORT
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -1017,6 +1023,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PRESERVE_PERMISSIONS_SUPPORT */
+end_comment
 
 end_unit
 

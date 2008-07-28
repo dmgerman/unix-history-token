@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Status Information  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Status Information  */
 end_comment
 
 begin_include
@@ -489,7 +489,6 @@ break|break;
 case|case
 name|T_CONFLICT
 case|:
-comment|/* I _think_ that "unresolved" is correct; that if it has 	       been resolved then the status will change.  But I'm not 	       sure about that.  */
 name|sstat
 operator|=
 literal|"Unresolved Conflict"
@@ -516,25 +515,10 @@ name|T_MODIFIED
 case|:
 if|if
 condition|(
-name|vers
-operator|->
-name|ts_conflict
-operator|&&
-operator|(
-name|file_has_conflict
-argument_list|(
-name|finfo
-argument_list|,
-name|vers
-operator|->
-name|ts_conflict
-argument_list|)
-operator|||
 name|file_has_markers
 argument_list|(
 name|finfo
 argument_list|)
-operator|)
 condition|)
 name|sstat
 operator|=
@@ -743,41 +727,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-elseif|else
-if|if
-condition|(
-name|server_active
-condition|)
-block|{
-name|cvs_output
-argument_list|(
-literal|"   Working revision:\t"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cvs_output
-argument_list|(
-name|vers
-operator|->
-name|vn_user
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cvs_output
-argument_list|(
-literal|"\n"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 else|else
 block|{
 name|cvs_output
@@ -796,6 +745,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|server_active
+condition|)
+block|{
 name|cvs_output
 argument_list|(
 literal|"\t"
@@ -812,6 +767,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|cvs_output
 argument_list|(
 literal|"\n"

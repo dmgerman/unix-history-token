@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * A simple ndbm-emulator for CVS.  It parses a text file of the format:  *   * key	value  *   * at dbm_open time, and loads the entire file into memory.  As such, it is  * probably only good for fairly small modules files.  Ours is about 30K in  * size, and this code works fine.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * A simple ndbm-emulator for CVS.  It parses a text file of the format:  *   * key	value  *   * at dbm_open time, and loads the entire file into memory.  As such, it is  * probably only good for fairly small modules files.  Ours is about 30K in  * size, and this code works fine.  */
 end_comment
 
 begin_include

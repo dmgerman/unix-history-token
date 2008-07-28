@@ -54,7 +54,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
-name|notify_check
+name|cvs_notify_check
 name|PROTO
 argument_list|(
 operator|(

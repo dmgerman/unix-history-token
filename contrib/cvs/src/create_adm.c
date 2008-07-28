@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Create Administration.  *   * Creates a CVS administration directory based on the argument repository; the  * "Entries" file is prefilled from the "initrecord" argument.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (C) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Create Administration.  *   * Creates a CVS administration directory based on the argument repository; the  * "Entries" file is prefilled from the "initrecord" argument.  */
 end_comment
 
 begin_include

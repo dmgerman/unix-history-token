@@ -7,6 +7,18 @@ begin_comment
 comment|/* This file simply performs the include magic necessary for using time  * functions  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XTIME_HEADER_INCLUDED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|XTIME_HEADER_INCLUDED
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -223,6 +235,15 @@ end_endif
 
 begin_comment
 comment|/* !vms */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !XTIME_HEADER_INCLUDED */
 end_comment
 
 end_unit

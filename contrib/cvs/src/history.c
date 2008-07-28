@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS 1.0 kit.  *  * **************** History of Users and Module ****************  *  * LOGGING:  Append record to "${CVSROOT}/CVSROOTADM/CVSROOTADM_HISTORY".  *  * On For each Tag, Add, Checkout, Commit, Update or Release command,  * one line of text is written to a History log.  *  *	X date | user | CurDir | special | rev(s) | argument '\n'  *  * where: [The spaces in the example line above are not in the history file.]  *  *  X		is a single character showing the type of event:  *		T	"Tag" cmd.  *		O	"Checkout" cmd.  *              E       "Export" cmd.  *		F	"Release" cmd.  *		W	"Update" cmd - No User file, Remove from Entries file.  *		U	"Update" cmd - File was checked out over User file.  *		P	"Update" cmd - User file was patched.  *		G	"Update" cmd - File was merged successfully.  *		C	"Update" cmd - File was merged and shows overlaps.  *		M	"Commit" cmd - "Modified" file.  *		A	"Commit" cmd - "Added" file.  *		R	"Commit" cmd - "Removed" file.  *  *  date	is a fixed length 8-char hex representation of a Unix time_t.  *		[Starting here, variable fields are delimited by '|' chars.]  *  *  user	is the username of the person who typed the command.  *  *  CurDir	The directory where the action occurred.  This should be the  *		absolute path of the directory which is at the same level as  *		the "Repository" field (for W,U,P,G,C& M,A,R).  *  *  Repository	For record types [W,U,P,G,C,M,A,R] this field holds the  *		repository read from the administrative data where the  *		command was typed.  *		T	"A" --> New Tag, "D" --> Delete Tag  *			Otherwise it is the Tag or Date to modify.  *		O,F,E	A "" (null field)  *  *  rev(s)	Revision number or tag.  *		T	The Tag to apply.  *		O,E	The Tag or Date, if specified, else "" (null field).  *		F	"" (null field)  *		W	The Tag or Date, if specified, else "" (null field).  *		U,P	The Revision checked out over the User file.  *		G,C	The Revision(s) involved in merge.  *		M,A,R	RCS Revision affected.  *  *  argument	The module (for [TOEF]) or file (for [WUPGCMAR]) affected.  *  *  *** Report categories: "User" and "Since" modifiers apply to all reports.  *			[For "sort" ordering see the "sort_order" routine.]  *  *   Extract list of record types  *  *	-e, -x [TOEFWUPGCMAR]  *  *		Extracted records are simply printed, No analysis is performed.  *		All "field" modifiers apply.  -e chooses all types.  *  *   Checked 'O'ut modules  *  *	-o, -w  *		Checked out modules.  'F' and 'O' records are examined and if  *		the last record for a repository/file is an 'O', a line is  *		printed.  "-w" forces the "working dir" to be used in the  *		comparison instead of the repository.  *  *   Committed (Modified) files  *  *	-c, -l, -w  *		All 'M'odified, 'A'dded and 'R'emoved records are examined.  *		"Field" modifiers apply.  -l forces a sort by file within user  *		and shows only the last modifier.  -w works as in Checkout.  *  *		Warning: Be careful with what you infer from the output of  *			 "cvs hi -c -l".  It means the last time *you*  *			 changed the file, not the list of files for which  *			 you were the last changer!!!  *  *   Module history for named modules.  *	-m module, -l  *  *		This is special.  If one or more modules are specified, the  *		module names are remembered and the files making up the  *		modules are remembered.  Only records matching exactly those  *		files and repositories are shown.  Sorting by "module", then  *		filename, is implied.  If -l ("last modified") is specified,  *		then "update" records (types WUPCG), tag and release records  *		are ignored and the last (by date) "modified" record.  *  *   TAG history  *  *	-T	All Tag records are displayed.  *  *** Modifiers.  *  *   Since ...		[All records contain a timestamp, so any report  *			 category can be limited by date.]  *  *	-D date		- The "date" is parsed into a Unix "time_t" and  *			  records with an earlier time stamp are ignored.  *	-r rev/tag	- A "rev" begins with a digit.  A "tag" does not.  If  *			  you use this option, every file is searched for the  *			  indicated rev/tag.  *	-t tag		- The "tag" is searched for in the history file and no  *			  record is displayed before the tag is found.  An  *			  error is printed if the tag is never found.  *	-b string	- Records are printed only back to the last reference  *			  to the string in the "module", "file" or  *			  "repository" fields.  *  *   Field Selections	[Simple comparisons on existing fields.  All field  *			 selections are repeatable.]  *  *	-a		- All users.  *	-u user		- If no user is given and '-a' is not given, only  *			  records for the user typing the command are shown.  *			  ==> If -a or -u is not specified, just use "self".  *  *	-f filematch	- Only records in which the "file" field contains the  *			  string "filematch" are considered.  *  *	-p repository	- Only records in which the "repository" string is a  *			  prefix of the "repos" field are considered.  *  *	-n modulename	- Only records which contain "modulename" in the  *			  "module" field are considered.  *  *  * EXAMPLES: ("cvs history", "cvs his" or "cvs hi")  *  *** Checked out files for username.  (default self, e.g. "dgg")  *	cvs hi			[equivalent to: "cvs hi -o -u dgg"]  *	cvs hi -u user		[equivalent to: "cvs hi -o -u user"]  *	cvs hi -o		[equivalent to: "cvs hi -o -u dgg"]  *  *** Committed (modified) files from the beginning of the file.  *	cvs hi -c [-u user]  *  *** Committed (modified) files since Midnight, January 1, 1990:  *	cvs hi -c -D 'Jan 1 1990' [-u user]  *  *** Committed (modified) files since tag "TAG" was stored in the history file:  *	cvs hi -c -t TAG [-u user]  *  *** Committed (modified) files since tag "TAG" was placed on the files:  *	cvs hi -c -r TAG [-u user]  *  *** Who last committed file/repository X?  *	cvs hi -c -l -[fp] X  *  *** Modified files since tag/date/file/repos?  *	cvs hi -c {-r TAG | -D Date | -b string}  *  *** Tag history  *	cvs hi -T  *  *** History of file/repository/module X.  *	cvs hi -[fpn] X  *  *** History of user "user".  *	cvs hi -e -u user  *  *** Dump (eXtract) specified record types  *	cvs hi -x [TOEFWUPGCMAR]  *  *  * FUTURE:		J[Join], I[Import]  (Not currently implemented.)  *  */
+comment|/*  * Copyright (C) 1994-2005 The Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  */
+end_comment
+
+begin_comment
+comment|/* **************** History of Users and Module ****************  *  * LOGGING:  Append record to "${CVSROOT}/CVSROOTADM/CVSROOTADM_HISTORY".  *  * On For each Tag, Add, Checkout, Commit, Update or Release command,  * one line of text is written to a History log.  *  *	X date | user | CurDir | special | rev(s) | argument '\n'  *  * where: [The spaces in the example line above are not in the history file.]  *  *  X		is a single character showing the type of event:  *		T	"Tag" cmd.  *		O	"Checkout" cmd.  *              E       "Export" cmd.  *		F	"Release" cmd.  *		W	"Update" cmd - No User file, Remove from Entries file.  *		U	"Update" cmd - File was checked out over User file.  *		P	"Update" cmd - User file was patched.  *		G	"Update" cmd - File was merged successfully.  *		C	"Update" cmd - File was merged and shows overlaps.  *		M	"Commit" cmd - "Modified" file.  *		A	"Commit" cmd - "Added" file.  *		R	"Commit" cmd - "Removed" file.  *  *  date	is a fixed length 8-char hex representation of a Unix time_t.  *		[Starting here, variable fields are delimited by '|' chars.]  *  *  user	is the username of the person who typed the command.  *  *  CurDir	The directory where the action occurred.  This should be the  *		absolute path of the directory which is at the same level as  *		the "Repository" field (for W,U,P,G,C& M,A,R).  *  *  Repository	For record types [W,U,P,G,C,M,A,R] this field holds the  *		repository read from the administrative data where the  *		command was typed.  *		T	"A" --> New Tag, "D" --> Delete Tag  *			Otherwise it is the Tag or Date to modify.  *		O,F,E	A "" (null field)  *  *  rev(s)	Revision number or tag.  *		T	The Tag to apply.  *		O,E	The Tag or Date, if specified, else "" (null field).  *		F	"" (null field)  *		W	The Tag or Date, if specified, else "" (null field).  *		U,P	The Revision checked out over the User file.  *		G,C	The Revision(s) involved in merge.  *		M,A,R	RCS Revision affected.  *  *  argument	The module (for [TOEF]) or file (for [WUPGCMAR]) affected.  *  *  *** Report categories: "User" and "Since" modifiers apply to all reports.  *			[For "sort" ordering see the "sort_order" routine.]  *  *   Extract list of record types  *  *	-e, -x [TOEFWUPGCMAR]  *  *		Extracted records are simply printed, No analysis is performed.  *		All "field" modifiers apply.  -e chooses all types.  *  *   Checked 'O'ut modules  *  *	-o, -w  *		Checked out modules.  'F' and 'O' records are examined and if  *		the last record for a repository/file is an 'O', a line is  *		printed.  "-w" forces the "working dir" to be used in the  *		comparison instead of the repository.  *  *   Committed (Modified) files  *  *	-c, -l, -w  *		All 'M'odified, 'A'dded and 'R'emoved records are examined.  *		"Field" modifiers apply.  -l forces a sort by file within user  *		and shows only the last modifier.  -w works as in Checkout.  *  *		Warning: Be careful with what you infer from the output of  *			 "cvs hi -c -l".  It means the last time *you*  *			 changed the file, not the list of files for which  *			 you were the last changer!!!  *  *   Module history for named modules.  *	-m module, -l  *  *		This is special.  If one or more modules are specified, the  *		module names are remembered and the files making up the  *		modules are remembered.  Only records matching exactly those  *		files and repositories are shown.  Sorting by "module", then  *		filename, is implied.  If -l ("last modified") is specified,  *		then "update" records (types WUPCG), tag and release records  *		are ignored and the last (by date) "modified" record.  *  *   TAG history  *  *	-T	All Tag records are displayed.  *  *** Modifiers.  *  *   Since ...		[All records contain a timestamp, so any report  *			 category can be limited by date.]  *  *	-D date		- The "date" is parsed into a Unix "time_t" and  *			  records with an earlier time stamp are ignored.  *	-r rev/tag	- A "rev" begins with a digit.  A "tag" does not.  If  *			  you use this option, every file is searched for the  *			  indicated rev/tag.  *	-t tag		- The "tag" is searched for in the history file and no  *			  record is displayed before the tag is found.  An  *			  error is printed if the tag is never found.  *	-b string	- Records are printed only back to the last reference  *			  to the string in the "module", "file" or  *			  "repository" fields.  *  *   Field Selections	[Simple comparisons on existing fields.  All field  *			 selections are repeatable.]  *  *	-a		- All users.  *	-u user		- If no user is given and '-a' is not given, only  *			  records for the user typing the command are shown.  *			  ==> If -a or -u is not specified, just use "self".  *  *	-f filematch	- Only records in which the "file" field contains the  *			  string "filematch" are considered.  *  *	-p repository	- Only records in which the "repository" string is a  *			  prefix of the "repos" field are considered.  *  *	-n modulename	- Only records which contain "modulename" in the  *			  "module" field are considered.  *  *  * EXAMPLES: ("cvs history", "cvs his" or "cvs hi")  *  *** Checked out files for username.  (default self, e.g. "dgg")  *	cvs hi			[equivalent to: "cvs hi -o -u dgg"]  *	cvs hi -u user		[equivalent to: "cvs hi -o -u user"]  *	cvs hi -o		[equivalent to: "cvs hi -o -u dgg"]  *  *** Committed (modified) files from the beginning of the file.  *	cvs hi -c [-u user]  *  *** Committed (modified) files since Midnight, January 1, 1990:  *	cvs hi -c -D 'Jan 1 1990' [-u user]  *  *** Committed (modified) files since tag "TAG" was stored in the history file:  *	cvs hi -c -t TAG [-u user]  *  *** Committed (modified) files since tag "TAG" was placed on the files:  *	cvs hi -c -r TAG [-u user]  *  *** Who last committed file/repository X?  *	cvs hi -c -l -[fp] X  *  *** Modified files since tag/date/file/repos?  *	cvs hi -c {-r TAG | -D Date | -b string}  *  *** Tag history  *	cvs hi -T  *  *** History of file/repository/module X.  *	cvs hi -[fpn] X  *  *** History of user "user".  *	cvs hi -e -u user  *  *** Dump (eXtract) specified record types  *	cvs hi -x [TOEFWUPGCMAR]  *  *  * FUTURE:		J[Join], I[Import]  (Not currently implemented.)  *  */
 end_comment
 
 begin_include
@@ -430,8 +434,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|logHistory
-init|=
-name|ALL_HISTORY_REC_TYPES
 decl_stmt|;
 end_decl_stmt
 
@@ -507,14 +509,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|hrec_count
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|hrec_max
 decl_stmt|;
 end_decl_stmt
@@ -534,7 +536,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|user_max
 decl_stmt|;
 end_decl_stmt
@@ -545,7 +547,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|user_count
 decl_stmt|;
 end_decl_stmt
@@ -579,7 +581,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|file_max
 decl_stmt|;
 end_decl_stmt
@@ -590,7 +592,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|file_count
 decl_stmt|;
 end_decl_stmt
@@ -614,7 +616,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|mod_max
 decl_stmt|;
 end_decl_stmt
@@ -625,7 +627,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|mod_count
 decl_stmt|;
 end_decl_stmt
@@ -1302,14 +1304,10 @@ case|:
 comment|/* For specified file */
 name|save_file
 argument_list|(
-literal|""
+name|NULL
 argument_list|,
 name|optarg
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1346,12 +1344,8 @@ name|save_file
 argument_list|(
 name|optarg
 argument_list|,
-literal|""
+name|NULL
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1741,17 +1735,13 @@ operator|++
 control|)
 name|save_file
 argument_list|(
-literal|""
+name|NULL
 argument_list|,
 name|argv
 index|[
 name|i
 index|]
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2673,6 +2663,20 @@ condition|)
 goto|goto
 name|out
 goto|;
+if|if
+condition|(
+operator|!
+name|history_lock
+argument_list|(
+name|current_parsed_root
+operator|->
+name|directory
+argument_list|)
+condition|)
+comment|/* history_lock() will already have printed an error on failure.  */
+goto|goto
+name|out
+goto|;
 name|fd
 operator|=
 name|CVS_OPEN
@@ -3218,6 +3222,9 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|clear_history_lock
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|fname
@@ -3260,6 +3267,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|user_count
+operator|==
+name|user_max
+operator|||
 name|size_overflow_p
 argument_list|(
 name|xtimes
@@ -3374,6 +3385,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|file_count
+operator|==
+name|file_max
+operator|||
 name|size_overflow_p
 argument_list|(
 name|xtimes
@@ -3436,15 +3451,23 @@ name|cp
 operator|=
 name|xmalloc
 argument_list|(
+name|dir
+condition|?
 name|strlen
 argument_list|(
 name|dir
 argument_list|)
+else|:
+literal|0
 operator|+
+name|name
+condition|?
 name|strlen
 argument_list|(
 name|name
 argument_list|)
+else|:
+literal|0
 operator|+
 literal|2
 argument_list|)
@@ -3589,6 +3612,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|mod_count
+operator|==
+name|mod_max
+operator|||
 name|size_overflow_p
 argument_list|(
 name|xtimes
@@ -4297,25 +4324,58 @@ init|=
 name|hrec_head
 decl_stmt|;
 name|hrec_max
-operator|+=
+operator|=
+name|xsum
+argument_list|(
+name|hrec_max
+argument_list|,
 name|HREC_INCREMENT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hrec_count
+operator|==
+name|hrec_max
+operator|||
+name|size_overflow_p
+argument_list|(
+name|xtimes
+argument_list|(
+name|hrec_max
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hrec
+argument_list|)
+argument_list|)
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Too many history records in history file."
+argument_list|)
 expr_stmt|;
 name|hrec_head
 operator|=
 name|xrealloc
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|hrec_head
 argument_list|,
+name|xtimes
+argument_list|(
 name|hrec_max
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|hrec
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5234,6 +5294,17 @@ operator|=
 name|fl
 operator|->
 name|l_module
+expr_stmt|;
+if|if
+condition|(
+name|cmpfile
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|cmpfile
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

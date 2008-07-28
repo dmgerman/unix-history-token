@@ -38,21 +38,19 @@ init|=
 block|{
 literal|"Usage: %s %s {on|off|add|remove} [-lR] [-a<action>]... [<path>]...\n"
 block|,
-literal|"on/off: turn on/off read-only checkouts of files\n"
+literal|"on/off: Turn on/off read-only checkouts of files.\n"
 block|,
-literal|"add/remove: add or remove notification on actions\n"
+literal|"add/remove: Add or remove notification on actions.\n"
 block|,
-literal|"-l (on/off/add/remove): Local directory only, not recursive\n"
+literal|"-l (on/off/add/remove): Local directory only, not recursive.\n"
 block|,
-literal|"-R (on/off/add/remove): Process directories recursively (default)\n"
+literal|"-R (on/off/add/remove): Process directories recursively (default).\n"
 block|,
-literal|"-a (add/remove): Specify what actions, one of\n"
+literal|"-a (add/remove): Specify what actions, one of: `edit', `unedit',\n"
 block|,
-literal|"    edit,unedit,commit,all,none (defaults to all, multiple -a\n"
+literal|"                 `commit', `all', or `none' (defaults to `all').\n"
 block|,
-literal|"    options are permitted)\n"
-block|,
-literal|"(Specify the --help global option for a list of other help options)\n"
+literal|"(Specify the --help global option for a list of other help options.)\n"
 block|,
 name|NULL
 block|}
@@ -1802,13 +1800,13 @@ name|watchers_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-lR] [files...]\n"
+literal|"Usage: %s %s [-lR] [<file>]...\n"
 block|,
-literal|"\t-l\tProcess this directory only (not recursive).\n"
+literal|"-l\tProcess this directory only (not recursive).\n"
 block|,
-literal|"\t-R\tProcess directories recursively.\n"
+literal|"-R\tProcess directories recursively (default).\n"
 block|,
-literal|"(Specify the --help global option for a list of other help options)\n"
+literal|"(Specify the --help global option for a list of other help options.)\n"
 block|,
 name|NULL
 block|}

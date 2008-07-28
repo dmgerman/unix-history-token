@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Administration ("cvs admin")  *   */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (c) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Administration ("cvs admin")  *   */
 end_comment
 
 begin_include
@@ -1172,20 +1172,14 @@ ifdef|#
 directive|ifdef
 name|CVS_ADMIN_GROUP
 comment|/* The use of `cvs admin -k' is unrestricted.  However, any other        option is restricted if the group CVS_ADMIN_GROUP exists on the        server.  */
+comment|/* This is only "secure" on the server, since the user could edit the      * RCS file on a local host, but some people like this kind of      * check anyhow.  The alternative would be to check only when      * (server_active) rather than when not on the client.      */
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
-comment|/* This is only "secure" on the server, since the user could edit the 	 * RCS file on a local host, but some people like this kind of 	 * check anyhow.  The alternative would be to check only when 	 * (server_active) rather than when not on the client. 	 */
 operator|!
 name|current_parsed_root
 operator|->
 name|isremote
 operator|&&
-endif|#
-directive|endif
-comment|/* CLIENT_SUPPORT */
 operator|!
 name|only_k_option
 operator|&&
@@ -3383,6 +3377,31 @@ argument_list|(
 name|rcs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rev
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"No head revision in archive file `%s'."
+argument_list|,
+name|rcs
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
 block|}
 else|else
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (C) 1992, Brian Berliner and Jeff Polk  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  */
 end_comment
 
 begin_comment
@@ -65,28 +65,28 @@ end_typedef
 
 begin_struct
 struct|struct
-name|node
+name|hashnode
 block|{
 name|Ntype
 name|type
 decl_stmt|;
 name|struct
-name|node
+name|hashnode
 modifier|*
 name|next
 decl_stmt|;
 name|struct
-name|node
+name|hashnode
 modifier|*
 name|prev
 decl_stmt|;
 name|struct
-name|node
+name|hashnode
 modifier|*
 name|hashnext
 decl_stmt|;
 name|struct
-name|node
+name|hashnode
 modifier|*
 name|hashprev
 decl_stmt|;
@@ -112,14 +112,14 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|node
+name|hashnode
 name|Node
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|list
+name|hashlist
 block|{
 name|Node
 modifier|*
@@ -133,7 +133,7 @@ name|HASHSIZE
 index|]
 decl_stmt|;
 name|struct
-name|list
+name|hashlist
 modifier|*
 name|next
 decl_stmt|;
@@ -144,7 +144,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|list
+name|hashlist
 name|List
 typedef|;
 end_typedef

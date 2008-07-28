@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Show last revision where each line modified  *   * Prints the specified files with each line annotated with the revision  * number where it was last modified.  With no argument, annotates all  * all the files in the directory (recursive by default).  */
+comment|/*  * Copyright (C) 1986-2005 The Free Software Foundation, Inc.  *  * Portions Copyright (C) 1998-2005 Derek Price, Ximbiot<http://ximbiot.com>,  *                                  and others.  *  * Portions Copyright (c) 1992, Brian Berliner and Jeff Polk  * Portions Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Show last revision where each line modified  *   * Prints the specified files with each line annotated with the revision  * number where it was last modified.  With no argument, annotates all  * all the files in the directory (recursive by default).  */
 end_comment
 
 begin_include
@@ -1013,6 +1013,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|repository
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|where
 argument_list|)
 expr_stmt|;
 return|return
