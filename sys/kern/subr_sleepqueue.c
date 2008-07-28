@@ -4782,7 +4782,7 @@ name|td
 operator|->
 name|td_name
 index|[
-name|i
+literal|0
 index|]
 operator|!=
 literal|'\0'
@@ -4793,7 +4793,9 @@ name|td_name
 else|:
 name|td
 operator|->
-name|td_name
+name|td_proc
+operator|->
+name|p_comm
 argument_list|)
 expr_stmt|;
 block|}
