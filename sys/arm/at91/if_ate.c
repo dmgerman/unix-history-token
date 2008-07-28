@@ -3319,7 +3319,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|rxtag
+name|mtag
 argument_list|,
 name|sc
 operator|->
@@ -3382,7 +3382,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|rxtag
+name|mtag
 argument_list|,
 name|sc
 operator|->
