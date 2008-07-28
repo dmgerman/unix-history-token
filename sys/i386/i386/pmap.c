@@ -19344,11 +19344,11 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* Only supported on kernel virtual addresses. */
+comment|/* 	 * Only supported on kernel virtual addresses above the recursive map. 	 */
 if|if
 condition|(
 name|base
-operator|<=
+operator|<
 name|VM_MIN_KERNEL_ADDRESS
 condition|)
 return|return
