@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARM_AT91_AT91QDMMCREG_H
+name|ARM_AT91_AT91_MCIREG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARM_AT91_AT91QDMMCREG_H
+name|ARM_AT91_AT91_MCIREG_H
 end_define
 
 begin_define
@@ -925,7 +925,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ARM_AT91_AT91QDMMCREG_H */
+comment|/* ARM_AT91_AT91_MCIREG_H */
 end_comment
 
 end_unit
