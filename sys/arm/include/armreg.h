@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: armreg.h,v 1.28 2003/10/31 16:30:15 scw Exp $	*/
+comment|/*	$NetBSD: armreg.h,v 1.37 2007/01/06 00:50:54 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -209,6 +209,17 @@ begin_comment
 comment|/* 'T' */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CPU_ID_FARADAY
+value|0x66000000
+end_define
+
+begin_comment
+comment|/* 'f' */
+end_comment
+
 begin_comment
 comment|/* How to decide what format the CPUID is in. */
 end_comment
@@ -344,6 +355,20 @@ define|#
 directive|define
 name|CPU_ID_ARCH_V5TE
 value|0x00050000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_ARCH_V5TEJ
+value|0x00060000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_ARCH_V6
+value|0x00070000
 end_define
 
 begin_define
@@ -502,10 +527,6 @@ name|CPU_ID_ARM7500
 value|0x41027100
 end_define
 
-begin_comment
-comment|/* XXX This is a guess. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -595,6 +616,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_ARM926EJS
+value|0x41069260
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_ARM940T
 value|0x41029400
 end_define
@@ -657,6 +685,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_ARM1026EJS
+value|0x4106a260
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_ARM1136JS
+value|0x4107b360
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_ARM1136JSR1
+value|0x4117b360
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_SA110
 value|0x4401a100
 end_define
@@ -673,6 +722,13 @@ define|#
 directive|define
 name|CPU_ID_TI925T
 value|0x54029250
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_FA526
+value|0x66015260
 end_define
 
 begin_define
@@ -779,6 +835,13 @@ end_define
 begin_comment
 comment|/* 4th version Core */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_PXA27X
+value|0x69054110
+end_define
 
 begin_define
 define|#
@@ -1636,6 +1699,17 @@ end_define
 
 begin_comment
 comment|/* Always condition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THUMB_INSN_SIZE
+value|2
+end_define
+
+begin_comment
+comment|/* Some are 4 bytes.  */
 end_comment
 
 begin_endif
