@@ -2020,6 +2020,13 @@ ifdef|#
 directive|ifdef
 name|AUTHENTICATION
 comment|/*      * Handle the Authentication option before we do anything else.      */
+if|if
+condition|(
+name|auth_level
+operator|>=
+literal|0
+condition|)
+block|{
 name|send_do
 argument_list|(
 name|TELOPT_AUTHENTICATION
@@ -2052,6 +2059,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
