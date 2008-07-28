@@ -605,6 +605,11 @@ name|ip6_src
 argument_list|)
 condition|)
 continue|continue;
+name|INP_RLOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|in6p
@@ -642,6 +647,11 @@ name|offp
 argument_list|)
 condition|)
 block|{
+name|INP_RUNLOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 name|rip6stat
 operator|.
 name|rip6s_badsum
@@ -813,11 +823,6 @@ block|}
 name|last
 operator|=
 name|in6p
-expr_stmt|;
-name|INP_RLOCK
-argument_list|(
-name|last
-argument_list|)
 expr_stmt|;
 block|}
 name|INP_INFO_RUNLOCK
