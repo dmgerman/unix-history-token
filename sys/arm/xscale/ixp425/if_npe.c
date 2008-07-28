@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Intel XScale NPE Ethernet driver.  *  * This driver handles the two ports present on the IXP425.  * Packet processing is done by the Network Processing Engines  * (NPE's) that work together with a MAC and PHY. The MAC  * is also mapped to the XScale cpu; the PHY is accessed via  * the MAC. NPE-XScale communication happens through h/w  * queues managed by the Q Manager block.  *  * The code here replaces the ethAcc, ethMii, and ethDB classes  * in the Intel Access Library (IAL) and the OS-specific driver.  *  * XXX add vlan support  * XXX NPE-C port doesn't work yet  */
+comment|/*  * Intel XScale NPE Ethernet driver.  *  * This driver handles the two ports present on the IXP425.  * Packet processing is done by the Network Processing Engines  * (NPE's) that work together with a MAC and PHY. The MAC  * is also mapped to the XScale cpu; the PHY is accessed via  * the MAC. NPE-XScale communication happens through h/w  * queues managed by the Q Manager block.  *  * The code here replaces the ethAcc, ethMii, and ethDB classes  * in the Intel Access Library (IAL) and the OS-specific driver.  *  * XXX add vlan support  */
 end_comment
 
 begin_ifdef
