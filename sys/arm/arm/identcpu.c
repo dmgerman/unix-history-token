@@ -134,11 +134,17 @@ name|CPU_CLASS_ARM9TDMI
 block|,
 name|CPU_CLASS_ARM9ES
 block|,
+name|CPU_CLASS_ARM9EJS
+block|,
 name|CPU_CLASS_ARM10E
+block|,
+name|CPU_CLASS_ARM10EJ
 block|,
 name|CPU_CLASS_SA1
 block|,
 name|CPU_CLASS_XSCALE
+block|,
+name|CPU_CLASS_ARM11J
 block|}
 enum|;
 end_enum
@@ -430,6 +436,53 @@ specifier|const
 name|char
 modifier|*
 specifier|const
+name|i80219_steppings
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|"step A-0"
+block|,
+literal|"rev 1"
+block|,
+literal|"rev 2"
+block|,
+literal|"rev 3"
+block|,
+literal|"rev 4"
+block|,
+literal|"rev 5"
+block|,
+literal|"rev 6"
+block|,
+literal|"rev 7"
+block|,
+literal|"rev 8"
+block|,
+literal|"rev 9"
+block|,
+literal|"rev 10"
+block|,
+literal|"rev 11"
+block|,
+literal|"rev 12"
+block|,
+literal|"rev 13"
+block|,
+literal|"rev 14"
+block|,
+literal|"rev 15"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
 name|i80321_steppings
 index|[
 literal|16
@@ -518,6 +571,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Steppings for PXA2[15]0 */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -541,6 +598,108 @@ block|,
 literal|"step B-2"
 block|,
 literal|"step C-0"
+block|,
+literal|"rev 6"
+block|,
+literal|"rev 7"
+block|,
+literal|"rev 8"
+block|,
+literal|"rev 9"
+block|,
+literal|"rev 10"
+block|,
+literal|"rev 11"
+block|,
+literal|"rev 12"
+block|,
+literal|"rev 13"
+block|,
+literal|"rev 14"
+block|,
+literal|"rev 15"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Steppings for PXA255/26x.  * rev 5: PXA26x B0, rev 6: PXA255 A0    */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|pxa255_steppings
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|"rev 0"
+block|,
+literal|"rev 1"
+block|,
+literal|"rev 2"
+block|,
+literal|"step A-0"
+block|,
+literal|"rev 4"
+block|,
+literal|"step B-0"
+block|,
+literal|"step A-0"
+block|,
+literal|"rev 7"
+block|,
+literal|"rev 8"
+block|,
+literal|"rev 9"
+block|,
+literal|"rev 10"
+block|,
+literal|"rev 11"
+block|,
+literal|"rev 12"
+block|,
+literal|"rev 13"
+block|,
+literal|"rev 14"
+block|,
+literal|"rev 15"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Stepping for PXA27x */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|pxa27x_steppings
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|"step A-0"
+block|,
+literal|"step A-1"
+block|,
+literal|"step B-0"
+block|,
+literal|"step B-1"
+block|,
+literal|"step C-0"
+block|,
+literal|"rev 5"
 block|,
 literal|"rev 6"
 block|,
@@ -838,6 +997,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_ARM926EJS
+block|,
+name|CPU_CLASS_ARM9EJS
+block|,
+literal|"ARM926EJ-S"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_ARM940T
 block|,
 name|CPU_CLASS_ARM9TDMI
@@ -903,6 +1072,16 @@ block|,
 name|CPU_CLASS_ARM10E
 block|,
 literal|"ARM1022E-S"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_ARM1026EJS
+block|,
+name|CPU_CLASS_ARM10EJ
+block|,
+literal|"ARM1026EJ-S"
 block|,
 name|generic_steppings
 block|}
@@ -1014,7 +1193,7 @@ name|CPU_CLASS_XSCALE
 block|,
 literal|"i80219 400MHz"
 block|,
-name|xscale_steppings
+name|i80219_steppings
 block|}
 block|,
 block|{
@@ -1024,7 +1203,17 @@ name|CPU_CLASS_XSCALE
 block|,
 literal|"i80219 600MHz"
 block|,
-name|xscale_steppings
+name|i80219_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_PXA27X
+block|,
+name|CPU_CLASS_XSCALE
+block|,
+literal|"PXA27x"
+block|,
+name|pxa27x_steppings
 block|}
 block|,
 block|{
@@ -1072,9 +1261,9 @@ name|CPU_ID_PXA250C
 block|,
 name|CPU_CLASS_XSCALE
 block|,
-literal|"PXA250"
+literal|"PXA255"
 block|,
-name|pxa2x0_steppings
+name|pxa255_steppings
 block|}
 block|,
 block|{
@@ -1115,6 +1304,26 @@ block|,
 literal|"IXP425 266MHz"
 block|,
 name|ixp425_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_ARM1136JS
+block|,
+name|CPU_CLASS_ARM11J
+block|,
+literal|"ARM1136J-S"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_ARM1136JSR1
+block|,
+name|CPU_CLASS_ARM11J
+block|,
+literal|"ARM1136J-S R1"
+block|,
+name|generic_steppings
 block|}
 block|,
 block|{
@@ -1222,10 +1431,17 @@ comment|/* CPU_CLASS_ARM9TDMI */
 block|{
 literal|"ARM9E-S"
 block|,
-name|NULL
+literal|"CPU_ARM9E"
 block|}
 block|,
 comment|/* CPU_CLASS_ARM9ES */
+block|{
+literal|"ARM9EJ-S"
+block|,
+literal|"CPU_ARM9E"
+block|}
+block|,
+comment|/* CPU_CLASS_ARM9EJS */
 block|{
 literal|"ARM10E"
 block|,
@@ -1233,6 +1449,13 @@ literal|"CPU_ARM10"
 block|}
 block|,
 comment|/* CPU_CLASS_ARM10E */
+block|{
+literal|"ARM10EJ"
+block|,
+literal|"CPU_ARM10"
+block|}
+block|,
+comment|/* CPU_CLASS_ARM10EJ */
 block|{
 literal|"SA-1"
 block|,
@@ -1247,6 +1470,13 @@ literal|"CPU_XSCALE_..."
 block|}
 block|,
 comment|/* CPU_CLASS_XSCALE */
+block|{
+literal|"ARM11J"
+block|,
+literal|"CPU_ARM11"
+block|}
+block|,
+comment|/* CPU_CLASS_ARM11J */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1294,7 +1524,7 @@ literal|"**unknown 12**"
 block|,
 literal|"**unknown 13**"
 block|,
-literal|"**unknown 14**"
+literal|"write-back-locking-C"
 block|,
 literal|"**unknown 15**"
 block|, }
@@ -1524,13 +1754,25 @@ case|case
 name|CPU_CLASS_ARM9TDMI
 case|:
 case|case
+name|CPU_CLASS_ARM9ES
+case|:
+case|case
+name|CPU_CLASS_ARM9EJS
+case|:
+case|case
 name|CPU_CLASS_ARM10E
+case|:
+case|case
+name|CPU_CLASS_ARM10EJ
 case|:
 case|case
 name|CPU_CLASS_SA1
 case|:
 case|case
 name|CPU_CLASS_XSCALE
+case|:
+case|case
+name|CPU_CLASS_ARM11J
 case|:
 if|if
 condition|(

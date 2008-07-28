@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|CPU_NTYPES
-value|2
+value|(defined(CPU_ARM7TDMI) +			\ 			 defined(CPU_ARM8) + defined(CPU_ARM9) +	\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM10) +				\ 			 defined(CPU_ARM11) +				\ 			 defined(CPU_SA110) + defined(CPU_SA1100) +	\ 			 defined(CPU_SA1110) +				\ 			 defined(CPU_IXP12X0) +				\ 			 defined(CPU_XSCALE_80200) +			\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(__CPU_XSCALE_PXA2XX) +			\ 			 defined(CPU_XSCALE_IXP425))
 end_define
 
 begin_comment
@@ -116,6 +116,17 @@ directive|if
 operator|(
 name|defined
 argument_list|(
+name|CPU_ARM9E
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM10
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
 name|CPU_XSCALE_80200
 argument_list|)
 operator|||
@@ -141,11 +152,6 @@ argument_list|(
 name|CPU_XSCALE_PXA2X0
 argument_list|)
 operator|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_ARM10
-argument_list|)
 end_if
 
 begin_define
@@ -172,11 +178,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM11
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ARM_ARCH_6
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARM_ARCH_6
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|ARM_NARCH
-value|(ARM_ARCH_4 + ARM_ARCH_5)
+value|(ARM_ARCH_4 + ARM_ARCH_5 + ARM_ARCH_6)
 end_define
 
 begin_if
@@ -203,6 +242,29 @@ error|#
 directive|error
 error|ARM_NARCH is 0
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|ARM_ARCH_5
+operator|||
+name|ARM_ARCH_6
+end_if
+
+begin_comment
+comment|/*  * We could support Thumb code on v4T, but the lack of clean interworking  * makes that hard.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THUMB_CODE
+end_define
 
 begin_endif
 endif|#
@@ -290,7 +352,18 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|CPU_ARM9E
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
 name|CPU_ARM10
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM11
 argument_list|)
 operator|)
 end_if
