@@ -672,6 +672,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"jme"
+block|,
+literal|"JMicron JMC250 Gigabit/JMC260 Fast Ethernet"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"kue"
 block|,
 literal|"Kawasaki LSI USB Ethernet adapter"
