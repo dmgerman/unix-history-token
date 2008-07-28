@@ -18,12 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DISABLE_MBUF_IOVEC
-end_define
-
-begin_define
-define|#
-directive|define
 name|RTALLOC2_DEFINED
 end_define
 

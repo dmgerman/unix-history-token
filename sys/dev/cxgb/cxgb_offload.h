@@ -33,22 +33,11 @@ directive|include
 file|<cxgb_config.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TOE_ENABLED
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<ulp/tom/cxgb_l2t.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -79,22 +68,11 @@ directive|include
 file|<dev/cxgb/cxgb_config.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TOE_ENABLED
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<dev/cxgb/ulp/tom/cxgb_l2t.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -309,12 +287,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TOE_ENABLED
-end_ifdef
-
 begin_struct
 struct|struct
 name|cxgb_client
@@ -430,11 +402,6 @@ name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void

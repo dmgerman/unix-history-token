@@ -569,7 +569,7 @@ begin_define
 define|#
 directive|define
 name|PIO_LEN
-value|(WR_LEN - sizeof(struct cpl_tx_pkt))
+value|(WR_LEN - sizeof(struct cpl_tx_pkt_lso))
 end_define
 
 begin_comment
