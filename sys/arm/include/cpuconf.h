@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|CPU_NTYPES
-value|(defined(CPU_ARM7TDMI) +			\ 			 defined(CPU_ARM8) + defined(CPU_ARM9) +	\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM10) +				\ 			 defined(CPU_ARM11) +				\ 			 defined(CPU_SA110) + defined(CPU_SA1100) +	\ 			 defined(CPU_SA1110) +				\ 			 defined(CPU_IXP12X0) +				\ 			 defined(CPU_XSCALE_80200) +			\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(__CPU_XSCALE_PXA2XX) +			\ 			 defined(CPU_XSCALE_IXP425))
+value|(defined(CPU_ARM7TDMI) +			\ 			 defined(CPU_ARM8) + defined(CPU_ARM9) +	\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM10) +				\ 			 defined(CPU_ARM11) +				\ 			 defined(CPU_SA110) + defined(CPU_SA1100) +	\ 			 defined(CPU_SA1110) +				\ 			 defined(CPU_IXP12X0) +				\ 			 defined(CPU_XSCALE_80200) +			\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_XSCALE_IXP425))
 end_define
 
 begin_comment
