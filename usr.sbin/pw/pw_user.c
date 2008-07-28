@@ -6189,6 +6189,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|SALTSIZE
+value|32
+end_define
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -6196,7 +6203,7 @@ specifier|const
 name|chars
 index|[]
 init|=
-literal|"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ."
+literal|"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ./"
 decl_stmt|;
 end_decl_stmt
 
@@ -6216,7 +6223,9 @@ decl_stmt|;
 name|char
 name|salt
 index|[
-literal|12
+name|SALTSIZE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 specifier|static
@@ -6235,7 +6244,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|8
+name|SALTSIZE
 condition|;
 name|i
 operator|++
@@ -6250,12 +6259,19 @@ index|[
 name|arc4random
 argument_list|()
 operator|%
-literal|63
+operator|(
+sizeof|sizeof
+argument_list|(
+name|chars
+argument_list|)
+operator|-
+literal|1
+operator|)
 index|]
 expr_stmt|;
 name|salt
 index|[
-name|i
+name|SALTSIZE
 index|]
 operator|=
 literal|'\0'
