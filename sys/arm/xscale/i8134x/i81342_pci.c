@@ -1027,7 +1027,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"i80321_pci_probe: failed to set up I/O rman"
+literal|"i81342_pci_probe: failed to set up I/O rman"
 argument_list|)
 expr_stmt|;
 block|}
