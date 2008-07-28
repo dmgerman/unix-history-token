@@ -19349,7 +19349,7 @@ if|if
 condition|(
 name|base
 operator|<=
-name|VM_MAXUSER_ADDRESS
+name|VM_MIN_KERNEL_ADDRESS
 condition|)
 return|return
 operator|(
