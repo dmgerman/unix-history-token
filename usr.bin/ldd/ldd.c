@@ -90,17 +90,14 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * Elf32_xhdr structures can only be used if sys/elf32.h is included, so  * check for the existence of one of the macros defined in sys/elf32.h.  *  * The presense of the ELF32_R_TYPE macro via machine/elf.h has been verified  * on amd64 6.3, ia64 7.0 and sparc64 7.0.  The absence of the macro has been  * verified on alpha 6.2.  */
+comment|/*  * 32-bit ELF data structures can only be used if the system header[s] declare  * them.  There is no official macro for determining whether they are declared,  * so check for the existence of one of the 32-macros defined in elf(5).  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ELF32_R_TYPE
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
