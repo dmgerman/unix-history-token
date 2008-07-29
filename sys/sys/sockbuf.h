@@ -175,7 +175,7 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|socket
+name|mbuf
 struct_decl|;
 end_struct_decl
 
@@ -187,7 +187,13 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|mbuf
+name|socket
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -328,6 +334,12 @@ comment|/* (c/d) flags, see below */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -1026,6 +1038,11 @@ end_endif
 begin_comment
 comment|/* SOCKBUF_DEBUG */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
