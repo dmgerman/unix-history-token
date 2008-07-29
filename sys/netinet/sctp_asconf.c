@@ -4379,23 +4379,11 @@ specifier|static
 name|uint32_t
 name|sctp_addr_match
 parameter_list|(
-ifdef|#
-directive|ifdef
-name|INET6
 name|struct
 name|sctp_ipv6addr_param
 modifier|*
 name|v6addr
 parameter_list|,
-else|#
-directive|else
-name|struct
-name|sctp_ipv4addr_param
-modifier|*
-name|v4addr
-parameter_list|,
-endif|#
-directive|endif
 name|struct
 name|sockaddr
 modifier|*
@@ -4407,9 +4395,6 @@ name|param_type
 decl_stmt|,
 name|param_length
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|struct
 name|sctp_ipv4addr_param
 modifier|*
@@ -4422,6 +4407,9 @@ operator|*
 operator|)
 name|v6addr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|sa
@@ -4514,10 +4502,8 @@ operator|)
 return|;
 block|}
 block|}
-elseif|else
 endif|#
 directive|endif
-comment|/* INET6 */
 if|if
 condition|(
 name|sa
