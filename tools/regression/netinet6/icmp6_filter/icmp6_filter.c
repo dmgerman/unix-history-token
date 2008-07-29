@@ -433,7 +433,6 @@ literal|"6: setsockopt(ICMP6_FILTER, PASSALL)"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * ... And that we can read back the pass all rule again. 	 */
-comment|/* 	 * Confirm that we can still read a pass all filter. 	 */
 name|len
 operator|=
 sizeof|sizeof
