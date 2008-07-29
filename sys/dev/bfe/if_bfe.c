@@ -1087,15 +1087,6 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|bfe_unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
 name|bfe_dev
 operator|=
 name|dev
@@ -1740,8 +1731,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -1787,24 +1776,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|bfe_dev
 operator|=
 name|dev
-expr_stmt|;
-name|sc
-operator|->
-name|bfe_unit
-operator|=
-name|unit
 expr_stmt|;
 comment|/* 	 * Map control/status registers. 	 */
 name|pci_enable_busmaster
@@ -1841,11 +1817,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: couldn't map memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1924,11 +1900,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1947,13 +1923,11 @@ name|dev
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: failed to allocate DMA resources\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|bfe_unit
+literal|"failed to allocate DMA resources\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1983,13 +1957,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: failed to if_alloc()\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|bfe_unit
+literal|"failed to if_alloc()\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2119,13 +2091,11 @@ name|bfe_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: MII without any PHY!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|bfe_unit
+literal|"MII without any PHY!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2202,11 +2172,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3409,13 +3379,13 @@ name|error
 operator|!=
 name|ENOMEM
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: failed to map RX buffer, error %d\n"
-argument_list|,
 name|sc
 operator|->
-name|bfe_unit
+name|bfe_dev
+argument_list|,
+literal|"failed to map RX buffer, error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -3865,13 +3835,13 @@ operator|&
 name|BMCR_RESET
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: PHY Reset would not complete.\n"
-argument_list|,
 name|sc
 operator|->
-name|bfe_unit
+name|bfe_dev
+argument_list|,
+literal|"PHY Reset would not complete.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5538,14 +5508,14 @@ operator|==
 name|timeout
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: BUG!  Timeout waiting for bit %08x of register "
-literal|"%x to %s.\n"
-argument_list|,
 name|sc
 operator|->
-name|bfe_unit
+name|bfe_dev
+argument_list|,
+literal|"BUG!  Timeout waiting for bit %08x of register "
+literal|"%x to %s.\n"
 argument_list|,
 name|bit
 argument_list|,
@@ -6560,9 +6530,13 @@ operator|&
 name|BFE_ISTAT_DSCE
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"if_bfe Descriptor Error\n"
+name|sc
+operator|->
+name|bfe_dev
+argument_list|,
+literal|"Descriptor Error\n"
 argument_list|)
 expr_stmt|;
 name|bfe_stop
@@ -6584,9 +6558,13 @@ operator|&
 name|BFE_ISTAT_DPE
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"if_bfe Descriptor Protocol Error\n"
+name|sc
+operator|->
+name|bfe_dev
+argument_list|,
+literal|"Descriptor Protocol Error\n"
 argument_list|)
 expr_stmt|;
 name|bfe_stop
@@ -7494,13 +7472,15 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: bfe_init: Not enough memory for list buffers\n"
-argument_list|,
 name|sc
 operator|->
-name|bfe_unit
+name|bfe_dev
+argument_list|,
+literal|"%s: Not enough memory for list buffers\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bfe_stop
@@ -7998,13 +7978,13 @@ name|sc
 operator|->
 name|bfe_ifp
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"bfe%d: watchdog timeout -- resetting\n"
-argument_list|,
 name|sc
 operator|->
-name|bfe_unit
+name|bfe_dev
+argument_list|,
+literal|"watchdog timeout -- resetting\n"
 argument_list|)
 expr_stmt|;
 name|ifp
