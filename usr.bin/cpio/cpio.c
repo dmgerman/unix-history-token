@@ -805,6 +805,18 @@ name|ARCHIVE_EXTRACT_TIME
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_NO_PRESERVE_OWNER
+case|:
+comment|/* GNU cpio */
+name|cpio
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_OWNER
+expr_stmt|;
+break|break;
+case|case
 literal|'O'
 case|:
 comment|/* GNU cpio */

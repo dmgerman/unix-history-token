@@ -296,6 +296,16 @@ literal|'d'
 block|}
 block|,
 block|{
+literal|"no-preserve-owner"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_PRESERVE_OWNER
+block|}
+block|,
+block|{
 literal|"null"
 block|,
 name|no_argument

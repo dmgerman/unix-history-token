@@ -252,6 +252,8 @@ name|OPTION_INSECURE
 init|=
 literal|1
 block|,
+name|OPTION_NO_PRESERVE_OWNER
+block|,
 name|OPTION_QUIET
 block|,
 name|OPTION_VERSION
