@@ -424,9 +424,7 @@ argument_list|)
 condition|)
 block|{
 name|kthread_exit
-argument_list|(
-literal|0
-argument_list|)
+argument_list|( 			    )
 expr_stmt|;
 block|}
 name|sctp_iterator_worker
