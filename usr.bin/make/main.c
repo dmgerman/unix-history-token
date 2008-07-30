@@ -538,6 +538,16 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
+name|printGraphOnly
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -p flag */
+end_comment
+
+begin_decl_stmt
+name|Boolean
 name|queryFlag
 decl_stmt|;
 end_decl_stmt
@@ -634,7 +644,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: make [-BPSXeiknqrstv] [-C directory] [-D variable]\n"
+literal|"usage: make [-BPSXeiknpqrstv] [-C directory] [-D variable]\n"
 literal|"\t[-d flags] [-E variable] [-f makefile] [-I directory]\n"
 literal|"\t[-j max_jobs] [-m directory] [-V variable]\n"
 literal|"\t[variable=value] [target ...]\n"
@@ -1504,7 +1514,7 @@ expr_stmt|;
 define|#
 directive|define
 name|OPTFLAGS
-value|"ABC:D:E:I:PSV:Xd:ef:ij:km:nqrstvx:"
+value|"ABC:D:E:I:PSV:Xd:ef:ij:km:npqrstvx:"
 for|for
 control|(
 init|;
@@ -2063,6 +2073,18 @@ literal|"-n"
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|printGraphOnly
+operator|=
+name|TRUE
+expr_stmt|;
+name|debug
+operator||=
+name|DEBUG_GRAPH1
 expr_stmt|;
 break|break;
 case|case
@@ -3421,6 +3443,11 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* Execute all commands */
+name|printGraphOnly
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Don't stop after printing graph */
 name|keepgoing
 operator|=
 name|FALSE
@@ -4612,6 +4639,9 @@ argument_list|(
 operator|&
 name|variables
 argument_list|)
+operator|&&
+operator|!
+name|printGraphOnly
 condition|)
 block|{
 comment|/* 		 * Since the user has not requested that any variables 		 * be printed, we can build targets. 		 * 		 * Have read the entire graph and need to make a list of targets 		 * to create. If none was given on the command line, we consult 		 * the parsing module to find the main target(s) to create. 		 */
