@@ -215,18 +215,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|s32
-name|ixgbe_reset_phy_nl
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

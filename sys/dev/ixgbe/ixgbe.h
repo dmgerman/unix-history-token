@@ -1145,6 +1145,12 @@ decl_stmt|;
 name|u32
 name|rx_process_limit
 decl_stmt|;
+name|eventhandler_tag
+name|vlan_attach
+decl_stmt|;
+name|eventhandler_tag
+name|vlan_detach
+decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
 name|long

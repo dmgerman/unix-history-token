@@ -85,20 +85,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_DEV_ID_82598_DA_DUAL_PORT
-value|0x10F1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_DEV_ID_82598_SR_DUAL_PORT_EM
-value|0x10E1
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXGBE_DEV_ID_82598EB_XF_LR
 value|0x10F4
 end_define
@@ -510,6 +496,13 @@ define|#
 directive|define
 name|IXGBE_RDRXCTL
 value|0x02F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RDRXCTRL_RSC_PUSH
+value|0x80
 end_define
 
 begin_define
@@ -2722,6 +2715,39 @@ value|0x04800
 end_define
 
 begin_comment
+comment|/* RDRXCTL Bit Masks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RDRXCTL_RDMTS_1_2
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Rx Desc Min Threshold Size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RDRXCTL_MVMEN
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RDRXCTL_DMAIDONE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* DMA init cycle done */
+end_comment
+
+begin_comment
 comment|/* CTRL Bit Masks */
 end_comment
 
@@ -3311,13 +3337,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_TWINAX_DEV
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXGBE_MDIO_COMMAND_TIMEOUT
 value|100
 end_define
@@ -3561,13 +3580,6 @@ name|QT2022_PHY_ID
 value|0x0043A400
 end_define
 
-begin_define
-define|#
-directive|define
-name|ATH_PHY_ID
-value|0x03429050
-end_define
-
 begin_comment
 comment|/* PHY Types */
 end_comment
@@ -3577,73 +3589,6 @@ define|#
 directive|define
 name|IXGBE_M88E1145_E_PHY_ID
 value|0x01410CD0
-end_define
-
-begin_comment
-comment|/* Special PHY Init Routine */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_PHY_INIT_OFFSET_NL
-value|0x002B
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CONTROL_MASK_NL
-value|0xF000
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_DATA_MASK_NL
-value|0x0FFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CONTROL_SHIFT_NL
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_DELAY_NL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_DATA_NL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CONTROL_NL
-value|0x000F
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CONTROL_EOL_NL
-value|0x0FFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CONTROL_SOL_NL
-value|0x0000
 end_define
 
 begin_comment
@@ -4217,28 +4162,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_EICR_GPI_SDP0
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* Gen Purpose Interrupt on SDP0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_EICR_GPI_SDP1
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Gen Purpose Interrupt on SDP1 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IXGBE_EICR_LSC
 value|0x00100000
 end_define
@@ -4256,6 +4179,28 @@ end_define
 
 begin_comment
 comment|/* Manageability Event Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EICR_GPI_SDP0
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Gen Purpose Interrupt on SDP0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EICR_GPI_SDP1
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Gen Purpose Interrupt on SDP1 */
 end_comment
 
 begin_define
@@ -4320,28 +4265,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_EICS_GPI_SDP0
-value|IXGBE_EICR_GPI_SDP0
-end_define
-
-begin_comment
-comment|/* Gen Purpose Interrupt on SDP0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_EICS_GPI_SDP1
-value|IXGBE_EICR_GPI_SDP1
-end_define
-
-begin_comment
-comment|/* Gen Purpose Interrupt on SDP1 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IXGBE_EICS_LSC
 value|IXGBE_EICR_LSC
 end_define
@@ -4364,12 +4287,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_EICS_GPI_SDP0
+value|IXGBE_EICR_GPI_SDP0
+end_define
+
+begin_comment
+comment|/* SDP0 Gen Purpose Int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EICS_GPI_SDP1
+value|IXGBE_EICR_GPI_SDP1
+end_define
+
+begin_comment
+comment|/* SDP1 Gen Purpose Int */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_EICS_PBUR
 value|IXGBE_EICR_PBUR
 end_define
 
 begin_comment
-comment|/* Pkt Buf Handler Error */
+comment|/* Pkt Buf Handler Err */
 end_comment
 
 begin_define
@@ -4423,28 +4368,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_EIMS_GPI_SDP0
-value|IXGBE_EICR_GPI_SDP0
-end_define
-
-begin_comment
-comment|/* Gen Purpose Interrupt on SDP0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_EIMS_GPI_SDP1
-value|IXGBE_EICR_GPI_SDP1
-end_define
-
-begin_comment
-comment|/* Gen Purpose Interrupt on SDP1 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IXGBE_EIMS_LSC
 value|IXGBE_EICR_LSC
 end_define
@@ -4467,12 +4390,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_EIMS_GPI_SDP0
+value|IXGBE_EICR_GPI_SDP0
+end_define
+
+begin_comment
+comment|/* SDP0 Gen Purpose Int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EIMS_GPI_SDP1
+value|IXGBE_EICR_GPI_SDP1
+end_define
+
+begin_comment
+comment|/* SDP1 Gen Purpose Int */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_EIMS_PBUR
 value|IXGBE_EICR_PBUR
 end_define
 
 begin_comment
-comment|/* Pkt Buf Handler Error */
+comment|/* Pkt Buf Handler Err */
 end_comment
 
 begin_define
@@ -4526,28 +4471,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_EIMC_GPI_SDP0
-value|IXGBE_EICR_GPI_SDP0
-end_define
-
-begin_comment
-comment|/* Gen Purpose Interrupt on SDP0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_EIMC_GPI_SDP1
-value|IXGBE_EICR_GPI_SDP1
-end_define
-
-begin_comment
-comment|/* Gen Purpose Interrupt on SDP1 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IXGBE_EIMC_LSC
 value|IXGBE_EICR_LSC
 end_define
@@ -4570,12 +4493,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_EIMC_GPI_SDP0
+value|IXGBE_EICR_GPI_SDP0
+end_define
+
+begin_comment
+comment|/* SDP0 Gen Purpose Int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EIMC_GPI_SDP1
+value|IXGBE_EICR_GPI_SDP1
+end_define
+
+begin_comment
+comment|/* SDP1 Gen Purpose Int */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_EIMC_PBUR
 value|IXGBE_EICR_PBUR
 end_define
 
 begin_comment
-comment|/* Pkt Buf Handler Error */
+comment|/* Pkt Buf Handler Err */
 end_comment
 
 begin_define
@@ -4586,7 +4531,7 @@ value|IXGBE_EICR_DHER
 end_define
 
 begin_comment
-comment|/* Desc Handler Error */
+comment|/* Desc Handler Err */
 end_comment
 
 begin_define
@@ -5551,7 +5496,7 @@ value|0x00040000
 end_define
 
 begin_comment
-comment|/* PCS 1G autoneg timeout enable (bit 18) */
+comment|/* PCS 1G autoneg to en */
 end_comment
 
 begin_define
@@ -6366,6 +6311,13 @@ name|IXGBE_RAH_AV
 value|0x80000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_CLEAR_VMDQ_ALL
+value|0xFFFFFFFF
+end_define
+
 begin_comment
 comment|/* Header split receive */
 end_comment
@@ -6553,7 +6505,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* Tx seq. # write-back enable */
+comment|/* Tx seq# write-back enable */
 end_comment
 
 begin_comment
@@ -7081,9 +7033,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_RXDADV_HBO
+name|IXGBE_RXDADV_ERR_HBO
 value|0x00800000
 end_define
+
+begin_comment
+comment|/*Header Buffer Overflow */
+end_comment
 
 begin_define
 define|#
@@ -7827,11 +7783,11 @@ block|{
 name|__le16
 name|pkt_info
 decl_stmt|;
-comment|/* RSS type, Packet type */
+comment|/* RSS, Pkt type */
 name|__le16
 name|hdr_info
 decl_stmt|;
-comment|/* Split Header, header len */
+comment|/* Splithdr, hdrlen */
 block|}
 name|hs_rss
 struct|;
@@ -7924,7 +7880,7 @@ value|0x0000FFFF
 end_define
 
 begin_comment
-comment|/* Data buffer length(bytes) */
+comment|/* Data buf length(bytes) */
 end_comment
 
 begin_define
@@ -8056,7 +8012,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* NXTSEQ/SEED present in WB */
+comment|/* NXTSEQ/SEED pres in WB */
 end_comment
 
 begin_define
@@ -8394,8 +8350,6 @@ block|,
 name|ixgbe_phy_qt
 block|,
 name|ixgbe_phy_xaui
-block|,
-name|ixgbe_phy_nl
 block|,
 name|ixgbe_phy_generic
 block|}
@@ -9223,7 +9177,35 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
+name|clear_rar
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u32
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
 name|set_vmdq
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u32
+parameter_list|,
+name|u32
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|clear_vmdq
 function_decl|)
 parameter_list|(
 name|struct
@@ -9330,6 +9312,17 @@ parameter_list|,
 name|u32
 parameter_list|,
 name|bool
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|init_uta_tables
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Flow Control */
@@ -9485,6 +9478,9 @@ decl_stmt|;
 name|enum
 name|ixgbe_eeprom_type
 name|type
+decl_stmt|;
+name|u32
+name|semaphore_delay
 decl_stmt|;
 name|u16
 name|word_size
