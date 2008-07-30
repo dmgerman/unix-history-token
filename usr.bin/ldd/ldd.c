@@ -89,6 +89,27 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_comment
+comment|/*  * 32-bit ELF data structures can only be used if the system header[s] declare  * them.  There is no official macro for determining whether they are declared,  * so check for the existence of one of the 32-macros defined in elf(5).  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ELF32_R_TYPE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ELF32_SUPPORTED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -154,6 +175,11 @@ directive|if
 name|__ELF_WORD_SIZE
 operator|>
 literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 end_if
 
 begin_define
@@ -243,6 +269,11 @@ directive|if
 name|__ELF_WORD_SIZE
 operator|>
 literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -594,6 +625,11 @@ directive|if
 name|__ELF_WORD_SIZE
 operator|>
 literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 case|case
 name|TYPE_ELF32
 case|:
@@ -944,9 +980,21 @@ name|struct
 name|exec
 name|aout
 decl_stmt|;
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|>
+literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 name|Elf32_Ehdr
 name|elf32
 decl_stmt|;
+endif|#
+directive|endif
 name|Elf_Ehdr
 name|elf
 decl_stmt|;
@@ -1085,6 +1133,11 @@ directive|if
 name|__ELF_WORD_SIZE
 operator|>
 literal|32
+operator|&&
+name|defined
+argument_list|(
+name|ELF32_SUPPORTED
+argument_list|)
 if|if
 condition|(
 operator|(
