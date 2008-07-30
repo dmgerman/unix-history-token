@@ -1971,9 +1971,9 @@ argument_list|,
 operator|&
 name|fn
 argument_list|,
-name|EXP_FULL
-operator||
 name|EXP_TILDE
+operator||
+name|EXP_REDIR
 argument_list|)
 expr_stmt|;
 name|fixredir
