@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/clist.h>
 end_include
 
@@ -147,6 +141,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|QUOTEMASK
+value|0x100
+end_define
 
 begin_function_decl
 specifier|static
@@ -855,7 +856,7 @@ argument_list|)
 condition|)
 name|chr
 operator||=
-name|TTY_QUOTE
+name|QUOTEMASK
 expr_stmt|;
 comment|/* 		 * Advance to next character. 		 */
 name|clistp
@@ -1642,7 +1643,7 @@ if|if
 condition|(
 name|chr
 operator|&
-name|TTY_QUOTE
+name|QUOTEMASK
 condition|)
 block|{
 name|setbit
@@ -2343,7 +2344,7 @@ operator|->
 name|c_info
 argument_list|)
 condition|?
-name|TTY_QUOTE
+name|QUOTEMASK
 else|:
 literal|0
 operator|)
@@ -2474,7 +2475,7 @@ argument_list|)
 condition|)
 name|chr
 operator||=
-name|TTY_QUOTE
+name|QUOTEMASK
 expr_stmt|;
 comment|/* 		 * If all of the characters have been unput in this 		 * cblock, then find the previous one and free this 		 * one. 		 */
 if|if
