@@ -4190,7 +4190,7 @@ literal|0
 return|;
 name|fail
 label|:
-name|ural_free_tx_list
+name|ural_free_rx_list
 argument_list|(
 name|sc
 argument_list|)

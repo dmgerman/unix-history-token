@@ -4654,7 +4654,7 @@ literal|0
 return|;
 name|fail
 label|:
-name|rum_free_tx_list
+name|rum_free_rx_list
 argument_list|(
 name|sc
 argument_list|)
