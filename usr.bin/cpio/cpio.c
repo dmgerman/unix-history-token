@@ -533,6 +533,12 @@ name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
 expr_stmt|;
+name|cpio
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_PERM
+expr_stmt|;
 if|if
 condition|(
 name|geteuid
