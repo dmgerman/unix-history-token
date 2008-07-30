@@ -3388,6 +3388,8 @@ name|td_pcb
 operator|->
 name|pcb_flags
 operator||=
+name|PCB_GS32BIT
+operator||
 name|PCB_32BIT
 expr_stmt|;
 block|}

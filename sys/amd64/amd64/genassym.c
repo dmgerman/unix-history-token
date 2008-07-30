@@ -1078,6 +1078,16 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
+name|PCB_GS32BIT
+argument_list|,
+name|PCB_GS32BIT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
 name|PCB_FULLCTX
 argument_list|,
 name|PCB_FULLCTX
