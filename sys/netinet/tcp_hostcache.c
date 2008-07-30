@@ -1261,7 +1261,26 @@ argument_list|,
 name|hc_qhead
 argument_list|)
 expr_stmt|;
-comment|/* 		 * At first we were dropping the last element, just to 		 * reaquire it in the next two lines again which ain't 		 * very efficient. Instead just reuse the least used element. 		 * Maybe we drop something that is still "in-use" but we can 		 * be "lossy". 		 */
+comment|/* 		 * At first we were dropping the last element, just to 		 * reaquire it in the next two lines again which ain't 		 * very efficient. Instead just reuse the least used element. 		 * Maybe we drop something that is still "in-use" but we can 		 * be "lossy". 		 * Just give up if this bucket row is empty and we don't have 		 * anything to replace. 		 */
+if|if
+condition|(
+name|hc_entry
+operator|==
+name|NULL
+condition|)
+block|{
+name|THC_UNLOCK
+argument_list|(
+operator|&
+name|hc_head
+operator|->
+name|hch_mtx
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
