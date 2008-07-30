@@ -5205,7 +5205,7 @@ argument_list|(
 name|swap_zone
 argument_list|)
 condition|)
-name|printf
+name|panic
 argument_list|(
 literal|"swap zone exhausted, increase kern.maxswzone\n"
 argument_list|)
