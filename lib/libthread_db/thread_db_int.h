@@ -375,13 +375,11 @@ specifier|const
 name|td_thrhandle_t
 modifier|*
 parameter_list|,
-name|void
-modifier|*
+name|psaddr_t
 parameter_list|,
 name|size_t
 parameter_list|,
-name|void
-modifier|*
+name|psaddr_t
 modifier|*
 parameter_list|)
 function_decl|;

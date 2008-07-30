@@ -1164,15 +1164,13 @@ name|td_thrhandle_t
 modifier|*
 name|th
 parameter_list|,
-name|void
-modifier|*
+name|psaddr_t
 name|linkmap
 parameter_list|,
 name|size_t
 name|offset
 parameter_list|,
-name|void
-modifier|*
+name|psaddr_t
 modifier|*
 name|address
 parameter_list|)

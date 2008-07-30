@@ -192,8 +192,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|void
-modifier|*
+name|uintptr_t
 name|psaddr_t
 typedef|;
 end_typedef
