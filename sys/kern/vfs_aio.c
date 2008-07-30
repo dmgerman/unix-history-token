@@ -503,6 +503,16 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|aio
+argument_list|,
+literal|"Asynchronous I/O"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
 argument_list|(
