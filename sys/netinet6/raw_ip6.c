@@ -3459,12 +3459,6 @@ literal|"rip6_send: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
-argument_list|(
-operator|&
-name|ripcbinfo
-argument_list|)
-expr_stmt|;
 comment|/* Always copy sockaddr to avoid overwrites. */
 comment|/* Unlocked read. */
 if|if
@@ -3481,12 +3475,6 @@ condition|(
 name|nam
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|ripcbinfo
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -3526,6 +3514,11 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
+name|INP_RLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
@@ -3545,6 +3538,11 @@ name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|INP_RUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|dst
 operator|=
 operator|&
@@ -3560,12 +3558,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|ripcbinfo
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -3590,12 +3582,6 @@ name|sockaddr_in6
 argument_list|)
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|ripcbinfo
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -3657,12 +3643,6 @@ operator|!=
 name|AF_INET6
 condition|)
 block|{
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|ripcbinfo
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -3686,12 +3666,6 @@ argument_list|,
 name|dst
 argument_list|,
 name|control
-argument_list|)
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
