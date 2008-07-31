@@ -74,6 +74,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sockopt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sockstate.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sockbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -87,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socketvar.h>
 end_include
 
 begin_include
