@@ -768,7 +768,7 @@ condition|(
 name|hx
 operator|<
 operator|(
-literal|1U
+literal|1ULL
 operator|<<
 name|HFRAC_BITS
 operator|)
