@@ -15,12 +15,6 @@ directive|define
 name|_CXGB_CONFIG_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|VM_FAULT_HOLD_DEFINED
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
