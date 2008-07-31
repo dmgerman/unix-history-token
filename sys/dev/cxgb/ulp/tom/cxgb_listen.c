@@ -62,13 +62,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/sockopt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
+file|<sys/sockstate.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sockbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -956,7 +968,7 @@ name|inpcb
 modifier|*
 name|inp
 init|=
-name|sotoinpcb
+name|so_sotoinpcb
 argument_list|(
 name|so
 argument_list|)
@@ -1052,9 +1064,10 @@ argument_list|)
 operator|&&
 operator|!
 operator|(
+name|so_options_get
+argument_list|(
 name|so
-operator|->
-name|so_options
+argument_list|)
 operator|&
 name|SO_NO_DDP
 operator|)
