@@ -117,9 +117,6 @@ modifier|*
 modifier|*
 name|ops_pp
 decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
 name|ret
 operator|=
 literal|0
@@ -391,9 +388,6 @@ modifier|*
 name|pta
 parameter_list|)
 block|{
-name|size_t
-name|i
-decl_stmt|;
 name|struct
 name|ta_ops
 modifier|*

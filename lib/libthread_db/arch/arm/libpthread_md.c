@@ -563,16 +563,6 @@ modifier|*
 name|r
 parameter_list|)
 block|{
-specifier|const
-name|mcontext_t
-modifier|*
-name|mc
-init|=
-operator|&
-name|uc
-operator|->
-name|uc_mcontext
-decl_stmt|;
 comment|/* XXX */
 name|memset
 argument_list|(
@@ -613,6 +603,11 @@ name|step
 parameter_list|)
 block|{
 comment|/* XXX */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
