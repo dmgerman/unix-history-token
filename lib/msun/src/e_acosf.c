@@ -50,13 +50,31 @@ comment|/* 0x40490fda */
 name|pio2_hi
 init|=
 literal|1.5707962513e+00
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* 0x3fc90fda */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|float
 name|pio2_lo
 init|=
 literal|7.5497894159e-08
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* 0x33a22168 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|float
 name|pS0
 init|=
 literal|1.6666667163e-01

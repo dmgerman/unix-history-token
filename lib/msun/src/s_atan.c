@@ -240,6 +240,13 @@ index|[
 literal|3
 index|]
 operator|+
+operator|*
+operator|(
+specifier|volatile
+name|double
+operator|*
+operator|)
+operator|&
 name|atanlo
 index|[
 literal|3
@@ -253,6 +260,13 @@ index|[
 literal|3
 index|]
 operator|-
+operator|*
+operator|(
+specifier|volatile
+name|double
+operator|*
+operator|)
+operator|&
 name|atanlo
 index|[
 literal|3

@@ -35,12 +35,18 @@ end_include
 
 begin_decl_stmt
 specifier|static
-specifier|const
+specifier|volatile
 name|float
 name|tiny
 init|=
 literal|1.0e-30
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|float
 name|zero
 init|=
 literal|0.0
@@ -58,8 +64,17 @@ comment|/* 0x3fc90fdb */
 name|pi
 init|=
 literal|3.1415927410e+00
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* 0x40490fdb */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|float
 name|pi_lo
 init|=
 operator|-

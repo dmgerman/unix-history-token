@@ -39,12 +39,18 @@ end_include
 
 begin_decl_stmt
 specifier|static
-specifier|const
+specifier|volatile
 name|double
 name|tiny
 init|=
 literal|1.0e-300
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|double
 name|zero
 init|=
 literal|0.0
@@ -68,8 +74,17 @@ init|=
 literal|3.1415926535897931160E
 operator|+
 literal|00
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* 0x400921FB, 0x54442D18 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
 name|pi_lo
 init|=
 literal|1.2246467991473531772E

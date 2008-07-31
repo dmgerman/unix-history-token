@@ -54,13 +54,31 @@ comment|/* 0x400921FB, 0x54442D18 */
 name|pio2_hi
 init|=
 literal|1.57079632679489655800e+00
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* 0x3FF921FB, 0x54442D18 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
 name|pio2_lo
 init|=
 literal|6.12323399573676603587e-17
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* 0x3C91A626, 0x33145C07 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|double
 name|pS0
 init|=
 literal|1.66666666666666657415e-01
