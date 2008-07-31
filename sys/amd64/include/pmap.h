@@ -247,6 +247,24 @@ comment|/* Non-cacheable */
 end_comment
 
 begin_comment
+comment|/* Page level cache control fields used to determine the PAT type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_PDE_CACHE
+value|(PG_PDE_PAT | PG_NC_PWT | PG_NC_PCD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PTE_CACHE
+value|(PG_PTE_PAT | PG_NC_PWT | PG_NC_PCD)
+end_define
+
+begin_comment
 comment|/*  * Promotion to a 2MB (PDE) page mapping requires that the corresponding 4KB  * (PTE) page mappings have identical settings for the following fields:  */
 end_comment
 
