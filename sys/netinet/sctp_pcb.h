@@ -2107,6 +2107,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|sctp_swap_inpcb_for_listen
+parameter_list|(
+name|struct
+name|sctp_inpcb
+modifier|*
+name|inp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*-  * Null in last arg inpcb indicate run on ALL ep's. Specific inp in last arg  * indicates run on ONLY assoc's of the specified endpoint.  */
 end_comment

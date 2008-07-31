@@ -94,7 +94,7 @@ name|inp
 parameter_list|,
 name|feature
 parameter_list|)
-value|(inp->sctp_features& feature)
+value|((inp->sctp_features& feature) == feature)
 end_define
 
 begin_define
