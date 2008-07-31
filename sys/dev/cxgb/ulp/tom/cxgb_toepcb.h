@@ -260,7 +260,6 @@ name|mbuf
 modifier|*
 name|peek_wr
 parameter_list|(
-specifier|const
 name|struct
 name|toepcb
 modifier|*

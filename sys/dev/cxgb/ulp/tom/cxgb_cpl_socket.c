@@ -1591,7 +1591,7 @@ name|toep
 parameter_list|)
 block|{
 name|struct
-name|rwlock
+name|mtx
 modifier|*
 name|lock
 decl_stmt|;
@@ -1604,7 +1604,7 @@ name|tp_tp
 operator|->
 name|t_inpcb
 operator|->
-name|inp_lock
+name|inp_mtx
 expr_stmt|;
 name|inp_wlock
 argument_list|(
@@ -1795,19 +1795,11 @@ name|m0
 operator|->
 name|m_ext
 operator|.
-name|ext_arg1
+name|ext_args
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX: probably wrong /phk */
-name|m0
-operator|->
-name|m_ext
-operator|.
-name|ext_arg2
-operator|=
-name|NULL
-expr_stmt|;
 name|mv
 operator|=
 name|mtomv
