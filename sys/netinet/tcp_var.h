@@ -1702,6 +1702,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|sockopt
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
