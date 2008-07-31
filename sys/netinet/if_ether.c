@@ -1717,6 +1717,11 @@ decl_stmt|;
 if|if
 condition|(
 name|m
+condition|)
+block|{
+if|if
+condition|(
+name|m
 operator|->
 name|m_flags
 operator|&
@@ -1788,6 +1793,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rt0
@@ -2138,6 +2144,11 @@ block|}
 comment|/* 	 * There is an arptab entry, but no ethernet address 	 * response yet.  Replace the held mbuf with this 	 * latest one. 	 */
 if|if
 condition|(
+name|m
+condition|)
+block|{
+if|if
+condition|(
 name|la
 operator|->
 name|la_hold
@@ -2155,6 +2166,7 @@ name|la_hold
 operator|=
 name|m
 expr_stmt|;
+block|}
 name|KASSERT
 argument_list|(
 name|rt
@@ -3275,14 +3287,42 @@ operator|->
 name|rt_gateway
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* -current */
-comment|/* Only call this once */
-block|if (firstpass) { 			sin.sin_addr.s_addr = isaddr.s_addr; 			EVENTHANDLER_INVOKE(route_arp_update_event, rt, 			    ar_sha(ah), (struct sockaddr *)&sin); 		}
-endif|#
-directive|endif
+if|if
+condition|(
+name|firstpass
+condition|)
+block|{
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|isaddr
+operator|.
+name|s_addr
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|route_arp_update_event
+argument_list|,
+name|rt
+argument_list|,
+name|ar_sha
+argument_list|(
+name|ah
+argument_list|)
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|sin
+argument_list|)
+expr_stmt|;
+block|}
 name|la
 operator|=
 operator|(
