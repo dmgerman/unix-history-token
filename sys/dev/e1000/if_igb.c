@@ -21211,8 +21211,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no descriptors avail event = %lu\n"
+literal|"no descriptors avail event = %lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|txr
 operator|->
 name|no_desc_avail
