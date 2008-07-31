@@ -544,6 +544,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCP_CONGESTION
+value|0x40
+end_define
+
+begin_comment
+comment|/* get/set congestion control algorithm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_CA_NAME_MAX
+value|16
+end_define
+
+begin_comment
+comment|/* max congestion control name length */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCPI_OPT_TIMESTAMPS
 value|0x01
 end_define
@@ -567,6 +589,13 @@ define|#
 directive|define
 name|TCPI_OPT_ECN
 value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPI_OPT_TOE
+value|0x10
 end_define
 
 begin_comment
@@ -694,11 +723,23 @@ name|u_int32_t
 name|tcpi_snd_bwnd
 decl_stmt|;
 comment|/* Bandwidth send window. */
+name|u_int32_t
+name|tcpi_snd_nxt
+decl_stmt|;
+comment|/* Next egress seqno */
+name|u_int32_t
+name|tcpi_rcv_nxt
+decl_stmt|;
+comment|/* Next ingress seqno */
+name|u_int32_t
+name|tcpi_toe_tid
+decl_stmt|;
+comment|/* HWTID for TOE endpoints */
 comment|/* Padding to grow without breaking ABI. */
 name|u_int32_t
 name|__tcpi_pad
 index|[
-literal|32
+literal|29
 index|]
 decl_stmt|;
 comment|/* Padding. */
