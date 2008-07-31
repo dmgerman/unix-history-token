@@ -205,7 +205,8 @@ parameter_list|,
 name|psaddr_t
 name|pt
 parameter_list|,
-name|int
+name|enum
+name|pt_type
 name|type
 parameter_list|)
 block|{
@@ -6201,6 +6202,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|td_err_e
 name|pt_thr_tls_get_addr
 parameter_list|(

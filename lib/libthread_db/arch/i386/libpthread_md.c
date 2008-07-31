@@ -20,31 +20,25 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<proc_service.h>
+file|<machine/npx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<thread_db.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/npx.h>
 end_include
 
 begin_include
