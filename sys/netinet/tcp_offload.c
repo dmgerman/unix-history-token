@@ -212,13 +212,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"no toe capability on %p\n"
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -241,11 +234,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"tdev not set\n"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EPERM
@@ -268,11 +256,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"not offloadable\n"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EPERM
