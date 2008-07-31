@@ -376,6 +376,21 @@ directive|define
 name|TF_TOE
 value|0x2000000
 comment|/* this connection is offloaded */
+define|#
+directive|define
+name|TF_ECN_PERMIT
+value|0x4000000
+comment|/* connection ECN-ready */
+define|#
+directive|define
+name|TF_ECN_SND_CWR
+value|0x8000000
+comment|/* ECN CWR in queue */
+define|#
+directive|define
+name|TF_ECN_SND_ECE
+value|0x10000000
+comment|/* ECN ECE in queue */
 name|tcp_seq
 name|snd_una
 decl_stmt|;
@@ -1429,6 +1444,27 @@ name|u_long
 name|tcps_sack_sboverflow
 decl_stmt|;
 comment|/* times scoreboard overflowed */
+comment|/* ECN related stats */
+name|u_long
+name|tcps_ecn_ce
+decl_stmt|;
+comment|/* ECN Congestion Experienced */
+name|u_long
+name|tcps_ecn_ect0
+decl_stmt|;
+comment|/* ECN Capable Transport */
+name|u_long
+name|tcps_ecn_ect1
+decl_stmt|;
+comment|/* ECN Capable Transport */
+name|u_long
+name|tcps_ecn_shs
+decl_stmt|;
+comment|/* ECN successful handshakes */
+name|u_long
+name|tcps_ecn_rcwnd
+decl_stmt|;
+comment|/* # times ECN reduced the cwnd */
 block|}
 struct|;
 end_struct
@@ -1815,6 +1851,24 @@ end_decl_stmt
 begin_comment
 comment|/* RST on sock alloc failure */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_do_ecn
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TCP ECN enabled/disabled */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_ecn_maxretries
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int

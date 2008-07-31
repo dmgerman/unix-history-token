@@ -7625,6 +7625,29 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|t_flags
+operator|&
+name|TF_ECN_PERMIT
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"%sTF_ECN_PERMIT"
+argument_list|,
+name|comma
+condition|?
+literal|", "
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_function
 
