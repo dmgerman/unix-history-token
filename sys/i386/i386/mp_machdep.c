@@ -3051,7 +3051,7 @@ index|[
 name|cpu
 index|]
 expr_stmt|;
-comment|/* allocate and set up an idle stack data page */
+comment|/* allocate and set up a boot stack data page */
 name|bootstacks
 index|[
 name|cpu
