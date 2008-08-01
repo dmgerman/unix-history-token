@@ -545,6 +545,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|trunc_1gpage
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned long)(x)& ~PDPMASK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|atop
 parameter_list|(
 name|x
