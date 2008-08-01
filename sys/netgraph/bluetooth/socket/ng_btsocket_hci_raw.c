@@ -434,13 +434,6 @@ comment|/* Globals */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|ifqmaxlen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|ng_btsocket_hci_raw_debug_level
@@ -3034,7 +3027,7 @@ argument_list|(
 operator|&
 name|ng_btsocket_hci_raw_queue
 argument_list|,
-name|ifqmaxlen
+literal|300
 argument_list|)
 expr_stmt|;
 name|mtx_init
