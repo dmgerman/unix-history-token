@@ -1607,15 +1607,23 @@ operator|=
 name|usernm
 expr_stmt|;
 block|}
-comment|/* if we are supposed to be mailing, MAILTO will 			 * be non-NULL.  only in this case should we set 			 * up the mail command and subjects and stuff... 			 */
 if|if
 condition|(
 name|mailto
 operator|&&
 operator|*
 name|mailto
-operator|!=
+operator|==
 literal|'\0'
+condition|)
+name|mailto
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* if we are supposed to be mailing, MAILTO will 			 * be non-NULL.  only in this case should we set 			 * up the mail command and subjects and stuff... 			 */
+if|if
+condition|(
+name|mailto
 condition|)
 block|{
 specifier|register
