@@ -972,6 +972,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|debug
+value|ssh_debug
+end_define
+
+begin_define
+define|#
+directive|define
+name|debug2
+value|ssh_debug2
+end_define
+
+begin_define
+define|#
+directive|define
+name|debug3
+value|ssh_debug3
+end_define
+
+begin_define
+define|#
+directive|define
 name|decode_reply
 value|ssh_decode_reply
 end_define
@@ -1119,6 +1140,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|error
+value|ssh_error
+end_define
+
+begin_define
+define|#
+directive|define
 name|evp_acss
 value|ssh_evp_acss
 end_define
@@ -1156,6 +1184,13 @@ define|#
 directive|define
 name|export_dns_rr
 value|ssh_export_dns_rr
+end_define
+
+begin_define
+define|#
+directive|define
+name|fatal
+value|ssh_fatal
 end_define
 
 begin_define
@@ -1583,6 +1618,13 @@ define|#
 directive|define
 name|log_level_number
 value|ssh_log_level_number
+end_define
+
+begin_define
+define|#
+directive|define
+name|logit
+value|ssh_logit
 end_define
 
 begin_define
@@ -2388,6 +2430,13 @@ define|#
 directive|define
 name|uuencode
 value|ssh_uuencode
+end_define
+
+begin_define
+define|#
+directive|define
+name|verbose
+value|ssh_verbose
 end_define
 
 begin_define
