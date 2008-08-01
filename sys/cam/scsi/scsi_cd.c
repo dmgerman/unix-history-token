@@ -1496,6 +1496,18 @@ name|changerq
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SCSICD
+argument_list|,
+literal|"scsi_cd"
+argument_list|,
+literal|"scsi_cd buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -6243,7 +6255,7 @@ operator|*
 name|rcap
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -7182,7 +7194,7 @@ name|free
 argument_list|(
 name|rdcap
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 if|if
@@ -7673,7 +7685,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -7716,7 +7728,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7762,7 +7774,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 if|if
@@ -8093,7 +8105,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -8136,7 +8148,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8182,7 +8194,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 if|if
@@ -8281,7 +8293,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -8311,7 +8323,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8357,7 +8369,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 if|if
@@ -8441,7 +8453,7 @@ expr|struct
 name|cd_sub_channel_info
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -8485,7 +8497,7 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8541,7 +8553,7 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8657,7 +8669,7 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -8694,7 +8706,7 @@ expr|struct
 name|ioc_toc_header
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -8734,7 +8746,7 @@ name|free
 argument_list|(
 name|th
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8800,7 +8812,7 @@ name|free
 argument_list|(
 name|th
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -8875,7 +8887,7 @@ operator|*
 name|data
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -8890,7 +8902,7 @@ operator|*
 name|lead
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -8950,14 +8962,14 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|lead
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9004,14 +9016,14 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|lead
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9104,14 +9116,14 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|lead
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|error
@@ -9202,14 +9214,14 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|lead
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9270,14 +9282,14 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|lead
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9359,14 +9371,14 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|lead
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9452,14 +9464,14 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|lead
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -9516,7 +9528,7 @@ operator|*
 name|data
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -9546,7 +9558,7 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|error
@@ -9597,7 +9609,7 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9690,7 +9702,7 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 name|error
@@ -9736,7 +9748,7 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9787,7 +9799,7 @@ name|free
 argument_list|(
 name|data
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -9850,7 +9862,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -9880,7 +9892,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9981,7 +9993,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -10044,7 +10056,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -10074,7 +10086,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10165,7 +10177,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -10228,7 +10240,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -10258,7 +10270,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10385,7 +10397,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -10436,7 +10448,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -10466,7 +10478,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10551,7 +10563,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -10602,7 +10614,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -10632,7 +10644,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10713,7 +10725,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -10764,7 +10776,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -10793,7 +10805,7 @@ argument_list|(
 operator|&
 name|params
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10874,7 +10886,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -10925,7 +10937,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -10955,7 +10967,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11036,7 +11048,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -11087,7 +11099,7 @@ name|params
 operator|.
 name|alloc_len
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -11117,7 +11129,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11198,7 +11210,7 @@ name|params
 operator|.
 name|mode_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 block|}
@@ -12365,7 +12377,7 @@ expr|struct
 name|scsi_read_capacity_data
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -12473,7 +12485,7 @@ name|free
 argument_list|(
 name|rcap_buf
 argument_list|,
-name|M_TEMP
+name|M_SCSICD
 argument_list|)
 expr_stmt|;
 operator|*

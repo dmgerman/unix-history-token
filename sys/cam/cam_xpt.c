@@ -6062,7 +6062,7 @@ expr|struct
 name|intr_config_hook
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -6104,7 +6104,7 @@ name|free
 argument_list|(
 name|xpt_config_hook
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|printf
@@ -23087,7 +23087,7 @@ argument_list|(
 name|xpt_scan_bus_info
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -23244,7 +23244,7 @@ name|free
 argument_list|(
 name|scan_info
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|request_ccb
@@ -23759,7 +23759,7 @@ name|free
 argument_list|(
 name|scan_info
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|request_ccb
@@ -23860,7 +23860,7 @@ name|free
 argument_list|(
 name|scan_info
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|request_ccb
@@ -24300,7 +24300,7 @@ expr|union
 name|ccb
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -24335,7 +24335,7 @@ operator|*
 name|new_path
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -24362,7 +24362,7 @@ name|free
 argument_list|(
 name|request_ccb
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 return|return;
@@ -24416,14 +24416,14 @@ name|free
 argument_list|(
 name|request_ccb
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|new_path
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 return|return;
@@ -24624,14 +24624,14 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|done_ccb
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 block|}
@@ -24722,7 +24722,7 @@ operator|*
 name|softc
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -25369,7 +25369,7 @@ name|malloc
 argument_list|(
 name|mode_buf_len
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -25498,7 +25498,7 @@ operator|*
 name|serial_buf
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -26302,7 +26302,7 @@ name|free
 argument_list|(
 name|mode_hdr
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|softc
@@ -26730,7 +26730,7 @@ name|free
 argument_list|(
 name|serial_buf
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 if|if
@@ -26963,7 +26963,7 @@ name|periph
 operator|->
 name|softc
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 block|}
@@ -31178,7 +31178,7 @@ name|free
 argument_list|(
 name|xpt_config_hook
 argument_list|,
-name|M_TEMP
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|xpt_config_hook
