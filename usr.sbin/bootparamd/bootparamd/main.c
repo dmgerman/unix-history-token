@@ -220,7 +220,7 @@ name|struct
 name|stat
 name|buf
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 while|while
@@ -243,6 +243,9 @@ literal|1
 condition|)
 switch|switch
 condition|(
+operator|(
+name|char
+operator|)
 name|c
 condition|)
 block|{
