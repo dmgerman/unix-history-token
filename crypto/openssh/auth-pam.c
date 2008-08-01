@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2003,2004 Damien Miller<djm@mindrot.org>  * Copyrigh
 end_comment
 
 begin_comment
-comment|/* Based on $xFreeBSD: src/crypto/openssh/auth2-pam-freebsd.c,v 1.11 2003/03/31 13:48:18 des Exp $ */
+comment|/* Based on $FreeBSD: src/crypto/openssh/auth2-pam-freebsd.c,v 1.11 2003/03/31 13:48:18 des Exp $ */
 end_comment
 
 begin_include
@@ -16,14 +16,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
