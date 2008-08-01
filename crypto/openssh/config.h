@@ -3561,14 +3561,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if S/Key is actually OPIE */
-end_comment
-
-begin_comment
-comment|/* #undef OPIE */
-end_comment
-
-begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
 end_comment
 
