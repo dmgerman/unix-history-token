@@ -383,6 +383,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+operator|*
 name|pshared
 operator|=
 name|PTHREAD_PROCESS_PRIVATE
