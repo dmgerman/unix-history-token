@@ -409,6 +409,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ee16_shutdown
+parameter_list|(
+name|struct
+name|ie_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sl_read_ether
 parameter_list|(
 name|struct
