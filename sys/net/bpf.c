@@ -6086,6 +6086,7 @@ name|d
 operator|->
 name|bd_rcount
 expr_stmt|;
+comment|/* 		 * NB: We dont call BPF_CHECK_DIRECTION() here since there is no 		 * way for the caller to indiciate to us whether this packet 		 * is inbound or outbound.  In the bpf_mtap() routines, we use 		 * the interface pointers on the mbuf to figure it out. 		 */
 ifdef|#
 directive|ifdef
 name|BPF_JITTER
