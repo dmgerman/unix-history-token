@@ -414,7 +414,7 @@ if|if
 condition|(
 name|k
 operator|>
-literal|60
+literal|26
 condition|)
 name|z
 operator|=
@@ -427,7 +427,7 @@ literal|0.5
 operator|*
 name|pi_lo
 expr_stmt|;
-comment|/* |y/x|>  2**60 */
+comment|/* |y/x|>  2**26 */
 elseif|else
 if|if
 condition|(
@@ -438,13 +438,13 @@ operator|&&
 name|k
 operator|<
 operator|-
-literal|60
+literal|26
 condition|)
 name|z
 operator|=
 literal|0.0
 expr_stmt|;
-comment|/* |y|/x< -2**60 */
+comment|/* |y|/x< -2**26 */
 else|else
 name|z
 operator|=

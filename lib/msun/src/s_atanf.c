@@ -89,45 +89,18 @@ name|aT
 index|[]
 init|=
 block|{
-literal|3.3333334327e-01
+literal|3.3333328366e-01
 block|,
-comment|/* 0x3eaaaaaa */
 operator|-
-literal|2.0000000298e-01
+literal|1.9999158382e-01
 block|,
-comment|/* 0xbe4ccccd */
-literal|1.4285714924e-01
+literal|1.4253635705e-01
 block|,
-comment|/* 0x3e124925 */
 operator|-
-literal|1.1111110449e-01
+literal|1.0648017377e-01
 block|,
-comment|/* 0xbde38e38 */
-literal|9.0908870101e-02
-block|,
-comment|/* 0x3dba2e6e */
-operator|-
-literal|7.6918758452e-02
-block|,
-comment|/* 0xbd9d8795 */
-literal|6.6610731184e-02
-block|,
-comment|/* 0x3d886b35 */
-operator|-
-literal|5.8335702866e-02
-block|,
-comment|/* 0xbd6ef16b */
-literal|4.9768779427e-02
-block|,
-comment|/* 0x3d4bda59 */
-operator|-
-literal|3.6531571299e-02
-block|,
-comment|/* 0xbd15a221 */
-literal|1.6285819933e-02
-block|,
-comment|/* 0x3c8569d7 */
-block|}
+literal|6.1687607318e-02
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -186,10 +159,10 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x50800000
+literal|0x4c800000
 condition|)
 block|{
-comment|/* if |x|>= 2^34 */
+comment|/* if |x|>= 2**26 */
 if|if
 condition|(
 name|ix
@@ -259,10 +232,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x31000000
+literal|0x39800000
 condition|)
 block|{
-comment|/* |x|< 2^-29 */
+comment|/* |x|< 2**-12 */
 if|if
 condition|(
 name|huge
@@ -396,7 +369,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 2.4375<= |x|< 2^66 */
+comment|/* 2.4375<= |x|< 2**26 */
 name|id
 operator|=
 literal|3
@@ -448,37 +421,10 @@ index|]
 operator|+
 name|w
 operator|*
-operator|(
 name|aT
 index|[
 literal|4
 index|]
-operator|+
-name|w
-operator|*
-operator|(
-name|aT
-index|[
-literal|6
-index|]
-operator|+
-name|w
-operator|*
-operator|(
-name|aT
-index|[
-literal|8
-index|]
-operator|+
-name|w
-operator|*
-name|aT
-index|[
-literal|10
-index|]
-operator|)
-operator|)
-operator|)
 operator|)
 operator|)
 expr_stmt|;
@@ -494,37 +440,10 @@ index|]
 operator|+
 name|w
 operator|*
-operator|(
 name|aT
 index|[
 literal|3
 index|]
-operator|+
-name|w
-operator|*
-operator|(
-name|aT
-index|[
-literal|5
-index|]
-operator|+
-name|w
-operator|*
-operator|(
-name|aT
-index|[
-literal|7
-index|]
-operator|+
-name|w
-operator|*
-name|aT
-index|[
-literal|9
-index|]
-operator|)
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 if|if
