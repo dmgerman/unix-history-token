@@ -58,6 +58,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -89,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -1530,12 +1548,10 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|writertc
 parameter_list|(
-name|u_char
+name|int
 name|reg
 parameter_list|,
 name|u_char
