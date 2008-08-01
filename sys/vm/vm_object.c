@@ -2060,6 +2060,52 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	vm_object_destroy removes the object from the global object list  *      and frees the space for the object.  */
+end_comment
+
+begin_function
+name|void
+name|vm_object_destroy
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|)
+block|{
+comment|/* 	 * Remove the object from the global object list. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
+argument_list|)
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|vm_object_list
+argument_list|,
+name|object
+argument_list|,
+name|object_list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Free the space for the object. 	 */
+name|uma_zfree
+argument_list|(
+name|obj_zone
+argument_list|,
+name|object
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *	vm_object_terminate actually destroys the specified object, freeing  *	up all previously used resources.  *  *	The object must be locked.  *	This routine may block.  */
 end_comment
 
@@ -2283,34 +2329,8 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the object from the global object list. 	 */
-name|mtx_lock
+name|vm_object_destroy
 argument_list|(
-operator|&
-name|vm_object_list_mtx
-argument_list|)
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|vm_object_list
-argument_list|,
-name|object
-argument_list|,
-name|object_list
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_object_list_mtx
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Free the space for the object. 	 */
-name|uma_zfree
-argument_list|(
-name|obj_zone
-argument_list|,
 name|object
 argument_list|)
 expr_stmt|;

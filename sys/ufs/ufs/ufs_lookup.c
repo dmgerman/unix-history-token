@@ -425,6 +425,23 @@ argument_list|(
 name|vdp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Create a vm object if vmiodirenable is enabled. 	 * Alternatively we could call vnode_create_vobject 	 * in VFS_VGET but we could end up creating objects 	 * that are never used. 	 */
+name|vnode_create_vobject_off
+argument_list|(
+name|vdp
+argument_list|,
+name|DIP
+argument_list|(
+name|dp
+argument_list|,
+name|i_size
+argument_list|)
+argument_list|,
+name|cnp
+operator|->
+name|cn_thread
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
 name|slotstatus
 operator|=

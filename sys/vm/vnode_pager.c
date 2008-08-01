@@ -756,14 +756,9 @@ operator|*
 operator|)
 name|handle
 expr_stmt|;
-name|ASSERT_VOP_ELOCKED
-argument_list|(
-name|vp
-argument_list|,
-literal|"vnode_pager_alloc"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If the object is being terminated, wait for it to 	 * go away. 	 */
+name|retry
+label|:
 while|while
 condition|(
 operator|(
@@ -841,7 +836,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * And an object of the appropriate size 		 */
+comment|/* 		 * Add an object of the appropriate size 		 */
 name|object
 operator|=
 name|vm_object_allocate
@@ -889,11 +884,45 @@ argument_list|,
 name|OBJ_NEEDGIANT
 argument_list|)
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_object
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 			 * Object has been created while we were sleeping 			 */
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|vm_object_destroy
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 name|vp
 operator|->
 name|v_object
 operator|=
 name|object
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 block|}
 else|else
