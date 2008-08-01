@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_mm.h,v 1.4 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: monitor_mm.h,v 1.5 2008/04/29 11:20:31 otto Exp $ */
 end_comment
 
 begin_comment
@@ -69,14 +69,6 @@ modifier|*
 name|mmalloc
 decl_stmt|;
 comment|/* Used to completely share */
-name|int
-name|write
-decl_stmt|;
-comment|/* used to writing to other party */
-name|int
-name|read
-decl_stmt|;
-comment|/* used for reading from other party */
 block|}
 struct|;
 end_struct

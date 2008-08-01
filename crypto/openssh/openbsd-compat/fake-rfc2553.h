@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: fake-rfc2553.h,v 1.13 2006/07/24 03:51:52 djm Exp $ */
+comment|/* $Id: fake-rfc2553.h,v 1.16 2008/07/14 11:37:37 djm Exp $ */
 end_comment
 
 begin_comment
@@ -195,6 +195,9 @@ decl_stmt|;
 name|struct
 name|in6_addr
 name|sin6_addr
+decl_stmt|;
+name|u_int32_t
+name|sin6_scope_id
 decl_stmt|;
 block|}
 struct|;
@@ -462,6 +465,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|EAI_FAMILY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EAI_FAMILY
+value|(INT_MAX - 5)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_STRUCT_ADDRINFO
 end_ifndef
 
@@ -615,7 +636,7 @@ name|gai_strerror
 parameter_list|(
 name|a
 parameter_list|)
-value|(ssh_gai_strerror(a))
+value|(_ssh_compat_gai_strerror(a))
 end_define
 
 begin_function_decl

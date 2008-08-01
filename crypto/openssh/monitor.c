@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.89 2006/11/07 10:31:31 markus Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.99 2008/07/10 18:08:11 markus Exp $ */
 end_comment
 
 begin_comment
@@ -129,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/dh.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/sys-queue.h"
 end_include
 
 begin_include
@@ -2227,6 +2233,14 @@ operator|&
 name|monitor_child_handler
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|monitor_child_handler
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|compat20
@@ -3277,6 +3291,36 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|buffer_put_string
+argument_list|(
+name|m
+argument_list|,
+operator|&
+name|options
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|options
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|banner
+operator|!=
+name|NULL
+condition|)
+name|buffer_put_cstring
+argument_list|(
+name|m
+argument_list|,
+name|options
+operator|.
+name|banner
+argument_list|)
+expr_stmt|;
 name|debug3
 argument_list|(
 literal|"%s: sending MONITOR_ANS_PWNAM: %d"
@@ -5093,6 +5137,19 @@ name|auth_method
 operator|=
 literal|"publickey"
 expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|pubkey_authentication
+operator|&&
+name|allowed
+operator|!=
+literal|1
+condition|)
+name|auth_clear_options
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|MM_HOSTKEY
@@ -5149,6 +5206,19 @@ name|chost
 argument_list|,
 name|key
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|rhosts_rsa_authentication
+operator|&&
+name|allowed
+operator|!=
+literal|1
+condition|)
+name|auth_clear_options
+argument_list|()
 expr_stmt|;
 name|auth_method
 operator|=
@@ -5256,7 +5326,7 @@ name|allowed
 condition|?
 literal|"allowed"
 else|:
-literal|"disallowed"
+literal|"not allowed"
 argument_list|)
 expr_stmt|;
 name|buffer_clear
@@ -6428,11 +6498,12 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|session_unused
+argument_list|(
 name|s
 operator|->
-name|used
-operator|=
-literal|0
+name|self
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -6644,6 +6715,8 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|mm_send_fd
 argument_list|(
 name|sock
@@ -6652,7 +6725,10 @@ name|s
 operator|->
 name|ptyfd
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|||
 name|mm_send_fd
 argument_list|(
 name|sock
@@ -6660,6 +6736,16 @@ argument_list|,
 name|s
 operator|->
 name|ttyfd
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: send fds failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* make sure nothing uses fd 0 */
@@ -7748,6 +7834,20 @@ operator|&
 name|mm_session_close
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PAM
+if|if
+condition|(
+name|options
+operator|.
+name|use_pam
+condition|)
+name|sshpam_cleanup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|waitpid
@@ -8531,6 +8631,8 @@ name|packets
 decl_stmt|;
 name|u_int64_t
 name|blocks
+decl_stmt|,
+name|bytes
 decl_stmt|;
 name|debug3
 argument_list|(
@@ -8735,6 +8837,14 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
+name|bytes
+operator|=
+name|buffer_get_int64
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
 name|packet_set_state
 argument_list|(
 name|MODE_OUT
@@ -8744,6 +8854,8 @@ argument_list|,
 name|blocks
 argument_list|,
 name|packets
+argument_list|,
+name|bytes
 argument_list|)
 expr_stmt|;
 name|seqnr
@@ -8770,6 +8882,14 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
+name|bytes
+operator|=
+name|buffer_get_int64
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
 name|packet_set_state
 argument_list|(
 name|MODE_IN
@@ -8779,6 +8899,8 @@ argument_list|,
 name|blocks
 argument_list|,
 name|packets
+argument_list|,
+name|bytes
 argument_list|)
 expr_stmt|;
 name|skip

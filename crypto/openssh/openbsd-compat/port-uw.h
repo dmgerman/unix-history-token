@@ -9,20 +9,11 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_LIBIAF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_LIBIAF
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_LIBIAF
+end_ifdef
 
 begin_function_decl
 name|char

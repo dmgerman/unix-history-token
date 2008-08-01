@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-gss.h,v 1.9 2006/08/18 14:40:34 djm Exp $ */
+comment|/* $OpenBSD: ssh-gss.h,v 1.10 2007/06/12 08:20:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -446,16 +446,6 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
-name|ssh_gssapi_acquire_cred
-parameter_list|(
-name|Gssctxt
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|OM_uint32
 name|ssh_gssapi_init_ctx
 parameter_list|(
 name|Gssctxt
@@ -571,19 +561,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|OM_uint32
-name|ssh_gssapi_server_ctx
-parameter_list|(
-name|Gssctxt
-modifier|*
-modifier|*
-parameter_list|,
-name|gss_OID
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ssh_gssapi_buildmic
 parameter_list|(
@@ -625,6 +602,19 @@ end_function_decl
 begin_comment
 comment|/* In the server */
 end_comment
+
+begin_function_decl
+name|OM_uint32
+name|ssh_gssapi_server_ctx
+parameter_list|(
+name|Gssctxt
+modifier|*
+modifier|*
+parameter_list|,
+name|gss_OID
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

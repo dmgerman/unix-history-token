@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.h,v 1.1 2006/04/22 11:26:08 djm Exp $ */
+comment|/* $Id: port-linux.h,v 1.2 2008/03/26 20:27:21 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -24,6 +24,15 @@ ifdef|#
 directive|ifdef
 name|WITH_SELINUX
 end_ifdef
+
+begin_function_decl
+name|int
+name|ssh_selinux_enabled
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

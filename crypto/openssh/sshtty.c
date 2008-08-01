@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshtty.c,v 1.12 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: sshtty.c,v 1.13 2008/05/19 15:45:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -67,13 +67,19 @@ end_decl_stmt
 begin_function
 name|struct
 name|termios
+modifier|*
 name|get_saved_tio
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 return|return
+name|_in_raw_mode
+condition|?
+operator|&
 name|_saved_tio
+else|:
+name|NULL
 return|;
 block|}
 end_function

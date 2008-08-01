@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.71 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.74 2008/06/26 11:46:31 grunk Exp $ */
 end_comment
 
 begin_comment
@@ -309,7 +309,7 @@ decl_stmt|;
 name|int
 name|enable_ssh_keysign
 decl_stmt|;
-name|int
+name|int64_t
 name|rekey_limit
 decl_stmt|;
 name|int
@@ -362,6 +362,9 @@ name|local_command
 decl_stmt|;
 name|int
 name|permit_local_command
+decl_stmt|;
+name|int
+name|visual_host_key
 decl_stmt|;
 block|}
 name|Options

@@ -556,7 +556,7 @@ argument_list|(
 name|sshpam_thread_status
 argument_list|)
 condition|)
-name|fatal
+name|sigdie
 argument_list|(
 literal|"PAM: authentication thread exited unexpectedly"
 argument_list|)
@@ -570,7 +570,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|fatal
+name|sigdie
 argument_list|(
 literal|"PAM: authentication thread exited uncleanly"
 argument_list|)
@@ -2824,18 +2824,26 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|debug
-argument_list|(
-literal|"PAM: cleanup"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sshpam_handle
 operator|==
 name|NULL
+operator|||
+operator|(
+name|use_privsep
+operator|&&
+operator|!
+name|mm_is_monitor
+argument_list|()
+operator|)
 condition|)
 return|return;
+name|debug
+argument_list|(
+literal|"PAM: cleanup"
+argument_list|)
+expr_stmt|;
 name|pam_set_item
 argument_list|(
 name|sshpam_handle
@@ -2856,6 +2864,11 @@ condition|(
 name|sshpam_cred_established
 condition|)
 block|{
+name|debug
+argument_list|(
+literal|"PAM: deleting credentials"
+argument_list|)
+expr_stmt|;
 name|pam_setcred
 argument_list|(
 name|sshpam_handle
@@ -2873,6 +2886,11 @@ condition|(
 name|sshpam_session_open
 condition|)
 block|{
+name|debug
+argument_list|(
+literal|"PAM: closing session"
+argument_list|)
+expr_stmt|;
 name|pam_close_session
 argument_list|(
 name|sshpam_handle
@@ -3228,24 +3246,13 @@ return|;
 block|}
 name|ctxt
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 expr|*
 name|ctxt
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|ctxt
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ctxt
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Start the authentication thread */
@@ -4730,6 +4737,8 @@ name|msg
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|input
@@ -4739,6 +4748,15 @@ name|input
 argument_list|,
 name|stdin
 argument_list|)
+operator|==
+name|NULL
+condition|)
+name|input
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -5326,10 +5344,10 @@ condition|(
 operator|(
 name|reply
 operator|=
-name|malloc
+name|calloc
 argument_list|(
 name|n
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -5345,21 +5363,6 @@ operator|(
 name|PAM_CONV_ERR
 operator|)
 return|;
-name|memset
-argument_list|(
-name|reply
-argument_list|,
-literal|0
-argument_list|,
-name|n
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|reply
-argument_list|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i

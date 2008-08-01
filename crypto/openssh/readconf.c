@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.c,v 1.159 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: readconf.c,v 1.167 2008/06/26 11:46:31 grunk Exp $ */
 end_comment
 
 begin_comment
@@ -318,6 +318,8 @@ block|,
 name|oLocalCommand
 block|,
 name|oPermitLocalCommand
+block|,
+name|oVisualHostKey
 block|,
 name|oVersionAddendum
 block|,
@@ -858,6 +860,12 @@ block|{
 literal|"permitlocalcommand"
 block|,
 name|oPermitLocalCommand
+block|}
+block|,
+block|{
+literal|"visualhostkey"
+block|,
+name|oVisualHostKey
 block|}
 block|,
 block|{
@@ -1406,6 +1414,10 @@ name|value2
 decl_stmt|,
 name|scale
 decl_stmt|;
+name|LogLevel
+modifier|*
+name|log_level_ptr
+decl_stmt|;
 name|long
 name|long
 name|orig
@@ -1611,6 +1623,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|activep
+operator|&&
 operator|*
 name|intptr
 operator|==
@@ -2181,13 +2196,6 @@ goto|;
 case|case
 name|oRekeyLimit
 case|:
-name|intptr
-operator|=
-operator|&
-name|options
-operator|->
-name|rekey_limit
-expr_stmt|;
 name|arg
 operator|=
 name|strdelim
@@ -2344,7 +2352,7 @@ name|orig
 operator|||
 name|val64
 operator|>
-name|INT_MAX
+name|UINT_MAX
 condition|)
 name|fatal
 argument_list|(
@@ -2375,17 +2383,19 @@ condition|(
 operator|*
 name|activep
 operator|&&
-operator|*
-name|intptr
+name|options
+operator|->
+name|rekey_limit
 operator|==
 operator|-
 literal|1
 condition|)
-operator|*
-name|intptr
+name|options
+operator|->
+name|rekey_limit
 operator|=
 operator|(
-name|int
+name|u_int32_t
 operator|)
 name|val64
 expr_stmt|;
@@ -3239,12 +3249,8 @@ break|break;
 case|case
 name|oLogLevel
 case|:
-name|intptr
+name|log_level_ptr
 operator|=
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|options
 operator|->
@@ -3291,16 +3297,13 @@ condition|(
 operator|*
 name|activep
 operator|&&
-operator|(
-name|LogLevel
-operator|)
 operator|*
-name|intptr
+name|log_level_ptr
 operator|==
 name|SYSLOG_LEVEL_NOT_SET
 condition|)
 operator|*
-name|intptr
+name|log_level_ptr
 operator|=
 operator|(
 name|LogLevel
@@ -4500,6 +4503,19 @@ goto|goto
 name|parse_flag
 goto|;
 case|case
+name|oVisualHostKey
+case|:
+name|intptr
+operator|=
+operator|&
+name|options
+operator|->
+name|visual_host_key
+expr_stmt|;
+goto|goto
+name|parse_flag
+goto|;
+case|case
 name|oVersionAddendum
 case|:
 name|ssh_version_set_addendum
@@ -5302,6 +5318,13 @@ expr_stmt|;
 name|options
 operator|->
 name|permit_local_command
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|options
+operator|->
+name|visual_host_key
 operator|=
 operator|-
 literal|1
@@ -6206,6 +6229,21 @@ name|permit_local_command
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|options
+operator|->
+name|visual_host_key
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|visual_host_key
+operator|=
+literal|0
+expr_stmt|;
 comment|/* options->local_command should not be set by default */
 comment|/* options->proxy_command should not be set by default */
 comment|/* options->user will be set in the main program if appropriate */
@@ -6274,9 +6312,6 @@ expr_stmt|;
 comment|/* skip leading spaces */
 while|while
 condition|(
-operator|*
-name|cp
-operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -6460,7 +6495,7 @@ operator|->
 name|listen_port
 operator|==
 literal|0
-operator|&&
+operator|||
 name|fwd
 operator|->
 name|connect_port

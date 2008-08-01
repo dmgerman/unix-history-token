@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.h,v 1.16 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: auth-options.h,v 1.17 2008/03/26 21:28:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -69,6 +69,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|no_pty_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|no_user_rc
 decl_stmt|;
 end_decl_stmt
 

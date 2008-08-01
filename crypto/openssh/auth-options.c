@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.40 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.43 2008/06/10 23:06:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/sys-queue.h"
 end_include
 
 begin_include
@@ -180,6 +186,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|no_user_rc
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* "command=" option. */
 end_comment
@@ -247,6 +261,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|no_x11_forwarding_flag
+operator|=
+literal|0
+expr_stmt|;
+name|no_user_rc
 operator|=
 literal|0
 expr_stmt|;
@@ -521,6 +539,47 @@ literal|"Pty allocation disabled."
 argument_list|)
 expr_stmt|;
 name|no_pty_flag
+operator|=
+literal|1
+expr_stmt|;
+name|opts
+operator|+=
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next_option
+goto|;
+block|}
+name|cp
+operator|=
+literal|"no-user-rc"
+expr_stmt|;
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|opts
+argument_list|,
+name|cp
+argument_list|,
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|auth_debug_add
+argument_list|(
+literal|"User rc file execution disabled."
+argument_list|)
+expr_stmt|;
+name|no_user_rc
 operator|=
 literal|1
 expr_stmt|;
@@ -1056,7 +1115,7 @@ expr_stmt|;
 name|opts
 operator|++
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|match_host_and_ip
 argument_list|(
@@ -1066,10 +1125,47 @@ name|remote_ip
 argument_list|,
 name|patterns
 argument_list|)
-operator|!=
-literal|1
 condition|)
 block|{
+case|case
+literal|1
+case|:
+name|xfree
+argument_list|(
+name|patterns
+argument_list|)
+expr_stmt|;
+comment|/* Host name matches. */
+goto|goto
+name|next_option
+goto|;
+case|case
+operator|-
+literal|1
+case|:
+name|debug
+argument_list|(
+literal|"%.100s, line %lu: invalid criteria"
+argument_list|,
+name|file
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+name|auth_debug_add
+argument_list|(
+literal|"%.100s, line %lu: "
+literal|"invalid criteria"
+argument_list|,
+name|file
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+literal|0
+case|:
 name|xfree
 argument_list|(
 name|patterns
@@ -1098,20 +1194,12 @@ argument_list|,
 name|remote_host
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 comment|/* deny access */
 return|return
 literal|0
 return|;
-block|}
-name|xfree
-argument_list|(
-name|patterns
-argument_list|)
-expr_stmt|;
-comment|/* Host name matches. */
-goto|goto
-name|next_option
-goto|;
 block|}
 name|cp
 operator|=

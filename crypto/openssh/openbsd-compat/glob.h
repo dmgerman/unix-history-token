@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: glob.h,v 1.9 2004/10/07 16:56:11 millert Exp $	*/
+comment|/*	$OpenBSD: glob.h,v 1.10 2005/12/13 00:35:22 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ operator|||
 name|HAVE_DECL_GLOB_NOMATCH
 operator|==
 literal|0
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|BROKEN_GLOB
+argument_list|)
 end_if
 
 begin_ifndef
@@ -177,10 +183,6 @@ name|glob_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Flags */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -258,6 +260,61 @@ begin_comment
 comment|/* Disable backslash escaping. */
 end_comment
 
+begin_comment
+comment|/* Error values returned by glob(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOSPACE
+value|(-1)
+end_define
+
+begin_comment
+comment|/* Malloc call failed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_ABORTED
+value|(-2)
+end_define
+
+begin_comment
+comment|/* Unignored error. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOMATCH
+value|(-3)
+end_define
+
+begin_comment
+comment|/* No match and GLOB_NOCHECK not set. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOSYS
+value|(-4)
+end_define
+
+begin_comment
+comment|/* Function not supported. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_ABEND
+value|GLOB_ABORTED
+end_define
+
 begin_define
 define|#
 directive|define
@@ -334,61 +391,6 @@ end_define
 begin_comment
 comment|/* Limit pattern match output to ARG_MAX */
 end_comment
-
-begin_comment
-comment|/* Error values returned by glob(3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_NOSPACE
-value|(-1)
-end_define
-
-begin_comment
-comment|/* Malloc call failed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_ABORTED
-value|(-2)
-end_define
-
-begin_comment
-comment|/* Unignored error. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_NOMATCH
-value|(-3)
-end_define
-
-begin_comment
-comment|/* No match and GLOB_NOCHECK not set. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_NOSYS
-value|(-4)
-end_define
-
-begin_comment
-comment|/* Function not supported. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_ABEND
-value|GLOB_ABORTED
-end_define
 
 begin_function_decl
 name|int

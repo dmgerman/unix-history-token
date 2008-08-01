@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.14 2005/04/26 12:59:02 jmc Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.17 2008/06/08 20:15:29 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -45,6 +45,51 @@ name|longname
 decl_stmt|;
 name|Attrib
 name|a
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Used for statvfs responses on the wire from the server, because the  * server's native format may be larger than the client's.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sftp_statvfs
+block|{
+name|u_int64_t
+name|f_bsize
+decl_stmt|;
+name|u_int64_t
+name|f_frsize
+decl_stmt|;
+name|u_int64_t
+name|f_blocks
+decl_stmt|;
+name|u_int64_t
+name|f_bfree
+decl_stmt|;
+name|u_int64_t
+name|f_bavail
+decl_stmt|;
+name|u_int64_t
+name|f_files
+decl_stmt|;
+name|u_int64_t
+name|f_ffree
+decl_stmt|;
+name|u_int64_t
+name|f_favail
+decl_stmt|;
+name|u_int64_t
+name|f_fsid
+decl_stmt|;
+name|u_int64_t
+name|f_flag
+decl_stmt|;
+name|u_int64_t
+name|f_namemax
 decl_stmt|;
 block|}
 struct|;
@@ -240,29 +285,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Get file attributes of open file 'handle' */
-end_comment
-
-begin_function_decl
-name|Attrib
-modifier|*
-name|do_fstat
-parameter_list|(
-name|struct
-name|sftp_conn
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Set file attributes of 'path' */
 end_comment
 
@@ -326,6 +348,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Get statistics for filesystem hosting file at "path" */
+end_comment
+
+begin_function_decl
+name|int
+name|do_statvfs
+parameter_list|(
+name|struct
+name|sftp_conn
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|sftp_statvfs
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Rename 'oldpath' to 'newpath' */
 end_comment
 
@@ -359,25 +406,6 @@ name|sftp_conn
 modifier|*
 parameter_list|,
 name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Return target of symlink 'path' - caller must free result */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|do_readlink
-parameter_list|(
-name|struct
-name|sftp_conn
 modifier|*
 parameter_list|,
 name|char

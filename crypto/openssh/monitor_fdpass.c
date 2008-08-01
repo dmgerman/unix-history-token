@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_fdpass.c,v 1.12 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: monitor_fdpass.c,v 1.17 2008/03/24 16:11:07 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -79,7 +79,7 @@ file|"monitor_fdpass.h"
 end_include
 
 begin_function
-name|void
+name|int
 name|mm_send_fd
 parameter_list|(
 name|int
@@ -131,6 +131,18 @@ block|{
 name|struct
 name|cmsghdr
 name|hdr
+decl_stmt|;
+name|char
+name|tmp
+index|[
+name|CMSG_SPACE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+index|]
 decl_stmt|;
 name|char
 name|buf
@@ -305,7 +317,8 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"%s: sendmsg(%d): %s"
 argument_list|,
@@ -319,13 +332,19 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|n
 operator|!=
 literal|1
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"%s: sendmsg: expected sent 1 got %ld"
 argument_list|,
@@ -337,15 +356,27 @@ operator|)
 name|n
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
 else|#
 directive|else
-name|fatal
+name|error
 argument_list|(
-literal|"%s: UsePrivilegeSeparation=yes not supported"
+literal|"%s: file descriptor passing not supported"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 endif|#
 directive|endif
 block|}
@@ -529,7 +560,8 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"%s: recvmsg: %s"
 argument_list|,
@@ -541,13 +573,19 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|n
 operator|!=
 literal|1
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"%s: recvmsg: expected received 1 got %ld"
 argument_list|,
@@ -559,6 +597,11 @@ operator|)
 name|n
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|HAVE_ACCRIGHTS_IN_MSGHDR
@@ -573,13 +616,19 @@ argument_list|(
 name|fd
 argument_list|)
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"%s: no fd"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 else|#
 directive|else
 name|cmsg
@@ -596,13 +645,19 @@ name|cmsg
 operator|==
 name|NULL
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"%s: no message header"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 ifndef|#
 directive|ifndef
 name|BROKEN_CMSG_TYPE
@@ -614,7 +669,8 @@ name|cmsg_type
 operator|!=
 name|SCM_RIGHTS
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"%s: expected type %d got %d"
 argument_list|,
@@ -627,6 +683,11 @@ operator|->
 name|cmsg_type
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 endif|#
 directive|endif
 name|fd
@@ -650,13 +711,17 @@ name|fd
 return|;
 else|#
 directive|else
-name|fatal
+name|error
 argument_list|(
-literal|"%s: UsePrivilegeSeparation=yes not supported"
+literal|"%s: file descriptor passing not supported"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 endif|#
 directive|endif
 block|}

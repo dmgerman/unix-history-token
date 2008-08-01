@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.155 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.171 2008/07/13 21:22:52 sthen Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/pem.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
 end_include
 
 begin_include
@@ -264,6 +270,14 @@ name|int
 name|quiet
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|log_level
+init|=
+name|SYSLOG_LEVEL_INFO
 decl_stmt|;
 end_decl_stmt
 
@@ -625,24 +639,17 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strchr
+name|buf
+index|[
+name|strcspn
 argument_list|(
 name|buf
 argument_list|,
-literal|'\n'
+literal|"\n"
 argument_list|)
-condition|)
-operator|*
-name|strchr
-argument_list|(
-name|buf
-argument_list|,
-literal|'\n'
-argument_list|)
+index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -1840,18 +1847,10 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|c
-operator|==
-name|EOF
-condition|)
+comment|/* We reached EOF */
 return|return
 operator|-
 literal|1
-return|;
-return|return
-name|pos
 return|;
 block|}
 end_function
@@ -2740,6 +2739,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|fp
+decl_stmt|,
+modifier|*
+name|ra
 decl_stmt|;
 name|int
 name|i
@@ -2750,7 +2752,7 @@ literal|0
 decl_stmt|,
 name|num
 init|=
-literal|1
+literal|0
 decl_stmt|,
 name|invalid
 init|=
@@ -2848,9 +2850,20 @@ argument_list|,
 name|rep
 argument_list|)
 expr_stmt|;
+name|ra
+operator|=
+name|key_fingerprint
+argument_list|(
+name|public
+argument_list|,
+name|fptype
+argument_list|,
+name|SSH_FP_RANDOMART
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u %s %s\n"
+literal|"%u %s %s (%s)\n"
 argument_list|,
 name|key_size
 argument_list|(
@@ -2860,6 +2873,24 @@ argument_list|,
 name|fp
 argument_list|,
 name|comment
+argument_list|,
+name|key_type
+argument_list|(
+name|public
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|log_level
+operator|>=
+name|SYSLOG_LEVEL_VERBOSE
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|ra
 argument_list|)
 expr_stmt|;
 name|key_free
@@ -2870,6 +2901,11 @@ expr_stmt|;
 name|xfree
 argument_list|(
 name|comment
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|ra
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -2929,23 +2965,20 @@ name|f
 argument_list|)
 condition|)
 block|{
-name|i
-operator|=
-name|strlen
-argument_list|(
-name|line
-argument_list|)
-operator|-
-literal|1
-expr_stmt|;
 if|if
 condition|(
+operator|(
+name|cp
+operator|=
+name|strchr
+argument_list|(
 name|line
-index|[
-name|i
-index|]
-operator|!=
+argument_list|,
 literal|'\n'
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|error
@@ -2953,6 +2986,8 @@ argument_list|(
 literal|"line %d too long: %.40s..."
 argument_list|,
 name|num
+operator|+
+literal|1
 argument_list|,
 name|line
 argument_list|)
@@ -2977,10 +3012,8 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
-name|line
-index|[
-name|i
-index|]
+operator|*
+name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -3021,7 +3054,7 @@ name|cp
 operator|==
 literal|'#'
 condition|)
-continue|continue ;
+continue|continue;
 name|i
 operator|=
 name|strtol
@@ -3219,9 +3252,20 @@ argument_list|,
 name|rep
 argument_list|)
 expr_stmt|;
+name|ra
+operator|=
+name|key_fingerprint
+argument_list|(
+name|public
+argument_list|,
+name|fptype
+argument_list|,
+name|SSH_FP_RANDOMART
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u %s %s\n"
+literal|"%u %s %s (%s)\n"
 argument_list|,
 name|key_size
 argument_list|(
@@ -3235,6 +3279,29 @@ condition|?
 name|comment
 else|:
 literal|"no comment"
+argument_list|,
+name|key_type
+argument_list|(
+name|public
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|log_level
+operator|>=
+name|SYSLOG_LEVEL_VERBOSE
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|ra
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|ra
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -3293,6 +3360,7 @@ name|FILE
 modifier|*
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3304,6 +3372,109 @@ parameter_list|,
 name|int
 name|hash
 parameter_list|)
+block|{
+if|if
+condition|(
+name|print_fingerprint
+condition|)
+block|{
+name|enum
+name|fp_rep
+name|rep
+decl_stmt|;
+name|enum
+name|fp_type
+name|fptype
+decl_stmt|;
+name|char
+modifier|*
+name|fp
+decl_stmt|,
+modifier|*
+name|ra
+decl_stmt|;
+name|fptype
+operator|=
+name|print_bubblebabble
+condition|?
+name|SSH_FP_SHA1
+else|:
+name|SSH_FP_MD5
+expr_stmt|;
+name|rep
+operator|=
+name|print_bubblebabble
+condition|?
+name|SSH_FP_BUBBLEBABBLE
+else|:
+name|SSH_FP_HEX
+expr_stmt|;
+name|fp
+operator|=
+name|key_fingerprint
+argument_list|(
+name|public
+argument_list|,
+name|fptype
+argument_list|,
+name|rep
+argument_list|)
+expr_stmt|;
+name|ra
+operator|=
+name|key_fingerprint
+argument_list|(
+name|public
+argument_list|,
+name|fptype
+argument_list|,
+name|SSH_FP_RANDOMART
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%u %s %s (%s)\n"
+argument_list|,
+name|key_size
+argument_list|(
+name|public
+argument_list|)
+argument_list|,
+name|fp
+argument_list|,
+name|name
+argument_list|,
+name|key_type
+argument_list|(
+name|public
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|log_level
+operator|>=
+name|SYSLOG_LEVEL_VERBOSE
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|ra
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|ra
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 if|if
 condition|(
@@ -3360,6 +3531,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3425,8 +3597,6 @@ index|]
 decl_stmt|;
 name|int
 name|c
-decl_stmt|,
-name|i
 decl_stmt|,
 name|skip
 init|=
@@ -3697,26 +3867,20 @@ name|in
 argument_list|)
 condition|)
 block|{
-name|num
-operator|++
-expr_stmt|;
-name|i
-operator|=
-name|strlen
-argument_list|(
-name|line
-argument_list|)
-operator|-
-literal|1
-expr_stmt|;
 if|if
 condition|(
+operator|(
+name|cp
+operator|=
+name|strchr
+argument_list|(
 name|line
-index|[
-name|i
-index|]
-operator|!=
+argument_list|,
 literal|'\n'
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|error
@@ -3724,6 +3888,8 @@ argument_list|(
 literal|"line %d too long: %.40s..."
 argument_list|,
 name|num
+operator|+
+literal|1
 argument_list|,
 name|line
 argument_list|)
@@ -3738,6 +3904,9 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+name|num
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|skip
@@ -3749,10 +3918,8 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
-name|line
-index|[
-name|i
-index|]
+operator|*
+name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -4133,7 +4300,7 @@ name|print_host
 argument_list|(
 name|out
 argument_list|,
-name|cp
+name|name
 argument_list|,
 name|public
 argument_list|,
@@ -4262,7 +4429,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s is not a valid known_host file.\n"
+literal|"%s is not a valid known_hosts file.\n"
 argument_list|,
 name|identity_file
 argument_list|)
@@ -5283,24 +5450,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|strchr
+name|new_comment
+index|[
+name|strcspn
 argument_list|(
 name|new_comment
 argument_list|,
-literal|'\n'
+literal|"\n"
 argument_list|)
-condition|)
-operator|*
-name|strchr
-argument_list|(
-name|new_comment
-argument_list|,
-literal|'\n'
-argument_list|)
+index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 comment|/* Save the file using the new passphrase. */
@@ -5531,7 +5691,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [options]\n"
+literal|"usage: %s [options]\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -5595,7 +5755,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -e          Convert OpenSSH to IETF SECSH key file.\n"
+literal|"  -e          Convert OpenSSH to RFC 4716 key file.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5637,7 +5797,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -i          Convert IETF SECSH to OpenSSH key file.\n"
+literal|"  -i          Convert RFC 4716 to OpenSSH key file.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5768,12 +5928,12 @@ name|int
 name|main
 parameter_list|(
 name|int
-name|ac
+name|argc
 parameter_list|,
 name|char
 modifier|*
 modifier|*
-name|av
+name|argv
 parameter_list|)
 block|{
 name|char
@@ -5859,11 +6019,6 @@ name|do_screen_candidates
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|log_level
-init|=
-name|SYSLOG_LEVEL_INFO
-decl_stmt|;
 name|BIGNUM
 modifier|*
 name|start
@@ -5896,7 +6051,7 @@ name|__progname
 operator|=
 name|ssh_get_progname
 argument_list|(
-name|av
+name|argv
 index|[
 literal|0
 index|]
@@ -5907,7 +6062,7 @@ argument_list|()
 expr_stmt|;
 name|log_init
 argument_list|(
-name|av
+name|argv
 index|[
 literal|0
 index|]
@@ -5984,9 +6139,9 @@ name|opt
 operator|=
 name|getopt
 argument_list|(
-name|ac
+name|argc
 argument_list|,
-name|av
+name|argv
 argument_list|,
 literal|"degiqpclBHvxXyF:b:f:t:U:D:P:N:C:r:g:R:T:G:M:S:a:W:"
 argument_list|)
@@ -6475,7 +6630,7 @@ block|}
 comment|/* reinit */
 name|log_init
 argument_list|(
-name|av
+name|argv
 index|[
 literal|0
 index|]
@@ -6491,7 +6646,7 @@ if|if
 condition|(
 name|optind
 operator|<
-name|ac
+name|argc
 condition|)
 block|{
 name|printf
@@ -6513,6 +6668,26 @@ block|{
 name|printf
 argument_list|(
 literal|"Can only have one of -p and -c.\n"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|print_fingerprint
+operator|&&
+operator|(
+name|delete_host
+operator|||
+name|hash_hosts
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Cannot use -l with -D or -R.\n"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -7577,6 +7752,19 @@ argument_list|,
 name|SSH_FP_HEX
 argument_list|)
 decl_stmt|;
+name|char
+modifier|*
+name|ra
+init|=
+name|key_fingerprint
+argument_list|(
+name|public
+argument_list|,
+name|SSH_FP_MD5
+argument_list|,
+name|SSH_FP_RANDOMART
+argument_list|)
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"Your public key has been saved in %s.\n"
@@ -7596,6 +7784,23 @@ argument_list|,
 name|fp
 argument_list|,
 name|comment
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"The key's randomart image is:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|ra
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|ra
 argument_list|)
 expr_stmt|;
 name|xfree

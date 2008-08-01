@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.h,v 1.5 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: sftp.h,v 1.9 2008/06/13 00:12:02 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -312,6 +312,24 @@ value|0x00000020
 end_define
 
 begin_comment
+comment|/* statvfs@openssh.com f_flag flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH2_FXE_STATVFS_ST_RDONLY
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_FXE_STATVFS_ST_NOSUID
+value|0x00000002
+end_define
+
+begin_comment
 comment|/* status messages */
 end_comment
 
@@ -384,6 +402,45 @@ directive|define
 name|SSH2_FX_MAX
 value|8
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|passwd
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|sftp_server_main
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sftp_server_cleanup_exit
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

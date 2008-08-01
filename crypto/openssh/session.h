@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.h,v 1.29 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: session.h,v 1.30 2008/05/08 12:21:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -43,6 +43,9 @@ name|used
 decl_stmt|;
 name|int
 name|self
+decl_stmt|;
+name|int
+name|next_unused
 decl_stmt|;
 name|struct
 name|passwd
@@ -168,6 +171,15 @@ parameter_list|(
 name|Authctxt
 modifier|*
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|session_unused
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;

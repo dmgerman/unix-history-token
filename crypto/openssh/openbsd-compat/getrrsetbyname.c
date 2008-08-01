@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: getrrsetbyname.c,v 1.10 2005/03/30 02:58:28 tedu Exp $ */
+comment|/* $OpenBSD: getrrsetbyname.c,v 1.11 2007/10/11 18:36:41 jakob Exp $ */
 end_comment
 
 begin_comment
@@ -116,33 +116,11 @@ parameter_list|)
 value|(c)
 end_define
 
-begin_comment
-comment|/* to avoid conflicts where a platform already has _res */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_res
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|_res
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|_res
-value|_compat_res
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE__RES_EXTERN
+end_ifndef
 
 begin_decl_stmt
 name|struct
@@ -150,6 +128,11 @@ name|__res_state
 name|_res
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Necessary functions and macros */
@@ -1068,7 +1051,7 @@ name|rrset
 operator|->
 name|rri_rdclass
 argument_list|,
-name|T_SIG
+name|T_RRSIG
 argument_list|)
 expr_stmt|;
 comment|/* allocate memory for answers */
@@ -1107,6 +1090,15 @@ name|fail
 goto|;
 block|}
 comment|/* allocate memory for signatures */
+if|if
+condition|(
+name|rrset
+operator|->
+name|rri_nsigs
+operator|>
+literal|0
+condition|)
+block|{
 name|rrset
 operator|->
 name|rri_sigs
@@ -1140,6 +1132,7 @@ expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 block|}
 comment|/* copy answers& signatures */
 for|for
@@ -1214,7 +1207,7 @@ name|rr
 operator|->
 name|type
 operator|==
-name|T_SIG
+name|T_RRSIG
 condition|)
 name|rdata
 operator|=

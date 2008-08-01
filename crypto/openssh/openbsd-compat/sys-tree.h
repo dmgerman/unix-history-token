@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: tree.h,v 1.7 2002/10/17 21:51:54 art Exp $	*/
+comment|/*	$OpenBSD: tree.h,v 1.10 2007/10/29 23:49:41 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -356,7 +356,7 @@ value|for ((x) = SPLAY_MIN(name, head);				\ 	     (x) != NULL;						\ 	     (x)
 end_define
 
 begin_comment
-comment|/* Macros that define a red-back tree */
+comment|/* Macros that define a red-black tree */
 end_comment
 
 begin_define
@@ -594,11 +594,10 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|void name##_RB_INSERT_COLOR(struct name *, struct type *);	\ void name##_RB_REMOVE_COLOR(struct name *, struct type *, struct type *);\ struct type *name##_RB_REMOVE(struct name *, struct type *);		\ struct type *name##_RB_INSERT(struct name *, struct type *);		\ struct type *name##_RB_FIND(struct name *, struct type *);		\ struct type *name##_RB_NEXT(struct name *, struct type *);		\ struct type *name##_RB_MINMAX(struct name *, int);
+value|void name##_RB_INSERT_COLOR(struct name *, struct type *);	\ void name##_RB_REMOVE_COLOR(struct name *, struct type *, struct type *);\ struct type *name##_RB_REMOVE(struct name *, struct type *);		\ struct type *name##_RB_INSERT(struct name *, struct type *);		\ struct type *name##_RB_FIND(struct name *, struct type *);		\ struct type *name##_RB_NEXT(struct type *);				\ struct type *name##_RB_MINMAX(struct name *, int);
 end_define
 
 begin_comment
-unit|\ 									\
 comment|/* Main rb operation.  * Moves node close to the key of elm to top  */
 end_comment
 
@@ -620,7 +619,7 @@ value|void									\ name##_RB_INSERT_COLOR(struct name *head, struct type *elm)
 comment|/* Inserts a node into the RB tree */
 value|\ struct type *								\ name##_RB_INSERT(struct name *head, struct type *elm)			\ {									\ 	struct type *tmp;						\ 	struct type *parent = NULL;					\ 	int comp = 0;							\ 	tmp = RB_ROOT(head);						\ 	while (tmp) {							\ 		parent = tmp;						\ 		comp = (cmp)(elm, parent);				\ 		if (comp< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else if (comp> 0)					\ 			tmp = RB_RIGHT(tmp, field);			\ 		else							\ 			return (tmp);					\ 	}								\ 	RB_SET(elm, parent, field);					\ 	if (parent != NULL) {						\ 		if (comp< 0)						\ 			RB_LEFT(parent, field) = elm;			\ 		else							\ 			RB_RIGHT(parent, field) = elm;			\ 		RB_AUGMENT(parent);					\ 	} else								\ 		RB_ROOT(head) = elm;					\ 	name##_RB_INSERT_COLOR(head, elm);				\ 	return (NULL);							\ }									\ 									\
 comment|/* Finds the node with the same key as elm */
-value|\ struct type *								\ name##_RB_FIND(struct name *head, struct type *elm)			\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	int comp;							\ 	while (tmp) {							\ 		comp = cmp(elm, tmp);					\ 		if (comp< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else if (comp> 0)					\ 			tmp = RB_RIGHT(tmp, field);			\ 		else							\ 			return (tmp);					\ 	}								\ 	return (NULL);							\ }									\ 									\ struct type *								\ name##_RB_NEXT(struct name *head, struct type *elm)			\ {									\ 	if (RB_RIGHT(elm, field)) {					\ 		elm = RB_RIGHT(elm, field);				\ 		while (RB_LEFT(elm, field))				\ 			elm = RB_LEFT(elm, field);			\ 	} else {							\ 		if (RB_PARENT(elm, field)&&				\ 		    (elm == RB_LEFT(RB_PARENT(elm, field), field)))	\ 			elm = RB_PARENT(elm, field);			\ 		else {							\ 			while (RB_PARENT(elm, field)&&			\ 			    (elm == RB_RIGHT(RB_PARENT(elm, field), field)))\ 				elm = RB_PARENT(elm, field);		\ 			elm = RB_PARENT(elm, field);			\ 		}							\ 	}								\ 	return (elm);							\ }									\ 									\ struct type *								\ name##_RB_MINMAX(struct name *head, int val)				\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	struct type *parent = NULL;					\ 	while (tmp) {							\ 		parent = tmp;						\ 		if (val< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else							\ 			tmp = RB_RIGHT(tmp, field);			\ 	}								\ 	return (parent);						\ }
+value|\ struct type *								\ name##_RB_FIND(struct name *head, struct type *elm)			\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	int comp;							\ 	while (tmp) {							\ 		comp = cmp(elm, tmp);					\ 		if (comp< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else if (comp> 0)					\ 			tmp = RB_RIGHT(tmp, field);			\ 		else							\ 			return (tmp);					\ 	}								\ 	return (NULL);							\ }									\ 									\ struct type *								\ name##_RB_NEXT(struct type *elm)					\ {									\ 	if (RB_RIGHT(elm, field)) {					\ 		elm = RB_RIGHT(elm, field);				\ 		while (RB_LEFT(elm, field))				\ 			elm = RB_LEFT(elm, field);			\ 	} else {							\ 		if (RB_PARENT(elm, field)&&				\ 		    (elm == RB_LEFT(RB_PARENT(elm, field), field)))	\ 			elm = RB_PARENT(elm, field);			\ 		else {							\ 			while (RB_PARENT(elm, field)&&			\ 			    (elm == RB_RIGHT(RB_PARENT(elm, field), field)))\ 				elm = RB_PARENT(elm, field);		\ 			elm = RB_PARENT(elm, field);			\ 		}							\ 	}								\ 	return (elm);							\ }									\ 									\ struct type *								\ name##_RB_MINMAX(struct name *head, int val)				\ {									\ 	struct type *tmp = RB_ROOT(head);				\ 	struct type *parent = NULL;					\ 	while (tmp) {							\ 		parent = tmp;						\ 		if (val< 0)						\ 			tmp = RB_LEFT(tmp, field);			\ 		else							\ 			tmp = RB_RIGHT(tmp, field);			\ 	}								\ 	return (parent);						\ }
 end_define
 
 begin_define
@@ -690,7 +689,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|name##_RB_NEXT(x, y)
+value|name##_RB_NEXT(y)
 end_define
 
 begin_define
@@ -729,7 +728,7 @@ parameter_list|,
 name|head
 parameter_list|)
 define|\
-value|for ((x) = RB_MIN(name, head);					\ 	     (x) != NULL;						\ 	     (x) = name##_RB_NEXT(head, x))
+value|for ((x) = RB_MIN(name, head);					\ 	     (x) != NULL;						\ 	     (x) = name##_RB_NEXT(x))
 end_define
 
 begin_endif

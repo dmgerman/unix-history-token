@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"openbsd-compat/sys-queue.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"log.h"
 end_include
 

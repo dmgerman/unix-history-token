@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: groupaccess.h,v 1.7 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: groupaccess.h,v 1.8 2008/07/04 03:44:59 djm Exp $ */
 end_comment
 
 begin_comment
@@ -42,6 +42,17 @@ specifier|const
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ga_match_pattern_list
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
