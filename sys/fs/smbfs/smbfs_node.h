@@ -188,12 +188,6 @@ name|long
 name|n_dirofs
 decl_stmt|;
 comment|/* last ff offset */
-name|struct
-name|lockf
-modifier|*
-name|n_lockf
-decl_stmt|;
-comment|/* Locking records of file */
 name|LIST_ENTRY
 argument_list|(
 argument|smbnode

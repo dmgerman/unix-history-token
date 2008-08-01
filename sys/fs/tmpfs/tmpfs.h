@@ -338,12 +338,6 @@ name|unsigned
 name|long
 name|tn_gen
 decl_stmt|;
-comment|/* Head of byte-level lock list (used by tmpfs_advlock). */
-name|struct
-name|lockf
-modifier|*
-name|tn_lockf
-decl_stmt|;
 comment|/* As there is a single vnode for each active file within the 	 * system, care has to be taken to avoid allocating more than one 	 * vnode per file.  In order to do this, a bidirectional association 	 * is kept between vnodes and nodes. 	 * 	 * Whenever a vnode is allocated, its v_data field is updated to 	 * point to the node it references.  At the same time, the node's 	 * tn_vnode field is modified to point to the new vnode representing 	 * it.  Further attempts to allocate a vnode for this same node will 	 * result in returning a new reference to the value stored in 	 * tn_vnode. 	 * 	 * May be NULL when the node is unused (that is, no vnode has been 	 * allocated for it or it has been reclaimed). */
 name|struct
 name|vnode
