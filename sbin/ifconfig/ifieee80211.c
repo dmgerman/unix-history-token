@@ -831,10 +831,12 @@ name|rdp
 operator|==
 name|NULL
 condition|)
-name|exit
+name|errx
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"missing or corrupted regdomain database"
 argument_list|)
 expr_stmt|;
 block|}
