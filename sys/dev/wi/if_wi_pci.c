@@ -884,7 +884,7 @@ operator|->
 name|mem
 argument_list|)
 expr_stmt|;
-comment|/* 		 * From Linux driver: 		 * Write COR to enable PC card 		 * This is a subset of the protocol that the pccard bus code 		 * would do. 		 */
+comment|/* 		 * Write COR to enable PC card 		 * This is a subset of the protocol that the pccard bus code 		 * would do.  In theory, we should parse the CIS to find the 		 * COR offset.  In practice, the COR_OFFSET is always 0x3e0. 		 */
 name|CSM_WRITE_1
 argument_list|(
 name|sc
@@ -958,9 +958,9 @@ name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
-name|WI_HFA384X_PCICOR_OFF
+name|WI_PCICOR_OFF
 argument_list|,
-literal|0x0080
+name|WI_PCICOR_RESET
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -972,7 +972,7 @@ name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
-name|WI_HFA384X_PCICOR_OFF
+name|WI_PCICOR_OFF
 argument_list|,
 literal|0x0000
 argument_list|)
@@ -1022,7 +1022,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"couldn't reset prism2.5 core.\n"
+literal|"couldn't reset prism pci core.\n"
 argument_list|)
 expr_stmt|;
 name|wi_free

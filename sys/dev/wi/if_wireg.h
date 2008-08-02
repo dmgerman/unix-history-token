@@ -138,8 +138,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_HFA384X_PCICOR_OFF
+name|WI_PCICOR_OFF
 value|0x26
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_PCICOR_RESET
+value|0x0080
 end_define
 
 begin_comment
@@ -1348,7 +1355,7 @@ value|0x3e0
 end_define
 
 begin_comment
-comment|/* OK for PCI, must be bogus for pccard */
+comment|/* OK for PCI, default COR for Prism PC Card */
 end_comment
 
 begin_define
@@ -1771,6 +1778,27 @@ define|#
 directive|define
 name|WI_NIC_P3_PCMCIA_STR
 value|"RF:PRISM3(PCMCIA)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_NIC_P3_USB_AMD_ID
+value|0x801E
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_NIC_P3_USB_SST_ID
+value|0x801F
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_NIC_P3_USB_ATL_ID
+value|0x8020
 end_define
 
 begin_define
