@@ -9411,16 +9411,6 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* see if the OPQ contains anything */
-if|if
-condition|(
-operator|!
-name|CISS_TL_SIMPLE_OPQ_INTERRUPT
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-break|break;
 name|tag
 operator|=
 name|CISS_TL_SIMPLE_FETCH_CMD
