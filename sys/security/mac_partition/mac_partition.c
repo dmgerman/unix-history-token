@@ -96,7 +96,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_partition_enabled
+name|partition_enabled
 init|=
 literal|1
 decl_stmt|;
@@ -114,7 +114,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_partition_enabled
+name|partition_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -170,7 +170,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|mac_partition_enabled
+name|partition_enabled
 operator|==
 literal|0
 condition|)
