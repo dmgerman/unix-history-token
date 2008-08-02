@@ -844,13 +844,20 @@ begin_define
 define|#
 directive|define
 name|ATA_I82801HBM_S1
-value|0x28298086
+value|0x28288086
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_I82801HBM_S2
+value|0x28298086
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_I82801HBM_S3
 value|0x282a8086
 end_define
 
