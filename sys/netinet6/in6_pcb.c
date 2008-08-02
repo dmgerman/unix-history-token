@@ -2962,8 +2962,8 @@ name|in6_addr
 modifier|*
 name|laddr
 parameter_list|,
-name|u_int
-name|lport_arg
+name|u_short
+name|lport
 parameter_list|,
 name|int
 name|wild_okay
@@ -2981,11 +2981,6 @@ init|=
 literal|3
 decl_stmt|,
 name|wildcard
-decl_stmt|;
-name|u_short
-name|lport
-init|=
-name|lport_arg
 decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(

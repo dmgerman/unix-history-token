@@ -4265,8 +4265,8 @@ name|struct
 name|in_addr
 name|laddr
 parameter_list|,
-name|u_int
-name|lport_arg
+name|u_short
+name|lport
 parameter_list|,
 name|int
 name|wild_okay
@@ -4298,11 +4298,6 @@ endif|#
 directive|endif
 name|int
 name|wildcard
-decl_stmt|;
-name|u_short
-name|lport
-init|=
-name|lport_arg
 decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
