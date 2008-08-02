@@ -243,9 +243,6 @@ literal|1
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|c
 condition|)
 block|{
