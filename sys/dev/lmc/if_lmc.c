@@ -13045,7 +13045,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|raw_input
+name|lmc_raw_input
 parameter_list|(
 name|struct
 name|ifnet
@@ -13140,7 +13140,7 @@ name|DRIVER_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"%s: raw_input: rx pkt discarded: not IPv4 or IPv6\n"
+literal|"%s: lmc_raw_input: rx pkt discarded: not IPv4 or IPv6\n"
 argument_list|,
 name|NAME_UNIT
 argument_list|)
@@ -15239,7 +15239,7 @@ name|line_pkg
 operator|==
 name|PKG_RAWIP
 condition|)
-name|raw_input
+name|lmc_raw_input
 argument_list|(
 name|sc
 operator|->
@@ -22677,7 +22677,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|raw_ioctl
+name|lmc_raw_ioctl
 parameter_list|(
 name|struct
 name|ifnet
@@ -22790,7 +22790,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ifnet_ioctl
+name|lmc_ifnet_ioctl
 parameter_list|(
 name|struct
 name|ifnet
@@ -23050,7 +23050,7 @@ name|PKG_RAWIP
 condition|)
 name|error
 operator|=
-name|raw_ioctl
+name|lmc_raw_ioctl
 argument_list|(
 name|ifp
 argument_list|,
@@ -23110,7 +23110,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s: ifnet_ioctl; cmd=0x%08lx error=%d\n"
+literal|"%s: lmc_ifnet_ioctl; cmd=0x%08lx error=%d\n"
 argument_list|,
 name|NAME_UNIT
 argument_list|,
@@ -23132,7 +23132,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ifnet_start
+name|lmc_ifnet_start
 parameter_list|(
 name|struct
 name|ifnet
@@ -23175,7 +23175,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|raw_output
+name|lmc_raw_output
 parameter_list|(
 name|struct
 name|ifnet
@@ -23244,7 +23244,7 @@ name|DRIVER_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"%s: raw_output: tx pkt discarded: link down\n"
+literal|"%s: lmc_raw_output: tx pkt discarded: link down\n"
 argument_list|,
 name|NAME_UNIT
 argument_list|)
@@ -23286,7 +23286,7 @@ name|DRIVER_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"%s: raw_output: tx pkt discarded: netgraph active\n"
+literal|"%s: lmc_raw_output: tx pkt discarded: netgraph active\n"
 argument_list|,
 name|NAME_UNIT
 argument_list|)
@@ -23297,7 +23297,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* raw_output() ENQUEUEs in a syscall or softirq. */
+comment|/* lmc_raw_output() ENQUEUEs in a syscall or softirq. */
 comment|/* txintr_setup() DEQUEUEs in a hard interrupt. */
 comment|/* Some BSD QUEUE routines are not interrupt-safe. */
 block|{
@@ -23379,7 +23379,7 @@ name|DRIVER_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"%s: raw_output: IFQ_ENQUEUE() failed; error %d\n"
+literal|"%s: lmc_raw_output: IFQ_ENQUEUE() failed; error %d\n"
 argument_list|,
 name|NAME_UNIT
 argument_list|,
@@ -23400,7 +23400,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ifnet_watchdog
+name|lmc_ifnet_watchdog
 parameter_list|(
 name|struct
 name|ifnet
@@ -24281,33 +24281,33 @@ name|ifp
 operator|->
 name|if_ioctl
 operator|=
-name|ifnet_ioctl
+name|lmc_ifnet_ioctl
 expr_stmt|;
 name|ifp
 operator|->
 name|if_start
 operator|=
-name|ifnet_start
+name|lmc_ifnet_start
 expr_stmt|;
 comment|/* sppp changes this */
 name|ifp
 operator|->
 name|if_output
 operator|=
-name|raw_output
+name|lmc_raw_output
 expr_stmt|;
 comment|/* sppp& p2p change this */
 name|ifp
 operator|->
 name|if_input
 operator|=
-name|raw_input
+name|lmc_raw_input
 expr_stmt|;
 name|ifp
 operator|->
 name|if_watchdog
 operator|=
-name|ifnet_watchdog
+name|lmc_ifnet_watchdog
 expr_stmt|;
 name|ifp
 operator|->
@@ -24508,7 +24508,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ifnet_attach
+name|lmc_ifnet_attach
 parameter_list|(
 name|softc_t
 modifier|*
@@ -24955,7 +24955,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ifnet_detach
+name|lmc_ifnet_detach
 parameter_list|(
 name|softc_t
 modifier|*
@@ -25820,7 +25820,7 @@ comment|/* always accept */
 block|}
 comment|/* Receive data in mbufs from another Netgraph node. */
 comment|/* Transmit an mbuf-chain on the communication link. */
-comment|/* This procedure is very similar to raw_output(). */
+comment|/* This procedure is very similar to lmc_raw_output(). */
 comment|/* Called from a syscall (user context; no spinlocks). */
 if|#
 directive|if
@@ -27398,7 +27398,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|ifnet_attach
+name|lmc_ifnet_attach
 argument_list|(
 name|sc
 argument_list|)
@@ -27826,7 +27826,7 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-name|ifnet_detach
+name|lmc_ifnet_detach
 argument_list|(
 name|sc
 argument_list|)
@@ -33288,7 +33288,7 @@ name|net_dev
 parameter_list|)
 block|{
 comment|/* Initialize the generic network device. */
-comment|/* Note similarity to BSD's ifnet_attach(). */
+comment|/* Note similarity to BSD's lmc_ifnet_attach(). */
 name|net_dev
 operator|->
 name|flags
