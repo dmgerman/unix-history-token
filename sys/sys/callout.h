@@ -360,6 +360,47 @@ define|\
 value|callout_reset_on((c), (on_tick), (fn), (arg), PCPU_GET(cpuid))
 end_define
 
+begin_function_decl
+name|int
+name|callout_schedule
+parameter_list|(
+name|struct
+name|callout
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|callout_schedule_on
+parameter_list|(
+name|struct
+name|callout
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|callout_schedule_curcpu
+parameter_list|(
+name|c
+parameter_list|,
+name|on_tick
+parameter_list|)
+define|\
+value|callout_schedule_on((c), (on_tick), PCPU_GET(cpuid))
+end_define
+
 begin_define
 define|#
 directive|define
