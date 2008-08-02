@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 Sean C. Farley<scf@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2008 Sean C. Farley<scf@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -130,15 +130,19 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:  %s [-CDGUchrt] [-gu name] [-p name=value] "
-literal|"[(-S|-s name) value overwrite]\n\n"
+literal|"Usage:  %s [-DGUchrt] [-c 1|2|3|4] [-gu name] "
+literal|"[-p name=value]\n"
+literal|"\t[(-S|-s name) value overwrite]\n\n"
 literal|"Options:\n"
-literal|"  -C\t\t\t\tClear environ variable with NULL pointer\n"
 literal|"  -D\t\t\t\tDump environ\n"
 literal|"  -G name\t\t\tgetenv(NULL)\n"
 literal|"  -S value overwrite\t\tsetenv(NULL, value, overwrite)\n"
 literal|"  -U\t\t\t\tunsetenv(NULL)\n"
-literal|"  -c\t\t\t\tClear environ variable with calloc()'d memory\n"
+literal|"  -c 1|2|3|4\t\t\tClear environ variable using method:\n"
+literal|"\t\t\t\t1 - set environ to NULL pointer\n"
+literal|"\t\t\t\t2 - set environ[0] to NULL pointer\n"
+literal|"\t\t\t\t3 - set environ to calloc()'d NULL-terminated array\n"
+literal|"\t\t\t\t4 - set environ to static NULL-terminated array\n"
 literal|"  -g name\t\t\tgetenv(name)\n"
 literal|"  -h\t\t\t\tHelp\n"
 literal|"  -p name=value\t\t\tputenv(name=value)\n"
@@ -210,17 +214,6 @@ name|argv
 parameter_list|)
 block|{
 name|char
-modifier|*
-name|staticEnv
-index|[]
-init|=
-block|{
-literal|"FOO=bar"
-block|,
-name|NULL
-block|}
-decl_stmt|;
-name|char
 name|arg
 decl_stmt|;
 specifier|const
@@ -234,6 +227,28 @@ specifier|const
 name|char
 modifier|*
 name|value
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|emptyEnv
+index|[]
+init|=
+block|{
+name|NULL
+block|}
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|staticEnv
+index|[]
+init|=
+block|{
+literal|"FOO=bar"
+block|,
+name|NULL
+block|}
 decl_stmt|;
 if|if
 condition|(
@@ -268,7 +283,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CDGS:Ucg:hp:rs:tu:"
+literal|"DGS:Uc:g:hp:rs:tu:"
 argument_list|)
 operator|)
 operator|!=
@@ -282,7 +297,18 @@ name|arg
 condition|)
 block|{
 case|case
-literal|'C'
+literal|'c'
+case|:
+switch|switch
+condition|(
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+condition|)
+block|{
+case|case
+literal|1
 case|:
 name|environ
 operator|=
@@ -290,7 +316,18 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
-literal|'c'
+literal|2
+case|:
+name|environ
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+case|case
+literal|3
 case|:
 name|environ
 operator|=
@@ -305,6 +342,16 @@ name|environ
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|environ
+operator|=
+name|emptyEnv
+expr_stmt|;
+break|break;
+block|}
 break|break;
 case|case
 literal|'D'
