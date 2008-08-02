@@ -3324,6 +3324,8 @@ argument_list|,
 name|lport
 argument_list|,
 name|wild
+argument_list|,
+name|cred
 argument_list|)
 condition|)
 do|;
@@ -3405,6 +3407,8 @@ argument_list|,
 name|lport
 argument_list|,
 name|wild
+argument_list|,
+name|cred
 argument_list|)
 condition|)
 do|;

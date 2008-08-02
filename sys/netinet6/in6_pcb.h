@@ -223,6 +223,10 @@ operator|,
 name|u_short
 operator|,
 name|int
+operator|,
+expr|struct
+name|ucred
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
