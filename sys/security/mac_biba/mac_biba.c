@@ -2996,7 +2996,7 @@ name|mbe_grade
 operator|=
 name|value
 expr_stmt|;
-comment|/* 		 * Optional compartment piece of the element.  If none 		 * are included, we assume that the label has no 		 * compartments. 		 */
+comment|/* 		 * Optional compartment piece of the element.  If none are 		 * included, we assume that the label has no compartments. 		 */
 if|if
 condition|(
 name|string
@@ -3100,7 +3100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note: destructively consumes the string, make a local copy before  * calling if that's a problem.  */
+comment|/*  * Note: destructively consumes the string, make a local copy before calling  * if that's a problem.  */
 end_comment
 
 begin_function
