@@ -650,6 +650,13 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|SIEMENS
+argument_list|,
+name|SS1021A
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|SIMPLETECH
 argument_list|,
 name|SPECTRUM24_ALT
