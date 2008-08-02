@@ -888,6 +888,11 @@ name|inst_call
 argument_list|(
 name|inst
 argument_list|)
+operator|||
+name|inst_return
+argument_list|(
+name|inst
+argument_list|)
 condition|)
 block|{
 name|brpc
