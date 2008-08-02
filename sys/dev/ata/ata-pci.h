@@ -836,6 +836,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_I82801HBM
+value|0x28508086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_I82801HBM_S1
 value|0x28298086
 end_define
