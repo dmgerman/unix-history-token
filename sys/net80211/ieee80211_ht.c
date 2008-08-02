@@ -4579,6 +4579,11 @@ operator|==
 name|IEEE80211_HTINFO_OPMODE_PROTOPT
 condition|)
 return|return;
+name|IEEE80211_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 comment|/* track non-HT station presence */
 name|KASSERT
 argument_list|(
@@ -4611,6 +4616,11 @@ operator|=
 name|protmode
 expr_stmt|;
 name|htinfo_notify
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|IEEE80211_UNLOCK
 argument_list|(
 name|ic
 argument_list|)
