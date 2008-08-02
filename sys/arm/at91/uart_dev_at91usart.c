@@ -2240,6 +2240,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+switch|switch
+condition|(
+name|kdb_brk
+condition|)
+block|{
 case|case
 name|KDB_REQ_DEBUGGER
 case|:
@@ -2267,6 +2272,7 @@ name|kdb_reboot
 argument_list|()
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 endif|#
