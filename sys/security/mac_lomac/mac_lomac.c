@@ -268,7 +268,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_lomac_label_size
+name|lomac_label_size
 init|=
 sizeof|sizeof
 argument_list|(
@@ -290,7 +290,7 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|mac_lomac_label_size
+name|lomac_label_size
 argument_list|,
 literal|0
 argument_list|,
@@ -302,7 +302,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_lomac_enabled
+name|lomac_enabled
 init|=
 literal|1
 decl_stmt|;
@@ -320,7 +320,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_lomac_enabled
+name|lomac_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -335,7 +335,7 @@ argument_list|(
 literal|"security.mac.lomac.enabled"
 argument_list|,
 operator|&
-name|mac_lomac_enabled
+name|lomac_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -539,7 +539,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_lomac_slot
+name|lomac_slot
 decl_stmt|;
 end_decl_stmt
 
@@ -550,7 +550,7 @@ name|SLOT
 parameter_list|(
 name|l
 parameter_list|)
-value|((struct mac_lomac *)mac_label_get((l), mac_lomac_slot))
+value|((struct mac_lomac *)mac_label_get((l), lomac_slot))
 end_define
 
 begin_define
@@ -562,7 +562,7 @@ name|l
 parameter_list|,
 name|val
 parameter_list|)
-value|mac_label_set((l), mac_lomac_slot, (uintptr_t)(val))
+value|mac_label_set((l), lomac_slot, (uintptr_t)(val))
 end_define
 
 begin_define
@@ -572,7 +572,7 @@ name|PSLOT
 parameter_list|(
 name|l
 parameter_list|)
-value|((struct mac_lomac_proc *)				\     mac_label_get((l), mac_lomac_slot))
+value|((struct mac_lomac_proc *)				\     mac_label_get((l), lomac_slot))
 end_define
 
 begin_define
@@ -584,13 +584,13 @@ name|l
 parameter_list|,
 name|val
 parameter_list|)
-value|mac_label_set((l), mac_lomac_slot, (uintptr_t)(val))
+value|mac_label_set((l), lomac_slot, (uintptr_t)(val))
 end_define
 
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
-name|M_MACLOMAC
+name|M_LOMAC
 argument_list|,
 literal|"mac_lomac_label"
 argument_list|,
@@ -613,19 +613,19 @@ block|{
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 decl_stmt|;
-name|mac_lomac
+name|ml
 operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|mac_lomac
+operator|*
+name|ml
 argument_list|)
 argument_list|,
-name|M_MACLOMAC
+name|M_LOMAC
 argument_list|,
 name|M_ZERO
 operator||
@@ -634,7 +634,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac
+name|ml
 operator|)
 return|;
 block|}
@@ -648,20 +648,20 @@ parameter_list|(
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|)
 block|{
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|!=
 name|NULL
 condition|)
 name|free
 argument_list|(
-name|mac_lomac
+name|ml
 argument_list|,
-name|M_MACLOMAC
+name|M_LOMAC
 argument_list|)
 expr_stmt|;
 else|else
@@ -684,7 +684,7 @@ parameter_list|(
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|,
 name|int
 name|flags
@@ -693,14 +693,14 @@ block|{
 if|if
 condition|(
 operator|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
 name|flags
 operator|)
 operator|!=
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 condition|)
@@ -720,7 +720,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 parameter_list|(
 name|struct
 name|mac_lomac_element
@@ -786,7 +786,7 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"mac_lomac_dominate_element: b->mle_type invalid"
+literal|"lomac_dominate_element: b->mle_type invalid"
 argument_list|)
 expr_stmt|;
 block|}
@@ -836,14 +836,14 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"mac_lomac_dominate_element: b->mle_type invalid"
+literal|"lomac_dominate_element: b->mle_type invalid"
 argument_list|)
 expr_stmt|;
 block|}
 default|default:
 name|panic
 argument_list|(
-literal|"mac_lomac_dominate_element: a->mle_type invalid"
+literal|"lomac_dominate_element: a->mle_type invalid"
 argument_list|)
 expr_stmt|;
 block|}
@@ -853,7 +853,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_range_in_range
+name|lomac_range_in_range
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -868,7 +868,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|rangeb
@@ -881,7 +881,7 @@ operator|->
 name|ml_rangehigh
 argument_list|)
 operator|&&
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|rangea
@@ -901,7 +901,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_single_in_range
+name|lomac_single_in_range
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -927,7 +927,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_single_in_range: a not single"
+literal|"lomac_single_in_range: a not single"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -944,13 +944,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_single_in_range: b not range"
+literal|"lomac_single_in_range: b not range"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|range
@@ -963,7 +963,7 @@ operator|->
 name|ml_single
 argument_list|)
 operator|&&
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|single
@@ -983,7 +983,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_auxsingle_in_range
+name|lomac_auxsingle_in_range
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -1009,7 +1009,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_single_in_range: a not auxsingle"
+literal|"lomac_single_in_range: a not auxsingle"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1026,13 +1026,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_single_in_range: b not range"
+literal|"lomac_single_in_range: b not range"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|range
@@ -1045,7 +1045,7 @@ operator|->
 name|ml_auxsingle
 argument_list|)
 operator|&&
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|single
@@ -1065,7 +1065,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -1091,7 +1091,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_dominate_single: a not single"
+literal|"lomac_dominate_single: a not single"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1108,13 +1108,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_dominate_single: b not single"
+literal|"lomac_dominate_single: b not single"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|a
@@ -1134,7 +1134,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -1165,7 +1165,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_dominate_single: a not subject"
+literal|"lomac_dominate_single: a not subject"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1182,13 +1182,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_dominate_single: b not single"
+literal|"lomac_dominate_single: b not single"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|a
@@ -1208,7 +1208,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_equal_element
+name|lomac_equal_element
 parameter_list|(
 name|struct
 name|mac_lomac_element
@@ -1265,7 +1265,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_equal_single
+name|lomac_equal_single
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -1291,7 +1291,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_equal_single: a not single"
+literal|"lomac_equal_single: a not single"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1308,13 +1308,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_equal_single: b not single"
+literal|"lomac_equal_single: b not single"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_equal_element
+name|lomac_equal_element
 argument_list|(
 operator|&
 name|a
@@ -1334,17 +1334,17 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_contains_equal
+name|lomac_contains_equal
 parameter_list|(
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|)
 block|{
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -1352,7 +1352,7 @@ name|MAC_LOMAC_FLAG_SINGLE
 condition|)
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_single
 operator|.
@@ -1367,7 +1367,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -1375,7 +1375,7 @@ name|MAC_LOMAC_FLAG_AUX
 condition|)
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_auxsingle
 operator|.
@@ -1390,7 +1390,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -1399,7 +1399,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 operator|.
@@ -1414,7 +1414,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 operator|.
@@ -1439,18 +1439,18 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 parameter_list|(
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
 operator|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -1460,14 +1460,14 @@ operator|==
 name|MAC_LOMAC_FLAGS_BOTH
 argument_list|,
 operator|(
-literal|"mac_lomac_subject_privileged: subject doesn't have both labels"
+literal|"lomac_subject_privileged: subject doesn't have both labels"
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/* If the single is EQUAL, it's ok. */
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_single
 operator|.
@@ -1483,7 +1483,7 @@ return|;
 comment|/* If either range endpoint is EQUAL, it's ok. */
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 operator|.
@@ -1491,7 +1491,7 @@ name|mle_type
 operator|==
 name|MAC_LOMAC_TYPE_EQUAL
 operator|||
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 operator|.
@@ -1507,7 +1507,7 @@ return|;
 comment|/* If the range is low-high, it's ok. */
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 operator|.
@@ -1515,7 +1515,7 @@ name|mle_type
 operator|==
 name|MAC_LOMAC_TYPE_LOW
 operator|&&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 operator|.
@@ -1540,18 +1540,18 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_high_single
+name|lomac_high_single
 parameter_list|(
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
 operator|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -1561,13 +1561,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_high_single: mac_lomac not single"
+literal|"lomac_high_single: mac_lomac not single"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_single
 operator|.
@@ -1582,17 +1582,17 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_valid
+name|lomac_valid
 parameter_list|(
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|)
 block|{
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -1601,7 +1601,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_single
 operator|.
@@ -1633,7 +1633,7 @@ else|else
 block|{
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_single
 operator|.
@@ -1649,7 +1649,7 @@ return|;
 block|}
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -1658,7 +1658,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_auxsingle
 operator|.
@@ -1690,7 +1690,7 @@ else|else
 block|{
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_auxsingle
 operator|.
@@ -1706,7 +1706,7 @@ return|;
 block|}
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -1715,7 +1715,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 operator|.
@@ -1744,7 +1744,7 @@ return|;
 block|}
 switch|switch
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 operator|.
@@ -1774,15 +1774,15 @@ block|}
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 argument_list|,
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 argument_list|)
@@ -1797,7 +1797,7 @@ else|else
 block|{
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 operator|.
@@ -1805,7 +1805,7 @@ name|mle_type
 operator|!=
 name|MAC_LOMAC_TYPE_UNDEF
 operator|||
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 operator|.
@@ -1830,12 +1830,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_set_range
+name|lomac_set_range
 parameter_list|(
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|,
 name|u_short
 name|typelow
@@ -1850,7 +1850,7 @@ name|u_short
 name|gradehigh
 parameter_list|)
 block|{
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 operator|.
@@ -1858,7 +1858,7 @@ name|mle_type
 operator|=
 name|typelow
 expr_stmt|;
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 operator|.
@@ -1866,7 +1866,7 @@ name|mle_grade
 operator|=
 name|gradelow
 expr_stmt|;
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 operator|.
@@ -1874,7 +1874,7 @@ name|mle_type
 operator|=
 name|typehigh
 expr_stmt|;
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 operator|.
@@ -1882,7 +1882,7 @@ name|mle_grade
 operator|=
 name|gradehigh
 expr_stmt|;
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator||=
@@ -1894,12 +1894,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_set_single
+name|lomac_set_single
 parameter_list|(
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|,
 name|u_short
 name|type
@@ -1908,7 +1908,7 @@ name|u_short
 name|grade
 parameter_list|)
 block|{
-name|mac_lomac
+name|ml
 operator|->
 name|ml_single
 operator|.
@@ -1916,7 +1916,7 @@ name|mle_type
 operator|=
 name|type
 expr_stmt|;
-name|mac_lomac
+name|ml
 operator|->
 name|ml_single
 operator|.
@@ -1924,7 +1924,7 @@ name|mle_grade
 operator|=
 name|grade
 expr_stmt|;
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator||=
@@ -1936,7 +1936,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_copy_range
+name|lomac_copy_range
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -1962,7 +1962,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_copy_range: labelfrom not range"
+literal|"lomac_copy_range: labelfrom not range"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1994,7 +1994,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_copy_single
+name|lomac_copy_single
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -2020,7 +2020,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_copy_single: labelfrom not single"
+literal|"lomac_copy_single: labelfrom not single"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2044,7 +2044,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_copy_auxsingle
+name|lomac_copy_auxsingle
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -2070,7 +2070,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_lomac_copy_auxsingle: labelfrom not auxsingle"
+literal|"lomac_copy_auxsingle: labelfrom not auxsingle"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2094,7 +2094,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_copy
+name|lomac_copy
 parameter_list|(
 name|struct
 name|mac_lomac
@@ -2115,7 +2115,7 @@ name|ml_flags
 operator|&
 name|MAC_LOMAC_FLAG_SINGLE
 condition|)
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -2130,7 +2130,7 @@ name|ml_flags
 operator|&
 name|MAC_LOMAC_FLAG_AUX
 condition|)
-name|mac_lomac_copy_auxsingle
+name|lomac_copy_auxsingle
 argument_list|(
 name|source
 argument_list|,
@@ -2145,7 +2145,7 @@ name|ml_flags
 operator|&
 name|MAC_LOMAC_FLAG_RANGE
 condition|)
-name|mac_lomac_copy_range
+name|lomac_copy_range
 argument_list|(
 name|source
 argument_list|,
@@ -2158,7 +2158,7 @@ end_function
 begin_function_decl
 specifier|static
 name|int
-name|mac_lomac_to_string
+name|lomac_to_string
 parameter_list|(
 name|struct
 name|sbuf
@@ -2168,7 +2168,7 @@ parameter_list|,
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2279,10 +2279,10 @@ operator|&
 name|MAC_LOMAC_FLAG_UPDATE
 condition|)
 block|{
-comment|/* 		 * Check to see if the pending demotion would be more or 		 * less severe than this one, and keep the more severe. 		 * This can only happen for a multi-threaded application. 		 */
+comment|/* 		 * Check to see if the pending demotion would be more or less 		 * severe than this one, and keep the more severe.  This can 		 * only happen for a multi-threaded application. 		 */
 if|if
 condition|(
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|objlabel
 argument_list|,
@@ -2324,7 +2324,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Always demote the single label. 	 */
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|objlabel
 argument_list|,
@@ -2334,8 +2334,8 @@ operator|->
 name|mac_lomac
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Start with the original range, then minimize each side of 	 * the range to the point of not dominating the object.  The 	 * high side will always be demoted, of course. 	 */
-name|mac_lomac_copy_range
+comment|/* 	 * Start with the original range, then minimize each side of the 	 * range to the point of not dominating the object.  The high side 	 * will always be demoted, of course. 	 */
+name|lomac_copy_range
 argument_list|(
 name|subjlabel
 argument_list|,
@@ -2348,7 +2348,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|objlabel
@@ -2409,8 +2409,8 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Avoid memory allocation while holding a mutex; cache the 	 * label. 	 */
-name|mac_lomac_copy_single
+comment|/* 	 * Avoid memory allocation while holding a mutex; cache the label. 	 */
+name|lomac_copy_single
 argument_list|(
 operator|&
 name|subj
@@ -2441,7 +2441,7 @@ argument_list|,
 name|SBUF_AUTOEXTEND
 argument_list|)
 expr_stmt|;
-name|mac_lomac_to_string
+name|lomac_to_string
 argument_list|(
 operator|&
 name|subjlabel_sb
@@ -2475,7 +2475,7 @@ argument_list|,
 name|SBUF_AUTOEXTEND
 argument_list|)
 expr_stmt|;
-name|mac_lomac_to_string
+name|lomac_to_string
 argument_list|(
 operator|&
 name|subjtext_sb
@@ -2512,7 +2512,7 @@ argument_list|,
 name|SBUF_AUTOEXTEND
 argument_list|)
 expr_stmt|;
-name|mac_lomac_to_string
+name|lomac_to_string
 argument_list|(
 operator|&
 name|objlabel_sb
@@ -2678,7 +2678,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Relabel "to" to "from" only if "from" is a valid label (contains  * at least a single), as for a relabel operation which may or may  * not involve a relevant label.  */
+comment|/*  * Relabel "to" to "from" only if "from" is a valid label (contains at least  * a single), as for a relabel operation which may or may not involve a  * relevant label.  */
 end_comment
 
 begin_function
@@ -2717,7 +2717,7 @@ name|to
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy
+name|lomac_copy
 argument_list|(
 name|from
 argument_list|,
@@ -2735,7 +2735,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_lomac_init
+name|lomac_init
 parameter_list|(
 name|struct
 name|mac_policy_conf
@@ -2752,7 +2752,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_lomac_init_label
+name|lomac_init_label
 parameter_list|(
 name|struct
 name|label
@@ -2776,7 +2776,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_init_label_waitcheck
+name|lomac_init_label_waitcheck
 parameter_list|(
 name|struct
 name|label
@@ -2822,7 +2822,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_init_proc_label
+name|lomac_init_proc_label
 parameter_list|(
 name|struct
 name|label
@@ -2842,7 +2842,7 @@ expr|struct
 name|mac_lomac_proc
 argument_list|)
 argument_list|,
-name|M_MACLOMAC
+name|M_LOMAC
 argument_list|,
 name|M_ZERO
 operator||
@@ -2873,7 +2873,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 parameter_list|(
 name|struct
 name|label
@@ -2902,7 +2902,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_destroy_proc_label
+name|lomac_destroy_proc_label
 parameter_list|(
 name|struct
 name|label
@@ -2928,7 +2928,7 @@ argument_list|(
 name|label
 argument_list|)
 argument_list|,
-name|M_MACLOMAC
+name|M_LOMAC
 argument_list|)
 expr_stmt|;
 name|PSLOT_SET
@@ -2944,7 +2944,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_element_to_string
+name|lomac_element_to_string
 parameter_list|(
 name|struct
 name|sbuf
@@ -3023,7 +3023,7 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"mac_lomac_element_to_string: invalid type (%d)"
+literal|"lomac_element_to_string: invalid type (%d)"
 argument_list|,
 name|element
 operator|->
@@ -3037,7 +3037,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_to_string
+name|lomac_to_string
 parameter_list|(
 name|struct
 name|sbuf
@@ -3047,12 +3047,12 @@ parameter_list|,
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|)
 block|{
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -3061,12 +3061,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|mac_lomac_element_to_string
+name|lomac_element_to_string
 argument_list|(
 name|sb
 argument_list|,
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_single
 argument_list|)
@@ -3082,7 +3082,7 @@ return|;
 block|}
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -3108,12 +3108,12 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_lomac_element_to_string
+name|lomac_element_to_string
 argument_list|(
 name|sb
 argument_list|,
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_auxsingle
 argument_list|)
@@ -3146,7 +3146,7 @@ return|;
 block|}
 if|if
 condition|(
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator|&
@@ -3172,12 +3172,12 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_lomac_element_to_string
+name|lomac_element_to_string
 argument_list|(
 name|sb
 argument_list|,
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 argument_list|)
@@ -3209,12 +3209,12 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_lomac_element_to_string
+name|lomac_element_to_string
 argument_list|(
 name|sb
 argument_list|,
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 argument_list|)
@@ -3256,7 +3256,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_externalize_label
+name|lomac_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -3280,7 +3280,7 @@ block|{
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 decl_stmt|;
 if|if
 condition|(
@@ -3304,7 +3304,7 @@ name|claimed
 operator|)
 operator|++
 expr_stmt|;
-name|mac_lomac
+name|ml
 operator|=
 name|SLOT
 argument_list|(
@@ -3313,11 +3313,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_to_string
+name|lomac_to_string
 argument_list|(
 name|sb
 argument_list|,
-name|mac_lomac
+name|ml
 argument_list|)
 operator|)
 return|;
@@ -3327,7 +3327,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_parse_element
+name|lomac_parse_element
 parameter_list|(
 name|struct
 name|mac_lomac_element
@@ -3524,18 +3524,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note: destructively consumes the string, make a local copy before  * calling if that's a problem.  */
+comment|/*  * Note: destructively consumes the string, make a local copy before calling  * if that's a problem.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|mac_lomac_parse
+name|lomac_parse
 parameter_list|(
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 parameter_list|,
 name|char
 modifier|*
@@ -3766,7 +3766,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"mac_lomac_internalize_label: range mismatch"
+literal|"lomac_internalize_label: range mismatch"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3831,12 +3831,12 @@ expr_stmt|;
 block|}
 name|bzero
 argument_list|(
-name|mac_lomac
+name|ml
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|mac_lomac
+name|ml
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3849,10 +3849,10 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_lomac_parse_element
+name|lomac_parse_element
 argument_list|(
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_single
 argument_list|,
@@ -3868,7 +3868,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator||=
@@ -3884,10 +3884,10 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_lomac_parse_element
+name|lomac_parse_element
 argument_list|(
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_auxsingle
 argument_list|,
@@ -3903,7 +3903,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator||=
@@ -3919,10 +3919,10 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_lomac_parse_element
+name|lomac_parse_element
 argument_list|(
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangelow
 argument_list|,
@@ -3940,10 +3940,10 @@ operator|)
 return|;
 name|error
 operator|=
-name|mac_lomac_parse_element
+name|lomac_parse_element
 argument_list|(
 operator|&
-name|mac_lomac
+name|ml
 operator|->
 name|ml_rangehigh
 argument_list|,
@@ -3959,7 +3959,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mac_lomac
+name|ml
 operator|->
 name|ml_flags
 operator||=
@@ -3968,9 +3968,9 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|mac_lomac_valid
+name|lomac_valid
 argument_list|(
-name|mac_lomac
+name|ml
 argument_list|)
 expr_stmt|;
 if|if
@@ -3993,7 +3993,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_internalize_label
+name|lomac_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -4016,9 +4016,9 @@ block|{
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 decl_stmt|,
-name|mac_lomac_temp
+name|ml_temp
 decl_stmt|;
 name|int
 name|error
@@ -4047,10 +4047,10 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|mac_lomac_parse
+name|lomac_parse
 argument_list|(
 operator|&
-name|mac_lomac_temp
+name|ml_temp
 argument_list|,
 name|element_data
 argument_list|)
@@ -4064,7 +4064,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mac_lomac
+name|ml
 operator|=
 name|SLOT
 argument_list|(
@@ -4072,9 +4072,9 @@ name|label
 argument_list|)
 expr_stmt|;
 operator|*
-name|mac_lomac
+name|ml
 operator|=
-name|mac_lomac_temp
+name|ml_temp
 expr_stmt|;
 return|return
 operator|(
@@ -4087,7 +4087,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_copy_label
+name|lomac_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -4116,13 +4116,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Labeling event operations: file system objects, and things that look  * a lot like file system objects.  */
+comment|/*  * Labeling event operations: file system objects, and things that look a lot  * like file system objects.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_devfs_device
+name|lomac_create_devfs_device
 parameter_list|(
 name|struct
 name|ucred
@@ -4153,12 +4153,12 @@ block|{
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 decl_stmt|;
 name|int
 name|lomac_type
 decl_stmt|;
-name|mac_lomac
+name|ml
 operator|=
 name|SLOT
 argument_list|(
@@ -4284,9 +4284,9 @@ name|lomac_type
 operator|=
 name|MAC_LOMAC_TYPE_HIGH
 expr_stmt|;
-name|mac_lomac_set_single
+name|lomac_set_single
 argument_list|(
-name|mac_lomac
+name|ml
 argument_list|,
 name|lomac_type
 argument_list|,
@@ -4299,7 +4299,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_devfs_directory
+name|lomac_create_devfs_directory
 parameter_list|(
 name|struct
 name|mount
@@ -4327,18 +4327,18 @@ block|{
 name|struct
 name|mac_lomac
 modifier|*
-name|mac_lomac
+name|ml
 decl_stmt|;
-name|mac_lomac
+name|ml
 operator|=
 name|SLOT
 argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_set_single
+name|lomac_set_single
 argument_list|(
-name|mac_lomac
+name|ml
 argument_list|,
 name|MAC_LOMAC_TYPE_HIGH
 argument_list|,
@@ -4351,7 +4351,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_devfs_symlink
+name|lomac_create_devfs_symlink
 parameter_list|(
 name|struct
 name|ucred
@@ -4408,7 +4408,7 @@ argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -4421,7 +4421,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mount
+name|lomac_create_mount
 parameter_list|(
 name|struct
 name|ucred
@@ -4463,7 +4463,7 @@ argument_list|(
 name|mplabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -4476,7 +4476,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_relabel_vnode
+name|lomac_relabel_vnode
 parameter_list|(
 name|struct
 name|ucred
@@ -4534,7 +4534,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_update_devfs
+name|lomac_update_devfs
 parameter_list|(
 name|struct
 name|mount
@@ -4584,7 +4584,7 @@ argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy
+name|lomac_copy
 argument_list|(
 name|source
 argument_list|,
@@ -4597,7 +4597,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_associate_vnode_devfs
+name|lomac_associate_vnode_devfs
 parameter_list|(
 name|struct
 name|mount
@@ -4652,7 +4652,7 @@ argument_list|(
 name|vplabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -4665,7 +4665,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_associate_vnode_extattr
+name|lomac_associate_vnode_extattr
 parameter_list|(
 name|struct
 name|mount
@@ -4769,7 +4769,7 @@ name|EOPNOTSUPP
 condition|)
 block|{
 comment|/* Fall back to the mntlabel. */
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -4821,7 +4821,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mac_lomac_associate_vnode_extattr: bad size %d\n"
+literal|"lomac_associate_vnode_extattr: bad size %d\n"
 argument_list|,
 name|buflen
 argument_list|)
@@ -4882,7 +4882,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|mac_lomac_valid
+name|lomac_valid
 argument_list|(
 operator|&
 name|temp
@@ -4893,7 +4893,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mac_lomac_associate_vnode_extattr: invalid\n"
+literal|"lomac_associate_vnode_extattr: invalid\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4917,7 +4917,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mac_lomac_associate_vnode_extattr: not single\n"
+literal|"lomac_associate_vnode_extattr: not single\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4926,7 +4926,7 @@ name|EPERM
 operator|)
 return|;
 block|}
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 operator|&
 name|temp
@@ -4945,7 +4945,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_associate_vnode_singlelabel
+name|lomac_associate_vnode_singlelabel
 parameter_list|(
 name|struct
 name|mount
@@ -4990,7 +4990,7 @@ argument_list|(
 name|vplabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5003,7 +5003,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_create_vnode_extattr
+name|lomac_create_vnode_extattr
 parameter_list|(
 name|struct
 name|ucred
@@ -5112,7 +5112,7 @@ operator|&
 name|MAC_LOMAC_FLAG_AUX
 condition|)
 block|{
-name|mac_lomac_copy_auxsingle
+name|lomac_copy_auxsingle
 argument_list|(
 name|dir
 argument_list|,
@@ -5120,7 +5120,7 @@ operator|&
 name|temp
 argument_list|)
 expr_stmt|;
-name|mac_lomac_set_single
+name|lomac_set_single
 argument_list|(
 operator|&
 name|temp
@@ -5141,7 +5141,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5180,7 +5180,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|mac_lomac_copy
+name|lomac_copy
 argument_list|(
 operator|&
 name|temp
@@ -5199,7 +5199,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_setlabel_vnode_extattr
+name|lomac_setlabel_vnode_extattr
 parameter_list|(
 name|struct
 name|ucred
@@ -5274,7 +5274,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5321,7 +5321,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_inpcb_from_socket
+name|lomac_create_inpcb_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -5366,7 +5366,7 @@ argument_list|(
 name|inplabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5379,7 +5379,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mbuf_from_socket
+name|lomac_create_mbuf_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -5424,7 +5424,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5437,7 +5437,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_socket
+name|lomac_create_socket
 parameter_list|(
 name|struct
 name|ucred
@@ -5479,7 +5479,7 @@ argument_list|(
 name|solabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5492,7 +5492,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_pipe
+name|lomac_create_pipe
 parameter_list|(
 name|struct
 name|ucred
@@ -5534,7 +5534,7 @@ argument_list|(
 name|pplabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5547,7 +5547,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_socket_from_socket
+name|lomac_create_socket_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -5592,7 +5592,7 @@ argument_list|(
 name|newsolabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5605,7 +5605,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_relabel_socket
+name|lomac_relabel_socket
 parameter_list|(
 name|struct
 name|ucred
@@ -5663,7 +5663,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_relabel_pipe
+name|lomac_relabel_pipe
 parameter_list|(
 name|struct
 name|ucred
@@ -5721,7 +5721,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_set_socket_peer_from_mbuf
+name|lomac_set_socket_peer_from_mbuf
 parameter_list|(
 name|struct
 name|mbuf
@@ -5766,7 +5766,7 @@ argument_list|(
 name|sopeerlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5783,7 +5783,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_lomac_set_socket_peer_from_socket
+name|lomac_set_socket_peer_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -5828,7 +5828,7 @@ argument_list|(
 name|newsopeerlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5841,7 +5841,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_bpfdesc
+name|lomac_create_bpfdesc
 parameter_list|(
 name|struct
 name|ucred
@@ -5883,7 +5883,7 @@ argument_list|(
 name|dlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -5896,7 +5896,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_ifnet
+name|lomac_create_ifnet
 parameter_list|(
 name|struct
 name|ifnet
@@ -6168,7 +6168,7 @@ block|}
 block|}
 name|set
 label|:
-name|mac_lomac_set_single
+name|lomac_set_single
 argument_list|(
 name|dest
 argument_list|,
@@ -6177,7 +6177,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mac_lomac_set_range
+name|lomac_set_range
 argument_list|(
 name|dest
 argument_list|,
@@ -6196,7 +6196,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_ipq
+name|lomac_create_ipq
 parameter_list|(
 name|struct
 name|mbuf
@@ -6241,7 +6241,7 @@ argument_list|(
 name|ipqlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -6254,7 +6254,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_datagram_from_ipq
+name|lomac_create_datagram_from_ipq
 parameter_list|(
 name|struct
 name|ipq
@@ -6300,7 +6300,7 @@ name|mlabel
 argument_list|)
 expr_stmt|;
 comment|/* Just use the head, since we require them all to match. */
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -6313,7 +6313,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_fragment
+name|lomac_create_fragment
 parameter_list|(
 name|struct
 name|mbuf
@@ -6358,7 +6358,7 @@ argument_list|(
 name|fraglabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -6371,7 +6371,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mbuf_from_inpcb
+name|lomac_create_mbuf_from_inpcb
 parameter_list|(
 name|struct
 name|inpcb
@@ -6416,7 +6416,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -6429,7 +6429,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mbuf_linklayer
+name|lomac_create_mbuf_linklayer
 parameter_list|(
 name|struct
 name|ifnet
@@ -6464,7 +6464,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_set_single
+name|lomac_set_single
 argument_list|(
 name|dest
 argument_list|,
@@ -6479,7 +6479,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mbuf_from_bpfdesc
+name|lomac_create_mbuf_from_bpfdesc
 parameter_list|(
 name|struct
 name|bpf_d
@@ -6524,7 +6524,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -6537,7 +6537,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mbuf_from_ifnet
+name|lomac_create_mbuf_from_ifnet
 parameter_list|(
 name|struct
 name|ifnet
@@ -6582,7 +6582,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -6595,7 +6595,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mbuf_multicast_encap
+name|lomac_create_mbuf_multicast_encap
 parameter_list|(
 name|struct
 name|mbuf
@@ -6650,7 +6650,7 @@ argument_list|(
 name|mnewlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -6663,7 +6663,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mbuf_netlayer
+name|lomac_create_mbuf_netlayer
 parameter_list|(
 name|struct
 name|mbuf
@@ -6708,7 +6708,7 @@ argument_list|(
 name|mnewlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -6721,7 +6721,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_fragment_match
+name|lomac_fragment_match
 parameter_list|(
 name|struct
 name|mbuf
@@ -6768,7 +6768,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_equal_single
+name|lomac_equal_single
 argument_list|(
 name|a
 argument_list|,
@@ -6782,7 +6782,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_relabel_ifnet
+name|lomac_relabel_ifnet
 parameter_list|(
 name|struct
 name|ucred
@@ -6840,7 +6840,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_update_ipq
+name|lomac_update_ipq
 parameter_list|(
 name|struct
 name|mbuf
@@ -6870,7 +6870,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_inpcb_sosetlabel
+name|lomac_inpcb_sosetlabel
 parameter_list|(
 name|struct
 name|socket
@@ -6915,7 +6915,7 @@ argument_list|(
 name|inplabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|source
 argument_list|,
@@ -6928,7 +6928,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_init_syncache_from_inpcb
+name|lomac_init_syncache_from_inpcb
 parameter_list|(
 name|struct
 name|label
@@ -6965,7 +6965,7 @@ argument_list|(
 name|label
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy
+name|lomac_copy
 argument_list|(
 name|source
 argument_list|,
@@ -6978,7 +6978,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mbuf_from_syncache
+name|lomac_create_mbuf_from_syncache
 parameter_list|(
 name|struct
 name|label
@@ -7018,7 +7018,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy
+name|lomac_copy
 argument_list|(
 name|source
 argument_list|,
@@ -7031,7 +7031,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_mbuf_from_firewall
+name|lomac_create_mbuf_from_firewall
 parameter_list|(
 name|struct
 name|mbuf
@@ -7057,7 +7057,7 @@ name|mlabel
 argument_list|)
 expr_stmt|;
 comment|/* XXX: where is the label for the firewall really comming from? */
-name|mac_lomac_set_single
+name|lomac_set_single
 argument_list|(
 name|dest
 argument_list|,
@@ -7076,7 +7076,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_lomac_execve_transition
+name|lomac_execve_transition
 parameter_list|(
 name|struct
 name|ucred
@@ -7166,14 +7166,14 @@ argument_list|)
 else|:
 name|obj
 expr_stmt|;
-name|mac_lomac_copy
+name|lomac_copy
 argument_list|(
 name|source
 argument_list|,
 name|dest
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there's an auxiliary label on the real object, respect it 	 * and assume that this level should be assumed immediately if 	 * a higher level is currently in place. 	 */
+comment|/* 	 * If there's an auxiliary label on the real object, respect it and 	 * assume that this level should be assumed immediately if a higher 	 * level is currently in place. 	 */
 if|if
 condition|(
 name|robj
@@ -7183,7 +7183,7 @@ operator|&
 name|MAC_LOMAC_FLAG_AUX
 operator|&&
 operator|!
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|robj
@@ -7196,14 +7196,14 @@ operator|->
 name|ml_single
 argument_list|)
 operator|&&
-name|mac_lomac_auxsingle_in_range
+name|lomac_auxsingle_in_range
 argument_list|(
 name|robj
 argument_list|,
 name|dest
 argument_list|)
 condition|)
-name|mac_lomac_set_single
+name|lomac_set_single
 argument_list|(
 name|dest
 argument_list|,
@@ -7220,15 +7220,15 @@ operator|.
 name|mle_grade
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Restructuring to use the execve transitioning mechanism 	 * instead of the normal demotion mechanism here would be 	 * difficult, so just copy the label over and perform standard 	 * demotion.  This is also non-optimal because it will result 	 * in the intermediate label "new" being created and immediately 	 * recycled. 	 */
+comment|/* 	 * Restructuring to use the execve transitioning mechanism instead of 	 * the normal demotion mechanism here would be difficult, so just 	 * copy the label over and perform standard demotion.  This is also 	 * non-optimal because it will result in the intermediate label "new" 	 * being created and immediately recycled. 	 */
 if|if
 condition|(
-name|mac_lomac_enabled
+name|lomac_enabled
 operator|&&
 name|revocation_enabled
 operator|&&
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -7257,7 +7257,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_execve_will_transition
+name|lomac_execve_will_transition
 parameter_list|(
 name|struct
 name|ucred
@@ -7304,7 +7304,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 operator|||
 operator|!
 name|revocation_enabled
@@ -7353,7 +7353,7 @@ operator|&
 name|MAC_LOMAC_FLAG_AUX
 operator|&&
 operator|!
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|robj
@@ -7366,7 +7366,7 @@ operator|->
 name|ml_single
 argument_list|)
 operator|&&
-name|mac_lomac_auxsingle_in_range
+name|lomac_auxsingle_in_range
 argument_list|(
 name|robj
 argument_list|,
@@ -7375,7 +7375,7 @@ argument_list|)
 operator|)
 operator|||
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -7389,7 +7389,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_proc0
+name|lomac_create_proc0
 parameter_list|(
 name|struct
 name|ucred
@@ -7411,7 +7411,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_lomac_set_single
+name|lomac_set_single
 argument_list|(
 name|dest
 argument_list|,
@@ -7420,7 +7420,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mac_lomac_set_range
+name|lomac_set_range
 argument_list|(
 name|dest
 argument_list|,
@@ -7439,7 +7439,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_create_proc1
+name|lomac_create_proc1
 parameter_list|(
 name|struct
 name|ucred
@@ -7461,7 +7461,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_lomac_set_single
+name|lomac_set_single
 argument_list|(
 name|dest
 argument_list|,
@@ -7470,7 +7470,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mac_lomac_set_range
+name|lomac_set_range
 argument_list|(
 name|dest
 argument_list|,
@@ -7489,7 +7489,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_relabel_cred
+name|lomac_relabel_cred
 parameter_list|(
 name|struct
 name|ucred
@@ -7543,7 +7543,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_bpfdesc_receive
+name|lomac_check_bpfdesc_receive
 parameter_list|(
 name|struct
 name|bpf_d
@@ -7577,7 +7577,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -7600,7 +7600,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_lomac_equal_single
+name|lomac_equal_single
 argument_list|(
 name|a
 argument_list|,
@@ -7623,7 +7623,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_cred_relabel
+name|lomac_check_cred_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -7663,7 +7663,7 @@ argument_list|(
 name|newlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is a LOMAC label update for the credential, it may 	 * be an update of the single, range, or both. 	 */
+comment|/* 	 * If there is a LOMAC label update for the credential, it may be an 	 * update of the single, range, or both. 	 */
 name|error
 operator|=
 name|lomac_atmostflags
@@ -7705,7 +7705,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|subj
 argument_list|,
@@ -7724,18 +7724,18 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|mac_lomac_copy_range
+name|lomac_copy_range
 argument_list|(
 name|subj
 argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
-comment|/* 		 * To change the LOMAC range on a credential, the new 		 * range label must be in the current range. 		 */
+comment|/* 		 * To change the LOMAC range on a credential, the new range 		 * label must be in the current range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_lomac_range_in_range
+name|lomac_range_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -7747,11 +7747,11 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * To change the LOMAC single label on a credential, the 		 * new single label must be in the new range.  Implicitly 		 * from the previous check, the new single is in the old 		 * range. 		 */
+comment|/* 		 * To change the LOMAC single label on a credential, the new 		 * single label must be in the new range.  Implicitly from 		 * the previous check, the new single is in the old range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_lomac_single_in_range
+name|lomac_single_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -7763,10 +7763,10 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * To have EQUAL in any component of the new credential 		 * LOMAC label, the subject must already have EQUAL in 		 * their label. 		 */
+comment|/* 		 * To have EQUAL in any component of the new credential LOMAC 		 * label, the subject must already have EQUAL in their label. 		 */
 if|if
 condition|(
-name|mac_lomac_contains_equal
+name|lomac_contains_equal
 argument_list|(
 name|new
 argument_list|)
@@ -7774,7 +7774,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -7802,7 +7802,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_cred_visible
+name|lomac_check_cred_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -7826,7 +7826,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -7855,7 +7855,7 @@ comment|/* XXX: range */
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -7878,7 +7878,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_ifnet_relabel
+name|lomac_check_ifnet_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -7928,7 +7928,7 @@ argument_list|(
 name|newlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is a LOMAC label update for the interface, it may 	 * be an update of the single, range, or both. 	 */
+comment|/* 	 * If there is a LOMAC label update for the interface, it may be an 	 * update of the single, range, or both. 	 */
 name|error
 operator|=
 name|lomac_atmostflags
@@ -7950,7 +7950,7 @@ return|;
 comment|/* 	 * Relabling network interfaces requires LOMAC privilege. 	 */
 name|error
 operator|=
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -7987,7 +7987,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|subj
 argument_list|,
@@ -8006,7 +8006,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|mac_lomac_copy_range
+name|lomac_copy_range
 argument_list|(
 name|subj
 argument_list|,
@@ -8047,7 +8047,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_ifnet_transmit
+name|lomac_check_ifnet_transmit
 parameter_list|(
 name|struct
 name|ifnet
@@ -8081,7 +8081,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8104,7 +8104,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_single_in_range
+name|lomac_single_in_range
 argument_list|(
 name|p
 argument_list|,
@@ -8122,7 +8122,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_inpcb_deliver
+name|lomac_check_inpcb_deliver
 parameter_list|(
 name|struct
 name|inpcb
@@ -8156,7 +8156,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8179,7 +8179,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_equal_single
+name|lomac_equal_single
 argument_list|(
 name|p
 argument_list|,
@@ -8197,7 +8197,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_kld_load
+name|lomac_check_kld_load
 parameter_list|(
 name|struct
 name|ucred
@@ -8226,7 +8226,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8251,7 +8251,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -8264,7 +8264,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_high_single
+name|lomac_high_single
 argument_list|(
 name|obj
 argument_list|)
@@ -8285,7 +8285,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_pipe_ioctl
+name|lomac_check_pipe_ioctl
 parameter_list|(
 name|struct
 name|ucred
@@ -8315,7 +8315,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8334,7 +8334,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_pipe_read
+name|lomac_check_pipe_read
 parameter_list|(
 name|struct
 name|ucred
@@ -8363,7 +8363,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8389,7 +8389,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -8423,7 +8423,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_pipe_relabel
+name|lomac_check_pipe_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -8483,7 +8483,7 @@ argument_list|(
 name|pplabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is a LOMAC label update for a pipe, it must be a 	 * single update. 	 */
+comment|/* 	 * If there is a LOMAC label update for a pipe, it must be a single 	 * update. 	 */
 name|error
 operator|=
 name|lomac_atmostflags
@@ -8506,7 +8506,7 @@ comment|/* 	 * To perform a relabel of a pipe (LOMAC label or not), LOMAC must 	
 if|if
 condition|(
 operator|!
-name|mac_lomac_single_in_range
+name|lomac_single_in_range
 argument_list|(
 name|obj
 argument_list|,
@@ -8532,7 +8532,7 @@ comment|/* 		 * To change the LOMAC label on a pipe, the new pipe label 		 * mus
 if|if
 condition|(
 operator|!
-name|mac_lomac_single_in_range
+name|lomac_single_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -8547,7 +8547,7 @@ return|;
 comment|/* 		 * To change the LOMAC label on a pipe to be EQUAL, the 		 * subject must have appropriate privilege. 		 */
 if|if
 condition|(
-name|mac_lomac_contains_equal
+name|lomac_contains_equal
 argument_list|(
 name|new
 argument_list|)
@@ -8555,7 +8555,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -8582,7 +8582,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_pipe_write
+name|lomac_check_pipe_write
 parameter_list|(
 name|struct
 name|ucred
@@ -8611,7 +8611,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8637,7 +8637,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -8660,7 +8660,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_proc_debug
+name|lomac_check_proc_debug
 parameter_list|(
 name|struct
 name|ucred
@@ -8684,7 +8684,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8715,7 +8715,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -8730,7 +8730,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -8753,7 +8753,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_proc_sched
+name|lomac_check_proc_sched
 parameter_list|(
 name|struct
 name|ucred
@@ -8777,7 +8777,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8808,7 +8808,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -8823,7 +8823,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -8846,7 +8846,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_proc_signal
+name|lomac_check_proc_signal
 parameter_list|(
 name|struct
 name|ucred
@@ -8873,7 +8873,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8904,7 +8904,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -8919,7 +8919,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -8942,7 +8942,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_socket_deliver
+name|lomac_check_socket_deliver
 parameter_list|(
 name|struct
 name|socket
@@ -8976,7 +8976,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -8999,7 +8999,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_lomac_equal_single
+name|lomac_equal_single
 argument_list|(
 name|p
 argument_list|,
@@ -9017,7 +9017,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_socket_relabel
+name|lomac_check_socket_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -9077,7 +9077,7 @@ argument_list|(
 name|solabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is a LOMAC label update for the socket, it may be 	 * an update of single. 	 */
+comment|/* 	 * If there is a LOMAC label update for the socket, it may be an 	 * update of single. 	 */
 name|error
 operator|=
 name|lomac_atmostflags
@@ -9100,7 +9100,7 @@ comment|/* 	 * To relabel a socket, the old socket single must be in the subject
 if|if
 condition|(
 operator|!
-name|mac_lomac_single_in_range
+name|lomac_single_in_range
 argument_list|(
 name|obj
 argument_list|,
@@ -9122,11 +9122,11 @@ operator|&
 name|MAC_LOMAC_FLAG_SINGLE
 condition|)
 block|{
-comment|/* 		 * To relabel a socket, the new socket single must be in 		 * the subject range. 		 */
+comment|/* 		 * To relabel a socket, the new socket single must be in the 		 * subject range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_lomac_single_in_range
+name|lomac_single_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -9141,7 +9141,7 @@ return|;
 comment|/* 		 * To change the LOMAC label on the socket to contain EQUAL, 		 * the subject must have appropriate privilege. 		 */
 if|if
 condition|(
-name|mac_lomac_contains_equal
+name|lomac_contains_equal
 argument_list|(
 name|new
 argument_list|)
@@ -9149,7 +9149,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -9176,7 +9176,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_socket_visible
+name|lomac_check_socket_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -9205,7 +9205,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -9231,7 +9231,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -9258,7 +9258,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|mac_lomac_priv_check
+name|lomac_priv_check
 parameter_list|(
 name|struct
 name|ucred
@@ -9280,7 +9280,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -9564,7 +9564,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -9590,7 +9590,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_system_acct
+name|lomac_check_system_acct
 parameter_list|(
 name|struct
 name|ucred
@@ -9619,7 +9619,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -9644,7 +9644,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -9657,7 +9657,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_high_single
+name|lomac_high_single
 argument_list|(
 name|obj
 argument_list|)
@@ -9678,7 +9678,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_system_auditctl
+name|lomac_check_system_auditctl
 parameter_list|(
 name|struct
 name|ucred
@@ -9707,7 +9707,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -9732,7 +9732,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -9745,7 +9745,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_high_single
+name|lomac_high_single
 argument_list|(
 name|obj
 argument_list|)
@@ -9766,7 +9766,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_system_swapoff
+name|lomac_check_system_swapoff
 parameter_list|(
 name|struct
 name|ucred
@@ -9792,7 +9792,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -9810,7 +9810,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -9831,7 +9831,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_system_swapon
+name|lomac_check_system_swapon
 parameter_list|(
 name|struct
 name|ucred
@@ -9860,7 +9860,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -9885,7 +9885,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -9898,7 +9898,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_high_single
+name|lomac_high_single
 argument_list|(
 name|obj
 argument_list|)
@@ -9919,7 +9919,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_system_sysctl
+name|lomac_check_system_sysctl
 parameter_list|(
 name|struct
 name|ucred
@@ -9952,7 +9952,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -9968,7 +9968,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Treat sysctl variables without CTLFLAG_ANYBODY flag as 	 * lomac/high, but also require privilege to change them. 	 */
+comment|/* 	 * Treat sysctl variables without CTLFLAG_ANYBODY flag as lomac/high, 	 * but also require privilege to change them. 	 */
 if|if
 condition|(
 name|req
@@ -9994,7 +9994,7 @@ name|notdef
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate_high
+name|lomac_subject_dominate_high
 argument_list|(
 name|subj
 argument_list|)
@@ -10008,7 +10008,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -10030,7 +10030,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_create
+name|lomac_check_vnode_create
 parameter_list|(
 name|struct
 name|ucred
@@ -10069,7 +10069,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -10095,7 +10095,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -10116,7 +10116,7 @@ operator|&
 name|MAC_LOMAC_FLAG_AUX
 operator|&&
 operator|!
-name|mac_lomac_dominate_element
+name|lomac_dominate_element
 argument_list|(
 operator|&
 name|subj
@@ -10145,7 +10145,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_deleteacl
+name|lomac_check_vnode_deleteacl
 parameter_list|(
 name|struct
 name|ucred
@@ -10177,7 +10177,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -10203,7 +10203,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -10226,7 +10226,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_link
+name|lomac_check_vnode_link
 parameter_list|(
 name|struct
 name|ucred
@@ -10270,7 +10270,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -10296,7 +10296,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -10318,7 +10318,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -10341,7 +10341,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_mmap
+name|lomac_check_vnode_mmap
 parameter_list|(
 name|struct
 name|ucred
@@ -10377,7 +10377,7 @@ comment|/* 	 * Rely on the use of open()-time protections to handle 	 * non-revo
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -10426,7 +10426,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -10453,7 +10453,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -10488,7 +10488,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_check_vnode_mmap_downgrade
+name|lomac_check_vnode_mmap_downgrade
 parameter_list|(
 name|struct
 name|ucred
@@ -10523,7 +10523,7 @@ comment|/* 	 * Rely on the use of open()-time protections to handle 	 * non-revo
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 operator|||
 operator|!
 name|revocation_enabled
@@ -10548,7 +10548,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -10567,7 +10567,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_open
+name|lomac_check_vnode_open
 parameter_list|(
 name|struct
 name|ucred
@@ -10599,7 +10599,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -10639,7 +10639,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -10663,7 +10663,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_read
+name|lomac_check_vnode_read
 parameter_list|(
 name|struct
 name|ucred
@@ -10697,7 +10697,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 operator|||
 operator|!
 name|revocation_enabled
@@ -10726,7 +10726,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_dominate_single
+name|lomac_dominate_single
 argument_list|(
 name|obj
 argument_list|,
@@ -10760,7 +10760,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_relabel
+name|lomac_check_vnode_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -10845,7 +10845,7 @@ comment|/* 	 * To perform a relabel of the vnode (LOMAC label or not), LOMAC mus
 if|if
 condition|(
 operator|!
-name|mac_lomac_single_in_range
+name|lomac_single_in_range
 argument_list|(
 name|old
 argument_list|,
@@ -10871,7 +10871,7 @@ comment|/* 		 * To change the LOMAC label on a vnode, the new vnode label 		 * m
 if|if
 condition|(
 operator|!
-name|mac_lomac_single_in_range
+name|lomac_single_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -10886,7 +10886,7 @@ return|;
 comment|/* 		 * To change the LOMAC label on the vnode to be EQUAL, 		 * the subject must have appropriate privilege. 		 */
 if|if
 condition|(
-name|mac_lomac_contains_equal
+name|lomac_contains_equal
 argument_list|(
 name|new
 argument_list|)
@@ -10894,7 +10894,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -10932,7 +10932,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|mac_lomac_copy_single
+name|lomac_copy_single
 argument_list|(
 name|subj
 argument_list|,
@@ -10943,7 +10943,7 @@ comment|/* 		 * To change the auxiliary LOMAC label on a vnode, the new 		 * vno
 if|if
 condition|(
 operator|!
-name|mac_lomac_auxsingle_in_range
+name|lomac_auxsingle_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -10958,7 +10958,7 @@ return|;
 comment|/* 		 * To change the auxiliary LOMAC label on the vnode to be 		 * EQUAL, the subject must have appropriate privilege. 		 */
 if|if
 condition|(
-name|mac_lomac_contains_equal
+name|lomac_contains_equal
 argument_list|(
 name|new
 argument_list|)
@@ -10966,7 +10966,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_lomac_subject_privileged
+name|lomac_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -10993,7 +10993,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_rename_from
+name|lomac_check_vnode_rename_from
 parameter_list|(
 name|struct
 name|ucred
@@ -11037,7 +11037,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11063,7 +11063,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11085,7 +11085,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11108,7 +11108,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_rename_to
+name|lomac_check_vnode_rename_to
 parameter_list|(
 name|struct
 name|ucred
@@ -11155,7 +11155,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11181,7 +11181,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11210,7 +11210,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11234,7 +11234,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_revoke
+name|lomac_check_vnode_revoke
 parameter_list|(
 name|struct
 name|ucred
@@ -11263,7 +11263,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11289,7 +11289,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11312,7 +11312,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_setacl
+name|lomac_check_vnode_setacl
 parameter_list|(
 name|struct
 name|ucred
@@ -11349,7 +11349,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11375,7 +11375,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11398,7 +11398,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_setextattr
+name|lomac_check_vnode_setextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -11440,7 +11440,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11466,7 +11466,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11490,7 +11490,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_setflags
+name|lomac_check_vnode_setflags
 parameter_list|(
 name|struct
 name|ucred
@@ -11522,7 +11522,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11548,7 +11548,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11571,7 +11571,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_setmode
+name|lomac_check_vnode_setmode
 parameter_list|(
 name|struct
 name|ucred
@@ -11603,7 +11603,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11629,7 +11629,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11652,7 +11652,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_setowner
+name|lomac_check_vnode_setowner
 parameter_list|(
 name|struct
 name|ucred
@@ -11687,7 +11687,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11713,7 +11713,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11736,7 +11736,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_setutimes
+name|lomac_check_vnode_setutimes
 parameter_list|(
 name|struct
 name|ucred
@@ -11773,7 +11773,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11799,7 +11799,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11822,7 +11822,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_unlink
+name|lomac_check_vnode_unlink
 parameter_list|(
 name|struct
 name|ucred
@@ -11866,7 +11866,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 condition|)
 return|return
 operator|(
@@ -11892,7 +11892,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11914,7 +11914,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -11937,7 +11937,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_lomac_check_vnode_write
+name|lomac_check_vnode_write
 parameter_list|(
 name|struct
 name|ucred
@@ -11971,7 +11971,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_enabled
+name|lomac_enabled
 operator|||
 operator|!
 name|revocation_enabled
@@ -12000,7 +12000,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_lomac_subject_dominate
+name|lomac_subject_dominate
 argument_list|(
 name|subj
 argument_list|,
@@ -12023,7 +12023,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_lomac_thread_userret
+name|lomac_thread_userret
 parameter_list|(
 name|struct
 name|thread
@@ -12162,7 +12162,7 @@ argument_list|(
 name|newcred
 argument_list|)
 expr_stmt|;
-name|mac_lomac_copy
+name|lomac_copy
 argument_list|(
 operator|&
 name|subj
@@ -12243,673 +12243,673 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mac_policy_ops
-name|mac_lomac_ops
+name|lomac_ops
 init|=
 block|{
 operator|.
 name|mpo_init
 operator|=
-name|mac_lomac_init
+name|lomac_init
 block|,
 operator|.
 name|mpo_init_bpfdesc_label
 operator|=
-name|mac_lomac_init_label
+name|lomac_init_label
 block|,
 operator|.
 name|mpo_init_cred_label
 operator|=
-name|mac_lomac_init_label
+name|lomac_init_label
 block|,
 operator|.
 name|mpo_init_devfs_label
 operator|=
-name|mac_lomac_init_label
+name|lomac_init_label
 block|,
 operator|.
 name|mpo_init_ifnet_label
 operator|=
-name|mac_lomac_init_label
+name|lomac_init_label
 block|,
 operator|.
 name|mpo_init_syncache_label
 operator|=
-name|mac_lomac_init_label_waitcheck
+name|lomac_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_inpcb_label
 operator|=
-name|mac_lomac_init_label_waitcheck
+name|lomac_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_ipq_label
 operator|=
-name|mac_lomac_init_label_waitcheck
+name|lomac_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_mbuf_label
 operator|=
-name|mac_lomac_init_label_waitcheck
+name|lomac_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_mount_label
 operator|=
-name|mac_lomac_init_label
+name|lomac_init_label
 block|,
 operator|.
 name|mpo_init_pipe_label
 operator|=
-name|mac_lomac_init_label
+name|lomac_init_label
 block|,
 operator|.
 name|mpo_init_proc_label
 operator|=
-name|mac_lomac_init_proc_label
+name|lomac_init_proc_label
 block|,
 operator|.
 name|mpo_init_socket_label
 operator|=
-name|mac_lomac_init_label_waitcheck
+name|lomac_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_socket_peer_label
 operator|=
-name|mac_lomac_init_label_waitcheck
+name|lomac_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_vnode_label
 operator|=
-name|mac_lomac_init_label
+name|lomac_init_label
 block|,
 operator|.
 name|mpo_init_syncache_from_inpcb
 operator|=
-name|mac_lomac_init_syncache_from_inpcb
+name|lomac_init_syncache_from_inpcb
 block|,
 operator|.
 name|mpo_destroy_bpfdesc_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_cred_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_devfs_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_ifnet_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_inpcb_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_ipq_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_mbuf_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_mount_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_pipe_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_proc_label
 operator|=
-name|mac_lomac_destroy_proc_label
+name|lomac_destroy_proc_label
 block|,
 operator|.
 name|mpo_destroy_syncache_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_socket_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_socket_peer_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_destroy_vnode_label
 operator|=
-name|mac_lomac_destroy_label
+name|lomac_destroy_label
 block|,
 operator|.
 name|mpo_copy_cred_label
 operator|=
-name|mac_lomac_copy_label
+name|lomac_copy_label
 block|,
 operator|.
 name|mpo_copy_ifnet_label
 operator|=
-name|mac_lomac_copy_label
+name|lomac_copy_label
 block|,
 operator|.
 name|mpo_copy_mbuf_label
 operator|=
-name|mac_lomac_copy_label
+name|lomac_copy_label
 block|,
 operator|.
 name|mpo_copy_pipe_label
 operator|=
-name|mac_lomac_copy_label
+name|lomac_copy_label
 block|,
 operator|.
 name|mpo_copy_socket_label
 operator|=
-name|mac_lomac_copy_label
+name|lomac_copy_label
 block|,
 operator|.
 name|mpo_copy_vnode_label
 operator|=
-name|mac_lomac_copy_label
+name|lomac_copy_label
 block|,
 operator|.
 name|mpo_externalize_cred_label
 operator|=
-name|mac_lomac_externalize_label
+name|lomac_externalize_label
 block|,
 operator|.
 name|mpo_externalize_ifnet_label
 operator|=
-name|mac_lomac_externalize_label
+name|lomac_externalize_label
 block|,
 operator|.
 name|mpo_externalize_pipe_label
 operator|=
-name|mac_lomac_externalize_label
+name|lomac_externalize_label
 block|,
 operator|.
 name|mpo_externalize_socket_label
 operator|=
-name|mac_lomac_externalize_label
+name|lomac_externalize_label
 block|,
 operator|.
 name|mpo_externalize_socket_peer_label
 operator|=
-name|mac_lomac_externalize_label
+name|lomac_externalize_label
 block|,
 operator|.
 name|mpo_externalize_vnode_label
 operator|=
-name|mac_lomac_externalize_label
+name|lomac_externalize_label
 block|,
 operator|.
 name|mpo_internalize_cred_label
 operator|=
-name|mac_lomac_internalize_label
+name|lomac_internalize_label
 block|,
 operator|.
 name|mpo_internalize_ifnet_label
 operator|=
-name|mac_lomac_internalize_label
+name|lomac_internalize_label
 block|,
 operator|.
 name|mpo_internalize_pipe_label
 operator|=
-name|mac_lomac_internalize_label
+name|lomac_internalize_label
 block|,
 operator|.
 name|mpo_internalize_socket_label
 operator|=
-name|mac_lomac_internalize_label
+name|lomac_internalize_label
 block|,
 operator|.
 name|mpo_internalize_vnode_label
 operator|=
-name|mac_lomac_internalize_label
+name|lomac_internalize_label
 block|,
 operator|.
 name|mpo_create_devfs_device
 operator|=
-name|mac_lomac_create_devfs_device
+name|lomac_create_devfs_device
 block|,
 operator|.
 name|mpo_create_devfs_directory
 operator|=
-name|mac_lomac_create_devfs_directory
+name|lomac_create_devfs_directory
 block|,
 operator|.
 name|mpo_create_devfs_symlink
 operator|=
-name|mac_lomac_create_devfs_symlink
+name|lomac_create_devfs_symlink
 block|,
 operator|.
 name|mpo_create_mount
 operator|=
-name|mac_lomac_create_mount
+name|lomac_create_mount
 block|,
 operator|.
 name|mpo_relabel_vnode
 operator|=
-name|mac_lomac_relabel_vnode
+name|lomac_relabel_vnode
 block|,
 operator|.
 name|mpo_update_devfs
 operator|=
-name|mac_lomac_update_devfs
+name|lomac_update_devfs
 block|,
 operator|.
 name|mpo_associate_vnode_devfs
 operator|=
-name|mac_lomac_associate_vnode_devfs
+name|lomac_associate_vnode_devfs
 block|,
 operator|.
 name|mpo_associate_vnode_extattr
 operator|=
-name|mac_lomac_associate_vnode_extattr
+name|lomac_associate_vnode_extattr
 block|,
 operator|.
 name|mpo_associate_vnode_singlelabel
 operator|=
-name|mac_lomac_associate_vnode_singlelabel
+name|lomac_associate_vnode_singlelabel
 block|,
 operator|.
 name|mpo_create_vnode_extattr
 operator|=
-name|mac_lomac_create_vnode_extattr
+name|lomac_create_vnode_extattr
 block|,
 operator|.
 name|mpo_setlabel_vnode_extattr
 operator|=
-name|mac_lomac_setlabel_vnode_extattr
+name|lomac_setlabel_vnode_extattr
 block|,
 operator|.
 name|mpo_create_mbuf_from_socket
 operator|=
-name|mac_lomac_create_mbuf_from_socket
+name|lomac_create_mbuf_from_socket
 block|,
 operator|.
 name|mpo_create_mbuf_from_syncache
 operator|=
-name|mac_lomac_create_mbuf_from_syncache
+name|lomac_create_mbuf_from_syncache
 block|,
 operator|.
 name|mpo_create_pipe
 operator|=
-name|mac_lomac_create_pipe
+name|lomac_create_pipe
 block|,
 operator|.
 name|mpo_create_socket
 operator|=
-name|mac_lomac_create_socket
+name|lomac_create_socket
 block|,
 operator|.
 name|mpo_create_socket_from_socket
 operator|=
-name|mac_lomac_create_socket_from_socket
+name|lomac_create_socket_from_socket
 block|,
 operator|.
 name|mpo_relabel_pipe
 operator|=
-name|mac_lomac_relabel_pipe
+name|lomac_relabel_pipe
 block|,
 operator|.
 name|mpo_relabel_socket
 operator|=
-name|mac_lomac_relabel_socket
+name|lomac_relabel_socket
 block|,
 operator|.
 name|mpo_set_socket_peer_from_mbuf
 operator|=
-name|mac_lomac_set_socket_peer_from_mbuf
+name|lomac_set_socket_peer_from_mbuf
 block|,
 operator|.
 name|mpo_set_socket_peer_from_socket
 operator|=
-name|mac_lomac_set_socket_peer_from_socket
+name|lomac_set_socket_peer_from_socket
 block|,
 operator|.
 name|mpo_create_bpfdesc
 operator|=
-name|mac_lomac_create_bpfdesc
+name|lomac_create_bpfdesc
 block|,
 operator|.
 name|mpo_create_datagram_from_ipq
 operator|=
-name|mac_lomac_create_datagram_from_ipq
+name|lomac_create_datagram_from_ipq
 block|,
 operator|.
 name|mpo_create_fragment
 operator|=
-name|mac_lomac_create_fragment
+name|lomac_create_fragment
 block|,
 operator|.
 name|mpo_create_ifnet
 operator|=
-name|mac_lomac_create_ifnet
+name|lomac_create_ifnet
 block|,
 operator|.
 name|mpo_create_inpcb_from_socket
 operator|=
-name|mac_lomac_create_inpcb_from_socket
+name|lomac_create_inpcb_from_socket
 block|,
 operator|.
 name|mpo_create_ipq
 operator|=
-name|mac_lomac_create_ipq
+name|lomac_create_ipq
 block|,
 operator|.
 name|mpo_create_mbuf_from_inpcb
 operator|=
-name|mac_lomac_create_mbuf_from_inpcb
+name|lomac_create_mbuf_from_inpcb
 block|,
 operator|.
 name|mpo_create_mbuf_linklayer
 operator|=
-name|mac_lomac_create_mbuf_linklayer
+name|lomac_create_mbuf_linklayer
 block|,
 operator|.
 name|mpo_create_mbuf_from_bpfdesc
 operator|=
-name|mac_lomac_create_mbuf_from_bpfdesc
+name|lomac_create_mbuf_from_bpfdesc
 block|,
 operator|.
 name|mpo_create_mbuf_from_ifnet
 operator|=
-name|mac_lomac_create_mbuf_from_ifnet
+name|lomac_create_mbuf_from_ifnet
 block|,
 operator|.
 name|mpo_create_mbuf_multicast_encap
 operator|=
-name|mac_lomac_create_mbuf_multicast_encap
+name|lomac_create_mbuf_multicast_encap
 block|,
 operator|.
 name|mpo_create_mbuf_netlayer
 operator|=
-name|mac_lomac_create_mbuf_netlayer
+name|lomac_create_mbuf_netlayer
 block|,
 operator|.
 name|mpo_fragment_match
 operator|=
-name|mac_lomac_fragment_match
+name|lomac_fragment_match
 block|,
 operator|.
 name|mpo_relabel_ifnet
 operator|=
-name|mac_lomac_relabel_ifnet
+name|lomac_relabel_ifnet
 block|,
 operator|.
 name|mpo_update_ipq
 operator|=
-name|mac_lomac_update_ipq
+name|lomac_update_ipq
 block|,
 operator|.
 name|mpo_inpcb_sosetlabel
 operator|=
-name|mac_lomac_inpcb_sosetlabel
+name|lomac_inpcb_sosetlabel
 block|,
 operator|.
 name|mpo_execve_transition
 operator|=
-name|mac_lomac_execve_transition
+name|lomac_execve_transition
 block|,
 operator|.
 name|mpo_execve_will_transition
 operator|=
-name|mac_lomac_execve_will_transition
+name|lomac_execve_will_transition
 block|,
 operator|.
 name|mpo_create_proc0
 operator|=
-name|mac_lomac_create_proc0
+name|lomac_create_proc0
 block|,
 operator|.
 name|mpo_create_proc1
 operator|=
-name|mac_lomac_create_proc1
+name|lomac_create_proc1
 block|,
 operator|.
 name|mpo_relabel_cred
 operator|=
-name|mac_lomac_relabel_cred
+name|lomac_relabel_cred
 block|,
 operator|.
 name|mpo_check_bpfdesc_receive
 operator|=
-name|mac_lomac_check_bpfdesc_receive
+name|lomac_check_bpfdesc_receive
 block|,
 operator|.
 name|mpo_check_cred_relabel
 operator|=
-name|mac_lomac_check_cred_relabel
+name|lomac_check_cred_relabel
 block|,
 operator|.
 name|mpo_check_cred_visible
 operator|=
-name|mac_lomac_check_cred_visible
+name|lomac_check_cred_visible
 block|,
 operator|.
 name|mpo_check_ifnet_relabel
 operator|=
-name|mac_lomac_check_ifnet_relabel
+name|lomac_check_ifnet_relabel
 block|,
 operator|.
 name|mpo_check_ifnet_transmit
 operator|=
-name|mac_lomac_check_ifnet_transmit
+name|lomac_check_ifnet_transmit
 block|,
 operator|.
 name|mpo_check_inpcb_deliver
 operator|=
-name|mac_lomac_check_inpcb_deliver
+name|lomac_check_inpcb_deliver
 block|,
 operator|.
 name|mpo_check_kld_load
 operator|=
-name|mac_lomac_check_kld_load
+name|lomac_check_kld_load
 block|,
 operator|.
 name|mpo_check_pipe_ioctl
 operator|=
-name|mac_lomac_check_pipe_ioctl
+name|lomac_check_pipe_ioctl
 block|,
 operator|.
 name|mpo_check_pipe_read
 operator|=
-name|mac_lomac_check_pipe_read
+name|lomac_check_pipe_read
 block|,
 operator|.
 name|mpo_check_pipe_relabel
 operator|=
-name|mac_lomac_check_pipe_relabel
+name|lomac_check_pipe_relabel
 block|,
 operator|.
 name|mpo_check_pipe_write
 operator|=
-name|mac_lomac_check_pipe_write
+name|lomac_check_pipe_write
 block|,
 operator|.
 name|mpo_check_proc_debug
 operator|=
-name|mac_lomac_check_proc_debug
+name|lomac_check_proc_debug
 block|,
 operator|.
 name|mpo_check_proc_sched
 operator|=
-name|mac_lomac_check_proc_sched
+name|lomac_check_proc_sched
 block|,
 operator|.
 name|mpo_check_proc_signal
 operator|=
-name|mac_lomac_check_proc_signal
+name|lomac_check_proc_signal
 block|,
 operator|.
 name|mpo_check_socket_deliver
 operator|=
-name|mac_lomac_check_socket_deliver
+name|lomac_check_socket_deliver
 block|,
 operator|.
 name|mpo_check_socket_relabel
 operator|=
-name|mac_lomac_check_socket_relabel
+name|lomac_check_socket_relabel
 block|,
 operator|.
 name|mpo_check_socket_visible
 operator|=
-name|mac_lomac_check_socket_visible
+name|lomac_check_socket_visible
 block|,
 operator|.
 name|mpo_check_system_acct
 operator|=
-name|mac_lomac_check_system_acct
+name|lomac_check_system_acct
 block|,
 operator|.
 name|mpo_check_system_auditctl
 operator|=
-name|mac_lomac_check_system_auditctl
+name|lomac_check_system_auditctl
 block|,
 operator|.
 name|mpo_check_system_swapoff
 operator|=
-name|mac_lomac_check_system_swapoff
+name|lomac_check_system_swapoff
 block|,
 operator|.
 name|mpo_check_system_swapon
 operator|=
-name|mac_lomac_check_system_swapon
+name|lomac_check_system_swapon
 block|,
 operator|.
 name|mpo_check_system_sysctl
 operator|=
-name|mac_lomac_check_system_sysctl
+name|lomac_check_system_sysctl
 block|,
 operator|.
 name|mpo_check_vnode_access
 operator|=
-name|mac_lomac_check_vnode_open
+name|lomac_check_vnode_open
 block|,
 operator|.
 name|mpo_check_vnode_create
 operator|=
-name|mac_lomac_check_vnode_create
+name|lomac_check_vnode_create
 block|,
 operator|.
 name|mpo_check_vnode_deleteacl
 operator|=
-name|mac_lomac_check_vnode_deleteacl
+name|lomac_check_vnode_deleteacl
 block|,
 operator|.
 name|mpo_check_vnode_link
 operator|=
-name|mac_lomac_check_vnode_link
+name|lomac_check_vnode_link
 block|,
 operator|.
 name|mpo_check_vnode_mmap
 operator|=
-name|mac_lomac_check_vnode_mmap
+name|lomac_check_vnode_mmap
 block|,
 operator|.
 name|mpo_check_vnode_mmap_downgrade
 operator|=
-name|mac_lomac_check_vnode_mmap_downgrade
+name|lomac_check_vnode_mmap_downgrade
 block|,
 operator|.
 name|mpo_check_vnode_open
 operator|=
-name|mac_lomac_check_vnode_open
+name|lomac_check_vnode_open
 block|,
 operator|.
 name|mpo_check_vnode_read
 operator|=
-name|mac_lomac_check_vnode_read
+name|lomac_check_vnode_read
 block|,
 operator|.
 name|mpo_check_vnode_relabel
 operator|=
-name|mac_lomac_check_vnode_relabel
+name|lomac_check_vnode_relabel
 block|,
 operator|.
 name|mpo_check_vnode_rename_from
 operator|=
-name|mac_lomac_check_vnode_rename_from
+name|lomac_check_vnode_rename_from
 block|,
 operator|.
 name|mpo_check_vnode_rename_to
 operator|=
-name|mac_lomac_check_vnode_rename_to
+name|lomac_check_vnode_rename_to
 block|,
 operator|.
 name|mpo_check_vnode_revoke
 operator|=
-name|mac_lomac_check_vnode_revoke
+name|lomac_check_vnode_revoke
 block|,
 operator|.
 name|mpo_check_vnode_setacl
 operator|=
-name|mac_lomac_check_vnode_setacl
+name|lomac_check_vnode_setacl
 block|,
 operator|.
 name|mpo_check_vnode_setextattr
 operator|=
-name|mac_lomac_check_vnode_setextattr
+name|lomac_check_vnode_setextattr
 block|,
 operator|.
 name|mpo_check_vnode_setflags
 operator|=
-name|mac_lomac_check_vnode_setflags
+name|lomac_check_vnode_setflags
 block|,
 operator|.
 name|mpo_check_vnode_setmode
 operator|=
-name|mac_lomac_check_vnode_setmode
+name|lomac_check_vnode_setmode
 block|,
 operator|.
 name|mpo_check_vnode_setowner
 operator|=
-name|mac_lomac_check_vnode_setowner
+name|lomac_check_vnode_setowner
 block|,
 operator|.
 name|mpo_check_vnode_setutimes
 operator|=
-name|mac_lomac_check_vnode_setutimes
+name|lomac_check_vnode_setutimes
 block|,
 operator|.
 name|mpo_check_vnode_unlink
 operator|=
-name|mac_lomac_check_vnode_unlink
+name|lomac_check_vnode_unlink
 block|,
 operator|.
 name|mpo_check_vnode_write
 operator|=
-name|mac_lomac_check_vnode_write
+name|lomac_check_vnode_write
 block|,
 operator|.
 name|mpo_thread_userret
 operator|=
-name|mac_lomac_thread_userret
+name|lomac_thread_userret
 block|,
 operator|.
 name|mpo_create_mbuf_from_firewall
 operator|=
-name|mac_lomac_create_mbuf_from_firewall
+name|lomac_create_mbuf_from_firewall
 block|,
 operator|.
 name|mpo_priv_check
 operator|=
-name|mac_lomac_priv_check
+name|lomac_priv_check
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -12918,7 +12918,7 @@ begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
 operator|&
-name|mac_lomac_ops
+name|lomac_ops
 argument_list|,
 name|mac_lomac
 argument_list|,
@@ -12929,7 +12929,7 @@ operator||
 name|MPC_LOADTIME_FLAG_LABELMBUFS
 argument_list|,
 operator|&
-name|mac_lomac_slot
+name|lomac_slot
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -35,7 +35,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mac_policy_ops
-name|mac_none_ops
+name|none_ops
 init|=
 block|{ }
 decl_stmt|;
@@ -45,7 +45,7 @@ begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
 operator|&
-name|mac_none_ops
+name|none_ops
 argument_list|,
 name|mac_none
 argument_list|,

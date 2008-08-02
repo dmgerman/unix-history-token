@@ -264,7 +264,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_mls_label_size
+name|mls_label_size
 init|=
 sizeof|sizeof
 argument_list|(
@@ -286,7 +286,7 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|mac_mls_label_size
+name|mls_label_size
 argument_list|,
 literal|0
 argument_list|,
@@ -298,7 +298,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_mls_enabled
+name|mls_enabled
 init|=
 literal|1
 decl_stmt|;
@@ -316,7 +316,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|mac_mls_enabled
+name|mls_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -331,7 +331,7 @@ argument_list|(
 literal|"security.mac.mls.enabled"
 argument_list|,
 operator|&
-name|mac_mls_enabled
+name|mls_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -479,7 +479,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mac_mls_slot
+name|mls_slot
 decl_stmt|;
 end_decl_stmt
 
@@ -490,7 +490,7 @@ name|SLOT
 parameter_list|(
 name|l
 parameter_list|)
-value|((struct mac_mls *)mac_label_get((l), mac_mls_slot))
+value|((struct mac_mls *)mac_label_get((l), mls_slot))
 end_define
 
 begin_define
@@ -502,7 +502,7 @@ name|l
 parameter_list|,
 name|val
 parameter_list|)
-value|mac_label_set((l), mac_mls_slot, (uintptr_t)(val))
+value|mac_label_set((l), mls_slot, (uintptr_t)(val))
 end_define
 
 begin_decl_stmt
@@ -597,12 +597,12 @@ parameter_list|(
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 parameter_list|)
 block|{
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|!=
 name|NULL
 condition|)
@@ -610,7 +610,7 @@ name|uma_zfree
 argument_list|(
 name|zone_mls
 argument_list|,
-name|mac_mls
+name|mm
 argument_list|)
 expr_stmt|;
 else|else
@@ -633,7 +633,7 @@ parameter_list|(
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 parameter_list|,
 name|int
 name|flags
@@ -642,14 +642,14 @@ block|{
 if|if
 condition|(
 operator|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator|&
 name|flags
 operator|)
 operator|!=
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 condition|)
@@ -669,7 +669,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_dominate_element
+name|mls_dominate_element
 parameter_list|(
 name|struct
 name|mac_mls_element
@@ -738,7 +738,7 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"mac_mls_dominate_element: b->mme_type invalid"
+literal|"mls_dominate_element: b->mme_type invalid"
 argument_list|)
 expr_stmt|;
 block|}
@@ -827,14 +827,14 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"mac_mls_dominate_element: b->mme_type invalid"
+literal|"mls_dominate_element: b->mme_type invalid"
 argument_list|)
 expr_stmt|;
 block|}
 default|default:
 name|panic
 argument_list|(
-literal|"mac_mls_dominate_element: a->mme_type invalid"
+literal|"mls_dominate_element: a->mme_type invalid"
 argument_list|)
 expr_stmt|;
 block|}
@@ -849,7 +849,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_range_in_range
+name|mls_range_in_range
 parameter_list|(
 name|struct
 name|mac_mls
@@ -864,7 +864,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|mac_mls_dominate_element
+name|mls_dominate_element
 argument_list|(
 operator|&
 name|rangeb
@@ -877,7 +877,7 @@ operator|->
 name|mm_rangehigh
 argument_list|)
 operator|&&
-name|mac_mls_dominate_element
+name|mls_dominate_element
 argument_list|(
 operator|&
 name|rangea
@@ -897,7 +897,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 parameter_list|(
 name|struct
 name|mac_mls
@@ -923,7 +923,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_effective_in_range: a not effective"
+literal|"mls_effective_in_range: a not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -940,13 +940,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_effective_in_range: b not range"
+literal|"mls_effective_in_range: b not range"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_dominate_element
+name|mls_dominate_element
 argument_list|(
 operator|&
 name|range
@@ -959,7 +959,7 @@ operator|->
 name|mm_effective
 argument_list|)
 operator|&&
-name|mac_mls_dominate_element
+name|mls_dominate_element
 argument_list|(
 operator|&
 name|effective
@@ -984,7 +984,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 parameter_list|(
 name|struct
 name|mac_mls
@@ -1010,7 +1010,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_dominate_effective: a not effective"
+literal|"mls_dominate_effective: a not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1027,13 +1027,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_dominate_effective: b not effective"
+literal|"mls_dominate_effective: b not effective"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_dominate_element
+name|mls_dominate_element
 argument_list|(
 operator|&
 name|a
@@ -1053,7 +1053,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_equal_element
+name|mls_equal_element
 parameter_list|(
 name|struct
 name|mac_mls_element
@@ -1110,7 +1110,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_equal_effective
+name|mls_equal_effective
 parameter_list|(
 name|struct
 name|mac_mls
@@ -1136,7 +1136,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_equal_effective: a not effective"
+literal|"mls_equal_effective: a not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1153,13 +1153,13 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_equal_effective: b not effective"
+literal|"mls_equal_effective: b not effective"
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_equal_element
+name|mls_equal_element
 argument_list|(
 operator|&
 name|a
@@ -1179,17 +1179,17 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_contains_equal
+name|mls_contains_equal
 parameter_list|(
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 parameter_list|)
 block|{
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator|&
@@ -1197,7 +1197,7 @@ name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1212,7 +1212,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator|&
@@ -1221,7 +1221,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1236,7 +1236,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1261,18 +1261,18 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_subject_privileged
+name|mls_subject_privileged
 parameter_list|(
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
 operator|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator|&
@@ -1282,14 +1282,14 @@ operator|==
 name|MAC_MLS_FLAGS_BOTH
 argument_list|,
 operator|(
-literal|"mac_mls_subject_privileged: subject doesn't have both labels"
+literal|"mls_subject_privileged: subject doesn't have both labels"
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/* If the effective is EQUAL, it's ok. */
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1305,7 +1305,7 @@ return|;
 comment|/* If either range endpoint is EQUAL, it's ok. */
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1313,7 +1313,7 @@ name|mme_type
 operator|==
 name|MAC_MLS_TYPE_EQUAL
 operator|||
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1329,7 +1329,7 @@ return|;
 comment|/* If the range is low-high, it's ok. */
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1337,7 +1337,7 @@ name|mme_type
 operator|==
 name|MAC_MLS_TYPE_LOW
 operator|&&
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1362,17 +1362,17 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_valid
+name|mls_valid
 parameter_list|(
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 parameter_list|)
 block|{
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator|&
@@ -1381,7 +1381,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1403,7 +1403,7 @@ name|MAC_MLS_TYPE_LOW
 case|:
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1414,7 +1414,7 @@ operator|||
 operator|!
 name|MAC_MLS_BIT_SET_EMPTY
 argument_list|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1439,7 +1439,7 @@ else|else
 block|{
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1455,7 +1455,7 @@ return|;
 block|}
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator|&
@@ -1464,7 +1464,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1486,7 +1486,7 @@ name|MAC_MLS_TYPE_LOW
 case|:
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1497,7 +1497,7 @@ operator|||
 operator|!
 name|MAC_MLS_BIT_SET_EMPTY
 argument_list|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1519,7 +1519,7 @@ return|;
 block|}
 switch|switch
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1541,7 +1541,7 @@ name|MAC_MLS_TYPE_LOW
 case|:
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1552,7 +1552,7 @@ operator|||
 operator|!
 name|MAC_MLS_BIT_SET_EMPTY
 argument_list|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1575,15 +1575,15 @@ block|}
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_element
+name|mls_dominate_element
 argument_list|(
 operator|&
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 argument_list|,
 operator|&
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 argument_list|)
@@ -1598,7 +1598,7 @@ else|else
 block|{
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1606,7 +1606,7 @@ name|mme_type
 operator|!=
 name|MAC_MLS_TYPE_UNDEF
 operator|||
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1631,12 +1631,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_set_range
+name|mls_set_range
 parameter_list|(
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 parameter_list|,
 name|u_short
 name|typelow
@@ -1659,7 +1659,7 @@ modifier|*
 name|compartmentshigh
 parameter_list|)
 block|{
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1667,7 +1667,7 @@ name|mme_type
 operator|=
 name|typelow
 expr_stmt|;
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1683,7 +1683,7 @@ name|NULL
 condition|)
 name|memcpy
 argument_list|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1693,7 +1693,7 @@ name|compartmentslow
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 operator|.
@@ -1701,7 +1701,7 @@ name|mme_compartments
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1709,7 +1709,7 @@ name|mme_type
 operator|=
 name|typehigh
 expr_stmt|;
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1725,7 +1725,7 @@ name|NULL
 condition|)
 name|memcpy
 argument_list|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1735,7 +1735,7 @@ name|compartmentshigh
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 operator|.
@@ -1743,7 +1743,7 @@ name|mme_compartments
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator||=
@@ -1755,12 +1755,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_set_effective
+name|mls_set_effective
 parameter_list|(
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 parameter_list|,
 name|u_short
 name|type
@@ -1773,7 +1773,7 @@ modifier|*
 name|compartments
 parameter_list|)
 block|{
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1781,7 +1781,7 @@ name|mme_type
 operator|=
 name|type
 expr_stmt|;
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1797,7 +1797,7 @@ name|NULL
 condition|)
 name|memcpy
 argument_list|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1807,7 +1807,7 @@ name|compartments
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 operator|.
@@ -1815,7 +1815,7 @@ name|mme_compartments
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator||=
@@ -1827,7 +1827,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_copy_range
+name|mls_copy_range
 parameter_list|(
 name|struct
 name|mac_mls
@@ -1853,7 +1853,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_copy_range: labelfrom not range"
+literal|"mls_copy_range: labelfrom not range"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1885,7 +1885,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_copy_effective
+name|mls_copy_effective
 parameter_list|(
 name|struct
 name|mac_mls
@@ -1911,7 +1911,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"mac_mls_copy_effective: labelfrom not effective"
+literal|"mls_copy_effective: labelfrom not effective"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1935,7 +1935,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_copy
+name|mls_copy
 parameter_list|(
 name|struct
 name|mac_mls
@@ -1956,7 +1956,7 @@ name|mm_flags
 operator|&
 name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -1971,7 +1971,7 @@ name|mm_flags
 operator|&
 name|MAC_MLS_FLAG_RANGE
 condition|)
-name|mac_mls_copy_range
+name|mls_copy_range
 argument_list|(
 name|source
 argument_list|,
@@ -1988,7 +1988,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_mls_init
+name|mls_init
 parameter_list|(
 name|struct
 name|mac_policy_conf
@@ -2031,7 +2031,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_mls_init_label
+name|mls_init_label
 parameter_list|(
 name|struct
 name|label
@@ -2055,7 +2055,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_init_label_waitcheck
+name|mls_init_label_waitcheck
 parameter_list|(
 name|struct
 name|label
@@ -2101,7 +2101,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_destroy_label
+name|mls_destroy_label
 parameter_list|(
 name|struct
 name|label
@@ -2128,13 +2128,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mac_mls_element_to_string() accepts an sbuf and MLS element.  It  * converts the MLS element to a string and stores the result in the  * sbuf; if there isn't space in the sbuf, -1 is returned.  */
+comment|/*  * mls_element_to_string() accepts an sbuf and MLS element.  It converts the  * MLS element to a string and stores the result in the sbuf; if there isn't  * space in the sbuf, -1 is returned.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|mac_mls_element_to_string
+name|mls_element_to_string
 parameter_list|(
 name|struct
 name|sbuf
@@ -2334,7 +2334,7 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"mac_mls_element_to_string: invalid type (%d)"
+literal|"mls_element_to_string: invalid type (%d)"
 argument_list|,
 name|element
 operator|->
@@ -2346,13 +2346,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mac_mls_to_string() converts an MLS label to a string, and places  * the results in the passed sbuf.  It returns 0 on success, or EINVAL  * if there isn't room in the sbuf.  Note: the sbuf will be modified  * even in a failure case, so the caller may need to revert the sbuf  * by restoring the offset if that's undesired.  */
+comment|/*  * mls_to_string() converts an MLS label to a string, and places the results  * in the passed sbuf.  It returns 0 on success, or EINVAL if there isn't  * room in the sbuf.  Note: the sbuf will be modified even in a failure case,  * so the caller may need to revert the sbuf by restoring the offset if  * that's undesired.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|mac_mls_to_string
+name|mls_to_string
 parameter_list|(
 name|struct
 name|sbuf
@@ -2362,12 +2362,12 @@ parameter_list|,
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 parameter_list|)
 block|{
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator|&
@@ -2376,12 +2376,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|mac_mls_element_to_string
+name|mls_element_to_string
 argument_list|(
 name|sb
 argument_list|,
 operator|&
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 argument_list|)
@@ -2397,7 +2397,7 @@ return|;
 block|}
 if|if
 condition|(
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator|&
@@ -2423,12 +2423,12 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_mls_element_to_string
+name|mls_element_to_string
 argument_list|(
 name|sb
 argument_list|,
 operator|&
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 argument_list|)
@@ -2460,12 +2460,12 @@ operator|)
 return|;
 if|if
 condition|(
-name|mac_mls_element_to_string
+name|mls_element_to_string
 argument_list|(
 name|sb
 argument_list|,
 operator|&
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 argument_list|)
@@ -2507,7 +2507,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_externalize_label
+name|mls_externalize_label
 parameter_list|(
 name|struct
 name|label
@@ -2531,7 +2531,7 @@ block|{
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 decl_stmt|;
 if|if
 condition|(
@@ -2555,7 +2555,7 @@ name|claimed
 operator|)
 operator|++
 expr_stmt|;
-name|mac_mls
+name|mm
 operator|=
 name|SLOT
 argument_list|(
@@ -2564,11 +2564,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_to_string
+name|mls_to_string
 argument_list|(
 name|sb
 argument_list|,
-name|mac_mls
+name|mm
 argument_list|)
 operator|)
 return|;
@@ -2578,7 +2578,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_parse_element
+name|mls_parse_element
 parameter_list|(
 name|struct
 name|mac_mls_element
@@ -2775,7 +2775,7 @@ name|mme_level
 operator|=
 name|value
 expr_stmt|;
-comment|/* 		 * Optional compartment piece of the element.  If none 		 * are included, we assume that the label has no 		 * compartments. 		 */
+comment|/* 		 * Optional compartment piece of the element.  If none are 		 * included, we assume that the label has no compartments. 		 */
 if|if
 condition|(
 name|string
@@ -2879,18 +2879,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note: destructively consumes the string, make a local copy before  * calling if that's a problem.  */
+comment|/*  * Note: destructively consumes the string, make a local copy before calling  * if that's a problem.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|mac_mls_parse
+name|mls_parse
 parameter_list|(
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 parameter_list|,
 name|char
 modifier|*
@@ -3027,18 +3027,18 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"mac_mls_parse: range mismatch"
+literal|"mls_parse: range mismatch"
 operator|)
 argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-name|mac_mls
+name|mm
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|mac_mls
+name|mm
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3051,10 +3051,10 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_parse_element
+name|mls_parse_element
 argument_list|(
 operator|&
-name|mac_mls
+name|mm
 operator|->
 name|mm_effective
 argument_list|,
@@ -3070,7 +3070,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator||=
@@ -3086,10 +3086,10 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_parse_element
+name|mls_parse_element
 argument_list|(
 operator|&
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangelow
 argument_list|,
@@ -3107,10 +3107,10 @@ operator|)
 return|;
 name|error
 operator|=
-name|mac_mls_parse_element
+name|mls_parse_element
 argument_list|(
 operator|&
-name|mac_mls
+name|mm
 operator|->
 name|mm_rangehigh
 argument_list|,
@@ -3126,7 +3126,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mac_mls
+name|mm
 operator|->
 name|mm_flags
 operator||=
@@ -3135,9 +3135,9 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|mac_mls_valid
+name|mls_valid
 argument_list|(
-name|mac_mls
+name|mm
 argument_list|)
 expr_stmt|;
 if|if
@@ -3160,7 +3160,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_internalize_label
+name|mls_internalize_label
 parameter_list|(
 name|struct
 name|label
@@ -3183,9 +3183,9 @@ block|{
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 decl_stmt|,
-name|mac_mls_temp
+name|mm_temp
 decl_stmt|;
 name|int
 name|error
@@ -3214,10 +3214,10 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|mac_mls_parse
+name|mls_parse
 argument_list|(
 operator|&
-name|mac_mls_temp
+name|mm_temp
 argument_list|,
 name|element_data
 argument_list|)
@@ -3231,7 +3231,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|mac_mls
+name|mm
 operator|=
 name|SLOT
 argument_list|(
@@ -3239,9 +3239,9 @@ name|label
 argument_list|)
 expr_stmt|;
 operator|*
-name|mac_mls
+name|mm
 operator|=
-name|mac_mls_temp
+name|mm_temp
 expr_stmt|;
 return|return
 operator|(
@@ -3254,7 +3254,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_copy_label
+name|mls_copy_label
 parameter_list|(
 name|struct
 name|label
@@ -3283,13 +3283,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Labeling event operations: file system objects, and things that look  * a lot like file system objects.  */
+comment|/*  * Labeling event operations: file system objects, and things that look a lot  * like file system objects.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_devfs_device
+name|mls_create_devfs_device
 parameter_list|(
 name|struct
 name|ucred
@@ -3320,12 +3320,12 @@ block|{
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 decl_stmt|;
 name|int
 name|mls_type
 decl_stmt|;
-name|mac_mls
+name|mm
 operator|=
 name|SLOT
 argument_list|(
@@ -3464,9 +3464,9 @@ name|mls_type
 operator|=
 name|MAC_MLS_TYPE_LOW
 expr_stmt|;
-name|mac_mls_set_effective
+name|mls_set_effective
 argument_list|(
-name|mac_mls
+name|mm
 argument_list|,
 name|mls_type
 argument_list|,
@@ -3481,7 +3481,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_devfs_directory
+name|mls_create_devfs_directory
 parameter_list|(
 name|struct
 name|mount
@@ -3509,18 +3509,18 @@ block|{
 name|struct
 name|mac_mls
 modifier|*
-name|mac_mls
+name|mm
 decl_stmt|;
-name|mac_mls
+name|mm
 operator|=
 name|SLOT
 argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_effective
+name|mls_set_effective
 argument_list|(
-name|mac_mls
+name|mm
 argument_list|,
 name|MAC_MLS_TYPE_LOW
 argument_list|,
@@ -3535,7 +3535,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_devfs_symlink
+name|mls_create_devfs_symlink
 parameter_list|(
 name|struct
 name|ucred
@@ -3592,7 +3592,7 @@ argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3605,7 +3605,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mount
+name|mls_create_mount
 parameter_list|(
 name|struct
 name|ucred
@@ -3647,7 +3647,7 @@ argument_list|(
 name|mplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3660,7 +3660,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_relabel_vnode
+name|mls_relabel_vnode
 parameter_list|(
 name|struct
 name|ucred
@@ -3705,7 +3705,7 @@ argument_list|(
 name|vplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy
+name|mls_copy
 argument_list|(
 name|source
 argument_list|,
@@ -3718,7 +3718,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_update_devfs
+name|mls_update_devfs
 parameter_list|(
 name|struct
 name|mount
@@ -3768,7 +3768,7 @@ argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3781,7 +3781,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_associate_vnode_devfs
+name|mls_associate_vnode_devfs
 parameter_list|(
 name|struct
 name|mount
@@ -3836,7 +3836,7 @@ argument_list|(
 name|vplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3849,7 +3849,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_associate_vnode_extattr
+name|mls_associate_vnode_extattr
 parameter_list|(
 name|struct
 name|mount
@@ -3953,7 +3953,7 @@ name|EOPNOTSUPP
 condition|)
 block|{
 comment|/* Fall back to the mntlabel. */
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -3988,7 +3988,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mac_mls_associate_vnode_extattr: bad size %d\n"
+literal|"mls_associate_vnode_extattr: bad size %d\n"
 argument_list|,
 name|buflen
 argument_list|)
@@ -4001,7 +4001,7 @@ return|;
 block|}
 if|if
 condition|(
-name|mac_mls_valid
+name|mls_valid
 argument_list|(
 operator|&
 name|temp
@@ -4012,7 +4012,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mac_mls_associate_vnode_extattr: invalid\n"
+literal|"mls_associate_vnode_extattr: invalid\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4036,7 +4036,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mac_mls_associated_vnode_extattr: not effective\n"
+literal|"mls_associated_vnode_extattr: not effective\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4045,7 +4045,7 @@ name|EPERM
 operator|)
 return|;
 block|}
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 operator|&
 name|temp
@@ -4064,7 +4064,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_associate_vnode_singlelabel
+name|mls_associate_vnode_singlelabel
 parameter_list|(
 name|struct
 name|mount
@@ -4109,7 +4109,7 @@ argument_list|(
 name|vplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4122,7 +4122,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_create_vnode_extattr
+name|mls_create_vnode_extattr
 parameter_list|(
 name|struct
 name|ucred
@@ -4212,7 +4212,7 @@ argument_list|(
 name|vplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4250,7 +4250,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4268,7 +4268,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_setlabel_vnode_extattr
+name|mls_setlabel_vnode_extattr
 parameter_list|(
 name|struct
 name|ucred
@@ -4343,7 +4343,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4390,7 +4390,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_inpcb_from_socket
+name|mls_create_inpcb_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -4435,7 +4435,7 @@ argument_list|(
 name|inplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4448,7 +4448,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mbuf_from_socket
+name|mls_create_mbuf_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -4493,7 +4493,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4506,7 +4506,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_socket
+name|mls_create_socket
 parameter_list|(
 name|struct
 name|ucred
@@ -4548,7 +4548,7 @@ argument_list|(
 name|solabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4561,7 +4561,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_pipe
+name|mls_create_pipe
 parameter_list|(
 name|struct
 name|ucred
@@ -4603,7 +4603,7 @@ argument_list|(
 name|pplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4616,7 +4616,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_posix_sem
+name|mls_create_posix_sem
 parameter_list|(
 name|struct
 name|ucred
@@ -4658,7 +4658,7 @@ argument_list|(
 name|kslabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4671,7 +4671,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_socket_from_socket
+name|mls_create_socket_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -4716,7 +4716,7 @@ argument_list|(
 name|newsolabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4729,7 +4729,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_relabel_socket
+name|mls_relabel_socket
 parameter_list|(
 name|struct
 name|ucred
@@ -4774,7 +4774,7 @@ argument_list|(
 name|solabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy
+name|mls_copy
 argument_list|(
 name|source
 argument_list|,
@@ -4787,7 +4787,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_relabel_pipe
+name|mls_relabel_pipe
 parameter_list|(
 name|struct
 name|ucred
@@ -4832,7 +4832,7 @@ argument_list|(
 name|pplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy
+name|mls_copy
 argument_list|(
 name|source
 argument_list|,
@@ -4845,7 +4845,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_set_socket_peer_from_mbuf
+name|mls_set_socket_peer_from_mbuf
 parameter_list|(
 name|struct
 name|mbuf
@@ -4890,7 +4890,7 @@ argument_list|(
 name|sopeerlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4907,7 +4907,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_sysv_msgmsg
+name|mls_create_sysv_msgmsg
 parameter_list|(
 name|struct
 name|ucred
@@ -4960,7 +4960,7 @@ argument_list|(
 name|msglabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -4973,7 +4973,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_sysv_msgqueue
+name|mls_create_sysv_msgqueue
 parameter_list|(
 name|struct
 name|ucred
@@ -5015,7 +5015,7 @@ argument_list|(
 name|msqlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5028,7 +5028,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_sysv_sem
+name|mls_create_sysv_sem
 parameter_list|(
 name|struct
 name|ucred
@@ -5070,7 +5070,7 @@ argument_list|(
 name|semalabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5083,7 +5083,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_sysv_shm
+name|mls_create_sysv_shm
 parameter_list|(
 name|struct
 name|ucred
@@ -5125,7 +5125,7 @@ argument_list|(
 name|shmlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5142,7 +5142,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_mls_set_socket_peer_from_socket
+name|mls_set_socket_peer_from_socket
 parameter_list|(
 name|struct
 name|socket
@@ -5187,7 +5187,7 @@ argument_list|(
 name|newsopeerlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5200,7 +5200,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_bpfdesc
+name|mls_create_bpfdesc
 parameter_list|(
 name|struct
 name|ucred
@@ -5242,7 +5242,7 @@ argument_list|(
 name|dlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5255,7 +5255,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_ifnet
+name|mls_create_ifnet
 parameter_list|(
 name|struct
 name|ifnet
@@ -5300,7 +5300,7 @@ name|type
 operator|=
 name|MAC_MLS_TYPE_LOW
 expr_stmt|;
-name|mac_mls_set_effective
+name|mls_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -5311,7 +5311,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_range
+name|mls_set_range
 argument_list|(
 name|dest
 argument_list|,
@@ -5334,7 +5334,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_ipq
+name|mls_create_ipq
 parameter_list|(
 name|struct
 name|mbuf
@@ -5379,7 +5379,7 @@ argument_list|(
 name|ipqlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5392,7 +5392,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_datagram_from_ipq
+name|mls_create_datagram_from_ipq
 parameter_list|(
 name|struct
 name|ipq
@@ -5438,7 +5438,7 @@ name|mlabel
 argument_list|)
 expr_stmt|;
 comment|/* Just use the head, since we require them all to match. */
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5451,7 +5451,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_fragment
+name|mls_create_fragment
 parameter_list|(
 name|struct
 name|mbuf
@@ -5496,7 +5496,7 @@ argument_list|(
 name|fraglabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5509,7 +5509,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mbuf_from_inpcb
+name|mls_create_mbuf_from_inpcb
 parameter_list|(
 name|struct
 name|inpcb
@@ -5554,7 +5554,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5567,7 +5567,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mbuf_linklayer
+name|mls_create_mbuf_linklayer
 parameter_list|(
 name|struct
 name|ifnet
@@ -5602,7 +5602,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_effective
+name|mls_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -5619,7 +5619,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mbuf_from_bpfdesc
+name|mls_create_mbuf_from_bpfdesc
 parameter_list|(
 name|struct
 name|bpf_d
@@ -5664,7 +5664,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5677,7 +5677,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mbuf_from_ifnet
+name|mls_create_mbuf_from_ifnet
 parameter_list|(
 name|struct
 name|ifnet
@@ -5722,7 +5722,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5735,7 +5735,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mbuf_multicast_encap
+name|mls_create_mbuf_multicast_encap
 parameter_list|(
 name|struct
 name|mbuf
@@ -5790,7 +5790,7 @@ argument_list|(
 name|mnewlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5803,7 +5803,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mbuf_netlayer
+name|mls_create_mbuf_netlayer
 parameter_list|(
 name|struct
 name|mbuf
@@ -5848,7 +5848,7 @@ argument_list|(
 name|mnewlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -5861,7 +5861,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_fragment_match
+name|mls_fragment_match
 parameter_list|(
 name|struct
 name|mbuf
@@ -5908,7 +5908,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_equal_effective
+name|mls_equal_effective
 argument_list|(
 name|a
 argument_list|,
@@ -5922,7 +5922,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_relabel_ifnet
+name|mls_relabel_ifnet
 parameter_list|(
 name|struct
 name|ucred
@@ -5967,7 +5967,7 @@ argument_list|(
 name|ifplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy
+name|mls_copy
 argument_list|(
 name|source
 argument_list|,
@@ -5980,7 +5980,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_update_ipq
+name|mls_update_ipq
 parameter_list|(
 name|struct
 name|mbuf
@@ -6010,7 +6010,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_inpcb_sosetlabel
+name|mls_inpcb_sosetlabel
 parameter_list|(
 name|struct
 name|socket
@@ -6055,7 +6055,7 @@ argument_list|(
 name|inplabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy
+name|mls_copy
 argument_list|(
 name|source
 argument_list|,
@@ -6068,7 +6068,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mbuf_from_firewall
+name|mls_create_mbuf_from_firewall
 parameter_list|(
 name|struct
 name|mbuf
@@ -6094,7 +6094,7 @@ name|mlabel
 argument_list|)
 expr_stmt|;
 comment|/* XXX: where is the label for the firewall really comming from? */
-name|mac_mls_set_effective
+name|mls_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -6111,7 +6111,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_init_syncache_from_inpcb
+name|mls_init_syncache_from_inpcb
 parameter_list|(
 name|struct
 name|label
@@ -6148,7 +6148,7 @@ argument_list|(
 name|label
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -6161,7 +6161,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_mbuf_from_syncache
+name|mls_create_mbuf_from_syncache
 parameter_list|(
 name|struct
 name|label
@@ -6201,7 +6201,7 @@ argument_list|(
 name|mlabel
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy_effective
+name|mls_copy_effective
 argument_list|(
 name|source
 argument_list|,
@@ -6218,7 +6218,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_proc0
+name|mls_create_proc0
 parameter_list|(
 name|struct
 name|ucred
@@ -6240,7 +6240,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_effective
+name|mls_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -6251,7 +6251,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_range
+name|mls_set_range
 argument_list|(
 name|dest
 argument_list|,
@@ -6274,7 +6274,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_create_proc1
+name|mls_create_proc1
 parameter_list|(
 name|struct
 name|ucred
@@ -6296,7 +6296,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_effective
+name|mls_set_effective
 argument_list|(
 name|dest
 argument_list|,
@@ -6307,7 +6307,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_range
+name|mls_set_range
 argument_list|(
 name|dest
 argument_list|,
@@ -6330,7 +6330,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_relabel_cred
+name|mls_relabel_cred
 parameter_list|(
 name|struct
 name|ucred
@@ -6367,7 +6367,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_mls_copy
+name|mls_copy
 argument_list|(
 name|source
 argument_list|,
@@ -6384,7 +6384,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_mls_cleanup_sysv_msgmsg
+name|mls_cleanup_sysv_msgmsg
 parameter_list|(
 name|struct
 name|label
@@ -6412,7 +6412,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_cleanup_sysv_msgqueue
+name|mls_cleanup_sysv_msgqueue
 parameter_list|(
 name|struct
 name|label
@@ -6440,7 +6440,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_cleanup_sysv_sem
+name|mls_cleanup_sysv_sem
 parameter_list|(
 name|struct
 name|label
@@ -6468,7 +6468,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_cleanup_sysv_shm
+name|mls_cleanup_sysv_shm
 parameter_list|(
 name|struct
 name|label
@@ -6500,7 +6500,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_bpfdesc_receive
+name|mls_check_bpfdesc_receive
 parameter_list|(
 name|struct
 name|bpf_d
@@ -6534,7 +6534,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -6557,7 +6557,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_mls_equal_effective
+name|mls_equal_effective
 argument_list|(
 name|a
 argument_list|,
@@ -6580,7 +6580,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_cred_relabel
+name|mls_check_cred_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -6620,7 +6620,7 @@ argument_list|(
 name|newlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is an MLS label update for the credential, it may be 	 * an update of effective, range, or both. 	 */
+comment|/* 	 * If there is an MLS label update for the credential, it may be an 	 * update of effective, range, or both. 	 */
 name|error
 operator|=
 name|mls_atmostflags
@@ -6649,7 +6649,7 @@ operator|&
 name|MAC_MLS_FLAGS_BOTH
 condition|)
 block|{
-comment|/* 		 * If the change request modifies both the MLS label effective 		 * and range, check that the new effective will be in the 		 * new range. 		 */
+comment|/* 		 * If the change request modifies both the MLS label 		 * effective and range, check that the new effective will be 		 * in the new range. 		 */
 if|if
 condition|(
 operator|(
@@ -6663,7 +6663,7 @@ operator|==
 name|MAC_MLS_FLAGS_BOTH
 operator|&&
 operator|!
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -6675,7 +6675,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 		 * To change the MLS effective label on a credential, the 		 * new effective label must be in the current range. 		 */
+comment|/* 		 * To change the MLS effective label on a credential, the new 		 * effective label must be in the current range. 		 */
 if|if
 condition|(
 name|new
@@ -6685,7 +6685,7 @@ operator|&
 name|MAC_MLS_FLAG_EFFECTIVE
 operator|&&
 operator|!
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -6697,7 +6697,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * To change the MLS range label on a credential, the 		 * new range must be in the current range. 		 */
+comment|/* 		 * To change the MLS range label on a credential, the new 		 * range must be in the current range. 		 */
 if|if
 condition|(
 name|new
@@ -6707,7 +6707,7 @@ operator|&
 name|MAC_MLS_FLAG_RANGE
 operator|&&
 operator|!
-name|mac_mls_range_in_range
+name|mls_range_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -6719,10 +6719,10 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * To have EQUAL in any component of the new credential 		 * MLS label, the subject must already have EQUAL in 		 * their label. 		 */
+comment|/* 		 * To have EQUAL in any component of the new credential MLS 		 * label, the subject must already have EQUAL in their label. 		 */
 if|if
 condition|(
-name|mac_mls_contains_equal
+name|mls_contains_equal
 argument_list|(
 name|new
 argument_list|)
@@ -6730,7 +6730,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_subject_privileged
+name|mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -6757,7 +6757,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_cred_visible
+name|mls_check_cred_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -6781,7 +6781,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -6810,7 +6810,7 @@ comment|/* XXX: range */
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -6833,7 +6833,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_ifnet_relabel
+name|mls_check_ifnet_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -6883,7 +6883,7 @@ argument_list|(
 name|newlabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is an MLS label update for the interface, it may 	 * be an update of effective, range, or both. 	 */
+comment|/* 	 * If there is an MLS label update for the interface, it may be an 	 * update of effective, range, or both. 	 */
 name|error
 operator|=
 name|mls_atmostflags
@@ -6905,7 +6905,7 @@ return|;
 comment|/* 	 * Relabeling network interfaces requires MLS privilege. 	 */
 return|return
 operator|(
-name|mac_mls_subject_privileged
+name|mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -6917,7 +6917,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_ifnet_transmit
+name|mls_check_ifnet_transmit
 parameter_list|(
 name|struct
 name|ifnet
@@ -6951,7 +6951,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -6974,7 +6974,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 argument_list|(
 name|p
 argument_list|,
@@ -6992,7 +6992,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_inpcb_deliver
+name|mls_check_inpcb_deliver
 parameter_list|(
 name|struct
 name|inpcb
@@ -7026,7 +7026,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7049,7 +7049,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_equal_effective
+name|mls_equal_effective
 argument_list|(
 name|p
 argument_list|,
@@ -7067,7 +7067,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_msgrcv
+name|mls_check_sysv_msgrcv
 parameter_list|(
 name|struct
 name|ucred
@@ -7096,7 +7096,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7122,7 +7122,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7145,7 +7145,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_msgrmid
+name|mls_check_sysv_msgrmid
 parameter_list|(
 name|struct
 name|ucred
@@ -7174,7 +7174,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7200,7 +7200,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7223,7 +7223,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_msqget
+name|mls_check_sysv_msqget
 parameter_list|(
 name|struct
 name|ucred
@@ -7252,7 +7252,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7278,7 +7278,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7301,7 +7301,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_msqsnd
+name|mls_check_sysv_msqsnd
 parameter_list|(
 name|struct
 name|ucred
@@ -7330,7 +7330,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7356,7 +7356,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7379,7 +7379,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_msqrcv
+name|mls_check_sysv_msqrcv
 parameter_list|(
 name|struct
 name|ucred
@@ -7408,7 +7408,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7434,7 +7434,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7457,7 +7457,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_msqctl
+name|mls_check_sysv_msqctl
 parameter_list|(
 name|struct
 name|ucred
@@ -7489,7 +7489,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7526,7 +7526,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7545,7 +7545,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7576,7 +7576,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_semctl
+name|mls_check_sysv_semctl
 parameter_list|(
 name|struct
 name|ucred
@@ -7608,7 +7608,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7651,7 +7651,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7685,7 +7685,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7716,7 +7716,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_semget
+name|mls_check_sysv_semget
 parameter_list|(
 name|struct
 name|ucred
@@ -7745,7 +7745,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7771,7 +7771,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7794,7 +7794,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_semop
+name|mls_check_sysv_semop
 parameter_list|(
 name|struct
 name|ucred
@@ -7826,7 +7826,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7858,7 +7858,7 @@ condition|)
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7879,7 +7879,7 @@ condition|)
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -7902,7 +7902,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_shmat
+name|mls_check_sysv_shmat
 parameter_list|(
 name|struct
 name|ucred
@@ -7934,7 +7934,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -7960,7 +7960,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -7985,7 +7985,7 @@ condition|)
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8008,7 +8008,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_shmctl
+name|mls_check_sysv_shmctl
 parameter_list|(
 name|struct
 name|ucred
@@ -8040,7 +8040,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8077,7 +8077,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8099,7 +8099,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8130,7 +8130,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_sysv_shmget
+name|mls_check_sysv_shmget
 parameter_list|(
 name|struct
 name|ucred
@@ -8162,7 +8162,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8188,7 +8188,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8211,7 +8211,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_mount_stat
+name|mls_check_mount_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -8240,7 +8240,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8266,7 +8266,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8289,7 +8289,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_pipe_ioctl
+name|mls_check_pipe_ioctl
 parameter_list|(
 name|struct
 name|ucred
@@ -8319,7 +8319,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8338,7 +8338,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_pipe_poll
+name|mls_check_pipe_poll
 parameter_list|(
 name|struct
 name|ucred
@@ -8367,7 +8367,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8393,7 +8393,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8416,7 +8416,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_pipe_read
+name|mls_check_pipe_read
 parameter_list|(
 name|struct
 name|ucred
@@ -8445,7 +8445,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8471,7 +8471,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8494,7 +8494,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_pipe_relabel
+name|mls_check_pipe_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -8554,7 +8554,7 @@ argument_list|(
 name|pplabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is an MLS label update for a pipe, it must be a 	 * effective update. 	 */
+comment|/* 	 * If there is an MLS label update for a pipe, it must be a effective 	 * update. 	 */
 name|error
 operator|=
 name|mls_atmostflags
@@ -8577,7 +8577,7 @@ comment|/* 	 * To perform a relabel of a pipe (MLS label or not), MLS must 	 * a
 if|if
 condition|(
 operator|!
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 argument_list|(
 name|obj
 argument_list|,
@@ -8599,11 +8599,11 @@ operator|&
 name|MAC_MLS_FLAG_EFFECTIVE
 condition|)
 block|{
-comment|/* 		 * To change the MLS label on a pipe, the new pipe label 		 * must be in the subject range. 		 */
+comment|/* 		 * To change the MLS label on a pipe, the new pipe label must 		 * be in the subject range. 		 */
 if|if
 condition|(
 operator|!
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -8615,10 +8615,10 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * To change the MLS label on a pipe to be EQUAL, the 		 * subject must have appropriate privilege. 		 */
+comment|/* 		 * To change the MLS label on a pipe to be EQUAL, the subject 		 * must have appropriate privilege. 		 */
 if|if
 condition|(
-name|mac_mls_contains_equal
+name|mls_contains_equal
 argument_list|(
 name|new
 argument_list|)
@@ -8626,7 +8626,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_subject_privileged
+name|mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -8653,7 +8653,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_pipe_stat
+name|mls_check_pipe_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -8682,7 +8682,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8708,7 +8708,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8731,7 +8731,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_pipe_write
+name|mls_check_pipe_write
 parameter_list|(
 name|struct
 name|ucred
@@ -8760,7 +8760,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8786,7 +8786,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8809,7 +8809,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_posix_sem_write
+name|mls_check_posix_sem_write
 parameter_list|(
 name|struct
 name|ucred
@@ -8838,7 +8838,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8864,7 +8864,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -8887,7 +8887,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_posix_sem_rdonly
+name|mls_check_posix_sem_rdonly
 parameter_list|(
 name|struct
 name|ucred
@@ -8916,7 +8916,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -8942,7 +8942,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -8965,7 +8965,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_proc_debug
+name|mls_check_proc_debug
 parameter_list|(
 name|struct
 name|ucred
@@ -8989,7 +8989,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9020,7 +9020,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9035,7 +9035,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9058,7 +9058,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_proc_sched
+name|mls_check_proc_sched
 parameter_list|(
 name|struct
 name|ucred
@@ -9082,7 +9082,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9113,7 +9113,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9128,7 +9128,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9151,7 +9151,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_proc_signal
+name|mls_check_proc_signal
 parameter_list|(
 name|struct
 name|ucred
@@ -9178,7 +9178,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9209,7 +9209,7 @@ comment|/* XXX: range checks */
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9224,7 +9224,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9247,7 +9247,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_socket_deliver
+name|mls_check_socket_deliver
 parameter_list|(
 name|struct
 name|socket
@@ -9281,7 +9281,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9304,7 +9304,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mac_mls_equal_effective
+name|mls_equal_effective
 argument_list|(
 name|p
 argument_list|,
@@ -9322,7 +9322,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_socket_relabel
+name|mls_check_socket_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -9382,7 +9382,7 @@ argument_list|(
 name|solabel
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is an MLS label update for the socket, it may be 	 * an update of effective. 	 */
+comment|/* 	 * If there is an MLS label update for the socket, it may be an 	 * update of effective. 	 */
 name|error
 operator|=
 name|mls_atmostflags
@@ -9401,11 +9401,11 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * To relabel a socket, the old socket effective must be in the subject 	 * range. 	 */
+comment|/* 	 * To relabel a socket, the old socket effective must be in the 	 * subject range. 	 */
 if|if
 condition|(
 operator|!
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 argument_list|(
 name|obj
 argument_list|,
@@ -9431,7 +9431,7 @@ comment|/* 		 * To relabel a socket, the new socket effective must be in 		 * th
 if|if
 condition|(
 operator|!
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -9446,7 +9446,7 @@ return|;
 comment|/* 		 * To change the MLS label on the socket to contain EQUAL, 		 * the subject must have appropriate privilege. 		 */
 if|if
 condition|(
-name|mac_mls_contains_equal
+name|mls_contains_equal
 argument_list|(
 name|new
 argument_list|)
@@ -9454,7 +9454,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_subject_privileged
+name|mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -9481,7 +9481,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_socket_visible
+name|mls_check_socket_visible
 parameter_list|(
 name|struct
 name|ucred
@@ -9510,7 +9510,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9536,7 +9536,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9559,7 +9559,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_system_acct
+name|mls_check_system_acct
 parameter_list|(
 name|struct
 name|ucred
@@ -9588,7 +9588,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9614,7 +9614,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9622,7 +9622,7 @@ name|subj
 argument_list|)
 operator|||
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9645,7 +9645,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_system_auditctl
+name|mls_check_system_auditctl
 parameter_list|(
 name|struct
 name|ucred
@@ -9674,7 +9674,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9700,7 +9700,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9708,7 +9708,7 @@ name|subj
 argument_list|)
 operator|||
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9731,7 +9731,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_system_swapon
+name|mls_check_system_swapon
 parameter_list|(
 name|struct
 name|ucred
@@ -9760,7 +9760,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9786,7 +9786,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -9794,7 +9794,7 @@ name|subj
 argument_list|)
 operator|||
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9817,7 +9817,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_chdir
+name|mls_check_vnode_chdir
 parameter_list|(
 name|struct
 name|ucred
@@ -9846,7 +9846,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9872,7 +9872,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9895,7 +9895,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_chroot
+name|mls_check_vnode_chroot
 parameter_list|(
 name|struct
 name|ucred
@@ -9924,7 +9924,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -9950,7 +9950,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -9973,7 +9973,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_create
+name|mls_check_vnode_create
 parameter_list|(
 name|struct
 name|ucred
@@ -10012,7 +10012,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -10038,7 +10038,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10061,7 +10061,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_deleteacl
+name|mls_check_vnode_deleteacl
 parameter_list|(
 name|struct
 name|ucred
@@ -10093,7 +10093,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -10119,7 +10119,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10142,7 +10142,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_deleteextattr
+name|mls_check_vnode_deleteextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -10179,7 +10179,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -10205,7 +10205,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10228,7 +10228,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_exec
+name|mls_check_vnode_exec
 parameter_list|(
 name|struct
 name|ucred
@@ -10277,7 +10277,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * We currently don't permit labels to be changed at 		 * exec-time as part of MLS, so disallow non-NULL 		 * MLS label elements in the execlabel. 		 */
+comment|/* 		 * We currently don't permit labels to be changed at 		 * exec-time as part of MLS, so disallow non-NULL MLS label 		 * elements in the execlabel. 		 */
 name|exec
 operator|=
 name|SLOT
@@ -10307,7 +10307,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -10333,7 +10333,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10356,7 +10356,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_getacl
+name|mls_check_vnode_getacl
 parameter_list|(
 name|struct
 name|ucred
@@ -10388,7 +10388,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -10414,7 +10414,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10437,7 +10437,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_getextattr
+name|mls_check_vnode_getextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -10479,7 +10479,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -10505,7 +10505,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10528,7 +10528,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_link
+name|mls_check_vnode_link
 parameter_list|(
 name|struct
 name|ucred
@@ -10572,7 +10572,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -10598,7 +10598,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10620,7 +10620,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10643,7 +10643,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_listextattr
+name|mls_check_vnode_listextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -10675,7 +10675,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -10701,7 +10701,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10724,7 +10724,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_lookup
+name|mls_check_vnode_lookup
 parameter_list|(
 name|struct
 name|ucred
@@ -10758,7 +10758,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -10784,7 +10784,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10807,7 +10807,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_mmap
+name|mls_check_vnode_mmap
 parameter_list|(
 name|struct
 name|ucred
@@ -10843,7 +10843,7 @@ comment|/* 	 * Rely on the use of open()-time protections to handle 	 * non-revo
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 operator|||
 operator|!
 name|revocation_enabled
@@ -10883,7 +10883,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -10922,7 +10922,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -10946,7 +10946,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_open
+name|mls_check_vnode_open
 parameter_list|(
 name|struct
 name|ucred
@@ -10978,7 +10978,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -11018,7 +11018,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11047,7 +11047,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -11071,7 +11071,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_poll
+name|mls_check_vnode_poll
 parameter_list|(
 name|struct
 name|ucred
@@ -11105,7 +11105,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 operator|||
 operator|!
 name|revocation_enabled
@@ -11134,7 +11134,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11157,7 +11157,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_read
+name|mls_check_vnode_read
 parameter_list|(
 name|struct
 name|ucred
@@ -11191,7 +11191,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 operator|||
 operator|!
 name|revocation_enabled
@@ -11220,7 +11220,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11243,7 +11243,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_readdir
+name|mls_check_vnode_readdir
 parameter_list|(
 name|struct
 name|ucred
@@ -11272,7 +11272,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -11298,7 +11298,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11321,7 +11321,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_readlink
+name|mls_check_vnode_readlink
 parameter_list|(
 name|struct
 name|ucred
@@ -11350,7 +11350,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -11376,7 +11376,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -11399,7 +11399,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_relabel
+name|mls_check_vnode_relabel
 parameter_list|(
 name|struct
 name|ucred
@@ -11482,7 +11482,7 @@ comment|/* 	 * To perform a relabel of the vnode (MLS label or not), MLS must 	 
 if|if
 condition|(
 operator|!
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 argument_list|(
 name|old
 argument_list|,
@@ -11508,7 +11508,7 @@ comment|/* 		 * To change the MLS label on a vnode, the new vnode label 		 * mus
 if|if
 condition|(
 operator|!
-name|mac_mls_effective_in_range
+name|mls_effective_in_range
 argument_list|(
 name|new
 argument_list|,
@@ -11520,10 +11520,10 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * To change the MLS label on the vnode to be EQUAL, 		 * the subject must have appropriate privilege. 		 */
+comment|/* 		 * To change the MLS label on the vnode to be EQUAL, the 		 * subject must have appropriate privilege. 		 */
 if|if
 condition|(
-name|mac_mls_contains_equal
+name|mls_contains_equal
 argument_list|(
 name|new
 argument_list|)
@@ -11531,7 +11531,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mac_mls_subject_privileged
+name|mls_subject_privileged
 argument_list|(
 name|subj
 argument_list|)
@@ -11558,7 +11558,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_rename_from
+name|mls_check_vnode_rename_from
 parameter_list|(
 name|struct
 name|ucred
@@ -11602,7 +11602,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -11628,7 +11628,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -11650,7 +11650,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -11673,7 +11673,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_rename_to
+name|mls_check_vnode_rename_to
 parameter_list|(
 name|struct
 name|ucred
@@ -11720,7 +11720,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -11746,7 +11746,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -11775,7 +11775,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -11799,7 +11799,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_revoke
+name|mls_check_vnode_revoke
 parameter_list|(
 name|struct
 name|ucred
@@ -11828,7 +11828,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -11854,7 +11854,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -11877,7 +11877,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_setacl
+name|mls_check_vnode_setacl
 parameter_list|(
 name|struct
 name|ucred
@@ -11914,7 +11914,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -11940,7 +11940,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -11963,7 +11963,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_setextattr
+name|mls_check_vnode_setextattr
 parameter_list|(
 name|struct
 name|ucred
@@ -12005,7 +12005,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -12031,7 +12031,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -12055,7 +12055,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_setflags
+name|mls_check_vnode_setflags
 parameter_list|(
 name|struct
 name|ucred
@@ -12087,7 +12087,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -12113,7 +12113,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -12136,7 +12136,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_setmode
+name|mls_check_vnode_setmode
 parameter_list|(
 name|struct
 name|ucred
@@ -12168,7 +12168,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -12194,7 +12194,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -12217,7 +12217,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_setowner
+name|mls_check_vnode_setowner
 parameter_list|(
 name|struct
 name|ucred
@@ -12252,7 +12252,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -12278,7 +12278,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -12301,7 +12301,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_setutimes
+name|mls_check_vnode_setutimes
 parameter_list|(
 name|struct
 name|ucred
@@ -12338,7 +12338,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -12364,7 +12364,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -12387,7 +12387,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_stat
+name|mls_check_vnode_stat
 parameter_list|(
 name|struct
 name|ucred
@@ -12421,7 +12421,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -12447,7 +12447,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|subj
 argument_list|,
@@ -12470,7 +12470,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_unlink
+name|mls_check_vnode_unlink
 parameter_list|(
 name|struct
 name|ucred
@@ -12514,7 +12514,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 condition|)
 return|return
 operator|(
@@ -12540,7 +12540,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -12562,7 +12562,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -12585,7 +12585,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_vnode_write
+name|mls_check_vnode_write
 parameter_list|(
 name|struct
 name|ucred
@@ -12619,7 +12619,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_enabled
+name|mls_enabled
 operator|||
 operator|!
 name|revocation_enabled
@@ -12648,7 +12648,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mac_mls_dominate_effective
+name|mls_dominate_effective
 argument_list|(
 name|obj
 argument_list|,
@@ -12671,7 +12671,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_mls_associate_nfsd_label
+name|mls_associate_nfsd_label
 parameter_list|(
 name|struct
 name|ucred
@@ -12693,7 +12693,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_effective
+name|mls_set_effective
 argument_list|(
 name|label
 argument_list|,
@@ -12704,7 +12704,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mac_mls_set_range
+name|mls_set_range
 argument_list|(
 name|label
 argument_list|,
@@ -12728,888 +12728,888 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mac_policy_ops
-name|mac_mls_ops
+name|mls_ops
 init|=
 block|{
 operator|.
 name|mpo_init
 operator|=
-name|mac_mls_init
+name|mls_init
 block|,
 operator|.
 name|mpo_init_bpfdesc_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_cred_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_devfs_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_ifnet_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_inpcb_label
 operator|=
-name|mac_mls_init_label_waitcheck
+name|mls_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_syncache_label
 operator|=
-name|mac_mls_init_label_waitcheck
+name|mls_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_sysv_msgmsg_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_sysv_msgqueue_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_sysv_sem_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_sysv_shm_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_ipq_label
 operator|=
-name|mac_mls_init_label_waitcheck
+name|mls_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_mbuf_label
 operator|=
-name|mac_mls_init_label_waitcheck
+name|mls_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_mount_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_pipe_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_posix_sem_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_init_socket_label
 operator|=
-name|mac_mls_init_label_waitcheck
+name|mls_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_socket_peer_label
 operator|=
-name|mac_mls_init_label_waitcheck
+name|mls_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_vnode_label
 operator|=
-name|mac_mls_init_label
+name|mls_init_label
 block|,
 operator|.
 name|mpo_destroy_bpfdesc_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_cred_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_devfs_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_ifnet_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_inpcb_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_syncache_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_sysv_msgmsg_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_sysv_msgqueue_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_sysv_sem_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_sysv_shm_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_ipq_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_mbuf_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_mount_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_pipe_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_posix_sem_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_socket_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_socket_peer_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_destroy_vnode_label
 operator|=
-name|mac_mls_destroy_label
+name|mls_destroy_label
 block|,
 operator|.
 name|mpo_copy_cred_label
 operator|=
-name|mac_mls_copy_label
+name|mls_copy_label
 block|,
 operator|.
 name|mpo_copy_ifnet_label
 operator|=
-name|mac_mls_copy_label
+name|mls_copy_label
 block|,
 operator|.
 name|mpo_copy_mbuf_label
 operator|=
-name|mac_mls_copy_label
+name|mls_copy_label
 block|,
 operator|.
 name|mpo_copy_pipe_label
 operator|=
-name|mac_mls_copy_label
+name|mls_copy_label
 block|,
 operator|.
 name|mpo_copy_socket_label
 operator|=
-name|mac_mls_copy_label
+name|mls_copy_label
 block|,
 operator|.
 name|mpo_copy_vnode_label
 operator|=
-name|mac_mls_copy_label
+name|mls_copy_label
 block|,
 operator|.
 name|mpo_externalize_cred_label
 operator|=
-name|mac_mls_externalize_label
+name|mls_externalize_label
 block|,
 operator|.
 name|mpo_externalize_ifnet_label
 operator|=
-name|mac_mls_externalize_label
+name|mls_externalize_label
 block|,
 operator|.
 name|mpo_externalize_pipe_label
 operator|=
-name|mac_mls_externalize_label
+name|mls_externalize_label
 block|,
 operator|.
 name|mpo_externalize_socket_label
 operator|=
-name|mac_mls_externalize_label
+name|mls_externalize_label
 block|,
 operator|.
 name|mpo_externalize_socket_peer_label
 operator|=
-name|mac_mls_externalize_label
+name|mls_externalize_label
 block|,
 operator|.
 name|mpo_externalize_vnode_label
 operator|=
-name|mac_mls_externalize_label
+name|mls_externalize_label
 block|,
 operator|.
 name|mpo_internalize_cred_label
 operator|=
-name|mac_mls_internalize_label
+name|mls_internalize_label
 block|,
 operator|.
 name|mpo_internalize_ifnet_label
 operator|=
-name|mac_mls_internalize_label
+name|mls_internalize_label
 block|,
 operator|.
 name|mpo_internalize_pipe_label
 operator|=
-name|mac_mls_internalize_label
+name|mls_internalize_label
 block|,
 operator|.
 name|mpo_internalize_socket_label
 operator|=
-name|mac_mls_internalize_label
+name|mls_internalize_label
 block|,
 operator|.
 name|mpo_internalize_vnode_label
 operator|=
-name|mac_mls_internalize_label
+name|mls_internalize_label
 block|,
 operator|.
 name|mpo_create_devfs_device
 operator|=
-name|mac_mls_create_devfs_device
+name|mls_create_devfs_device
 block|,
 operator|.
 name|mpo_create_devfs_directory
 operator|=
-name|mac_mls_create_devfs_directory
+name|mls_create_devfs_directory
 block|,
 operator|.
 name|mpo_create_devfs_symlink
 operator|=
-name|mac_mls_create_devfs_symlink
+name|mls_create_devfs_symlink
 block|,
 operator|.
 name|mpo_create_mount
 operator|=
-name|mac_mls_create_mount
+name|mls_create_mount
 block|,
 operator|.
 name|mpo_relabel_vnode
 operator|=
-name|mac_mls_relabel_vnode
+name|mls_relabel_vnode
 block|,
 operator|.
 name|mpo_update_devfs
 operator|=
-name|mac_mls_update_devfs
+name|mls_update_devfs
 block|,
 operator|.
 name|mpo_associate_vnode_devfs
 operator|=
-name|mac_mls_associate_vnode_devfs
+name|mls_associate_vnode_devfs
 block|,
 operator|.
 name|mpo_associate_vnode_extattr
 operator|=
-name|mac_mls_associate_vnode_extattr
+name|mls_associate_vnode_extattr
 block|,
 operator|.
 name|mpo_associate_vnode_singlelabel
 operator|=
-name|mac_mls_associate_vnode_singlelabel
+name|mls_associate_vnode_singlelabel
 block|,
 operator|.
 name|mpo_create_vnode_extattr
 operator|=
-name|mac_mls_create_vnode_extattr
+name|mls_create_vnode_extattr
 block|,
 operator|.
 name|mpo_setlabel_vnode_extattr
 operator|=
-name|mac_mls_setlabel_vnode_extattr
+name|mls_setlabel_vnode_extattr
 block|,
 operator|.
 name|mpo_create_mbuf_from_socket
 operator|=
-name|mac_mls_create_mbuf_from_socket
+name|mls_create_mbuf_from_socket
 block|,
 operator|.
 name|mpo_create_mbuf_from_syncache
 operator|=
-name|mac_mls_create_mbuf_from_syncache
+name|mls_create_mbuf_from_syncache
 block|,
 operator|.
 name|mpo_create_pipe
 operator|=
-name|mac_mls_create_pipe
+name|mls_create_pipe
 block|,
 operator|.
 name|mpo_create_posix_sem
 operator|=
-name|mac_mls_create_posix_sem
+name|mls_create_posix_sem
 block|,
 operator|.
 name|mpo_create_socket
 operator|=
-name|mac_mls_create_socket
+name|mls_create_socket
 block|,
 operator|.
 name|mpo_create_socket_from_socket
 operator|=
-name|mac_mls_create_socket_from_socket
+name|mls_create_socket_from_socket
 block|,
 operator|.
 name|mpo_relabel_pipe
 operator|=
-name|mac_mls_relabel_pipe
+name|mls_relabel_pipe
 block|,
 operator|.
 name|mpo_relabel_socket
 operator|=
-name|mac_mls_relabel_socket
+name|mls_relabel_socket
 block|,
 operator|.
 name|mpo_set_socket_peer_from_mbuf
 operator|=
-name|mac_mls_set_socket_peer_from_mbuf
+name|mls_set_socket_peer_from_mbuf
 block|,
 operator|.
 name|mpo_set_socket_peer_from_socket
 operator|=
-name|mac_mls_set_socket_peer_from_socket
+name|mls_set_socket_peer_from_socket
 block|,
 operator|.
 name|mpo_create_bpfdesc
 operator|=
-name|mac_mls_create_bpfdesc
+name|mls_create_bpfdesc
 block|,
 operator|.
 name|mpo_create_datagram_from_ipq
 operator|=
-name|mac_mls_create_datagram_from_ipq
+name|mls_create_datagram_from_ipq
 block|,
 operator|.
 name|mpo_create_fragment
 operator|=
-name|mac_mls_create_fragment
+name|mls_create_fragment
 block|,
 operator|.
 name|mpo_create_ifnet
 operator|=
-name|mac_mls_create_ifnet
+name|mls_create_ifnet
 block|,
 operator|.
 name|mpo_create_inpcb_from_socket
 operator|=
-name|mac_mls_create_inpcb_from_socket
+name|mls_create_inpcb_from_socket
 block|,
 operator|.
 name|mpo_init_syncache_from_inpcb
 operator|=
-name|mac_mls_init_syncache_from_inpcb
+name|mls_init_syncache_from_inpcb
 block|,
 operator|.
 name|mpo_create_ipq
 operator|=
-name|mac_mls_create_ipq
+name|mls_create_ipq
 block|,
 operator|.
 name|mpo_create_sysv_msgmsg
 operator|=
-name|mac_mls_create_sysv_msgmsg
+name|mls_create_sysv_msgmsg
 block|,
 operator|.
 name|mpo_create_sysv_msgqueue
 operator|=
-name|mac_mls_create_sysv_msgqueue
+name|mls_create_sysv_msgqueue
 block|,
 operator|.
 name|mpo_create_sysv_sem
 operator|=
-name|mac_mls_create_sysv_sem
+name|mls_create_sysv_sem
 block|,
 operator|.
 name|mpo_create_sysv_shm
 operator|=
-name|mac_mls_create_sysv_shm
+name|mls_create_sysv_shm
 block|,
 operator|.
 name|mpo_create_mbuf_from_inpcb
 operator|=
-name|mac_mls_create_mbuf_from_inpcb
+name|mls_create_mbuf_from_inpcb
 block|,
 operator|.
 name|mpo_create_mbuf_linklayer
 operator|=
-name|mac_mls_create_mbuf_linklayer
+name|mls_create_mbuf_linklayer
 block|,
 operator|.
 name|mpo_create_mbuf_from_bpfdesc
 operator|=
-name|mac_mls_create_mbuf_from_bpfdesc
+name|mls_create_mbuf_from_bpfdesc
 block|,
 operator|.
 name|mpo_create_mbuf_from_ifnet
 operator|=
-name|mac_mls_create_mbuf_from_ifnet
+name|mls_create_mbuf_from_ifnet
 block|,
 operator|.
 name|mpo_create_mbuf_multicast_encap
 operator|=
-name|mac_mls_create_mbuf_multicast_encap
+name|mls_create_mbuf_multicast_encap
 block|,
 operator|.
 name|mpo_create_mbuf_netlayer
 operator|=
-name|mac_mls_create_mbuf_netlayer
+name|mls_create_mbuf_netlayer
 block|,
 operator|.
 name|mpo_fragment_match
 operator|=
-name|mac_mls_fragment_match
+name|mls_fragment_match
 block|,
 operator|.
 name|mpo_relabel_ifnet
 operator|=
-name|mac_mls_relabel_ifnet
+name|mls_relabel_ifnet
 block|,
 operator|.
 name|mpo_update_ipq
 operator|=
-name|mac_mls_update_ipq
+name|mls_update_ipq
 block|,
 operator|.
 name|mpo_inpcb_sosetlabel
 operator|=
-name|mac_mls_inpcb_sosetlabel
+name|mls_inpcb_sosetlabel
 block|,
 operator|.
 name|mpo_create_proc0
 operator|=
-name|mac_mls_create_proc0
+name|mls_create_proc0
 block|,
 operator|.
 name|mpo_create_proc1
 operator|=
-name|mac_mls_create_proc1
+name|mls_create_proc1
 block|,
 operator|.
 name|mpo_relabel_cred
 operator|=
-name|mac_mls_relabel_cred
+name|mls_relabel_cred
 block|,
 operator|.
 name|mpo_cleanup_sysv_msgmsg
 operator|=
-name|mac_mls_cleanup_sysv_msgmsg
+name|mls_cleanup_sysv_msgmsg
 block|,
 operator|.
 name|mpo_cleanup_sysv_msgqueue
 operator|=
-name|mac_mls_cleanup_sysv_msgqueue
+name|mls_cleanup_sysv_msgqueue
 block|,
 operator|.
 name|mpo_cleanup_sysv_sem
 operator|=
-name|mac_mls_cleanup_sysv_sem
+name|mls_cleanup_sysv_sem
 block|,
 operator|.
 name|mpo_cleanup_sysv_shm
 operator|=
-name|mac_mls_cleanup_sysv_shm
+name|mls_cleanup_sysv_shm
 block|,
 operator|.
 name|mpo_check_bpfdesc_receive
 operator|=
-name|mac_mls_check_bpfdesc_receive
+name|mls_check_bpfdesc_receive
 block|,
 operator|.
 name|mpo_check_cred_relabel
 operator|=
-name|mac_mls_check_cred_relabel
+name|mls_check_cred_relabel
 block|,
 operator|.
 name|mpo_check_cred_visible
 operator|=
-name|mac_mls_check_cred_visible
+name|mls_check_cred_visible
 block|,
 operator|.
 name|mpo_check_ifnet_relabel
 operator|=
-name|mac_mls_check_ifnet_relabel
+name|mls_check_ifnet_relabel
 block|,
 operator|.
 name|mpo_check_ifnet_transmit
 operator|=
-name|mac_mls_check_ifnet_transmit
+name|mls_check_ifnet_transmit
 block|,
 operator|.
 name|mpo_check_inpcb_deliver
 operator|=
-name|mac_mls_check_inpcb_deliver
+name|mls_check_inpcb_deliver
 block|,
 operator|.
 name|mpo_check_sysv_msgrcv
 operator|=
-name|mac_mls_check_sysv_msgrcv
+name|mls_check_sysv_msgrcv
 block|,
 operator|.
 name|mpo_check_sysv_msgrmid
 operator|=
-name|mac_mls_check_sysv_msgrmid
+name|mls_check_sysv_msgrmid
 block|,
 operator|.
 name|mpo_check_sysv_msqget
 operator|=
-name|mac_mls_check_sysv_msqget
+name|mls_check_sysv_msqget
 block|,
 operator|.
 name|mpo_check_sysv_msqsnd
 operator|=
-name|mac_mls_check_sysv_msqsnd
+name|mls_check_sysv_msqsnd
 block|,
 operator|.
 name|mpo_check_sysv_msqrcv
 operator|=
-name|mac_mls_check_sysv_msqrcv
+name|mls_check_sysv_msqrcv
 block|,
 operator|.
 name|mpo_check_sysv_msqctl
 operator|=
-name|mac_mls_check_sysv_msqctl
+name|mls_check_sysv_msqctl
 block|,
 operator|.
 name|mpo_check_sysv_semctl
 operator|=
-name|mac_mls_check_sysv_semctl
+name|mls_check_sysv_semctl
 block|,
 operator|.
 name|mpo_check_sysv_semget
 operator|=
-name|mac_mls_check_sysv_semget
+name|mls_check_sysv_semget
 block|,
 operator|.
 name|mpo_check_sysv_semop
 operator|=
-name|mac_mls_check_sysv_semop
+name|mls_check_sysv_semop
 block|,
 operator|.
 name|mpo_check_sysv_shmat
 operator|=
-name|mac_mls_check_sysv_shmat
+name|mls_check_sysv_shmat
 block|,
 operator|.
 name|mpo_check_sysv_shmctl
 operator|=
-name|mac_mls_check_sysv_shmctl
+name|mls_check_sysv_shmctl
 block|,
 operator|.
 name|mpo_check_sysv_shmget
 operator|=
-name|mac_mls_check_sysv_shmget
+name|mls_check_sysv_shmget
 block|,
 operator|.
 name|mpo_check_mount_stat
 operator|=
-name|mac_mls_check_mount_stat
+name|mls_check_mount_stat
 block|,
 operator|.
 name|mpo_check_pipe_ioctl
 operator|=
-name|mac_mls_check_pipe_ioctl
+name|mls_check_pipe_ioctl
 block|,
 operator|.
 name|mpo_check_pipe_poll
 operator|=
-name|mac_mls_check_pipe_poll
+name|mls_check_pipe_poll
 block|,
 operator|.
 name|mpo_check_pipe_read
 operator|=
-name|mac_mls_check_pipe_read
+name|mls_check_pipe_read
 block|,
 operator|.
 name|mpo_check_pipe_relabel
 operator|=
-name|mac_mls_check_pipe_relabel
+name|mls_check_pipe_relabel
 block|,
 operator|.
 name|mpo_check_pipe_stat
 operator|=
-name|mac_mls_check_pipe_stat
+name|mls_check_pipe_stat
 block|,
 operator|.
 name|mpo_check_pipe_write
 operator|=
-name|mac_mls_check_pipe_write
+name|mls_check_pipe_write
 block|,
 operator|.
 name|mpo_check_posix_sem_destroy
 operator|=
-name|mac_mls_check_posix_sem_write
+name|mls_check_posix_sem_write
 block|,
 operator|.
 name|mpo_check_posix_sem_getvalue
 operator|=
-name|mac_mls_check_posix_sem_rdonly
+name|mls_check_posix_sem_rdonly
 block|,
 operator|.
 name|mpo_check_posix_sem_open
 operator|=
-name|mac_mls_check_posix_sem_write
+name|mls_check_posix_sem_write
 block|,
 operator|.
 name|mpo_check_posix_sem_post
 operator|=
-name|mac_mls_check_posix_sem_write
+name|mls_check_posix_sem_write
 block|,
 operator|.
 name|mpo_check_posix_sem_unlink
 operator|=
-name|mac_mls_check_posix_sem_write
+name|mls_check_posix_sem_write
 block|,
 operator|.
 name|mpo_check_posix_sem_wait
 operator|=
-name|mac_mls_check_posix_sem_write
+name|mls_check_posix_sem_write
 block|,
 operator|.
 name|mpo_check_proc_debug
 operator|=
-name|mac_mls_check_proc_debug
+name|mls_check_proc_debug
 block|,
 operator|.
 name|mpo_check_proc_sched
 operator|=
-name|mac_mls_check_proc_sched
+name|mls_check_proc_sched
 block|,
 operator|.
 name|mpo_check_proc_signal
 operator|=
-name|mac_mls_check_proc_signal
+name|mls_check_proc_signal
 block|,
 operator|.
 name|mpo_check_socket_deliver
 operator|=
-name|mac_mls_check_socket_deliver
+name|mls_check_socket_deliver
 block|,
 operator|.
 name|mpo_check_socket_relabel
 operator|=
-name|mac_mls_check_socket_relabel
+name|mls_check_socket_relabel
 block|,
 operator|.
 name|mpo_check_socket_visible
 operator|=
-name|mac_mls_check_socket_visible
+name|mls_check_socket_visible
 block|,
 operator|.
 name|mpo_check_system_acct
 operator|=
-name|mac_mls_check_system_acct
+name|mls_check_system_acct
 block|,
 operator|.
 name|mpo_check_system_auditctl
 operator|=
-name|mac_mls_check_system_auditctl
+name|mls_check_system_auditctl
 block|,
 operator|.
 name|mpo_check_system_swapon
 operator|=
-name|mac_mls_check_system_swapon
+name|mls_check_system_swapon
 block|,
 operator|.
 name|mpo_check_vnode_access
 operator|=
-name|mac_mls_check_vnode_open
+name|mls_check_vnode_open
 block|,
 operator|.
 name|mpo_check_vnode_chdir
 operator|=
-name|mac_mls_check_vnode_chdir
+name|mls_check_vnode_chdir
 block|,
 operator|.
 name|mpo_check_vnode_chroot
 operator|=
-name|mac_mls_check_vnode_chroot
+name|mls_check_vnode_chroot
 block|,
 operator|.
 name|mpo_check_vnode_create
 operator|=
-name|mac_mls_check_vnode_create
+name|mls_check_vnode_create
 block|,
 operator|.
 name|mpo_check_vnode_deleteacl
 operator|=
-name|mac_mls_check_vnode_deleteacl
+name|mls_check_vnode_deleteacl
 block|,
 operator|.
 name|mpo_check_vnode_deleteextattr
 operator|=
-name|mac_mls_check_vnode_deleteextattr
+name|mls_check_vnode_deleteextattr
 block|,
 operator|.
 name|mpo_check_vnode_exec
 operator|=
-name|mac_mls_check_vnode_exec
+name|mls_check_vnode_exec
 block|,
 operator|.
 name|mpo_check_vnode_getacl
 operator|=
-name|mac_mls_check_vnode_getacl
+name|mls_check_vnode_getacl
 block|,
 operator|.
 name|mpo_check_vnode_getextattr
 operator|=
-name|mac_mls_check_vnode_getextattr
+name|mls_check_vnode_getextattr
 block|,
 operator|.
 name|mpo_check_vnode_link
 operator|=
-name|mac_mls_check_vnode_link
+name|mls_check_vnode_link
 block|,
 operator|.
 name|mpo_check_vnode_listextattr
 operator|=
-name|mac_mls_check_vnode_listextattr
+name|mls_check_vnode_listextattr
 block|,
 operator|.
 name|mpo_check_vnode_lookup
 operator|=
-name|mac_mls_check_vnode_lookup
+name|mls_check_vnode_lookup
 block|,
 operator|.
 name|mpo_check_vnode_mmap
 operator|=
-name|mac_mls_check_vnode_mmap
+name|mls_check_vnode_mmap
 block|,
 operator|.
 name|mpo_check_vnode_open
 operator|=
-name|mac_mls_check_vnode_open
+name|mls_check_vnode_open
 block|,
 operator|.
 name|mpo_check_vnode_poll
 operator|=
-name|mac_mls_check_vnode_poll
+name|mls_check_vnode_poll
 block|,
 operator|.
 name|mpo_check_vnode_read
 operator|=
-name|mac_mls_check_vnode_read
+name|mls_check_vnode_read
 block|,
 operator|.
 name|mpo_check_vnode_readdir
 operator|=
-name|mac_mls_check_vnode_readdir
+name|mls_check_vnode_readdir
 block|,
 operator|.
 name|mpo_check_vnode_readlink
 operator|=
-name|mac_mls_check_vnode_readlink
+name|mls_check_vnode_readlink
 block|,
 operator|.
 name|mpo_check_vnode_relabel
 operator|=
-name|mac_mls_check_vnode_relabel
+name|mls_check_vnode_relabel
 block|,
 operator|.
 name|mpo_check_vnode_rename_from
 operator|=
-name|mac_mls_check_vnode_rename_from
+name|mls_check_vnode_rename_from
 block|,
 operator|.
 name|mpo_check_vnode_rename_to
 operator|=
-name|mac_mls_check_vnode_rename_to
+name|mls_check_vnode_rename_to
 block|,
 operator|.
 name|mpo_check_vnode_revoke
 operator|=
-name|mac_mls_check_vnode_revoke
+name|mls_check_vnode_revoke
 block|,
 operator|.
 name|mpo_check_vnode_setacl
 operator|=
-name|mac_mls_check_vnode_setacl
+name|mls_check_vnode_setacl
 block|,
 operator|.
 name|mpo_check_vnode_setextattr
 operator|=
-name|mac_mls_check_vnode_setextattr
+name|mls_check_vnode_setextattr
 block|,
 operator|.
 name|mpo_check_vnode_setflags
 operator|=
-name|mac_mls_check_vnode_setflags
+name|mls_check_vnode_setflags
 block|,
 operator|.
 name|mpo_check_vnode_setmode
 operator|=
-name|mac_mls_check_vnode_setmode
+name|mls_check_vnode_setmode
 block|,
 operator|.
 name|mpo_check_vnode_setowner
 operator|=
-name|mac_mls_check_vnode_setowner
+name|mls_check_vnode_setowner
 block|,
 operator|.
 name|mpo_check_vnode_setutimes
 operator|=
-name|mac_mls_check_vnode_setutimes
+name|mls_check_vnode_setutimes
 block|,
 operator|.
 name|mpo_check_vnode_stat
 operator|=
-name|mac_mls_check_vnode_stat
+name|mls_check_vnode_stat
 block|,
 operator|.
 name|mpo_check_vnode_unlink
 operator|=
-name|mac_mls_check_vnode_unlink
+name|mls_check_vnode_unlink
 block|,
 operator|.
 name|mpo_check_vnode_write
 operator|=
-name|mac_mls_check_vnode_write
+name|mls_check_vnode_write
 block|,
 operator|.
 name|mpo_associate_nfsd_label
 operator|=
-name|mac_mls_associate_nfsd_label
+name|mls_associate_nfsd_label
 block|,
 operator|.
 name|mpo_create_mbuf_from_firewall
 operator|=
-name|mac_mls_create_mbuf_from_firewall
+name|mls_create_mbuf_from_firewall
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -13618,7 +13618,7 @@ begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
 operator|&
-name|mac_mls_ops
+name|mls_ops
 argument_list|,
 name|mac_mls
 argument_list|,
@@ -13629,7 +13629,7 @@ operator||
 name|MPC_LOADTIME_FLAG_LABELMBUFS
 argument_list|,
 operator|&
-name|mac_mls_slot
+name|mls_slot
 argument_list|)
 expr_stmt|;
 end_expr_stmt
