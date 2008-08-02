@@ -599,13 +599,19 @@ name|LDBL_MANT_DIG
 operator|+
 literal|2
 condition|)
+block|{
+comment|/* |y/x| huge */
 name|z
 operator|=
 name|pio2_hi
 operator|+
 name|pio2_lo
 expr_stmt|;
-comment|/* |y/x| huge */
+name|m
+operator|&=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(

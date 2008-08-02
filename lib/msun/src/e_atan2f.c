@@ -416,6 +416,8 @@ name|k
 operator|>
 literal|26
 condition|)
+block|{
+comment|/* |y/x|>  2**26 */
 name|z
 operator|=
 name|pi_o_2
@@ -427,7 +429,11 @@ literal|0.5
 operator|*
 name|pi_lo
 expr_stmt|;
-comment|/* |y/x|>  2**26 */
+name|m
+operator|&=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -444,7 +450,7 @@ name|z
 operator|=
 literal|0.0
 expr_stmt|;
-comment|/* |y|/x< -2**26 */
+comment|/* 0> |y|/x> -2**-26 */
 else|else
 name|z
 operator|=
@@ -474,28 +480,8 @@ comment|/* atan(+,+) */
 case|case
 literal|1
 case|:
-block|{
-name|u_int32_t
-name|zh
-decl_stmt|;
-name|GET_FLOAT_WORD
-argument_list|(
-name|zh
-argument_list|,
-name|z
-argument_list|)
-expr_stmt|;
-name|SET_FLOAT_WORD
-argument_list|(
-name|z
-argument_list|,
-name|zh
-operator|^
-literal|0x80000000
-argument_list|)
-expr_stmt|;
-block|}
 return|return
+operator|-
 name|z
 return|;
 comment|/* atan(-,+) */
