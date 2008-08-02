@@ -61,12 +61,65 @@ name|double
 name|one
 init|=
 literal|1.00000000000000000000e+00
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_comment
+comment|/* XXX Work around the fact that gcc truncates long double constants on i386 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
+name|pi1
+init|=
+literal|3.14159265358979311600e+00
 decl_stmt|,
+comment|/*  0x1.921fb54442d18p+1  */
+name|pi2
+init|=
+literal|1.22514845490862001043e-16
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  0x1.1a80000000000p-53 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|pi
+value|((long double)pi1 + pi2)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|long
+name|double
 name|pi
 init|=
 literal|3.14159265358979323846264338327950280e+00L
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|long
