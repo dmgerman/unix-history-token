@@ -217,7 +217,6 @@ name|x
 return|;
 comment|/* return x with inexact if x!=0*/
 block|}
-else|else
 name|t
 operator|=
 name|x
