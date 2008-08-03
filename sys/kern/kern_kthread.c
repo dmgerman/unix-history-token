@@ -910,9 +910,6 @@ decl_stmt|,
 modifier|*
 name|oldtd
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -924,10 +921,6 @@ name|panic
 argument_list|(
 literal|"kthread_add called too soon"
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 comment|/* If no process supplied, put it on proc0 */
 if|if
