@@ -9755,11 +9755,19 @@ operator|<
 literal|10
 operator|)
 condition|)
+block|{
 name|DELAY
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* This is a no-op read that flushes pending mailbox updates */
+name|AMR_QGET_ODB
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
