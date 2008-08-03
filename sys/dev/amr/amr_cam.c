@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2002 Eric Moore  * Copyright (c) 2002 LSI Logic Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The party using or redistributing the source code and binary forms  *    agrees to the disclaimer below and the terms and conditions set forth  *    herein.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002 Eric Moore  * Copyright (c) 2002 LSI Logic Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. The party using or redistributing the source code and binary forms  *	agrees to the disclaimer below and the terms and conditions set forth  *	herein.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -199,7 +199,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/********************************************************************************  * Enqueue/dequeue functions  */
+comment|/***********************************************************************  * Enqueue/dequeue functions  */
 end_comment
 
 begin_function
@@ -374,7 +374,7 @@ operator|->
 name|amr_cam_ccbq
 argument_list|)
 expr_stmt|;
-comment|/*      * Allocate a devq for all our channels combined.  This should      * allow for the maximum number of SCSI commands we will accept      * at one time. Save the pointer in the softc so we can find it later      * during detach.      */
+comment|/* 	 * Allocate a devq for all our channels combined.  This should 	 * allow for the maximum number of SCSI commands we will accept 	 * at one time. Save the pointer in the softc so we can find it later 	 * during detach. 	 */
 if|if
 condition|(
 operator|(
@@ -399,7 +399,7 @@ name|amr_cam_devq
 operator|=
 name|devq
 expr_stmt|;
-comment|/*      * Iterate over our channels, registering them with CAM      */
+comment|/* 	 * Iterate over our channels, registering them with CAM 	 */
 for|for
 control|(
 name|chn
@@ -536,7 +536,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*      * XXX we should scan the config and work out which devices are actually      * protected.      */
+comment|/* 	 * XXX we should scan the config and work out which devices are 	 * actually protected. 	 */
 return|return
 operator|(
 literal|0
@@ -586,7 +586,7 @@ name|chn
 operator|++
 control|)
 block|{
-comment|/* 	 * If a sim was allocated for this channel, free it 	 */
+comment|/* 		 * If a sim was allocated for this channel, free it 		 */
 if|if
 condition|(
 name|sc
@@ -654,11 +654,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                         CAM passthrough interface  ********************************************************************************  ********************************************************************************/
+comment|/***********************************************************************  *********************************************************************** 			CAM passthrough interface  ***********************************************************************  ***********************************************************************/
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Handle a request for action from CAM  */
+comment|/***********************************************************************  * Handle a request for action from CAM  */
 end_comment
 
 begin_function
@@ -696,7 +696,7 @@ operator|.
 name|func_code
 condition|)
 block|{
-comment|/*      * Perform SCSI I/O to a physical device.      */
+comment|/* 	 * Perform SCSI I/O to a physical device. 	 */
 case|case
 name|XPT_SCSI_IO
 case|:
@@ -792,7 +792,7 @@ name|status
 operator|=
 name|CAM_REQ_CMP_ERR
 expr_stmt|;
-comment|/* if there is data transfer, it must be to/from a virtual address */
+comment|/* 		 * if there is data transfer, it must be to/from a virtual 		 * address 		 */
 if|if
 condition|(
 operator|(
@@ -837,7 +837,7 @@ operator|=
 name|CAM_REQ_CMP_ERR
 expr_stmt|;
 block|}
-comment|/* 	 * If the command is to a LUN other than 0, fail it. 	 * This is probably incorrect, but during testing the firmware did not 	 * seem to respect the LUN field, and thus devices appear echoed. 	 */
+comment|/* 		 * If the command is to a LUN other than 0, fail it. 		 * This is probably incorrect, but during testing the 		 * firmware did not seem to respect the LUN field, and thus 		 * devices appear echoed. 		 */
 if|if
 condition|(
 name|csio
@@ -916,7 +916,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*      * Return path stats.  Some of these should probably be      * amended.      */
+comment|/* 	 * Return path stats.  Some of these should probably be amended. 	 */
 case|case
 name|XPT_PATH_INQ
 case|:
@@ -1057,7 +1057,7 @@ literal|132
 operator|*
 literal|1024
 expr_stmt|;
-comment|/* XXX get from controller? */
+comment|/* XXX */
 name|cpi
 operator|->
 name|transport
@@ -1171,26 +1171,30 @@ name|struct
 name|ccb_trans_settings_scsi
 modifier|*
 name|scsi
-init|=
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_spi
+modifier|*
+name|spi
+decl_stmt|;
+name|scsi
+operator|=
 operator|&
 name|cts
 operator|->
 name|proto_specific
 operator|.
 name|scsi
-decl_stmt|;
-name|struct
-name|ccb_trans_settings_spi
-modifier|*
+expr_stmt|;
 name|spi
-init|=
+operator|=
 operator|&
 name|cts
 operator|->
 name|xport_specific
 operator|.
 name|spi
-decl_stmt|;
+expr_stmt|;
 name|cts
 operator|->
 name|protocol
@@ -1307,7 +1311,7 @@ operator|=
 name|CAM_FUNC_NOTAVAIL
 expr_stmt|;
 break|break;
-comment|/*      * Reject anything else as unsupported.      */
+comment|/* 	 * Reject anything else as unsupported. 	 */
 default|default:
 comment|/* we can't do this */
 name|ccb
@@ -1339,7 +1343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Convert a CAM CCB off the top of the CCB queue to a passthrough SCSI command.  */
+comment|/***********************************************************************  * Convert a CAM CCB off the top of the CCB queue to a passthrough SCSI  * command.  */
 end_comment
 
 begin_function
@@ -1447,7 +1451,7 @@ name|ccb_h
 operator|.
 name|target_id
 expr_stmt|;
-comment|/*      * Build a passthrough command.      */
+comment|/* 	 * Build a passthrough command. 	 */
 comment|/* construct passthrough */
 if|if
 condition|(
@@ -1599,7 +1603,7 @@ name|cdb_len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* we leave the data s/g list and s/g count to the map routine later */
+comment|/* 		 * we leave the data s/g list and s/g count to the map routine 		 * later 		 */
 name|debug
 argument_list|(
 literal|2
@@ -1780,7 +1784,7 @@ name|cdb_len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* we leave the data s/g list and s/g count to the map routine later */
+comment|/* 		 * we leave the data s/g list and s/g count to the map routine 		 * later 		 */
 name|debug
 argument_list|(
 literal|2
@@ -2060,7 +2064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Check for interrupt status  */
+comment|/***********************************************************************  * Check for interrupt status  */
 end_comment
 
 begin_function
@@ -2086,7 +2090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle completion of a command submitted via CAM.  */
+comment|/**********************************************************************  * Handle completion of a command submitted via CAM.  */
 end_comment
 
 begin_function
@@ -2104,7 +2108,19 @@ name|struct
 name|amr_passthrough
 modifier|*
 name|ap
-init|=
+decl_stmt|;
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+decl_stmt|;
+name|struct
+name|scsi_inquiry_data
+modifier|*
+name|inq
+decl_stmt|;
+name|ap
+operator|=
 operator|(
 expr|struct
 name|amr_passthrough
@@ -2113,12 +2129,9 @@ operator|)
 name|ac
 operator|->
 name|ac_data
-decl_stmt|;
-name|struct
-name|ccb_scsiio
-modifier|*
+expr_stmt|;
 name|csio
-init|=
+operator|=
 operator|(
 expr|struct
 name|ccb_scsiio
@@ -2127,12 +2140,9 @@ operator|)
 name|ac
 operator|->
 name|ac_private
-decl_stmt|;
-name|struct
-name|scsi_inquiry_data
-modifier|*
+expr_stmt|;
 name|inq
-init|=
+operator|=
 operator|(
 expr|struct
 name|scsi_inquiry_data
@@ -2141,7 +2151,7 @@ operator|)
 name|csio
 operator|->
 name|data_ptr
-decl_stmt|;
+expr_stmt|;
 comment|/* XXX note that we're ignoring ac->ac_status - good idea? */
 name|debug
 argument_list|(
@@ -2158,7 +2168,7 @@ operator|->
 name|ap_scsi_status
 argument_list|)
 expr_stmt|;
-comment|/*      * Hide disks from CAM so that they're not picked up and treated as 'normal' disks.      *      * If the configuration provides a mechanism to mark a disk a "not managed", we      * could add handling for that to allow disks to be selectively visible.      */
+comment|/* 	 * Hide disks from CAM so that they're not picked up and treated as 	 * 'normal' disks. 	 * 	 * If the configuration provides a mechanism to mark a disk a "not 	 * managed", we could add handling for that to allow disks to be 	 * selectively visible. 	 */
 comment|/* handle passthrough SCSI status */
 switch|switch
 condition|(
@@ -2365,7 +2375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle completion of a command submitted via CAM.  * Completion for extended cdb  */
+comment|/***********************************************************************  * Handle completion of a command submitted via CAM.  * Completion for extended cdb  */
 end_comment
 
 begin_function
@@ -2383,7 +2393,19 @@ name|struct
 name|amr_ext_passthrough
 modifier|*
 name|aep
-init|=
+decl_stmt|;
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+decl_stmt|;
+name|struct
+name|scsi_inquiry_data
+modifier|*
+name|inq
+decl_stmt|;
+name|aep
+operator|=
 operator|(
 expr|struct
 name|amr_ext_passthrough
@@ -2392,12 +2414,9 @@ operator|)
 name|ac
 operator|->
 name|ac_data
-decl_stmt|;
-name|struct
-name|ccb_scsiio
-modifier|*
+expr_stmt|;
 name|csio
-init|=
+operator|=
 operator|(
 expr|struct
 name|ccb_scsiio
@@ -2406,12 +2425,9 @@ operator|)
 name|ac
 operator|->
 name|ac_private
-decl_stmt|;
-name|struct
-name|scsi_inquiry_data
-modifier|*
+expr_stmt|;
 name|inq
-init|=
+operator|=
 operator|(
 expr|struct
 name|scsi_inquiry_data
@@ -2420,7 +2436,7 @@ operator|)
 name|csio
 operator|->
 name|data_ptr
-decl_stmt|;
+expr_stmt|;
 name|debug
 argument_list|(
 literal|1
@@ -2457,7 +2473,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Hide disks from CAM so that they're not picked up and treated as 'normal' disks.      *      * If the configuration provides a mechanism to mark a disk a "not managed", we      * could add handling for that to allow disks to be selectively visible.      */
+comment|/* 	 * Hide disks from CAM so that they're not picked up and treated as 	 * 'normal' disks. 	 * 	 * If the configuration provides a mechanism to mark a disk a "not 	 * managed", we could add handling for that to allow disks to be 	 * selectively visible. 	 */
 comment|/* handle passthrough SCSI status */
 switch|switch
 condition|(
