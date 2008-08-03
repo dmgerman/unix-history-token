@@ -4428,10 +4428,10 @@ name|debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"%16d"
+literal|"%jd"
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dp
 argument_list|)
@@ -8573,10 +8573,13 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|" %d: 0x%x/%d"
+literal|" %d: 0x%lx/%d"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sg
 operator|->
 name|sg_addr
@@ -8668,10 +8671,13 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|" %d: 0x%x/%d"
+literal|" %d: 0x%lx/%d"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sg
 operator|->
 name|sg_addr
