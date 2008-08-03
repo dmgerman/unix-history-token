@@ -628,18 +628,6 @@ block|{
 name|int
 name|envNdx
 decl_stmt|;
-comment|/* Check for non-existant environment. */
-if|if
-condition|(
-name|environ
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 comment|/* Find variable within environ. */
 for|for
 control|(
@@ -1610,7 +1598,26 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * Find environment variable via environ if no changes have been made 	 * via a *env() call or environ has been replaced or cleared by a 	 * running program, otherwise, use the rebuilt environment. 	 */
+comment|/* 	 * An empty environment (environ or its first value) regardless if 	 * environ has been copied before will return a NULL. 	 * 	 * If the environment is not empty, find an environment variable via 	 * environ if environ has not been copied via an *env() call or been 	 * replaced by a running program, otherwise, use the rebuilt 	 * environment. 	 */
+if|if
+condition|(
+name|environ
+operator|==
+name|NULL
+operator|||
+name|environ
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+elseif|else
 if|if
 condition|(
 name|envVars
@@ -1629,21 +1636,6 @@ name|name
 argument_list|,
 name|nameLen
 argument_list|)
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
-name|environ
-index|[
-literal|0
-index|]
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 else|else
@@ -2033,24 +2025,30 @@ name|char
 modifier|*
 name|equals
 decl_stmt|;
-comment|/* 	 * Internally-built environ has been replaced or cleared.  clean up 	 * everything. 	 */
+comment|/* 	 * Internally-built environ has been replaced or cleared (detected by 	 * using the count of active variables against a NULL as the first value 	 * in environ).  Clean up everything. 	 */
 if|if
 condition|(
-name|envVarsTotal
-operator|>
-literal|0
+name|intEnviron
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|environ
 operator|!=
 name|intEnviron
 operator|||
+operator|(
+name|envActive
+operator|>
+literal|0
+operator|&&
 name|environ
 index|[
 literal|0
 index|]
 operator|==
 name|NULL
+operator|)
 operator|)
 condition|)
 block|{
