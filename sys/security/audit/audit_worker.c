@@ -518,7 +518,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Warning: audit space low\n"
+literal|"Warning: disk space low (< %d%% free) "
+literal|"on audit log file-system\n"
+argument_list|,
+name|audit_qctrl
+operator|.
+name|aq_minfree
 argument_list|)
 expr_stmt|;
 block|}
