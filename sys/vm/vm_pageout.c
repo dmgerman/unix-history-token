@@ -681,7 +681,7 @@ name|vm_swap_enabled
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable entire process swapout"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -702,7 +702,7 @@ name|vm_swap_idle_enabled
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Allow swapout on idle criteria"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

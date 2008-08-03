@@ -239,7 +239,7 @@ name|msync_flush_flags
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable sequential iteration optimization"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -293,7 +293,7 @@ name|max_proc_mmap
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of memory-mapped files per process"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

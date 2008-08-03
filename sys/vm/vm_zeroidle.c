@@ -156,7 +156,7 @@ name|idlezero_enable
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Allow the kernel to use idle cpu cycles to zero-out pages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
