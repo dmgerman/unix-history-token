@@ -142,11 +142,19 @@ expr_stmt|;
 if|if
 condition|(
 name|ix
+operator|>=
+literal|0x3f800000
+condition|)
+block|{
+comment|/* |x|>= 1 */
+if|if
+condition|(
+name|ix
 operator|==
 literal|0x3f800000
 condition|)
 block|{
-comment|/* |x|==1 */
+comment|/* |x| == 1 */
 if|if
 condition|(
 name|hx
@@ -156,7 +164,7 @@ condition|)
 return|return
 literal|0.0
 return|;
-comment|/* acos(1) = 0  */
+comment|/* acos(1) = 0 */
 else|else
 return|return
 name|pi
@@ -170,15 +178,6 @@ name|pio2_lo
 return|;
 comment|/* acos(-1)= pi */
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>
-literal|0x3f800000
-condition|)
-block|{
-comment|/* |x|>= 1 */
 return|return
 operator|(
 name|x
@@ -318,7 +317,7 @@ name|qS1
 expr_stmt|;
 name|s
 operator|=
-name|__ieee754_sqrtf
+name|sqrtf
 argument_list|(
 name|z
 argument_list|)
@@ -373,7 +372,7 @@ literal|0.5
 expr_stmt|;
 name|s
 operator|=
-name|__ieee754_sqrtf
+name|sqrtf
 argument_list|(
 name|z
 argument_list|)

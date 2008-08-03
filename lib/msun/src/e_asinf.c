@@ -91,8 +91,6 @@ name|s
 decl_stmt|;
 name|float
 name|t
-init|=
-literal|0.0
 decl_stmt|,
 name|w
 decl_stmt|,
@@ -125,26 +123,24 @@ expr_stmt|;
 if|if
 condition|(
 name|ix
-operator|==
+operator|>=
 literal|0x3f800000
 condition|)
 block|{
-comment|/* asin(1)=+-pi/2 with inexact */
+comment|/* |x|>= 1 */
+if|if
+condition|(
+name|ix
+operator|==
+literal|0x3f800000
+condition|)
+comment|/* |x| == 1 */
 return|return
 name|x
 operator|*
 name|pio2
 return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>
-literal|0x3f800000
-condition|)
-block|{
-comment|/* |x|>= 1 */
+comment|/* asin(+-1) = +-pi/2 with inexact */
 return|return
 operator|(
 name|x
@@ -176,7 +172,7 @@ operator|<
 literal|0x39800000
 condition|)
 block|{
-comment|/* if |x|< 2**-12 */
+comment|/* |x|< 2**-12 */
 if|if
 condition|(
 name|huge
@@ -190,7 +186,6 @@ name|x
 return|;
 comment|/* return x with inexact if x!=0*/
 block|}
-else|else
 name|t
 operator|=
 name|x
@@ -284,7 +279,7 @@ name|qS1
 expr_stmt|;
 name|s
 operator|=
-name|__ieee754_sqrt
+name|sqrt
 argument_list|(
 name|t
 argument_list|)
