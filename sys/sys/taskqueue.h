@@ -206,6 +206,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|taskqueue_block
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|taskqueue_unblock
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Functions for dedicated thread taskqueues  */
 end_comment
