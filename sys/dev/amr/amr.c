@@ -791,6 +791,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_AMR
+argument_list|,
+literal|"amr"
+argument_list|,
+literal|"AMR memory"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/********************************************************************************  ********************************************************************************                                                                       Inline Glue  ********************************************************************************  ********************************************************************************/
 end_comment
@@ -2562,7 +2574,7 @@ expr|struct
 name|amr_passthrough
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|,
 name|M_WAITOK
 operator||
@@ -2703,7 +2715,7 @@ name|ap
 operator|->
 name|ap_data_transfer_length
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|,
 name|M_WAITOK
 operator||
@@ -3051,7 +3063,7 @@ name|malloc
 argument_list|(
 name|len
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|,
 name|M_WAITOK
 operator||
@@ -3364,7 +3376,7 @@ name|free
 argument_list|(
 name|dp
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 if|if
@@ -3377,7 +3389,7 @@ name|free
 argument_list|(
 name|ap
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 return|return
@@ -3957,7 +3969,7 @@ name|malloc
 argument_list|(
 name|au_length
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|,
 name|M_WAITOK
 operator||
@@ -3998,7 +4010,7 @@ name|free
 argument_list|(
 name|dp
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 return|return
@@ -4041,7 +4053,7 @@ expr|struct
 name|amr_passthrough
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|,
 name|M_WAITOK
 operator||
@@ -4483,7 +4495,7 @@ name|free
 argument_list|(
 name|dp
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 if|if
@@ -4496,7 +4508,7 @@ name|free
 argument_list|(
 name|ap
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -4792,7 +4804,7 @@ name|free
 argument_list|(
 name|aex
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get product info for channel count. 	 */
@@ -4868,7 +4880,7 @@ name|free
 argument_list|(
 name|ap
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 name|ap
@@ -4899,7 +4911,7 @@ name|free
 argument_list|(
 name|ap
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 if|if
@@ -5150,7 +5162,7 @@ name|free
 argument_list|(
 name|ae
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5302,7 +5314,7 @@ name|malloc
 argument_list|(
 name|bufsize
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|,
 name|M_ZERO
 operator||
@@ -5450,7 +5462,7 @@ name|free
 argument_list|(
 name|result
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 name|result
@@ -10304,7 +10316,7 @@ name|malloc
 argument_list|(
 name|AMR_CMD_CLUSTERSIZE
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -10681,7 +10693,7 @@ name|free
 argument_list|(
 name|acc
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 block|}
@@ -11788,7 +11800,7 @@ name|free
 argument_list|(
 name|ap
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12131,7 +12143,7 @@ name|free
 argument_list|(
 name|ae
 argument_list|,
-name|M_DEVBUF
+name|M_AMR
 argument_list|)
 expr_stmt|;
 block|}
