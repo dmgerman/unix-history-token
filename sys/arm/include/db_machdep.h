@@ -185,8 +185,12 @@ name|inst_branch
 parameter_list|(
 name|ins
 parameter_list|)
-value|(((ins)& 0x0f000000) == 0x0a000000 || \ 				 ((ins)& 0x0fdffff0) == 0x079ff100 || \ 				 ((ins)& 0x0ff0f000) == 0x0590f000)
+value|(((ins)& 0x0f000000) == 0x0a000000 || \ 				 ((ins)& 0x0fdffff0) == 0x079ff100 || \ 				 ((ins)& 0x0ff0f000) == 0x0590f000 || \ 				 ((ins)& 0x0ffffff0) == 0x012fff30)
 end_define
+
+begin_comment
+comment|/* blx */
+end_comment
 
 begin_define
 define|#
