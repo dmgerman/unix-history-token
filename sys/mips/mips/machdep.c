@@ -954,7 +954,7 @@ name|sysctl_machdep_adjkerntz
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"Local offset from GMT in seconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -994,7 +994,7 @@ name|disable_rtc_set
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Disable setting the real time clock to system time"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1024,7 +1024,7 @@ name|bootinfo
 argument_list|,
 name|bootinfo
 argument_list|,
-literal|""
+literal|"Bootinfo struct: kernel filename, BIOS harddisk geometry, etc"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1055,7 +1055,7 @@ name|wall_cmos_clock
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Wall CMOS clock assumed"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -602,7 +602,7 @@ name|sysctl_machdep_counter_freq
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|""
+literal|"Timecounter frequency in Hz"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
