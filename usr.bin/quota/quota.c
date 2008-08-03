@@ -2040,6 +2040,9 @@ modifier|*
 name|qup
 decl_stmt|;
 block|{
+name|time_t
+name|tt
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"Raw %s quota information for id %lu on %s\n"
@@ -2167,6 +2170,15 @@ name|dqb_btime
 operator|!=
 literal|0
 condition|)
+block|{
+name|tt
+operator|=
+name|qup
+operator|->
+name|dqblk
+operator|.
+name|dqb_btime
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %s"
@@ -2174,14 +2186,11 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|qup
-operator|->
-name|dqblk
-operator|.
-name|dqb_btime
+name|tt
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|printf
 argument_list|(
@@ -2212,6 +2221,15 @@ name|dqb_itime
 operator|!=
 literal|0
 condition|)
+block|{
+name|tt
+operator|=
+name|qup
+operator|->
+name|dqblk
+operator|.
+name|dqb_itime
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %s"
@@ -2219,14 +2237,11 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|qup
-operator|->
-name|dqblk
-operator|.
-name|dqb_itime
+name|tt
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|printf
 argument_list|(
