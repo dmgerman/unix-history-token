@@ -4029,6 +4029,17 @@ value|((uint64_t) (y)>> 32)
 end_define
 
 begin_comment
+comment|/*  * The number of bits reserved for MSS in RealTek controllers is  * 11bits. This limits the maximum interface MTU size in TSO case  * as upper stack should not generate TCP segments with MSS greater  * than the limit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_TSO_MTU
+value|(2047 - ETHER_HDR_LEN - ETHER_CRC_LEN)
+end_define
+
+begin_comment
 comment|/* see comment in dev/re/if_re.c */
 end_comment
 
