@@ -65,12 +65,6 @@ directive|include
 file|<machine/armreg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
 begin_comment
 comment|/*  * Since we are compiled outside of the normal kernel build process, we  * need to include opt_global.h manually.  */
 end_comment
