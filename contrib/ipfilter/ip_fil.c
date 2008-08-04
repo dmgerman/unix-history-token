@@ -4556,6 +4556,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ipf_random
+end_ifndef
+
 begin_function
 name|u_32_t
 name|ipf_random
@@ -4591,6 +4597,11 @@ argument_list|()
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
