@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -389,6 +389,9 @@ name|trv
 decl_stmt|,
 modifier|*
 name|suffp
+decl_stmt|,
+modifier|*
+name|carryp
 decl_stmt|;
 name|char
 modifier|*
@@ -404,13 +407,25 @@ decl_stmt|;
 name|uint32_t
 name|rand
 decl_stmt|;
+name|char
+name|carrybuf
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 if|if
 condition|(
+operator|(
 name|doopen
 operator|!=
 name|NULL
 operator|&&
 name|domkdir
+operator|)
+operator|||
+name|slen
+operator|<
+literal|0
 condition|)
 block|{
 name|errno
@@ -454,6 +469,15 @@ condition|(
 name|trv
 operator|<
 name|path
+operator|||
+name|NULL
+operator|!=
+name|strchr
+argument_list|(
+name|suffp
+argument_list|,
+literal|'/'
+argument_list|)
 condition|)
 block|{
 name|errno
@@ -508,6 +532,18 @@ operator|=
 name|trv
 operator|+
 literal|1
+expr_stmt|;
+comment|/* save first combination of random characters */
+name|memcpy
+argument_list|(
+name|carrybuf
+argument_list|,
+name|start
+argument_list|,
+name|suffp
+operator|-
+name|start
+argument_list|)
 expr_stmt|;
 comment|/* 	 * check the target directory. 	 */
 if|if
@@ -702,17 +738,17 @@ control|(
 name|trv
 operator|=
 name|start
+operator|,
+name|carryp
+operator|=
+name|carrybuf
 init|;
 condition|;
 control|)
 block|{
+comment|/* have we tried all possible permutations? */
 if|if
 condition|(
-operator|*
-name|trv
-operator|==
-literal|'\0'
-operator|||
 name|trv
 operator|==
 name|suffp
@@ -722,6 +758,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* yes - exit with EEXIST */
 name|pad
 operator|=
 name|strchr
@@ -737,31 +774,60 @@ condition|(
 name|pad
 operator|==
 name|NULL
-operator|||
+condition|)
+block|{
+comment|/* this should never happen */
+name|errno
+operator|=
+name|EIO
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* increment character */
+operator|*
+name|trv
+operator|=
+operator|(
 operator|*
 operator|++
 name|pad
 operator|==
 literal|'\0'
-condition|)
-operator|*
-name|trv
-operator|++
-operator|=
+operator|)
+condition|?
 name|padchar
 index|[
 literal|0
 index|]
-expr_stmt|;
-else|else
-block|{
-operator|*
-name|trv
-operator|++
-operator|=
+else|:
 operator|*
 name|pad
 expr_stmt|;
+comment|/* carry to next position? */
+if|if
+condition|(
+operator|*
+name|trv
+operator|==
+operator|*
+name|carryp
+condition|)
+block|{
+comment|/* increment position and loop */
+operator|++
+name|trv
+expr_stmt|;
+operator|++
+name|carryp
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* try with new name */
 break|break;
 block|}
 block|}
