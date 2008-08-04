@@ -6261,7 +6261,11 @@ argument_list|,
 name|i
 argument_list|)
 argument_list|,
+operator|(
 name|PZERO
+operator|+
+literal|1
+operator|)
 operator||
 name|PCATCH
 argument_list|,
