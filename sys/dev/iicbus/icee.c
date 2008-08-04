@@ -60,13 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/resource.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/resource.h>
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -141,8 +141,8 @@ name|sc_dev
 decl_stmt|;
 comment|/* Myself */
 name|struct
-name|mtx
-name|sc_mtx
+name|sx
+name|sc_lock
 decl_stmt|;
 comment|/* basically a perimeter lock */
 name|struct
@@ -154,13 +154,6 @@ comment|/* user interface */
 name|int
 name|addr
 decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|OPENED
-value|1
 name|int
 name|size
 decl_stmt|;
@@ -188,7 +181,7 @@ name|ICEE_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_lock(&(_sc)->sc_mtx)
+value|sx_xlock(&(_sc)->sc_lock)
 end_define
 
 begin_define
@@ -198,7 +191,7 @@ name|ICEE_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_unlock(&(_sc)->sc_mtx)
+value|sx_xunlock(&(_sc)->sc_lock)
 end_define
 
 begin_define
@@ -208,8 +201,7 @@ name|ICEE_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|)
-define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->sc_dev), "icee", MTX_DEF)
+value|sx_init(&_sc->sc_lock, "icee")
 end_define
 
 begin_define
@@ -219,7 +211,7 @@ name|ICEE_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_destroy(&_sc->sc_mtx);
+value|sx_destroy(&_sc->sc_lock);
 end_define
 
 begin_define
@@ -229,7 +221,7 @@ name|ICEE_ASSERT_LOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_OWNED);
+value|sx_assert(&_sc->sc_lock, SA_XLOCKED);
 end_define
 
 begin_define
@@ -239,7 +231,7 @@ name|ICEE_ASSERT_UNLOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_NOTOWNED);
+value|sx_assert(&_sc->sc_lock, SA_UNLOCKED);
 end_define
 
 begin_define
@@ -295,6 +287,11 @@ operator|.
 name|d_version
 operator|=
 name|D_VERSION
+block|,
+operator|.
+name|d_flags
+operator|=
+name|D_TRACKCLOSE
 block|,
 operator|.
 name|d_open
@@ -587,47 +584,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|struct
-name|icee_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
-name|CDEV2SOFTC
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|ICEE_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|sc
-operator|->
-name|flags
-operator|&
-name|OPENED
-operator|)
-condition|)
-block|{
-name|sc
-operator|->
-name|flags
-operator||=
-name|OPENED
-expr_stmt|;
-block|}
-name|ICEE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -658,35 +614,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|struct
-name|icee_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
-name|CDEV2SOFTC
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|ICEE_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|flags
-operator|&=
-operator|~
-name|OPENED
-expr_stmt|;
-name|ICEE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0

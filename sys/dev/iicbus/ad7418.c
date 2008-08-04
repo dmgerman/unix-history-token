@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -265,8 +265,8 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
-name|mtx
-name|sc_mtx
+name|sx
+name|sc_lock
 decl_stmt|;
 name|int
 name|sc_curchan
@@ -372,6 +372,14 @@ decl_stmt|;
 name|int
 name|temp
 decl_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_lock
+argument_list|)
+expr_stmt|;
 name|ad7418_update
 argument_list|(
 name|sc
@@ -388,6 +396,14 @@ literal|64
 operator|)
 operator|*
 literal|25
+expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_lock
+argument_list|)
 expr_stmt|;
 return|return
 name|sysctl_handle_int
@@ -423,6 +439,14 @@ decl_stmt|;
 name|int
 name|volt
 decl_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_lock
+argument_list|)
+expr_stmt|;
 name|ad7418_update
 argument_list|(
 name|sc
@@ -441,6 +465,14 @@ operator|*
 literal|564
 operator|/
 literal|10
+expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_lock
+argument_list|)
 expr_stmt|;
 return|return
 name|sysctl_handle_int
@@ -506,7 +538,7 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
-name|mtx_init
+name|sx_init
 argument_list|(
 operator|&
 name|sc
@@ -514,10 +546,6 @@ operator|->
 name|sc_mtx
 argument_list|,
 literal|"ad7418"
-argument_list|,
-literal|"ad7418"
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -821,10 +849,9 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* 	 * NB: Linux driver delays here but chip data sheet 	 *     says nothing and things appear to work fine w/o 	 *     a delay on channel change.  If this is enabled 	 *     be sure to account for losing the mutex below 	 *     in ad7418_update. 	 */
-block|mtx_assert(&sc->sc_mtx, MA_OWNED);
+comment|/* 	 * NB: Linux driver delays here but chip data sheet 	 *     says nothing and things appear to work fine w/o 	 *     a delay on channel change. 	 */
 comment|/* let channel change settle, 1 tick should be 'nuf (need ~1ms) */
-block|msleep(sc,&sc->sc_mtx, 0, "ad7418", 1);
+block|tsleep(sc, 0, "ad7418", hz/1000);
 endif|#
 directive|endif
 block|}
@@ -932,12 +959,14 @@ block|{
 name|int
 name|v
 decl_stmt|;
-name|mtx_lock
+name|sx_assert
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_mtx
+name|sc_lock
+argument_list|,
+name|SA_XLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* NB: no point in updating any faster than the chip */
@@ -1019,14 +1048,6 @@ operator|=
 name|ticks
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
