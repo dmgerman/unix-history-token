@@ -631,10 +631,51 @@ comment|/* shutdownhook cookie */
 name|int
 name|gone
 decl_stmt|;
+name|struct
+name|mtx
+name|sc_lock
+decl_stmt|;
+name|struct
+name|callout
+name|sc_timer
+decl_stmt|;
+name|int
+name|sc_tx_timeout
+decl_stmt|;
 block|}
 name|snc_softc_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNC_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->sc_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNC_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->sc_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNC_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->sc_lock, MA_OWNED)
+end_define
 
 begin_comment
 comment|/*  * Accessing SONIC data structures and registers as 32 bit values  * makes code endianess independent.  The SONIC is however always in  * bigendian mode so it is necessary to ensure that data structures shared  * between the CPU and the SONIC are always in bigendian order.  */
@@ -1015,7 +1056,7 @@ value|((4*16 + 1) * ((sc->bitmode) ? 4 : 2))
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|sncconfig
 parameter_list|(
 name|struct
