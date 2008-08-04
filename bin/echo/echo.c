@@ -114,6 +114,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__dead2
 name|void
 name|errexit
 parameter_list|(

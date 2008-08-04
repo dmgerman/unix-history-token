@@ -284,20 +284,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|__archive_errx
-parameter_list|(
+argument_list|(
 name|int
 name|retvalue
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|msg
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

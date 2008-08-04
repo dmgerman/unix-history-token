@@ -80,18 +80,19 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|gerr
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|s
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
