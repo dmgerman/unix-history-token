@@ -6230,6 +6230,21 @@ name|ifp
 operator|->
 name|if_capabilities
 expr_stmt|;
+comment|/* 	 * Don't enable TSO by default. Under certain 	 * circumtances the controller generated corrupted 	 * packets in TSO size. 	 */
+name|ifp
+operator|->
+name|if_hwassist
+operator|&=
+operator|~
+name|CSUM_TSO
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|&=
+operator|~
+name|IFCAP_TSO4
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
