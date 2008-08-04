@@ -1536,7 +1536,6 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1633,7 +1632,6 @@ name|dest
 operator|=
 name|word
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1761,7 +1759,6 @@ argument_list|,
 name|RL_EEMODE_PROGRAM
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7633,7 +7630,6 @@ name|RE_ETHER_ALIGN
 operator|-
 name|ETHER_ALIGN
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9800,7 +9796,6 @@ argument_list|,
 name|RL_INTRS_CPLUS
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10803,7 +10798,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11072,7 +11066,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
