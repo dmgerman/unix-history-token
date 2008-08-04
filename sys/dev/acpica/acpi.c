@@ -1570,7 +1570,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * ACPI can only be loaded as a module by the loader; activating it after  * system bootstrap time is not useful, and can be fatal to the system.  * It also cannot be unloaded, since the entire system bus heirarchy hangs  * off it.  */
+comment|/*  * ACPI can only be loaded as a module by the loader; activating it after  * system bootstrap time is not useful, and can be fatal to the system.  * It also cannot be unloaded, since the entire system bus hierarchy hangs  * off it.  */
 end_comment
 
 begin_function
