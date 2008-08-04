@@ -872,6 +872,23 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|pmap_kenter_attr
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_paddr_t
+name|pa
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|vm_page_t
 name|pmap_lookup_pt_page
 parameter_list|(
@@ -4788,7 +4805,8 @@ block|}
 end_function
 
 begin_function
-name|PMAP_INLINE
+specifier|static
+name|__inline
 name|void
 name|pmap_kenter_attr
 parameter_list|(
