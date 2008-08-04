@@ -403,13 +403,6 @@ name|intr_event
 modifier|*
 name|event
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -419,11 +412,6 @@ name|cnt
 operator|.
 name|v_intr
 argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_intr_nesting_level
-operator|++
 expr_stmt|;
 while|while
 condition|(
@@ -474,11 +462,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|td
-operator|->
-name|td_intr_nesting_level
-operator|--
-expr_stmt|;
 block|}
 end_function
 
