@@ -10960,9 +10960,6 @@ break|break;
 block|}
 block|}
 comment|/* 	 * Disabling Rx/Tx MACs have a side-effect of resetting 	 * JME_TXNDA/JME_RXNDA register to the first address of 	 * Tx/Rx descriptor address. So driver should reset its 	 * internal procucer/consumer pointer and reclaim any 	 * allocated resources. Note, just saving the value of 	 * JME_TXNDA and JME_RXNDA registers before stopping MAC 	 * and restoring JME_TXNDA/JME_RXNDA register is not 	 * sufficient to make sure correct MAC state because 	 * stopping MAC operation can take a while and hardware 	 * might have updated JME_TXNDA/JME_RXNDA registers 	 * during the stop operation. 	 */
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* Block execution of task. */
 name|taskqueue_block
 argument_list|(
@@ -10971,8 +10968,6 @@ operator|->
 name|jme_tq
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Disable interrupts and stop driver. */
 name|CSR_WRITE_4
 argument_list|(
@@ -11388,9 +11383,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* Unblock execution of task. */
 name|taskqueue_unblock
 argument_list|(
@@ -11399,8 +11391,6 @@ operator|->
 name|jme_tq
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Reenable interrupts. */
 name|CSR_WRITE_4
 argument_list|(
