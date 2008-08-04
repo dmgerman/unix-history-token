@@ -1110,12 +1110,12 @@ parameter_list|(
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ipqlabel
+name|qlabel
 parameter_list|,
 name|struct
 name|mbuf
@@ -1342,12 +1342,12 @@ parameter_list|,
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ipqlabel
+name|qlabel
 parameter_list|)
 block|{  }
 end_function
@@ -1589,12 +1589,12 @@ parameter_list|,
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ipqlabel
+name|qlabel
 parameter_list|)
 block|{
 return|return
@@ -1687,12 +1687,12 @@ parameter_list|,
 name|struct
 name|ipq
 modifier|*
-name|ipq
+name|q
 parameter_list|,
 name|struct
 name|label
 modifier|*
-name|ipqlabel
+name|qlabel
 parameter_list|)
 block|{  }
 end_function
