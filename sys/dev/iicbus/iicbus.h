@@ -15,6 +15,18 @@ directive|define
 name|__IICBUS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -51,6 +63,10 @@ name|u_char
 name|started
 decl_stmt|;
 comment|/* address of the 'started' slave 				 * 0 if no start condition succeeded */
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -87,7 +103,7 @@ parameter_list|,
 name|T
 parameter_list|)
 define|\
-value|__inline static int							\ iicbus_get_ ## A(device_t dev, T *t)					\ {									\ 	return BUS_READ_IVAR(device_get_parent(dev), dev,		\ 	    IICBUS_IVAR_ ## B, (uintptr_t *) t);			\ }
+value|__BUS_ACCESSOR(iicbus, A, IICBUS, B, T)
 end_define
 
 begin_macro
@@ -100,6 +116,36 @@ argument_list|,
 argument|uint32_t
 argument_list|)
 end_macro
+
+begin_define
+define|#
+directive|define
+name|IICBUS_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IICBUS_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IICBUS_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->lock, MA_OWNED)
+end_define
 
 begin_function_decl
 specifier|extern

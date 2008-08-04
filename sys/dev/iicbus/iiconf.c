@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -39,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -138,23 +150,31 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|IICBUS_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|how
 condition|)
 block|{
 case|case
-operator|(
 name|IIC_WAIT
 operator||
 name|IIC_INTR
-operator|)
 case|:
 name|error
 operator|=
-name|tsleep
+name|mtx_sleep
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|lock
 argument_list|,
 name|IICPRI
 operator||
@@ -167,17 +187,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|IIC_WAIT
 operator||
 name|IIC_NOINTR
-operator|)
 case|:
 name|error
 operator|=
-name|tsleep
+name|mtx_sleep
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|lock
 argument_list|,
 name|IICPRI
 argument_list|,
@@ -237,13 +260,16 @@ name|bus
 argument_list|)
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
 decl_stmt|;
 comment|/* first, ask the underlying layers if the request is ok */
+name|IICBUS_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|error
@@ -291,11 +317,6 @@ operator|!
 name|error
 condition|)
 block|{
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -309,11 +330,6 @@ operator|!=
 name|dev
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|iicbus_poll
@@ -332,9 +348,9 @@ name|owner
 operator|=
 name|dev
 expr_stmt|;
-name|splx
+name|IICBUS_UNLOCK
 argument_list|(
-name|s
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -365,6 +381,11 @@ name|how
 argument_list|)
 expr_stmt|;
 block|}
+name|IICBUS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -404,8 +425,6 @@ name|bus
 argument_list|)
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* first, ask the underlying layers if the release is ok */
@@ -432,10 +451,10 @@ operator|(
 name|error
 operator|)
 return|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
+name|IICBUS_LOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -446,9 +465,9 @@ operator|!=
 name|dev
 condition|)
 block|{
-name|splx
+name|IICBUS_UNLOCK
 argument_list|(
-name|s
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -461,15 +480,15 @@ name|sc
 operator|->
 name|owner
 operator|=
-literal|0
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|NULL
 expr_stmt|;
 comment|/* wakeup waiting processes */
 name|wakeup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|IICBUS_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -1208,7 +1227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * iicbus_trasnfer()  *  * Do an aribtrary number of transfers on the iicbus.  We pass these  * raw requests to the bridge driver.  If the bridge driver supports  * them directly, then it manages all the details.  If not, it can use  * the helper function iicbus_transfer_gen() which will do the  * transfers at a low level.  *  * Pointers passed in as part of iic_msg must be kernel pointers.  * Callers that have user addresses to manage must do so on their own.  */
+comment|/*  * iicbus_transfer()  *  * Do an aribtrary number of transfers on the iicbus.  We pass these  * raw requests to the bridge driver.  If the bridge driver supports  * them directly, then it manages all the details.  If not, it can use  * the helper function iicbus_transfer_gen() which will do the  * transfers at a low level.  *  * Pointers passed in as part of iic_msg must be kernel pointers.  * Callers that have user addresses to manage must do so on their own.  */
 end_comment
 
 begin_function
@@ -1300,7 +1319,9 @@ operator|!=
 literal|1
 condition|)
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 name|bus
 operator|=
