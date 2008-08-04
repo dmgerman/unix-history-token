@@ -703,10 +703,6 @@ argument_list|(
 name|elem
 argument_list|)
 expr_stmt|;
-name|p
-operator|=
-name|curline
-expr_stmt|;
 do|do
 block|{
 if|if

@@ -465,10 +465,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|vrow
-operator|+=
-name|varsetsize
-expr_stmt|;
 name|rrow
 operator|+=
 name|rulesetsize
@@ -550,10 +546,6 @@ name|WORDSIZE
 argument_list|(
 name|nrules
 argument_list|)
-expr_stmt|;
-name|rsp
-operator|=
-name|ruleset
 expr_stmt|;
 name|rsend
 operator|=

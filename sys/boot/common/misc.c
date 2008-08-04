@@ -65,10 +65,6 @@ name|cp
 decl_stmt|;
 for|for
 control|(
-name|hlong
-operator|=
-literal|0
-operator|,
 name|i
 operator|=
 literal|0
