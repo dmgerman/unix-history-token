@@ -447,6 +447,16 @@ block|}
 block|,
 literal|0
 block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_ASUS
+block|,
+name|USB_PRODUCT_ASUS_P535
+block|}
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
