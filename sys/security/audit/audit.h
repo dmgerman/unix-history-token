@@ -1083,6 +1083,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|audit_proc_coredump
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|int
+name|errcode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|audit_thread_alloc
 parameter_list|(
 name|struct
