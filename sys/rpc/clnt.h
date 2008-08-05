@@ -44,6 +44,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/netconfig.h>
 end_include
 
@@ -166,6 +172,65 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Functions of this type may be used to receive notification when RPC  * calls have to be re-transmitted etc.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|rpc_feedback
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|int
+name|procnum
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * A structure used with CLNT_CALL_EXT to pass extra information used  * while processing an RPC call.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rpc_callextra
+block|{
+name|AUTH
+modifier|*
+name|rc_auth
+decl_stmt|;
+comment|/* auth handle to use for this call */
+name|rpc_feedback
+modifier|*
+name|rc_feedback
+decl_stmt|;
+comment|/* callback for retransmits etc. */
+name|void
+modifier|*
+name|rc_feedback_arg
+decl_stmt|;
+comment|/* argument for callback */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Client rpc handle.  * Created by individual implementations  * Client is responsible for initializing auth, see e.g. auth_none.c.  */
 end_comment
@@ -175,6 +240,134 @@ typedef|typedef
 struct|struct
 name|__rpc_client
 block|{
+ifdef|#
+directive|ifdef
+name|_KERNEL
+specifier|volatile
+name|u_int
+name|cl_refs
+decl_stmt|;
+comment|/* reference count */
+name|AUTH
+modifier|*
+name|cl_auth
+decl_stmt|;
+comment|/* authenticator */
+struct|struct
+name|clnt_ops
+block|{
+comment|/* call remote procedure */
+name|enum
+name|clnt_stat
+function_decl|(
+modifier|*
+name|cl_call
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_client
+modifier|*
+parameter_list|,
+name|struct
+name|rpc_callextra
+modifier|*
+parameter_list|,
+name|rpcproc_t
+parameter_list|,
+name|xdrproc_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|xdrproc_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|timeval
+parameter_list|)
+function_decl|;
+comment|/* abort a call */
+name|void
+function_decl|(
+modifier|*
+name|cl_abort
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_client
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* get specific error code */
+name|void
+function_decl|(
+modifier|*
+name|cl_geterr
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_client
+modifier|*
+parameter_list|,
+name|struct
+name|rpc_err
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* frees results */
+name|bool_t
+function_decl|(
+modifier|*
+name|cl_freeres
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_client
+modifier|*
+parameter_list|,
+name|xdrproc_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* destroy this structure */
+name|void
+function_decl|(
+modifier|*
+name|cl_destroy
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_client
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* the ioctl() of rpc */
+name|bool_t
+function_decl|(
+modifier|*
+name|cl_control
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_client
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+modifier|*
+name|cl_ops
+struct|;
+else|#
+directive|else
 name|AUTH
 modifier|*
 name|cl_auth
@@ -289,6 +482,8 @@ block|}
 modifier|*
 name|cl_ops
 struct|;
+endif|#
+directive|endif
 name|void
 modifier|*
 name|cl_private
@@ -340,8 +535,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FEEDBACK_REXMIT1
+name|FEEDBACK_OK
 value|1
+end_define
+
+begin_comment
+comment|/* no retransmits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FEEDBACK_REXMIT1
+value|2
 end_define
 
 begin_comment
@@ -351,12 +557,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FEEDBACK_OK
-value|2
+name|FEEDBACK_REXMIT2
+value|3
 end_define
 
 begin_comment
-comment|/* no retransmits */
+comment|/* second and subsequent retransmit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FEEDBACK_RECONNECT
+value|4
+end_define
+
+begin_comment
+comment|/* client reconnect */
 end_comment
 
 begin_comment
@@ -392,9 +609,77 @@ begin_comment
 comment|/*  * client side rpc interface ops  *  * Parameter types are:  *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CLNT_ACQUIRE
+parameter_list|(
+name|rh
+parameter_list|)
+define|\
+value|refcount_acquire(&(rh)->cl_refs)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLNT_RELEASE
+parameter_list|(
+name|rh
+parameter_list|)
+define|\
+value|if (refcount_release(&(rh)->cl_refs))	\ 		CLNT_DESTROY(rh)
+end_define
+
+begin_comment
+comment|/*  * enum clnt_stat  * CLNT_CALL_EXT(rh, ext, proc, xargs, argsp, xres, resp, timeout)  * 	CLIENT *rh;  *	struct rpc_callextra *ext;  *	rpcproc_t proc;  *	xdrproc_t xargs;  *	void *argsp;  *	xdrproc_t xres;  *	void *resp;  *	struct timeval timeout;  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLNT_CALL_EXT
+parameter_list|(
+name|rh
+parameter_list|,
+name|ext
+parameter_list|,
+name|proc
+parameter_list|,
+name|xargs
+parameter_list|,
+name|argsp
+parameter_list|,
+name|xres
+parameter_list|,
+name|resp
+parameter_list|,
+name|secs
+parameter_list|)
+define|\
+value|((*(rh)->cl_ops->cl_call)(rh, ext, proc, xargs,		\ 		argsp, xres, resp, secs))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * enum clnt_stat  * CLNT_CALL(rh, proc, xargs, argsp, xres, resp, timeout)  * 	CLIENT *rh;  *	rpcproc_t proc;  *	xdrproc_t xargs;  *	void *argsp;  *	xdrproc_t xres;  *	void *resp;  *	struct timeval timeout;  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -416,7 +701,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		argsp, xres, resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, NULL, proc, xargs,	\ 		argsp, xres, resp, secs))
 end_define
 
 begin_define
@@ -439,8 +724,64 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		argsp, xres, resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, NULL, proc, xargs,	\ 		argsp, xres, resp, secs))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CLNT_CALL
+parameter_list|(
+name|rh
+parameter_list|,
+name|proc
+parameter_list|,
+name|xargs
+parameter_list|,
+name|argsp
+parameter_list|,
+name|xres
+parameter_list|,
+name|resp
+parameter_list|,
+name|secs
+parameter_list|)
+define|\
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs,	\ 		argsp, xres, resp, secs))
+end_define
+
+begin_define
+define|#
+directive|define
+name|clnt_call
+parameter_list|(
+name|rh
+parameter_list|,
+name|proc
+parameter_list|,
+name|xargs
+parameter_list|,
+name|argsp
+parameter_list|,
+name|xres
+parameter_list|,
+name|resp
+parameter_list|,
+name|secs
+parameter_list|)
+define|\
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs,	\ 		argsp, xres, resp, secs))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * void  * CLNT_ABORT(rh);  * 	CLIENT *rh;  */
@@ -834,6 +1175,28 @@ end_define
 
 begin_comment
 comment|/* set interruptible flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_RETRIES
+value|25
+end_define
+
+begin_comment
+comment|/* set retry count for reconnect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_RETRIES
+value|26
+end_define
+
+begin_comment
+comment|/* get retry count for reconnect */
 end_comment
 
 begin_endif
@@ -1578,6 +1941,9 @@ name|rpc_createerr
 value|(*(__rpc_createerr()))
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|_KERNEL
 comment|/*  * The simplified interface:  * enum clnt_stat  * rpc_call(host, prognum, versnum, procnum, inproc, in, outproc, out, nettype)  *	const char *host;  *	const rpcprog_t prognum;  *	const rpcvers_t versnum;  *	const rpcproc_t procnum;  *	const xdrproc_t inproc, outproc;  *	const char *in;  *	char *out;  *	const char *nettype;  */
 name|__BEGIN_DECLS
 specifier|extern
@@ -1721,12 +2087,6 @@ end_function_decl
 begin_macro
 name|__END_DECLS
 end_macro
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
 
 begin_comment
 comment|/* For backward compatibility */

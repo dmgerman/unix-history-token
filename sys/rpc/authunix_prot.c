@@ -166,12 +166,23 @@ operator|==
 name|XDR_ENCODE
 condition|)
 block|{
+comment|/* 		 * Restrict name length to 255 according to RFC 1057. 		 */
 name|namelen
 operator|=
 name|strlen
 argument_list|(
 name|hostname
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|namelen
+operator|>
+literal|255
+condition|)
+name|namelen
+operator|=
+literal|255
 expr_stmt|;
 block|}
 else|else

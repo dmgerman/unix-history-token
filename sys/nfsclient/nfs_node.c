@@ -985,6 +985,16 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the NLM is running, give it a chance to abort pending 	 * locks. 	 */
+if|if
+condition|(
+name|nfs_reclaim_p
+condition|)
+name|nfs_reclaim_p
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Destroy the vm object and flush associated pages. 	 */
 name|vnode_destroy_vobject
 argument_list|(

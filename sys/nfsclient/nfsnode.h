@@ -660,6 +660,22 @@ name|buf_ops_nfs4
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vop_advlock_t
+modifier|*
+name|nfs_advlock_p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vop_reclaim_t
+modifier|*
+name|nfs_reclaim_p
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Prototypes for NFS vnode operations  */
 end_comment

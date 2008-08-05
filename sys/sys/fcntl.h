@@ -868,6 +868,17 @@ begin_comment
 comment|/* Lock owner is remote NFS client */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_NOINTR
+value|0x100
+end_define
+
+begin_comment
+comment|/* Ignore signals when waiting */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

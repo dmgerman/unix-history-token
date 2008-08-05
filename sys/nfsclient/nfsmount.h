@@ -237,6 +237,13 @@ name|struct
 name|nfs_tcp_mountstate
 name|nm_nfstcpstate
 decl_stmt|;
+name|char
+name|nm_hostname
+index|[
+name|MNAMELEN
+index|]
+decl_stmt|;
+comment|/* server's name */
 comment|/* NFSv4 */
 name|uint64_t
 name|nm_clientid
