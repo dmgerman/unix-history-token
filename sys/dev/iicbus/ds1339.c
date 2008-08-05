@@ -260,12 +260,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|addr
+operator|=
 name|iicbus_get_addr
 argument_list|(
 name|dev
-argument_list|,
-operator|&
-name|addr
 argument_list|)
 expr_stmt|;
 if|if
