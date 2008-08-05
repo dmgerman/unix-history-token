@@ -218,6 +218,15 @@ comment|/* don't sent mail if this file exist */
 end_comment
 
 begin_decl_stmt
+name|char
+name|path
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|fixs
 name|neaster
@@ -825,7 +834,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|printing
@@ -837,6 +847,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|event_print_all
 argument_list|(
@@ -852,10 +863,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Functions to handle buffered calendar events.  */
-end_comment
 
 begin_function
 name|struct
@@ -891,6 +898,7 @@ name|event
 modifier|*
 name|e
 decl_stmt|;
+comment|/* 	 * Creating a new event: 	 * - Create a new event 	 * - Copy the machine readable day and month 	 * - Copy the human readable and language specific date 	 * - Copy the text of the event 	 */
 name|e
 operator|=
 operator|(
@@ -1018,6 +1026,7 @@ name|char
 modifier|*
 name|text
 decl_stmt|;
+comment|/* 	 * Adding text to the event: 	 * - Save a copy of the old text (unknown length, so strdup()) 	 * - Allocate enough space for old text + \n + new text + 0 	 * - Store the old text + \n + new text 	 * - Destroy the saved copy. 	 */
 name|text
 operator|=
 name|strdup
@@ -1144,13 +1153,6 @@ modifier|*
 name|e_next
 decl_stmt|;
 name|int
-name|daycount
-init|=
-name|f_dayAfter
-operator|+
-name|f_dayBefore
-decl_stmt|;
-name|int
 name|daycounter
 decl_stmt|;
 name|int
@@ -1158,6 +1160,7 @@ name|day
 decl_stmt|,
 name|month
 decl_stmt|;
+comment|/* 	 * Print all events: 	 * - We know the number of days to be counted (f_dayAfter + f_dayBefore) 	 * - We know the current day of the year ("now" - f_dayBefore + counter) 	 * - We know the number of days in the year (yrdays, set in settime()) 	 * - So we know the date on which the current daycounter is on the 	 *   calendar in days and months. 	 * - Go through the list of events, and print all matching dates 	 */
 for|for
 control|(
 name|daycounter
@@ -1166,7 +1169,9 @@ literal|0
 init|;
 name|daycounter
 operator|<=
-name|daycount
+name|f_dayAfter
+operator|+
+name|f_dayBefore
 condition|;
 name|daycounter
 operator|++
@@ -1202,6 +1207,7 @@ name|day
 operator|-=
 name|yrdays
 expr_stmt|;
+comment|/* 		 * When we know the day of the year, we can determine the day 		 * of the month and the month. 		 */
 name|month
 operator|=
 literal|1
@@ -1253,6 +1259,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 		 * Go through all events and print the text of the matching 		 * dates 		 */
 for|for
 control|(
 name|e
@@ -1745,15 +1752,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-name|char
-name|path
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|FILE

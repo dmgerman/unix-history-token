@@ -270,7 +270,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* month (Januar ...) */
+comment|/* month (January ...) */
 end_comment
 
 begin_define
@@ -325,7 +325,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* days bevore current date */
+comment|/* days before current date */
 end_comment
 
 begin_decl_stmt
@@ -339,20 +339,9 @@ begin_comment
 comment|/* day before weekend */
 end_comment
 
-begin_struct
-struct|struct
-name|fixs
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_comment
+comment|/*  * Event sorting related functions:  * - Use event_add() to create a new event  * - Use event_continue() to add more text to the last added event  * - Use event_print_all() to display them in time chronological order  */
+end_comment
 
 begin_function_decl
 name|struct
@@ -363,24 +352,18 @@ parameter_list|(
 name|struct
 name|event
 modifier|*
-name|events
 parameter_list|,
 name|int
-name|month
 parameter_list|,
 name|int
-name|day
 parameter_list|,
 name|char
 modifier|*
-name|date
 parameter_list|,
 name|int
-name|var
 parameter_list|,
 name|char
 modifier|*
-name|txt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -417,10 +400,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Stored calendar event */
-end_comment
-
 begin_struct
 struct|struct
 name|event
@@ -446,6 +425,21 @@ name|struct
 name|event
 modifier|*
 name|next
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|fixs
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|}
 struct|;
