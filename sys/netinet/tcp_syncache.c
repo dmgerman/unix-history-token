@@ -4121,7 +4121,7 @@ goto|goto
 name|failed
 goto|;
 block|}
-comment|/* 	 * The SEQ must fall in the window starting a the received initial receive  	 * sequence number + 1 (the SYN). 	 */
+comment|/* 	 * The SEQ must fall in the window starting at the received 	 * initial receive sequence number + 1 (the SYN). 	 */
 if|if
 condition|(
 operator|(
