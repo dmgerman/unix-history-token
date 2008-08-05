@@ -10216,6 +10216,9 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|wakeup_swapper
+decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -10939,6 +10942,10 @@ name|out
 goto|;
 block|}
 comment|/* 		 * All other kinds of signals: 		 * If a thread is sleeping interruptibly, simulate a 		 * wakeup so that when it is continued it will be made 		 * runnable and can look at the signal.  However, don't make 		 * the PROCESS runnable, leave it stopped. 		 * It may run a bit until it hits a thread_suspend_check(). 		 */
+name|wakeup_swapper
+operator|=
+literal|0
+expr_stmt|;
 name|PROC_SLOCK
 argument_list|(
 name|p
@@ -10964,6 +10971,8 @@ operator|&
 name|TDF_SINTR
 operator|)
 condition|)
+name|wakeup_swapper
+operator|=
 name|sleepq_abort
 argument_list|(
 name|td
@@ -10980,6 +10989,13 @@ name|PROC_SUNLOCK
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 goto|goto
 name|out
@@ -11216,6 +11232,13 @@ specifier|register
 name|int
 name|prop
 decl_stmt|;
+name|int
+name|wakeup_swapper
+decl_stmt|;
+name|wakeup_swapper
+operator|=
+literal|0
+expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -11353,6 +11376,8 @@ argument_list|,
 name|PUSER
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_abort
 argument_list|(
 name|td
@@ -11397,6 +11422,13 @@ name|thread_unlock
 argument_list|(
 name|td
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 end_function

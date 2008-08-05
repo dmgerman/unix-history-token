@@ -870,7 +870,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|wakeupshlk
 parameter_list|(
 name|struct
@@ -894,6 +894,8 @@ name|x
 decl_stmt|;
 name|int
 name|queue
+decl_stmt|,
+name|wakeup_swapper
 decl_stmt|;
 name|TD_LOCKS_DEC
 argument_list|(
@@ -936,6 +938,10 @@ name|file
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+name|wakeup_swapper
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -1127,6 +1133,8 @@ else|:
 literal|"exclusive"
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_broadcast
 argument_list|(
 operator|&
@@ -1159,6 +1167,11 @@ operator|->
 name|lock_object
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|wakeup_swapper
+operator|)
+return|;
 block|}
 end_function
 
@@ -1498,6 +1511,8 @@ decl_stmt|,
 name|itimo
 decl_stmt|,
 name|queue
+decl_stmt|,
+name|wakeup_swapper
 decl_stmt|;
 name|contested
 operator|=
@@ -1727,6 +1742,10 @@ condition|)
 name|op
 operator|=
 name|LK_EXCLUSIVE
+expr_stmt|;
+name|wakeup_swapper
+operator|=
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -2173,6 +2192,8 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * We have been unable to succeed in upgrading, so just 		 * give up the shared lock. 		 */
+name|wakeup_swapper
+operator|+=
 name|wakeupshlk
 argument_list|(
 name|lk
@@ -3015,6 +3036,8 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_broadcast
 argument_list|(
 operator|&
@@ -3040,6 +3063,8 @@ expr_stmt|;
 break|break;
 block|}
 else|else
+name|wakeup_swapper
+operator|=
 name|wakeupshlk
 argument_list|(
 name|lk
@@ -3303,6 +3328,8 @@ else|:
 literal|"exclusive"
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|+=
 name|sleepq_broadcast
 argument_list|(
 operator|&
@@ -3585,6 +3612,13 @@ name|lc_unlock
 argument_list|(
 name|ilk
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

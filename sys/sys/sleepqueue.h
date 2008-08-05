@@ -130,7 +130,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sleepq_abort
 parameter_list|(
 name|struct
@@ -183,7 +183,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sleepq_broadcast
 parameter_list|(
 name|void
@@ -266,7 +266,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sleepq_signal
 parameter_list|(
 name|void

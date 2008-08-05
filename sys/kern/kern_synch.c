@@ -1268,11 +1268,16 @@ modifier|*
 name|ident
 parameter_list|)
 block|{
+name|int
+name|wakeup_swapper
+decl_stmt|;
 name|sleepq_lock
 argument_list|(
 name|ident
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_broadcast
 argument_list|(
 name|ident
@@ -1288,6 +1293,13 @@ name|sleepq_release
 argument_list|(
 name|ident
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1305,11 +1317,16 @@ modifier|*
 name|ident
 parameter_list|)
 block|{
+name|int
+name|wakeup_swapper
+decl_stmt|;
 name|sleepq_lock
 argument_list|(
 name|ident
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_signal
 argument_list|(
 name|ident
@@ -1325,6 +1342,13 @@ name|sleepq_release
 argument_list|(
 name|ident
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1817,11 +1841,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Change process state to be runnable,  * placing it on the run queue if it is in memory,  * and awakening the swapper if it isn't in memory.  */
+comment|/*  * Change thread state to be runnable, placing it on the run queue if  * it is in memory.  If it is swapped out, return true so our caller  * will know to awaken the swapper.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|setrunnable
 parameter_list|(
 name|struct
@@ -1871,7 +1895,11 @@ case|:
 case|case
 name|TDS_RUNQ
 case|:
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|TDS_INHIBITED
 case|:
@@ -1884,8 +1912,12 @@ name|td_inhibitors
 operator|!=
 name|TDI_SWAPPED
 condition|)
-return|return;
-comment|/* XXX: intentional fall-through ? */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* FALLTHROUGH */
 case|case
 name|TDS_CAN_RUN
 case|:
@@ -1938,10 +1970,11 @@ name|td_flags
 operator||=
 name|TDF_SWAPINREQ
 expr_stmt|;
-comment|/* 			 * due to a LOR between the thread lock and 			 * the sleepqueue chain locks, use 			 * lower level scheduling functions. 			 */
-name|kick_proc0
-argument_list|()
-expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 block|}
 else|else
@@ -1950,6 +1983,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

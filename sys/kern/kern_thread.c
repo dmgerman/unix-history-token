@@ -1882,6 +1882,8 @@ name|p
 decl_stmt|;
 name|int
 name|remaining
+decl_stmt|,
+name|wakeup_swapper
 decl_stmt|;
 name|td
 operator|=
@@ -2085,6 +2087,10 @@ condition|)
 goto|goto
 name|stopme
 goto|;
+name|wakeup_swapper
+operator|=
+literal|0
+expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -2170,6 +2176,8 @@ operator|&
 name|TDF_SINTR
 operator|)
 condition|)
+name|wakeup_swapper
+operator|=
 name|sleepq_abort
 argument_list|(
 name|td2
@@ -2259,6 +2267,13 @@ name|td2
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -3005,11 +3020,25 @@ operator|->
 name|p_suspcount
 operator|--
 expr_stmt|;
+if|if
+condition|(
 name|setrunnable
 argument_list|(
 name|td
 argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|panic
+argument_list|(
+literal|"not waking up swapper"
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 end_function
 

@@ -1419,6 +1419,13 @@ modifier|*
 name|cvp
 parameter_list|)
 block|{
+name|int
+name|wakeup_swapper
+decl_stmt|;
+name|wakeup_swapper
+operator|=
+literal|0
+expr_stmt|;
 name|sleepq_lock
 argument_list|(
 name|cvp
@@ -1438,6 +1445,8 @@ operator|->
 name|cv_waiters
 operator|--
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_signal
 argument_list|(
 name|cvp
@@ -1454,6 +1463,13 @@ name|sleepq_release
 argument_list|(
 name|cvp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1475,7 +1491,14 @@ name|int
 name|pri
 parameter_list|)
 block|{
+name|int
+name|wakeup_swapper
+decl_stmt|;
 comment|/* 	 * XXX sleepq_broadcast pri argument changed from -1 meaning 	 * no pri to 0 meaning no pri. 	 */
+name|wakeup_swapper
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|pri
@@ -1507,6 +1530,8 @@ name|cv_waiters
 operator|=
 literal|0
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_broadcast
 argument_list|(
 name|cvp
@@ -1523,6 +1548,13 @@ name|sleepq_release
 argument_list|(
 name|cvp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 end_function
