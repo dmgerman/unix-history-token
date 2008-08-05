@@ -886,31 +886,5 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|pcf_isa
-argument_list|,
-name|iicbus
-argument_list|,
-name|PCF_MINVER
-argument_list|,
-name|PCF_PREFVER
-argument_list|,
-name|PCF_MAXVER
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_VERSION
-argument_list|(
-name|pcf_isa
-argument_list|,
-name|PCF_MODVER
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 end_unit
 
