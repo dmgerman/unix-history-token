@@ -182,6 +182,17 @@ begin_comment
 comment|/* day before weekend */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+argument_list|(
+name|void
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -456,7 +467,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
+name|__dead2
 name|usage
 parameter_list|(
 name|void
