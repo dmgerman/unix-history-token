@@ -3311,10 +3311,15 @@ decl_stmt|;
 name|gss_qop_t
 name|qop_state
 decl_stmt|;
-name|u_char
+name|int32_t
 name|rpchdr
 index|[
 literal|128
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int32_t
+argument_list|)
 index|]
 decl_stmt|;
 name|int32_t
@@ -3341,10 +3346,6 @@ expr_stmt|;
 comment|/* Reconstruct RPC header for signing (from xdr_callmsg). */
 name|buf
 operator|=
-operator|(
-name|int32_t
-operator|*
-operator|)
 name|rpchdr
 expr_stmt|;
 name|IXDR_PUT_LONG
@@ -3490,6 +3491,10 @@ operator|*
 operator|)
 name|buf
 operator|-
+operator|(
+name|u_char
+operator|*
+operator|)
 name|rpchdr
 expr_stmt|;
 name|checksum
