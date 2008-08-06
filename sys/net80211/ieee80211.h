@@ -3850,6 +3850,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WPS_OUI_TYPE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|RSN_OUI
 value|0xac0f00
 end_define
