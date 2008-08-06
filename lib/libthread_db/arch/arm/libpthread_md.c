@@ -506,6 +506,7 @@ name|struct
 name|fpreg
 modifier|*
 name|r
+name|__unused
 parameter_list|,
 name|ucontext_t
 modifier|*
@@ -550,6 +551,7 @@ specifier|const
 name|ucontext_t
 modifier|*
 name|uc
+name|__unused
 parameter_list|,
 name|struct
 name|fpreg
@@ -591,9 +593,11 @@ name|struct
 name|reg
 modifier|*
 name|reg
+name|__unused
 parameter_list|,
 name|int
 name|step
+name|__unused
 parameter_list|)
 block|{
 comment|/* XXX */

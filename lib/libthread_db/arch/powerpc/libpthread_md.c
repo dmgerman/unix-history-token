@@ -296,9 +296,11 @@ name|struct
 name|reg
 modifier|*
 name|reg
+name|__unused
 parameter_list|,
 name|int
 name|step
+name|__unused
 parameter_list|)
 block|{
 comment|/* XXX */
