@@ -1070,6 +1070,11 @@ argument_list|(
 name|pseudo_random
 argument_list|)
 expr_stmt|;
+name|OPTSYM
+argument_list|(
+name|pname_to_uid
+argument_list|)
+expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&

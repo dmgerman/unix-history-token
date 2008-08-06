@@ -2375,6 +2375,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_UID_T_DECLARED
+end_ifdef
+
+begin_function_decl
+name|OM_uint32
+name|gss_pname_to_uid
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+specifier|const
+name|gss_name_t
+name|pname
+parameter_list|,
+comment|/* principal name */
+specifier|const
+name|gss_OID
+name|mech
+parameter_list|,
+comment|/* mechanism to query */
+name|uid_t
+modifier|*
+name|uidp
+comment|/* pointer to UID for result */
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|__END_DECLS
 end_macro

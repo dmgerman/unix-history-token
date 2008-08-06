@@ -942,6 +942,31 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|OM_uint32
+name|_gss_pname_to_uid
+parameter_list|(
+name|OM_uint32
+modifier|*
+parameter_list|,
+comment|/* minor status */
+name|gss_name_t
+name|pname
+parameter_list|,
+comment|/* principal name */
+name|gss_OID
+name|mech
+parameter_list|,
+comment|/* mechanism to query */
+name|uid_t
+modifier|*
+name|uidp
+comment|/* pointer to UID for result */
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|_gss_mech_switch
@@ -1099,6 +1124,10 @@ decl_stmt|;
 name|_gss_pseudo_random
 modifier|*
 name|gm_pseudo_random
+decl_stmt|;
+name|_gss_pname_to_uid
+modifier|*
+name|gm_pname_to_uid
 decl_stmt|;
 block|}
 struct|;

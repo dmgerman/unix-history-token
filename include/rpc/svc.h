@@ -301,6 +301,89 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Interface to server-side authentication flavors.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|__rpc_svcauth
+block|{
+struct|struct
+name|svc_auth_ops
+block|{
+name|int
+function_decl|(
+modifier|*
+name|svc_ah_wrap
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_svcauth
+modifier|*
+parameter_list|,
+name|XDR
+modifier|*
+parameter_list|,
+name|xdrproc_t
+parameter_list|,
+name|caddr_t
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|svc_ah_unwrap
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_svcauth
+modifier|*
+parameter_list|,
+name|XDR
+modifier|*
+parameter_list|,
+name|xdrproc_t
+parameter_list|,
+name|caddr_t
+parameter_list|)
+function_decl|;
+block|}
+modifier|*
+name|svc_ah_ops
+struct|;
+name|void
+modifier|*
+name|svc_ah_private
+decl_stmt|;
+block|}
+name|SVCAUTH
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Server transport extensions (accessed via xp_p3).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|__rpc_svcxprt_ext
+block|{
+name|int
+name|xp_flags
+decl_stmt|;
+comment|/* versquiet */
+name|SVCAUTH
+name|xp_auth
+decl_stmt|;
+comment|/* interface to auth methods */
+block|}
+name|SVCXPRT_EXT
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Service request  */
 end_comment
 
@@ -526,6 +609,66 @@ name|in
 parameter_list|)
 define|\
 value|(*(xprt)->xp_ops2->xp_control)((xprt), (rq), (in))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVC_EXT
+parameter_list|(
+name|xprt
+parameter_list|)
+define|\
+value|((SVCXPRT_EXT *) xprt->xp_p3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVC_AUTH
+parameter_list|(
+name|xprt
+parameter_list|)
+define|\
+value|(SVC_EXT(xprt)->xp_auth)
+end_define
+
+begin_comment
+comment|/*  * Operations defined on an SVCAUTH handle  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVCAUTH_WRAP
+parameter_list|(
+name|auth
+parameter_list|,
+name|xdrs
+parameter_list|,
+name|xfunc
+parameter_list|,
+name|xwhere
+parameter_list|)
+define|\
+value|((auth)->svc_ah_ops->svc_ah_wrap(auth, xdrs, xfunc, xwhere))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVCAUTH_UNWRAP
+parameter_list|(
+name|auth
+parameter_list|,
+name|xdrs
+parameter_list|,
+name|xfunc
+parameter_list|,
+name|xwhere
+parameter_list|)
+define|\
+value|((auth)->svc_ah_ops->svc_ah_unwrap(auth, xdrs, xfunc, xwhere))
 end_define
 
 begin_comment
@@ -803,6 +946,17 @@ comment|/* def FD_SETSIZE */
 end_comment
 
 begin_comment
+comment|/*  * A set of null auth methods used by any authentication protocols  * that don't need to inspect or modify the message body.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|SVCAUTH
+name|_svc_auth_null
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * a small program implemented by the svc_rpc implementation itself;  * also see clnt.h for protocol numbers.  */
 end_comment
 
@@ -820,6 +974,28 @@ end_function_decl
 begin_function_decl
 name|__END_DECLS
 name|__BEGIN_DECLS
+specifier|extern
+name|SVCXPRT
+modifier|*
+name|svc_xprt_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|svc_xprt_free
+parameter_list|(
+name|SVCXPRT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|svc_getreq

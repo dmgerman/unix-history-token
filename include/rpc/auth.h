@@ -324,6 +324,7 @@ comment|/* bogus response verifier */
 name|AUTH_FAILED
 init|=
 literal|7
+block|,
 comment|/* some unknown reason */
 ifdef|#
 directive|ifdef
@@ -353,10 +354,23 @@ comment|/* can't decode authenticator */
 name|AUTH_NET_ADDR
 init|=
 literal|12
+block|,
 comment|/* wrong net address in ticket */
 endif|#
 directive|endif
 comment|/* KERBEROS */
+comment|/* 	 * RPCSEC_GSS errors 	 */
+name|RPCSEC_GSS_CREDPROBLEM
+init|=
+literal|13
+block|,
+name|RPCSEC_GSS_CTXPROBLEM
+init|=
+literal|14
+block|,
+name|RPCSEC_GSS_NODISPATCH
+init|=
+literal|0x8000000
 block|}
 enum|;
 end_enum
@@ -1241,6 +1255,42 @@ end_define
 begin_comment
 comment|/* kerberos style */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RPCSEC_GSS
+value|6
+end_define
+
+begin_comment
+comment|/* RPCSEC_GSS */
+end_comment
+
+begin_comment
+comment|/*  * Pseudo auth flavors for RPCSEC_GSS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RPCSEC_GSS_KRB5
+value|390003
+end_define
+
+begin_define
+define|#
+directive|define
+name|RPCSEC_GSS_KRB5I
+value|390004
+end_define
+
+begin_define
+define|#
+directive|define
+name|RPCSEC_GSS_KRB5P
+value|390005
+end_define
 
 begin_endif
 endif|#

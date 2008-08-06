@@ -1203,7 +1203,28 @@ literal|"Invalid server verifier"
 block|,
 comment|/* 6 - AUTH_INVALIDRESP */
 literal|"Failed (unspecified error)"
+block|,
 comment|/* 7 - AUTH_FAILED */
+literal|"Kerberos generic error"
+block|,
+comment|/* 8 - AUTH_KERB_GENERIC*/
+literal|"Kerberos credential expired"
+block|,
+comment|/* 9 - AUTH_TIMEEXPIRE */
+literal|"Bad kerberos ticket file"
+block|,
+comment|/* 10 - AUTH_TKT_FILE */
+literal|"Can't decode kerberos authenticator"
+block|,
+comment|/* 11 - AUTH_DECODE */
+literal|"Address wrong in kerberos ticket"
+block|,
+comment|/* 12 - AUTH_NET_ADDR */
+literal|"GSS-API crediential problem"
+block|,
+comment|/* 13 - RPCSEC_GSS_CREDPROBLEM */
+literal|"GSS-API context problem"
+comment|/* 14 - RPCSEC_GSS_CTXPROBLEM */
 block|}
 decl_stmt|;
 end_decl_stmt

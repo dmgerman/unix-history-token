@@ -1587,10 +1587,14 @@ expr_stmt|;
 if|if
 condition|(
 name|pos
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
+name|pos
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|xdrs
