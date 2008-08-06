@@ -3031,7 +3031,7 @@ operator|)
 return|;
 name|bad
 label|:
-name|ed_release_resources
+name|ed_detach
 argument_list|(
 name|dev
 argument_list|)

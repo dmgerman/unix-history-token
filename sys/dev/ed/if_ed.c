@@ -1661,6 +1661,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
+block|{
 name|ED_LOCK
 argument_list|(
 name|sc
@@ -1703,6 +1708,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 name|bus_teardown_intr
 argument_list|(
 name|dev
