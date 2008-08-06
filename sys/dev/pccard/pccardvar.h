@@ -603,6 +603,23 @@ block|}
 end_function
 
 begin_comment
+comment|/* Hack */
+end_comment
+
+begin_function_decl
+name|int
+name|pccard_select_cfe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|entry
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* ivar interface */
 end_comment
 
