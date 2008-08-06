@@ -348,6 +348,9 @@ name|end
 decl_stmt|,
 name|conf_state
 decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
 name|bool_t
 name|xdr_stat
 decl_stmt|;
@@ -452,6 +455,12 @@ argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
+name|databuf
+operator|.
+name|length
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -460,9 +469,7 @@ argument_list|(
 name|xdrs
 argument_list|,
 operator|&
-name|databuf
-operator|.
-name|length
+name|len
 argument_list|)
 condition|)
 return|return
