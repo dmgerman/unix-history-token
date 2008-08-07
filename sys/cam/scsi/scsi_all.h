@@ -2185,15 +2185,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|T_OSD
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_ADC
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
 name|T_NODEVICE
-value|0x1F
+value|0x1f
 end_define
 
 begin_define
 define|#
 directive|define
 name|T_ANY
-value|0xFF
+value|0xff
 end_define
 
 begin_comment
@@ -3442,7 +3456,7 @@ block|{
 name|u_int8_t
 name|opcode
 decl_stmt|;
-name|u_int16_t
+name|u_int32_t
 name|opmask
 decl_stmt|;
 specifier|const
