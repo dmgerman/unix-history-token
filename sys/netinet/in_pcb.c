@@ -1403,7 +1403,7 @@ decl_stmt|;
 name|int
 name|dorandom
 decl_stmt|;
-comment|/* 	 * Because no actual state changes occur here, a write global write 	 * lock on the pcbinfo isn't required. 	 */
+comment|/* 	 * Because no actual state changes occur here, a global write lock on 	 * the pcbinfo isn't required. 	 */
 name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|pcbinfo
