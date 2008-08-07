@@ -2988,7 +2988,7 @@ operator|.
 name|inc_fibnum
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If we found a route, use the address corresponding to 		 * the outgoing interface. 		 *  		 * Otherwise assume faddr is reachable on a directly connected 		 * network and try to find a corresponding interface to take 		 * the source address from. 		 */
+comment|/* 		 * If we found a route, use the address corresponding to 		 * the outgoing interface. 		 * 		 * Otherwise assume faddr is reachable on a directly connected 		 * network and try to find a corresponding interface to take 		 * the source address from. 		 */
 if|if
 condition|(
 name|ia

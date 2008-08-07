@@ -899,7 +899,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * These locking functions are for inpcb consumers outside of sys/netinet,   * more specifically, they were added for the benefit of TOE drivers. The  * macros are reserved for use by the stack.  */
+comment|/*  * These locking functions are for inpcb consumers outside of sys/netinet,  * more specifically, they were added for the benefit of TOE drivers. The  * macros are reserved for use by the stack.  */
 end_comment
 
 begin_function_decl
