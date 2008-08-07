@@ -8156,7 +8156,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Short Cable Receive Errors (MP21.E) 	 * also: Page 78 of the DP83815 data sheet (september 2002 version) 	 * recommends the following register settings "for optimum 	 * performance." for rev 15C.  The driver from NS also sets 	 * the PHY_CR register for later versions. 	 */
+comment|/* 	 * Short Cable Receive Errors (MP21.E) 	 * also: Page 78 of the DP83815 data sheet (september 2002 version) 	 * recommends the following register settings "for optimum 	 * performance." for rev 15C.  Set this also for 15D parts as 	 * they require it in practice. 	 */
 if|if
 condition|(
 name|sc
@@ -8190,15 +8190,6 @@ argument_list|,
 literal|0x189C
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sis_srr
-operator|==
-name|NS_SRR_15C
-condition|)
-block|{
 comment|/* set val for c2 */
 name|CSR_WRITE_4
 argument_list|(
@@ -8229,7 +8220,6 @@ argument_list|,
 literal|0x008C
 argument_list|)
 expr_stmt|;
-block|}
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -8664,23 +8654,12 @@ argument_list|,
 literal|0x00e8
 argument_list|)
 expr_stmt|;
-name|reg
-operator|=
-name|CSR_READ_4
-argument_list|(
-name|sc
-argument_list|,
-name|NS_PHY_DSPCFG
-argument_list|)
-expr_stmt|;
 name|SIS_SETBIT
 argument_list|(
 name|sc
 argument_list|,
 name|NS_PHY_DSPCFG
 argument_list|,
-name|reg
-operator||
 literal|0x20
 argument_list|)
 expr_stmt|;
