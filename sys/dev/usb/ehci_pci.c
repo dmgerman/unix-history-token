@@ -286,6 +286,24 @@ literal|"AMD 8111 USB 2.0 controller"
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|PCI_EHCI_DEVICEID_CS5536
+value|0x20951022
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ehci_device_cs5536
+init|=
+literal|"AMD CS5536 (Geode) USB 2.0 controller"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ATI */
 end_comment
@@ -939,6 +957,14 @@ name|ehci_device_8111
 operator|)
 return|;
 case|case
+name|PCI_EHCI_DEVICEID_CS5536
+case|:
+return|return
+operator|(
+name|ehci_device_cs5536
+operator|)
+return|;
+case|case
 name|PCI_EHCI_DEVICEID_SB200
 case|:
 return|return
@@ -1250,6 +1276,40 @@ case|:
 case|case
 name|PCI_USBREV_1_1
 case|:
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"pre-2.0 USB rev\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pci_get_devid
+argument_list|(
+name|self
+argument_list|)
+operator|==
+name|PCI_EHCI_DEVICEID_CS5536
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|usbrev
+operator|=
+name|USBREV_2_0
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"Quirk for CS5536 USB 2.0 enabled\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|sc
 operator|->
 name|sc_bus
@@ -1257,13 +1317,6 @@ operator|.
 name|usbrev
 operator|=
 name|USBREV_UNKNOWN
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|self
-argument_list|,
-literal|"pre-2.0 USB rev\n"
-argument_list|)
 expr_stmt|;
 return|return
 name|ENXIO
