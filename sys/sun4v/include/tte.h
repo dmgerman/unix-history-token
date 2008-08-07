@@ -67,6 +67,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_PA_CH_BITS
+value|(30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_PA_SF_BITS
+value|(28)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_PA_BITS
 value|(42)
 end_define
@@ -90,6 +104,20 @@ define|#
 directive|define
 name|TD_DIAG_MASK
 value|((1UL<< TD_DIAG_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_PA_CH_MASK
+value|((1UL<< TD_PA_CH_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_PA_SF_MASK
+value|((1UL<< TD_PA_SF_BITS) - 1)
 end_define
 
 begin_define
