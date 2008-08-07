@@ -3589,14 +3589,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Increase the reference count on the socket, enabling power, if 	 * necessary. XXX: I don't see the enable power part here! 	 */
-name|pf
-operator|->
-name|sc
-operator|->
-name|sc_enabled_count
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|pf
@@ -3605,14 +3597,18 @@ name|pf_flags
 operator|&
 name|PFF_ENABLED
 condition|)
-block|{
-comment|/* 		 * Don't do anything if we're already enabled. 		 */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
+name|pf
+operator|->
+name|sc
+operator|->
+name|sc_enabled_count
+operator|++
+expr_stmt|;
 comment|/* 	 * it's possible for different functions' CCRs to be in the same 	 * underlying page.  Check for that. 	 */
 name|STAILQ_FOREACH
 argument_list|(
@@ -4181,10 +4177,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* 		 * Don't do anything if we're already disabled. 		 */
 return|return;
-block|}
 if|if
 condition|(
 name|pf
