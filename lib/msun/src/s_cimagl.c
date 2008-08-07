@@ -21,10 +21,10 @@ name|z
 parameter_list|)
 block|{
 return|return
-operator|-
+operator|(
+name|__imag__
 name|z
-operator|*
-name|I
+operator|)
 return|;
 block|}
 end_function

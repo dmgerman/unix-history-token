@@ -9,6 +9,12 @@ directive|include
 file|<complex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"math_private.h"
+end_include
+
 begin_function
 name|double
 name|complex
@@ -20,17 +26,21 @@ name|z
 parameter_list|)
 block|{
 return|return
+operator|(
+name|cpack
+argument_list|(
 name|creal
 argument_list|(
 name|z
 argument_list|)
+argument_list|,
 operator|-
-name|I
-operator|*
 name|cimag
 argument_list|(
 name|z
 argument_list|)
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
