@@ -2017,9 +2017,6 @@ name|off_t
 modifier|*
 name|sp
 decl_stmt|;
-name|srandomdev
-argument_list|()
-expr_stmt|;
 name|Tbl
 operator|.
 name|str_flags
@@ -2052,10 +2049,10 @@ control|)
 block|{
 name|i
 operator|=
-name|random
-argument_list|()
-operator|%
+name|arc4random_uniform
+argument_list|(
 name|cnt
+argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
