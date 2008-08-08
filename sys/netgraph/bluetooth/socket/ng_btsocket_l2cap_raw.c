@@ -518,6 +518,21 @@ name|ng_btsocket_l2cap_raw_rt_task
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|timeval
+name|ng_btsocket_l2cap_raw_lasttime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ng_btsocket_l2cap_raw_curpps
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Sysctl tree */
 end_comment
@@ -668,7 +683,7 @@ define|#
 directive|define
 name|NG_BTSOCKET_L2CAP_RAW_INFO
 define|\
-value|if (ng_btsocket_l2cap_raw_debug_level>= NG_BTSOCKET_INFO_LEVEL) \ 		printf
+value|if (ng_btsocket_l2cap_raw_debug_level>= NG_BTSOCKET_INFO_LEVEL&& \ 	    ppsratecheck(&ng_btsocket_l2cap_raw_lasttime,&ng_btsocket_l2cap_raw_curpps, 1)) \ 		printf
 end_define
 
 begin_define
@@ -676,7 +691,7 @@ define|#
 directive|define
 name|NG_BTSOCKET_L2CAP_RAW_WARN
 define|\
-value|if (ng_btsocket_l2cap_raw_debug_level>= NG_BTSOCKET_WARN_LEVEL) \ 		printf
+value|if (ng_btsocket_l2cap_raw_debug_level>= NG_BTSOCKET_WARN_LEVEL&& \ 	    ppsratecheck(&ng_btsocket_l2cap_raw_lasttime,&ng_btsocket_l2cap_raw_curpps, 1)) \ 		printf
 end_define
 
 begin_define
@@ -684,7 +699,7 @@ define|#
 directive|define
 name|NG_BTSOCKET_L2CAP_RAW_ERR
 define|\
-value|if (ng_btsocket_l2cap_raw_debug_level>= NG_BTSOCKET_ERR_LEVEL) \ 		printf
+value|if (ng_btsocket_l2cap_raw_debug_level>= NG_BTSOCKET_ERR_LEVEL&& \ 	    ppsratecheck(&ng_btsocket_l2cap_raw_lasttime,&ng_btsocket_l2cap_raw_curpps, 1)) \ 		printf
 end_define
 
 begin_define
@@ -692,7 +707,7 @@ define|#
 directive|define
 name|NG_BTSOCKET_L2CAP_RAW_ALERT
 define|\
-value|if (ng_btsocket_l2cap_raw_debug_level>= NG_BTSOCKET_ALERT_LEVEL) \ 		printf
+value|if (ng_btsocket_l2cap_raw_debug_level>= NG_BTSOCKET_ALERT_LEVEL&& \ 	    ppsratecheck(&ng_btsocket_l2cap_raw_lasttime,&ng_btsocket_l2cap_raw_curpps, 1)) \ 		printf
 end_define
 
 begin_comment
