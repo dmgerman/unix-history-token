@@ -132,17 +132,6 @@ directive|include
 file|"randomize_fd.h"
 end_include
 
-begin_comment
-comment|/*  * The random() function is defined to return values between 0 and  * 2^31 - 1 inclusive in random(3).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANDOM_MAX
-value|0x7fffffffL
-end_define
-
 begin_function_decl
 specifier|static
 name|void
@@ -437,13 +426,13 @@ name|random_exit
 operator|&&
 name|denom
 operator|>
-literal|255
+literal|256
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"denominator must be<= 255 for random exit."
+literal|"denominator must be<= 256 for random exit."
 argument_list|)
 expr_stmt|;
 break|break;
@@ -534,14 +523,19 @@ call|(
 name|int
 call|)
 argument_list|(
-operator|(
 name|denom
 operator|*
 name|random
 argument_list|()
-operator|)
 operator|/
-name|RANDOM_MAX
+operator|(
+operator|(
+name|double
+operator|)
+name|RAND_MAX
+operator|+
+literal|1
+operator|)
 argument_list|)
 return|;
 comment|/* 	 * Select whether to print the first line.  (Prime the pump.) 	 * We find a random number between 0 and denom - 1 and, if it's 	 * 0 (which has a 1 / denom chance of being true), we select the 	 * line. 	 */
@@ -556,7 +550,14 @@ operator|*
 name|random
 argument_list|()
 operator|/
-name|RANDOM_MAX
+operator|(
+operator|(
+name|double
+operator|)
+name|RAND_MAX
+operator|+
+literal|1
+operator|)
 argument_list|)
 operator|==
 literal|0
@@ -619,7 +620,14 @@ operator|*
 name|random
 argument_list|()
 operator|/
-name|RANDOM_MAX
+operator|(
+operator|(
+name|double
+operator|)
+name|RAND_MAX
+operator|+
+literal|1
+operator|)
 argument_list|)
 operator|==
 literal|0
