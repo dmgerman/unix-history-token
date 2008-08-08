@@ -334,6 +334,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|_rw_try_wlock
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|_rw_wunlock
 parameter_list|(
@@ -356,6 +376,26 @@ end_function_decl
 begin_function_decl
 name|void
 name|_rw_rlock
+parameter_list|(
+name|struct
+name|rwlock
+modifier|*
+name|rw
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_rw_try_rlock
 parameter_list|(
 name|struct
 name|rwlock
@@ -522,7 +562,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Public interface for lock operations.  *  * XXX: Missing try locks.  */
+comment|/*  * Public interface for lock operations.  */
 end_comment
 
 begin_ifndef
@@ -630,11 +670,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|rw_try_rlock
+parameter_list|(
+name|rw
+parameter_list|)
+value|_rw_try_rlock((rw), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|rw_try_upgrade
 parameter_list|(
 name|rw
 parameter_list|)
 value|_rw_try_upgrade((rw), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rw_try_wlock
+parameter_list|(
+name|rw
+parameter_list|)
+value|_rw_try_wlock((rw), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
