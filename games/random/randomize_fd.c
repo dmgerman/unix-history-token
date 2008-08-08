@@ -956,14 +956,7 @@ argument_list|()
 operator|)
 operator|/
 operator|(
-operator|(
-operator|(
-name|double
-operator|)
-name|RAND_MAX
-operator|+
-literal|1
-operator|)
+name|RANDOM_MAX
 operator|/
 name|numnode
 operator|)

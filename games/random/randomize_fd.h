@@ -15,6 +15,17 @@ directive|define
 name|__RANDOMIZE_FD__
 end_define
 
+begin_comment
+comment|/*  * The random() function is defined to return values between 0 and  * 2^31 - 1 inclusive in random(3).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RANDOM_MAX
+value|0x80000000UL
+end_define
+
 begin_define
 define|#
 directive|define
