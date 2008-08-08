@@ -504,7 +504,7 @@ literal|"Intel 82945GM (945GM GMCH) SVGA controller"
 block|}
 block|,
 block|{
-literal|0x27A28086
+literal|0x27AE8086
 block|,
 name|CHIP_I915
 block|,
@@ -553,7 +553,36 @@ block|,
 literal|"Intel G965 SVGA controller"
 block|}
 block|,
-comment|/* 	{0x29b28086, CHIP_G33, 0x00020000, 	    "Intel Q35 SVGA controller"}, 	{0x29c28086, CHIP_G33, 0x00020000, 	    "Intel G33 SVGA controller"}, 	{0x29d28086, CHIP_G33, 0x00020000, 	    "Intel Q33 SVGA controller"}, */
+block|{
+literal|0x29b28086
+block|,
+name|CHIP_G33
+block|,
+literal|0x00020000
+block|,
+literal|"Intel Q35 SVGA controller"
+block|}
+block|,
+block|{
+literal|0x29c28086
+block|,
+name|CHIP_G33
+block|,
+literal|0x00020000
+block|,
+literal|"Intel G33 SVGA controller"
+block|}
+block|,
+block|{
+literal|0x29d28086
+block|,
+name|CHIP_G33
+block|,
+literal|0x00020000
+block|,
+literal|"Intel Q33 SVGA controller"
+block|}
+block|,
 block|{
 literal|0x2a028086
 block|,
