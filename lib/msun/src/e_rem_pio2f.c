@@ -51,11 +51,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-name|half
-init|=
-literal|5.00000000000000000000e-01
-decl_stmt|,
-comment|/* 0x3FE00000, 0x00000000 */
 name|invpio2
 init|=
 literal|6.36619772367581382433e-01

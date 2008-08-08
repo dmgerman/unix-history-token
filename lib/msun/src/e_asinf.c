@@ -97,10 +97,6 @@ decl_stmt|,
 name|p
 decl_stmt|,
 name|q
-decl_stmt|,
-name|c
-decl_stmt|,
-name|r
 decl_stmt|;
 name|int32_t
 name|hx

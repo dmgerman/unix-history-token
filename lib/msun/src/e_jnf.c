@@ -37,11 +37,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|float
-name|invsqrtpi
-init|=
-literal|5.6418961287e-01
-decl_stmt|,
-comment|/* 0x3f106ebb */
 name|two
 init|=
 literal|2.0000000000e+00
