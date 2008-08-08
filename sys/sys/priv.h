@@ -2479,6 +2479,32 @@ comment|/* Perforn ARLA_VIOC_NNPFSDEBUG. */
 end_comment
 
 begin_comment
+comment|/*  * cpuctl(4) privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_CPUCTL_WRMSR
+value|640
+end_define
+
+begin_comment
+comment|/* Write model-specific register. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_CPUCTL_UPDATE
+value|641
+end_define
+
+begin_comment
+comment|/* Update cpu microcode. */
+end_comment
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
@@ -2486,7 +2512,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|631
+value|642
 end_define
 
 begin_comment
