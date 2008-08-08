@@ -44,7 +44,7 @@ pragma|#
 directive|pragma
 name|STDC
 name|CX_LIMITED_RANGE
-name|on
+name|ON
 end_pragma
 
 begin_function
