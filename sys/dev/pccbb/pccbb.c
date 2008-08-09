@@ -516,6 +516,9 @@ name|cbb_cardbus_reset
 parameter_list|(
 name|device_t
 name|brdev
+parameter_list|,
+name|int
+name|on
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3655,6 +3658,9 @@ name|cbb_cardbus_reset
 parameter_list|(
 name|device_t
 name|brdev
+parameter_list|,
+name|int
+name|on
 parameter_list|)
 block|{
 name|struct
@@ -3667,10 +3673,15 @@ argument_list|(
 name|brdev
 argument_list|)
 decl_stmt|;
+name|uint32_t
+name|b
+decl_stmt|;
 name|int
 name|delay
+decl_stmt|,
+name|count
 decl_stmt|;
-comment|/* 	 * 100ms is necessary for most bridges.  For some reason, the Ricoh 	 * RF5C47x bridges need 400ms.  The spec says 20ms, but even some 	 * normally sane bridges need longer with some cards. 	 */
+comment|/* 	 * 20ms is necessary for most bridges.  For some reason, the Ricoh 	 * RF5C47x bridges need 400ms. 	 */
 name|delay
 operator|=
 name|sc
@@ -3681,7 +3692,7 @@ name|CB_RF5C47X
 condition|?
 literal|400
 else|:
-literal|100
+literal|20
 expr_stmt|;
 name|PCI_MASK_CONFIG
 argument_list|(
@@ -3706,9 +3717,11 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* If a card exists, unreset it! */
+comment|/* If a card exists and we're turning it on, unreset it! */
 if|if
 condition|(
+name|on
+operator|&&
 name|CBB_CARD_PRESENT
 argument_list|(
 name|cbb_get
@@ -3733,15 +3746,68 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Wait up to .5s for the vendor of device 0.0 to become 		 * != 0xffffffff 		 */
+name|b
+operator|=
+name|pcib_get_bus
+argument_list|(
+name|brdev
+argument_list|)
+expr_stmt|;
+name|count
+operator|=
+literal|25
+expr_stmt|;
+do|do
+block|{
 name|pause
 argument_list|(
 literal|"cbbP4"
 argument_list|,
 name|hz
 operator|*
-name|delay
+literal|2
 operator|/
-literal|1000
+literal|100
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|PCIB_READ_CONFIG
+argument_list|(
+name|brdev
+argument_list|,
+name|b
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|PCIR_DEVVENDOR
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0xfffffffful
+operator|&&
+operator|--
+name|count
+operator|>=
+literal|0
+condition|)
+do|;
+if|if
+condition|(
+name|count
+operator|<
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|brdev
+argument_list|,
+literal|"Timeout on reset\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3810,6 +3876,8 @@ return|;
 name|cbb_cardbus_reset
 argument_list|(
 name|brdev
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3842,6 +3910,8 @@ expr_stmt|;
 name|cbb_cardbus_reset
 argument_list|(
 name|brdev
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
