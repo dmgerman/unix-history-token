@@ -2218,8 +2218,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|!=
-operator|-
-literal|1
+literal|0xfffffffful
 condition|)
 block|{
 name|devlist_entry
