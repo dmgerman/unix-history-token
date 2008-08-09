@@ -3681,7 +3681,7 @@ name|delay
 decl_stmt|,
 name|count
 decl_stmt|;
-comment|/* 	 * 20ms is necessary for most bridges.  For some reason, the Ricoh 	 * RF5C47x bridges need 400ms. 	 */
+comment|/* 	 * Asserting reset for 20ms is necessary for most bridges.  For some 	 * reason, the Ricoh RF5C47x bridges need it asserted for 400ms. 	 */
 name|delay
 operator|=
 name|sc
@@ -3717,7 +3717,7 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* If a card exists and we're turning it on, unreset it! */
+comment|/* 	 *  If a card exists and we're turning it on, take it out of reset. 	 */
 if|if
 condition|(
 name|on
@@ -3733,6 +3733,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+comment|/* 		 * After clearing reset, wait up to 1.1s for the vendor of 		 * device 0.0 to become != 0xffff.  The PCMCIA PC Card Host 		 * System Specification says that when powering up the card, 		 * the PCI Spec v2.1 must be followed.  In PCI spec v2.2 Table 		 * 4-6, Trhfa (Reset High to first Config Access) is at most 		 * 2^25 clocks, or just over 1s.  Secont 2.2.1 states any card 		 * not ready to participate in bus transactions must tristate 		 * its outputs.  Therefore, any access to its configuration 		 * registers must be ignored.  In that state, the vendor will 		 * read 0xffff.  Section 6.2.1 states a vendor id of 0xffff is 		 * invalid, so this can never match a real card.  Print a 		 * warning if it never returns a real id.  The PCMCIA PC Card 		 * Electrical Spec Section 5.2.7.1 implies only device 0. 		 */
 name|PCI_MASK_CONFIG
 argument_list|(
 name|brdev
@@ -3746,7 +3747,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Wait up to .5s for the vendor of device 0.0 to become 		 * != 0xffffffff 		 */
 name|b
 operator|=
 name|pcib_get_bus
@@ -3756,7 +3756,9 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-literal|25
+literal|1100
+operator|/
+literal|20
 expr_stmt|;
 do|do
 block|{
@@ -3786,10 +3788,10 @@ literal|0
 argument_list|,
 name|PCIR_DEVVENDOR
 argument_list|,
-literal|4
+literal|2
 argument_list|)
 operator|==
-literal|0xfffffffful
+literal|0xfffful
 operator|&&
 operator|--
 name|count
@@ -3807,7 +3809,7 @@ name|device_printf
 argument_list|(
 name|brdev
 argument_list|,
-literal|"Timeout on reset\n"
+literal|"Warning: Bus reset timeout\n"
 argument_list|)
 expr_stmt|;
 block|}
