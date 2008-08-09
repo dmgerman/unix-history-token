@@ -3670,7 +3670,7 @@ decl_stmt|;
 name|int
 name|delay
 decl_stmt|;
-comment|/* 	 * 20ms is necessary for most bridges.  For some reason, the Ricoh 	 * RF5C47x bridges need 400ms. 	 */
+comment|/* 	 * 100ms is necessary for most bridges.  For some reason, the Ricoh 	 * RF5C47x bridges need 400ms.  The spec says 20ms, but even some 	 * normally sane bridges need longer with some cards. 	 */
 name|delay
 operator|=
 name|sc
@@ -3681,7 +3681,7 @@ name|CB_RF5C47X
 condition|?
 literal|400
 else|:
-literal|20
+literal|100
 expr_stmt|;
 name|PCI_MASK_CONFIG
 argument_list|(
