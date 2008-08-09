@@ -155,6 +155,7 @@ name|sc_sid
 decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
+argument|padlock_sessions_head
 argument_list|,
 argument|padlock_session
 argument_list|)
@@ -1177,11 +1178,13 @@ operator|->
 name|sc_sessions_lock
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_REVERSE
 argument_list|(
 argument|ses
 argument_list|,
 argument|&sc->sc_sessions
+argument_list|,
+argument|padlock_sessions_head
 argument_list|,
 argument|ses_next
 argument_list|)
@@ -1494,11 +1497,13 @@ operator|->
 name|sc_sessions_lock
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_REVERSE
 argument_list|(
 argument|ses
 argument_list|,
 argument|&sc->sc_sessions
+argument_list|,
+argument|padlock_sessions_head
 argument_list|,
 argument|ses_next
 argument_list|)
