@@ -1254,6 +1254,12 @@ name|ses_used
 operator|=
 literal|0
 expr_stmt|;
+name|ses
+operator|->
+name|ses_id
+operator|=
+name|sid
+expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
