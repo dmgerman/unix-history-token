@@ -112,6 +112,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|sbuf_new_auto
+parameter_list|()
+define|\
+value|sbuf_new(NULL, NULL, 0, SBUF_AUTOEXTEND)
+end_define
+
 begin_function_decl
 name|void
 name|sbuf_clear
