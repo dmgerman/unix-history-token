@@ -674,9 +674,6 @@ name|error
 decl_stmt|,
 name|fd
 decl_stmt|;
-name|ssize_t
-name|abc
-decl_stmt|;
 name|pathgen
 argument_list|(
 name|name
@@ -802,9 +799,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|abc
-operator|=
 name|pwrite
 argument_list|(
 name|fd
@@ -817,7 +811,6 @@ name|mediasize
 operator|-
 name|sectorsize
 argument_list|)
-operator|)
 operator|!=
 operator|(
 name|ssize_t
@@ -1244,8 +1237,6 @@ name|msize
 operator|=
 name|secsize
 operator|=
-name|ssize
-operator|=
 literal|0
 expr_stmt|;
 for|for
@@ -1362,6 +1353,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+block|}
+if|if
+condition|(
+name|secsize
+operator|==
+literal|0
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Device not specified"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
