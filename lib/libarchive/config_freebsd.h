@@ -79,6 +79,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_CHOWN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_DECL_INT64_MAX
 value|1
 end_define
@@ -191,6 +198,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_GETEUID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_GRP_H
 value|1
 end_define
@@ -275,6 +289,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_MKNOD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_POLL
 value|1
 end_define
@@ -297,6 +318,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_SELECT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETENV
 value|1
 end_define
 
@@ -426,6 +454,12 @@ name|HAVE_SYS_TYPES_H
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SYS_UTIME_H
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -443,7 +477,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_TZSET
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_UNISTD_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_UNSETENV
 value|1
 end_define
 

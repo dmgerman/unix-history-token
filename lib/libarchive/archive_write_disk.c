@@ -122,6 +122,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_SYS_UTIME_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/utime.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_EXT2FS_EXT2_FS_H
 end_ifdef
 
@@ -364,6 +381,24 @@ include|#
 directive|include
 file|"archive_private.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -3019,6 +3054,9 @@ name|lookup_gid
 operator|=
 name|trivial_lookup_gid
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_GETEUID
 name|a
 operator|->
 name|user_uid
@@ -3026,6 +3064,9 @@ operator|=
 name|geteuid
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_GETEUID */
 if|if
 condition|(
 name|archive_string_ensure
@@ -3123,6 +3164,8 @@ argument_list|(
 literal|"."
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 if|if
@@ -3287,6 +3330,7 @@ name|mode
 argument_list|)
 condition|)
 block|{
+comment|/* 		 * TODO: Fix this.  Apparently, there are platforms 		 * that still allow root to hose the entire filesystem 		 * by unlinking a dir.  The S_ISDIR() test above 		 * prevents us from using unlink() here if the new 		 * object is a dir, but that doesn't mean the old 		 * object isn't a dir. 		 */
 if|if
 condition|(
 name|unlink
@@ -3911,6 +3955,8 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_TRUNC
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 if|if
@@ -3984,14 +4030,14 @@ name|a
 operator|->
 name|mode
 operator|&
-name|S_IFMT
+name|AE_IFMT
 condition|)
 block|{
 default|default:
 comment|/* POSIX requires that we fall through here. */
 comment|/* FALLTHROUGH */
 case|case
-name|S_IFREG
+name|AE_IFREG
 case|:
 name|a
 operator|->
@@ -4008,6 +4054,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_EXCL
+operator||
+name|O_BINARY
 argument_list|,
 name|mode
 argument_list|)
@@ -4024,8 +4072,12 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-name|S_IFCHR
+name|AE_IFCHR
 case|:
+ifdef|#
+directive|ifdef
+name|HAVE_MKNOD
+comment|/* Note: we use AE_IFCHR for the case label, and 		 * S_IFCHR for the mknod() call.  This is correct.  */
 name|r
 operator|=
 name|mknod
@@ -4046,10 +4098,24 @@ name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* TODO: Find a better way to warn about our inability 		 * to restore a char device node. */
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_MKNOD */
 break|break;
 case|case
-name|S_IFBLK
+name|AE_IFBLK
 case|:
+ifdef|#
+directive|ifdef
+name|HAVE_MKNOD
 name|r
 operator|=
 name|mknod
@@ -4070,9 +4136,20 @@ name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* TODO: Find a better way to warn about our inability 		 * to restore a block device node. */
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_MKNOD */
 break|break;
 case|case
-name|S_IFDIR
+name|AE_IFDIR
 case|:
 name|mode
 operator|=
@@ -4151,8 +4228,11 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|S_IFIFO
+name|AE_IFIFO
 case|:
+ifdef|#
+directive|ifdef
+name|HAVE_MKFIFO
 name|r
 operator|=
 name|mkfifo
@@ -4164,6 +4244,17 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* TODO: Find a better way to warn about our inability 		 * to restore a fifo. */
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_MKFIFO */
 break|break;
 block|}
 comment|/* All the system calls above set errno on failure. */
@@ -6355,6 +6446,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|HAVE_FCHOWN
+comment|/* If we have an fd, we can avoid a race. */
 if|if
 condition|(
 name|a
@@ -6380,11 +6472,31 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|success
-goto|;
+block|{
+comment|/* We've set owner and know uid/gid are correct. */
+name|a
+operator|->
+name|todo
+operator|&=
+operator|~
+operator|(
+name|TODO_OWNER
+operator||
+name|TODO_SGID_CHECK
+operator||
+name|TODO_SUID_CHECK
+operator|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
 endif|#
 directive|endif
+comment|/* We prefer lchown() but will use chown() if that's all we have. */
+comment|/* Of course, if we have neither, this will always fail. */
 ifdef|#
 directive|ifdef
 name|HAVE_LCHOWN
@@ -6407,11 +6519,30 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|success
-goto|;
-else|#
-directive|else
+block|{
+comment|/* We've set owner and know uid/gid are correct. */
+name|a
+operator|->
+name|todo
+operator|&=
+operator|~
+operator|(
+name|TODO_OWNER
+operator||
+name|TODO_SGID_CHECK
+operator||
+name|TODO_SUID_CHECK
+operator|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
+elif|#
+directive|elif
+name|HAVE_CHOWN
 if|if
 condition|(
 operator|!
@@ -6439,9 +6570,27 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|success
-goto|;
+block|{
+comment|/* We've set owner and know uid/gid are correct. */
+name|a
+operator|->
+name|todo
+operator|&=
+operator|~
+operator|(
+name|TODO_OWNER
+operator||
+name|TODO_SGID_CHECK
+operator||
+name|TODO_SUID_CHECK
+operator|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+block|}
 endif|#
 directive|endif
 name|archive_set_error
@@ -6471,35 +6620,6 @@ expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_WARN
-operator|)
-return|;
-name|success
-label|:
-name|a
-operator|->
-name|todo
-operator|&=
-operator|~
-name|TODO_OWNER
-expr_stmt|;
-comment|/* We know the user/group are correct now. */
-name|a
-operator|->
-name|todo
-operator|&=
-operator|~
-name|TODO_SGID_CHECK
-expr_stmt|;
-name|a
-operator|->
-name|todo
-operator|&=
-operator|~
-name|TODO_SUID_CHECK
-expr_stmt|;
-return|return
-operator|(
-name|ARCHIVE_OK
 operator|)
 return|;
 block|}
@@ -7974,6 +8094,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_NONBLOCK
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 if|if

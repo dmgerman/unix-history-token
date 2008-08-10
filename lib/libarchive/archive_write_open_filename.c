@@ -125,6 +125,24 @@ directive|include
 file|"archive.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|write_file_data
@@ -429,6 +447,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
+operator||
+name|O_BINARY
 expr_stmt|;
 comment|/* 	 * Open the file. 	 */
 if|if
