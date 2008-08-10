@@ -60,19 +60,65 @@ argument_list|(
 literal|"original"
 argument_list|)
 expr_stmt|;
-name|buff
-index|[
+name|assertEqualInt
+argument_list|(
 literal|0
-index|]
-operator|=
-literal|'f'
+argument_list|,
+name|mkdir
+argument_list|(
+literal|"f"
+argument_list|,
+literal|0775
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|buff
-index|[
-literal|1
-index|]
-operator|=
-literal|'_'
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|mkdir
+argument_list|(
+literal|"l"
+argument_list|,
+literal|0775
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|mkdir
+argument_list|(
+literal|"m"
+argument_list|,
+literal|0775
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|mkdir
+argument_list|(
+literal|"s"
+argument_list|,
+literal|0775
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|mkdir
+argument_list|(
+literal|"d"
+argument_list|,
+literal|0775
+argument_list|)
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -88,7 +134,21 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Create a file named "f_abcdef..." */
+name|buff
+index|[
+literal|0
+index|]
+operator|=
+literal|'f'
+expr_stmt|;
+name|buff
+index|[
+literal|1
+index|]
+operator|=
+literal|'/'
+expr_stmt|;
+comment|/* Create a file named "f/abcdef..." */
 name|buff
 index|[
 name|i
@@ -157,7 +217,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* Create a link named "l_abcdef..." to the above. */
+comment|/* Create a link named "l/abcdef..." to the above. */
 name|strcpy
 argument_list|(
 name|buff2
@@ -184,7 +244,7 @@ name|buff2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Create a link named "m_abcdef..." to the above. */
+comment|/* Create a link named "m/abcdef..." to the above. */
 name|strcpy
 argument_list|(
 name|buff2
@@ -211,13 +271,43 @@ name|buff2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Create a symlink named "s_abcdef..." to the above. */
+comment|/* Create a symlink named "s/abcdef..." to the above. */
+name|strcpy
+argument_list|(
 name|buff2
+operator|+
+literal|3
+argument_list|,
+name|buff
+argument_list|)
+expr_stmt|;
+name|buff
 index|[
 literal|0
 index|]
 operator|=
 literal|'s'
+expr_stmt|;
+name|buff2
+index|[
+literal|0
+index|]
+operator|=
+literal|'.'
+expr_stmt|;
+name|buff2
+index|[
+literal|1
+index|]
+operator|=
+literal|'.'
+expr_stmt|;
+name|buff2
+index|[
+literal|2
+index|]
+operator|=
+literal|'/'
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
@@ -225,14 +315,14 @@ literal|0
 argument_list|,
 name|symlink
 argument_list|(
-name|buff
-argument_list|,
 name|buff2
+argument_list|,
+name|buff
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Create a dir named "d_abcdef...". */
-name|buff2
+comment|/* Create a dir named "d/abcdef...". */
+name|buff
 index|[
 literal|0
 index|]
@@ -245,7 +335,7 @@ literal|0
 argument_list|,
 name|mkdir
 argument_list|(
-name|buff2
+name|buff
 argument_list|,
 literal|0775
 argument_list|)
@@ -296,6 +386,18 @@ literal|260
 index|]
 decl_stmt|;
 name|char
+name|name1
+index|[
+literal|260
+index|]
+decl_stmt|;
+name|char
+name|name2
+index|[
+literal|260
+index|]
+decl_stmt|;
+name|char
 name|contents
 index|[
 literal|260
@@ -303,6 +405,8 @@ index|]
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|,
 name|r
 decl_stmt|;
@@ -316,6 +420,9 @@ specifier|const
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|dp
 decl_stmt|;
 name|DIR
 modifier|*
@@ -331,7 +438,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
@@ -341,44 +448,60 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Verify a file named "f_abcdef..." */
-name|filename
-index|[
+comment|/* Generate a base name of the correct length. */
+for|for
+control|(
+name|j
+operator|=
 literal|0
-index|]
-operator|=
-literal|'f'
-expr_stmt|;
-name|filename
-index|[
-literal|1
-index|]
-operator|=
-literal|'_'
-expr_stmt|;
-name|filename
-index|[
+init|;
+name|j
+operator|<
 name|i
-operator|+
-literal|2
+condition|;
+operator|++
+name|j
+control|)
+name|filename
+index|[
+name|j
 index|]
 operator|=
 literal|'a'
 operator|+
 operator|(
-name|i
+name|j
 operator|%
 literal|26
 operator|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|for (n = i; n> 0; n /= 10) 			filename[--j] = '0' + (n % 10);
+endif|#
+directive|endif
 name|filename
 index|[
 name|i
-operator|+
-literal|3
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+comment|/* Verify a file named "f/abcdef..." */
+name|strcpy
+argument_list|(
+name|name1
+argument_list|,
+literal|"f/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|name1
+argument_list|,
+name|filename
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -398,7 +521,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|filename
+name|name1
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -407,7 +530,7 @@ name|failure
 argument_list|(
 literal|"Couldn't open \"%s\": %s"
 argument_list|,
-name|filename
+name|name1
 argument_list|,
 name|strerror
 argument_list|(
@@ -449,7 +572,7 @@ name|len
 argument_list|,
 name|i
 operator|+
-literal|3
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Verify contents of 'contents' */
@@ -467,19 +590,19 @@ argument_list|)
 expr_stmt|;
 name|assertEqualString
 argument_list|(
-name|filename
+name|name1
 argument_list|,
 name|contents
 argument_list|)
 expr_stmt|;
-comment|/* stat() file and get dev/ino for next check */
+comment|/* stat() for dev/ino for next check */
 name|assertEqualInt
 argument_list|(
 literal|0
 argument_list|,
 name|lstat
 argument_list|(
-name|filename
+name|name1
 argument_list|,
 operator|&
 name|st
@@ -489,6 +612,20 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 		 * ustar allows 100 chars for links, and we have 		 * "original/" as part of the name, so the link 		 * names here can't exceed 91 chars. 		 */
+name|strcpy
+argument_list|(
+name|name2
+argument_list|,
+literal|"l/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|name2
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|limit
@@ -497,20 +634,13 @@ name|LIMIT_USTAR
 operator|||
 name|strlen
 argument_list|(
-name|filename
+name|name2
 argument_list|)
 operator|<=
-literal|91
+literal|100
 condition|)
 block|{
-comment|/* Verify hardlink "l_abcdef..." */
-name|filename
-index|[
-literal|0
-index|]
-operator|=
-literal|'l'
-expr_stmt|;
+comment|/* Verify hardlink "l/abcdef..." */
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -520,7 +650,7 @@ name|r
 operator|=
 name|lstat
 argument_list|(
-name|filename
+name|name2
 argument_list|,
 operator|&
 name|st2
@@ -559,7 +689,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Verify hardlink "m_abcdef..." */
-name|filename
+name|name2
 index|[
 literal|0
 index|]
@@ -575,7 +705,7 @@ name|r
 operator|=
 name|lstat
 argument_list|(
-name|filename
+name|name2
 argument_list|,
 operator|&
 name|st2
@@ -615,13 +745,20 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 		 * Symlink text doesn't include the 'original/' prefix, 		 * so the limit here is 100 characters. 		 */
-comment|/* Verify symlink "s_abcdef..." */
+comment|/* Verify symlink "s/abcdef..." */
+name|strcpy
+argument_list|(
+name|name2
+argument_list|,
+literal|"../s/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|name2
+argument_list|,
 name|filename
-index|[
-literal|0
-index|]
-operator|=
-literal|'s'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -631,7 +768,7 @@ name|LIMIT_USTAR
 operator|||
 name|strlen
 argument_list|(
-name|filename
+name|name2
 argument_list|)
 operator|<=
 literal|100
@@ -658,7 +795,9 @@ literal|0
 argument_list|,
 name|lstat
 argument_list|(
-name|filename
+name|name2
+operator|+
+literal|3
 argument_list|,
 operator|&
 name|st2
@@ -681,7 +820,9 @@ name|failure
 argument_list|(
 literal|"Couldn't stat %s"
 argument_list|,
-name|filename
+name|name2
+operator|+
+literal|3
 argument_list|)
 expr_stmt|;
 if|if
@@ -692,7 +833,9 @@ literal|0
 argument_list|,
 name|stat
 argument_list|(
-name|filename
+name|name2
+operator|+
+literal|3
 argument_list|,
 operator|&
 name|st2
@@ -725,13 +868,20 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Verify dir "d_abcdef...". */
+comment|/* Verify dir "d/abcdef...". */
+name|strcpy
+argument_list|(
+name|name1
+argument_list|,
+literal|"d/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|name1
+argument_list|,
 name|filename
-index|[
-literal|0
-index|]
-operator|=
-literal|'d'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -752,7 +902,7 @@ name|failure
 argument_list|(
 literal|"Couldn't stat %s (length %d)"
 argument_list|,
-name|filename
+name|name1
 argument_list|,
 name|strlen
 argument_list|(
@@ -768,7 +918,7 @@ literal|0
 argument_list|,
 name|lstat
 argument_list|(
-name|filename
+name|name1
 argument_list|,
 operator|&
 name|st2
@@ -795,11 +945,47 @@ block|}
 block|}
 block|}
 comment|/* Now make sure nothing is there that shouldn't be. */
+for|for
+control|(
+name|dp
+operator|=
+literal|"dflms"
+init|;
+operator|*
+name|dp
+operator|!=
+literal|'\0'
+condition|;
+operator|++
+name|dp
+control|)
+block|{
+name|char
+name|dir
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|dir
+index|[
+literal|0
+index|]
+operator|=
+operator|*
+name|dp
+expr_stmt|;
+name|dir
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|d
 operator|=
 name|opendir
 argument_list|(
-literal|"."
+name|dir
 argument_list|)
 expr_stmt|;
 while|while
@@ -824,7 +1010,7 @@ name|d_name
 expr_stmt|;
 switch|switch
 condition|(
-name|p
+name|dp
 index|[
 literal|0
 index|]
@@ -859,8 +1045,8 @@ name|strlen
 argument_list|(
 name|p
 argument_list|)
-operator|<
-literal|92
+operator|<=
+literal|100
 argument_list|)
 expr_stmt|;
 block|}
@@ -930,37 +1116,32 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Our files have very particular filename patterns. */
-name|assert
-argument_list|(
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|!=
+literal|'.'
+operator|||
+operator|(
 name|p
 index|[
 literal|1
 index|]
-operator|==
-literal|'_'
+operator|!=
+literal|'.'
 operator|&&
 name|p
 index|[
-literal|2
+literal|1
 index|]
-operator|==
-literal|'a'
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|p
-index|[
-literal|2
-index|]
-operator|==
-literal|'a'
-argument_list|)
-expr_stmt|;
-name|p
-operator|+=
-literal|2
-expr_stmt|;
+operator|!=
+literal|'\0'
+operator|)
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -981,13 +1162,18 @@ condition|;
 name|i
 operator|++
 control|)
-name|assert
+block|{
+name|failure
 argument_list|(
+literal|"i=%d, p[i]='%c' 'a'+(i%%26)='%c'"
+argument_list|,
+name|i
+argument_list|,
 name|p
 index|[
 name|i
 index|]
-operator|==
+argument_list|,
 literal|'a'
 operator|+
 operator|(
@@ -997,6 +1183,23 @@ literal|26
 operator|)
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|p
+index|[
+name|i
+index|]
+argument_list|,
+literal|'a'
+operator|+
+operator|(
+name|i
+operator|%
+literal|26
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|assert
 argument_list|(
 name|p
@@ -1007,6 +1210,7 @@ operator|==
 literal|'\0'
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'.'
@@ -1059,6 +1263,7 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_function
@@ -1084,9 +1289,14 @@ literal|0775
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
 name|chdir
 argument_list|(
 literal|"plain"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Use the tar program to create an archive. 	 */
@@ -1094,7 +1304,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s cf archive -C .. original>pack.out 2>pack.err"
+literal|"%s cf archive -C ../original f d l m s>pack.out 2>pack.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -1159,19 +1369,19 @@ argument_list|(
 literal|"unpack.out"
 argument_list|)
 expr_stmt|;
-name|chdir
-argument_list|(
-literal|"original"
-argument_list|)
-expr_stmt|;
 name|verify_tree
 argument_list|(
 name|LIMIT_NONE
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
 name|chdir
 argument_list|(
-literal|"../.."
+literal|".."
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1207,9 +1417,14 @@ literal|0775
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
 name|chdir
 argument_list|(
 name|target
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Use the tar program to create an archive. 	 */
@@ -1217,7 +1432,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s cf archive --format=ustar -C .. original>pack.out 2>pack.err"
+literal|"%s cf archive --format=ustar -C ../original f d l m s>pack.out 2>pack.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -1242,6 +1457,7 @@ argument_list|(
 literal|"pack.out"
 argument_list|)
 expr_stmt|;
+comment|/* Stderr is non-empty, since there are a bunch of files 	 * with filenames too long to archive. */
 comment|/* 	 * Use tar to unpack the archive into another directory. 	 */
 name|r
 operator|=

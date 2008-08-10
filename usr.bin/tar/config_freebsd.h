@@ -349,6 +349,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_REGEX_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SETLOCALE
 value|1
 end_define
@@ -433,13 +440,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRUCT_STAT_ST_MTIMESPEC_TV_NSEC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_STAT_ST_RDEV
 value|1
 end_define
 
