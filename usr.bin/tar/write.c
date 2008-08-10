@@ -1139,6 +1139,15 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+literal|'Z'
+case|:
+name|archive_write_set_compression_compress
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|bsdtar_errc
 argument_list|(
