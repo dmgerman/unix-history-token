@@ -5326,6 +5326,17 @@ name|a
 operator|->
 name|format_data
 expr_stmt|;
+if|if
+condition|(
+name|pax
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
 name|archive_string_free
 argument_list|(
 operator|&
