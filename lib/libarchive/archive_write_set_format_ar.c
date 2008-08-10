@@ -1797,6 +1797,17 @@ expr_stmt|;
 if|if
 condition|(
 name|ar
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+if|if
+condition|(
+name|ar
 operator|->
 name|has_strtab
 operator|>
