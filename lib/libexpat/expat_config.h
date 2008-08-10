@@ -3,9 +3,23 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
 begin_comment
 comment|/* 1234 = LIL_ENDIAN, 4321 = BIGENDIAN */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+end_if
 
 begin_define
 define|#
@@ -13,6 +27,23 @@ directive|define
 name|BYTEORDER
 value|1234
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BYTEORDER
+value|4321
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `bcopy' function. */
@@ -249,9 +280,35 @@ begin_comment
 comment|/* whether byteorder is bigendian */
 end_comment
 
-begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
-end_comment
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|WORDS_BIGENDIAN
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to specify how much context to retain around the current parse    point. */
