@@ -530,8 +530,6 @@ name|OPTION_CHROOT
 block|,
 name|OPTION_EXCLUDE
 block|,
-name|OPTION_FAST_READ
-block|,
 name|OPTION_FORMAT
 block|,
 name|OPTION_HELP
@@ -759,7 +757,7 @@ name|no_argument
 block|,
 name|NULL
 block|,
-name|OPTION_FAST_READ
+literal|'q'
 block|}
 block|,
 block|{
@@ -1647,17 +1645,6 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
-name|OPTION_FAST_READ
-case|:
-comment|/* GNU tar */
-name|bsdtar
-operator|->
-name|option_fast_read
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'H'
 case|:
 comment|/* BSD convention */
@@ -2151,6 +2138,17 @@ operator|->
 name|create_format
 operator|=
 literal|"pax"
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+comment|/* FreeBSD GNU tar --fast-read, NetBSD -q */
+name|bsdtar
+operator|->
+name|option_fast_read
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
