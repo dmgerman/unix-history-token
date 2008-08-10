@@ -22,7 +22,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RANDOM_MAX
+name|RANDOM_MAX_PLUS1
 value|0x80000000UL
 end_define
 

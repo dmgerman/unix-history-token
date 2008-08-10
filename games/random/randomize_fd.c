@@ -117,8 +117,10 @@ expr|struct
 name|rand_node
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -136,26 +138,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc"
+literal|"calloc"
 argument_list|)
-expr_stmt|;
-name|n
-operator|->
-name|len
-operator|=
-literal|0
-expr_stmt|;
-name|n
-operator|->
-name|cp
-operator|=
-name|NULL
-expr_stmt|;
-name|n
-operator|->
-name|next
-operator|=
-name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -794,7 +778,7 @@ if|if
 condition|(
 name|numnode
 operator|==
-name|RANDOM_MAX
+name|RANDOM_MAX_PLUS1
 condition|)
 block|{
 name|errno
@@ -805,7 +789,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"too many lines"
+literal|"too many delimiters"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1033,7 +1017,7 @@ operator|*
 name|random
 argument_list|()
 operator|/
-name|RANDOM_MAX
+name|RANDOM_MAX_PLUS1
 argument_list|)
 operator|==
 literal|0
