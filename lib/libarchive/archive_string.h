@@ -24,6 +24,27 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_comment
+comment|/* required for wchar_t on some systems */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_STRING_H
 end_ifdef
 
@@ -31,6 +52,23 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_WCHAR_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<wchar.h>
 end_include
 
 begin_endif
@@ -105,32 +143,6 @@ value|__archive_strappend_char
 end_define
 
 begin_comment
-comment|/* Append a char to an archive_string using UTF8. */
-end_comment
-
-begin_function_decl
-name|struct
-name|archive_string
-modifier|*
-name|__archive_strappend_char_UTF8
-parameter_list|(
-name|struct
-name|archive_string
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|archive_strappend_char_UTF8
-value|__archive_strappend_char_UTF8
-end_define
-
-begin_comment
 comment|/* Append an integer in the specified base (2<= base<= 16). */
 end_comment
 
@@ -159,6 +171,66 @@ define|#
 directive|define
 name|archive_strappend_int
 value|__archive_strappend_int
+end_define
+
+begin_comment
+comment|/* Convert a wide-char string to UTF-8 and append the result. */
+end_comment
+
+begin_function_decl
+name|struct
+name|archive_string
+modifier|*
+name|__archive_strappend_w_utf8
+parameter_list|(
+name|struct
+name|archive_string
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|archive_strappend_w_utf8
+value|__archive_strappend_w_utf8
+end_define
+
+begin_comment
+comment|/* Convert a wide-char string to current locale and append the result. */
+end_comment
+
+begin_comment
+comment|/* Returns NULL if conversion fails. */
+end_comment
+
+begin_function_decl
+name|struct
+name|archive_string
+modifier|*
+name|__archive_strappend_w_mbs
+parameter_list|(
+name|struct
+name|archive_string
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|archive_strappend_w_mbs
+value|__archive_strappend_w_mbs
 end_define
 
 begin_comment
@@ -307,7 +379,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|((as)->length = 0, __archive_string_append((as), (p), strlen(p)))
+value|((as)->length = 0, __archive_string_append((as), (p), p == NULL ? 0 : strlen(p)))
 end_define
 
 begin_comment
@@ -430,6 +502,23 @@ directive|define
 name|archive_string_sprintf
 value|__archive_string_sprintf
 end_define
+
+begin_comment
+comment|/* Allocates a fresh buffer and converts as (assumed to be UTF-8) into it.  * Returns NULL if conversion failed in any way. */
+end_comment
+
+begin_function_decl
+name|wchar_t
+modifier|*
+name|__archive_string_utf8_w
+parameter_list|(
+name|struct
+name|archive_string
+modifier|*
+name|as
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

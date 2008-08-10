@@ -37,7 +37,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
 name|char
 name|strtab
 index|[]
@@ -984,6 +983,16 @@ name|archive_write_header
 argument_list|(
 name|a
 argument_list|,
+name|ae
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertA
+argument_list|(
+literal|5
+operator|==
+name|archive_entry_size
+argument_list|(
 name|ae
 argument_list|)
 argument_list|)

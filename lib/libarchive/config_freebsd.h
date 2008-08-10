@@ -177,6 +177,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_FCNTL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_FCNTL_H
 value|1
 end_define
@@ -310,6 +317,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_PIPE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_POLL
 value|1
 end_define
@@ -409,20 +423,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRUCT_STAT_ST_MTIMESPEC_TV_NSEC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_STAT_ST_RDEV
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_TM_TM_GMTOFF
 value|1
 end_define
 
@@ -533,6 +533,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_VFORK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_WCHAR_H
 value|1
 end_define
@@ -548,6 +555,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_WCSLEN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCTOMB
 value|1
 end_define
 
