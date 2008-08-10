@@ -286,7 +286,7 @@ value|(((s3)[0]<< 16) | ((s3)[1]<< 8) | (s3)[2])
 end_define
 
 begin_comment
-comment|/* CCB Mangement functions */
+comment|/* CCB Management functions */
 end_comment
 
 begin_function_decl
