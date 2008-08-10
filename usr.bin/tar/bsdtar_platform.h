@@ -106,6 +106,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* Just leaving this macro replacement empty leads to a dangling semicolon. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -113,11 +117,8 @@ name|__FBSDID
 parameter_list|(
 name|a
 parameter_list|)
+value|struct _undefined_hack
 end_define
-
-begin_comment
-comment|/* null */
-end_comment
 
 begin_endif
 endif|#
