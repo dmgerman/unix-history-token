@@ -717,8 +717,6 @@ parameter_list|,
 name|off_t
 name|skip
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|struct
 name|memdata
@@ -797,6 +795,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|DEFINE_TEST
