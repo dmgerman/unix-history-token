@@ -10442,9 +10442,6 @@ decl_stmt|;
 name|ssize_t
 name|n
 decl_stmt|;
-name|int
-name|err
-decl_stmt|;
 comment|/* Ensure pax_entry buffer is big enough. */
 if|if
 condition|(
@@ -10550,10 +10547,6 @@ operator|=
 name|tar
 operator|->
 name|pax_entry
-expr_stmt|;
-name|err
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
