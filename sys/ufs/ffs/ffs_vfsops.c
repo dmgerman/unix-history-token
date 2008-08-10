@@ -808,14 +808,6 @@ argument_list|,
 literal|"snapshot"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mp
-operator|->
-name|mnt_opt
-operator|!=
-name|NULL
-condition|)
 name|vfs_deleteopt
 argument_list|(
 name|mp
