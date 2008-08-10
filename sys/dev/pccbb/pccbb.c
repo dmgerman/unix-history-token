@@ -517,6 +517,9 @@ parameter_list|(
 name|device_t
 name|brdev
 parameter_list|,
+name|device_t
+name|child
+parameter_list|,
 name|int
 name|on
 parameter_list|)
@@ -3659,6 +3662,9 @@ parameter_list|(
 name|device_t
 name|brdev
 parameter_list|,
+name|device_t
+name|child
+parameter_list|,
 name|int
 name|on
 parameter_list|)
@@ -3751,7 +3757,7 @@ name|b
 operator|=
 name|pcib_get_bus
 argument_list|(
-name|brdev
+name|child
 argument_list|)
 expr_stmt|;
 name|count
@@ -3879,6 +3885,8 @@ name|cbb_cardbus_reset
 argument_list|(
 name|brdev
 argument_list|,
+name|child
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -3912,6 +3920,8 @@ expr_stmt|;
 name|cbb_cardbus_reset
 argument_list|(
 name|brdev
+argument_list|,
+name|child
 argument_list|,
 literal|0
 argument_list|)
