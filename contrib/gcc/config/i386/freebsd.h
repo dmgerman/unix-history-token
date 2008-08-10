@@ -151,24 +151,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* This goes away when the math emulator is fixed.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_SUBTARGET_DEFAULT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_SUBTARGET_DEFAULT
-define|\
-value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
-end_define
-
-begin_comment
 comment|/* Don't default to pcc-struct-return, we want to retain compatibility with    older gcc versions AND pcc-struct-return is nonreentrant.    (even though the SVR4 ABI for the i386 says that records and unions are    returned in memory).  */
 end_comment
 
