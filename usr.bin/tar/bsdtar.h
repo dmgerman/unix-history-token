@@ -228,6 +228,11 @@ modifier|*
 name|gname_cache
 decl_stmt|;
 comment|/* for write.c */
+name|char
+modifier|*
+name|buff
+decl_stmt|;
+comment|/* for write.c */
 name|struct
 name|matching
 modifier|*
