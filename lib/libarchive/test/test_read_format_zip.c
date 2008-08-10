@@ -226,6 +226,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|failure
+argument_list|(
+literal|"archive_read_data() returns number of bytes read"
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 literal|18
@@ -236,7 +241,7 @@ name|a
 argument_list|,
 name|buff
 argument_list|,
-literal|18
+literal|19
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -297,9 +302,14 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|failure
+argument_list|(
+literal|"file2 has a bad CRC, so reading to end should fail"
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|18
+name|ARCHIVE_WARN
 argument_list|,
 name|archive_read_data
 argument_list|(
@@ -307,7 +317,7 @@ name|a
 argument_list|,
 name|buff
 argument_list|,
-literal|18
+literal|19
 argument_list|)
 argument_list|)
 expr_stmt|;
