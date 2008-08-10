@@ -536,6 +536,8 @@ name|OPTION_HELP
 block|,
 name|OPTION_INCLUDE
 block|,
+name|OPTION_KEEP_NEWER_FILES
+block|,
 name|OPTION_NEWER_CTIME
 block|,
 name|OPTION_NEWER_CTIME_THAN
@@ -848,6 +850,16 @@ block|,
 name|NULL
 block|,
 literal|'P'
+block|}
+block|,
+block|{
+literal|"keep-newer-files"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_KEEP_NEWER_FILES
 block|}
 block|,
 block|{
@@ -1801,6 +1813,17 @@ operator|->
 name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_NO_OVERWRITE
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_KEEP_NEWER_FILES
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|extract_flags
+operator||=
+name|ARCHIVE_EXTRACT_NO_OVERWRITE_NEWER
 expr_stmt|;
 break|break;
 case|case
