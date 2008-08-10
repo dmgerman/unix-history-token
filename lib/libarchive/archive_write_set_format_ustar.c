@@ -1936,10 +1936,28 @@ expr_stmt|;
 if|if
 condition|(
 name|t
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ENOMEM
+argument_list|,
+literal|"Can't allocate ustar data"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|strcpy
 argument_list|(
 name|t
@@ -1966,7 +1984,6 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|ret

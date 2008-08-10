@@ -256,6 +256,12 @@ name|ae_xattr
 modifier|*
 name|xattr_p
 decl_stmt|;
+name|char
+name|strmode
+index|[
+literal|11
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

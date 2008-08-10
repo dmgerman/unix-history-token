@@ -1858,6 +1858,22 @@ name|state
 operator|=
 name|ARCHIVE_STATE_DATA
 expr_stmt|;
+comment|/* 	 * If it's not open, tell our client not to try writing. 	 * In particular, dirs, links, etc, don't get written to. 	 */
+if|if
+condition|(
+name|a
+operator|->
+name|fd
+operator|<
+literal|0
+condition|)
+name|archive_entry_set_size
+argument_list|(
+name|entry
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|done
 label|:
 comment|/* Restore the user's umask before returning. */
