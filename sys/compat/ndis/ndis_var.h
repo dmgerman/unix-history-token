@@ -2346,7 +2346,7 @@ decl_stmt|;
 name|uint32_t
 name|nwbx_ielen
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 name|nwbx_ies
 index|[
 literal|1
