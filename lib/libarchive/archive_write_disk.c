@@ -7027,12 +7027,16 @@ block|}
 elseif|else
 if|if
 condition|(
+name|a
+operator|->
 name|fd
 operator|>=
 literal|0
 operator|&&
 name|fstat
 argument_list|(
+name|a
+operator|->
 name|fd
 argument_list|,
 operator|&
