@@ -424,6 +424,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|free
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buff
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
