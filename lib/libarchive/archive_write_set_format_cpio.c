@@ -432,12 +432,16 @@ name|archive_write_cpio_destroy
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_CPIO_POSIX
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"POSIX cpio"

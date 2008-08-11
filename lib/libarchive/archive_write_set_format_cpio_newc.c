@@ -453,12 +453,16 @@ name|archive_write_newc_destroy
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_CPIO_SVR4_NOCRC
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"SVR4 cpio nocrc"

@@ -425,12 +425,16 @@ argument_list|)
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR_PAX_RESTRICTED
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"restricted POSIX pax interchange"
@@ -589,12 +593,16 @@ name|archive_write_pax_finish_entry
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|=
 name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
 expr_stmt|;
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format_name
 operator|=
 literal|"POSIX pax interchange"
@@ -3350,6 +3358,8 @@ if|if
 condition|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|!=
 name|ARCHIVE_FORMAT_TAR_PAX_RESTRICTED
@@ -3670,6 +3680,8 @@ if|if
 condition|(
 name|a
 operator|->
+name|archive
+operator|.
 name|archive_format
 operator|!=
 name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
