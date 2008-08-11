@@ -1408,13 +1408,6 @@ operator||=
 name|IFM_ACTIVE
 expr_stmt|;
 block|}
-name|PHY_READ
-argument_list|(
-name|sc
-argument_list|,
-name|RGEPHY_MII_BMSR
-argument_list|)
-expr_stmt|;
 name|bmsr
 operator|=
 name|PHY_READ
