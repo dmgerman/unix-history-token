@@ -665,6 +665,18 @@ argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|2000000
+name|archive_write_finish
+argument_list|(
+name|ad
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -675,6 +687,8 @@ name|ad
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Test the entries on disk. */
 name|assert
 argument_list|(
