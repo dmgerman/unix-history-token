@@ -11,12 +11,29 @@ begin_comment
 comment|/*  * The goal of this file (and the matching test.c) is to  * simplify the very repetitive test-*.c test programs.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FILE_OFFSET_BITS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_FILE_OFFSET_BITS
 value|64
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
 
 begin_include
 include|#
@@ -54,11 +71,22 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -389,7 +417,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|test_assert
 parameter_list|(
 specifier|const
@@ -411,7 +439,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|test_assert_empty_file
 parameter_list|(
 specifier|const
@@ -424,7 +452,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|test_assert_equal_file
 parameter_list|(
 specifier|const
@@ -441,7 +469,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|test_assert_equal_int
 parameter_list|(
 specifier|const
@@ -469,7 +497,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|test_assert_equal_string
 parameter_list|(
 specifier|const
@@ -503,7 +531,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|test_assert_equal_wstring
 parameter_list|(
 specifier|const
@@ -537,7 +565,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|test_assert_equal_mem
 parameter_list|(
 specifier|const
@@ -570,6 +598,25 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|test_assert_file_contents
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -619,19 +666,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Global vars  */
+comment|/* Extracts named reference file to the current directory. */
 end_comment
 
-begin_comment
-comment|/* Directory holding reference files. */
-end_comment
-
-begin_decl_stmt
+begin_function_decl
+name|void
+name|extract_reference_file
+parameter_list|(
+specifier|const
 name|char
 modifier|*
-name|refdir
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Special interfaces for libarchive test harness.  */
