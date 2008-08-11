@@ -5172,7 +5172,7 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-comment|/* 	 * Gaurd against symlink tricks.  Reject any archive entry whose 	 * destination would be altered by a symlink. 	 */
+comment|/* 	 * Guard against symlink tricks.  Reject any archive entry whose 	 * destination would be altered by a symlink. 	 */
 comment|/* Whatever we checked last time doesn't need to be re-checked. */
 name|pn
 operator|=
