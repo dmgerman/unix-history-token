@@ -362,13 +362,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|axf
 operator|->
 name|Final
