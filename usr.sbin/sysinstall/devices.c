@@ -809,6 +809,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"upgt"
+argument_list|,
+literal|"Conexant/Intersil PrismGT USB wireless adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"ural"
 argument_list|,
 literal|"Ralink Technology RT2500USB 802.11 wireless adapter"
