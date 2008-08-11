@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_comment
 comment|/*  * Most of these tests are system-independent, though a few depend on  * features of the local system.  Such tests are conditionalized on  * the platform name.  On unsupported platforms, only the  * system-independent features will be tested.  *  * No, I don't want to use config.h in the test files because I want  * the tests to also serve as a check on the correctness of config.h.  * A mis-configured library build should cause tests to fail.  */
 end_comment
@@ -4467,6 +4473,145 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* 	 * Exercise the character-conversion logic, if we can. 	 */
+name|failure
+argument_list|(
+literal|"Can't exercise charset-conversion logic."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|assert
+argument_list|(
+name|NULL
+operator|!=
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|"de_DE.UTF-8"
+argument_list|)
+argument_list|)
+condition|)
+block|{
+comment|/* A filename that cannot be converted to wide characters. */
+name|archive_entry_copy_pathname
+argument_list|(
+name|e
+argument_list|,
+literal|"abc\314\214mno\374xyz"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"Converting invalid chars to Unicode should fail."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|NULL
+operator|==
+name|archive_entry_pathname_w
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|//failure("Converting invalid chars to UTF-8 should fail.");
+comment|//assert(NULL == archive_entry_pathname_utf8(e));
+comment|/* A group name that cannot be converted. */
+name|archive_entry_copy_gname
+argument_list|(
+name|e
+argument_list|,
+literal|"abc\314\214mno\374xyz"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"Converting invalid chars to Unicode should fail."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|NULL
+operator|==
+name|archive_entry_gname_w
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* A user name that cannot be converted. */
+name|archive_entry_copy_uname
+argument_list|(
+name|e
+argument_list|,
+literal|"abc\314\214mno\374xyz"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"Converting invalid chars to Unicode should fail."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|NULL
+operator|==
+name|archive_entry_uname_w
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* A hardlink target that cannot be converted. */
+name|archive_entry_copy_hardlink
+argument_list|(
+name|e
+argument_list|,
+literal|"abc\314\214mno\374xyz"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"Converting invalid chars to Unicode should fail."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|NULL
+operator|==
+name|archive_entry_hardlink_w
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* A symlink target that cannot be converted. */
+name|archive_entry_copy_symlink
+argument_list|(
+name|e
+argument_list|,
+literal|"abc\314\214mno\374xyz"
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"Converting invalid chars to Unicode should fail."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|NULL
+operator|==
+name|archive_entry_symlink_w
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Release the experimental entry. */
 name|archive_entry_free
 argument_list|(
