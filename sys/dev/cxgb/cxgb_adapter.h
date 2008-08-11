@@ -2226,6 +2226,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|t3_os_phymod_changed
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adap
+parameter_list|,
+name|int
+name|port_id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|t3_sge_err_intr_handler
 parameter_list|(
 name|adapter_t

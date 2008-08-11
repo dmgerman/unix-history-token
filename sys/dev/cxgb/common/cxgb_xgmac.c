@@ -58,10 +58,6 @@ name|msleep
 value|t3_os_sleep
 end_define
 
-begin_comment
-comment|/*  * # of exact address filters.  The first one is used for the station address,  * the rest are available for multicast addresses.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -846,6 +842,18 @@ name|mac
 operator|->
 name|offset
 decl_stmt|;
+name|int
+name|idx
+init|=
+name|macidx
+argument_list|(
+name|mac
+argument_list|)
+decl_stmt|;
+name|unsigned
+name|int
+name|store
+decl_stmt|;
 comment|/* Stop egress traffic to xgm*/
 if|if
 condition|(
@@ -903,12 +911,57 @@ name|oft
 argument_list|)
 expr_stmt|;
 comment|/* flush */
+comment|/* Store A_TP_TX_DROP_CFG_CH0 */
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_PIO_ADDR
+argument_list|,
+name|A_TP_TX_DROP_CFG_CH0
+operator|+
+name|idx
+argument_list|)
+expr_stmt|;
+name|store
+operator|=
+name|t3_read_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_TX_DROP_CFG_CH0
+operator|+
+name|idx
+argument_list|)
+expr_stmt|;
 name|msleep
 argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+comment|/* Change DROP_CFG to 0xc0000011 */
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_PIO_ADDR
+argument_list|,
+name|A_TP_TX_DROP_CFG_CH0
+operator|+
+name|idx
+argument_list|)
+expr_stmt|;
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_PIO_DATA
+argument_list|,
+literal|0xc0000011
+argument_list|)
+expr_stmt|;
 comment|/* Check for xgm Rx fifo empty */
+comment|/* Increased loop count to 1000 from 5 cover 1G and 100Mbps case */
 if|if
 condition|(
 name|t3_wait_op_done
@@ -923,7 +976,7 @@ literal|0x80000000
 argument_list|,
 literal|1
 argument_list|,
-literal|5
+literal|1000
 argument_list|,
 literal|2
 argument_list|)
@@ -1076,7 +1129,28 @@ operator||
 name|F_ENHASHMCAST
 argument_list|)
 expr_stmt|;
-comment|/*Resume egress traffic to xgm*/
+comment|/* Restore the DROP_CFG */
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_PIO_ADDR
+argument_list|,
+name|A_TP_TX_DROP_CFG_CH0
+operator|+
+name|idx
+argument_list|)
+expr_stmt|;
+name|t3_write_reg
+argument_list|(
+name|adap
+argument_list|,
+name|A_TP_PIO_DATA
+argument_list|,
+name|store
+argument_list|)
+expr_stmt|;
+comment|/* Resume egress traffic to xgm */
 if|if
 condition|(
 operator|!

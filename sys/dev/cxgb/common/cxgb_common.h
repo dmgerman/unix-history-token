@@ -418,6 +418,13 @@ name|WR_FLITS
 value|(TX_DESC_FLITS + 1 - SGE_NUM_GENBITS)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_PHYINTRS
+value|4
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|cphy
@@ -521,7 +528,7 @@ name|unsigned
 name|char
 name|gpio_intr
 index|[
-name|MAX_NPORTS
+name|MAX_PHYINTRS
 index|]
 decl_stmt|;
 comment|/* GPIO PHY IRQ pins */
@@ -543,39 +550,6 @@ modifier|*
 name|desc
 decl_stmt|;
 comment|/* product description */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|port_type_info
-block|{
-name|int
-function_decl|(
-modifier|*
-name|phy_prep
-function_decl|)
-parameter_list|(
-name|struct
-name|cphy
-modifier|*
-name|phy
-parameter_list|,
-name|adapter_t
-modifier|*
-name|adapter
-parameter_list|,
-name|int
-name|phy_addr
-parameter_list|,
-specifier|const
-name|struct
-name|mdio_ops
-modifier|*
-name|ops
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 end_struct
@@ -1865,6 +1839,34 @@ block|,
 name|cphy_cause_fifo_error
 init|=
 literal|2
+block|,
+name|cphy_cause_module_change
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/* PHY module types */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|phy_modtype_none
+block|,
+name|phy_modtype_sr
+block|,
+name|phy_modtype_lr
+block|,
+name|phy_modtype_lrm
+block|,
+name|phy_modtype_twinax
+block|,
+name|phy_modtype_twinax_long
+block|,
+name|phy_modtype_unknown
 block|}
 enum|;
 end_enum
@@ -2074,10 +2076,18 @@ begin_struct
 struct|struct
 name|cphy
 block|{
-name|int
+name|u8
 name|addr
 decl_stmt|;
 comment|/* PHY address */
+name|u8
+name|modtype
+decl_stmt|;
+comment|/* PHY module type */
+name|short
+name|priv
+decl_stmt|;
+comment|/* scratch pad */
 name|unsigned
 name|int
 name|caps
@@ -2299,14 +2309,11 @@ parameter_list|)
 block|{
 name|phy
 operator|->
-name|adapter
-operator|=
-name|adapter
-expr_stmt|;
-name|phy
-operator|->
 name|addr
 operator|=
+operator|(
+name|u8
+operator|)
 name|phy_addr
 expr_stmt|;
 name|phy
@@ -2314,6 +2321,12 @@ operator|->
 name|caps
 operator|=
 name|caps
+expr_stmt|;
+name|phy
+operator|->
+name|adapter
+operator|=
+name|adapter
 expr_stmt|;
 name|phy
 operator|->
@@ -2534,9 +2547,12 @@ modifier|*
 name|adap
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CONFIG_CHELSIO_T3_CORE
+argument_list|)
 return|return
 name|adap
 operator|->
@@ -3317,6 +3333,17 @@ name|ai
 parameter_list|,
 name|int
 name|reset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t3_reinit_adapter
+parameter_list|(
+name|adapter_t
+modifier|*
+name|adap
 parameter_list|)
 function_decl|;
 end_function_decl
