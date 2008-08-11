@@ -77,14 +77,6 @@ parameter_list|)
 block|{
 specifier|static
 specifier|const
-name|char
-modifier|*
-name|perms
-init|=
-literal|"?rwxrwxrwx "
-decl_stmt|;
-specifier|static
-specifier|const
 name|mode_t
 name|permbits
 index|[]
@@ -128,7 +120,7 @@ name|strcpy
 argument_list|(
 name|bp
 argument_list|,
-name|perms
+literal|"?rwxrwxrwx "
 argument_list|)
 expr_stmt|;
 name|mode
