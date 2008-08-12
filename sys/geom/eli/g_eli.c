@@ -3131,6 +3131,7 @@ name|sc_crypto
 operator|==
 name|G_ELI_CRYPTO_SW
 condition|)
+block|{
 name|error
 operator|=
 name|crypto_newsession
@@ -3146,6 +3147,7 @@ argument_list|,
 name|CRYPTOCAP_F_SOFTWARE
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
