@@ -373,7 +373,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Available commands:  *  * init [-bhPv] [-a aalgo] [-e ealgo] [-i iterations] [-l keylen] [-K newkeyfile] prov  * label - alias for 'init'  * attach [-dprv] [-k keyfile] prov  * detach [-fl] prov ...  * stop - alias for 'detach'  * onetime [-d] [-a aalgo] [-e ealgo] [-l keylen] prov ...  * configure [-bB] prov ...  * setkey [-pPv] [-n keyno] [-k keyfile] [-K newkeyfile] prov  * delkey [-afv] [-n keyno] prov  * kill [-av] [prov ...]  * backup [-v] prov file  * restore [-v] file prov  * clear [-v] prov ...  * dump [-v] prov ...  */
+comment|/*  * Available commands:  *  * init [-bhPv] [-a aalgo] [-e ealgo] [-i iterations] [-l keylen] [-K newkeyfile] prov  * label - alias for 'init'  * attach [-dprv] [-k keyfile] prov  * detach [-fl] prov ...  * stop - alias for 'detach'  * onetime [-d] [-a aalgo] [-e ealgo] [-l keylen] prov  * configure [-bB] prov ...  * setkey [-pPv] [-n keyno] [-k keyfile] [-K newkeyfile] prov  * delkey [-afv] [-n keyno] prov  * kill [-av] [prov ...]  * backup [-v] prov file  * restore [-v] file prov  * clear [-v] prov ...  * dump [-v] prov ...  */
 end_comment
 
 begin_decl_stmt
@@ -778,7 +778,7 @@ block|}
 block|,
 name|NULL
 block|,
-literal|"[-d] [-a aalgo] [-e ealgo] [-l keylen] [-s sectorsize] prov ..."
+literal|"[-d] [-a aalgo] [-e ealgo] [-l keylen] [-s sectorsize] prov"
 block|}
 block|,
 block|{
