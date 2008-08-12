@@ -439,22 +439,6 @@ value|do {						\ 	emitm(&stream, 0x05, 1);					\ 	emitm(&stream, i32, 4);						
 end_define
 
 begin_comment
-comment|/* addl i32,r32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDid
-parameter_list|(
-name|i32
-parameter_list|,
-name|r32
-parameter_list|)
-value|do {						\ 	emitm(&stream, 0x81, 1);					\ 	emitm(&stream, (24<< 3) | r32, 1);				\ 	emitm(&stream, i32, 4);						\ } while (0)
-end_define
-
-begin_comment
 comment|/* addl i8,r32 */
 end_comment
 
@@ -683,24 +667,6 @@ value|do {							\ 	emitm(&stream, 0xf7, 1);					\ 	emitm(&stream, (27<< 3) | (r
 end_define
 
 begin_comment
-comment|/* cmpl off(sr32),dr32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMPodd
-parameter_list|(
-name|off
-parameter_list|,
-name|sr32
-parameter_list|,
-name|dr32
-parameter_list|)
-value|do {					\ 	emitm(&stream, 0x3b, 1);					\ 	emitm(&stream,							\ 	    (1<< 6) | ((dr32& 0x7)<< 3) | (sr32& 0x7), 1);		\ 	emitm(&stream, off, 1);						\ } while (0)
-end_define
-
-begin_comment
 comment|/* cmpl sr32,dr32 */
 end_comment
 
@@ -758,20 +724,6 @@ parameter_list|(
 name|off32
 parameter_list|)
 value|do {							\ 	emitm(&stream, 0x840f, 2);					\ 	emitm(&stream, off32, 4);					\ } while (0)
-end_define
-
-begin_comment
-comment|/* jle off32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JLE
-parameter_list|(
-name|off32
-parameter_list|)
-value|do {							\ 	emitm(&stream, 0x8e0f, 2);					\ 	emitm(&stream, off32, 4);					\ } while (0)
 end_define
 
 begin_comment
