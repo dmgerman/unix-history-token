@@ -219,7 +219,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-af:t:A:B:F:W:"
+literal|"-A:aB:F:f:t:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -462,9 +462,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
