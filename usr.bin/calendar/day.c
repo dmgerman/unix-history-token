@@ -1536,7 +1536,7 @@ operator|%
 literal|7
 operator|)
 expr_stmt|;
-comment|/* (month length - day) / 7 + 1 */
+comment|/* (month length - day)	/ 7 + 1 */
 if|if
 condition|(
 name|cumdays
@@ -1583,11 +1583,11 @@ operator|==
 operator|-
 name|v1
 condition|)
-comment|/* bingo ! */
 name|day
 operator|=
 name|v2
 expr_stmt|;
+comment|/* bingo ! */
 comment|/* set to yesterday */
 else|else
 block|{
@@ -1615,13 +1615,13 @@ block|}
 comment|/* first, second ... +1 ... +5 */
 else|else
 block|{
+comment|/* offset: +1 (first Sunday) ... */
 name|v1
 operator|=
 name|day
 operator|/
 literal|10
 expr_stmt|;
-comment|/* offset: +1 (first Sunday) ... */
 name|day
 operator|=
 name|day
@@ -1674,9 +1674,9 @@ name|day
 operator|=
 name|v2
 expr_stmt|;
-comment|/* set to yesterday */
 else|else
 block|{
+comment|/* set to yesterday */
 name|day
 operator|=
 name|tp
@@ -1699,9 +1699,9 @@ return|;
 block|}
 block|}
 block|}
-comment|/* wired */
 else|else
 block|{
+comment|/* wired */
 name|day
 operator|=
 name|tp
@@ -1760,7 +1760,7 @@ literal|1
 index|]
 condition|)
 block|{
-comment|/* off end of month */
+comment|/* off end of month, adjust */
 name|day
 operator|-=
 operator|(
@@ -1777,7 +1777,7 @@ name|month
 index|]
 operator|)
 expr_stmt|;
-comment|/* adjust */
+comment|/* next year */
 if|if
 condition|(
 operator|++
@@ -1785,7 +1785,6 @@ name|month
 operator|>
 literal|12
 condition|)
-comment|/* next year */
 name|month
 operator|=
 literal|1
