@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp_lro.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -595,68 +601,6 @@ name|PIO_LEN
 value|(WR_LEN - sizeof(struct cpl_tx_pkt_lso))
 end_define
 
-begin_comment
-comment|/* careful, the following are set on priv_flags and must not collide with  * IFF_ flags!  */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|LRO_ACTIVE
-init|=
-operator|(
-literal|1
-operator|<<
-literal|8
-operator|)
-block|, }
-enum|;
-end_enum
-
-begin_comment
-comment|/* Max concurrent LRO sessions per queue set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_LRO_SES
-value|8
-end_define
-
-begin_struct
-struct|struct
-name|t3_lro_session
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|head
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|tail
-decl_stmt|;
-name|uint32_t
-name|seq
-decl_stmt|;
-name|uint16_t
-name|ip_len
-decl_stmt|;
-name|uint16_t
-name|mss
-decl_stmt|;
-name|uint16_t
-name|vtag
-decl_stmt|;
-name|uint8_t
-name|npkts
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|lro_state
@@ -665,20 +609,9 @@ name|unsigned
 name|short
 name|enabled
 decl_stmt|;
-name|unsigned
-name|short
-name|active_idx
-decl_stmt|;
-name|unsigned
-name|int
-name|nactive
-decl_stmt|;
 name|struct
-name|t3_lro_session
-name|sess
-index|[
-name|MAX_LRO_SES
-index|]
+name|lro_ctrl
+name|ctrl
 decl_stmt|;
 block|}
 struct|;
@@ -1062,15 +995,6 @@ comment|/* # of VLAN tag extractions */
 name|SGE_PSTAT_VLANINS
 block|,
 comment|/* # of VLAN tag insertions */
-name|SGE_PSTATS_LRO_QUEUED
-block|,
-comment|/* # of LRO appended packets */
-name|SGE_PSTATS_LRO_FLUSHED
-block|,
-comment|/* # of LRO flushed packets */
-name|SGE_PSTATS_LRO_X_STREAMS
-block|,
-comment|/* # of exceeded LRO contexts */
 block|}
 enum|;
 end_enum
@@ -1079,7 +1003,7 @@ begin_define
 define|#
 directive|define
 name|SGE_PSTAT_MAX
-value|(SGE_PSTATS_LRO_X_STREAMS+1)
+value|(SGE_PSTAT_VLANINS+1)
 end_define
 
 begin_define
@@ -2510,39 +2434,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|t3_rx_eth_lro
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adap
-parameter_list|,
-name|struct
-name|sge_rspq
-modifier|*
-name|rq
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|ethpad
-parameter_list|,
-name|uint32_t
-name|rss_hash
-parameter_list|,
-name|uint32_t
-name|rss_csum
-parameter_list|,
-name|int
-name|lro
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|t3_rx_eth
 parameter_list|(
 name|struct
@@ -2562,27 +2453,6 @@ name|m
 parameter_list|,
 name|int
 name|ethpad
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t3_lro_flush
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adap
-parameter_list|,
-name|struct
-name|sge_qset
-modifier|*
-name|qs
-parameter_list|,
-name|struct
-name|lro_state
-modifier|*
-name|state
 parameter_list|)
 function_decl|;
 end_function_decl
