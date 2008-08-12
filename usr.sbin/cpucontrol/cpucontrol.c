@@ -578,7 +578,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|WARNX
+name|WARN
 argument_list|(
 literal|0
 argument_list|,
@@ -612,7 +612,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|WARNX
+name|WARN
 argument_list|(
 literal|0
 argument_list|,
@@ -873,7 +873,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|WARNX
+name|WARN
 argument_list|(
 literal|0
 argument_list|,
@@ -921,7 +921,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|WARNX
+name|WARN
 argument_list|(
 literal|0
 argument_list|,
@@ -1053,7 +1053,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|WARNX
+name|WARN
 argument_list|(
 literal|0
 argument_list|,
