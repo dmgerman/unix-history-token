@@ -330,7 +330,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_PROM_ADDRESS
-value|(0x00000000ffffe000UL)
+value|(0x00000000ffffffffUL)
 end_define
 
 begin_define
