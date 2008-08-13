@@ -11450,10 +11450,26 @@ control|)
 block|{
 if|if
 condition|(
-operator|*
 name|s
+index|[
+literal|0
+index|]
 operator|==
 literal|'%'
+operator|&&
+name|s
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|s
+index|[
+literal|2
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 comment|/* Try to convert % escape */
