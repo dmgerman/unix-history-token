@@ -502,7 +502,7 @@ name|st
 operator|.
 name|st_mode
 operator|&
-literal|07777
+literal|0777
 operator|)
 operator|==
 literal|0755
@@ -665,7 +665,7 @@ name|st
 operator|.
 name|st_mode
 operator|&
-literal|07777
+literal|0777
 operator|)
 operator|==
 literal|0755
