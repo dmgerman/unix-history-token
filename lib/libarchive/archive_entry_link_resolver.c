@@ -656,6 +656,18 @@ operator|==
 literal|1
 condition|)
 return|return;
+comment|/* Directories never have hardlinks. */
+if|if
+condition|(
+name|archive_entry_filetype
+argument_list|(
+operator|*
+name|e
+argument_list|)
+operator|==
+name|AE_IFDIR
+condition|)
+return|return;
 switch|switch
 condition|(
 name|res
