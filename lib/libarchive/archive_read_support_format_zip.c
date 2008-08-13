@@ -2832,12 +2832,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We know compressed size; just skip it. */
-name|archive_read_format_zip_read_data_skip
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
+comment|/* We can't decompress this entry, but we will 			 * be able to skip() it and try the next entry. */
 name|r
 operator|=
 name|ARCHIVE_WARN
@@ -3665,6 +3660,18 @@ operator|->
 name|data
 operator|)
 expr_stmt|;
+comment|/* If we've already read to end of data, we're done. */
+if|if
+condition|(
+name|zip
+operator|->
+name|end_of_entry_cleanup
+condition|)
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
 comment|/* 	 * If the length is at the end, we have no choice but 	 * to decompress all the data to find the end marker. 	 */
 if|if
 condition|(
