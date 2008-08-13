@@ -7432,6 +7432,12 @@ operator|->
 name|argv
 operator|==
 name|NULL
+operator|&&
+name|bsdtar
+operator|->
+name|names_from_file
+operator|==
+name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
