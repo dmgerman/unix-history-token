@@ -518,7 +518,7 @@ decl_stmt|;
 name|char
 name|ti_db_suspended
 decl_stmt|;
-name|char
+name|int
 name|ti_traceme
 decl_stmt|;
 name|sigset_t
