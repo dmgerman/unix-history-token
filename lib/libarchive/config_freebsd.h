@@ -177,6 +177,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_FCNTL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_FCNTL_H
 value|1
 end_define
@@ -304,6 +311,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_MKNOD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_PIPE
 value|1
 end_define
 
@@ -527,6 +541,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_UTIME_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_VFORK
 value|1
 end_define
 

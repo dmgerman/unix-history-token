@@ -19,6 +19,17 @@ directive|define
 name|ARCHIVE_PLATFORM_H_INCLUDED
 end_define
 
+begin_comment
+comment|/* archive.h and archive_entry.h require this. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__LIBARCHIVE_BUILD
+value|1
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

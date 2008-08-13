@@ -1049,6 +1049,20 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|filesize
+operator|<
+literal|0
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"32-bit off_t doesn't permit testing of very large files."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|archive_entry_set_size
 argument_list|(
 name|ae

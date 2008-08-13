@@ -15,6 +15,10 @@ directive|define
 name|ARCHIVE_ENTRY_H_INCLUDED
 end_define
 
+begin_comment
+comment|/*  * Note: archive_entry.h is for use outside of libarchive; the  * configuration headers (config.h, archive_platform.h, etc.) are  * purely internal.  Do NOT use HAVE_XXX configuration macros to  * control the behavior of this header!  If you must conditionalize,  * use predefined compiler and/or platform macros.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -37,11 +41,224 @@ directive|include
 file|<time.h>
 end_include
 
+begin_comment
+comment|/* Get appropriate definitions of standard POSIX-style types. */
+end_comment
+
+begin_comment
+comment|/* These should match the types used in 'struct stat' */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__LA_UID_T
+value|unsigned int
+end_define
+
+begin_define
+define|#
+directive|define
+name|__LA_GID_T
+value|unsigned int
+end_define
+
+begin_define
+define|#
+directive|define
+name|__LA_DEV_T
+value|unsigned int
+end_define
+
+begin_define
+define|#
+directive|define
+name|__LA_MODE_T
+value|unsigned short
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|__LA_UID_T
+value|uid_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|__LA_GID_T
+value|gid_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|__LA_DEV_T
+value|dev_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|__LA_MODE_T
+value|mode_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * XXX Is this defined for all Windows compilers?  If so, in what  * header?  It would be nice to remove the __LA_INO_T indirection and  * just use plain ino_t everywhere.  Likewise for the other types just  * above.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__LA_INO_T
+value|ino_t
+end_define
+
+begin_comment
+comment|/*  * On Windows, define LIBARCHIVE_STATIC if you're building or using a  * .lib.  The default here assumes you're building a DLL.  Only  * libarchive source should ever define __LIBARCHIVE_BUILD.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+name|defined
+name|__WIN32__
+operator|)
+operator|||
+operator|(
+name|defined
+name|_WIN32
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|!
+name|defined
+name|LIBARCHIVE_STATIC
+operator|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LIBARCHIVE_BUILD
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__LA_DECL
+value|__attribute__((dllexport)) extern
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__LA_DECL
+value|__declspec(dllexport)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__LA_DECL
+value|__attribute__((dllimport)) extern
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__LA_DECL
+value|__declspec(dllimport)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Static libraries on all platforms and shared libraries on non-Windows. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__LA_DECL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -55,7 +272,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * Description of an archive entry.  *  * Basically, a "struct stat" with a few text fields added in.  *  * TODO: Add "comment", "charset", and possibly other entries that are  * supported by "pax interchange" format.  However, GNU, ustar, cpio,  * and other variants don't support these features, so they're not an  * excruciatingly high priority right now.  *  * TODO: "pax interchange" format allows essentially arbitrary  * key/value attributes to be attached to any entry.  Supporting  * such extensions may make this library useful for special  * applications (e.g., a package manager could attach special  * package-management attributes to each entry).  */
+comment|/*  * Description of an archive entry.  *  * You can think of this as "struct stat" with some text fields added in.  *  * TODO: Add "comment", "charset", and possibly other entries that are  * supported by "pax interchange" format.  However, GNU, ustar, cpio,  * and other variants don't support these features, so they're not an  * excruciatingly high priority right now.  *  * TODO: "pax interchange" format allows essentially arbitrary  * key/value attributes to be attached to any entry.  Supporting  * such extensions may make this library useful for special  * applications (e.g., a package manager could attach special  * package-management attributes to each entry).  */
 struct_decl|struct
 name|archive_entry
 struct_decl|;
@@ -93,6 +310,7 @@ directive|define
 name|AE_IFIFO
 value|0010000
 comment|/*  * Basic object manipulation  */
+name|__LA_DECL
 name|struct
 name|archive_entry
 modifier|*
@@ -104,6 +322,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* The 'clone' function does a deep copy; all of the strings are copied too. */
+name|__LA_DECL
 name|struct
 name|archive_entry
 modifier|*
@@ -114,6 +333,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_free
 parameter_list|(
@@ -122,6 +342,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|struct
 name|archive_entry
 modifier|*
@@ -131,6 +352,7 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/*  * Retrieve fields from an archive_entry.  */
+name|__LA_DECL
 name|time_t
 name|archive_entry_atime
 parameter_list|(
@@ -139,6 +361,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|long
 name|archive_entry_atime_nsec
 parameter_list|(
@@ -147,6 +370,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|time_t
 name|archive_entry_ctime
 parameter_list|(
@@ -155,6 +379,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|long
 name|archive_entry_ctime_nsec
 parameter_list|(
@@ -163,6 +388,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|dev_t
 name|archive_entry_dev
 parameter_list|(
@@ -171,6 +397,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|dev_t
 name|archive_entry_devmajor
 parameter_list|(
@@ -179,6 +406,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|dev_t
 name|archive_entry_devminor
 parameter_list|(
@@ -187,7 +415,8 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-name|mode_t
+name|__LA_DECL
+name|__LA_MODE_T
 name|archive_entry_filetype
 parameter_list|(
 name|struct
@@ -195,6 +424,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_fflags
 parameter_list|(
@@ -213,6 +443,7 @@ modifier|*
 comment|/* clear */
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|char
 modifier|*
@@ -223,7 +454,8 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-name|gid_t
+name|__LA_DECL
+name|__LA_GID_T
 name|archive_entry_gid
 parameter_list|(
 name|struct
@@ -231,6 +463,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|char
 modifier|*
@@ -241,6 +474,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|wchar_t
 modifier|*
@@ -251,6 +485,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|char
 modifier|*
@@ -261,6 +496,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|wchar_t
 modifier|*
@@ -271,7 +507,8 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-name|ino_t
+name|__LA_DECL
+name|__LA_INO_T
 name|archive_entry_ino
 parameter_list|(
 name|struct
@@ -279,7 +516,8 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-name|mode_t
+name|__LA_DECL
+name|__LA_MODE_T
 name|archive_entry_mode
 parameter_list|(
 name|struct
@@ -287,6 +525,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|time_t
 name|archive_entry_mtime
 parameter_list|(
@@ -295,6 +534,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|long
 name|archive_entry_mtime_nsec
 parameter_list|(
@@ -303,6 +543,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|unsigned
 name|int
 name|archive_entry_nlink
@@ -312,6 +553,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|char
 modifier|*
@@ -322,6 +564,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|wchar_t
 modifier|*
@@ -332,6 +575,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|dev_t
 name|archive_entry_rdev
 parameter_list|(
@@ -340,6 +584,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|dev_t
 name|archive_entry_rdevmajor
 parameter_list|(
@@ -348,6 +593,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|dev_t
 name|archive_entry_rdevminor
 parameter_list|(
@@ -356,6 +602,18 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_entry_sourcepath
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|int64_t
 name|archive_entry_size
 parameter_list|(
@@ -364,6 +622,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|char
 modifier|*
@@ -374,6 +633,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|char
 modifier|*
@@ -384,6 +644,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|wchar_t
 modifier|*
@@ -394,7 +655,8 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-name|uid_t
+name|__LA_DECL
+name|__LA_UID_T
 name|archive_entry_uid
 parameter_list|(
 name|struct
@@ -402,6 +664,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|char
 modifier|*
@@ -412,6 +675,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 specifier|const
 name|wchar_t
 modifier|*
@@ -423,6 +687,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/*  * Set fields in an archive_entry.  *  * Note that string 'set' functions do not copy the string, only the pointer.  * In contrast, 'copy' functions do copy the object pointed to.  */
+name|__LA_DECL
 name|void
 name|archive_entry_set_atime
 parameter_list|(
@@ -435,6 +700,7 @@ parameter_list|,
 name|long
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_ctime
 parameter_list|(
@@ -447,6 +713,7 @@ parameter_list|,
 name|long
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_dev
 parameter_list|(
@@ -457,6 +724,7 @@ parameter_list|,
 name|dev_t
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_devmajor
 parameter_list|(
@@ -467,6 +735,7 @@ parameter_list|,
 name|dev_t
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_devminor
 parameter_list|(
@@ -477,6 +746,7 @@ parameter_list|,
 name|dev_t
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_filetype
 parameter_list|(
@@ -488,6 +758,7 @@ name|unsigned
 name|int
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_fflags
 parameter_list|(
@@ -506,6 +777,22 @@ parameter_list|)
 function_decl|;
 comment|/* Returns pointer to start of first invalid token, or NULL if none. */
 comment|/* Note that all recognized tokens are processed, regardless. */
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_entry_copy_fflags_text
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 specifier|const
 name|wchar_t
 modifier|*
@@ -520,6 +807,7 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_gid
 parameter_list|(
@@ -527,9 +815,10 @@ name|struct
 name|archive_entry
 modifier|*
 parameter_list|,
-name|gid_t
+name|__LA_GID_T
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_gname
 parameter_list|(
@@ -542,6 +831,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_gname
 parameter_list|(
@@ -554,6 +844,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_gname_w
 parameter_list|(
@@ -566,6 +857,20 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_update_gname_utf8
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_hardlink
 parameter_list|(
@@ -578,6 +883,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_hardlink
 parameter_list|(
@@ -590,6 +896,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_hardlink_w
 parameter_list|(
@@ -602,6 +909,7 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_ino
 parameter_list|(
@@ -613,6 +921,7 @@ name|unsigned
 name|long
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_link
 parameter_list|(
@@ -625,6 +934,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_link
 parameter_list|(
@@ -637,6 +947,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_link_w
 parameter_list|(
@@ -649,6 +960,20 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_update_link_utf8
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_mode
 parameter_list|(
@@ -656,9 +981,10 @@ name|struct
 name|archive_entry
 modifier|*
 parameter_list|,
-name|mode_t
+name|__LA_MODE_T
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_mtime
 parameter_list|(
@@ -671,6 +997,7 @@ parameter_list|,
 name|long
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_nlink
 parameter_list|(
@@ -682,6 +1009,7 @@ name|unsigned
 name|int
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_pathname
 parameter_list|(
@@ -694,6 +1022,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_pathname
 parameter_list|(
@@ -706,6 +1035,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_pathname_w
 parameter_list|(
@@ -718,6 +1048,20 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_update_pathname_utf8
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_perm
 parameter_list|(
@@ -725,9 +1069,10 @@ name|struct
 name|archive_entry
 modifier|*
 parameter_list|,
-name|mode_t
+name|__LA_MODE_T
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_rdev
 parameter_list|(
@@ -738,6 +1083,7 @@ parameter_list|,
 name|dev_t
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_rdevmajor
 parameter_list|(
@@ -748,6 +1094,7 @@ parameter_list|,
 name|dev_t
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_rdevminor
 parameter_list|(
@@ -758,6 +1105,7 @@ parameter_list|,
 name|dev_t
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_size
 parameter_list|(
@@ -768,6 +1116,20 @@ parameter_list|,
 name|int64_t
 parameter_list|)
 function_decl|;
+name|__LA_DECL
+name|void
+name|archive_entry_copy_sourcepath
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_symlink
 parameter_list|(
@@ -780,6 +1142,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_symlink
 parameter_list|(
@@ -792,6 +1155,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_symlink_w
 parameter_list|(
@@ -804,6 +1168,7 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_uid
 parameter_list|(
@@ -811,9 +1176,10 @@ name|struct
 name|archive_entry
 modifier|*
 parameter_list|,
-name|uid_t
+name|__LA_UID_T
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_set_uname
 parameter_list|(
@@ -826,6 +1192,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_uname
 parameter_list|(
@@ -838,6 +1205,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_uname_w
 parameter_list|(
@@ -850,18 +1218,33 @@ name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * Routines to bulk copy fields to/from a platform-native "struct  * stat."  Libarchive used to just store a struct stat inside of each  * archive_entry object, but this created issues when trying to  * manipulate archives on systems different than the ones they were  * created on.  *  * TODO: On Linux, provide both stat32 and stat64 versions of these functions.  */
-specifier|const
-name|struct
-name|stat
-modifier|*
-name|archive_entry_stat
+name|__LA_DECL
+name|int
+name|archive_entry_update_uname_utf8
 parameter_list|(
 name|struct
 name|archive_entry
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
+comment|/*  * Routines to bulk copy fields to/from a platform-native "struct  * stat."  Libarchive used to just store a struct stat inside of each  * archive_entry object, but this created issues when trying to  * manipulate archives on systems different than the ones they were  * created on.  *  * TODO: On Linux, provide both stat32 and stat64 versions of these functions.  */
+name|__LA_DECL
+specifier|const
+expr|struct
+name|stat
+operator|*
+name|archive_entry_stat
+argument_list|(
+expr|struct
+name|archive_entry
+operator|*
+argument_list|)
+expr_stmt|;
+name|__LA_DECL
 name|void
 name|archive_entry_copy_stat
 parameter_list|(
@@ -930,6 +1313,7 @@ name|ARCHIVE_ENTRY_ACL_OTHER
 value|10006
 comment|/* Public. */
 comment|/*  * Set the ACL by clearing it and adding entries one at a time.  * Unlike the POSIX.1e ACL routines, you must specify the type  * (access/default) for each entry.  Internally, the ACL data is just  * a soup of entries.  API calls here allow you to retrieve just the  * entries of interest.  This design (which goes against the spirit of  * POSIX.1e) is useful for handling archive formats that combine  * default and access information in a single ACL list.  */
+name|__LA_DECL
 name|void
 name|archive_entry_acl_clear
 parameter_list|(
@@ -938,6 +1322,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_acl_add_entry
 parameter_list|(
@@ -963,6 +1348,7 @@ modifier|*
 comment|/* name */
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_acl_add_entry_w
 parameter_list|(
@@ -989,6 +1375,7 @@ comment|/* name */
 parameter_list|)
 function_decl|;
 comment|/*  * To retrieve the ACL, first "reset", then repeatedly ask for the  * "next" entry.  The want_type parameter allows you to request only  * access entries or only default entries.  */
+name|__LA_DECL
 name|int
 name|archive_entry_acl_reset
 parameter_list|(
@@ -1000,6 +1387,7 @@ name|int
 comment|/* want_type */
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|int
 name|archive_entry_acl_next
 parameter_list|(
@@ -1033,6 +1421,7 @@ modifier|*
 comment|/* name */
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|int
 name|archive_entry_acl_next_w
 parameter_list|(
@@ -1075,6 +1464,7 @@ define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT
 value|2048
+name|__LA_DECL
 specifier|const
 name|wchar_t
 modifier|*
@@ -1089,6 +1479,7 @@ comment|/* flags */
 parameter_list|)
 function_decl|;
 comment|/* Return a count of entries matching 'want_type' */
+name|__LA_DECL
 name|int
 name|archive_entry_acl_count
 parameter_list|(
@@ -1101,6 +1492,7 @@ comment|/* want_type */
 parameter_list|)
 function_decl|;
 comment|/*  * Private ACL parser.  This is private because it handles some  * very weird formats that clients should not be messing with.  * Clients should only deal with their platform-native formats.  * Because of the need to support many formats cleanly, new arguments  * are likely to get added on a regular basis.  Clients who try to use  * this interface are likely to be surprised when it changes.  *  * You were warned!  *  * TODO: Move this declaration out of the public header and into  * a private header.  Warnings above are silly.  */
+name|__LA_DECL
 name|int
 name|__archive_entry_acl_parse_w
 parameter_list|(
@@ -1117,6 +1509,7 @@ comment|/* type */
 parameter_list|)
 function_decl|;
 comment|/*  * extended attributes  */
+name|__LA_DECL
 name|void
 name|archive_entry_xattr_clear
 parameter_list|(
@@ -1125,6 +1518,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_xattr_add_entry
 parameter_list|(
@@ -1147,6 +1541,7 @@ comment|/* size */
 parameter_list|)
 function_decl|;
 comment|/*  * To retrieve the xattr list, first "reset", then repeatedly ask for the  * "next" entry.  */
+name|__LA_DECL
 name|int
 name|archive_entry_xattr_count
 parameter_list|(
@@ -1155,6 +1550,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|int
 name|archive_entry_xattr_reset
 parameter_list|(
@@ -1163,6 +1559,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
 name|int
 name|archive_entry_xattr_next
 parameter_list|(
@@ -1186,10 +1583,13 @@ name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * Utility to detect hardlinks.  *  * The 'struct archive_hardlink_lookup' is a cache of entry  * names and dev/ino numbers.  Here's how to use it:  *   1. Create a lookup object with archive_hardlink_lookup_new()  *   2. Hand each archive_entry to archive_hardlink_lookup().  *      That function will return NULL (this is not a hardlink to  *      a previous entry) or the pathname of the first entry  *      that matched this.  *   3. Use archive_hardlink_lookup_free() to release the cache.  *  * To make things more efficient, be sure that each entry has a valid  * nlinks value.  The hardlink cache uses this to track when all links  * have been found.  If the nlinks value is zero, it will keep every  * name in the cache indefinitely, which can use a lot of memory.  */
+comment|/*  * Utility to match up hardlinks.  *  * The 'struct archive_entry_linkresolver' is a cache of archive entries  * for files with multiple links.  Here's how to use it:  *   1. Create a lookup object with archive_entry_linkresolver_new()  *   2. Tell it the archive format you're using.  *   3. Hand each archive_entry to archive_entry_linkify().  *      That function will return 0, 1, or 2 entries that should  *      be written.  *   4. Call archive_entry_linkify(resolver, NULL) until  *      no more entries are returned.  *   5. Call archive_entry_link_resolver_free(resolver) to free resources.  *  * The entries returned have their hardlink and size fields updated  * appropriately.  If an entry is passed in that does not refer to  * a file with multiple links, it is returned unchanged.  The intention  * is that you should be able to simply filter all entries through  * this machine.  *  * To make things more efficient, be sure that each entry has a valid  * nlinks value.  The hardlink cache uses this to track when all links  * have been found.  If the nlinks value is zero, it will keep every  * name in the cache indefinitely, which can use a lot of memory.  *  * Note that archive_entry_size() is reset to zero if the file  * body should not be written to the archive.  Pay attention!  */
+name|__LA_DECL
 struct_decl|struct
 name|archive_entry_linkresolver
 struct_decl|;
+comment|/*  * There are three different strategies for marking hardlinks.  * The descriptions below name them after the best-known  * formats that rely on each strategy:  *  * "Old cpio" is the simplest, it always returns any entry unmodified.  *    As far as I know, only cpio formats use this.  Old cpio archives  *    store every link with the full body; the onus is on the dearchiver  *    to detect and properly link the files as they are restored.  * "tar" is also pretty simple; it caches a copy the first time it sees  *    any link.  Subsequent appearances are modified to be hardlink  *    references to the first one without any body.  Used by all tar  *    formats, although the newest tar formats permit the "old cpio" strategy  *    as well.  This strategy is very simple for the dearchiver,  *    and reasonably straightforward for the archiver.  * "new cpio" is trickier.  It stores the body only with the last  *    occurrence.  The complication is that we might not  *    see every link to a particular file in a single session, so  *    there's no easy way to know when we've seen the last occurrence.  *    The solution here is to queue one link until we see the next.  *    At the end of the session, you can enumerate any remaining  *    entries by calling archive_entry_linkify(NULL) and store those  *    bodies.  If you have a file with three links l1, l2, and l3,  *    you'll get the following behavior if you see all three links:  *           linkify(l1) => NULL   (the resolver stores l1 internally)  *           linkify(l2) => l1     (resolver stores l2, you write l1)  *           linkify(l3) => l2, l3 (all links seen, you can write both).  *    If you only see l1 and l2, you'll get this behavior:  *           linkify(l1) => NULL  *           linkify(l2) => l1  *           linkify(NULL) => l2   (at end, you retrieve remaining links)  *    As the name suggests, this strategy is used by newer cpio variants.  *    It's noticably more complex for the archiver, slightly more complex  *    for the dearchiver than the tar strategy, but makes it straightforward  *    to restore a file using any link by simply continuing to scan until  *    you see a link that is stored with a body.  In contrast, the tar  *    strategy requires you to rescan the archive from the beginning to  *    correctly extract an arbitrary link.  */
+name|__LA_DECL
 name|struct
 name|archive_entry_linkresolver
 modifier|*
@@ -1198,6 +1598,19 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|__LA_DECL
+name|void
+name|archive_entry_linkresolver_set_strategy
+parameter_list|(
+name|struct
+name|archive_entry_linkresolver
+modifier|*
+parameter_list|,
+name|int
+comment|/* format_code */
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|void
 name|archive_entry_linkresolver_free
 parameter_list|(
@@ -1206,10 +1619,9 @@ name|archive_entry_linkresolver
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
-name|archive_entry_linkresolve
+name|__LA_DECL
+name|void
+name|archive_entry_linkify
 parameter_list|(
 name|struct
 name|archive_entry_linkresolver
@@ -1217,6 +1629,12 @@ modifier|*
 parameter_list|,
 name|struct
 name|archive_entry
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1230,6 +1648,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* This is meaningless outside of this header. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|__LA_DECL
+end_undef
 
 begin_endif
 endif|#

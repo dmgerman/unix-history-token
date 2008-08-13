@@ -25,7 +25,7 @@ value|022
 end_define
 
 begin_comment
-comment|/*  * Exercise hardlink recreation.  */
+comment|/*  * Exercise hardlink recreation.  *  * File permissions are chosen so that the authoritive entry  * has the correct permission and the non-authoritive versions  * are just writeable files.  */
 end_comment
 
 begin_macro
@@ -209,7 +209,7 @@ name|ae
 argument_list|,
 name|S_IFREG
 operator||
-literal|0755
+literal|0600
 argument_list|)
 expr_stmt|;
 name|archive_entry_set_size
@@ -301,7 +301,7 @@ name|ae
 argument_list|,
 name|S_IFREG
 operator||
-literal|0755
+literal|0600
 argument_list|)
 expr_stmt|;
 name|archive_entry_set_size
@@ -489,7 +489,7 @@ name|ae
 argument_list|,
 name|S_IFREG
 operator||
-literal|0755
+literal|0600
 argument_list|)
 expr_stmt|;
 name|archive_entry_set_size
@@ -513,9 +513,14 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|3000000
 name|assertEqualInt
 argument_list|(
-literal|0
+name|ARCHIVE_WARN
 argument_list|,
 name|archive_write_data
 argument_list|(
@@ -523,13 +528,29 @@ name|ad
 argument_list|,
 name|data
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|data
-argument_list|)
+literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|assertEqualInt
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|archive_write_data
+argument_list|(
+name|ad
+argument_list|,
+name|data
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|assertEqualIntA
 argument_list|(
 name|ad

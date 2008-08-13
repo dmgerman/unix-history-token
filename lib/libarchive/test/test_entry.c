@@ -108,6 +108,12 @@ comment|/* For xattr tests. */
 name|int
 name|c
 decl_stmt|;
+name|wchar_t
+name|wc
+decl_stmt|;
+name|long
+name|l
+decl_stmt|;
 name|assert
 argument_list|(
 operator|(
@@ -662,7 +668,7 @@ argument_list|,
 literal|"link3"
 argument_list|)
 expr_stmt|;
-comment|/* Arbitrarily override hardlink if both hardlink and symlink set. */
+comment|/* Arbitrarily override symlink if both hardlink and symlink set. */
 name|archive_entry_set_hardlink
 argument_list|(
 name|e
@@ -1193,6 +1199,39 @@ literal|"uappnd,nouchg,nodump,noopaque,uunlnk"
 argument_list|)
 expr_stmt|;
 comment|/* TODO: Test archive_entry_copy_fflags_text_w() */
+comment|/* Test archive_entry_copy_fflags_text() */
+name|archive_entry_copy_fflags_text
+argument_list|(
+name|e
+argument_list|,
+literal|"nouappnd, nouchg, dump,uunlnk"
+argument_list|)
+expr_stmt|;
+name|archive_entry_fflags
+argument_list|(
+name|e
+argument_list|,
+operator|&
+name|set
+argument_list|,
+operator|&
+name|clear
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|16
+argument_list|,
+name|set
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|7
+argument_list|,
+name|clear
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* See test_acl_basic.c for tests of ACL set/get consistency. */
@@ -4474,25 +4513,26 @@ directive|endif
 endif|#
 directive|endif
 comment|/* 	 * Exercise the character-conversion logic, if we can. 	 */
-name|failure
-argument_list|(
-literal|"Can't exercise charset-conversion logic."
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|assert
-argument_list|(
 name|NULL
-operator|!=
+operator|==
 name|setlocale
 argument_list|(
 name|LC_ALL
 argument_list|,
 literal|"de_DE.UTF-8"
 argument_list|)
-argument_list|)
 condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Can't exercise charset-conversion logic without"
+literal|" a suitable locale."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* A filename that cannot be converted to wide characters. */
 name|archive_entry_copy_pathname
@@ -4606,6 +4646,91 @@ argument_list|(
 name|NULL
 operator|==
 name|archive_entry_symlink_w
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|l
+operator|=
+literal|0x12345678L
+expr_stmt|;
+name|wc
+operator|=
+operator|(
+name|wchar_t
+operator|)
+name|l
+expr_stmt|;
+comment|/* Wide character too big for UTF-8. */
+if|if
+condition|(
+name|NULL
+operator|==
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|"C"
+argument_list|)
+operator|||
+operator|(
+name|long
+operator|)
+name|wc
+operator|!=
+name|l
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Testing charset conversion failure requires 32-bit wchar_t and support for \"C\" locale."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Build the string L"xxx\U12345678yyy\u5678zzz" without 		 * using C99 \u#### syntax, which isn't uniformly 		 * supported.  (GCC 3.4.6, for instance, defaults to 		 * "c89 plus GNU extensions.") 		 */
+name|wcscpy
+argument_list|(
+name|wbuff
+argument_list|,
+literal|L"xxxAyyyBzzz"
+argument_list|)
+expr_stmt|;
+name|wbuff
+index|[
+literal|3
+index|]
+operator|=
+literal|0x12345678
+expr_stmt|;
+name|wbuff
+index|[
+literal|7
+index|]
+operator|=
+literal|0x5678
+expr_stmt|;
+comment|/* A wide filename that cannot be converted to narrow. */
+name|archive_entry_copy_pathname_w
+argument_list|(
+name|e
+argument_list|,
+name|wbuff
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"Converting wide characters from Unicode should fail."
+argument_list|)
+expr_stmt|;
+name|assertEqualString
+argument_list|(
+name|NULL
+argument_list|,
+name|archive_entry_pathname
 argument_list|(
 name|e
 argument_list|)
