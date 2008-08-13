@@ -1357,7 +1357,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+literal|30
 argument_list|,
 literal|"smist"
 argument_list|,

@@ -7142,7 +7142,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+literal|10
 argument_list|,
 literal|"est"
 argument_list|,
