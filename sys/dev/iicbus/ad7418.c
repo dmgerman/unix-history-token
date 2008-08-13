@@ -543,7 +543,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_mtx
+name|sc_lock
 argument_list|,
 literal|"ad7418"
 argument_list|)

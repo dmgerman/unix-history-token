@@ -27,17 +27,23 @@ directive|include
 file|<sys/_sx.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/lock_profile.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock_profile.h>
+end_include
 
 begin_include
 include|#
