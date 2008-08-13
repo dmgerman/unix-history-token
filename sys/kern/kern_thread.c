@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_witness.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -1518,6 +1524,16 @@ name|td_state
 operator|=
 name|TDS_INACTIVE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITNESS
+name|witness_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|CTR1
 argument_list|(
 name|KTR_PROC

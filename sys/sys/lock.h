@@ -1095,6 +1095,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|witness_thread_exit
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
