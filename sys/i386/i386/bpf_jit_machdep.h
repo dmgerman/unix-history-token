@@ -561,6 +561,38 @@ value|do {						\ 	emitm(&stream, 0x21, 1);					\ 	emitm(&stream,							\ 	    (
 end_define
 
 begin_comment
+comment|/* testl i32,r32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TESTid
+parameter_list|(
+name|i32
+parameter_list|,
+name|r32
+parameter_list|)
+value|do {						\ 	if (r32 == EAX) {						\ 		emitm(&stream, 0xa9, 1);				\ 	} else {							\ 		emitm(&stream, 0xf7, 1);				\ 		emitm(&stream, (3<< 6) | r32, 1);			\ 	}								\ 	emitm(&stream, i32, 4);						\ } while (0)
+end_define
+
+begin_comment
+comment|/* testl sr32,dr32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TESTrd
+parameter_list|(
+name|sr32
+parameter_list|,
+name|dr32
+parameter_list|)
+value|do {						\ 	emitm(&stream, 0x85, 1);					\ 	emitm(&stream,							\ 	    (3<< 6) | ((sr32& 0x7)<< 3) | (dr32& 0x7), 1);		\ } while (0)
+end_define
+
+begin_comment
 comment|/* orl sr32,dr32 */
 end_comment
 
@@ -713,87 +745,17 @@ value|do {							\ 	emitm(&stream, 0x75, 1);					\ 	emitm(&stream, off8, 1);				
 end_define
 
 begin_comment
-comment|/* je off32 */
+comment|/* jbe off8 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|JE
-parameter_list|(
-name|off32
-parameter_list|)
-value|do {							\ 	emitm(&stream, 0x840f, 2);					\ 	emitm(&stream, off32, 4);					\ } while (0)
-end_define
-
-begin_comment
-comment|/* jle off8 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JLEb
+name|JBEb
 parameter_list|(
 name|off8
 parameter_list|)
-value|do {							\ 	emitm(&stream, 0x7e, 1);					\ 	emitm(&stream, off8, 1);					\ } while (0)
-end_define
-
-begin_comment
-comment|/* ja off32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JA
-parameter_list|(
-name|off32
-parameter_list|)
-value|do {							\ 	emitm(&stream, 0x870f, 2);					\ 	emitm(&stream, off32, 4);					\ } while (0)
-end_define
-
-begin_comment
-comment|/* jae off32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JAE
-parameter_list|(
-name|off32
-parameter_list|)
-value|do {							\ 	emitm(&stream, 0x830f, 2);					\ 	emitm(&stream, off32, 4);					\ } while (0)
-end_define
-
-begin_comment
-comment|/* jg off32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JG
-parameter_list|(
-name|off32
-parameter_list|)
-value|do {							\ 	emitm(&stream, 0x8f0f, 2);					\ 	emitm(&stream, off32, 4);					\ } while (0)
-end_define
-
-begin_comment
-comment|/* jge off32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JGE
-parameter_list|(
-name|off32
-parameter_list|)
-value|do {							\ 	emitm(&stream, 0x8d0f, 2);					\ 	emitm(&stream, off32, 4);					\ } while (0)
+value|do {							\ 	emitm(&stream, 0x76, 1);					\ 	emitm(&stream, off8, 1);					\ } while (0)
 end_define
 
 begin_comment
@@ -822,6 +784,66 @@ parameter_list|(
 name|r32
 parameter_list|)
 value|do {						\ 	emitm(&stream, 0x31, 1);					\ 	emitm(&stream, (3<< 6) | ((r32& 0x7)<< 3) | (r32& 0x7), 1);	\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * Conditional long jumps  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JB
+value|0x82
+end_define
+
+begin_define
+define|#
+directive|define
+name|JAE
+value|0x83
+end_define
+
+begin_define
+define|#
+directive|define
+name|JE
+value|0x84
+end_define
+
+begin_define
+define|#
+directive|define
+name|JNE
+value|0x85
+end_define
+
+begin_define
+define|#
+directive|define
+name|JBE
+value|0x86
+end_define
+
+begin_define
+define|#
+directive|define
+name|JA
+value|0x87
+end_define
+
+begin_define
+define|#
+directive|define
+name|JCC
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|do {							\ 	if (ins->jt != 0&& ins->jf != 0) {				\
+comment|/* 5 is the size of the following jmp */
+value|\ 		emitm(&stream, ((t)<< 8) | 0x0f, 2);			\ 		emitm(&stream, stream.refs[stream.bpf_pc + ins->jt] -	\ 		    stream.refs[stream.bpf_pc] + 5, 4);			\ 		JMP(stream.refs[stream.bpf_pc + ins->jf] -		\ 		    stream.refs[stream.bpf_pc]);			\ 	} else if (ins->jt != 0) {					\ 		emitm(&stream, ((t)<< 8) | 0x0f, 2);			\ 		emitm(&stream, stream.refs[stream.bpf_pc + ins->jt] -	\ 		    stream.refs[stream.bpf_pc], 4);			\ 	} else {							\ 		emitm(&stream, ((f)<< 8) | 0x0f, 2);			\ 		emitm(&stream, stream.refs[stream.bpf_pc + ins->jf] -	\ 		    stream.refs[stream.bpf_pc], 4);			\ 	}								\ } while (0)
 end_define
 
 begin_endif
