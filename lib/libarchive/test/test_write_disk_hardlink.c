@@ -665,16 +665,6 @@ argument_list|(
 name|ae
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|archive_write_finish
-argument_list|(
-name|ad
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER
