@@ -7510,6 +7510,14 @@ name|s
 operator|.
 name|st_mode
 argument_list|)
+operator|&&
+operator|!
+name|S_ISBLK
+argument_list|(
+name|s
+operator|.
+name|st_mode
+argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
