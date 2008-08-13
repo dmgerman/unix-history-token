@@ -182,6 +182,16 @@ block|{
 if|if
 condition|(
 name|n
+operator|<
+name|REDZONE_HSIZE
+condition|)
+name|n
+operator|=
+name|REDZONE_HSIZE
+expr_stmt|;
+if|if
+condition|(
+name|n
 operator|<=
 literal|128
 condition|)
