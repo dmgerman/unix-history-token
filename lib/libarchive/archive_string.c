@@ -72,36 +72,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sgi
-end_ifdef
-
-begin_comment
-comment|/*  * The following prototype is missing on IRXI,  * even though the function is implemented in libc.  */
-end_comment
-
-begin_function_decl
-name|size_t
-name|wcrtomb
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|wchar_t
-parameter_list|,
-name|mbstate_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -704,13 +674,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Home-grown wcrtomb for UTF-8.  */
+comment|/*  * Home-grown wctomb for UTF-8.  */
 end_comment
 
 begin_function
 specifier|static
-name|size_t
-name|my_wcrtomb_utf8
+name|int
+name|my_wctomb_utf8
 parameter_list|(
 name|char
 modifier|*
@@ -718,24 +688,15 @@ name|p
 parameter_list|,
 name|wchar_t
 name|wc
-parameter_list|,
-name|mbstate_t
-modifier|*
-name|s
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|s
-expr_stmt|;
-comment|/* UNUSED */
 if|if
 condition|(
 name|p
 operator|==
 name|NULL
 condition|)
+comment|/* UTF-8 doesn't use shift states. */
 return|return
 operator|(
 literal|0
@@ -970,7 +931,7 @@ name|wchar_t
 modifier|*
 name|w
 parameter_list|,
-name|size_t
+name|int
 function_decl|(
 modifier|*
 name|func
@@ -980,9 +941,6 @@ name|char
 modifier|*
 parameter_list|,
 name|wchar_t
-parameter_list|,
-name|mbstate_t
-modifier|*
 parameter_list|)
 parameter_list|)
 block|{
@@ -993,30 +951,28 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|mbstate_t
-name|shift_state
-decl_stmt|;
 name|char
 name|buff
 index|[
 literal|256
 index|]
 decl_stmt|;
-comment|/* 	 * Convert one wide char at a time into 'buff', whenever that 	 * fills, append it to the string. 	 */
-name|p
-operator|=
-name|buff
-expr_stmt|;
-name|wcrtomb
+comment|/* Clear the shift state before starting. */
+call|(
+modifier|*
+name|func
+call|)
 argument_list|(
 name|NULL
 argument_list|,
 literal|L'
 expr|\0'
-argument_list|,
-operator|&
-name|shift_state
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Convert one wide char at a time into 'buff', whenever that 	 * fills, append it to the string. 	 */
+name|p
+operator|=
+name|buff
 expr_stmt|;
 while|while
 condition|(
@@ -1082,9 +1038,6 @@ argument_list|,
 operator|*
 name|w
 operator|++
-argument_list|,
-operator|&
-name|shift_state
 argument_list|)
 expr_stmt|;
 if|if
@@ -1154,7 +1107,7 @@ name|as
 argument_list|,
 name|w
 argument_list|,
-name|my_wcrtomb_utf8
+name|my_wctomb_utf8
 argument_list|)
 condition|)
 return|return
@@ -1171,7 +1124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Translates a wide character string into current locale character set  * and appends to the archive_string.  Note: returns NULL if conversion  * fails.  *  * TODO: use my_wcrtomb_utf8 if !HAVE_WCRTOMB (add configure logic first!)  */
+comment|/*  * Translates a wide character string into current locale character set  * and appends to the archive_string.  Note: returns NULL if conversion  * fails.  */
 end_comment
 
 begin_function
@@ -1191,6 +1144,9 @@ modifier|*
 name|w
 parameter_list|)
 block|{
+if|#
+directive|if
+name|HAVE_WCTOMB
 if|if
 condition|(
 name|my_wcstombs
@@ -1199,7 +1155,7 @@ name|as
 argument_list|,
 name|w
 argument_list|,
-name|wcrtomb
+name|wctomb
 argument_list|)
 condition|)
 return|return
@@ -1207,6 +1163,27 @@ operator|(
 name|NULL
 operator|)
 return|;
+else|#
+directive|else
+comment|/* TODO: Can we do better than this?  Are there platforms 	 * that have locale support but don't have wctomb()? */
+if|if
+condition|(
+name|my_wcstombs
+argument_list|(
+name|as
+argument_list|,
+name|w
+argument_list|,
+name|my_wctomb_utf8
+argument_list|)
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|as
@@ -1216,13 +1193,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Home-grown mbrtowc for UTF-8.  Some systems lack UTF-8  * (or even lack mbrtowc()) and we need UTF-8 support for pax  * format.  So please don't replace this with a call to the  * standard mbrtowc() function!  */
+comment|/*  * Home-grown mbtowc for UTF-8.  Some systems lack UTF-8  * (or even lack mbtowc()) and we need UTF-8 support for pax  * format.  So please don't replace this with a call to the  * standard mbtowc() function!  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|my_mbrtowc_utf8
+name|my_mbtowc_utf8
 parameter_list|(
 name|wchar_t
 modifier|*
@@ -1235,22 +1212,11 @@ name|s
 parameter_list|,
 name|size_t
 name|n
-parameter_list|,
-name|mbstate_t
-modifier|*
-name|ps
 parameter_list|)
 block|{
 name|int
 name|ch
 decl_stmt|;
-comment|/* 	 * This argument is here to make the prototype identical to the 	 * standard mbrtowc(), so I can build generic string processors 	 * that just accept a pointer to a suitable mbrtowc() function. 	 */
-operator|(
-name|void
-operator|)
-name|ps
-expr_stmt|;
-comment|/* UNUSED */
 comment|/* Standard behavior:  a NULL value for 's' just resets shift state. */
 if|if
 condition|(
@@ -1732,15 +1698,13 @@ condition|)
 block|{
 name|n
 operator|=
-name|my_mbrtowc_utf8
+name|my_mbtowc_utf8
 argument_list|(
 name|dest
 argument_list|,
 name|src
 argument_list|,
 literal|8
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if

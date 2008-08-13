@@ -24,6 +24,27 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_comment
+comment|/* required for wchar_t on some systems */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_STRING_H
 end_ifdef
 
