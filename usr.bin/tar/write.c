@@ -228,27 +228,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LINUX_EXT2_FS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<linux/ext2_fs.h>
-end_include
-
-begin_comment
-comment|/* for Linux file flags */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_PWD_H
 end_ifdef
 
