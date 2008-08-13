@@ -163,7 +163,7 @@ name|void
 modifier|*
 name|cookie
 decl_stmt|;
-name|u_long
+name|register_t
 name|s
 decl_stmt|;
 comment|/* 	 * It is important that we are not interrupted or preempted while 	 * doing the IPIs. The interrupted CPU may hold locks, and since 	 * it will wait for the CPU that sent the IPI, this can lead 	 * to a deadlock when an interrupt comes in on that CPU and it's 	 * handler tries to grab one of that locks. This will only happen for 	 * spin locks, but these IPI types are delivered even if normal 	 * interrupts are disabled, so the lock critical section will not 	 * protect the target processor from entering the IPI handler with 	 * the lock held. 	 */
@@ -197,10 +197,7 @@ name|pm
 operator|->
 name|pm_context
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 operator|!=
 operator|-
@@ -277,7 +274,7 @@ name|void
 modifier|*
 name|cookie
 decl_stmt|;
-name|u_long
+name|register_t
 name|s
 decl_stmt|;
 name|PMAP_STATS_INC
@@ -312,10 +309,7 @@ name|pm
 operator|->
 name|pm_context
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 operator|!=
 operator|-
@@ -423,7 +417,7 @@ decl_stmt|;
 name|u_long
 name|flags
 decl_stmt|;
-name|u_long
+name|register_t
 name|s
 decl_stmt|;
 name|PMAP_STATS_INC
@@ -460,10 +454,7 @@ name|pm
 operator|->
 name|pm_context
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 operator|!=
 operator|-
