@@ -35,9 +35,12 @@ begin_comment
 comment|/* define if you have a cloning BPF device */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CLONING_BPF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CLONING_BPF
+value|1
+end_define
 
 begin_comment
 comment|/* define if you have the DAG API */
