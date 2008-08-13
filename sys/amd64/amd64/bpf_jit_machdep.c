@@ -530,7 +530,7 @@ name|ADDib
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|int
+name|int32_t
 argument_list|)
 argument_list|,
 name|ECX
@@ -610,7 +610,7 @@ name|ADDib
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|short
+name|int16_t
 argument_list|)
 argument_list|,
 name|ECX
@@ -768,7 +768,7 @@ name|ADDib
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|int
+name|int32_t
 argument_list|)
 argument_list|,
 name|ECX
@@ -855,7 +855,7 @@ name|ADDib
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|short
+name|int16_t
 argument_list|)
 argument_list|,
 name|ECX
