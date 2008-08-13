@@ -128,6 +128,11 @@ decl_stmt|;
 name|int64_t
 name|entry_uncompressed_bytes_read
 decl_stmt|;
+comment|/* Running CRC32 of the decompressed data */
+name|unsigned
+name|long
+name|entry_crc32
+decl_stmt|;
 name|unsigned
 name|version
 decl_stmt|;
@@ -173,6 +178,7 @@ decl_stmt|;
 name|char
 name|end_of_entry_cleanup
 decl_stmt|;
+name|unsigned
 name|long
 name|crc32
 decl_stmt|;
@@ -1236,6 +1242,19 @@ operator|->
 name|entry_compressed_bytes_read
 operator|=
 literal|0
+expr_stmt|;
+name|zip
+operator|->
+name|entry_crc32
+operator|=
+name|crc32
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2650,8 +2669,44 @@ name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
-comment|/* TODO: Compute CRC. */
-comment|/* 			if (zip->crc32 != zip->entry_crc32_calculated) { 				archive_set_error(&a->archive, ARCHIVE_ERRNO_MISC, 				    "ZIP data CRC error"); 				return (ARCHIVE_WARN); 			} */
+comment|/* Check computed CRC against header */
+if|if
+condition|(
+name|zip
+operator|->
+name|crc32
+operator|!=
+name|zip
+operator|->
+name|entry_crc32
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"ZIP bad CRC: 0x%lx should be 0x%lx"
+argument_list|,
+name|zip
+operator|->
+name|entry_crc32
+argument_list|,
+name|zip
+operator|->
+name|crc32
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_WARN
+operator|)
+return|;
+block|}
 comment|/* End-of-entry cleanup done. */
 name|zip
 operator|->
@@ -2789,6 +2844,35 @@ name|ARCHIVE_WARN
 expr_stmt|;
 block|}
 break|break;
+block|}
+comment|/* Update checksum */
+if|if
+condition|(
+name|r
+operator|==
+name|ARCHIVE_OK
+operator|&&
+operator|*
+name|size
+condition|)
+block|{
+name|zip
+operator|->
+name|entry_crc32
+operator|=
+name|crc32
+argument_list|(
+name|zip
+operator|->
+name|entry_crc32
+argument_list|,
+operator|*
+name|buff
+argument_list|,
+operator|*
+name|size
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
