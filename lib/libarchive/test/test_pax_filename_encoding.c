@@ -1153,6 +1153,18 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|2000000
+name|archive_write_finish
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -1163,6 +1175,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Now read the entries back. 	 */
 name|assert
 argument_list|(
@@ -1448,6 +1462,18 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|2000000
+name|archive_read_finish
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -1458,6 +1484,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
