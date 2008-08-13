@@ -750,6 +750,13 @@ decl_stmt|,
 modifier|*
 name|temp
 decl_stmt|;
+if|if
+condition|(
+name|opts
+operator|==
+name|NULL
+condition|)
+return|return;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|opt
