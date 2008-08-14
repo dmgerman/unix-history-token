@@ -8688,6 +8688,7 @@ name|size
 operator|<=
 operator|(
 operator|(
+operator|(
 sizeof|sizeof
 argument_list|(
 name|size_invs
@@ -8698,11 +8699,12 @@ argument_list|(
 name|unsigned
 argument_list|)
 operator|)
+operator|+
+literal|2
+operator|)
 operator|<<
 name|QUANTUM_2POW_MIN
 operator|)
-operator|+
-literal|2
 condition|)
 block|{
 name|regind
