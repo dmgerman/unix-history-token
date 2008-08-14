@@ -289,13 +289,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_SRC_COMPAT
-value|0x200000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_SRC_ALL
 value|0x3FFFFF
 end_define
