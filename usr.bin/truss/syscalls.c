@@ -3270,7 +3270,7 @@ name|XEND
 end_undef
 
 begin_comment
-comment|/* Searches an xlat array for a value, and returns it if found.  Otherwise    return a string representation. */
+comment|/*  * Searches an xlat array for a value, and returns it if found.  Otherwise  * return a string representation.  */
 end_comment
 
 begin_function
@@ -3320,9 +3320,11 @@ operator|==
 name|val
 condition|)
 return|return
+operator|(
 name|xlat
 operator|->
 name|str
+operator|)
 return|;
 switch|switch
 condition|(
@@ -3379,7 +3381,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 name|tmp
+operator|)
 return|;
 block|}
 end_function
@@ -3401,6 +3405,7 @@ name|val
 parameter_list|)
 block|{
 return|return
+operator|(
 name|lookup
 argument_list|(
 name|xlat
@@ -3409,6 +3414,7 @@ name|val
 argument_list|,
 literal|16
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3563,7 +3569,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|str
+operator|)
 return|;
 block|}
 end_function
@@ -3622,14 +3630,18 @@ name|name
 argument_list|)
 condition|)
 return|return
+operator|(
 name|sc
+operator|)
 return|;
 name|sc
 operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -3706,11 +3718,15 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3799,7 +3815,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 for|for
 control|(
@@ -3871,7 +3889,9 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 for|for
@@ -3946,7 +3966,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
+operator|(
 name|buf
+operator|)
 return|;
 block|}
 block|}
@@ -4113,13 +4135,13 @@ argument_list|(
 name|tmp2
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|BinString
 case|:
 block|{
-comment|/* Binary block of data that might have printable characters.          XXX If type|OUT, assume that the length is the syscall's          return value.  Otherwise, assume that the length of the block          is in the next syscall argument. */
+comment|/* Binary block of data that might have printable characters. 		   XXX If type|OUT, assume that the length is the syscall's 		   return value.  Otherwise, assume that the length of the block 		   is in the next syscall argument. */
 name|int
 name|max_string
 init|=
@@ -4170,7 +4192,7 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* Don't print more than max_string characters, to avoid word          wrap.  If we have to truncate put some ... after the string.          */
+comment|/* Don't print more than max_string characters, to avoid word 		   wrap.  If we have to truncate put some ... after the string. 		*/
 if|if
 condition|(
 name|len
@@ -4284,6 +4306,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -4301,6 +4324,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+block|}
 case|case
 name|StringArray
 case|:
@@ -4538,8 +4562,8 @@ argument_list|,
 literal|"]"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 ifdef|#
 directive|ifdef
 name|__LP64__
@@ -4683,8 +4707,8 @@ argument_list|(
 name|tmp2
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Ioctl
 case|:
@@ -4708,6 +4732,7 @@ if|if
 condition|(
 name|temp
 condition|)
+block|{
 name|tmp
 operator|=
 name|strdup
@@ -4715,6 +4740,7 @@ argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|unsigned
@@ -4733,7 +4759,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"0x%lx { IO%s%s 0x%lx('%c'), %lu, %lu}"
+literal|"0x%lx { IO%s%s 0x%lx('%c'), %lu, %lu }"
 argument_list|,
 name|arg
 argument_list|,
@@ -4787,8 +4813,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 break|break;
+block|}
 case|case
 name|Umtx
 case|:
@@ -4831,7 +4857,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{0x%lx}"
+literal|"{ 0x%lx }"
 argument_list|,
 operator|(
 name|long
@@ -4857,8 +4883,8 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Timespec
 case|:
@@ -4901,7 +4927,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{%ld.%09ld}"
+literal|"{%ld.%09ld }"
 argument_list|,
 operator|(
 name|long
@@ -4931,8 +4957,8 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Timeval
 case|:
@@ -4975,7 +5001,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{%ld.%06ld}"
+literal|"{%ld.%06ld }"
 argument_list|,
 operator|(
 name|long
@@ -5005,8 +5031,8 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Timeval2
 case|:
@@ -5052,7 +5078,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{%ld.%06ld, %ld.%06ld}"
+literal|"{%ld.%06ld, %ld.%06ld }"
 argument_list|,
 operator|(
 name|long
@@ -5105,8 +5131,8 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Itimerval
 case|:
@@ -5149,7 +5175,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{%ld.%06ld, %ld.%06ld}"
+literal|"{%ld.%06ld, %ld.%06ld }"
 argument_list|,
 operator|(
 name|long
@@ -5198,13 +5224,13 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Pollfd
 case|:
 block|{
-comment|/*        * XXX: A Pollfd argument expects the /next/ syscall argument to be        * the number of fds in the array. This matches the poll syscall.        */
+comment|/* 		 * XXX: A Pollfd argument expects the /next/ syscall argument to be 		 * the number of fds in the array. This matches the poll syscall. 		 */
 name|struct
 name|pollfd
 modifier|*
@@ -5429,6 +5455,7 @@ literal|'\0'
 expr_stmt|;
 block|}
 else|else
+block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -5444,18 +5471,19 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|pfd
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Fd_set
 case|:
 block|{
-comment|/*         * XXX: A Fd_set argument expects the /first/ syscall argument to be        * the number of fds in the array.  This matches the select syscall.        */
+comment|/* 		 * XXX: A Fd_set argument expects the /first/ syscall argument to be 		 * the number of fds in the array.  This matches the select syscall. 		 */
 name|fd_set
 modifier|*
 name|fds
@@ -5676,6 +5704,7 @@ literal|'\0'
 expr_stmt|;
 block|}
 else|else
+block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -5691,13 +5720,14 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|fds
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Signal
 case|:
@@ -5737,8 +5767,8 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Sigset
 case|:
@@ -5892,8 +5922,8 @@ argument_list|,
 literal|"0x0"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Sigprocmask
 case|:
@@ -5955,8 +5985,8 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Fcntlflag
 case|:
@@ -6051,8 +6081,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
 break|break;
+block|}
 case|case
 name|Open
 case|:
@@ -6391,7 +6421,7 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*        * If ss_len is 0, then try to guess from the sockaddr type.        * AF_UNIX may be initialized incorrectly, so always frob        * it by using the "right" size.        */
+comment|/* 		 * If ss_len is 0, then try to guess from the sockaddr type. 		 * AF_UNIX may be initialized incorrectly, so always frob 		 * it by using the "right" size. 		 */
 if|if
 condition|(
 name|ss
@@ -6745,8 +6775,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 break|break;
+block|}
 case|case
 name|Sigaction
 case|:
@@ -6862,6 +6892,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -6879,11 +6910,12 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+block|}
 case|case
 name|Kevent
 case|:
 block|{
-comment|/*        * XXX XXX: the size of the array is determined by either the        * next syscall argument, or by the syscall returnvalue,        * depending on which argument number we are.  This matches the        * kevent syscall, but luckily that's the only syscall that uses        * them.        */
+comment|/* 		 * XXX XXX: the size of the array is determined by either the 		 * next syscall argument, or by the syscall returnvalue, 		 * depending on which argument number we are.  This matches the 		 * kevent syscall, but luckily that's the only syscall that uses 		 * them. 		 */
 name|struct
 name|kevent
 modifier|*
@@ -7198,6 +7230,7 @@ literal|'\0'
 expr_stmt|;
 block|}
 else|else
+block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -7213,13 +7246,14 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|ke
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|Stat
 case|:
@@ -7278,7 +7312,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{mode=%s,inode=%jd,size=%jd,blksize=%ld}"
+literal|"{ mode=%s,inode=%jd,size=%jd,blksize=%ld }"
 argument_list|,
 name|mode
 argument_list|,
@@ -7306,6 +7340,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -7323,6 +7358,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+block|}
 case|case
 name|Rusage
 case|:
@@ -7360,12 +7396,13 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 name|asprintf
 argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{u=%ld.%06ld,s=%ld.%06ld,in=%ld,out=%ld}"
+literal|"{ u=%ld.%06ld,s=%ld.%06ld,in=%ld,out=%ld }"
 argument_list|,
 operator|(
 name|long
@@ -7406,7 +7443,9 @@ operator|.
 name|ru_oublock
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -7424,6 +7463,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+block|}
 case|case
 name|Rlimit
 case|:
@@ -7461,12 +7501,13 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 name|asprintf
 argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"{cur=%ju,max=%ju}"
+literal|"{ cur=%ju,max=%ju }"
 argument_list|,
 name|rl
 operator|.
@@ -7477,7 +7518,9 @@ operator|.
 name|rlim_max
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -7495,6 +7538,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+block|}
 default|default:
 name|errx
 argument_list|(
@@ -7511,7 +7555,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|tmp
+operator|)
 return|;
 block|}
 end_function

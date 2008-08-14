@@ -203,19 +203,6 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
-name|__alpha__
-block|{
-literal|"FreeBSD ELF"
-block|,
-name|alpha_syscall_entry
-block|,
-name|alpha_syscall_exit
-block|}
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|__amd64__
 block|{
 literal|"FreeBSD ELF64"
