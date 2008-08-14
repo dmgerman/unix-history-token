@@ -273,59 +273,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_EXIT
+name|TDF_BOUND
 value|TDF_SCHED1
 end_define
 
 begin_comment
-comment|/* thread is being killed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDF_BOUND
-value|TDF_SCHED2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ts_flags
-value|ts_thread->td_flags
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSF_DIDRUN
-value|TDF_DIDRUN
-end_define
-
-begin_comment
-comment|/* thread actually ran. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSF_EXIT
-value|TDF_EXIT
-end_define
-
-begin_comment
-comment|/* thread is being killed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSF_BOUND
-value|TDF_BOUND
-end_define
-
-begin_comment
-comment|/* stuck to one CPU */
+comment|/* Bound to one CPU. */
 end_comment
 
 begin_define
@@ -1334,12 +1287,12 @@ name|awake
 operator|=
 literal|1
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_flags
+name|td_flags
 operator|&=
 operator|~
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 expr_stmt|;
 block|}
 elseif|else
@@ -1355,28 +1308,28 @@ name|awake
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Do not clear TSF_DIDRUN */
+comment|/* Do not clear TDF_DIDRUN */
 block|}
 elseif|else
 if|if
 condition|(
-name|ts
+name|td
 operator|->
-name|ts_flags
+name|td_flags
 operator|&
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 condition|)
 block|{
 name|awake
 operator|=
 literal|1
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_flags
+name|td_flags
 operator|&=
 operator|~
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 expr_stmt|;
 block|}
 comment|/* 			 * ts_pctcpu is only for ps and ttyinfo(). 			 * Do it per td_sched, and add them up at the end? 			 * XXXKSE 			 */
@@ -3148,11 +3101,9 @@ argument_list|)
 expr_stmt|;
 name|newtd
 operator|->
-name|td_sched
-operator|->
-name|ts_flags
+name|td_flags
 operator||=
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 expr_stmt|;
 name|TD_SET_RUNNING
 argument_list|(
@@ -4099,12 +4050,12 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|ts
+name|td
 operator|)
 operator|->
-name|ts_flags
+name|td_flags
 operator|&
-name|TSF_BOUND
+name|TDF_BOUND
 condition|)
 block|{
 comment|/* Find CPU from bound runq */
@@ -4814,9 +4765,11 @@ argument_list|)
 expr_stmt|;
 name|ts
 operator|->
-name|ts_flags
+name|ts_thread
+operator|->
+name|td_flags
 operator||=
-name|TSF_DIDRUN
+name|TDF_DIDRUN
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -4964,11 +4917,11 @@ name|td
 operator|->
 name|td_sched
 expr_stmt|;
-name|ts
+name|td
 operator|->
-name|ts_flags
+name|td_flags
 operator||=
-name|TSF_BOUND
+name|TDF_BOUND
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5024,12 +4977,10 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|->
-name|td_sched
-operator|->
-name|ts_flags
+name|td_flags
 operator|&=
 operator|~
-name|TSF_BOUND
+name|TDF_BOUND
 expr_stmt|;
 block|}
 end_function
@@ -5055,11 +5006,9 @@ return|return
 operator|(
 name|td
 operator|->
-name|td_sched
-operator|->
-name|ts_flags
+name|td_flags
 operator|&
-name|TSF_BOUND
+name|TDF_BOUND
 operator|)
 return|;
 block|}
