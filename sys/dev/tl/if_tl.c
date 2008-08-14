@@ -200,7 +200,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pci/if_tlreg.h>
+file|<dev/tl/if_tlreg.h>
 end_include
 
 begin_expr_stmt
