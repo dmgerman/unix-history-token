@@ -4030,7 +4030,7 @@ decl_stmt|;
 name|u_char
 name|toname
 index|[
-literal|11
+literal|12
 index|]
 decl_stmt|,
 name|oldname
