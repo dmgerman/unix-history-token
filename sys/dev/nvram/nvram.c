@@ -36,7 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -146,6 +158,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
+name|sx
+name|nvram_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
 name|cdevsw
 name|nvram_cdevsw
 init|=
@@ -154,11 +174,6 @@ operator|.
 name|d_version
 operator|=
 name|D_VERSION
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
 block|,
 operator|.
 name|d_open
@@ -369,6 +384,12 @@ decl_stmt|;
 name|uint16_t
 name|sum
 decl_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|nvram_lock
+argument_list|)
+expr_stmt|;
 comment|/* Assert that we understand the existing checksum first!  */
 name|sum
 operator|=
@@ -416,11 +437,19 @@ name|sum
 operator|!=
 literal|0
 condition|)
+block|{
+name|sx_xunlock
+argument_list|(
+operator|&
+name|nvram_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
 operator|)
 return|;
+block|}
 comment|/* Bring in user data and write */
 while|while
 condition|(
@@ -453,12 +482,20 @@ name|nv_off
 operator|>=
 name|NVRAM_LAST
 condition|)
+block|{
+name|sx_xunlock
+argument_list|(
+operator|&
+name|nvram_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 comment|/* Signal EOF */
+block|}
 comment|/* Single byte at a time */
 name|error
 operator|=
@@ -527,6 +564,12 @@ argument_list|,
 name|sum
 argument_list|)
 expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|nvram_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -561,6 +604,14 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|sx_init
+argument_list|(
+operator|&
+name|nvram_lock
+argument_list|,
+literal|"nvram"
+argument_list|)
+expr_stmt|;
 name|nvram_dev
 operator|=
 name|make_dev
@@ -589,6 +640,12 @@ case|:
 name|destroy_dev
 argument_list|(
 name|nvram_dev
+argument_list|)
+expr_stmt|;
+name|sx_destroy
+argument_list|(
+operator|&
+name|nvram_lock
 argument_list|)
 expr_stmt|;
 break|break;
