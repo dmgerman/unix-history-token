@@ -3387,11 +3387,13 @@ condition|;
 name|j
 operator|++
 control|)
+block|{
 name|ret
 operator|++
 expr_stmt|;
 name|CPU_SPINWAIT
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|_pthread_mutex_trylock
