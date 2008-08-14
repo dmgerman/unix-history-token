@@ -125,6 +125,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|u_long
+name|atomic_fetchadd_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -394,6 +409,67 @@ name|MPLOCKED
 literal|"		"
 literal|"	xaddl	%0, %1 ;	"
 literal|"# atomic_fetchadd_int"
+operator|:
+literal|"+r"
+operator|(
+name|v
+operator|)
+operator|,
+comment|/* 0 (result) */
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+comment|/* 1 */
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* 2 */
+end_comment
+
+begin_return
+return|return
+operator|(
+name|v
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/*  * Atomically add the value of v to the long integer pointed to by p and return  * the previous value of *p.  */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|u_long
+name|atomic_fetchadd_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	xaddq	%0, %1 ;	"
+literal|"# atomic_fetchadd_long"
 operator|:
 literal|"+r"
 operator|(
