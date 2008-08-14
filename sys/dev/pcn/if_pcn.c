@@ -188,7 +188,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pci/if_pcnreg.h>
+file|<dev/pcn/if_pcnreg.h>
 end_include
 
 begin_expr_stmt
