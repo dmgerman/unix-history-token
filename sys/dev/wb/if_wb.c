@@ -208,7 +208,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pci/if_wbreg.h>
+file|<dev/wb/if_wbreg.h>
 end_include
 
 begin_expr_stmt
