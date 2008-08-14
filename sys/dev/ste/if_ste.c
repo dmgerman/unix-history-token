@@ -223,7 +223,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pci/if_stereg.h>
+file|<dev/ste/if_stereg.h>
 end_include
 
 begin_expr_stmt
