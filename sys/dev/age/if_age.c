@@ -7526,7 +7526,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Poll link state until jme(4) get a 10/100 link. */
+comment|/* Poll link state until age(4) get a 10/100 link. */
 for|for
 control|(
 name|i
