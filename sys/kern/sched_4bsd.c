@@ -467,6 +467,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|kick_other_cpu
+parameter_list|(
+name|int
+name|pri
+parameter_list|,
+name|int
+name|cpuid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -1445,7 +1459,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*  			 * If there are ANY running threads in this process, 			 * then don't count it as sleeping. XXX  this is broken  			 */
+comment|/* 			 * If there are ANY running threads in this process, 			 * then don't count it as sleeping. 			 * XXX: this is broken. 			 */
 if|if
 condition|(
 name|awake
@@ -1525,14 +1539,12 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* end of thread loop */
 name|PROC_SUNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* end of process loop */
 name|sx_sunlock
 argument_list|(
 operator|&
@@ -2073,7 +2085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * charge childs scheduling cpu usage to parent.  */
+comment|/*  * Charge child's scheduling CPU usage to parent.  */
 end_comment
 
 begin_function
@@ -2934,7 +2946,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/*   	 * Switch to the sched lock to fix things up and pick 	 * a new thread. 	 */
+comment|/* 	 * Switch to the sched lock to fix things up and pick 	 * a new thread. 	 */
 if|if
 condition|(
 name|td
@@ -3083,7 +3095,7 @@ condition|(
 name|newtd
 condition|)
 block|{
-comment|/*  		 * The thread we are about to run needs to be counted 		 * as if it had been added to the run queue and selected. 		 * It came from: 		 * * A preemption 		 * * An upcall  		 * * A followon 		 */
+comment|/* 		 * The thread we are about to run needs to be counted 		 * as if it had been added to the run queue and selected. 		 * It came from: 		 * * A preemption 		 * * An upcall 		 * * A followon 		 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -3186,7 +3198,7 @@ operator|->
 name|td_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Where am I?  What year is it? 		 * We are in the same thread that went to sleep above, 		 * but any amount of time may have passed. All out context 		 * will still be available as will local variables. 		 * PCPU values however may have changed as we may have 		 * changed CPU so don't trust cached values of them. 		 * New threads will go to fork_exit() instead of here 		 * so if you change things here you may need to change 		 * things there too. 		 * If the thread above was exiting it will never wake 		 * up again here, so either it has saved everything it 		 * needed to, or the thread_wait() or wait() will 		 * need to reap it. 		 */
+comment|/* 		 * Where am I?  What year is it? 		 * We are in the same thread that went to sleep above, 		 * but any amount of time may have passed. All our context 		 * will still be available as will local variables. 		 * PCPU values however may have changed as we may have 		 * changed CPU so don't trust cached values of them. 		 * New threads will go to fork_exit() instead of here 		 * so if you change things here you may need to change 		 * things there too. 		 * 		 * If the thread above was exiting it will never wake 		 * up again here, so either it has saved everything it 		 * needed to, or the thread_wait() or wait() will 		 * need to reap it. 		 */
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
@@ -3336,10 +3348,6 @@ directive|ifdef
 name|SMP
 end_ifdef
 
-begin_comment
-comment|/* enable HTT_2 if you have a 2-way HTT cpu.*/
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -3349,25 +3357,23 @@ name|int
 name|cpunum
 parameter_list|)
 block|{
-name|cpumask_t
-name|map
-decl_stmt|,
-name|me
-decl_stmt|,
-name|dontuse
-decl_stmt|;
-name|cpumask_t
-name|map2
-decl_stmt|;
 name|struct
 name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
 name|cpumask_t
+name|dontuse
+decl_stmt|,
 name|id
 decl_stmt|,
+name|map
+decl_stmt|,
+name|map2
+decl_stmt|,
 name|map3
+decl_stmt|,
+name|me
 decl_stmt|;
 name|mtx_assert
 argument_list|(
@@ -3423,7 +3429,7 @@ return|;
 name|forward_wakeups_requested
 operator|++
 expr_stmt|;
-comment|/*  * check the idle mask we received against what we calculated before  * in the old version.  */
+comment|/* 	 * Check the idle mask we received against what we calculated 	 * before in the old version. 	 */
 name|me
 operator|=
 name|PCPU_GET
@@ -3431,7 +3437,7 @@ argument_list|(
 name|cpumask
 argument_list|)
 expr_stmt|;
-comment|/*  	 * don't bother if we should be doing it ourself.. 	 */
+comment|/* Don't bother if we should be doing it ourself. */
 if|if
 condition|(
 operator|(
@@ -3533,7 +3539,7 @@ operator|&
 operator|~
 name|dontuse
 expr_stmt|;
-comment|/* If they are both on, compare and use loop if different */
+comment|/* If they are both on, compare and use loop if different. */
 if|if
 condition|(
 name|forward_wakeup_use_loop
@@ -3569,7 +3575,7 @@ operator|=
 name|map3
 expr_stmt|;
 block|}
-comment|/* If we only allow a specific CPU, then mask off all the others */
+comment|/* If we only allow a specific CPU, then mask off all the others. */
 if|if
 condition|(
 name|cpunum
@@ -3632,7 +3638,7 @@ name|map2
 expr_stmt|;
 block|}
 block|}
-comment|/* set only one bit */
+comment|/* Set only one bit. */
 if|if
 condition|(
 name|forward_wakeup_use_single
@@ -3693,31 +3699,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-name|kick_other_cpu
-parameter_list|(
-name|int
-name|pri
-parameter_list|,
-name|int
-name|cpuid
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|void
@@ -3734,21 +3715,17 @@ name|struct
 name|pcpu
 modifier|*
 name|pcpu
-init|=
+decl_stmt|;
+name|int
+name|cpri
+decl_stmt|;
+name|pcpu
+operator|=
 name|pcpu_find
 argument_list|(
 name|cpuid
 argument_list|)
-decl_stmt|;
-name|int
-name|cpri
-init|=
-name|pcpu
-operator|->
-name|pc_curthread
-operator|->
-name|td_priority
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|idle_cpus_mask
@@ -3772,6 +3749,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|cpri
+operator|=
+name|pcpu
+operator|->
+name|pc_curthread
+operator|->
+name|td_priority
+expr_stmt|;
 if|if
 condition|(
 name|pri
@@ -4049,16 +4034,14 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|td
-operator|)
 operator|->
 name|td_flags
 operator|&
 name|TDF_BOUND
 condition|)
 block|{
-comment|/* Find CPU from bound runq */
+comment|/* Find CPU from bound runq. */
 name|KASSERT
 argument_list|(
 name|SKE_RUNQ_PCPU
@@ -4166,7 +4149,7 @@ argument_list|(
 name|cpumask
 argument_list|)
 decl_stmt|;
-name|int
+name|cpumask_t
 name|idle
 init|=
 name|idle_cpus_mask
@@ -4420,7 +4403,7 @@ operator|=
 operator|&
 name|runq
 expr_stmt|;
-comment|/*  	 * If we are yielding (on the way out anyhow)  	 * or the thread being saved is US, 	 * then don't try be smart about preemption 	 * or kicking off another CPU 	 * as it won't help and may hinder. 	 * In the YIEDLING case, we are about to run whoever is  	 * being put in the queue anyhow, and in the  	 * OURSELF case, we are puting ourself on the run queue 	 * which also only happens when we are about to yield. 	 */
+comment|/* 	 * If we are yielding (on the way out anyhow) or the thread 	 * being saved is US, then don't try be smart about preemption 	 * or kicking off another CPU as it won't help and may hinder. 	 * In the YIEDLING case, we are about to run whoever is being 	 * put in the queue anyhow, and in the OURSELF case, we are 	 * puting ourself on the run queue which also only happens 	 * when we are about to yield. 	 */
 if|if
 condition|(
 operator|(
@@ -4602,7 +4585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Select threads to run.  * Notice that the running threads still consume a slot.  */
+comment|/*  * Select threads to run.  Note that running threads still consume a  * slot.  */
 end_comment
 
 begin_function
