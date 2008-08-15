@@ -8769,7 +8769,7 @@ name|start
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Let the parent deside */
+comment|/* Let the parent decide. */
 name|end
 operator|=
 operator|~
@@ -8810,7 +8810,7 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Not quite sure what to do on failure of allocating the resource 	 * since I can postulate several right answers. 	 */
+comment|/* 	 * Try to allocate the resource for this BAR from our parent 	 * so that this resource range is already reserved.  The 	 * driver for this device will later inherit this resource in 	 * pci_alloc_resource(). 	 */
 name|res
 operator|=
 name|resource_list_alloc
@@ -8842,19 +8842,61 @@ expr_stmt|;
 if|if
 condition|(
 name|res
-operator|!=
+operator|==
 name|NULL
 condition|)
+block|{
+comment|/* 		 * If the allocation fails, clear the BAR and delete 		 * the resource list entry to force 		 * pci_alloc_resource() to allocate resources from the 		 * parent. 		 */
+name|resource_list_delete
+argument_list|(
+name|rl
+argument_list|,
+name|type
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|start
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|start
+operator|=
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
 name|reg
 argument_list|,
-name|rman_get_start
-argument_list|(
-name|res
+name|start
+argument_list|,
+literal|4
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ln2range
+operator|==
+literal|64
+condition|)
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|reg
+operator|+
+literal|4
+argument_list|,
+name|start
+operator|>>
+literal|32
 argument_list|,
 literal|4
 argument_list|)
