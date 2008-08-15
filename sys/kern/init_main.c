@@ -2467,6 +2467,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|scheduler_running
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Start the initial user process; try exec'ing each pathname in init_path.  * The program is invoked with one argument containing the boot flags.  */
 end_comment
@@ -2530,6 +2538,10 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|scheduler_running
+operator|=
+literal|1
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
