@@ -148,6 +148,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|int
 name|sigev_generation
 decl_stmt|;
