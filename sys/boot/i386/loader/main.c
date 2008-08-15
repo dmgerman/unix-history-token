@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/psl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -257,6 +263,26 @@ name|bootinfo
 argument_list|)
 else|:
 name|NULL
+expr_stmt|;
+comment|/* Initialize the v86 register set to a known-good state. */
+name|bzero
+argument_list|(
+operator|&
+name|v86
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|v86
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|v86
+operator|.
+name|efl
+operator|=
+name|PSL_RESERVED_DEFAULT
+operator||
+name|PSL_I
 expr_stmt|;
 comment|/*       * Initialise the heap as early as possible.  Once this is done, malloc() is usable.      */
 name|bios_getmem
