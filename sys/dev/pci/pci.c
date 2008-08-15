@@ -11942,7 +11942,7 @@ name|start
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Let the parent deside */
+comment|/* Let the parent decide. */
 name|end
 operator|=
 operator|~
@@ -11983,7 +11983,7 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Not quite sure what to do on failure of allocating the resource 	 * since I can postulate several right answers. 	 */
+comment|/* 	 * Try to allocate the resource for this BAR from our parent 	 * so that this resource range is already reserved.  The 	 * driver for this device will later inherit this resource in 	 * pci_alloc_resource(). 	 */
 name|res
 operator|=
 name|resource_list_alloc
@@ -12018,11 +12018,23 @@ name|res
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|barlen
-operator|)
-return|;
+block|{
+comment|/* 		 * If the allocation fails, clear the BAR and delete 		 * the resource list entry to force 		 * pci_alloc_resource() to allocate resources from the 		 * parent. 		 */
+name|resource_list_delete
+argument_list|(
+name|rl
+argument_list|,
+name|type
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|start
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
 name|start
 operator|=
 name|rman_get_start
@@ -12030,63 +12042,6 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|u_long
-operator|)
-name|start
-operator|!=
-name|start
-condition|)
-block|{
-comment|/* Wait a minute!  this platform can't do this address. */
-name|device_printf
-argument_list|(
-name|bus
-argument_list|,
-literal|"pci%d:%d.%d.%x bar %#x start %#jx, too many bits."
-argument_list|,
-name|pci_get_domain
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|b
-argument_list|,
-name|s
-argument_list|,
-name|f
-argument_list|,
-name|reg
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|start
-argument_list|)
-expr_stmt|;
-name|resource_list_release
-argument_list|(
-name|rl
-argument_list|,
-name|bus
-argument_list|,
-name|dev
-argument_list|,
-name|type
-argument_list|,
-name|reg
-argument_list|,
-name|res
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|barlen
-operator|)
-return|;
-block|}
 name|pci_write_config
 argument_list|(
 name|dev
