@@ -117,6 +117,11 @@ value|0x08
 comment|/* fpu state is initialized */
 define|#
 directive|define
+name|PCB_GS32BIT
+value|0x20
+comment|/* linux gs switch */
+define|#
+directive|define
 name|PCB_32BIT
 value|0x40
 comment|/* process has 32 bit context (segs etc) */
