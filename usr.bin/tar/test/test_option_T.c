@@ -99,6 +99,9 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 comment|/* Create a simple dir heirarchy; bail if anything fails. */
 if|if
 condition|(
@@ -258,11 +261,25 @@ name|f
 argument_list|)
 expr_stmt|;
 comment|/* Use -c -T to archive up the files. */
+name|r
+operator|=
 name|systemf
 argument_list|(
 literal|"%s -c -f test1.tar -T filelist> test1.out 2> test1.err"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"Failure here probably means that tar can't archive zero-length files without reading them"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|r
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 name|assertEmptyFile

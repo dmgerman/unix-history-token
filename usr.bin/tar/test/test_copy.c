@@ -988,6 +988,24 @@ argument_list|(
 name|dir
 argument_list|)
 expr_stmt|;
+name|failure
+argument_list|(
+literal|"Unable to open dir '%s'"
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|assert
+argument_list|(
+name|d
+operator|!=
+name|NULL
+argument_list|)
+condition|)
+continue|continue;
 while|while
 condition|(
 operator|(
