@@ -54,6 +54,35 @@ begin_comment
 comment|/*  * The SMP parts are setup in pmap.c and locore.s for the BSP, and  * mp_machdep.c sets up the data for the AP's to "see" when they awake.  * The reason for doing it via a struct is so that an array of pointers  * to each CPU's data can be set up for things like "check curproc on all  * other processors"  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+define|\
+value|char	pc_monitorbuf[128] __aligned(128);
+comment|/* cache line */
+value|\ 	struct	pcpu *pc_prvspace;
+comment|/* Self-reference */
+value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	struct	segment_descriptor *pc_fsgs_gdt;			\ 	vm_paddr_t 	*pc_pdir_shadow;				\ 	int	pc_currentldt;						\ 	u_int   pc_acpi_id;
+comment|/* ACPI CPU id */
+value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
+comment|/* Flag indicating private tss*/
+value|\         u_int     pc_cr3;
+comment|/* track cr3 for R1/R3*/
+value|\         u_int     pc_pdir;                                              \         u_int     pc_lazypmap;                                          \         u_int     pc_rendezvous;                                        \         u_int     pc_cpuast
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -71,6 +100,11 @@ end_define
 begin_comment
 comment|/* Flag indicating private tss */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

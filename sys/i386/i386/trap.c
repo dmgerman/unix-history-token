@@ -384,6 +384,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/xen/xenfunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/xen/hypervisor.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/xen/xenvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/xen/evtchn.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|void
@@ -525,9 +566,19 @@ comment|/* 15 unused */
 literal|""
 block|,
 comment|/* 16 unused */
+ifdef|#
+directive|ifdef
+name|XEN
+literal|"hypervisor callback"
+block|,
+comment|/* 17 T_HYPCALLBACK*/
+else|#
+directive|else
 literal|""
 block|,
 comment|/* 17 unused */
+endif|#
+directive|endif
 literal|"integer divide fault"
 block|,
 comment|/* 18 T_DIVIDE */
@@ -902,6 +953,9 @@ name|out
 goto|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|XEN
 if|if
 condition|(
 operator|(
@@ -1006,6 +1060,9 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* !XEN */
 name|eva
 operator|=
 literal|0
