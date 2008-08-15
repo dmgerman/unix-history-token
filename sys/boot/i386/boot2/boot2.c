@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/psl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdarg.h>
 end_include
 
@@ -390,7 +396,7 @@ name|V86_CY
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 1)
+value|((x)& PSL_C)
 end_define
 
 begin_define
@@ -400,7 +406,7 @@ name|V86_ZR
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x40)
+value|((x)& PSL_Z)
 end_define
 
 begin_define
@@ -1209,6 +1215,14 @@ operator|.
 name|ctl
 operator|=
 name|V86_FLAGS
+expr_stmt|;
+name|v86
+operator|.
+name|efl
+operator|=
+name|PSL_RESERVED_DEFAULT
+operator||
+name|PSL_I
 expr_stmt|;
 name|dsk
 operator|.
