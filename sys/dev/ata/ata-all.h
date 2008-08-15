@@ -2926,6 +2926,13 @@ name|ata_setmax
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ata_dma_check_80pin
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* public prototypes */
 end_comment

@@ -42099,6 +42099,27 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|ata_dma_check_80pin
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Skipping 80pin cable check\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|mode
+return|;
+block|}
+if|if
+condition|(
 name|mode
 operator|>
 name|ATA_UDMA2

@@ -341,6 +341,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|ata_dma_check_80pin
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* local vars */
 end_comment
@@ -413,6 +421,38 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"ATA disk DMA mode control"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ata.ata_dma_check_80pin"
+argument_list|,
+operator|&
+name|ata_dma_check_80pin
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ata
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ata_dma_check_80pin
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ata_dma_check_80pin
+argument_list|,
+literal|1
+argument_list|,
+literal|"Check for 80pin cable before setting ATA DMA mode"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
