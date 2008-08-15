@@ -159,6 +159,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/xen/xen-os.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/xen/hypervisor.h>
 end_include
 

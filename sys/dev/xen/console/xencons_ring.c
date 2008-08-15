@@ -491,13 +491,6 @@ condition|(
 name|err
 condition|)
 block|{
-name|XENPRINTF
-argument_list|(
-literal|"XEN console request irq failed %i\n"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
 return|return
 name|err
 return|;

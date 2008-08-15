@@ -1346,8 +1346,6 @@ argument_list|(
 literal|"xencons: shutdown event registration failed!\n"
 argument_list|)
 expr_stmt|;
-name|TRACE_EXIT
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1746,8 +1744,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|TRACE_ENTER
-expr_stmt|;
 name|tp
 operator|=
 name|dev
@@ -1886,8 +1882,6 @@ name|dev
 operator|,
 name|tp
 operator|)
-expr_stmt|;
-name|TRACE_EXIT
 expr_stmt|;
 return|return
 name|error

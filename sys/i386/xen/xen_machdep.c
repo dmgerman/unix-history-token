@@ -190,6 +190,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_page.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -359,13 +365,6 @@ specifier|extern
 name|unsigned
 name|int
 name|avail_space
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|gdt_set
 decl_stmt|;
 end_decl_stmt
 
@@ -715,6 +714,21 @@ name|XPQUEUE_SIZE
 value|128
 end_define
 
+begin_struct
+struct|struct
+name|mmu_log
+block|{
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|int
+name|line
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -770,25 +784,31 @@ parameter_list|()
 value|int vcpu = smp_processor_id()
 end_define
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mmu_log
+name|xpq_queue_log
+index|[
+name|MAX_VIRT_CPUS
+index|]
+index|[
+name|XPQUEUE_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|XPQ_QUEUE_LOG
+value|xpq_queue_log[vcpu]
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
-
-begin_struct
-struct|struct
-name|mmu_log
-block|{
-name|char
-modifier|*
-name|file
-decl_stmt|;
-name|int
-name|line
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 specifier|static
@@ -846,6 +866,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !SMP */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -892,7 +916,7 @@ if|if
 condition|(
 name|__predict_true
 argument_list|(
-name|gdt_set
+name|gdtset
 argument_list|)
 condition|)
 name|critical_enter
@@ -924,14 +948,14 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (__predict_true(gdt_set)) 	for (i = _xpq_idx; i> 0;) { 		if (i>= 3) { 			CTR6(KTR_PMAP, "mmu:val: %lx ptr: %lx val: %lx ptr: %lx val: %lx ptr: %lx", 			    (XPQ_QUEUE[i-1].val& 0xffffffff), (XPQ_QUEUE[i-1].ptr& 0xffffffff), 			    (XPQ_QUEUE[i-2].val& 0xffffffff), (XPQ_QUEUE[i-2].ptr& 0xffffffff), 			    (XPQ_QUEUE[i-3].val& 0xffffffff), (XPQ_QUEUE[i-3].ptr& 0xffffffff)); 			    i -= 3; 		} else if (i == 2) { 			CTR4(KTR_PMAP, "mmu: val: %lx ptr: %lx val: %lx ptr: %lx", 			    (XPQ_QUEUE[i-1].val& 0xffffffff), (XPQ_QUEUE[i-1].ptr& 0xffffffff), 			    (XPQ_QUEUE[i-2].val& 0xffffffff), (XPQ_QUEUE[i-2].ptr& 0xffffffff)); 			i = 0; 		} else { 			CTR2(KTR_PMAP, "mmu: val: %lx ptr: %lx",  			    (XPQ_QUEUE[i-1].val& 0xffffffff), (XPQ_QUEUE[i-1].ptr& 0xffffffff)); 			i = 0; 		} 	}
+block|if (__predict_true(gdtset)) 	for (i = _xpq_idx; i> 0;) { 		if (i>= 3) { 			CTR6(KTR_PMAP, "mmu:val: %lx ptr: %lx val: %lx ptr: %lx val: %lx ptr: %lx", 			    (XPQ_QUEUE[i-1].val& 0xffffffff), (XPQ_QUEUE[i-1].ptr& 0xffffffff), 			    (XPQ_QUEUE[i-2].val& 0xffffffff), (XPQ_QUEUE[i-2].ptr& 0xffffffff), 			    (XPQ_QUEUE[i-3].val& 0xffffffff), (XPQ_QUEUE[i-3].ptr& 0xffffffff)); 			    i -= 3; 		} else if (i == 2) { 			CTR4(KTR_PMAP, "mmu: val: %lx ptr: %lx val: %lx ptr: %lx", 			    (XPQ_QUEUE[i-1].val& 0xffffffff), (XPQ_QUEUE[i-1].ptr& 0xffffffff), 			    (XPQ_QUEUE[i-2].val& 0xffffffff), (XPQ_QUEUE[i-2].ptr& 0xffffffff)); 			i = 0; 		} else { 			CTR2(KTR_PMAP, "mmu: val: %lx ptr: %lx",  			    (XPQ_QUEUE[i-1].val& 0xffffffff), (XPQ_QUEUE[i-1].ptr& 0xffffffff)); 			i = 0; 		} 	}
 endif|#
 directive|endif
 if|if
 condition|(
 name|__predict_true
 argument_list|(
-name|gdt_set
+name|gdtset
 argument_list|)
 condition|)
 name|critical_exit
@@ -1049,6 +1073,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|SET_VCPU
+argument_list|()
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|XPQ_IDX
@@ -1118,7 +1145,7 @@ begin_function
 name|void
 name|xen_load_cr3
 parameter_list|(
-name|vm_paddr_t
+name|u_int
 name|val
 parameter_list|)
 block|{
@@ -1126,6 +1153,9 @@ name|struct
 name|mmuext_op
 name|op
 decl_stmt|;
+name|SET_VCPU
+argument_list|()
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|XPQ_IDX
@@ -1180,6 +1210,68 @@ end_function
 
 begin_function
 name|void
+name|xen_restore_flags
+parameter_list|(
+name|u_int
+name|eflags
+parameter_list|)
+block|{
+name|__restore_flags
+argument_list|(
+name|eflags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|xen_save_and_cli
+parameter_list|(
+name|u_int
+modifier|*
+name|eflags
+parameter_list|)
+block|{
+name|__save_and_cli
+argument_list|(
+operator|(
+operator|*
+name|eflags
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|xen_cli
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__cli
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|xen_sti
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|__sti
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|_xen_machphys_update
 parameter_list|(
 name|unsigned
@@ -1198,17 +1290,17 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|SET_VCPU
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|__predict_true
 argument_list|(
-name|gdt_set
+name|gdtset
 argument_list|)
 condition|)
 name|critical_enter
-argument_list|()
-expr_stmt|;
-name|SET_VCPU
 argument_list|()
 expr_stmt|;
 name|XPQ_QUEUE
@@ -1238,7 +1330,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
-name|xpq_queue_log
+name|XPQ_QUEUE_LOG
 index|[
 name|XPQ_IDX
 index|]
@@ -1247,7 +1339,7 @@ name|file
 operator|=
 name|file
 expr_stmt|;
-name|xpq_queue_log
+name|XPQ_QUEUE_LOG
 index|[
 name|XPQ_IDX
 index|]
@@ -1265,7 +1357,7 @@ if|if
 condition|(
 name|__predict_true
 argument_list|(
-name|gdt_set
+name|gdtset
 argument_list|)
 condition|)
 name|critical_exit
@@ -1292,11 +1384,14 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|SET_VCPU
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|__predict_true
 argument_list|(
-name|gdt_set
+name|gdtset
 argument_list|)
 condition|)
 name|mtx_assert
@@ -1311,13 +1406,10 @@ if|if
 condition|(
 name|__predict_true
 argument_list|(
-name|gdt_set
+name|gdtset
 argument_list|)
 condition|)
 name|critical_enter
-argument_list|()
-expr_stmt|;
-name|SET_VCPU
 argument_list|()
 expr_stmt|;
 name|XPQ_QUEUE
@@ -1351,7 +1443,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
-name|xpq_queue_log
+name|XPQ_QUEUE_LOG
 index|[
 name|XPQ_IDX
 index|]
@@ -1360,7 +1452,7 @@ name|file
 operator|=
 name|file
 expr_stmt|;
-name|xpq_queue_log
+name|XPQ_QUEUE_LOG
 index|[
 name|XPQ_IDX
 index|]
@@ -1378,7 +1470,7 @@ if|if
 condition|(
 name|__predict_true
 argument_list|(
-name|gdt_set
+name|gdtset
 argument_list|)
 condition|)
 name|critical_exit
@@ -2903,6 +2995,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ADD_ISA_HOLE */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -3617,6 +3713,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* PAE */
 ifndef|#
 directive|ifndef
 name|PAE
@@ -4168,6 +4265,7 @@ directive|endif
 block|xen_flush_queue();
 endif|#
 directive|endif
+comment|/* 0 */
 name|cur_space
 operator|+=
 name|PAGE_SIZE
@@ -5116,20 +5214,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|shutdown
+name|shutdown
 argument_list|,
-argument|SI_SUB_PSEUDO
+name|SI_SUB_PSEUDO
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|,
-argument|setup_shutdown_watcher
+name|setup_shutdown_watcher
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -5325,6 +5424,7 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* CONFIG_SMP */
 name|preempt_disable
 argument_list|()
 expr_stmt|;
@@ -5615,6 +5715,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_comment
 comment|/********** CODE WORTH KEEPING ABOVE HERE *****************/
