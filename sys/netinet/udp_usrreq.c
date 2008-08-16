@@ -912,6 +912,9 @@ name|inp_vflag
 operator|&
 name|INP_IPV6
 condition|)
+operator|(
+name|void
+operator|)
 name|ip6_savecontrol_v4
 argument_list|(
 name|inp
@@ -920,6 +923,8 @@ name|n
 argument_list|,
 operator|&
 name|opts
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
