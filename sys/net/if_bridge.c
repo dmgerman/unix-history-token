@@ -454,17 +454,6 @@ value|(IFCAP_TOE|IFCAP_TSO|IFCAP_TXCSUM)
 end_define
 
 begin_comment
-comment|/*  * List of capabilities to disable on the member interface.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BRIDGE_IFCAPS_STRIP
-value|IFCAP_LRO
-end_define
-
-begin_comment
 comment|/*  * Bridge interface list entry.  */
 end_comment
 
@@ -4028,11 +4017,6 @@ name|bif_ifp
 operator|->
 name|if_capenable
 expr_stmt|;
-name|enabled
-operator|&=
-operator|~
-name|BRIDGE_IFCAPS_STRIP
-expr_stmt|;
 comment|/* strip off mask bits and enable them again if allowed */
 name|enabled
 operator|&=
@@ -4042,6 +4026,22 @@ expr_stmt|;
 name|enabled
 operator||=
 name|mask
+expr_stmt|;
+comment|/* 		 * Receive offload can only be enabled if all members also 		 * support send offload. 		 */
+if|if
+condition|(
+operator|(
+name|enabled
+operator|&
+name|IFCAP_TSO
+operator|)
+operator|==
+literal|0
+condition|)
+name|enabled
+operator|&=
+operator|~
+name|IFCAP_LRO
 expr_stmt|;
 name|bridge_set_ifcap
 argument_list|(
