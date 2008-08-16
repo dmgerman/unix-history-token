@@ -211,7 +211,7 @@ comment|/* !_KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * This is the default number of seconds we wait for devices to settle  * after a SCSI bus reset.  */
+comment|/*  * This is the default number of milliseconds we wait for devices to settle  * after a SCSI bus reset.  */
 end_comment
 
 begin_ifndef
