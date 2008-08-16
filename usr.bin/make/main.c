@@ -4430,7 +4430,7 @@ argument_list|(
 literal|".depend"
 argument_list|)
 expr_stmt|;
-comment|/* Install all the flags into the MAKE envariable. */
+comment|/* Install all the flags into the MAKEFLAGS envariable. */
 if|if
 condition|(
 operator|(
@@ -4456,6 +4456,16 @@ argument_list|(
 literal|"MAKEFLAGS"
 argument_list|,
 name|p
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|setenv
+argument_list|(
+literal|"MAKEFLAGS"
+argument_list|,
+literal|""
 argument_list|,
 literal|1
 argument_list|)
