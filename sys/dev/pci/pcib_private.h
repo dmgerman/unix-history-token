@@ -46,15 +46,19 @@ name|uint16_t
 name|command
 decl_stmt|;
 comment|/* command register */
-name|uint32_t
+name|u_int
 name|domain
 decl_stmt|;
 comment|/* domain number */
-name|uint8_t
+name|u_int
+name|pribus
+decl_stmt|;
+comment|/* primary bus number */
+name|u_int
 name|secbus
 decl_stmt|;
 comment|/* secondary bus number */
-name|uint8_t
+name|u_int
 name|subbus
 decl_stmt|;
 comment|/* subordinate bus number */
