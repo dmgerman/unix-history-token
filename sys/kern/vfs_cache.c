@@ -1032,6 +1032,9 @@ name|ncpp
 operator|++
 control|)
 block|{
+name|CACHE_LOCK
+argument_list|()
+expr_stmt|;
 name|count
 operator|=
 literal|0
@@ -1049,6 +1052,9 @@ name|count
 operator|++
 expr_stmt|;
 block|}
+name|CACHE_UNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -1200,6 +1206,9 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
+name|CACHE_LOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|ncp
@@ -1213,6 +1222,9 @@ name|count
 operator|++
 expr_stmt|;
 block|}
+name|CACHE_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|count
