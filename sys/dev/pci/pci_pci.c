@@ -2146,9 +2146,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* subtractive bridge: always ok */
-if|#
-directive|if
-literal|1
 if|if
 condition|(
 name|pcib_is_nonprefetch_open
@@ -2223,8 +2220,6 @@ name|pmemlimit
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
