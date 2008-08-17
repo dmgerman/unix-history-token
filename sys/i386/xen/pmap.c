@@ -2749,6 +2749,8 @@ name|mpte
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
+name|xpmap_mtop
+argument_list|(
 name|PTD
 index|[
 name|i
@@ -2757,6 +2759,7 @@ name|KPTDI
 index|]
 operator|&
 name|PG_FRAME
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2790,6 +2793,8 @@ name|mpte
 operator|->
 name|phys_addr
 operator|=
+name|xpmap_mtop
+argument_list|(
 name|PTD
 index|[
 name|i
@@ -2798,6 +2803,7 @@ name|KPTDI
 index|]
 operator|&
 name|PG_FRAME
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Initialize the address space (zone) for the pv entries.  Set a 	 * high water mark so that the system can recover from excessive 	 * numbers of pv entries. 	 */
