@@ -2112,10 +2112,15 @@ name|i
 operator|*
 name|PAGE_SIZE
 argument_list|,
+operator|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|frames
 index|[
 name|i
 index|]
+operator|)
 operator|<<
 name|PAGE_SHIFT
 operator||
