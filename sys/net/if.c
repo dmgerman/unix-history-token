@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -983,7 +989,7 @@ argument_list|()
 expr_stmt|;
 name|ifp
 operator|=
-name|ifindex_table
+name|V_ifindex_table
 index|[
 name|idx
 index|]
@@ -1018,7 +1024,7 @@ block|{
 name|IFNET_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
-name|ifindex_table
+name|V_ifindex_table
 index|[
 name|idx
 index|]
@@ -1088,7 +1094,7 @@ argument_list|()
 expr_stmt|;
 name|cdev
 operator|=
-name|ifindex_table
+name|V_ifindex_table
 index|[
 name|idx
 index|]
@@ -1123,7 +1129,7 @@ block|{
 name|IFNET_WLOCK
 argument_list|()
 expr_stmt|;
-name|ifindex_table
+name|V_ifindex_table
 index|[
 name|idx
 index|]
@@ -1501,7 +1507,7 @@ block|{
 name|klist
 operator|=
 operator|&
-name|ifklist
+name|V_ifklist
 expr_stmt|;
 block|}
 else|else
@@ -1724,19 +1730,19 @@ expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|ifg_head
+name|V_ifg_head
 argument_list|)
 expr_stmt|;
 name|knlist_init
 argument_list|(
 operator|&
-name|ifklist
+name|V_ifklist
 argument_list|,
 name|NULL
 argument_list|,
@@ -1794,13 +1800,13 @@ name|ifindex_entry
 modifier|*
 name|e
 decl_stmt|;
-name|if_indexlim
+name|V_if_indexlim
 operator|<<=
 literal|1
 expr_stmt|;
 name|n
 operator|=
-name|if_indexlim
+name|V_if_indexlim
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1823,7 +1829,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifindex_table
+name|V_ifindex_table
 operator|!=
 name|NULL
 condition|)
@@ -1838,7 +1844,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|ifindex_table
+name|V_ifindex_table
 argument_list|,
 name|n
 operator|/
@@ -1850,13 +1856,13 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|ifindex_table
+name|V_ifindex_table
 argument_list|,
 name|M_IFNET
 argument_list|)
 expr_stmt|;
 block|}
-name|ifindex_table
+name|V_ifindex_table
 operator|=
 name|e
 expr_stmt|;
@@ -1912,7 +1918,7 @@ name|ifp
 operator|->
 name|if_index
 operator|<=
-name|if_index
+name|V_if_index
 condition|;
 name|ifp
 operator|->
@@ -1962,9 +1968,9 @@ name|ifp
 operator|->
 name|if_index
 operator|>
-name|if_index
+name|V_if_index
 condition|)
-name|if_index
+name|V_if_index
 operator|=
 name|ifp
 operator|->
@@ -1972,9 +1978,9 @@ name|if_index
 expr_stmt|;
 if|if
 condition|(
-name|if_index
+name|V_if_index
 operator|>=
-name|if_indexlim
+name|V_if_indexlim
 condition|)
 name|if_grow
 argument_list|()
@@ -2141,18 +2147,18 @@ expr_stmt|;
 comment|/* XXX: should be locked with if_findindex() */
 while|while
 condition|(
-name|if_index
+name|V_if_index
 operator|>
 literal|0
 operator|&&
 name|ifnet_byindex
 argument_list|(
-name|if_index
+name|V_if_index
 argument_list|)
 operator|==
 name|NULL
 condition|)
-name|if_index
+name|V_if_index
 operator|--
 expr_stmt|;
 name|IFNET_WUNLOCK
@@ -2800,7 +2806,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|,
 name|ifp
 argument_list|,
@@ -2909,7 +2915,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -3367,7 +3373,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|iter
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -3381,7 +3387,7 @@ block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|,
 name|ifp
 argument_list|,
@@ -3601,7 +3607,7 @@ condition|(
 operator|(
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|j
 index|]
@@ -3979,7 +3985,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifg
 argument_list|,
-argument|&ifg_head
+argument|&V_ifg_head
 argument_list|,
 argument|ifg_next
 argument_list|)
@@ -4093,7 +4099,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|ifg_head
+name|V_ifg_head
 argument_list|,
 name|ifg
 argument_list|,
@@ -4324,7 +4330,7 @@ block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|ifg_head
+name|V_ifg_head
 argument_list|,
 name|ifgl
 operator|->
@@ -4648,7 +4654,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifg
 argument_list|,
-argument|&ifg_head
+argument|&V_ifg_head
 argument_list|,
 argument|ifg_next
 argument_list|)
@@ -5035,7 +5041,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -5165,7 +5171,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -5280,7 +5286,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -5443,7 +5449,7 @@ name|sdl
 operator|->
 name|sdl_index
 operator|<=
-name|if_index
+name|V_if_index
 condition|)
 return|return
 operator|(
@@ -5464,7 +5470,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -6872,7 +6878,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -6962,7 +6968,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -9721,7 +9727,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -10987,7 +10993,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|oifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -11195,7 +11201,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|oifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)

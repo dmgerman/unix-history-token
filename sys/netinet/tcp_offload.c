@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -312,7 +318,7 @@ block|{
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -330,7 +336,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -351,7 +357,7 @@ block|{
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -371,7 +377,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -411,7 +417,7 @@ block|{
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -433,7 +439,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if

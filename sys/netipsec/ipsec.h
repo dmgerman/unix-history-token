@@ -1199,7 +1199,7 @@ name|ipseclog
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (ipsec_debug) log x; } while (0)
+value|do { if (V_ipsec_debug) log x; } while (0)
 end_define
 
 begin_comment
@@ -1213,7 +1213,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (ipsec_debug) printf x; } while (0)
+value|do { if (V_ipsec_debug) printf x; } while (0)
 end_define
 
 begin_function_decl

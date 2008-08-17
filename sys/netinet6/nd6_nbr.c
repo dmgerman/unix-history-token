@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -553,7 +559,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -1360,7 +1366,7 @@ name|ND_NA_FLAG_OVERRIDE
 operator|)
 operator||
 operator|(
-name|ip6_forwarding
+name|V_ip6_forwarding
 condition|?
 name|ND_NA_FLAG_ROUTER
 else|:
@@ -1423,7 +1429,7 @@ name|ND_NA_FLAG_OVERRIDE
 operator|)
 operator||
 operator|(
-name|ip6_forwarding
+name|V_ip6_forwarding
 condition|?
 name|ND_NA_FLAG_ROUTER
 else|:
@@ -1503,7 +1509,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_badns
 operator|++
@@ -2412,7 +2418,7 @@ argument_list|,
 name|ifs6_out_neighborsolicit
 argument_list|)
 expr_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outhist
 index|[
@@ -2686,7 +2692,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -3178,7 +3184,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nd6_gctimer
+name|V_nd6_gctimer
 operator|*
 name|hz
 argument_list|)
@@ -3299,7 +3305,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nd6_gctimer
+name|V_nd6_gctimer
 operator|*
 name|hz
 argument_list|)
@@ -3437,7 +3443,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nd6_gctimer
+name|V_nd6_gctimer
 operator|*
 name|hz
 argument_list|)
@@ -3514,7 +3520,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|ip6_forwarding
+name|V_ip6_forwarding
 condition|)
 block|{
 comment|/* 				 * Even if the neighbor is not in the default 				 * router list, the neighbor may be used 				 * as a next hop for some destinations 				 * (e.g. redirect case). So we must 				 * call rt6_flush explicitly. 				 */
@@ -3638,7 +3644,7 @@ expr_stmt|;
 return|return;
 name|bad
 label|:
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_badna
 operator|++
@@ -4526,7 +4532,7 @@ argument_list|,
 name|ifs6_out_neighboradvert
 argument_list|)
 expr_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outhist
 index|[
@@ -4740,7 +4746,7 @@ for|for
 control|(
 name|dp
 operator|=
-name|dadq
+name|V_dadq
 operator|.
 name|tqh_first
 init|;
@@ -4885,16 +4891,16 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|dad_init
+name|V_dad_init
 condition|)
 block|{
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|dadq
+name|V_dadq
 argument_list|)
 expr_stmt|;
-name|dad_init
+name|V_dad_init
 operator|++
 expr_stmt|;
 block|}
@@ -4967,7 +4973,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|ip6_dad_count
+name|V_ip6_dad_count
 condition|)
 block|{
 name|ia
@@ -5159,7 +5165,7 @@ name|dp
 operator|->
 name|dad_count
 operator|=
-name|ip6_dad_count
+name|V_ip6_dad_count
 expr_stmt|;
 name|dp
 operator|->
@@ -5252,7 +5258,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|dad_init
+name|V_dad_init
 condition|)
 return|return;
 name|dp
@@ -5279,7 +5285,7 @@ expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|dadq
+name|V_dadq
 argument_list|,
 operator|(
 expr|struct
@@ -5500,7 +5506,7 @@ name|dp
 operator|->
 name|dad_ns_tcount
 operator|>
-name|dad_maxtry
+name|V_dad_maxtry
 condition|)
 block|{
 name|nd6log
@@ -5522,7 +5528,7 @@ expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|dadq
+name|V_dadq
 argument_list|,
 operator|(
 expr|struct
@@ -5687,7 +5693,7 @@ expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|dadq
+name|V_dadq
 argument_list|,
 operator|(
 expr|struct
@@ -5997,7 +6003,7 @@ block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|dadq
+name|V_dadq
 argument_list|,
 operator|(
 expr|struct
@@ -6210,7 +6216,7 @@ expr_stmt|;
 comment|/* Quickhack - completely ignore DAD NS packets */
 if|if
 condition|(
-name|dad_ignore_ns
+name|V_dad_ignore_ns
 condition|)
 block|{
 name|char

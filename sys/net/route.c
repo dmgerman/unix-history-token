@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -659,7 +665,7 @@ operator|*
 operator|*
 operator|)
 operator|&
-name|rt_tables
+name|V_rt_tables
 index|[
 name|table
 index|]
@@ -1117,7 +1123,7 @@ literal|0
 expr_stmt|;
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|fibnum
 index|]
@@ -1139,7 +1145,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|rtstat
+name|V_rtstat
 operator|.
 name|rts_unreach
 operator|++
@@ -1409,7 +1415,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * Either we hit the root or couldn't find any match, 		 * Which basically means 		 * "caint get there frm here" 		 */
-name|rtstat
+name|V_rtstat
 operator|.
 name|rts_unreach
 operator|++
@@ -1514,7 +1520,7 @@ argument_list|)
 expr_stmt|;
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|rt
 operator|->
@@ -1640,7 +1646,7 @@ literal|"rtfree 2"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * the rtentry must have been removed from the routing table 		 * so it is represented in rttrash.. remove that now. 		 */
-name|rttrash
+name|V_rttrash
 operator|--
 expr_stmt|;
 ifdef|#
@@ -2108,7 +2114,7 @@ expr_stmt|;
 name|stat
 operator|=
 operator|&
-name|rtstat
+name|V_rtstat
 operator|.
 name|rts_dynamic
 expr_stmt|;
@@ -2134,7 +2140,7 @@ expr_stmt|;
 name|stat
 operator|=
 operator|&
-name|rtstat
+name|V_rtstat
 operator|.
 name|rts_newgateway
 expr_stmt|;
@@ -2202,7 +2208,7 @@ if|if
 condition|(
 name|error
 condition|)
-name|rtstat
+name|V_rtstat
 operator|.
 name|rts_badredirect
 operator|++
@@ -3233,7 +3239,7 @@ directive|endif
 comment|/* 	 * Find the correct routing tree to use for this Address Family 	 */
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|rt
 operator|->
@@ -3499,7 +3505,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * one more rtentry floating around that is not 	 * linked to the routing table. 	 */
-name|rttrash
+name|V_rttrash
 operator|++
 expr_stmt|;
 name|bad
@@ -3644,7 +3650,7 @@ expr_stmt|;
 comment|/* 	 * Find the correct routing tree to use for this Address Family 	 */
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|fibnum
 index|]
@@ -4066,7 +4072,7 @@ label|:
 endif|#
 directive|endif
 comment|/* 		 * One more rtentry floating around that is not 		 * linked to the routing table. rttrash will be decremented 		 * when RTFREE(rt) is eventually called. 		 */
-name|rttrash
+name|V_rttrash
 operator|++
 expr_stmt|;
 comment|/* 		 * If the caller wants it, then it can have it, 		 * but it's up to it to free the rtentry as we won't be 		 * doing it. 		 */
@@ -5305,7 +5311,7 @@ name|radix_node_head
 modifier|*
 name|rnh
 init|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|rt
 operator|->
@@ -6163,7 +6169,7 @@ condition|(
 operator|(
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|fibnum
 index|]

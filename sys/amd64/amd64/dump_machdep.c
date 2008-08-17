@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -536,7 +542,7 @@ name|kdh
 operator|->
 name|hostname
 argument_list|,
-name|hostname
+name|G_hostname
 argument_list|,
 sizeof|sizeof
 argument_list|(

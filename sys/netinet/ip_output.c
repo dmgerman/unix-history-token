@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -566,7 +572,7 @@ operator|=
 name|ip_newid
 argument_list|()
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_localout
 operator|++
@@ -766,7 +772,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_noroute
 operator|++
@@ -857,7 +863,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_noroute
 operator|++
@@ -1020,7 +1026,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_noroute
 operator|++
@@ -1311,7 +1317,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_noroute
 operator|++
@@ -1411,7 +1417,7 @@ expr_stmt|;
 comment|/* 			 * If we are acting as a multicast router, perform 			 * multicast forwarding as if the packet had just 			 * arrived on the interface to which we are about 			 * to send.  The multicast forwarding function 			 * recursively calls this function, using the 			 * IP_FORWARDING flag to prevent infinite recursion. 			 * 			 * Multicasts that are looped back by ip_mloopback(), 			 * above, will be forwarded by the ip_input() routine, 			 * if necessary. 			 */
 if|if
 condition|(
-name|ip_mrouter
+name|V_ip_mrouter
 operator|&&
 operator|(
 name|flags
@@ -1426,7 +1432,7 @@ comment|/* 				 * If rsvp daemon is not running, do not 				 * set ip_moptions. 
 if|if
 condition|(
 operator|!
-name|rsvp_on
+name|V_rsvp_on
 condition|)
 name|imo
 operator|=
@@ -1598,7 +1604,7 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_odropped
 operator|++
@@ -1904,7 +1910,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-name|loif
+name|V_loif
 expr_stmt|;
 if|if
 condition|(
@@ -1994,7 +2000,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-name|loif
+name|V_loif
 expr_stmt|;
 if|if
 condition|(
@@ -2164,7 +2170,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badaddr
 operator|++
@@ -2473,7 +2479,7 @@ name|error
 operator|=
 name|EMSGSIZE
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantfrag
 operator|++
@@ -2614,7 +2620,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragmented
 operator|++
@@ -2743,7 +2749,7 @@ name|IP_DF
 condition|)
 block|{
 comment|/* Fragmentation not allowed */
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantfrag
 operator|++
@@ -2999,7 +3005,7 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_odropped
 operator|++
@@ -3195,7 +3201,7 @@ operator|=
 name|ENOBUFS
 expr_stmt|;
 comment|/* ??? */
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_odropped
 operator|++
@@ -3293,7 +3299,7 @@ operator|->
 name|m_nextpkt
 expr_stmt|;
 block|}
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_ofragments
 operator|+=

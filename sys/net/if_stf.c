@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2557,7 +2563,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 init|;
 name|ia4

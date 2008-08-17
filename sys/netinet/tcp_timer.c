@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -555,7 +561,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 operator|(
@@ -569,7 +575,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -722,7 +728,7 @@ decl_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -745,7 +751,7 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -758,7 +764,7 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -816,7 +822,7 @@ name|t_flags
 operator||=
 name|TF_ACKNOW
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_delack
 operator|++
@@ -876,7 +882,7 @@ comment|/* 	 * XXXRW: Does this actually happen? 	 */
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -899,7 +905,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -956,7 +962,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1007,7 +1013,7 @@ name|SBS_CANTRCVMORE
 operator|)
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_finwait2_drops
 operator|++
@@ -1126,7 +1132,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -1175,7 +1181,7 @@ directive|endif
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -1198,7 +1204,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1248,7 +1254,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1264,7 +1270,7 @@ name|tt_keep
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Keep-alive timer went off; send something 	 * or drop connection if idle for too long. 	 */
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_keeptimeo
 operator|++
@@ -1319,7 +1325,7 @@ goto|goto
 name|dropit
 goto|;
 comment|/* 		 * Send a packet designed to force a response 		 * if the peer is up and reachable: 		 * either an ACK if the connection is still alive, 		 * or an RST if the peer has closed the connection 		 * due to timeout or reboot. 		 * Using sequence number tp->snd_una-1 		 * causes the transmitted zero-length segment 		 * to lie outside the receive window; 		 * by the protocol spec, this requires the 		 * correspondent TCP to respond. 		 */
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_keepprobe
 operator|++
@@ -1458,13 +1464,13 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
 name|dropit
 label|:
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_keepdrops
 operator|++
@@ -1541,7 +1547,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -1585,7 +1591,7 @@ directive|endif
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -1608,7 +1614,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1658,7 +1664,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1674,7 +1680,7 @@ name|tt_persist
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Persistance timer into zero window. 	 * Force a byte to be output, if possible. 	 */
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_persisttimeo
 operator|++
@@ -1716,7 +1722,7 @@ name|tcp_totbackoff
 operator|)
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_persistdrop
 operator|++
@@ -1812,7 +1818,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -1862,7 +1868,7 @@ directive|endif
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -1889,7 +1895,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1939,7 +1945,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1976,7 +1982,7 @@ name|t_rxtshift
 operator|=
 name|TCP_MAXRXTSHIFT
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_timeoutdrop
 operator|++
@@ -2005,7 +2011,7 @@ block|}
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -2086,7 +2092,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rexmttimeo
 operator|++
@@ -2398,7 +2404,7 @@ condition|)
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}

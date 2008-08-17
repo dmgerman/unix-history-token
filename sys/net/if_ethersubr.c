@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1980,7 +1986,7 @@ if|if
 condition|(
 name|IPFW_LOADED
 operator|&&
-name|ether_ipfw
+name|V_ether_ipfw
 operator|!=
 literal|0
 condition|)
@@ -2116,7 +2122,7 @@ name|rule
 operator|!=
 name|NULL
 operator|&&
-name|fw_one_pass
+name|V_fw_one_pass
 condition|)
 return|return
 literal|1
@@ -3233,7 +3239,7 @@ if|if
 condition|(
 name|IPFW_LOADED
 operator|&&
-name|ether_ipfw
+name|V_ether_ipfw
 operator|!=
 literal|0
 operator|&&

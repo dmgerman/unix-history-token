@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -843,14 +849,14 @@ name|tp
 operator|->
 name|snd_numholes
 operator|>=
-name|tcp_sack_maxholes
+name|V_tcp_sack_maxholes
 operator|||
-name|tcp_sack_globalholes
+name|V_tcp_sack_globalholes
 operator|>=
-name|tcp_sack_globalmaxholes
+name|V_tcp_sack_globalmaxholes
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sack_sboverflow
 operator|++
@@ -905,7 +911,7 @@ operator|->
 name|snd_numholes
 operator|++
 expr_stmt|;
-name|tcp_sack_globalholes
+name|V_tcp_sack_globalholes
 operator|++
 expr_stmt|;
 return|return
@@ -946,7 +952,7 @@ operator|->
 name|snd_numholes
 operator|--
 expr_stmt|;
-name|tcp_sack_globalholes
+name|V_tcp_sack_globalholes
 operator|--
 expr_stmt|;
 name|KASSERT
@@ -964,7 +970,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|tcp_sack_globalholes
+name|V_tcp_sack_globalholes
 operator|>=
 literal|0
 argument_list|,

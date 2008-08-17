@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/cd9660/iso.h>
 end_include
 
@@ -758,13 +764,13 @@ comment|/* XXXRW: locking. */
 comment|/* Inserting hostname i.e. "kurt.tools.de" */
 name|inbuf
 operator|=
-name|hostname
+name|V_hostname
 expr_stmt|;
 name|wlen
 operator|=
 name|strlen
 argument_list|(
-name|hostname
+name|V_hostname
 argument_list|)
 expr_stmt|;
 break|break;
@@ -998,13 +1004,13 @@ comment|/* XXXRW: locking. */
 comment|/* Inserting hostname i.e. "kurt.tools.de" */
 name|inbuf
 operator|=
-name|hostname
+name|V_hostname
 expr_stmt|;
 name|wlen
 operator|=
 name|strlen
 argument_list|(
-name|hostname
+name|V_hostname
 argument_list|)
 expr_stmt|;
 break|break;

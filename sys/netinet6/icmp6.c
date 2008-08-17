@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -891,7 +897,7 @@ decl_stmt|;
 name|int
 name|nxt
 decl_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_error
 operator|++
@@ -900,7 +906,7 @@ comment|/* count per-type-code statistics */
 name|icmp6_errcount
 argument_list|(
 operator|&
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outerrhist
 argument_list|,
@@ -922,7 +928,7 @@ operator|&
 name|M_DECRYPTED
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_canterror
 operator|++
@@ -1162,7 +1168,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -1187,7 +1193,7 @@ name|ND_REDIRECT
 condition|)
 block|{
 comment|/* 			 * ICMPv6 error 			 * Special case: for redirect (which is 			 * informational) we must not send icmp6 error. 			 */
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_canterror
 operator|++
@@ -1233,7 +1239,7 @@ name|code
 argument_list|)
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_toofreq
 operator|++
@@ -1417,7 +1423,7 @@ name|rcvif
 operator|=
 name|NULL
 expr_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outhist
 index|[
@@ -1578,7 +1584,7 @@ name|icmp6_hdr
 argument_list|)
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -1635,7 +1641,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -1697,7 +1703,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_checksum
 operator|++
@@ -1748,7 +1754,7 @@ name|freeit
 goto|;
 block|}
 block|}
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_inhist
 index|[
@@ -2334,12 +2340,12 @@ condition|(
 name|n
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_reflect
 operator|++
 expr_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outhist
 index|[
@@ -2532,7 +2538,7 @@ enum|;
 if|if
 condition|(
 operator|!
-name|icmp6_nodeinfo
+name|V_icmp6_nodeinfo
 condition|)
 break|break;
 if|if
@@ -2573,7 +2579,7 @@ goto|;
 define|#
 directive|define
 name|hostnamelen
-value|strlen(hostname)
+value|strlen(V_hostname)
 if|if
 condition|(
 name|mode
@@ -2650,7 +2656,7 @@ comment|/* 			 * XXX: this combination of flags is pointless, 			 * but should w
 if|if
 condition|(
 operator|(
-name|icmp6_nodeinfo
+name|V_icmp6_nodeinfo
 operator|&
 literal|5
 operator|)
@@ -2891,7 +2897,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|hostname
+name|V_hostname
 argument_list|,
 name|p
 operator|+
@@ -2962,12 +2968,12 @@ condition|(
 name|n
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_reflect
 operator|++
 expr_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outhist
 index|[
@@ -3547,7 +3553,7 @@ block|}
 break|break;
 name|badcode
 label|:
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_badcode
 operator|++
@@ -3555,7 +3561,7 @@ expr_stmt|;
 break|break;
 name|badlen
 label|:
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_badlen
 operator|++
@@ -3653,7 +3659,7 @@ name|ip6_hdr
 argument_list|)
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -3739,7 +3745,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -3936,7 +3942,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -4059,7 +4065,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -4161,7 +4167,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -4299,7 +4305,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -4404,7 +4410,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -4910,7 +4916,7 @@ argument_list|,
 name|mtu
 argument_list|)
 expr_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_pmtuchg
 operator|++
@@ -4927,7 +4933,7 @@ begin_define
 define|#
 directive|define
 name|hostnamelen
-value|strlen(hostname)
+value|strlen(V_hostname)
 end_define
 
 begin_function
@@ -5101,7 +5107,7 @@ comment|/* 	 * Validate IPv6 source address. 	 * The default configuration MUST 
 if|if
 condition|(
 operator|(
-name|icmp6_nodeinfo
+name|V_icmp6_nodeinfo
 operator|&
 name|ICMP6_NODEINFO_GLOBALOK
 operator|)
@@ -5189,7 +5195,7 @@ operator|)
 operator|&&
 operator|!
 operator|(
-name|icmp6_nodeinfo
+name|V_icmp6_nodeinfo
 operator|&
 name|ICMP6_NODEINFO_TMPADDROK
 operator|)
@@ -5432,7 +5438,7 @@ name|n
 operator|=
 name|ni6_nametodns
 argument_list|(
-name|hostname
+name|V_hostname
 argument_list|,
 name|hostnamelen
 argument_list|,
@@ -5553,7 +5559,7 @@ case|:
 if|if
 condition|(
 operator|(
-name|icmp6_nodeinfo
+name|V_icmp6_nodeinfo
 operator|&
 name|ICMP6_NODEINFO_FQDNOK
 operator|)
@@ -5573,7 +5579,7 @@ case|:
 if|if
 condition|(
 operator|(
-name|icmp6_nodeinfo
+name|V_icmp6_nodeinfo
 operator|&
 name|ICMP6_NODEINFO_NODEADDROK
 operator|)
@@ -5994,7 +6000,7 @@ name|m_next
 operator|=
 name|ni6_nametodns
 argument_list|(
-name|hostname
+name|V_hostname
 argument_list|,
 name|hostnamelen
 argument_list|,
@@ -7090,7 +7096,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 init|;
 name|ifp
@@ -7263,7 +7269,7 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-name|icmp6_nodeinfo
+name|V_icmp6_nodeinfo
 operator|&
 name|ICMP6_NODEINFO_TMPADDROK
 operator|)
@@ -7349,7 +7355,7 @@ else|:
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 decl_stmt|;
 name|struct
@@ -7629,7 +7635,7 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-name|icmp6_nodeinfo
+name|V_icmp6_nodeinfo
 operator|&
 name|ICMP6_NODEINFO_TMPADDROK
 operator|)
@@ -8033,14 +8039,14 @@ block|}
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|in6p
 argument_list|,
-argument|&ripcb
+argument|&V_ripcb
 argument_list|,
 argument|inp_list
 argument_list|)
@@ -8392,7 +8398,7 @@ block|}
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -8615,7 +8621,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_delivered
 operator|--
@@ -9343,7 +9349,7 @@ name|ip6
 operator|->
 name|ip6_hlim
 operator|=
-name|ip6_defhlim
+name|V_ip6_defhlim
 expr_stmt|;
 name|icmp6
 operator|->
@@ -9654,7 +9660,7 @@ return|return;
 comment|/* XXX if we are router, we don't update route by icmp6 redirect */
 if|if
 condition|(
-name|ip6_forwarding
+name|V_ip6_forwarding
 condition|)
 goto|goto
 name|freeit
@@ -9662,7 +9668,7 @@ goto|;
 if|if
 condition|(
 operator|!
-name|icmp6_rediraccept
+name|V_icmp6_rediraccept
 condition|)
 goto|goto
 name|freeit
@@ -9719,7 +9725,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -10667,7 +10673,7 @@ expr_stmt|;
 return|return;
 name|bad
 label|:
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_badredirect
 operator|++
@@ -10757,7 +10763,7 @@ decl_stmt|;
 name|icmp6_errcount
 argument_list|(
 operator|&
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outerrhist
 argument_list|,
@@ -10770,7 +10776,7 @@ comment|/* if we are not router, we don't send icmp6 redirect */
 if|if
 condition|(
 operator|!
-name|ip6_forwarding
+name|V_ip6_forwarding
 condition|)
 goto|goto
 name|fail
@@ -12081,7 +12087,7 @@ name|ifs6_out_redirect
 argument_list|)
 expr_stmt|;
 block|}
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outhist
 index|[
@@ -12401,12 +12407,12 @@ operator|!
 name|ppsratecheck
 argument_list|(
 operator|&
-name|icmp6errppslim_last
+name|V_icmp6errppslim_last
 argument_list|,
 operator|&
-name|icmp6errpps_count
+name|V_icmp6errpps_count
 argument_list|,
-name|icmp6errppslim
+name|V_icmp6errppslim
 argument_list|)
 condition|)
 block|{

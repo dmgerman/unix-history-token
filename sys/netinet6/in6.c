@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -805,7 +811,7 @@ for|for
 control|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ia
 condition|;
@@ -2822,7 +2828,7 @@ operator|&
 name|IN6_IFF_AUTOCONF
 operator|)
 operator|&&
-name|ip6_use_tempaddr
+name|V_ip6_use_tempaddr
 operator|&&
 name|pr
 operator|->
@@ -3658,7 +3664,7 @@ condition|(
 operator|(
 name|oia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 operator|)
 operator|!=
 name|NULL
@@ -3686,7 +3692,7 @@ name|ia
 expr_stmt|;
 block|}
 else|else
-name|in6_ifaddr
+name|V_in6_ifaddr
 operator|=
 name|ia
 expr_stmt|;
@@ -4613,7 +4619,7 @@ comment|/* 		 * join node information group address 		 */
 define|#
 directive|define
 name|hostnamelen
-value|strlen(hostname)
+value|strlen(V_hostname)
 name|delay
 operator|=
 literal|0
@@ -4652,7 +4658,7 @@ name|in6_nigroup
 argument_list|(
 name|ifp
 argument_list|,
-name|hostname
+name|V_hostname
 argument_list|,
 name|hostnamelen
 argument_list|,
@@ -5385,10 +5391,10 @@ operator|==
 operator|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 operator|)
 condition|)
-name|in6_ifaddr
+name|V_in6_ifaddr
 operator|=
 name|ia
 operator|->
@@ -7940,7 +7946,7 @@ for|for
 control|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ia
 condition|;
@@ -8005,7 +8011,7 @@ for|for
 control|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ia
 condition|;
@@ -8590,7 +8596,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip6_use_deprecated
+name|V_ip6_use_deprecated
 condition|)
 name|dep
 index|[
@@ -8789,7 +8795,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip6_use_deprecated
+name|V_ip6_use_deprecated
 condition|)
 name|dep
 index|[
@@ -9057,7 +9063,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 init|;
 name|ifp
@@ -9119,7 +9125,7 @@ condition|(
 name|maxmtu
 condition|)
 comment|/* update only when maxmtu is positive */
-name|in6_maxmtu
+name|V_in6_maxmtu
 operator|=
 name|maxmtu
 expr_stmt|;

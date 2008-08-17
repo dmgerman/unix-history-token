@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/raw_cb.h>
 end_include
 
@@ -267,12 +273,12 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_total
 operator|++
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_bytes
 operator|+=
@@ -301,7 +307,7 @@ name|sadb_msg
 argument_list|)
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_tooshort
 operator|++
@@ -347,7 +353,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_nomem
 operator|++
@@ -387,7 +393,7 @@ name|sadb_msg
 operator|*
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_msgtype
 index|[
@@ -409,7 +415,7 @@ name|sadb_msg_len
 argument_list|)
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invlen
 operator|++
@@ -540,7 +546,7 @@ operator|!
 name|m
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_nomem
 operator|++
@@ -614,7 +620,7 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* pid and seq? */
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_msgtype
 index|[
@@ -643,7 +649,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|key_src
+name|V_key_src
 argument_list|,
 name|m
 argument_list|,
@@ -651,7 +657,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_nomem
 operator|++
@@ -760,18 +766,18 @@ argument|, __func__); 		kdebug_sadb(msg)
 argument_list|)
 empty_stmt|;
 comment|/* 	 * we increment statistics here, just in case we have ENOBUFS 	 * in this function. 	 */
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_total
 operator|++
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_bytes
 operator|+=
 name|len
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_msgtype
 index|[
@@ -822,7 +828,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_nomem
 operator|++
@@ -856,7 +862,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_nomem
 operator|++
@@ -910,7 +916,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_nomem
 operator|++
@@ -1013,18 +1019,18 @@ name|msg
 argument_list|)
 expr_stmt|;
 comment|/* avoid duplicated statistics */
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_total
 operator|--
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_bytes
 operator|-=
 name|len
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_msgtype
 index|[
@@ -1126,12 +1132,12 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_total
 operator|++
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_bytes
 operator|+=
@@ -1174,7 +1180,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_nomem
 operator|++
@@ -1213,7 +1219,7 @@ name|sadb_msg
 operator|*
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_msgtype
 index|[
@@ -1234,7 +1240,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|rp
 argument_list|,
-argument|&rawcb_list
+argument|&V_rawcb_list
 argument_list|,
 argument|list
 argument_list|)
@@ -1394,7 +1400,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_msgtarget
 index|[
@@ -1434,7 +1440,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|in_nomem
 operator|++
@@ -1735,12 +1741,12 @@ operator|==
 name|PF_KEY
 condition|)
 comment|/* XXX: AF_KEY */
-name|key_cb
+name|V_key_cb
 operator|.
 name|key_count
 operator|++
 expr_stmt|;
-name|key_cb
+name|V_key_cb
 operator|.
 name|any_count
 operator|++
@@ -1903,12 +1909,12 @@ operator|==
 name|PF_KEY
 condition|)
 comment|/* XXX: AF_KEY */
-name|key_cb
+name|V_key_cb
 operator|.
 name|key_count
 operator|--
 expr_stmt|;
-name|key_cb
+name|V_key_cb
 operator|.
 name|any_count
 operator|--
@@ -2285,11 +2291,11 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|key_cb
+name|V_key_cb
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|key_cb
+name|V_key_cb
 argument_list|)
 argument_list|)
 expr_stmt|;

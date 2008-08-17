@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -712,7 +718,7 @@ name|type
 operator|!=
 name|ICMP_REDIRECT
 condition|)
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_error
 operator|++
@@ -803,7 +809,7 @@ name|icmp_type
 argument_list|)
 condition|)
 block|{
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_oldicmp
 operator|++
@@ -1192,7 +1198,7 @@ name|icmp
 operator|*
 argument_list|)
 expr_stmt|;
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_outhist
 index|[
@@ -1595,7 +1601,7 @@ operator|<
 name|ICMP_MINLEN
 condition|)
 block|{
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_tooshort
 operator|++
@@ -1637,7 +1643,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_tooshort
 operator|++
@@ -1688,7 +1694,7 @@ name|icmplen
 argument_list|)
 condition|)
 block|{
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_checksum
 operator|++
@@ -1865,7 +1871,7 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_inhist
 index|[
@@ -2058,7 +2064,7 @@ literal|2
 operator|)
 condition|)
 block|{
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_badlen
 operator|++
@@ -2181,7 +2187,7 @@ expr_stmt|;
 break|break;
 name|badcode
 label|:
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_badcode
 operator|++
@@ -2210,7 +2216,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_bmcastecho
 operator|++
@@ -2262,7 +2268,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_bmcasttstamp
 operator|++
@@ -2276,7 +2282,7 @@ operator|<
 name|ICMP_TSLEN
 condition|)
 block|{
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_badlen
 operator|++
@@ -2514,12 +2520,12 @@ operator|+=
 name|hlen
 expr_stmt|;
 comment|/* since ip_input deducts this */
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_reflect
 operator|++
 expr_stmt|;
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_outhist
 index|[
@@ -2729,7 +2735,7 @@ if|if
 condition|(
 name|drop_redirect
 operator|||
-name|ipforwarding
+name|V_ipforwarding
 condition|)
 break|break;
 if|if
@@ -2771,7 +2777,7 @@ literal|2
 operator|)
 condition|)
 block|{
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_badlen
 operator|++
@@ -3096,7 +3102,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* Bad return address */
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_badaddr
 operator|++
@@ -3344,7 +3350,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|icmpstat
+name|V_icmpstat
 operator|.
 name|icps_noroute
 operator|++
@@ -3384,7 +3390,7 @@ name|ip
 operator|->
 name|ip_ttl
 operator|=
-name|ip_defttl
+name|V_ip_defttl
 expr_stmt|;
 if|if
 condition|(

@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -2831,12 +2837,12 @@ name|nd
 operator|->
 name|my_hostnam
 argument_list|,
-name|hostname
+name|V_hostname
 argument_list|,
 name|MAXHOSTNAMELEN
 argument_list|)
 expr_stmt|;
-name|hostname
+name|V_hostname
 index|[
 name|MAXHOSTNAMELEN
 operator|-
@@ -2860,7 +2866,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|hostname
+name|V_hostname
 index|[
 name|i
 index|]

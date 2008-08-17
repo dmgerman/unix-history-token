@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/pfil.h>
 end_include
 
@@ -355,12 +361,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_noroute
 operator|++
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantforward
 operator|++
@@ -476,10 +482,10 @@ comment|/* 	 * Are we active and forwarding packets? 	 */
 if|if
 condition|(
 operator|!
-name|ipfastforward_active
+name|V_ipfastforward_active
 operator|||
 operator|!
-name|ipforwarding
+name|V_ipforwarding
 condition|)
 return|return
 name|m
@@ -517,7 +523,7 @@ name|ip
 argument_list|)
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_tooshort
 operator|++
@@ -557,7 +563,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_toosmall
 operator|++
@@ -588,7 +594,7 @@ operator|!=
 name|IPVERSION
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badvers
 operator|++
@@ -618,7 +624,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* minimum header length */
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badlen
 operator|++
@@ -652,7 +658,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badhlen
 operator|++
@@ -733,7 +739,7 @@ condition|(
 name|sum
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badsum
 operator|++
@@ -776,7 +782,7 @@ operator|<
 name|ip_len
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_tooshort
 operator|++
@@ -874,7 +880,7 @@ operator|==
 name|IN_LOOPBACKNET
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badaddr
 operator|++
@@ -1101,7 +1107,7 @@ condition|)
 return|return
 name|m
 return|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_total
 operator|++
@@ -1272,7 +1278,7 @@ name|IPSTEALTH
 if|if
 condition|(
 operator|!
-name|ipstealth
+name|V_ipstealth
 condition|)
 block|{
 endif|#
@@ -1751,7 +1757,7 @@ operator|.
 name|ifq_maxlen
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_odropped
 operator|++
@@ -1914,7 +1920,7 @@ operator|&
 name|IP_DF
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantfrag
 operator|++
@@ -2083,7 +2089,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragmented
 operator|++
@@ -2096,7 +2102,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_odropped
 operator|++
@@ -2112,12 +2118,12 @@ operator|.
 name|rmx_pksent
 operator|++
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_forward
 operator|++
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fastforward
 operator|++

@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -394,7 +400,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantforward
 operator|++

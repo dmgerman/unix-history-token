@@ -302,6 +302,12 @@ directive|include
 file|<sys/sx.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -8162,7 +8168,7 @@ argument|; 		h->ip_tos = IPTOS_LOWDELAY;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|h->ip_off = path_mtu_discovery ? IP_DF :
+argument|h->ip_off = V_path_mtu_discovery ? IP_DF :
 literal|0
 argument|; 		h->ip_len = len;
 else|#
@@ -8172,7 +8178,7 @@ literal|0
 argument|); 		h->ip_len = htons(len);
 endif|#
 directive|endif
-argument|h->ip_ttl = ttl ? ttl : ip_defttl; 		h->ip_sum =
+argument|h->ip_ttl = ttl ? ttl : V_ip_defttl; 		h->ip_sum =
 literal|0
 argument|; 		if (eh == NULL) {
 ifdef|#
@@ -8960,7 +8966,7 @@ argument|); 		sport = pd->hdr.tcp->th_sport; 		dport = pd->hdr.tcp->th_dport;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|pi =&tcbinfo;
+argument|pi =&V_tcbinfo;
 else|#
 directive|else
 argument|tb =&tcbtable;
@@ -8972,7 +8978,7 @@ argument|); 		sport = pd->hdr.udp->uh_sport; 		dport = pd->hdr.udp->uh_dport;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|pi =&udbinfo;
+argument|pi =&V_udbinfo;
 else|#
 directive|else
 argument|tb =&udbtable;
@@ -9077,7 +9083,7 @@ argument|) 				optlen =
 literal|2
 argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (wscale); }  u_int16_t pf_get_mss(struct mbuf *m, int off, u_int16_t th_off, sa_family_t af) { 	int		 hlen; 	u_int8_t	 hdr[
 literal|60
-argument|]; 	u_int8_t	*opt, optlen; 	u_int16_t	 mss = tcp_mssdflt;  	hlen = th_off<<
+argument|]; 	u_int8_t	*opt, optlen; 	u_int16_t	 mss = V_tcp_mssdflt;  	hlen = th_off<<
 literal|2
 argument|;
 comment|/* hlen<= sizeof(hdr) */
@@ -9116,7 +9122,7 @@ argument|struct rtentry		*rt = NULL; 	int			 hlen =
 literal|0
 argument|;
 comment|/* make the compiler happy */
-argument|u_int16_t		 mss = tcp_mssdflt;  	switch (af) {
+argument|u_int16_t		 mss = V_tcp_mssdflt;  	switch (af) {
 ifdef|#
 directive|ifdef
 name|INET
@@ -9173,7 +9179,7 @@ argument|rt = ro6.ro_rt; 		break;
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|}  	if (rt&& rt->rt_ifp) { 		mss = rt->rt_ifp->if_mtu - hlen - sizeof(struct tcphdr); 		mss = max(tcp_mssdflt, mss); 		RTFREE(rt); 	} 	mss = min(mss, offer); 	mss = max(mss,
+argument|}  	if (rt&& rt->rt_ifp) { 		mss = rt->rt_ifp->if_mtu - hlen - sizeof(struct tcphdr); 		mss = max(V_tcp_mssdflt, mss); 		RTFREE(rt); 	} 	mss = min(mss, offer); 	mss = max(mss,
 literal|64
 argument|);
 comment|/* sanity - at least max opt space */
@@ -9217,7 +9223,7 @@ literal|1
 argument_list|,
 argument|rtableid = -
 literal|1
-argument|; 	u_int16_t		 mss = tcp_mssdflt; 	int			 asd =
+argument|; 	u_int16_t		 mss = V_tcp_mssdflt; 	int			 asd =
 literal|0
 argument|; 	int			 match =
 literal|0
@@ -17854,7 +17860,7 @@ argument|)); 		goto bad; 	}  	ip = mtod(m0, struct ip *);  	ro =&iproute; 	bzero
 literal|0
 argument|); 		if (ro->ro_rt ==
 literal|0
-argument|) { 			ipstat.ips_noroute++; 			goto bad; 		}  		ifp = ro->ro_rt->rt_ifp; 		ro->ro_rt->rt_use++;  		if (ro->ro_rt->rt_flags& RTF_GATEWAY) 			dst = satosin(ro->ro_rt->rt_gateway); 	} else { 		if (TAILQ_EMPTY(&r->rpool.list)) { 			DPFPRINTF(PF_DEBUG_URGENT, 			    (
+argument|) { 			V_ipstat.ips_noroute++; 			goto bad; 		}  		ifp = ro->ro_rt->rt_ifp; 		ro->ro_rt->rt_use++;  		if (ro->ro_rt->rt_flags& RTF_GATEWAY) 			dst = satosin(ro->ro_rt->rt_gateway); 	} else { 		if (TAILQ_EMPTY(&r->rpool.list)) { 			DPFPRINTF(PF_DEBUG_URGENT, 			    (
 literal|"pf_route: TAILQ_EMPTY(&r->rpool.list)\n"
 argument|)); 			goto bad; 		} 		if (s == NULL) { 			pf_map_addr(AF_INET, r, (struct pf_addr *)&ip->ip_src,&naddr, NULL,&sn); 			if (!PF_AZERO(&naddr, AF_INET)) 				dst->sin_addr.s_addr = naddr.v4.s_addr; 			ifp = r->rpool.cur->kif ? 			    r->rpool.cur->kif->pfik_ifp : NULL; 		} else { 			if (!PF_AZERO(&s->rt_addr, AF_INET)) 				dst->sin_addr.s_addr = 				    s->rt_addr.v4.s_addr; 			ifp = s->rt_kif ? s->rt_kif->pfik_ifp : NULL; 		} 	} 	if (ifp == NULL) 		goto bad;  	if (oifp != ifp) {
 ifdef|#
@@ -17912,17 +17918,17 @@ argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) { 		if (!(ifp->if_capabi
 comment|/* Clear */
 argument|} 	} else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) { 		if (!(ifp->if_capabilities& IFCAP_CSUM_UDPv4) || 		    ifp->if_bridge != NULL) { 			in_delayed_cksum(m0); 			m0->m_pkthdr.csum_flags&= ~M_UDPV4_CSUM_OUT;
 comment|/* Clear */
-argument|} 	}  	if (ntohs(ip->ip_len)<= ifp->if_mtu) { 		if ((ifp->if_capabilities& IFCAP_CSUM_IPv4)&& 		    ifp->if_bridge == NULL) { 			m0->m_pkthdr.csum_flags |= M_IPV4_CSUM_OUT; 			ipstat.ips_outhwcsum++; 		} else { 			ip->ip_sum =
+argument|} 	}  	if (ntohs(ip->ip_len)<= ifp->if_mtu) { 		if ((ifp->if_capabilities& IFCAP_CSUM_IPv4)&& 		    ifp->if_bridge == NULL) { 			m0->m_pkthdr.csum_flags |= M_IPV4_CSUM_OUT; 			V_ipstat.ips_outhwcsum++; 		} else { 			ip->ip_sum =
 literal|0
 argument|; 			ip->ip_sum = in_cksum(m0, ip->ip_hl<<
 literal|2
 argument|); 		}
 comment|/* Update relevant hardware checksum stats for TCP/UDP */
-argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			tcpstat.tcps_outhwcsum++; 		else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) 			udpstat.udps_outhwcsum++; 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
+argument|if (m0->m_pkthdr.csum_flags& M_TCPV4_CSUM_OUT) 			V_tcpstat.tcps_outhwcsum++; 		else if (m0->m_pkthdr.csum_flags& M_UDPV4_CSUM_OUT) 			V_udpstat.udps_outhwcsum++; 		error = (*ifp->if_output)(ifp, m0, sintosa(dst), NULL); 		goto done; 	}
 endif|#
 directive|endif
 comment|/* 	 * Too large for interface; fragment if possible. 	 * Must be able to put at least 8 bytes per fragment. 	 */
-argument|if (ip->ip_off& htons(IP_DF)) { 		ipstat.ips_cantfrag++; 		if (r->rt != PF_DUPTO) {
+argument|if (ip->ip_off& htons(IP_DF)) { 		V_ipstat.ips_cantfrag++; 		if (r->rt != PF_DUPTO) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -17974,7 +17980,7 @@ endif|#
 directive|endif
 argument|m_freem(m0); 	}  	if (error ==
 literal|0
-argument|) 		ipstat.ips_fragmented++;  done: 	if (r->rt != PF_DUPTO) 		*m = NULL; 	if (ro ==&iproute&& ro->ro_rt) 		RTFREE(ro->ro_rt); 	return;  bad: 	m_freem(m0); 	goto done; }
+argument|) 		V_ipstat.ips_fragmented++;  done: 	if (r->rt != PF_DUPTO) 		*m = NULL; 	if (ro ==&iproute&& ro->ro_rt) 		RTFREE(ro->ro_rt); 	return;  bad: 	m_freem(m0); 	goto done; }
 endif|#
 directive|endif
 comment|/* INET */
@@ -18111,11 +18117,11 @@ directive|endif
 comment|/* INET6 */
 argument|default: 			return (
 literal|1
-argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 			tcpstat.tcps_rcvbadsum++; 			break; 		case IPPROTO_UDP: 			udpstat.udps_badsum++; 			break; 		case IPPROTO_ICMP: 			icmpstat.icps_checksum++; 			break;
+argument|); 		} 	} 	if (sum) { 		switch (p) { 		case IPPROTO_TCP: 			V_tcpstat.tcps_rcvbadsum++; 			break; 		case IPPROTO_UDP: 			V_udpstat.udps_badsum++; 			break; 		case IPPROTO_ICMP: 			V_icmpstat.icps_checksum++; 			break;
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: 			icmp6stat.icp6s_checksum++; 			break;
+argument|case IPPROTO_ICMPV6: 			V_icmp6stat.icp6s_checksum++; 			break;
 endif|#
 directive|endif
 comment|/* INET6 */
@@ -18173,11 +18179,11 @@ directive|endif
 comment|/* INET6 */
 argument|default: 		return (
 literal|1
-argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			tcpstat.tcps_rcvbadsum++; 			break; 		case IPPROTO_UDP: 			udpstat.udps_badsum++; 			break; 		case IPPROTO_ICMP: 			icmpstat.icps_checksum++; 			break;
+argument|); 	} 	if (sum) { 		m->m_pkthdr.csum_flags |= flag_bad; 		switch (p) { 		case IPPROTO_TCP: 			V_tcpstat.tcps_rcvbadsum++; 			break; 		case IPPROTO_UDP: 			V_udpstat.udps_badsum++; 			break; 		case IPPROTO_ICMP: 			V_icmpstat.icps_checksum++; 			break;
 ifdef|#
 directive|ifdef
 name|INET6
-argument|case IPPROTO_ICMPV6: 			icmp6stat.icp6s_checksum++; 			break;
+argument|case IPPROTO_ICMPV6: 			V_icmp6stat.icp6s_checksum++; 			break;
 endif|#
 directive|endif
 comment|/* INET6 */

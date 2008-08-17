@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -289,7 +295,7 @@ decl_stmt|;
 comment|/* Seed if this is the first use, reseed if requested. */
 if|if
 condition|(
-name|isn_last_reseed
+name|V_isn_last_reseed
 operator|==
 literal|0
 condition|)
@@ -297,15 +303,15 @@ block|{
 name|read_random
 argument_list|(
 operator|&
-name|isn_secret
+name|V_isn_secret
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|isn_secret
+name|V_isn_secret
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|isn_last_reseed
+name|V_isn_last_reseed
 operator|=
 name|ticks
 expr_stmt|;
@@ -355,13 +361,13 @@ comment|/* Compute the md5 hash and return the ISN. */
 name|MD5Init
 argument_list|(
 operator|&
-name|isn_ctx
+name|V_isn_ctx
 argument_list|)
 expr_stmt|;
 name|MD5Update
 argument_list|(
 operator|&
-name|isn_ctx
+name|V_isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -381,7 +387,7 @@ expr_stmt|;
 name|MD5Update
 argument_list|(
 operator|&
-name|isn_ctx
+name|V_isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -413,7 +419,7 @@ block|{
 name|MD5Update
 argument_list|(
 operator|&
-name|isn_ctx
+name|V_isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -434,7 +440,7 @@ expr_stmt|;
 name|MD5Update
 argument_list|(
 operator|&
-name|isn_ctx
+name|V_isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -460,7 +466,7 @@ block|{
 name|MD5Update
 argument_list|(
 operator|&
-name|isn_ctx
+name|V_isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -481,7 +487,7 @@ expr_stmt|;
 name|MD5Update
 argument_list|(
 operator|&
-name|isn_ctx
+name|V_isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -503,18 +509,18 @@ block|}
 name|MD5Update
 argument_list|(
 operator|&
-name|isn_ctx
+name|V_isn_ctx
 argument_list|,
 operator|(
 name|u_char
 operator|*
 operator|)
 operator|&
-name|isn_secret
+name|V_isn_secret
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|isn_secret
+name|V_isn_secret
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -528,7 +534,7 @@ operator|&
 name|md5_buffer
 argument_list|,
 operator|&
-name|isn_ctx
+name|V_isn_ctx
 argument_list|)
 expr_stmt|;
 name|new_isn
@@ -541,7 +547,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|isn_offset
+name|V_isn_offset
 operator|+=
 name|ISN_STATIC_INCREMENT
 operator|+
@@ -554,7 +560,7 @@ operator|)
 expr_stmt|;
 name|new_isn
 operator|+=
-name|isn_offset
+name|V_isn_offset
 expr_stmt|;
 return|return
 operator|(

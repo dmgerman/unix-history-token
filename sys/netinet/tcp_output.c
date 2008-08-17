@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -727,7 +733,7 @@ comment|/* 		 * We have been idle for "a while" and no acks are 		 * expected to
 name|int
 name|ss
 init|=
-name|ss_fltsz
+name|V_ss_fltsz
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -751,7 +757,7 @@ argument_list|)
 condition|)
 name|ss
 operator|=
-name|ss_fltsz_local
+name|V_ss_fltsz_local
 expr_stmt|;
 block|}
 elseif|else
@@ -771,7 +777,7 @@ argument_list|)
 condition|)
 name|ss
 operator|=
-name|ss_fltsz_local
+name|V_ss_fltsz_local
 expr_stmt|;
 name|tp
 operator|->
@@ -1090,12 +1096,12 @@ name|sendalot
 operator|=
 literal|1
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sack_rexmits
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sack_rexmit_bytes
 operator|+=
@@ -1457,7 +1463,7 @@ expr_stmt|;
 comment|/* 	 * Automatic sizing of send socket buffer.  Often the send buffer 	 * size is not optimally adjusted to the actual network conditions 	 * at hand (delay bandwidth product).  Setting the buffer size too 	 * small limits throughput on links with high bandwidth and high 	 * delay (eg. trans-continental/oceanic links).  Setting the 	 * buffer size too big consumes too much real kernel memory, 	 * especially with many connections on busy servers. 	 * 	 * The criteria to step up the send buffer one notch are: 	 *  1. receive window of remote host is larger than send buffer 	 *     (with a fudge factor of 5/4th); 	 *  2. send buffer is filled to 7/8th with data (so we actually 	 *     have data to make use of it); 	 *  3. send buffer fill has not hit maximal automatic size; 	 *  4. our send window (slow start and cogestion controlled) is 	 *     larger than sent but unacknowledged data in send buffer. 	 * 	 * The remote host receive window scaling factor may limit the 	 * growing of the send buffer before it reaches its allowed 	 * maximum. 	 * 	 * It scales directly with slow start or congestion window 	 * and does at most one step per received ACK.  This fast 	 * scaling has the drawback of growing the send buffer beyond 	 * what is strictly necessary to make full use of a given 	 * delay*bandwith product.  However testing has shown this not 	 * to be much of an problem.  At worst we are trading wasting 	 * of available bandwith (the non-use of it) for wasting some 	 * socket buffer memory. 	 * 	 * TODO: Shrink send buffer during idle periods together 	 * with congestion window.  Requires another timer.  Has to 	 * wait for upcoming tcp timer rewrite. 	 */
 if|if
 condition|(
-name|tcp_do_autosndbuf
+name|V_tcp_do_autosndbuf
 operator|&&
 name|so
 operator|->
@@ -1510,7 +1516,7 @@ name|so_snd
 operator|.
 name|sb_cc
 operator|<
-name|tcp_autosndbuf_max
+name|V_tcp_autosndbuf_max
 operator|&&
 name|sendwin
 operator|>=
@@ -1551,9 +1557,9 @@ name|so_snd
 operator|.
 name|sb_hiwat
 operator|+
-name|tcp_autosndbuf_inc
+name|V_tcp_autosndbuf_inc
 argument_list|,
-name|tcp_autosndbuf_max
+name|V_tcp_autosndbuf_max
 argument_list|)
 argument_list|,
 name|so
@@ -1605,7 +1611,7 @@ operator|&
 name|TF_TSO
 operator|)
 operator|&&
-name|tcp_do_tso
+name|V_tcp_do_tso
 operator|&&
 operator|(
 operator|(
@@ -2716,7 +2722,7 @@ name|len
 operator|==
 literal|1
 condition|)
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndprobe
 operator|++
@@ -2738,12 +2744,12 @@ operator|||
 name|sack_rxmit
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndrexmitpack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndrexmitbyte
 operator|+=
@@ -2752,12 +2758,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndpack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndbyte
 operator|+=
@@ -3082,7 +3088,7 @@ name|t_flags
 operator|&
 name|TF_ACKNOW
 condition|)
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndacks
 operator|++
@@ -3100,7 +3106,7 @@ operator||
 name|TH_RST
 operator|)
 condition|)
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndctrl
 operator|++
@@ -3119,13 +3125,13 @@ operator|->
 name|snd_una
 argument_list|)
 condition|)
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndurg
 operator|++
 expr_stmt|;
 else|else
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndwinup
 operator|++
@@ -3362,7 +3368,7 @@ name|t_state
 operator|==
 name|TCPS_SYN_SENT
 operator|&&
-name|tcp_do_ecn
+name|V_tcp_do_ecn
 condition|)
 block|{
 if|if
@@ -3380,7 +3386,7 @@ name|tp
 operator|->
 name|t_rxtshift
 operator|<=
-name|tcp_ecn_maxretries
+name|V_tcp_ecn_maxretries
 condition|)
 name|flags
 operator||=
@@ -3475,7 +3481,7 @@ name|ip_tos
 operator||=
 name|IPTOS_ECN_ECT0
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_ecn_ect0
 operator|++
@@ -4206,7 +4212,7 @@ name|t_rtseq
 operator|=
 name|startseq
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_segstimed
 operator|++
@@ -4551,7 +4557,7 @@ comment|/* INET6 */
 comment|/* 	 * If we do path MTU discovery, then we set DF on every packet. 	 * This might not be the best thing to do according to RFC3390 	 * Section 2. However the tcp hostcache migitates the problem 	 * so it affects only the first tcp connection with a host. 	 */
 if|if
 condition|(
-name|path_mtu_discovery
+name|V_path_mtu_discovery
 condition|)
 name|ip
 operator|->
@@ -4830,7 +4836,7 @@ operator|)
 return|;
 block|}
 block|}
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndtotal
 operator|++
@@ -4906,7 +4912,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * This completely breaks TCP if newreno is turned on.  What happens 	 * is that if delayed-acks are turned on on the receiver, this code 	 * on the transmitter effectively destroys the TCP window, forcing 	 * it to four packets (1.5Kx4 = 6K window). 	 */
-block|if (sendalot&& (!tcp_do_newreno || --maxburst)) 		goto again;
+block|if (sendalot&& (!V_tcp_do_newreno || --maxburst)) 		goto again;
 endif|#
 directive|endif
 if|if
@@ -5667,7 +5673,7 @@ name|sack
 operator|++
 expr_stmt|;
 block|}
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sack_send_blocks
 operator|++

@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -349,7 +355,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|in6_ifaddr
+name|V_in6_ifaddr
 condition|)
 comment|/* XXX broken! */
 return|return
@@ -454,7 +460,7 @@ name|sa6_embedscope
 argument_list|(
 name|sin6
 argument_list|,
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 argument_list|)
 operator|)
 operator|!=
@@ -598,14 +604,14 @@ argument_list|(
 name|lport
 argument_list|)
 operator|<=
-name|ipport_reservedhigh
+name|V_ipport_reservedhigh
 operator|&&
 name|ntohs
 argument_list|(
 name|lport
 argument_list|)
 operator|>=
-name|ipport_reservedlow
+name|V_ipport_reservedlow
 operator|&&
 name|priv_check_cred
 argument_list|(
@@ -1285,7 +1291,7 @@ operator|==
 literal|0
 operator|&&
 operator|!
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 condition|)
 name|scope_ambiguous
 operator|=
@@ -1300,7 +1306,7 @@ name|sa6_embedscope
 argument_list|(
 name|sin6
 argument_list|,
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 argument_list|)
 operator|)
 operator|!=
@@ -1313,7 +1319,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|in6_ifaddr
+name|V_in6_ifaddr
 condition|)
 block|{
 comment|/* 		 * If the destination address is UNSPECIFIED addr, 		 * use the loopback addr, e.g ::1. 		 */

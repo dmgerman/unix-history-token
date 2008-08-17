@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -13290,7 +13296,7 @@ name|rule
 operator|!=
 name|NULL
 operator|&&
-name|fw_one_pass
+name|V_fw_one_pass
 condition|)
 goto|goto
 name|ipfwpass
@@ -14178,7 +14184,7 @@ name|NULL
 condition|)
 block|{
 comment|/* XXXJRT new stat, please */
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_toosmall
 operator|++
@@ -14225,7 +14231,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_toosmall
 operator|++
@@ -14264,7 +14270,7 @@ operator|!=
 name|IPVERSION
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badvers
 operator|++
@@ -14293,7 +14299,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* minimum header length */
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badhlen
 operator|++
@@ -14327,7 +14333,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badhlen
 operator|++
@@ -14421,7 +14427,7 @@ condition|(
 name|sum
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badsum
 operator|++
@@ -14448,7 +14454,7 @@ operator|<
 name|hlen
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badlen
 operator|++
@@ -14469,7 +14475,7 @@ operator|<
 name|len
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_tooshort
 operator|++
@@ -14597,7 +14603,7 @@ name|NULL
 condition|)
 block|{
 comment|/* XXXJRT new stat, please */
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_toosmall
 operator|++
@@ -14662,7 +14668,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_toosmall
 operator|++
@@ -14703,7 +14709,7 @@ operator|!=
 name|IPV6_VERSION
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badvers
 operator|++
@@ -15001,7 +15007,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragmented
 operator|++

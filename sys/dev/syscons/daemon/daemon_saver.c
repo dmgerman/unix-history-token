@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pc/display.h>
 end_include
 
@@ -1645,7 +1651,7 @@ name|messagelen
 operator|=
 name|strlen
 argument_list|(
-name|hostname
+name|G_hostname
 argument_list|)
 operator|+
 literal|3
@@ -1681,7 +1687,7 @@ name|message
 argument_list|,
 literal|"%s - %s %s"
 argument_list|,
-name|hostname
+name|G_hostname
 argument_list|,
 name|ostype
 argument_list|,

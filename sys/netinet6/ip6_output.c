@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1646,7 +1652,7 @@ argument_list|(
 operator|&
 name|sa
 argument_list|,
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 argument_list|)
 operator|)
 operator|!=
@@ -1753,7 +1759,7 @@ name|error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -1777,7 +1783,7 @@ name|error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -1786,7 +1792,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_localout
 operator|++
@@ -1988,7 +1994,7 @@ name|ip6
 operator|->
 name|ip6_hlim
 operator|=
-name|ip6_defmcasthlim
+name|V_ip6_defmcasthlim
 expr_stmt|;
 block|}
 ifdef|#
@@ -2282,7 +2288,7 @@ block|{
 case|case
 name|EHOSTUNREACH
 case|:
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_noroute
 operator|++
@@ -2551,7 +2557,7 @@ name|routefound
 goto|;
 name|badscope
 label|:
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -2707,7 +2713,7 @@ name|IFF_MULTICAST
 operator|)
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_noroute
 operator|++
@@ -3233,7 +3239,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-name|loif
+name|V_loif
 expr_stmt|;
 if|if
 condition|(
@@ -3690,7 +3696,7 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_odropped
 operator|++
@@ -3865,7 +3871,7 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_odropped
 operator|++
@@ -3956,7 +3962,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_odropped
 operator|++
@@ -4057,7 +4063,7 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_odropped
 operator|++
@@ -4115,7 +4121,7 @@ name|ip6f_nxt
 operator|=
 name|nextproto
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_ofragments
 operator|++
@@ -4245,7 +4251,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_fragmented
 operator|++
@@ -9759,7 +9765,7 @@ name|im6o
 operator|->
 name|im6o_multicast_hlim
 operator|=
-name|ip6_defmcasthlim
+name|V_ip6_defmcasthlim
 expr_stmt|;
 name|im6o
 operator|->
@@ -9832,7 +9838,7 @@ name|ifindex
 operator|<
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|ifindex
 condition|)
@@ -9957,7 +9963,7 @@ name|im6o
 operator|->
 name|im6o_multicast_hlim
 operator|=
-name|ip6_defmcasthlim
+name|V_ip6_defmcasthlim
 expr_stmt|;
 else|else
 name|im6o
@@ -10240,7 +10246,7 @@ name|ipv6mr_interface
 operator|<
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|mreq
 operator|->
@@ -10470,7 +10476,7 @@ name|ipv6mr_interface
 operator|<
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|mreq
 operator|->
@@ -10601,7 +10607,7 @@ argument_list|(
 operator|&
 name|sa6_mc
 argument_list|,
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 argument_list|)
 expr_stmt|;
 if|if
@@ -10734,7 +10740,7 @@ name|im6o
 operator|->
 name|im6o_multicast_hlim
 operator|==
-name|ip6_defmcasthlim
+name|V_ip6_defmcasthlim
 operator|&&
 name|im6o
 operator|->
@@ -10916,7 +10922,7 @@ condition|)
 operator|*
 name|hlim
 operator|=
-name|ip6_defmcasthlim
+name|V_ip6_defmcasthlim
 expr_stmt|;
 else|else
 operator|*
@@ -10966,7 +10972,7 @@ condition|)
 operator|*
 name|loop
 operator|=
-name|ip6_defmcasthlim
+name|V_ip6_defmcasthlim
 expr_stmt|;
 else|else
 operator|*
@@ -11597,7 +11603,7 @@ name|pktinfo
 operator|->
 name|ipi6_ifindex
 operator|>
-name|if_index
+name|V_if_index
 operator|||
 name|pktinfo
 operator|->
@@ -11982,7 +11988,7 @@ name|sa6_embedscope
 argument_list|(
 name|sa6
 argument_list|,
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 argument_list|)
 operator|)
 operator|!=

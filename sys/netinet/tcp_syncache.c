@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -1108,7 +1114,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|((tcp_syncache.hash_secret ^					\ 	  (inc)->inc_faddr.s_addr ^					\ 	  ((inc)->inc_faddr.s_addr>> 16) ^				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
+value|((V_tcp_syncache.hash_secret ^					\ 	  (inc)->inc_faddr.s_addr ^					\ 	  ((inc)->inc_faddr.s_addr>> 16) ^				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
 end_define
 
 begin_define
@@ -1121,7 +1127,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|((tcp_syncache.hash_secret ^					\ 	  (inc)->inc6_faddr.s6_addr32[0] ^				\ 	  (inc)->inc6_faddr.s6_addr32[3] ^				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
+value|((V_tcp_syncache.hash_secret ^					\ 	  (inc)->inc6_faddr.s6_addr32[0] ^				\ 	  (inc)->inc6_faddr.s6_addr32[3] ^				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
 end_define
 
 begin_define
@@ -1224,7 +1230,7 @@ endif|#
 directive|endif
 name|uma_zfree
 argument_list|(
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|zone
 argument_list|,
@@ -1244,31 +1250,31 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|cache_count
 operator|=
 literal|0
 expr_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 operator|=
 name|TCP_SYNCACHE_HASHSIZE
 expr_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|bucket_limit
 operator|=
 name|TCP_SYNCACHE_BUCKETLIMIT
 expr_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|rexmt_limit
 operator|=
 name|SYNCACHE_MAXREXMTS
 expr_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hash_secret
 operator|=
@@ -1280,7 +1286,7 @@ argument_list|(
 literal|"net.inet.tcp.syncache.hashsize"
 argument_list|,
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 argument_list|)
@@ -1290,7 +1296,7 @@ argument_list|(
 literal|"net.inet.tcp.syncache.bucketlimit"
 argument_list|,
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|bucket_limit
 argument_list|)
@@ -1300,12 +1306,12 @@ condition|(
 operator|!
 name|powerof2
 argument_list|(
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 argument_list|)
 operator|||
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 operator|==
@@ -1317,33 +1323,33 @@ argument_list|(
 literal|"WARNING: syncache hash size is not a power of 2.\n"
 argument_list|)
 expr_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 operator|=
 name|TCP_SYNCACHE_HASHSIZE
 expr_stmt|;
 block|}
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashmask
 operator|=
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 operator|-
 literal|1
 expr_stmt|;
 comment|/* Set limits. */
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|cache_limit
 operator|=
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 operator|*
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|bucket_limit
 expr_stmt|;
@@ -1352,7 +1358,7 @@ argument_list|(
 literal|"net.inet.tcp.syncache.cachelimit"
 argument_list|,
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|cache_limit
 argument_list|)
@@ -1360,7 +1366,7 @@ expr_stmt|;
 comment|/* Allocate the hash table. */
 name|MALLOC
 argument_list|(
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 argument_list|,
@@ -1368,7 +1374,7 @@ expr|struct
 name|syncache_head
 operator|*
 argument_list|,
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 operator|*
@@ -1394,7 +1400,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 condition|;
@@ -1405,7 +1411,7 @@ block|{
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[
@@ -1418,7 +1424,7 @@ expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[
@@ -1437,7 +1443,7 @@ expr_stmt|;
 name|callout_init_mtx
 argument_list|(
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[
@@ -1447,7 +1453,7 @@ operator|.
 name|sch_timer
 argument_list|,
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[
@@ -1459,7 +1465,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[
@@ -1472,7 +1478,7 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* Create the syncache entry zone. */
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|zone
 operator|=
@@ -1501,11 +1507,11 @@ argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|zone
 argument_list|,
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|cache_limit
 argument_list|)
@@ -1550,7 +1556,7 @@ name|sch
 operator|->
 name|sch_length
 operator|>=
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|bucket_limit
 condition|)
@@ -1590,7 +1596,7 @@ argument_list|,
 name|sch
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_bucketoverflow
 operator|++
@@ -1645,12 +1651,12 @@ argument_list|(
 name|sch
 argument_list|)
 expr_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|cache_count
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_added
 operator|++
@@ -1729,7 +1735,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|cache_count
 operator|--
@@ -1945,7 +1951,7 @@ name|sc
 operator|->
 name|sc_rxmits
 operator|>
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|rexmt_limit
 condition|)
@@ -1998,7 +2004,7 @@ argument_list|,
 name|sch
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_stale
 operator|++
@@ -2058,7 +2064,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_retransmitted
 operator|++
@@ -2162,7 +2168,7 @@ block|{
 name|sch
 operator|=
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[
@@ -2170,7 +2176,7 @@ name|SYNCACHE_HASH6
 argument_list|(
 name|inc
 argument_list|,
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashmask
 argument_list|)
@@ -2227,7 +2233,7 @@ block|{
 name|sch
 operator|=
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[
@@ -2235,7 +2241,7 @@ name|SYNCACHE_HASH
 argument_list|(
 name|inc
 argument_list|,
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashmask
 argument_list|)
@@ -2410,7 +2416,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_badrst
 operator|++
@@ -2457,7 +2463,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_badrst
 operator|++
@@ -2532,7 +2538,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_reset
 operator|++
@@ -2581,7 +2587,7 @@ operator|->
 name|sc_wnd
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_badrst
 operator|++
@@ -2660,7 +2666,7 @@ argument_list|,
 name|sch
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_badack
 operator|++
@@ -2780,7 +2786,7 @@ argument_list|,
 name|sch
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_unreach
 operator|++
@@ -2846,7 +2852,7 @@ decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ok, create the full blown connection, and set things up 	 * as they would have been set up if we had created the 	 * connection when the SYN arrived.  If we can't create 	 * the connection, abort it. 	 */
@@ -2867,7 +2873,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Drop the connection; we will either send a RST or 		 * have the peer retransmit its SYN again after its 		 * RTO and try again. 		 */
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_listendrop
 operator|++
@@ -3761,7 +3767,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_accepts
 operator|++
@@ -3856,7 +3862,7 @@ comment|/* 	 * Global TCP locks are held because we manipulate the PCB lists 	 *
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -4049,7 +4055,7 @@ operator|->
 name|sch_length
 operator|--
 expr_stmt|;
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|cache_count
 operator|--
@@ -4340,13 +4346,13 @@ name|lsop
 operator|==
 name|NULL
 condition|)
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_aborted
 operator|++
 expr_stmt|;
 else|else
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_completed
 operator|++
@@ -4450,7 +4456,7 @@ decl_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|rc
@@ -4471,7 +4477,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -4606,7 +4612,7 @@ decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -4746,7 +4752,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4771,7 +4777,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remember the IP options, if any. 	 */
@@ -4848,7 +4854,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_dupsyn
 operator|++
@@ -5017,12 +5023,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndacks
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndtotal
 operator|++
@@ -5041,7 +5047,7 @@ name|sc
 operator|=
 name|uma_zalloc
 argument_list|(
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|zone
 argument_list|,
@@ -5058,7 +5064,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * The zone allocator couldn't provide more entries. 		 * Treat this as if the cache was full; drop the oldest 		 * entry and insert the new one. 		 */
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_zonefail
 operator|++
@@ -5092,7 +5098,7 @@ name|sc
 operator|=
 name|uma_zalloc
 argument_list|(
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|zone
 argument_list|,
@@ -5298,7 +5304,7 @@ name|win
 expr_stmt|;
 if|if
 condition|(
-name|tcp_do_rfc1323
+name|V_tcp_do_rfc1323
 condition|)
 block|{
 comment|/* 		 * A timestamp received in a SYN makes 		 * it ok to send timestamp requests and replies. 		 */
@@ -5461,7 +5467,7 @@ name|TH_CWR
 operator|)
 operator|)
 operator|&&
-name|tcp_do_ecn
+name|V_tcp_do_ecn
 condition|)
 name|sc
 operator|->
@@ -5579,12 +5585,12 @@ name|sch
 argument_list|)
 expr_stmt|;
 comment|/* locks and unlocks sch */
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndacks
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndtotal
 operator|++
@@ -5604,7 +5610,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_dropped
 operator|++
@@ -5773,7 +5779,7 @@ argument_list|,
 name|mssopt
 argument_list|)
 argument_list|,
-name|tcp_minmss
+name|V_tcp_minmss
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Assume that the entire packet will fit in a header mbuf. */
@@ -6053,7 +6059,7 @@ expr_stmt|;
 comment|/* 		 * See if we should do MTU discovery.  Route lookups are 		 * expensive, so we will only unset the DF bit if: 		 * 		 *	1) path_mtu_discovery is disabled 		 *	2) the SCF_UNREACH flag has been set 		 */
 if|if
 condition|(
-name|path_mtu_discovery
+name|V_path_mtu_discovery
 operator|&&
 operator|(
 operator|(
@@ -6189,7 +6195,7 @@ name|th_flags
 operator||=
 name|TH_ECE
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_ecn_shs
 operator|++
@@ -6695,7 +6701,7 @@ block|{
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -6923,7 +6929,7 @@ name|sc_inc
 argument_list|)
 argument_list|)
 argument_list|,
-name|tcp_minmss
+name|V_tcp_minmss
 argument_list|)
 expr_stmt|;
 for|for
@@ -7215,7 +7221,7 @@ name|ticks
 expr_stmt|;
 comment|/* after XOR */
 block|}
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_sendcookie
 operator|++
@@ -7825,7 +7831,7 @@ index|[
 name|mss
 index|]
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sc_recvcookie
 operator|++
@@ -7871,7 +7877,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 condition|;
@@ -7883,7 +7889,7 @@ comment|/* No need to lock for a read. */
 name|sch
 operator|=
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[
@@ -7961,7 +7967,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashsize
 condition|;
@@ -7972,7 +7978,7 @@ block|{
 name|sch
 operator|=
 operator|&
-name|tcp_syncache
+name|V_tcp_syncache
 operator|.
 name|hashbase
 index|[

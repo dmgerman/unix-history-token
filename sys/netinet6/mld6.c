@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -342,10 +348,10 @@ expr_stmt|;
 name|ip6_initpktopts
 argument_list|(
 operator|&
-name|ip6_opts
+name|V_ip6_opts
 argument_list|)
 expr_stmt|;
-name|ip6_opts
+name|V_ip6_opts
 operator|.
 name|ip6po_hbh
 operator|=
@@ -1074,7 +1080,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -1909,7 +1915,7 @@ name|NULL
 operator|)
 expr_stmt|;
 comment|/* increment output statictics */
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outhist
 index|[
@@ -1922,7 +1928,7 @@ argument_list|(
 name|mh
 argument_list|,
 operator|&
-name|ip6_opts
+name|V_ip6_opts
 argument_list|,
 name|NULL
 argument_list|,

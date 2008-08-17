@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -7931,7 +7937,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&in_ifaddrhead
+argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
@@ -8814,7 +8820,7 @@ for|for
 control|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ia
 condition|;

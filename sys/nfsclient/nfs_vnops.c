@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -7518,7 +7524,7 @@ operator|!
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 condition|)
 operator|*
@@ -7530,7 +7536,7 @@ argument_list|(
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 argument_list|)
 operator|->

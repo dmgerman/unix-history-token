@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2661,7 +2667,7 @@ comment|/* Run packet through ipfw processing, if enabled */
 if|#
 directive|if
 literal|0
-block|if (priv->conf.ipfw[linkNum]&& fw_enable&& ip_fw_chk_ptr != NULL) {
+block|if (priv->conf.ipfw[linkNum]&& V_fw_enable&& ip_fw_chk_ptr != NULL) {
 comment|/* XXX not implemented yet */
 block|}
 endif|#

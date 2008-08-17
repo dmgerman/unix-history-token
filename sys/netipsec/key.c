@@ -329,6 +329,12 @@ directive|include
 file|<sys/random.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -3491,7 +3497,7 @@ condition|?
 name|LIST_FIRST
 argument_list|(
 operator|&
-name|sptree
+name|V_sptree
 index|[
 name|dir
 index|]
@@ -3602,7 +3608,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[dir]
+argument|&V_sptree[dir]
 argument_list|,
 argument|chain
 argument_list|)
@@ -3819,7 +3825,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[dir]
+argument|&V_sptree[dir]
 argument_list|,
 argument|chain
 argument_list|)
@@ -4114,7 +4120,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[dir]
+argument|&V_sptree[dir]
 argument_list|,
 argument|chain
 argument_list|)
@@ -4689,7 +4695,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -4720,7 +4726,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|key_preferred_oldsa
+name|V_key_preferred_oldsa
 condition|)
 block|{
 name|state_valid
@@ -4942,7 +4948,7 @@ expr_stmt|;
 comment|/* What the best method is to compare ? */
 if|if
 condition|(
-name|key_preferred_oldsa
+name|V_key_preferred_oldsa
 condition|)
 block|{
 if|if
@@ -5454,7 +5460,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|key_preferred_oldsa
+name|V_key_preferred_oldsa
 condition|)
 block|{
 name|saorder_state_valid
@@ -5487,7 +5493,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -6348,7 +6354,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[spidx->dir]
+argument|&V_sptree[spidx->dir]
 argument_list|,
 argument|chain
 argument_list|)
@@ -6419,7 +6425,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[IPSEC_DIR_INBOUND]
+argument|&V_sptree[IPSEC_DIR_INBOUND]
 argument_list|,
 argument|chain
 argument_list|)
@@ -6456,7 +6462,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[IPSEC_DIR_OUTBOUND]
+argument|&V_sptree[IPSEC_DIR_OUTBOUND]
 argument_list|,
 argument|chain
 argument_list|)
@@ -9408,7 +9414,7 @@ expr_stmt|;
 name|LIST_INSERT_TAIL
 argument_list|(
 operator|&
-name|sptree
+name|V_sptree
 index|[
 name|newsp
 operator|->
@@ -9766,7 +9772,7 @@ decl_stmt|;
 name|int
 name|count
 init|=
-name|key_spi_trycnt
+name|V_key_spi_trycnt
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -9784,17 +9790,17 @@ block|{
 name|newid
 operator|=
 operator|(
-name|policy_id
+name|V_policy_id
 operator|=
 operator|(
-name|policy_id
+name|V_policy_id
 operator|==
 operator|~
 literal|0
 condition|?
 literal|1
 else|:
-name|policy_id
+name|V_policy_id
 operator|+
 literal|1
 operator|)
@@ -11169,7 +11175,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|key_blockacq_count
+name|V_key_blockacq_count
 operator|<
 name|newspacq
 operator|->
@@ -11455,7 +11461,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[dir]
+argument|&V_sptree[dir]
 argument_list|,
 argument|chain
 argument_list|)
@@ -11707,7 +11713,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[dir]
+argument|&V_sptree[dir]
 argument_list|,
 argument|chain
 argument_list|)
@@ -11751,7 +11757,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[dir]
+argument|&V_sptree[dir]
 argument_list|,
 argument|chain
 argument_list|)
@@ -12983,7 +12989,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|sahtree
+name|V_sahtree
 argument_list|,
 name|newsah
 argument_list|,
@@ -13060,7 +13066,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|saorder_state_any
+name|V_saorder_state_any
 argument_list|)
 condition|;
 name|stateidx
@@ -13070,7 +13076,7 @@ block|{
 name|u_int
 name|state
 init|=
-name|saorder_state_any
+name|V_saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -13378,10 +13384,10 @@ operator|->
 name|seq
 operator|=
 operator|(
-name|acq_seq
+name|V_acq_seq
 operator|=
 operator|(
-name|acq_seq
+name|V_acq_seq
 operator|==
 operator|~
 literal|0
@@ -13389,7 +13395,7 @@ condition|?
 literal|1
 else|:
 operator|++
-name|acq_seq
+name|V_acq_seq
 operator|)
 operator|)
 expr_stmt|;
@@ -14084,7 +14090,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -14204,7 +14210,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -14306,7 +14312,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|saorder_state_alive
+name|V_saorder_state_alive
 argument_list|)
 condition|;
 name|stateidx
@@ -14315,7 +14321,7 @@ control|)
 block|{
 name|state
 operator|=
-name|saorder_state_alive
+name|V_saorder_state_alive
 index|[
 name|stateidx
 index|]
@@ -17734,7 +17740,7 @@ for|for
 control|(
 name|ia
 operator|=
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 operator|.
 name|tqh_first
 init|;
@@ -17863,7 +17869,7 @@ for|for
 control|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ia
 condition|;
@@ -19388,7 +19394,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sp
 argument_list|,
-argument|&sptree[dir]
+argument|&V_sptree[dir]
 argument_list|,
 argument|chain
 argument_list|)
@@ -19547,7 +19553,7 @@ name|LIST_FOREACH_SAFE
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|,
@@ -19591,7 +19597,7 @@ name|sav
 operator|->
 name|created
 operator|>
-name|key_larval_lifetime
+name|V_key_larval_lifetime
 condition|)
 name|KEY_FREESAV
 argument_list|(
@@ -19965,7 +19971,7 @@ operator|=
 name|LIST_FIRST
 argument_list|(
 operator|&
-name|acqtree
+name|V_acqtree
 argument_list|)
 init|;
 name|acq
@@ -19994,7 +20000,7 @@ name|acq
 operator|->
 name|created
 operator|>
-name|key_blockacq_lifetime
+name|V_key_blockacq_lifetime
 operator|&&
 name|__LIST_CHAINED
 argument_list|(
@@ -20052,7 +20058,7 @@ operator|=
 name|LIST_FIRST
 argument_list|(
 operator|&
-name|spacqtree
+name|V_spacqtree
 argument_list|)
 init|;
 name|acq
@@ -20081,7 +20087,7 @@ name|acq
 operator|->
 name|created
 operator|>
-name|key_blockacq_lifetime
+name|V_key_blockacq_lifetime
 operator|&&
 name|__LIST_CHAINED
 argument_list|(
@@ -21686,7 +21692,7 @@ decl_stmt|;
 name|int
 name|count
 init|=
-name|key_spi_trycnt
+name|V_key_spi_trycnt
 decl_stmt|;
 comment|/* set spi range to allocate */
 if|if
@@ -21713,11 +21719,11 @@ else|else
 block|{
 name|min
 operator|=
-name|key_spi_minval
+name|V_key_spi_minval
 expr_stmt|;
 name|max
 operator|=
-name|key_spi_maxval
+name|V_key_spi_maxval
 expr_stmt|;
 block|}
 comment|/* IPCOMP needs 2-byte SPI */
@@ -21901,7 +21907,7 @@ name|keystat
 operator|.
 name|getspi_count
 operator|+
-name|key_spi_trycnt
+name|V_key_spi_trycnt
 operator|-
 name|count
 operator|)
@@ -24735,7 +24741,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -25100,7 +25106,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -25143,7 +25149,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|saorder_state_alive
+name|V_saorder_state_alive
 argument_list|)
 condition|;
 name|stateidx
@@ -25152,7 +25158,7 @@ control|)
 block|{
 name|state
 operator|=
-name|saorder_state_alive
+name|V_saorder_state_alive
 index|[
 name|stateidx
 index|]
@@ -25722,7 +25728,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -26097,7 +26103,7 @@ operator|->
 name|maxkey
 argument_list|)
 operator|<
-name|ipsec_esp_keymin
+name|V_ipsec_esp_keymin
 condition|)
 continue|continue;
 if|if
@@ -26109,11 +26115,11 @@ operator|->
 name|minkey
 argument_list|)
 operator|<
-name|ipsec_esp_keymin
+name|V_ipsec_esp_keymin
 condition|)
 name|encmin
 operator|=
-name|ipsec_esp_keymin
+name|V_ipsec_esp_keymin
 expr_stmt|;
 else|else
 name|encmin
@@ -26127,7 +26133,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ipsec_esp_auth
+name|V_ipsec_esp_auth
 condition|)
 name|m
 operator|=
@@ -26611,7 +26617,7 @@ argument_list|(
 name|minkeysize
 argument_list|)
 operator|<
-name|ipsec_ah_keymin
+name|V_ipsec_ah_keymin
 condition|)
 continue|continue;
 if|if
@@ -27229,7 +27235,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|key_blockacq_count
+name|V_key_blockacq_count
 operator|<
 name|newacq
 operator|->
@@ -27716,7 +27722,7 @@ operator|->
 name|seq
 operator|=
 operator|(
-name|acq_seq
+name|V_acq_seq
 operator|==
 operator|~
 literal|0
@@ -27724,7 +27730,7 @@ condition|?
 literal|1
 else|:
 operator|++
-name|acq_seq
+name|V_acq_seq
 operator|)
 expr_stmt|;
 name|newacq
@@ -27746,7 +27752,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|acqtree
+name|V_acqtree
 argument_list|,
 name|newacq
 argument_list|,
@@ -27788,7 +27794,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|acq
 argument_list|,
-argument|&acqtree
+argument|&V_acqtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -27843,7 +27849,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|acq
 argument_list|,
-argument|&acqtree
+argument|&V_acqtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -27964,7 +27970,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|spacqtree
+name|V_spacqtree
 argument_list|,
 name|acq
 argument_list|,
@@ -28007,7 +28013,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|acq
 argument_list|,
-argument|&spacqtree
+argument|&V_spacqtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -28466,7 +28472,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -28686,12 +28692,12 @@ name|sadb_msg_satype
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|regtree
+name|V_regtree
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|regtree
+name|V_regtree
 index|[
 literal|0
 index|]
@@ -28729,7 +28735,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|reg
 argument_list|,
-argument|&regtree[mhp->msg->sadb_msg_satype]
+argument|&V_regtree[mhp->msg->sadb_msg_satype]
 argument_list|,
 argument|chain
 argument_list|)
@@ -28844,7 +28850,7 @@ comment|/* add regnode to regtree. */
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|regtree
+name|V_regtree
 index|[
 name|mhp
 operator|->
@@ -29560,7 +29566,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|reg
 argument_list|,
-argument|&regtree[i]
+argument|&V_regtree[i]
 argument_list|,
 argument|chain
 argument_list|)
@@ -30435,7 +30441,7 @@ operator|=
 name|LIST_FIRST
 argument_list|(
 operator|&
-name|sahtree
+name|V_sahtree
 argument_list|)
 init|;
 name|sah
@@ -30485,7 +30491,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|saorder_state_alive
+name|V_saorder_state_alive
 argument_list|)
 condition|;
 name|stateidx
@@ -30494,7 +30500,7 @@ control|)
 block|{
 name|state
 operator|=
-name|saorder_state_any
+name|V_saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -30851,7 +30857,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -30885,7 +30891,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|saorder_state_any
+name|V_saorder_state_any
 argument_list|)
 condition|;
 name|stateidx
@@ -30894,7 +30900,7 @@ control|)
 block|{
 name|state
 operator|=
-name|saorder_state_any
+name|V_saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -30944,7 +30950,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)
@@ -31023,7 +31029,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|saorder_state_any
+name|V_saorder_state_any
 argument_list|)
 condition|;
 name|stateidx
@@ -31032,7 +31038,7 @@ control|)
 block|{
 name|state
 operator|=
-name|saorder_state_any
+name|V_saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -31648,7 +31654,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invlen
 operator|++
@@ -31685,7 +31691,7 @@ name|sadb_msg_version
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invver
 operator|++
@@ -31722,7 +31728,7 @@ name|sadb_msg_type
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invmsgtype
 operator|++
@@ -31967,7 +31973,7 @@ name|sadb_msg_type
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invsatype
 operator|++
@@ -32039,7 +32045,7 @@ name|sadb_msg_type
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invsatype
 operator|++
@@ -32080,7 +32086,7 @@ name|sadb_msg_satype
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invsatype
 operator|++
@@ -32122,7 +32128,7 @@ name|sadb_msg_satype
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invsatype
 operator|++
@@ -32224,7 +32230,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invaddr
 operator|++
@@ -32266,7 +32272,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invaddr
 operator|++
@@ -32308,7 +32314,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invaddr
 operator|++
@@ -32350,7 +32356,7 @@ name|sockaddr_in
 argument_list|)
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invaddr
 operator|++
@@ -32383,7 +32389,7 @@ name|sockaddr_in6
 argument_list|)
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invaddr
 operator|++
@@ -32409,7 +32415,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invaddr
 operator|++
@@ -32495,7 +32501,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invaddr
 operator|++
@@ -32539,7 +32545,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invmsgtype
 operator|++
@@ -32984,7 +32990,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_dupext
 operator|++
@@ -33015,7 +33021,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invexttype
 operator|++
@@ -33048,7 +33054,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invlen
 operator|++
@@ -33146,7 +33152,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pfkeystat
+name|V_pfkeystat
 operator|.
 name|out_invlen
 operator|++
@@ -33511,7 +33517,7 @@ control|)
 name|LIST_INIT
 argument_list|(
 operator|&
-name|sptree
+name|V_sptree
 index|[
 name|i
 index|]
@@ -33520,7 +33526,7 @@ expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
-name|sahtree
+name|V_sahtree
 argument_list|)
 expr_stmt|;
 for|for
@@ -33539,7 +33545,7 @@ control|)
 name|LIST_INIT
 argument_list|(
 operator|&
-name|regtree
+name|V_regtree
 index|[
 name|i
 index|]
@@ -33548,23 +33554,23 @@ expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
-name|acqtree
+name|V_acqtree
 argument_list|)
 expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
-name|spacqtree
+name|V_spacqtree
 argument_list|)
 expr_stmt|;
 comment|/* system default */
-name|ip4_def_policy
+name|V_ip4_def_policy
 operator|.
 name|policy
 operator|=
 name|IPSEC_POLICY_NONE
 expr_stmt|;
-name|ip4_def_policy
+name|V_ip4_def_policy
 operator|.
 name|refcnt
 operator|++
@@ -33783,7 +33789,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sah
 argument_list|,
-argument|&sahtree
+argument|&V_sahtree
 argument_list|,
 argument|chain
 argument_list|)

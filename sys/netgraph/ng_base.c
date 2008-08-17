@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -581,7 +587,7 @@ parameter_list|,
 name|node
 parameter_list|)
 define|\
-value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(node,&ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
+value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(node,&V_ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
 end_define
 
 begin_define
@@ -2477,7 +2483,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|ng_name_hash
+name|V_ng_name_hash
 index|[
 literal|0
 index|]
@@ -2516,7 +2522,7 @@ name|node
 operator|->
 name|nd_ID
 operator|=
-name|nextID
+name|V_nextID
 operator|++
 expr_stmt|;
 comment|/* 137/second for 1 year before wrap */
@@ -2554,7 +2560,7 @@ block|}
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|ng_ID_hash
+name|V_ng_ID_hash
 index|[
 name|NG_IDHASH_FN
 argument_list|(
@@ -3167,7 +3173,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|ng_name_hash
+name|V_ng_name_hash
 index|[
 name|hash
 index|]
@@ -3283,7 +3289,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|node
 argument_list|,
-argument|&ng_name_hash[hash]
+argument|&V_ng_name_hash[hash]
 argument_list|,
 argument|nd_nodes
 argument_list|)
@@ -9576,7 +9582,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|node
 argument_list|,
-argument|&ng_name_hash[i]
+argument|&V_ng_name_hash[i]
 argument_list|,
 argument|nd_nodes
 argument_list|)
@@ -9691,7 +9697,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|node
 argument_list|,
-argument|&ng_name_hash[i]
+argument|&V_ng_name_hash[i]
 argument_list|,
 argument|nd_nodes
 argument_list|)

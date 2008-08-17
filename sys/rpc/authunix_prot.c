@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/types.h>
 end_include
 
@@ -189,7 +195,7 @@ name|namelen
 operator|=
 name|strlen
 argument_list|(
-name|hostname
+name|V_hostname
 argument_list|)
 expr_stmt|;
 if|if
@@ -255,7 +261,7 @@ name|xdr_opaque
 argument_list|(
 name|xdrs
 argument_list|,
-name|hostname
+name|V_hostname
 argument_list|,
 name|namelen
 argument_list|)

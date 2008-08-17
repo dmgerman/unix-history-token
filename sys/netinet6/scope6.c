@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -197,11 +203,11 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|sid_default
+name|V_sid_default
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sid_default
+name|V_sid_default
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -478,7 +484,7 @@ index|[
 name|i
 index|]
 operator|>
-name|if_index
+name|V_if_index
 condition|)
 block|{
 comment|/* 				 * XXX: theoretically, there should be no 				 * relationship between link IDs and interface 				 * IDs, but we check the consistency for 				 * safety in later use. 				 */
@@ -811,7 +817,7 @@ condition|(
 name|ifp
 condition|)
 block|{
-name|sid_default
+name|V_sid_default
 operator|.
 name|s6id_list
 index|[
@@ -822,7 +828,7 @@ name|ifp
 operator|->
 name|if_index
 expr_stmt|;
-name|sid_default
+name|V_sid_default
 operator|.
 name|s6id_list
 index|[
@@ -836,7 +842,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sid_default
+name|V_sid_default
 operator|.
 name|s6id_list
 index|[
@@ -845,7 +851,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|sid_default
+name|V_sid_default
 operator|.
 name|s6id_list
 index|[
@@ -877,7 +883,7 @@ expr_stmt|;
 operator|*
 name|idlist
 operator|=
-name|sid_default
+name|V_sid_default
 expr_stmt|;
 name|SCOPE6_UNLOCK
 argument_list|()
@@ -922,7 +928,7 @@ argument_list|()
 expr_stmt|;
 name|id
 operator|=
-name|sid_default
+name|V_sid_default
 operator|.
 name|s6id_list
 index|[
@@ -1020,7 +1026,7 @@ block|{
 comment|/* 		 * At this moment, we only check interface-local and 		 * link-local scope IDs, and use interface indices as the 		 * zone IDs assuming a one-to-one mapping between interfaces 		 * and links. 		 */
 if|if
 condition|(
-name|if_index
+name|V_if_index
 operator|<
 name|zoneid
 condition|)
@@ -1179,7 +1185,7 @@ name|zoneid
 operator|<
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|zoneid
 condition|)

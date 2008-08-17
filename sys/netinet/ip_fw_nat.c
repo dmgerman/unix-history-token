@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/libalias/alias.h>
 end_include
 
@@ -321,7 +327,7 @@ decl_stmt|;
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 comment|/* Check every nat entry... */
@@ -329,7 +335,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|ptr
 argument_list|,
-argument|&layer3_chain.nat
+argument|&V_layer3_chain.nat
 argument_list|,
 argument|_next
 argument_list|)
@@ -434,7 +440,7 @@ block|}
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 block|}
@@ -458,14 +464,14 @@ decl_stmt|;
 name|IPFW_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|rule
 operator|=
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|rules
 init|;
@@ -537,7 +543,7 @@ name|b
 parameter_list|,
 name|p
 parameter_list|)
-value|do {				\ 		IPFW_WLOCK_ASSERT(&layer3_chain);	\ 		LIST_INSERT_HEAD(b, p, _next);		\ 	} while (0)
+value|do {				\ 		IPFW_WLOCK_ASSERT(&V_layer3_chain);	\ 		LIST_INSERT_HEAD(b, p, _next);		\ 	} while (0)
 end_define
 
 begin_define
@@ -547,7 +553,7 @@ name|UNHOOK_NAT
 parameter_list|(
 name|p
 parameter_list|)
-value|do {				\ 		IPFW_WLOCK_ASSERT(&layer3_chain);	\ 		LIST_REMOVE(p, _next);			\ 	} while (0)
+value|do {				\ 		IPFW_WLOCK_ASSERT(&V_layer3_chain);	\ 		LIST_REMOVE(p, _next);			\ 	} while (0)
 end_define
 
 begin_define
@@ -1830,12 +1836,12 @@ comment|/*  	 * Find/create nat rule. 	 */
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|LOOKUP_NAT
 argument_list|(
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|ser_n
 operator|->
@@ -1879,7 +1885,7 @@ block|{
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|free
@@ -1916,7 +1922,7 @@ block|{
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|free
@@ -1967,7 +1973,7 @@ block|}
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Basic nat configuration. 	 */
@@ -2083,13 +2089,13 @@ expr_stmt|;
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|HOOK_NAT
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|nat
 argument_list|,
@@ -2099,7 +2105,7 @@ expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 return|return
@@ -2146,12 +2152,12 @@ expr_stmt|;
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|LOOKUP_NAT
 argument_list|(
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|i
 argument_list|,
@@ -2168,7 +2174,7 @@ block|{
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 return|return
@@ -2190,7 +2196,7 @@ expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|del_redir_spool_cfg
@@ -2287,7 +2293,7 @@ expr_stmt|;
 name|IPFW_RLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 comment|/* Serialize all the data. */
@@ -2295,7 +2301,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|n
 argument_list|,
-argument|&layer3_chain.nat
+argument|&V_layer3_chain.nat
 argument_list|,
 argument|_next
 argument_list|)
@@ -2433,7 +2439,7 @@ expr_stmt|;
 name|IPFW_RUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|sooptcopyout
@@ -2462,7 +2468,7 @@ label|:
 name|IPFW_RUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2530,7 +2536,7 @@ expr_stmt|;
 name|IPFW_RLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|size
@@ -2543,7 +2549,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|ptr
 argument_list|,
-argument|&layer3_chain.nat
+argument|&V_layer3_chain.nat
 argument_list|,
 argument|_next
 argument_list|)
@@ -2600,7 +2606,7 @@ block|{
 name|IPFW_RUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 return|return
@@ -2660,7 +2666,7 @@ block|}
 name|IPFW_RUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|sooptcopyout
@@ -2698,7 +2704,7 @@ block|{
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 comment|/* init ipfw hooks */
@@ -2725,10 +2731,10 @@ expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
-name|ifaddr_event_tag
+name|V_ifaddr_event_tag
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
@@ -2768,14 +2774,14 @@ decl_stmt|;
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH_SAFE
 argument_list|(
 argument|ptr
 argument_list|,
-argument|&layer3_chain.nat
+argument|&V_layer3_chain.nat
 argument_list|,
 argument|_next
 argument_list|,
@@ -2818,7 +2824,7 @@ name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|ifaddr_event
 argument_list|,
-name|ifaddr_event_tag
+name|V_ifaddr_event_tag
 argument_list|)
 expr_stmt|;
 comment|/* flush all nat ptrs */
@@ -2826,7 +2832,7 @@ for|for
 control|(
 name|rule
 operator|=
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|rules
 init|;
@@ -2877,7 +2883,7 @@ expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 block|}

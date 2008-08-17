@@ -229,6 +229,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2465,7 +2471,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|mdc
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -3408,27 +3414,27 @@ block|{
 comment|/* bogus pkt */
 if|if
 condition|(
-name|verbose_limit
+name|V_verbose_limit
 operator|!=
 literal|0
 operator|&&
-name|norule_counter
+name|V_norule_counter
 operator|>=
-name|verbose_limit
+name|V_verbose_limit
 condition|)
 return|return;
-name|norule_counter
+name|V_norule_counter
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|norule_counter
+name|V_norule_counter
 operator|==
-name|verbose_limit
+name|V_verbose_limit
 condition|)
 name|limit_reached
 operator|=
-name|verbose_limit
+name|V_verbose_limit
 expr_stmt|;
 name|action
 operator|=
@@ -4936,7 +4942,7 @@ expr_stmt|;
 name|i
 operator|&=
 operator|(
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 operator|-
 literal|1
 operator|)
@@ -4964,7 +4970,7 @@ name|q
 parameter_list|)
 value|{				\ 	ipfw_dyn_rule *old_q = q;					\ 									\
 comment|/* remove a refcount to the parent */
-value|\ 	if (q->dyn_type == O_LIMIT)					\ 		q->parent->count--;					\ 	DEB(printf("ipfw: unlink entry 0x%08x %d -> 0x%08x %d, %d left\n",\ 		(q->id.src_ip), (q->id.src_port),			\ 		(q->id.dst_ip), (q->id.dst_port), dyn_count-1 ); )	\ 	if (prev != NULL)						\ 		prev->next = q = q->next;				\ 	else								\ 		head = q = q->next;					\ 	dyn_count--;							\ 	uma_zfree(ipfw_dyn_rule_zone, old_q); }
+value|\ 	if (q->dyn_type == O_LIMIT)					\ 		q->parent->count--;					\ 	DEB(printf("ipfw: unlink entry 0x%08x %d -> 0x%08x %d, %d left\n",\ 		(q->id.src_ip), (q->id.src_port),			\ 		(q->id.dst_ip), (q->id.dst_port), V_dyn_count-1 ); )	\ 	if (prev != NULL)						\ 		prev->next = q = q->next;				\ 	else								\ 		head = q = q->next;					\ 	V_dyn_count--;							\ 	uma_zfree(ipfw_dyn_rule_zone, old_q); }
 end_define
 
 begin_define
@@ -5031,11 +5037,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 operator|==
 name|NULL
 operator|||
-name|dyn_count
+name|V_dyn_count
 operator|==
 literal|0
 condition|)
@@ -5066,7 +5072,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 condition|;
 name|i
 operator|++
@@ -5080,7 +5086,7 @@ name|NULL
 operator|,
 name|q
 operator|=
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
@@ -5201,7 +5207,7 @@ name|UNLINK_DYN_RULE
 argument_list|(
 name|prev
 argument_list|,
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
@@ -5301,7 +5307,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 operator|==
 name|NULL
 condition|)
@@ -5324,7 +5330,7 @@ name|NULL
 operator|,
 name|q
 operator|=
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
@@ -5367,7 +5373,7 @@ name|UNLINK_DYN_RULE
 argument_list|(
 name|prev
 argument_list|,
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
@@ -5684,12 +5690,12 @@ name|q
 operator|->
 name|next
 operator|=
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
 expr_stmt|;
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
@@ -5765,7 +5771,7 @@ name|expire
 operator|=
 name|time_uptime
 operator|+
-name|dyn_syn_lifetime
+name|V_dyn_syn_lifetime
 expr_stmt|;
 break|break;
 case|case
@@ -5885,7 +5891,7 @@ name|expire
 operator|=
 name|time_uptime
 operator|+
-name|dyn_ack_lifetime
+name|V_dyn_ack_lifetime
 expr_stmt|;
 break|break;
 case|case
@@ -5896,13 +5902,13 @@ case|:
 comment|/* both sides closed */
 if|if
 condition|(
-name|dyn_fin_lifetime
+name|V_dyn_fin_lifetime
 operator|>=
-name|dyn_keepalive_period
+name|V_dyn_keepalive_period
 condition|)
-name|dyn_fin_lifetime
+name|V_dyn_fin_lifetime
 operator|=
-name|dyn_keepalive_period
+name|V_dyn_keepalive_period
 operator|-
 literal|1
 expr_stmt|;
@@ -5912,7 +5918,7 @@ name|expire
 operator|=
 name|time_uptime
 operator|+
-name|dyn_fin_lifetime
+name|V_dyn_fin_lifetime
 expr_stmt|;
 break|break;
 default|default:
@@ -5925,13 +5931,13 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|dyn_rst_lifetime
+name|V_dyn_rst_lifetime
 operator|>=
-name|dyn_keepalive_period
+name|V_dyn_keepalive_period
 condition|)
-name|dyn_rst_lifetime
+name|V_dyn_rst_lifetime
 operator|=
-name|dyn_keepalive_period
+name|V_dyn_keepalive_period
 operator|-
 literal|1
 expr_stmt|;
@@ -5941,7 +5947,7 @@ name|expire
 operator|=
 name|time_uptime
 operator|+
-name|dyn_rst_lifetime
+name|V_dyn_rst_lifetime
 expr_stmt|;
 break|break;
 block|}
@@ -5962,7 +5968,7 @@ name|expire
 operator|=
 name|time_uptime
 operator|+
-name|dyn_udp_lifetime
+name|V_dyn_udp_lifetime
 expr_stmt|;
 block|}
 else|else
@@ -5974,7 +5980,7 @@ name|expire
 operator|=
 name|time_uptime
 operator|+
-name|dyn_short_lifetime
+name|V_dyn_short_lifetime
 expr_stmt|;
 block|}
 name|done
@@ -6063,21 +6069,21 @@ expr_stmt|;
 comment|/* 	 * Try reallocation, make sure we have a power of 2 and do 	 * not allow more than 64k entries. In case of overflow, 	 * default to 1024. 	 */
 if|if
 condition|(
-name|dyn_buckets
+name|V_dyn_buckets
 operator|>
 literal|65536
 condition|)
-name|dyn_buckets
+name|V_dyn_buckets
 operator|=
 literal|1024
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|dyn_buckets
+name|V_dyn_buckets
 operator|&
 operator|(
-name|dyn_buckets
+name|V_dyn_buckets
 operator|-
 literal|1
 operator|)
@@ -6087,26 +6093,26 @@ literal|0
 condition|)
 block|{
 comment|/* not a power of 2 */
-name|dyn_buckets
+name|V_dyn_buckets
 operator|=
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 expr_stmt|;
 comment|/* reset */
 return|return;
 block|}
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 operator|=
-name|dyn_buckets
+name|V_dyn_buckets
 expr_stmt|;
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 operator|!=
 name|NULL
 condition|)
 name|free
 argument_list|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 argument_list|,
 name|M_IPFW
 argument_list|)
@@ -6117,11 +6123,11 @@ init|;
 condition|;
 control|)
 block|{
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 operator|=
 name|malloc
 argument_list|(
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -6138,16 +6144,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 operator|!=
 name|NULL
 operator|||
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 operator|<=
 literal|2
 condition|)
 break|break;
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 operator|/=
 literal|2
 expr_stmt|;
@@ -6191,18 +6197,18 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 operator|==
 name|NULL
 operator|||
 operator|(
-name|dyn_count
+name|V_dyn_count
 operator|==
 literal|0
 operator|&&
-name|dyn_buckets
+name|V_dyn_buckets
 operator|!=
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 operator|)
 condition|)
 block|{
@@ -6211,7 +6217,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 operator|==
 name|NULL
 condition|)
@@ -6316,7 +6322,7 @@ name|expire
 operator|=
 name|time_uptime
 operator|+
-name|dyn_syn_lifetime
+name|V_dyn_syn_lifetime
 expr_stmt|;
 name|r
 operator|->
@@ -6356,26 +6362,26 @@ name|r
 operator|->
 name|next
 operator|=
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
 expr_stmt|;
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
 operator|=
 name|r
 expr_stmt|;
-name|dyn_count
+name|V_dyn_count
 operator|++
 expr_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
 literal|"ipfw: add dyn entry ty %d 0x%08x %d -> 0x%08x %d, total %d\n"
-argument|, 	   dyn_type, 	   (r->id.src_ip), (r->id.src_port), 	   (r->id.dst_ip), (r->id.dst_port), 	   dyn_count );
+argument|, 	   dyn_type, 	   (r->id.src_ip), (r->id.src_port), 	   (r->id.dst_ip), (r->id.dst_port), 	   V_dyn_count );
 argument_list|)
 return|return
 name|r
@@ -6416,7 +6422,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 condition|)
 block|{
 name|int
@@ -6438,7 +6444,7 @@ for|for
 control|(
 name|q
 operator|=
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
@@ -6573,7 +6579,7 @@ name|expire
 operator|=
 name|time_uptime
 operator|+
-name|dyn_short_lifetime
+name|V_dyn_short_lifetime
 expr_stmt|;
 name|DEB
 argument_list|(
@@ -6724,9 +6730,9 @@ return|;
 block|}
 if|if
 condition|(
-name|dyn_count
+name|V_dyn_count
 operator|>=
-name|dyn_max
+name|V_dyn_max
 condition|)
 comment|/* Run out of slots, try to remove any expired rule. */
 name|remove_dyn_rule
@@ -6742,9 +6748,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dyn_count
+name|V_dyn_count
 operator|>=
-name|dyn_max
+name|V_dyn_max
 condition|)
 block|{
 if|if
@@ -7073,7 +7079,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fw_verbose
+name|V_fw_verbose
 operator|&&
 name|last_log
 operator|!=
@@ -7758,7 +7764,7 @@ name|ip
 operator|->
 name|ip_ttl
 operator|=
-name|ip_defttl
+name|V_ip_defttl
 expr_stmt|;
 name|ip
 operator|->
@@ -8337,7 +8343,7 @@ expr_stmt|;
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 if|if
@@ -8371,7 +8377,7 @@ block|{
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|free
@@ -8390,7 +8396,7 @@ block|}
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 return|return
@@ -9514,7 +9520,7 @@ expr_stmt|;
 name|pi
 operator|=
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 expr_stmt|;
 block|}
 elseif|else
@@ -9532,7 +9538,7 @@ expr_stmt|;
 name|pi
 operator|=
 operator|&
-name|udbinfo
+name|V_udbinfo
 expr_stmt|;
 block|}
 else|else
@@ -9939,7 +9945,7 @@ modifier|*
 name|chain
 init|=
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 decl_stmt|;
 name|struct
 name|m_tag
@@ -10385,7 +10391,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fw_deny_unknown_exthdrs
+name|V_fw_deny_unknown_exthdrs
 condition|)
 return|return
 operator|(
@@ -10520,7 +10526,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fw_deny_unknown_exthdrs
+name|V_fw_deny_unknown_exthdrs
 condition|)
 return|return
 operator|(
@@ -10822,7 +10828,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fw_deny_unknown_exthdrs
+name|V_fw_deny_unknown_exthdrs
 condition|)
 return|return
 operator|(
@@ -11268,7 +11274,7 @@ block|{
 comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. 		 * 		 * If fw_one_pass != 0 then just accept it. 		 * XXX should not happen here, but optimized out in 		 * the caller. 		 */
 if|if
 condition|(
-name|fw_one_pass
+name|V_fw_one_pass
 condition|)
 block|{
 name|IPFW_RUNLOCK
@@ -11459,7 +11465,7 @@ name|again
 label|:
 if|if
 condition|(
-name|set_disable
+name|V_set_disable
 operator|&
 operator|(
 literal|1
@@ -13164,7 +13170,7 @@ name|O_LOG
 case|:
 if|if
 condition|(
-name|fw_verbose
+name|V_fw_verbose
 condition|)
 name|ipfw_log
 argument_list|(
@@ -14860,7 +14866,7 @@ name|arg1
 expr_stmt|;
 name|LOOKUP_NAT
 argument_list|(
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|nat_id
 argument_list|,
@@ -15041,7 +15047,7 @@ name|pullup_failed
 label|:
 if|if
 condition|(
-name|fw_verbose
+name|V_fw_verbose
 condition|)
 name|printf
 argument_list|(
@@ -15255,22 +15261,22 @@ block|}
 comment|/* 	 * If rulenum is 0, find highest numbered rule before the 	 * default rule, and add autoinc_step 	 */
 if|if
 condition|(
-name|autoinc_step
+name|V_autoinc_step
 operator|<
 literal|1
 condition|)
-name|autoinc_step
+name|V_autoinc_step
 operator|=
 literal|1
 expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|autoinc_step
+name|V_autoinc_step
 operator|>
 literal|1000
 condition|)
-name|autoinc_step
+name|V_autoinc_step
 operator|=
 literal|1000
 expr_stmt|;
@@ -15327,13 +15333,13 @@ name|rulenum
 operator|<
 name|IPFW_DEFAULT_RULE
 operator|-
-name|autoinc_step
+name|V_autoinc_step
 condition|)
 name|rule
 operator|->
 name|rulenum
 operator|+=
-name|autoinc_step
+name|V_autoinc_step
 expr_stmt|;
 name|input_rule
 operator|->
@@ -15428,7 +15434,7 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|static_count
+name|V_static_count
 operator|++
 expr_stmt|;
 name|static_len
@@ -15444,7 +15450,7 @@ name|DEB
 argument_list|(
 argument|printf(
 literal|"ipfw: installed rule %d, static count now %d\n"
-argument|, 		rule->rulenum, static_count);
+argument|, 		rule->rulenum, V_static_count);
 argument_list|)
 return|return
 operator|(
@@ -15538,7 +15544,7 @@ name|next
 operator|=
 name|n
 expr_stmt|;
-name|static_count
+name|V_static_count
 operator|--
 expr_stmt|;
 name|static_len
@@ -16393,7 +16399,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|norule_counter
+name|V_norule_counter
 operator|=
 literal|0
 expr_stmt|;
@@ -16555,7 +16561,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fw_verbose
+name|V_fw_verbose
 condition|)
 name|log
 argument_list|(
@@ -17786,7 +17792,7 @@ comment|/* 			 * XXX HACK. Store the disable mask in the "next" pointer 			 * in
 name|bcopy
 argument_list|(
 operator|&
-name|set_disable
+name|V_set_disable
 argument_list|,
 operator|&
 operator|(
@@ -17804,7 +17810,7 @@ operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|set_disable
+name|V_set_disable
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -17847,7 +17853,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 condition|)
 block|{
 name|ipfw_dyn_rule
@@ -17870,7 +17876,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 condition|;
 name|i
 operator|++
@@ -17879,7 +17885,7 @@ for|for
 control|(
 name|p
 operator|=
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
@@ -18212,13 +18218,13 @@ expr_stmt|;
 comment|/* size of static rules */
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 condition|)
 comment|/* add size of dyn.rules */
 name|size
 operator|+=
 operator|(
-name|dyn_count
+name|V_dyn_count
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -18249,7 +18255,7 @@ argument_list|,
 name|ipfw_getrules
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|buf
 argument_list|,
@@ -18272,10 +18278,10 @@ comment|/* 		 * Normally we cannot release the lock on each iteration. 		 * We c
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|reap
 operator|=
@@ -18284,7 +18290,7 @@ expr_stmt|;
 name|free_chain
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 literal|0
 comment|/* keep default rule */
@@ -18292,11 +18298,11 @@ argument_list|)
 expr_stmt|;
 name|rule
 operator|=
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|reap
 expr_stmt|;
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|reap
 operator|=
@@ -18305,7 +18311,7 @@ expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 if|if
@@ -18380,7 +18386,7 @@ operator|=
 name|add_rule
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|rule
 argument_list|)
@@ -18474,7 +18480,7 @@ operator|=
 name|del_entry
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|rulenum
 index|[
@@ -18495,10 +18501,10 @@ name|u_int32_t
 argument_list|)
 condition|)
 comment|/* set enable/disable */
-name|set_disable
+name|V_set_disable
 operator|=
 operator|(
-name|set_disable
+name|V_set_disable
 operator||
 name|rulenum
 index|[
@@ -18579,7 +18585,7 @@ operator|=
 name|zero_entry
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|rulenum
 index|[
@@ -18631,7 +18637,7 @@ operator|=
 name|add_table_entry
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|ent
 operator|.
@@ -18689,7 +18695,7 @@ operator|=
 name|del_table_entry
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|ent
 operator|.
@@ -18741,7 +18747,7 @@ break|break;
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|error
@@ -18749,7 +18755,7 @@ operator|=
 name|flush_table
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|tbl
 argument_list|)
@@ -18757,7 +18763,7 @@ expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 block|}
@@ -18799,7 +18805,7 @@ break|break;
 name|IPFW_RLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|error
@@ -18807,7 +18813,7 @@ operator|=
 name|count_table
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|tbl
 argument_list|,
@@ -18818,7 +18824,7 @@ expr_stmt|;
 name|IPFW_RUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 if|if
@@ -18940,7 +18946,7 @@ expr_stmt|;
 name|IPFW_RLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|error
@@ -18948,7 +18954,7 @@ operator|=
 name|dump_table
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 name|tbl
 argument_list|)
@@ -18956,7 +18962,7 @@ expr_stmt|;
 name|IPFW_RUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 if|if
@@ -19195,15 +19201,15 @@ name|q
 decl_stmt|;
 if|if
 condition|(
-name|dyn_keepalive
+name|V_dyn_keepalive
 operator|==
 literal|0
 operator|||
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 operator|==
 name|NULL
 operator|||
-name|dyn_count
+name|V_dyn_count
 operator|==
 literal|0
 condition|)
@@ -19231,7 +19237,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|curr_dyn_buckets
+name|V_curr_dyn_buckets
 condition|;
 name|i
 operator|++
@@ -19241,7 +19247,7 @@ for|for
 control|(
 name|q
 operator|=
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 index|[
 name|i
 index|]
@@ -19294,7 +19300,7 @@ name|TIME_LEQ
 argument_list|(
 name|time_uptime
 operator|+
-name|dyn_keepalive_interval
+name|V_dyn_keepalive_interval
 argument_list|,
 name|q
 operator|->
@@ -19459,9 +19465,9 @@ label|:
 name|callout_reset
 argument_list|(
 operator|&
-name|ipfw_timeout
+name|V_ipfw_timeout
 argument_list|,
-name|dyn_keepalive_period
+name|V_dyn_keepalive_period
 operator|*
 name|hz
 argument_list|,
@@ -19543,7 +19549,7 @@ operator||
 name|CTLFLAG_SECURE3
 argument_list|,
 operator|&
-name|fw6_enable
+name|V_fw6_enable
 argument_list|,
 literal|0
 argument_list|,
@@ -19573,7 +19579,7 @@ operator||
 name|CTLFLAG_SECURE
 argument_list|,
 operator|&
-name|fw_deny_unknown_exthdrs
+name|V_fw_deny_unknown_exthdrs
 argument_list|,
 literal|0
 argument_list|,
@@ -19582,7 +19588,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|rules
 operator|=
@@ -19591,7 +19597,7 @@ expr_stmt|;
 name|IPFW_LOCK_INIT
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|ipfw_dyn_rule_zone
@@ -19624,7 +19630,7 @@ expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
-name|ipfw_timeout
+name|V_ipfw_timeout
 argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
@@ -19698,7 +19704,7 @@ operator|=
 name|add_rule
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 operator|&
 name|default_rule
@@ -19725,7 +19731,7 @@ expr_stmt|;
 name|IPFW_LOCK_DESTROY
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|uma_zdestroy
@@ -19741,7 +19747,7 @@ return|;
 block|}
 name|ip_fw_default_rule
 operator|=
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|rules
 expr_stmt|;
@@ -19808,7 +19814,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_VERBOSE
-name|fw_verbose
+name|V_fw_verbose
 operator|=
 literal|1
 expr_stmt|;
@@ -19817,7 +19823,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_VERBOSE_LIMIT
-name|verbose_limit
+name|V_verbose_limit
 operator|=
 name|IPFIREWALL_VERBOSE_LIMIT
 expr_stmt|;
@@ -19825,7 +19831,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|fw_verbose
+name|V_fw_verbose
 operator|==
 literal|0
 condition|)
@@ -19837,7 +19843,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|verbose_limit
+name|V_verbose_limit
 operator|==
 literal|0
 condition|)
@@ -19851,7 +19857,7 @@ name|printf
 argument_list|(
 literal|"limited to %d packets/entry by default\n"
 argument_list|,
-name|verbose_limit
+name|V_verbose_limit
 argument_list|)
 expr_stmt|;
 name|error
@@ -19859,7 +19865,7 @@ operator|=
 name|init_tables
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 if|if
@@ -19873,7 +19879,7 @@ expr_stmt|;
 name|IPFW_LOCK_DESTROY
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|uma_zdestroy
@@ -19898,7 +19904,7 @@ expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|ipfw_timeout
+name|V_ipfw_timeout
 argument_list|,
 name|hz
 argument_list|,
@@ -19910,7 +19916,7 @@ expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|nat
 argument_list|)
@@ -19946,22 +19952,22 @@ expr_stmt|;
 name|callout_drain
 argument_list|(
 operator|&
-name|ipfw_timeout
+name|V_ipfw_timeout
 argument_list|)
 expr_stmt|;
 name|IPFW_WLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 name|flush_tables
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|reap
 operator|=
@@ -19970,7 +19976,7 @@ expr_stmt|;
 name|free_chain
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|,
 literal|1
 comment|/* kill default rule */
@@ -19978,11 +19984,11 @@ argument_list|)
 expr_stmt|;
 name|reap
 operator|=
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|reap
 operator|,
-name|layer3_chain
+name|V_layer3_chain
 operator|.
 name|reap
 operator|=
@@ -19991,7 +19997,7 @@ expr_stmt|;
 name|IPFW_WUNLOCK
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 if|if
@@ -20015,13 +20021,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 operator|!=
 name|NULL
 condition|)
 name|free
 argument_list|(
-name|ipfw_dyn_v
+name|V_ipfw_dyn_v
 argument_list|,
 name|M_IPFW
 argument_list|)
@@ -20029,7 +20035,7 @@ expr_stmt|;
 name|IPFW_LOCK_DESTROY
 argument_list|(
 operator|&
-name|layer3_chain
+name|V_layer3_chain
 argument_list|)
 expr_stmt|;
 ifdef|#

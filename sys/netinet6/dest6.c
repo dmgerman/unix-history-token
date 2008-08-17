@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -392,7 +398,7 @@ name|dstoptlen
 operator|)
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_toosmall
 operator|++

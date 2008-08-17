@@ -128,6 +128,12 @@ directive|include
 file|<sys/jail.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -648,7 +654,7 @@ directive|endif
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -920,7 +926,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -951,7 +957,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -1061,7 +1067,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -1146,7 +1152,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -1259,7 +1265,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -1447,7 +1453,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -1512,7 +1518,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -1657,7 +1663,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -1715,7 +1721,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -1882,7 +1888,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -2031,7 +2037,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -2132,7 +2138,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -2245,7 +2251,7 @@ return|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -2463,7 +2469,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -2520,7 +2526,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -2597,7 +2603,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -2693,7 +2699,7 @@ expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -2760,7 +2766,7 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -3056,7 +3062,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -3145,7 +3151,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -3361,7 +3367,7 @@ block|{
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -3534,7 +3540,7 @@ comment|/* 			 * Do implied connect if not yet connected, 			 * initialize windo
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3603,7 +3609,7 @@ comment|/* 			 * Close the send side of the connection after 			 * the data is s
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|socantsendmore
@@ -3625,7 +3631,7 @@ block|{
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -3754,7 +3760,7 @@ comment|/* 			 * Do implied connect if not yet connected, 			 * initialize windo
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3814,7 +3820,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -3831,7 +3837,7 @@ block|{
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -3911,7 +3917,7 @@ condition|)
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -3972,7 +3978,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -4081,7 +4087,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -4137,7 +4143,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -4244,7 +4250,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -4730,7 +4736,7 @@ decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -4880,7 +4886,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_connattempt
 operator|++
@@ -4999,7 +5005,7 @@ decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -5211,7 +5217,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_connattempt
 operator|++
@@ -5995,7 +6001,7 @@ name|optval
 operator|+
 literal|40
 operator|>=
-name|tcp_minmss
+name|V_tcp_minmss
 condition|)
 name|tp
 operator|->
@@ -6444,7 +6450,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|error
@@ -6454,7 +6460,7 @@ argument_list|(
 name|so
 argument_list|,
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -6465,7 +6471,7 @@ block|{
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -6569,7 +6575,7 @@ directive|endif
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -6592,7 +6598,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -6639,7 +6645,7 @@ decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -6773,7 +6779,7 @@ block|{
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT

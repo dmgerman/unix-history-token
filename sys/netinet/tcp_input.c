@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -1083,7 +1089,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
+value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
 end_define
 
 begin_comment
@@ -1414,7 +1420,7 @@ name|to_flags
 operator|=
 literal|0
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvtotal
 operator|++
@@ -1470,7 +1476,7 @@ name|tlen
 argument_list|)
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvbadsum
 operator|++
@@ -1590,7 +1596,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvshort
 operator|++
@@ -1804,7 +1810,7 @@ operator|->
 name|th_sum
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvbadsum
 operator|++
@@ -1876,7 +1882,7 @@ operator|>
 name|tlen
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvbadoff
 operator|++
@@ -1987,7 +1993,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvshort
 operator|++
@@ -2117,7 +2123,7 @@ comment|/* 	 * Locate pcb for segment. 	 */
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|findpcb
@@ -2125,7 +2131,7 @@ label|:
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2179,7 +2185,7 @@ operator|=
 name|in_pcblookup_hash
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|,
 name|ip
 operator|->
@@ -2218,7 +2224,7 @@ operator|=
 name|in_pcblookup_hash
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|,
 name|ip
 operator|->
@@ -2284,7 +2290,7 @@ operator|=
 name|in6_pcblookup_hash
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|,
 operator|&
 name|ip6
@@ -2322,7 +2328,7 @@ operator|=
 name|in_pcblookup_hash
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|,
 name|ip
 operator|->
@@ -2416,7 +2422,7 @@ comment|/* 		 * When blackholing do not respond with a RST but 		 * completely i
 if|if
 condition|(
 operator|(
-name|blackhole
+name|V_blackhole
 operator|==
 literal|1
 operator|&&
@@ -2427,7 +2433,7 @@ name|TH_SYN
 operator|)
 operator|)
 operator|||
-name|blackhole
+name|V_blackhole
 operator|==
 literal|2
 condition|)
@@ -2465,7 +2471,7 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|ipsec6stat
+name|V_ipsec6stat
 operator|.
 name|in_polvio
 operator|++
@@ -2490,7 +2496,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ipsec4stat
+name|V_ipsec4stat
 operator|.
 name|in_polvio
 operator|++
@@ -2598,7 +2604,7 @@ goto|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2962,7 +2968,7 @@ argument_list|,
 name|__func__
 argument_list|,
 operator|(
-name|tcp_sc_rst_sock_fail
+name|V_tcp_sc_rst_sock_fail
 condition|?
 literal|"sending RST"
 else|:
@@ -2972,7 +2978,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tcp_sc_rst_sock_fail
+name|V_tcp_sc_rst_sock_fail
 condition|)
 block|{
 name|rstreason
@@ -3051,7 +3057,7 @@ expr_stmt|;
 name|INP_INFO_UNLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3118,7 +3124,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_badsyn
 operator|++
@@ -3172,7 +3178,7 @@ name|inc
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Not needed! */
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_badsyn
 operator|++
@@ -3194,7 +3200,7 @@ operator|&
 name|TH_FIN
 operator|)
 operator|&&
-name|drop_synfin
+name|V_drop_synfin
 condition|)
 block|{
 if|if
@@ -3228,7 +3234,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_badsyn
 operator|++
@@ -3283,7 +3289,7 @@ condition|(
 name|isipv6
 operator|&&
 operator|!
-name|ip6_use_deprecated
+name|V_ip6_use_deprecated
 condition|)
 block|{
 name|struct
@@ -3741,7 +3747,7 @@ comment|/* 		 * Entry added to syncache and mbuf consumed. 		 * Everything alrea
 name|INP_INFO_UNLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3767,7 +3773,7 @@ expr_stmt|;
 name|INP_INFO_UNLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3776,7 +3782,7 @@ label|:
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|tcp_dropwithreset
@@ -3802,7 +3808,7 @@ label|:
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -3819,7 +3825,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|drop
@@ -3827,7 +3833,7 @@ label|:
 name|INP_INFO_UNLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -3953,7 +3959,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -4055,7 +4061,7 @@ name|t_flags
 operator||=
 name|TF_ECN_SND_ECE
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_ecn_ce
 operator|++
@@ -4064,7 +4070,7 @@ break|break;
 case|case
 name|IPTOS_ECN_ECT0
 case|:
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_ecn_ect0
 operator|++
@@ -4073,7 +4079,7 @@ break|break;
 case|case
 name|IPTOS_ECN_ECT1
 case|:
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_ecn_ect1
 operator|++
@@ -4114,7 +4120,7 @@ name|snd_recover
 argument_list|)
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_ecn_rcwnd
 operator|++
@@ -4528,7 +4534,7 @@ operator|&&
 operator|(
 operator|(
 operator|!
-name|tcp_do_newreno
+name|V_tcp_do_newreno
 operator|&&
 operator|!
 operator|(
@@ -4548,7 +4554,7 @@ operator|)
 operator|||
 operator|(
 operator|(
-name|tcp_do_newreno
+name|V_tcp_do_newreno
 operator|||
 operator|(
 name|tp
@@ -4600,7 +4606,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -4609,7 +4615,7 @@ literal|0
 expr_stmt|;
 comment|/* 				 * This is a pure ack for outstanding data. 				 */
 operator|++
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_predack
 expr_stmt|;
@@ -4630,7 +4636,7 @@ name|t_badrxtwin
 condition|)
 block|{
 operator|++
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndrexmitbad
 expr_stmt|;
@@ -4822,12 +4828,12 @@ name|tp
 operator|->
 name|snd_una
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvackpack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvackbyte
 operator|+=
@@ -5054,7 +5060,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -5083,7 +5089,7 @@ name|tp
 argument_list|)
 expr_stmt|;
 operator|++
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_preddat
 expr_stmt|;
@@ -5111,12 +5117,12 @@ name|tp
 operator|->
 name|rcv_nxt
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvpack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvbyte
 operator|+=
@@ -5164,7 +5170,7 @@ directive|endif
 comment|/* 		 * Automatic sizing of receive socket buffer.  Often the send 		 * buffer size is not optimally adjusted to the actual network 		 * conditions at hand (delay bandwidth product).  Setting the 		 * buffer size too small limits throughput on links with high 		 * bandwidth and high delay (eg. trans-continental/oceanic links). 		 * 		 * On the receive side the socket buffer memory is only rarely 		 * used to any significant extent.  This allows us to be much 		 * more aggressive in scaling the receive socket buffer.  For 		 * the case that the buffer space is actually used to a large 		 * extent and we run out of kernel memory we can simply drop 		 * the new segments; TCP on the sender will just retransmit it 		 * later.  Setting the buffer size too big may only consume too 		 * much kernel memory if the application doesn't read() from 		 * the socket or packet loss or reordering makes use of the 		 * reassembly queue. 		 * 		 * The criteria to step up the receive buffer one notch are: 		 *  1. the number of bytes received during the time it takes 		 *     one timestamp to be reflected back to us (the RTT); 		 *  2. received bytes per RTT is within seven eighth of the 		 *     current socket buffer size; 		 *  3. receive buffer size has not hit maximal automatic size; 		 * 		 * This algorithm does one step per RTT at most and only if 		 * we receive a bulk stream w/o packet losses or reorderings. 		 * Shrinking the buffer during idle times is not necessary as 		 * it doesn't consume any memory when idle. 		 * 		 * TODO: Only step up if the application is actually serving 		 * the buffer to better manage the socket buffer resources. 		 */
 if|if
 condition|(
-name|tcp_do_autorcvbuf
+name|V_tcp_do_autorcvbuf
 operator|&&
 name|to
 operator|.
@@ -5226,7 +5232,7 @@ name|so_rcv
 operator|.
 name|sb_hiwat
 operator|<
-name|tcp_autorcvbuf_max
+name|V_tcp_autorcvbuf_max
 condition|)
 block|{
 name|newsize
@@ -5239,9 +5245,9 @@ name|so_rcv
 operator|.
 name|sb_hiwat
 operator|+
-name|tcp_autorcvbuf_inc
+name|V_tcp_autorcvbuf_inc
 argument_list|,
-name|tcp_autorcvbuf_max
+name|V_tcp_autorcvbuf_max
 argument_list|)
 expr_stmt|;
 block|}
@@ -5608,7 +5614,7 @@ operator|&
 name|TH_ACK
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_connects
 operator|++
@@ -5721,7 +5727,7 @@ operator|&
 name|TH_ECE
 operator|)
 operator|&&
-name|tcp_do_ecn
+name|V_tcp_do_ecn
 condition|)
 block|{
 name|tp
@@ -5730,7 +5736,7 @@ name|t_flags
 operator||=
 name|TF_ECN_PERMIT
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_ecn_shs
 operator|++
@@ -5879,12 +5885,12 @@ operator|&=
 operator|~
 name|TH_FIN
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvpackafterwin
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvbyteafterwin
 operator|+=
@@ -5995,7 +6001,7 @@ name|TCPS_ESTABLISHED
 case|:
 if|if
 condition|(
-name|tcp_insecure_rst
+name|V_tcp_insecure_rst
 operator|==
 literal|0
 operator|&&
@@ -6058,7 +6064,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_badrst
 operator|++
@@ -6091,7 +6097,7 @@ name|t_state
 operator|=
 name|TCPS_CLOSED
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_drops
 operator|++
@@ -6204,18 +6210,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvduppack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvdupbyte
 operator|+=
 name|tlen
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_pawsdrop
 operator|++
@@ -6357,12 +6363,12 @@ name|todrop
 operator|=
 name|tlen
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvduppack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvdupbyte
 operator|+=
@@ -6371,12 +6377,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvpartduppack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvpartdupbyte
 operator|+=
@@ -6522,7 +6528,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvafterclose
 operator|++
@@ -6563,7 +6569,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvpackafterwin
 operator|++
@@ -6575,7 +6581,7 @@ operator|>=
 name|tlen
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvbyteafterwin
 operator|+=
@@ -6605,7 +6611,7 @@ name|t_flags
 operator||=
 name|TF_ACKNOW
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvwinprobe
 operator|++
@@ -6617,7 +6623,7 @@ name|dropafterack
 goto|;
 block|}
 else|else
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvbyteafterwin
 operator|+=
@@ -6809,7 +6815,7 @@ comment|/* 	 * In SYN_RECEIVED state, the ack ACKs our SYN, so enter 	 * ESTABLI
 case|case
 name|TCPS_SYN_RECEIVED
 case|:
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_connects
 operator|++
@@ -6987,7 +6993,7 @@ name|snd_max
 argument_list|)
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvacktoomuch
 operator|++
@@ -7064,7 +7070,7 @@ operator|->
 name|snd_wnd
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvdupack
 operator|++
@@ -7106,7 +7112,7 @@ name|tcprexmtthresh
 operator|||
 operator|(
 operator|(
-name|tcp_do_newreno
+name|V_tcp_do_newreno
 operator|||
 operator|(
 name|tp
@@ -7267,9 +7273,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|tcp_do_newreno
+name|V_tcp_do_newreno
 operator|||
-name|tcp_do_ecn
+name|V_tcp_do_ecn
 condition|)
 block|{
 if|if
@@ -7324,7 +7330,7 @@ operator|&
 name|TF_SACK_PERMIT
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sack_recovery_episode
 operator|++
@@ -7442,7 +7448,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|tcp_do_rfc3042
+name|V_tcp_do_rfc3042
 condition|)
 block|{
 name|u_long
@@ -7651,7 +7657,7 @@ expr_stmt|;
 comment|/* 		 * If the congestion window was inflated to account 		 * for the other side's cached packets, retract it. 		 */
 if|if
 condition|(
-name|tcp_do_newreno
+name|V_tcp_do_newreno
 operator|||
 operator|(
 name|tp
@@ -7875,12 +7881,12 @@ name|tp
 operator|->
 name|snd_una
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvackpack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvackbyte
 operator|+=
@@ -7903,7 +7909,7 @@ name|t_badrxtwin
 condition|)
 block|{
 operator|++
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndrexmitbad
 expr_stmt|;
@@ -8149,7 +8155,7 @@ if|if
 condition|(
 operator|(
 operator|!
-name|tcp_do_newreno
+name|V_tcp_do_newreno
 operator|&&
 operator|!
 operator|(
@@ -8300,7 +8306,7 @@ comment|/* Detect una wraparound. */
 if|if
 condition|(
 operator|(
-name|tcp_do_newreno
+name|V_tcp_do_newreno
 operator|||
 operator|(
 name|tp
@@ -8352,7 +8358,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|tcp_do_newreno
+name|V_tcp_do_newreno
 operator|||
 operator|(
 name|tp
@@ -8537,7 +8543,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -8690,7 +8696,7 @@ name|tp
 operator|->
 name|snd_wnd
 condition|)
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvwinupd
 operator|++
@@ -9089,12 +9095,12 @@ name|th_flags
 operator|&
 name|TH_FIN
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvpack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvbyte
 operator|+=
@@ -9334,7 +9340,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9343,7 +9349,7 @@ block|}
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|headlocked
@@ -9422,7 +9428,7 @@ expr_stmt|;
 name|INP_INFO_UNLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -9574,7 +9580,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|tp
@@ -9650,7 +9656,7 @@ condition|)
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9720,7 +9726,7 @@ condition|)
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -10411,7 +10417,7 @@ continue|continue;
 if|if
 condition|(
 operator|!
-name|tcp_do_sack
+name|V_tcp_do_sack
 condition|)
 continue|continue;
 name|to
@@ -10474,7 +10480,7 @@ name|cp
 operator|+
 literal|2
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sack_rcv_blocks
 operator|++
@@ -10685,7 +10691,7 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rttupdated
 operator|++
@@ -11052,7 +11058,7 @@ name|tp
 operator|->
 name|t_maxseg
 operator|=
-name|tcp_v6mssdflt
+name|V_tcp_v6mssdflt
 expr_stmt|;
 block|}
 else|else
@@ -11080,7 +11086,7 @@ name|tp
 operator|->
 name|t_maxseg
 operator|=
-name|tcp_mssdflt
+name|V_tcp_mssdflt
 expr_stmt|;
 block|}
 comment|/* 	 * No route to sender, stay with default mss and return. 	 */
@@ -11122,7 +11128,7 @@ name|max
 argument_list|(
 name|offer
 argument_list|,
-name|tcp_minmss
+name|V_tcp_minmss
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Sanity check: make sure that maxopd will be large 			 * enough to allow some data on segments even if the 			 * all the option space is used (40bytes).  Otherwise 			 * funny things may happen in tcp_output. 			 */
@@ -11187,7 +11193,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|path_mtu_discovery
+name|V_path_mtu_discovery
 operator|&&
 operator|!
 name|in6_localaddr
@@ -11204,7 +11210,7 @@ name|min
 argument_list|(
 name|mss
 argument_list|,
-name|tcp_v6mssdflt
+name|V_tcp_v6mssdflt
 argument_list|)
 expr_stmt|;
 block|}
@@ -11221,7 +11227,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|path_mtu_discovery
+name|V_path_mtu_discovery
 operator|&&
 operator|!
 name|in_localaddr
@@ -11237,7 +11243,7 @@ name|min
 argument_list|(
 name|mss
 argument_list|,
-name|tcp_mssdflt
+name|V_tcp_mssdflt
 argument_list|)
 expr_stmt|;
 block|}
@@ -11602,7 +11608,7 @@ name|t_srtt
 operator|+
 name|TCP_RTT_SCALE
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_usedrtt
 operator|++
@@ -11622,7 +11628,7 @@ name|metrics
 operator|.
 name|rmx_rttvar
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_usedrttvar
 operator|++
@@ -11697,7 +11703,7 @@ operator|.
 name|rmx_ssthresh
 argument_list|)
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_usedssthresh
 operator|++
@@ -11766,7 +11772,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|tcp_do_rfc3390
+name|V_tcp_do_rfc3390
 condition|)
 name|tp
 operator|->
@@ -11838,7 +11844,7 @@ name|snd_cwnd
 operator|=
 name|mss
 operator|*
-name|ss_fltsz_local
+name|V_ss_fltsz_local
 expr_stmt|;
 else|else
 name|tp
@@ -11847,7 +11853,7 @@ name|snd_cwnd
 operator|=
 name|mss
 operator|*
-name|ss_fltsz
+name|V_ss_fltsz
 expr_stmt|;
 comment|/* Check the interface for TSO capabilities. */
 if|if
@@ -11934,7 +11940,7 @@ condition|)
 block|{
 name|mss
 operator|=
-name|tcp_v6mssdflt
+name|V_tcp_v6mssdflt
 expr_stmt|;
 name|maxmtu
 operator|=
@@ -11974,7 +11980,7 @@ directive|endif
 block|{
 name|mss
 operator|=
-name|tcp_mssdflt
+name|V_tcp_mssdflt
 expr_stmt|;
 name|maxmtu
 operator|=

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/ibcs2/ibcs2_socksys.h>
 end_include
 
@@ -787,7 +793,7 @@ if|if
 condition|(
 name|strlen
 argument_list|(
-name|hostname
+name|V_hostname
 argument_list|)
 operator|==
 literal|0
@@ -815,7 +821,7 @@ argument_list|)
 argument_list|,
 literal|"%s"
 argument_list|,
-name|hostname
+name|V_hostname
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

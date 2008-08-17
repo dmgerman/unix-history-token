@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -368,7 +374,7 @@ if|#
 directive|if
 literal|0
 comment|/* If we do not accept IP-in-IP explicitly, drop.  */
-block|if (!ipip_allow&& ((*m)->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		ipipstat.ipips_pdrops++; 		m_freem(*m); 		return IPPROTO_DONE; 	}
+block|if (!V_ipip_allow&& ((*m)->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		V_ipipstat.ipips_pdrops++; 		m_freem(*m); 		return IPPROTO_DONE; 	}
 endif|#
 directive|endif
 name|_ipip_input
@@ -424,7 +430,7 @@ if|#
 directive|if
 literal|0
 comment|/* If we do not accept IP-in-IP explicitly, drop.  */
-block|if (!ipip_allow&& (m->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		ipipstat.ipips_pdrops++; 		m_freem(m); 		return; 	}
+block|if (!V_ipip_allow&& (m->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		V_ipipstat.ipips_pdrops++; 		m_freem(m); 		return; 	}
 endif|#
 directive|endif
 name|_ipip_input
@@ -530,7 +536,7 @@ decl_stmt|;
 name|int
 name|hlen
 decl_stmt|;
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_ipackets
 operator|++
@@ -590,7 +596,7 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_family
 operator|++
@@ -639,7 +645,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_hdrops
 operator|++
@@ -806,7 +812,7 @@ name|ip
 argument_list|)
 condition|)
 block|{
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_hdrops
 operator|++
@@ -873,7 +879,7 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_family
 operator|++
@@ -921,7 +927,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_hdrops
 operator|++
@@ -963,7 +969,7 @@ name|ip_p
 expr_stmt|;
 name|ip_ecn_egress
 argument_list|(
-name|ip4_ipsec_ecn
+name|V_ip4_ipsec_ecn
 argument_list|,
 operator|&
 name|otos
@@ -1016,7 +1022,7 @@ literal|0xff
 expr_stmt|;
 name|ip_ecn_egress
 argument_list|(
-name|ip6_ipsec_ecn
+name|V_ip6_ipsec_ecn
 argument_list|,
 operator|&
 name|otos
@@ -1091,7 +1097,7 @@ name|IFF_LOOPBACK
 operator|)
 operator|)
 operator|&&
-name|ipip_allow
+name|V_ipip_allow
 operator|!=
 literal|2
 condition|)
@@ -1103,7 +1109,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -1162,7 +1168,7 @@ operator|.
 name|s_addr
 condition|)
 block|{
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_spoof
 operator|++
@@ -1227,7 +1233,7 @@ name|ip6_src
 argument_list|)
 condition|)
 block|{
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_spoof
 operator|++
@@ -1253,7 +1259,7 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* Statistics */
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_ibytes
 operator|+=
@@ -1410,7 +1416,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* (0) on success. */
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_qfull
 operator|++
@@ -1646,7 +1652,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_unspec
 operator|++
@@ -1688,7 +1694,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_hdrops
 operator|++
@@ -1741,7 +1747,7 @@ name|ipo
 operator|->
 name|ip_ttl
 operator|=
-name|ip_defttl
+name|V_ip_defttl
 expr_stmt|;
 name|ipo
 operator|->
@@ -2070,7 +2076,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_unspec
 operator|++
@@ -2166,7 +2172,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_hdrops
 operator|++
@@ -2227,7 +2233,7 @@ name|ip6o
 operator|->
 name|ip6_hlim
 operator|=
-name|ip_defttl
+name|V_ip_defttl
 expr_stmt|;
 name|ip6o
 operator|->
@@ -2426,7 +2432,7 @@ name|sa_family
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_family
 operator|++
@@ -2440,7 +2446,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_opackets
 operator|++
@@ -2472,7 +2478,7 @@ literal|0
 block|if (sav->tdb_xform->xf_type == XF_IP4) 			tdb->tdb_cur_bytes += 			    m->m_pkthdr.len - sizeof(struct ip);
 endif|#
 directive|endif
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_obytes
 operator|+=
@@ -2514,7 +2520,7 @@ literal|0
 block|if (sav->tdb_xform->xf_type == XF_IP4) 			tdb->tdb_cur_bytes += 			    m->m_pkthdr.len - sizeof(struct ip6_hdr);
 endif|#
 directive|endif
-name|ipipstat
+name|V_ipipstat
 operator|.
 name|ipips_obytes
 operator|+=

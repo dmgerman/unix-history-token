@@ -119,6 +119,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -482,7 +488,7 @@ condition|)
 block|{
 name|RANGECHK
 argument_list|(
-name|ipport_lowfirstauto
+name|V_ipport_lowfirstauto
 argument_list|,
 literal|1
 argument_list|,
@@ -493,7 +499,7 @@ argument_list|)
 expr_stmt|;
 name|RANGECHK
 argument_list|(
-name|ipport_lowlastauto
+name|V_ipport_lowlastauto
 argument_list|,
 literal|1
 argument_list|,
@@ -504,7 +510,7 @@ argument_list|)
 expr_stmt|;
 name|RANGECHK
 argument_list|(
-name|ipport_firstauto
+name|V_ipport_firstauto
 argument_list|,
 name|IPPORT_RESERVED
 argument_list|,
@@ -513,7 +519,7 @@ argument_list|)
 expr_stmt|;
 name|RANGECHK
 argument_list|(
-name|ipport_lastauto
+name|V_ipport_lastauto
 argument_list|,
 name|IPPORT_RESERVED
 argument_list|,
@@ -522,7 +528,7 @@ argument_list|)
 expr_stmt|;
 name|RANGECHK
 argument_list|(
-name|ipport_hifirstauto
+name|V_ipport_hifirstauto
 argument_list|,
 name|IPPORT_RESERVED
 argument_list|,
@@ -531,7 +537,7 @@ argument_list|)
 expr_stmt|;
 name|RANGECHK
 argument_list|(
-name|ipport_hilastauto
+name|V_ipport_hilastauto
 argument_list|,
 name|IPPORT_RESERVED
 argument_list|,
@@ -1041,7 +1047,7 @@ name|INP_IPV6PROTO
 expr_stmt|;
 if|if
 condition|(
-name|ip6_v6only
+name|V_ip6_v6only
 condition|)
 name|inp
 operator|->
@@ -1082,7 +1088,7 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
-name|ip6_auto_flowlabel
+name|V_ip6_auto_flowlabel
 condition|)
 name|inp
 operator|->
@@ -1419,7 +1425,7 @@ condition|(
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 condition|)
 comment|/* XXX broken! */
@@ -1698,14 +1704,14 @@ argument_list|(
 name|lport
 argument_list|)
 operator|<=
-name|ipport_reservedhigh
+name|V_ipport_reservedhigh
 operator|&&
 name|ntohs
 argument_list|(
 name|lport
 argument_list|)
 operator|>=
-name|ipport_reservedlow
+name|V_ipport_reservedlow
 operator|&&
 name|priv_check_cred
 argument_list|(
@@ -2097,12 +2103,12 @@ condition|)
 block|{
 name|first
 operator|=
-name|ipport_hifirstauto
+name|V_ipport_hifirstauto
 expr_stmt|;
 comment|/* sysctl */
 name|last
 operator|=
-name|ipport_hilastauto
+name|V_ipport_hilastauto
 expr_stmt|;
 name|lastport
 operator|=
@@ -2142,12 +2148,12 @@ name|error
 return|;
 name|first
 operator|=
-name|ipport_lowfirstauto
+name|V_ipport_lowfirstauto
 expr_stmt|;
 comment|/* 1023 */
 name|last
 operator|=
-name|ipport_lowlastauto
+name|V_ipport_lowlastauto
 expr_stmt|;
 comment|/* 600 */
 name|lastport
@@ -2162,12 +2168,12 @@ else|else
 block|{
 name|first
 operator|=
-name|ipport_firstauto
+name|V_ipport_firstauto
 expr_stmt|;
 comment|/* sysctl */
 name|last
 operator|=
-name|ipport_lastauto
+name|V_ipport_lastauto
 expr_stmt|;
 name|lastport
 operator|=
@@ -2180,16 +2186,16 @@ block|}
 comment|/* 		 * For UDP, use random port allocation as long as the user 		 * allows it.  For TCP (and as of yet unknown) connections, 		 * use random port allocation only if the user allows it AND 		 * ipport_tick() allows it. 		 */
 if|if
 condition|(
-name|ipport_randomized
+name|V_ipport_randomized
 operator|&&
 operator|(
 operator|!
-name|ipport_stoprandom
+name|V_ipport_stoprandom
 operator|||
 name|pcbinfo
 operator|==
 operator|&
-name|udbinfo
+name|V_udbinfo
 operator|)
 condition|)
 name|dorandom
@@ -2218,9 +2224,9 @@ condition|(
 name|pcbinfo
 operator|!=
 operator|&
-name|udbinfo
+name|V_udbinfo
 condition|)
-name|ipport_tcpallocs
+name|V_ipport_tcpallocs
 operator|++
 expr_stmt|;
 comment|/* 		 * Simple check to ensure all ports are not used up causing 		 * a deadlock here. 		 */
@@ -2878,7 +2884,7 @@ operator|!
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 condition|)
 block|{
@@ -2898,7 +2904,7 @@ argument_list|(
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 argument_list|)
 operator|->
@@ -2920,7 +2926,7 @@ operator|(
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 operator|->
 name|ia_ifp
@@ -2938,7 +2944,7 @@ operator|&
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 operator|->
 name|ia_broadaddr
@@ -3129,7 +3135,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&in_ifaddrhead
+argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
@@ -5484,31 +5490,31 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|ipport_tcpallocs
+name|V_ipport_tcpallocs
 operator|<=
-name|ipport_tcplastcount
+name|V_ipport_tcplastcount
 operator|+
-name|ipport_randomcps
+name|V_ipport_randomcps
 condition|)
 block|{
 if|if
 condition|(
-name|ipport_stoprandom
+name|V_ipport_stoprandom
 operator|>
 literal|0
 condition|)
-name|ipport_stoprandom
+name|V_ipport_stoprandom
 operator|--
 expr_stmt|;
 block|}
 else|else
-name|ipport_stoprandom
+name|V_ipport_stoprandom
 operator|=
-name|ipport_randomtime
+name|V_ipport_randomtime
 expr_stmt|;
-name|ipport_tcplastcount
+name|V_ipport_tcplastcount
 operator|=
-name|ipport_tcpallocs
+name|V_ipport_tcpallocs
 expr_stmt|;
 name|callout_reset
 argument_list|(
@@ -5675,7 +5681,7 @@ decl_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -5708,7 +5714,7 @@ block|}
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 block|}

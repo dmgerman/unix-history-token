@@ -261,7 +261,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(&in_ifaddrhashtbl[INADDR_HASHVAL(x)& in_ifaddrhmask])
+value|(&V_in_ifaddrhashtbl[INADDR_HASHVAL(x)& V_in_ifaddrhmask])
 end_define
 
 begin_comment
@@ -324,7 +324,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_ifaddr *ia; */
 define|\
-value|{ \ 	for ((ia) = TAILQ_FIRST(&in_ifaddrhead); \ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp); \ 	    (ia) = TAILQ_NEXT((ia), ia_link)) \ 		continue; \ }
+value|{ \ 	for ((ia) = TAILQ_FIRST(&V_in_ifaddrhead); \ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp); \ 	    (ia) = TAILQ_NEXT((ia), ia_link)) \ 		continue; \ }
 end_define
 
 begin_endif
@@ -733,7 +733,7 @@ comment|/* struct in_multistep step; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	IN_MULTI_LOCK_ASSERT(); \ 	(step).i_inm = LIST_FIRST(&in_multihead); \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
+value|do { \ 	IN_MULTI_LOCK_ASSERT(); \ 	(step).i_inm = LIST_FIRST(&V_in_multihead); \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
 end_define
 
 begin_struct_decl

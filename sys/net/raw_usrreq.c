@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/raw_cb.h>
 end_include
 
@@ -116,7 +122,7 @@ block|{
 name|LIST_INIT
 argument_list|(
 operator|&
-name|rawcb_list
+name|V_rawcb_list
 argument_list|)
 expr_stmt|;
 block|}
@@ -181,7 +187,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|rp
 argument_list|,
-argument|&rawcb_list
+argument|&V_rawcb_list
 argument_list|,
 argument|list
 argument_list|)

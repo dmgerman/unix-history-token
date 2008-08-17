@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -452,7 +458,7 @@ expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
-name|router_info_head
+name|V_router_info_head
 argument_list|)
 expr_stmt|;
 block|}
@@ -493,7 +499,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|rti
 argument_list|,
-argument|&router_info_head
+argument|&V_router_info_head
 argument_list|,
 argument|rti_list
 argument_list|)
@@ -575,7 +581,7 @@ expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|router_info_head
+name|V_router_info_head
 argument_list|,
 name|rti
 argument_list|,
@@ -673,7 +679,7 @@ name|timer
 decl_stmt|;
 comment|/** timer value in the igmp query header **/
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_total
 expr_stmt|;
@@ -703,7 +709,7 @@ name|IGMP_MINLEN
 condition|)
 block|{
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_tooshort
 expr_stmt|;
@@ -751,7 +757,7 @@ literal|0
 condition|)
 block|{
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_tooshort
 expr_stmt|;
@@ -792,7 +798,7 @@ argument_list|)
 condition|)
 block|{
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_badsum
 expr_stmt|;
@@ -858,7 +864,7 @@ case|case
 name|IGMP_MEMBERSHIP_QUERY
 case|:
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_queries
 expr_stmt|;
@@ -958,7 +964,7 @@ literal|0
 condition|)
 block|{
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_badqueries
 expr_stmt|;
@@ -998,7 +1004,7 @@ argument_list|)
 condition|)
 block|{
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_badqueries
 expr_stmt|;
@@ -1146,7 +1152,7 @@ name|s_addr
 condition|)
 break|break;
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_reports
 expr_stmt|;
@@ -1176,7 +1182,7 @@ argument_list|)
 condition|)
 block|{
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_badreports
 expr_stmt|;
@@ -1255,7 +1261,7 @@ operator|=
 literal|0
 expr_stmt|;
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_rcv_ourreports
 expr_stmt|;
@@ -1596,7 +1602,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|rti
 argument_list|,
-argument|&router_info_head
+argument|&V_router_info_head
 argument_list|,
 argument|rti_list
 argument_list|)
@@ -1707,7 +1713,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-name|loif
+name|V_loif
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1926,7 +1932,7 @@ operator|.
 name|imo_multicast_loop
 operator|=
 operator|(
-name|ip_mrouter
+name|V_ip_mrouter
 operator|!=
 name|NULL
 operator|)
@@ -1950,7 +1956,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 operator|++
-name|igmpstat
+name|V_igmpstat
 operator|.
 name|igps_snd_reports
 expr_stmt|;

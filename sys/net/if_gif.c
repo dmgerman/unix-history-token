@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -932,7 +938,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|gif_softc_list
+name|V_gif_softc_list
 argument_list|,
 name|sc
 argument_list|,
@@ -1161,7 +1167,7 @@ expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
-name|gif_softc_list
+name|V_gif_softc_list
 argument_list|)
 expr_stmt|;
 name|if_clone_attach
@@ -1173,7 +1179,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
-name|ip6_gif_hlim
+name|V_ip6_gif_hlim
 operator|=
 name|GIF_HLIM
 expr_stmt|;
@@ -1198,7 +1204,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
-name|ip6_gif_hlim
+name|V_ip6_gif_hlim
 operator|=
 literal|0
 expr_stmt|;
@@ -1796,7 +1802,7 @@ if|if
 condition|(
 name|gif_called
 operator|>
-name|max_gif_nesting
+name|V_max_gif_nesting
 condition|)
 block|{
 name|log
@@ -3723,7 +3729,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|sc2
 argument_list|,
-argument|&gif_softc_list
+argument|&V_gif_softc_list
 argument_list|,
 argument|gif_list
 argument_list|)
@@ -3795,7 +3801,7 @@ comment|/* 		 * Disallow parallel tunnels unless instructed 		 * otherwise. 		 *
 if|if
 condition|(
 operator|!
-name|parallel_tunnels
+name|V_parallel_tunnels
 operator|&&
 name|bcmp
 argument_list|(

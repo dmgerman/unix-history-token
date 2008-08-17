@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -387,7 +393,7 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|tcp_reass_maxseg
+name|V_tcp_reass_maxseg
 operator|=
 name|nmbclusters
 operator|/
@@ -397,7 +403,7 @@ name|uma_zone_set_max
 argument_list|(
 name|tcp_reass_zone
 argument_list|,
-name|tcp_reass_maxseg
+name|V_tcp_reass_maxseg
 argument_list|)
 expr_stmt|;
 block|}
@@ -416,7 +422,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|tcp_reass_maxseg
+name|V_tcp_reass_maxseg
 operator|=
 name|nmbclusters
 operator|/
@@ -427,7 +433,7 @@ argument_list|(
 literal|"net.inet.tcp.reass.maxsegments"
 argument_list|,
 operator|&
-name|tcp_reass_maxseg
+name|V_tcp_reass_maxseg
 argument_list|)
 expr_stmt|;
 name|tcp_reass_zone
@@ -459,7 +465,7 @@ name|uma_zone_set_max
 argument_list|(
 name|tcp_reass_zone
 argument_list|,
-name|tcp_reass_maxseg
+name|V_tcp_reass_maxseg
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_REGISTER
@@ -568,24 +574,24 @@ operator|->
 name|rcv_nxt
 operator|&&
 operator|(
-name|tcp_reass_qsize
+name|V_tcp_reass_qsize
 operator|+
 literal|1
 operator|>=
-name|tcp_reass_maxseg
+name|V_tcp_reass_maxseg
 operator|||
 name|tp
 operator|->
 name|t_segqlen
 operator|>=
-name|tcp_reass_maxqlen
+name|V_tcp_reass_maxqlen
 operator|)
 condition|)
 block|{
-name|tcp_reass_overflows
+name|V_tcp_reass_overflows
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvmemdrop
 operator|++
@@ -623,7 +629,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvmemdrop
 operator|++
@@ -649,7 +655,7 @@ operator|->
 name|t_segqlen
 operator|++
 expr_stmt|;
-name|tcp_reass_qsize
+name|V_tcp_reass_qsize
 operator|++
 expr_stmt|;
 comment|/* 	 * Find a segment which begins after this one does. 	 */
@@ -726,12 +732,12 @@ operator|*
 name|tlenp
 condition|)
 block|{
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvduppack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvdupbyte
 operator|+=
@@ -755,7 +761,7 @@ operator|->
 name|t_segqlen
 operator|--
 expr_stmt|;
-name|tcp_reass_qsize
+name|V_tcp_reass_qsize
 operator|--
 expr_stmt|;
 comment|/* 				 * Try to present any queued data 				 * at the left window edge to the user. 				 * This is needed after the 3-WHS 				 * completes. 				 */
@@ -784,12 +790,12 @@ name|i
 expr_stmt|;
 block|}
 block|}
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvoopack
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_rcvoobyte
 operator|+=
@@ -896,7 +902,7 @@ operator|->
 name|t_segqlen
 operator|--
 expr_stmt|;
-name|tcp_reass_qsize
+name|V_tcp_reass_qsize
 operator|--
 expr_stmt|;
 name|q
@@ -1090,7 +1096,7 @@ operator|->
 name|t_segqlen
 operator|--
 expr_stmt|;
-name|tcp_reass_qsize
+name|V_tcp_reass_qsize
 operator|--
 expr_stmt|;
 name|q

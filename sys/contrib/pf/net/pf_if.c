@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -718,7 +724,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifg
 argument_list|,
-argument|&ifg_head
+argument|&V_ifg_head
 argument_list|,
 argument|ifg_next
 argument_list|)
@@ -731,7 +737,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)

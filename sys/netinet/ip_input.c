@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/pfil.h>
 end_include
 
@@ -1012,10 +1018,10 @@ decl_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 expr_stmt|;
-name|in_ifaddrhashtbl
+name|V_in_ifaddrhashtbl
 operator|=
 name|hashinit
 argument_list|(
@@ -1024,7 +1030,7 @@ argument_list|,
 name|M_IFADDR
 argument_list|,
 operator|&
-name|in_ifaddrhmask
+name|V_in_ifaddrhmask
 argument_list|)
 expr_stmt|;
 name|pr
@@ -1189,23 +1195,23 @@ control|)
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|maxnipq
+name|V_maxnipq
 operator|=
 name|nmbclusters
 operator|/
 literal|32
 expr_stmt|;
-name|maxfragsperpacket
+name|V_maxfragsperpacket
 operator|=
 literal|16
 expr_stmt|;
-name|ipq_zone
+name|V_ipq_zone
 operator|=
 name|uma_zcreate
 argument_list|(
@@ -1429,7 +1435,7 @@ goto|goto
 name|ours
 goto|;
 block|}
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_total
 operator|++
@@ -1481,7 +1487,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_toosmall
 operator|++
@@ -1508,7 +1514,7 @@ operator|!=
 name|IPVERSION
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badvers
 operator|++
@@ -1537,7 +1543,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* minimum header length */
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badhlen
 operator|++
@@ -1571,7 +1577,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badhlen
 operator|++
@@ -1641,7 +1647,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badaddr
 operator|++
@@ -1715,7 +1721,7 @@ condition|(
 name|sum
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badsum
 operator|++
@@ -1770,7 +1776,7 @@ operator|<
 name|hlen
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badlen
 operator|++
@@ -1806,7 +1812,7 @@ condition|)
 block|{
 name|tooshort
 label|:
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_tooshort
 operator|++
@@ -2053,7 +2059,7 @@ return|return;
 comment|/* greedy RSVP, snatches any PATH packet of the RSVP protocol and no          * matter if it is destined to another node, or whether it is           * a multicast one, RSVP wants it! and prevents it from being forwarded          * anywhere else. Also checks if the rsvp daemon is running before 	 * grabbing the packet.          */
 if|if
 condition|(
-name|rsvp_on
+name|V_rsvp_on
 operator|&&
 name|ip
 operator|->
@@ -2070,7 +2076,7 @@ condition|(
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 operator|&&
 operator|(
@@ -2093,10 +2099,10 @@ goto|;
 comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 * 	 * XXX - Checking also should be disabled if the destination 	 * address is ipnat'ed to a different interface. 	 * 	 * XXX - Checking is incompatible with IP aliases added 	 * to the loopback interface instead of the interface where 	 * the packets are received. 	 * 	 * XXX - This is the case for carp vhost IPs as well so we 	 * insert a workaround. If the packet got here, we already 	 * checked with carp_iamatch() and carp_forus(). 	 */
 name|checkif
 operator|=
-name|ip_checkinterface
+name|V_ip_checkinterface
 operator|&&
 operator|(
-name|ipforwarding
+name|V_ipforwarding
 operator|==
 literal|0
 operator|)
@@ -2320,7 +2326,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantforward
 operator|++
@@ -2354,7 +2360,7 @@ name|inm
 decl_stmt|;
 if|if
 condition|(
-name|ip_mrouter
+name|V_ip_mrouter
 condition|)
 block|{
 comment|/* 			 * If we are acting as a multicast router, all 			 * incoming multicast packets are passed to the 			 * kernel-level multicast forwarding function. 			 * The packet is returned (relatively) intact; if 			 * ip_mforward() returns a non-zero value, the packet 			 * must be discarded, else it may be accepted below. 			 */
@@ -2380,7 +2386,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantforward
 operator|++
@@ -2404,7 +2410,7 @@ condition|)
 goto|goto
 name|ours
 goto|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_forward
 operator|++
@@ -2439,7 +2445,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_notmember
 operator|++
@@ -2506,7 +2512,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip_keepfaith
+name|V_ip_keepfaith
 condition|)
 block|{
 if|if
@@ -2537,12 +2543,12 @@ block|}
 comment|/* 	 * Not for us; forward if possible and desirable. 	 */
 if|if
 condition|(
-name|ipforwarding
+name|V_ipforwarding
 operator|==
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantforward
 operator|++
@@ -2588,7 +2594,7 @@ name|IPSTEALTH
 comment|/* 	 * IPSTEALTH: Process non-routing options only 	 * if the packet is destined for us. 	 */
 if|if
 condition|(
-name|ipstealth
+name|V_ipstealth
 operator|&&
 name|hlen
 operator|>
@@ -2711,7 +2717,7 @@ endif|#
 directive|endif
 comment|/* IPSEC */
 comment|/* 	 * Switch out to protocol's input routine. 	 */
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_delivered
 operator|++
@@ -2762,13 +2768,13 @@ block|{
 comment|/* 	 * -1 for unlimited allocation. 	 */
 if|if
 condition|(
-name|maxnipq
+name|V_maxnipq
 operator|<
 literal|0
 condition|)
 name|uma_zone_set_max
 argument_list|(
-name|ipq_zone
+name|V_ipq_zone
 argument_list|,
 literal|0
 argument_list|)
@@ -2776,27 +2782,27 @@ expr_stmt|;
 comment|/* 	 * Positive number for specific bound. 	 */
 if|if
 condition|(
-name|maxnipq
+name|V_maxnipq
 operator|>
 literal|0
 condition|)
 name|uma_zone_set_max
 argument_list|(
-name|ipq_zone
+name|V_ipq_zone
 argument_list|,
-name|maxnipq
+name|V_maxnipq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Zero specifies no further fragment queue allocation -- set the 	 * bound very low, but rely on implementation elsewhere to actually 	 * prevent allocation and reclaim current queues. 	 */
 if|if
 condition|(
-name|maxnipq
+name|V_maxnipq
 operator|==
 literal|0
 condition|)
 name|uma_zone_set_max
 argument_list|(
-name|ipq_zone
+name|V_ipq_zone
 argument_list|,
 literal|1
 argument_list|)
@@ -2816,11 +2822,11 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|maxnipq
+name|V_maxnipq
 operator|>
 literal|0
 operator|&&
-name|maxnipq
+name|V_maxnipq
 operator|<
 operator|(
 name|nmbclusters
@@ -2829,7 +2835,7 @@ literal|32
 operator|)
 condition|)
 block|{
-name|maxnipq
+name|V_maxnipq
 operator|=
 name|nmbclusters
 operator|/
@@ -2857,7 +2863,7 @@ name|i
 decl_stmt|;
 name|i
 operator|=
-name|maxnipq
+name|V_maxnipq
 expr_stmt|;
 name|error
 operator|=
@@ -2900,7 +2906,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|maxnipq
+name|V_maxnipq
 operator|=
 name|i
 expr_stmt|;
@@ -3006,21 +3012,21 @@ decl_stmt|;
 comment|/* If maxnipq or maxfragsperpacket are 0, never accept fragments. */
 if|if
 condition|(
-name|maxnipq
+name|V_maxnipq
 operator|==
 literal|0
 operator|||
-name|maxfragsperpacket
+name|V_maxfragsperpacket
 operator|==
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragments
 operator|++
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragdropped
 operator|++
@@ -3073,7 +3079,7 @@ expr_stmt|;
 name|head
 operator|=
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|hash
 index|]
@@ -3155,13 +3161,13 @@ comment|/* 	 * Attempt to trim the number of allocated fragment queues if it 	 *
 if|if
 condition|(
 operator|(
-name|nipq
+name|V_nipq
 operator|>
-name|maxnipq
+name|V_maxnipq
 operator|)
 operator|&&
 operator|(
-name|maxnipq
+name|V_maxnipq
 operator|>
 literal|0
 operator|)
@@ -3210,7 +3216,7 @@ init|=
 name|TAILQ_LAST
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -3223,7 +3229,7 @@ condition|(
 name|r
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragtimeout
 operator|+=
@@ -3234,7 +3240,7 @@ expr_stmt|;
 name|ip_freef
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -3248,7 +3254,7 @@ block|}
 block|}
 else|else
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragtimeout
 operator|+=
@@ -3303,7 +3309,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_toosmall
 operator|++
@@ -3335,7 +3341,7 @@ operator|<<=
 literal|3
 expr_stmt|;
 comment|/* 	 * Attempt reassembly; if it succeeds, proceed. 	 * ip_reass() will return a different mbuf. 	 */
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragments
 operator|++
@@ -3374,7 +3380,7 @@ name|fp
 operator|=
 name|uma_zalloc
 argument_list|(
-name|ipq_zone
+name|V_ipq_zone
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3405,7 +3411,7 @@ condition|)
 block|{
 name|uma_zfree
 argument_list|(
-name|ipq_zone
+name|V_ipq_zone
 argument_list|,
 name|fp
 argument_list|)
@@ -3436,7 +3442,7 @@ argument_list|,
 name|ipq_list
 argument_list|)
 expr_stmt|;
-name|nipq
+name|V_nipq
 operator|++
 expr_stmt|;
 name|fp
@@ -3844,7 +3850,7 @@ name|m_nextpkt
 operator|=
 name|nq
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragdropped
 operator|++
@@ -3908,10 +3914,10 @@ name|fp
 operator|->
 name|ipq_nfrags
 operator|>
-name|maxfragsperpacket
+name|V_maxfragsperpacket
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragdropped
 operator|+=
@@ -3957,10 +3963,10 @@ name|fp
 operator|->
 name|ipq_nfrags
 operator|>
-name|maxfragsperpacket
+name|V_maxfragsperpacket
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragdropped
 operator|+=
@@ -4009,12 +4015,12 @@ operator|>
 name|IP_MAXPACKET
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_toolong
 operator|++
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragdropped
 operator|+=
@@ -4212,12 +4218,12 @@ argument_list|,
 name|ipq_list
 argument_list|)
 expr_stmt|;
-name|nipq
+name|V_nipq
 operator|--
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|ipq_zone
+name|V_ipq_zone
 argument_list|,
 name|fp
 argument_list|)
@@ -4261,7 +4267,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_reassembled
 operator|++
@@ -4276,7 +4282,7 @@ operator|)
 return|;
 name|dropfrag
 label|:
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragdropped
 operator|++
@@ -4379,12 +4385,12 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|ipq_zone
+name|V_ipq_zone
 argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|nipq
+name|V_nipq
 operator|--
 expr_stmt|;
 block|}
@@ -4433,7 +4439,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -4471,7 +4477,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragtimeout
 operator|+=
@@ -4482,7 +4488,7 @@ expr_stmt|;
 name|ip_freef
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -4496,13 +4502,13 @@ block|}
 comment|/* 	 * If we are over the maximum number of fragments 	 * (due to the limit being lowered), drain off 	 * enough to get down to the new limit. 	 */
 if|if
 condition|(
-name|maxnipq
+name|V_maxnipq
 operator|>=
 literal|0
 operator|&&
-name|nipq
+name|V_nipq
 operator|>
-name|maxnipq
+name|V_maxnipq
 condition|)
 block|{
 for|for
@@ -4521,29 +4527,29 @@ control|)
 block|{
 while|while
 condition|(
-name|nipq
+name|V_nipq
 operator|>
-name|maxnipq
+name|V_maxnipq
 operator|&&
 operator|!
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
 argument_list|)
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragdropped
 operator|+=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -4554,7 +4560,7 @@ expr_stmt|;
 name|ip_freef
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -4562,7 +4568,7 @@ argument_list|,
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -4615,21 +4621,21 @@ operator|!
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
 argument_list|)
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_fragdropped
 operator|+=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -4640,7 +4646,7 @@ expr_stmt|;
 name|ip_freef
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -4648,7 +4654,7 @@ argument_list|,
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ipq
+name|V_ipq
 index|[
 name|i
 index|]
@@ -5170,7 +5176,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantforward
 operator|++
@@ -5188,7 +5194,7 @@ name|IPSTEALTH
 if|if
 condition|(
 operator|!
-name|ipstealth
+name|V_ipstealth
 condition|)
 block|{
 endif|#
@@ -5360,7 +5366,7 @@ name|IPSTEALTH
 if|if
 condition|(
 operator|!
-name|ipstealth
+name|V_ipstealth
 condition|)
 block|{
 endif|#
@@ -5389,7 +5395,7 @@ condition|(
 operator|!
 name|srcrt
 operator|&&
-name|ipsendredirects
+name|V_ipsendredirects
 operator|&&
 name|ia
 operator|->
@@ -5678,14 +5684,14 @@ if|if
 condition|(
 name|error
 condition|)
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantforward
 operator|++
 expr_stmt|;
 else|else
 block|{
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_forward
 operator|++
@@ -5694,7 +5700,7 @@ if|if
 condition|(
 name|type
 condition|)
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_redirectsent
 operator|++
@@ -5838,7 +5844,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantfrag
 operator|++
@@ -5850,7 +5856,7 @@ case|:
 comment|/* 		 * A router should not generate ICMP_SOURCEQUENCH as 		 * required in RFC1812 Requirements for IP Version 4 Routers. 		 * Source quench could be a big problem under DoS attacks, 		 * or if the underlying interface is rate-limited. 		 * Those who need source quench packets may re-enable them 		 * via the net.inet.ip.sendsourcequench sysctl. 		 */
 if|if
 condition|(
-name|ip_sendsourcequench
+name|V_ip_sendsourcequench
 operator|==
 literal|0
 condition|)
@@ -6333,7 +6339,7 @@ name|ifp
 operator|->
 name|if_index
 operator|<=
-name|if_index
+name|V_if_index
 operator|)
 operator|)
 condition|)
@@ -6524,14 +6530,14 @@ name|EOPNOTSUPP
 return|;
 if|if
 condition|(
-name|ip_rsvpd
+name|V_ip_rsvpd
 operator|!=
 name|NULL
 condition|)
 return|return
 name|EADDRINUSE
 return|;
-name|ip_rsvpd
+name|V_ip_rsvpd
 operator|=
 name|so
 expr_stmt|;
@@ -6539,14 +6545,14 @@ comment|/* 	 * This may seem silly, but we need to be sure we don't over-increme
 if|if
 condition|(
 operator|!
-name|ip_rsvp_on
+name|V_ip_rsvp_on
 condition|)
 block|{
-name|ip_rsvp_on
+name|V_ip_rsvp_on
 operator|=
 literal|1
 expr_stmt|;
-name|rsvp_on
+name|V_rsvp_on
 operator|++
 expr_stmt|;
 block|}
@@ -6563,21 +6569,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ip_rsvpd
+name|V_ip_rsvpd
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * This may seem silly, but we need to be sure we don't over-decrement 	 * the RSVP counter, in case something slips up. 	 */
 if|if
 condition|(
-name|ip_rsvp_on
+name|V_ip_rsvp_on
 condition|)
 block|{
-name|ip_rsvp_on
+name|V_ip_rsvp_on
 operator|=
 literal|0
 expr_stmt|;
-name|rsvp_on
+name|V_rsvp_on
 operator|--
 expr_stmt|;
 block|}
@@ -6620,7 +6626,7 @@ comment|/* Can still get packets with rsvp_on = 0 if there is a local member 	 *
 if|if
 condition|(
 operator|!
-name|rsvp_on
+name|V_rsvp_on
 condition|)
 block|{
 name|m_freem
@@ -6632,7 +6638,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|ip_rsvpd
+name|V_ip_rsvpd
 operator|!=
 name|NULL
 condition|)

@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom.h>
 end_include
 
@@ -215,7 +221,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|hostname
+name|G_hostname
 argument_list|,
 name|vhdr
 operator|->

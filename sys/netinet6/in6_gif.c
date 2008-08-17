@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -794,7 +800,7 @@ name|ip6
 operator|->
 name|ip6_hlim
 operator|=
-name|ip6_gif_hlim
+name|V_ip6_gif_hlim
 expr_stmt|;
 name|ip6
 operator|->
@@ -1241,7 +1247,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_nogif
 operator|++
@@ -1279,7 +1285,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_nogif
 operator|++
@@ -1539,7 +1545,7 @@ name|AF_LINK
 expr_stmt|;
 break|break;
 default|default:
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_nogif
 operator|++

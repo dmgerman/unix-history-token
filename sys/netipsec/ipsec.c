@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1438,7 +1444,7 @@ expr_stmt|;
 name|sp
 operator|=
 operator|&
-name|ip4_def_policy
+name|V_ip4_def_policy
 expr_stmt|;
 if|if
 condition|(
@@ -2364,7 +2370,7 @@ literal|"getpolicy failed w/o error"
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipsec4stat
+name|V_ipsec4stat
 operator|.
 name|ips_out_inval
 operator|++
@@ -2414,7 +2420,7 @@ comment|/* fall thru... */
 case|case
 name|IPSEC_POLICY_DISCARD
 case|:
-name|ipsec4stat
+name|V_ipsec4stat
 operator|.
 name|ips_out_polvio
 operator|++
@@ -6703,7 +6709,7 @@ parameter_list|(
 name|lev
 parameter_list|)
 define|\
-value|(((lev) != IPSEC_LEVEL_USE&& (lev) != IPSEC_LEVEL_REQUIRE	      \&& (lev) != IPSEC_LEVEL_UNIQUE)			      \ 		? (ipsec_debug						      \ 			? log(LOG_INFO, "fixed system default level " #lev ":%d->%d\n",\ 				(lev), IPSEC_LEVEL_REQUIRE)		      \ 			: 0),						      \ 			(lev) = IPSEC_LEVEL_REQUIRE,			      \ 			(lev)						      \ 		: (lev))
+value|(((lev) != IPSEC_LEVEL_USE&& (lev) != IPSEC_LEVEL_REQUIRE	      \&& (lev) != IPSEC_LEVEL_UNIQUE)			      \ 		? (V_ipsec_debug						      \ 			? log(LOG_INFO, "fixed system default level " #lev ":%d->%d\n",\ 				(lev), IPSEC_LEVEL_REQUIRE)		      \ 			: 0),						      \ 			(lev) = IPSEC_LEVEL_REQUIRE,			      \ 			(lev)						      \ 		: (lev))
 comment|/* set default level */
 switch|switch
 condition|(
@@ -6736,28 +6742,28 @@ name|esp_trans_deflev
 operator|=
 name|IPSEC_CHECK_DEFAULT
 argument_list|(
-name|ip4_esp_trans_deflev
+name|V_ip4_esp_trans_deflev
 argument_list|)
 expr_stmt|;
 name|esp_net_deflev
 operator|=
 name|IPSEC_CHECK_DEFAULT
 argument_list|(
-name|ip4_esp_net_deflev
+name|V_ip4_esp_net_deflev
 argument_list|)
 expr_stmt|;
 name|ah_trans_deflev
 operator|=
 name|IPSEC_CHECK_DEFAULT
 argument_list|(
-name|ip4_ah_trans_deflev
+name|V_ip4_ah_trans_deflev
 argument_list|)
 expr_stmt|;
 name|ah_net_deflev
 operator|=
 name|IPSEC_CHECK_DEFAULT
 argument_list|(
-name|ip4_ah_net_deflev
+name|V_ip4_ah_net_deflev
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6773,28 +6779,28 @@ name|esp_trans_deflev
 operator|=
 name|IPSEC_CHECK_DEFAULT
 argument_list|(
-name|ip6_esp_trans_deflev
+name|V_ip6_esp_trans_deflev
 argument_list|)
 expr_stmt|;
 name|esp_net_deflev
 operator|=
 name|IPSEC_CHECK_DEFAULT
 argument_list|(
-name|ip6_esp_net_deflev
+name|V_ip6_esp_net_deflev
 argument_list|)
 expr_stmt|;
 name|ah_trans_deflev
 operator|=
 name|IPSEC_CHECK_DEFAULT
 argument_list|(
-name|ip6_ah_trans_deflev
+name|V_ip6_ah_trans_deflev
 argument_list|)
 expr_stmt|;
 name|ah_net_deflev
 operator|=
 name|IPSEC_CHECK_DEFAULT
 argument_list|(
-name|ip6_ah_net_deflev
+name|V_ip6_ah_net_deflev
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7319,7 +7325,7 @@ if|if
 condition|(
 name|result
 condition|)
-name|ipsec4stat
+name|V_ipsec4stat
 operator|.
 name|ips_in_polvio
 operator|++
@@ -7454,7 +7460,7 @@ if|if
 condition|(
 name|result
 condition|)
-name|ipsec6stat
+name|V_ipsec6stat
 operator|.
 name|ips_in_polvio
 operator|++
@@ -9221,7 +9227,7 @@ block|{
 name|SECPOLICY_LOCK_INIT
 argument_list|(
 operator|&
-name|ip4_def_policy
+name|V_ip4_def_policy
 argument_list|)
 expr_stmt|;
 name|ip4_def_policy

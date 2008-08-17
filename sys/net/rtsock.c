@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2102,7 +2108,7 @@ name|RTM_LOCK
 case|:
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|so
 operator|->
@@ -5951,7 +5957,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -6377,7 +6383,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)
@@ -6826,7 +6832,7 @@ condition|(
 operator|(
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|curthread
 operator|->

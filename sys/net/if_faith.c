@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1239,7 +1245,7 @@ name|ret
 decl_stmt|;
 if|if
 condition|(
-name|ip6_keepfaith
+name|V_ip6_keepfaith
 operator|==
 literal|0
 condition|)

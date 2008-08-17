@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1734,7 +1740,7 @@ argument_list|)
 expr_stmt|;
 name|RADIX_NODE_LOCK
 argument_list|(
-name|rt_tables
+name|V_rt_tables
 index|[
 name|AF_INET
 index|]
@@ -1743,7 +1749,7 @@ expr_stmt|;
 comment|/* could sleep XXX */
 name|bootpboot_p_tree
 argument_list|(
-name|rt_tables
+name|V_rt_tables
 index|[
 name|AF_INET
 index|]
@@ -1753,7 +1759,7 @@ argument_list|)
 expr_stmt|;
 name|RADIX_NODE_UNLOCK
 argument_list|(
-name|rt_tables
+name|V_rt_tables
 index|[
 name|AF_INET
 index|]
@@ -1877,7 +1883,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 init|;
 name|ifp
@@ -7805,7 +7811,7 @@ argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
-name|hostname
+name|G_hostname
 argument_list|,
 name|p
 argument_list|)
@@ -7814,7 +7820,7 @@ name|printf
 argument_list|(
 literal|"hostname %s "
 argument_list|,
-name|hostname
+name|G_hostname
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -8166,7 +8172,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 operator|,
 name|ifcnt
@@ -8251,7 +8257,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 operator|,
 name|ifctx

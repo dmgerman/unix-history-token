@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1504,7 +1510,7 @@ expr_stmt|;
 comment|/* Sendbuffer is in units of 32KB. 		 */
 if|if
 condition|(
-name|tcp_do_autosndbuf
+name|V_tcp_do_autosndbuf
 operator|&&
 name|snd
 operator|->
@@ -1520,7 +1526,7 @@ name|htonl
 argument_list|(
 name|V_TX_SNDBUF
 argument_list|(
-name|tcp_autosndbuf_max
+name|V_tcp_autosndbuf_max
 operator|>>
 literal|15
 argument_list|)
@@ -5887,7 +5893,7 @@ name|MAX_RCV_WND
 expr_stmt|;
 if|if
 condition|(
-name|tcp_do_rfc1323
+name|V_tcp_do_rfc1323
 condition|)
 for|for
 control|(
@@ -5969,11 +5975,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tcp_do_autorcvbuf
+name|V_tcp_do_autorcvbuf
 condition|)
 name|wnd
 operator|=
-name|tcp_autorcvbuf_max
+name|V_tcp_autorcvbuf_max
 expr_stmt|;
 else|else
 name|wnd
@@ -17986,7 +17992,7 @@ name|tp
 operator|->
 name|t_state
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_connects
 operator|++

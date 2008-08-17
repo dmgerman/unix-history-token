@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2010,7 +2016,7 @@ name|unit
 operator|=
 name|alloc_unr
 argument_list|(
-name|ng_iface_unit
+name|V_ng_iface_unit
 argument_list|)
 expr_stmt|;
 comment|/* Link together node and private info */
@@ -3046,7 +3052,7 @@ name|NULL
 expr_stmt|;
 name|free_unr
 argument_list|(
-name|ng_iface_unit
+name|V_ng_iface_unit
 argument_list|,
 name|priv
 operator|->
@@ -3178,7 +3184,7 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|ng_iface_unit
+name|V_ng_iface_unit
 operator|=
 name|new_unrhdr
 argument_list|(
@@ -3195,7 +3201,7 @@ name|MOD_UNLOAD
 case|:
 name|delete_unrhdr
 argument_list|(
-name|ng_iface_unit
+name|V_ng_iface_unit
 argument_list|)
 expr_stmt|;
 break|break;

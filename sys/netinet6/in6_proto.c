@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2086,7 +2092,7 @@ operator|)
 return|;
 name|old
 operator|=
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 expr_stmt|;
 name|error
 operator|=
@@ -2104,14 +2110,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|<
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 operator|+
-name|ip6_temp_regen_advance
+name|V_ip6_temp_regen_advance
 condition|)
 block|{
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|=
 name|old
 expr_stmt|;
@@ -2175,7 +2181,7 @@ operator|)
 return|;
 name|old
 operator|=
-name|ip6_temp_valid_lifetime
+name|V_ip6_temp_valid_lifetime
 expr_stmt|;
 name|error
 operator|=
@@ -2193,12 +2199,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ip6_temp_valid_lifetime
+name|V_ip6_temp_valid_lifetime
 operator|<
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 condition|)
 block|{
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|=
 name|old
 expr_stmt|;

@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -328,13 +334,13 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|ip6_maxfragpackets
+name|V_ip6_maxfragpackets
 operator|=
 name|nmbclusters
 operator|/
 literal|4
 expr_stmt|;
-name|ip6_maxfrags
+name|V_ip6_maxfrags
 operator|=
 name|nmbclusters
 operator|/
@@ -350,13 +356,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ip6_maxfragpackets
+name|V_ip6_maxfragpackets
 operator|=
 name|nmbclusters
 operator|/
 literal|4
 expr_stmt|;
-name|ip6_maxfrags
+name|V_ip6_maxfrags
 operator|=
 name|nmbclusters
 operator|/
@@ -376,16 +382,16 @@ expr_stmt|;
 name|IP6Q_LOCK_INIT
 argument_list|()
 expr_stmt|;
-name|ip6q
+name|V_ip6q
 operator|.
 name|ip6q_next
 operator|=
-name|ip6q
+name|V_ip6q
 operator|.
 name|ip6q_prev
 operator|=
 operator|&
-name|ip6q
+name|V_ip6q
 expr_stmt|;
 block|}
 end_function
@@ -724,7 +730,7 @@ return|return
 name|IPPROTO_DONE
 return|;
 block|}
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_fragments
 operator|++
@@ -751,7 +757,7 @@ expr_stmt|;
 comment|/* 	 * Enforce upper bound on number of fragments. 	 * If maxfrag is 0, never accept fragments. 	 * If maxfrag is -1, accept all fragments without limitation. 	 */
 if|if
 condition|(
-name|ip6_maxfrags
+name|V_ip6_maxfrags
 operator|<
 literal|0
 condition|)
@@ -759,12 +765,12 @@ empty_stmt|;
 elseif|else
 if|if
 condition|(
-name|frag6_nfrags
+name|V_frag6_nfrags
 operator|>=
 operator|(
 name|u_int
 operator|)
-name|ip6_maxfrags
+name|V_ip6_maxfrags
 condition|)
 goto|goto
 name|dropfrag
@@ -773,14 +779,14 @@ for|for
 control|(
 name|q6
 operator|=
-name|ip6q
+name|V_ip6q
 operator|.
 name|ip6q_next
 init|;
 name|q6
 operator|!=
 operator|&
-name|ip6q
+name|V_ip6q
 condition|;
 name|q6
 operator|=
@@ -830,7 +836,7 @@ condition|(
 name|q6
 operator|==
 operator|&
-name|ip6q
+name|V_ip6q
 condition|)
 block|{
 comment|/* 		 * the first fragment to arrive, create a reassembly queue. 		 */
@@ -841,7 +847,7 @@ expr_stmt|;
 comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxfragpackets is 0, never accept fragments. 		 * If maxfragpackets is -1, accept all fragments without 		 * limitation. 		 */
 if|if
 condition|(
-name|ip6_maxfragpackets
+name|V_ip6_maxfragpackets
 operator|<
 literal|0
 condition|)
@@ -849,17 +855,17 @@ empty_stmt|;
 elseif|else
 if|if
 condition|(
-name|frag6_nfragpackets
+name|V_frag6_nfragpackets
 operator|>=
 operator|(
 name|u_int
 operator|)
-name|ip6_maxfragpackets
+name|V_ip6_maxfragpackets
 condition|)
 goto|goto
 name|dropfrag
 goto|;
-name|frag6_nfragpackets
+name|V_frag6_nfragpackets
 operator|++
 expr_stmt|;
 name|q6
@@ -907,7 +913,7 @@ argument_list|(
 name|q6
 argument_list|,
 operator|&
-name|ip6q
+name|V_ip6q
 argument_list|)
 expr_stmt|;
 comment|/* ip6q_nxt will be filled afterwards, from 1st fragment */
@@ -1660,7 +1666,7 @@ operator|->
 name|ip6af_up
 argument_list|)
 expr_stmt|;
-name|frag6_nfrags
+name|V_frag6_nfrags
 operator|++
 expr_stmt|;
 name|q6
@@ -1672,7 +1678,7 @@ if|#
 directive|if
 literal|0
 comment|/* xxx */
-block|if (q6 != ip6q.ip6q_next) { 		frag6_remque(q6); 		frag6_insque(q6,&ip6q); 	}
+block|if (q6 != V_ip6q.ip6q_next) { 		frag6_remque(q6); 		frag6_insque(q6,&V_ip6q); 	}
 endif|#
 directive|endif
 name|next
@@ -2016,7 +2022,7 @@ argument_list|(
 name|q6
 argument_list|)
 expr_stmt|;
-name|frag6_nfrags
+name|V_frag6_nfrags
 operator|-=
 name|q6
 operator|->
@@ -2029,7 +2035,7 @@ argument_list|,
 name|M_FTABLE
 argument_list|)
 expr_stmt|;
-name|frag6_nfragpackets
+name|V_frag6_nfragpackets
 operator|--
 expr_stmt|;
 goto|goto
@@ -2080,7 +2086,7 @@ argument_list|(
 name|q6
 argument_list|)
 expr_stmt|;
-name|frag6_nfrags
+name|V_frag6_nfrags
 operator|-=
 name|q6
 operator|->
@@ -2093,7 +2099,7 @@ argument_list|,
 name|M_FTABLE
 argument_list|)
 expr_stmt|;
-name|frag6_nfragpackets
+name|V_frag6_nfragpackets
 operator|--
 expr_stmt|;
 if|if
@@ -2140,7 +2146,7 @@ operator|=
 name|plen
 expr_stmt|;
 block|}
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_reassembled
 operator|++
@@ -2181,7 +2187,7 @@ argument_list|,
 name|ifs6_reass_fail
 argument_list|)
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_fragdropped
 operator|++
@@ -2340,7 +2346,7 @@ argument_list|(
 name|q6
 argument_list|)
 expr_stmt|;
-name|frag6_nfrags
+name|V_frag6_nfrags
 operator|-=
 name|q6
 operator|->
@@ -2353,7 +2359,7 @@ argument_list|,
 name|M_FTABLE
 argument_list|)
 expr_stmt|;
-name|frag6_nfragpackets
+name|V_frag6_nfragpackets
 operator|--
 expr_stmt|;
 block|}
@@ -2558,7 +2564,7 @@ argument_list|()
 expr_stmt|;
 name|q6
 operator|=
-name|ip6q
+name|V_ip6q
 operator|.
 name|ip6q_next
 expr_stmt|;
@@ -2571,7 +2577,7 @@ condition|(
 name|q6
 operator|!=
 operator|&
-name|ip6q
+name|V_ip6q
 condition|)
 block|{
 operator|--
@@ -2596,7 +2602,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_fragtimeout
 operator|++
@@ -2614,19 +2620,19 @@ block|}
 comment|/* 	 * If we are over the maximum number of fragments 	 * (due to the limit being lowered), drain off 	 * enough to get down to the new limit. 	 */
 while|while
 condition|(
-name|frag6_nfragpackets
+name|V_frag6_nfragpackets
 operator|>
 operator|(
 name|u_int
 operator|)
-name|ip6_maxfragpackets
+name|V_ip6_maxfragpackets
 operator|&&
-name|ip6q
+name|V_ip6q
 operator|.
 name|ip6q_prev
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_fragoverflow
 operator|++
@@ -2634,7 +2640,7 @@ expr_stmt|;
 comment|/* XXX in6_ifstat_inc(ifp, ifs6_reass_fail) */
 name|frag6_freef
 argument_list|(
-name|ip6q
+name|V_ip6q
 operator|.
 name|ip6q_prev
 argument_list|)
@@ -2647,7 +2653,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Routing changes might produce a better route than we last used; 	 * make sure we notice eventually, even if forwarding only for one 	 * destination and the cache is never replaced. 	 */
-block|if (ip6_forward_rt.ro_rt) { 		RTFREE(ip6_forward_rt.ro_rt); 		ip6_forward_rt.ro_rt = 0; 	} 	if (ipsrcchk_rt.ro_rt) { 		RTFREE(ipsrcchk_rt.ro_rt); 		ipsrcchk_rt.ro_rt = 0; 	}
+block|if (V_ip6_forward_rt.ro_rt) { 		RTFREE(V_ip6_forward_rt.ro_rt); 		V_ip6_forward_rt.ro_rt = 0; 	} 	if (ipsrcchk_rt.ro_rt) { 		RTFREE(ipsrcchk_rt.ro_rt); 		ipsrcchk_rt.ro_rt = 0; 	}
 endif|#
 directive|endif
 block|}
@@ -2674,15 +2680,15 @@ condition|)
 return|return;
 while|while
 condition|(
-name|ip6q
+name|V_ip6q
 operator|.
 name|ip6q_next
 operator|!=
 operator|&
-name|ip6q
+name|V_ip6q
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_fragdropped
 operator|++
@@ -2690,7 +2696,7 @@ expr_stmt|;
 comment|/* XXX in6_ifstat_inc(ifp, ifs6_reass_fail) */
 name|frag6_freef
 argument_list|(
-name|ip6q
+name|V_ip6q
 operator|.
 name|ip6q_next
 argument_list|)

@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -468,7 +474,7 @@ name|struct
 name|sockaddr_in6
 name|fromsa
 decl_stmt|;
-name|rip6stat
+name|V_rip6stat
 operator|.
 name|rip6s_ipackets
 operator|++
@@ -515,14 +521,14 @@ comment|/* general init */
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|in6p
 argument_list|,
-argument|&ripcb
+argument|&V_ripcb
 argument_list|,
 argument|inp_list
 argument_list|)
@@ -620,7 +626,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|rip6stat
+name|V_rip6stat
 operator|.
 name|rip6s_isum
 operator|++
@@ -652,7 +658,7 @@ argument_list|(
 name|in6p
 argument_list|)
 expr_stmt|;
-name|rip6stat
+name|V_rip6stat
 operator|.
 name|rip6s_badsum
 operator|++
@@ -703,7 +709,7 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-name|ipsec6stat
+name|V_ipsec6stat
 operator|.
 name|in_polvio
 operator|++
@@ -795,7 +801,7 @@ argument_list|(
 name|opts
 argument_list|)
 expr_stmt|;
-name|rip6stat
+name|V_rip6stat
 operator|.
 name|rip6s_fullsock
 operator|++
@@ -828,7 +834,7 @@ block|}
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -852,12 +858,12 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ipsec6stat
+name|V_ipsec6stat
 operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_delivered
 operator|--
@@ -954,7 +960,7 @@ argument_list|(
 name|opts
 argument_list|)
 expr_stmt|;
-name|rip6stat
+name|V_rip6stat
 operator|.
 name|rip6s_fullsock
 operator|++
@@ -976,7 +982,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|rip6stat
+name|V_rip6stat
 operator|.
 name|rip6s_nosock
 operator|++
@@ -989,7 +995,7 @@ name|m_flags
 operator|&
 name|M_MCAST
 condition|)
-name|rip6stat
+name|V_rip6stat
 operator|.
 name|rip6s_nosockmcast
 operator|++
@@ -1040,7 +1046,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_delivered
 operator|--
@@ -1262,7 +1268,7 @@ operator|)
 name|in6_pcbnotify
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|,
 name|sa
 argument_list|,
@@ -1543,7 +1549,7 @@ operator|==
 literal|0
 operator|&&
 operator|!
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 condition|)
 name|scope_ambiguous
 operator|=
@@ -1558,7 +1564,7 @@ name|sa6_embedscope
 argument_list|(
 name|dstsock
 argument_list|,
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 argument_list|)
 operator|)
 operator|!=
@@ -2047,7 +2053,7 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_outhist
 index|[
@@ -2057,7 +2063,7 @@ operator|++
 expr_stmt|;
 block|}
 else|else
-name|rip6stat
+name|V_rip6stat
 operator|.
 name|rip6s_opackets
 operator|++
@@ -2449,7 +2455,7 @@ return|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 name|error
@@ -2459,7 +2465,7 @@ argument_list|(
 name|so
 argument_list|,
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -2470,7 +2476,7 @@ block|{
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -2500,7 +2506,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -2608,7 +2614,7 @@ comment|/* xxx: RSVP */
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -2638,7 +2644,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -2892,7 +2898,7 @@ condition|(
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 operator|||
 name|addr
@@ -2915,7 +2921,7 @@ name|sa6_embedscope
 argument_list|(
 name|addr
 argument_list|,
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 argument_list|)
 operator|)
 operator|!=
@@ -2993,7 +2999,7 @@ block|}
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -3017,7 +3023,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -3129,7 +3135,7 @@ condition|(
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 condition|)
 return|return
@@ -3160,7 +3166,7 @@ operator|==
 literal|0
 operator|&&
 operator|!
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 condition|)
 name|scope_ambiguous
 operator|=
@@ -3175,7 +3181,7 @@ name|sa6_embedscope
 argument_list|(
 name|addr
 argument_list|,
-name|ip6_use_defzone
+name|V_ip6_use_defzone
 argument_list|)
 operator|)
 operator|!=
@@ -3189,7 +3195,7 @@ return|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -3238,7 +3244,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -3285,7 +3291,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -3322,7 +3328,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return

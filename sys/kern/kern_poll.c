@@ -107,6 +107,12 @@ directive|include
 file|<sys/kthread.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -2202,7 +2208,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifp
 argument_list|,
-argument|&ifnet
+argument|&V_ifnet
 argument_list|,
 argument|if_link
 argument_list|)

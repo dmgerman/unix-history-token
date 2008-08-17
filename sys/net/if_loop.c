@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -408,7 +414,7 @@ block|{
 comment|/* XXX: destroying lo0 will lead to panics. */
 name|KASSERT
 argument_list|(
-name|loif
+name|V_loif
 operator|!=
 name|ifp
 argument_list|,
@@ -541,11 +547,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|loif
+name|V_loif
 operator|==
 name|NULL
 condition|)
-name|loif
+name|V_loif
 operator|=
 name|ifp
 expr_stmt|;
@@ -915,7 +921,7 @@ if|if
 condition|(
 name|bpf_peers_present
 argument_list|(
-name|loif
+name|V_loif
 operator|->
 name|if_bpf
 argument_list|)
@@ -933,7 +939,7 @@ operator|)
 operator|==
 literal|0
 operator|||
-name|loif
+name|V_loif
 operator|==
 name|ifp
 condition|)
@@ -947,7 +953,7 @@ decl_stmt|;
 comment|/* 				 * We need to prepend the address family. 				 */
 name|bpf_mtap2
 argument_list|(
-name|loif
+name|V_loif
 operator|->
 name|if_bpf
 argument_list|,

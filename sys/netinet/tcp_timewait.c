@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -399,16 +405,16 @@ decl_stmt|;
 comment|/* 	 * Max out at half the ephemeral port range so that TIME_WAIT 	 * sockets don't tie up too many ephemeral ports. 	 */
 if|if
 condition|(
-name|ipport_lastauto
+name|V_ipport_lastauto
 operator|>
-name|ipport_firstauto
+name|V_ipport_firstauto
 condition|)
 name|halfrange
 operator|=
 operator|(
-name|ipport_lastauto
+name|V_ipport_lastauto
 operator|-
-name|ipport_firstauto
+name|V_ipport_firstauto
 operator|)
 operator|/
 literal|2
@@ -417,9 +423,9 @@ else|else
 name|halfrange
 operator|=
 operator|(
-name|ipport_firstauto
+name|V_ipport_firstauto
 operator|-
-name|ipport_lastauto
+name|V_ipport_lastauto
 operator|)
 operator|/
 literal|2
@@ -671,7 +677,7 @@ expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|twq_2msl
+name|V_twq_2msl
 argument_list|)
 expr_stmt|;
 block|}
@@ -716,7 +722,7 @@ decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 comment|/* tcp_tw_2msl_reset(). */
@@ -727,7 +733,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nolocaltimewait
+name|V_nolocaltimewait
 operator|&&
 name|in_localip
 argument_list|(
@@ -1107,7 +1113,7 @@ comment|/*  * Determine if the ISN we will generate has advanced beyond the last
 end_comment
 
 begin_endif
-unit|int tcp_twrecycleable(struct tcptw *tw) { 	tcp_seq new_iss = tw->iss; 	tcp_seq new_irs = tw->irs;  	INP_INFO_WLOCK_ASSERT(&tcbinfo); 	new_iss += (ticks - tw->t_starttime) * (ISN_BYTES_PER_SECOND / hz); 	new_irs += (ticks - tw->t_starttime) * (MS_ISN_BYTES_PER_SECOND / hz);  	if (SEQ_GT(new_iss, tw->snd_nxt)&& SEQ_GT(new_irs, tw->rcv_nxt)) 		return (1); 	else 		return (0); }
+unit|int tcp_twrecycleable(struct tcptw *tw) { 	tcp_seq new_iss = tw->iss; 	tcp_seq new_irs = tw->irs;  	INP_INFO_WLOCK_ASSERT(&V_tcbinfo); 	new_iss += (ticks - tw->t_starttime) * (ISN_BYTES_PER_SECOND / hz); 	new_irs += (ticks - tw->t_starttime) * (MS_ISN_BYTES_PER_SECOND / hz);  	if (SEQ_GT(new_iss, tw->snd_nxt)&& SEQ_GT(new_irs, tw->rcv_nxt)) 		return (1); 	else 		return (0); }
 endif|#
 directive|endif
 end_endif
@@ -1194,7 +1200,7 @@ comment|/* tcbinfo lock required for tcp_twclose(), tcp_tw_2msl_reset(). */
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -1680,7 +1686,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 comment|/* tcp_tw_2msl_stop(). */
@@ -1817,7 +1823,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_closed
 operator|++
@@ -2358,7 +2364,7 @@ name|len
 expr_stmt|;
 if|if
 condition|(
-name|path_mtu_discovery
+name|V_path_mtu_discovery
 condition|)
 name|ip
 operator|->
@@ -2404,18 +2410,18 @@ name|flags
 operator|&
 name|TH_ACK
 condition|)
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndacks
 operator|++
 expr_stmt|;
 else|else
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndctrl
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_sndtotal
 operator|++
@@ -2445,7 +2451,7 @@ block|{
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -2462,7 +2468,7 @@ condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|twq_2msl
+name|V_twq_2msl
 argument_list|,
 name|tw
 argument_list|,
@@ -2482,7 +2488,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|twq_2msl
+name|V_twq_2msl
 argument_list|,
 name|tw
 argument_list|,
@@ -2506,13 +2512,13 @@ block|{
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|twq_2msl
+name|V_twq_2msl
 argument_list|,
 name|tw
 argument_list|,
@@ -2540,7 +2546,7 @@ decl_stmt|;
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|tcbinfo
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 for|for
@@ -2554,7 +2560,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|twq_2msl
+name|V_twq_2msl
 argument_list|)
 expr_stmt|;
 if|if

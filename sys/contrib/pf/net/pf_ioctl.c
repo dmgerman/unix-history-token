@@ -270,6 +270,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -19951,7 +19957,7 @@ operator|&
 name|M_LOOP
 condition|?
 operator|&
-name|loif
+name|V_loif
 index|[
 literal|0
 index|]

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/raw_cb.h>
 end_include
 
@@ -270,7 +276,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|rawcb_list
+name|V_rawcb_list
 argument_list|,
 name|rp
 argument_list|,

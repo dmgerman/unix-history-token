@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -2314,7 +2320,7 @@ directive|ifndef
 name|KLD_MODULE
 comment|/* 	     * XXX: Avoid undefined symbol error with an IPv4 only 	     * kernel. 	     */
 operator|&&
-name|ip6_v6only
+name|V_ip6_v6only
 endif|#
 directive|endif
 condition|)

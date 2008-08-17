@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -601,7 +607,7 @@ parameter_list|)
 block|{
 name|uma_zone_set_max
 argument_list|(
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_zone
 argument_list|,
@@ -663,7 +669,7 @@ block|{
 name|INP_INFO_LOCK_INIT
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|,
 literal|"udp"
 argument_list|)
@@ -671,17 +677,17 @@ expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
-name|udb
+name|V_udb
 argument_list|)
 expr_stmt|;
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_listhead
 operator|=
 operator|&
 name|udb
 expr_stmt|;
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_hashbase
 operator|=
@@ -692,12 +698,12 @@ argument_list|,
 name|M_PCB
 argument_list|,
 operator|&
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_hashmask
 argument_list|)
 expr_stmt|;
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_porthashbase
 operator|=
@@ -708,12 +714,12 @@ argument_list|,
 name|M_PCB
 argument_list|,
 operator|&
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_porthashmask
 argument_list|)
 expr_stmt|;
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_zone
 operator|=
@@ -742,7 +748,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_zone
 argument_list|,
@@ -846,7 +852,7 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-name|ipsec4stat
+name|V_ipsec4stat
 operator|.
 name|in_polvio
 operator|++
@@ -1074,7 +1080,7 @@ argument_list|(
 name|opts
 argument_list|)
 expr_stmt|;
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_fullsock
 operator|++
@@ -1156,7 +1162,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_ipackets
 operator|++
@@ -1243,7 +1249,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_hdrops
 operator|++
@@ -1372,7 +1378,7 @@ name|udphdr
 argument_list|)
 condition|)
 block|{
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_badlen
 operator|++
@@ -1398,7 +1404,7 @@ comment|/* 	 * Save a copy of the IP header in case we want restore it for 	 * s
 if|if
 condition|(
 operator|!
-name|udp_blackhole
+name|V_udp_blackhole
 condition|)
 name|save_ip
 operator|=
@@ -1594,7 +1600,7 @@ condition|(
 name|uh_sum
 condition|)
 block|{
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_badsum
 operator|++
@@ -1608,7 +1614,7 @@ return|return;
 block|}
 block|}
 else|else
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_nosum
 operator|++
@@ -1687,7 +1693,7 @@ directive|endif
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1732,7 +1738,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|inp
 argument_list|,
-argument|&udb
+argument|&V_udb
 argument_list|,
 argument|inp_list
 argument_list|)
@@ -2021,7 +2027,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_filtermcast
 operator|++
@@ -2134,7 +2140,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * No matching pcb found; discard datagram.  (No need 			 * to send an ICMP Port Unreachable for a broadcast 			 * or multicast datgram.) 			 */
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_noportbcast
 operator|++
@@ -2171,7 +2177,7 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2182,7 +2188,7 @@ operator|=
 name|in_pcblookup_hash
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|,
 name|ip
 operator|->
@@ -2268,7 +2274,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_noport
 operator|++
@@ -2286,7 +2292,7 @@ name|M_MCAST
 operator|)
 condition|)
 block|{
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_noportbcast
 operator|++
@@ -2297,7 +2303,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|udp_blackhole
+name|V_udp_blackhole
 condition|)
 goto|goto
 name|badheadlocked
@@ -2341,7 +2347,7 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2355,7 +2361,7 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -2422,7 +2428,7 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|badunlocked
@@ -2626,7 +2632,7 @@ expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -2634,7 +2640,7 @@ operator|=
 name|in_pcblookup_hash
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|,
 name|faddr
 argument_list|,
@@ -2696,7 +2702,7 @@ block|}
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -2704,7 +2710,7 @@ else|else
 name|in_pcbnotifyall
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|,
 name|faddr
 argument_list|,
@@ -2762,7 +2768,7 @@ condition|)
 block|{
 name|n
 operator|=
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_count
 expr_stmt|;
@@ -2814,25 +2820,25 @@ comment|/* 	 * OK, now we're committed to doing something. 	 */
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|gencnt
 operator|=
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_gencnt
 expr_stmt|;
 name|n
 operator|=
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_count
 expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|error
@@ -2944,7 +2950,7 @@ return|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 for|for
@@ -2953,7 +2959,7 @@ name|inp
 operator|=
 name|LIST_FIRST
 argument_list|(
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_listhead
 argument_list|)
@@ -3023,7 +3029,7 @@ block|}
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|n
@@ -3170,14 +3176,14 @@ comment|/* 		 * Give the user an updated idea of our state.  If the 		 * generat
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|xig
 operator|.
 name|xig_gen
 operator|=
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_gencnt
 expr_stmt|;
@@ -3191,14 +3197,14 @@ name|xig
 operator|.
 name|xig_count
 operator|=
-name|udbinfo
+name|V_udbinfo
 operator|.
 name|ipi_count
 expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|error
@@ -3327,7 +3333,7 @@ return|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -3335,7 +3341,7 @@ operator|=
 name|in_pcblookup_hash
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|,
 name|addrs
 index|[
@@ -3385,7 +3391,7 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -3450,7 +3456,7 @@ block|{
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|error
@@ -3914,7 +3920,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -3991,7 +3997,7 @@ operator|!
 name|INP_INFO_TRY_RLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 condition|)
 block|{
@@ -4003,7 +4009,7 @@ expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|INP_RLOCK
@@ -4047,7 +4053,7 @@ block|{
 name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -4213,7 +4219,7 @@ block|{
 name|INP_INFO_LOCK_ASSERT
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|error
@@ -4276,7 +4282,7 @@ block|{
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK_ASSERT
@@ -4741,7 +4747,7 @@ operator|->
 name|inp_ip_tos
 expr_stmt|;
 comment|/* XXX */
-name|udpstat
+name|V_udpstat
 operator|.
 name|udps_opackets
 operator|++
@@ -4755,7 +4761,7 @@ condition|)
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -4768,7 +4774,7 @@ condition|)
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|error
@@ -4831,7 +4837,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -4851,7 +4857,7 @@ expr_stmt|;
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -4911,7 +4917,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -4957,7 +4963,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -5031,7 +5037,7 @@ return|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|error
@@ -5041,7 +5047,7 @@ argument_list|(
 name|so
 argument_list|,
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -5052,7 +5058,7 @@ block|{
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -5075,7 +5081,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|inp
@@ -5088,7 +5094,7 @@ name|inp
 operator|->
 name|inp_ip_ttl
 operator|=
-name|ip_defttl
+name|V_ip_defttl
 expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(
@@ -5153,7 +5159,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -5182,7 +5188,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -5230,7 +5236,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -5276,7 +5282,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -5337,7 +5343,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -5364,7 +5370,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -5439,7 +5445,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -5502,7 +5508,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -5523,7 +5529,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 block|}
@@ -5566,7 +5572,7 @@ expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 name|INP_WLOCK
@@ -5593,7 +5599,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -5641,7 +5647,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 return|return

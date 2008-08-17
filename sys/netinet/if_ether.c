@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1168,7 +1174,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&in_ifaddrhead
+argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
@@ -1253,14 +1259,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|useloopback
+name|V_useloopback
 condition|)
 block|{
 name|rt
 operator|->
 name|rt_ifp
 operator|=
-name|loif
+name|V_loif
 expr_stmt|;
 name|rt
 operator|->
@@ -1268,7 +1274,7 @@ name|rt_rmx
 operator|.
 name|rmx_mtu
 operator|=
-name|loif
+name|V_loif
 operator|->
 name|if_mtu
 expr_stmt|;
@@ -2199,7 +2205,7 @@ name|la
 operator|->
 name|la_asked
 operator|<
-name|arp_maxtries
+name|V_arp_maxtries
 condition|)
 name|error
 operator|=
@@ -3084,7 +3090,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|)
 operator|)
 operator|==
@@ -3908,7 +3914,7 @@ name|rt_expire
 operator|=
 name|time_uptime
 operator|+
-name|arpt_keep
+name|V_arpt_keep
 expr_stmt|;
 name|callout_reset
 argument_list|(
@@ -3919,7 +3925,7 @@ name|la_timer
 argument_list|,
 name|hz
 operator|*
-name|arpt_keep
+name|V_arpt_keep
 argument_list|,
 name|arptimer
 argument_list|,
@@ -3937,7 +3943,7 @@ name|la
 operator|->
 name|la_preempt
 operator|=
-name|arp_maxtries
+name|V_arp_maxtries
 expr_stmt|;
 name|hold
 operator|=
@@ -4079,7 +4085,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|arp_proxyall
+name|V_arp_proxyall
 condition|)
 goto|goto
 name|drop

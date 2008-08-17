@@ -101,6 +101,12 @@ directive|include
 file|<sys/unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(,
@@ -1274,7 +1280,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|hostname
+name|V_hostname
 argument_list|,
 name|tmphostname
 argument_list|,
@@ -1324,7 +1330,7 @@ name|bcopy
 argument_list|(
 name|tmphostname
 argument_list|,
-name|hostname
+name|V_hostname
 argument_list|,
 name|MAXHOSTNAMELEN
 argument_list|)

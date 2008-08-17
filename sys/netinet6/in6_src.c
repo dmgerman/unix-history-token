@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -523,9 +529,9 @@ name|REPLACE
 parameter_list|(
 name|r
 parameter_list|)
-value|do {\ 	if ((r)< sizeof(ip6stat.ip6s_sources_rule) / \ 		sizeof(ip6stat.ip6s_sources_rule[0]))
+value|do {\ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
 comment|/* check for safety */
-value|\ 		ip6stat.ip6s_sources_rule[(r)]++; \
+value|\ 		V_ip6stat.ip6s_sources_rule[(r)]++; \
 comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: replace %s with %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto replace; \ } while(0)
 end_define
@@ -537,9 +543,9 @@ name|NEXT
 parameter_list|(
 name|r
 parameter_list|)
-value|do {\ 	if ((r)< sizeof(ip6stat.ip6s_sources_rule) / \ 		sizeof(ip6stat.ip6s_sources_rule[0]))
+value|do {\ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
 comment|/* check for safety */
-value|\ 		ip6stat.ip6s_sources_rule[(r)]++; \
+value|\ 		V_ip6stat.ip6s_sources_rule[(r)]++; \
 comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: keep %s against %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto next;
 comment|/* XXX: we can't use 'continue' here */
@@ -553,9 +559,9 @@ name|BREAK
 parameter_list|(
 name|r
 parameter_list|)
-value|do { \ 	if ((r)< sizeof(ip6stat.ip6s_sources_rule) / \ 		sizeof(ip6stat.ip6s_sources_rule[0]))
+value|do { \ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
 comment|/* check for safety */
-value|\ 		ip6stat.ip6s_sources_rule[(r)]++; \ 	goto out;
+value|\ 		V_ip6stat.ip6s_sources_rule[(r)]++; \ 	goto out;
 comment|/* XXX: we can't use 'break' here */
 value|\ } while(0)
 end_define
@@ -1031,7 +1037,7 @@ for|for
 control|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ia
 condition|;
@@ -1163,7 +1169,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|ip6_use_deprecated
+name|V_ip6_use_deprecated
 operator|&&
 name|IFA6_IS_DEPRECATED
 argument_list|(
@@ -1480,7 +1486,7 @@ condition|)
 block|{
 name|prefer_tempaddr
 operator|=
-name|ip6_prefer_tempaddr
+name|V_ip6_prefer_tempaddr
 expr_stmt|;
 block|}
 elseif|else
@@ -2568,7 +2574,7 @@ name|error
 operator|==
 name|EHOSTUNREACH
 condition|)
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_noroute
 operator|++
@@ -3076,13 +3082,13 @@ block|}
 else|else
 return|return
 operator|(
-name|ip6_defhlim
+name|V_ip6_defhlim
 operator|)
 return|;
 block|}
 return|return
 operator|(
-name|ip6_defhlim
+name|V_ip6_defhlim
 operator|)
 return|;
 block|}
@@ -3201,12 +3207,12 @@ condition|)
 block|{
 name|first
 operator|=
-name|ipport_hifirstauto
+name|V_ipport_hifirstauto
 expr_stmt|;
 comment|/* sysctl */
 name|last
 operator|=
-name|ipport_hilastauto
+name|V_ipport_hilastauto
 expr_stmt|;
 name|lastport
 operator|=
@@ -3246,12 +3252,12 @@ name|error
 return|;
 name|first
 operator|=
-name|ipport_lowfirstauto
+name|V_ipport_lowfirstauto
 expr_stmt|;
 comment|/* 1023 */
 name|last
 operator|=
-name|ipport_lowlastauto
+name|V_ipport_lowlastauto
 expr_stmt|;
 comment|/* 600 */
 name|lastport
@@ -3266,12 +3272,12 @@ else|else
 block|{
 name|first
 operator|=
-name|ipport_firstauto
+name|V_ipport_firstauto
 expr_stmt|;
 comment|/* sysctl */
 name|last
 operator|=
-name|ipport_lastauto
+name|V_ipport_lastauto
 expr_stmt|;
 name|lastport
 operator|=
@@ -3515,15 +3521,15 @@ comment|/* initialize the "last resort" policy */
 name|bzero
 argument_list|(
 operator|&
-name|defaultaddrpolicy
+name|V_defaultaddrpolicy
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|defaultaddrpolicy
+name|V_defaultaddrpolicy
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|defaultaddrpolicy
+name|V_defaultaddrpolicy
 operator|.
 name|label
 operator|=
@@ -3571,7 +3577,7 @@ condition|)
 name|match
 operator|=
 operator|&
-name|defaultaddrpolicy
+name|V_defaultaddrpolicy
 expr_stmt|;
 else|else
 name|match
@@ -3907,7 +3913,7 @@ block|{
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|addrsel_policytab
+name|V_addrsel_policytab
 argument_list|)
 expr_stmt|;
 block|}
@@ -3962,7 +3968,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|pol
 argument_list|,
-argument|&addrsel_policytab
+argument|&V_addrsel_policytab
 argument_list|,
 argument|ape_entry
 argument_list|)
@@ -4051,7 +4057,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|addrsel_policytab
+name|V_addrsel_policytab
 argument_list|,
 name|new
 argument_list|,
@@ -4099,7 +4105,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|pol
 argument_list|,
-argument|&addrsel_policytab
+argument|&V_addrsel_policytab
 argument_list|,
 argument|ape_entry
 argument_list|)
@@ -4170,7 +4176,7 @@ block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|addrsel_policytab
+name|V_addrsel_policytab
 argument_list|,
 name|pol
 argument_list|,
@@ -4232,7 +4238,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|pol
 argument_list|,
-argument|&addrsel_policytab
+argument|&V_addrsel_policytab
 argument_list|,
 argument|ape_entry
 argument_list|)
@@ -4387,7 +4393,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|pent
 argument_list|,
-argument|&addrsel_policytab
+argument|&V_addrsel_policytab
 argument_list|,
 argument|ape_entry
 argument_list|)

@@ -1282,7 +1282,7 @@ name|nd6log
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (nd6_debug) log x; } while (
+value|do { if (V_nd6_debug) log x; } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define

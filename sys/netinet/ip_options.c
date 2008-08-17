@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -584,7 +590,7 @@ directive|ifdef
 name|IPSTEALTH
 if|if
 condition|(
-name|ipstealth
+name|V_ipstealth
 operator|&&
 name|pass
 operator|>
@@ -766,7 +772,7 @@ directive|ifdef
 name|IPSTEALTH
 if|if
 condition|(
-name|ipstealth
+name|V_ipstealth
 condition|)
 goto|goto
 name|dropit
@@ -781,7 +787,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ipforwarding
+name|V_ipforwarding
 condition|)
 block|{
 name|char
@@ -844,7 +850,7 @@ name|dropit
 label|:
 endif|#
 directive|endif
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_cantforward
 operator|++
@@ -1039,7 +1045,7 @@ directive|ifdef
 name|IPSTEALTH
 if|if
 condition|(
-name|ipstealth
+name|V_ipstealth
 operator|&&
 name|pass
 operator|==
@@ -1253,7 +1259,7 @@ directive|ifdef
 name|IPSTEALTH
 if|if
 condition|(
-name|ipstealth
+name|V_ipstealth
 operator|&&
 name|pass
 operator|==
@@ -1696,7 +1702,7 @@ if|if
 condition|(
 name|forward
 operator|&&
-name|ipforwarding
+name|V_ipforwarding
 condition|)
 block|{
 name|ip_forward
@@ -1732,7 +1738,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_badoptions
 operator|++

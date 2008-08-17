@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -2121,7 +2127,7 @@ name|SVR4_SI_HOSTNAME
 case|:
 name|str
 operator|=
-name|hostname
+name|V_hostname
 expr_stmt|;
 break|break;
 case|case
@@ -2178,7 +2184,7 @@ case|:
 comment|/* XXXRW: locking? */
 name|str
 operator|=
-name|domainname
+name|V_domainname
 expr_stmt|;
 break|break;
 case|case

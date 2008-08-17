@@ -157,6 +157,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2030,7 +2036,7 @@ if|if
 condition|(
 name|so
 operator|!=
-name|ip_mrouter
+name|V_ip_mrouter
 operator|&&
 name|sopt
 operator|->
@@ -2980,7 +2986,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ip_mrouter
+name|V_ip_mrouter
 operator|==
 name|NULL
 condition|)
@@ -3239,7 +3245,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ip_mrouter
+name|V_ip_mrouter
 operator|!=
 name|NULL
 condition|)
@@ -3316,7 +3322,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|ip_mrouter
+name|V_ip_mrouter
 operator|=
 name|so
 expr_stmt|;
@@ -3382,7 +3388,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ip_mrouter
+name|V_ip_mrouter
 operator|==
 name|NULL
 condition|)
@@ -3395,7 +3401,7 @@ name|EINVAL
 return|;
 block|}
 comment|/*      * Detach/disable hooks to the reset of the system.      */
-name|ip_mrouter
+name|V_ip_mrouter
 operator|=
 name|NULL
 expr_stmt|;
@@ -6516,7 +6522,7 @@ if|if
 condition|(
 name|socket_send
 argument_list|(
-name|ip_mrouter
+name|V_ip_mrouter
 argument_list|,
 name|mm
 argument_list|,
@@ -7488,7 +7494,7 @@ if|if
 condition|(
 name|socket_send
 argument_list|(
-name|ip_mrouter
+name|V_ip_mrouter
 argument_list|,
 name|mm
 argument_list|,
@@ -8190,7 +8196,7 @@ name|v_rsvp_on
 operator|=
 literal|1
 expr_stmt|;
-name|rsvp_on
+name|V_rsvp_on
 operator|++
 expr_stmt|;
 block|}
@@ -8228,7 +8234,7 @@ name|v_rsvp_on
 operator|=
 literal|0
 expr_stmt|;
-name|rsvp_on
+name|V_rsvp_on
 operator|--
 expr_stmt|;
 block|}
@@ -8333,7 +8339,7 @@ name|v_rsvp_on
 operator|=
 literal|0
 expr_stmt|;
-name|rsvp_on
+name|V_rsvp_on
 operator|--
 expr_stmt|;
 block|}
@@ -8400,14 +8406,14 @@ name|printf
 argument_list|(
 literal|"rsvp_input: rsvp_on %d\n"
 argument_list|,
-name|rsvp_on
+name|V_rsvp_on
 argument_list|)
 expr_stmt|;
 comment|/* Can still get packets with rsvp_on = 0 if there is a local member      * of the group to which the RSVP packet is addressed.  But in this      * case we want to throw the packet away.      */
 if|if
 condition|(
 operator|!
-name|rsvp_on
+name|V_rsvp_on
 condition|)
 block|{
 name|m_freem
@@ -8496,7 +8502,7 @@ expr_stmt|;
 comment|/* 	 * If the old-style non-vif-associated socket is set, 	 * then use it.  Otherwise, drop packet since there 	 * is no specific socket for this vif. 	 */
 if|if
 condition|(
-name|ip_rsvpd
+name|V_ip_rsvpd
 operator|!=
 name|NULL
 condition|)
@@ -10336,7 +10342,7 @@ if|if
 condition|(
 name|socket_send
 argument_list|(
-name|ip_mrouter
+name|V_ip_mrouter
 argument_list|,
 name|m
 argument_list|,
@@ -11650,7 +11656,7 @@ if|if
 condition|(
 name|socket_send
 argument_list|(
-name|ip_mrouter
+name|V_ip_mrouter
 argument_list|,
 name|mb_first
 argument_list|,
@@ -13207,7 +13213,7 @@ case|:
 comment|/* 	 * Typically module unload happens after the user-level 	 * process has shutdown the kernel services (the check 	 * below insures someone can't just yank the module out 	 * from under a running process).  But if the module is 	 * just loaded and then unloaded w/o starting up a user 	 * process we still need to cleanup. 	 */
 if|if
 condition|(
-name|ip_mrouter
+name|V_ip_mrouter
 ifdef|#
 directive|ifdef
 name|INET6

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1649,7 +1655,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|in_multihead
+name|V_in_multihead
 argument_list|,
 name|ninm
 argument_list|,
@@ -2292,7 +2298,7 @@ name|gsr_interface
 operator|==
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|gsr
 operator|.
@@ -3374,7 +3380,7 @@ name|msfr_ifindex
 operator|==
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|msfr
 operator|.
@@ -4577,7 +4583,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&in_ifaddrhead
+argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
@@ -4816,7 +4822,7 @@ name|gsr_interface
 operator|==
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|gsr
 operator|.
@@ -5700,7 +5706,7 @@ name|gsr_interface
 operator|==
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|gsr
 operator|.
@@ -6128,7 +6134,7 @@ name|imr_ifindex
 operator|<
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|mreqn
 operator|.
@@ -6521,7 +6527,7 @@ name|msfr_ifindex
 operator|==
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|msfr
 operator|.

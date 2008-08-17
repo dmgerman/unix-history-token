@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -449,7 +455,7 @@ name|hostnamelen
 operator|=
 name|strlen
 argument_list|(
-name|hostname
+name|V_hostname
 argument_list|)
 expr_stmt|;
 if|#
@@ -482,7 +488,7 @@ argument_list|(
 operator|&
 name|ctxt
 argument_list|,
-name|hostname
+name|V_hostname
 argument_list|,
 name|hostnamelen
 argument_list|)
@@ -1552,7 +1558,7 @@ for|for
 control|(
 name|ifp
 operator|=
-name|ifnet
+name|V_ifnet
 operator|.
 name|tqh_first
 init|;
@@ -2912,7 +2918,7 @@ block|}
 comment|/* 	 * assign a link-local address, if there's none. 	 */
 if|if
 condition|(
-name|ip6_auto_linklocal
+name|V_ip6_auto_linklocal
 operator|&&
 name|ifp
 operator|->
@@ -2968,13 +2974,13 @@ directive|endif
 comment|/* update dynamically. */
 if|if
 condition|(
-name|in6_maxmtu
+name|V_in6_maxmtu
 operator|<
 name|ifp
 operator|->
 name|if_mtu
 condition|)
-name|in6_maxmtu
+name|V_in6_maxmtu
 operator|=
 name|ifp
 operator|->
@@ -3299,10 +3305,10 @@ operator|==
 operator|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 operator|)
 condition|)
-name|in6_ifaddr
+name|V_in6_ifaddr
 operator|=
 name|ia
 operator|->
@@ -3374,7 +3380,7 @@ block|}
 name|in6_pcbpurgeif0
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|,
 name|ifp
 argument_list|)
@@ -3382,7 +3388,7 @@ expr_stmt|;
 name|in6_pcbpurgeif0
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|,
 name|ifp
 argument_list|)
@@ -3452,7 +3458,7 @@ return|return;
 comment|/* XXX grab lock first to avoid LOR */
 if|if
 condition|(
-name|rt_tables
+name|V_rt_tables
 index|[
 literal|0
 index|]
@@ -3465,7 +3471,7 @@ condition|)
 block|{
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
-name|rt_tables
+name|V_rt_tables
 index|[
 literal|0
 index|]
@@ -3517,7 +3523,7 @@ expr_stmt|;
 block|}
 name|RADIX_NODE_HEAD_UNLOCK
 argument_list|(
-name|rt_tables
+name|V_rt_tables
 index|[
 literal|0
 index|]
@@ -3697,14 +3703,14 @@ decl_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|in6_tmpaddrtimer_ch
+name|V_in6_tmpaddrtimer_ch
 argument_list|,
 operator|(
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|-
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 operator|-
-name|ip6_temp_regen_advance
+name|V_ip6_temp_regen_advance
 operator|)
 operator|*
 name|hz
@@ -3731,7 +3737,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 init|;
 name|ifp

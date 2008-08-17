@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -858,7 +864,7 @@ argument_list|,
 operator|&
 name|cria
 argument_list|,
-name|crypto_support
+name|V_crypto_support
 argument_list|)
 return|;
 block|}
@@ -1073,7 +1079,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ah_cleartos
+name|V_ah_cleartos
 condition|)
 name|ip
 operator|->
@@ -2288,7 +2294,7 @@ literal|"ah_input: cannot pullup header\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_hdrops
 operator|++
@@ -2324,7 +2330,7 @@ name|sav
 argument_list|)
 condition|)
 block|{
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_replay
 operator|++
@@ -2441,7 +2447,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_badauthl
 operator|++
@@ -2455,7 +2461,7 @@ return|return
 name|EACCES
 return|;
 block|}
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_ibytes
 operator|+=
@@ -2493,7 +2499,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_crypto
 operator|++
@@ -2748,7 +2754,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_crypto
 operator|++
@@ -2852,7 +2858,7 @@ literal|0
 condition|)
 block|{
 comment|/* NB: mbuf is free'd by ah_massage_headers */
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_hdrops
 operator|++
@@ -3232,7 +3238,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_notdb
 operator|++
@@ -3354,7 +3360,7 @@ return|return
 name|error
 return|;
 block|}
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_noxform
 operator|++
@@ -3384,7 +3390,7 @@ goto|;
 block|}
 else|else
 block|{
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_hist
 index|[
@@ -3413,7 +3419,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_crypto
 operator|++
@@ -3528,7 +3534,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_badauth
 operator|++
@@ -3658,7 +3664,7 @@ name|sav
 argument_list|)
 condition|)
 block|{
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_replay
 operator|++
@@ -3719,7 +3725,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_hdrops
 operator|++
@@ -3921,7 +3927,7 @@ literal|"null authentication xform"
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_output
 operator|++
@@ -4023,7 +4029,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_nopf
 operator|++
@@ -4102,7 +4108,7 @@ name|maxpacketsize
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_toobig
 operator|++
@@ -4116,7 +4122,7 @@ name|bad
 goto|;
 block|}
 comment|/* Update the counters. */
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_obytes
 operator|+=
@@ -4175,7 +4181,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_hdrops
 operator|++
@@ -4248,7 +4254,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_hdrops
 operator|++
@@ -4412,7 +4418,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_wrap
 operator|++
@@ -4432,7 +4438,7 @@ comment|/* Emulate replay attack when ipsec_replay is TRUE. */
 if|if
 condition|(
 operator|!
-name|ipsec_replay
+name|V_ipsec_replay
 condition|)
 endif|#
 directive|endif
@@ -4481,7 +4487,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_crypto
 operator|++
@@ -4600,7 +4606,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_crypto
 operator|++
@@ -5177,7 +5183,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_notdb
 operator|++
@@ -5268,7 +5274,7 @@ return|return
 name|error
 return|;
 block|}
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_noxform
 operator|++
@@ -5304,7 +5310,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_crypto
 operator|++
@@ -5326,7 +5332,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_hist
 index|[
@@ -5367,7 +5373,7 @@ name|REGRESSION
 comment|/* Emulate man-in-the-middle attack when ipsec_integrity is TRUE. */
 if|if
 condition|(
-name|ipsec_integrity
+name|V_ipsec_integrity
 condition|)
 block|{
 name|int

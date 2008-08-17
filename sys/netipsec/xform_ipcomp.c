@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -434,7 +440,7 @@ argument_list|,
 operator|&
 name|cric
 argument_list|,
-name|crypto_support
+name|V_crypto_support
 argument_list|)
 return|;
 block|}
@@ -554,7 +560,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_crypto
 operator|++
@@ -612,7 +618,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_crypto
 operator|++
@@ -990,7 +996,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_notdb
 operator|++
@@ -1108,7 +1114,7 @@ return|return
 name|error
 return|;
 block|}
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_noxform
 operator|++
@@ -1144,7 +1150,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_crypto
 operator|++
@@ -1166,7 +1172,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_hist
 index|[
@@ -1243,7 +1249,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_hdrops
 operator|++
@@ -1314,7 +1320,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_hdrops
 operator|++
@@ -1575,7 +1581,7 @@ name|hlen
 operator|=
 name|IPCOMP_HLENGTH
 expr_stmt|;
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_output
 operator|++
@@ -1625,7 +1631,7 @@ endif|#
 directive|endif
 comment|/* INET6 */
 default|default:
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_nopf
 operator|++
@@ -1693,7 +1699,7 @@ operator|>
 name|maxpacketsize
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_toobig
 operator|++
@@ -1747,7 +1753,7 @@ name|bad
 goto|;
 block|}
 comment|/* Update the counters */
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_obytes
 operator|+=
@@ -1775,7 +1781,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_hdrops
 operator|++
@@ -1841,7 +1847,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_wrap
 operator|++
@@ -2033,7 +2039,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_crypto
 operator|++
@@ -2139,7 +2145,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_crypto
 operator|++
@@ -2414,7 +2420,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_notdb
 operator|++
@@ -2506,7 +2512,7 @@ return|return
 name|error
 return|;
 block|}
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_noxform
 operator|++
@@ -2542,7 +2548,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_crypto
 operator|++
@@ -2564,7 +2570,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_hist
 index|[
@@ -2666,7 +2672,7 @@ endif|#
 directive|endif
 comment|/* INET6 */
 default|default:
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_nopf
 operator|++

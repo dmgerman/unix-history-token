@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -579,11 +585,11 @@ decl_stmt|;
 comment|/* If I'm not a router, ignore it. */
 if|if
 condition|(
-name|ip6_accept_rtadv
+name|V_ip6_accept_rtadv
 operator|!=
 literal|0
 operator|||
-name|ip6_forwarding
+name|V_ip6_forwarding
 operator|!=
 literal|1
 condition|)
@@ -706,7 +712,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -870,7 +876,7 @@ expr_stmt|;
 return|return;
 name|bad
 label|:
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_badrs
 operator|++
@@ -979,7 +985,7 @@ decl_stmt|;
 comment|/* 	 * We only accept RAs only when 	 * the system-wide variable allows the acceptance, and 	 * per-interface variable allows RAs on the receiving interface. 	 */
 if|if
 condition|(
-name|ip6_accept_rtadv
+name|V_ip6_accept_rtadv
 operator|==
 literal|0
 condition|)
@@ -1134,7 +1140,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_tooshort
 operator|++
@@ -1314,7 +1320,7 @@ name|ndi
 operator|->
 name|recalctm
 operator|=
-name|nd6_recalc_reachtm_interval
+name|V_nd6_recalc_reachtm_interval
 expr_stmt|;
 comment|/* reset */
 block|}
@@ -1964,7 +1970,7 @@ expr_stmt|;
 return|return;
 name|bad
 label|:
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_badra
 operator|++
@@ -2329,7 +2335,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 init|;
 name|dr
@@ -2560,7 +2566,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 init|;
 name|dr
@@ -2609,9 +2615,9 @@ comment|/* 	 * Flush all the routing table entries that use the router 	 * as a 
 if|if
 condition|(
 operator|!
-name|ip6_forwarding
+name|V_ip6_forwarding
 operator|&&
-name|ip6_accept_rtadv
+name|V_ip6_accept_rtadv
 condition|)
 comment|/* XXX: better condition? */
 name|rt6_flush
@@ -2646,7 +2652,7 @@ block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|,
 name|dr
 argument_list|,
@@ -2658,7 +2664,7 @@ for|for
 control|(
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -2767,10 +2773,10 @@ decl_stmt|;
 comment|/* 	 * This function should be called only when acting as an autoconfigured 	 * host.  Although the remaining part of this function is not effective 	 * if the node is not an autoconfigured host, we explicitly exclude 	 * such cases here for safety. 	 */
 if|if
 condition|(
-name|ip6_forwarding
+name|V_ip6_forwarding
 operator|||
 operator|!
-name|ip6_accept_rtadv
+name|V_ip6_accept_rtadv
 condition|)
 block|{
 name|nd6log
@@ -2781,9 +2787,9 @@ operator|,
 literal|"defrouter_select: called unexpectedly (forwarding=%d, "
 literal|"accept_rtadv=%d)\n"
 operator|,
-name|ip6_forwarding
+name|V_ip6_forwarding
 operator|,
-name|ip6_accept_rtadv
+name|V_ip6_accept_rtadv
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2801,7 +2807,7 @@ operator|!
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 condition|)
 block|{
@@ -2820,7 +2826,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 init|;
 name|dr
@@ -2945,7 +2951,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 expr_stmt|;
 else|else
@@ -3252,7 +3258,7 @@ comment|/* 			 * preferred router may be changed, so relocate 			 * this router.
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|,
 name|dr
 argument_list|,
@@ -3365,7 +3371,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 init|;
 name|dr
@@ -3411,7 +3417,7 @@ else|else
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|,
 name|n
 argument_list|,
@@ -3626,7 +3632,7 @@ for|for
 control|(
 name|search
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -3932,7 +3938,7 @@ comment|/* link ndpr_entry to nd_prefix list */
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|nd_prefix
+name|V_nd_prefix
 argument_list|,
 name|new
 argument_list|,
@@ -4930,7 +4936,7 @@ name|maxpltime
 decl_stmt|;
 if|if
 condition|(
-name|ip6_temp_valid_lifetime
+name|V_ip6_temp_valid_lifetime
 operator|>
 call|(
 name|u_int32_t
@@ -4944,13 +4950,13 @@ operator|->
 name|ia6_createtime
 operator|)
 operator|+
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 argument_list|)
 condition|)
 block|{
 name|maxvltime
 operator|=
-name|ip6_temp_valid_lifetime
+name|V_ip6_temp_valid_lifetime
 operator|-
 operator|(
 name|time_second
@@ -4960,7 +4966,7 @@ operator|->
 name|ia6_createtime
 operator|)
 operator|-
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 expr_stmt|;
 block|}
 else|else
@@ -4970,7 +4976,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|>
 call|(
 name|u_int32_t
@@ -4984,13 +4990,13 @@ operator|->
 name|ia6_createtime
 operator|)
 operator|+
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 argument_list|)
 condition|)
 block|{
 name|maxpltime
 operator|=
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|-
 operator|(
 name|time_second
@@ -5000,7 +5006,7 @@ operator|->
 name|ia6_createtime
 operator|)
 operator|-
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 expr_stmt|;
 block|}
 else|else
@@ -5178,7 +5184,7 @@ expr_stmt|;
 comment|/* 			 * RFC 3041 3.3 (2). 			 * When a new public address is created as described 			 * in RFC2462, also create a new temporary address. 			 * 			 * RFC 3041 3.5. 			 * When an interface connects to a new link, a new 			 * randomized interface identifier should be generated 			 * immediately together with a new set of temporary 			 * addresses.  Thus, we specifiy 1 as the 2nd arg of 			 * in6_tmpifadd(). 			 */
 if|if
 condition|(
-name|ip6_use_tempaddr
+name|V_ip6_use_tempaddr
 condition|)
 block|{
 name|int
@@ -5390,7 +5396,7 @@ for|for
 control|(
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -5431,7 +5437,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 init|;
 name|dr
@@ -5455,7 +5461,7 @@ for|for
 control|(
 name|pr0
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -5504,7 +5510,7 @@ operator|(
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 operator|&&
 name|pfxrtr
@@ -5518,7 +5524,7 @@ for|for
 control|(
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -5615,7 +5621,7 @@ for|for
 control|(
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -5676,7 +5682,7 @@ for|for
 control|(
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -5864,7 +5870,7 @@ for|for
 control|(
 name|ifa
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ifa
 condition|;
@@ -5919,7 +5925,7 @@ for|for
 control|(
 name|ifa
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ifa
 condition|;
@@ -6016,7 +6022,7 @@ for|for
 control|(
 name|ifa
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ifa
 condition|;
@@ -6185,7 +6191,7 @@ for|for
 control|(
 name|opr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -6831,7 +6837,7 @@ for|for
 control|(
 name|opr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -7931,7 +7937,7 @@ for|for
 control|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ia
 condition|;
@@ -8037,17 +8043,17 @@ if|if
 condition|(
 name|vltime0
 operator|>
-name|ip6_temp_valid_lifetime
+name|V_ip6_temp_valid_lifetime
 condition|)
 name|vltime0
 operator|=
-name|ip6_temp_valid_lifetime
+name|V_ip6_temp_valid_lifetime
 expr_stmt|;
 block|}
 else|else
 name|vltime0
 operator|=
-name|ip6_temp_valid_lifetime
+name|V_ip6_temp_valid_lifetime
 expr_stmt|;
 if|if
 condition|(
@@ -8089,25 +8095,25 @@ if|if
 condition|(
 name|pltime0
 operator|>
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|-
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 condition|)
 block|{
 name|pltime0
 operator|=
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|-
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 expr_stmt|;
 block|}
 block|}
 else|else
 name|pltime0
 operator|=
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|-
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 expr_stmt|;
 name|ifra
 operator|.
@@ -8134,7 +8140,7 @@ name|ifra_lifetime
 operator|.
 name|ia6t_pltime
 operator|<=
-name|ip6_temp_regen_advance
+name|V_ip6_temp_regen_advance
 condition|)
 return|return
 operator|(
@@ -8430,7 +8436,7 @@ name|radix_node_head
 modifier|*
 name|rnh
 init|=
-name|rt_tables
+name|V_rt_tables
 index|[
 literal|0
 index|]
@@ -8675,7 +8681,7 @@ name|ifindex
 operator|<
 literal|0
 operator|||
-name|if_index
+name|V_if_index
 operator|<
 name|ifindex
 condition|)
@@ -8703,37 +8709,37 @@ operator|)
 return|;
 if|if
 condition|(
-name|nd6_defifindex
+name|V_nd6_defifindex
 operator|!=
 name|ifindex
 condition|)
 block|{
-name|nd6_defifindex
+name|V_nd6_defifindex
 operator|=
 name|ifindex
 expr_stmt|;
 if|if
 condition|(
-name|nd6_defifindex
+name|V_nd6_defifindex
 operator|>
 literal|0
 condition|)
-name|nd6_defifp
+name|V_nd6_defifp
 operator|=
 name|ifnet_byindex
 argument_list|(
-name|nd6_defifindex
+name|V_nd6_defifindex
 argument_list|)
 expr_stmt|;
 else|else
-name|nd6_defifp
+name|V_nd6_defifp
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* 		 * Our current implementation assumes one-to-one maping between 		 * interfaces and links, so it would be natural to use the 		 * default interface as the default link. 		 */
 name|scope6_setdefault
 argument_list|(
-name|nd6_defifp
+name|V_nd6_defifp
 argument_list|)
 expr_stmt|;
 block|}

@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -664,7 +670,7 @@ parameter_list|(
 name|ip
 parameter_list|)
 define|\
-value|(((ip)->s_addr ^ ((ip)->s_addr>> 7) ^ ((ip)->s_addr>> 17))&	\ 	  tcp_hostcache.hashmask)
+value|(((ip)->s_addr ^ ((ip)->s_addr>> 7) ^ ((ip)->s_addr>> 17))&	\ 	  V_tcp_hostcache.hashmask)
 end_define
 
 begin_comment
@@ -679,7 +685,7 @@ parameter_list|(
 name|ip6
 parameter_list|)
 define|\
-value|(((ip6)->s6_addr32[0] ^				\ 	  (ip6)->s6_addr32[1] ^				\ 	  (ip6)->s6_addr32[2] ^				\ 	  (ip6)->s6_addr32[3])&			\ 	 tcp_hostcache.hashmask)
+value|(((ip6)->s6_addr32[0] ^				\ 	  (ip6)->s6_addr32[1] ^				\ 	  (ip6)->s6_addr32[2] ^				\ 	  (ip6)->s6_addr32[3])&			\ 	 V_tcp_hostcache.hashmask)
 end_define
 
 begin_define
@@ -713,43 +719,43 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Initialize hostcache structures. 	 */
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_count
 operator|=
 literal|0
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 operator|=
 name|TCP_HOSTCACHE_HASHSIZE
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|bucket_limit
 operator|=
 name|TCP_HOSTCACHE_BUCKETLIMIT
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_limit
 operator|=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 operator|*
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|bucket_limit
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|expire
 operator|=
 name|TCP_HOSTCACHE_EXPIRE
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|prune
 operator|=
@@ -760,7 +766,7 @@ argument_list|(
 literal|"net.inet.tcp.hostcache.hashsize"
 argument_list|,
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 argument_list|)
@@ -770,7 +776,7 @@ argument_list|(
 literal|"net.inet.tcp.hostcache.cachelimit"
 argument_list|,
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_limit
 argument_list|)
@@ -780,7 +786,7 @@ argument_list|(
 literal|"net.inet.tcp.hostcache.bucketlimit"
 argument_list|,
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|bucket_limit
 argument_list|)
@@ -790,7 +796,7 @@ condition|(
 operator|!
 name|powerof2
 argument_list|(
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 argument_list|)
@@ -801,7 +807,7 @@ argument_list|(
 literal|"WARNING: hostcache hash size is not a power of 2.\n"
 argument_list|)
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 operator|=
@@ -809,18 +815,18 @@ name|TCP_HOSTCACHE_HASHSIZE
 expr_stmt|;
 comment|/* default */
 block|}
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashmask
 operator|=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 operator|-
 literal|1
 expr_stmt|;
 comment|/* 	 * Allocate the hash table. 	 */
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 operator|=
@@ -831,7 +837,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 operator|*
@@ -857,7 +863,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 condition|;
@@ -868,7 +874,7 @@ block|{
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -878,7 +884,7 @@ operator|.
 name|hch_bucket
 argument_list|)
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -892,7 +898,7 @@ expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -910,7 +916,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Allocate the hostcache entries. 	 */
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|zone
 operator|=
@@ -939,11 +945,11 @@ argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|zone
 argument_list|,
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_limit
 argument_list|)
@@ -952,7 +958,7 @@ comment|/* 	 * Set up periodic cache cleanup. 	 */
 name|callout_init
 argument_list|(
 operator|&
-name|tcp_hc_callout
+name|V_tcp_hc_callout
 argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
@@ -960,9 +966,9 @@ expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|tcp_hc_callout
+name|V_tcp_hc_callout
 argument_list|,
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|prune
 operator|*
@@ -1048,7 +1054,7 @@ expr_stmt|;
 name|hc_head
 operator|=
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -1227,7 +1233,7 @@ expr_stmt|;
 name|hc_head
 operator|=
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -1250,15 +1256,15 @@ name|hc_head
 operator|->
 name|hch_length
 operator|>=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|bucket_limit
 operator|||
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_count
 operator|>=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_limit
 condition|)
@@ -1307,7 +1313,7 @@ argument_list|,
 name|rmx_q
 argument_list|)
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -1317,12 +1323,12 @@ operator|.
 name|hch_length
 operator|--
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_count
 operator|--
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_hc_bucketoverflow
 operator|++
@@ -1330,7 +1336,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|uma_zfree(tcp_hostcache.zone, hc_entry);
+block|uma_zfree(V_tcp_hostcache.zone, hc_entry);
 endif|#
 directive|endif
 block|}
@@ -1341,7 +1347,7 @@ name|hc_entry
 operator|=
 name|uma_zalloc
 argument_list|(
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|zone
 argument_list|,
@@ -1425,7 +1431,7 @@ name|hc_entry
 operator|->
 name|rmx_expire
 operator|=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|expire
 expr_stmt|;
@@ -1442,7 +1448,7 @@ argument_list|,
 name|rmx_q
 argument_list|)
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -1452,12 +1458,12 @@ operator|.
 name|hch_length
 operator|++
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_count
 operator|++
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_hc_added
 operator|++
@@ -1530,7 +1536,7 @@ name|hc_entry
 operator|->
 name|rmx_expire
 operator|=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|expire
 expr_stmt|;
@@ -1662,7 +1668,7 @@ name|hc_entry
 operator|->
 name|rmx_expire
 operator|=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|expire
 expr_stmt|;
@@ -1751,7 +1757,7 @@ name|hc_entry
 operator|->
 name|rmx_expire
 operator|=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|expire
 expr_stmt|;
@@ -1867,7 +1873,7 @@ name|hc_entry
 operator|->
 name|rmx_expire
 operator|=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|expire
 expr_stmt|;
@@ -1914,7 +1920,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_cachedrtt
 operator|++
@@ -1962,7 +1968,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_cachedrttvar
 operator|++
@@ -2010,7 +2016,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|tcpstat
+name|V_tcpstat
 operator|.
 name|tcps_cachedssthresh
 operator|++
@@ -2058,7 +2064,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* tcpstat.tcps_cachedbandwidth++; */
+comment|/* V_tcpstat.tcps_cachedbandwidth++; */
 block|}
 if|if
 condition|(
@@ -2102,7 +2108,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* tcpstat.tcps_cachedcwnd++; */
+comment|/* V_tcpstat.tcps_cachedcwnd++; */
 block|}
 if|if
 condition|(
@@ -2146,7 +2152,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* tcpstat.tcps_cachedsendpipe++; */
+comment|/* V_tcpstat.tcps_cachedsendpipe++; */
 block|}
 if|if
 condition|(
@@ -2190,7 +2196,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* tcpstat.tcps_cachedrecvpipe++; */
+comment|/* V_tcpstat.tcps_cachedrecvpipe++; */
 block|}
 name|TAILQ_REMOVE
 argument_list|(
@@ -2288,7 +2294,7 @@ operator|=
 name|linesize
 operator|*
 operator|(
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_count
 operator|+
@@ -2345,7 +2351,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 condition|;
@@ -2356,7 +2362,7 @@ block|{
 name|THC_LOCK
 argument_list|(
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -2370,7 +2376,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|hc_entry
 argument_list|,
-argument|&tcp_hostcache.hashbase[i].hch_bucket
+argument|&V_tcp_hostcache.hashbase[i].hch_bucket
 argument_list|,
 argument|rmx_q
 argument_list|)
@@ -2499,7 +2505,7 @@ block|}
 name|THC_UNLOCK
 argument_list|(
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -2576,7 +2582,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|purgeall
 condition|)
@@ -2585,7 +2591,7 @@ name|all
 operator|=
 literal|1
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|purgeall
 operator|=
@@ -2600,7 +2606,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashsize
 condition|;
@@ -2611,7 +2617,7 @@ block|{
 name|THC_LOCK
 argument_list|(
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -2625,7 +2631,7 @@ name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|hc_entry
 argument_list|,
-argument|&tcp_hostcache.hashbase[i].hch_bucket
+argument|&V_tcp_hostcache.hashbase[i].hch_bucket
 argument_list|,
 argument|rmx_q
 argument_list|,
@@ -2646,7 +2652,7 @@ block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -2662,14 +2668,14 @@ argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|zone
 argument_list|,
 name|hc_entry
 argument_list|)
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -2679,7 +2685,7 @@ operator|.
 name|hch_length
 operator|--
 expr_stmt|;
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|cache_count
 operator|--
@@ -2690,7 +2696,7 @@ name|hc_entry
 operator|->
 name|rmx_expire
 operator|-=
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|prune
 expr_stmt|;
@@ -2698,7 +2704,7 @@ block|}
 name|THC_UNLOCK
 argument_list|(
 operator|&
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|hashbase
 index|[
@@ -2712,9 +2718,9 @@ block|}
 name|callout_reset
 argument_list|(
 operator|&
-name|tcp_hc_callout
+name|V_tcp_hc_callout
 argument_list|,
-name|tcp_hostcache
+name|V_tcp_hostcache
 operator|.
 name|prune
 operator|*

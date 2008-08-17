@@ -83,6 +83,12 @@ directive|include
 file|<sys/utsname.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/vimage.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1120,7 +1126,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|domainname
+name|V_domainname
 argument_list|,
 name|tmpdomainname
 argument_list|,
@@ -1325,7 +1331,7 @@ name|bcopy
 argument_list|(
 name|tmpdomainname
 argument_list|,
-name|domainname
+name|V_domainname
 argument_list|,
 sizeof|sizeof
 argument_list|(

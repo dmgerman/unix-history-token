@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -781,7 +787,7 @@ name|iphdr
 operator|.
 name|ip_ttl
 operator|=
-name|ip_gif_ttl
+name|V_ip_gif_ttl
 expr_stmt|;
 name|iphdr
 operator|.
@@ -1231,7 +1237,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_nogif
 operator|++
@@ -1267,7 +1273,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_nogif
 operator|++
@@ -1554,7 +1560,7 @@ name|AF_LINK
 expr_stmt|;
 break|break;
 default|default:
-name|ipstat
+name|V_ipstat
 operator|.
 name|ips_nogif
 operator|++
@@ -1724,7 +1730,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ia4
 argument_list|,
-argument|&in_ifaddrhead
+argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)

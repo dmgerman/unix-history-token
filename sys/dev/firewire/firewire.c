@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kdb.h>
 end_include
 
@@ -3731,7 +3737,7 @@ name|buf
 operator|->
 name|hw
 argument_list|,
-name|hostname
+name|V_hostname
 argument_list|)
 expr_stmt|;
 block|}

@@ -220,6 +220,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -3546,7 +3552,7 @@ name|utsname
 operator|.
 name|domainname
 argument_list|,
-name|domainname
+name|V_domainname
 argument_list|,
 name|LINUX_MAX_UTSNAME
 argument_list|)

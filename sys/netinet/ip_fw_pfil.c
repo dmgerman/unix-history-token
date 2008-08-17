@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2176,7 +2182,7 @@ condition|(
 name|arg1
 operator|==
 operator|&
-name|fw_enable
+name|V_fw_enable
 condition|)
 block|{
 if|if
@@ -2203,7 +2209,7 @@ condition|(
 name|arg1
 operator|==
 operator|&
-name|fw6_enable
+name|V_fw6_enable
 condition|)
 block|{
 if|if

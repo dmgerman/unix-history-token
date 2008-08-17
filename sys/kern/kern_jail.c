@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2411,7 +2417,7 @@ name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
-name|hostname
+name|V_hostname
 argument_list|,
 name|size
 argument_list|)

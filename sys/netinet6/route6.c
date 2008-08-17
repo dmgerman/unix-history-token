@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -192,7 +198,7 @@ operator|&
 name|IP6A_SWAP
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badoptions
 operator|++
@@ -291,7 +297,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++
@@ -321,7 +327,7 @@ block|IP6_EXTHDR_CHECK(m, off, rhlen, IPPROTO_DONE);
 else|#
 directive|else
 comment|/* 		 * note on option length: 		 * maximum rhlen: 2048 		 * max mbuf m_pulldown can handle: MCLBYTES == usually 2048 		 * so, here we are assuming that m_pulldown can handle 		 * rhlen == 2048 case.  this may not be a good thing to 		 * assume - we may want to avoid pulling it up altogether. 		 */
-block|IP6_EXTHDR_GET(rh, struct ip6_rthdr *, m, off, rhlen); 		if (rh == NULL) { 			ip6stat.ip6s_tooshort++; 			return IPPROTO_DONE; 		}
+block|IP6_EXTHDR_GET(rh, struct ip6_rthdr *, m, off, rhlen); 		if (rh == NULL) { 			V_ip6stat.ip6s_tooshort++; 			return IPPROTO_DONE; 		}
 endif|#
 directive|endif
 block|if (ip6_rthdr0(m, ip6, (struct ip6_rthdr0 *)rh)) 			return (IPPROTO_DONE); 		break;
@@ -354,7 +360,7 @@ expr_stmt|;
 break|break;
 comment|/* Final dst. Just ignore the header. */
 block|}
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badoptions
 operator|++
@@ -431,17 +437,17 @@ comment|/* 		 * Type 0 routing header can't contain more than 23 addresses. 		 *
 end_comment
 
 begin_comment
-unit|ip6stat.ip6s_badoptions++; 		icmp6_error(m, ICMP6_PARAM_PROB, ICMP6_PARAMPROB_HEADER, 			    (caddr_t)&rh0->ip6r0_len - (caddr_t)ip6); 		return (-1); 	}  	if ((addrs = rh0->ip6r0_len / 2)< rh0->ip6r0_segleft) { 		ip6stat.ip6s_badoptions++; 		icmp6_error(m, ICMP6_PARAM_PROB, ICMP6_PARAMPROB_HEADER, 			    (caddr_t)&rh0->ip6r0_segleft - (caddr_t)ip6); 		return (-1); 	}  	index = addrs - rh0->ip6r0_segleft; 	rh0->ip6r0_segleft--; 	nextaddr = ((struct in6_addr *)(rh0 + 1)) + index;
+unit|V_ip6stat.ip6s_badoptions++; 		icmp6_error(m, ICMP6_PARAM_PROB, ICMP6_PARAMPROB_HEADER, 			    (caddr_t)&rh0->ip6r0_len - (caddr_t)ip6); 		return (-1); 	}  	if ((addrs = rh0->ip6r0_len / 2)< rh0->ip6r0_segleft) { 		V_ip6stat.ip6s_badoptions++; 		icmp6_error(m, ICMP6_PARAM_PROB, ICMP6_PARAMPROB_HEADER, 			    (caddr_t)&rh0->ip6r0_segleft - (caddr_t)ip6); 		return (-1); 	}  	index = addrs - rh0->ip6r0_segleft; 	rh0->ip6r0_segleft--; 	nextaddr = ((struct in6_addr *)(rh0 + 1)) + index;
 comment|/* 	 * reject invalid addresses.  be proactive about malicious use of 	 * IPv4 mapped/compat address. 	 * XXX need more checks? 	 */
 end_comment
 
 begin_comment
-unit|if (IN6_IS_ADDR_MULTICAST(nextaddr) || 	    IN6_IS_ADDR_UNSPECIFIED(nextaddr) || 	    IN6_IS_ADDR_V4MAPPED(nextaddr) || 	    IN6_IS_ADDR_V4COMPAT(nextaddr)) { 		ip6stat.ip6s_badoptions++; 		m_freem(m); 		return (-1); 	} 	if (IN6_IS_ADDR_MULTICAST(&ip6->ip6_dst) || 	    IN6_IS_ADDR_UNSPECIFIED(&ip6->ip6_dst) || 	    IN6_IS_ADDR_V4MAPPED(&ip6->ip6_dst) || 	    IN6_IS_ADDR_V4COMPAT(&ip6->ip6_dst)) { 		ip6stat.ip6s_badoptions++; 		m_freem(m); 		return (-1); 	}
+unit|if (IN6_IS_ADDR_MULTICAST(nextaddr) || 	    IN6_IS_ADDR_UNSPECIFIED(nextaddr) || 	    IN6_IS_ADDR_V4MAPPED(nextaddr) || 	    IN6_IS_ADDR_V4COMPAT(nextaddr)) { 		V_ip6stat.ip6s_badoptions++; 		m_freem(m); 		return (-1); 	} 	if (IN6_IS_ADDR_MULTICAST(&ip6->ip6_dst) || 	    IN6_IS_ADDR_UNSPECIFIED(&ip6->ip6_dst) || 	    IN6_IS_ADDR_V4MAPPED(&ip6->ip6_dst) || 	    IN6_IS_ADDR_V4COMPAT(&ip6->ip6_dst)) { 		V_ip6stat.ip6s_badoptions++; 		m_freem(m); 		return (-1); 	}
 comment|/* 	 * Determine the scope zone of the next hop, based on the interface 	 * of the current hop. [RFC4007, Section 9] 	 * Then disambiguate the scope zone for the next hop (if necessary). 	 */
 end_comment
 
 begin_comment
-unit|if ((ifa = ip6_getdstifaddr(m)) == NULL) 		goto bad; 	if (in6_setscope(nextaddr, ifa->ia_ifp, NULL) != 0) { 		ip6stat.ip6s_badscope++; 		goto bad; 	}
+unit|if ((ifa = ip6_getdstifaddr(m)) == NULL) 		goto bad; 	if (in6_setscope(nextaddr, ifa->ia_ifp, NULL) != 0) { 		V_ip6stat.ip6s_badscope++; 		goto bad; 	}
 comment|/* 	 * Swap the IPv6 destination address and nextaddr. Forward the packet. 	 */
 end_comment
 

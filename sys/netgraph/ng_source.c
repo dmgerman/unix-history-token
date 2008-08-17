@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2319,7 +2325,7 @@ literal|"%s: can't find interface %d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|if_index
+name|V_if_index
 argument_list|)
 expr_stmt|;
 return|return

@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -835,7 +841,7 @@ return|return;
 comment|/* 	 * As requested by David Greenman: 	 * If rtq_reallyold is 0, just delete the route without 	 * waiting for a timeout cycle to kill it. 	 */
 if|if
 condition|(
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|!=
 literal|0
 condition|)
@@ -854,7 +860,7 @@ name|rmx_expire
 operator|=
 name|time_uptime
 operator|+
-name|rtq_reallyold
+name|V_rtq_reallyold
 expr_stmt|;
 block|}
 else|else
@@ -1055,7 +1061,7 @@ name|rmx_expire
 operator|-
 name|time_uptime
 operator|>
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|)
 condition|)
 block|{
@@ -1067,7 +1073,7 @@ name|rmx_expire
 operator|=
 name|time_uptime
 operator|+
-name|rtq_reallyold
+name|V_rtq_reallyold
 expr_stmt|;
 block|}
 name|ap
@@ -1176,7 +1182,7 @@ name|nextstop
 operator|=
 name|time_uptime
 operator|+
-name|rtq_timeout6
+name|V_rtq_timeout6
 expr_stmt|;
 name|arg
 operator|.
@@ -1222,7 +1228,7 @@ name|arg
 operator|.
 name|killed
 operator|>
-name|rtq_toomany
+name|V_rtq_toomany
 operator|)
 operator|&&
 operator|(
@@ -1230,32 +1236,32 @@ name|time_uptime
 operator|-
 name|last_adjusted_timeout
 operator|>=
-name|rtq_timeout6
+name|V_rtq_timeout6
 operator|)
 operator|&&
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|>
-name|rtq_minreallyold
+name|V_rtq_minreallyold
 condition|)
 block|{
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|=
 literal|2
 operator|*
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|/
 literal|3
 expr_stmt|;
 if|if
 condition|(
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|<
-name|rtq_minreallyold
+name|V_rtq_minreallyold
 condition|)
 block|{
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|=
-name|rtq_minreallyold
+name|V_rtq_minreallyold
 expr_stmt|;
 block|}
 name|last_adjusted_timeout
@@ -1271,7 +1277,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"in6_rtqtimo: adjusted rtq_reallyold to %d"
 argument_list|,
-name|rtq_reallyold
+name|V_rtq_reallyold
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1334,7 +1340,7 @@ expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|rtq_timer6
+name|V_rtq_timer6
 argument_list|,
 name|tvtohz
 argument_list|(
@@ -1603,7 +1609,7 @@ block|}
 name|callout_reset
 argument_list|(
 operator|&
-name|rtq_mtutimer
+name|V_rtq_mtutimer
 argument_list|,
 name|tvtohz
 argument_list|(
@@ -1626,7 +1632,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void in6_rtqdrain(void) { 	struct radix_node_head *rnh = rt_tables[AF_INET6]; 	struct rtqk_arg arg;  	arg.found = arg.killed = 0; 	arg.rnh = rnh; 	arg.nextstop = 0; 	arg.draining = 1; 	arg.updating = 0; 	RADIX_NODE_HEAD_LOCK(rnh); 	rnh->rnh_walktree(rnh, in6_rtqkill,&arg); 	RADIX_NODE_HEAD_UNLOCK(rnh); }
+unit|void in6_rtqdrain(void) { 	struct radix_node_head *rnh = V_rt_tables[AF_INET6]; 	struct rtqk_arg arg;  	arg.found = arg.killed = 0; 	arg.rnh = rnh; 	arg.nextstop = 0; 	arg.draining = 1; 	arg.updating = 0; 	RADIX_NODE_HEAD_LOCK(rnh); 	rnh->rnh_walktree(rnh, in6_rtqkill,&arg); 	RADIX_NODE_HEAD_UNLOCK(rnh); }
 endif|#
 directive|endif
 end_endif
@@ -1712,7 +1718,7 @@ expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
-name|rtq_timer6
+name|V_rtq_timer6
 argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
@@ -1726,7 +1732,7 @@ comment|/* kick off timeout first time */
 name|callout_init
 argument_list|(
 operator|&
-name|rtq_mtutimer
+name|V_rtq_mtutimer
 argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)

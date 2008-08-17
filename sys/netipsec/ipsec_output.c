@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -630,7 +636,7 @@ operator|->
 name|next
 condition|)
 block|{
-name|ipsec4stat
+name|V_ipsec4stat
 operator|.
 name|ips_out_bundlesa
 operator|++
@@ -1246,7 +1252,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * IPsec processing is required, but no SA found. 		 * I assume that key_acquire() had been called 		 * to get/establish the SA. Here I discard 		 * this packet because it is responsibility for 		 * upper layer to retransmit the packet. 		 */
-name|ipsec4stat
+name|V_ipsec4stat
 operator|.
 name|ips_out_nosa
 operator|++
@@ -1330,7 +1336,7 @@ operator|==
 name|IPPROTO_ESP
 operator|&&
 operator|!
-name|esp_enable
+name|V_esp_enable
 operator|)
 operator|||
 operator|(
@@ -1343,7 +1349,7 @@ operator|==
 name|IPPROTO_AH
 operator|&&
 operator|!
-name|ah_enable
+name|V_ah_enable
 operator|)
 operator|||
 operator|(
@@ -1356,7 +1362,7 @@ operator|==
 name|IPPROTO_IPCOMP
 operator|&&
 operator|!
-name|ipcomp_enable
+name|V_ipcomp_enable
 operator|)
 condition|)
 block|{
@@ -1372,15 +1378,15 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_OSTAT
 argument_list|(
-name|espstat
+name|V_espstat
 operator|.
 name|esps_pdrops
 argument_list|,
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_pdrops
 argument_list|,
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_pdrops
 argument_list|)
@@ -1415,15 +1421,15 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_OSTAT
 argument_list|(
-name|espstat
+name|V_espstat
 operator|.
 name|esps_noxform
 argument_list|,
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_noxform
 argument_list|,
-name|ipcompstat
+name|V_ipcompstat
 operator|.
 name|ipcomps_noxform
 argument_list|)
@@ -1736,7 +1742,7 @@ expr_stmt|;
 comment|/* Honor system-wide control of how to handle IP_DF */
 switch|switch
 condition|(
-name|ip4_ipsec_dfbit
+name|V_ip4_ipsec_dfbit
 condition|)
 block|{
 case|case
@@ -1749,7 +1755,7 @@ case|:
 comment|/* set in outer header */
 name|setdf
 operator|=
-name|ip4_ipsec_dfbit
+name|V_ip4_ipsec_dfbit
 expr_stmt|;
 break|break;
 default|default:
@@ -3144,7 +3150,7 @@ comment|/* construct new IPv6 header. see RFC 2401 5.1.2.2 */
 comment|/* ECN consideration. */
 name|ip6_ecn_ingress
 argument_list|(
-name|ip6_ipsec_ecn
+name|V_ip6_ipsec_ecn
 argument_list|,
 operator|&
 name|ip6
@@ -3519,7 +3525,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipsec6stat
+name|V_ipsec6stat
 operator|.
 name|ips_out_inval
 operator|++
@@ -3545,7 +3551,7 @@ operator|!
 name|m
 condition|)
 block|{
-name|ipsec6stat
+name|V_ipsec6stat
 operator|.
 name|ips_out_nomem
 operator|++
@@ -3755,12 +3761,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_noroute
 operator|++
 expr_stmt|;
-name|ipsec6stat
+name|V_ipsec6stat
 operator|.
 name|ips_out_noroute
 operator|++
@@ -3830,7 +3836,7 @@ operator|!
 name|m
 condition|)
 block|{
-name|ipsec6stat
+name|V_ipsec6stat
 operator|.
 name|ips_out_nomem
 operator|++

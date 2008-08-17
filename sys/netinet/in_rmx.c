@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -706,7 +712,7 @@ return|return;
 comment|/* 	 * If rtq_reallyold is 0, just delete the route without 	 * waiting for a timeout cycle to kill it. 	 */
 if|if
 condition|(
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|!=
 literal|0
 condition|)
@@ -725,7 +731,7 @@ name|rmx_expire
 operator|=
 name|time_uptime
 operator|+
-name|rtq_reallyold
+name|V_rtq_reallyold
 expr_stmt|;
 block|}
 else|else
@@ -927,7 +933,7 @@ name|rmx_expire
 operator|-
 name|time_uptime
 operator|>
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|)
 condition|)
 block|{
@@ -939,7 +945,7 @@ name|rmx_expire
 operator|=
 name|time_uptime
 operator|+
-name|rtq_reallyold
+name|V_rtq_reallyold
 expr_stmt|;
 block|}
 name|ap
@@ -1037,7 +1043,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|rt_tables
+name|V_rt_tables
 index|[
 literal|0
 index|]
@@ -1070,7 +1076,7 @@ condition|(
 operator|(
 name|newrock
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|fibnum
 index|]
@@ -1097,12 +1103,12 @@ name|atv
 operator|.
 name|tv_sec
 operator|=
-name|rtq_timeout
+name|V_rtq_timeout
 expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|rtq_timer
+name|V_rtq_timer
 argument_list|,
 name|tvtohz
 argument_list|(
@@ -1167,7 +1173,7 @@ name|nextstop
 operator|=
 name|time_uptime
 operator|+
-name|rtq_timeout
+name|V_rtq_timeout
 expr_stmt|;
 name|arg
 operator|.
@@ -1213,7 +1219,7 @@ name|arg
 operator|.
 name|killed
 operator|>
-name|rtq_toomany
+name|V_rtq_toomany
 operator|)
 operator|&&
 operator|(
@@ -1221,32 +1227,32 @@ name|time_uptime
 operator|-
 name|last_adjusted_timeout
 operator|>=
-name|rtq_timeout
+name|V_rtq_timeout
 operator|)
 operator|&&
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|>
-name|rtq_minreallyold
+name|V_rtq_minreallyold
 condition|)
 block|{
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|=
 literal|2
 operator|*
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|/
 literal|3
 expr_stmt|;
 if|if
 condition|(
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|<
-name|rtq_minreallyold
+name|V_rtq_minreallyold
 condition|)
 block|{
-name|rtq_reallyold
+name|V_rtq_reallyold
 operator|=
-name|rtq_minreallyold
+name|V_rtq_minreallyold
 expr_stmt|;
 block|}
 name|last_adjusted_timeout
@@ -1262,7 +1268,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"in_rtqtimo: adjusted rtq_reallyold to %d\n"
 argument_list|,
-name|rtq_reallyold
+name|V_rtq_reallyold
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1344,7 +1350,7 @@ control|)
 block|{
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|fibnum
 index|]
@@ -1499,7 +1505,7 @@ block|{
 name|callout_init
 argument_list|(
 operator|&
-name|rtq_timer
+name|V_rtq_timer
 argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
@@ -1685,7 +1691,7 @@ control|)
 block|{
 name|rnh
 operator|=
-name|rt_tables
+name|V_rt_tables
 index|[
 name|fibnum
 index|]

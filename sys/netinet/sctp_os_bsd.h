@@ -198,13 +198,8 @@ name|__FreeBSD__
 argument_list|)
 operator|&&
 name|__FreeBSD_version
-operator|>
-literal|800000
-operator|&&
-name|defined
-argument_list|(
-name|VIMAGE
-argument_list|)
+operator|>=
+literal|800044
 end_if
 
 begin_include
@@ -671,7 +666,7 @@ value|system_base_info.__m
 end_define
 
 begin_comment
-comment|/*  * Macros to expand out globals defined by various modules  * to either a real global or a virtualized instance of one,  * depending on whether VIMAGE is defined in opt_vimage.h  * XXX opt_vimage.h not yet present,  more framework to come.  * XXX so will always evaluate to the global for now (VIMAGE not defined)  */
+comment|/*  * Macros to expand out globals defined by various modules  * to either a real global or a virtualized instance of one,  * depending on whether VIMAGE is defined.  */
 end_comment
 
 begin_comment
@@ -719,13 +714,19 @@ name|__FreeBSD__
 argument_list|)
 operator|&&
 name|__FreeBSD_version
-operator|>
-literal|800000
+operator|>=
+literal|800044
 operator|&&
 name|defined
 argument_list|(
 name|VIMAGE
 argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+literal|0
 end_if
 
 begin_define
@@ -749,6 +750,28 @@ name|__SYMBOL
 parameter_list|)
 value|VSYM(VSYMNAME(__MODULE), __SYMBOL)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MODULE_GLOBAL
+parameter_list|(
+name|__MODULE
+parameter_list|,
+name|__SYMBOL
+parameter_list|)
+value|V_ ## __SYMBOL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

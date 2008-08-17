@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -496,7 +502,7 @@ expr|struct
 name|newesp
 argument_list|)
 operator|+
-name|esp_max_ivlen
+name|V_esp_max_ivlen
 operator|+
 literal|9
 operator|+
@@ -875,7 +881,7 @@ argument_list|,
 operator|&
 name|crie
 argument_list|,
-name|crypto_support
+name|V_crypto_support
 argument_list|)
 expr_stmt|;
 block|}
@@ -899,7 +905,7 @@ argument_list|,
 operator|&
 name|crie
 argument_list|,
-name|crypto_support
+name|V_crypto_support
 argument_list|)
 expr_stmt|;
 block|}
@@ -923,7 +929,7 @@ argument_list|,
 operator|&
 name|cria
 argument_list|,
-name|crypto_support
+name|V_crypto_support
 argument_list|)
 expr_stmt|;
 block|}
@@ -1320,7 +1326,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_badilen
 operator|++
@@ -1372,7 +1378,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*XXX*/
-name|espstat
+name|V_espstat
 operator|.
 name|esps_replay
 operator|++
@@ -1388,7 +1394,7 @@ return|;
 comment|/*XXX*/
 block|}
 comment|/* Update the counters */
-name|espstat
+name|V_espstat
 operator|.
 name|esps_ibytes
 operator|+=
@@ -1527,7 +1533,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_crypto
 operator|++
@@ -1620,7 +1626,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_crypto
 operator|++
@@ -2214,7 +2220,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|espstat
+name|V_espstat
 operator|.
 name|esps_notdb
 operator|++
@@ -2366,7 +2372,7 @@ return|return
 name|error
 return|;
 block|}
-name|espstat
+name|V_espstat
 operator|.
 name|esps_noxform
 operator|++
@@ -2402,7 +2408,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|espstat
+name|V_espstat
 operator|.
 name|esps_crypto
 operator|++
@@ -2424,7 +2430,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|espstat
+name|V_espstat
 operator|.
 name|esps_hist
 index|[
@@ -2443,7 +2449,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * If we have a tag, it means an IPsec-aware NIC did 		 * the verification for us.  Otherwise we need to 		 * check the authentication calculation. 		 */
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_hist
 index|[
@@ -2532,7 +2538,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_badauth
 operator|++
@@ -2648,7 +2654,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_replay
 operator|++
@@ -2713,7 +2719,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|espstat
+name|V_espstat
 operator|.
 name|esps_hdrops
 operator|++
@@ -2790,7 +2796,7 @@ operator|-
 name|skip
 condition|)
 block|{
-name|espstat
+name|V_espstat
 operator|.
 name|esps_badilen
 operator|++
@@ -2882,7 +2888,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|espstat
+name|V_espstat
 operator|.
 name|esps_badenc
 operator|++
@@ -3287,7 +3293,7 @@ name|alen
 operator|=
 literal|0
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_output
 operator|++
@@ -3378,7 +3384,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_nopf
 operator|++
@@ -3446,7 +3452,7 @@ name|maxpacketsize
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_toobig
 operator|++
@@ -3460,7 +3466,7 @@ name|bad
 goto|;
 block|}
 comment|/* Update the counters. */
-name|espstat
+name|V_espstat
 operator|.
 name|esps_obytes
 operator|+=
@@ -3515,7 +3521,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_hdrops
 operator|++
@@ -3579,7 +3585,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_hdrops
 operator|++
@@ -3636,7 +3642,7 @@ comment|/* Emulate replay attack when ipsec_replay is TRUE. */
 if|if
 condition|(
 operator|!
-name|ipsec_replay
+name|V_ipsec_replay
 condition|)
 endif|#
 directive|endif
@@ -3902,7 +3908,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_crypto
 operator|++
@@ -4060,7 +4066,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|espstat
+name|V_espstat
 operator|.
 name|esps_crypto
 operator|++
@@ -4361,7 +4367,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|espstat
+name|V_espstat
 operator|.
 name|esps_notdb
 operator|++
@@ -4481,7 +4487,7 @@ return|return
 name|error
 return|;
 block|}
-name|espstat
+name|V_espstat
 operator|.
 name|esps_noxform
 operator|++
@@ -4517,7 +4523,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|espstat
+name|V_espstat
 operator|.
 name|esps_crypto
 operator|++
@@ -4539,7 +4545,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|espstat
+name|V_espstat
 operator|.
 name|esps_hist
 index|[
@@ -4557,7 +4563,7 @@ name|tdb_authalgxform
 operator|!=
 name|NULL
 condition|)
-name|ahstat
+name|V_ahstat
 operator|.
 name|ahs_hist
 index|[
@@ -4586,7 +4592,7 @@ name|REGRESSION
 comment|/* Emulate man-in-the-middle attack when ipsec_integrity is TRUE. */
 if|if
 condition|(
-name|ipsec_integrity
+name|V_ipsec_integrity
 condition|)
 block|{
 specifier|static
@@ -4746,7 +4752,7 @@ parameter_list|(
 name|xform
 parameter_list|)
 define|\
-value|if (xform.blocksize> esp_max_ivlen)		\ 		esp_max_ivlen = xform.blocksize		\  	esp_max_ivlen = 0;
+value|if (xform.blocksize> V_esp_max_ivlen)		\ 		V_esp_max_ivlen = xform.blocksize		\  	V_esp_max_ivlen = 0;
 name|MAXIV
 argument_list|(
 name|enc_xform_des

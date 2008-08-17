@@ -218,6 +218,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -677,7 +683,7 @@ comment|/* initialization of the default router list */
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 expr_stmt|;
 name|nd6_init_done
@@ -688,7 +694,7 @@ comment|/* start timer */
 name|callout_init
 argument_list|(
 operator|&
-name|nd6_slowtimo_ch
+name|V_nd6_slowtimo_ch
 argument_list|,
 literal|0
 argument_list|)
@@ -696,7 +702,7 @@ expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|nd6_slowtimo_ch
+name|V_nd6_slowtimo_ch
 argument_list|,
 name|ND6_SLOWTIMER_INTERVAL
 operator|*
@@ -1006,7 +1012,7 @@ name|ndi
 operator|->
 name|maxmtu
 operator|>
-name|in6_maxmtu
+name|V_in6_maxmtu
 condition|)
 name|in6_setmaxmtu
 argument_list|()
@@ -1402,7 +1408,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Message validation requires that all included 			 * options have a length that is greater than zero. 			 */
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_nd_badopt
 operator|++
@@ -1560,10 +1566,10 @@ if|if
 condition|(
 name|i
 operator|>
-name|nd6_maxndopt
+name|V_nd6_maxndopt
 condition|)
 block|{
-name|icmp6stat
+name|V_icmp6stat
 operator|.
 name|icp6s_nd_toomanyopt
 operator|++
@@ -1924,7 +1930,7 @@ name|ln
 operator|->
 name|ln_asked
 operator|<
-name|nd6_mmaxtries
+name|V_nd6_mmaxtries
 condition|)
 block|{
 name|ln
@@ -2072,7 +2078,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nd6_gctimer
+name|V_nd6_gctimer
 operator|*
 name|hz
 argument_list|)
@@ -2193,7 +2199,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nd6_gctimer
+name|V_nd6_gctimer
 operator|*
 name|hz
 argument_list|)
@@ -2209,7 +2215,7 @@ name|ln
 operator|->
 name|ln_asked
 operator|<
-name|nd6_umaxtries
+name|V_nd6_umaxtries
 condition|)
 block|{
 name|ln
@@ -2377,9 +2383,9 @@ decl_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|nd6_timer_ch
+name|V_nd6_timer_ch
 argument_list|,
-name|nd6_prune
+name|V_nd6_prune
 operator|*
 name|hz
 argument_list|,
@@ -2399,7 +2405,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 expr_stmt|;
 while|while
@@ -2464,7 +2470,7 @@ for|for
 control|(
 name|ia6
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ia6
 condition|;
@@ -2503,7 +2509,7 @@ decl_stmt|;
 comment|/* 			 * If the expiring address is temporary, try 			 * regenerating a new one.  This would be useful when 			 * we suspended a laptop PC, then turned it on after a 			 * period that could invalidate all temporary 			 * addresses.  Although we may have to restart the 			 * loop (see below), it must be after purging the 			 * address.  Otherwise, we'd see an infinite loop of 			 * regeneration. 			 */
 if|if
 condition|(
-name|ip6_use_tempaddr
+name|V_ip6_use_tempaddr
 operator|&&
 operator|(
 name|ia6
@@ -2572,7 +2578,7 @@ expr_stmt|;
 comment|/* 			 * If a temporary address has just become deprecated, 			 * regenerate a new one if possible. 			 */
 if|if
 condition|(
-name|ip6_use_tempaddr
+name|V_ip6_use_tempaddr
 operator|&&
 operator|(
 name|ia6
@@ -2625,7 +2631,7 @@ block|}
 comment|/* expire prefix list */
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 expr_stmt|;
@@ -2956,7 +2962,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 init|;
 name|dr
@@ -3003,7 +3009,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 init|;
 name|dr
@@ -3049,7 +3055,7 @@ for|for
 control|(
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -3093,7 +3099,7 @@ block|}
 comment|/* cancel default outgoing interface setting */
 if|if
 condition|(
-name|nd6_defifindex
+name|V_nd6_defifindex
 operator|==
 name|ifp
 operator|->
@@ -3107,9 +3113,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ip6_forwarding
+name|V_ip6_forwarding
 operator|&&
-name|ip6_accept_rtadv
+name|V_ip6_accept_rtadv
 condition|)
 block|{
 comment|/* XXX: too restrictive? */
@@ -3121,7 +3127,7 @@ block|}
 comment|/* 	 * Nuke neighbor cache entries for the ifp. 	 * Note that rt->rt_ifp may not be the same as ifp, 	 * due to KAME goto ours hack.  See RTM_RESOLVE case in 	 * nd6_rtrequest(), and ip6_input(). 	 */
 name|ln
 operator|=
-name|llinfo_nd6
+name|V_llinfo_nd6
 operator|.
 name|ln_next
 expr_stmt|;
@@ -3132,7 +3138,7 @@ operator|&&
 name|ln
 operator|!=
 operator|&
-name|llinfo_nd6
+name|V_llinfo_nd6
 condition|)
 block|{
 name|struct
@@ -3727,7 +3733,7 @@ for|for
 control|(
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -3827,17 +3833,17 @@ comment|/* 	 * If the default router list is empty, all addresses are regarded 	
 if|if
 condition|(
 operator|!
-name|ip6_forwarding
+name|V_ip6_forwarding
 operator|&&
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 operator|==
 name|NULL
 operator|&&
-name|nd6_defifindex
+name|V_nd6_defifindex
 operator|==
 name|ifp
 operator|->
@@ -3994,7 +4000,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ip6_forwarding
+name|V_ip6_forwarding
 condition|)
 block|{
 name|int
@@ -4080,7 +4086,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nd6_gctimer
+name|V_nd6_gctimer
 operator|*
 name|hz
 argument_list|)
@@ -4340,7 +4346,7 @@ name|ln
 operator|->
 name|ln_byhint
 operator|>
-name|nd6_maxnudhint
+name|V_nd6_maxnudhint
 condition|)
 return|return;
 block|}
@@ -4772,10 +4778,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|nd6_inuse
+name|V_nd6_inuse
 operator|++
 expr_stmt|;
-name|nd6_allocated
+name|V_nd6_allocated
 operator|++
 expr_stmt|;
 name|bzero
@@ -4859,11 +4865,11 @@ name|ln
 operator|->
 name|ln_next
 operator|=
-name|llinfo_nd6
+name|V_llinfo_nd6
 operator|.
 name|ln_next
 expr_stmt|;
-name|llinfo_nd6
+name|V_llinfo_nd6
 operator|.
 name|ln_next
 operator|=
@@ -4874,7 +4880,7 @@ operator|->
 name|ln_prev
 operator|=
 operator|&
-name|llinfo_nd6
+name|V_llinfo_nd6
 expr_stmt|;
 name|ln
 operator|->
@@ -4979,7 +4985,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|nd6_useloopback
+name|V_nd6_useloopback
 condition|)
 block|{
 name|rt
@@ -4987,7 +4993,7 @@ operator|->
 name|rt_ifp
 operator|=
 operator|&
-name|loif
+name|V_loif
 index|[
 literal|0
 index|]
@@ -5320,7 +5326,7 @@ else|else
 empty_stmt|;
 comment|/* XXX: should not happen. bark here? */
 block|}
-name|nd6_inuse
+name|V_nd6_inuse
 operator|--
 expr_stmt|;
 name|ln
@@ -5525,7 +5531,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 expr_stmt|;
 while|while
@@ -5659,7 +5665,7 @@ argument_list|()
 expr_stmt|;
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 expr_stmt|;
@@ -6265,7 +6271,7 @@ for|for
 control|(
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;
@@ -6309,7 +6315,7 @@ for|for
 control|(
 name|ia
 operator|=
-name|in6_ifaddr
+name|V_in6_ifaddr
 init|;
 name|ia
 condition|;
@@ -6396,7 +6402,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 init|;
 name|dr
@@ -6565,7 +6571,7 @@ name|ndif
 operator|->
 name|ifindex
 operator|=
-name|nd6_defifindex
+name|V_nd6_defifindex
 expr_stmt|;
 break|break;
 case|case
@@ -7025,7 +7031,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nd6_gctimer
+name|V_nd6_gctimer
 operator|*
 name|hz
 argument_list|)
@@ -7237,9 +7243,9 @@ operator|->
 name|ln_router
 operator|&&
 operator|!
-name|ip6_forwarding
+name|V_ip6_forwarding
 operator|&&
-name|ip6_accept_rtadv
+name|V_ip6_accept_rtadv
 condition|)
 name|defrouter_select
 argument_list|()
@@ -7273,7 +7279,7 @@ decl_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|nd6_slowtimo_ch
+name|V_nd6_slowtimo_ch
 argument_list|,
 name|ND6_SLOWTIMER_INTERVAL
 operator|*
@@ -7294,7 +7300,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|ifnet
+name|V_ifnet
 argument_list|)
 init|;
 name|ifp
@@ -7339,7 +7345,7 @@ name|nd6if
 operator|->
 name|recalctm
 operator|=
-name|nd6_recalc_reachtm_interval
+name|V_nd6_recalc_reachtm_interval
 expr_stmt|;
 name|nd6if
 operator|->
@@ -7947,7 +7953,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nd6_gctimer
+name|V_nd6_gctimer
 operator|*
 name|hz
 argument_list|)
@@ -7982,7 +7988,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nd6_delay
+name|V_nd6_delay
 operator|*
 name|hz
 argument_list|)
@@ -8076,7 +8082,7 @@ while|while
 condition|(
 name|i
 operator|>=
-name|nd6_maxqueuelen
+name|V_nd6_maxqueuelen
 condition|)
 block|{
 name|m_hold
@@ -8900,7 +8906,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|nd_defrouter
+name|V_nd_defrouter
 argument_list|)
 init|;
 name|dr
@@ -9139,7 +9145,7 @@ for|for
 control|(
 name|pr
 operator|=
-name|nd_prefix
+name|V_nd_prefix
 operator|.
 name|lh_first
 init|;

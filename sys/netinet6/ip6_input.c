@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -663,7 +669,7 @@ name|ip6intrq
 operator|.
 name|ifq_maxlen
 operator|=
-name|ip6qmaxlen
+name|V_ip6qmaxlen
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -703,7 +709,7 @@ expr_stmt|;
 name|frag6_init
 argument_list|()
 expr_stmt|;
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 operator|=
 name|arc4random
 argument_list|()
@@ -727,7 +733,7 @@ comment|/* nd6_timer_init */
 name|callout_init
 argument_list|(
 operator|&
-name|nd6_timer_ch
+name|V_nd6_timer_ch
 argument_list|,
 literal|0
 argument_list|)
@@ -735,7 +741,7 @@ expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|nd6_timer_ch
+name|V_nd6_timer_ch
 argument_list|,
 name|hz
 argument_list|,
@@ -748,7 +754,7 @@ comment|/* timer for regeneranation of temporary addresses randomize ID */
 name|callout_init
 argument_list|(
 operator|&
-name|in6_tmpaddrtimer_ch
+name|V_in6_tmpaddrtimer_ch
 argument_list|,
 literal|0
 argument_list|)
@@ -756,14 +762,14 @@ expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
-name|in6_tmpaddrtimer_ch
+name|V_in6_tmpaddrtimer_ch
 argument_list|,
 operator|(
-name|ip6_temp_preferred_lifetime
+name|V_ip6_temp_preferred_lifetime
 operator|-
-name|ip6_desync_factor
+name|V_ip6_desync_factor
 operator|-
-name|ip6_temp_regen_advance
+name|V_ip6_temp_regen_advance
 operator|)
 operator|*
 name|hz
@@ -909,13 +915,13 @@ name|m
 operator|->
 name|m_next
 condition|)
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_mext2m
 operator|++
 expr_stmt|;
 else|else
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_mext1
 operator|++
@@ -926,7 +932,7 @@ block|{
 define|#
 directive|define
 name|M2MMAX
-value|(sizeof(ip6stat.ip6s_m2m)/sizeof(ip6stat.ip6s_m2m[0]))
+value|(sizeof(V_ip6stat.ip6s_m2m)/sizeof(V_ip6stat.ip6s_m2m[0]))
 if|if
 condition|(
 name|m
@@ -943,11 +949,11 @@ operator|&
 name|M_LOOP
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_m2m
 index|[
-name|loif
+name|V_loif
 index|[
 literal|0
 index|]
@@ -971,7 +977,7 @@ name|if_index
 operator|<
 name|M2MMAX
 condition|)
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_m2m
 index|[
@@ -986,7 +992,7 @@ index|]
 operator|++
 expr_stmt|;
 else|else
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_m2m
 index|[
@@ -996,7 +1002,7 @@ operator|++
 expr_stmt|;
 block|}
 else|else
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_m1
 operator|++
@@ -1042,7 +1048,7 @@ argument_list|,
 name|ifs6_in_receive
 argument_list|)
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_total
 operator|++
@@ -1257,7 +1263,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_toosmall
 operator|++
@@ -1296,7 +1302,7 @@ operator|!=
 name|IPV6_VERSION
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badvers
 operator|++
@@ -1316,7 +1322,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_nxthist
 index|[
@@ -1347,7 +1353,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * XXX: "badscope" is not very suitable for a multicast source. 		 */
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -1388,7 +1394,7 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * In this case, the packet should come from the loopback 		 * interface.  However, we cannot just check the if_flags, 		 * because ip6_mloopback() passes the "actual" interface 		 * as the outgoing/incoming interface. 		 */
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -1455,7 +1461,7 @@ name|ip6_dst
 argument_list|)
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -1479,7 +1485,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Reject packets with IPv4 compatible addresses (auto tunnel). 	 * 	 * The code forbids auto tunnel relay case in RFC1933 (the check is 	 * stronger than RFC1933).  We may want to re-enable it if mech-xx 	 * is revised to forbid relaying case. 	 */
-block|if (IN6_IS_ADDR_V4COMPAT(&ip6->ip6_src) || 	    IN6_IS_ADDR_V4COMPAT(&ip6->ip6_dst)) { 		ip6stat.ip6s_badscope++; 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_addrerr); 		goto bad; 	}
+block|if (IN6_IS_ADDR_V4COMPAT(&ip6->ip6_src) || 	    IN6_IS_ADDR_V4COMPAT(&ip6->ip6_dst)) { 		V_ip6stat.ip6s_badscope++; 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_addrerr); 		goto bad; 	}
 endif|#
 directive|endif
 comment|/* 	 * Run through list of hooks for input packets. 	 * 	 * NB: Beware of the destination address changing 	 *     (e.g. by NAT rewriting).  When this happens, 	 *     tell ip6_forward to do the right thing. 	 */
@@ -1579,7 +1585,7 @@ name|ip6_dst
 argument_list|)
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -1624,7 +1630,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -1694,12 +1700,12 @@ operator|!
 name|ip6_mrouter
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_notmember
 operator|++
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_cantforward
 operator|++
@@ -1734,14 +1740,14 @@ block|}
 comment|/* 	 *  Unicast check 	 */
 if|if
 condition|(
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|!=
 name|NULL
 operator|&&
 operator|(
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|->
@@ -1768,7 +1774,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_dst
 operator|)
@@ -1777,7 +1783,7 @@ operator|->
 name|sin6_addr
 argument_list|)
 condition|)
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_forward_cachehit
 operator|++
@@ -1791,25 +1797,25 @@ name|dst6
 decl_stmt|;
 if|if
 condition|(
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 condition|)
 block|{
 comment|/* route is down or destination is different */
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_forward_cachemiss
 operator|++
 expr_stmt|;
 name|RTFREE
 argument_list|(
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|=
@@ -1819,7 +1825,7 @@ block|}
 name|bzero
 argument_list|(
 operator|&
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_dst
 argument_list|,
@@ -1838,7 +1844,7 @@ name|sockaddr_in6
 operator|*
 operator|)
 operator|&
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_dst
 expr_stmt|;
@@ -1874,7 +1880,7 @@ name|route
 operator|*
 operator|)
 operator|&
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 argument_list|)
 expr_stmt|;
 block|}
@@ -1888,12 +1894,12 @@ value|((struct sockaddr_in6 *)((r)->rt_nodes->rn_key))
 comment|/* 	 * Accept the packet if the forwarding interface to the destination 	 * according to the routing table is the loopback interface, 	 * unless the associated route has a gateway. 	 * Note that this approach causes to accept a packet if there is a 	 * route to the loopback interface for the destination of the packet. 	 * But we think it's even useful in some situations, e.g. when using 	 * a special daemon which wants to intercept the packet. 	 * 	 * XXX: some OSes automatically make a cloned route for the destination 	 * of an outgoing packet.  If the outgoing interface of the packet 	 * is a loopback one, the kernel would consider the packet to be 	 * accepted, even if we have no such address assinged on the interface. 	 * We check the cloned flag of the route entry to reject such cases, 	 * assuming that route entries for our own addresses are not made by 	 * cloning (it should be true because in6_addloop explicitly installs 	 * the host route).  However, we might have to do an explicit check 	 * while it would be less efficient.  Or, should we rather install a 	 * reject route for such a case? 	 */
 if|if
 condition|(
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|&&
 operator|(
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|->
@@ -1913,7 +1919,7 @@ directive|ifdef
 name|RTF_WASCLONED
 operator|!
 operator|(
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|->
@@ -1929,7 +1935,7 @@ directive|ifdef
 name|RTF_CLONED
 operator|!
 operator|(
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|->
@@ -1944,10 +1950,10 @@ if|#
 directive|if
 literal|0
 comment|/* 	     * The check below is redundant since the comparison of 	     * the destination and the key of the rtentry has 	     * already done through looking up the routing table. 	     */
-expr|IN6_ARE_ADDR_EQUAL(&ip6->ip6_dst,&rt6_key(ip6_forward_rt.ro_rt)->sin6_addr)
+expr|IN6_ARE_ADDR_EQUAL(&ip6->ip6_dst,&rt6_key(V_ip6_forward_rt.ro_rt)->sin6_addr)
 endif|#
 directive|endif
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|->
@@ -1968,7 +1974,7 @@ expr|struct
 name|in6_ifaddr
 operator|*
 operator|)
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|->
@@ -2086,22 +2092,22 @@ block|}
 comment|/* 	 * FAITH (Firewall Aided Internet Translator) 	 */
 if|if
 condition|(
-name|ip6_keepfaith
+name|V_ip6_keepfaith
 condition|)
 block|{
 if|if
 condition|(
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|&&
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|->
 name|rt_ifp
 operator|&&
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|->
@@ -2119,7 +2125,7 @@ literal|1
 expr_stmt|;
 name|deliverifp
 operator|=
-name|ip6_forward_rt
+name|V_ip6_forward_rt
 operator|.
 name|ro_rt
 operator|->
@@ -2135,10 +2141,10 @@ comment|/* 	 * Now there is no reason to process the packet if it's not our own 
 if|if
 condition|(
 operator|!
-name|ip6_forwarding
+name|V_ip6_forwarding
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_cantforward
 operator|++
@@ -2291,7 +2297,7 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Note that if a valid jumbo payload option is 			 * contained, ip6_hopopts_input() must set a valid 			 * (non-zero) payload length to the variable plen. 			 */
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badoptions
 operator|++
@@ -2391,7 +2397,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++
@@ -2414,7 +2420,7 @@ operator|!=
 operator|~
 literal|0
 operator|&&
-name|ip6_forwarding
+name|V_ip6_forwarding
 condition|)
 block|{
 switch|switch
@@ -2461,7 +2467,7 @@ operator|<
 name|plen
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++
@@ -2592,7 +2598,7 @@ name|m
 argument_list|)
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_cantforward
 operator|++
@@ -2665,7 +2671,7 @@ name|ip6_dst
 argument_list|)
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -2686,7 +2692,7 @@ name|bad
 goto|;
 block|}
 comment|/* 	 * Tell launch routine the next header 	 */
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_delivered
 operator|++
@@ -2711,17 +2717,17 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip6_hdrnestlimit
+name|V_ip6_hdrnestlimit
 operator|&&
 operator|(
 operator|++
 name|nest
 operator|>
-name|ip6_hdrnestlimit
+name|V_ip6_hdrnestlimit
 operator|)
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_toomanyhdr
 operator|++
@@ -2742,7 +2748,7 @@ operator|<
 name|off
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++
@@ -3073,7 +3079,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++
@@ -3121,7 +3127,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++
@@ -3317,7 +3323,7 @@ operator|<
 name|IP6OPT_MINLEN
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_toosmall
 operator|++
@@ -3349,7 +3355,7 @@ operator|<
 name|IP6OPT_RTALERT_LEN
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_toosmall
 operator|++
@@ -3441,7 +3447,7 @@ operator|<
 name|IP6OPT_JUMBO_LEN
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_toosmall
 operator|++
@@ -3512,7 +3518,7 @@ operator|->
 name|ip6_plen
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badoptions
 operator|++
@@ -3577,7 +3583,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badoptions
 operator|++
@@ -3616,7 +3622,7 @@ operator|<=
 name|IPV6_MAXPACKET
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badoptions
 operator|++
@@ -3660,7 +3666,7 @@ operator|<
 name|IP6OPT_MINLEN
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_toosmall
 operator|++
@@ -3796,7 +3802,7 @@ case|case
 name|IP6OPT_TYPE_FORCEICMP
 case|:
 comment|/* send ICMP even if multicasted */
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badoptions
 operator|++
@@ -3822,7 +3828,7 @@ case|case
 name|IP6OPT_TYPE_ICMP
 case|:
 comment|/* send ICMP if not multicasted */
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badoptions
 operator|++
@@ -4490,7 +4496,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++
@@ -4534,7 +4540,7 @@ argument_list|(
 name|ext
 argument_list|)
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++
@@ -4783,7 +4789,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++
@@ -4846,7 +4852,7 @@ argument_list|(
 name|ext
 argument_list|)
 expr_stmt|;
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_tooshort
 operator|++

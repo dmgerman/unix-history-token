@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1466,11 +1472,11 @@ argument_list|(
 name|sopt
 argument_list|,
 operator|&
-name|pim6
+name|V_pim6
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pim6
+name|V_pim6
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1764,7 +1770,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|pim6
+name|V_pim6
 operator|=
 operator|*
 name|i
@@ -1803,7 +1809,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 condition|)
 name|log
 argument_list|(
@@ -1871,7 +1877,7 @@ name|ip6_mrouter
 operator|=
 name|so
 expr_stmt|;
-name|ip6_mrouter_ver
+name|V_ip6_mrouter_ver
 operator|=
 name|cmd
 expr_stmt|;
@@ -1901,7 +1907,7 @@ name|n6expire
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|pim6
+name|V_pim6
 operator|=
 literal|0
 expr_stmt|;
@@ -1931,7 +1937,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 condition|)
 name|log
 argument_list|(
@@ -1996,7 +2002,7 @@ comment|/* 	 * If there is still IPv4 multicast routing daemon, 	 * we remain in
 if|if
 condition|(
 operator|!
-name|ip_mrouter
+name|V_ip_mrouter
 condition|)
 endif|#
 directive|endif
@@ -2071,7 +2077,7 @@ name|nummifs
 operator|=
 literal|0
 expr_stmt|;
-name|pim6
+name|V_pim6
 operator|=
 literal|0
 expr_stmt|;
@@ -2231,7 +2237,7 @@ name|ip6_mrouter
 operator|=
 name|NULL
 expr_stmt|;
-name|ip6_mrouter_ver
+name|V_ip6_mrouter_ver
 operator|=
 literal|0
 expr_stmt|;
@@ -2245,7 +2251,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 condition|)
 name|log
 argument_list|(
@@ -2356,7 +2362,7 @@ name|mifcp
 operator|->
 name|mif6c_pifi
 operator|>
-name|if_index
+name|V_if_index
 condition|)
 return|return
 operator|(
@@ -2568,7 +2574,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 condition|)
 name|log
 argument_list|(
@@ -2782,7 +2788,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 condition|)
 name|log
 argument_list|(
@@ -2879,7 +2885,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_MFC
 condition|)
@@ -3095,7 +3101,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_MFC
 condition|)
@@ -3297,7 +3303,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_MFC
 condition|)
@@ -3770,7 +3776,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_MFC
 condition|)
@@ -4075,7 +4081,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_FORWARD
 condition|)
@@ -4159,21 +4165,21 @@ name|ip6_src
 argument_list|)
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_cantforward
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ip6_log_time
+name|V_ip6_log_time
 operator|+
-name|ip6_log_interval
+name|V_ip6_log_interval
 operator|<
 name|time_second
 condition|)
 block|{
-name|ip6_log_time
+name|V_ip6_log_time
 operator|=
 name|time_second
 expr_stmt|;
@@ -4310,7 +4316,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 operator|(
 name|DEBUG_FORWARD
@@ -4681,7 +4687,7 @@ endif|#
 directive|endif
 switch|switch
 condition|(
-name|ip6_mrouter_ver
+name|V_ip6_mrouter_ver
 condition|)
 block|{
 ifdef|#
@@ -4779,7 +4785,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_FORWARD
 condition|)
@@ -4821,7 +4827,7 @@ control|)
 empty_stmt|;
 switch|switch
 condition|(
-name|ip6_mrouter_ver
+name|V_ip6_mrouter_ver
 condition|)
 block|{
 ifdef|#
@@ -5268,7 +5274,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_EXPIRE
 condition|)
@@ -5541,7 +5547,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_FORWARD
 condition|)
@@ -5596,7 +5602,7 @@ name|m6_ifp
 condition|)
 if|if
 condition|(
-name|pim6
+name|V_pim6
 operator|&&
 operator|(
 name|m
@@ -5719,7 +5725,7 @@ name|NULL
 expr_stmt|;
 switch|switch
 condition|(
-name|ip6_mrouter_ver
+name|V_ip6_mrouter_ver
 condition|)
 block|{
 ifdef|#
@@ -5824,7 +5830,7 @@ control|)
 empty_stmt|;
 switch|switch
 condition|(
-name|ip6_mrouter_ver
+name|V_ip6_mrouter_ver
 condition|)
 block|{
 ifdef|#
@@ -5894,7 +5900,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 condition|)
 name|log
 argument_list|(
@@ -6038,7 +6044,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -6156,7 +6162,7 @@ operator|!=
 name|odzone
 condition|)
 block|{
-name|ip6stat
+name|V_ip6stat
 operator|.
 name|ip6s_badscope
 operator|++
@@ -6389,7 +6395,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_XMIT
 condition|)
@@ -6567,7 +6573,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_XMIT
 condition|)
@@ -6592,7 +6598,7 @@ block|{
 comment|/* 		 * pMTU discovery is intentionally disabled by default, since 		 * various router may notify pMTU in multicast, which can be 		 * a DDoS to a router 		 */
 if|if
 condition|(
-name|ip6_mcast_pmtu
+name|V_ip6_mcast_pmtu
 condition|)
 name|icmp6_error
 argument_list|(
@@ -6612,7 +6618,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_XMIT
 condition|)
@@ -6749,7 +6755,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 condition|)
 block|{
 name|char
@@ -6994,7 +7000,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 condition|)
 name|log
 argument_list|(
@@ -7122,7 +7128,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_PIM
 condition|)
@@ -7292,7 +7298,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_PIM
 condition|)
@@ -7450,7 +7456,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_PIM
 condition|)
@@ -7575,7 +7581,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_PIM
 condition|)
@@ -7690,7 +7696,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_PIM
 condition|)
@@ -7785,7 +7791,7 @@ directive|ifdef
 name|MRT6DEBUG
 if|if
 condition|(
-name|mrt6debug
+name|V_mrt6debug
 operator|&
 name|DEBUG_PIM
 condition|)

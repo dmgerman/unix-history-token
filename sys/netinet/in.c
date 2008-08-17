@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -343,14 +349,14 @@ name|ia
 decl_stmt|;
 if|if
 condition|(
-name|subnetsarelocal
+name|V_subnetsarelocal
 condition|)
 block|{
 name|TAILQ_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&in_ifaddrhead
+argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
@@ -380,7 +386,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&in_ifaddrhead
+argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
@@ -1579,7 +1585,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|,
 name|ia
 argument_list|,
@@ -2509,7 +2515,7 @@ expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|in_ifaddrhead
+name|V_in_ifaddrhead
 argument_list|,
 name|ia
 argument_list|,
@@ -4100,7 +4106,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&in_ifaddrhead
+argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
@@ -4191,7 +4197,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|sameprefixcarponly
+name|V_sameprefixcarponly
 operator|&&
 name|target
 operator|->
@@ -4349,7 +4355,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&in_ifaddrhead
+argument|&V_in_ifaddrhead
 argument_list|,
 argument|ia_link
 argument_list|)
@@ -4741,7 +4747,7 @@ name|LIST_FOREACH_SAFE
 argument_list|(
 argument|inm
 argument_list|,
-argument|&in_multihead
+argument|&V_in_multihead
 argument_list|,
 argument|inm_link
 argument_list|,
@@ -4790,7 +4796,7 @@ block|{
 name|in_pcbpurgeif0
 argument_list|(
 operator|&
-name|ripcbinfo
+name|V_ripcbinfo
 argument_list|,
 name|ifp
 argument_list|)
@@ -4798,7 +4804,7 @@ expr_stmt|;
 name|in_pcbpurgeif0
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|,
 name|ifp
 argument_list|)
