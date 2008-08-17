@@ -689,12 +689,10 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|unsigned
-name|long
+name|vm_paddr_t
 name|pfn_to_mfn
 parameter_list|(
-name|unsigned
-name|long
+name|vm_paddr_t
 name|pfn
 parameter_list|)
 block|{
@@ -1173,8 +1171,15 @@ argument_list|,
 literal|"reading virtual-device"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"couldn't find virtual device"
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 name|info
@@ -2877,8 +2882,7 @@ block|{
 name|caddr_t
 name|alignbuf
 decl_stmt|;
-name|unsigned
-name|long
+name|vm_paddr_t
 name|buffer_ma
 decl_stmt|;
 name|blkif_request_t
@@ -2889,8 +2893,7 @@ name|unsigned
 name|long
 name|id
 decl_stmt|;
-name|unsigned
-name|int
+name|uint64_t
 name|fsect
 decl_stmt|,
 name|lsect
@@ -3713,7 +3716,7 @@ name|BLKIF_RSP_OKAY
 argument_list|)
 condition|)
 block|{
-name|XENPRINTF
+name|printf
 argument_list|(
 literal|"Bad return from blkdev data request: %x\n"
 argument_list|,
