@@ -225,7 +225,7 @@ name|PFNTOMFN
 parameter_list|(
 name|i
 parameter_list|)
-value|(xen_phys_machine[((xen_pfn_t)i)])
+value|(xen_phys_machine[(i)])
 end_define
 
 begin_define
@@ -235,7 +235,7 @@ name|MFNTOPFN
 parameter_list|(
 name|i
 parameter_list|)
-value|(xen_machine_phys[((xen_pfn_t)i)])
+value|((vm_paddr_t)xen_machine_phys[(i)])
 end_define
 
 begin_define
@@ -305,7 +305,7 @@ name|phystomach
 parameter_list|(
 name|pa
 parameter_list|)
-value|(PFNTOMFN((pa)>> PAGE_SHIFT)<< PAGE_SHIFT)
+value|(((vm_paddr_t)(PFNTOMFN((pa)>> PAGE_SHIFT)))<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -315,7 +315,7 @@ name|machtophys
 parameter_list|(
 name|ma
 parameter_list|)
-value|(MFNTOPFN((ma)>> PAGE_SHIFT)<< PAGE_SHIFT)
+value|(((vm_paddr_t)(MFNTOPFN((ma)>> PAGE_SHIFT)))<< PAGE_SHIFT)
 end_define
 
 begin_function_decl

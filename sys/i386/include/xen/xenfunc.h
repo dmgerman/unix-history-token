@@ -166,11 +166,9 @@ begin_function_decl
 name|void
 name|_xen_machphys_update
 parameter_list|(
-name|unsigned
-name|long
+name|vm_paddr_t
 parameter_list|,
-name|unsigned
-name|long
+name|vm_paddr_t
 parameter_list|,
 name|char
 modifier|*
