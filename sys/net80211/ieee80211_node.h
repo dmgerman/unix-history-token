@@ -202,6 +202,59 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/*  * Information element ``blob''.  We use this structure  * to capture management frame payloads that need to be  * retained.  Information elemnts within the payload that  * we need to consult have references recorded.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_ies
+block|{
+comment|/* the following are either NULL or point within data */
+name|uint8_t
+modifier|*
+name|wpa_ie
+decl_stmt|;
+comment|/* captured WPA ie */
+name|uint8_t
+modifier|*
+name|rsn_ie
+decl_stmt|;
+comment|/* captured RSN ie */
+name|uint8_t
+modifier|*
+name|wme_ie
+decl_stmt|;
+comment|/* captured WME ie */
+name|uint8_t
+modifier|*
+name|ath_ie
+decl_stmt|;
+comment|/* captured Atheros ie */
+name|uint8_t
+modifier|*
+name|htcap_ie
+decl_stmt|;
+comment|/* captured HTCAP ie */
+name|uint8_t
+modifier|*
+name|htinfo_ie
+decl_stmt|;
+comment|/* captured HTINFO ie */
+comment|/* NB: these must be the last members of this structure */
+name|uint8_t
+modifier|*
+name|data
+decl_stmt|;
+comment|/* frame data> 802.11 header */
+name|int
+name|len
+decl_stmt|;
+comment|/* data size in bytes */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Node specific information.  Note that drivers are expected  * to derive from this structure to add device-specific per-node  * state.  This is done by overriding the ic_node_* methods in  * the ieee80211com structure.  */
 end_comment
 
@@ -361,26 +414,11 @@ modifier|*
 name|ni_challenge
 decl_stmt|;
 comment|/* shared-key challenge */
-name|uint8_t
-modifier|*
-name|ni_wpa_ie
+name|struct
+name|ieee80211_ies
+name|ni_ies
 decl_stmt|;
-comment|/* captured WPA ie */
-name|uint8_t
-modifier|*
-name|ni_rsn_ie
-decl_stmt|;
-comment|/* captured RSN ie */
-name|uint8_t
-modifier|*
-name|ni_wme_ie
-decl_stmt|;
-comment|/* captured WME ie */
-name|uint8_t
-modifier|*
-name|ni_ath_ie
-decl_stmt|;
-comment|/* captured Atheros ie */
+comment|/* captured ie's */
 comment|/* tx seq per-tid */
 name|uint16_t
 name|ni_txseqs
@@ -512,11 +550,6 @@ name|ni_dtim_count
 decl_stmt|;
 comment|/* DTIM count for last bcn */
 comment|/* 11n state */
-name|uint8_t
-modifier|*
-name|ni_htcap_ie
-decl_stmt|;
-comment|/* captured HTCAP ie */
 name|uint16_t
 name|ni_htcap
 decl_stmt|;
@@ -909,6 +942,59 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|ieee80211_ies_init
+parameter_list|(
+name|struct
+name|ieee80211_ies
+modifier|*
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ies_cleanup
+parameter_list|(
+name|struct
+name|ieee80211_ies
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ies_expand
+parameter_list|(
+name|struct
+name|ieee80211_ies
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ieee80211_ies_setie
+parameter_list|(
+name|_ies
+parameter_list|,
+name|_ie
+parameter_list|,
+name|_off
+parameter_list|)
+value|do {		\ 	(_ies)._ie = (_ies).data + (_off);			\ } while (0)
+end_define
 
 begin_comment
 comment|/*  * Table of ieee80211_node instances.  Each ieee80211com  * has at least one for holding the scan candidates.  * When operating as an access point or in ibss mode there  * is a second table for associated stations or neighbors.  */

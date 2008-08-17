@@ -524,6 +524,15 @@ name|timoff
 decl_stmt|;
 name|uint8_t
 modifier|*
+name|ies
+decl_stmt|;
+comment|/* all captured ies */
+name|size_t
+name|ies_len
+decl_stmt|;
+comment|/* length of all captured ies */
+name|uint8_t
+modifier|*
 name|tim
 decl_stmt|;
 name|uint8_t
@@ -598,6 +607,7 @@ index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
+comment|/* XXX can point inside se_ies */
 name|uint8_t
 name|se_ssid
 index|[
@@ -683,36 +693,11 @@ name|uint8_t
 name|se_dtimperiod
 decl_stmt|;
 comment|/* DTIM period */
-name|uint8_t
-modifier|*
-name|se_wpa_ie
+name|struct
+name|ieee80211_ies
+name|se_ies
 decl_stmt|;
-comment|/* captured WPA ie */
-name|uint8_t
-modifier|*
-name|se_rsn_ie
-decl_stmt|;
-comment|/* captured RSN ie */
-name|uint8_t
-modifier|*
-name|se_wme_ie
-decl_stmt|;
-comment|/* captured WME ie */
-name|uint8_t
-modifier|*
-name|se_htcap_ie
-decl_stmt|;
-comment|/* captured HTP cap ie */
-name|uint8_t
-modifier|*
-name|se_htinfo_ie
-decl_stmt|;
-comment|/* captured HTP info ie */
-name|uint8_t
-modifier|*
-name|se_ath_ie
-decl_stmt|;
-comment|/* captured Atheros ie */
+comment|/* captured ie's */
 name|u_int
 name|se_age
 decl_stmt|;

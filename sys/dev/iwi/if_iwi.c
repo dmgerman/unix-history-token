@@ -15901,7 +15901,9 @@ operator|)
 operator|&&
 name|ni
 operator|->
-name|ni_wme_ie
+name|ni_ies
+operator|.
+name|wme_ie
 operator|!=
 name|NULL
 condition|)
