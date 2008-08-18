@@ -1362,7 +1362,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|struct
+name|mbuf
+modifier|*
+modifier|*
 name|ip6_savecontrol_v4
 parameter_list|(
 name|struct
@@ -1376,6 +1379,9 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
