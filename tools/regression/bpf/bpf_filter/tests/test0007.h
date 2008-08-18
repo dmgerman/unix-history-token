@@ -44,9 +44,11 @@ end_comment
 begin_decl_stmt
 name|u_char
 name|pkt
-index|[
-literal|0xdeadc0de
-index|]
+index|[]
+init|=
+block|{
+literal|0x00
+block|, }
 decl_stmt|;
 end_decl_stmt
 
