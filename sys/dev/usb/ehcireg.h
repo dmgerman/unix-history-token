@@ -1219,6 +1219,20 @@ name|ehci_physaddr_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|ehci_isoc_trans_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|ehci_isoc_bufr_ptr_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Isochronous Transfer Descriptor */
 end_comment
@@ -1230,7 +1244,192 @@ block|{
 name|ehci_link_t
 name|itd_next
 decl_stmt|;
-comment|/* XXX many more */
+name|ehci_isoc_trans_t
+name|itd_ctl
+index|[
+literal|8
+index|]
+decl_stmt|;
+define|#
+directive|define
+name|EHCI_ITD_GET_STATUS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 28)& 0xf)
+define|#
+directive|define
+name|EHCI_ITD_SET_STATUS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xf)<< 28)
+define|#
+directive|define
+name|EHCI_ITD_ACTIVE
+value|0x80000000
+define|#
+directive|define
+name|EHCI_ITD_BUF_ERR
+value|0x40000000
+define|#
+directive|define
+name|EHCI_ITD_BABBLE
+value|0x20000000
+define|#
+directive|define
+name|EHCI_ITD_ERROR
+value|0x10000000
+define|#
+directive|define
+name|EHCI_ITD_GET_LEN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& 0xfff)
+define|#
+directive|define
+name|EHCI_ITD_SET_LEN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xfff)<< 16)
+define|#
+directive|define
+name|EHCI_ITD_IOC
+value|0x8000
+define|#
+directive|define
+name|EHCI_ITD_GET_IOC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 15)& 1)
+define|#
+directive|define
+name|EHCI_ITD_SET_IOC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 15)& EHCI_ITD_IOC)
+define|#
+directive|define
+name|EHCI_ITD_GET_PG
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 12)& 0xf)
+define|#
+directive|define
+name|EHCI_ITD_SET_PG
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xf)<< 12)
+define|#
+directive|define
+name|EHCI_ITD_GET_OFFS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 0)& 0xfff)
+define|#
+directive|define
+name|EHCI_ITD_SET_OFFS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xfff)<< 0)
+name|ehci_isoc_bufr_ptr_t
+name|itd_bufr
+index|[
+literal|7
+index|]
+decl_stmt|;
+define|#
+directive|define
+name|EHCI_ITD_GET_BPTR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xfffff000)
+define|#
+directive|define
+name|EHCI_ITD_SET_BPTR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xfffff000)
+define|#
+directive|define
+name|EHCI_ITD_GET_EP
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 8)& 0xf)
+define|#
+directive|define
+name|EHCI_ITD_SET_EP
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xf)<< 8)
+define|#
+directive|define
+name|EHCI_ITD_GET_DADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x7f)
+define|#
+directive|define
+name|EHCI_ITD_SET_DADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x7f)
+define|#
+directive|define
+name|EHCI_ITD_GET_DIR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 11)& 1)
+define|#
+directive|define
+name|EHCI_ITD_SET_DIR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 1)<< 11)
+define|#
+directive|define
+name|EHCI_ITD_GET_MAXPKT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x7ff)
+define|#
+directive|define
+name|EHCI_ITD_SET_MAXPKT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x7ff)
+define|#
+directive|define
+name|EHCI_ITD_GET_MULTI
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x3)
+define|#
+directive|define
+name|EHCI_ITD_SET_MULTI
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x3)
 block|}
 name|ehci_itd_t
 typedef|;

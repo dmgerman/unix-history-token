@@ -113,6 +113,84 @@ name|EHCI_SQH_CHUNK
 value|(EHCI_PAGE_SIZE / EHCI_SQH_SIZE)
 end_define
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|ehci_soft_itd
+block|{
+name|ehci_itd_t
+name|itd
+decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
+comment|/* soft_itds links in a periodic frame*/
+name|struct
+name|ehci_soft_itd
+modifier|*
+name|next
+decl_stmt|;
+name|struct
+name|ehci_soft_itd
+modifier|*
+name|prev
+decl_stmt|;
+block|}
+name|frame_list
+struct|;
+comment|/* circular list of free itds */
+name|LIST_ENTRY
+argument_list|(
+argument|ehci_soft_itd
+argument_list|)
+name|free_list
+expr_stmt|;
+block|}
+name|u
+union|;
+name|struct
+name|ehci_soft_itd
+modifier|*
+name|xfer_next
+decl_stmt|;
+comment|/* Next soft_itd in xfer */
+name|ehci_physaddr_t
+name|physaddr
+decl_stmt|;
+name|usb_dma_t
+name|dma
+decl_stmt|;
+name|int
+name|offs
+decl_stmt|;
+name|int
+name|slot
+decl_stmt|;
+name|struct
+name|timeval
+name|t
+decl_stmt|;
+comment|/* store free time */
+block|}
+name|ehci_soft_itd_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|EHCI_ITD_SIZE
+value|((sizeof(struct ehci_soft_itd) + EHCI_QH_ALIGN - 1) / EHCI_ITD_ALIGN * EHCI_ITD_ALIGN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_ITD_CHUNK
+value|(EHCI_PAGE_SIZE / EHCI_ITD_SIZE)
+end_define
+
 begin_struct
 struct|struct
 name|ehci_xfer
@@ -139,6 +217,17 @@ decl_stmt|;
 name|ehci_soft_qtd_t
 modifier|*
 name|sqtdend
+decl_stmt|;
+name|ehci_soft_itd_t
+modifier|*
+name|itdstart
+decl_stmt|;
+name|ehci_soft_itd_t
+modifier|*
+name|itdend
+decl_stmt|;
+name|u_int
+name|isoc_len
 decl_stmt|;
 name|u_int32_t
 name|ehci_xfer_flags
@@ -271,6 +360,13 @@ define|#
 directive|define
 name|EHCI_COMPANION_MAX
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_FREE_LIST_INTERVAL
+value|100
 end_define
 
 begin_define
@@ -421,6 +517,13 @@ index|[
 name|EHCI_INTRQHS
 index|]
 decl_stmt|;
+comment|/* jcmm - an array matching sc_flist, but with software pointers, 	 * not hardware address pointers 	 */
+name|struct
+name|ehci_soft_itd
+modifier|*
+modifier|*
+name|sc_softitds
+decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -436,6 +539,14 @@ name|ehci_soft_qtd_t
 modifier|*
 name|sc_freeqtds
 decl_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument|sc_freeitds
+argument_list|,
+argument|ehci_soft_itd
+argument_list|)
+name|sc_freeitds
+expr_stmt|;
 name|int
 name|sc_noport
 decl_stmt|;

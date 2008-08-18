@@ -1156,6 +1156,20 @@ value|((a)& UE_ISO_TYPE)
 name|uWord
 name|wMaxPacketSize
 decl_stmt|;
+define|#
+directive|define
+name|UE_GET_TRANS
+parameter_list|(
+name|a
+parameter_list|)
+value|(((a)>> 11)& 0x3)
+define|#
+directive|define
+name|UE_GET_SIZE
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)& 0x7ff)
 name|uByte
 name|bInterval
 decl_stmt|;
