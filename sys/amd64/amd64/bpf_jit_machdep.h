@@ -949,6 +949,34 @@ value|do {						\ 	if (dr32 == EAX){						\ 		emitm(&stream, 0x3d, 1);				\ 		em
 end_define
 
 begin_comment
+comment|/* jb off8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JBb
+parameter_list|(
+name|off8
+parameter_list|)
+value|do {							\ 	emitm(&stream, 0x72, 1);					\ 	emitm(&stream, off8, 1);					\ } while (0)
+end_define
+
+begin_comment
+comment|/* jae off8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JAEb
+parameter_list|(
+name|off8
+parameter_list|)
+value|do {							\ 	emitm(&stream, 0x73, 1);					\ 	emitm(&stream, off8, 1);					\ } while (0)
+end_define
+
+begin_comment
 comment|/* jne off8 */
 end_comment
 
@@ -963,17 +991,17 @@ value|do {							\ 	emitm(&stream, 0x75, 1);					\ 	emitm(&stream, off8, 1);				
 end_define
 
 begin_comment
-comment|/* jbe off8 */
+comment|/* ja off8 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|JBEb
+name|JAb
 parameter_list|(
 name|off8
 parameter_list|)
-value|do {							\ 	emitm(&stream, 0x76, 1);					\ 	emitm(&stream, off8, 1);					\ } while (0)
+value|do {							\ 	emitm(&stream, 0x77, 1);					\ 	emitm(&stream, off8, 1);					\ } while (0)
 end_define
 
 begin_comment
