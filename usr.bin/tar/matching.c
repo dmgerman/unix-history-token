@@ -1304,8 +1304,6 @@ argument_list|(
 name|pattern
 argument_list|,
 name|string
-argument_list|,
-name|FNM_LEADING_DIR
 argument_list|)
 operator|)
 return|;
