@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/parse.c,v 4.14 1999/11/28 09:13:52 kardel RELEASE_19991128_A  *    * parse.c,v 4.14 1999/11/28 09:13:52 kardel RELEASE_19991128_A  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used  * as kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1992-1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp4-dev/libparse/parse.c,v 4.20 2005/08/06 17:39:40 kardel RELEASE_20050806_A  *    * parse.c,v 4.20 2005/08/06 17:39:40 kardel RELEASE_20050806_A  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used  * as kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -57,7 +57,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parse.c,v 4.14 1999/11/28 09:13:52 kardel RELEASE_19991128_A"
+literal|"parse.c,v 4.20 2005/08/06 17:39:40 kardel RELEASE_20050806_A"
 decl_stmt|;
 end_decl_stmt
 
@@ -693,8 +693,6 @@ operator|=
 name|parseio
 operator|->
 name|parse_index
-operator|+
-literal|1
 expr_stmt|;
 name|updated
 operator|=
@@ -855,8 +853,6 @@ operator|=
 name|parseio
 operator|->
 name|parse_index
-operator|+
-literal|1
 expr_stmt|;
 name|parseio
 operator|->
@@ -3235,7 +3231,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parse.c,v  * Revision 4.14  1999/11/28 09:13:52  kardel  * RECON_4_0_98F  *  * Revision 4.13  1999/02/28 11:50:20  kardel  * (timepacket): removed unecessary code  *  * Revision 4.12  1999/02/21 12:17:44  kardel  * 4.91f reconcilation  *  * Revision 4.11  1999/02/21 11:09:47  kardel  * unified debug output  *  * Revision 4.10  1998/12/20 23:45:30  kardel  * fix types and warnings  *  * Revision 4.9  1998/08/09 22:26:06  kardel  * Trimble TSIP support  *  * Revision 4.8  1998/06/14 21:09:39  kardel  * Sun acc cleanup  *  * Revision 4.7  1998/06/13 15:19:13  kardel  * fix mem*() to b*() function macro emulation  *  * Revision 4.6  1998/06/13 13:24:13  kardel  * printf fmt  *  * Revision 4.5  1998/06/13 13:01:10  kardel  * printf fmt  *  * Revision 4.4  1998/06/13 12:12:10  kardel  * bcopy/memcpy cleanup  * fix SVSV name clash  *  * Revision 4.3  1998/06/12 15:22:30  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:27  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:55  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:36  kardel  * Start 4.0 release version numbering  *  * from V3 3.46 log info deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * parse.c,v  * Revision 4.20  2005/08/06 17:39:40  kardel  * cleanup size handling wrt/ to buffer boundaries  *  * Revision 4.19  2005/04/16 17:32:10  kardel  * update copyright  *  * Revision 4.18  2004/11/14 16:11:05  kardel  * update Id tags  *  * Revision 4.17  2004/11/14 15:29:41  kardel  * support PPSAPI, upgrade Copyright to Berkeley style  *  * Revision 4.14  1999/11/28 09:13:52  kardel  * RECON_4_0_98F  *  * Revision 4.13  1999/02/28 11:50:20  kardel  * (timepacket): removed unecessary code  *  * Revision 4.12  1999/02/21 12:17:44  kardel  * 4.91f reconcilation  *  * Revision 4.11  1999/02/21 11:09:47  kardel  * unified debug output  *  * Revision 4.10  1998/12/20 23:45:30  kardel  * fix types and warnings  *  * Revision 4.9  1998/08/09 22:26:06  kardel  * Trimble TSIP support  *  * Revision 4.8  1998/06/14 21:09:39  kardel  * Sun acc cleanup  *  * Revision 4.7  1998/06/13 15:19:13  kardel  * fix mem*() to b*() function macro emulation  *  * Revision 4.6  1998/06/13 13:24:13  kardel  * printf fmt  *  * Revision 4.5  1998/06/13 13:01:10  kardel  * printf fmt  *  * Revision 4.4  1998/06/13 12:12:10  kardel  * bcopy/memcpy cleanup  * fix SVSV name clash  *  * Revision 4.3  1998/06/12 15:22:30  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:27  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:55  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:36  kardel  * Start 4.0 release version numbering  *  * from V3 3.46 log info deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit

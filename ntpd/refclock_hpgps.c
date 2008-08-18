@@ -71,7 +71,7 @@ file|<ctype.h>
 end_include
 
 begin_comment
-comment|/* Version 0.1 April  1, 1995    *         0.2 April 25, 1995  *             tolerant of missing timecode response prompt and sends  *             clear status if prompt indicates error;  *             can use either local time or UTC from receiver;  *             can get receiver status screen via flag4  *  * WARNING!: This driver is UNDER CONSTRUCTION  * Everything in here should be treated with suspicion.  * If it looks wrong, it probably is.  *  * Comments and/or questions to: Dave Vitanye  *                               Hewlett Packard Company  *                               dave@scd.hp.com  *                               (408) 553-2856  *  * Thanks to the author of the PST driver, which was the starting point for  * this one.  *  * This driver supports the HP 58503A Time and Frequency Reference Receiver.  * This receiver uses HP SmartClock (TM) to implement an Enhanced GPS receiver.  * The receiver accuracy when locked to GPS in normal operation is better  * than 1 usec. The accuracy when operating in holdover is typically better  * than 10 usec. per day.  *  * The receiver should be operated with factory default settings.  * Initial driver operation: expects the receiver to be already locked  * to GPS, configured and able to output timecode format 2 messages.  *  * The driver uses the poll sequence :PTIME:TCODE? to get a response from  * the receiver. The receiver responds with a timecode string of ASCII  * printing characters, followed by a<cr><lf>, followed by a prompt string  * issued by the receiver, in the following format:  * T#yyyymmddhhmmssMFLRVcc<cr><lf>scpi>   *  * The driver processes the response at the<cr> and<lf>, so what the  * driver sees is the prompt from the previous poll, followed by this  * timecode. The prompt from the current poll is (usually) left unread until  * the next poll. So (except on the very first poll) the driver sees this:  *  * scpi> T#yyyymmddhhmmssMFLRVcc<cr><lf>  *  * The T is the on-time character, at 980 msec. before the next 1PPS edge.  * The # is the timecode format type. We look for format 2.  * Without any of the CLK or PPS stuff, then, the receiver buffer timestamp  * at the<cr> is 24 characters later, which is about 25 msec. at 9600 bps,  * so the first approximation for fudge time1 is nominally -0.955 seconds.  * This number probably needs adjusting for each machine / OS type, so far:  *  -0.955000 on an HP 9000 Model 712/80 HP-UX 9.05  *  -0.953175 on an HP 9000 Model 370    HP-UX 9.10   *  * This receiver also provides a 1PPS signal, but I haven't figured out  * how to deal with any of the CLK or PPS stuff yet. Stay tuned.  *  */
+comment|/* Version 0.1 April  1, 1995    *         0.2 April 25, 1995  *             tolerant of missing timecode response prompt and sends  *             clear status if prompt indicates error;  *             can use either local time or UTC from receiver;  *             can get receiver status screen via flag4  *  * WARNING!: This driver is UNDER CONSTRUCTION  * Everything in here should be treated with suspicion.  * If it looks wrong, it probably is.  *  * Comments and/or questions to: Dave Vitanye  *                               Hewlett Packard Company  *                               dave@scd.hp.com  *                               (408) 553-2856  *  * Thanks to the author of the PST driver, which was the starting point for  * this one.  *  * This driver supports the HP 58503A Time and Frequency Reference Receiver.  * This receiver uses HP SmartClock (TM) to implement an Enhanced GPS receiver.  * The receiver accuracy when locked to GPS in normal operation is better  * than 1 usec. The accuracy when operating in holdover is typically better  * than 10 usec. per day.  *  * The same driver also handles the HP Z3801A which is available surplus  * from the cell phone industry.  It's popular with hams.  * It needs a different line setup: 19200 baud, 7 data bits, odd parity  * That is selected by adding "mode 1" to the server line in ntp.conf  * HP Z3801A code from Jeff Mock added by Hal Murray, Sep 2005  *  *  * The receiver should be operated with factory default settings.  * Initial driver operation: expects the receiver to be already locked  * to GPS, configured and able to output timecode format 2 messages.  *  * The driver uses the poll sequence :PTIME:TCODE? to get a response from  * the receiver. The receiver responds with a timecode string of ASCII  * printing characters, followed by a<cr><lf>, followed by a prompt string  * issued by the receiver, in the following format:  * T#yyyymmddhhmmssMFLRVcc<cr><lf>scpi>   *  * The driver processes the response at the<cr> and<lf>, so what the  * driver sees is the prompt from the previous poll, followed by this  * timecode. The prompt from the current poll is (usually) left unread until  * the next poll. So (except on the very first poll) the driver sees this:  *  * scpi> T#yyyymmddhhmmssMFLRVcc<cr><lf>  *  * The T is the on-time character, at 980 msec. before the next 1PPS edge.  * The # is the timecode format type. We look for format 2.  * Without any of the CLK or PPS stuff, then, the receiver buffer timestamp  * at the<cr> is 24 characters later, which is about 25 msec. at 9600 bps,  * so the first approximation for fudge time1 is nominally -0.955 seconds.  * This number probably needs adjusting for each machine / OS type, so far:  *  -0.955000 on an HP 9000 Model 712/80 HP-UX 9.05  *  -0.953175 on an HP 9000 Model 370    HP-UX 9.10   *  * This receiver also provides a 1PPS signal, but I haven't figured out  * how to deal with any of the CLK or PPS stuff yet. Stay tuned.  *  */
 end_comment
 
 begin_comment
@@ -102,6 +102,17 @@ end_define
 
 begin_comment
 comment|/* uart speed (9600 baud) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEED232Z
+value|B19200
+end_define
+
+begin_comment
+comment|/* uart speed (19200 baud) */
 end_comment
 
 begin_define
@@ -431,7 +442,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* 	 * Open serial port. Use CLK line discipline, if available. 	 */
+comment|/* 	 * Open serial port. Use CLK line discipline, if available. 	 * Default is HP 58503A, mode arg selects HP Z3801A 	 */
 operator|(
 name|void
 operator|)
@@ -444,6 +455,44 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+comment|/* mode parameter to server config line shares ttl slot */
+if|if
+condition|(
+operator|(
+name|peer
+operator|->
+name|ttl
+operator|==
+literal|1
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|fd
+operator|=
+name|refclock_open
+argument_list|(
+name|device
+argument_list|,
+name|SPEED232Z
+argument_list|,
+name|LDISC_CLK
+operator||
+name|LDISC_7O1
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 operator|!
@@ -465,6 +514,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* 	 * Allocate and initialize unit structure 	 */
 if|if
 condition|(

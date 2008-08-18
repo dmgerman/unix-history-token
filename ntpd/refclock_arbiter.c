@@ -71,7 +71,7 @@ file|<ctype.h>
 end_include
 
 begin_comment
-comment|/*  * This driver supports the Arbiter 1088A/B Satellite Controlled Clock.  * The claimed accuracy of this clock is 100 ns relative to the PPS  * output when receiving four or more satellites.  *  * The receiver should be configured before starting the NTP daemon, in  * order to establish reliable position and operating conditions. It  * does not initiate surveying or hold mode. For use with NTP, the  * daylight savings time feature should be disables (D0 command) and the  * broadcast mode set to operate in UTC (BU command).  *  * The timecode format supported by this driver is selected by the poll  * sequence "B5", which initiates a line in the following format to be  * repeated once per second until turned off by the "B0" poll sequence.  *  * Format B5 (24 ASCII printing characters):  *  *<cr><lf>i yy ddd hh:mm:ss.000bbb    *  *	on-time =<cr>  *	i = synchronization flag (' ' = locked, '?' = unlocked)  *	yy = year of century  *	ddd = day of year  *	hh:mm:ss = hours, minutes, seconds  *	.000 = fraction of second (not used)  *	bbb = tailing spaces for fill  *  * The alarm condition is indicated by a '?' at i, which indicates the  * receiver is not synchronized. In normal operation, a line consisting  * of the timecode followed by the time quality character (TQ) followed  * by the receiver status string (SR) is written to the clockstats file.  * The time quality character is encoded in IEEE P1344 standard:  *  * Format TQ (IEEE P1344 estimated worst-case time quality)  *  *	0	clock locked, maximum accuracy  *	F	clock failure, time not reliable  *	4	clock unlocked, accuracy< 1 us  *	5	clock unlocked, accuracy< 10 us  *	6	clock unlocked, accuracy< 100 us  *	7	clock unlocked, accuracy< 1 ms  *	8	clock unlocked, accuracy< 10 ms  *	9	clock unlocked, accuracy< 100 ms  *	A	clock unlocked, accuracy< 1 s  *	B	clock unlocked, accuracy< 10 s  *  * The status string is encoded as follows:  *  * Format SR (25 ASCII printing characters)  *  *	V=vv S=ss T=t P=pdop E=ee  *  *	vv = satellites visible  *	ss = relative signal strength  *	t = satellites tracked  *	pdop = position dilution of precision (meters)  *	ee = hardware errors  *  * If flag4 is set, an additional line consisting of the receiver  * latitude (LA), longitude (LO) and elevation (LH) (meters) is written  * to this file. If channel B is enabled for deviation mode and connected  * to a 1-PPS signal, the last two numbers on the line are the deviation  * and standard deviation averaged over the last 15 seconds.  */
+comment|/*  * This driver supports the Arbiter 1088A/B Satellite Controlled Clock.  * The claimed accuracy of this clock is 100 ns relative to the PPS  * output when receiving four or more satellites.  *  * The receiver should be configured before starting the NTP daemon, in  * order to establish reliable position and operating conditions. It  * does not initiate surveying or hold mode. For use with NTP, the  * daylight savings time feature should be disables (D0 command) and the  * broadcast mode set to operate in UTC (BU command).  *  * The timecode format supported by this driver is selected by the poll  * sequence "B5", which initiates a line in the following format to be  * repeated once per second until turned off by the "B0" poll sequence.  *  * Format B5 (24 ASCII printing characters):  *  *<cr><lf>i yy ddd hh:mm:ss.000bbb    *  *	on-time =<cr>  *	i = synchronization flag (' ' = locked, '?' = unlocked)  *	yy = year of century  *	ddd = day of year  *	hh:mm:ss = hours, minutes, seconds  *	.000 = fraction of second (not used)  *	bbb = tailing spaces for fill  *  * The alarm condition is indicated by a '?' at i, which indicates the  * receiver is not synchronized. In normal operation, a line consisting  * of the timecode followed by the time quality character (TQ) followed  * by the receiver status string (SR) is written to the clockstats file.  * The time quality character is encoded in IEEE P1344 standard:  *  * Format TQ (IEEE P1344 estimated worst-case time quality)  *  *	0	clock locked, maximum accuracy  *	F	clock failure, time not reliable  *	4	clock unlocked, accuracy< 1 us  *	5	clock unlocked, accuracy< 10 us  *	6	clock unlocked, accuracy< 100 us  *	7	clock unlocked, accuracy< 1 ms  *	8	clock unlocked, accuracy< 10 ms  *	9	clock unlocked, accuracy< 100 ms  *	A	clock unlocked, accuracy< 1 s  *	B	clock unlocked, accuracy< 10 s  *  * The status string is encoded as follows:  *  * Format SR (25 ASCII printing characters)  *  *	V=vv S=ss T=t P=pdop E=ee  *  *	vv = satellites visible  *	ss = relative signal strength  *	t = satellites tracked  *	pdop = position dilution of precision (meters)  *	ee = hardware errors  *  * If flag4 is set, an additional line consisting of the receiver  * latitude (LA), longitude (LO), elevation (LH) (meters), and data  * buffer (DB) is written to this file. If channel B is enabled for  * deviation mode and connected to a 1-PPS signal, the last two numbers  * on the line are the deviation and standard deviation averaged over  * the last 15 seconds.  *  * PPS calibration fudge time1 .001240  */
 end_comment
 
 begin_comment
@@ -148,7 +148,7 @@ begin_define
 define|#
 directive|define
 name|MAXSTA
-value|30
+value|40
 end_define
 
 begin_comment
@@ -159,7 +159,7 @@ begin_define
 define|#
 directive|define
 name|MAXPOS
-value|70
+value|80
 end_define
 
 begin_comment
@@ -667,7 +667,14 @@ decl_stmt|;
 name|u_char
 name|syncchar
 decl_stmt|;
-comment|/* synchronization indicator */
+comment|/* synch indicator */
+name|char
+name|tbuf
+index|[
+name|BMAX
+index|]
+decl_stmt|;
+comment|/* temp buffer */
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
@@ -703,9 +710,7 @@ name|refclock_gtlin
 argument_list|(
 name|rbufp
 argument_list|,
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 argument_list|,
 name|BMAX
 argument_list|,
@@ -751,15 +756,13 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Collect statistics. If nothing is recogized, just 		 * ignore; sometimes the clock doesn't stop spewing 		 * timecodes for awhile after the B0 commant. 		 */
+comment|/* 		 * Collect statistics. If nothing is recogized, just 		 * ignore; sometimes the clock doesn't stop spewing 		 * timecodes for awhile after the B0 command. 		 * 		 * If flag4 is not set, send TQ, SR, B5. If flag4 is 		 * sset, send TQ, SR, LA, LO, LH, DB, B5. When the 		 * median filter is full, send B0. 		 */
 if|if
 condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 argument_list|,
 literal|"TQ"
 argument_list|,
@@ -771,9 +774,7 @@ name|up
 operator|->
 name|qualchar
 operator|=
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 index|[
 literal|2
 index|]
@@ -791,6 +792,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 elseif|else
 if|if
@@ -798,9 +800,7 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 argument_list|,
 literal|"SR"
 argument_list|,
@@ -814,9 +814,7 @@ name|up
 operator|->
 name|status
 argument_list|,
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 operator|+
 literal|2
 argument_list|)
@@ -843,7 +841,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|write
 argument_list|(
 name|pp
@@ -857,12 +854,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|up
-operator|->
-name|tcswitch
-operator|++
-expr_stmt|;
-block|}
+return|return;
 block|}
 elseif|else
 if|if
@@ -870,9 +862,7 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 argument_list|,
 literal|"LA"
 argument_list|,
@@ -886,9 +876,7 @@ name|up
 operator|->
 name|latlon
 argument_list|,
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 operator|+
 literal|2
 argument_list|)
@@ -906,6 +894,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 elseif|else
 if|if
@@ -913,9 +902,7 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 argument_list|,
 literal|"LO"
 argument_list|,
@@ -938,9 +925,7 @@ name|up
 operator|->
 name|latlon
 argument_list|,
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 operator|+
 literal|2
 argument_list|)
@@ -958,6 +943,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 elseif|else
 if|if
@@ -965,9 +951,7 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 argument_list|,
 literal|"LH"
 argument_list|,
@@ -990,9 +974,7 @@ name|up
 operator|->
 name|latlon
 argument_list|,
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 operator|+
 literal|2
 argument_list|)
@@ -1010,6 +992,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 elseif|else
 if|if
@@ -1017,9 +1000,7 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 argument_list|,
 literal|"DB"
 argument_list|,
@@ -1042,9 +1023,7 @@ name|up
 operator|->
 name|latlon
 argument_list|,
-name|pp
-operator|->
-name|a_lastcode
+name|tbuf
 operator|+
 literal|2
 argument_list|)
@@ -1061,6 +1040,24 @@ operator|->
 name|latlon
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"arbiter: %s\n"
+argument_list|,
+name|up
+operator|->
+name|latlon
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|write
 argument_list|(
 name|pp
@@ -1074,31 +1071,39 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. If the timecode has valid length, but not in 	 * proper format, we declare bad format and exit. If the 	 * timecode has invalid length, which sometimes occurs when the 	 * B0 amputates the broadcast, we just quietly steal away. Note 	 * that the time quality character and receiver status string is 	 * tacked on the end for clockstats display.  	 */
 name|up
 operator|->
 name|tcswitch
 operator|++
 expr_stmt|;
-block|}
-return|return;
-block|}
-name|pp
-operator|->
-name|lencode
-operator|=
-name|temp
-expr_stmt|;
-comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. If the timecode has valid length, but not in 	 * proper format, we declare bad format and exit. If the 	 * timecode has invalid length, which sometimes occurs when the 	 * B0 amputates the broadcast, we just quietly steal away. Note 	 * that the time quality character and receiver status string is 	 * tacked on the end for clockstats display.  	 */
 if|if
 condition|(
-name|pp
+name|up
 operator|->
-name|lencode
-operator|==
+name|tcswitch
+operator|<=
+literal|1
+operator|||
+name|temp
+operator|<
 name|LENARB
 condition|)
-block|{
-comment|/* 		 * Timecode format B5: "i yy ddd hh:mm:ss.000   " 		 */
+return|return;
+comment|/* 	 * Timecode format B5: "i yy ddd hh:mm:ss.000   " 	 */
+name|strncpy
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
+argument_list|,
+name|tbuf
+argument_list|,
+name|BMAX
+argument_list|)
+expr_stmt|;
 name|pp
 operator|->
 name|a_lastcode
@@ -1121,6 +1126,17 @@ argument_list|,
 name|up
 operator|->
 name|status
+argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|lencode
+operator|=
+name|strlen
+argument_list|(
+name|pp
+operator|->
+name|a_lastcode
 argument_list|)
 expr_stmt|;
 name|syncchar
@@ -1191,29 +1207,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
-else|else
-block|{
-name|write
-argument_list|(
-name|pp
-operator|->
-name|io
-operator|.
-name|fd
-argument_list|,
-literal|"B0"
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|up
-operator|->
-name|tcswitch
-operator|++
-expr_stmt|;
 comment|/* 	 * We decode the clock dispersion from the time quality 	 * character. 	 */
 switch|switch
 condition|(
@@ -1231,6 +1224,14 @@ operator|->
 name|disp
 operator|=
 literal|1e-7
+expr_stmt|;
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
 expr_stmt|;
 break|break;
 case|case
@@ -1400,49 +1401,6 @@ name|leap
 operator|=
 name|LEAP_NOWARNING
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"arbiter: timecode %d %s\n"
-argument_list|,
-name|pp
-operator|->
-name|lencode
-argument_list|,
-name|pp
-operator|->
-name|a_lastcode
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|up
-operator|->
-name|tcswitch
-operator|>=
-name|NSTAGE
-condition|)
-name|write
-argument_list|(
-name|pp
-operator|->
-name|io
-operator|.
-name|fd
-argument_list|,
-literal|"B0"
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Process the new sample in the median filter and determine the 	 * timecode timestamp. 	 */
 if|if
 condition|(
@@ -1459,6 +1417,43 @@ argument_list|,
 name|CEVNT_BADTIME
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|peer
+operator|->
+name|disp
+operator|>
+name|MAXDISTANCE
+condition|)
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|tcswitch
+operator|>=
+name|MAXSTAGE
+condition|)
+block|{
+name|write
+argument_list|(
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+argument_list|,
+literal|"B0"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1491,7 +1486,7 @@ name|refclockproc
 modifier|*
 name|pp
 decl_stmt|;
-comment|/* 	 * Time to poll the clock. The Arbiter clock responds to a "B5" 	 * by returning a timecode in the format specified above. 	 * Transmission occurs once per second, unless turned off by a 	 * "B0". Note there is no checking on state, since this may not 	 * be the only customer reading the clock. Only one customer 	 * need poll the clock; all others just listen in. If nothing is 	 * heard from the clock for two polls, declare a timeout and 	 * keep going. 	 */
+comment|/* 	 * Time to poll the clock. The Arbiter clock responds to a "B5" 	 * by returning a timecode in the format specified above. 	 * Transmission occurs once per second, unless turned off by a 	 * "B0". Note there is no checking on state, since this may not 	 * be the only customer reading the clock. Only one customer 	 * need poll the clock; all others just listen in. 	 */
 name|pp
 operator|=
 name|peer
@@ -1508,6 +1503,11 @@ operator|)
 name|pp
 operator|->
 name|unitptr
+expr_stmt|;
+name|pp
+operator|->
+name|polls
+operator|++
 expr_stmt|;
 name|up
 operator|->
@@ -1532,7 +1532,6 @@ argument_list|)
 operator|!=
 literal|2
 condition|)
-block|{
 name|refclock_report
 argument_list|(
 name|peer
@@ -1540,13 +1539,7 @@ argument_list|,
 name|CEVNT_FAULT
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|pp
-operator|->
-name|polls
-operator|++
-expr_stmt|;
+comment|/* 	 * Process median filter samples. If none received, declare a 	 * timeout and keep going. 	 */
 if|if
 condition|(
 name|pp
@@ -1567,14 +1560,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|pp
-operator|->
-name|lastref
-operator|=
-name|pp
-operator|->
-name|lastrec
-expr_stmt|;
 name|refclock_receive
 argument_list|(
 name|peer
@@ -1592,6 +1577,28 @@ operator|->
 name|a_lastcode
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"arbiter: timecode %d %s\n"
+argument_list|,
+name|pp
+operator|->
+name|lencode
+argument_list|,
+name|pp
+operator|->
+name|a_lastcode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

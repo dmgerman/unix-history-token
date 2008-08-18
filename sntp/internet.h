@@ -138,11 +138,6 @@ name|sockaddr_storage
 modifier|*
 name|anywhere
 parameter_list|,
-name|struct
-name|sockaddr_storage
-modifier|*
-name|everwhere
-parameter_list|,
 name|int
 modifier|*
 name|port
@@ -176,11 +171,6 @@ name|struct
 name|in_addr
 modifier|*
 name|anywhere
-parameter_list|,
-name|struct
-name|in_addr
-modifier|*
-name|everwhere
 parameter_list|,
 name|int
 modifier|*

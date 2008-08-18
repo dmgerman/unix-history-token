@@ -48,6 +48,10 @@ begin_comment
 comment|/*  * Flags for forming descriptors.  */
 end_comment
 
+begin_comment
+comment|/*  * Flags for forming descriptors.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -69,7 +73,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|STR
+name|NTP_STR
 value|0x1
 end_define
 
@@ -80,7 +84,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UINT
+name|NTP_UINT
 value|0x2
 end_define
 
@@ -91,7 +95,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INT
+name|NTP_INT
 value|0x3
 end_define
 
@@ -102,7 +106,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ADD
+name|NTP_ADD
 value|0x4
 end_define
 
@@ -118,7 +122,7 @@ value|0x5
 end_define
 
 begin_comment
-comment|/* IP address family */
+comment|/* IP version */
 end_comment
 
 begin_comment
@@ -512,6 +516,9 @@ operator|,
 expr|struct
 name|ctl_var
 operator|*
+operator|,
+name|int
+name|code
 operator|)
 argument_list|)
 decl_stmt|;

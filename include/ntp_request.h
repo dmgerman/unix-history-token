@@ -26,6 +26,26 @@ comment|/*  * A mode 7 packet is used exchanging data between an NTP server  * a
 end_comment
 
 begin_comment
+comment|/*  * union of raw addresses to save space  */
+end_comment
+
+begin_union
+union|union
+name|addrun
+block|{
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+name|struct
+name|in_addr
+name|addr
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
 comment|/*  * A request packet.  These are almost a fixed length.  */
 end_comment
 
@@ -978,6 +998,28 @@ begin_comment
 comment|/* Here is a hostname + assoc_id */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|REQ_IF_STATS
+value|44
+end_define
+
+begin_comment
+comment|/* get interface statistics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_IF_RELOAD
+value|45
+end_define
+
+begin_comment
+comment|/* reload interface list */
+end_comment
+
 begin_comment
 comment|/* Determine size of pre-v6 version of structures */
 end_comment
@@ -1050,6 +1092,13 @@ define|#
 directive|define
 name|INFO_FLAG_SHORTLIST
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFO_FLAG_IBURST
+value|0x100
 end_define
 
 begin_comment
@@ -1824,7 +1873,7 @@ decl_stmt|;
 name|u_char
 name|hashcount
 index|[
-name|HASH_SIZE
+name|NTP_HASH_SIZE
 index|]
 decl_stmt|;
 block|}
@@ -2958,6 +3007,137 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * interface statistics  */
+end_comment
+
+begin_struct
+struct|struct
+name|info_if_stats
+block|{
+name|union
+name|addrun
+name|unaddr
+decl_stmt|;
+comment|/* address */
+name|union
+name|addrun
+name|unbcast
+decl_stmt|;
+comment|/* broadcast */
+name|union
+name|addrun
+name|unmask
+decl_stmt|;
+comment|/* mask */
+name|u_int32
+name|v6_flag
+decl_stmt|;
+comment|/* is this v6 */
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* name of interface */
+name|int32
+name|flags
+decl_stmt|;
+comment|/* interface flags */
+name|int32
+name|last_ttl
+decl_stmt|;
+comment|/* last TTL specified */
+name|int32
+name|num_mcast
+decl_stmt|;
+comment|/* No. of IP addresses in multicast socket */
+name|int32
+name|received
+decl_stmt|;
+comment|/* number of incoming packets */
+name|int32
+name|sent
+decl_stmt|;
+comment|/* number of outgoing packets */
+name|int32
+name|notsent
+decl_stmt|;
+comment|/* number of send failures */
+name|int32
+name|uptime
+decl_stmt|;
+comment|/* number of seconds this interface was active */
+name|u_int32
+name|scopeid
+decl_stmt|;
+comment|/* Scope used for Multicasting */
+name|u_int32
+name|ifindex
+decl_stmt|;
+comment|/* interface index - from system */
+name|u_int32
+name|ifnum
+decl_stmt|;
+comment|/* sequential interface number */
+name|u_int32
+name|peercnt
+decl_stmt|;
+comment|/* number of peers referencinf this interface - informational only */
+name|u_short
+name|family
+decl_stmt|;
+comment|/* Address family */
+name|u_char
+name|ignore_packets
+decl_stmt|;
+comment|/* Specify whether the packet should be ignored */
+name|u_char
+name|action
+decl_stmt|;
+comment|/* reason the item is listed */
+name|int32
+name|_filler0
+decl_stmt|;
+comment|/* pad to a 64 bit size boundary */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IFS_EXISTS
+value|1
+end_define
+
+begin_comment
+comment|/* just exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFS_CREATED
+value|2
+end_define
+
+begin_comment
+comment|/* was just created */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFS_DELETED
+value|3
+end_define
+
+begin_comment
+comment|/* was just delete */
+end_comment
 
 begin_comment
 comment|/*  * Info returned with IP -> hostname lookup  */

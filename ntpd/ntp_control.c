@@ -47,6 +47,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntp_unixtime.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_stdlib.h"
 end_include
 
@@ -427,6 +433,34 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ctl_putfs
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|tstamp_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -875,6 +909,15 @@ block|}
 block|,
 comment|/* 13 */
 block|{
+name|CS_ERROR
+block|,
+name|RO
+block|,
+literal|"noise"
+block|}
+block|,
+comment|/* 14 */
+block|{
 name|CS_CLOCK
 block|,
 name|RO
@@ -882,7 +925,7 @@ block|,
 literal|"clock"
 block|}
 block|,
-comment|/* 14 */
+comment|/* 15 */
 block|{
 name|CS_PROCESSOR
 block|,
@@ -891,7 +934,7 @@ block|,
 literal|"processor"
 block|}
 block|,
-comment|/* 15 */
+comment|/* 16 */
 block|{
 name|CS_SYSTEM
 block|,
@@ -900,7 +943,7 @@ block|,
 literal|"system"
 block|}
 block|,
-comment|/* 16 */
+comment|/* 17 */
 block|{
 name|CS_VERSION
 block|,
@@ -909,7 +952,7 @@ block|,
 literal|"version"
 block|}
 block|,
-comment|/* 17 */
+comment|/* 18 */
 block|{
 name|CS_STABIL
 block|,
@@ -918,7 +961,7 @@ block|,
 literal|"stability"
 block|}
 block|,
-comment|/* 18 */
+comment|/* 19 */
 block|{
 name|CS_VARLIST
 block|,
@@ -927,7 +970,7 @@ block|,
 literal|"sys_var_list"
 block|}
 block|,
-comment|/* 19 */
+comment|/* 20 */
 ifdef|#
 directive|ifdef
 name|OPENSSL
@@ -939,7 +982,7 @@ block|,
 literal|"flags"
 block|}
 block|,
-comment|/* 20 */
+comment|/* 21 */
 block|{
 name|CS_HOST
 block|,
@@ -948,16 +991,16 @@ block|,
 literal|"hostname"
 block|}
 block|,
-comment|/* 21 */
+comment|/* 22 */
 block|{
 name|CS_PUBLIC
 block|,
 name|RO
 block|,
-literal|"hostkey"
+literal|"update"
 block|}
 block|,
-comment|/* 22 */
+comment|/* 23 */
 block|{
 name|CS_CERTIF
 block|,
@@ -966,25 +1009,25 @@ block|,
 literal|"cert"
 block|}
 block|,
-comment|/* 23 */
+comment|/* 24 */
 block|{
 name|CS_REVTIME
 block|,
 name|RO
 block|,
-literal|"refresh"
+literal|"expire"
 block|}
 block|,
-comment|/* 24 */
+comment|/* 25 */
 block|{
 name|CS_LEAPTAB
 block|,
 name|RO
 block|,
-literal|"leapseconds"
+literal|"leapsec"
 block|}
 block|,
-comment|/* 25 */
+comment|/* 26 */
 block|{
 name|CS_TAI
 block|,
@@ -993,7 +1036,7 @@ block|,
 literal|"tai"
 block|}
 block|,
-comment|/* 26 */
+comment|/* 27 */
 block|{
 name|CS_DIGEST
 block|,
@@ -1002,7 +1045,25 @@ block|,
 literal|"signature"
 block|}
 block|,
-comment|/* 27 */
+comment|/* 28 */
+block|{
+name|CS_IDENT
+block|,
+name|RO
+block|,
+literal|"ident"
+block|}
+block|,
+comment|/* 29 */
+block|{
+name|CS_REVOKE
+block|,
+name|RO
+block|,
+literal|"expire"
+block|}
+block|,
+comment|/* 30 */
 endif|#
 directive|endif
 comment|/* OPENSSL */
@@ -1013,7 +1074,7 @@ name|EOV
 block|,
 literal|""
 block|}
-comment|/* 28 */
+comment|/* 21/31 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1079,6 +1140,8 @@ name|CS_DRIFT
 block|,
 name|CS_JITTER
 block|,
+name|CS_ERROR
+block|,
 name|CS_STABIL
 block|,
 ifdef|#
@@ -1092,9 +1155,11 @@ name|CS_FLAGS
 block|,
 name|CS_PUBLIC
 block|,
-name|CS_REVTIME
+name|CS_IDENT
 block|,
 name|CS_LEAPTAB
+block|,
+name|CS_TAI
 block|,
 name|CS_CERTIF
 block|,
@@ -1317,7 +1382,7 @@ block|}
 block|,
 comment|/* 21 */
 block|{
-name|CP_VALID
+name|CP_UNREACH
 block|,
 name|RO
 block|,
@@ -1452,15 +1517,6 @@ block|}
 block|,
 comment|/* 36 */
 block|{
-name|CP_RANK
-block|,
-name|RO
-block|,
-literal|"rank"
-block|}
-block|,
-comment|/* 37 */
-block|{
 name|CP_VARLIST
 block|,
 name|RO
@@ -1468,7 +1524,7 @@ block|,
 literal|"peer_var_list"
 block|}
 block|,
-comment|/* 38 */
+comment|/* 37 */
 ifdef|#
 directive|ifdef
 name|OPENSSL
@@ -1480,13 +1536,22 @@ block|,
 literal|"flags"
 block|}
 block|,
-comment|/* 39 */
+comment|/* 38 */
 block|{
 name|CP_HOST
 block|,
 name|RO
 block|,
 literal|"hostname"
+block|}
+block|,
+comment|/* 39 */
+block|{
+name|CP_VALID
+block|,
+name|RO
+block|,
+literal|"valid"
 block|}
 block|,
 comment|/* 40 */
@@ -1531,7 +1596,7 @@ name|CP_IDENT
 block|,
 name|RO
 block|,
-literal|"identity"
+literal|"trust"
 block|}
 block|,
 comment|/* 45 */
@@ -1545,7 +1610,7 @@ name|EOV
 block|,
 literal|""
 block|}
-comment|/* 39/46 */
+comment|/* 38/46 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1583,7 +1648,7 @@ name|CP_REFID
 block|,
 name|CP_REACH
 block|,
-name|CP_VALID
+name|CP_UNREACH
 block|,
 name|CP_HMODE
 block|,
@@ -1627,6 +1692,8 @@ name|OPENSSL
 name|CP_HOST
 block|,
 name|CP_DIGEST
+block|,
+name|CP_VALID
 block|,
 name|CP_FLAGS
 block|,
@@ -2018,7 +2085,7 @@ block|,
 comment|/* REFCLK_LOCALCLOCK (1) */
 name|CTL_SST_TS_UHF
 block|,
-comment|/* REFCLK_GPS_TRAK (2) */
+comment|/* deprecated REFCLK_GPS_TRAK (2) */
 name|CTL_SST_TS_HF
 block|,
 comment|/* REFCLK_WWV_PST (3) */
@@ -2030,7 +2097,7 @@ block|,
 comment|/* REFCLK_TRUETIME (5) */
 name|CTL_SST_TS_UHF
 block|,
-comment|/* REFCLK_GOES_TRAK (6) */
+comment|/* REFCLK_GOES_TRAK (6) IRIG_AUDIO? */
 name|CTL_SST_TS_HF
 block|,
 comment|/* REFCLK_CHU (7) */
@@ -2054,10 +2121,10 @@ block|,
 comment|/* REFCLK_ATOM_LEITCH (13) */
 name|CTL_SST_TS_LF
 block|,
-comment|/* REFCLK_MSF_EES (14) */
-name|CTL_SST_TS_UHF
+comment|/* deprecated REFCLK_MSF_EES (14) */
+name|CTL_SST_TS_NTP
 block|,
-comment|/* REFCLK_TRUETIME (15) */
+comment|/* not used (15) */
 name|CTL_SST_TS_UHF
 block|,
 comment|/* REFCLK_IRIG_BANCOMM (16) */
@@ -2079,15 +2146,15 @@ comment|/* REFCLK_GPS_VME (21) */
 name|CTL_SST_TS_ATOM
 block|,
 comment|/* REFCLK_ATOM_PPS (22) */
-name|CTL_SST_TS_TELEPHONE
+name|CTL_SST_TS_NTP
 block|,
-comment|/* REFCLK_PTB_ACTS (23) */
-name|CTL_SST_TS_TELEPHONE
+comment|/* not used (23) */
+name|CTL_SST_TS_NTP
 block|,
-comment|/* REFCLK_USNO (24) */
-name|CTL_SST_TS_UHF
+comment|/* not used (24) */
+name|CTL_SST_TS_NTP
 block|,
-comment|/* REFCLK_TRUETIME (25) */
+comment|/* not used (25) */
 name|CTL_SST_TS_UHF
 block|,
 comment|/* REFCLK_GPS_HP (26) */
@@ -2111,10 +2178,10 @@ block|,
 comment|/* REFCLK_CHRONOLOG (32) */
 name|CTL_SST_TS_LF
 block|,
-comment|/* REFCLK_DUMBCLOCK (32) */
+comment|/* REFCLK_DUMBCLOCK (33) */
 name|CTL_SST_TS_LF
 block|,
-comment|/* REFCLK_ULINK (33) */
+comment|/* REFCLK_ULINK (34) */
 name|CTL_SST_TS_LF
 block|,
 comment|/* REFCLK_PCF (35) */
@@ -3604,6 +3671,9 @@ name|this_clock
 operator|=
 name|CTL_SST_TS_UNSPEC
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|REFCLOCK
 if|if
 condition|(
 name|sys_peer
@@ -3667,6 +3737,9 @@ name|CTL_SST_TS_PPS
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* REFCLOCK */
 return|return
 operator|(
 name|u_short
@@ -4594,6 +4667,172 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * ctl_putfs - write a decoded filestamp into the response  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|ctl_putfs
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|tag
+parameter_list|,
+name|tstamp_t
+name|uval
+parameter_list|)
+block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|cq
+decl_stmt|;
+name|char
+name|buffer
+index|[
+literal|200
+index|]
+decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|tm
+init|=
+name|NULL
+decl_stmt|;
+name|time_t
+name|fstamp
+decl_stmt|;
+name|cp
+operator|=
+name|buffer
+expr_stmt|;
+name|cq
+operator|=
+name|tag
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|cq
+operator|!=
+literal|'\0'
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+operator|*
+name|cq
+operator|++
+expr_stmt|;
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'='
+expr_stmt|;
+name|fstamp
+operator|=
+name|uval
+operator|-
+name|JAN_1970
+expr_stmt|;
+name|tm
+operator|=
+name|gmtime
+argument_list|(
+operator|&
+name|fstamp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tm
+operator|==
+name|NULL
+condition|)
+return|return;
+name|sprintf
+argument_list|(
+name|cp
+argument_list|,
+literal|"%04d%02d%02d%02d%02d"
+argument_list|,
+name|tm
+operator|->
+name|tm_year
+operator|+
+literal|1900
+argument_list|,
+name|tm
+operator|->
+name|tm_mon
+operator|+
+literal|1
+argument_list|,
+name|tm
+operator|->
+name|tm_mday
+argument_list|,
+name|tm
+operator|->
+name|tm_hour
+argument_list|,
+name|tm
+operator|->
+name|tm_min
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|cp
+operator|!=
+literal|'\0'
+condition|)
+name|cp
+operator|++
+expr_stmt|;
+name|ctl_putdata
+argument_list|(
+name|buffer
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|cp
+operator|-
+name|buffer
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * ctl_puthex - write a tagged unsigned integer, in hex, into the response  */
 end_comment
 
@@ -4881,13 +5120,19 @@ name|ts
 operator|->
 name|l_ui
 operator|&
-literal|0xffffffffL
+name|ULONG_CONST
+argument_list|(
+literal|0xffffffff
+argument_list|)
 argument_list|,
 name|ts
 operator|->
 name|l_uf
 operator|&
-literal|0xffffffffL
+name|ULONG_CONST
+argument_list|(
+literal|0xffffffff
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -5610,6 +5855,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CS_ERROR
+case|:
+name|ctl_putdbl
+argument_list|(
+name|sys_var
+index|[
+name|CS_ERROR
+index|]
+operator|.
+name|text
+argument_list|,
+name|clock_jitter
+operator|*
+literal|1e3
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CS_CLOCK
 case|:
 name|get_systime
@@ -6233,7 +6496,7 @@ name|sprintf
 argument_list|(
 name|cbuf
 argument_list|,
-literal|"%s %s 0x%x %u"
+literal|"%s %s 0x%x"
 argument_list|,
 name|cp
 operator|->
@@ -6246,15 +6509,6 @@ argument_list|,
 name|cp
 operator|->
 name|flags
-argument_list|,
-name|ntohl
-argument_list|(
-name|cp
-operator|->
-name|cert
-operator|.
-name|fstamp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ctl_putstr
@@ -6274,6 +6528,20 @@ name|cbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ctl_putfs
+argument_list|(
+name|sys_var
+index|[
+name|CS_REVOKE
+index|]
+operator|.
+name|text
+argument_list|,
+name|cp
+operator|->
+name|last
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -6287,7 +6555,7 @@ name|fstamp
 operator|!=
 literal|0
 condition|)
-name|ctl_putuint
+name|ctl_putfs
 argument_list|(
 name|sys_var
 index|[
@@ -6300,7 +6568,7 @@ name|ntohl
 argument_list|(
 name|hostval
 operator|.
-name|fstamp
+name|tstamp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6316,7 +6584,7 @@ name|tstamp
 operator|!=
 literal|0
 condition|)
-name|ctl_putuint
+name|ctl_putfs
 argument_list|(
 name|sys_var
 index|[
@@ -6335,6 +6603,79 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CS_IDENT
+case|:
+if|if
+condition|(
+name|iffpar_pkey
+operator|!=
+name|NULL
+condition|)
+name|ctl_putstr
+argument_list|(
+name|sys_var
+index|[
+name|CS_IDENT
+index|]
+operator|.
+name|text
+argument_list|,
+name|iffpar_file
+argument_list|,
+name|strlen
+argument_list|(
+name|iffpar_file
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gqpar_pkey
+operator|!=
+name|NULL
+condition|)
+name|ctl_putstr
+argument_list|(
+name|sys_var
+index|[
+name|CS_IDENT
+index|]
+operator|.
+name|text
+argument_list|,
+name|gqpar_file
+argument_list|,
+name|strlen
+argument_list|(
+name|gqpar_file
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mvpar_pkey
+operator|!=
+name|NULL
+condition|)
+name|ctl_putstr
+argument_list|(
+name|sys_var
+index|[
+name|CS_IDENT
+index|]
+operator|.
+name|text
+argument_list|,
+name|mvpar_file
+argument_list|,
+name|strlen
+argument_list|(
+name|mvpar_file
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CS_LEAPTAB
 case|:
 if|if
@@ -6345,7 +6686,7 @@ name|fstamp
 operator|!=
 literal|0
 condition|)
-name|ctl_putuint
+name|ctl_putfs
 argument_list|(
 name|sys_var
 index|[
@@ -6362,12 +6703,10 @@ name|fstamp
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sys_tai
-operator|!=
-literal|0
-condition|)
+break|break;
+case|case
+name|CS_TAI
+case|:
 name|ctl_putuint
 argument_list|(
 name|sys_var
@@ -6406,6 +6745,9 @@ modifier|*
 name|peer
 parameter_list|)
 block|{
+name|int
+name|temp
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|OPENSSL
@@ -6570,6 +6912,13 @@ break|break;
 case|case
 name|CP_DSTADR
 case|:
+if|if
+condition|(
+name|peer
+operator|->
+name|dstadr
+condition|)
+block|{
 name|ctl_putadr
 argument_list|(
 name|peer_var
@@ -6591,6 +6940,24 @@ name|sin
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ctl_putadr
+argument_list|(
+name|peer_var
+index|[
+name|CP_DSTADR
+index|]
+operator|.
+name|text
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|CP_DSTPORT
@@ -6796,37 +7163,6 @@ operator|&
 name|FLAG_REFCLOCK
 condition|)
 block|{
-if|if
-condition|(
-name|peer
-operator|->
-name|stratum
-operator|>
-literal|0
-operator|&&
-name|peer
-operator|->
-name|stratum
-operator|<
-name|STRATUM_UNSPEC
-condition|)
-name|ctl_putadr
-argument_list|(
-name|peer_var
-index|[
-name|CP_REFID
-index|]
-operator|.
-name|text
-argument_list|,
-name|peer
-operator|->
-name|refid
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-else|else
 name|ctl_putid
 argument_list|(
 name|peer_var
@@ -6998,6 +7334,12 @@ break|break;
 case|case
 name|CP_FLASH
 case|:
+name|temp
+operator|=
+name|peer
+operator|->
+name|flash
+expr_stmt|;
 name|ctl_puthex
 argument_list|(
 name|peer_var
@@ -7007,9 +7349,7 @@ index|]
 operator|.
 name|text
 argument_list|,
-name|peer
-operator|->
-name|flash
+name|temp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7035,13 +7375,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CP_VALID
+name|CP_UNREACH
 case|:
 name|ctl_putuint
 argument_list|(
 name|peer_var
 index|[
-name|CP_VALID
+name|CP_UNREACH
 index|]
 operator|.
 name|text
@@ -7049,24 +7389,6 @@ argument_list|,
 name|peer
 operator|->
 name|unreach
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CP_RANK
-case|:
-name|ctl_putuint
-argument_list|(
-name|peer_var
-index|[
-name|CP_RANK
-index|]
-operator|.
-name|text
-argument_list|,
-name|peer
-operator|->
-name|rank
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7142,12 +7464,9 @@ index|]
 operator|.
 name|text
 argument_list|,
-name|SQRT
-argument_list|(
 name|peer
 operator|->
 name|jitter
-argument_list|)
 operator|*
 literal|1e3
 argument_list|)
@@ -7645,6 +7964,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CP_VALID
+case|:
+comment|/* not used */
+break|break;
+case|case
 name|CP_IDENT
 case|:
 if|if
@@ -7728,7 +8052,7 @@ operator|->
 name|key
 argument_list|)
 expr_stmt|;
-name|ctl_putuint
+name|ctl_putfs
 argument_list|(
 name|peer_var
 index|[
@@ -8590,7 +8914,8 @@ operator|||
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|reqpt
@@ -8733,7 +9058,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp
@@ -8807,7 +9133,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|cp
@@ -8856,23 +9183,14 @@ expr_stmt|;
 name|numctlbadpkts
 operator|++
 expr_stmt|;
-name|msyslog
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"Possible 'ntpdx' exploit from %s:%d (possibly spoofed)\n"
-argument_list|,
-name|stoa
-argument_list|(
-name|rmt_addr
-argument_list|)
-argument_list|,
-name|SRCPORT
-argument_list|(
-name|rmt_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Avoid possible DOS attack */
+comment|/* If we get a smarter msyslog we can re-enable this */
+block|msyslog(LOG_WARNING, 		"Possible 'ntpdx' exploit from %s:%d (possibly spoofed)\n", 		stoa(rmt_addr), SRCPORT(rmt_addr) 								);
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -8908,6 +9226,7 @@ operator|!
 name|isspace
 argument_list|(
 call|(
+name|unsigned
 name|int
 call|)
 argument_list|(
@@ -9140,7 +9459,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|HASH_SIZE
+name|NTP_HASH_SIZE
 condition|;
 name|i
 operator|++
@@ -10431,7 +10750,7 @@ literal|0
 operator|&&
 name|i
 operator|<
-name|HASH_SIZE
+name|NTP_HASH_SIZE
 condition|;
 name|i
 operator|++
@@ -13120,6 +13439,7 @@ begin_function
 name|void
 name|set_sys_var
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|data

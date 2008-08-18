@@ -99,7 +99,7 @@ comment|/*  			 HEY!  CHECK THIS OUT!    The first half of this file is obsolete
 end_comment
 
 begin_comment
-comment|/*  INFO ON NEW KERNEL PLL SYS CALLS    NTP_SYSCALLS_STD	- use the "normal" ones   NTP_SYSCALL_GET	- SYS_ntp_gettime id   NTP_SYSCALL_ADJ	- SYS_ntp_adjtime id   NTP_SYSCALLS_LIBC - ntp_adjtime() and ntp_gettime() are in libc.  HOW TO GET IP INTERFACE INFORMATION    Some UNIX V.4 machines implement a sockets library on top of   streams. For these systems, you must use send the SIOCGIFCONF down   the stream in an I_STR ioctl. This ususally also implies   USE_STREAMS_DEVICE FOR IF_CONFIG. Dell UNIX is a notable exception.    STREAMS_TLI - use ioctl(I_STR) to implement ioctl(SIOCGIFCONF)  WHAT DOES IOCTL(SIOCGIFCONF) RETURN IN THE BUFFER    UNIX V.4 machines implement a sockets library on top of streams.   When requesting the IP interface configuration with an ioctl(2) calll,   an array of ifreq structures are placed in the provided buffer.  Some   implementations also place the length of the buffer information in   the first integer position of the buffer.    SIZE_RETURNED_IN_BUFFER - size integer is in the buffer  WILL IOCTL(SIOCGIFCONF) WORK ON A SOCKET    Some UNIX V.4 machines do not appear to support ioctl() requests for the   IP interface configuration on a socket.  They appear to require the use   of the streams device instead.    USE_STREAMS_DEVICE_FOR_IF_CONFIG - use the /dev/ip device for configuration  MISC    HAVE_PROTOTYPES	- Prototype functions   DOSYNCTODR		- Resync TODR clock  every hour.   RETSIGTYPE		- Define signal function type.   NO_SIGNED_CHAR_DECL - No "signed char" see include/ntp.h   LOCK_PROCESS		- Have plock.   UDP_WILDCARD_DELIVERY 			- these systems deliver broadcast packets to the wildcard 			  port instead to a port bound to the interface bound 			  to the correct broadcast address - are these 			  implementations broken or did the spec change ? */
+comment|/*  INFO ON NEW KERNEL PLL SYS CALLS    NTP_SYSCALLS_STD	- use the "normal" ones   NTP_SYSCALL_GET	- SYS_ntp_gettime id   NTP_SYSCALL_ADJ	- SYS_ntp_adjtime id   NTP_SYSCALLS_LIBC - ntp_adjtime() and ntp_gettime() are in libc.  HOW TO GET IP INTERFACE INFORMATION    Some UNIX V.4 machines implement a sockets library on top of   streams. For these systems, you must use send the SIOCGIFCONF down   the stream in an I_STR ioctl. This ususally also implies   USE_STREAMS_DEVICE FOR IF_CONFIG. Dell UNIX is a notable exception.  WHAT DOES IOCTL(SIOCGIFCONF) RETURN IN THE BUFFER    UNIX V.4 machines implement a sockets library on top of streams.   When requesting the IP interface configuration with an ioctl(2) calll,   an array of ifreq structures are placed in the provided buffer.  Some   implementations also place the length of the buffer information in   the first integer position of the buffer.    SIZE_RETURNED_IN_BUFFER - size integer is in the buffer  WILL IOCTL(SIOCGIFCONF) WORK ON A SOCKET    Some UNIX V.4 machines do not appear to support ioctl() requests for the   IP interface configuration on a socket.  They appear to require the use   of the streams device instead.    USE_STREAMS_DEVICE_FOR_IF_CONFIG - use the /dev/ip device for configuration  MISC    HAVE_PROTOTYPES	- Prototype functions   DOSYNCTODR		- Resync TODR clock  every hour.   RETSIGTYPE		- Define signal function type.   NO_SIGNED_CHAR_DECL - No "signed char" see include/ntp.h   LOCK_PROCESS		- Have plock. */
 end_comment
 
 begin_comment
@@ -172,6 +172,33 @@ end_endif
 begin_comment
 comment|/* P */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_NTP_ADJTIME
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE___ADJTIMEX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ntp_adjtime
+value|__adjtimex
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -730,6 +757,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOCKET_ERROR
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
 name|closesocket
 value|close
 end_define
@@ -897,20 +931,6 @@ define|#
 directive|define
 name|write
 value|_write
-end_define
-
-begin_define
-define|#
-directive|define
-name|vsnprintf
-value|_vsnprintf
-end_define
-
-begin_define
-define|#
-directive|define
-name|snprintf
-value|_snprintf
 end_define
 
 begin_ifndef
@@ -1267,20 +1287,6 @@ define|#
 directive|define
 name|_getch
 value|getchar
-end_define
-
-begin_define
-define|#
-directive|define
-name|random
-value|rand
-end_define
-
-begin_define
-define|#
-directive|define
-name|srandom
-value|srand
 end_define
 
 begin_comment

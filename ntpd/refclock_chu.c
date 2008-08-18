@@ -314,7 +314,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXSIG
+name|MAXAMP
 value|6000.
 end_define
 
@@ -370,7 +370,7 @@ begin_define
 define|#
 directive|define
 name|DEVICE_AUDIO
-value|"/dev/chu_audio"
+value|"/dev/audio"
 end_define
 
 begin_comment
@@ -2475,17 +2475,17 @@ operator|&
 literal|0xff
 index|]
 expr_stmt|;
-comment|/* 		 * Clip noise spikes greater than MAXSIG. If no clips, 		 * increase the gain a tad; if the clips are too high,  		 * decrease a tad. 		 */
+comment|/* 		 * Clip noise spikes greater than MAXAMP. If no clips, 		 * increase the gain a tad; if the clips are too high,  		 * decrease a tad. 		 */
 if|if
 condition|(
 name|sample
 operator|>
-name|MAXSIG
+name|MAXAMP
 condition|)
 block|{
 name|sample
 operator|=
-name|MAXSIG
+name|MAXAMP
 expr_stmt|;
 name|up
 operator|->
@@ -2499,13 +2499,13 @@ condition|(
 name|sample
 operator|<
 operator|-
-name|MAXSIG
+name|MAXAMP
 condition|)
 block|{
 name|sample
 operator|=
 operator|-
-name|MAXSIG
+name|MAXAMP
 expr_stmt|;
 name|up
 operator|->
@@ -4946,6 +4946,8 @@ operator|->
 name|ntstamp
 operator|<
 name|MAXSTAGE
+operator|-
+literal|1
 condition|)
 name|up
 operator|->
@@ -5521,6 +5523,8 @@ operator|->
 name|ntstamp
 operator|<
 name|MAXSTAGE
+operator|-
+literal|1
 condition|)
 name|up
 operator|->
@@ -5656,7 +5660,7 @@ literal|0
 operator|||
 name|i
 operator|>
-literal|19
+literal|18
 condition|)
 block|{
 name|i

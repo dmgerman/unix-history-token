@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * refclock_wwvb - clock driver for Spectracom WWVB receivers  */
+comment|/*  * refclock_wwvb - clock driver for Spectracom WWVB and GPS receivers  */
 end_comment
 
 begin_ifdef
@@ -77,7 +77,7 @@ file|<ctype.h>
 end_include
 
 begin_comment
-comment|/*  * This driver supports the Spectracom Model 8170 and Netclock/2 WWVB  * Synchronized Clocks and the Netclock/GPS Master Clock. Both the WWVB  * and GPS clocks have proven reliable sources of time; however, the  * WWVB clocks have proven vulnerable to high ambient conductive RF  * interference. The claimed accuracy of the WWVB clocks is 100 us  * relative to the broadcast signal, while the claimed accuracy of the  * GPS clock is 50 ns; however, in most cases the actual accuracy is  * limited by the resolution of the timecode and the latencies of the  * serial interface and operating system.  *  * The WWVB and GPS clocks should be configured for 24-hour display,  * AUTO DST off, time zone 0 (UTC), data format 0 or 2 (see below) and  * baud rate 9600. If the clock is to used as the source for the IRIG  * Audio Decoder (refclock_irig.c in this distribution), it should be  * configured for AM IRIG output and IRIG format 1 (IRIG B with  * signature control). The GPS clock can be configured either to respond  * to a 'T' poll character or left running continuously.   *  * There are two timecode formats used by these clocks. Format 0, which  * is available with both the Netclock/2 and 8170, and format 2, which  * is available only with the Netclock/2, specially modified 8170 and  * GPS.  *  * Format 0 (22 ASCII printing characters):  *  *<cr><lf>i  ddd hh:mm:ss  TZ=zz<cr><lf>  *  *	on-time = first<cr>  *	hh:mm:ss = hours, minutes, seconds  *	i = synchronization flag (' ' = in synch, '?' = out of synch)  *  * The alarm condition is indicated by other than ' ' at a, which occurs  * during initial synchronization and when received signal is lost for  * about ten hours.  *  * Format 2 (24 ASCII printing characters):  *  *<cr><lf>iqyy ddd hh:mm:ss.fff ld  *  *	on-time =<cr>  *	i = synchronization flag (' ' = in synch, '?' = out of synch)  *	q = quality indicator (' ' = locked, 'A'...'D' = unlocked)  *	yy = year (as broadcast)  *	ddd = day of year  *	hh:mm:ss.fff = hours, minutes, seconds, milliseconds  *  * The alarm condition is indicated by other than ' ' at a, which occurs  * during initial synchronization and when received signal is lost for  * about ten hours. The unlock condition is indicated by other than ' '  * at q.  *  * The q is normally ' ' when the time error is less than 1 ms and a  * character in the set 'A'...'D' when the time error is less than 10,  * 100, 500 and greater than 500 ms respectively. The l is normally ' ',  * but is set to 'L' early in the month of an upcoming UTC leap second  * and reset to ' ' on the first day of the following month. The d is  * set to 'S' for standard time 'I' on the day preceding a switch to  * daylight time, 'D' for daylight time and 'O' on the day preceding a  * switch to standard time. The start bit of the first<cr> is  * synchronized to the indicated time as returned.  *  * This driver does not need to be told which format is in use - it  * figures out which one from the length of the message.The driver makes  * no attempt to correct for the intrinsic jitter of the radio itself,  * which is a known problem with the older radios.  *  * Fudge Factors  *  * This driver can retrieve a table of quality data maintained  * internally by the Netclock/2 clock. If flag4 of the fudge  * configuration command is set to 1, the driver will retrieve this  * table and write it to the clockstats file on when the first timecode  * message of a new day is received.  */
+comment|/*  * This driver supports the Spectracom Model 8170 and Netclock/2 WWVB  * Synchronized Clocks and the Netclock/GPS Master Clock. Both the WWVB  * and GPS clocks have proven reliable sources of time; however, the  * WWVB clocks have proven vulnerable to high ambient conductive RF  * interference. The claimed accuracy of the WWVB clocks is 100 us  * relative to the broadcast signal, while the claimed accuracy of the  * GPS clock is 50 ns; however, in most cases the actual accuracy is  * limited by the resolution of the timecode and the latencies of the  * serial interface and operating system.  *  * The WWVB and GPS clocks should be configured for 24-hour display,  * AUTO DST off, time zone 0 (UTC), data format 0 or 2 (see below) and  * baud rate 9600. If the clock is to used as the source for the IRIG  * Audio Decoder (refclock_irig.c in this distribution), it should be  * configured for AM IRIG output and IRIG format 1 (IRIG B with  * signature control). The GPS clock can be configured either to respond  * to a 'T' poll character or left running continuously.   *  * There are two timecode formats used by these clocks. Format 0, which  * is available with both the Netclock/2 and 8170, and format 2, which  * is available only with the Netclock/2, specially modified 8170 and  * GPS.  *  * Format 0 (22 ASCII printing characters):  *  *<cr><lf>i  ddd hh:mm:ss TZ=zz<cr><lf>  *  *	on-time = first<cr>  *	hh:mm:ss = hours, minutes, seconds  *	i = synchronization flag (' ' = in synch, '?' = out of synch)  *  * The alarm condition is indicated by other than ' ' at a, which occurs  * during initial synchronization and when received signal is lost for  * about ten hours.  *  * Format 2 (24 ASCII printing characters):  *  *<cr><lf>iqyy ddd hh:mm:ss.fff ld  *  *	on-time =<cr>  *	i = synchronization flag (' ' = in synch, '?' = out of synch)  *	q = quality indicator (' ' = locked, 'A'...'D' = unlocked)  *	yy = year (as broadcast)  *	ddd = day of year  *	hh:mm:ss.fff = hours, minutes, seconds, milliseconds  *  * The alarm condition is indicated by other than ' ' at a, which occurs  * during initial synchronization and when received signal is lost for  * about ten hours. The unlock condition is indicated by other than ' '  * at q.  *  * The q is normally ' ' when the time error is less than 1 ms and a  * character in the set 'A'...'D' when the time error is less than 10,  * 100, 500 and greater than 500 ms respectively. The l is normally ' ',  * but is set to 'L' early in the month of an upcoming UTC leap second  * and reset to ' ' on the first day of the following month. The d is  * set to 'S' for standard time 'I' on the day preceding a switch to  * daylight time, 'D' for daylight time and 'O' on the day preceding a  * switch to standard time. The start bit of the first<cr> is  * synchronized to the indicated time as returned.  *  * This driver does not need to be told which format is in use - it  * figures out which one from the length of the message. The driver  * makes no attempt to correct for the intrinsic jitter of the radio  * itself, which is a known problem with the older radios.  *  * Fudge Factors  *  * This driver can retrieve a table of quality data maintained  * internally by the Netclock/2 clock. If flag4 of the fudge  * configuration command is set to 1, the driver will retrieve this  * table and write it to the clockstats file when the first timecode  * message of a new day is received.  *  * PPS calibration fudge time 1: format 0 .003134, format 2 .004034  */
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ begin_define
 define|#
 directive|define
 name|DESCRIPTION
-value|"Spectracom WWVB/GPS Receivers"
+value|"Spectracom WWVB/GPS Receiver"
 end_define
 
 begin_comment
@@ -202,10 +202,6 @@ begin_struct
 struct|struct
 name|wwvbunit
 block|{
-name|u_char
-name|tcswitch
-decl_stmt|;
-comment|/* timecode switch */
 name|l_fp
 name|laststamp
 decl_stmt|;
@@ -292,6 +288,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|wwvb_timer
+name|P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|peer
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Transfer vector  */
 end_comment
@@ -320,8 +333,8 @@ comment|/* initialize driver (not used) */
 name|noentry
 block|,
 comment|/* not used (old wwvb_buginfo) */
-name|NOFLAGS
-comment|/* not used */
+name|wwvb_timer
+comment|/* called once per second */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -365,9 +378,6 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* 	 * Open serial port. Use CLK line discipline, if available. 	 */
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|device
@@ -421,9 +431,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
@@ -514,9 +521,6 @@ name|io
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
@@ -561,12 +565,6 @@ name|REFID
 argument_list|,
 literal|4
 argument_list|)
-expr_stmt|;
-name|peer
-operator|->
-name|burst
-operator|=
-name|MAXSTAGE
 expr_stmt|;
 return|return
 operator|(
@@ -751,7 +749,7 @@ operator|&
 name|trtmp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note we get a buffer and timestamp for both a<cr> and<lf>, 	 * but only the<cr> timestamp is retained. Note: in format 0 on 	 * a Netclock/2 or upgraded 8170 the start bit is delayed 100 	 * +-50 us relative to the pps; however, on an unmodified 8170 	 * the start bit can be delayed up to 10 ms. In format 2 the 	 * reading precision is only to the millisecond. Thus, unless 	 * you have a pps gadget and don't have to have the year, format 	 * 0 provides the lowest jitter. 	 */
+comment|/* 	 * Note we get a buffer and timestamp for both a<cr> and<lf>, 	 * but only the<cr> timestamp is retained. Note: in format 0 on 	 * a Netclock/2 or upgraded 8170 the start bit is delayed 100 	 * +-50 us relative to the pps; however, on an unmodified 8170 	 * the start bit can be delayed up to 10 ms. In format 2 the 	 * reading precision is only to the millisecond. Thus, unless 	 * you have a PPS gadget and don't have to have the year, format 	 * 0 provides the lowest jitter. 	 */
 if|if
 condition|(
 name|temp
@@ -759,34 +757,11 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|up
-operator|->
-name|tcswitch
-operator|==
-literal|0
-condition|)
-block|{
-name|up
-operator|->
-name|tcswitch
-operator|=
-literal|1
-expr_stmt|;
 name|up
 operator|->
 name|laststamp
 operator|=
 name|trtmp
-expr_stmt|;
-block|}
-else|else
-name|up
-operator|->
-name|tcswitch
-operator|=
-literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -803,18 +778,6 @@ operator|=
 name|up
 operator|->
 name|laststamp
-expr_stmt|;
-name|up
-operator|->
-name|laststamp
-operator|=
-name|trtmp
-expr_stmt|;
-name|up
-operator|->
-name|tcswitch
-operator|=
-literal|1
 expr_stmt|;
 comment|/* 	 * We get down to business, check the timecode format and decode 	 * its contents. This code uses the timecode length to determine 	 * format 0, 2 or 3. If the timecode has invalid length or is 	 * not in proper format, we declare bad format and exit. 	 */
 name|syncchar
@@ -1202,17 +1165,30 @@ argument_list|,
 name|CEVNT_BADTIME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|disp
+operator|>
+name|MAXDISTANCE
+condition|)
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * wwvb_poll - called by the transmit procedure  */
+comment|/*  * wwvb_timer - called once per second by the transmit procedure  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|wwvb_poll
+name|wwvb_timer
 parameter_list|(
 name|int
 name|unit
@@ -1238,7 +1214,7 @@ name|char
 name|pollchar
 decl_stmt|;
 comment|/* character sent to clock */
-comment|/* 	 * Time to poll the clock. The Spectracom clock responds to a 	 * 'T' by returning a timecode in the format(s) specified above. 	 * Note there is no checking on state, since this may not be the 	 * only customer reading the clock. Only one customer need poll 	 * the clock; all others just listen in. If the clock becomes 	 * unreachable, declare a timeout and keep going. 	 */
+comment|/* 	 * Time to poll the clock. The Spectracom clock responds to a 	 * 'T' by returning a timecode in the format(s) specified above. 	 * Note there is no checking on state, since this may not be the 	 * only customer reading the clock. Only one customer need poll 	 * the clock; all others just listen in. 	 */
 name|pp
 operator|=
 name|peer
@@ -1298,15 +1274,96 @@ argument_list|,
 name|CEVNT_FAULT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+block|}
+end_function
+
+begin_comment
+comment|/*  * wwvb_poll - called by the transmit procedure  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|wwvb_poll
+parameter_list|(
+name|int
+name|unit
+parameter_list|,
+name|struct
+name|peer
+modifier|*
+name|peer
+parameter_list|)
+block|{
+specifier|register
+name|struct
+name|wwvbunit
+modifier|*
+name|up
+decl_stmt|;
+name|struct
+name|refclockproc
+modifier|*
+name|pp
+decl_stmt|;
+comment|/* 	 * Sweep up the samples received since the last poll. If none 	 * are received, declare a timeout and keep going. 	 */
+name|pp
+operator|=
 name|peer
 operator|->
-name|burst
-operator|>
-literal|0
+name|procptr
+expr_stmt|;
+name|up
+operator|=
+operator|(
+expr|struct
+name|wwvbunit
+operator|*
+operator|)
+name|pp
+operator|->
+name|unitptr
+expr_stmt|;
+name|pp
+operator|->
+name|polls
+operator|++
+expr_stmt|;
+comment|/* 	 * If the monitor flag is set (flag4), we dump the internal 	 * quality table at the first timecode beginning the day. 	 */
+if|if
+condition|(
+name|pp
+operator|->
+name|sloppyclockflag
+operator|&
+name|CLK_FLAG4
+operator|&&
+name|pp
+operator|->
+name|hour
+operator|<
+operator|(
+name|int
+operator|)
+name|up
+operator|->
+name|lasthour
 condition|)
-return|return;
+name|up
+operator|->
+name|linect
+operator|=
+name|MONLIN
+expr_stmt|;
+name|up
+operator|->
+name|lasthour
+operator|=
+name|pp
+operator|->
+name|hour
+expr_stmt|;
+comment|/* 	 * Process median filter samples. If none received, declare a 	 * timeout and keep going. 	 */
 if|if
 condition|(
 name|pp
@@ -1366,51 +1423,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|peer
-operator|->
-name|burst
-operator|=
-name|MAXSTAGE
-expr_stmt|;
-name|pp
-operator|->
-name|polls
-operator|++
-expr_stmt|;
-comment|/* 	 * If the monitor flag is set (flag4), we dump the internal 	 * quality table at the first timecode beginning the day. 	 */
-if|if
-condition|(
-name|pp
-operator|->
-name|sloppyclockflag
-operator|&
-name|CLK_FLAG4
-operator|&&
-name|pp
-operator|->
-name|hour
-operator|<
-operator|(
-name|int
-operator|)
-name|up
-operator|->
-name|lasthour
-condition|)
-name|up
-operator|->
-name|linect
-operator|=
-name|MONLIN
-expr_stmt|;
-name|up
-operator|->
-name|lasthour
-operator|=
-name|pp
-operator|->
-name|hour
-expr_stmt|;
 block|}
 end_function
 

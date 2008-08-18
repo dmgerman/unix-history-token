@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ntp_random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"openssl/asn1_mac.h"
 end_include
 
@@ -211,16 +217,6 @@ begin_comment
 comment|/* status word */
 end_comment
 
-begin_decl_stmt
-name|u_int
-name|sys_tai
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current UTC offset from TAI */
-end_comment
-
 begin_comment
 comment|/*  * Global cryptodata in network byte order  */
 end_comment
@@ -272,6 +268,84 @@ begin_comment
 comment|/* leapseconds table */
 end_comment
 
+begin_decl_stmt
+name|EVP_PKEY
+modifier|*
+name|iffpar_pkey
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IFF parameters */
+end_comment
+
+begin_decl_stmt
+name|EVP_PKEY
+modifier|*
+name|gqpar_pkey
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* GQ parameters */
+end_comment
+
+begin_decl_stmt
+name|EVP_PKEY
+modifier|*
+name|mvpar_pkey
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MV parameters */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|iffpar_file
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IFF parameters file */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|gqpar_file
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* GQ parameters file */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|mvpar_file
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MV parameters file */
+end_comment
+
 begin_comment
 comment|/*  * Private cryptodata in host byte order  */
 end_comment
@@ -316,48 +390,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* sign key */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|EVP_PKEY
-modifier|*
-name|iffpar_pkey
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* IFF parameters */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|EVP_PKEY
-modifier|*
-name|gqpar_pkey
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* GQ parameters */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|EVP_PKEY
-modifier|*
-name|mvpar_pkey
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MV parameters */
 end_comment
 
 begin_decl_stmt
@@ -432,48 +464,6 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|iffpar_file
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* IFF parameters file */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|gqpar_file
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* GQ parameters file */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|mvpar_file
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MV parameters file */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
 name|cert_file
 init|=
 name|NULL
@@ -508,7 +498,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* IFF file stamp */
+comment|/* IFF filestamp */
 end_comment
 
 begin_decl_stmt
@@ -534,7 +524,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* MV file stamp */
+comment|/* MV filestamp */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|ident_scheme
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* server identity scheme */
 end_comment
 
 begin_comment
@@ -1055,6 +1058,14 @@ name|hdlen
 decl_stmt|,
 name|len
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dstadr
+condition|)
+return|return
+literal|0
+return|;
 comment|/* 	 * Generate the session key and key ID. If the lifetime is 	 * greater than zero, install the key and call it trusted. 	 */
 name|hdlen
 operator|=
@@ -1332,11 +1343,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * make_keylist - generate key list  *  * This routine constructs a pseudo-random sequence by repeatedly  * hashing the session key starting from a given source address,  * destination address, private value and the next key ID of the  * preceeding session key. The last entry on the list is saved along  * with its sequence number and public signature.  */
+comment|/*  * make_keylist - generate key list  *  * Returns  * XEVNT_OK	success  * XEVNT_PER	host certificate expired  *  * This routine constructs a pseudo-random sequence by repeatedly  * hashing the session key starting from a given source address,  * destination address, private value and the next key ID of the  * preceeding session key. The last entry on the list is saved along  * with its sequence number and public signature.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|make_keylist
 parameter_list|(
 name|struct
@@ -1387,10 +1398,20 @@ name|lifetime
 decl_stmt|;
 name|u_int
 name|len
+decl_stmt|,
+name|mpoll
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dstadr
+condition|)
+return|return
+name|XEVNT_OK
+return|;
 comment|/* 	 * Allocate the key list if necessary. 	 */
 name|tstamp
 operator|=
@@ -1428,19 +1449,27 @@ block|{
 name|keyid
 operator|=
 operator|(
-name|u_long
-operator|)
-name|RANDOM
-operator|&
-literal|0xffffffff
-expr_stmt|;
-if|if
-condition|(
-name|keyid
-operator|<=
+name|ntp_random
+argument_list|()
+operator|+
 name|NTP_MAXKEY
-condition|)
-continue|continue;
+operator|+
+literal|1
+operator|)
+operator|&
+operator|(
+operator|(
+literal|1
+operator|<<
+sizeof|sizeof
+argument_list|(
+name|keyid_t
+argument_list|)
+operator|)
+operator|-
+literal|1
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|authhavekey
@@ -1452,27 +1481,30 @@ continue|continue;
 break|break;
 block|}
 comment|/* 	 * Generate up to NTP_MAXSESSION session keys. Stop if the 	 * next one would not be unique or not a session key ID or if 	 * it would expire before the next poll. The private value 	 * included in the hash is zero if broadcast mode, the peer 	 * cookie if client mode or the host cookie if symmetric modes. 	 */
+name|mpoll
+operator|=
+literal|1
+operator|<<
+name|min
+argument_list|(
+name|peer
+operator|->
+name|ppoll
+argument_list|,
+name|peer
+operator|->
+name|hpoll
+argument_list|)
+expr_stmt|;
 name|lifetime
 operator|=
 name|min
 argument_list|(
 name|sys_automax
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|NTP_MAXSESSION
 operator|*
-operator|(
-literal|1
-operator|<<
-operator|(
-name|peer
-operator|->
-name|kpoll
-operator|)
-operator|)
+name|mpoll
 argument_list|)
 expr_stmt|;
 if|if
@@ -1546,11 +1578,7 @@ argument_list|)
 expr_stmt|;
 name|lifetime
 operator|-=
-literal|1
-operator|<<
-name|peer
-operator|->
-name|kpoll
+name|mpoll
 expr_stmt|;
 if|if
 condition|(
@@ -1565,19 +1593,7 @@ name|NTP_MAXKEY
 operator|||
 name|lifetime
 operator|<=
-call|(
-name|unsigned
-name|long
-call|)
-argument_list|(
-literal|1
-operator|<<
-operator|(
-name|peer
-operator|->
-name|kpoll
-operator|)
-argument_list|)
+name|mpoll
 condition|)
 break|break;
 block|}
@@ -1679,13 +1695,30 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|vp
-operator|->
 name|tstamp
 operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|tstamp
+operator|<
+name|cinfo
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|cinfo
+operator|->
+name|last
+condition|)
+return|return
+operator|(
+name|XEVNT_PER
+operator|)
+return|;
 if|if
 condition|(
 name|vp
@@ -1833,11 +1866,16 @@ argument_list|)
 argument_list|,
 name|peer
 operator|->
-name|kpoll
+name|hpoll
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+name|XEVNT_OK
+operator|)
+return|;
 block|}
 end_function
 
@@ -1946,6 +1984,10 @@ name|cookie
 decl_stmt|;
 comment|/* crumbles */
 name|int
+name|hismode
+decl_stmt|;
+comment|/* packet mode */
+name|int
 name|rval
 init|=
 name|XEVNT_OK
@@ -1957,29 +1999,27 @@ decl_stmt|;
 name|u_int32
 name|temp32
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KERNEL_PLL
-if|#
-directive|if
-name|NTP_API
-operator|>
-literal|3
-name|struct
-name|timex
-name|ntv
-decl_stmt|;
-comment|/* kernel interface structure */
-endif|#
-directive|endif
-comment|/* NTP_API */
-endif|#
-directive|endif
-comment|/* KERNEL_PLL */
 comment|/* 	 * Initialize. Note that the packet has already been checked for 	 * valid format and extension field lengths. First extract the 	 * field length, command code and association ID in host byte 	 * order. These are used with all commands and modes. Then check 	 * the version number, which must be 2, and length, which must 	 * be at least 8 for requests and VALUE_LEN (24) for responses. 	 * Packets that fail either test sink without a trace. The 	 * association ID is saved only if nonzero. 	 */
 name|authlen
 operator|=
 name|LEN_PKT_NOMAC
+expr_stmt|;
+name|hismode
+operator|=
+operator|(
+name|int
+operator|)
+name|PKT_MODE
+argument_list|(
+operator|(
+operator|&
+name|rbufp
+operator|->
+name|recv_pkt
+operator|)
+operator|->
+name|li_vn_mode
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2068,7 +2108,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"crypto_recv: flags 0x%x ext offset %d len %u code %x assocID %d\n"
+literal|"crypto_recv: flags 0x%x ext offset %d len %u code 0x%x assocID %d\n"
 argument_list|,
 name|peer
 operator|->
@@ -2105,18 +2145,6 @@ operator|||
 name|len
 operator|<
 literal|8
-operator|||
-operator|(
-name|len
-operator|<
-name|VALUE_LEN
-operator|&&
-operator|(
-name|code
-operator|&
-name|CRYPTO_RESP
-operator|)
-operator|)
 condition|)
 block|{
 name|sys_unknownversion
@@ -2203,11 +2231,24 @@ condition|(
 name|code
 condition|)
 block|{
-comment|/* 		 * Install status word, host name, signature scheme and 		 * association ID. In OpenSSL the signature algorithm is 		 * bound to the digest algorithm, so the NID completely 		 * defines the signature scheme. Note the request and 		 * response are identical, but neither is validated by 		 * signature. The request is processed here only in 		 * symmetric modes. The server name field would be 		 * useful to implement access controls in future. 		 */
+comment|/* 		 * Install status word, host name, signature scheme and 		 * association ID. In OpenSSL the signature algorithm is 		 * bound to the digest algorithm, so the NID completely 		 * defines the signature scheme. Note the request and 		 * response are identical, but neither is validated by 		 * signature. The request is processed here only in 		 * symmetric modes. The server name field might be 		 * useful to implement access controls in future. 		 */
 case|case
 name|CRYPTO_ASSOC
 case|:
-comment|/* 			 * Pass the extension field to the transmit 			 * side. 			 */
+comment|/* 			 * If the machine is running when this message 			 * arrives, the other fellow has reset and so 			 * must we. Otherwise, pass the extension field 			 * to the transmit side. 			 */
+if|if
+condition|(
+name|peer
+operator|->
+name|crypto
+condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_ERR
+expr_stmt|;
+break|break;
+block|}
 name|fp
 operator|=
 name|emalloc
@@ -2249,19 +2290,24 @@ name|CRYPTO_ASSOC
 operator||
 name|CRYPTO_RESP
 case|:
-comment|/* 			 * Discard the message if it has already been 			 * stored or the server is not synchronized. 			 */
+comment|/* 			 * Discard the message if it has already been 			 * stored or the message has been amputated. 			 */
 if|if
 condition|(
 name|peer
 operator|->
 name|crypto
-operator|||
-operator|!
-name|fstamp
 condition|)
 break|break;
 if|if
 condition|(
+name|vallen
+operator|==
+literal|0
+operator|||
+name|vallen
+operator|>
+name|MAXHOSTNAME
+operator|||
 name|len
 operator|<
 name|VALUE_LEN
@@ -2275,7 +2321,37 @@ name|XEVNT_LEN
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * Check the identity schemes are compatible. If 			 * the client has PC, the server must have PC, 			 * in which case the server public key and 			 * identity are presumed valid, so we skip the 			 * certificate and identity exchanges and move 			 * immediately to the cookie exchange which 			 * confirms the server signature. If the client 			 * has IFF or GC or both, the server must have 			 * the same one or both. Otherwise, the default 			 * TC scheme is used. 			 */
+comment|/* 			 * Check the identity schemes are compatible. If 			 * the client has PC, the server must have PC, 			 * in which case the server public key and 			 * identity are presumed valid, so we skip the 			 * certificate and identity exchanges and move 			 * immediately to the cookie exchange which 			 * confirms the server signature. 			 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"crypto_recv: ident host 0x%x server 0x%x\n"
+argument_list|,
+name|crypto_flags
+argument_list|,
+name|fstamp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|temp32
+operator|=
+operator|(
+name|crypto_flags
+operator||
+name|ident_scheme
+operator|)
+operator|&
+name|fstamp
+operator|&
+name|CRYPTO_FLAG_MASK
+expr_stmt|;
 if|if
 condition|(
 name|crypto_flags
@@ -2292,49 +2368,96 @@ operator|&
 name|CRYPTO_FLAG_PRIV
 operator|)
 condition|)
+block|{
 name|rval
 operator|=
 name|XEVNT_KEY
 expr_stmt|;
+break|break;
+block|}
 else|else
+block|{
 name|fstamp
 operator||=
 name|CRYPTO_FLAG_VALID
 operator||
 name|CRYPTO_FLAG_VRFY
+operator||
+name|CRYPTO_FLAG_SIGN
 expr_stmt|;
+block|}
+comment|/* 			 * In symmetric modes it is an error if either 			 * peer requests identity and the other peer 			 * does not support it. 			 */
 block|}
 elseif|else
 if|if
 condition|(
-name|crypto_flags
-operator|&
-name|CRYPTO_FLAG_MASK
+operator|(
+name|hismode
+operator|==
+name|MODE_ACTIVE
+operator|||
+name|hismode
+operator|==
+name|MODE_PASSIVE
+operator|)
 operator|&&
-operator|!
+operator|(
 operator|(
 name|crypto_flags
-operator|&
+operator||
 name|fstamp
+operator|)
 operator|&
 name|CRYPTO_FLAG_MASK
 operator|)
+operator|&&
+operator|!
+name|temp32
 condition|)
 block|{
 name|rval
 operator|=
 name|XEVNT_KEY
 expr_stmt|;
+break|break;
+comment|/* 			 * It is an error if the client requests 			 * identity and the server does not support it. 			 */
 block|}
-comment|/* 			 * Discard the message if identity error. 			 */
+elseif|else
 if|if
 condition|(
-name|rval
-operator|!=
-name|XEVNT_OK
+name|hismode
+operator|==
+name|MODE_CLIENT
+operator|&&
+operator|(
+name|fstamp
+operator|&
+name|CRYPTO_FLAG_MASK
+operator|)
+operator|&&
+operator|!
+name|temp32
 condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_KEY
+expr_stmt|;
 break|break;
-comment|/* 			 * Discard the message if the host name length 			 * is unreasonable or the signature digest NID 			 * is not supported. 			 */
+block|}
+comment|/* 			 * Otherwise, the identity scheme(s) are those 			 * that both client and server support. 			 */
+name|fstamp
+operator|=
+name|temp32
+operator||
+operator|(
+name|fstamp
+operator|&
+operator|~
+name|CRYPTO_FLAG_MASK
+operator|)
+expr_stmt|;
+comment|/* 			 * Discard the message if the signature digest 			 * NID is not supported. 			 */
 name|temp32
 operator|=
 operator|(
@@ -2359,47 +2482,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vallen
-operator|==
-literal|0
-operator|||
-name|vallen
-operator|>
-name|MAXHOSTNAME
-condition|)
-name|rval
-operator|=
-name|XEVNT_LEN
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|dp
 operator|==
 name|NULL
 condition|)
+block|{
 name|rval
 operator|=
 name|XEVNT_MD
 expr_stmt|;
-if|if
-condition|(
-name|rval
-operator|!=
-name|XEVNT_OK
-condition|)
 break|break;
-comment|/* 			 * Save status word, host name and message 			 * digest/signature type. If PC identity, be 			 * sure not to sign the certificate. 			 */
-if|if
-condition|(
-name|crypto_flags
-operator|&
-name|CRYPTO_FLAG_PRIV
-condition|)
-name|fstamp
-operator||=
-name|CRYPTO_FLAG_SIGN
-expr_stmt|;
+block|}
+comment|/* 			 * Save status word, host name and message 			 * digest/signature type. 			 */
 name|peer
 operator|->
 name|crypto
@@ -2528,16 +2622,7 @@ name|CRYPTO_CERT
 operator||
 name|CRYPTO_RESP
 case|:
-comment|/* 			 * Discard the message if invalid or identity 			 * already confirmed. 			 */
-if|if
-condition|(
-name|peer
-operator|->
-name|crypto
-operator|&
-name|CRYPTO_FLAG_VRFY
-condition|)
-break|break;
+comment|/* 			 * Discard the message if invalid. 			 */
 if|if
 condition|(
 operator|(
@@ -2616,7 +2701,7 @@ operator|->
 name|issuer
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We plug in the public key and group key in 			 * the first certificate received. However, note 			 * that this certificate might not be signed by 			 * the server, so we can't check the 			 * signature/digest NID. 			 */
+comment|/* 			 * We plug in the public key and lifetime from 			 * the first certificate received. However, note 			 * that this certificate might not be signed by 			 * the server, so we can't check the 			 * signature/digest NID. 			 */
 if|if
 condition|(
 name|peer
@@ -2677,7 +2762,7 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
 name|temp32
 operator|=
@@ -2747,16 +2832,25 @@ name|CRYPTO_IFF
 operator||
 name|CRYPTO_RESP
 case|:
-comment|/* 			 * Discard the message if invalid or identity 			 * already confirmed. 			 */
+comment|/* 			 * Discard the message if invalid or certificate 			 * trail not trusted. 			 */
 if|if
 condition|(
+operator|!
+operator|(
 name|peer
 operator|->
 name|crypto
 operator|&
-name|CRYPTO_FLAG_VRFY
+name|CRYPTO_FLAG_VALID
+operator|)
 condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_ERR
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -2805,7 +2899,7 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -2854,16 +2948,25 @@ name|CRYPTO_GQ
 operator||
 name|CRYPTO_RESP
 case|:
-comment|/* 			 * Discard the message if invalid or identity 			 * already confirmed. 			 */
+comment|/* 			 * Discard the message if invalid or certificate 			 * trail not trusted. 			 */
 if|if
 condition|(
+operator|!
+operator|(
 name|peer
 operator|->
 name|crypto
 operator|&
-name|CRYPTO_FLAG_VRFY
+name|CRYPTO_FLAG_VALID
+operator|)
 condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_ERR
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -2912,7 +3015,7 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -2961,16 +3064,25 @@ name|CRYPTO_MV
 operator||
 name|CRYPTO_RESP
 case|:
-comment|/* 			 * Discard the message if invalid or identity 			 * already confirmed. 			 */
+comment|/* 			 * Discard the message if invalid or certificate 			 * trail not trusted. 			 */
 if|if
 condition|(
+operator|!
+operator|(
 name|peer
 operator|->
 name|crypto
 operator|&
-name|CRYPTO_FLAG_VRFY
+name|CRYPTO_FLAG_VALID
+operator|)
 condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_ERR
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -3019,7 +3131,7 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -3062,140 +3174,11 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
-comment|/* 		 * X509 certificate sign response. Validate the 		 * certificate signed by the server and install. Later 		 * this can be provided to clients of this server in 		 * lieu of the self signed certificate in order to 		 * validate the public key. 		 */
-case|case
-name|CRYPTO_SIGN
-operator||
-name|CRYPTO_RESP
-case|:
-comment|/* 			 * Discard the message if invalid or identity 			 * not confirmed. 			 */
-if|if
-condition|(
-operator|!
-operator|(
-name|peer
-operator|->
-name|crypto
-operator|&
-name|CRYPTO_FLAG_VRFY
-operator|)
-condition|)
-break|break;
-if|if
-condition|(
-operator|(
-name|rval
-operator|=
-name|crypto_verify
-argument_list|(
-name|ep
-argument_list|,
-name|NULL
-argument_list|,
-name|peer
-argument_list|)
-operator|)
-operator|!=
-name|XEVNT_OK
-condition|)
-break|break;
-comment|/* 			 * Scan the certificate list to delete old 			 * versions and link the newest version first on 			 * the list. 			 */
-if|if
-condition|(
-operator|(
-name|rval
-operator|=
-name|cert_install
-argument_list|(
-name|ep
-argument_list|,
-name|peer
-argument_list|)
-operator|)
-operator|!=
-name|XEVNT_OK
-condition|)
-break|break;
-name|peer
-operator|->
-name|crypto
-operator||=
-name|CRYPTO_FLAG_SIGN
-expr_stmt|;
-name|peer
-operator|->
-name|flash
-operator|&=
-operator|~
-name|TEST10
-expr_stmt|;
-name|temp32
-operator|=
-name|cinfo
-operator|->
-name|nid
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|statstr
-argument_list|,
-literal|"sign %s 0x%x %s (%u) fs %u"
-argument_list|,
-name|cinfo
-operator|->
-name|issuer
-argument_list|,
-name|cinfo
-operator|->
-name|flags
-argument_list|,
-name|OBJ_nid2ln
-argument_list|(
-name|temp32
-argument_list|)
-argument_list|,
-name|temp32
-argument_list|,
-name|ntohl
-argument_list|(
-name|ep
-operator|->
-name|fstamp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|record_crypto_stats
-argument_list|(
-operator|&
-name|peer
-operator|->
-name|srcadr
-argument_list|,
-name|statstr
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"crypto_recv: %s\n"
-argument_list|,
-name|statstr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-break|break;
 comment|/* 		 * Cookie request in symmetric modes. Roll a random 		 * cookie and install in symmetric mode. Encrypt for the 		 * response, which is transmitted later. 		 */
 case|case
 name|CRYPTO_COOK
 case|:
-comment|/* 			 * Discard the message if invalid or identity 			 * not confirmed. 			 */
+comment|/* 			 * Discard the message if invalid or certificate 			 * trail not trusted. 			 */
 if|if
 condition|(
 operator|!
@@ -3204,10 +3187,16 @@ name|peer
 operator|->
 name|crypto
 operator|&
-name|CRYPTO_FLAG_VRFY
+name|CRYPTO_FLAG_VALID
 operator|)
 condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_ERR
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -3276,7 +3265,7 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
 break|break;
 block|}
@@ -3338,7 +3327,7 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -3410,7 +3399,13 @@ operator|&
 name|CRYPTO_FLAG_VRFY
 operator|)
 condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_ERR
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -3579,7 +3574,7 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -3651,7 +3646,13 @@ operator|&
 name|CRYPTO_FLAG_VRFY
 operator|)
 condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_ERR
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -3784,7 +3785,7 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -3842,11 +3843,13 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
-comment|/* 		 * Install leapseconds table in symmetric modes. This 		 * table is proventicated to the NIST primary servers, 		 * either by copying the file containing the table from 		 * a NIST server to a trusted server or directly using 		 * this protocol. While the entire table is installed at 		 * the server, presently only the current TAI offset is 		 * provided via the kernel to other applications. 		 */
+comment|/* 		 * X509 certificate sign response. Validate the 		 * certificate signed by the server and install. Later 		 * this can be provided to clients of this server in 		 * lieu of the self signed certificate in order to 		 * validate the public key. 		 */
 case|case
-name|CRYPTO_TAI
+name|CRYPTO_SIGN
+operator||
+name|CRYPTO_RESP
 case|:
-comment|/* 			 * Discard the message if invalid or identity 			 * not confirmed. 			 */
+comment|/* 			 * Discard the message if invalid or not 			 * proventic. 			 */
 if|if
 condition|(
 operator|!
@@ -3855,10 +3858,131 @@ name|peer
 operator|->
 name|crypto
 operator|&
-name|CRYPTO_FLAG_VRFY
+name|CRYPTO_FLAG_PROV
 operator|)
 condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_ERR
+expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+operator|(
+name|rval
+operator|=
+name|crypto_verify
+argument_list|(
+name|ep
+argument_list|,
+name|NULL
+argument_list|,
+name|peer
+argument_list|)
+operator|)
+operator|!=
+name|XEVNT_OK
+condition|)
+break|break;
+comment|/* 			 * Scan the certificate list to delete old 			 * versions and link the newest version first on 			 * the list. 			 */
+if|if
+condition|(
+operator|(
+name|rval
+operator|=
+name|cert_install
+argument_list|(
+name|ep
+argument_list|,
+name|peer
+argument_list|)
+operator|)
+operator|!=
+name|XEVNT_OK
+condition|)
+break|break;
+name|peer
+operator|->
+name|crypto
+operator||=
+name|CRYPTO_FLAG_SIGN
+expr_stmt|;
+name|peer
+operator|->
+name|flash
+operator|&=
+operator|~
+name|TEST8
+expr_stmt|;
+name|temp32
+operator|=
+name|cinfo
+operator|->
+name|nid
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|statstr
+argument_list|,
+literal|"sign %s 0x%x %s (%u) fs %u"
+argument_list|,
+name|cinfo
+operator|->
+name|issuer
+argument_list|,
+name|cinfo
+operator|->
+name|flags
+argument_list|,
+name|OBJ_nid2ln
+argument_list|(
+name|temp32
+argument_list|)
+argument_list|,
+name|temp32
+argument_list|,
+name|ntohl
+argument_list|(
+name|ep
+operator|->
+name|fstamp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|record_crypto_stats
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|,
+name|statstr
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"crypto_recv: %s\n"
+argument_list|,
+name|statstr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+comment|/* 		 * Install leapseconds table in symmetric modes. This 		 * table is proventicated to the NIST primary servers, 		 * either by copying the file containing the table from 		 * a NIST server to a trusted server or directly using 		 * this protocol. While the entire table is installed at 		 * the server, presently only the current TAI offset is 		 * provided via the kernel to other applications. 		 */
+case|case
+name|CRYPTO_TAI
+case|:
+comment|/* 			 * Discard the message if invalid. 			 */
 if|if
 condition|(
 operator|(
@@ -3925,7 +4049,7 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
 break|break;
 block|}
@@ -3935,19 +4059,16 @@ name|CRYPTO_TAI
 operator||
 name|CRYPTO_RESP
 case|:
-comment|/* 			 * Discard the message if invalid or identity 			 * not confirmed or signature not verified with 			 * respect to the leapsecond table values. 			 */
+comment|/* 			 * If this is a response, discard the message if 			 * signature not verified with respect to the 			 * leapsecond table values. 			 */
 if|if
 condition|(
-operator|!
-operator|(
 name|peer
 operator|->
-name|crypto
-operator|&
-name|CRYPTO_FLAG_VRFY
-operator|)
+name|cmmd
+operator|==
+name|NULL
 condition|)
-break|break;
+block|{
 if|if
 condition|(
 operator|(
@@ -3969,7 +4090,8 @@ operator|!=
 name|XEVNT_OK
 condition|)
 break|break;
-comment|/* 			 * Initialize peer variables, leapseconds 			 * structure and extension field in network byte 			 * order. Since a filestamp may have changed, 			 * recompute the signatures. 			 */
+block|}
+comment|/* 			 * Initialize peer variables with latest update. 			 */
 name|peer
 operator|->
 name|tai_leap
@@ -4076,16 +4198,6 @@ expr_stmt|;
 name|crypto_update
 argument_list|()
 expr_stmt|;
-name|sys_tai
-operator|=
-name|vallen
-operator|/
-literal|4
-operator|+
-name|TAI_1972
-operator|-
-literal|1
-expr_stmt|;
 block|}
 name|crypto_flags
 operator||=
@@ -4102,44 +4214,8 @@ operator|->
 name|flash
 operator|&=
 operator|~
-name|TEST10
+name|TEST8
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KERNEL_PLL
-if|#
-directive|if
-name|NTP_API
-operator|>
-literal|3
-comment|/* 			 * If the kernel cooperates, initialize the 			 * current TAI offset. 			 */
-name|ntv
-operator|.
-name|modes
-operator|=
-name|MOD_TAI
-expr_stmt|;
-name|ntv
-operator|.
-name|constant
-operator|=
-name|sys_tai
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ntp_adjtime
-argument_list|(
-operator|&
-name|ntv
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* NTP_API */
-endif|#
-directive|endif
-comment|/* KERNEL_PLL */
 name|sprintf
 argument_list|(
 name|statstr
@@ -4192,6 +4268,9 @@ directive|endif
 break|break;
 comment|/* 		 * We come here in symmetric modes for miscellaneous 		 * commands that have value fields but are processed on 		 * the transmit side. All we need do here is check for 		 * valid field length. Remaining checks are below and on 		 * the transmit side. 		 */
 case|case
+name|CRYPTO_CERT
+case|:
+case|case
 name|CRYPTO_IFF
 case|:
 case|case
@@ -4232,7 +4311,7 @@ condition|)
 block|{
 name|rval
 operator|=
-name|XEVNT_LEN
+name|XEVNT_ERR
 expr_stmt|;
 block|}
 elseif|else
@@ -4291,12 +4370,12 @@ name|fp
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * We log everything except length/format errors and 		 * duplicates, which are log clogging vulnerabilities. 		 * The first error found terminates the extension field 		 * scan and we return the laundry to the caller. 		 */
+comment|/* 		 * We don't log length/format/timestamp errors and 		 * duplicates, which are log clogging vulnerabilities. 		 * The first error found terminates the extension field 		 * scan and we return the laundry to the caller. A 		 * length/format/timestamp error on transmit is 		 * cheerfully ignored, as the message is not sent. 		 */
 if|if
 condition|(
 name|rval
-operator|!=
-name|XEVNT_OK
+operator|>
+name|XEVNT_TSP
 condition|)
 block|{
 name|sprintf
@@ -4314,12 +4393,6 @@ argument_list|,
 name|fstamp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rval
-operator|>
-name|XEVNT_TSP
-condition|)
 name|record_crypto_stats
 argument_list|(
 operator|&
@@ -4354,6 +4427,25 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|rval
+operator|>
+name|XEVNT_OK
+operator|&&
+operator|(
+name|code
+operator|&
+name|CRYPTO_RESP
+operator|)
+condition|)
+block|{
+name|rval
+operator|=
+name|XEVNT_OK
+expr_stmt|;
 block|}
 name|authlen
 operator|+=
@@ -4428,6 +4520,9 @@ name|struct
 name|cert_info
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|xp
 decl_stmt|;
 comment|/* certificate info/value pointer */
 name|char
@@ -4446,6 +4541,9 @@ name|NTP_MAXSTRLEN
 index|]
 decl_stmt|;
 comment|/* statistics for filegen */
+name|tstamp_t
+name|tstamp
+decl_stmt|;
 name|u_int
 name|vallen
 decl_stmt|;
@@ -4525,6 +4623,11 @@ name|rval
 operator|=
 name|XEVNT_OK
 expr_stmt|;
+name|tstamp
+operator|=
+name|crypto_time
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|opcode
@@ -4532,12 +4635,32 @@ operator|&
 literal|0xffff0000
 condition|)
 block|{
-comment|/* 	 * Send association request and response with status word and 	 * host name. Note, this message is not signed and the filestamp 	 * contains only the status word. We check at this point whether 	 * the identity schemes are compatible to save tears later on. 	 */
+comment|/* 	 * Send association request and response with status word and 	 * host name. Note, this message is not signed and the filestamp 	 * contains only the status word. 	 */
 case|case
 name|CRYPTO_ASSOC
 operator||
 name|CRYPTO_RESP
 case|:
+name|len
+operator|+=
+name|crypto_send
+argument_list|(
+name|fp
+argument_list|,
+operator|&
+name|hostval
+argument_list|)
+expr_stmt|;
+name|fp
+operator|->
+name|fstamp
+operator|=
+name|htonl
+argument_list|(
+name|crypto_flags
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|CRYPTO_ASSOC
 case|:
@@ -4551,20 +4674,6 @@ operator|&
 name|hostval
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|crypto_time
-argument_list|()
-operator|==
-literal|0
-condition|)
-name|fp
-operator|->
-name|fstamp
-operator|=
-literal|0
-expr_stmt|;
-else|else
 name|fp
 operator|->
 name|fstamp
@@ -4572,6 +4681,8 @@ operator|=
 name|htonl
 argument_list|(
 name|crypto_flags
+operator||
+name|ident_scheme
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4621,8 +4732,7 @@ operator|.
 name|ptr
 operator|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|ep
@@ -4640,7 +4750,7 @@ name|vtemp
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Send certificate response or sign request. Use the values 	 * from the certificate. If the request contains no subject 	 * name, assume the name of this host. This is for backwards 	 * compatibility.  Light the error bit if no certificate with 	 * the given subject name is found. Of course, private 	 * certificates are never sent. 	 */
+comment|/* 	 * Send certificate response or sign request. Use the values 	 * from the certificate cache. If the request contains no 	 * subject name, assume the name of this host. This is for 	 * backwards compatibility. Private certificates are never sent. 	 */
 case|case
 name|CRYPTO_SIGN
 case|:
@@ -4685,9 +4795,9 @@ operator|>
 name|MAXHOSTNAME
 condition|)
 block|{
-name|opcode
-operator||=
-name|CRYPTO_ERROR
+name|rval
+operator|=
+name|XEVNT_LEN
 expr_stmt|;
 break|break;
 block|}
@@ -4712,6 +4822,11 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+comment|/* 		 * Find all certificates with matching subject. If a 		 * self-signed, trusted certificate is found, use that. 		 * If not, use the first one with matching subject. A 		 * private certificate is never divulged or signed. 		 */
+name|xp
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|cp
@@ -4752,6 +4867,82 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|xp
+operator|==
+name|NULL
+condition|)
+name|xp
+operator|=
+name|cp
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|certname
+argument_list|,
+name|cp
+operator|->
+name|issuer
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|cp
+operator|->
+name|flags
+operator|&
+name|CERT_TRUST
+condition|)
+block|{
+name|xp
+operator|=
+name|cp
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+comment|/* 		 * Be careful who you trust. If not yet synchronized, 		 * give back an empty response. If certificate not found 		 * or beyond the lifetime, return an error. This is to 		 * avoid a bad dude trying to get an expired certificate 		 * re-signed. Otherwise, send it. 		 * 		 * Note the timestamp and filestamp are taken from the 		 * certificate value structure. For all certificates the 		 * timestamp is the latest signature update time. For 		 * host and imported certificates the filestamp is the 		 * creation epoch. For signed certificates the filestamp 		 * is the creation epoch of the trusted certificate at 		 * the base of the certificate trail. In principle, this 		 * allows strong checking for signature masquerade. 		 */
+if|if
+condition|(
+name|tstamp
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|xp
+operator|==
+name|NULL
+condition|)
+name|rval
+operator|=
+name|XEVNT_CRT
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|tstamp
+operator|<
+name|xp
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|xp
+operator|->
+name|last
+condition|)
+name|rval
+operator|=
+name|XEVNT_SRV
+expr_stmt|;
+else|else
 name|len
 operator|+=
 name|crypto_send
@@ -4759,23 +4950,10 @@ argument_list|(
 name|fp
 argument_list|,
 operator|&
-name|cp
+name|xp
 operator|->
 name|cert
 argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-if|if
-condition|(
-name|cp
-operator|==
-name|NULL
-condition|)
-name|opcode
-operator||=
-name|CRYPTO_ERROR
 expr_stmt|;
 break|break;
 comment|/* 	 * Send challenge in Schnorr (IFF) identity scheme. 	 */
@@ -4801,9 +4979,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|opcode
-operator||=
-name|CRYPTO_ERROR
+name|rval
+operator|=
+name|XEVNT_ERR
 expr_stmt|;
 break|break;
 block|}
@@ -4823,6 +5001,7 @@ operator|)
 operator|==
 name|XEVNT_OK
 condition|)
+block|{
 name|len
 operator|+=
 name|crypto_send
@@ -4839,6 +5018,7 @@ operator|&
 name|vtemp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* 	 * Send response in Schnorr (IFF) identity scheme. 	 */
 case|case
@@ -4862,6 +5042,7 @@ operator|)
 operator|==
 name|XEVNT_OK
 condition|)
+block|{
 name|len
 operator|+=
 name|crypto_send
@@ -4878,6 +5059,7 @@ operator|&
 name|vtemp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* 	 * Send challenge in Guillou-Quisquater (GQ) identity scheme. 	 */
 case|case
@@ -4902,9 +5084,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|opcode
-operator||=
-name|CRYPTO_ERROR
+name|rval
+operator|=
+name|XEVNT_ERR
 expr_stmt|;
 break|break;
 block|}
@@ -4924,6 +5106,7 @@ operator|)
 operator|==
 name|XEVNT_OK
 condition|)
+block|{
 name|len
 operator|+=
 name|crypto_send
@@ -4940,6 +5123,7 @@ operator|&
 name|vtemp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* 	 * Send response in Guillou-Quisquater (GQ) identity scheme. 	 */
 case|case
@@ -4963,6 +5147,7 @@ operator|)
 operator|==
 name|XEVNT_OK
 condition|)
+block|{
 name|len
 operator|+=
 name|crypto_send
@@ -4979,6 +5164,7 @@ operator|&
 name|vtemp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* 	 * Send challenge in MV identity scheme. 	 */
 case|case
@@ -5003,9 +5189,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|opcode
-operator||=
-name|CRYPTO_ERROR
+name|rval
+operator|=
+name|XEVNT_ERR
 expr_stmt|;
 break|break;
 block|}
@@ -5025,6 +5211,7 @@ operator|)
 operator|==
 name|XEVNT_OK
 condition|)
+block|{
 name|len
 operator|+=
 name|crypto_send
@@ -5041,6 +5228,7 @@ operator|&
 name|vtemp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* 	 * Send response in MV identity scheme. 	 */
 case|case
@@ -5064,6 +5252,7 @@ operator|)
 operator|==
 name|XEVNT_OK
 condition|)
+block|{
 name|len
 operator|+=
 name|crypto_send
@@ -5080,6 +5269,7 @@ operator|&
 name|vtemp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* 	 * Send certificate sign response. The integrity of the request 	 * certificate has already been verified on the receive side. 	 * Sign the response using the local server key. Use the 	 * filestamp from the request and use the timestamp as the 	 * current time. Light the error bit if the certificate is 	 * invalid or contains an unverified signature. 	 */
 case|case
@@ -5152,9 +5342,9 @@ operator|<
 name|VALUE_LEN
 condition|)
 block|{
-name|opcode
-operator||=
-name|CRYPTO_ERROR
+name|rval
+operator|=
+name|XEVNT_LEN
 expr_stmt|;
 break|break;
 block|}
@@ -5191,9 +5381,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|opcode
-operator||=
-name|CRYPTO_ERROR
+name|rval
+operator|=
+name|XEVNT_ERR
 expr_stmt|;
 break|break;
 block|}
@@ -5260,9 +5450,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|opcode
-operator||=
-name|CRYPTO_ERROR
+name|rval
+operator|=
+name|XEVNT_ERR
 expr_stmt|;
 break|break;
 block|}
@@ -5286,7 +5476,7 @@ name|sndval
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Send leapseconds table and signature. Use the values from the 	 * tai structure. If no table has been loaded, just send a 	 * request. 	 */
+comment|/* 	 * Send leapseconds table and signature. Use the values from the 	 * tai structure. If no table has been loaded, just send an 	 * empty request. 	 */
 case|case
 name|CRYPTO_TAI
 case|:
@@ -5320,17 +5510,17 @@ name|opcode
 operator|&
 name|CRYPTO_RESP
 condition|)
-name|opcode
-operator||=
-name|CRYPTO_ERROR
+name|rval
+operator|=
+name|XEVNT_ERR
 expr_stmt|;
 block|}
-comment|/* 	 * We ignore length/format errors and duplicates. Other errors 	 * are reported to the log and deny further service. To really 	 * persistent rascals we toss back a kiss-of-death grenade. 	 */
+comment|/* 	 * In case of error, flame the log. If a request, toss the 	 * puppy; if a response, return so the sender can flame, too. 	 */
 if|if
 condition|(
 name|rval
-operator|>
-name|XEVNT_TSP
+operator|!=
+name|XEVNT_OK
 condition|)
 block|{
 name|opcode
@@ -5355,6 +5545,13 @@ argument_list|,
 name|statstr
 argument_list|)
 expr_stmt|;
+name|report_event
+argument_list|(
+name|rval
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -5371,6 +5568,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+operator|(
+name|opcode
+operator|&
+name|CRYPTO_RESP
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Round up the field length to a multiple of 8 bytes and save 	 * the request code and length. 	 */
 name|len
@@ -5411,7 +5622,9 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"crypto_xmit: ext offset %d len %u code %x assocID %d\n"
+literal|"crypto_xmit: flags 0x%x ext offset %d len %u code 0x%x assocID %d\n"
+argument_list|,
+name|crypto_flags
 argument_list|,
 name|start
 argument_list|,
@@ -5435,7 +5648,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_verify - parse and verify the extension field and value  *  * Returns  * XEVNT_OK	success  * XEVNT_LEN	bad field format or length  * XEVNT_TSP	bad timestamp  * XEVNT_FSP	bad filestamp  * XEVNT_PUB	bad or missing public key  * XEVNT_SGL	bad signature length  * XEVNT_SIG	signature not verified  */
+comment|/*  * crypto_verify - parse and verify the extension field and value  *  * Returns  * XEVNT_OK	success  * XEVNT_LEN	bad field format or length  * XEVNT_TSP	bad timestamp  * XEVNT_FSP	bad filestamp  * XEVNT_PUB	bad or missing public key  * XEVNT_SGL	bad signature length  * XEVNT_SIG	signature not verified  * XEVNT_ERR	protocol error  */
 end_comment
 
 begin_function
@@ -5473,10 +5686,18 @@ decl_stmt|;
 comment|/* signature context */
 name|tstamp_t
 name|tstamp
+decl_stmt|,
+name|tstamp1
+init|=
+literal|0
 decl_stmt|;
 comment|/* timestamp */
 name|tstamp_t
 name|fstamp
+decl_stmt|,
+name|fstamp1
+init|=
+literal|0
 decl_stmt|;
 comment|/* filestamp */
 name|u_int
@@ -5493,12 +5714,9 @@ decl_stmt|,
 name|len
 decl_stmt|;
 name|int
-name|rval
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
-comment|/* 	 * We require valid opcode and field length, timestamp, 	 * filestamp, public key, digest, signature length and 	 * signature, where relevant. Note that preliminary length 	 * checks are done in the main loop. 	 */
+comment|/* 	 * We require valid opcode and field lengths, timestamp, 	 * filestamp, public key, digest, signature length and 	 * signature, where relevant. Note that preliminary length 	 * checks are done in the main loop. 	 */
 name|len
 operator|=
 name|ntohl
@@ -5530,7 +5748,7 @@ name|CRYPTO_ERROR
 condition|)
 return|return
 operator|(
-name|XEVNT_LEN
+name|XEVNT_ERR
 operator|)
 return|;
 if|if
@@ -5566,7 +5784,7 @@ name|XEVNT_OK
 operator|)
 return|;
 block|}
-comment|/* 	 * We have a value header. Check for valid field lengths. The 	 * field length must be long enough to contain the value header, 	 * value and signature. If a request and a previous request of 	 * the same type is pending, discard the previous request. If a 	 * request but no signature, there is no need for further 	 * checking. 	 */
+comment|/* 	 * We have a value header. Check for valid field lengths. The 	 * field length must be long enough to contain the value header, 	 * value and signature. Note both the value and signature fields 	 * are rounded up to the next word. 	 */
 name|vallen
 operator|=
 name|ntohl
@@ -5576,29 +5794,6 @@ operator|->
 name|vallen
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-operator|(
-operator|(
-name|VALUE_LEN
-operator|+
-name|vallen
-operator|+
-literal|3
-operator|)
-operator|/
-literal|4
-operator|)
-operator|*
-literal|4
-condition|)
-return|return
-operator|(
-name|XEVNT_LEN
-operator|)
-return|;
 name|i
 operator|=
 operator|(
@@ -5628,24 +5823,56 @@ name|len
 operator|<
 name|VALUE_LEN
 operator|+
+operator|(
+operator|(
 name|vallen
 operator|+
+literal|3
+operator|)
+operator|/
+literal|4
+operator|)
+operator|*
+literal|4
+operator|+
+operator|(
+operator|(
 name|siglen
+operator|+
+literal|3
+operator|)
+operator|/
+literal|4
+operator|)
+operator|*
+literal|4
 condition|)
 return|return
 operator|(
 name|XEVNT_LEN
 operator|)
 return|;
+comment|/* 	 * Punt if this is a response with no data. Punt if this is a 	 * request and a previous response is pending.  	 */
 if|if
 condition|(
-operator|!
-operator|(
 name|opcode
 operator|&
 name|CRYPTO_RESP
-operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|vallen
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|XEVNT_LEN
+operator|)
+return|;
+block|}
+else|else
 block|{
 if|if
 condition|(
@@ -5655,55 +5882,34 @@ name|cmmd
 operator|!=
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|opcode
-operator||
-name|CRYPTO_RESP
-operator|)
-operator|==
-operator|(
-name|ntohl
-argument_list|(
-name|peer
-operator|->
-name|cmmd
-operator|->
-name|opcode
-argument_list|)
-operator|&
-literal|0xffff0000
-operator|)
-condition|)
-block|{
-name|free
-argument_list|(
-name|peer
-operator|->
-name|cmmd
-argument_list|)
-expr_stmt|;
-name|peer
-operator|->
-name|cmmd
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
-block|{
 return|return
 operator|(
 name|XEVNT_LEN
 operator|)
 return|;
 block|}
-block|}
+comment|/* 	 * Check for valid timestamp and filestamp. If the timestamp is 	 * zero, the sender is not synchronized and signatures are 	 * disregarded. If not, the timestamp must not precede the 	 * filestamp. The timestamp and filestamp must not precede the 	 * corresponding values in the value structure, if present. Once 	 * the autokey values have been installed, the timestamp must 	 * always be later than the corresponding value in the value 	 * structure. Duplicate timestamps are illegal once the cookie 	 * has been validated. 	 */
+name|tstamp
+operator|=
+name|ntohl
+argument_list|(
+name|ep
+operator|->
+name|tstamp
+argument_list|)
+expr_stmt|;
+name|fstamp
+operator|=
+name|ntohl
+argument_list|(
+name|ep
+operator|->
+name|fstamp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|siglen
+name|tstamp
 operator|==
 literal|0
 condition|)
@@ -5712,12 +5918,88 @@ operator|(
 name|XEVNT_OK
 operator|)
 return|;
-block|}
-comment|/* 	 * We have a signature. Check for valid timestamp and filestamp. 	 * The timestamp must not precede the filestamp. The timestamp 	 * and filestamp must not precede the corresponding values in 	 * the value structure. Once the autokey values have been 	 * installed, the timestamp must always be later than the 	 * corresponding value in the value structure. Duplicate 	 * timestamps are illegal once the cookie has been validated. 	 */
-name|rval
+if|if
+condition|(
+name|tstamp
+operator|<
+name|fstamp
+condition|)
+return|return
+operator|(
+name|XEVNT_TSP
+operator|)
+return|;
+if|if
+condition|(
+name|vp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|tstamp1
 operator|=
-name|XEVNT_OK
+name|ntohl
+argument_list|(
+name|vp
+operator|->
+name|tstamp
+argument_list|)
 expr_stmt|;
+name|fstamp1
+operator|=
+name|ntohl
+argument_list|(
+name|vp
+operator|->
+name|fstamp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tstamp
+operator|<
+name|tstamp1
+operator|||
+operator|(
+name|tstamp
+operator|==
+name|tstamp1
+operator|&&
+operator|(
+name|peer
+operator|->
+name|crypto
+operator|&
+name|CRYPTO_FLAG_AUTO
+operator|)
+operator|)
+operator|)
+condition|)
+return|return
+operator|(
+name|XEVNT_TSP
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|tstamp
+operator|<
+name|fstamp1
+operator|||
+name|fstamp
+operator|<
+name|fstamp1
+operator|)
+condition|)
+return|return
+operator|(
+name|XEVNT_FSP
+operator|)
+return|;
+block|}
+comment|/* 	 * Check for valid signature length, public key and digest 	 * algorithm. 	 */
 if|if
 condition|(
 name|crypto_flags
@@ -5739,120 +6021,12 @@ name|peer
 operator|->
 name|pkey
 expr_stmt|;
-name|tstamp
-operator|=
-name|ntohl
-argument_list|(
-name|ep
-operator|->
-name|tstamp
-argument_list|)
-expr_stmt|;
-name|fstamp
-operator|=
-name|ntohl
-argument_list|(
-name|ep
-operator|->
-name|fstamp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|tstamp
+name|siglen
 operator|==
 literal|0
 operator|||
-name|tstamp
-operator|<
-name|fstamp
-condition|)
-block|{
-name|rval
-operator|=
-name|XEVNT_TSP
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|vp
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|tstamp
-operator|<
-name|ntohl
-argument_list|(
-name|vp
-operator|->
-name|tstamp
-argument_list|)
-operator|||
-operator|(
-name|tstamp
-operator|==
-name|ntohl
-argument_list|(
-name|vp
-operator|->
-name|tstamp
-argument_list|)
-operator|&&
-operator|(
-name|peer
-operator|->
-name|crypto
-operator|&
-name|CRYPTO_FLAG_AUTO
-operator|)
-operator|)
-operator|)
-condition|)
-block|{
-name|rval
-operator|=
-name|XEVNT_TSP
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|vp
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|tstamp
-operator|<
-name|ntohl
-argument_list|(
-name|vp
-operator|->
-name|fstamp
-argument_list|)
-operator|||
-name|fstamp
-operator|<
-name|ntohl
-argument_list|(
-name|vp
-operator|->
-name|fstamp
-argument_list|)
-operator|)
-condition|)
-block|{
-name|rval
-operator|=
-name|XEVNT_FSP
-expr_stmt|;
-comment|/* 	 * If a public key and digest is present, and if valid key 	 * length, check for valid signature. Note that the first valid 	 * signature lights the proventic bit. 	 */
-block|}
-elseif|else
-if|if
-condition|(
 name|pkey
 operator|==
 name|NULL
@@ -5863,10 +6037,11 @@ name|digest
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* fall through */
-block|}
-elseif|else
+return|return
+operator|(
+name|XEVNT_OK
+operator|)
+return|;
 if|if
 condition|(
 name|siglen
@@ -5879,14 +6054,12 @@ argument_list|(
 name|pkey
 argument_list|)
 condition|)
-block|{
-name|rval
-operator|=
+return|return
+operator|(
 name|XEVNT_SGL
-expr_stmt|;
-block|}
-else|else
-block|{
+operator|)
+return|;
+comment|/* 	 * Darn, I thought we would never get here. Verify the 	 * signature. If the identity exchange is verified, light the 	 * proventic bit. If no client identity scheme is specified, 	 * avoid doing the sign exchange. 	 */
 name|EVP_VerifyInit
 argument_list|(
 operator|&
@@ -5918,6 +6091,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|EVP_VerifyFinal
 argument_list|(
 operator|&
@@ -5940,7 +6114,11 @@ argument_list|,
 name|pkey
 argument_list|)
 condition|)
-block|{
+return|return
+operator|(
+name|XEVNT_SIG
+operator|)
+return|;
 if|if
 condition|(
 name|peer
@@ -5949,57 +6127,39 @@ name|crypto
 operator|&
 name|CRYPTO_FLAG_VRFY
 condition|)
+block|{
 name|peer
 operator|->
 name|crypto
 operator||=
 name|CRYPTO_FLAG_PROV
 expr_stmt|;
-block|}
-else|else
-block|{
-name|rval
-operator|=
-name|XEVNT_SIG
-expr_stmt|;
-block|}
-block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
-name|debug
-operator|>
-literal|1
+operator|!
+operator|(
+name|crypto_flags
+operator|&
+name|CRYPTO_FLAG_MASK
+operator|)
 condition|)
-name|printf
-argument_list|(
-literal|"crypto_recv: verify %x vallen %u siglen %u ts %u fs %u\n"
-argument_list|,
-name|rval
-argument_list|,
-name|vallen
-argument_list|,
-name|siglen
-argument_list|,
-name|tstamp
-argument_list|,
-name|fstamp
-argument_list|)
+name|peer
+operator|->
+name|crypto
+operator||=
+name|CRYPTO_FLAG_SIGN
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 return|return
 operator|(
-name|rval
+name|XEVNT_OK
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_encrypt - construct encrypted cookie and signature from  * extension field and cookie  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_CKY	bad or missing cookie  */
+comment|/*  * crypto_encrypt - construct encrypted cookie and signature from  * extension field and cookie  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_CKY	bad or missing cookie  * XEVNT_PER	host certificate expired  */
 end_comment
 
 begin_function
@@ -6255,6 +6415,25 @@ operator|(
 name|XEVNT_OK
 operator|)
 return|;
+if|if
+condition|(
+name|tstamp
+operator|<
+name|cinfo
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|cinfo
+operator|->
+name|last
+condition|)
+return|return
+operator|(
+name|XEVNT_PER
+operator|)
+return|;
 name|vp
 operator|->
 name|sig
@@ -6359,19 +6538,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* 	 * If the server identity has already been verified, no further 	 * action is necessary. Otherwise, try to load the identity file 	 * of the certificate issuer. If the issuer file is not found, 	 * try the host file. If nothing found, declare a cryptobust. 	 * Note we can't get here unless the trusted certificate has 	 * been found and the CRYPTO_FLAG_VALID bit is set, so the 	 * certificate issuer is valid. 	 */
-if|if
-condition|(
-name|peer
-operator|->
-name|crypto
-operator|&
-name|CRYPTO_FLAG_VRFY
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 if|if
 condition|(
 name|peer
@@ -6651,7 +6817,7 @@ name|CRYPTO_MV
 operator|)
 return|;
 block|}
-comment|/* 	 * No compatible identity scheme is available. Use the default 	 * TC scheme. 	 */
+comment|/* 	 * No compatible identity scheme is available. Life is hard. 	 */
 name|msyslog
 argument_list|(
 name|LOG_INFO
@@ -6749,6 +6915,17 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|opcode
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ep
+operator|)
+return|;
 name|ep
 operator|->
 name|opcode
@@ -7068,10 +7245,6 @@ name|cp
 decl_stmt|,
 modifier|*
 name|cpn
-decl_stmt|,
-modifier|*
-modifier|*
-name|zp
 decl_stmt|;
 comment|/* certificate info/value */
 name|char
@@ -7217,12 +7390,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Sign certificates and timestamps. The filestamp is derived 	 * from the certificate file extension from wherever the file 	 * was generated. At the same time expired certificates are 	 * expunged. 	 */
-name|zp
-operator|=
-operator|&
-name|cinfo
-expr_stmt|;
+comment|/* 	 * Sign certificates and timestamps. The filestamp is derived 	 * from the certificate file extension from wherever the file 	 * was generated. Note we do not throw expired certificates 	 * away; they may have signed younger ones. 	 */
 for|for
 control|(
 name|cp
@@ -7244,28 +7412,6 @@ name|cp
 operator|->
 name|link
 expr_stmt|;
-if|if
-condition|(
-name|tstamp
-operator|>
-name|cp
-operator|->
-name|last
-condition|)
-block|{
-operator|*
-name|zp
-operator|=
-name|cpn
-expr_stmt|;
-name|cert_free
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|cp
 operator|->
 name|cert
@@ -7381,14 +7527,6 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
-name|zp
-operator|=
-operator|&
-name|cp
-operator|->
-name|link
-expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Sign leapseconds table and timestamps. The filestamp is 	 * derived from the leapsecond file extension from wherever the 	 * file was generated. 	 */
 if|if
@@ -7980,6 +8118,7 @@ argument_list|,
 name|bk
 argument_list|)
 expr_stmt|;
+comment|/* XXX MEMLEAK? free ptr? */
 return|return
 operator|(
 literal|1
@@ -7989,7 +8128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ***********************************************************************  *								       *  * The following routines implement the Schnorr (IFF) identity scheme  *  *								       *  ***********************************************************************  *  * The Schnorr (IFF) identity scheme is intended for use when  * the ntp-genkeys program does not generate the certificates used in  * the protocol and the group key cannot be conveyed in the certificate  * itself. For this purpose, new generations of IFF values must be  * securely transmitted to all members of the group before use. The  * scheme is self contained and independent of new generations of host  * keys, sign keys and certificates.  *  * The IFF identity scheme is based on DSA cryptography and algorithms  * described in Stinson p. 285. The IFF values hide in a DSA cuckoo  * structure, but only the primes and generator are used. The p is a  * 512-bit prime, q a 160-bit prime that divides p - 1 and is a qth root  * of 1 mod p; that is, g^q = 1 mod p. The TA rolls primvate random  * group key b disguised as a DSA structure member, then computes public  * key g^(q - b). These values are shared only among group members and  * never revealed in messages. Alice challenges Bob to confirm identity  * using the protocol described below.  *  * How it works  *  * The scheme goes like this. Both Alice and Bob have the public primes  * p, q and generator g. The TA gives private key b to Bob and public  * key v = g^(q - a) mod p to Alice.  *  * Alice rolls new random challenge r and sends to Bob in the IFF  * request message. Bob rolls new random k, then computes y = k + b r  * mod q and x = g^k mod p and sends (y, hash(x)) to Alice in the  * response message. Besides making the response shorter, the hash makes  * it effectivey impossible for an intruder to solve for b by observing  * a number of these messages.  *   * Alice receives the response and computes g^y v^r mod p. After a bit  * of algebra, this simplifies to g^k. If the hash of this result  * matches hash(x), Alice knows that Bob has the group key b. The signed  * response binds this knowledge to Bob's private key and the public key  * previously received in his certificate.  *  * crypto_alice - construct Alice's challenge in IFF scheme  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_ID	bad or missing identity parameters  */
+comment|/*  ***********************************************************************  *								       *  * The following routines implement the Schnorr (IFF) identity scheme  *  *								       *  ***********************************************************************  *  * The Schnorr (IFF) identity scheme is intended for use when  * the ntp-genkeys program does not generate the certificates used in  * the protocol and the group key cannot be conveyed in the certificate  * itself. For this purpose, new generations of IFF values must be  * securely transmitted to all members of the group before use. The  * scheme is self contained and independent of new generations of host  * keys, sign keys and certificates.  *  * The IFF identity scheme is based on DSA cryptography and algorithms  * described in Stinson p. 285. The IFF values hide in a DSA cuckoo  * structure, but only the primes and generator are used. The p is a  * 512-bit prime, q a 160-bit prime that divides p - 1 and is a qth root  * of 1 mod p; that is, g^q = 1 mod p. The TA rolls primvate random  * group key b disguised as a DSA structure member, then computes public  * key g^(q - b). These values are shared only among group members and  * never revealed in messages. Alice challenges Bob to confirm identity  * using the protocol described below.  *  * How it works  *  * The scheme goes like this. Both Alice and Bob have the public primes  * p, q and generator g. The TA gives private key b to Bob and public  * key v = g^(q - a) mod p to Alice.  *  * Alice rolls new random challenge r and sends to Bob in the IFF  * request message. Bob rolls new random k, then computes y = k + b r  * mod q and x = g^k mod p and sends (y, hash(x)) to Alice in the  * response message. Besides making the response shorter, the hash makes  * it effectivey impossible for an intruder to solve for b by observing  * a number of these messages.  *   * Alice receives the response and computes g^y v^r mod p. After a bit  * of algebra, this simplifies to g^k. If the hash of this result  * matches hash(x), Alice knows that Bob has the group key b. The signed  * response binds this knowledge to Bob's private key and the public key  * previously received in his certificate.  *  * crypto_alice - construct Alice's challenge in IFF scheme  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_ID	bad or missing group key  */
 end_comment
 
 begin_function
@@ -8235,6 +8374,25 @@ operator|(
 name|XEVNT_OK
 operator|)
 return|;
+if|if
+condition|(
+name|tstamp
+operator|<
+name|cinfo
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|cinfo
+operator|->
+name|last
+condition|)
+return|return
+operator|(
+name|XEVNT_PER
+operator|)
+return|;
 name|vp
 operator|->
 name|sig
@@ -8316,7 +8474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_bob - construct Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  */
+comment|/*  * crypto_bob - construct Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_ID	bad or missing group key  * XEVNT_ERR	protocol error  * XEVNT_PER	host expired certificate  */
 end_comment
 
 begin_function
@@ -8380,12 +8538,9 @@ decl_stmt|;
 comment|/* 	 * If the IFF parameters are not valid, something awful 	 * happened or we are being tormented. 	 */
 if|if
 condition|(
-operator|!
-operator|(
-name|crypto_flags
-operator|&
-name|CRYPTO_FLAG_IFF
-operator|)
+name|iffpar_pkey
+operator|==
+name|NULL
 condition|)
 block|{
 name|msyslog
@@ -8397,7 +8552,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ID
 operator|)
 return|;
 block|}
@@ -8460,7 +8615,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ERR
 operator|)
 return|;
 block|}
@@ -8679,7 +8834,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ERR
 operator|)
 return|;
 block|}
@@ -8733,6 +8888,25 @@ condition|)
 return|return
 operator|(
 name|XEVNT_OK
+operator|)
+return|;
+if|if
+condition|(
+name|tstamp
+operator|<
+name|cinfo
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|cinfo
+operator|->
+name|last
+condition|)
+return|return
+operator|(
+name|XEVNT_PER
 operator|)
 return|;
 name|vp
@@ -8816,7 +8990,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_iff - verify Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_FSP	bad filestamp  * XEVNT_ID	bad or missing identity parameters  */
+comment|/*  * crypto_iff - verify Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_ID	bad or missing group key  * XEVNT_FSP	bad filestamp  */
 end_comment
 
 begin_function
@@ -8888,7 +9062,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ID
 operator|)
 return|;
 block|}
@@ -8974,7 +9148,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ID
 operator|)
 return|;
 block|}
@@ -9050,7 +9224,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ERR
 operator|)
 return|;
 block|}
@@ -9181,7 +9355,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ***********************************************************************  *								       *  * The following routines implement the Guillou-Quisquater (GQ)        *  * identity scheme                                                     *  *								       *  ***********************************************************************  *  * The Guillou-Quisquater (GQ) identity scheme is intended for use when  * the ntp-genkeys program generates the certificates used in the  * protocol and the group key can be conveyed in a certificate extension  * field. The scheme is self contained and independent of new  * generations of host keys, sign keys and certificates.  *  * The GQ identity scheme is based on RSA cryptography and algorithms  * described in Stinson p. 300 (with errors). The GQ values hide in a  * RSA cuckoo structure, but only the modulus is used. The 512-bit  * public modulus is n = p q, where p and q are secret large primes. The  * TA rolls random group key b disguised as a RSA structure member.  * Except for the public key, these values are shared only among group  * members and never revealed in messages.  *  * When rolling new certificates, Bob recomputes the private and  * public keys. The private key u is a random roll, while the public key  * is the inverse obscured by the group key v = (u^-1)^b. These values  * replace the private and public keys normally generated by the RSA  * scheme. Alice challenges Bob to confirm identity using the protocol  * described below.  *  * How it works  *  * The scheme goes like this. Both Alice and Bob have the same modulus n  * and some random b as the group key. These values are computed and  * distributed in advance via secret means, although only the group key  * b is truly secret. Each has a private random private key u and public  * key (u^-1)^b, although not necessarily the same ones. Bob and Alice  * can regenerate the key pair from time to time without affecting  * operations. The public key is conveyed on the certificate in an  * extension field; the private key is never revealed.  *  * Alice rolls new random challenge r and sends to Bob in the GQ  * request message. Bob rolls new random k, then computes y = k u^r mod  * n and x = k^b mod n and sends (y, hash(x)) to Alice in the response  * message. Besides making the response shorter, the hash makes it  * effectivey impossible for an intruder to solve for b by observing  * a number of these messages.  *   * Alice receives the response and computes y^b v^r mod n. After a bit  * of algebra, this simplifies to k^b. If the hash of this result  * matches hash(x), Alice knows that Bob has the group key b. The signed  * response binds this knowledge to Bob's private key and the public key  * previously received in his certificate.  *  * crypto_alice2 - construct Alice's challenge in GQ scheme  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_ID	bad or missing identity parameters  */
+comment|/*  ***********************************************************************  *								       *  * The following routines implement the Guillou-Quisquater (GQ)        *  * identity scheme                                                     *  *								       *  ***********************************************************************  *  * The Guillou-Quisquater (GQ) identity scheme is intended for use when  * the ntp-genkeys program generates the certificates used in the  * protocol and the group key can be conveyed in a certificate extension  * field. The scheme is self contained and independent of new  * generations of host keys, sign keys and certificates.  *  * The GQ identity scheme is based on RSA cryptography and algorithms  * described in Stinson p. 300 (with errors). The GQ values hide in a  * RSA cuckoo structure, but only the modulus is used. The 512-bit  * public modulus is n = p q, where p and q are secret large primes. The  * TA rolls random group key b disguised as a RSA structure member.  * Except for the public key, these values are shared only among group  * members and never revealed in messages.  *  * When rolling new certificates, Bob recomputes the private and  * public keys. The private key u is a random roll, while the public key  * is the inverse obscured by the group key v = (u^-1)^b. These values  * replace the private and public keys normally generated by the RSA  * scheme. Alice challenges Bob to confirm identity using the protocol  * described below.  *  * How it works  *  * The scheme goes like this. Both Alice and Bob have the same modulus n  * and some random b as the group key. These values are computed and  * distributed in advance via secret means, although only the group key  * b is truly secret. Each has a private random private key u and public  * key (u^-1)^b, although not necessarily the same ones. Bob and Alice  * can regenerate the key pair from time to time without affecting  * operations. The public key is conveyed on the certificate in an  * extension field; the private key is never revealed.  *  * Alice rolls new random challenge r and sends to Bob in the GQ  * request message. Bob rolls new random k, then computes y = k u^r mod  * n and x = k^b mod n and sends (y, hash(x)) to Alice in the response  * message. Besides making the response shorter, the hash makes it  * effectivey impossible for an intruder to solve for b by observing  * a number of these messages.  *   * Alice receives the response and computes y^b v^r mod n. After a bit  * of algebra, this simplifies to k^b. If the hash of this result  * matches hash(x), Alice knows that Bob has the group key b. The signed  * response binds this knowledge to Bob's private key and the public key  * previously received in his certificate.  *  * crypto_alice2 - construct Alice's challenge in GQ scheme  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_ID	bad or missing group key  * XEVNT_PER	host certificate expired  */
 end_comment
 
 begin_function
@@ -9427,6 +9601,25 @@ operator|(
 name|XEVNT_OK
 operator|)
 return|;
+if|if
+condition|(
+name|tstamp
+operator|<
+name|cinfo
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|cinfo
+operator|->
+name|last
+condition|)
+return|return
+operator|(
+name|XEVNT_PER
+operator|)
+return|;
 name|vp
 operator|->
 name|sig
@@ -9508,7 +9701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_bob2 - construct Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  */
+comment|/*  * crypto_bob2 - construct Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_ID	bad or missing group key  * XEVNT_ERR	protocol error  * XEVNT_PER	host certificate expired  */
 end_comment
 
 begin_function
@@ -9575,12 +9768,9 @@ decl_stmt|;
 comment|/* 	 * If the GQ parameters are not valid, something awful 	 * happened or we are being tormented. 	 */
 if|if
 condition|(
-operator|!
-operator|(
-name|crypto_flags
-operator|&
-name|CRYPTO_FLAG_GQ
-operator|)
+name|gqpar_pkey
+operator|==
+name|NULL
 condition|)
 block|{
 name|msyslog
@@ -9592,7 +9782,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ID
 operator|)
 return|;
 block|}
@@ -9655,7 +9845,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ERR
 operator|)
 return|;
 block|}
@@ -9890,7 +10080,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ERR
 operator|)
 return|;
 block|}
@@ -9944,6 +10134,25 @@ condition|)
 return|return
 operator|(
 name|XEVNT_OK
+operator|)
+return|;
+if|if
+condition|(
+name|tstamp
+operator|<
+name|cinfo
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|cinfo
+operator|->
+name|last
+condition|)
+return|return
+operator|(
+name|XEVNT_PER
 operator|)
 return|;
 name|vp
@@ -10027,7 +10236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_gq - verify Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_FSP	bad filestamp  * XEVNT_ID	bad or missing identity parameters  */
+comment|/*  * crypto_gq - verify Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_ID	bad or missing group keys  * XEVNT_ERR	protocol error  * XEVNT_FSP	bad filestamp  */
 end_comment
 
 begin_function
@@ -10099,7 +10308,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ID
 operator|)
 return|;
 block|}
@@ -10185,7 +10394,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ID
 operator|)
 return|;
 block|}
@@ -10261,7 +10470,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ERR
 operator|)
 return|;
 block|}
@@ -10399,7 +10608,7 @@ comment|/*  ********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * The Mu-Varadharajan (MV) cryptosystem was originally intended when  * servers broadcast messages to clients, but clients never send  * messages to servers. There is one encryption key for the server and a  * separate decryption key for each client. It operated something like a  * pay-per-view satellite broadcasting system where the session key is  * encrypted by the broadcaster and the decryption keys are held in a  * tamperproof set-top box.  *  * The MV parameters and private encryption key hide in a DSA cuckoo  * structure which uses the same parameters, but generated in a  * different way. The values are used in an encryption scheme similar to  * El Gamal cryptography and a polynomial formed from the expansion of  * product terms (x - x[j]), as described in Mu, Y., and V.  * Varadharajan: Robust and Secure Broadcasting, Proc. Indocrypt 2001,  * 223-231. The paper has significant errors and serious omissions.  *  * Let q be the product of n distinct primes s'[j] (j = 1...n), where  * each s'[j] has m significant bits. Let p be a prime p = 2 * q + 1, so  * that q and each s'[j] divide p - 1 and p has M = n * m + 1  * significant bits. The elements x mod q of Zq with the elements 2 and  * the primes removed form a field Zq* valid for polynomial arithetic.  * Let g be a generator of Zp; that is, gcd(g, p - 1) = 1 and g^q = 1  * mod p. We expect M to be in the 500-bit range and n relatively small,  * like 25, so the likelihood of a randomly generated element of x mod q  * of Zq colliding with a factor of p - 1 is very small and can be  * avoided. Associated with each s'[j] is an element s[j] such that s[j]  * s'[j] = s'[j] mod q. We find s[j] as the quotient (q + s'[j]) /  * s'[j]. These are the parameters of the scheme and they are expensive  * to compute.  *  * We set up an instance of the scheme as follows. A set of random  * values x[j] mod q (j = 1...n), are generated as the zeros of a  * polynomial of order n. The product terms (x - x[j]) are expanded to  * form coefficients a[i] mod q (i = 0...n) in powers of x. These are  * used as exponents of the generator g mod p to generate the private  * encryption key A. The pair (gbar, ghat) of public server keys and the  * pairs (xbar[j], xhat[j]) (j = 1...n) of private client keys are used  * to construct the decryption keys. The devil is in the details.  *  * The distinguishing characteristic of this scheme is the capability to  * revoke keys. Included in the calculation of E, gbar and ghat is the  * product s = prod(s'[j]) (j = 1...n) above. If the factor s'[j] is  * subsequently removed from the product and E, gbar and ghat  * recomputed, the jth client will no longer be able to compute E^-1 and  * thus unable to decrypt the block.  *  * How it works  *  * The scheme goes like this. Bob has the server values (p, A, q, gbar,  * ghat) and Alice the client values (p, xbar, xhat).  *  * Alice rolls new random challenge r (0< r< p) and sends to Bob in  * the MV request message. Bob rolls new random k (0< k< q), encrypts  * y = A^k mod p (a permutation) and sends (hash(y), gbar^k, ghat^k) to  * Alice.  *   * Alice receives the response and computes the decryption key (the  * inverse permutation) from previously obtained (xbar, xhat) and  * (gbar^k, ghat^k) in the message. She computes the inverse, which is  * unique by reasons explained in the ntp-keygen.c program sources. If  * the hash of this result matches hash(y), Alice knows that Bob has the  * group key b. The signed response binds this knowledge to Bob's  * private key and the public key previously received in his  * certificate.  *  * crypto_alice3 - construct Alice's challenge in MV scheme  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_ID	bad or missing identity parameters  */
+comment|/*  * The Mu-Varadharajan (MV) cryptosystem was originally intended when  * servers broadcast messages to clients, but clients never send  * messages to servers. There is one encryption key for the server and a  * separate decryption key for each client. It operated something like a  * pay-per-view satellite broadcasting system where the session key is  * encrypted by the broadcaster and the decryption keys are held in a  * tamperproof set-top box.  *  * The MV parameters and private encryption key hide in a DSA cuckoo  * structure which uses the same parameters, but generated in a  * different way. The values are used in an encryption scheme similar to  * El Gamal cryptography and a polynomial formed from the expansion of  * product terms (x - x[j]), as described in Mu, Y., and V.  * Varadharajan: Robust and Secure Broadcasting, Proc. Indocrypt 2001,  * 223-231. The paper has significant errors and serious omissions.  *  * Let q be the product of n distinct primes s'[j] (j = 1...n), where  * each s'[j] has m significant bits. Let p be a prime p = 2 * q + 1, so  * that q and each s'[j] divide p - 1 and p has M = n * m + 1  * significant bits. The elements x mod q of Zq with the elements 2 and  * the primes removed form a field Zq* valid for polynomial arithetic.  * Let g be a generator of Zp; that is, gcd(g, p - 1) = 1 and g^q = 1  * mod p. We expect M to be in the 500-bit range and n relatively small,  * like 25, so the likelihood of a randomly generated element of x mod q  * of Zq colliding with a factor of p - 1 is very small and can be  * avoided. Associated with each s'[j] is an element s[j] such that s[j]  * s'[j] = s'[j] mod q. We find s[j] as the quotient (q + s'[j]) /  * s'[j]. These are the parameters of the scheme and they are expensive  * to compute.  *  * We set up an instance of the scheme as follows. A set of random  * values x[j] mod q (j = 1...n), are generated as the zeros of a  * polynomial of order n. The product terms (x - x[j]) are expanded to  * form coefficients a[i] mod q (i = 0...n) in powers of x. These are  * used as exponents of the generator g mod p to generate the private  * encryption key A. The pair (gbar, ghat) of public server keys and the  * pairs (xbar[j], xhat[j]) (j = 1...n) of private client keys are used  * to construct the decryption keys. The devil is in the details.  *  * The distinguishing characteristic of this scheme is the capability to  * revoke keys. Included in the calculation of E, gbar and ghat is the  * product s = prod(s'[j]) (j = 1...n) above. If the factor s'[j] is  * subsequently removed from the product and E, gbar and ghat  * recomputed, the jth client will no longer be able to compute E^-1 and  * thus unable to decrypt the block.  *  * How it works  *  * The scheme goes like this. Bob has the server values (p, A, q, gbar,  * ghat) and Alice the client values (p, xbar, xhat).  *  * Alice rolls new random challenge r (0< r< p) and sends to Bob in  * the MV request message. Bob rolls new random k (0< k< q), encrypts  * y = A^k mod p (a permutation) and sends (hash(y), gbar^k, ghat^k) to  * Alice.  *   * Alice receives the response and computes the decryption key (the  * inverse permutation) from previously obtained (xbar, xhat) and  * (gbar^k, ghat^k) in the message. She computes the inverse, which is  * unique by reasons explained in the ntp-keygen.c program sources. If  * the hash of this result matches hash(y), Alice knows that Bob has the  * group key b. The signed response binds this knowledge to Bob's  * private key and the public key previously received in his  * certificate.  *  * crypto_alice3 - construct Alice's challenge in MV scheme  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_ID	bad or missing group key  * XEVNT_PER	host certificate expired  */
 end_comment
 
 begin_function
@@ -10645,6 +10854,25 @@ operator|(
 name|XEVNT_OK
 operator|)
 return|;
+if|if
+condition|(
+name|tstamp
+operator|<
+name|cinfo
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|cinfo
+operator|->
+name|last
+condition|)
+return|return
+operator|(
+name|XEVNT_PER
+operator|)
+return|;
 name|vp
 operator|->
 name|sig
@@ -10726,7 +10954,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_bob3 - construct Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  */
+comment|/*  * crypto_bob3 - construct Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_ERR	protocol error  * XEVNT_PER	host certificate expired  */
 end_comment
 
 begin_function
@@ -10790,12 +11018,9 @@ decl_stmt|;
 comment|/* 	 * If the MV parameters are not valid, something awful 	 * happened or we are being tormented. 	 */
 if|if
 condition|(
-operator|!
-operator|(
-name|crypto_flags
-operator|&
-name|CRYPTO_FLAG_MV
-operator|)
+name|mvpar_pkey
+operator|==
+name|NULL
 condition|)
 block|{
 name|msyslog
@@ -10807,7 +11032,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ID
 operator|)
 return|;
 block|}
@@ -10870,7 +11095,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ERR
 operator|)
 return|;
 block|}
@@ -11149,7 +11374,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ERR
 operator|)
 return|;
 block|}
@@ -11203,6 +11428,25 @@ condition|)
 return|return
 operator|(
 name|XEVNT_OK
+operator|)
+return|;
+if|if
+condition|(
+name|tstamp
+operator|<
+name|cinfo
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|cinfo
+operator|->
+name|last
+condition|)
+return|return
+operator|(
+name|XEVNT_PER
 operator|)
 return|;
 name|vp
@@ -11286,7 +11530,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_mv - verify Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_FSP	bad filestamp  * XEVNT_ID	bad or missing identity parameters  */
+comment|/*  * crypto_mv - verify Bob's response to Alice's challenge  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_ID	bad or missing group key  * XEVNT_ERR	protocol error  * XEVNT_FSP	bad filestamp  */
 end_comment
 
 begin_function
@@ -11361,7 +11605,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ID
 operator|)
 return|;
 block|}
@@ -11447,7 +11691,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ID
 operator|)
 return|;
 block|}
@@ -11528,7 +11772,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_PUB
+name|XEVNT_ERR
 operator|)
 return|;
 block|}
@@ -12353,7 +12597,7 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"cert_parse: invalid signature not verified %s"
+literal|"cert_parse: signature not verified %s"
 argument_list|,
 name|pathbuf
 argument_list|)
@@ -12397,11 +12641,21 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"cert_parse: expired %s"
+literal|"cert_parse: invalid certificate %s first %u last %u fstamp %u"
 argument_list|,
 name|ret
 operator|->
 name|subject
+argument_list|,
+name|ret
+operator|->
+name|first
+argument_list|,
+name|ret
+operator|->
+name|last
+argument_list|,
+name|fstamp
 argument_list|)
 expr_stmt|;
 name|cert_free
@@ -12499,7 +12753,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cert_sign - sign x509 certificate and update value structure.  *  * The certificate request is a copy of the client certificate, which  * includes the version number, subject name and public key of the  * client. The resulting certificate includes these values plus the  * serial number, issuer name and validity interval of the server. The  * validity interval extends from the current time to the same time one  * year hence. For NTP purposes, it is convenient to use the NTP seconds  * of the current time as the serial number.  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_CRT	bad or missing certificate  * XEVNT_VFY	certificate not verified  */
+comment|/*  * cert_sign - sign x509 certificate equest and update value structure.  *  * The certificate request includes a copy of the host certificate,  * which includes the version number, subject name and public key of the  * host. The resulting certificate includes these values plus the  * serial number, issuer name and valid interval of the server. The  * valid interval extends from the current time to the same time one  * year hence. This may extend the life of the signed certificate beyond  * that of the signer certificate.  *  * It is convenient to use the NTP seconds of the current time as the  * serial number. In the value structure the timestamp is the current  * time and the filestamp is taken from the extension field. Note this  * routine is called only when the client clock is synchronized to a  * proventic source, so timestamp comparisons are valid.  *  * The host certificate is valid from the time it was generated for a  * period of one year. A signed certificate is valid from the time of  * signature for a period of one year, but only the host certificate (or  * sign certificate if used) is actually used to encrypt and decrypt  * signatures. The signature trail is built from the client via the  * intermediate servers to the trusted server. Each signature on the  * trail must be valid at the time of signature, but it could happen  * that a signer certificate expire before the signed certificate, which  * remains valid until its expiration.   *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_CRT	bad or missing certificate  * XEVNT_VFY	certificate not verified  * XEVNT_PER	host certificate expired  */
 end_comment
 
 begin_function
@@ -12570,7 +12824,7 @@ name|i
 decl_stmt|,
 name|temp
 decl_stmt|;
-comment|/* 	 * Decode ASN.1 objects and construct certificate structure. 	 */
+comment|/* 	 * Decode ASN.1 objects and construct certificate structure. 	 * Make sure the system clock is synchronized to a proventic 	 * source. 	 */
 name|tstamp
 operator|=
 name|crypto_time
@@ -12585,6 +12839,25 @@ condition|)
 return|return
 operator|(
 name|XEVNT_TSP
+operator|)
+return|;
+if|if
+condition|(
+name|tstamp
+operator|<
+name|cinfo
+operator|->
+name|first
+operator|||
+name|tstamp
+operator|>
+name|cinfo
+operator|->
+name|last
+condition|)
+return|return
+operator|(
+name|XEVNT_PER
 operator|)
 return|;
 name|ptr
@@ -12683,7 +12956,7 @@ name|XEVNT_PUB
 operator|)
 return|;
 block|}
-comment|/* 	 * Generate X509 certificate signed by this server. For this 	 * prupose the issuer name is the server name. Also copy any 	 * extensions that might be present. 	 */
+comment|/* 	 * Generate X509 certificate signed by this server. For this 	 * purpose the issuer name is the server name. Also copy any 	 * extensions that might be present. 	 */
 name|cert
 operator|=
 name|X509_new
@@ -12754,8 +13027,7 @@ argument_list|,
 name|MBSTRING_ASC
 argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|sys_hostname
@@ -13145,6 +13417,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cert
+operator|==
+name|NULL
+operator|||
 operator|!
 name|X509_verify
 argument_list|(
@@ -13158,12 +13434,6 @@ operator|(
 name|XEVNT_VFY
 operator|)
 return|;
-name|cinf
-operator|->
-name|flags
-operator||=
-name|CERT_SIGN
-expr_stmt|;
 name|X509_free
 argument_list|(
 name|cert
@@ -13178,7 +13448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cert - install certificate in certificate list  *  * This routine encodes an extension field into a certificate info/value  * structure. It searches the certificate list for duplicates and  * expunges whichever is older. It then searches the list for other  * certificates that might be verified by this latest one. Finally, it  * inserts this certificate first on the list.  *  * Returns  * XEVNT_OK	success  * XEVNT_PER	certificate expired  * XEVNT_CRT	bad or missing certificate   */
+comment|/*  * cert - install certificate in certificate list  *  * This routine encodes an extension field into a certificate info/value  * structure. It searches the certificate list for duplicates and  * expunges whichever is older. It then searches the list for other  * certificates that might be verified by this latest one. Finally, it  * inserts this certificate first on the list.  *  * Returns  * XEVNT_OK	success  * XEVNT_FSP	bad or missing filestamp  * XEVNT_CRT	bad or missing certificate   */
 end_comment
 
 begin_function
@@ -13213,13 +13483,7 @@ modifier|*
 modifier|*
 name|zp
 decl_stmt|;
-name|int
-name|rval
-decl_stmt|;
-name|tstamp_t
-name|tstamp
-decl_stmt|;
-comment|/* 	 * Parse and validate the signed certificate. If valid, 	 * construct the info/value structure; otherwise, scamper home. 	 * Note this allows a certificate not-before time to be in the 	 * future, but not a not-after time to be in the past. 	 */
+comment|/* 	 * Parse and validate the signed certificate. If valid, 	 * construct the info/value structure; otherwise, scamper home. 	 */
 if|if
 condition|(
 operator|(
@@ -13258,36 +13522,7 @@ operator|(
 name|XEVNT_CRT
 operator|)
 return|;
-name|tstamp
-operator|=
-name|crypto_time
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|tstamp
-operator|>
-name|cp
-operator|->
-name|last
-condition|)
-block|{
-name|cert_free
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|XEVNT_PER
-operator|)
-return|;
-block|}
-comment|/* 	 * Scan certificate list looking for another certificate with 	 * the same subject and issuer. If another is found with the 	 * same or older filestamp, unlink it and return the goodies to 	 * the heap. If another is found with a later filetsamp, discard 	 * the new one and leave the building. 	 */
-name|rval
-operator|=
-name|XEVNT_OK
-expr_stmt|;
+comment|/* 	 * Scan certificate list looking for another certificate with 	 * the same subject and issuer. If another is found with the 	 * same or older filestamp, unlink it and return the goodies to 	 * the heap. If another is found with a later filestamp, discard 	 * the new one and leave the building. 	 * 	 * Make a note to study this issue again. An earlier certificate 	 * with a long lifetime might be overtaken by a later 	 * certificate with a short lifetime, thus invalidating the 	 * earlier signature. However, we gotta find a way to leak old 	 * stuff from the cache, so we do it anyway.  	 */
 name|yp
 operator|=
 name|cp
@@ -13387,7 +13622,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|XEVNT_TSP
+name|XEVNT_FSP
 operator|)
 return|;
 block|}
@@ -13411,7 +13646,7 @@ name|cinfo
 operator|=
 name|yp
 expr_stmt|;
-comment|/* 	 * Scan the certificate list to see if Y is signed by X. 	 */
+comment|/* 	 * Scan the certificate list to see if Y is signed by X. This is 	 * independent of order. 	 */
 for|for
 control|(
 name|yp
@@ -13446,16 +13681,7 @@ operator|->
 name|link
 control|)
 block|{
-if|if
-condition|(
-name|yp
-operator|->
-name|flags
-operator|&
-name|CERT_ERROR
-condition|)
-continue|continue;
-comment|/* 			 * If issuer Y matches subject X and signature Y 			 * is valid using public key X, then Y is valid. 			 */
+comment|/* 			 * If the issuer of certificate Y matches the 			 * subject of certificate X, verify the 			 * signature of Y using the public key of X. If 			 * so, X signs Y. 			 */
 if|if
 condition|(
 name|strcmp
@@ -13470,6 +13696,12 @@ name|subject
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|xp
+operator|->
+name|flags
+operator|&
+name|CERT_ERROR
 condition|)
 continue|continue;
 if|if
@@ -13494,13 +13726,33 @@ name|CERT_ERROR
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 			 * The signature Y is valid only if it begins 			 * during the lifetime of X; however, it is not 			 * necessarily an error, since some other 			 * certificate might sign Y.  			 */
+if|if
+condition|(
+name|yp
+operator|->
+name|first
+operator|<
 name|xp
+operator|->
+name|first
+operator|||
+name|yp
+operator|->
+name|first
+operator|>
+name|xp
+operator|->
+name|last
+condition|)
+continue|continue;
+name|yp
 operator|->
 name|flags
 operator||=
 name|CERT_SIGN
 expr_stmt|;
-comment|/* 			 * If X is trusted, then Y is trusted. Note that 			 * we might stumble over a self signed 			 * certificate that is not trusted, at least 			 * temporarily. This can happen when a dude 			 * first comes up, but has not synchronized the 			 * clock and had its certificate signed by its 			 * server. In case of broken certificate trail, 			 * this might result in a loop that could 			 * persist until timeout. 			 */
+comment|/* 			 * If X is trusted, then Y is trusted. Note that 			 * we might stumble over a self-signed 			 * certificate that is not trusted, at least 			 * temporarily. This can happen when a dude 			 * first comes up, but has not synchronized the 			 * clock and had its certificate signed by its 			 * server. In case of broken certificate trail, 			 * this might result in a loop that could 			 * persist until timeout. 			 */
 if|if
 condition|(
 operator|!
@@ -13509,7 +13761,11 @@ name|xp
 operator|->
 name|flags
 operator|&
+operator|(
 name|CERT_TRUST
+operator||
+name|CERT_VALID
+operator|)
 operator|)
 condition|)
 continue|continue;
@@ -13517,7 +13773,7 @@ name|yp
 operator|->
 name|flags
 operator||=
-name|CERT_TRUST
+name|CERT_VALID
 expr_stmt|;
 comment|/* 			 * If subject Y matches the server subject name, 			 * then Y has completed the certificate trail. 			 * Save the group key and light the valid bit. 			 */
 if|if
@@ -13614,7 +13870,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|rval
+name|XEVNT_OK
 operator|)
 return|;
 block|}
@@ -13850,6 +14106,14 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -13881,6 +14145,14 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -13909,6 +14181,14 @@ argument_list|,
 literal|"crypto_key: invalid timestamp %s\n"
 argument_list|,
 name|filename
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|str
 argument_list|)
 expr_stmt|;
 return|return
@@ -14229,6 +14509,14 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -14260,6 +14548,14 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -14289,6 +14585,14 @@ argument_list|,
 literal|"crypto_cert: invalid filestamp %s\n"
 argument_list|,
 name|filename
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|str
 argument_list|)
 expr_stmt|;
 return|return
@@ -14334,6 +14638,14 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -14376,6 +14688,14 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -14402,6 +14722,14 @@ expr_stmt|;
 name|free
 argument_list|(
 name|data
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|str
 argument_list|)
 expr_stmt|;
 if|if
@@ -14512,14 +14840,14 @@ name|NTP_MAXSTRLEN
 index|]
 decl_stmt|;
 comment|/* file line buffer */
-name|u_int
+name|u_int32
 name|leapsec
 index|[
 name|MAX_LEAP
 index|]
 decl_stmt|;
 comment|/* NTP time at leaps */
-name|u_int
+name|int
 name|offset
 decl_stmt|;
 comment|/* offset at leap (s) */
@@ -14551,34 +14879,21 @@ comment|/* filestamp */
 name|u_int
 name|len
 decl_stmt|;
-name|char
+name|u_int32
 modifier|*
 name|ptr
+decl_stmt|;
+name|char
+modifier|*
+name|dp
 decl_stmt|;
 name|int
 name|rval
 decl_stmt|,
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KERNEL_PLL
-if|#
-directive|if
-name|NTP_API
-operator|>
-literal|3
-name|struct
-name|timex
-name|ntv
-decl_stmt|;
-comment|/* kernel interface structure */
-endif|#
-directive|endif
-comment|/* NTP_API */
-endif|#
-directive|endif
-comment|/* KERNEL_PLL */
 comment|/* 	 * Open the file and discard comment lines. If the first 	 * character of the file name is not '/', prepend the keys 	 * directory string. If the file is not found, not to worry; it 	 * can be retrieved over the net. But, if it is found with 	 * errors, we crash and burn. 	 */
 if|if
 condition|(
@@ -14652,7 +14967,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|ptr
+name|dp
 operator|=
 name|strrchr
 argument_list|(
@@ -14664,7 +14979,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ptr
+name|dp
 operator|=
 name|strrchr
 argument_list|(
@@ -14676,14 +14991,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ptr
+name|dp
 operator|!=
 name|NULL
 condition|)
 name|sscanf
 argument_list|(
 operator|++
-name|ptr
+name|dp
 argument_list|,
 literal|"%u"
 argument_list|,
@@ -14717,7 +15032,7 @@ operator|<
 name|MAX_LEAP
 condition|)
 block|{
-name|ptr
+name|dp
 operator|=
 name|fgets
 argument_list|(
@@ -14732,7 +15047,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ptr
+name|dp
 operator|==
 name|NULL
 condition|)
@@ -14761,7 +15076,7 @@ name|sscanf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%u %u"
+literal|"%u %d"
 argument_list|,
 operator|&
 name|leapsec
@@ -14780,18 +15095,11 @@ if|if
 condition|(
 name|i
 operator|!=
-call|(
-name|int
-call|)
-argument_list|(
 name|offset
 operator|-
 name|TAI_1972
-argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 name|i
 operator|++
 expr_stmt|;
@@ -14803,7 +15111,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ptr
+name|dp
 operator|!=
 name|NULL
 condition|)
@@ -14826,12 +15134,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The extension field table entries consists of the NTP seconds 	 * of leap insertion in reverse order, so that the most recent 	 * insertion is the first entry in the table. 	 */
+comment|/* 	 * The extension field table entries consists of the NTP seconds 	 * of leap insertion in network byte order. 	 */
 name|len
 operator|=
 name|i
 operator|*
-literal|4
+sizeof|sizeof
+argument_list|(
+name|u_int32
+argument_list|)
 expr_stmt|;
 name|tai_leap
 operator|.
@@ -14854,120 +15165,57 @@ operator|.
 name|ptr
 operator|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|ptr
 expr_stmt|;
 for|for
 control|(
-init|;
-name|i
-operator|>=
+name|j
+operator|=
 literal|0
-condition|;
+init|;
+name|j
+operator|<
 name|i
-operator|--
+condition|;
+name|j
+operator|++
 control|)
-block|{
 operator|*
 name|ptr
 operator|++
 operator|=
-operator|(
-name|char
-operator|)
 name|htonl
 argument_list|(
 name|leapsec
 index|[
-name|i
+name|j
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|crypto_flags
 operator||=
 name|CRYPTO_FLAG_TAI
 expr_stmt|;
-name|sys_tai
-operator|=
-name|len
-operator|/
-literal|4
-operator|+
-name|TAI_1972
-operator|-
-literal|1
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KERNEL_PLL
-if|#
-directive|if
-name|NTP_API
-operator|>
-literal|3
-name|ntv
-operator|.
-name|modes
-operator|=
-name|MOD_TAI
-expr_stmt|;
-name|ntv
-operator|.
-name|constant
-operator|=
-name|sys_tai
-expr_stmt|;
-if|if
-condition|(
-name|ntp_adjtime
-argument_list|(
-operator|&
-name|ntv
-argument_list|)
-operator|==
-name|TIME_ERROR
-condition|)
-name|msyslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"crypto_tai: kernel TAI update failed"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* NTP_API */
-endif|#
-directive|endif
-comment|/* KERNEL_PLL */
 name|sprintf
 argument_list|(
 name|statstr
 argument_list|,
-literal|"%s link %d fs %u offset %u"
+literal|"%s fs %u leap %u len %u"
 argument_list|,
 name|cp
 argument_list|,
-name|rval
-argument_list|,
 name|fstamp
 argument_list|,
-name|ntohl
-argument_list|(
-name|tai_leap
-operator|.
-name|vallen
-argument_list|)
-operator|/
-literal|4
-operator|+
-name|TAI_1972
-operator|-
-literal|1
+name|leapsec
+index|[
+operator|--
+name|j
+index|]
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 name|record_crypto_stats
@@ -15455,8 +15703,7 @@ operator|.
 name|ptr
 operator|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|sys_hostname
@@ -15879,7 +16126,7 @@ name|cinfo
 operator|->
 name|flags
 operator|&
-name|CERT_PRIV
+name|CERT_TRUST
 operator|&&
 name|strcmp
 argument_list|(
@@ -16188,6 +16435,55 @@ name|mvpar_file
 argument_list|,
 name|cp
 argument_list|)
+expr_stmt|;
+break|break;
+comment|/* 	 * Set identity scheme. 	 */
+case|case
+name|CRYPTO_CONF_IDENT
+case|:
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"iff"
+argument_list|)
+condition|)
+name|ident_scheme
+operator||=
+name|CRYPTO_FLAG_IFF
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"gq"
+argument_list|)
+condition|)
+name|ident_scheme
+operator||=
+name|CRYPTO_FLAG_GQ
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"mv"
+argument_list|)
+condition|)
+name|ident_scheme
+operator||=
+name|CRYPTO_FLAG_MV
 expr_stmt|;
 break|break;
 comment|/* 	 * Set certificate file name. 	 */

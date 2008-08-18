@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM  * DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL  * INTERNET SOFTWARE CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING  * FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: netaddr.h,v 1.21 2002/04/03 06:38:35 marka Exp $ */
+comment|/* $Id: netaddr.h,v 1.18.12.7 2004/03/08 09:04:52 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -38,12 +38,6 @@ directive|include
 file|<isc/types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ntp_rfc2553.h"
-end_include
-
 begin_macro
 name|ISC_LANG_BEGINDECLS
 end_macro
@@ -69,6 +63,9 @@ decl_stmt|;
 block|}
 name|type
 union|;
+name|isc_uint32_t
+name|zone
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -244,6 +241,32 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|isc_netaddr_setzone
+parameter_list|(
+name|isc_netaddr_t
+modifier|*
+name|netaddr
+parameter_list|,
+name|isc_uint32_t
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_uint32_t
+name|isc_netaddr_getzone
+parameter_list|(
+specifier|const
+name|isc_netaddr_t
+modifier|*
+name|netaddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|isc_netaddr_any
 parameter_list|(
 name|isc_netaddr_t
@@ -285,6 +308,21 @@ end_function_decl
 
 begin_comment
 comment|/*  * Returns ISC_TRUE if the address is a multicast address.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|isc_netaddr_isexperimental
+parameter_list|(
+name|isc_netaddr_t
+modifier|*
+name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Returns ISC_TRUE if the address is a experimental (CLASS E) address.  */
 end_comment
 
 begin_function_decl

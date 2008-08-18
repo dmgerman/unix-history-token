@@ -1878,14 +1878,14 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|bits
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|bits
 condition|)
 block|{
+name|bits
+operator|++
+expr_stmt|;
 operator|*
 name|cp
 operator|++
@@ -2044,7 +2044,7 @@ operator|>=
 literal|0
 operator|&&
 name|s
-operator|<=
+operator|<
 sizeof|sizeof
 argument_list|(
 name|timex_states

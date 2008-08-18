@@ -853,43 +853,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|CS_CLOCK
+name|CS_ERROR
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_PROCESSOR
+name|CS_CLOCK
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_SYSTEM
+name|CS_PROCESSOR
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_VERSION
+name|CS_SYSTEM
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_STABIL
+name|CS_VERSION
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_VARLIST
+name|CS_STABIL
 value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|CS_VARLIST
+value|20
 end_define
 
 begin_ifdef
@@ -902,63 +909,77 @@ begin_define
 define|#
 directive|define
 name|CS_FLAGS
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|CS_HOST
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_PUBLIC
+name|CS_HOST
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_CERTIF
+name|CS_PUBLIC
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_REVTIME
+name|CS_CERTIF
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_LEAPTAB
+name|CS_REVTIME
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_TAI
+name|CS_LEAPTAB
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|CS_DIGEST
+name|CS_TAI
 value|27
 end_define
 
 begin_define
 define|#
 directive|define
+name|CS_DIGEST
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|CS_IDENT
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|CS_REVOKE
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
 name|CS_MAXCODE
-value|CS_DIGEST
+value|CS_REVOKE
 end_define
 
 begin_else
@@ -1136,7 +1157,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CP_VALID
+name|CP_UNREACH
 value|22
 end_define
 
@@ -1241,15 +1262,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|CP_RANK
-value|37
-end_define
-
-begin_define
-define|#
-directive|define
 name|CP_VARLIST
-value|38
+value|37
 end_define
 
 begin_ifdef
@@ -1262,13 +1276,20 @@ begin_define
 define|#
 directive|define
 name|CP_FLAGS
-value|39
+value|38
 end_define
 
 begin_define
 define|#
 directive|define
 name|CP_HOST
+value|39
+end_define
+
+begin_define
+define|#
+directive|define
+name|CP_VALID
 value|40
 end_define
 
@@ -1487,6 +1508,15 @@ comment|/* version number of trapper */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ctl_trap
+name|ctl_trap
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Flag bits  */

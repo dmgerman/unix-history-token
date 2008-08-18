@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|LOCKNAME
-value|"/etc/msntp.pid"
+value|"/etc/sntp.pid"
 end_define
 
 begin_comment
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|SAVENAME
-value|"/etc/msntp.state"
+value|"/etc/sntp.state"
 end_define
 
 begin_comment
@@ -123,34 +123,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|op_server
+name|op_listen
 value|2
 end_define
 
 begin_comment
-comment|/* Behave as a response server */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|op_listen
-value|3
-end_define
-
-begin_comment
 comment|/* Behave as a listening client */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|op_broadcast
-value|4
-end_define
-
-begin_comment
-comment|/* Behave as a broadcast server */
 end_comment
 
 begin_decl_stmt

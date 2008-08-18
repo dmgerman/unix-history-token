@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM  * DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL  * INTERNET SOFTWARE CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING  * FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: net.h,v 1.34 2002/04/03 06:38:38 marka Exp $ */
+comment|/* $Id: net.h,v 1.31.2.2.10.8 2004/04/29 01:31:23 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -53,6 +53,12 @@ end_include
 begin_comment
 comment|/* Contractual promise. */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
 
 begin_include
 include|#
@@ -755,6 +761,17 @@ define|\
 value|(((isc_uint32_t)(i)& ISC__IPADDR(0xf0000000)) \ 		 == ISC__IPADDR(0xe0000000))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISC_IPADDR_ISEXPERIMENTAL
+parameter_list|(
+name|i
+parameter_list|)
+define|\
+value|(((isc_uint32_t)(i)& ISC__IPADDR(0xf0000000)) \ 		 == ISC__IPADDR(0xf0000000))
+end_define
+
 begin_comment
 comment|/***  *** Functions.  ***/
 end_comment
@@ -770,7 +787,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Check if the system's kernel supports IPv4.  *  * Returns:  *  *	ISC_R_SUCCESS		IPv4 is supported.  *	ISC_R_NOTFOUND		IPv4 is not supported.  *	ISC_R_UNEXPECTED  */
+comment|/*  * Check if the system's kernel supports IPv4.  *  * Returns:  *  *	ISC_R_SUCCESS		IPv4 is supported.  *	ISC_R_NOTFOUND		IPv4 is not supported.  *	ISC_R_DISABLED		IPv4 is disabled.  *	ISC_R_UNEXPECTED  */
 end_comment
 
 begin_function_decl
@@ -783,8 +800,76 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Check if the system's kernel supports IPv6.  *  * Returns:  *  *	ISC_R_SUCCESS		IPv6 is supported.  *	ISC_R_NOTFOUND		IPv6 is not supported.  *	ISC_R_UNEXPECTED  */
+comment|/*  * Check if the system's kernel supports IPv6.  *  * Returns:  *  *	ISC_R_SUCCESS		IPv6 is supported.  *	ISC_R_NOTFOUND		IPv6 is not supported.  *	ISC_R_DISABLED		IPv6 is disabled.  *	ISC_R_UNEXPECTED  */
 end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_net_probe_ipv6only
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Check if the system's kernel supports the IPV6_V6ONLY socket option.  *  * Returns:  *  *	ISC_R_SUCCESS		the option is supported for both TCP and UDP.  *	ISC_R_NOTFOUND		IPv6 itself or the option is not supported.  *	ISC_R_UNEXPECTED  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_net_probe_ipv6pktinfo
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Check if the system's kernel supports the IPV6_(RECV)PKTINFO socket option  * for UDP sockets.  *  * Returns:  *  *	ISC_R_SUCCESS		the option is supported.  *	ISC_R_NOTFOUND		IPv6 itself or the option is not supported.  *	ISC_R_UNEXPECTED  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc_net_disableipv4
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isc_net_disableipv6
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isc_net_enableipv4
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isc_net_enableipv6
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_NEEDNTOP
+end_ifdef
 
 begin_function_decl
 specifier|const
@@ -810,12 +895,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISC_PLATFORM_NEEDNTOP
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -827,6 +906,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_NEEDPTON
+end_ifdef
 
 begin_function_decl
 name|int
@@ -847,12 +932,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISC_PLATFORM_NEEDPTON
-end_ifdef
-
 begin_undef
 undef|#
 directive|undef
@@ -871,6 +950,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_NEEDATON
+end_ifdef
+
 begin_function_decl
 name|int
 name|isc_net_aton
@@ -887,12 +972,6 @@ name|addr
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISC_PLATFORM_NEEDATON
-end_ifdef
 
 begin_define
 define|#

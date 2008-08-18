@@ -71,53 +71,19 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_TIMEPPS_H
+name|HAVE_PPSAPI
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<timepps.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* HAVE_TIMEPPS_H */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TIMEPPS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/timepps.h>
+file|"ppsapi_timepps.h"
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* HAVE_SYS_TIMEPPS_H */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_TIMEPPS_H */
-end_comment
 
 begin_comment
 comment|/*  * Definitions  */

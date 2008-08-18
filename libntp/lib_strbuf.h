@@ -17,7 +17,7 @@ begin_define
 define|#
 directive|define
 name|LIB_NUMBUFS
-value|20
+value|200
 end_define
 
 begin_define
@@ -39,7 +39,7 @@ parameter_list|(
 name|buf
 parameter_list|)
 define|\
-value|do { \ 		if (!lib_inited) \ 			init_lib(); \ 		buf =&lib_stringbuf[lib_nextbuf][0]; \ 		if (++lib_nextbuf>= LIB_NUMBUFS) \ 			lib_nextbuf = 0; \ 	} while (0)
+value|do { \ 		if (!lib_inited) \ 			init_lib(); \ 		buf =&lib_stringbuf[lib_nextbuf][0]; \ 		if (++lib_nextbuf>= LIB_NUMBUFS) \ 			lib_nextbuf = 0; \ 		memset(buf, 0, LIB_BUFLENGTH); \ 	} while (0)
 end_define
 
 begin_decl_stmt
