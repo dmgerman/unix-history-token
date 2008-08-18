@@ -1223,7 +1223,7 @@ literal|3
 case|:
 name|c
 operator|->
-name|physical_maximum
+name|physical_minimum
 operator|=
 name|dval
 expr_stmt|;
