@@ -1200,6 +1200,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|PT_UPDATES_FLUSH
+parameter_list|()
+end_define
+
 begin_endif
 endif|#
 directive|endif
