@@ -720,7 +720,7 @@ name|tcbinfo
 argument_list|)
 expr_stmt|;
 comment|/* tcp_tw_2msl_reset(). */
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -750,7 +750,7 @@ name|tp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -800,7 +800,7 @@ name|tp
 operator|!=
 name|NULL
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1050,7 +1050,7 @@ operator|&=
 operator|~
 name|INP_SOCKREF
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1077,7 +1077,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1197,7 +1197,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1588,7 +1588,7 @@ name|TH_ACK
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1600,7 +1600,7 @@ operator|)
 return|;
 name|drop
 label|:
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1684,7 +1684,7 @@ name|tcbinfo
 argument_list|)
 expr_stmt|;
 comment|/* tcp_tw_2msl_stop(). */
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1741,7 +1741,7 @@ operator|&=
 operator|~
 name|INP_SOCKREF
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1783,7 +1783,7 @@ block|}
 else|else
 block|{
 comment|/* 			 * If we don't own the only reference, the socket and 			 * inpcb need to be left around to be handled by 			 * tcp_usr_detach() later. 			 */
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1922,7 +1922,7 @@ name|inc_isipv6
 decl_stmt|;
 endif|#
 directive|endif
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -2448,7 +2448,7 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tw
 operator|->
@@ -2575,7 +2575,7 @@ name|ticks
 operator|)
 condition|)
 break|break;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|tw
 operator|->

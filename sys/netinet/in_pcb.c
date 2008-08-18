@@ -1092,7 +1092,7 @@ name|IN6P_AUTOFLOWLABEL
 expr_stmt|;
 endif|#
 directive|endif
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1176,7 +1176,7 @@ operator|->
 name|inp_pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1403,7 +1403,8 @@ decl_stmt|;
 name|int
 name|dorandom
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+comment|/* 	 * Because no actual state changes occur here, a global write lock on 	 * the pcbinfo isn't required. 	 */
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|pcbinfo
 argument_list|)
@@ -2494,7 +2495,7 @@ operator|->
 name|inp_pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -2761,7 +2762,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+comment|/* 	 * Because a global state change doesn't actually occur here, a read 	 * lock is sufficient. 	 */
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|inp
 operator|->
@@ -3064,7 +3066,7 @@ operator|.
 name|inc_fibnum
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If we found a route, use the address corresponding to 		 * the outgoing interface. 		 *  		 * Otherwise assume faddr is reachable on a directly connected 		 * network and try to find a corresponding interface to take 		 * the source address from. 		 */
+comment|/* 		 * If we found a route, use the address corresponding to 		 * the outgoing interface. 		 * 		 * Otherwise assume faddr is reachable on a directly connected 		 * network and try to find a corresponding interface to take 		 * the source address from. 		 */
 if|if
 condition|(
 name|ia
@@ -3370,7 +3372,7 @@ operator|->
 name|inp_pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -3478,7 +3480,7 @@ argument_list|(
 name|ipi
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -3555,7 +3557,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3593,7 +3595,7 @@ operator|->
 name|inp_pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -3801,7 +3803,7 @@ literal|"in_getsockaddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3818,7 +3820,7 @@ name|inp
 operator|->
 name|inp_laddr
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3886,7 +3888,7 @@ literal|"in_getpeeraddr: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3903,7 +3905,7 @@ name|inp
 operator|->
 name|inp_faddr
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3981,7 +3983,7 @@ argument_list|,
 argument|inp_temp
 argument_list|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4002,7 +4004,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4030,7 +4032,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4049,7 +4051,7 @@ argument_list|,
 name|errno
 argument_list|)
 condition|)
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4107,7 +4109,7 @@ argument_list|,
 argument|inp_list
 argument_list|)
 block|{
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4228,7 +4230,7 @@ operator|-=
 name|gap
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4307,7 +4309,7 @@ directive|endif
 name|int
 name|wildcard
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|pcbinfo
 argument_list|)
@@ -4689,7 +4691,7 @@ name|lport
 init|=
 name|lport_arg
 decl_stmt|;
-name|INP_INFO_RLOCK_ASSERT
+name|INP_INFO_LOCK_ASSERT
 argument_list|(
 name|pcbinfo
 argument_list|)
@@ -5029,7 +5031,7 @@ argument_list|(
 name|pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -5273,7 +5275,7 @@ argument_list|(
 name|pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -5385,7 +5387,7 @@ argument_list|(
 name|pcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -5513,7 +5515,7 @@ literal|"in_pcbsosetlabel: so->so_pcb == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -5535,7 +5537,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)

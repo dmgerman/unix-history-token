@@ -625,23 +625,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|sockaddr_in
-name|ripsrc
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|ripsrc
-argument_list|)
-block|,
-name|AF_INET
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -661,6 +644,11 @@ name|struct
 name|mbuf
 modifier|*
 name|n
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+name|ripsrc
 parameter_list|)
 block|{
 name|int
@@ -668,7 +656,7 @@ name|policyfail
 init|=
 literal|0
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_RLOCK_ASSERT
 argument_list|(
 name|last
 argument_list|)
@@ -817,7 +805,6 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|&
 name|ripsrc
 argument_list|,
 name|n
@@ -917,11 +904,35 @@ decl_stmt|,
 modifier|*
 name|last
 decl_stmt|;
-name|INP_INFO_RLOCK
+name|struct
+name|sockaddr_in
+name|ripsrc
+decl_stmt|;
+name|bzero
 argument_list|(
 operator|&
-name|ripcbinfo
+name|ripsrc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ripsrc
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ripsrc
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ripsrc
+argument_list|)
+expr_stmt|;
+name|ripsrc
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
 expr_stmt|;
 name|ripsrc
 operator|.
@@ -935,6 +946,12 @@ name|last
 operator|=
 name|NULL
 expr_stmt|;
+name|INP_INFO_RLOCK
+argument_list|(
+operator|&
+name|ripcbinfo
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|inp
@@ -944,7 +961,7 @@ argument_list|,
 argument|inp_list
 argument_list|)
 block|{
-name|INP_LOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -964,7 +981,7 @@ condition|)
 block|{
 name|docontinue
 label|:
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1111,10 +1128,13 @@ argument_list|,
 name|ip
 argument_list|,
 name|n
+argument_list|,
+operator|&
+name|ripsrc
 argument_list|)
 expr_stmt|;
 comment|/* XXX count dropped packet */
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1141,6 +1161,9 @@ argument_list|,
 name|ip
 argument_list|,
 name|m
+argument_list|,
+operator|&
+name|ripsrc
 argument_list|)
 operator|!=
 literal|0
@@ -1150,7 +1173,7 @@ operator|.
 name|ips_delivered
 operator|--
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1308,7 +1331,7 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-name|INP_LOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1450,7 +1473,7 @@ name|EMSGSIZE
 operator|)
 return|;
 block|}
-name|INP_LOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1499,7 +1522,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1568,7 +1591,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -1653,7 +1676,7 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2640,7 +2663,7 @@ name|inp_ip_ttl
 operator|=
 name|ip_defttl
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2706,7 +2729,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2775,7 +2798,7 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -2848,7 +2871,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2860,7 +2883,7 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2914,7 +2937,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2926,7 +2949,7 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2995,7 +3018,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3007,7 +3030,7 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3208,7 +3231,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3221,7 +3244,7 @@ name|addr
 operator|->
 name|sin_addr
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3343,7 +3366,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3361,7 +3384,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3412,7 +3435,7 @@ literal|"rip_shutdown: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3422,7 +3445,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3792,7 +3815,7 @@ name|inp_list
 argument_list|)
 control|)
 block|{
-name|INP_LOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3831,7 +3854,7 @@ operator|=
 name|inp
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3872,7 +3895,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|INP_LOCK
+name|INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3941,7 +3964,7 @@ operator|.
 name|xi_socket
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3961,7 +3984,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|inp
 argument_list|)

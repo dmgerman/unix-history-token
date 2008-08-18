@@ -511,7 +511,7 @@ argument_list|,
 argument|inp_list
 argument_list|)
 block|{
-name|INP_LOCK
+name|INP_RLOCK
 argument_list|(
 name|in6p
 argument_list|)
@@ -531,7 +531,7 @@ condition|)
 block|{
 name|docontinue
 label|:
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|in6p
 argument_list|)
@@ -810,7 +810,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -853,7 +853,7 @@ name|ip6s_delivered
 operator|--
 expr_stmt|;
 comment|/* do not inject data into pcb */
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -958,7 +958,7 @@ operator|->
 name|in6p_socket
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_RUNLOCK
 argument_list|(
 name|last
 argument_list|)
@@ -1453,7 +1453,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|in6p
 argument_list|)
@@ -2095,7 +2095,7 @@ name|control
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|in6p
 argument_list|)
@@ -2535,7 +2535,7 @@ operator|->
 name|in6p_icmp6filt
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2598,7 +2598,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2974,7 +2974,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -2987,7 +2987,7 @@ name|addr
 operator|->
 name|sin6_addr
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3160,7 +3160,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3198,7 +3198,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3245,7 +3245,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3282,7 +3282,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3333,7 +3333,7 @@ literal|"rip6_shutdown: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3343,7 +3343,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)

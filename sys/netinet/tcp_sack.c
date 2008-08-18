@@ -472,7 +472,7 @@ name|num_saved
 decl_stmt|,
 name|i
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -760,7 +760,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -1208,7 +1208,7 @@ name|j
 decl_stmt|,
 name|num_sack_blks
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -2061,7 +2061,7 @@ name|sackhole
 modifier|*
 name|q
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -2154,7 +2154,7 @@ name|num_segs
 init|=
 literal|1
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -2275,7 +2275,7 @@ comment|/*  * Debug version of tcp_sack_output() that walks the scoreboard.  Use
 end_comment
 
 begin_comment
-unit|static struct sackhole * tcp_sack_output_debug(struct tcpcb *tp, int *sack_bytes_rexmt) { 	struct sackhole *p;  	INP_LOCK_ASSERT(tp->t_inpcb); 	*sack_bytes_rexmt = 0; 	TAILQ_FOREACH(p,&tp->snd_holes, scblink) { 		if (SEQ_LT(p->rxmit, p->end)) { 			if (SEQ_LT(p->rxmit, tp->snd_una)) {
+unit|static struct sackhole * tcp_sack_output_debug(struct tcpcb *tp, int *sack_bytes_rexmt) { 	struct sackhole *p;  	INP_WLOCK_ASSERT(tp->t_inpcb); 	*sack_bytes_rexmt = 0; 	TAILQ_FOREACH(p,&tp->snd_holes, scblink) { 		if (SEQ_LT(p->rxmit, p->end)) { 			if (SEQ_LT(p->rxmit, tp->snd_una)) {
 comment|/* old SACK hole */
 end_comment
 
@@ -2312,7 +2312,7 @@ name|hole
 init|=
 name|NULL
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->
@@ -2437,7 +2437,7 @@ operator|->
 name|snd_holes
 argument_list|)
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->

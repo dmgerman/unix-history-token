@@ -36,8 +36,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -271,6 +294,10 @@ name|icmp6_filter
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*-  * struct inpcb captures the network layer state for TCP, UDP, and raw IPv4  * and IPv6 sockets.  In the case of TCP, further per-connection state is  * hung off of inp_ppcb most of the time.  Almost all fields of struct inpcb  * are static after creation or protected by a per-inpcb rwlock, inp_lock.  A  * few fields also require the global pcbinfo lock for the inpcb to be held,  * when modified, such as the global connection lists and hashes, as well as  * binding information (which affects which hash a connection is on).  This  * model means that connections can be looked up without holding the  * per-connection lock, which is important for performance when attempting to  * find the connection for a packet given its IP and port tuple.  Writing to  * these fields that write locks be held on both the inpcb and global locks.  *  * Key:  * (c) - Constant after initialization  * (i) - Protected by the inpcb lock  * (p) - Protected by the pcbinfo lock for the inpcb  * (s) - Protected by another subsystem's locks  * (x) - Undefined locking  *  * A few other notes:  *  * When a read lock is held, stability of the field is guaranteed; to write  * to a field, a write lock must generally be held.  *  * netinet/netinet6-layer code should not assume that the inp_socket pointer  * is safe to dereference without inp_lock being held, even for protocols  * other than TCP (where the inpcb persists during TIMEWAIT even after the  * socket has been freed), or there may be close(2)-related races.  *  * The inp_vflag field is overloaded, and would otherwise ideally be (c).  */
+end_comment
+
 begin_struct
 struct|struct
 name|inpcb
@@ -281,42 +308,43 @@ argument|inpcb
 argument_list|)
 name|inp_hash
 expr_stmt|;
-comment|/* hash list */
+comment|/* (i/p) hash list */
 name|LIST_ENTRY
 argument_list|(
 argument|inpcb
 argument_list|)
 name|inp_list
 expr_stmt|;
-comment|/* list for all PCBs of this proto */
+comment|/* (i/p) list for all PCBs for proto */
 name|void
 modifier|*
 name|inp_ppcb
 decl_stmt|;
-comment|/* pointer to per-protocol pcb */
+comment|/* (i) pointer to per-protocol pcb */
 name|struct
 name|inpcbinfo
 modifier|*
 name|inp_pcbinfo
 decl_stmt|;
-comment|/* PCB list info */
+comment|/* (c) PCB list info */
 name|struct
 name|socket
 modifier|*
 name|inp_socket
 decl_stmt|;
-comment|/* back pointer to socket */
+comment|/* (i)  back pointer to socket */
 name|u_int32_t
 name|inp_flow
 decl_stmt|;
+comment|/* (i) IPv6 flow information */
 name|int
 name|inp_flags
 decl_stmt|;
-comment|/* generic IP/datagram flags */
+comment|/* (i) generic IP/datagram flags */
 name|u_char
 name|inp_vflag
 decl_stmt|;
-comment|/* IP version flag (v4/v6) */
+comment|/* (i) IP version flag (v4/v6) */
 define|#
 directive|define
 name|INP_IPV4
@@ -353,19 +381,19 @@ comment|/* strong socket reference */
 name|u_char
 name|inp_ip_ttl
 decl_stmt|;
-comment|/* time to live proto */
+comment|/* (i) time to live proto */
 name|u_char
 name|inp_ip_p
 decl_stmt|;
-comment|/* protocol proto */
+comment|/* (c) protocol proto */
 name|u_char
 name|inp_ip_minttl
 decl_stmt|;
-comment|/* minimum TTL or drop */
+comment|/* (i) minimum TTL or drop */
 name|uint32_t
 name|inp_ispare1
 decl_stmt|;
-comment|/* connection id / queue id */
+comment|/* (x) connection id / queue id */
 name|void
 modifier|*
 name|inp_pspare
@@ -373,44 +401,44 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* rtentry / general use */
+comment|/* (x) rtentry / general use */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
 name|inp_inc
 decl_stmt|;
-comment|/* list for this PCB's local port */
+comment|/* (i/p) list for PCB's local port */
 name|struct
 name|label
 modifier|*
 name|inp_label
 decl_stmt|;
-comment|/* MAC label */
+comment|/* (i) MAC label */
 name|struct
 name|inpcbpolicy
 modifier|*
 name|inp_sp
 decl_stmt|;
-comment|/* for IPSEC */
+comment|/* (s) for IPSEC */
 comment|/* Protocol-dependent part; options. */
 struct|struct
 block|{
 name|u_char
 name|inp4_ip_tos
 decl_stmt|;
-comment|/* type of service proto */
+comment|/* (i) type of service proto */
 name|struct
 name|mbuf
 modifier|*
 name|inp4_options
 decl_stmt|;
-comment|/* IP options */
+comment|/* (i) IP options */
 name|struct
 name|ip_moptions
 modifier|*
 name|inp4_moptions
 decl_stmt|;
-comment|/* IP multicast options */
+comment|/* (i) IP multicast options */
 block|}
 name|inp_depend4
 struct|;
@@ -444,31 +472,31 @@ name|inp_moptions
 value|inp_depend4.inp4_moptions
 struct|struct
 block|{
-comment|/* IP options */
+comment|/* (i) IP options */
 name|struct
 name|mbuf
 modifier|*
 name|inp6_options
 decl_stmt|;
-comment|/* IP6 options for outgoing packets */
+comment|/* (i) IP6 options for outgoing packets */
 name|struct
 name|ip6_pktopts
 modifier|*
 name|inp6_outputopts
 decl_stmt|;
-comment|/* IP multicast options */
+comment|/* (i) IP multicast options */
 name|struct
 name|ip6_moptions
 modifier|*
 name|inp6_moptions
 decl_stmt|;
-comment|/* ICMPv6 code type filter */
+comment|/* (i) ICMPv6 code type filter */
 name|struct
 name|icmp6_filter
 modifier|*
 name|inp6_icmp6filt
 decl_stmt|;
-comment|/* IPV6_CHECKSUM setsockopt */
+comment|/* (i) IPV6_CHECKSUM setsockopt */
 name|int
 name|inp6_cksum
 decl_stmt|;
@@ -484,12 +512,13 @@ argument|inpcb
 argument_list|)
 name|inp_portlist
 expr_stmt|;
+comment|/* (i/p) */
 name|struct
 name|inpcbport
 modifier|*
 name|inp_phd
 decl_stmt|;
-comment|/* head of this list */
+comment|/* (i/p) head of this list */
 define|#
 directive|define
 name|inp_zero_size
@@ -497,10 +526,10 @@ value|offsetof(struct inpcb, inp_gencnt)
 name|inp_gen_t
 name|inp_gencnt
 decl_stmt|;
-comment|/* generation count of this instance */
+comment|/* (c) generation count of this instance */
 name|struct
-name|mtx
-name|inp_mtx
+name|rwlock
+name|inp_lock
 decl_stmt|;
 define|#
 directive|define
@@ -723,8 +752,8 @@ name|u_quad_t
 name|ipi_gencnt
 decl_stmt|;
 name|struct
-name|mtx
-name|ipi_mtx
+name|rwlock
+name|ipi_lock
 decl_stmt|;
 comment|/* 	 * vimage 1 	 * general use 1 	 */
 name|void
@@ -750,7 +779,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|mtx_init(&(inp)->inp_mtx, (d), (t), MTX_DEF | MTX_RECURSE | MTX_DUPOK)
+value|rw_init_flags(&(inp)->inp_lock, (t), RW_RECURSE |  RW_DUPOK)
 end_define
 
 begin_define
@@ -760,27 +789,17 @@ name|INP_LOCK_DESTROY
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_destroy(&(inp)->inp_mtx)
+value|rw_destroy(&(inp)->inp_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|INP_LOCK
+name|INP_RLOCK
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_lock(&(inp)->inp_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INP_UNLOCK
-parameter_list|(
-name|inp
-parameter_list|)
-value|mtx_unlock(&(inp)->inp_mtx)
+value|rw_rlock(&(inp)->inp_lock)
 end_define
 
 begin_define
@@ -790,7 +809,37 @@ name|INP_WLOCK
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_lock(&(inp)->inp_mtx)
+value|rw_wlock(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_TRY_RLOCK
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_try_rlock(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_TRY_WLOCK
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_try_wlock(&(inp)->inp_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_RUNLOCK
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_runlock(&(inp)->inp_lock)
 end_define
 
 begin_define
@@ -800,7 +849,7 @@ name|INP_WUNLOCK
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_unlock(&(inp)->inp_mtx)
+value|rw_wunlock(&(inp)->inp_lock)
 end_define
 
 begin_define
@@ -810,7 +859,17 @@ name|INP_LOCK_ASSERT
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_assert(&(inp)->inp_mtx, MA_OWNED)
+value|rw_assert(&(inp)->inp_lock, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_RLOCK_ASSERT
+parameter_list|(
+name|inp
+parameter_list|)
+value|rw_assert(&(inp)->inp_lock, RA_RLOCKED)
 end_define
 
 begin_define
@@ -820,7 +879,7 @@ name|INP_WLOCK_ASSERT
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_assert(&(inp)->inp_mtx, MA_OWNED)
+value|rw_assert(&(inp)->inp_lock, RA_WLOCKED)
 end_define
 
 begin_define
@@ -830,7 +889,7 @@ name|INP_UNLOCK_ASSERT
 parameter_list|(
 name|inp
 parameter_list|)
-value|mtx_assert(&(inp)->inp_mtx, MA_NOTOWNED)
+value|rw_assert(&(inp)->inp_lock, RA_UNLOCKED)
 end_define
 
 begin_ifdef
@@ -840,7 +899,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * These locking functions are for inpcb consumers outside of sys/netinet,   * more specifically, they were added for the benefit of TOE drivers. The  * macros are reserved for use by the stack.  */
+comment|/*  * These locking functions are for inpcb consumers outside of sys/netinet,  * more specifically, they were added for the benefit of TOE drivers. The  * macros are reserved for use by the stack.  */
 end_comment
 
 begin_function_decl
@@ -1083,7 +1142,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|mtx_init(&(ipi)->ipi_mtx, (d), NULL, MTX_DEF | MTX_RECURSE)
+value|rw_init_flags(&(ipi)->ipi_lock, (d), RW_RECURSE)
 end_define
 
 begin_define
@@ -1093,7 +1152,7 @@ name|INP_INFO_LOCK_DESTROY
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_destroy(&(ipi)->ipi_mtx)
+value|rw_destroy(&(ipi)->ipi_lock)
 end_define
 
 begin_define
@@ -1103,7 +1162,7 @@ name|INP_INFO_RLOCK
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_lock(&(ipi)->ipi_mtx)
+value|rw_rlock(&(ipi)->ipi_lock)
 end_define
 
 begin_define
@@ -1113,7 +1172,27 @@ name|INP_INFO_WLOCK
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_lock(&(ipi)->ipi_mtx)
+value|rw_wlock(&(ipi)->ipi_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_INFO_TRY_RLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_try_rlock(&(ipi)->ipi_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_INFO_TRY_WLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_try_wlock(&(ipi)->ipi_lock)
 end_define
 
 begin_define
@@ -1123,7 +1202,7 @@ name|INP_INFO_RUNLOCK
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_unlock(&(ipi)->ipi_mtx)
+value|rw_runlock(&(ipi)->ipi_lock)
 end_define
 
 begin_define
@@ -1133,7 +1212,17 @@ name|INP_INFO_WUNLOCK
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_unlock(&(ipi)->ipi_mtx)
+value|rw_wunlock(&(ipi)->ipi_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_INFO_LOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_assert(&(ipi)->ipi_lock, RA_LOCKED)
 end_define
 
 begin_define
@@ -1143,7 +1232,7 @@ name|INP_INFO_RLOCK_ASSERT
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_assert(&(ipi)->ipi_mtx, MA_OWNED)
+value|rw_assert(&(ipi)->ipi_lock, RA_RLOCKED)
 end_define
 
 begin_define
@@ -1153,7 +1242,7 @@ name|INP_INFO_WLOCK_ASSERT
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_assert(&(ipi)->ipi_mtx, MA_OWNED)
+value|rw_assert(&(ipi)->ipi_lock, RA_WLOCKED)
 end_define
 
 begin_define
@@ -1163,7 +1252,7 @@ name|INP_INFO_UNLOCK_ASSERT
 parameter_list|(
 name|ipi
 parameter_list|)
-value|mtx_assert(&(ipi)->ipi_mtx, MA_NOTOWNED)
+value|rw_assert(&(ipi)->ipi_lock, RA_UNLOCKED)
 end_define
 
 begin_define

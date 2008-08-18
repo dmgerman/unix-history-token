@@ -3641,7 +3641,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3659,7 +3659,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -3782,7 +3782,7 @@ name|OPTSET
 parameter_list|(
 name|bit
 parameter_list|)
-value|do {						\ 	INP_LOCK(inp);							\ 	if (optval)							\ 		inp->inp_flags |= bit;					\ 	else								\ 		inp->inp_flags&= ~bit;					\ 	INP_UNLOCK(inp);						\ } while (0)
+value|do {						\ 	INP_WLOCK(inp);							\ 	if (optval)							\ 		inp->inp_flags |= bit;					\ 	else								\ 		inp->inp_flags&= ~bit;					\ 	INP_WUNLOCK(inp);						\ } while (0)
 case|case
 name|IP_RECVOPTS
 case|:
@@ -3946,7 +3946,7 @@ condition|(
 name|error
 condition|)
 break|break;
-name|INP_LOCK
+name|INP_WLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -4023,7 +4023,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|INP_UNLOCK
+name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)

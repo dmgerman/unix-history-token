@@ -972,7 +972,7 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)
@@ -1166,7 +1166,7 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
 argument_list|)

@@ -538,7 +538,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|INP_LOCK_ASSERT
+name|INP_WLOCK_ASSERT
 argument_list|(
 name|tp
 operator|->

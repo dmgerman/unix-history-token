@@ -9039,11 +9039,11 @@ argument|); 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|INP_LOCK(inp); 	if ((inp->inp_socket == NULL) || (inp->inp_socket->so_cred == NULL)) { 		INP_UNLOCK(inp); 		INP_INFO_RUNLOCK(pi); 		return (-
+argument|INP_RLOCK(inp); 	INP_INFO_RUNLOCK(pi); 	if ((inp->inp_socket == NULL) || (inp->inp_socket->so_cred == NULL)) { 		INP_RUNLOCK(inp); 		return (-
 literal|1
 argument|); 	} 	pd->lookup.uid = inp->inp_socket->so_cred->cr_uid; 	pd->lookup.gid = inp->inp_socket->so_cred->cr_groups[
 literal|0
-argument|]; 	INP_UNLOCK(inp); 	INP_INFO_RUNLOCK(pi);
+argument|]; 	INP_RUNLOCK(inp);
 else|#
 directive|else
 argument|pd->lookup.uid = inp->inp_socket->so_euid; 	pd->lookup.gid = inp->inp_socket->so_egid; 	pd->lookup.pid = inp->inp_socket->so_cpid;

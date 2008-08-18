@@ -1609,7 +1609,7 @@ name|toep
 parameter_list|)
 block|{
 name|struct
-name|mtx
+name|rwlock
 modifier|*
 name|lock
 decl_stmt|;
@@ -1622,7 +1622,7 @@ name|tp_tp
 operator|->
 name|t_inpcb
 operator|->
-name|inp_mtx
+name|inp_lock
 expr_stmt|;
 name|inp_wlock
 argument_list|(
