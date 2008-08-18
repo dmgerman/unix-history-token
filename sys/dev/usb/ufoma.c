@@ -3,6 +3,12 @@ begin_comment
 comment|/*	$NetBSD: umodem.c,v 1.45 2002/09/23 05:51:23 simonb Exp $	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UFOMA_HANDSFREE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -598,8 +604,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFOMA_HANDSFREE
+end_ifdef
+
 begin_comment
-comment|/*Pseudo ucom stuff*/
+comment|/*Pseudo ucom stuff(for Handsfree interface)*/
 end_comment
 
 begin_function_decl
@@ -634,6 +646,11 @@ name|t_oproc_t
 name|ufomastart
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*umodem like stuff*/
@@ -1163,10 +1180,32 @@ name|UMATCH_NONE
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|0
-block|if(mad->bType != UMCPC_ACM_TYPE_AB5){ 		return UMATCH_NONE; 	}
+ifndef|#
+directive|ifndef
+name|UFOMA_HANDSFREE
+if|if
+condition|(
+operator|(
+name|mad
+operator|->
+name|bType
+operator|==
+name|UMCPC_ACM_TYPE_AB5
+operator|)
+operator|||
+operator|(
+name|mad
+operator|->
+name|bType
+operator|==
+name|UMCPC_ACM_TYPE_AB6
+operator|)
+condition|)
+block|{
+return|return
+name|UMATCH_NONE
+return|;
+block|}
 endif|#
 directive|endif
 return|return
@@ -1638,6 +1677,9 @@ name|UMCPC_ACM_TYPE_AB6
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UFOMA_HANDSFREE
 comment|/*These does not have data interface*/
 name|sc
 operator|->
@@ -1650,6 +1692,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/*Should not happen*/
+goto|goto
+name|error
+goto|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -1944,6 +1994,7 @@ name|sc
 operator|->
 name|sc_is_ucom
 condition|)
+block|{
 name|ucom_detach
 argument_list|(
 operator|&
@@ -1952,7 +2003,12 @@ operator|->
 name|sc_ucom
 argument_list|)
 expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|UFOMA_HANDSFREE
 else|else
+block|{
 name|ttyfree
 argument_list|(
 name|sc
@@ -1962,6 +2018,9 @@ operator|.
 name|sc_tty
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|sc
@@ -2580,6 +2639,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFOMA_HANDSFREE
+end_ifdef
+
 begin_function
 specifier|static
 specifier|inline
@@ -2812,6 +2877,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -2848,6 +2918,12 @@ name|sc
 operator|->
 name|sc_ucom
 decl_stmt|;
+name|u_char
+name|mstatus
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|UFOMA_HANDSFREE
 name|usb_device_request_t
 name|req
 decl_stmt|;
@@ -2859,9 +2935,8 @@ operator|&
 name|req
 argument_list|)
 expr_stmt|;
-name|u_char
-name|mstatus
-decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -3004,6 +3079,9 @@ operator|.
 name|bNotification
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UFOMA_HANDSFREE
 case|case
 name|UCDC_N_RESPONSE_AVAILABLE
 case|:
@@ -3094,6 +3172,8 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|UCDC_N_SERIAL_STATE
 case|:
@@ -3273,6 +3353,12 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFOMA_HANDSFREE
+end_ifdef
 
 begin_function
 specifier|static
@@ -3640,6 +3726,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
