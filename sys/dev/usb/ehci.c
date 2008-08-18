@@ -1327,11 +1327,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notyet
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -7400,11 +7400,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notyet
-end_if
+end_ifdef
 
 begin_function
 name|void
