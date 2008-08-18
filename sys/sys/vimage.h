@@ -1684,6 +1684,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_rtq_minreallyold6
+value|rtq_minreallyold6
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_rtq_mtutimer
 value|rtq_mtutimer
 end_define
@@ -1693,6 +1700,13 @@ define|#
 directive|define
 name|V_rtq_reallyold
 value|rtq_reallyold
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_rtq_reallyold6
+value|rtq_reallyold6
 end_define
 
 begin_define
@@ -1728,6 +1742,13 @@ define|#
 directive|define
 name|V_rtq_toomany
 value|rtq_toomany
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_rtq_toomany6
+value|rtq_toomany6
 end_define
 
 begin_define

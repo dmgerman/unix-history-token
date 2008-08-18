@@ -653,7 +653,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|rtq_reallyold
+name|rtq_reallyold6
 init|=
 literal|60
 operator|*
@@ -677,7 +677,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|rtq_reallyold
+name|rtq_reallyold6
 argument_list|,
 literal|0
 argument_list|,
@@ -689,7 +689,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|rtq_minreallyold
+name|rtq_minreallyold6
 init|=
 literal|10
 decl_stmt|;
@@ -711,7 +711,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|rtq_minreallyold
+name|rtq_minreallyold6
 argument_list|,
 literal|0
 argument_list|,
@@ -723,7 +723,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|rtq_toomany
+name|rtq_toomany6
 init|=
 literal|128
 decl_stmt|;
@@ -745,7 +745,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|rtq_toomany
+name|rtq_toomany6
 argument_list|,
 literal|0
 argument_list|,
@@ -838,10 +838,10 @@ operator|!=
 name|RTF_WASCLONED
 condition|)
 return|return;
-comment|/* 	 * As requested by David Greenman: 	 * If rtq_reallyold is 0, just delete the route without 	 * waiting for a timeout cycle to kill it. 	 */
+comment|/* 	 * As requested by David Greenman: 	 * If rtq_reallyold6 is 0, just delete the route without 	 * waiting for a timeout cycle to kill it. 	 */
 if|if
 condition|(
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 operator|!=
 literal|0
 condition|)
@@ -860,7 +860,7 @@ name|rmx_expire
 operator|=
 name|time_uptime
 operator|+
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 expr_stmt|;
 block|}
 else|else
@@ -906,7 +906,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Get rid of old routes.  When draining, this deletes everything, even when  * the timeout is not expired yet.  When updating, this makes sure that  * nothing has a timeout longer than the current value of rtq_reallyold.  */
+comment|/*  * Get rid of old routes.  When draining, this deletes everything, even when  * the timeout is not expired yet.  When updating, this makes sure that  * nothing has a timeout longer than the current value of rtq_reallyold6.  */
 end_comment
 
 begin_function
@@ -1061,7 +1061,7 @@ name|rmx_expire
 operator|-
 name|time_uptime
 operator|>
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 operator|)
 condition|)
 block|{
@@ -1073,7 +1073,7 @@ name|rmx_expire
 operator|=
 name|time_uptime
 operator|+
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 expr_stmt|;
 block|}
 name|ap
@@ -1228,7 +1228,7 @@ name|arg
 operator|.
 name|killed
 operator|>
-name|V_rtq_toomany
+name|V_rtq_toomany6
 operator|)
 operator|&&
 operator|(
@@ -1239,29 +1239,29 @@ operator|>=
 name|V_rtq_timeout6
 operator|)
 operator|&&
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 operator|>
-name|V_rtq_minreallyold
+name|V_rtq_minreallyold6
 condition|)
 block|{
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 operator|=
 literal|2
 operator|*
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 operator|/
 literal|3
 expr_stmt|;
 if|if
 condition|(
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 operator|<
-name|V_rtq_minreallyold
+name|V_rtq_minreallyold6
 condition|)
 block|{
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 operator|=
-name|V_rtq_minreallyold
+name|V_rtq_minreallyold6
 expr_stmt|;
 block|}
 name|last_adjusted_timeout
@@ -1275,9 +1275,9 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"in6_rtqtimo: adjusted rtq_reallyold to %d"
+literal|"in6_rtqtimo: adjusted rtq_reallyold6 to %d"
 argument_list|,
-name|V_rtq_reallyold
+name|V_rtq_reallyold6
 argument_list|)
 expr_stmt|;
 endif|#
