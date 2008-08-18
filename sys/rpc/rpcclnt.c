@@ -214,7 +214,7 @@ begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
-name|M_RPC
+name|M_RPCCLNT
 argument_list|,
 literal|"rpcclnt"
 argument_list|,
@@ -4987,7 +4987,7 @@ expr|struct
 name|rpctask
 argument_list|)
 argument_list|,
-name|M_RPC
+name|M_RPCCLNT
 argument_list|,
 operator|(
 name|M_WAITOK
@@ -5071,7 +5071,7 @@ name|FREE
 argument_list|(
 name|task
 argument_list|,
-name|M_RPC
+name|M_RPCCLNT
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5592,7 +5592,7 @@ name|FREE
 argument_list|(
 name|task
 argument_list|,
-name|M_RPC
+name|M_RPCCLNT
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8779,7 +8779,7 @@ expr|struct
 name|rpcclnt
 argument_list|)
 argument_list|,
-name|M_RPC
+name|M_RPCCLNT
 argument_list|,
 name|M_WAITOK
 operator||
@@ -8814,7 +8814,7 @@ name|FREE
 argument_list|(
 name|rpc
 argument_list|,
-name|M_RPC
+name|M_RPCCLNT
 argument_list|)
 expr_stmt|;
 block|}
