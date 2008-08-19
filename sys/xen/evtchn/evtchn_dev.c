@@ -1409,7 +1409,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|evtchn_init
+name|evtchn_dev_init
 parameter_list|(
 name|void
 modifier|*
@@ -1520,13 +1520,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|evtchn_init
+name|evtchn_dev_init
 argument_list|,
 name|SI_SUB_DRIVERS
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|evtchn_init
+name|evtchn_dev_init
 argument_list|,
 name|NULL
 argument_list|)
