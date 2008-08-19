@@ -745,6 +745,12 @@ begin_comment
 comment|/* per-cpu queues and indices */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|mmu_update_t
@@ -757,6 +763,11 @@ name|XPQUEUE_SIZE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1079,6 +1090,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|SET_VCPU
 argument_list|()
 expr_stmt|;
@@ -1095,6 +1109,8 @@ name|XPQ_IDX
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1159,6 +1175,9 @@ name|struct
 name|mmuext_op
 name|op
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|SET_VCPU
 argument_list|()
 expr_stmt|;
@@ -1175,6 +1194,8 @@ name|XPQ_IDX
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|op
 operator|.
 name|cmd
