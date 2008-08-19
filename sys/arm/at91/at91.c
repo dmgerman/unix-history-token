@@ -997,6 +997,8 @@ block|,
 name|AT91RM92_UDP_SIZE
 block|,
 name|AT91RM92_IRQ_UDP
+block|,
+name|AT91RM92_IRQ_PIOB
 block|}
 block|,
 block|{
