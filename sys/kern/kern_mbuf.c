@@ -880,6 +880,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+modifier|*
+name|mbuf_jumbo_alloc
+parameter_list|(
+name|uma_zone_t
+parameter_list|,
+name|int
+parameter_list|,
+name|u_int8_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|mbuf_jumbo_free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -1139,6 +1172,20 @@ argument_list|,
 name|nmbjumbo9
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_allocf
+argument_list|(
+name|zone_jumbo9
+argument_list|,
+name|mbuf_jumbo_alloc
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_freef
+argument_list|(
+name|zone_jumbo9
+argument_list|,
+name|mbuf_jumbo_free
+argument_list|)
+expr_stmt|;
 name|zone_jumbo16
 operator|=
 name|uma_zcreate
@@ -1182,6 +1229,20 @@ argument_list|(
 name|zone_jumbo16
 argument_list|,
 name|nmbjumbo16
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_allocf
+argument_list|(
+name|zone_jumbo16
+argument_list|,
+name|mbuf_jumbo_alloc
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_freef
+argument_list|(
+name|zone_jumbo16
+argument_list|,
+name|mbuf_jumbo_free
 argument_list|)
 expr_stmt|;
 name|zone_ext_refcnt
@@ -1305,12 +1366,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_comment
 comment|/*  * UMA backend page allocator for the jumbo frame zones.  *  * Allocates kernel virtual memory that is backed by contiguous physical  * pages.  */
 end_comment
@@ -1402,11 +1457,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Constructor for Mbuf master zone.  *  * The 'arg' pointer points to a mb_args structure which  * contains call-specific information required to support the  * mbuf allocation API.  See mbuf.h.  */
