@@ -15,23 +15,6 @@ directive|define
 name|_SYS_PCPU_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"no user-serviceable parts inside"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -218,6 +201,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_expr_stmt
 name|SLIST_HEAD
 argument_list|(
@@ -355,6 +344,15 @@ name|size
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

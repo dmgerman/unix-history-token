@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_PCPU_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -63,6 +57,12 @@ name|PCPU_MD_FIELDS
 define|\
 value|struct	intr_request pc_irpool[IR_FREE];			\ 	struct	intr_request *pc_irhead;				\ 	struct	intr_request **pc_irtail;				\ 	struct	intr_request *pc_irfree;				\ 	struct	pmap *pc_pmap;						\ 	vm_offset_t pc_addr;						\ 	u_long	pc_tickref;						\ 	u_long	pc_tickadj;						\ 	u_int	pc_mid;							\ 	u_int	pc_node;						\ 	u_int	pc_tlb_ctx;						\ 	u_int	pc_tlb_ctx_max;						\ 	u_int	pc_tlb_ctx_min
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct

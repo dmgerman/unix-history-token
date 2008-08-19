@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_PCPU_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -67,6 +61,12 @@ end_define
 begin_comment
 comment|/* XXX SUN4V_FIXME - as we access the *_ra and *_size fields in quick 	 * succession we _really_ want them to be L1 cache line size aligned 	 * and it is quite possible that we want all of ASI_QUEUE fields to 	 * be L2 cache aligned - they're surrounded by per-cpu data, so there is 	 * no possibility of false sharing, but this might help in reducing misses 	 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct
