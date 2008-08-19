@@ -5377,6 +5377,7 @@ name|b_qindex
 operator|=
 name|QUEUE_DIRTY_GIANT
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|bp
