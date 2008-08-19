@@ -1006,7 +1006,7 @@ operator|.
 name|name
 operator|=
 literal|"L8L"
-comment|/* Only has hotkeys, apparantly */
+comment|/* Only has hotkeys, apparently */
 block|}
 block|,
 block|{
