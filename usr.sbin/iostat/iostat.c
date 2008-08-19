@@ -1442,7 +1442,6 @@ literal|1
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|&
 name|cur
 operator|.
 name|cp_time
