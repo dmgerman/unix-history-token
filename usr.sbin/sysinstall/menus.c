@@ -5648,29 +5648,6 @@ name|DIST_SRC_CDDL
 block|}
 block|,
 block|{
-literal|" compat"
-block|,
-literal|"/usr/src/compat (compatibility software)"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|SrcDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_SRC_COMPAT
-block|}
-block|,
-block|{
 literal|" contrib"
 block|,
 literal|"/usr/src/contrib (contributed software)"
