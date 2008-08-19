@@ -753,8 +753,9 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|mmu_update_t
-name|xpq_queue
+name|struct
+name|mmu_log
+name|xpq_queue_log
 index|[
 name|MAX_VIRT_CPUS
 index|]
@@ -775,6 +776,19 @@ name|int
 name|xpq_idx
 index|[
 name|MAX_VIRT_CPUS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|mmu_update_t
+name|xpq_queue
+index|[
+name|MAX_VIRT_CPUS
+index|]
+index|[
+name|XPQUEUE_SIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -800,20 +814,6 @@ name|SET_VCPU
 parameter_list|()
 value|int vcpu = smp_processor_id()
 end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mmu_log
-name|xpq_queue_log
-index|[
-name|MAX_VIRT_CPUS
-index|]
-index|[
-name|XPQUEUE_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
