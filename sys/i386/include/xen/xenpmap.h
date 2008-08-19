@@ -697,12 +697,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -717,31 +711,6 @@ value|do { 								\    PANIC_IF(HYPERVISOR_update_va_mapping(((unsigned long)(_
 comment|/*CONSTCOND*/
 value|0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PT_SET_MA
-parameter_list|(
-name|_va
-parameter_list|,
-name|_ma
-parameter_list|)
-define|\
-value|do { 								\    PANIC_IF(HYPERVISOR_update_va_mapping(((unsigned long)(_va)),\ 	   (_ma),						\ 	   UVMF_INVLPG| UVMF_LOCAL)< 0);			\ } while (
-comment|/*CONSTCOND*/
-value|0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
