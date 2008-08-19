@@ -521,7 +521,7 @@ name|pmc_mask
 operator|=
 literal|1
 operator|<<
-name|AT91RM92_IRQ_UDP
+name|AT91RM92_IRQ_UHP
 block|,
 operator|.
 name|set_mode
