@@ -10360,6 +10360,20 @@ operator|&
 name|filelist_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The f_cdevpriv cannot be assigned non-NULL value while we 	 * are destroying the file. 	 */
+if|if
+condition|(
+name|fp
+operator|->
+name|f_cdevpriv
+operator|!=
+name|NULL
+condition|)
+name|devfs_fpdrop
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|crfree
 argument_list|(
 name|fp

@@ -438,7 +438,7 @@ comment|/* seekable / nonsequential */
 end_comment
 
 begin_comment
-comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (fl)	filelist_lock  * (f)	f_mtx in struct file  * none	not locked  */
+comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (fl)	filelist_lock  * (f)	f_mtx in struct file  * (d) cdevpriv_mtx  * none	not locked  */
 end_comment
 
 begin_struct
@@ -547,6 +547,12 @@ modifier|*
 name|f_label
 decl_stmt|;
 comment|/* Place-holder for struct label pointer. */
+name|struct
+name|cdev_privdata
+modifier|*
+name|f_cdevpriv
+decl_stmt|;
+comment|/* (d) Private data for the cdev. */
 block|}
 struct|;
 end_struct

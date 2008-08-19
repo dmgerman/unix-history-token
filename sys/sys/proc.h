@@ -808,6 +808,12 @@ modifier|*
 name|td_cpuset
 decl_stmt|;
 comment|/* (t) CPU affinity mask. */
+name|struct
+name|file
+modifier|*
+name|td_fpop
+decl_stmt|;
+comment|/* (k) file referencing cdev under op */
 block|}
 struct|;
 end_struct
