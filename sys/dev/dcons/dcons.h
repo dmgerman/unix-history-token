@@ -355,7 +355,7 @@ name|flags
 decl_stmt|;
 name|void
 modifier|*
-name|dev
+name|tty
 decl_stmt|;
 block|}
 struct|;

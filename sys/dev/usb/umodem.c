@@ -631,8 +631,6 @@ name|u_long
 parameter_list|,
 name|caddr_t
 parameter_list|,
-name|int
-parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -2767,9 +2765,6 @@ name|cmd
 parameter_list|,
 name|caddr_t
 name|data
-parameter_list|,
-name|int
-name|flag
 parameter_list|,
 name|struct
 name|thread

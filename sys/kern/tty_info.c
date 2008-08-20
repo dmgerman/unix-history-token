@@ -616,7 +616,7 @@ end_comment
 
 begin_function
 name|void
-name|ttyinfo
+name|tty_info
 parameter_list|(
 name|struct
 name|tty
@@ -677,13 +677,18 @@ name|struct
 name|rusage
 name|ru
 decl_stmt|;
-if|if
-condition|(
-name|ttycheckoutq
+name|tty_lock_assert
 argument_list|(
 name|tp
 argument_list|,
-literal|0
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tty_checkoutq
+argument_list|(
+name|tp
 argument_list|)
 operator|==
 literal|0
@@ -724,7 +729,6 @@ operator|%
 literal|100
 argument_list|)
 expr_stmt|;
-comment|/* 	 * On return following a ttyprintf(), we set tp->t_rocount to 0 so 	 * that pending input will be retyped on BS. 	 */
 if|if
 condition|(
 name|tp
@@ -740,12 +744,6 @@ name|tp
 argument_list|,
 literal|"not a controlling terminal\n"
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_rocount
-operator|=
-literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -764,12 +762,6 @@ name|tp
 argument_list|,
 literal|"no foreground process group\n"
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_rocount
-operator|=
-literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -806,12 +798,6 @@ name|tp
 argument_list|,
 literal|"empty foreground process group\n"
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_rocount
-operator|=
-literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -1151,12 +1137,6 @@ literal|100
 argument_list|,
 name|rss
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_rocount
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function

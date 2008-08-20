@@ -10614,6 +10614,28 @@ literal|0
 block|}
 block|,
 comment|/* 503 = unlinkat */
+block|{
+name|AS
+argument_list|(
+name|posix_openpt_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|posix_openpt
+block|,
+name|AUE_POSIXOPENPT
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* 504 = posix_openpt */
 block|}
 decl_stmt|;
 end_decl_stmt

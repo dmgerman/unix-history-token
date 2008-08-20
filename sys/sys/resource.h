@@ -311,8 +311,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RLIM_NLIMITS
+name|RLIMIT_NPTS
 value|11
+end_define
+
+begin_comment
+comment|/* pseudo-terminals */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RLIM_NLIMITS
+value|12
 end_define
 
 begin_comment

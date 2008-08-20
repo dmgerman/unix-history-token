@@ -1004,6 +1004,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KF_TYPE_PTS
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|KF_TYPE_UNKNOWN
 value|255
 end_define

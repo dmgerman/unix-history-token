@@ -195,8 +195,19 @@ begin_comment
 comment|/* set line discipline */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TIOCPTMASTER
+value|_IO('t', 28)
+end_define
+
 begin_comment
-comment|/* 28-69 free */
+comment|/* pts master validation */
+end_comment
+
+begin_comment
+comment|/* 29-69 free */
 end_comment
 
 begin_comment

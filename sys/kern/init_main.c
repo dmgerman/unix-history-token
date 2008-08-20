@@ -1571,11 +1571,15 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|refcount_init
+argument_list|(
+operator|&
 name|session0
 operator|.
 name|s_count
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|session0
 operator|.

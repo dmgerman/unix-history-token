@@ -171,6 +171,10 @@ name|long
 name|ui_proccnt
 decl_stmt|;
 comment|/* (b) number of processes */
+name|long
+name|ui_ptscnt
+decl_stmt|;
+comment|/* (b) number of pseudo-terminals */
 name|uid_t
 name|ui_uid
 decl_stmt|;
@@ -314,6 +318,24 @@ name|hiwat
 parameter_list|,
 name|u_int
 name|to
+parameter_list|,
+name|rlim_t
+name|maxval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|chgptscnt
+parameter_list|(
+name|struct
+name|uidinfo
+modifier|*
+name|uip
+parameter_list|,
+name|int
+name|diff
 parameter_list|,
 name|rlim_t
 name|maxval

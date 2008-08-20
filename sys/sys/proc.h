@@ -184,10 +184,10 @@ begin_struct
 struct|struct
 name|session
 block|{
-name|int
+name|u_int
 name|s_count
 decl_stmt|;
-comment|/* (m) Ref cnt; pgrps in session. */
+comment|/* Ref cnt; pgrps in session - atomic. */
 name|struct
 name|proc
 modifier|*
@@ -205,7 +205,7 @@ name|tty
 modifier|*
 name|s_ttyp
 decl_stmt|;
-comment|/* (m) Controlling tty. */
+comment|/* (e) Controlling tty. */
 name|pid_t
 name|s_sid
 decl_stmt|;
@@ -3215,26 +3215,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SESSHOLD
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->s_count++)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SESSRELE
-parameter_list|(
-name|s
-parameter_list|)
-value|sessrele(s)
-end_define
-
-begin_define
-define|#
-directive|define
 name|STOPEVENT
 parameter_list|(
 name|p
@@ -4314,7 +4294,18 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sessrele
+name|sess_hold
+parameter_list|(
+name|struct
+name|session
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sess_release
 parameter_list|(
 name|struct
 name|session

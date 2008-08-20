@@ -314,7 +314,7 @@ name|SC_VTY
 parameter_list|(
 name|dev
 parameter_list|)
-value|minor(dev)
+value|(((sc_ttysoftc *)tty_softc(tp))->st_index)
 end_define
 
 begin_define
@@ -334,9 +334,9 @@ define|#
 directive|define
 name|SC_STAT
 parameter_list|(
-name|dev
+name|tp
 parameter_list|)
-value|(*((scr_stat **)&(dev)->si_drv1))
+value|(*((scr_stat **)&((sc_ttysoftc *)tty_softc(tp))->st_stat))
 end_define
 
 begin_comment
@@ -832,7 +832,7 @@ name|int
 name|vtys
 decl_stmt|;
 name|struct
-name|cdev
+name|tty
 modifier|*
 modifier|*
 name|dev
@@ -1220,6 +1220,27 @@ name|scr_stat
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* TTY softc. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|sc_ttysoftc
+block|{
+name|int
+name|st_index
+decl_stmt|;
+name|scr_stat
+modifier|*
+name|st_stat
+decl_stmt|;
+block|}
+name|sc_ttysoftc
+typedef|;
+end_typedef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1407,9 +1428,6 @@ name|cmd
 parameter_list|,
 name|caddr_t
 name|data
-parameter_list|,
-name|int
-name|flag
 parameter_list|,
 name|struct
 name|thread
@@ -2035,18 +2053,15 @@ name|sc_user_ioctl
 function_decl|)
 parameter_list|(
 name|struct
-name|cdev
+name|tty
 modifier|*
-name|dev
+name|tp
 parameter_list|,
 name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
 name|data
-parameter_list|,
-name|int
-name|flag
 parameter_list|,
 name|struct
 name|thread
@@ -2491,9 +2506,6 @@ parameter_list|,
 name|caddr_t
 name|data
 parameter_list|,
-name|int
-name|flag
-parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -2733,9 +2745,6 @@ parameter_list|,
 name|caddr_t
 name|data
 parameter_list|,
-name|int
-name|flag
-parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -2849,9 +2858,6 @@ name|cmd
 parameter_list|,
 name|caddr_t
 name|data
-parameter_list|,
-name|int
-name|flag
 parameter_list|,
 name|struct
 name|thread

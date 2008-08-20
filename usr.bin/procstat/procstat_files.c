@@ -839,6 +839,14 @@ literal|"h"
 expr_stmt|;
 break|break;
 case|case
+name|KF_TYPE_PTS
+case|:
+name|str
+operator|=
+literal|"t"
+expr_stmt|;
+break|break;
+case|case
 name|KF_TYPE_SEM
 case|:
 name|str
@@ -1158,6 +1166,9 @@ name|KF_TYPE_VNODE
 case|:
 case|case
 name|KF_TYPE_FIFO
+case|:
+case|case
+name|KF_TYPE_PTS
 case|:
 name|printf
 argument_list|(

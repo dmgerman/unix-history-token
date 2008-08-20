@@ -346,29 +346,6 @@ name|_POSIX_VDISABLE
 value|0xff
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CCEQ
-parameter_list|(
-name|val
-parameter_list|,
-name|c
-parameter_list|)
-value|((c) == (val) ? (val) != _POSIX_VDISABLE : 0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Input flags - software input processing  */
 end_comment
@@ -566,12 +543,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OXTABS
+name|TABDLY
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* tab delay mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAB0
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* no tab delay and expansion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAB3
 value|0x00000004
 end_define
 
 begin_comment
 comment|/* expand tabs to spaces */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OXTABS
+value|TAB3
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
 end_comment
 
 begin_define
@@ -842,15 +863,26 @@ begin_comment
 comment|/* DCD flow control of output */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MDMBUF
-value|0x00100000
+value|CCAR_OFLOW
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* old name for CCAR_OFLOW */
+comment|/* !_KERNEL */
 end_comment
 
 begin_endif
@@ -1385,6 +1417,29 @@ ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CCEQ
+parameter_list|(
+name|val
+parameter_list|,
+name|c
+parameter_list|)
+value|((c) != _POSIX_VDISABLE&& (c) == (val))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Commands passed to tcsetattr() for setting the termios structure.  */

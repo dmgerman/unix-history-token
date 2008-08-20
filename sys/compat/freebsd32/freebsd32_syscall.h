@@ -2308,8 +2308,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_MAXSYSCALL
+name|FREEBSD32_SYS_posix_openpt
 value|504
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_MAXSYSCALL
+value|505
 end_define
 
 end_unit

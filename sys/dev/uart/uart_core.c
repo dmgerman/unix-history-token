@@ -127,12 +127,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -1921,7 +1915,7 @@ name|sc
 operator|->
 name|sc_rxbufsz
 operator|=
-name|IBUFSIZ
+literal|384
 expr_stmt|;
 name|sc
 operator|->

@@ -158,6 +158,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|tty
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ucom_softc
 struct_decl|;
 end_struct_decl
@@ -243,8 +249,6 @@ name|u_long
 parameter_list|,
 name|caddr_t
 parameter_list|,
-name|int
-parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -293,7 +297,7 @@ name|u_int32_t
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
+name|size_t
 function_decl|(
 modifier|*
 name|ucom_write
@@ -304,14 +308,14 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_char
+name|struct
+name|tty
 modifier|*
 parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
 name|u_int32_t
-modifier|*
 parameter_list|)
 function_decl|;
 block|}
@@ -430,6 +434,17 @@ end_define
 
 begin_comment
 comment|/* Rx stopped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UCS_TXBUSY
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Tx busy */
 end_comment
 
 begin_define
@@ -558,14 +573,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|ucom_attach_tty
 parameter_list|(
 name|struct
 name|ucom_softc
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|char
 modifier|*

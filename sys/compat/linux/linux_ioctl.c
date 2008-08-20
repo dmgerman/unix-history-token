@@ -1476,6 +1476,22 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|speedtab
+block|{
+name|int
+name|sp_speed
+decl_stmt|;
+comment|/* Speed. */
+name|int
+name|sp_code
+decl_stmt|;
+comment|/* Code. */
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2090,7 +2106,7 @@ name|bios
 operator|->
 name|c_oflag
 operator|&
-name|OXTABS
+name|TAB3
 condition|)
 name|lios
 operator|->
@@ -3140,7 +3156,7 @@ name|bios
 operator|->
 name|c_oflag
 operator||=
-name|OXTABS
+name|TAB3
 expr_stmt|;
 name|bios
 operator|->

@@ -3007,13 +3007,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX TTY */
 name|vpold
 operator|=
 name|td
@@ -3073,13 +3066,6 @@ argument_list|(
 name|vpold
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX TTY */
 block|}
 return|return
 operator|(

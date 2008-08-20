@@ -216,6 +216,17 @@ begin_comment
 comment|/* posix semaphore */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_PTS
+value|10
+end_define
+
+begin_comment
+comment|/* pseudo teletype master device */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

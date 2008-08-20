@@ -250,6 +250,14 @@ name|RLIMIT_VMEM
 block|}
 block|,
 block|{
+literal|"pseudoterminals"
+block|,
+name|login_getcapnum
+block|,
+name|RLIMIT_NPTS
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

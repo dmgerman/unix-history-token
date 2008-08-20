@@ -1471,11 +1471,10 @@ operator|->
 name|cr_rgid
 expr_stmt|;
 comment|/* (7) The terminal from which the process was started */
-name|SESS_LOCK
+name|sx_slock
 argument_list|(
-name|p
-operator|->
-name|p_session
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1500,7 +1499,7 @@ name|acct
 operator|.
 name|ac_tty
 operator|=
-name|dev2udev
+name|tty_udev
 argument_list|(
 name|p
 operator|->
@@ -1509,8 +1508,6 @@ operator|->
 name|pg_session
 operator|->
 name|s_ttyp
-operator|->
-name|t_dev
 argument_list|)
 expr_stmt|;
 else|else
@@ -1520,11 +1517,10 @@ name|ac_tty
 operator|=
 name|NODEV
 expr_stmt|;
-name|SESS_UNLOCK
+name|sx_sunlock
 argument_list|(
-name|p
-operator|->
-name|p_session
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 comment|/* (8) The boolean flags that tell how the process terminated, etc. */

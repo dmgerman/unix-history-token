@@ -3277,9 +3277,6 @@ parameter_list|,
 name|caddr_t
 name|data
 parameter_list|,
-name|int
-name|flag
-parameter_list|,
 name|struct
 name|thread
 modifier|*
@@ -3317,8 +3314,6 @@ operator|=
 name|SC_STAT
 argument_list|(
 name|tp
-operator|->
-name|t_dev
 argument_list|)
 expr_stmt|;
 switch|switch

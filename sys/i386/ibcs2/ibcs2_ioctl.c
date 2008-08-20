@@ -336,6 +336,22 @@ begin_comment
 comment|/*  * iBCS2 ioctl calls.  */
 end_comment
 
+begin_struct
+struct|struct
+name|speedtab
+block|{
+name|int
+name|sp_speed
+decl_stmt|;
+comment|/* Speed. */
+name|int
+name|sp_code
+decl_stmt|;
+comment|/* Code. */
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -498,6 +514,57 @@ literal|38400
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|ttspeedtab
+parameter_list|(
+name|int
+name|speed
+parameter_list|,
+name|struct
+name|speedtab
+modifier|*
+name|table
+parameter_list|)
+block|{
+for|for
+control|(
+init|;
+name|table
+operator|->
+name|sp_speed
+operator|!=
+operator|-
+literal|1
+condition|;
+name|table
+operator|++
+control|)
+if|if
+condition|(
+name|table
+operator|->
+name|sp_speed
+operator|==
+name|speed
+condition|)
+return|return
+operator|(
+name|table
+operator|->
+name|sp_code
+operator|)
+return|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -709,7 +776,7 @@ name|IBCS2_TAB3
 condition|)
 name|r
 operator||=
-name|OXTABS
+name|TAB3
 expr_stmt|;
 name|bt
 operator|->
@@ -1484,7 +1551,7 @@ if|if
 condition|(
 name|l
 operator|&
-name|OXTABS
+name|TAB3
 condition|)
 name|r
 operator||=

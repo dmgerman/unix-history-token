@@ -1523,6 +1523,9 @@ comment|/* 502 = symlinkat */
 literal|"unlinkat"
 block|,
 comment|/* 503 = unlinkat */
+literal|"posix_openpt"
+block|,
+comment|/* 504 = posix_openpt */
 block|}
 decl_stmt|;
 end_decl_stmt

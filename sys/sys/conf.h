@@ -45,12 +45,6 @@ end_endif
 
 begin_struct_decl
 struct_decl|struct
-name|tty
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|snapdata
 struct_decl|;
 end_struct_decl
@@ -221,11 +215,6 @@ decl_stmt|;
 union|union
 block|{
 name|struct
-name|tty
-modifier|*
-name|__sit_tty
-decl_stmt|;
-name|struct
 name|snapdata
 modifier|*
 name|__sid_snapdata
@@ -244,13 +233,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|si_tty
-value|__si_u.__sit_tty
-end_define
 
 begin_define
 define|#
