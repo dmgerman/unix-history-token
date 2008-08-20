@@ -2117,6 +2117,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ifnet_setbyindex
+parameter_list|(
+name|u_short
+name|idx
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Given the index, ifaddr_byindex() returns the one and only  * link-level ifaddr for the interface. You are not supposed to use  * it to traverse the list of addresses associated to the interface.  */
 end_comment
