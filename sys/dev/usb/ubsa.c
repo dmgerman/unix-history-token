@@ -1081,6 +1081,13 @@ block|,
 name|USB_PRODUCT_HUAWEI_MOBILE
 block|}
 block|,
+comment|/* Sierra Wireless LENOVO UMTS card */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC8755_3
+block|}
+block|,
 comment|/* Qualcomm, Inc. ZTE CDMA */
 block|{
 name|USB_VENDOR_QUALCOMMINC
