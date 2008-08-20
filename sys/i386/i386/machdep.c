@@ -5893,6 +5893,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|scheduler_running
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -5902,6 +5908,13 @@ name|int
 name|busy
 parameter_list|)
 block|{
+name|scheduler_running
+operator|=
+literal|1
+expr_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
 name|idle_block
 argument_list|()
 expr_stmt|;
@@ -6010,6 +6023,31 @@ return|return;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|cpu_idle_fn
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+init|=
+name|cpu_idle_hlt
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 name|void
 function_decl|(
@@ -6023,6 +6061,11 @@ init|=
 name|cpu_idle_acpi
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
