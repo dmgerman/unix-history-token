@@ -212,7 +212,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|uint64_t
 name|pciebar
 decl_stmt|;
 end_decl_stmt
@@ -714,7 +714,10 @@ case|:
 case|case
 literal|0x2584
 case|:
-comment|/* Intel 915 or 925 */
+case|case
+literal|0x2590
+case|:
+comment|/* Intel 915, 925, or 915GM */
 name|pciebar
 operator|=
 name|pci_cfgregread
@@ -729,6 +732,37 @@ literal|0x48
 argument_list|,
 literal|4
 argument_list|)
+expr_stmt|;
+name|pciereg_cfgopen
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|0x25d0
+case|:
+case|case
+literal|0x25d4
+case|:
+case|case
+literal|0x25d8
+case|:
+comment|/* Intel 5000Z/V/P */
+name|pciebar
+operator|=
+name|pci_cfgregread
+argument_list|(
+literal|0
+argument_list|,
+literal|16
+argument_list|,
+literal|0
+argument_list|,
+literal|0x64
+argument_list|,
+literal|4
+argument_list|)
+operator|<<
+literal|16
 expr_stmt|;
 name|pciereg_cfgopen
 argument_list|()
@@ -1981,14 +2015,53 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PAE
+if|if
+condition|(
+name|pciebar
+operator|>=
+literal|0x100000000
+condition|)
+block|{
 if|if
 condition|(
 name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Setting up PCIe mappings for BAR 0x%x\n"
+literal|"PCI: Memory Mapped PCI configuration area base 0x%jx too high\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|pciebar
+argument_list|)
+expr_stmt|;
+name|pciebar
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Setting up PCIe mappings for BAR 0x%jx\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pciebar
 argument_list|)
 expr_stmt|;
