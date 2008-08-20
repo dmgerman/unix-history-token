@@ -8711,7 +8711,7 @@ name|m_pkthdr
 operator|.
 name|ether_vtag
 operator|=
-name|ntohs
+name|bswap16
 argument_list|(
 operator|(
 name|rxvlan
@@ -10504,7 +10504,7 @@ name|M_VLANTAG
 condition|)
 name|vlanctl
 operator||=
-name|htons
+name|bswap16
 argument_list|(
 operator|(
 operator|*
