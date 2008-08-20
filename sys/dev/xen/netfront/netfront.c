@@ -186,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -8017,20 +8023,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|SYSINIT
 argument_list|(
-argument|xennetif
+name|xennetif
 argument_list|,
-argument|SI_SUB_PSEUDO
+name|SI_SUB_PSEUDO
 argument_list|,
-argument|SI_ORDER_SECOND
+name|SI_ORDER_SECOND
 argument_list|,
-argument|netif_init
+name|netif_init
 argument_list|,
-argument|NULL
+name|NULL
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 8  * tab-width: 4  * indent-tabs-mode: t  * End:  */
