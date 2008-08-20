@@ -174,17 +174,6 @@ name|ticks
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|lbolt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* once a second sleep address */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

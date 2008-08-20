@@ -201,12 +201,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|lbolt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|pause_wchan
@@ -218,14 +212,6 @@ specifier|static
 name|struct
 name|callout
 name|loadav_callout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|callout
-name|lbolt_callout
 decl_stmt|;
 end_decl_stmt
 
@@ -322,18 +308,6 @@ begin_function_decl
 specifier|static
 name|void
 name|loadav
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|lboltcb
 parameter_list|(
 name|void
 modifier|*
@@ -485,11 +459,6 @@ operator|||
 name|lock
 operator|!=
 name|NULL
-operator|||
-name|ident
-operator|==
-operator|&
-name|lbolt
 argument_list|,
 operator|(
 literal|"sleeping without a lock"
@@ -734,13 +703,6 @@ name|sleepq_add
 argument_list|(
 name|ident
 argument_list|,
-name|ident
-operator|==
-operator|&
-name|lbolt
-condition|?
-name|NULL
-else|:
 name|lock
 argument_list|,
 name|wmesg
@@ -2146,37 +2108,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|lboltcb
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|wakeup
-argument_list|(
-operator|&
-name|lbolt
-argument_list|)
-expr_stmt|;
-name|callout_reset
-argument_list|(
-operator|&
-name|lbolt_callout
-argument_list|,
-name|hz
-argument_list|,
-name|lboltcb
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2199,21 +2130,8 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
-name|callout_init
-argument_list|(
-operator|&
-name|lbolt_callout
-argument_list|,
-name|CALLOUT_MPSAFE
-argument_list|)
-expr_stmt|;
 comment|/* Kick off timeout driven events by calling first time. */
 name|loadav
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|lboltcb
 argument_list|(
 name|NULL
 argument_list|)
