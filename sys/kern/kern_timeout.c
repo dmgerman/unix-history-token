@@ -1884,6 +1884,8 @@ name|callout_wait
 argument_list|,
 operator|&
 name|callout_lock
+operator|.
+name|mtx_object
 argument_list|,
 literal|"codrain"
 argument_list|,

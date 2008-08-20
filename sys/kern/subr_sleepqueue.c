@@ -225,7 +225,7 @@ name|sq_type
 decl_stmt|;
 comment|/* (c) Queue type. */
 name|struct
-name|mtx
+name|lock_object
 modifier|*
 name|sq_lock
 decl_stmt|;
@@ -941,7 +941,7 @@ modifier|*
 name|wchan
 parameter_list|,
 name|struct
-name|mtx
+name|lock_object
 modifier|*
 name|lock
 parameter_list|,
@@ -3821,12 +3821,9 @@ condition|)
 block|{
 name|lock
 operator|=
-operator|&
 name|sq
 operator|->
 name|sq_lock
-operator|->
-name|mtx_object
 expr_stmt|;
 name|db_printf
 argument_list|(

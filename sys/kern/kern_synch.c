@@ -652,7 +652,10 @@ name|sleepq_add
 argument_list|(
 name|ident
 argument_list|,
+operator|&
 name|mtx
+operator|->
+name|mtx_object
 argument_list|,
 name|wmesg
 argument_list|,
@@ -990,7 +993,10 @@ name|sleepq_add
 argument_list|(
 name|ident
 argument_list|,
+operator|&
 name|mtx
+operator|->
+name|mtx_object
 argument_list|,
 name|wmesg
 argument_list|,
