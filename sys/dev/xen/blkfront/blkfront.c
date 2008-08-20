@@ -2264,6 +2264,12 @@ operator|&
 name|blkif_io_lock
 argument_list|)
 expr_stmt|;
+name|info
+operator|->
+name|is_ready
+operator|=
+literal|1
+expr_stmt|;
 if|#
 directive|if
 literal|0
