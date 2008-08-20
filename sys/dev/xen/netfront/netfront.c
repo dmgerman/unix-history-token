@@ -8024,7 +8024,7 @@ argument|xennetif
 argument_list|,
 argument|SI_SUB_PSEUDO
 argument_list|,
-argument|SI_ORDER_ANY
+argument|SI_ORDER_SECOND
 argument_list|,
 argument|netif_init
 argument_list|,
