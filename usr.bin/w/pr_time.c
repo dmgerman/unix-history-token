@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<wchar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
@@ -236,9 +242,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|printf
+name|wprintf
 argument_list|(
-literal|"%-7.7s"
+literal|L"%-7.7s"
 argument_list|,
 name|buf
 argument_list|)
