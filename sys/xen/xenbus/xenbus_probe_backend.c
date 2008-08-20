@@ -216,20 +216,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|spin_lock
-value|mtx_lock
-end_define
-
-begin_define
-define|#
-directive|define
-name|spin_unlock
-value|mtx_unlock
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEFINE_SPINLOCK
 parameter_list|(
 name|lock
@@ -288,13 +274,6 @@ define|#
 directive|define
 name|list_empty
 value|TAILQ_EMPTY
-end_define
-
-begin_define
-define|#
-directive|define
-name|wake_up
-value|wakeup
 end_define
 
 begin_decl_stmt

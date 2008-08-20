@@ -82,6 +82,13 @@ name|xb_waitq
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|xenbus_running
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -94,7 +101,7 @@ parameter_list|,
 name|ret
 parameter_list|)
 define|\
-value|do {								\         for (;;) {                                              \ 		if (condition)					\ 			break;					\ 		if ((ret = !tsleep(wchan, PWAIT | PCATCH, "waitev", hz/10))) \ 			break;							\ 	}									\ } while (0)
+value|do {								\         for (;;) {                                              \                 if (xenbus_running == 0) {			\ 			break;					\ 		}                                               \ 		if (condition)					\ 			break;					\ 		if ((ret = !tsleep(wchan, PWAIT | PCATCH, "waitev", hz/10))) \ 			break;							\ 	}									\ } while (0)
 end_define
 
 begin_define
@@ -255,28 +262,6 @@ define|#
 directive|define
 name|rw_semaphore
 value|sema
-end_define
-
-begin_typedef
-typedef|typedef
-name|struct
-name|mtx
-name|spinlock_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|spin_lock
-value|mtx_lock
-end_define
-
-begin_define
-define|#
-directive|define
-name|spin_unlock
-value|mtx_unlock
 end_define
 
 begin_define

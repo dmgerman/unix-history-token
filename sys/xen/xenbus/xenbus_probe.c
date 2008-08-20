@@ -3586,9 +3586,14 @@ operator|&
 name|fe_watch
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 name|xenbus_backend_probe_and_watch
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Notify others that xenstore is up */
 name|EVENTHANDLER_INVOKE
 argument_list|(
