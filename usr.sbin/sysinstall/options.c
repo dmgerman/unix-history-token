@@ -200,13 +200,6 @@ end_function
 begin_define
 define|#
 directive|define
-name|TAPE_PROMPT
-value|"Please enter the tape block size in 512 byte blocks:"
-end_define
-
-begin_define
-define|#
-directive|define
 name|NEWFS_PROMPT
 value|"Please enter newfs(8) parameters:"
 end_define
@@ -431,20 +424,6 @@ block|,
 name|EDITOR_PROMPT
 block|,
 name|VAR_EDITOR
-block|,
-name|varCheck
-block|}
-block|,
-block|{
-literal|"Tape Blocksize"
-block|,
-literal|"Tape media block size in 512 byte blocks"
-block|,
-name|OPT_IS_VAR
-block|,
-name|TAPE_PROMPT
-block|,
-name|VAR_TAPE_BLOCKSIZE
 block|,
 name|varCheck
 block|}

@@ -966,13 +966,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_TAPE_BLOCKSIZE
-value|"tapeBlocksize"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VAR_TRY_DHCP
 value|"tryDHCP"
 end_define
@@ -1076,13 +1069,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_TAPE_BLOCKSIZE
-value|"20"
-end_define
 
 begin_comment
 comment|/* One MB worth of blocks */
@@ -6724,17 +6710,6 @@ end_empty_stmt
 begin_comment
 comment|/* tape.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|mediaTapeBlocksize
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern

@@ -33,33 +33,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|char
-modifier|*
-name|mediaTapeBlocksize
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|cp
-init|=
-name|variable_get
-argument_list|(
-name|VAR_TAPE_BLOCKSIZE
-argument_list|)
-decl_stmt|;
-return|return
-name|cp
-condition|?
-name|cp
-else|:
-name|DEFAULT_TAPE_BLOCKSIZE
-return|;
-block|}
-end_function
-
-begin_function
 name|Boolean
 name|mediaInitTape
 parameter_list|(
@@ -200,12 +173,9 @@ name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"ft | cpio -idum %s --block-size %s"
+literal|"ft | cpio -idum %s"
 argument_list|,
 name|cpioVerbosity
-argument_list|()
-argument_list|,
-name|mediaTapeBlocksize
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -214,12 +184,9 @@ name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"cpio -idum %s --block-size %s -I %s"
+literal|"cpio -idum %s -I %s"
 argument_list|,
 name|cpioVerbosity
-argument_list|()
-argument_list|,
-name|mediaTapeBlocksize
 argument_list|()
 argument_list|,
 name|dev

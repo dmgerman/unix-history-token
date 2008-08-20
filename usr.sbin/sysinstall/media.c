@@ -3034,11 +3034,6 @@ argument_list|,
 name|cpioVerbosity
 argument_list|()
 argument_list|,
-literal|"--block-size"
-argument_list|,
-name|mediaTapeBlocksize
-argument_list|()
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -3056,11 +3051,6 @@ argument_list|,
 name|cpio
 argument_list|,
 literal|"-idum"
-argument_list|,
-literal|"--block-size"
-argument_list|,
-name|mediaTapeBlocksize
-argument_list|()
 argument_list|,
 operator|(
 name|char
@@ -3581,11 +3571,6 @@ argument_list|,
 name|cpioVerbosity
 argument_list|()
 argument_list|,
-literal|"--block-size"
-argument_list|,
-name|mediaTapeBlocksize
-argument_list|()
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -3605,9 +3590,6 @@ argument_list|,
 literal|"-idum"
 argument_list|,
 literal|"--block-size"
-argument_list|,
-name|mediaTapeBlocksize
-argument_list|()
 argument_list|,
 operator|(
 name|char

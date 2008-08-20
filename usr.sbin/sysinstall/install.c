@@ -5051,15 +5051,6 @@ argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|VAR_TAPE_BLOCKSIZE
-argument_list|,
-name|DEFAULT_TAPE_BLOCKSIZE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
 name|VAR_INSTALL_ROOT
 argument_list|,
 literal|"/"
