@@ -1067,8 +1067,8 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * XXX XEN need to check on PSL_USER is handled 	 */
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|XEN
 name|td2
 operator|->
