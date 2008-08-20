@@ -34,26 +34,26 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|reffile1
+name|reffile2
 init|=
-literal|"test_patterns.tgz"
+literal|"test_patterns_2.tgz"
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|reffile1_out
+name|reffile2_out
 init|=
-literal|"test_patterns.tgz.out"
+literal|"test_patterns_2.tgz.out"
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|reffile1_err
+name|reffile2_err
 init|=
-literal|"test_patterns.tgz.err"
+literal|"test_patterns_2.tgz.err"
 decl_stmt|;
 comment|/* 	 * Test basic command-line pattern handling. 	 */
-comment|/* 	 * John Baldwin reported this problem in PR bin/121598 	 */
+comment|/* 	 * Test 1: Files on the command line that don't get matched 	 * didn't produce an error. 	 * 	 * John Baldwin reported this problem in PR bin/121598 	 */
 name|fd
 operator|=
 name|open
@@ -116,19 +116,20 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Test 2: Check basic matching of full paths that start with / 	 */
 name|extract_reference_file
 argument_list|(
-name|reffile1
+name|reffile2
 argument_list|)
 expr_stmt|;
 name|extract_reference_file
 argument_list|(
-name|reffile1_out
+name|reffile2_out
 argument_list|)
 expr_stmt|;
 name|extract_reference_file
 argument_list|(
-name|reffile1_err
+name|reffile2_err
 argument_list|)
 expr_stmt|;
 name|r
@@ -139,7 +140,7 @@ literal|"%s tf %s /tmp/foo/bar> tar2a.out 2> tar2a.err"
 argument_list|,
 name|testprog
 argument_list|,
-name|reffile1
+name|reffile2
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -153,16 +154,17 @@ name|assertEqualFile
 argument_list|(
 literal|"tar2a.out"
 argument_list|,
-name|reffile1_out
+name|reffile2_out
 argument_list|)
 expr_stmt|;
 name|assertEqualFile
 argument_list|(
 literal|"tar2a.err"
 argument_list|,
-name|reffile1_err
+name|reffile2_err
 argument_list|)
 expr_stmt|;
+comment|/* 	 * 	 */
 block|}
 end_block
 
