@@ -96,12 +96,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|xen_save_and_cli
 parameter_list|(
-name|u_int
-modifier|*
-name|eflags
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1940,17 +1938,14 @@ parameter_list|)
 block|{
 name|register_t
 name|eflags
-init|=
-literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|XEN
-name|xen_save_and_cli
-argument_list|(
-operator|&
 name|eflags
-argument_list|)
+operator|=
+name|xen_save_and_cli
+argument_list|()
 expr_stmt|;
 else|#
 directive|else

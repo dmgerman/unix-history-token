@@ -1252,22 +1252,25 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|xen_save_and_cli
 parameter_list|(
-name|u_int
-modifier|*
-name|eflags
+name|void
 parameter_list|)
 block|{
+name|int
+name|eflags
+decl_stmt|;
 name|__save_and_cli
 argument_list|(
-operator|(
-operator|*
 name|eflags
-operator|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|eflags
+operator|)
+return|;
 block|}
 end_function
 
@@ -5006,8 +5009,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|setup_shutdown_watcher
+parameter_list|(
+name|void
+modifier|*
+name|unused
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
-specifier|static
 name|void
 name|setup_shutdown_watcher
 parameter_list|(
@@ -5037,7 +5050,7 @@ name|SYSINIT
 argument_list|(
 name|shutdown
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_RUN_SCHEDULER
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
