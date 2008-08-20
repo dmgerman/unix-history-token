@@ -929,7 +929,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|struct sysctl_oid_list SYSCTL_NODE_CHILDREN(parent, name);	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|(access),		    \ 		   (void*)&SYSCTL_NODE_CHILDREN(parent, name), 0, handler,  \ 		   "N", descr)
+value|struct sysctl_oid_list SYSCTL_NODE_CHILDREN(parent, name);	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|(access),		    \ 	    (void*)&SYSCTL_NODE_CHILDREN(parent, name), 0, handler, "N", descr)
 end_define
 
 begin_define
