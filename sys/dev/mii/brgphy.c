@@ -1750,14 +1750,17 @@ expr_stmt|;
 comment|/* Reset autoneg timer. */
 break|break;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* Todo: Is this correct? */
 comment|/* Announce link loss right after it happens. */
-block|if (sc->mii_ticks++ == 0) 			break;
-endif|#
-directive|endif
+if|if
+condition|(
+name|sc
+operator|->
+name|mii_ticks
+operator|++
+operator|==
+literal|0
+condition|)
+break|break;
 comment|/* Only retry autonegotiation every mii_anegticks seconds. */
 if|if
 condition|(
@@ -1769,9 +1772,7 @@ name|sc
 operator|->
 name|mii_anegticks
 condition|)
-goto|goto
-name|brgphy_service_exit
-goto|;
+break|break;
 comment|/* Retry autonegotiation */
 name|sc
 operator|->
