@@ -757,7 +757,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+literal|20
 argument_list|,
 literal|"ichss"
 argument_list|,
