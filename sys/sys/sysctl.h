@@ -875,7 +875,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 },			 \ 		nbr, kind, a1, a2, #name, handler, fmt, 0, __DESCR(descr) }; \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
+value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 }, nbr, kind,		 \ 		a1, a2, #name, handler, fmt, 0, __DESCR(descr), 0, 0 };  \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
 end_define
 
 begin_define
@@ -929,7 +929,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|struct sysctl_oid_list SYSCTL_NODE_CHILDREN(parent, name);	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|(access),		    \ 		   (void*)&SYSCTL_NODE_CHILDREN(parent, name), 0, handler, \ 		   "N", descr)
+value|struct sysctl_oid_list SYSCTL_NODE_CHILDREN(parent, name);	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|(access),		    \ 		   (void*)&SYSCTL_NODE_CHILDREN(parent, name), 0, handler,  \ 		   "N", descr)
 end_define
 
 begin_define

@@ -17788,7 +17788,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX HACK. Store the disable mask in the "next" pointer 			 * in a wild attempt to keep the ABI the same. 			 * Why do we do this on EVERY rule? 			 */
+comment|/* 			 * XXX HACK. Store the disable mask in the "next" 			 * pointer in a wild attempt to keep the ABI the same. 			 * Why do we do this on EVERY rule? 			 */
 name|bcopy
 argument_list|(
 operator|&

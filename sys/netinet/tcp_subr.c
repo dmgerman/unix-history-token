@@ -6008,9 +6008,7 @@ name|max
 argument_list|(
 literal|296
 argument_list|,
-operator|(
 name|V_tcp_minmss
-operator|)
 operator|+
 sizeof|sizeof
 argument_list|(

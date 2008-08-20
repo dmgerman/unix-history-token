@@ -2967,13 +2967,11 @@ name|s
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
 name|V_tcp_sc_rst_sock_fail
 condition|?
 literal|"sending RST"
 else|:
 literal|"try again"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

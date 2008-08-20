@@ -2525,7 +2525,7 @@ operator|=
 name|V_nextID
 operator|++
 expr_stmt|;
-comment|/* 137/second for 1 year before wrap */
+comment|/* 137/sec for 1 year before wrap */
 comment|/* Is there a problem with the new number? */
 name|NG_IDHASH_FIND
 argument_list|(

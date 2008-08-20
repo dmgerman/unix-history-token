@@ -3694,12 +3694,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -3799,11 +3793,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

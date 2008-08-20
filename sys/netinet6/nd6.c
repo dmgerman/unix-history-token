@@ -686,10 +686,6 @@ operator|&
 name|V_nd_defrouter
 argument_list|)
 expr_stmt|;
-name|nd6_init_done
-operator|=
-literal|1
-expr_stmt|;
 comment|/* start timer */
 name|callout_init
 argument_list|(
@@ -712,6 +708,10 @@ name|nd6_slowtimo
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|nd6_init_done
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function

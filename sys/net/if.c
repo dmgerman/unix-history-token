@@ -1008,7 +1008,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ifnet_setbyindex
 parameter_list|(

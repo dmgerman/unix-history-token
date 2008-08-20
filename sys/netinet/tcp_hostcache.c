@@ -2728,7 +2728,7 @@ name|hz
 argument_list|,
 name|tcp_hc_purge
 argument_list|,
-literal|0
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
