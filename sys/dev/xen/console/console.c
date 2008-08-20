@@ -1695,11 +1695,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|tty_unlock
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|xc_start_needed
@@ -1715,6 +1710,11 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
+name|tty_unlock
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&

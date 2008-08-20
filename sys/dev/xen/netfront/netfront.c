@@ -5465,7 +5465,12 @@ operator|)
 name|vaddr
 argument_list|,
 operator|(
+operator|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|mfn
+operator|)
 operator|<<
 name|PAGE_SHIFT
 operator|)
