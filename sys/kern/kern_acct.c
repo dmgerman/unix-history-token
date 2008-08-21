@@ -1260,12 +1260,65 @@ operator|->
 name|td_proc
 expr_stmt|;
 comment|/* 	 * Get process accounting information. 	 */
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* (1) The name of the command that ran */
+comment|/* (1) The terminal from which the process was started */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_CONTROLT
+operator|)
+operator|&&
+name|p
+operator|->
+name|p_pgrp
+operator|->
+name|pg_session
+operator|->
+name|s_ttyp
+condition|)
+name|acct
+operator|.
+name|ac_tty
+operator|=
+name|tty_udev
+argument_list|(
+name|p
+operator|->
+name|p_pgrp
+operator|->
+name|pg_session
+operator|->
+name|s_ttyp
+argument_list|)
+expr_stmt|;
+else|else
+name|acct
+operator|.
+name|ac_tty
+operator|=
+name|NODEV
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
+comment|/* (2) The name of the command that ran */
 name|bcopy
 argument_list|(
 name|p
@@ -1282,7 +1335,7 @@ operator|.
 name|ac_comm
 argument_list|)
 expr_stmt|;
-comment|/* (2) The amount of user and system time that was used */
+comment|/* (3) The amount of user and system time that was used */
 name|rufetchcalc
 argument_list|(
 name|p
@@ -1315,7 +1368,7 @@ argument_list|(
 name|st
 argument_list|)
 expr_stmt|;
-comment|/* (3) The elapsed time the command ran (and its starting time) */
+comment|/* (4) The elapsed time the command ran (and its starting time) */
 name|tmp
 operator|=
 name|boottime
@@ -1369,7 +1422,7 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-comment|/* (4) The average amount of memory used */
+comment|/* (5) The average amount of memory used */
 name|tmp
 operator|=
 name|ut
@@ -1433,7 +1486,7 @@ name|ac_mem
 operator|=
 literal|0
 expr_stmt|;
-comment|/* (5) The number of disk I/O operations done */
+comment|/* (6) The number of disk I/O operations done */
 name|acct
 operator|.
 name|ac_io
@@ -1449,7 +1502,7 @@ operator|.
 name|ru_oublock
 argument_list|)
 expr_stmt|;
-comment|/* (6) The UID and GID of the process */
+comment|/* (7) The UID and GID of the process */
 name|acct
 operator|.
 name|ac_uid
@@ -1469,59 +1522,6 @@ operator|->
 name|p_ucred
 operator|->
 name|cr_rgid
-expr_stmt|;
-comment|/* (7) The terminal from which the process was started */
-name|sx_slock
-argument_list|(
-operator|&
-name|proctree_lock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_CONTROLT
-operator|)
-operator|&&
-name|p
-operator|->
-name|p_pgrp
-operator|->
-name|pg_session
-operator|->
-name|s_ttyp
-condition|)
-name|acct
-operator|.
-name|ac_tty
-operator|=
-name|tty_udev
-argument_list|(
-name|p
-operator|->
-name|p_pgrp
-operator|->
-name|pg_session
-operator|->
-name|s_ttyp
-argument_list|)
-expr_stmt|;
-else|else
-name|acct
-operator|.
-name|ac_tty
-operator|=
-name|NODEV
-expr_stmt|;
-name|sx_sunlock
-argument_list|(
-operator|&
-name|proctree_lock
-argument_list|)
 expr_stmt|;
 comment|/* (8) The boolean flags that tell how the process terminated, etc. */
 name|acct
