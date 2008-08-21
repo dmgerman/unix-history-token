@@ -3444,27 +3444,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BFE_RX_RING_SIZE
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|BFE_TX_RING_SIZE
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|BFE_LINK_DOWN
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
 name|BFE_TX_LIST_CNT
 value|128
 end_define
@@ -3507,14 +3486,55 @@ end_define
 begin_define
 define|#
 directive|define
+name|BFE_RX_RING_ALIGN
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|BFE_TX_RING_ALIGN
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|BFE_MAXTXSEGS
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|BFE_DMA_MAXADDR
+value|0x3FFFFFFF
+end_define
+
+begin_comment
+comment|/* 1GB DMA address limit. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BFE_ADDR_LO
+parameter_list|(
+name|x
+parameter_list|)
+value|((uint64_t)(x)& 0xFFFFFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CSR_READ_4
 parameter_list|(
 name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_4(sc->bfe_btag, sc->bfe_bhandle, reg)
+value|bus_read_4(sc->bfe_res, reg)
 end_define
 
 begin_define
@@ -3528,8 +3548,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_4(sc->bfe_btag, sc->bfe_bhandle, reg, val)
+value|bus_write_4(sc->bfe_res, reg, val)
 end_define
 
 begin_define
@@ -3606,7 +3625,7 @@ end_define
 
 begin_struct
 struct|struct
-name|bfe_data
+name|bfe_tx_data
 block|{
 name|struct
 name|mbuf
@@ -3615,6 +3634,25 @@ name|bfe_mbuf
 decl_stmt|;
 name|bus_dmamap_t
 name|bfe_map
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|bfe_rx_data
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|bfe_mbuf
+decl_stmt|;
+name|bus_dmamap_t
+name|bfe_map
+decl_stmt|;
+name|u_int32_t
+name|bfe_ctrl
 decl_stmt|;
 block|}
 struct|;
@@ -3794,15 +3832,6 @@ decl_stmt|;
 name|device_t
 name|bfe_miibus
 decl_stmt|;
-name|bus_space_handle_t
-name|bfe_bhandle
-decl_stmt|;
-name|vm_offset_t
-name|bfe_vhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|bfe_btag
-decl_stmt|;
 name|bus_dma_tag_t
 name|bfe_tag
 decl_stmt|;
@@ -3818,6 +3847,14 @@ name|bus_dmamap_t
 name|bfe_tx_map
 decl_stmt|,
 name|bfe_rx_map
+decl_stmt|;
+name|bus_dma_tag_t
+name|bfe_txmbuf_tag
+decl_stmt|,
+name|bfe_rxmbuf_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|bfe_rx_sparemap
 decl_stmt|;
 name|void
 modifier|*
@@ -3850,7 +3887,7 @@ modifier|*
 name|bfe_rx_list
 decl_stmt|;
 name|struct
-name|bfe_data
+name|bfe_tx_data
 name|bfe_tx_ring
 index|[
 name|BFE_TX_LIST_CNT
@@ -3858,7 +3895,7 @@ index|]
 decl_stmt|;
 comment|/* XXX */
 name|struct
-name|bfe_data
+name|bfe_rx_data
 name|bfe_rx_ring
 index|[
 name|BFE_RX_LIST_CNT
@@ -3886,8 +3923,6 @@ decl_stmt|,
 name|bfe_tx_prod
 decl_stmt|;
 name|u_int32_t
-name|bfe_rx_cnt
-decl_stmt|,
 name|bfe_rx_prod
 decl_stmt|,
 name|bfe_rx_cons
@@ -3913,9 +3948,6 @@ decl_stmt|;
 name|u_int8_t
 name|bfe_core_unit
 decl_stmt|;
-name|u_int8_t
-name|bfe_up
-decl_stmt|;
 name|u_char
 name|bfe_enaddr
 index|[
@@ -3924,14 +3956,6 @@ index|]
 decl_stmt|;
 name|int
 name|bfe_if_flags
-decl_stmt|;
-name|char
-modifier|*
-name|bfe_vpd_prodname
-decl_stmt|;
-name|char
-modifier|*
-name|bfe_vpd_readonly
 decl_stmt|;
 block|}
 struct|;
