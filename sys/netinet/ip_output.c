@@ -4793,7 +4793,6 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-comment|/* 		 * NB: 		 * It's not clear whether there are any lingering 		 * reentrancy problems in other areas which might 		 * be exposed by using ip_input directly (in 		 * particular, everything which modifies the packet 		 * in-place).  Yet another option is using the 		 * protosw directly to deliver the looped back 		 * packet.  For the moment, we'll err on the side 		 * of safety by using if_simloop(). 		 */
 if|#
 directive|if
 literal|1
@@ -4825,24 +4824,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|notdef
-name|copym
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-name|ifp
-expr_stmt|;
-name|ip_input
-argument_list|(
-name|copym
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|if_simloop
 argument_list|(
 name|ifp
@@ -4856,8 +4837,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
