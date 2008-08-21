@@ -619,7 +619,7 @@ argument_list|(
 name|status
 argument_list|)
 else|:
-literal|1
+name|EX_SOFTWARE
 operator|)
 return|;
 block|}
