@@ -2461,6 +2461,28 @@ literal|0
 block|, 	}
 block|,
 block|{
+literal|0x14db
+block|,
+literal|0x2152
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Avlab Low Profile PCI 4 Serial"
+block|,
+name|DEFAULT_RCLK
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|4
+block|,
+literal|0
+block|, 	}
+block|,
+block|{
 literal|0x1592
 block|,
 literal|0x0781
