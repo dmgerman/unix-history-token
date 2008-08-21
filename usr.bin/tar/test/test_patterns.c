@@ -45,13 +45,6 @@ name|reffile2_out
 init|=
 literal|"test_patterns_2.tgz.out"
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|reffile2_err
-init|=
-literal|"test_patterns_2.tgz.err"
-decl_stmt|;
 comment|/* 	 * Test basic command-line pattern handling. 	 */
 comment|/* 	 * Test 1: Files on the command line that don't get matched 	 * didn't produce an error. 	 * 	 * John Baldwin reported this problem in PR bin/121598 	 */
 name|fd
@@ -127,11 +120,6 @@ argument_list|(
 name|reffile2_out
 argument_list|)
 expr_stmt|;
-name|extract_reference_file
-argument_list|(
-name|reffile2_err
-argument_list|)
-expr_stmt|;
 name|r
 operator|=
 name|systemf
@@ -157,11 +145,9 @@ argument_list|,
 name|reffile2_out
 argument_list|)
 expr_stmt|;
-name|assertEqualFile
+name|assertEmptyFile
 argument_list|(
 literal|"tar2a.err"
-argument_list|,
-name|reffile2_err
 argument_list|)
 expr_stmt|;
 comment|/* 	 * 	 */

@@ -830,18 +830,6 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* Excluded by a pattern test. */
-comment|/* 		 * Modify the pathname as requested by the user.  We 		 * do this for -t as well to give users a way to 		 * preview the effects of their rewrites.  We also do 		 * this before extraction security checks (including 		 * leading '/' removal).  Note that some rewrite 		 * failures prevent extraction. 		 */
-if|if
-condition|(
-name|edit_pathname
-argument_list|(
-name|bsdtar
-argument_list|,
-name|entry
-argument_list|)
-condition|)
-continue|continue;
-comment|/* Excluded by a rewrite failure. */
 if|if
 condition|(
 name|mode
@@ -860,6 +848,7 @@ name|stderr
 else|:
 name|stdout
 expr_stmt|;
+comment|/* 			 * TODO: Provide some reasonable way to 			 * preview rewrites.  gtar always displays 			 * the unedited path in -t output, which means 			 * you cannot easily preview rewrites. 			 */
 if|if
 condition|(
 name|bsdtar
@@ -1006,6 +995,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Note: some rewrite failures prevent extraction. */
+if|if
+condition|(
+name|edit_pathname
+argument_list|(
+name|bsdtar
+argument_list|,
+name|entry
+argument_list|)
+condition|)
+continue|continue;
+comment|/* Excluded by a rewrite failure. */
 if|if
 condition|(
 name|bsdtar
