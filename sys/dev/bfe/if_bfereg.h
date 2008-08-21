@@ -3911,10 +3911,6 @@ name|u_int8_t
 name|bfe_mdc_port
 decl_stmt|;
 name|u_int8_t
-name|bfe_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|bfe_core_unit
 decl_stmt|;
 name|u_int8_t
