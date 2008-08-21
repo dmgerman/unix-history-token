@@ -45,6 +45,13 @@ name|reffile2_out
 init|=
 literal|"test_patterns_2.tgz.out"
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|reffile3
+init|=
+literal|"test_patterns_3.tgz"
+decl_stmt|;
 comment|/* 	 * Test basic command-line pattern handling. 	 */
 comment|/* 	 * Test 1: Files on the command line that don't get matched 	 * didn't produce an error. 	 * 	 * John Baldwin reported this problem in PR bin/121598 	 */
 name|fd
@@ -150,7 +157,141 @@ argument_list|(
 literal|"tar2a.err"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * 	 */
+comment|/* 	 * Test 3 archive has some entries starting with '/' and some not. 	 */
+name|extract_reference_file
+argument_list|(
+name|reffile3
+argument_list|)
+expr_stmt|;
+comment|/* Test 3a:  Pattern tmp/foo/bar should not match /tmp/foo/bar */
+name|r
+operator|=
+name|systemf
+argument_list|(
+literal|"%s xf %s tmp/foo/bar> tar3a.out 2> tar3a.err"
+argument_list|,
+name|testprog
+argument_list|,
+name|reffile3
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|r
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"tar3a.out"
+argument_list|)
+expr_stmt|;
+comment|/* Test 3b:  Pattern /tmp/foo/baz should not match tmp/foo/baz */
+name|assertNonEmptyFile
+argument_list|(
+literal|"tar3a.err"
+argument_list|)
+expr_stmt|;
+comment|/* Again, with the '/' */
+name|r
+operator|=
+name|systemf
+argument_list|(
+literal|"%s xf %s /tmp/foo/baz> tar3b.out 2> tar3b.err"
+argument_list|,
+name|testprog
+argument_list|,
+name|reffile3
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|r
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"tar3b.out"
+argument_list|)
+expr_stmt|;
+name|assertNonEmptyFile
+argument_list|(
+literal|"tar3b.err"
+argument_list|)
+expr_stmt|;
+comment|/* Test 3c: ./tmp/foo/bar should not match /tmp/foo/bar */
+name|r
+operator|=
+name|systemf
+argument_list|(
+literal|"%s xf %s ./tmp/foo/bar> tar3c.out 2> tar3c.err"
+argument_list|,
+name|testprog
+argument_list|,
+name|reffile3
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|r
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"tar3c.out"
+argument_list|)
+expr_stmt|;
+name|assertNonEmptyFile
+argument_list|(
+literal|"tar3c.err"
+argument_list|)
+expr_stmt|;
+comment|/* Test 3d: ./tmp/foo/baz should match tmp/foo/baz */
+name|r
+operator|=
+name|systemf
+argument_list|(
+literal|"%s xf %s ./tmp/foo/baz> tar3d.out 2> tar3d.err"
+argument_list|,
+name|testprog
+argument_list|,
+name|reffile3
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|r
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"tar3d.out"
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"tar3d.err"
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|access
+argument_list|(
+literal|"tmp/foo/baz/bar"
+argument_list|,
+name|F_OK
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

@@ -342,6 +342,18 @@ value|test_setup(__FILE__, __LINE__);test_assert_empty_file
 end_define
 
 begin_comment
+comment|/* Assert that a file is not empty; supports printf-style arguments. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertNonEmptyFile
+define|\
+value|test_setup(__FILE__, __LINE__);test_assert_non_empty_file
+end_define
+
+begin_comment
 comment|/* Assert that a file exists; supports printf-style arguments. */
 end_comment
 
@@ -459,6 +471,19 @@ end_function_decl
 begin_function_decl
 name|int
 name|test_assert_empty_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|test_assert_non_empty_file
 parameter_list|(
 specifier|const
 name|char
