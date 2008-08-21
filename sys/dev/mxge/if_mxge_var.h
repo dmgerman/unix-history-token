@@ -63,9 +63,20 @@ begin_if
 if|#
 directive|if
 operator|(
+operator|(
+name|__FreeBSD_version
+operator|>
+literal|800000
+operator|&&
 name|__FreeBSD_version
 operator|<
 literal|800005
+operator|)
+expr|\
+operator|||
+name|__FreeBSD_version
+operator|<
+literal|700111
 operator|)
 end_if
 
