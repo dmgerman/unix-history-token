@@ -330,11 +330,6 @@ name|error
 decl_stmt|,
 name|unit
 decl_stmt|;
-name|MPT_LOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 name|handler
 operator|.
 name|reply_handler
@@ -353,11 +348,6 @@ name|handler
 argument_list|,
 operator|&
 name|user_handler_id
-argument_list|)
-expr_stmt|;
-name|MPT_UNLOCK
-argument_list|(
-name|mpt
 argument_list|)
 expr_stmt|;
 if|if
