@@ -1092,7 +1092,7 @@ operator|->
 name|bfe_did
 condition|)
 block|{
-name|device_set_desc_copy
+name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
