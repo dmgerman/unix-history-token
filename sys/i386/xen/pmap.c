@@ -7989,6 +7989,9 @@ operator||
 name|PG_M
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|PD_SET_VA
 argument_list|(
 name|kernel_pmap
@@ -8038,6 +8041,9 @@ argument_list|(
 operator|&
 name|allpmaps_lock
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|kernel_vm_end
 operator|=
