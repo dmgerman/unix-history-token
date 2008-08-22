@@ -550,17 +550,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNITOSOFTC
-parameter_list|(
-name|unit
-parameter_list|)
-define|\
-value|((struct lp_data *)devclass_get_softc(lp_devclass, (unit)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|UNITODEVICE
 parameter_list|(
 name|unit
