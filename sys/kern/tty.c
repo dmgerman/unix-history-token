@@ -7359,15 +7359,11 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
 name|TF_HIWAT_IN
-operator|)
-operator|==
-literal|0
 operator|&&
 name|tp
 operator|->
