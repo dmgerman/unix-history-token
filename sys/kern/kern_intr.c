@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -6000,6 +6006,9 @@ argument_list|(
 name|ie
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|XEN
 name|KASSERT
 argument_list|(
 name|error
@@ -6011,6 +6020,23 @@ literal|"bad stray interrupt"
 operator|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"bad stray interrupt"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|critical_exit
 argument_list|()
