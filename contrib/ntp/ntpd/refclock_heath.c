@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * refclock_heath - clock driver for Heath GC-1000 and and GC-1000 II  */
+comment|/*  * refclock_heath - clock driver for Heath GC-1000  * (but no longer the GC-1001 Model II, which apparently never worked)  */
 end_comment
 
 begin_ifdef
@@ -92,7 +92,7 @@ comment|/* not HAVE_SYS_IOCTL_H */
 end_comment
 
 begin_comment
-comment|/*  * This driver supports the Heath GC-1000 Most Accurate Clock, with  * RS232C Output Accessory. This is a WWV/WWVH receiver somewhat less  * robust than other supported receivers. Its claimed accuracy is 100 ms  * when actually synchronized to the broadcast signal, but this doesn't  * happen even most of the time, due to propagation conditions, ambient  * noise sources, etc. When not synchronized, the accuracy is at the  * whim of the internal clock oscillator, which can wander into the  * sunset without warning. Since the indicated precision is 100 ms,  * expect a host synchronized only to this thing to wander to and fro,  * occasionally being rudely stepped when the offset exceeds the default  * clock_max of 128 ms.   *  * There are two GC-1000 versions supported by this driver. The original  * GC-1000 with RS-232 output first appeared in 1983, but dissapeared  * from the market a few years later. The GC-1000 II with RS-232 output  * first appeared circa 1990, but apparently is no longer manufactured.  * The two models differ considerably, both in interface and commands.  * The GC-1000 has a pseudo-bipolar timecode output triggered by a RTS  * transition. The timecode includes both the day of year and time of  * day. The GC-1000 II has a true bipolar output and a complement of  * single character commands. The timecode includes only the time of  * day.  *  * GC-1000  *  * The internal DIPswitches should be set to operate in MANUAL mode. The  * external DIPswitches should be set to GMT and 24-hour format.  *  * In MANUAL mode the clock responds to a rising edge of the request to  * send (RTS) modem control line by sending the timecode. Therefore, it  * is necessary that the operating system implement the TIOCMBIC and  * TIOCMBIS ioctl system calls and TIOCM_RTS control bit. Present  * restrictions require the use of a POSIX-compatible programming  * interface, although other interfaces may work as well.  *  * A simple hardware modification to the clock can be made which  * prevents the clock hearing the request to send (RTS) if the HI SPEC  * lamp is out. Route the HISPEC signal to the tone decoder board pin  * 19, from the display, pin 19. Isolate pin 19 of the decoder board  * first, but maintain connection with pin 10. Also isolate pin 38 of  * the CPU on the tone board, and use half an added 7400 to gate the  * original signal to pin 38 with that from pin 19.  *  * The clock message consists of 23 ASCII printing characters in the  * following format:  *  * hh:mm:ss.f AM  dd/mm/yr<cr>  *  *	hh:mm:ss.f = hours, minutes, seconds  *	f = deciseconds ('?' when out of spec)  *	AM/PM/bb = blank in 24-hour mode  *	dd/mm/yr = day, month, year  *  * The alarm condition is indicated by '?', rather than a digit, at f.  * Note that 0?:??:??.? is displayed before synchronization is first  * established and hh:mm:ss.? once synchronization is established and  * then lost again for about a day.  *  * GC-1000 II  *  * Commands consist of a single letter and are case sensitive. When  * enterred in lower case, a description of the action performed is  * displayed. When enterred in upper case the action is performed.  * Following is a summary of descriptions as displayed by the clock:  *  * The clock responds with a command The 'A' command returns an ASCII  * local time string:  HH:MM:SS.T xx<CR>, where  *  *	HH = hours  *	MM = minutes  *	SS = seconds  *	T = tenths-of-seconds  *	xx = 'AM', 'PM', or '  '  *<CR> = carriage return  *  * The 'D' command returns 24 pairs of bytes containing the variable  * divisor value at the end of each of the previous 24 hours. This  * allows the timebase trimming process to be observed.  UTC hour 00 is  * always returned first. The first byte of each pair is the high byte  * of (variable divisor * 16); the second byte is the low byte of  * (variable divisor * 16). For example, the byte pair 3C 10 would be  * returned for a divisor of 03C1 hex (961 decimal).  *  * The 'I' command returns:  | TH | TL | ER | DH | DL | U1 | I1 | I2 | ,  * where  *  *	TH = minutes since timebase last trimmed (high byte)  *	TL = minutes since timebase last trimmed (low byte)  *	ER = last accumulated error in 1.25 ms increments  *	DH = high byte of (current variable divisor * 16)  *	DL = low byte of (current variable divisor * 16)  *	U1 = UT1 offset (/.1 s):  | + | 4 | 2 | 1 | 0 | 0 | 0 | 0 |  *	I1 = information byte 1:  | W | C | D | I | U | T | Z | 1 | ,  *	     where  *  *		W = set by WWV(H)  *		C = CAPTURE LED on  *		D = TRIM DN LED on  *		I = HI SPEC LED on  *		U = TRIM UP LED on  *		T = DST switch on  *		Z = UTC switch on  *		1 = UT1 switch on  *  *	I2 = information byte 2:  | 8 | 8 | 4 | 2 | 1 | D | d | S | ,  *	     where  *  *		8, 8, 4, 2, 1 = TIME ZONE switch settings  *		D = DST bit (#55) in last-received frame  *		d = DST bit (#2) in last-received frame  *		S = clock is in simulation mode  *  * The 'P' command returns 24 bytes containing the number of frames  * received without error during UTC hours 00 through 23, providing an  * indication of hourly propagation.  These bytes are updated each hour  * to reflect the previous 24 hour period.  UTC hour 00 is always  * returned first.  *  * The 'T' command returns the UTC time:  | HH | MM | SS | T0 | , where  *	HH = tens-of-hours and hours (packed BCD)  *	MM = tens-of-minutes and minutes (packed BCD)  *	SS = tens-of-seconds and seconds (packed BCD)  *	T = tenths-of-seconds (BCD)  *  * Fudge Factors  *  * A fudge time1 value of .04 s appears to center the clock offset  * residuals. The fudge time2 parameter is the local time offset east of  * Greenwich, which depends on DST. Sorry about that, but the clock  * gives no hint on what the DIPswitches say.  */
+comment|/*  * This driver supports the Heath GC-1000 Most Accurate Clock, with  * RS232C Output Accessory. This is a WWV/WWVH receiver somewhat less  * robust than other supported receivers. Its claimed accuracy is 100 ms  * when actually synchronized to the broadcast signal, but this doesn't  * happen even most of the time, due to propagation conditions, ambient  * noise sources, etc. When not synchronized, the accuracy is at the  * whim of the internal clock oscillator, which can wander into the  * sunset without warning. Since the indicated precision is 100 ms,  * expect a host synchronized only to this thing to wander to and fro,  * occasionally being rudely stepped when the offset exceeds the default  * clock_max of 128 ms.   *  * There were two GC-1000 versions supported by this driver. The original  * GC-1000 with RS-232 output first appeared in 1983, but dissapeared  * from the market a few years later. The GC-1001 II with RS-232 output  * first appeared circa 1990, but apparently is no longer manufactured.  * The two models differ considerably, both in interface and commands.  * The GC-1000 has a pseudo-bipolar timecode output triggered by a RTS  * transition. The timecode includes both the day of year and time of  * day. The GC-1001 II has a true bipolar output and a complement of  * single character commands. The timecode includes only the time of  * day.  *  * The GC-1001 II was apparently never tested and, based on a Coverity  * scan, apparently never worked [Bug 689].  Related code has been disabled.  *  * GC-1000  *  * The internal DIPswitches should be set to operate in MANUAL mode. The  * external DIPswitches should be set to GMT and 24-hour format.  *  * In MANUAL mode the clock responds to a rising edge of the request to  * send (RTS) modem control line by sending the timecode. Therefore, it  * is necessary that the operating system implement the TIOCMBIC and  * TIOCMBIS ioctl system calls and TIOCM_RTS control bit. Present  * restrictions require the use of a POSIX-compatible programming  * interface, although other interfaces may work as well.  *  * A simple hardware modification to the clock can be made which  * prevents the clock hearing the request to send (RTS) if the HI SPEC  * lamp is out. Route the HISPEC signal to the tone decoder board pin  * 19, from the display, pin 19. Isolate pin 19 of the decoder board  * first, but maintain connection with pin 10. Also isolate pin 38 of  * the CPU on the tone board, and use half an added 7400 to gate the  * original signal to pin 38 with that from pin 19.  *  * The clock message consists of 23 ASCII printing characters in the  * following format:  *  * hh:mm:ss.f AM  dd/mm/yr<cr>  *  *	hh:mm:ss.f = hours, minutes, seconds  *	f = deciseconds ('?' when out of spec)  *	AM/PM/bb = blank in 24-hour mode  *	dd/mm/yr = day, month, year  *  * The alarm condition is indicated by '?', rather than a digit, at f.  * Note that 0?:??:??.? is displayed before synchronization is first  * established and hh:mm:ss.? once synchronization is established and  * then lost again for about a day.  *  * GC-1001 II  *  * Commands consist of a single letter and are case sensitive. When  * enterred in lower case, a description of the action performed is  * displayed. When enterred in upper case the action is performed.  * Following is a summary of descriptions as displayed by the clock:  *  * The clock responds with a command The 'A' command returns an ASCII  * local time string:  HH:MM:SS.T xx<CR>, where  *  *	HH = hours  *	MM = minutes  *	SS = seconds  *	T = tenths-of-seconds  *	xx = 'AM', 'PM', or '  '  *<CR> = carriage return  *  * The 'D' command returns 24 pairs of bytes containing the variable  * divisor value at the end of each of the previous 24 hours. This  * allows the timebase trimming process to be observed.  UTC hour 00 is  * always returned first. The first byte of each pair is the high byte  * of (variable divisor * 16); the second byte is the low byte of  * (variable divisor * 16). For example, the byte pair 3C 10 would be  * returned for a divisor of 03C1 hex (961 decimal).  *  * The 'I' command returns:  | TH | TL | ER | DH | DL | U1 | I1 | I2 | ,  * where  *  *	TH = minutes since timebase last trimmed (high byte)  *	TL = minutes since timebase last trimmed (low byte)  *	ER = last accumulated error in 1.25 ms increments  *	DH = high byte of (current variable divisor * 16)  *	DL = low byte of (current variable divisor * 16)  *	U1 = UT1 offset (/.1 s):  | + | 4 | 2 | 1 | 0 | 0 | 0 | 0 |  *	I1 = information byte 1:  | W | C | D | I | U | T | Z | 1 | ,  *	     where  *  *		W = set by WWV(H)  *		C = CAPTURE LED on  *		D = TRIM DN LED on  *		I = HI SPEC LED on  *		U = TRIM UP LED on  *		T = DST switch on  *		Z = UTC switch on  *		1 = UT1 switch on  *  *	I2 = information byte 2:  | 8 | 8 | 4 | 2 | 1 | D | d | S | ,  *	     where  *  *		8, 8, 4, 2, 1 = TIME ZONE switch settings  *		D = DST bit (#55) in last-received frame  *		d = DST bit (#2) in last-received frame  *		S = clock is in simulation mode  *  * The 'P' command returns 24 bytes containing the number of frames  * received without error during UTC hours 00 through 23, providing an  * indication of hourly propagation.  These bytes are updated each hour  * to reflect the previous 24 hour period.  UTC hour 00 is always  * returned first.  *  * The 'T' command returns the UTC time:  | HH | MM | SS | T0 | , where  *	HH = tens-of-hours and hours (packed BCD)  *	MM = tens-of-minutes and minutes (packed BCD)  *	SS = tens-of-seconds and seconds (packed BCD)  *	T = tenths-of-seconds (BCD)  *  * Fudge Factors  *  * A fudge time1 value of .04 s appears to center the clock offset  * residuals. The fudge time2 parameter is the local time offset east of  * Greenwich, which depends on DST. Sorry about that, but the clock  * gives no hint on what the DIPswitches say.  */
 end_comment
 
 begin_comment
@@ -154,6 +154,16 @@ begin_comment
 comment|/* min timecode length */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* BUG 689 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -164,6 +174,11 @@ end_define
 begin_comment
 comment|/* min timecode length */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Tables to compute the ddd of year form icky dd/mm timecode. Viva la  * leap.  */
@@ -238,7 +253,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Baud rate table. The GC-1000 supports 1200, 2400 and 4800; the  * GC-1000 II supports only 9600.  */
+comment|/*  * Baud rate table. The GC-1000 supports 1200, 2400 and 4800; the  * GC-1001 II supports only 9600.  */
 end_comment
 
 begin_decl_stmt
@@ -396,9 +411,6 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* 	 * Open serial port 	 */
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|device
@@ -427,7 +439,7 @@ operator|&
 literal|0x3
 index|]
 argument_list|,
-literal|0
+name|LDISC_REMOTE
 argument_list|)
 operator|)
 condition|)
@@ -674,7 +686,7 @@ operator|->
 name|lencode
 condition|)
 block|{
-comment|/* 	 * GC-1000 timecode format: "hh:mm:ss.f AM  mm/dd/yy" 	 * GC-1000 II timecode format: "hh:mm:ss.f   " 	 */
+comment|/* 	 * GC-1000 timecode format: "hh:mm:ss.f AM  mm/dd/yy" 	 * GC-1001 II timecode format: "hh:mm:ss.f   " 	 */
 case|case
 name|LENHEATH1
 case|:
@@ -733,52 +745,18 @@ expr_stmt|;
 return|return;
 block|}
 break|break;
-comment|/* 	 * GC-1000 II timecode format: "hh:mm:ss.f   " 	 */
-case|case
-name|LENHEATH2
-case|:
-if|if
-condition|(
-name|sscanf
-argument_list|(
-name|pp
-operator|->
-name|a_lastcode
-argument_list|,
-literal|"%2d:%2d:%2d.%c"
-argument_list|,
-operator|&
-name|pp
-operator|->
-name|hour
-argument_list|,
-operator|&
-name|pp
-operator|->
-name|minute
-argument_list|,
-operator|&
-name|pp
-operator|->
-name|second
-argument_list|,
-operator|&
-name|dsec
-argument_list|)
-operator|!=
-literal|4
-condition|)
-block|{
-name|refclock_report
-argument_list|(
-name|peer
-argument_list|,
-name|CEVNT_BADREPLY
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-break|break;
+if|#
+directive|if
+literal|0
+comment|/* BUG 689 */
+comment|/* 	 * GC-1001 II timecode format: "hh:mm:ss.f   " 	 */
+block|case LENHEATH2: 		if (sscanf(pp->a_lastcode, "%2d:%2d:%2d.%c",&pp->hour,&pp->minute,&pp->second,&dsec) != 4) { 			refclock_report(peer, CEVNT_BADREPLY); 			return; 		} else { 			struct tm *tm_time_p; 			time_t     now;  			time(&now);
+comment|/* we should grab 'now' earlier */
+block|tm_time_p = gmtime(&now);
+comment|/* 			 * There is a window of time around midnight 			 * where this will Do The Wrong Thing. 			 */
+block|if (tm_time_p) { 				month = tm_time_p->tm_mon + 1; 				day = tm_time_p->tm_mday; 			} else { 				refclock_report(peer, CEVNT_FAULT); 				return; 			} 		} 		break;
+endif|#
+directive|endif
 default|default:
 name|refclock_report
 argument_list|(
@@ -1011,7 +989,7 @@ name|peer
 operator|->
 name|procptr
 expr_stmt|;
-comment|/* 	 * We toggle the RTS modem control lead (GC-1000) and sent a T 	 * (GC-1000 II) to kick a timecode loose from the radio. This 	 * code works only for POSIX and SYSV interfaces. With bsd you 	 * are on your own. We take a timestamp between the up and down 	 * edges to lengthen the pulse, which should be about 50 usec on 	 * a Sun IPC. With hotshot CPUs, the pulse might get too short. 	 * Later. 	 */
+comment|/* 	 * We toggle the RTS modem control lead (GC-1000) and sent a T 	 * (GC-1001 II) to kick a timecode loose from the radio. This 	 * code works only for POSIX and SYSV interfaces. With bsd you 	 * are on your own. We take a timestamp between the up and down 	 * edges to lengthen the pulse, which should be about 50 usec on 	 * a Sun IPC. With hotshot CPUs, the pulse might get too short. 	 * Later. 	 * 	 * Bug 689: Even though we no longer support the GC-1001 II, 	 * I'm leaving the 'T' write in for timing purposes. 	 */
 if|if
 condition|(
 name|ioctl

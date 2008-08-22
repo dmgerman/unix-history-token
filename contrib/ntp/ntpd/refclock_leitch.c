@@ -176,6 +176,12 @@ begin_comment
 comment|/* uart speed (300 baud) */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -186,8 +192,31 @@ parameter_list|,
 name|M
 parameter_list|)
 define|\
-value|if (debug) fprintf(stderr,"write leitch %s\n",M); \ if ((write(A->leitchio.fd,M,sizeof(M))< 0)) {\ 						      if (debug) \ 									 fprintf(stderr, "leitch_send: unit %d send failed\n", A->unit); \ 																		 else \ 																			      msyslog(LOG_ERR, "leitch_send: unit %d send failed %m",A->unit);}
+value|if (debug) fprintf(stderr,"write leitch %s\n",M); \ if ((write(A->leitchio.fd,M,sizeof(M))< 0)) {\ 	if (debug) \ 	    fprintf(stderr, "leitch_send: unit %d send failed\n", A->unit); \ 	else \ 	    msyslog(LOG_ERR, "leitch_send: unit %d send failed %m",A->unit);}
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|leitch_send
+parameter_list|(
+name|A
+parameter_list|,
+name|M
+parameter_list|)
+define|\
+value|if ((write(A->leitchio.fd,M,sizeof(M))< 0)) {\ 	msyslog(LOG_ERR, "leitch_send: unit %d send failed %m",A->unit);}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -753,7 +782,7 @@ directive|endif
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|MAXUNITS
 condition|)
 block|{

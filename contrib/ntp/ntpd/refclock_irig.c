@@ -110,7 +110,7 @@ file|"audio.h"
 end_include
 
 begin_comment
-comment|/*  * Audio IRIG-B/E demodulator/decoder  *  * This driver receives, demodulates and decodes IRIG-B/E signals when  * connected to the audio codec /dev/audio. The IRIG signal format is an  * amplitude-modulated carrier with pulse-width modulated data bits. For  * IRIG-B, the carrier frequency is 1000 Hz and bit rate 100 b/s; for  * IRIG-E, the carrier frequenchy is 100 Hz and bit rate 10 b/s. The  * driver automatically recognizes which format is in use.  *  * The program processes 8000-Hz mu-law companded samples using separate  * signal filters for IRIG-B and IRIG-E, a comb filter, envelope  * detector and automatic threshold corrector. Cycle crossings relative  * to the corrected slice level determine the width of each pulse and  * its value - zero, one or position identifier. The data encode 20 BCD  * digits which determine the second, minute, hour and day of the year  * and sometimes the year and synchronization condition. The comb filter  * exponentially averages the corresponding samples of successive baud  * intervals in order to reliably identify the reference carrier cycle.  * A type-II phase-lock loop (PLL) performs additional integration and  * interpolation to accurately determine the zero crossing of that  * cycle, which determines the reference timestamp. A pulse-width  * discriminator demodulates the data pulses, which are then encoded as  * the BCD digits of the timecode.  *  * The timecode and reference timestamp are updated once each second  * with IRIG-B (ten seconds with IRIG-E) and local clock offset samples  * saved for later processing. At poll intervals of 64 s, the saved  * samples are processed by a trimmed-mean filter and used to update the  * system clock.  *  * An automatic gain control feature provides protection against  * overdriven or underdriven input signal amplitudes. It is designed to  * maintain adequate demodulator signal amplitude while avoiding  * occasional noise spikes. In order to assure reliable capture, the  * decompanded input signal amplitude must be greater than 100 units and  * the codec sample frequency error less than 250 PPM (.025 percent).  *  * The program performs a number of error checks to protect against  * overdriven or underdriven input signal levels, incorrect signal  * format or improper hardware configuration. Specifically, if any of  * the following errors occur for a time measurement, the data are  * rejected.  *  * o The peak carrier amplitude is less than DRPOUT (100). This usually  *   means dead IRIG signal source, broken cable or wrong input port.  *  * o The frequency error is greater than MAXFREQ +-250 PPM (.025%). This  *   usually means broken codec hardware or wrong codec configuration.  *  * o The modulation index is less than MODMIN (0.5). This usually means  *   overdriven IRIG signal or wrong IRIG format.  *  * o A frame synchronization error has occurred. This usually means  *   wrong IRIG signal format or the IRIG signal source has lost  *   synchronization (signature control).  *  * o A data decoding error has occurred. This usually means wrong IRIG  *   signal format.  *  * o The current second of the day is not exactly one greater than the  *   previous one. This usually means a very noisy IRIG signal or  *   insufficient CPU resources.  *  * o An audio codec error (overrun) occurred. This usually means  *   insufficient CPU resources, as sometimes happens with Sun SPARC  *   IPCs when doing something useful.  *  * Note that additional checks are done elsewhere in the reference clock  * interface routines.  *  * Debugging aids  *  * The timecode format used for debugging and data recording includes  * data helpful in diagnosing problems with the IRIG signal and codec  * connections. With debugging enabled (-d on the ntpd command line),  * the driver produces one line for each timecode in the following  * format:  *  * 00 1 98 23 19:26:52 721 143 0.694 20 0.1 66.5 3094572411.00027  *  * The most recent line is also written to the clockstats file at 64-s  * intervals.  *  * The first field contains the error flags in hex, where the hex bits  * are interpreted as below. This is followed by the IRIG status  * indicator, year of century, day of year and time of day. The status  * indicator and year are not produced by some IRIG devices. Following  * these fields are the signal amplitude (0-8100), codec gain (0-255),  * modulation index (0-1), time constant (2-20), carrier phase error  * (us) and carrier frequency error (PPM). The last field is the on-time  * timestamp in NTP format.  *  * The fraction part of the on-time timestamp is a good indicator of how  * well the driver is doing. With an UltrSPARC 30 and Solaris 2.7, this  * thing can keep the clock within a few tens of microseconds relative  * to the IRIG-B signal. Accuracy with IRIG-E is about ten times worse.  * Unfortunately, Sun broke the 2.7 audio driver in 2.8, which has a  * 10-ms sawtooth modulation. The driver attempts to remove the  * modulation by some clever estimation techniques which mostly work.  * Your experience may vary.  *  * Unlike other drivers, which can have multiple instantiations, this  * one supports only one. It does not seem likely that more than one  * audio codec would be useful in a single machine. More than one would  * probably chew up too much CPU time anyway.  *  * Fudge factors  *  * Fudge flag4 causes the dubugging output described above to be  * recorded in the clockstats file. When the audio driver is compiled,  * fudge flag2 selects the audio input port, where 0 is the mike port  * (default) and 1 is the line-in port. It does not seem useful to  * select the compact disc player port. Fudge flag3 enables audio  * monitoring of the input signal. For this purpose, the monitor gain is  * set to a default value. Fudgetime2 is used as a frequency vernier for  * broken codec sample frequency.  */
+comment|/*  * Audio IRIG-B/E demodulator/decoder  *  * This driver receives, demodulates and decodes IRIG-B/E signals when  * connected to the audio codec /dev/audio. The IRIG signal format is an  * amplitude-modulated carrier with pulse-width modulated data bits. For  * IRIG-B, the carrier frequency is 1000 Hz and bit rate 100 b/s; for  * IRIG-E, the carrier frequenchy is 100 Hz and bit rate 10 b/s. The  * driver automatically recognizes which format is in use.  *  * The program processes 8000-Hz mu-law companded samples using separate  * signal filters for IRIG-B and IRIG-E, a comb filter, envelope  * detector and automatic threshold corrector. Cycle crossings relative  * to the corrected slice level determine the width of each pulse and  * its value - zero, one or position identifier. The data encode 20 BCD  * digits which determine the second, minute, hour and day of the year  * and sometimes the year and synchronization condition. The comb filter  * exponentially averages the corresponding samples of successive baud  * intervals in order to reliably identify the reference carrier cycle.  * A type-II phase-lock loop (PLL) performs additional integration and  * interpolation to accurately determine the zero crossing of that  * cycle, which determines the reference timestamp. A pulse-width  * discriminator demodulates the data pulses, which are then encoded as  * the BCD digits of the timecode.  *  * The timecode and reference timestamp are updated once each second  * with IRIG-B (ten seconds with IRIG-E) and local clock offset samples  * saved for later processing. At poll intervals of 64 s, the saved  * samples are processed by a trimmed-mean filter and used to update the  * system clock.  *  * An automatic gain control feature provides protection against  * overdriven or underdriven input signal amplitudes. It is designed to  * maintain adequate demodulator signal amplitude while avoiding  * occasional noise spikes. In order to assure reliable capture, the  * decompanded input signal amplitude must be greater than 100 units and  * the codec sample frequency error less than 250 PPM (.025 percent).  *  * The program performs a number of error checks to protect against  * overdriven or underdriven input signal levels, incorrect signal  * format or improper hardware configuration. Specifically, if any of  * the following errors occur for a time measurement, the data are  * rejected.  *  * o The peak carrier amplitude is less than DRPOUT (100). This usually  *   means dead IRIG signal source, broken cable or wrong input port.  *  * o The frequency error is greater than MAXFREQ +-250 PPM (.025%). This  *   usually means broken codec hardware or wrong codec configuration.  *  * o The modulation index is less than MODMIN (0.5). This usually means  *   overdriven IRIG signal or wrong IRIG format.  *  * o A frame synchronization error has occurred. This usually means  *   wrong IRIG signal format or the IRIG signal source has lost  *   synchronization (signature control).  *  * o A data decoding error has occurred. This usually means wrong IRIG  *   signal format.  *  * o The current second of the day is not exactly one greater than the  *   previous one. This usually means a very noisy IRIG signal or  *   insufficient CPU resources.  *  * o An audio codec error (overrun) occurred. This usually means  *   insufficient CPU resources, as sometimes happens with Sun SPARC  *   IPCs when doing something useful.  *  * Note that additional checks are done elsewhere in the reference clock  * interface routines.  *  * Debugging aids  *  * The timecode format used for debugging and data recording includes  * data helpful in diagnosing problems with the IRIG signal and codec  * connections. With debugging enabled (-d on the ntpd command line),  * the driver produces one line for each timecode in the following  * format:  *  * 00 1 98 23 19:26:52 721 143 0.694 20 0.1 66.5 3094572411.00027  *  * The most recent line is also written to the clockstats file at 64-s  * intervals.  *  * The first field contains the error flags in hex, where the hex bits  * are interpreted as below. This is followed by the IRIG status  * indicator, year of century, day of year and time of day. The status  * indicator and year are not produced by some IRIG devices. Following  * these fields are the signal amplitude (0-8100), codec gain (0-255),  * modulation index (0-1), time constant (2-20), carrier phase error  * (us) and carrier frequency error (PPM). The last field is the on-time  * timestamp in NTP format.  *  * The fraction part of the on-time timestamp is a good indicator of how  * well the driver is doing. Once upon a time, an UltrSPARC 30 and  * Solaris 2.7 kept the clock within a few tens of microseconds relative  * to the IRIG-B signal. Accuracy with IRIG-E was about ten times worse.  * Unfortunately, Sun broke the 2.7 audio driver in 2.8, which has a 10-  * ms sawtooth modulation. The driver attempts to remove the modulation  * by some clever estimation techniques which mostly work. With the  * "mixerctl -o" command before starting the daemon, the jitter is down  * to about 100 microseconds. Your experience may vary.  *  * Unlike other drivers, which can have multiple instantiations, this  * one supports only one. It does not seem likely that more than one  * audio codec would be useful in a single machine. More than one would  * probably chew up too much CPU time anyway.  *  * Fudge factors  *  * Fudge flag4 causes the dubugging output described above to be  * recorded in the clockstats file. Fudge flag2 selects the audio input  * port, where 0 is the mike port (default) and 1 is the line-in port.  * It does not seem useful to select the compact disc player port. Fudge  * flag3 enables audio monitoring of the input signal. For this purpose,  * the monitor gain is set to a default value. Fudgetime2 is used as a  * frequency vernier for broken codec sample frequency.  */
 end_comment
 
 begin_comment
@@ -274,7 +274,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXSIG
+name|MAXAMP
 value|6000.
 end_define
 
@@ -1624,17 +1624,17 @@ operator|&
 literal|0xff
 index|]
 expr_stmt|;
-comment|/* 		 * Clip noise spikes greater than MAXSIG. If no clips, 		 * increase the gain a tad; if the clips are too high,  		 * decrease a tad. 		 */
+comment|/* 		 * Clip noise spikes greater than MAXAMP. If no clips, 		 * increase the gain a tad; if the clips are too high,  		 * decrease a tad. 		 */
 if|if
 condition|(
 name|sample
 operator|>
-name|MAXSIG
+name|MAXAMP
 condition|)
 block|{
 name|sample
 operator|=
-name|MAXSIG
+name|MAXAMP
 expr_stmt|;
 name|up
 operator|->
@@ -1648,13 +1648,13 @@ condition|(
 name|sample
 operator|<
 operator|-
-name|MAXSIG
+name|MAXAMP
 condition|)
 block|{
 name|sample
 operator|=
 operator|-
-name|MAXSIG
+name|MAXAMP
 expr_stmt|;
 name|up
 operator|->
@@ -3802,26 +3802,12 @@ name|year
 operator|>
 literal|0
 condition|)
-block|{
 name|pp
 operator|->
 name|year
 operator|+=
 literal|2000
 expr_stmt|;
-if|if
-condition|(
-name|syncchar
-operator|==
-literal|'0'
-condition|)
-name|up
-operator|->
-name|errflg
-operator||=
-name|IRIG_ERR_CHECK
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|pp

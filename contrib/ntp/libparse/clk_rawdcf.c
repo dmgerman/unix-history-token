@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/clk_rawdcf.c,v 4.9 1999/12/06 13:42:23 kardel Exp  *    * clk_rawdcf.c,v 4.9 1999/12/06 13:42:23 kardel Exp  *  * Raw DCF77 pulse clock support  *  * Copyright (C) 1992-1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/clk_rawdcf.c,v 4.18 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *    * clk_rawdcf.c,v 4.18 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *  * Raw DCF77 pulse clock support  *  * Copyright (c) 1995-2006 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -181,6 +181,13 @@ name|last_tcode_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|BUFFER_MAX
+value|61
+end_define
+
 begin_decl_stmt
 name|clockformat_t
 name|clock_rawdcf
@@ -201,7 +208,7 @@ comment|/* no private configuration data */
 literal|"RAW DCF77 Timecode"
 block|,
 comment|/* direct decoding / time synthesis */
-literal|61
+name|BUFFER_MAX
 block|,
 comment|/* bit buffer */
 expr|sizeof
@@ -219,26 +226,32 @@ name|dcfparam
 block|{
 name|unsigned
 name|char
+modifier|*
 name|onebits
-index|[
-literal|60
-index|]
 decl_stmt|;
 name|unsigned
 name|char
+modifier|*
 name|zerobits
-index|[
-literal|60
-index|]
 decl_stmt|;
 block|}
 name|dcfparameter
 init|=
 block|{
-literal|"###############RADMLS1248124P124812P1248121241248112481248P"
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+literal|"###############RADMLS1248124P124812P1248121241248112481248P??"
 block|,
 comment|/* 'ONE' representation */
-literal|"--------------------s-------p------p----------------------p"
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+literal|"--------------------s-------p------p----------------------p__"
 comment|/* 'ZERO' representation */
 block|}
 struct|;
@@ -558,30 +571,25 @@ specifier|static
 name|u_long
 name|ext_bf
 parameter_list|(
-specifier|register
 name|unsigned
 name|char
 modifier|*
 name|buf
 parameter_list|,
-specifier|register
 name|int
 name|idx
 parameter_list|,
-specifier|register
 name|unsigned
 name|char
 modifier|*
 name|zero
 parameter_list|)
 block|{
-specifier|register
 name|u_long
 name|sum
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -745,7 +753,6 @@ modifier|*
 name|clock_time
 parameter_list|)
 block|{
-specifier|register
 name|unsigned
 name|char
 modifier|*
@@ -753,7 +760,6 @@ name|s
 init|=
 name|buffer
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 modifier|*
@@ -763,7 +769,6 @@ name|dcfprm
 operator|->
 name|onebits
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 modifier|*
@@ -773,7 +778,6 @@ name|dcfprm
 operator|->
 name|zerobits
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -821,7 +825,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|58
+name|size
 condition|;
 name|i
 operator|++
@@ -854,9 +858,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"parse: convert_rawdcf: BAD DATA - no conversion for \"%s\"\n"
-argument_list|,
-name|buffer
+literal|"parse: convert_rawdcf: BAD DATA - no conversion"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -865,9 +867,19 @@ return|return
 name|CVT_NONE
 return|;
 block|}
+if|if
+condition|(
+operator|*
+name|b
+condition|)
 name|b
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|c
+condition|)
 name|c
 operator|++
 expr_stmt|;
@@ -1394,7 +1406,6 @@ operator|*
 operator|)
 name|local
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 modifier|*
@@ -1407,7 +1418,6 @@ operator|*
 operator|)
 name|buffer
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 modifier|*
@@ -1417,7 +1427,6 @@ name|s
 operator|+
 name|size
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 modifier|*
@@ -1427,7 +1436,6 @@ name|dcfparameter
 operator|.
 name|onebits
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 modifier|*
@@ -1442,7 +1450,6 @@ name|rtc
 init|=
 name|CVT_NONE
 decl_stmt|;
-specifier|register
 name|unsigned
 name|int
 name|i
@@ -1504,7 +1511,6 @@ operator|<
 name|e
 condition|)
 block|{
-specifier|register
 name|unsigned
 name|int
 name|ch
@@ -1917,17 +1923,9 @@ name|buffer
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|s
 operator|<
 name|e
-operator|)
-operator|&&
-operator|*
-name|c
-operator|&&
-operator|*
-name|b
 condition|)
 block|{
 if|if
@@ -1971,9 +1969,19 @@ block|}
 name|s
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|b
+condition|)
 name|b
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|c
+condition|)
 name|c
 operator|++
 expr_stmt|;
@@ -2088,16 +2096,13 @@ specifier|static
 name|u_long
 name|pps_rawdcf
 parameter_list|(
-specifier|register
 name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-specifier|register
 name|int
 name|status
 parameter_list|,
-specifier|register
 name|timestamp_t
 modifier|*
 name|ptime
@@ -2141,12 +2146,10 @@ specifier|static
 name|u_long
 name|snt_rawdcf
 parameter_list|(
-specifier|register
 name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-specifier|register
 name|timestamp_t
 modifier|*
 name|ptime
@@ -2238,7 +2241,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inp_rawdcf  *  * grep DCF77 data from input stream  */
+comment|/*  * inp_rawdcf  *  * grab DCF77 data from input stream  */
 end_comment
 
 begin_function
@@ -2410,7 +2413,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE&& CLOCK_RAWDCF) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_rawdcf.c,v  * Revision 4.9  1999/12/06 13:42:23  kardel  * transfer correctly converted time codes always into tcode  *  * Revision 4.8  1999/11/28 09:13:50  kardel  * RECON_4_0_98F  *  * Revision 4.7  1999/04/01 20:07:20  kardel  * added checking for minutie increment of timestamps in clk_rawdcf.c  *  * Revision 4.6  1998/06/14 21:09:37  kardel  * Sun acc cleanup  *  * Revision 4.5  1998/06/13 12:04:16  kardel  * fix SYSV clock name clash  *  * Revision 4.4  1998/06/12 15:22:28  kardel  * fix prototypes  *  * Revision 4.3  1998/06/06 18:33:36  kardel  * simplified condidional compile expression  *  * Revision 4.2  1998/05/24 11:04:18  kardel  * triggering PPS on negative edge for simpler wiring (Rx->DCD)  *  * Revision 4.1  1998/05/24 09:39:53  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:30  kardel  * Start 4.0 release version numbering  *  * from V3 3.24 log info deleted 1998/04/11 kardel  *  */
+comment|/*  * History:  *  * clk_rawdcf.c,v  * Revision 4.18  2006/06/22 18:40:01  kardel  * clean up signedness (gcc 4)  *  * Revision 4.17  2006/01/22 16:01:55  kardel  * update version information  *  * Revision 4.16  2006/01/22 15:51:22  kardel  * generate reasonable timecode output on invalid input  *  * Revision 4.15  2005/08/06 19:17:06  kardel  * clean log output  *  * Revision 4.14  2005/08/06 17:39:40  kardel  * cleanup size handling wrt/ to buffer boundaries  *  * Revision 4.13  2005/04/16 17:32:10  kardel  * update copyright  *  * Revision 4.12  2004/11/14 15:29:41  kardel  * support PPSAPI, upgrade Copyright to Berkeley style  *  * Revision 4.9  1999/12/06 13:42:23  kardel  * transfer correctly converted time codes always into tcode  *  * Revision 4.8  1999/11/28 09:13:50  kardel  * RECON_4_0_98F  *  * Revision 4.7  1999/04/01 20:07:20  kardel  * added checking for minutie increment of timestamps in clk_rawdcf.c  *  * Revision 4.6  1998/06/14 21:09:37  kardel  * Sun acc cleanup  *  * Revision 4.5  1998/06/13 12:04:16  kardel  * fix SYSV clock name clash  *  * Revision 4.4  1998/06/12 15:22:28  kardel  * fix prototypes  *  * Revision 4.3  1998/06/06 18:33:36  kardel  * simplified condidional compile expression  *  * Revision 4.2  1998/05/24 11:04:18  kardel  * triggering PPS on negative edge for simpler wiring (Rx->DCD)  *  * Revision 4.1  1998/05/24 09:39:53  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:30  kardel  * Start 4.0 release version numbering  *  * from V3 3.24 log info deleted 1998/04/11 kardel  *  */
 end_comment
 
 end_unit

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v4/parseutil/testdcf.c,v 3.18 1996/12/01 16:05:04 kardel Exp  *    * testdcf.c,v 3.18 1996/12/01 16:05:04 kardel Exp  *  * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1993,1994,1995,1996, 1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
+comment|/*  * /src/NTP/ntp4-dev/parseutil/testdcf.c,v 4.10 2005/08/06 14:18:43 kardel RELEASE_20050806_A  *  * testdcf.c,v 4.10 2005/08/06 14:18:43 kardel RELEASE_20050806_A  *    * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"ntp_stdlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -130,6 +136,17 @@ name|clocktime_t
 typedef|;
 end_typedef
 
+begin_function_decl
+specifier|static
+name|char
+name|type
+parameter_list|(
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -202,6 +219,16 @@ end_comment
 begin_comment
 comment|/*  * DCF77 raw time code  *  * From "Zur Zeit", Physikalisch-Technische Bundesanstalt (PTB), Braunschweig  * und Berlin, Maerz 1989  *  * Timecode transmission:  * AM:  *	time marks are send every second except for the second before the  *	next minute mark  *	time marks consist of a reduction of transmitter power to 25%  *	of the nominal level  *	the falling edge is the time indication (on time)  *	time marks of a 100ms duration constitute a logical 0  *	time marks of a 200ms duration constitute a logical 1  * FM:  *	see the spec. (basically a (non-)inverted psuedo random phase shift)  *  * Encoding:  * Second	Contents  * 0  - 10	AM: free, FM: 0  * 11 - 14	free  * 15		R     - alternate antenna  * 16		A1    - expect zone change (1 hour before)  * 17 - 18	Z1,Z2 - time zone  *		 0  0 illegal  *		 0  1 MEZ  (MET)  *		 1  0 MESZ (MED, MET DST)  *		 1  1 illegal  * 19		A2    - expect leap insertion/deletion (1 hour before)  * 20		S     - start of time code (1)  * 21 - 24	M1    - BCD (lsb first) Minutes  * 25 - 27	M10   - BCD (lsb first) 10 Minutes  * 28		P1    - Minute Parity (even)  * 29 - 32	H1    - BCD (lsb first) Hours  * 33 - 34      H10   - BCD (lsb first) 10 Hours  * 35		P2    - Hour Parity (even)  * 36 - 39	D1    - BCD (lsb first) Days  * 40 - 41	D10   - BCD (lsb first) 10 Days  * 42 - 44	DW    - BCD (lsb first) day of week (1: Monday -> 7: Sunday)  * 45 - 49	MO    - BCD (lsb first) Month  * 50           MO0   - 10 Months  * 51 - 53	Y1    - BCD (lsb first) Years  * 54 - 57	Y10   - BCD (lsb first) 10 Years  * 58 		P3    - Date Parity (even)  * 59		      - usually missing (minute indication), except for leap insertion  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|revision
+index|[]
+init|=
+literal|"4.10"
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|static
@@ -1042,6 +1069,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 name|type
 parameter_list|(
@@ -1057,7 +1085,7 @@ expr_stmt|;
 return|return
 operator|(
 name|c
-operator|>
+operator|>=
 literal|0xF
 operator|)
 return|;
@@ -1421,8 +1449,6 @@ name|term
 operator|.
 name|c_cflag
 operator|=
-name|B50
-operator||
 name|CS8
 operator||
 name|CREAD
@@ -1435,8 +1461,6 @@ name|term
 operator|.
 name|c_cflag
 operator|=
-name|B50
-operator||
 name|CS8
 operator||
 name|CREAD
@@ -1464,6 +1488,22 @@ operator|.
 name|c_lflag
 operator|=
 literal|0
+expr_stmt|;
+name|cfsetispeed
+argument_list|(
+operator|&
+name|term
+argument_list|,
+name|B50
+argument_list|)
+expr_stmt|;
+name|cfsetospeed
+argument_list|(
+operator|&
+name|term
+argument_list|,
+name|B50
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1551,7 +1591,9 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"  DCF77 monitor - Copyright (C) 1993-1996, Frank Kardel\n\n"
+literal|"  DCF77 monitor %s - Copyright (C) 1993-2005, Frank Kardel\n\n"
+argument_list|,
+name|revision
 argument_list|)
 expr_stmt|;
 name|clock_time
@@ -2164,6 +2206,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * History:  *  * testdcf.c,v  * Revision 4.10  2005/08/06 14:18:43  kardel  * cleanup warnings  *  * Revision 4.9  2005/08/06 14:14:38  kardel  * document revision on startup  *  * Revision 4.8  2005/08/06 14:10:08  kardel  * fix setting of baud rate  *  * Revision 4.7  2005/04/16 17:32:10  kardel  * update copyright  *  * Revision 4.6  2004/11/14 15:29:42  kardel  * support PPSAPI, upgrade Copyright to Berkeley style  *  */
+end_comment
 
 end_unit
 

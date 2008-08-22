@@ -425,6 +425,21 @@ end_comment
 
 begin_function_decl
 name|isc_boolean_t
+name|isc_sockaddr_isexperimental
+parameter_list|(
+name|isc_sockaddr_t
+modifier|*
+name|sa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Returns ISC_TRUE if the address is a experimental (CLASS E) address.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
 name|isc_sockaddr_islinklocal
 parameter_list|(
 name|isc_sockaddr_t

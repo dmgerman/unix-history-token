@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **	dynamically loadable clk driver ** **	/src/NTP/REPOSITORY/v3/kernel/clkinit.c,v 1.1.1.1 1994/07/11 07:56:25 kardel Exp ** **	william robertson<rob@agate.berkeley.edu>   */
+comment|/* **	dynamically loadable clk driver ** **	william robertson<rob@agate.berkeley.edu>   */
 end_comment
 
 begin_include

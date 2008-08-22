@@ -33,6 +33,22 @@ directive|include
 file|"ntp_stdlib.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ntp_random.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntpd.h"
+end_include
+
+begin_comment
+comment|/* for sys_precision */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -114,8 +130,35 @@ comment|/* HAVE_UTMPX_H */
 end_comment
 
 begin_comment
-comment|/*  * These routines (get_systime, step_systime, adj_systime) implement an  * interface between the system independent NTP clock and the Unix  * system clock in various architectures and operating systems.  *  * Time is a precious quantity in these routines and every effort is  * made to minimize errors by always rounding toward zero and amortizing  * adjustment residues. By default the adjustment quantum is 1 us for  * the usual Unix tickadj() system call, but this can be increased if  * necessary by a configuration command. For instance, when the  * adjtime() quantum is a clock tick for a 100-Hz clock, the quantum  * should be 10 ms.  */
+comment|/*  * These routines (get_systime, step_systime, adj_systime) implement an  * interface between the system independent NTP clock and the Unix  * system clock in various architectures and operating systems.  *  * Time is a precious quantity in these routines and every effort is  * made to minimize errors by always rounding toward zero and amortizing  * adjustment residues. By default the adjustment quantum is 1 us for  * the usual Unix tickadj() system call, but this can be increased if  * necessary by the tick configuration command. For instance, when the  * adjtime() quantum is a clock tick for a 100-Hz clock, the quantum  * should be 10 ms.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|RELIANTUNIX_CLOCK
+operator|||
+name|defined
+name|SCO5_CLOCK
+end_if
+
+begin_decl_stmt
+name|double
+name|sys_tick
+init|=
+literal|10e-3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 10 ms tickadj() */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|double
@@ -126,8 +169,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* tickadj() quantum (s) */
+comment|/* 1 us tickadj() */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|double
@@ -180,7 +228,7 @@ name|timespec
 name|ts
 decl_stmt|;
 comment|/* seconds and nanoseconds */
-comment|/* 	 * Convert Unix clock from seconds and nanoseconds to seconds. 	 */
+comment|/* 	 * Convert Unix clock from seconds and nanoseconds to seconds. 	 * The bottom is only two bits down, so no need for fuzz. 	 * Some systems don't have that level of precision, however... 	 */
 ifdef|#
 directive|ifdef
 name|HAVE_CLOCK_GETTIME
@@ -230,7 +278,7 @@ name|timeval
 name|tv
 decl_stmt|;
 comment|/* seconds and microseconds */
-comment|/* 	 * Convert Unix clock from seconds and microseconds to seconds. 	 */
+comment|/* 	 * Convert Unix clock from seconds and microseconds to seconds. 	 * Add in unbiased random fuzz beneath the microsecond. 	 */
 name|GETTIMEOFDAY
 argument_list|(
 operator|&
@@ -260,6 +308,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_CLOCK_GETTIME || HAVE_GETCLOCK */
+comment|/* 	 * ntp_random() produces 31 bits (always nonnegative). 	 * This bit is done only after the precision has been 	 * determined. 	 */
+if|if
+condition|(
+name|sys_precision
+operator|!=
+literal|0
+condition|)
+name|dtemp
+operator|+=
+operator|(
+name|ntp_random
+argument_list|()
+operator|/
+name|FRAC
+operator|-
+literal|.5
+operator|)
+operator|/
+operator|(
+literal|1
+operator|<<
+operator|-
+name|sys_precision
+operator|)
+expr_stmt|;
 comment|/* 	 * Renormalize to seconds past 1900 and fraction. 	 */
 name|dtemp
 operator|+=
@@ -287,8 +360,7 @@ if|if
 condition|(
 name|dtemp
 operator|<
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|dtemp
@@ -463,7 +535,27 @@ name|adjtv
 operator|.
 name|tv_usec
 expr_stmt|;
+name|sys_residual
+operator|=
+operator|-
+name|sys_residual
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|adjtv
+operator|.
+name|tv_sec
+operator|!=
+literal|0
+operator|||
+name|adjtv
+operator|.
+name|tv_usec
+operator|!=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|adjtime
@@ -490,6 +582,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
@@ -1515,20 +1608,11 @@ operator|-
 name|sys_residual
 expr_stmt|;
 block|}
-comment|/* 	 * We went to all the trouble just to be sure the emulation is 	 * precise. We now return to our regularly scheduled concert. 	 */
 name|ntp_node
 operator|.
-name|clk_time
-operator|-=
-name|adjtv
-operator|.
-name|tv_sec
-operator|+
-name|adjtv
-operator|.
-name|tv_usec
-operator|/
-literal|1e6
+name|adj
+operator|=
+name|now
 expr_stmt|;
 return|return
 operator|(
@@ -1552,10 +1636,30 @@ name|now
 comment|/* step adjustment (s) */
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"step_systime: time %.6f adj %.6f\n"
+argument_list|,
 name|ntp_node
 operator|.
-name|adj
-operator|=
+name|ntp_time
+argument_list|,
+name|now
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ntp_node
+operator|.
+name|ntp_time
+operator|+=
 name|now
 expr_stmt|;
 return|return

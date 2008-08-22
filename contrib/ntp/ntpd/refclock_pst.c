@@ -976,6 +976,20 @@ argument_list|,
 name|CEVNT_BADTIME
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|peer
+operator|->
+name|disp
+operator|>
+name|MAXDISTANCE
+condition|)
+name|refclock_receive
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

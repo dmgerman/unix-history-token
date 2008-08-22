@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Refclock_neoclock4x.c  * - NeoClock4X driver for DCF77 or FIA Timecode  *  * Date: 2003-07-07 v1.13  *  * see http://www.linum.com/redir/jump/id=neoclock4x&action=redir  * for details about the NeoClock4X device  *  * Copyright (C) 2002-2003 by Linum Software GmbH<neoclock4x@linum.com>  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  *  */
+comment|/*  *  * Refclock_neoclock4x.c  * - NeoClock4X driver for DCF77 or FIA Timecode  *  * Date: 2006-01-11 v1.15  *  * see http://www.linum.com/redir/jump/id=neoclock4x&action=redir  * for details about the NeoClock4X device  *  * Copyright (C) 2002-2004 by Linum Software GmbH<neoclock4x@linum.com>  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  *  */
 end_comment
 
 begin_ifdef
@@ -121,6 +121,12 @@ directive|include
 file|<sys/modem.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__QNXNTO__
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -141,6 +147,11 @@ directive|define
 name|TIOCM_RTS
 value|MRTS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -216,6 +227,27 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * NTP version 4.20 change the pp->msec field to pp->nsec.  * To allow to support older ntp versions with this sourcefile  * you can define NTP_PRE_420 to allow this driver to compile  * with ntp version back to 4.1.2.  *  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|NTP_PRE_420
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * If you want the driver for whatever reason to not use  * the TX line to send anything to your NeoClock4X  * device you must tell the NTP refclock driver which  * firmware you NeoClock4X device uses.  *  * If you want to enable this feature change the "#if 0"  * line to "#if 1" and make sure that the defined firmware  * matches the firmware off your NeoClock4X receiver!  *  */
 end_comment
 
@@ -236,6 +268,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* at this time only firmware version A is known */
+end_comment
 
 begin_define
 define|#
@@ -367,7 +403,14 @@ begin_define
 define|#
 directive|define
 name|NEOCLOCK4X_DRIVER_VERSION
-value|"1.12 (2003-01-10)"
+value|"1.15 (2006-01-11)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSEC_TO_MILLI
+value|1000000
 end_define
 
 begin_struct
@@ -669,18 +712,6 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void     neol_mdelay             P((int));
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 operator|!
 name|defined
 argument_list|(
@@ -850,7 +881,7 @@ name|dev
 argument_list|,
 name|B2400
 argument_list|,
-name|LDISC_CLK
+name|LDISC_STD
 argument_list|)
 expr_stmt|;
 if|if
@@ -872,6 +903,142 @@ name|defined
 argument_list|(
 name|HAVE_TERMIOS
 argument_list|)
+if|#
+directive|if
+literal|1
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|termsettings
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"NeoClock4X(%d): (tcgetattr) can't query serial port settings: %m"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 2400 Baud 8N2 */
+name|termsettings
+operator|.
+name|c_iflag
+operator|=
+name|IGNBRK
+operator||
+name|IGNPAR
+operator||
+name|ICRNL
+expr_stmt|;
+name|termsettings
+operator|.
+name|c_oflag
+operator|=
+literal|0
+expr_stmt|;
+name|termsettings
+operator|.
+name|c_cflag
+operator|=
+name|CS8
+operator||
+name|CSTOPB
+operator||
+name|CLOCAL
+operator||
+name|CREAD
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|cfsetispeed
+argument_list|(
+operator|&
+name|termsettings
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|B2400
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|cfsetospeed
+argument_list|(
+operator|&
+name|termsettings
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|B2400
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcsetattr
+argument_list|(
+name|fd
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|termsettings
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"NeoClock4X(%d): (tcsetattr) can't set serial port 2400 8N2: %m"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|tcgetattr
@@ -973,6 +1140,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 elif|#
 directive|elif
 name|defined
@@ -1577,7 +1746,7 @@ name|msyslog
 argument_list|(
 name|LOG_EMERG
 argument_list|,
-literal|"NeoClock4X(%d): Unkown firmware defined at compile time for NeoClock4X"
+literal|"NeoClock4X(%d): unknown firmware defined at compile time for NeoClock4X"
 argument_list|,
 name|unit
 argument_list|)
@@ -2619,15 +2788,36 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NTP_PRE_420
+argument_list|)
+name|pp
+operator|->
+name|msec
+operator|=
+name|dsec
+operator|*
+literal|10
+expr_stmt|;
+comment|/* convert 1/100s from neoclock to real miliseconds */
+else|#
+directive|else
 name|pp
 operator|->
 name|nsec
 operator|=
 name|dsec
 operator|*
-literal|10000
+literal|10
+operator|*
+name|NSEC_TO_MILLI
 expr_stmt|;
 comment|/* convert 1/100s from neoclock to nanoseconds */
+endif|#
+directive|endif
 name|memcpy
 argument_list|(
 name|up
@@ -2963,41 +3153,38 @@ condition|)
 block|{
 name|msyslog
 argument_list|(
-name|LOG_DEBUG
+argument|LOG_DEBUG
 argument_list|,
 literal|"NeoClock4X(%d): calculated UTC date/time: %04d-%02d-%02d %02d:%02d:%02d.%03ld"
 argument_list|,
-name|up
-operator|->
-name|unit
+argument|up->unit
 argument_list|,
-name|pp
-operator|->
-name|year
+argument|pp->year
 argument_list|,
-name|month
+argument|month
 argument_list|,
-name|day
+argument|day
 argument_list|,
-name|pp
-operator|->
-name|hour
+argument|pp->hour
 argument_list|,
-name|pp
-operator|->
-name|minute
+argument|pp->minute
 argument_list|,
-name|pp
-operator|->
-name|second
+argument|pp->second
 argument_list|,
-name|pp
-operator|->
-name|nsec
-operator|/
-literal|1000
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NTP_PRE_420
 argument_list|)
-expr_stmt|;
+argument|pp->msec
+else|#
+directive|else
+argument|pp->nsec/NSEC_TO_MILLI
+endif|#
+directive|endif
+argument_list|)
+empty_stmt|;
 block|}
 name|up
 operator|->
@@ -3043,6 +3230,22 @@ name|pp
 operator|->
 name|second
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NTP_PRE_420
+argument_list|)
+name|up
+operator|->
+name|utc_msec
+operator|=
+name|pp
+operator|->
+name|msec
+expr_stmt|;
+else|#
+directive|else
 name|up
 operator|->
 name|utc_msec
@@ -3051,8 +3254,10 @@ name|pp
 operator|->
 name|nsec
 operator|/
-literal|1000
+name|NSEC_TO_MILLI
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3365,14 +3570,6 @@ operator|!=
 name|out
 condition|)
 block|{
-specifier|static
-name|char
-name|outstatus
-index|[
-literal|800
-index|]
-decl_stmt|;
-comment|/* status output buffer */
 name|char
 modifier|*
 name|tt
@@ -3383,13 +3580,6 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|outstatus
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|out
 operator|->
 name|kv_list
@@ -3911,6 +4101,9 @@ literal|0
 init|;
 name|isxdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|str
 index|[
 name|i
@@ -3929,6 +4122,9 @@ name|hexdigit
 operator|=
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|str
 index|[
 name|i
@@ -4016,6 +4212,9 @@ literal|0
 init|;
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|str
 index|[
 name|i
@@ -4430,22 +4629,6 @@ name|d
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  *  delay in milliseconds  */
-end_comment
-
-begin_endif
-unit|static void neol_mdelay(int milliseconds) {   struct timeval tv;    if(milliseconds)     {       tv.tv_sec  = 0;       tv.tv_usec = milliseconds * 1000;       select(1, NULL, NULL, NULL,&tv);     } }
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -5081,7 +5264,7 @@ comment|/* REFCLOCK */
 end_comment
 
 begin_comment
-comment|/*  * History:  * refclock_neoclock4x.c  *  * 2002/04/27 cjh  * Revision 1.0  first release  *  * 2002/07/15 cjh  * preparing for bitkeeper reposity  *  * 2002/09/09 cjh  * Revision 1.1  * - don't assume sprintf returns an int anymore  * - change the way the firmware version is read  * - some customers would like to put a device called  *   data diode to the NeoClock4X device to disable  *   the write line. We need to now the firmware  *   version even in this case. We made a compile time  *   definition in this case. The code was previously  *   only available on request.  *  * 2003/01/08 cjh  * Revision 1.11  * - changing xprinf to xnprinf to avoid buffer overflows  * - change some logic  * - fixed memory leaks if drivers can't initialize  *  * 2003/01/10 cjh  * Revision 1.12  * - replaced ldiv  * - add code to support FreeBSD  *  * 2003/07/07 cjh  * Revision 1.13  * - fix reporting of clock status  *   changes. previously a bad clock  *   status was never reset.  */
+comment|/*  * History:  * refclock_neoclock4x.c  *  * 2002/04/27 cjh  * Revision 1.0  first release  *  * 2002/07/15 cjh  * preparing for bitkeeper reposity  *  * 2002/09/09 cjh  * Revision 1.1  * - don't assume sprintf returns an int anymore  * - change the way the firmware version is read  * - some customers would like to put a device called  *   data diode to the NeoClock4X device to disable  *   the write line. We need to now the firmware  *   version even in this case. We made a compile time  *   definition in this case. The code was previously  *   only available on request.  *  * 2003/01/08 cjh  * Revision 1.11  * - changing xprinf to xnprinf to avoid buffer overflows  * - change some logic  * - fixed memory leaks if drivers can't initialize  *  * 2003/01/10 cjh  * Revision 1.12  * - replaced ldiv  * - add code to support FreeBSD  *  * 2003/07/07 cjh  * Revision 1.13  * - fix reporting of clock status  *   changes. previously a bad clock  *   status was never reset.  *  * 2004/04/07 cjh  * Revision 1.14  * - open serial port in a way  *   AIX and some other OS can  *   handle much better  *  * 2006/01/11 cjh  * Revision 1.15  * - remove some unsued #ifdefs  * - fix nsec calculation, closes #499  *  */
 end_comment
 
 end_unit

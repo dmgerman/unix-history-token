@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/parsesolaris.c,v 4.6 1998/11/15 21:56:08 kardel RELEASE_19991128_A  *    * parsesolaris.c,v 4.6 1998/11/15 21:56:08 kardel RELEASE_19991128_A  *  * STREAMS module for reference clocks  *  * Copyright (C) 1993-1998 by Frank Kardel  * derived work from parsestreams.c ((c) 1991-1993, Frank Kardel) and  * dcf77sync.c((c) Frank Kardel)  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp4-dev/libparse/parsesolaris.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *    * parsesolaris.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * STREAMS module for reference clocks  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_define
@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parsesolaris.c,v 4.6 1998/11/15 21:56:08 kardel RELEASE_19991128_A"
+literal|"parsesolaris.c,v 4.11 2005/04/16 17:32:10 kardel RELEASE_20050508_A"
 decl_stmt|;
 end_decl_stmt
 
@@ -1422,7 +1422,7 @@ name|cmn_err
 argument_list|(
 name|CE_CONT
 argument_list|,
-literal|"?%s: Copyright (c) 1993-1998, Frank Kardel\n"
+literal|"?%s: Copyright (c) 1993-2005, Frank Kardel\n"
 argument_list|,
 name|modlstrmod
 operator|.
@@ -4474,7 +4474,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parsesolaris.c,v  * Revision 4.6  1998/11/15 21:56:08  kardel  * ntp_memset not necessary  *  * Revision 4.5  1998/11/15 21:23:37  kardel  * ntp_memset() replicated in Sun kernel files  *  * Revision 4.4  1998/06/14 21:09:40  kardel  * Sun acc cleanup  *  * Revision 4.3  1998/06/13 12:14:59  kardel  * more prototypes  * fix name clashes  * allow for ansi2knr  *  * Revision 4.2  1998/06/12 15:23:08  kardel  * fix prototypes  * adjust for ansi2knr  *  * Revision 4.1  1998/05/24 09:38:46  kardel  * streams initiated iopps calls (M_xHANGUP) are now consistent with the  * respective calls from zs_xsisr()  * simulation of CARRIER status to avoid unecessary M_xHANGUP messages  *  * Revision 4.0  1998/04/10 19:45:38  kardel  * Start 4.0 release version numbering  *  * from V3 3.28 log info deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * parsesolaris.c,v  * Revision 4.11  2005/04/16 17:32:10  kardel  * update copyright  *  * Revision 4.10  2004/11/14 16:06:08  kardel  * update Id tags  *  * Revision 4.9  2004/11/14 15:29:41  kardel  * support PPSAPI, upgrade Copyright to Berkeley style  *  * Revision 4.6  1998/11/15 21:56:08  kardel  * ntp_memset not necessary  *  * Revision 4.5  1998/11/15 21:23:37  kardel  * ntp_memset() replicated in Sun kernel files  *  * Revision 4.4  1998/06/14 21:09:40  kardel  * Sun acc cleanup  *  * Revision 4.3  1998/06/13 12:14:59  kardel  * more prototypes  * fix name clashes  * allow for ansi2knr  *  * Revision 4.2  1998/06/12 15:23:08  kardel  * fix prototypes  * adjust for ansi2knr  *  * Revision 4.1  1998/05/24 09:38:46  kardel  * streams initiated iopps calls (M_xHANGUP) are now consistent with the  * respective calls from zs_xsisr()  * simulation of CARRIER status to avoid unecessary M_xHANGUP messages  *  * Revision 4.0  1998/04/10 19:45:38  kardel  * Start 4.0 release version numbering  *  * from V3 3.28 log info deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit
