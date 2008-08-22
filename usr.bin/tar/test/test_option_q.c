@@ -29,6 +29,7 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+comment|/* 	 * Create an archive with several different versions of the 	 * same files.  By default, the last version will overwrite 	 * any earlier versions.  The -q/--fast-read option will 	 * stop early, so we can verify -q/--fast-read by seeing 	 * which version of each file actually ended up being 	 * extracted.  This also exercises -r mode, since that's 	 * what we use to build up the test archive. 	 */
 name|fd
 operator|=
 name|open
@@ -284,6 +285,7 @@ name|testprog
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Now, try extracting from the test archive with various 	 * combinations of -q. 	 */
 comment|/* Test 1: -q foo should only extract the first foo. */
 name|assertEqualInt
 argument_list|(
