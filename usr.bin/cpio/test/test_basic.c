@@ -592,7 +592,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s -p -W quiet %s<filelist>%s/stdout 2>%s/stderr"
+literal|"%s -p %s<filelist>%s/stdout 2>%s/stderr"
 argument_list|,
 name|testprog
 argument_list|,
@@ -632,8 +632,15 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
-name|assertEmptyFile
+comment|/* gcpio 2.9 writes "1 block" to stderr */
+comment|/* assertFileContents("1 block\n", 8, "stderr"); */
+comment|/* bsdcpio writes nothing to stderr for passthrough mode */
+name|assertFileContents
 argument_list|(
+literal|""
+argument_list|,
+literal|0
+argument_list|,
 literal|"stderr"
 argument_list|)
 expr_stmt|;
@@ -855,6 +862,8 @@ argument_list|,
 literal|"1 block\n"
 argument_list|)
 expr_stmt|;
+comment|/* For some reason, gcpio 2.9 writes 7 blocks but only reads 6? */
+comment|/* bsdcpio writes 7 blocks and reads 7 blocks. */
 name|basic_cpio
 argument_list|(
 literal|"copy_ustar"

@@ -413,6 +413,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* bsdcpio writes nothing to stderr in -p mode */
 name|assertEmptyFile
 argument_list|(
 literal|"copy-no-a.err"

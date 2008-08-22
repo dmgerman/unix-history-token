@@ -109,6 +109,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Verify that nothing went to stderr. */
+name|failure
+argument_list|(
+literal|"Error invoking %s -i %s< %s"
+argument_list|,
+name|testprog
+argument_list|,
+name|options
+argument_list|,
+name|from
+argument_list|)
+expr_stmt|;
 name|assertFileContents
 argument_list|(
 name|se
@@ -534,6 +545,7 @@ argument_list|,
 literal|"2 blocks\n"
 argument_list|)
 expr_stmt|;
+comment|/* gcpio-2.9 only reads 6 blocks here */
 name|unpack_test
 argument_list|(
 literal|"test_gcpio_compat_ref.ustar"
