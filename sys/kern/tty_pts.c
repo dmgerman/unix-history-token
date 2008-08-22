@@ -464,13 +464,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
 break|break;
-block|}
 comment|/* Wait for more data. */
 if|if
 condition|(
@@ -741,7 +735,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|ENXIO
+name|EIO
 expr_stmt|;
 goto|goto
 name|done
