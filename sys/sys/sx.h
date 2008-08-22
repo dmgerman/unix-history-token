@@ -222,6 +222,33 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sx_sleep
+parameter_list|(
+name|void
+modifier|*
+name|ident
+parameter_list|,
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+name|int
+name|priority
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|wmesg
+parameter_list|,
+name|int
+name|timo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_sx_slock
 parameter_list|(
 name|struct
@@ -1188,25 +1215,6 @@ parameter_list|(
 name|sx
 parameter_list|)
 value|do {						\ 	if (sx_xlocked(sx))						\ 		sx_xunlock(sx);						\ 	else								\ 		sx_sunlock(sx);						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sx_sleep
-parameter_list|(
-name|chan
-parameter_list|,
-name|sx
-parameter_list|,
-name|pri
-parameter_list|,
-name|wmesg
-parameter_list|,
-name|timo
-parameter_list|)
-define|\
-value|_sleep((chan),&(sx)->lock_object, (pri), (wmesg), (timo))
 end_define
 
 begin_comment
