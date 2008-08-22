@@ -172,7 +172,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|ppc_attach
+name|ppc_detach
 argument_list|)
 block|,
 comment|/* bus interface */
