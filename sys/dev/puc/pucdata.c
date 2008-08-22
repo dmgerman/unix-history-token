@@ -2559,6 +2559,28 @@ block|,
 block|{
 literal|0x6666
 block|,
+literal|0x0002
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Decision Computer Inc, PCCOM 8-port serial"
+block|,
+name|DEFAULT_RCLK
+block|,
+name|PUC_PORT_8S
+block|,
+literal|0x1c
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x6666
+block|,
 literal|0x0004
 block|,
 literal|0xffff
