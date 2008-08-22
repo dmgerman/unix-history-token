@@ -1280,6 +1280,10 @@ name|struct
 name|callout
 name|sge_timer_ch
 decl_stmt|;
+name|unsigned
+name|int
+name|check_task_cnt
+decl_stmt|;
 comment|/* Register lock for use by the hardware layer */
 name|struct
 name|mtx
@@ -2484,6 +2488,16 @@ name|p
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|CXGB_TICKS
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)->params.linkpoll_period ? \     (hz * (a)->params.linkpoll_period) / 10 : \     (a)->params.stats_update_period * hz)
+end_define
 
 begin_comment
 comment|/*  * XXX figure out how we can return this to being private to sge  */
