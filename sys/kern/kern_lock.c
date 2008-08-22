@@ -2193,7 +2193,7 @@ break|break;
 block|}
 comment|/* 		 * We have been unable to succeed in upgrading, so just 		 * give up the shared lock. 		 */
 name|wakeup_swapper
-operator|+=
+operator||=
 name|wakeupshlk
 argument_list|(
 name|lk
@@ -3329,7 +3329,7 @@ literal|"exclusive"
 argument_list|)
 expr_stmt|;
 name|wakeup_swapper
-operator|+=
+operator||=
 name|sleepq_broadcast
 argument_list|(
 operator|&
