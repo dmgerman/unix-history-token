@@ -379,7 +379,7 @@ literal|0
 argument_list|,
 name|systemf
 argument_list|(
-literal|"%s -xf ../archive.tar -q foo bar"
+literal|"%s -xf ../archive.tar -q foo bar>test.out 2>test.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -401,6 +401,16 @@ argument_list|,
 literal|4
 argument_list|,
 literal|"bar"
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"test.out"
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"test.err"
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -442,7 +452,7 @@ literal|0
 argument_list|,
 name|systemf
 argument_list|(
-literal|"%s -xf ../archive.tar --fast-read foo bar"
+literal|"%s -xf ../archive.tar --fast-read foo bar>test.out 2>test.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -464,6 +474,16 @@ argument_list|,
 literal|4
 argument_list|,
 literal|"bar"
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"test.out"
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"test.err"
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -505,7 +525,7 @@ literal|0
 argument_list|,
 name|systemf
 argument_list|(
-literal|"%s -xf ../archive.tar foo bar"
+literal|"%s -xf ../archive.tar foo bar>test.out 2>test.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -527,6 +547,16 @@ argument_list|,
 literal|4
 argument_list|,
 literal|"bar"
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"test.out"
+argument_list|)
+expr_stmt|;
+name|assertEmptyFile
+argument_list|(
+literal|"test.err"
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
