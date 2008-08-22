@@ -4419,6 +4419,9 @@ modifier|*
 name|enumerator
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|XEN
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -4466,6 +4469,8 @@ argument_list|,
 name|apic_next
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
