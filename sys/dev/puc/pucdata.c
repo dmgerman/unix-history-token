@@ -2244,6 +2244,30 @@ block|,
 block|{
 literal|0x14d2
 block|,
+literal|0x8010
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"VScom PCI-100L"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_1S
+block|,
+literal|0x14
+block|,
+literal|0
+block|,
+literal|0
+block|, 	}
+block|,
+block|{
+literal|0x14d2
+block|,
 literal|0x8020
 block|,
 literal|0xffff
