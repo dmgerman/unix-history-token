@@ -316,12 +316,6 @@ decl_stmt|,
 modifier|*
 name|res_ioport
 decl_stmt|;
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
-name|bus_space_tag_t
-name|bst
-decl_stmt|;
 name|void
 modifier|*
 name|intr_cookie
@@ -638,7 +632,7 @@ name|r_dtr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_SPP_DTR))
+value|(bus_read_1((ppc)->res_ioport, PPC_SPP_DTR))
 end_define
 
 begin_define
@@ -648,7 +642,7 @@ name|r_str
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_SPP_STR))
+value|(bus_read_1((ppc)->res_ioport, PPC_SPP_STR))
 end_define
 
 begin_define
@@ -658,7 +652,7 @@ name|r_ctr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_SPP_CTR))
+value|(bus_read_1((ppc)->res_ioport, PPC_SPP_CTR))
 end_define
 
 begin_define
@@ -668,7 +662,7 @@ name|r_epp_A
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_EPP_ADDR))
+value|(bus_read_1((ppc)->res_ioport, PPC_EPP_ADDR))
 end_define
 
 begin_define
@@ -678,7 +672,7 @@ name|r_epp_D
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_EPP_DATA))
+value|(bus_read_1((ppc)->res_ioport, PPC_EPP_DATA))
 end_define
 
 begin_define
@@ -688,7 +682,7 @@ name|r_cnfgA
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_ECP_CNFGA))
+value|(bus_read_1((ppc)->res_ioport, PPC_ECP_CNFGA))
 end_define
 
 begin_define
@@ -698,7 +692,7 @@ name|r_cnfgB
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_ECP_CNFGB))
+value|(bus_read_1((ppc)->res_ioport, PPC_ECP_CNFGB))
 end_define
 
 begin_define
@@ -708,7 +702,7 @@ name|r_ecr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_ECP_ECR))
+value|(bus_read_1((ppc)->res_ioport, PPC_ECP_ECR))
 end_define
 
 begin_define
@@ -718,7 +712,7 @@ name|r_fifo
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_ECP_D_FIFO))
+value|(bus_read_1((ppc)->res_ioport, PPC_ECP_D_FIFO))
 end_define
 
 begin_define
@@ -730,7 +724,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_SPP_DTR, byte))
+value|(bus_write_1((ppc)->res_ioport, PPC_SPP_DTR, byte))
 end_define
 
 begin_define
@@ -742,7 +736,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_SPP_STR, byte))
+value|(bus_write_1((ppc)->res_ioport, PPC_SPP_STR, byte))
 end_define
 
 begin_define
@@ -754,7 +748,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_SPP_CTR, byte))
+value|(bus_write_1((ppc)->res_ioport, PPC_SPP_CTR, byte))
 end_define
 
 begin_define
@@ -766,7 +760,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_EPP_ADDR, byte))
+value|(bus_write_1((ppc)->res_ioport, PPC_EPP_ADDR, byte))
 end_define
 
 begin_define
@@ -778,7 +772,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_EPP_DATA, byte))
+value|(bus_write_1((ppc)->res_ioport, PPC_EPP_DATA, byte))
 end_define
 
 begin_define
@@ -790,7 +784,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_ECP_ECR, byte))
+value|(bus_write_1((ppc)->res_ioport, PPC_ECP_ECR, byte))
 end_define
 
 begin_define
@@ -802,7 +796,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_ECP_D_FIFO, byte))
+value|(bus_write_1((ppc)->res_ioport, PPC_ECP_D_FIFO, byte))
 end_define
 
 begin_comment
