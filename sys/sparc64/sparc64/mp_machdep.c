@@ -1790,7 +1790,7 @@ operator|!=
 literal|0
 condition|)
 empty_stmt|;
-comment|/* ok, now enter the scheduler */
+comment|/* Ok, now enter the scheduler. */
 name|sched_throw
 argument_list|(
 name|NULL
