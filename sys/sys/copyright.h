@@ -47,14 +47,6 @@ begin_comment
 comment|/* a port of FreeBSD to the NEC PC98, Japan */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|COPYRIGHT_PC98
-define|\
-value|"Copyright (c) 1994-2003 FreeBSD(98) porting team.\nCopyright (c) 1992  A.Kojima F.Ukai M.Ishii (KMC).\n"
-end_define
-
 begin_if
 if|#
 directive|if
@@ -64,6 +56,30 @@ name|PC98
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|COPYRIGHT_PC98
+define|\
+value|"Copyright (c) 1994-2003 FreeBSD(98) porting team.\nCopyright (c) 1992  A.Kojima F.Ukai M.Ishii (KMC).\n"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|COPYRIGHT_PC98
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|char
 name|copyright
@@ -74,26 +90,6 @@ name|COPYRIGHT_PC98
 name|COPYRIGHT_UCB
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-name|copyright
-index|[]
-init|=
-name|COPYRIGHT_FreeBSD
-name|COPYRIGHT_UCB
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
