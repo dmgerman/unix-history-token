@@ -814,28 +814,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tty_gone
-argument_list|(
-name|tp
-argument_list|)
-condition|)
-block|{
-comment|/* We lost the discipline. */
-name|uma_zfree
-argument_list|(
-name|ttyoutq_zone
-argument_list|,
-name|tob
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* Block can now be readded to the list. */
 comment|/* 			 * XXX: we could remove the blocks here when the 			 * queue was shrunk, but still in use. See 			 * ttyoutq_setsize(). 			 */
 name|STAILQ_INSERT_TAIL
@@ -936,21 +914,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tty_gone
-argument_list|(
-name|tp
-argument_list|)
-condition|)
-block|{
-comment|/* We lost the discipline. */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|error
