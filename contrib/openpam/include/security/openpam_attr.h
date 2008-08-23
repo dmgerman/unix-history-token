@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: openpam_attr.h 182041 2008-08-23 10:44:18Z des $  */
 end_comment
 
 begin_ifndef
