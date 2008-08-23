@@ -370,6 +370,30 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Interesting values for HyperTransport */
+end_comment
+
+begin_struct
+struct|struct
+name|pcicfg_ht
+block|{
+name|uint8_t
+name|ht_msimap
+decl_stmt|;
+comment|/* Offset of MSI mapping cap registers. */
+name|uint16_t
+name|ht_msictrl
+decl_stmt|;
+comment|/* MSI mapping control */
+name|uint64_t
+name|ht_msiaddr
+decl_stmt|;
+comment|/* MSI mapping base address */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* config header information common to all header types */
 end_comment
 
@@ -507,6 +531,11 @@ name|pcicfg_msix
 name|msix
 decl_stmt|;
 comment|/* pci msi-x */
+name|struct
+name|pcicfg_ht
+name|ht
+decl_stmt|;
+comment|/* HyperTransport */
 block|}
 name|pcicfgregs
 typedef|;
@@ -1880,6 +1909,19 @@ name|pci_msi_device_blacklisted
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pci_ht_map_msi
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|uint64_t
+name|addr
 parameter_list|)
 function_decl|;
 end_function_decl
