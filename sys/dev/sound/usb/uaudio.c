@@ -3802,8 +3802,7 @@ condition|(
 name|err
 operator|==
 literal|0
-condition|)
-block|{
+operator|&&
 name|device_get_children
 argument_list|(
 name|sc
@@ -3816,7 +3815,10 @@ argument_list|,
 operator|&
 name|devcount
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -3895,12 +3897,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|devlist
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|devlist
