@@ -743,6 +743,13 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|unitno
+init|=
+name|unit
+operator|-
+literal|768
+decl_stmt|;
 name|sc
 operator|=
 operator|(
@@ -769,7 +776,7 @@ name|sc
 operator|->
 name|xb_unit
 operator|=
-name|unit
+name|unitno
 expr_stmt|;
 name|sc
 operator|->
@@ -813,7 +820,7 @@ name|xb_disk
 operator|->
 name|d_unit
 operator|=
-name|unit
+name|unitno
 expr_stmt|;
 name|sc
 operator|->
