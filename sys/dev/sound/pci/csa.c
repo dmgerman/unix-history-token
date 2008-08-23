@@ -522,6 +522,8 @@ name|pci_childcount
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|device_get_children
 argument_list|(
 operator|*
@@ -533,7 +535,8 @@ argument_list|,
 operator|&
 name|pci_childcount
 argument_list|)
-expr_stmt|;
+condition|)
+continue|continue;
 for|for
 control|(
 name|j
