@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -71,12 +77,34 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|int
 name|pty_warningcnt
 init|=
 literal|10
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tty_pty_warningcnt
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pty_warningcnt
+argument_list|,
+literal|0
+argument_list|,
+literal|"Warnings that will be triggered upon PTY allocation"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
