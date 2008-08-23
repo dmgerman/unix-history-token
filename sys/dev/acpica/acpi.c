@@ -3430,6 +3430,8 @@ name|error
 operator|)
 return|;
 comment|/*      * Now, set them into the appropriate power state, usually D3.  If the      * device has an _SxD method for the next sleep state, use that power      * state instead.      */
+name|error
+operator|=
 name|device_get_children
 argument_list|(
 name|dev
@@ -3441,6 +3443,15 @@ operator|&
 name|numdevs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -3549,6 +3560,8 @@ name|int
 name|i
 decl_stmt|,
 name|numdevs
+decl_stmt|,
+name|error
 decl_stmt|;
 name|device_t
 name|child
@@ -3559,6 +3572,8 @@ decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 comment|/*      * Put all devices in D0 before resuming them.  Call _S0D on each one      * since some systems expect this.      */
+name|error
+operator|=
 name|device_get_children
 argument_list|(
 name|dev
@@ -3570,6 +3585,15 @@ operator|&
 name|numdevs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -3978,6 +4002,8 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|device_get_children
 argument_list|(
 name|dev
@@ -3988,7 +4014,8 @@ argument_list|,
 operator|&
 name|numdevs
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 for|for
 control|(
 name|i
