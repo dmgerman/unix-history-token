@@ -60,7 +60,8 @@ specifier|static
 name|void
 name|tdfx_configure
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -176,7 +177,8 @@ name|device_t
 name|nbdev
 parameter_list|)
 block|{
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 init|=
@@ -191,7 +193,8 @@ name|dev
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|drm_device_t
+expr|struct
+name|drm_device
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -261,7 +264,8 @@ name|tdfx_methods
 block|,
 expr|sizeof
 operator|(
-name|drm_device_t
+expr|struct
+name|drm_device
 operator|)
 block|}
 decl_stmt|;
@@ -388,7 +392,8 @@ name|tdfx
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|drm_device_t
+expr|struct
+name|drm_device
 argument_list|)
 argument_list|,
 name|drm_probe

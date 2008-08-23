@@ -17,6 +17,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/** @file drm_sysctl.c  * Implementation of various sysctls for controlling DRM behavior and reporting  * debug information.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -143,7 +147,8 @@ begin_function
 name|int
 name|drm_sysctl_init
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -431,7 +436,8 @@ begin_function
 name|int
 name|drm_sysctl_cleanup
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -492,7 +498,8 @@ name|int
 name|drm_name_info
 name|DRM_SYSCTL_HANDLER_ARGS
 block|{
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 init|=
@@ -603,7 +610,8 @@ name|int
 name|drm_vm_info
 name|DRM_SYSCTL_HANDLER_ARGS
 block|{
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 init|=
@@ -863,7 +871,8 @@ name|int
 name|drm_bufs_info
 name|DRM_SYSCTL_HANDLER_ARGS
 block|{
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 init|=
@@ -1203,7 +1212,8 @@ name|int
 name|drm_clients_info
 name|DRM_SYSCTL_HANDLER_ARGS
 block|{
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 init|=

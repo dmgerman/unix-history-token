@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file drm_pci.h  * \brief PCI consistent, DMA-accessible memory functions.  *  * \author Eric Anholt<anholt@FreeBSD.org>  */
-end_comment
-
-begin_comment
 comment|/*-  * Copyright 2003 Eric Anholt.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE  * AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 end_comment
 
@@ -20,6 +16,10 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/**  * \file drm_pci.h  * \brief PCI consistent, DMA-accessible memory allocation.  *  * \author Eric Anholt<anholt@FreeBSD.org>  */
+end_comment
 
 begin_include
 include|#
@@ -120,7 +120,8 @@ name|drm_dma_handle_t
 modifier|*
 name|drm_pci_alloc
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
@@ -199,6 +200,9 @@ return|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|ret
 operator|=
 name|bus_dma_tag_create
@@ -254,6 +258,9 @@ argument_list|,
 name|M_DRM
 argument_list|)
 expr_stmt|;
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -300,10 +307,16 @@ argument_list|,
 name|M_DRM
 argument_list|)
 expr_stmt|;
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
 name|ret
 operator|=
 name|bus_dmamap_load
@@ -511,7 +524,8 @@ begin_function
 name|void
 name|drm_pci_free
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,

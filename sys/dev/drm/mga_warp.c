@@ -609,10 +609,8 @@ name|size
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_ERR
-argument_list|(
+operator|-
 name|ENOMEM
-argument_list|)
 return|;
 block|}
 switch|switch
@@ -645,10 +643,8 @@ argument_list|)
 return|;
 default|default:
 return|return
-name|DRM_ERR
-argument_list|(
+operator|-
 name|EINVAL
-argument_list|)
 return|;
 block|}
 block|}
@@ -743,10 +739,8 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-name|DRM_ERR
-argument_list|(
+operator|-
 name|EINVAL
-argument_list|)
 return|;
 block|}
 name|MGA_WRITE
@@ -786,10 +780,8 @@ name|WMISC_EXPECTED
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_ERR
-argument_list|(
+operator|-
 name|EINVAL
-argument_list|)
 return|;
 block|}
 return|return

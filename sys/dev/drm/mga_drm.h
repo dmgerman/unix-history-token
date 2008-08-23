@@ -672,7 +672,8 @@ name|int
 name|vertsize
 decl_stmt|;
 comment|/* The current cliprects, or a subset thereof. 	 */
-name|drm_clip_rect_t
+name|struct
+name|drm_clip_rect
 name|boxes
 index|[
 name|MGA_NR_SAREA_CLIPRECTS
@@ -731,7 +732,8 @@ name|exported_front_y
 decl_stmt|,
 name|exported_h
 decl_stmt|;
-name|drm_clip_rect_t
+name|struct
+name|drm_clip_rect
 name|exported_boxes
 index|[
 name|MGA_NR_SAREA_CLIPRECTS
@@ -768,7 +770,8 @@ name|last_quiescent
 decl_stmt|;
 comment|/*  */
 comment|/* LRU lists for texture memory in agp space and on the card. 	 */
-name|drm_tex_region_t
+name|struct
+name|drm_tex_region
 name|texList
 index|[
 name|MGA_NR_TEX_HEAPS
@@ -1110,7 +1113,7 @@ typedef|typedef
 struct|struct
 name|drm_mga_dma_bootstrap
 block|{
-comment|/** 	 * \name AGP texture region 	 *  	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, these fields will 	 * be filled in with the actual AGP texture settings. 	 *  	 * \warning 	 * If these fields are non-zero, but dma_mga_dma_bootstrap::agp_mode 	 * is zero, it means that PCI memory (most likely through the use of 	 * an IOMMU) is being used for "AGP" textures. 	 */
+comment|/** 	 * \name AGP texture region 	 * 	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, these fields will 	 * be filled in with the actual AGP texture settings. 	 * 	 * \warning 	 * If these fields are non-zero, but dma_mga_dma_bootstrap::agp_mode 	 * is zero, it means that PCI memory (most likely through the use of 	 * an IOMMU) is being used for "AGP" textures. 	 */
 comment|/*@{*/
 name|unsigned
 name|long
@@ -1122,19 +1125,19 @@ name|texture_size
 decl_stmt|;
 comment|/**< Size of the AGP texture region. */
 comment|/*@}*/
-comment|/** 	 * Requested size of the primary DMA region. 	 *  	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, this field will be 	 * filled in with the actual AGP mode.  If AGP was not available 	 */
+comment|/** 	 * Requested size of the primary DMA region. 	 * 	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, this field will be 	 * filled in with the actual AGP mode.  If AGP was not available 	 */
 name|uint32_t
 name|primary_size
 decl_stmt|;
-comment|/** 	 * Requested number of secondary DMA buffers. 	 *  	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, this field will be 	 * filled in with the actual number of secondary DMA buffers 	 * allocated.  Particularly when PCI DMA is used, this may be 	 * (subtantially) less than the number requested. 	 */
+comment|/** 	 * Requested number of secondary DMA buffers. 	 * 	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, this field will be 	 * filled in with the actual number of secondary DMA buffers 	 * allocated.  Particularly when PCI DMA is used, this may be 	 * (subtantially) less than the number requested. 	 */
 name|uint32_t
 name|secondary_bin_count
 decl_stmt|;
-comment|/** 	 * Requested size of each secondary DMA buffer. 	 *  	 * While the kernel \b is free to reduce 	 * dma_mga_dma_bootstrap::secondary_bin_count, it is \b not allowed 	 * to reduce dma_mga_dma_bootstrap::secondary_bin_size. 	 */
+comment|/** 	 * Requested size of each secondary DMA buffer. 	 * 	 * While the kernel \b is free to reduce 	 * dma_mga_dma_bootstrap::secondary_bin_count, it is \b not allowed 	 * to reduce dma_mga_dma_bootstrap::secondary_bin_size. 	 */
 name|uint32_t
 name|secondary_bin_size
 decl_stmt|;
-comment|/** 	 * Bit-wise mask of AGPSTAT2_* values.  Currently only \c AGPSTAT2_1X, 	 * \c AGPSTAT2_2X, and \c AGPSTAT2_4X are supported.  If this value is 	 * zero, it means that PCI DMA should be used, even if AGP is 	 * possible. 	 *  	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, this field will be 	 * filled in with the actual AGP mode.  If AGP was not available 	 * (i.e., PCI DMA was used), this value will be zero. 	 */
+comment|/** 	 * Bit-wise mask of AGPSTAT2_* values.  Currently only \c AGPSTAT2_1X, 	 * \c AGPSTAT2_2X, and \c AGPSTAT2_4X are supported.  If this value is 	 * zero, it means that PCI DMA should be used, even if AGP is 	 * possible. 	 * 	 * On return from the DRM_MGA_DMA_BOOTSTRAP ioctl, this field will be 	 * filled in with the actual AGP mode.  If AGP was not available 	 * (i.e., PCI DMA was used), this value will be zero. 	 */
 name|uint32_t
 name|agp_mode
 decl_stmt|;

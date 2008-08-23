@@ -17,6 +17,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/** @file drm_vm.c  * Support code for mmaping of DRM maps.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -105,8 +109,16 @@ argument_list|)
 endif|#
 directive|endif
 block|{
-name|DRM_DEVICE
-expr_stmt|;
+name|struct
+name|drm_device
+modifier|*
+name|dev
+init|=
+name|drm_get_device_from_kdev
+argument_list|(
+name|kdev
+argument_list|)
+decl_stmt|;
 name|drm_local_map_t
 modifier|*
 name|map
@@ -170,10 +182,7 @@ operator|->
 name|authenticated
 condition|)
 return|return
-name|DRM_ERR
-argument_list|(
 name|EACCES
-argument_list|)
 return|;
 if|if
 condition|(
@@ -241,6 +250,14 @@ index|[
 name|page
 index|]
 decl_stmt|;
+name|DRM_SPINUNLOCK
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|dma_lock
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -255,14 +272,6 @@ operator|*
 name|paddr
 operator|=
 name|phys
-expr_stmt|;
-name|DRM_SPINUNLOCK
-argument_list|(
-operator|&
-name|dev
-operator|->
-name|dma_lock
-argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -293,14 +302,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|DRM_SPINUNLOCK
-argument_list|(
-operator|&
-name|dev
-operator|->
-name|dma_lock
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* A sequential search of a linked list is 				   fine here because: 1) there will only be 				   about 5-10 entries in the list and, 2) a 				   DRI client only has to do this mapping 				   once, so it doesn't have to be optimized 				   for performance, even if the list was a 				   bit longer. */
 name|DRM_LOCK

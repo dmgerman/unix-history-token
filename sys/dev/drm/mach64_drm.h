@@ -374,7 +374,8 @@ name|int
 name|vertsize
 decl_stmt|;
 comment|/* The current cliprects, or a subset thereof. 	 */
-name|drm_clip_rect_t
+name|struct
+name|drm_clip_rect
 name|boxes
 index|[
 name|MACH64_NR_SAREA_CLIPRECTS
@@ -390,7 +391,8 @@ name|int
 name|frames_queued
 decl_stmt|;
 comment|/* Texture memory LRU. 	 */
-name|drm_tex_region_t
+name|struct
+name|drm_tex_region
 name|tex_list
 index|[
 name|MACH64_NR_TEX_HEAPS
@@ -805,8 +807,9 @@ typedef|typedef
 struct|struct
 name|drm_mach64_blit
 block|{
-name|int
-name|idx
+name|void
+modifier|*
+name|buf
 decl_stmt|;
 name|int
 name|pitch
