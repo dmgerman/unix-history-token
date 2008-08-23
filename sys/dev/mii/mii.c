@@ -1372,15 +1372,6 @@ argument_list|,
 name|MII_BMSR
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"BMSR(%d) is %#x\n"
-argument_list|,
-name|i
-argument_list|,
-name|bmsr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bmsr
