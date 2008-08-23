@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c) 2001-2005 McAfee, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Security Research Division of McAfee, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c) 2001-2005 McAfee, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Security Research Division of McAfee, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -13736,6 +13736,13 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|TEST_OBJECTS
+value|(MPC_OBJECT_CRED |				\ 			 MPC_OBJECT_PROC |				\ 			 MPC_OBJECT_VNODE |				\ 			 MPC_OBJECT_INPCB |				\ 			 MPC_OBJECT_SOCKET |				\ 			 MPC_OBJECT_DEVFS |				\ 			 MPC_OBJECT_MBUF |				\ 			 MPC_OBJECT_IPQ |				\ 			 MPC_OBJECT_IFNET |				\ 			 MPC_OBJECT_BPFDESC |				\ 			 MPC_OBJECT_PIPE |				\ 			 MPC_OBJECT_MOUNT |				\ 			 MPC_OBJECT_POSIXSEM |				\ 			 MPC_OBJECT_POSIXSHM |				\ 			 MPC_OBJECT_SYSVMSG |				\ 			 MPC_OBJECT_SYSVMSQ |				\ 			 MPC_OBJECT_SYSVSEM |				\ 			 MPC_OBJECT_SYSVSHM |				\ 			 MPC_OBJECT_SYNCACHE)
+end_define
+
 begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
@@ -13747,11 +13754,11 @@ argument_list|,
 literal|"TrustedBSD MAC/Test"
 argument_list|,
 name|MPC_LOADTIME_FLAG_UNLOADOK
-operator||
-name|MPC_LOADTIME_FLAG_LABELMBUFS
 argument_list|,
 operator|&
 name|test_slot
+argument_list|,
+name|TEST_OBJECTS
 argument_list|)
 expr_stmt|;
 end_expr_stmt

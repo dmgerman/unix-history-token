@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002, 2006 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract   * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2002, 2006 Robert N. M. Watson  * Copyright (c) 2001 Ilmar S. Habibulin  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed by Robert Watson and Ilmar Habibulin for the  * TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract   * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -250,27 +250,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Flag to indicate whether or not we should allocate label storage for new  * mbufs.  Since most dynamic policies we currently work with don't rely on  * mbuf labeling, try to avoid paying the cost of mtag allocation unless  * specifically notified of interest.  One result of this is that if a  * dynamically loaded policy requests mbuf labels, it must be able to deal  * with a NULL label being returned on any mbufs that were already in flight  * when the policy was loaded.  Since the policy already has to deal with  * uninitialized labels, this probably won't be a problem.  Note: currently  * no locking.  Will this be a problem?  *  * In the future, we may want to allow objects to request labeling on a per-  * object type basis, rather than globally for all objects.  */
+comment|/*  * Each policy declares a mask of object types requiring labels to be  * allocated for them.  For convenience, we combine and cache the bitwise or  * of the per-policy object flags to track whether we will allocate a label  * for an object type at run-time.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAC_ALWAYS_LABEL_MBUF
-end_ifndef
-
 begin_decl_stmt
-name|int
-name|mac_labelmbufs
-init|=
-literal|0
+name|uint64_t
+name|mac_labeled
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|SYSCTL_QUAD
+argument_list|(
+name|_security_mac
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|labeled
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|mac_labeled
+argument_list|,
+literal|0
+argument_list|,
+literal|"Mask of object types being labeled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -780,76 +788,46 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|MAC_ALWAYS_LABEL_MBUF
 name|struct
 name|mac_policy_conf
 modifier|*
-name|tmpc
-decl_stmt|;
-name|int
-name|labelmbufs
+name|mpc
 decl_stmt|;
 name|mac_policy_assert_exclusive
 argument_list|()
 expr_stmt|;
-name|labelmbufs
+name|mac_labeled
 operator|=
 literal|0
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
-argument|tmpc
+argument|mpc
 argument_list|,
 argument|&mac_static_policy_list
 argument_list|,
 argument|mpc_list
 argument_list|)
-block|{
-if|if
-condition|(
-name|tmpc
+name|mac_labeled
+operator||=
+name|mpc
 operator|->
-name|mpc_loadtime_flags
-operator|&
-name|MPC_LOADTIME_FLAG_LABELMBUFS
-condition|)
-name|labelmbufs
-operator|++
+name|mpc_labeled
 expr_stmt|;
-block|}
 name|LIST_FOREACH
 argument_list|(
-argument|tmpc
+argument|mpc
 argument_list|,
 argument|&mac_policy_list
 argument_list|,
 argument|mpc_list
 argument_list|)
-block|{
-if|if
-condition|(
-name|tmpc
+name|mac_labeled
+operator||=
+name|mpc
 operator|->
-name|mpc_loadtime_flags
-operator|&
-name|MPC_LOADTIME_FLAG_LABELMBUFS
-condition|)
-name|labelmbufs
-operator|++
+name|mpc_labeled
 expr_stmt|;
-block|}
-name|mac_labelmbufs
-operator|=
-operator|(
-name|labelmbufs
-operator|!=
-literal|0
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

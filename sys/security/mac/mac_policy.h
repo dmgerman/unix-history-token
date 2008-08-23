@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract   * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2002, 2007 Robert N. M. Watson  * Copyright (c) 2001-2005 Networks Associates Technology, Inc.  * Copyright (c) 2005-2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed by Robert Watson for the TrustedBSD Project.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract   * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -7061,6 +7061,23 @@ name|int
 name|mpc_runtime_flags
 decl_stmt|;
 comment|/* flags */
+name|int
+name|_mpc_spare1
+decl_stmt|;
+comment|/* Spare. */
+name|uint64_t
+name|mpc_labeled
+decl_stmt|;
+comment|/* Labeled objects. */
+name|uint64_t
+name|_mpc_spare2
+decl_stmt|;
+comment|/* Spare. */
+name|void
+modifier|*
+name|_mpc_spare3
+decl_stmt|;
+comment|/* Spare. */
 name|LIST_ENTRY
 argument_list|(
 argument|mac_policy_conf
@@ -7090,13 +7107,6 @@ name|MPC_LOADTIME_FLAG_UNLOADOK
 value|0x00000002
 end_define
 
-begin_define
-define|#
-directive|define
-name|MPC_LOADTIME_FLAG_LABELMBUFS
-value|0x00000004
-end_define
-
 begin_comment
 comment|/* Flags for the mpc_runtime_flags field. */
 end_comment
@@ -7106,6 +7116,143 @@ define|#
 directive|define
 name|MPC_RUNTIME_FLAG_REGISTERED
 value|0x00000001
+end_define
+
+begin_comment
+comment|/*  * Flags for mpc_labeled declaring which objects should have labels allocated  * for them by the MAC Framework.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_CRED
+value|0x0000000000000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_PROC
+value|0x0000000000000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_VNODE
+value|0x0000000000000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_INPCB
+value|0x0000000000000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_SOCKET
+value|0x0000000000000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_DEVFS
+value|0x0000000000000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_MBUF
+value|0x0000000000000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_IPQ
+value|0x0000000000000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_IFNET
+value|0x0000000000000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_BPFDESC
+value|0x0000000000000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_PIPE
+value|0x0000000000000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_MOUNT
+value|0x0000000000000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_POSIXSEM
+value|0x0000000000001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_POSIXSHM
+value|0x0000000000002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_SYSVMSG
+value|0x0000000000004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_SYSVMSQ
+value|0x0000000000008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_SYSVSEM
+value|0x0000000000010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_SYSVSHM
+value|0x0000000000020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC_OBJECT_SYNCACHE
+value|0x0000000000040000
 end_define
 
 begin_comment
@@ -7133,9 +7280,11 @@ parameter_list|,
 name|mpflags
 parameter_list|,
 name|privdata_wanted
+parameter_list|, \
+name|labeled
 parameter_list|)
 define|\
-value|static struct mac_policy_conf mpname##_mac_policy_conf = {	\ 		#mpname,						\ 		mpfullname,						\ 		mpops,							\ 		mpflags,						\ 		privdata_wanted,					\ 		0,							\ 	};								\ 	static moduledata_t mpname##_mod = {				\ 		#mpname,						\ 		mac_policy_modevent,					\&mpname##_mac_policy_conf				\ 	};								\ 	MODULE_DEPEND(mpname, kernel_mac_support, MAC_VERSION,		\ 	    MAC_VERSION, MAC_VERSION);					\ 	DECLARE_MODULE(mpname, mpname##_mod, SI_SUB_MAC_POLICY,		\ 	    SI_ORDER_MIDDLE)
+value|static struct mac_policy_conf mpname##_mac_policy_conf = {	\ 		.mpc_name = #mpname,					\ 		.mpc_fullname = mpfullname,				\ 		.mpc_ops = mpops,					\ 		.mpc_loadtime_flags = mpflags,				\ 		.mpc_field_off = privdata_wanted,			\ 		.mpc_labeled = labeled,					\ 	};								\ 	static moduledata_t mpname##_mod = {				\ 		#mpname,						\ 		mac_policy_modevent,					\&mpname##_mac_policy_conf				\ 	};								\ 	MODULE_DEPEND(mpname, kernel_mac_support, MAC_VERSION,		\ 	    MAC_VERSION, MAC_VERSION);					\ 	DECLARE_MODULE(mpname, mpname##_mod, SI_SUB_MAC_POLICY,		\ 	    SI_ORDER_MIDDLE)
 end_define
 
 begin_function_decl

@@ -15032,6 +15032,17 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|BIBA_OBJECTS
+value|(MPC_OBJECT_CRED |				\
+comment|/* MPC_OBJECT_PROC | */
+value|\ 			 MPC_OBJECT_VNODE |				\ 			 MPC_OBJECT_INPCB |				\ 			 MPC_OBJECT_SOCKET |				\ 			 MPC_OBJECT_DEVFS |				\ 			 MPC_OBJECT_MBUF |				\ 			 MPC_OBJECT_IPQ |				\ 			 MPC_OBJECT_IFNET |				\ 			 MPC_OBJECT_BPFDESC |				\ 			 MPC_OBJECT_PIPE |				\ 			 MPC_OBJECT_MOUNT |				\ 			 MPC_OBJECT_POSIXSEM |				\
+comment|/* MPC_OBJECT_POSIXSHM | */
+value|\ 			 MPC_OBJECT_SYSVMSG |				\ 			 MPC_OBJECT_SYSVMSQ |				\ 			 MPC_OBJECT_SYSVSEM |				\ 			 MPC_OBJECT_SYSVSHM |				\ 			 MPC_OBJECT_SYNCACHE)
+end_define
+
 begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
@@ -15043,11 +15054,11 @@ argument_list|,
 literal|"TrustedBSD MAC/Biba"
 argument_list|,
 name|MPC_LOADTIME_FLAG_NOTLATE
-operator||
-name|MPC_LOADTIME_FLAG_LABELMBUFS
 argument_list|,
 operator|&
 name|biba_slot
+argument_list|,
+name|BIBA_OBJECTS
 argument_list|)
 expr_stmt|;
 end_expr_stmt

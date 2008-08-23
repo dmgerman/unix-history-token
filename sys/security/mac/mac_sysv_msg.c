@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2004 Networks Associates Technology, Inc.  * Copyright (c) 2006 SPARTA, Inc.  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by Network  * Associates Laboratories, the Security Research Division of Network  * Associates, Inc. under DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"),  * as part of the DARPA CHATS research program.  *  * This software was enhanced by SPARTA ISSO under SPAWAR contract  * N66001-04-C-6019 ("SEFOS").  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -166,12 +166,25 @@ modifier|*
 name|msgptr
 parameter_list|)
 block|{
+if|if
+condition|(
+name|mac_labeled
+operator|&
+name|MPC_OBJECT_SYSVMSG
+condition|)
 name|msgptr
 operator|->
 name|label
 operator|=
 name|mac_sysv_msgmsg_label_alloc
 argument_list|()
+expr_stmt|;
+else|else
+name|msgptr
+operator|->
+name|label
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -223,12 +236,25 @@ modifier|*
 name|msqkptr
 parameter_list|)
 block|{
+if|if
+condition|(
+name|mac_labeled
+operator|&
+name|MPC_OBJECT_SYSVMSQ
+condition|)
 name|msqkptr
 operator|->
 name|label
 operator|=
 name|mac_sysv_msgqueue_label_alloc
 argument_list|()
+expr_stmt|;
+else|else
+name|msqkptr
+operator|->
+name|label
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -269,6 +295,15 @@ modifier|*
 name|msgptr
 parameter_list|)
 block|{
+if|if
+condition|(
+name|msgptr
+operator|->
+name|label
+operator|!=
+name|NULL
+condition|)
+block|{
 name|mac_sysv_msgmsg_label_free
 argument_list|(
 name|msgptr
@@ -282,6 +317,7 @@ name|label
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -321,6 +357,15 @@ modifier|*
 name|msqkptr
 parameter_list|)
 block|{
+if|if
+condition|(
+name|msqkptr
+operator|->
+name|label
+operator|!=
+name|NULL
+condition|)
+block|{
 name|mac_sysv_msgqueue_label_free
 argument_list|(
 name|msqkptr
@@ -334,6 +379,7 @@ name|label
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 end_function
 
