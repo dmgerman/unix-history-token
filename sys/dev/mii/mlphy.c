@@ -689,6 +689,10 @@ decl_stmt|,
 name|reg
 decl_stmt|;
 comment|/* 	 * See if there's another PHY on this bus with us. 	 * If so, we may need it for 10Mbps modes. 	 */
+name|devs
+operator|=
+literal|0
+expr_stmt|;
 name|device_get_children
 argument_list|(
 name|msc
@@ -1431,6 +1435,10 @@ decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* See if there's another PHY on the bus with us. */
+name|devs
+operator|=
+literal|0
+expr_stmt|;
 name|device_get_children
 argument_list|(
 name|msc

@@ -494,6 +494,10 @@ operator|->
 name|mii_instance
 condition|)
 block|{
+name|devs
+operator|=
+literal|0
+expr_stmt|;
 name|device_get_children
 argument_list|(
 name|sc
