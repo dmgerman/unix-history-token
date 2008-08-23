@@ -492,12 +492,7 @@ condition|(
 name|mii
 operator|->
 name|mii_instance
-condition|)
-block|{
-name|devs
-operator|=
-literal|0
-expr_stmt|;
+operator|&&
 name|device_get_children
 argument_list|(
 name|sc
@@ -512,7 +507,10 @@ argument_list|,
 operator|&
 name|devs
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|i
