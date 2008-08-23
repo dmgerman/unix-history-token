@@ -430,6 +430,8 @@ operator|!
 name|bus
 condition|)
 continue|continue;
+if|if
+condition|(
 name|device_get_children
 argument_list|(
 name|bus
@@ -440,7 +442,10 @@ argument_list|,
 operator|&
 name|numkids
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+continue|continue;
 for|for
 control|(
 name|i
