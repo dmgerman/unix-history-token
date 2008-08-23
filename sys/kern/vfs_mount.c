@@ -507,8 +507,6 @@ literal|"nosuid"
 block|,
 literal|"noexec"
 block|,
-literal|"update"
-block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -2734,6 +2732,9 @@ name|opt
 decl_stmt|,
 modifier|*
 name|noro_opt
+decl_stmt|,
+modifier|*
+name|tmp_opt
 decl_stmt|;
 name|char
 modifier|*
@@ -2956,13 +2957,15 @@ name|bail
 goto|;
 block|}
 comment|/* 	 * We need to see if we have the "update" option 	 * before we call vfs_domount(), since vfs_domount() has special 	 * logic based on MNT_UPDATE.  This is very important 	 * when we want to update the root filesystem. 	 */
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|opt
 argument_list|,
 argument|optlist
 argument_list|,
 argument|link
+argument_list|,
+argument|tmp_opt
 argument_list|)
 block|{
 if|if
@@ -2978,10 +2981,19 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|fsflags
 operator||=
 name|MNT_UPDATE
 expr_stmt|;
+name|vfs_freeopt
+argument_list|(
+name|optlist
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
