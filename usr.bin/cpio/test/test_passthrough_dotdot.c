@@ -89,6 +89,15 @@ literal|"dir"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|write
+argument_list|(
+name|filelist
+argument_list|,
+literal|".\n"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* File with 10 bytes content. */
 name|fd
 operator|=
