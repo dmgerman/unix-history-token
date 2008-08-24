@@ -1353,9 +1353,15 @@ name|a_mode
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|QUOTA
+name|int
 name|relocked
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|UFS_ACL
