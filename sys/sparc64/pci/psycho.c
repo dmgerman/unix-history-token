@@ -1264,6 +1264,8 @@ decl_stmt|;
 name|uint32_t
 name|dvmabase
 decl_stmt|,
+name|prop
+decl_stmt|,
 name|prop_array
 index|[
 literal|2
@@ -1636,11 +1638,35 @@ argument_list|(
 name|csr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OF_getprop
+argument_list|(
+name|node
+argument_list|,
+literal|"clock-frequency"
+argument_list|,
+operator|&
+name|prop
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|prop
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|prop
+operator|=
+literal|33000000
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s, impl %d, version %d, IGN %#x, bus %c\n"
+literal|"%s, impl %d, version %d, IGN %#x, bus %c, %dMHz\n"
 argument_list|,
 name|desc
 operator|->
@@ -1665,6 +1691,12 @@ operator|+
 name|sc
 operator|->
 name|sc_half
+argument_list|,
+name|prop
+operator|/
+literal|1000
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* Set up the PCI control and PCI diagnostic registers. */
