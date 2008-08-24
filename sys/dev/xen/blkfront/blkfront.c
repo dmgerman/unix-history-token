@@ -748,7 +748,7 @@ name|unitno
 init|=
 name|unit
 operator|-
-literal|768
+literal|767
 decl_stmt|;
 name|sc
 operator|=
