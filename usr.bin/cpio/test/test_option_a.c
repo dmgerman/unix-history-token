@@ -413,9 +413,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* bsdcpio writes nothing to stderr in -p mode */
-name|assertEmptyFile
+name|assertFileContents
 argument_list|(
+literal|"1 block\n"
+argument_list|,
+literal|8
+argument_list|,
 literal|"copy-no-a.err"
 argument_list|)
 expr_stmt|;
@@ -485,8 +488,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|assertEmptyFile
+name|assertFileContents
 argument_list|(
+literal|"1 block\n"
+argument_list|,
+literal|8
+argument_list|,
 literal|"copy-no-a.err"
 argument_list|)
 expr_stmt|;
@@ -553,8 +560,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|assertEmptyFile
+name|assertFileContents
 argument_list|(
+literal|"1 block\n"
+argument_list|,
+literal|8
+argument_list|,
 literal|"copy-a.err"
 argument_list|)
 expr_stmt|;
@@ -624,8 +635,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|assertEmptyFile
+name|assertFileContents
 argument_list|(
+literal|"1 block\n"
+argument_list|,
+literal|8
+argument_list|,
 literal|"copy-a.err"
 argument_list|)
 expr_stmt|;

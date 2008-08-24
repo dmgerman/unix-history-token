@@ -632,14 +632,11 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
-comment|/* gcpio 2.9 writes "1 block" to stderr */
-comment|/* assertFileContents("1 block\n", 8, "stderr"); */
-comment|/* bsdcpio writes nothing to stderr for passthrough mode */
 name|assertFileContents
 argument_list|(
-literal|""
+literal|"1 block\n"
 argument_list|,
-literal|0
+literal|8
 argument_list|,
 literal|"stderr"
 argument_list|)

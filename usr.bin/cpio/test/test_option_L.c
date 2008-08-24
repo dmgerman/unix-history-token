@@ -192,8 +192,12 @@ argument_list|(
 literal|"copy-L.out"
 argument_list|)
 expr_stmt|;
-name|assertEmptyFile
+name|assertFileContents
 argument_list|(
+literal|"1 block\n"
+argument_list|,
+literal|8
+argument_list|,
 literal|"copy-L.err"
 argument_list|)
 expr_stmt|;

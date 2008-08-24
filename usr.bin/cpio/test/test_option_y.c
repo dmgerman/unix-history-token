@@ -89,15 +89,6 @@ argument_list|,
 name|testprog
 argument_list|)
 expr_stmt|;
-name|assertFileContents
-argument_list|(
-literal|"1 block\n"
-argument_list|,
-literal|8
-argument_list|,
-literal|"archive.err"
-argument_list|)
-expr_stmt|;
 name|failure
 argument_list|(
 literal|"-y (bzip) option seems to be broken"
@@ -113,6 +104,15 @@ literal|0
 argument_list|)
 condition|)
 block|{
+name|assertFileContents
+argument_list|(
+literal|"1 block\n"
+argument_list|,
+literal|8
+argument_list|,
+literal|"archive.err"
+argument_list|)
+expr_stmt|;
 comment|/* Check that the archive file has a bzip2 signature. */
 name|p
 operator|=
