@@ -499,7 +499,7 @@ literal|0x4222
 block|,
 literal|0x1005
 block|,
-literal|"Intel(R) PRO/Wireless 3945AB"
+literal|"Intel(R) PRO/Wireless 3945BG"
 block|}
 block|,
 block|{
@@ -509,17 +509,17 @@ literal|0x4222
 block|,
 literal|0x1034
 block|,
-literal|"Intel(R) PRO/Wireless 3945AB"
+literal|"Intel(R) PRO/Wireless 3945BG"
 block|}
 block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4222
+literal|0x4227
 block|,
 literal|0x1014
 block|,
-literal|"Intel(R) PRO/Wireless 3945AB"
+literal|"Intel(R) PRO/Wireless 3945BG"
 block|}
 block|,
 block|{
@@ -529,7 +529,7 @@ literal|0x4222
 block|,
 literal|0x1044
 block|,
-literal|"Intel(R) PRO/Wireless 3945AB"
+literal|"Intel(R) PRO/Wireless 3945BG"
 block|}
 block|,
 block|{
