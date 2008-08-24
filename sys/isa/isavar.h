@@ -382,17 +382,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISACFGATTR_MULTI
-value|(1<< 2)
-end_define
-
-begin_comment
-comment|/* multiple configurations */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ISACFGATTR_HINTS
 value|(1<< 3)
 end_define
