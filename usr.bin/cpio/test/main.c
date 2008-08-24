@@ -3115,6 +3115,8 @@ argument_list|(
 name|s
 operator|*
 literal|2
+operator|+
+literal|128
 argument_list|)
 expr_stmt|;
 name|n
@@ -3128,6 +3130,8 @@ argument_list|,
 name|s
 operator|*
 literal|2
+operator|+
+literal|128
 argument_list|)
 expr_stmt|;
 if|if
