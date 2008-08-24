@@ -3990,13 +3990,26 @@ operator|)
 return|;
 block|}
 comment|/* TODO: if it's a symlink... */
+comment|/* 		 * NO_OVERWRITE_NEWER doesn't apply to directories. 		 */
 if|if
 condition|(
+operator|(
 name|a
 operator|->
 name|flags
 operator|&
 name|ARCHIVE_EXTRACT_NO_OVERWRITE_NEWER
+operator|)
+operator|&&
+operator|!
+name|S_ISDIR
+argument_list|(
+name|a
+operator|->
+name|st
+operator|.
+name|st_mode
+argument_list|)
 condition|)
 block|{
 if|if
