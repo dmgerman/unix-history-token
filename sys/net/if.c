@@ -5331,6 +5331,8 @@ condition|(
 name|ifa
 operator|->
 name|ifa_dstaddr
+operator|!=
+name|NULL
 operator|&&
 name|sa_equal
 argument_list|(
@@ -5527,7 +5529,7 @@ name|ifa
 operator|->
 name|ifa_dstaddr
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|sa_equal
 argument_list|(
