@@ -190,9 +190,9 @@ expr_stmt|;
 comment|/* Verify stderr and stdout. */
 name|assertFileContents
 argument_list|(
-literal|"../file\n"
+literal|"../.\n../file\n"
 argument_list|,
-literal|8
+literal|13
 argument_list|,
 literal|"stderr"
 argument_list|)
