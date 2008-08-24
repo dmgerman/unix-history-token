@@ -83,17 +83,6 @@ directive|ifndef
 name|SC_NO_SYSMOUSE
 end_ifndef
 
-begin_define
-define|#
-directive|define
-name|SC_MOUSE
-value|128
-end_define
-
-begin_comment
-comment|/* minor number */
-end_comment
-
 begin_comment
 comment|/* local variables */
 end_comment
@@ -172,9 +161,6 @@ decl_stmt|;
 name|mousemode_t
 modifier|*
 name|mode
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 switch|switch
 condition|(
@@ -487,11 +473,6 @@ case|case
 name|MOUSE_GETSTATUS
 case|:
 comment|/* get accumulated mouse events */
-name|s
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 operator|*
 operator|(
 name|mousestatus_t
@@ -532,11 +513,6 @@ operator|.
 name|dz
 operator|=
 literal|0
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -663,8 +639,7 @@ name|smdev_ttydevsw
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|)
 expr_stmt|;
 name|tty_makedev
@@ -755,7 +730,16 @@ name|z
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|flags
+init|=
+literal|0
 decl_stmt|;
+name|tty_lock
+argument_list|(
+name|sysmouse_tty
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|info
@@ -864,9 +848,9 @@ name|id
 expr_stmt|;
 break|break;
 default|default:
-return|return
-literal|0
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 name|mouse_status
 operator|.
@@ -914,24 +898,17 @@ operator|.
 name|button
 operator|)
 expr_stmt|;
-if|if
-condition|(
+name|flags
+operator|=
 name|mouse_status
 operator|.
 name|flags
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
+expr_stmt|;
 if|if
 condition|(
-operator|(
-name|sysmouse_tty
+name|flags
 operator|==
-name|NULL
-operator|)
+literal|0
 operator|||
 operator|!
 name|tty_opened
@@ -939,11 +916,9 @@ argument_list|(
 name|sysmouse_tty
 argument_list|)
 condition|)
-return|return
-name|mouse_status
-operator|.
-name|flags
-return|;
+goto|goto
+name|done
+goto|;
 comment|/* the first five bytes are compatible with MouseSystems' */
 name|buf
 index|[
@@ -1160,10 +1135,17 @@ argument_list|(
 name|sysmouse_tty
 argument_list|)
 expr_stmt|;
+name|done
+label|:
+name|tty_unlock
+argument_list|(
+name|sysmouse_tty
+argument_list|)
+expr_stmt|;
 return|return
-name|mouse_status
-operator|.
+operator|(
 name|flags
+operator|)
 return|;
 block|}
 end_function
