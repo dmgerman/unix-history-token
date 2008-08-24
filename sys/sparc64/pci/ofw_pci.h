@@ -75,6 +75,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* default values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFW_PCI_LATENCY
+value|64
+end_define
+
 begin_endif
 endif|#
 directive|endif

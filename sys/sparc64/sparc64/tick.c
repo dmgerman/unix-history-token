@@ -248,6 +248,7 @@ parameter_list|(
 name|struct
 name|clockframe
 modifier|*
+name|cf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -271,7 +272,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|tick_process
 parameter_list|(
@@ -283,10 +284,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 operator|==
 literal|0
 condition|)
@@ -334,14 +332,15 @@ block|{
 name|u_long
 name|adj
 decl_stmt|,
-name|s
+name|ref
 decl_stmt|,
 name|tick
-decl_stmt|,
-name|ref
 decl_stmt|;
 name|long
 name|delta
+decl_stmt|;
+name|register_t
+name|s
 decl_stmt|;
 name|int
 name|count
@@ -545,7 +544,8 @@ parameter_list|)
 block|{
 name|u_long
 name|base
-decl_stmt|,
+decl_stmt|;
+name|register_t
 name|s
 decl_stmt|;
 comment|/* 	 * Avoid stopping of hardclock in terms of a lost tick interrupt 	 * by ensuring that the tick period is at least TICK_GRACE ticks. 	 * This check would be better placed in tick_init(), however we 	 * have to call tick_init() before cninit() in order to provide 	 * the low-level console drivers with a working DELAY() which in 	 * turn means we cannot use panic() in tick_init(). 	 */
@@ -568,10 +568,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 operator|==
 literal|0
 condition|)

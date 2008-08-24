@@ -138,7 +138,7 @@ file|"pci_if.h"
 end_include
 
 begin_comment
-comment|/* Helper functions. */
+comment|/* Helper functions */
 end_comment
 
 begin_function_decl
@@ -158,7 +158,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Methods. */
+comment|/* Methods */
 end_comment
 
 begin_decl_stmt
@@ -455,7 +455,7 @@ block|{
 name|uint32_t
 name|reg
 decl_stmt|;
-comment|/* 	 * Initialize the latency timer register for busmaster devices to work 	 * properly. This is another task which the firmware does not always 	 * perform. The Min_Gnt register can be used to compute it's recommended 	 * value: it contains the desired latency in units of 1/4 us. To 	 * calculate the correct latency timer value, the clock frequency of 	 * the bus (defaulting to 33Mhz) should be used and no wait states 	 * should be assumed. 	 */
+comment|/* 	 * Initialize the latency timer register for busmaster devices to 	 * work properly.  This is another task which the firmware doesn't 	 * always perform.  The Min_Gnt register can be used to compute its 	 * recommended value: it contains the desired latency in units of 	 * 1/4 us.  To calculate the correct latency timer value, the clock 	 * frequency of the bus (defaulting to 33MHz) and no wait states 	 * should be assumed. 	 */
 if|if
 condition|(
 name|OF_getprop
@@ -573,7 +573,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Compute a value to write into the cache line size register. 	 * The role of the streaming cache is unclear in write invalidate 	 * transfers, so it is made sure that it's line size is always reached. 	 * Generally, the cache line size is fixed at 64 bytes by Fireplane/ 	 * Safari, JBus and UPA. 	 */
+comment|/* 	 * Compute a value to write into the cache line size register. 	 * The role of the streaming cache is unclear in write invalidate 	 * transfers, so it is made sure that it's line size is always 	 * reached.  Generally, the cache line size is fixed at 64 bytes 	 * by Fireplane/Safari, JBus and UPA. 	 */
 name|PCIB_WRITE_CONFIG
 argument_list|(
 name|bridge
@@ -596,7 +596,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The preset in the intline register is usually wrong. Reset it to 255, 	 * so that the PCI code will reroute the interrupt if needed. 	 */
+comment|/* 	 * The preset in the intline register is usually wrong.  Reset 	 * it to 255, so that the PCI code will reroute the interrupt if 	 * needed. 	 */
 name|PCIB_WRITE_CONFIG
 argument_list|(
 name|bridge
@@ -1015,7 +1015,7 @@ operator|>=
 literal|255
 condition|)
 block|{
-comment|/* 		 * A fully specified interrupt (including IGN), as present on 		 * SPARCengine Ultra AX and e450. Extract the INO and return it. 		 */
+comment|/* 		 * A fully specified interrupt (including IGN), as present on 		 * SPARCengine Ultra AX and E450.  Extract the INO and return 		 * it. 		 */
 return|return
 operator|(
 name|INTINO
@@ -1025,7 +1025,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * If we got intr from a property, it may or may not be an intpin. 	 * For on-board devices, it frequently is not, and is completely out 	 * of the valid intpin range. For PCI slots, it hopefully is, otherwise 	 * we will have trouble interfacing with non-OFW buses such as cardbus. 	 * Since we cannot tell which it is without violating layering, we 	 * will always use the route_interrupt method, and treat exceptions on 	 * the level they become apparent. 	 */
+comment|/* 	 * If we got intr from a property, it may or may not be an intpin. 	 * For on-board devices, it frequently is not, and is completely out 	 * of the valid intpin range.  For PCI slots, it hopefully is, 	 * otherwise we will have trouble interfacing with non-OFW buses 	 * such as cardbus. 	 * Since we cannot tell which it is without violating layering, we 	 * will always use the route_interrupt method, and treat exceptions 	 * on the level they become apparent. 	 */
 return|return
 operator|(
 name|PCIB_ROUTE_INTERRUPT

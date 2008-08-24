@@ -250,7 +250,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Virtual and physical address of message buffer.  */
+comment|/*  * Virtual and physical address of message buffer  */
 end_comment
 
 begin_decl_stmt
@@ -274,7 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Map of physical memory reagions.  */
+comment|/*  * Map of physical memory reagions  */
 end_comment
 
 begin_decl_stmt
@@ -353,7 +353,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * First and last available kernel virtual addresses.  */
+comment|/*  * First and last available kernel virtual addresses  */
 end_comment
 
 begin_decl_stmt
@@ -381,7 +381,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Kernel pmap.  */
+comment|/*  * Kernel pmap  */
 end_comment
 
 begin_decl_stmt
@@ -886,7 +886,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Quick sort callout for comparing memory regions.  */
+comment|/*  * Quick sort callout for comparing memory regions  */
 end_comment
 
 begin_function_decl
@@ -1116,10 +1116,10 @@ decl_stmt|;
 name|vm_size_t
 name|virtsz
 decl_stmt|;
-name|ihandle_t
+name|phandle_t
 name|pmem
 decl_stmt|;
-name|ihandle_t
+name|phandle_t
 name|vmem
 decl_stmt|;
 name|int
@@ -1131,7 +1131,7 @@ decl_stmt|;
 name|int
 name|j
 decl_stmt|;
-comment|/* 	 * Find out what physical memory is available from the prom and 	 * initialize the phys_avail array.  This must be done before 	 * pmap_bootstrap_alloc is called. 	 */
+comment|/* 	 * Find out what physical memory is available from the PROM and 	 * initialize the phys_avail array.  This must be done before 	 * pmap_bootstrap_alloc is called. 	 */
 if|if
 condition|(
 operator|(
@@ -1446,7 +1446,7 @@ argument_list|(
 name|physsz
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate the size of kernel virtual memory, and the size and mask 	 * for the kernel tsb. 	 */
+comment|/* 	 * Calculate the size of kernel virtual memory, and the size and mask 	 * for the kernel TSB. 	 */
 name|virtsz
 operator|=
 name|roundup
@@ -1488,7 +1488,7 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * Allocate the kernel tsb and lock it in the tlb. 	 */
+comment|/* 	 * Allocate the kernel TSB and lock it in the TLB. 	 */
 name|pa
 operator|=
 name|pmap_bootstrap_alloc
@@ -1713,7 +1713,7 @@ name|TD_W
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Set the start and end of kva.  The kernel is loaded at the first 	 * available 4 meg super page, so round up to the end of the page. 	 */
+comment|/* 	 * Set the start and end of KVA.  The kernel is loaded at the first 	 * available 4MB super page, so round up to the end of the page. 	 */
 name|virtual_avail
 operator|=
 name|roundup2
@@ -1762,7 +1762,7 @@ name|PAGE_SIZE
 operator|*
 name|DCACHE_COLORS
 expr_stmt|;
-comment|/* 	 * Allocate a kernel stack with guard page for thread0 and map it into 	 * the kernel tsb.  We must ensure that the virtual address is coloured 	 * properly, since we're allocating from phys_avail so the memory won't 	 * have an associated vm_page_t. 	 */
+comment|/* 	 * Allocate a kernel stack with guard page for thread0 and map it 	 * into the kernel TSB.  We must ensure that the virtual address is 	 * coloured properly, since we're allocating from phys_avail so the 	 * memory won't have an associated vm_page_t. 	 */
 name|pa
 operator|=
 name|pmap_bootstrap_alloc
@@ -1931,7 +1931,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Add the prom mappings to the kernel tsb. 	 */
+comment|/* 	 * Add the PROM mappings to the kernel TSB. 	 */
 if|if
 condition|(
 operator|(
@@ -2188,7 +2188,7 @@ name|off
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Get the available physical memory ranges from /memory/reg. These 	 * are only used for kernel dumps, but it may not be wise to do prom 	 * calls in that situation. 	 */
+comment|/* 	 * Get the available physical memory ranges from /memory/reg.  These 	 * are only used for kernel dumps, but it may not be wise to do PROM 	 * calls in that situation. 	 */
 if|if
 condition|(
 operator|(
@@ -2312,7 +2312,7 @@ decl_stmt|;
 name|u_long
 name|data
 decl_stmt|;
-name|u_long
+name|register_t
 name|s
 decl_stmt|;
 name|int
@@ -2323,7 +2323,7 @@ operator|=
 name|intr_disable
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Map the 4mb tsb pages. 	 */
+comment|/* 	 * Map the 4MB TSB pages. 	 */
 for|for
 control|(
 name|i
@@ -2403,7 +2403,7 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set the secondary context to be the kernel context (needed for 	 * fp block operations in the kernel and the cache code). 	 */
+comment|/* 	 * Set the secondary context to be the kernel context (needed for 	 * FP block operations in the kernel). 	 */
 name|stxa
 argument_list|(
 name|AA_DMMU_SCXR
@@ -3917,7 +3917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map a wired page into kernel virtual address space. This additionally  * takes a flag argument wich is or'ed to the TTE data. This is used by  * bus_space_map().  * NOTE: if the mapping is non-cacheable, it's the caller's responsibility  * to flush entries that might still be in the cache, if applicable.  */
+comment|/*  * Map a wired page into kernel virtual address space.  This additionally  * takes a flag argument wich is or'ed to the TTE data.  This is used by  * sparc64_bus_mem_map().  * NOTE: if the mapping is non-cacheable, it's the caller's responsibility  * to flush entries that might still be in the cache, if applicable.  */
 end_comment
 
 begin_function
@@ -4468,7 +4468,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate kva space for the tsb. 	 */
+comment|/* 	 * Allocate KVA space for the TSB. 	 */
 if|if
 condition|(
 name|pm
@@ -4684,10 +4684,7 @@ name|pm
 operator|->
 name|pm_context
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 argument_list|,
 name|pm
@@ -4714,7 +4711,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * After the pmap was freed, it might be reallocated to a new process. 	 * When switching, this might lead us to wrongly assume that we need 	 * not switch contexts because old and new pmap pointer are equal. 	 * Therefore, make sure that this pmap is not referenced by any PCPU 	 * pointer any more. This could happen in two cases: 	 * - A process that referenced the pmap is currently exiting on a CPU. 	 *   However, it is guaranteed to not switch in any more after setting 	 *   its state to PRS_ZOMBIE. 	 * - A process that referenced this pmap ran on a CPU, but we switched 	 *   to a kernel thread, leaving the pmap pointer unchanged. 	 */
+comment|/* 	 * After the pmap was freed, it might be reallocated to a new process. 	 * When switching, this might lead us to wrongly assume that we need 	 * not switch contexts because old and new pmap pointer are equal. 	 * Therefore, make sure that this pmap is not referenced by any PCPU 	 * pointer any more.  This could happen in two cases: 	 * - A process that referenced the pmap is currently exiting on a CPU. 	 *   However, it is guaranteed to not switch in any more after setting 	 *   its state to PRS_ZOMBIE. 	 * - A process that referenced this pmap ran on a CPU, but we switched 	 *   to a kernel thread, leaving the pmap pointer unchanged. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -5140,10 +5137,7 @@ name|pm
 operator|->
 name|pm_context
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 argument_list|,
 name|start
@@ -5630,10 +5624,7 @@ name|pm
 operator|->
 name|pm_context
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 argument_list|,
 name|sva
@@ -5971,10 +5962,7 @@ name|pm
 operator|->
 name|pm_context
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 argument_list|,
 name|m
@@ -8356,7 +8344,7 @@ parameter_list|,
 name|vm_offset_t
 name|eva
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_comment
@@ -8509,7 +8497,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_ts_referenced:  *  *	Return a count of reference bits for a page, clearing those bits.  *	It is not necessary for every reference bit to be cleared, but it  *	is necessary that 0 only be returned when there are truly no  *	reference bits set.  *  *	XXX: The exact number of bits to check and clear is a matter that  *	should be tested and standardized at some point in the future for  *	optimal aging of shared pages.  */
+comment|/*  * Return a count of reference bits for a page, clearing those bits.  * It is not necessary for every reference bit to be cleared, but it  * is necessary that 0 only be returned when there are truly no  * reference bits set.  *  * XXX: The exact number of bits to check and clear is a matter that  * should be tested and standardized at some point in the future for  * optimal aging of shared pages.  */
 end_comment
 
 begin_function
@@ -9256,10 +9244,7 @@ name|pm
 operator|->
 name|pm_context
 index|[
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|curcpu
 index|]
 operator|=
 name|context

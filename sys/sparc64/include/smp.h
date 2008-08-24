@@ -71,6 +71,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IDC_ITID_SHIFT
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPI_AST
 value|PIL_AST
 end_define
@@ -205,25 +212,6 @@ name|cpu_ipi_selected
 parameter_list|(
 name|u_int
 name|cpus
-parameter_list|,
-name|u_long
-name|d0
-parameter_list|,
-name|u_long
-name|d1
-parameter_list|,
-name|u_long
-name|d2
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cpu_ipi_send
-parameter_list|(
-name|u_int
-name|mid
 parameter_list|,
 name|u_long
 name|d0
@@ -1155,7 +1143,7 @@ name|void
 modifier|*
 name|cookie
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_endif

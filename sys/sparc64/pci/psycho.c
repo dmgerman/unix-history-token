@@ -1507,6 +1507,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 block|}
 else|else
@@ -3041,7 +3042,7 @@ name|PCS_FUNC
 argument_list|,
 name|PCIR_LATTIMER
 argument_list|,
-literal|64
+name|OFW_PCI_LATENCY
 argument_list|,
 literal|1
 argument_list|)
@@ -4261,6 +4262,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 if|if
 condition|(
@@ -4434,6 +4436,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 block|}
 end_function
@@ -5581,6 +5584,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* NOTREACHED */
 block|}
 name|rv
 operator|=
