@@ -117,6 +117,13 @@ decl_stmt|;
 name|int
 name|tx_timeout
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|HAS_INT_NO_REG
+value|1
 block|}
 struct|;
 end_struct

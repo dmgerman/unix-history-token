@@ -943,10 +943,11 @@ operator|!=
 name|irq
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ex: WARNING: board's EEPROM is configured"
-literal|" for IRQ %d, using %d\n"
+name|dev
+argument_list|,
+literal|"WARNING: IRQ mismatch: EEPROM %d, using %d\n"
 argument_list|,
 name|ee2irq
 index|[
@@ -1058,6 +1059,12 @@ operator|->
 name|irq_rid
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator||=
+name|HAS_INT_NO_REG
 expr_stmt|;
 if|if
 condition|(

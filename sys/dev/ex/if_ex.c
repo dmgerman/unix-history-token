@@ -1592,7 +1592,6 @@ name|temp_reg
 operator|&
 name|Trnoff_Enable
 condition|)
-block|{
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -1605,7 +1604,6 @@ operator|~
 name|Trnoff_Enable
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -1619,7 +1617,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -1639,8 +1636,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * - Setup transmit chaining and discard bad received frames. 	 * - Match broadcast. 	 * - Clear test mode. 	 * - Set receiving mode. 	 * - Set IRQ number. 	 */
+comment|/* 	 * - Setup transmit chaining and discard bad received frames. 	 * - Match broadcast. 	 * - Clear test mode. 	 * - Set receiving mode. 	 */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -1696,6 +1692,7 @@ literal|0x3f
 comment|/* XXX constants. */
 argument_list|)
 expr_stmt|;
+comment|/* 	 * - Set IRQ number, if this part has it.  ISA devices have this, 	 * while PC Card devices don't seem to.  Either way, we have to 	 * switch to Bank1 as the rest of this code relies on that. 	 */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -1705,6 +1702,14 @@ argument_list|,
 name|Bank1_Sel
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|HAS_INT_NO_REG
+condition|)
 name|CSR_WRITE_1
 argument_list|(
 name|sc
