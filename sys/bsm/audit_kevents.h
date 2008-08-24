@@ -4325,8 +4325,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AUE_POSIXOPENPT
-value|43153
+name|AUE_POSIX_OPENPT
+value|43185
 end_define
 
 begin_comment
