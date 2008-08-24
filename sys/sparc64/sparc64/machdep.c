@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  * 	from: FreeBSD: src/sys/i386/i386/machdep.c,v 1.477 2001/08/27  */
+comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	from: FreeBSD: src/sys/i386/i386/machdep.c,v 1.477 2001/08/27  */
 end_comment
 
 begin_include
@@ -1284,11 +1284,15 @@ modifier|*
 name|vec
 parameter_list|)
 block|{
-name|phandle_t
-name|child
+name|char
+name|type
+index|[
+literal|8
+index|]
 decl_stmt|;
-name|phandle_t
-name|root
+name|char
+modifier|*
+name|env
 decl_stmt|;
 name|struct
 name|pcpu
@@ -1301,18 +1305,14 @@ decl_stmt|;
 name|caddr_t
 name|kmdp
 decl_stmt|;
+name|phandle_t
+name|child
+decl_stmt|;
+name|phandle_t
+name|root
+decl_stmt|;
 name|u_int
 name|clock
-decl_stmt|;
-name|char
-modifier|*
-name|env
-decl_stmt|;
-name|char
-name|type
-index|[
-literal|8
-index|]
 decl_stmt|;
 name|end
 operator|=
@@ -1322,7 +1322,7 @@ name|kmdp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Find out what kind of cpu we have first, for anything that changes 	 * behaviour. 	 */
+comment|/* 	 * Find out what kind of CPU we have first, for anything that changes 	 * behaviour. 	 */
 name|cpu_impl
 operator|=
 name|VER_IMPL
@@ -1985,11 +1985,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|oonstack
-decl_stmt|;
 name|u_long
 name|sp
+decl_stmt|;
+name|int
+name|oonstack
 decl_stmt|;
 name|int
 name|sig
@@ -3212,7 +3212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get current clock frequency for the given cpu id. */
+comment|/* Get current clock frequency for the given CPU ID. */
 end_comment
 
 begin_function
@@ -3360,7 +3360,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Insert code to halt (until next interrupt) for the idle loop */
+comment|/* Insert code to halt (until next interrupt) for the idle loop. */
 block|}
 end_function
 

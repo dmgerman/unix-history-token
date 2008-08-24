@@ -32,13 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -63,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_include
@@ -298,7 +286,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"dcache_page_inval: pa not page aligned"
+literal|"%s: pa not page aligned"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -443,7 +433,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"icache_page_inval: pa not page aligned"
+literal|"%s: pa not page aligned"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

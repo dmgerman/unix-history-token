@@ -335,12 +335,16 @@ name|void
 name|spitfire_ipi_send
 parameter_list|(
 name|u_int
+name|mid
 parameter_list|,
 name|u_long
+name|d0
 parameter_list|,
 name|u_long
+name|d1
 parameter_list|,
 name|u_long
+name|d2
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -952,10 +956,10 @@ name|phandle_t
 name|child
 decl_stmt|;
 name|u_int
-name|clock
+name|mid
 decl_stmt|;
 name|u_int
-name|mid
+name|clock
 decl_stmt|;
 name|u_int
 name|cpuid
@@ -1413,10 +1417,10 @@ name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|u_int
-name|ctx_min
+name|ctx_inc
 decl_stmt|;
 name|u_int
-name|ctx_inc
+name|ctx_min
 decl_stmt|;
 name|int
 name|i
@@ -1768,7 +1772,7 @@ operator|!=
 literal|0
 condition|)
 empty_stmt|;
-comment|/* ok, now enter the scheduler */
+comment|/* Ok, now enter the scheduler. */
 name|sched_throw
 argument_list|(
 name|NULL

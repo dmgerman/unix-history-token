@@ -132,6 +132,17 @@ parameter_list|)
 value|(((r)->cspace>> 24)& 0x03)
 end_define
 
+begin_comment
+comment|/* default values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFW_PCI_LATENCY
+value|64
+end_define
+
 begin_endif
 endif|#
 directive|endif

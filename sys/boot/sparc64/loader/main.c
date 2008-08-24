@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/atomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -1869,7 +1863,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* Allocate a physical page, claim the virtual area */
+comment|/* Allocate a physical page, claim the virtual area. */
 if|if
 condition|(
 name|pa
@@ -1936,7 +1930,7 @@ argument_list|,
 name|mva
 argument_list|)
 expr_stmt|;
-comment|/* The mappings may have changed, be paranoid. */
+comment|/* 				 * The mappings may have changed, be paranoid. 				 */
 continue|continue;
 block|}
 comment|/* 			 * Actually, we can only allocate two pages less at 			 * most (depending on the kernel TSB size). 			 */
@@ -2694,7 +2688,7 @@ modifier|*
 modifier|*
 name|dp
 decl_stmt|;
-comment|/* 	 * Tell the Open Firmware functions where they find the ofw gate. 	 */
+comment|/* 	 * Tell the Open Firmware functions where they find the OFW gate. 	 */
 name|OF_init
 argument_list|(
 name|openfirm
