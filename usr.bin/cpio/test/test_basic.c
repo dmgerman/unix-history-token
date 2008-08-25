@@ -338,6 +338,98 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Another file with 1 link and different permissions. */
+name|r
+operator|=
+name|lstat
+argument_list|(
+literal|"file2"
+argument_list|,
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"Failed to stat file %s/file2, errno=%d"
+argument_list|,
+name|target
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|r
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+condition|)
+block|{
+name|assert
+argument_list|(
+name|S_ISREG
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"%s/file2: st.st_mode = %o"
+argument_list|,
+name|target
+argument_list|,
+name|st
+operator|.
+name|st_mode
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0777
+argument_list|,
+name|st
+operator|.
+name|st_mode
+operator|&
+literal|0777
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|10
+argument_list|,
+name|st
+operator|.
+name|st_size
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"file %s/file2 should have 1 link"
+argument_list|,
+name|target
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|1
+argument_list|,
+name|st
+operator|.
+name|st_nlink
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* dir */
 name|r
 operator|=
@@ -371,6 +463,17 @@ name|st
 operator|.
 name|st_mode
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"%s/dir: st.st_mode = %o"
+argument_list|,
+name|target
+argument_list|,
+name|st
+operator|.
+name|st_mode
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -786,6 +889,55 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
+comment|/* Another file with different permissions. */
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"file2"
+argument_list|,
+name|O_CREAT
+operator||
+name|O_WRONLY
+argument_list|,
+literal|0777
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|fd
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|10
+argument_list|,
+name|write
+argument_list|(
+name|fd
+argument_list|,
+literal|"123456789"
+argument_list|,
+literal|10
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|filelist
+argument_list|,
+literal|"file2\n"
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
 comment|/* Directory. */
 name|assertEqualInt
 argument_list|(
@@ -814,6 +966,11 @@ argument_list|(
 name|filelist
 argument_list|)
 expr_stmt|;
+name|umask
+argument_list|(
+literal|022
+argument_list|)
+expr_stmt|;
 comment|/* Archive/dearchive with a variety of options. */
 name|basic_cpio
 argument_list|(
@@ -823,7 +980,7 @@ literal|""
 argument_list|,
 literal|""
 argument_list|,
-literal|"1 block\n"
+literal|"2 blocks\n"
 argument_list|)
 expr_stmt|;
 name|basic_cpio
@@ -834,7 +991,7 @@ literal|"--format=odc"
 argument_list|,
 literal|""
 argument_list|,
-literal|"1 block\n"
+literal|"2 blocks\n"
 argument_list|)
 expr_stmt|;
 name|basic_cpio
@@ -856,11 +1013,9 @@ literal|"-H odc"
 argument_list|,
 literal|""
 argument_list|,
-literal|"1 block\n"
+literal|"2 blocks\n"
 argument_list|)
 expr_stmt|;
-comment|/* For some reason, gcpio 2.9 writes 7 blocks but only reads 6? */
-comment|/* bsdcpio writes 7 blocks and reads 7 blocks. */
 name|basic_cpio
 argument_list|(
 literal|"copy_ustar"
@@ -869,7 +1024,7 @@ literal|"-H ustar"
 argument_list|,
 literal|""
 argument_list|,
-literal|"7 blocks\n"
+literal|"9 blocks\n"
 argument_list|)
 expr_stmt|;
 comment|/* Copy in one step using -p */
