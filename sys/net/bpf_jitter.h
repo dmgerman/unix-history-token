@@ -77,9 +77,12 @@ name|bpf_filter_func
 name|func
 decl_stmt|;
 name|int
-modifier|*
 name|mem
+index|[
+name|BPF_MEMWORDS
+index|]
 decl_stmt|;
+comment|/* Scratch memory */
 block|}
 name|bpf_jit_filter
 typedef|;
