@@ -383,6 +383,80 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|pccard_function
+name|pccard_3c1_func0
+init|=
+block|{
+literal|0
+block|,
+comment|/* function number */
+name|PCCARD_FUNCTION_NETWORK
+block|,
+literal|0x05
+block|,
+comment|/* last cfe number */
+literal|0x400
+block|,
+comment|/* ccr_base */
+literal|0x267
+block|,
+comment|/* ccr_mask */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_config_entry
+name|pccard_3c1_func0_cfe0
+init|=
+block|{
+literal|0x05
+block|,
+comment|/* cfe number */
+name|PCCARD_CFE_IO8
+operator||
+name|PCCARD_CFE_IO16
+operator||
+name|PCCARD_CFE_IRQLEVEL
+block|,
+name|PCCARD_IFTYPE_IO
+block|,
+literal|1
+block|,
+comment|/* num_iospace */
+literal|5
+block|,
+comment|/* iomask */
+block|{
+block|{
+literal|0x0010
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* iospace */
+literal|0xffff
+block|,
+comment|/* irqmask */
+literal|0
+block|,
+comment|/* num_memspace */
+block|{ }
+block|,
+comment|/* memspace */
+literal|0
+block|,
+comment|/* maxtwins */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_function
 name|pccard_sveclancard_func0
 init|=
 block|{
@@ -749,6 +823,20 @@ name|pccard_sierra_a555_func1
 block|,
 operator|&
 name|pccard_sierra_a555_func1_cfe0
+block|}
+block|,
+block|{
+name|PCMCIA_VENDOR_3COM
+block|,
+name|PCMCIA_PRODUCT_3COM_3C1
+block|,
+name|PCMCIA_CIS_INVALID
+block|,
+operator|&
+name|pccard_3c1_func0
+block|,
+operator|&
+name|pccard_3c1_func0_cfe0
 block|}
 block|,
 block|{
