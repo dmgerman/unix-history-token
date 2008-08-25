@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -201,12 +207,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_compat.h"
 end_include
 
 begin_ifdef

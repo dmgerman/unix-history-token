@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -279,12 +285,6 @@ end_endif
 begin_comment
 comment|/* __i386__ || __amd64__ */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_compat.h"
-end_include
 
 begin_ifdef
 ifdef|#
