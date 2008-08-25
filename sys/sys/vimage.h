@@ -1838,6 +1838,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_static_len
+value|static_len
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_static_count
 value|static_count
 end_define

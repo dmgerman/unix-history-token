@@ -15437,7 +15437,7 @@ label|:
 name|V_static_count
 operator|++
 expr_stmt|;
-name|static_len
+name|V_static_len
 operator|+=
 name|l
 expr_stmt|;
@@ -15547,7 +15547,7 @@ expr_stmt|;
 name|V_static_count
 operator|--
 expr_stmt|;
-name|static_len
+name|V_static_len
 operator|-=
 name|l
 expr_stmt|;
@@ -18213,7 +18213,7 @@ case|:
 comment|/* 		 * pass up a copy of the current rules. Static rules 		 * come first (the last of which has number IPFW_DEFAULT_RULE), 		 * followed by a possibly empty list of dynamic rule. 		 * The last dynamic rule has NULL in the "next" field. 		 * 		 * Note that the calculated size is used to bound the 		 * amount of data returned to the user.  The rule set may 		 * change between calculating the size and returning the 		 * data in which case we'll just return what fits. 		 */
 name|size
 operator|=
-name|static_len
+name|V_static_len
 expr_stmt|;
 comment|/* size of static rules */
 if|if
