@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 M. Warner Losh.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2008 TAKAHASHI Yoshihiro  * Copyright (c) 2008 Marcel Moolenaar  * Copyright (c) 2001 M. Warner Losh  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -747,6 +747,84 @@ name|NULL
 block|}
 block|,
 comment|/* ZTIF761 - Zoom ComStar 33.6 */
+comment|/* The following are found in PC98 hardware. */
+block|{
+literal|0x4180a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8041 - PC-9821CB-B04 */
+block|{
+literal|0x0181a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8101 - PC-9821CB2-B04 */
+block|{
+literal|0x5181a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8151 - Internal FAX/Modem for Cx3, Cb3 */
+block|{
+literal|0x9181a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8191 - PC-9801-120 */
+block|{
+literal|0xe181a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC81E1 - Internal FAX/Modem */
+block|{
+literal|0x1182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8211 - PC-9801-123 */
+block|{
+literal|0x3182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8231 - Internal FAX/Modem (Voice) */
+block|{
+literal|0x4182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8241 - PC-9821NR-B05 */
+block|{
+literal|0x5182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8251 - Internel FAX/Modem */
+block|{
+literal|0x7182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8271 - PC-9801-125 */
+block|{
+literal|0x11802fbf
+block|,
+name|NULL
+block|}
+block|,
+comment|/* OYO8011 - Internal FAX/Modem (Ring) */
 block|{
 literal|0
 block|}
@@ -785,7 +863,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Probe PnP _and_ non-PnP ns8250 here. */
+comment|/* Check PnP IDs */
 if|if
 condition|(
 name|ISA_PNP_PROBE
@@ -796,10 +874,25 @@ name|dev
 argument_list|,
 name|isa_ns8250_ids
 argument_list|)
-operator|!=
+operator|==
 name|ENXIO
 condition|)
-block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Probe PnP _and_ non-PnP ns8250 here. */
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+name|isa_get_logicalid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
 name|sc
 operator|->
 name|sc_class
@@ -807,6 +900,34 @@ operator|=
 operator|&
 name|uart_ns8250_class
 expr_stmt|;
+else|else
+name|sc
+operator|->
+name|sc_class
+operator|=
+name|uart_pc98_getdev
+argument_list|(
+name|bus_get_resource_start
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|sc
+operator|->
+name|sc_class
+operator|=
+operator|&
+name|uart_ns8250_class
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|uart_bus_probe
@@ -821,13 +942,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-return|;
-block|}
-comment|/* Add checks for non-ns8250 IDs here. */
-return|return
-operator|(
-name|ENXIO
 operator|)
 return|;
 block|}
