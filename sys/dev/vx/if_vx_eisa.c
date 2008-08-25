@@ -189,25 +189,25 @@ case|case
 name|EISA_DEVICE_ID_3COM_3C592
 case|:
 return|return
-literal|"3Com 3C592 Network Adapter"
+literal|"3Com 3C592"
 return|;
 case|case
 name|EISA_DEVICE_ID_3COM_3C597_TX
 case|:
 return|return
-literal|"3Com 3C597-TX Network Adapter"
+literal|"3Com 3C597-TX"
 return|;
 case|case
 name|EISA_DEVICE_ID_3COM_3C597_T4
 case|:
 return|return
-literal|"3Com 3C597-T4 Network Adapter"
+literal|"3Com 3C597-T4"
 return|;
 case|case
 name|EISA_DEVICE_ID_3COM_3C597_MII
 case|:
 return|return
-literal|"3Com 3C597-MII Network Adapter"
+literal|"3Com 3C597-MII"
 return|;
 default|default:
 break|break;
