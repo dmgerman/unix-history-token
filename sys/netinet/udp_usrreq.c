@@ -508,7 +508,7 @@ begin_define
 define|#
 directive|define
 name|UDBHASHSIZE
-value|16
+value|128
 end_define
 
 begin_endif
