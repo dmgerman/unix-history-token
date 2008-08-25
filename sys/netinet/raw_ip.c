@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)raw_ip.c	8.7 (Berkeley) 5/15/95  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)raw_ip.c	8.7 (Berkeley) 5/15/95  */
 end_comment
 
 begin_include
@@ -261,11 +261,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * hooks for multicast routing. They all default to NULL,  * so leave them not initialized and rely on BSS being set to 0.  */
+comment|/*  * Hooks for multicast routing. They all default to NULL, so leave them not  * initialized and rely on BSS being set to 0.  */
 end_comment
 
 begin_comment
-comment|/* The socket used to communicate with the multicast routing daemon.  */
+comment|/*  * The socket used to communicate with the multicast routing daemon.  */
 end_comment
 
 begin_decl_stmt
@@ -277,7 +277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The various mrouter and rsvp functions */
+comment|/*  * The various mrouter and rsvp functions.  */
 end_comment
 
 begin_function_decl
@@ -542,7 +542,7 @@ operator|=
 operator|&
 name|ripcb
 expr_stmt|;
-comment|/* 	 * XXX We don't use the hash list for raw IP, but it's easier 	 * to allocate a one entry hash list than it is to check all 	 * over the place for hashbase == NULL. 	 */
+comment|/* 	 * XXX We don't use the hash list for raw IP, but it's easier to 	 * allocate a one entry hash list than it is to check all over the 	 * place for hashbase == NULL. 	 */
 name|ripcbinfo
 operator|.
 name|ipi_hashbase
@@ -853,13 +853,15 @@ name|n
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|policyfail
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Setup generic address and protocol structures  * for raw_input routine, then pass them along with  * mbuf chain.  */
+comment|/*  * Setup generic address and protocol structures for raw_input routine, then  * pass them along with mbuf chain.  */
 end_comment
 
 begin_function
@@ -1207,7 +1209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generate IP header and pass packet to ip_output.  * Tack on options user may have setup with control call.  */
+comment|/*  * Generate IP header and pass packet to ip_output.  Tack on options user may  * have setup with control call.  */
 end_comment
 
 begin_function
@@ -1265,7 +1267,7 @@ operator|)
 operator||
 name|IP_ALLOWBROADCAST
 decl_stmt|;
-comment|/* 	 * If the user handed us a complete IP packet, use it. 	 * Otherwise, allocate an mbuf for a header and fill it in. 	 */
+comment|/* 	 * If the user handed us a complete IP packet, use it.  Otherwise, 	 * allocate an mbuf for a header and fill it in. 	 */
 if|if
 condition|(
 operator|(
@@ -1539,7 +1541,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* don't allow both user specified and setsockopt options, 		   and don't allow packet length sizes that will crash */
+comment|/* 		 * Don't allow both user specified and setsockopt options, 		 * and don't allow packet length sizes that will crash. 		 */
 if|if
 condition|(
 operator|(
@@ -1602,7 +1604,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 if|if
@@ -1620,7 +1624,7 @@ operator|=
 name|ip_newid
 argument_list|()
 expr_stmt|;
-comment|/* XXX prevent ip_output from overwriting header fields */
+comment|/* 		 * XXX prevent ip_output from overwriting header fields. 		 */
 name|flags
 operator||=
 name|IP_RAWOUTPUT
@@ -1682,7 +1686,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2246,7 +2252,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function exists solely to receive the PRC_IFDOWN messages which  * are sent by if_down().  It looks for an ifaddr whose ifa_addr is sa,  * and calls in_ifadown() to remove all routes corresponding to that address.  * It also receives the PRC_IFUP messages from if_up() and reinstalls the  * interface routes.  */
+comment|/*  * This function exists solely to receive the PRC_IFDOWN messages which are  * sent by if_down().  It looks for an ifaddr whose ifa_addr is sa, and calls  * in_ifadown() to remove all routes corresponding to that address.  It also  * receives the PRC_IFUP messages from if_up() and reinstalls the interface  * routes.  */
 end_comment
 
 begin_function
@@ -2328,7 +2334,7 @@ argument_list|,
 name|ia
 argument_list|)
 expr_stmt|;
-comment|/* 				 * in_ifadown gets rid of all the rest of 				 * the routes.  This is not quite the right 				 * thing to do, but at least if we are running 				 * a routing process they will come back. 				 */
+comment|/* 				 * in_ifadown gets rid of all the rest of the 				 * routes.  This is not quite the right thing 				 * to do, but at least if we are running a 				 * routing process they will come back. 				 */
 name|in_ifadown
 argument_list|(
 operator|&
@@ -2564,7 +2570,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -2595,7 +2603,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|INP_INFO_WLOCK
 argument_list|(
@@ -2625,7 +2635,9 @@ name|ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|inp
@@ -2669,7 +2681,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2992,7 +3006,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|ENOTCONN
+operator|)
 return|;
 name|inp
 operator|=
@@ -3100,7 +3116,9 @@ name|addr
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3205,7 +3223,9 @@ literal|0
 operator|)
 condition|)
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 name|inp
 operator|=
@@ -3256,7 +3276,9 @@ name|ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3312,7 +3334,9 @@ name|addr
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3323,7 +3347,9 @@ name|ifnet
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 if|if
 condition|(
@@ -3340,7 +3366,9 @@ operator|!=
 name|AF_IMPLINK
 condition|)
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 name|inp
 operator|=
@@ -3396,7 +3424,9 @@ name|ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3451,7 +3481,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3537,7 +3569,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EISCONN
+operator|)
 return|;
 block|}
 name|dst
@@ -3565,7 +3599,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOTCONN
+operator|)
 return|;
 block|}
 name|dst
@@ -3585,6 +3621,7 @@ name|s_addr
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|rip_output
 argument_list|(
 name|m
@@ -3593,6 +3630,7 @@ name|so
 argument_list|,
 name|dst
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3670,7 +3708,9 @@ name|xinpcb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -3682,7 +3722,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 comment|/* 	 * OK, now we're committed to doing something. 	 */
 name|INP_INFO_RLOCK
@@ -3752,7 +3794,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|inp_list
 operator|=
@@ -3776,7 +3820,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|INP_INFO_RLOCK
 argument_list|(
@@ -3996,7 +4042,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/* 		 * Give the user an updated idea of our state. 		 * If the generation differs from what we told 		 * her before, she knows that something happened 		 * while we were processing this request, and it 		 * might be necessary to retry. 		 */
+comment|/* 		 * Give the user an updated idea of our state.  If the 		 * generation differs from what we told her before, she knows 		 * that something happened while we were processing this 		 * request, and it might be necessary to retry. 		 */
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -4053,7 +4099,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
