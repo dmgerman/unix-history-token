@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rig
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)raw_ip.c	8.2 (Berkeley) 1/4/94  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)raw_ip.c	8.2 (Berkeley) 1/4/94  */
 end_comment
 
 begin_include
@@ -386,7 +386,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Setup generic address and protocol structures  * for raw_input routine, then pass them along with  * mbuf chain.  */
+comment|/*  * Setup generic address and protocol structures for raw_input routine, then  * pass them along with mbuf chain.  */
 end_comment
 
 begin_function
@@ -477,14 +477,16 @@ name|ip6_dst
 argument_list|)
 condition|)
 block|{
-comment|/* XXX send icmp6 host/port unreach? */
+comment|/* XXX Send icmp6 host/port unreach? */
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 name|init_sin6
@@ -704,7 +706,7 @@ operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
-comment|/* do not inject data into pcb */
+comment|/* Do not inject data into pcb. */
 block|}
 elseif|else
 endif|#
@@ -852,7 +854,7 @@ operator|.
 name|ip6s_delivered
 operator|--
 expr_stmt|;
-comment|/* do not inject data into pcb */
+comment|/* Do not inject data into pcb. */
 name|INP_RUNLOCK
 argument_list|(
 name|last
@@ -894,7 +896,7 @@ operator|&
 name|opts
 argument_list|)
 expr_stmt|;
-comment|/* strip intermediate headers */
+comment|/* Strip intermediate headers. */
 name|m_adj
 argument_list|(
 name|m
@@ -1043,7 +1045,9 @@ name|ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 end_function
@@ -1185,7 +1189,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* if the parameter is from icmp6, decode it. */
+comment|/* 	 * If the parameter is from icmp6, decode it. 	 */
 if|if
 condition|(
 name|d
@@ -1286,7 +1290,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generate IPv6 header and pass packet to ip6_output.  * Tack on options user may have setup with control call.  */
+comment|/*  * Generate IPv6 header and pass packet to ip6_output.  Tack on options user  * may have setup with control call.  */
 end_comment
 
 begin_function
@@ -1518,7 +1522,7 @@ name|in6p
 operator|->
 name|in6p_outputopts
 expr_stmt|;
-comment|/* 	 * Check and convert scope zone ID into internal form. 	 * XXX: we may still need to determine the zone later. 	 */
+comment|/* 	 * Check and convert scope zone ID into internal form. 	 * 	 * XXX: we may still need to determine the zone later. 	 */
 if|if
 condition|(
 operator|!
@@ -1565,7 +1569,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * For an ICMPv6 packet, we should know its type and code 	 * to update statistics. 	 */
+comment|/* 	 * For an ICMPv6 packet, we should know its type and code to update 	 * statistics. 	 */
 if|if
 condition|(
 name|so
@@ -1775,7 +1779,7 @@ name|dstsock
 operator|->
 name|sin6_addr
 expr_stmt|;
-comment|/* fill in the rest of the IPv6 header fields */
+comment|/* 	 * Fill in the rest of the IPv6 header fields. 	 */
 name|ip6
 operator|->
 name|ip6_flow
@@ -1816,7 +1820,7 @@ operator|&
 name|IPV6_VERSION_MASK
 operator|)
 expr_stmt|;
-comment|/* ip6_plen will be filled in ip6_output, so not fill it here. */
+comment|/* 	 * ip6_plen will be filled in ip6_output, so not fill it here. 	 */
 name|ip6
 operator|->
 name|ip6_nxt
@@ -1866,7 +1870,7 @@ name|u_int16_t
 modifier|*
 name|p
 decl_stmt|;
-comment|/* compute checksum */
+comment|/* Compute checksum. */
 if|if
 condition|(
 name|so
@@ -2389,7 +2393,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|error
 operator|=
@@ -2407,7 +2413,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|MALLOC
 argument_list|(
@@ -2435,7 +2443,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|INP_INFO_WLOCK
 argument_list|(
@@ -2472,7 +2482,9 @@ name|M_PCB
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|inp
@@ -2541,7 +2553,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2748,12 +2762,25 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
-init|=
+decl_stmt|;
+name|inp
+operator|=
 name|sotoinpcb
 argument_list|(
 name|so
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|inp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"rip6_disconnect: inp == NULL"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2767,7 +2794,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|ENOTCONN
+operator|)
 return|;
 name|inp
 operator|->
@@ -2813,11 +2842,6 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
-init|=
-name|sotoinpcb
-argument_list|(
-name|so
-argument_list|)
 decl_stmt|;
 name|struct
 name|sockaddr_in6
@@ -2843,6 +2867,13 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|inp
+operator|=
+name|sotoinpcb
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|inp
@@ -2867,7 +2898,9 @@ name|addr
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2884,7 +2917,9 @@ operator|!=
 name|AF_INET6
 condition|)
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 if|if
 condition|(
@@ -2934,7 +2969,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 if|if
 condition|(
@@ -2999,7 +3036,9 @@ name|ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3029,11 +3068,6 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
-init|=
-name|sotoinpcb
-argument_list|(
-name|so
-argument_list|)
 decl_stmt|;
 name|struct
 name|sockaddr_in6
@@ -3070,6 +3104,13 @@ name|scope_ambiguous
 init|=
 literal|0
 decl_stmt|;
+name|inp
+operator|=
+name|sotoinpcb
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|inp
@@ -3094,7 +3135,9 @@ name|addr
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3105,7 +3148,9 @@ name|ifnet
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 if|if
 condition|(
@@ -3116,9 +3161,11 @@ operator|!=
 name|AF_INET6
 condition|)
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
-comment|/* 	 * Application should provide a proper zone ID or the use of 	 * default zone IDs should be enabled.  Unfortunately, some 	 * applications do not behave as it should, so we need a 	 * workaround.  Even if an appropriate ID is not determined, 	 * we'll see if we can determine the outgoing interface.  If we 	 * can, determine the zone ID based on the interface below. 	 */
+comment|/* 	 * Application should provide a proper zone ID or the use of default 	 * zone IDs should be enabled.  Unfortunately, some applications do 	 * not behave as it should, so we need a workaround.  Even if an 	 * appropriate ID is not determined, we'll see if we can determine 	 * the outgoing interface.  If we can, determine the zone ID based on 	 * the interface below. 	 */
 if|if
 condition|(
 name|addr
@@ -3294,7 +3341,9 @@ name|ripcbinfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3349,7 +3398,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3392,11 +3443,6 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
-init|=
-name|sotoinpcb
-argument_list|(
-name|so
-argument_list|)
 decl_stmt|;
 name|struct
 name|sockaddr_in6
@@ -3410,6 +3456,13 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|inp
+operator|=
+name|sotoinpcb
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|inp
@@ -3427,7 +3480,7 @@ operator|&
 name|ripcbinfo
 argument_list|)
 expr_stmt|;
-comment|/* always copy sockaddr to avoid overwrites */
+comment|/* Always copy sockaddr to avoid overwrites. */
 comment|/* Unlocked read. */
 if|if
 condition|(
@@ -3455,7 +3508,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EISCONN
+operator|)
 return|;
 block|}
 comment|/* XXX */
@@ -3532,7 +3587,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOTCONN
+operator|)
 return|;
 block|}
 if|if
