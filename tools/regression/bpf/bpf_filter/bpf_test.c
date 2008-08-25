@@ -140,30 +140,8 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/bpf_jitter.h>
 end_include
-
-begin_function_decl
-name|bpf_filter_func
-name|bpf_jit_compile
-parameter_list|(
-name|struct
-name|bpf_insn
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -174,6 +152,7 @@ name|void
 parameter_list|)
 block|{
 name|bpf_jit_filter
+modifier|*
 name|filter
 decl_stmt|;
 name|u_int
@@ -191,23 +170,17 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Create the binary */
+comment|/* Compile the BPF filter program and generate native code. */
 if|if
 condition|(
 operator|(
 name|filter
-operator|.
-name|func
 operator|=
-name|bpf_jit_compile
+name|bpf_jitter
 argument_list|(
 name|pc
 argument_list|,
 name|nins
-argument_list|,
-name|filter
-operator|.
-name|mem
 argument_list|)
 operator|)
 operator|==
@@ -248,7 +221,7 @@ operator|(
 operator|*
 operator|(
 name|filter
-operator|.
+operator|->
 name|func
 operator|)
 operator|)
@@ -260,11 +233,9 @@ operator|,
 name|buflen
 operator|)
 expr_stmt|;
-name|free
+name|bpf_destroy_jit_filter
 argument_list|(
 name|filter
-operator|.
-name|func
 argument_list|)
 expr_stmt|;
 return|return
