@@ -1069,7 +1069,7 @@ init|=
 name|FALSE
 decl_stmt|;
 name|struct
-name|pmap
+name|portmap
 name|mapping
 decl_stmt|;
 name|u_short
@@ -1482,7 +1482,7 @@ argument_list|,
 operator|(
 name|xdrproc_t
 operator|)
-name|xdr_pmap
+name|xdr_portmap
 argument_list|,
 operator|&
 name|mapping

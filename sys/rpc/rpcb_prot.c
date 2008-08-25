@@ -101,14 +101,14 @@ end_include
 
 begin_function
 name|bool_t
-name|xdr_pmap
+name|xdr_portmap
 parameter_list|(
 name|XDR
 modifier|*
 name|xdrs
 parameter_list|,
 name|struct
-name|pmap
+name|portmap
 modifier|*
 name|regs
 parameter_list|)
