@@ -1198,7 +1198,7 @@ return|;
 return|return
 name|htons
 argument_list|(
-name|ip_id
+name|V_ip_id
 operator|++
 argument_list|)
 return|;

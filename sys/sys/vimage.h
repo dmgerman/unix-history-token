@@ -914,6 +914,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_ip_id
+value|ip_id
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_ip_keepfaith
 value|ip_keepfaith
 end_define

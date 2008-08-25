@@ -1276,7 +1276,7 @@ name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
 comment|/* Initialize various other remaining things. */
-name|ip_id
+name|V_ip_id
 operator|=
 name|time_second
 operator|&
