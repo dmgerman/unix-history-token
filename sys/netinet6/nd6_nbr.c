@@ -5108,7 +5108,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|dadq
+name|V_dadq
 argument_list|,
 operator|(
 expr|struct
