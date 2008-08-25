@@ -168,6 +168,14 @@ literal|5
 block|}
 block|,
 block|{
+name|DEVICEID_82801EB
+block|,
+literal|"Intel 82801EB watchdog timer"
+block|,
+literal|5
+block|}
+block|,
+block|{
 name|DEVICEID_82801EBR
 block|,
 literal|"Intel 82801EB/ER watchdog timer"
@@ -211,6 +219,14 @@ block|{
 name|DEVICEID_ICH7
 block|,
 literal|"Intel ICH7 watchdog timer"
+block|,
+literal|7
+block|}
+block|,
+block|{
+name|DEVICEID_ICH7DH
+block|,
+literal|"Intel ICH7DH watchdog timer"
 block|,
 literal|7
 block|}
@@ -264,6 +280,14 @@ literal|8
 block|}
 block|,
 block|{
+name|DEVICEID_ICH8ME
+block|,
+literal|"Intel ICH8M-E watchdog timer"
+block|,
+literal|8
+block|}
+block|,
+block|{
 name|DEVICEID_63XXESB
 block|,
 literal|"Intel 63XXESB watchdog timer"
@@ -275,14 +299,6 @@ block|{
 name|DEVICEID_ICH9
 block|,
 literal|"Intel ICH9 watchdog timer"
-block|,
-literal|9
-block|}
-block|,
-block|{
-name|DEVICEID_ICH9R
-block|,
-literal|"Intel ICH9R watchdog timer"
 block|,
 literal|9
 block|}
@@ -301,6 +317,62 @@ block|,
 literal|"Intel ICH9DO watchdog timer"
 block|,
 literal|9
+block|}
+block|,
+block|{
+name|DEVICEID_ICH9M
+block|,
+literal|"Intel ICH9M watchdog timer"
+block|,
+literal|9
+block|}
+block|,
+block|{
+name|DEVICEID_ICH9ME
+block|,
+literal|"Intel ICH9M-E watchdog timer"
+block|,
+literal|9
+block|}
+block|,
+block|{
+name|DEVICEID_ICH9R
+block|,
+literal|"Intel ICH9R watchdog timer"
+block|,
+literal|9
+block|}
+block|,
+block|{
+name|DEVICEID_ICH10
+block|,
+literal|"Intel ICH10 watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_ICH10D
+block|,
+literal|"Intel ICH10D watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_ICH10DO
+block|,
+literal|"Intel ICH10DO watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
+name|DEVICEID_ICH10R
+block|,
+literal|"Intel ICH10R watchdog timer"
+block|,
+literal|10
 block|}
 block|,
 block|{
