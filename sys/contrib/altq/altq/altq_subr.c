@@ -31,16 +31,6 @@ directive|include
 file|"opt_altq.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD__
-operator|!=
-literal|2
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -58,11 +48,6 @@ include|#
 directive|include
 file|"opt_inet6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
