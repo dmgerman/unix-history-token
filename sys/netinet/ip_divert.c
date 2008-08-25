@@ -894,11 +894,6 @@ argument_list|,
 argument|inp_list
 argument_list|)
 block|{
-name|INP_RLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 comment|/* XXX why does only one socket match? */
 if|if
 condition|(
@@ -909,6 +904,11 @@ operator|==
 name|nport
 condition|)
 block|{
+name|INP_RLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|sa
 operator|=
 name|inp
@@ -980,11 +980,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|INP_RUNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 block|}
 name|INP_INFO_RUNLOCK
 argument_list|(
