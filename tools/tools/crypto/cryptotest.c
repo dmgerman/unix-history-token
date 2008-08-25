@@ -1040,7 +1040,7 @@ decl_stmt|;
 name|char
 name|iv
 index|[
-literal|8
+name|EALG_MAX_BLOCK_LEN
 index|]
 decl_stmt|;
 name|bzero
