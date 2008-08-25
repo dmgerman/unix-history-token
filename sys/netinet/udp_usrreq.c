@@ -685,7 +685,7 @@ operator|.
 name|ipi_listhead
 operator|=
 operator|&
-name|udb
+name|V_udb
 expr_stmt|;
 name|V_udbinfo
 operator|.
