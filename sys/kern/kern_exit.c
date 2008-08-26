@@ -2566,6 +2566,8 @@ name|WNOHANG
 operator||
 name|WCONTINUED
 operator||
+name|WNOWAIT
+operator||
 name|WLINUXCLONE
 operator|)
 condition|)
@@ -2790,12 +2792,32 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If we got the child via a ptrace 'attach', 			 * we need to give it back to the old parent. 			 */
 name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|options
+operator|&
+name|WNOWAIT
+condition|)
+block|{
+comment|/* 				 *  Only poll, returning the status. 				 *  Caller does not wish to release the proc 				 *  struct just yet. 				 */
+name|sx_xunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 			 * If we got the child via a ptrace 'attach', 			 * we need to give it back to the old parent. 			 */
 if|if
 condition|(
 name|p
