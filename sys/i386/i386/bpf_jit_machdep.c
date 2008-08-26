@@ -316,18 +316,6 @@ comment|/* 	 * NOTE: do not modify the name of this variable, as it's used by 	 
 name|emit_func
 name|emitm
 decl_stmt|;
-comment|/* Do not compile an empty filter. */
-if|if
-condition|(
-name|nins
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 comment|/* Allocate the reference table for the jumps */
 ifdef|#
 directive|ifdef
