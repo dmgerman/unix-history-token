@@ -350,6 +350,26 @@ literal|"CentaurHauls"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|msr_info_enabled
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.est.msr_info"
+argument_list|,
+operator|&
+name|msr_info_enabled
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Default bus clock value for Centrino processors. */
 end_comment
@@ -8160,6 +8180,16 @@ decl_stmt|;
 name|uint16_t
 name|id
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|msr_info_enabled
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 comment|/* Figure out the bus clock. */
 name|freq
 operator|=
