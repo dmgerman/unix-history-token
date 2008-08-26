@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_PCPU_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -50,6 +44,12 @@ end_define
 begin_comment
 comment|/* ACPI CPU id. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct

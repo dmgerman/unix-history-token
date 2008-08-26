@@ -563,6 +563,13 @@ end_endif
 
 begin_typedef
 typedef|typedef
+name|__cpumask_t
+name|cpumask_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|__critical_t
 name|critical_t
 typedef|;
@@ -1291,13 +1298,6 @@ begin_typedef
 typedef|typedef
 name|int
 name|boolean_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__cpumask_t
-name|cpumask_t
 typedef|;
 end_typedef
 

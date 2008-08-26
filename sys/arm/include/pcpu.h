@@ -40,6 +40,15 @@ name|vmspace
 struct_decl|;
 end_struct_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_comment
 comment|/*  * Inside the kernel, the globally reserved register g7 is used to  * point at the globaldata structure.  */
 end_comment
@@ -51,6 +60,12 @@ name|PCPU_MD_FIELDS
 define|\
 value|struct pcup *pc_prvspace;
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct

@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_PCPU_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -143,6 +137,12 @@ end_define
 begin_comment
 comment|/* where SRR1 gets saved */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_define
 define|#
