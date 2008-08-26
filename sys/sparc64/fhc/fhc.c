@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pcpu.h>
 end_include
 
@@ -193,6 +199,16 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|fhc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
