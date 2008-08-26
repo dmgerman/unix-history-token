@@ -3664,6 +3664,41 @@ argument_list|,
 literal|"\t%lu SACK scoreboard overflow\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|tcps_ecn_ce
+argument_list|,
+literal|"\t%lu packet%s with ECN CE bit set\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_ecn_ect0
+argument_list|,
+literal|"\t%lu packet%s with ECN ECT(0) bit set\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_ecn_ect1
+argument_list|,
+literal|"\t%lu packet%s with ECN ECT(1) bit set\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_ecn_shs
+argument_list|,
+literal|"\t%lu successful ECN handshake%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_ecn_rcwnd
+argument_list|,
+literal|"\t%lu time%s ECN reduced the congestion window\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
