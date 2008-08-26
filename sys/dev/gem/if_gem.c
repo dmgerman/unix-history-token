@@ -297,7 +297,7 @@ value|10000
 end_define
 
 begin_comment
-comment|/*  * The GEM hardware support basic TCP/UDP checksum offloading.  However,  * the hardware doesn't compensate the checksum for UDP datagram which  * can yield to 0x0.  As a safe guard, UDP checksum offload is disabled  * by default.  It can be reactivated by setting special link option  * link0 with ifconfig(8).  */
+comment|/*  * The hardware supports basic TCP/UDP checksum offloading.  However,  * the hardware doesn't compensate the checksum for UDP datagram which  * can yield to 0x0.  As a safe guard, UDP checksum offload is disabled  * by default.  It can be reactivated by setting special link option  * link0 with ifconfig(8).  */
 end_comment
 
 begin_define
@@ -2864,6 +2864,9 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|uint32_t
+name|v
+decl_stmt|;
 name|GEM_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -2877,7 +2880,7 @@ name|sc
 operator|->
 name|sc_ifp
 expr_stmt|;
-comment|/* 	 * Unload collision counters. 	 */
+comment|/* 	 * Unload collision and error counters. 	 */
 name|ifp
 operator|->
 name|if_collisions
@@ -2895,7 +2898,9 @@ name|sc
 argument_list|,
 name|GEM_MAC_FIRST_COLL_CNT
 argument_list|)
-operator|+
+expr_stmt|;
+name|v
+operator|=
 name|GEM_BANK1_READ_4
 argument_list|(
 name|sc
@@ -2908,6 +2913,50 @@ argument_list|(
 name|sc
 argument_list|,
 name|GEM_MAC_LATE_COLL_CNT
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_collisions
+operator|+=
+name|v
+expr_stmt|;
+name|ifp
+operator|->
+name|if_oerrors
+operator|+=
+name|v
+expr_stmt|;
+name|ifp
+operator|->
+name|if_ierrors
+operator|+=
+name|GEM_BANK1_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|GEM_MAC_RX_LEN_ERR_CNT
+argument_list|)
+operator|+
+name|GEM_BANK1_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|GEM_MAC_RX_ALIGN_ERR
+argument_list|)
+operator|+
+name|GEM_BANK1_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|GEM_MAC_RX_CRC_ERR_CNT
+argument_list|)
+operator|+
+name|GEM_BANK1_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|GEM_MAC_RX_CODE_VIOL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Then clear the hardware counters. 	 */
@@ -2943,6 +2992,42 @@ argument_list|(
 name|sc
 argument_list|,
 name|GEM_MAC_LATE_COLL_CNT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|GEM_BANK1_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|GEM_MAC_RX_LEN_ERR_CNT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|GEM_BANK1_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|GEM_MAC_RX_ALIGN_ERR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|GEM_BANK1_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|GEM_MAC_RX_CRC_ERR_CNT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|GEM_BANK1_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|GEM_MAC_RX_CODE_VIOL
 argument_list|,
 literal|0
 argument_list|)
@@ -9056,7 +9141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MII interface  *  * The GEM MII interface supports at least three different operating modes:  *  * Bitbang mode is implemented using data, clock and output enable registers.  *  * Frame mode is implemented by loading a complete frame into the frame  * register and polling the valid bit for completion.  *  * Polling mode uses the frame register but completion is indicated by  * an interrupt.  *  */
+comment|/*  * MII interface  *  * The MII interface supports at least three different operating modes:  *  * Bitbang mode is implemented using data, clock and output enable registers.  *  * Frame mode is implemented by loading a complete frame into the frame  * register and polling the valid bit for completion.  *  * Polling mode uses the frame register but completion is indicated by  * an interrupt.  *  */
 end_comment
 
 begin_function
@@ -10157,7 +10242,11 @@ name|GEM_MIF_CONFIG_PHY_SEL
 operator|)
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+comment|/* External MII needs echo disable if half duplex. */
+if|if
+condition|(
 operator|(
 name|IFM_OPTIONS
 argument_list|(
@@ -10173,11 +10262,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-comment|/* External MII needs echo disable if half duplex. */
 name|v
 operator||=
 name|GEM_MAC_XIF_ECHO_DISABL
 expr_stmt|;
+block|}
 else|else
 comment|/* 			 * Internal MII needs buffer enable. 			 * XXX buffer enable makes only sense for an 			 * external PHY. 			 */
 name|v
