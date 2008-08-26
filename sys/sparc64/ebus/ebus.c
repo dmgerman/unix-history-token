@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * UltraSPARC 5 and beyond Ebus support.  *  * note that this driver is not complete:  *	- ebus2 dma code is completely unwritten  *	- interrupt establish is written and appears to work  *	- bus map code is written and appears to work  * XXX: This is PCI specific, however, there exist SBus-to-EBus bridges...  * XXX: The EBus was designed to allow easy adaption of ISA devices to it - a  * compatability layer for ISA devices might be nice, although probably not  * easily possible because of some cruft (like in[bwl]/out[bwl] and friends).  * Additionally, the existing ISA code is limited to one ISA bus, however,  * there are machines with both ISA and EBus.  */
+comment|/*  * UltraSPARC 5 and beyond EBus support  */
 end_comment
 
 begin_include
@@ -181,9 +181,6 @@ begin_struct
 struct|struct
 name|ebus_softc
 block|{
-name|phandle_t
-name|sc_node
-decl_stmt|;
 name|struct
 name|isa_ranges
 modifier|*
@@ -540,6 +537,32 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ebus
+argument_list|,
+name|pci
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ebus
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -682,10 +705,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_node
-operator|=
 name|node
 operator|=
 name|ofw_bus_get_node
@@ -1386,7 +1405,7 @@ argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Map ebus ranges to PCI ranges. This may include changing the 	 * allocation type. 	 */
+comment|/* 	 * Map EBus ranges to PCI ranges.  This may include changing the 	 * allocation type. 	 */
 switch|switch
 condition|(
 name|type
@@ -1687,6 +1706,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ebus_release_resource
 parameter_list|(
