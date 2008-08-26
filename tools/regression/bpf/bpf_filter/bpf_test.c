@@ -132,20 +132,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BPF_JIT_COMPILER
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BPF_VALIDATE
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -165,11 +151,6 @@ index|]
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -209,18 +190,6 @@ name|i
 decl_stmt|,
 name|ret
 decl_stmt|;
-comment|/* Do not use BPF JIT compiler for an empty program */
-if|if
-condition|(
-name|nins
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* Compile the BPF filter program and generate native code. */
 if|if
 condition|(
@@ -1173,7 +1142,13 @@ name|ret
 operator|=
 name|bpf_filter
 argument_list|(
+name|nins
+operator|!=
+literal|0
+condition|?
 name|pc
+else|:
+name|NULL
 argument_list|,
 name|pkt
 argument_list|,
