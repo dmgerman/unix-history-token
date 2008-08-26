@@ -1950,22 +1950,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Step 24: Activate timer for PHY */
-name|callout_reset
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|tsec_tick_ch
-argument_list|,
-name|hz
-argument_list|,
-name|tsec_tick
-argument_list|,
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* Step 25: Activate network interface */
+comment|/* Step 24: Activate network interface */
 name|ifp
 operator|->
 name|if_drv_flags
@@ -1987,13 +1972,19 @@ name|ifp
 operator|->
 name|if_flags
 expr_stmt|;
+name|sc
+operator|->
+name|tsec_watchdog
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Schedule watchdog timeout */
 name|callout_reset
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|wd_callout
+name|tsec_callout
 argument_list|,
 name|hz
 argument_list|,
@@ -2513,14 +2504,14 @@ if|if
 condition|(
 name|sc
 operator|->
-name|wd_timer
+name|tsec_watchdog
 operator|==
 literal|0
 operator|||
 operator|--
 name|sc
 operator|->
-name|wd_timer
+name|tsec_watchdog
 operator|>
 literal|0
 condition|)
@@ -2790,7 +2781,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|wd_timer
+name|tsec_watchdog
 operator|=
 literal|5
 expr_stmt|;
@@ -4303,7 +4294,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|tsec_tick_ch
+name|tsec_callout
 argument_list|,
 literal|1
 argument_list|)
@@ -5167,16 +5158,6 @@ argument_list|,
 name|hwaddr
 argument_list|)
 expr_stmt|;
-name|callout_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|wd_callout
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Interrupts configuration (TX/RX/ERR) */
 name|sc
 operator|->
@@ -5850,7 +5831,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|tsec_tick_ch
+name|tsec_callout
 argument_list|)
 expr_stmt|;
 comment|/* Stop and release all interrupts */
@@ -6125,13 +6106,13 @@ name|sc
 operator|->
 name|tsec_ifp
 expr_stmt|;
-comment|/* Stop PHY tick engine */
+comment|/* Stop tick engine */
 name|callout_stop
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|tsec_tick_ch
+name|tsec_callout
 argument_list|)
 expr_stmt|;
 comment|/* Disable interface and watchdog timer */
@@ -6148,7 +6129,7 @@ operator|)
 expr_stmt|;
 name|sc
 operator|->
-name|wd_timer
+name|tsec_watchdog
 operator|=
 literal|0
 expr_stmt|;
@@ -6974,7 +6955,7 @@ argument_list|)
 condition|)
 name|sc
 operator|->
-name|wd_timer
+name|tsec_watchdog
 operator|=
 literal|0
 expr_stmt|;
@@ -7270,7 +7251,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|wd_callout
+name|tsec_callout
 argument_list|,
 name|hz
 argument_list|,

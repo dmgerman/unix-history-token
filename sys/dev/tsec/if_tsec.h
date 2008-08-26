@@ -70,10 +70,6 @@ modifier|*
 name|tsec_mii
 decl_stmt|;
 comment|/* MII media control */
-name|struct
-name|callout
-name|tsec_tick_ch
-decl_stmt|;
 name|int
 name|tsec_link
 decl_stmt|;
@@ -212,13 +208,13 @@ decl_stmt|;
 name|int
 name|tsec_if_flags
 decl_stmt|;
-comment|/* Watchdog related */
+comment|/* Watchdog and MII tick related */
 name|struct
 name|callout
-name|wd_callout
+name|tsec_callout
 decl_stmt|;
 name|int
-name|wd_timer
+name|tsec_watchdog
 decl_stmt|;
 comment|/* TX maps */
 name|bus_dmamap_t
