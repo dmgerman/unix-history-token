@@ -2423,25 +2423,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|u_int
-name|bpf_filter
-parameter_list|(
-specifier|const
-name|struct
-name|bpf_insn
-modifier|*
-parameter_list|,
-name|u_char
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|__inline
@@ -2524,6 +2505,25 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|u_int
+name|bpf_filter
+parameter_list|(
+specifier|const
+name|struct
+name|bpf_insn
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Number of scratch memory words (for BPF_LD|BPF_MEM and BPF_ST).  */

@@ -23,11 +23,20 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|sun
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -125,6 +134,17 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_endif
