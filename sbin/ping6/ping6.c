@@ -612,6 +612,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|F_AUDIBLE
+value|0x400000
+end_define
+
+begin_define
+define|#
+directive|define
 name|F_NOUSERDATA
 value|(F_NODEADDR | F_FQDN | F_FQDNOLD | F_SUPTYPES)
 end_define
@@ -756,6 +763,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* characters written for flood */
+end_comment
+
+begin_decl_stmt
+name|char
+name|BBELL
+init|=
+literal|'\a'
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* characters written for AUDIBLE */
 end_comment
 
 begin_decl_stmt
@@ -1660,7 +1679,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:c:dfHg:h:I:i:l:mnNop:qS:s:tvwW"
+literal|"a:b:c:defHg:h:I:i:l:mnNop:qS:s:tvwW"
 name|ADDOPTS
 argument_list|)
 operator|)
@@ -1919,6 +1938,14 @@ case|:
 name|options
 operator||=
 name|F_SO_DEBUG
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|options
+operator||=
+name|F_AUDIBLE
 expr_stmt|;
 break|break;
 case|case
@@ -7947,6 +7974,25 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|options
+operator|&
+name|F_AUDIBLE
+condition|)
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+operator|&
+name|BBELL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
