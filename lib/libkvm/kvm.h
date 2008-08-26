@@ -186,6 +186,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|kvm_getcptime
+parameter_list|(
+name|kvm_t
+modifier|*
+parameter_list|,
+name|long
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 modifier|*
