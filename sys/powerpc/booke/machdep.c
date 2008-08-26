@@ -433,26 +433,6 @@ name|availmem_regions_sz
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|trapcode
-decl_stmt|,
-modifier|*
-name|trapsize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|char
-name|kstack0_space
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|void
@@ -663,7 +643,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|u_int
 name|e500_init
 parameter_list|(
 name|u_int32_t
@@ -686,6 +666,11 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|int
+name|indx
+decl_stmt|,
+name|size
+decl_stmt|;
 comment|/* Initialise the decrementer-based clock. */
 name|decr_init
 argument_list|()
@@ -726,9 +711,6 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|int
-name|indx
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"Physical memory chunk(s):\n"
@@ -754,9 +736,8 @@ operator|+=
 literal|2
 control|)
 block|{
-name|int
-name|size1
-init|=
+name|size
+operator|=
 name|phys_avail
 index|[
 name|indx
@@ -768,7 +749,7 @@ name|phys_avail
 index|[
 name|indx
 index|]
-decl_stmt|;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"0x%08x - 0x%08x, %d bytes (%d pages)\n"
@@ -787,9 +768,9 @@ index|]
 operator|-
 literal|1
 argument_list|,
-name|size1
+name|size
 argument_list|,
-name|size1
+name|size
 operator|/
 name|PAGE_SIZE
 argument_list|)
@@ -1337,7 +1318,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|u_int
 name|e500_init
 parameter_list|(
 name|u_int32_t
@@ -1743,15 +1724,6 @@ expr_stmt|;
 comment|/* Finish setting up thread0. */
 name|thread0
 operator|.
-name|td_kstack
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|kstack0_space
-expr_stmt|;
-name|thread0
-operator|.
 name|td_pcb
 operator|=
 operator|(
@@ -1760,16 +1732,27 @@ name|pcb
 operator|*
 operator|)
 operator|(
+operator|(
 name|thread0
 operator|.
 name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|thread0
+operator|.
+name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
-operator|)
 operator|-
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcb
+argument_list|)
+operator|)
+operator|&
+operator|~
+literal|15
+operator|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -1950,9 +1933,45 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
+literal|"e500_init: SP = 0x%08x\n"
+argument_list|,
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|thread0
+operator|.
+name|td_pcb
+operator|-
+literal|16
+operator|)
+operator|&
+operator|~
+literal|15
+argument_list|)
+expr_stmt|;
+name|debugf
+argument_list|(
 literal|"e500_init: e\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|thread0
+operator|.
+name|td_pcb
+operator|-
+literal|16
+operator|)
+operator|&
+operator|~
+literal|15
+operator|)
+return|;
 block|}
 end_function
 
