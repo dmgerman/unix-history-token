@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Test 0001:	Catch illegal instruction.  *  * $FreeBSD$  */
+comment|/*-  * Test 0078:	Check boundary conditions (BPF_STX)  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -16,7 +16,25 @@ init|=
 block|{
 name|BPF_STMT
 argument_list|(
-literal|0xdead
+name|BPF_LD
+operator||
+name|BPF_IMM
+argument_list|,
+literal|0xdeadc0de
+argument_list|)
+block|,
+name|BPF_STMT
+argument_list|(
+name|BPF_STX
+argument_list|,
+literal|0xffffffff
+argument_list|)
+block|,
+name|BPF_STMT
+argument_list|(
+name|BPF_MISC
+operator||
+name|BPF_TXA
 argument_list|,
 literal|0
 argument_list|)
@@ -98,7 +116,7 @@ begin_decl_stmt
 name|u_int
 name|expect
 init|=
-literal|0
+literal|0xdeadc0de
 decl_stmt|;
 end_decl_stmt
 
@@ -106,13 +124,37 @@ begin_comment
 comment|/* Expeced signal */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BPF_JIT_COMPILER
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|expect_signal
 init|=
-name|SIGABRT
+name|SIGSEGV
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|expect_signal
+init|=
+name|SIGBUS
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
