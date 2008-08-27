@@ -31576,7 +31576,7 @@ block|{
 comment|/* 			 * We must decrement the refcount since we have the 			 * ep already and are binding. No remove going on 			 * here. 			 */
 name|SCTP_INP_DECR_REF
 argument_list|(
-name|inp
+name|lep
 argument_list|)
 expr_stmt|;
 block|}

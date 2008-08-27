@@ -374,6 +374,17 @@ name|SCTP_EXPLICIT_EOR
 value|0x0000001b
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_REUSE_PORT
+value|0x0000001c
+end_define
+
+begin_comment
+comment|/* rw */
+end_comment
+
 begin_comment
 comment|/*  * read-only options  */
 end_comment
@@ -1520,13 +1531,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_PCB_FLAGS_LISTENING
-value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_PCB_FLAGS_CLOSE_IP
 value|0x00040000
 end_define
@@ -1790,6 +1794,13 @@ define|#
 directive|define
 name|SCTP_PCB_FLAGS_MULTIPLE_ASCONFS
 value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_PORTREUSE
+value|0x02000000
 end_define
 
 begin_comment
