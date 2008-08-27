@@ -14103,7 +14103,7 @@ literal|"A"
 endif|#
 directive|endif
 literal|"usage: ping6 [-"
-literal|"d"
+literal|"de"
 if|#
 directive|if
 name|defined
