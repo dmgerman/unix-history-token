@@ -2879,7 +2879,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_kld_check_load
+name|mac_check_kld_load
 argument_list|(
 name|curthread
 operator|->
