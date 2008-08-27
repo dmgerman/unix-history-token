@@ -1724,6 +1724,9 @@ begin_struct
 struct|struct
 name|sctp_hmacalgo
 block|{
+name|uint32_t
+name|shmac_number_of_idents
+decl_stmt|;
 name|uint16_t
 name|shmac_idents
 index|[
