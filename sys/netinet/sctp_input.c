@@ -1406,6 +1406,10 @@ argument_list|)
 expr_stmt|;
 name|asoc
 operator|->
+name|tsn_last_delivered
+operator|=
+name|asoc
+operator|->
 name|cumulative_tsn
 operator|=
 name|asoc
@@ -16279,6 +16283,12 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|tsn_last_delivered
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
 name|cumulative_tsn
 operator|=
 name|stcb
@@ -16952,6 +16962,12 @@ name|SCTP_MAP_SLIDE_RESULT
 argument_list|)
 expr_stmt|;
 block|}
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|tsn_last_delivered
+operator|=
 name|stcb
 operator|->
 name|asoc

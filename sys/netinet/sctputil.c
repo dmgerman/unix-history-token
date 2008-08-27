@@ -27311,12 +27311,15 @@ name|sin6
 operator|.
 name|sin6_addr
 operator|.
-name|s6_addr16
+name|s6_addr32
 index|[
 literal|2
 index|]
 operator|=
+name|htonl
+argument_list|(
 literal|0xffff
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -27330,7 +27333,7 @@ name|sin6
 operator|.
 name|sin6_addr
 operator|.
-name|s6_addr16
+name|s6_addr32
 index|[
 literal|3
 index|]
@@ -27341,7 +27344,7 @@ name|sin6
 operator|.
 name|sin6_addr
 operator|.
-name|s6_addr16
+name|s6_addr32
 index|[
 literal|3
 index|]
