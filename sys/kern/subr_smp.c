@@ -1025,35 +1025,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|smp_no_rendevous_barrier
-parameter_list|(
-name|void
-modifier|*
-name|dummy
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|SMP
-name|KASSERT
-argument_list|(
-operator|(
-operator|!
-name|smp_started
-operator|)
-argument_list|,
-operator|(
-literal|"smp_no_rendevous called and smp is started"
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
 begin_comment
 comment|/*  * All-CPU rendezvous.  CPUs are signalled, all execute the setup function   * (if specified), rendezvous, execute the action function (if specified),  * rendezvous again, execute the teardown function (if specified), and then  * resume.  *  * Note that the supplied external functions _must_ be reentrant and aware  * that they are running in parallel and in an unknown lock context.  */
 end_comment
@@ -1818,6 +1789,35 @@ end_endif
 begin_comment
 comment|/* SMP */
 end_comment
+
+begin_function
+name|void
+name|smp_no_rendevous_barrier
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|SMP
+name|KASSERT
+argument_list|(
+operator|(
+operator|!
+name|smp_started
+operator|)
+argument_list|,
+operator|(
+literal|"smp_no_rendevous called and smp is started"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
 
 end_unit
 
