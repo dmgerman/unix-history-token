@@ -4930,6 +4930,15 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+else|else
+block|{
+name|cfe
+operator|->
+name|irqmask
+operator|=
+literal|0xffff
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|memspace
