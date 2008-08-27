@@ -1593,6 +1593,13 @@ name|AUTHENTICATION
 case|case
 name|TELOPT_AUTHENTICATION
 case|:
+if|if
+condition|(
+name|auth_level
+operator|>=
+literal|0
+condition|)
+block|{
 name|func
 operator|=
 name|auth_request
@@ -1600,6 +1607,7 @@ expr_stmt|;
 name|changeok
 operator|++
 expr_stmt|;
+block|}
 break|break;
 endif|#
 directive|endif
