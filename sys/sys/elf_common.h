@@ -3284,6 +3284,27 @@ begin_comment
 comment|/* Visible but not preemptible. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|STV_EXPORTED
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|STV_SINGLETON
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|STV_ELIMINATE
+value|0x6
+end_define
+
 begin_comment
 comment|/* Special symbol table indexes. */
 end_comment

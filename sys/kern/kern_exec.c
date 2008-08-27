@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -170,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sf_buf.h>
 end_include
 
@@ -308,6 +320,121 @@ include|#
 directive|include
 file|<security/mac/mac_framework.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/dtrace_bsd.h>
+end_include
+
+begin_decl_stmt
+name|dtrace_execexit_func_t
+name|dtrace_fasttrap_exec
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SDT_PROVIDER_DECLARE
+argument_list|(
+name|proc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec
+argument_list|,
+literal|0
+argument_list|,
+literal|"char *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec_failure
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec_failure
+argument_list|,
+literal|0
+argument_list|,
+literal|"int"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec_success
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec_success
+argument_list|,
+literal|0
+argument_list|,
+literal|"char *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -1517,6 +1644,27 @@ name|image_header
 operator|=
 name|NULL
 expr_stmt|;
+name|SDT_PROBE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec
+argument_list|,
+name|args
+operator|->
+name|fname
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Translate the file name. namei() returns a vnode pointer 	 *	in ni_vp amoung other things. 	 * 	 * XXXAUDIT: It would be desirable to also audit the name of the 	 * interpreter if this is an interpreted binary. 	 */
 name|ndp
 operator|=
@@ -2674,6 +2822,21 @@ name|ndp
 operator|->
 name|ni_vp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+comment|/* 	 * Tell the DTrace fasttrap provider about the exec if it 	 * has declared an interest. 	 */
+if|if
+condition|(
+name|dtrace_fasttrap_exec
+condition|)
+name|dtrace_fasttrap_exec
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Notify others that we exec'd, and clear the P_INEXEC flag 	 * as we're now a bona fide freshly-execed process. 	 */
 name|KNOTE_LOCKED
 argument_list|(
@@ -2904,6 +3067,27 @@ argument_list|,
 literal|0
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec_success
+argument_list|,
+name|args
+operator|->
+name|fname
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Handle deferred decrement of ref counts. 	 */
@@ -3149,6 +3333,25 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec_failure
+argument_list|,
+name|error
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|done2

@@ -27,6 +27,28 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|casptr
+parameter_list|(
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|)
+define|\
+value|atomic_cmpset_ptr((volatile uintptr_t *)(_a), (uintptr_t)(_b), (uintptr_t) (_c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cas32
+value|atomic_cmpset_32
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -456,6 +478,7 @@ operator|)
 name|atomic_cas_64
 argument_list|(
 operator|(
+specifier|volatile
 name|uint64_t
 operator|*
 operator|)

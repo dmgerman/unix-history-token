@@ -147,6 +147,27 @@ name|linker_symval_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|linker_function_nameval_callback_t
+function_decl|)
+parameter_list|(
+name|linker_file_t
+parameter_list|,
+name|int
+parameter_list|,
+name|linker_symval_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|common_symbol
@@ -202,6 +223,11 @@ modifier|*
 name|filename
 decl_stmt|;
 comment|/* file which was loaded */
+name|char
+modifier|*
+name|pathname
+decl_stmt|;
+comment|/* file name with full path */
 name|int
 name|id
 decl_stmt|;
@@ -246,6 +272,32 @@ argument_list|)
 name|loaded
 expr_stmt|;
 comment|/* preload dependency support */
+name|int
+name|loadcnt
+decl_stmt|;
+comment|/* load counter value */
+comment|/*      * Function Boundary Tracing (FBT) or Statically Defined Tracing (SDT)      * fields.      */
+name|int
+name|nenabled
+decl_stmt|;
+comment|/* number of enabled probes. */
+name|int
+name|fbt_nentries
+decl_stmt|;
+comment|/* number of fbt entries created. */
+name|void
+modifier|*
+name|sdt_probes
+decl_stmt|;
+name|int
+name|sdt_nentries
+decl_stmt|;
+name|size_t
+name|sdt_nprobes
+decl_stmt|;
+name|size_t
+name|sdt_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -436,6 +488,24 @@ parameter_list|,
 name|int
 modifier|*
 name|_count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * List all functions in a file.  */
+end_comment
+
+begin_function_decl
+name|int
+name|linker_file_function_listall
+parameter_list|(
+name|linker_file_t
+parameter_list|,
+name|linker_function_nameval_callback_t
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1144,6 +1214,75 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|linker_ctf
+block|{
+specifier|const
+name|uint8_t
+modifier|*
+name|ctftab
+decl_stmt|;
+comment|/* Decompressed CTF data. */
+name|int
+name|ctfcnt
+decl_stmt|;
+comment|/* Number of CTF data bytes. */
+specifier|const
+name|Elf_Sym
+modifier|*
+name|symtab
+decl_stmt|;
+comment|/* Ptr to the symbol table. */
+name|int
+name|nsym
+decl_stmt|;
+comment|/* Number of symbols. */
+specifier|const
+name|char
+modifier|*
+name|strtab
+decl_stmt|;
+comment|/* Ptr to the string table. */
+name|int
+name|strcnt
+decl_stmt|;
+comment|/* Number of string bytes. */
+name|uint32_t
+modifier|*
+modifier|*
+name|ctfoffp
+decl_stmt|;
+comment|/* Ptr to array of obj/fnc offsets. */
+name|uint32_t
+modifier|*
+modifier|*
+name|typoffp
+decl_stmt|;
+comment|/* Ptr to array of type offsets. */
+name|long
+modifier|*
+name|typlenp
+decl_stmt|;
+comment|/* Ptr to number of type data entries. */
+block|}
+name|linker_ctf_t
+typedef|;
+end_typedef
+
+begin_function_decl
+name|int
+name|linker_ctf_get
+parameter_list|(
+name|linker_file_t
+parameter_list|,
+name|linker_ctf_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|elf_cpu_load_file
@@ -1180,23 +1319,18 @@ name|ELF_RELOC_RELA
 value|2
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* _KERNEL */
+comment|/*  * This is version 1 of the KLD file status structure. It is identified  * by its _size_ in the version field.  */
 end_comment
 
 begin_struct
 struct|struct
-name|kld_file_stat
+name|kld_file_stat_1
 block|{
 name|int
 name|version
 decl_stmt|;
-comment|/* set to sizeof(linker_file_stat) */
+comment|/* set to sizeof(struct kld_file_stat_1) */
 name|char
 name|name
 index|[
@@ -1217,6 +1351,53 @@ name|size_t
 name|size
 decl_stmt|;
 comment|/* size in bytes */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_struct
+struct|struct
+name|kld_file_stat
+block|{
+name|int
+name|version
+decl_stmt|;
+comment|/* set to sizeof(struct kld_file_stat) */
+name|char
+name|name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|int
+name|refs
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+name|caddr_t
+name|address
+decl_stmt|;
+comment|/* load address */
+name|size_t
+name|size
+decl_stmt|;
+comment|/* size in bytes */
+name|char
+name|pathname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

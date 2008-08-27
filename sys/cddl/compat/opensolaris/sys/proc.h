@@ -90,17 +90,6 @@ name|boot_max_ncpus
 value|mp_ncpus
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* system clock's frequency */
-end_comment
-
 begin_define
 define|#
 directive|define

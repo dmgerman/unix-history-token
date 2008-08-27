@@ -572,9 +572,9 @@ index|]
 operator|=
 name|FALIGN
 argument_list|(
-literal|4
+literal|1
 argument_list|,
-literal|4
+literal|1
 argument_list|)
 block|,
 endif|#

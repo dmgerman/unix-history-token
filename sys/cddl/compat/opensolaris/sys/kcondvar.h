@@ -78,7 +78,7 @@ name|type
 parameter_list|,
 name|arg
 parameter_list|)
-value|do {			\ 	ASSERT((type) == CV_DEFAULT);					\ 	cv_init((cv), "zfs:" #cv);					\ } while (0)
+value|do {			\ 	const char *_name;						\ 	ASSERT((type) == CV_DEFAULT);					\ 	for (_name = #cv; *_name != '\0'; _name++) {			\ 		if (*_name>= 'a'&& *_name<= 'z')			\ 			break;						\ 	}								\ 	if (*_name == '\0')						\ 		_name = #cv;						\ 	cv_init((cv), _name);						\ } while (0)
 end_define
 
 begin_define

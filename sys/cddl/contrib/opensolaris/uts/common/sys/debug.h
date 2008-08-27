@@ -81,8 +81,8 @@ parameter_list|(
 name|EX
 parameter_list|)
 value|((void)((EX) || assfail(#EX, __FILE__, __LINE__)))
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 define|#
 directive|define
@@ -117,8 +117,8 @@ parameter_list|(
 name|EX
 parameter_list|)
 value|((void)((EX) || assfail("EX", __FILE__, __LINE__)))
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 define|#
 directive|define
@@ -248,8 +248,8 @@ parameter_list|,
 name|z
 parameter_list|)
 value|VERIFY3_IMPL(x, y, z, uintptr_t)
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 define|#
 directive|define

@@ -218,6 +218,15 @@ operator|)
 return|;
 endif|#
 directive|endif
+case|case
+name|SHT_AMD64_UNWIND
+case|:
+comment|/* == SHT_IA_64_UNWIND */
+return|return
+operator|(
+name|ELF_T_BYTE
+operator|)
+return|;
 default|default:
 return|return
 operator|(

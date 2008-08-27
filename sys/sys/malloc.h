@@ -160,10 +160,42 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Index definitions for the mti_probes[] array.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTMALLOC_PROBE_MALLOC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTMALLOC_PROBE_FREE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTMALLOC_PROBE_MAX
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|malloc_type_internal
 block|{
+name|uint32_t
+name|mti_probes
+index|[
+name|DTMALLOC_PROBE_MAX
+index|]
+decl_stmt|;
+comment|/* DTrace probe ID array. */
 name|struct
 name|malloc_type_stats
 name|mti_stats
@@ -449,8 +481,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XXX struct malloc_type is unused for contig*(). */
+comment|/*  * Function type used when iterating over the list of malloc types.  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|malloc_type_list_func_t
+parameter_list|(
+name|struct
+name|malloc_type
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_function_decl
 name|void
@@ -589,6 +636,19 @@ parameter_list|,
 name|unsigned
 name|long
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|malloc_type_list
+parameter_list|(
+name|malloc_type_list_func_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

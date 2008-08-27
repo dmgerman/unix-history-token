@@ -562,6 +562,17 @@ begin_comment
 comment|/* Unionfs bug. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KDB_WHY_DTRACE
+value|"dtrace"
+end_define
+
+begin_comment
+comment|/* DTrace action entered debugger. */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

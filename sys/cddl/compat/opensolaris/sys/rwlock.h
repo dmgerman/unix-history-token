@@ -166,7 +166,7 @@ name|type
 parameter_list|,
 name|arg
 parameter_list|)
-value|do {				\ 	KASSERT(((lock)->lock_object.lo_flags& LO_ALLMASK) !=		\ 	    LO_EXPECTED, ("lock %s already initialized", #lock));	\ 	bzero((lock), sizeof(struct sx));				\ 	sx_init_flags((lock), "zfs:" #lock, RW_FLAGS);			\ } while (0)
+value|do {				\ 	const char *_name;						\ 	KASSERT(((lock)->lock_object.lo_flags& LO_ALLMASK) !=		\ 	    LO_EXPECTED, ("lock %s already initialized", #lock));	\ 	bzero((lock), sizeof(struct sx));				\ 	for (_name = #lock; *_name != '\0'; _name++) {			\ 		if (*_name>= 'a'&& *_name<= 'z')			\ 			break;						\ 	}								\ 	if (*_name == '\0')						\ 		_name = #lock;						\ 	sx_init_flags((lock), _name, RW_FLAGS);				\ } while (0)
 end_define
 
 begin_define

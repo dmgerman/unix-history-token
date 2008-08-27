@@ -74,13 +74,6 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|void
-name|vmem_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 struct|struct
 name|kmem_cache
 block|{
@@ -140,6 +133,13 @@ name|kmem_cache_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|vmem_t
+value|void
+end_define
+
 begin_function_decl
 name|void
 modifier|*
@@ -169,7 +169,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|uint64_t
 name|kmem_size
 parameter_list|(
 name|void
@@ -178,7 +178,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|uint64_t
 name|kmem_used
 parameter_list|(
 name|void

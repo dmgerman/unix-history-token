@@ -98,6 +98,8 @@ modifier|*
 name|systrace_args_func_t
 function_decl|)
 parameter_list|(
+name|int
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,

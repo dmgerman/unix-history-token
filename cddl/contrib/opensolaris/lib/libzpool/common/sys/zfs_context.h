@@ -124,9 +124,6 @@ directive|include
 file|<umem.h>
 include|#
 directive|include
-file|<vmem.h>
-include|#
-directive|include
 file|<fsshare.h>
 include|#
 directive|include
@@ -1861,26 +1858,6 @@ directive|define
 name|gethrestime_sec
 parameter_list|()
 value|time(NULL)
-define|#
-directive|define
-name|open64
-parameter_list|(
-modifier|...
-parameter_list|)
-value|open(__VA_ARGS__)
-define|#
-directive|define
-name|pread64
-parameter_list|(
-name|d
-parameter_list|,
-name|p
-parameter_list|,
-name|n
-parameter_list|,
-name|o
-parameter_list|)
-value|pread(d, p, n, o)
 define|#
 directive|define
 name|pwrite64

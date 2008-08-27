@@ -166,12 +166,6 @@ name|ticks
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SOLARIS_C_SOURCE
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -182,11 +176,6 @@ end_decl_stmt
 begin_comment
 comment|/* once a second sleep address */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -285,6 +274,11 @@ init|=
 literal|0x2100000
 block|,
 comment|/* CPU resource(s)*/
+name|SI_SUB_KDTRACE
+init|=
+literal|0x2140000
+block|,
+comment|/* Kernel dtrace hooks */
 name|SI_SUB_MAC
 init|=
 literal|0x2180000
@@ -325,6 +319,16 @@ init|=
 literal|0x2480000
 block|,
 comment|/* ktrace */
+name|SI_SUB_OPENSOLARIS
+init|=
+literal|0x2490000
+block|,
+comment|/* OpenSolaris compatibility */
+name|SI_SUB_CYCLIC
+init|=
+literal|0x24A0000
+block|,
+comment|/* Cyclic timers */
 name|SI_SUB_AUDIT
 init|=
 literal|0x24C0000
@@ -375,6 +379,21 @@ init|=
 literal|0x3010000
 block|,
 comment|/* Let Netgraph initialize */
+name|SI_SUB_DTRACE
+init|=
+literal|0x3020000
+block|,
+comment|/* DTrace subsystem */
+name|SI_SUB_DTRACE_PROVIDER
+init|=
+literal|0x3048000
+block|,
+comment|/* DTrace providers */
+name|SI_SUB_DTRACE_ANON
+init|=
+literal|0x308C000
+block|,
+comment|/* DTrace anon enabling */
 name|SI_SUB_DRIVERS
 init|=
 literal|0x3100000
@@ -485,11 +504,6 @@ init|=
 literal|0xb380000
 block|,
 comment|/* Configure GEOM classes */
-name|SI_SUB_MOUNT_ROOT
-init|=
-literal|0xb400000
-block|,
-comment|/* root mount*/
 name|SI_SUB_SWAP
 init|=
 literal|0xc000000
