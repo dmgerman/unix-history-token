@@ -508,7 +508,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_use_deprecated
+argument_list|)
 condition|)
 block|{
 if|if
@@ -587,6 +592,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* INET6 */
+end_comment
 
 begin_function
 specifier|static
@@ -737,7 +746,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifn
 argument_list|,
-argument|&ifnet
+argument|&MODULE_GLOBAL(MOD_NET, ifnet)
 argument_list|,
 argument|if_list
 argument_list|)
@@ -1293,7 +1302,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifn
 argument_list|,
-argument|&ifnet
+argument|&MODULE_GLOBAL(MOD_NET, ifnet)
 argument_list|,
 argument|if_list
 argument_list|)

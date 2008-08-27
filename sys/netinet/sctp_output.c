@@ -16399,6 +16399,11 @@ name|defined
 argument_list|(
 name|__APPLE__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Userspace__
+argument_list|)
 name|ip
 operator|->
 name|ip_off
@@ -18067,7 +18072,12 @@ name|sa6_embedscope
 argument_list|(
 name|sin6
 argument_list|,
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_use_defzone
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
@@ -18466,7 +18476,12 @@ name|sa6_embedscope
 argument_list|(
 name|sin6
 argument_list|,
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_use_defzone
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
@@ -18596,7 +18611,12 @@ name|sa6_embedscope
 argument_list|(
 name|sin6
 argument_list|,
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_use_defzone
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
@@ -25146,7 +25166,12 @@ name|sa6_embedscope
 argument_list|(
 name|sin6
 argument_list|,
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_use_defzone
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|stc
@@ -25232,7 +25257,12 @@ name|sa6_embedscope
 argument_list|(
 name|sin6
 argument_list|,
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_use_defzone
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -28432,6 +28462,7 @@ operator|)
 operator|%
 literal|1000000
 expr_stmt|;
+comment|/* 				 * TODO sctp_constants.h needs alternative 				 * time macros when _KERNEL is undefined. 				 */
 name|timevaladd
 argument_list|(
 operator|&
@@ -49792,7 +49823,12 @@ name|ip6_out
 operator|->
 name|ip6_hlim
 operator|=
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_defhlim
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -49869,6 +49905,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* INET6 */
 default|default:
 comment|/* Currently not supported. */
 return|return;
@@ -55104,7 +55141,12 @@ name|ip6_out
 operator|->
 name|ip6_hlim
 operator|=
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_defhlim
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -55170,6 +55212,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* INET6 */
 default|default:
 comment|/* Currently not supported */
 if|if
@@ -56867,7 +56910,12 @@ name|out6
 operator|->
 name|ip6_hlim
 operator|=
+name|MODULE_GLOBAL
+argument_list|(
+name|MOD_INET6
+argument_list|,
 name|ip6_defhlim
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -57216,6 +57264,7 @@ break|break;
 block|}
 endif|#
 directive|endif
+comment|/* INET6 */
 default|default:
 comment|/* TSNH */
 break|break;
@@ -65201,7 +65250,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|pfx
 argument_list|,
-argument|&nd_prefix
+argument|&MODULE_GLOBAL(MOD_INET6, nd_prefix)
 argument_list|,
 argument|ndpr_entry
 argument_list|)

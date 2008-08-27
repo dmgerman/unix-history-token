@@ -42,6 +42,11 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__Userspace__
+argument_list|)
 end_if
 
 begin_if
