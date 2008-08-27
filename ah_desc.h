@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/branches/sam_hal/ah_desc.h#5 $  */
+comment|/*-  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/branches/sam_hal/ah_desc.h#8 $  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,16 @@ define|#
 directive|define
 name|_DEV_ATH_DESC_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"opt_ah.h"
+end_include
+
+begin_comment
+comment|/* NB: required for AH_SUPPORT_AR5416 */
+end_comment
 
 begin_comment
 comment|/*  * Transmit descriptor status.  This structure is filled  * in only after the tx descriptor process method finds a  * ``done'' descriptor; at which point it returns something  * other than HAL_EINPROGRESS.  *  * Note that ts_antenna may not be valid for all h/w.  It  * should be used only if non-zero.  */
@@ -68,9 +78,57 @@ name|u_int8_t
 name|ts_finaltsi
 decl_stmt|;
 comment|/* final transmit series index */
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5416
+comment|/* 802.11n status */
+name|u_int8_t
+name|ts_flags
+decl_stmt|;
+comment|/* misc flags */
+name|int8_t
+name|ts_rssi_ctl
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tx ack RSSI [ctl, chain 0-2] */
+name|int8_t
+name|ts_rssi_ext
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* tx ack RSSI [ext, chain 0-2] */
+comment|/* #define ts_rssi ts_rssi_combined */
+name|u_int32_t
+name|ts_ba_low
+decl_stmt|;
+comment|/* blockack bitmap low */
+name|u_int32_t
+name|ts_ba_high
+decl_stmt|;
+comment|/* blockack bitmap high */
+name|u_int32_t
+name|ts_evm0
+decl_stmt|;
+comment|/* evm bytes */
+name|u_int32_t
+name|ts_evm1
+decl_stmt|;
+name|u_int32_t
+name|ts_evm2
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* AH_SUPPORT_AR5416 */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* bits found in ts_status */
+end_comment
 
 begin_define
 define|#
@@ -105,8 +163,78 @@ begin_comment
 comment|/* fifo underrun */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAL_TXERR_XTXOP
+value|0x08
+end_define
+
 begin_comment
-comment|/*  * Receive descriptor status.  This structure is filled  * in only after the rx descriptor process method finds a  * ``done'' descriptor; at which point it returns something  * other than HAL_EINPROGRESS.  *  * If rx_status is zero, then the frame was received ok;  * otherwise the error information is indicated and rs_phyerr  * contains a phy error code if HAL_RXERR_PHY is set.  In general  * the frame contents is undefined when an error occurred thought  * for some errors (e.g. a decryption error), it may be meaningful.  *  * Note that the receive timestamp is expanded using the TSF to  * 15 bits (regardless of what the h/w provides directly).  *  * rx_rssi is in units of dbm above the noise floor.  This value  * is measured during the preamble and PLCP; i.e. with the initial  * 4us of detection.  The noise floor is typically a consistent  * -96dBm absolute power in a 20MHz channel.  */
+comment|/* txop exceeded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXERR_DESC_CFG_ERR
+value|0x10
+end_define
+
+begin_comment
+comment|/* Error in 20/40 desc config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXERR_DATA_UNDERRUN
+value|0x20
+end_define
+
+begin_comment
+comment|/* Tx buffer underrun */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXERR_DELIM_UNDERRUN
+value|0x40
+end_define
+
+begin_comment
+comment|/* Tx delimiter underrun */
+end_comment
+
+begin_comment
+comment|/* bits found in ts_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TX_BA
+value|0x01
+end_define
+
+begin_comment
+comment|/* Block Ack seen */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TX_AGGR
+value|0x02
+end_define
+
+begin_comment
+comment|/* Aggregate */
+end_comment
+
+begin_comment
+comment|/*  * Receive descriptor status.  This structure is filled  * in only after the rx descriptor process method finds a  * ``done'' descriptor; at which point it returns something  * other than HAL_EINPROGRESS.  *  * If rx_status is zero, then the frame was received ok;  * otherwise the error information is indicated and rs_phyerr  * contains a phy error code if HAL_RXERR_PHY is set.  In general  * the frame contents is undefined when an error occurred thought  * for some errors (e.g. a decryption error), it may be meaningful.  *  * Note that the receive timestamp is expanded using the TSF to  * at least 15 bits (regardless of what the h/w provides directly).  * Newer hardware supports a full 32-bits; use HAL_CAP_32TSTAMP to  * find out if the hardware is capable.  *  * rx_rssi is in units of dbm above the noise floor.  This value  * is measured during the preamble and PLCP; i.e. with the initial  * 4us of detection.  The noise floor is typically a consistent  * -96dBm absolute power in a 20MHz channel.  */
 end_comment
 
 begin_struct
@@ -117,10 +245,6 @@ name|u_int16_t
 name|rs_datalen
 decl_stmt|;
 comment|/* rx frame length */
-name|u_int16_t
-name|rs_tstamp
-decl_stmt|;
-comment|/* h/w assigned timestamp */
 name|u_int8_t
 name|rs_status
 decl_stmt|;
@@ -132,7 +256,7 @@ comment|/* phy error code */
 name|int8_t
 name|rs_rssi
 decl_stmt|;
-comment|/* rx frame RSSI */
+comment|/* rx frame RSSI (combined for 11n) */
 name|u_int8_t
 name|rs_keyix
 decl_stmt|;
@@ -142,16 +266,71 @@ name|rs_rate
 decl_stmt|;
 comment|/* h/w receive rate index */
 name|u_int8_t
-name|rs_antenna
-decl_stmt|;
-comment|/* antenna information */
-name|u_int8_t
 name|rs_more
 decl_stmt|;
 comment|/* more descriptors follow */
+name|u_int32_t
+name|rs_tstamp
+decl_stmt|;
+comment|/* h/w assigned timestamp */
+name|u_int32_t
+name|rs_antenna
+decl_stmt|;
+comment|/* antenna information */
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5416
+comment|/* 802.11n status */
+name|int8_t
+name|rs_rssi_ctl
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* rx frame RSSI [ctl, chain 0-2] */
+name|int8_t
+name|rs_rssi_ext
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* rx frame RSSI [ext, chain 0-2] */
+name|u_int8_t
+name|rs_isaggr
+decl_stmt|;
+comment|/* is part of the aggregate */
+name|u_int8_t
+name|rs_moreaggr
+decl_stmt|;
+comment|/* more frames in aggr to follow */
+name|u_int8_t
+name|rs_num_delims
+decl_stmt|;
+comment|/* number of delims in aggr */
+name|u_int8_t
+name|rs_flags
+decl_stmt|;
+comment|/* misc flags */
+name|u_int32_t
+name|rs_evm0
+decl_stmt|;
+comment|/* evm bytes */
+name|u_int32_t
+name|rs_evm1
+decl_stmt|;
+name|u_int32_t
+name|rs_evm2
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* AH_SUPPORT_AR5416 */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* bits found in rs_status */
+end_comment
 
 begin_define
 define|#
@@ -206,6 +385,98 @@ end_define
 
 begin_comment
 comment|/* Michael MIC decrypt error */
+end_comment
+
+begin_comment
+comment|/* bits found in rs_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_MORE
+value|0x01
+end_define
+
+begin_comment
+comment|/* more descriptors follow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_MORE_AGGR
+value|0x02
+end_define
+
+begin_comment
+comment|/* more frames in aggr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_GI
+value|0x04
+end_define
+
+begin_comment
+comment|/* full gi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_2040
+value|0x08
+end_define
+
+begin_comment
+comment|/* 40 Mhz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_DELIM_CRC_PRE
+value|0x10
+end_define
+
+begin_comment
+comment|/* crc error in delimiter pre */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_DELIM_CRC_POST
+value|0x20
+end_define
+
+begin_comment
+comment|/* crc error in delim after */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_DECRYPT_BUSY
+value|0x40
+end_define
+
+begin_comment
+comment|/* decrypt was too slow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_DUP_FRAME
+value|0x80
+end_define
+
+begin_comment
+comment|/* Dup frame rx'd on control channel */
 end_comment
 
 begin_enum
@@ -346,6 +617,40 @@ begin_comment
 comment|/*  * Definitions for the software frame/packet descriptors used by  * the Atheros HAL.  This definition obscures hardware-specific  * details from the driver.  Drivers are expected to fillin the  * portions of a descriptor that are not opaque then use HAL calls  * to complete the work.  Status for completed frames is returned  * in a device-independent format.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5416
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HAL_DESC_HW_SIZE
+value|20
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HAL_DESC_HW_SIZE
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_AR5416 */
+end_comment
+
 begin_struct
 struct|struct
 name|ath_desc
@@ -370,7 +675,7 @@ comment|/* opaque DMA control 1 */
 name|u_int32_t
 name|ds_hw
 index|[
-literal|4
+name|HAL_DESC_HW_SIZE
 index|]
 decl_stmt|;
 comment|/* opaque h/w region */
@@ -498,6 +803,39 @@ end_define
 
 begin_comment
 comment|/* enable h/w write of duration field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXDESC_EXT_ONLY
+value|0x0080
+end_define
+
+begin_comment
+comment|/* send on ext channel only (11n) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXDESC_EXT_AND_CTL
+value|0x0100
+end_define
+
+begin_comment
+comment|/* send on ext + ctl channels (11n) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_TXDESC_VMF
+value|0x0200
+end_define
+
+begin_comment
+comment|/* virtual more frag */
 end_comment
 
 begin_comment
