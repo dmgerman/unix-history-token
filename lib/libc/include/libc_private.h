@@ -321,6 +321,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * This function is used by the threading libraries to notify malloc that a  * thread is exiting.  */
+end_comment
+
+begin_function_decl
+name|void
+name|_malloc_thread_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * These functions are used by the threading libraries in order to protect  * malloc across fork().  */
 end_comment
 

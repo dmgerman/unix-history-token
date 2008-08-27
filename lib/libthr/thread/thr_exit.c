@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
 
@@ -219,6 +225,10 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Tell malloc that the thread is exiting. */
+name|_malloc_thread_cleanup
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
