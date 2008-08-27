@@ -619,6 +619,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|F_MISSED
+value|0x800000
+end_define
+
+begin_define
+define|#
+directive|define
 name|F_NOUSERDATA
 value|(F_NODEADDR | F_FQDN | F_FQDNOLD | F_SUPTYPES)
 end_define
@@ -842,6 +849,16 @@ end_comment
 
 begin_comment
 comment|/* counters */
+end_comment
+
+begin_decl_stmt
+name|long
+name|nmissedmax
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max value of ntransmitted - nreceived - 1 */
 end_comment
 
 begin_decl_stmt
@@ -1679,7 +1696,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:c:defHg:h:I:i:l:mnNop:qS:s:tvwW"
+literal|"a:b:c:dfHg:h:I:i:l:mnNop:qrRS:s:tvwW"
 name|ADDOPTS
 argument_list|)
 operator|)
@@ -1938,14 +1955,6 @@ case|:
 name|options
 operator||=
 name|F_SO_DEBUG
-expr_stmt|;
-break|break;
-case|case
-literal|'e'
-case|:
-name|options
-operator||=
-name|F_AUDIBLE
 expr_stmt|;
 break|break;
 case|case
@@ -2349,6 +2358,22 @@ case|:
 name|options
 operator||=
 name|F_QUIET
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|options
+operator||=
+name|F_AUDIBLE
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|options
+operator||=
+name|F_MISSED
 expr_stmt|;
 break|break;
 case|case
@@ -6031,6 +6056,45 @@ name|npackets
 operator|)
 condition|)
 break|break;
+if|if
+condition|(
+name|ntransmitted
+operator|-
+name|nreceived
+operator|-
+literal|1
+operator|>
+name|nmissedmax
+condition|)
+block|{
+name|nmissedmax
+operator|=
+name|ntransmitted
+operator|-
+name|nreceived
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|&
+name|F_MISSED
+condition|)
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+operator|&
+name|BBELL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|summary
 argument_list|()
@@ -14103,7 +14167,7 @@ literal|"A"
 endif|#
 directive|endif
 literal|"usage: ping6 [-"
-literal|"de"
+literal|"d"
 if|#
 directive|if
 name|defined
@@ -14126,7 +14190,7 @@ name|IPV6_USE_MIN_MTU
 literal|"m"
 endif|#
 directive|endif
-literal|"nNoqtvwW] "
+literal|"nNoqrRtvwW] "
 literal|"[-a addrtype] [-b bufsiz] [-c count] [-g gateway]\n"
 literal|"             [-h hoplimit] [-I interface] [-i wait] [-l preload]"
 if|#
