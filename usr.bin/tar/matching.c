@@ -497,18 +497,6 @@ argument_list|,
 literal|"Out of memory"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pattern
-index|[
-literal|0
-index|]
-operator|==
-literal|'/'
-condition|)
-name|pattern
-operator|++
-expr_stmt|;
 name|strcpy
 argument_list|(
 name|match
