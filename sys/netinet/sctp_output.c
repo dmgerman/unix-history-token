@@ -56036,6 +56036,9 @@ name|mout
 decl_stmt|;
 ifdef|#
 directive|ifdef
+name|INET6
+ifdef|#
+directive|ifdef
 name|SCTP_DEBUG
 name|struct
 name|sockaddr_in6
@@ -56043,6 +56046,8 @@ name|lsa6
 decl_stmt|,
 name|fsa6
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|uint32_t
