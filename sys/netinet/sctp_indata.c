@@ -106,211 +106,17 @@ modifier|*
 name|asoc
 parameter_list|)
 block|{
-name|uint32_t
-name|calc
-decl_stmt|,
-name|calc_save
-decl_stmt|;
-comment|/* 	 * This is really set wrong with respect to a 1-2-m socket. Since 	 * the sb_cc is the count that everyone as put up. When we re-write 	 * sctp_soreceive then we will fix this so that ONLY this 	 * associations data is taken into account. 	 */
-if|if
-condition|(
-name|stcb
-operator|->
-name|sctp_socket
-operator|==
-name|NULL
-condition|)
-return|return;
-if|if
-condition|(
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|sb_cc
-operator|==
-literal|0
-operator|&&
-name|asoc
-operator|->
-name|size_on_reasm_queue
-operator|==
-literal|0
-operator|&&
-name|asoc
-operator|->
-name|size_on_all_streams
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Full rwnd granted */
 name|asoc
 operator|->
 name|my_rwnd
 operator|=
-name|max
-argument_list|(
-name|SCTP_SB_LIMIT_RCV
+name|sctp_calc_rwnd
 argument_list|(
 name|stcb
-operator|->
-name|sctp_socket
-argument_list|)
 argument_list|,
-name|SCTP_MINIMAL_RWND
+name|asoc
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-comment|/* get actual space */
-name|calc
-operator|=
-operator|(
-name|uint32_t
-operator|)
-name|sctp_sbspace
-argument_list|(
-operator|&
-name|stcb
-operator|->
-name|asoc
-argument_list|,
-operator|&
-name|stcb
-operator|->
-name|sctp_socket
-operator|->
-name|so_rcv
-argument_list|)
-expr_stmt|;
-comment|/* 	 * take out what has NOT been put on socket queue and we yet hold 	 * for putting up. 	 */
-name|calc
-operator|=
-name|sctp_sbspace_sub
-argument_list|(
-name|calc
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|asoc
-operator|->
-name|size_on_reasm_queue
-argument_list|)
-expr_stmt|;
-name|calc
-operator|=
-name|sctp_sbspace_sub
-argument_list|(
-name|calc
-argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|asoc
-operator|->
-name|size_on_all_streams
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|calc
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* out of space */
-name|asoc
-operator|->
-name|my_rwnd
-operator|=
-literal|0
-expr_stmt|;
-return|return;
-block|}
-comment|/* what is the overhead of all these rwnd's */
-name|calc
-operator|=
-name|sctp_sbspace_sub
-argument_list|(
-name|calc
-argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|my_rwnd_control_len
-argument_list|)
-expr_stmt|;
-name|calc_save
-operator|=
-name|calc
-expr_stmt|;
-name|asoc
-operator|->
-name|my_rwnd
-operator|=
-name|calc
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|asoc
-operator|->
-name|my_rwnd
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|calc
-operator|<
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|my_rwnd_control_len
-operator|)
-condition|)
-block|{
-comment|/*- 		 * If our rwnd == 0&& the overhead is greater than the  		 * data onqueue, we clamp the rwnd to 1. This lets us  		 * still accept inbound segments, but hopefully will shut  		 * the sender down when he finally gets the message. This 		 * hopefully will gracefully avoid discarding packets.  		 */
-name|asoc
-operator|->
-name|my_rwnd
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|asoc
-operator|->
-name|my_rwnd
-operator|&&
-operator|(
-name|asoc
-operator|->
-name|my_rwnd
-operator|<
-name|stcb
-operator|->
-name|sctp_ep
-operator|->
-name|sctp_ep
-operator|.
-name|sctp_sws_receiver
-operator|)
-condition|)
-block|{
-comment|/* SWS engaged, tell peer none left */
-name|asoc
-operator|->
-name|my_rwnd
-operator|=
-literal|1
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -337,14 +143,6 @@ name|uint32_t
 name|calc
 init|=
 literal|0
-decl_stmt|,
-name|calc_save
-init|=
-literal|0
-decl_stmt|,
-name|result
-init|=
-literal|0
 decl_stmt|;
 comment|/* 	 * This is really set wrong with respect to a 1-2-m socket. Since 	 * the sb_cc is the count that everyone as put up. When we re-write 	 * sctp_soreceive then we will fix this so that ONLY this 	 * associations data is taken into account. 	 */
 if|if
@@ -482,23 +280,9 @@ operator|.
 name|my_rwnd_control_len
 argument_list|)
 expr_stmt|;
-name|calc_save
-operator|=
-name|calc
-expr_stmt|;
-name|result
-operator|=
-name|calc
-expr_stmt|;
+comment|/* 	 * If the window gets too small due to ctrl-stuff, reduce it to 1, 	 * even it is 0. SWS engaged 	 */
 if|if
 condition|(
-operator|(
-name|result
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
 name|calc
 operator|<
 name|stcb
@@ -506,41 +290,16 @@ operator|->
 name|asoc
 operator|.
 name|my_rwnd_control_len
-operator|)
 condition|)
 block|{
-comment|/*- 		 * If our rwnd == 0&& the overhead is greater than the  		 * data onqueue, we clamp the rwnd to 1. This lets us  		 * still accept inbound segments, but hopefully will shut  		 * the sender down when he finally gets the message. This 		 * hopefully will gracefully avoid discarding packets.  		 */
-name|result
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|result
-operator|&&
-operator|(
-name|result
-operator|<
-name|stcb
-operator|->
-name|sctp_ep
-operator|->
-name|sctp_ep
-operator|.
-name|sctp_sws_receiver
-operator|)
-condition|)
-block|{
-comment|/* SWS engaged, tell peer none left */
-name|result
+name|calc
 operator|=
 literal|1
 expr_stmt|;
 block|}
 return|return
 operator|(
-name|result
+name|calc
 operator|)
 return|;
 block|}
@@ -2425,7 +2184,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_STR_LOGGING_ENABLE
 condition|)
@@ -2714,7 +2476,10 @@ block|{
 comment|/* can be delivered right away? */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_STR_LOGGING_ENABLE
 condition|)
@@ -2854,7 +2619,10 @@ expr_stmt|;
 comment|/* 				 * We ignore the return of deliver_data here 				 * since we always can hold the chunk on the 				 * d-queue. And we have a finite number that 				 * can be delivered from the strq. 				 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_STR_LOGGING_ENABLE
 condition|)
@@ -2952,7 +2720,10 @@ block|{
 comment|/* Empty queue */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_STR_LOGGING_ENABLE
 condition|)
@@ -3010,7 +2781,10 @@ block|{
 comment|/* 					 * one in queue is bigger than the 					 * new one, insert before this one 					 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_STR_LOGGING_ENABLE
 condition|)
@@ -3129,7 +2903,10 @@ block|{
 comment|/* 						 * We are at the end, insert 						 * it after this one 						 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_STR_LOGGING_ENABLE
 condition|)
@@ -7167,6 +6944,24 @@ name|ch
 operator|.
 name|chunk_flags
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|chunk_flags
+operator|&
+name|SCTP_DATA_SACK_IMMEDIATELY
+operator|)
+operator|==
+name|SCTP_DATA_SACK_IMMEDIATELY
+condition|)
+block|{
+name|asoc
+operator|->
+name|send_sack
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|protocol_id
 operator|=
 name|ch
@@ -7193,7 +6988,10 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -7571,8 +7369,11 @@ name|asoc
 operator|->
 name|cnt_msg_on_sb
 operator|)
-operator|>
+operator|>=
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_max_chunks_on_queue
+argument_list|)
 operator|)
 operator|||
 operator|(
@@ -7765,8 +7566,11 @@ name|asoc
 operator|->
 name|cnt_msg_on_sb
 operator|)
-operator|>
+operator|>=
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_max_chunks_on_queue
+argument_list|)
 condition|)
 block|{
 name|SCTP_STAT_INCR
@@ -7994,7 +7798,10 @@ name|tsn
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -8499,7 +8306,10 @@ directive|ifdef
 name|SCTP_MBUF_LOGGING
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MBUF_LOGGING_ENABLE
 condition|)
@@ -8835,7 +8645,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_STR_LOGGING_ENABLE
 condition|)
@@ -10419,7 +10232,10 @@ name|tsn
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -10498,7 +10314,10 @@ expr_stmt|;
 comment|/* Set it present please */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_STR_LOGGING_ENABLE
 condition|)
@@ -10519,7 +10338,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -11513,8 +11335,6 @@ modifier|*
 name|asoc
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|at
 decl_stmt|;
 name|int
@@ -11614,11 +11434,11 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|i
+name|slide_from
 operator|=
 literal|0
 init|;
-name|i
+name|slide_from
 operator|<
 name|stcb
 operator|->
@@ -11626,7 +11446,7 @@ name|asoc
 operator|.
 name|mapping_array_size
 condition|;
-name|i
+name|slide_from
 operator|++
 control|)
 block|{
@@ -11636,7 +11456,7 @@ name|asoc
 operator|->
 name|mapping_array
 index|[
-name|i
+name|slide_from
 index|]
 operator|==
 literal|0xff
@@ -11662,7 +11482,7 @@ name|asoc
 operator|->
 name|mapping_array
 index|[
-name|i
+name|slide_from
 index|]
 index|]
 expr_stmt|;
@@ -11738,6 +11558,30 @@ operator|->
 name|highest_tsn_inside_map
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_logging_level
+argument_list|)
+operator|&
+name|SCTP_MAP_LOGGING_ENABLE
+condition|)
+block|{
+name|sctp_log_map
+argument_list|(
+literal|0
+argument_list|,
+literal|6
+argument_list|,
+name|asoc
+operator|->
+name|highest_tsn_inside_map
+argument_list|,
+name|SCTP_MAP_SLIDE_RESULT
+argument_list|)
+expr_stmt|;
+block|}
 name|asoc
 operator|->
 name|highest_tsn_inside_map
@@ -11832,7 +11676,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -11876,13 +11723,7 @@ literal|8
 condition|)
 block|{
 comment|/* we can slide the mapping array down */
-comment|/* Calculate the new byte postion we can move down */
-name|slide_from
-operator|=
-name|at
-operator|>>
-literal|3
-expr_stmt|;
+comment|/* slide_from holds where we hit the first NON 0xff byte */
 comment|/* 		 * now calculate the ceiling of the move using our highest 		 * TSN value 		 */
 if|if
 condition|(
@@ -11957,6 +11798,45 @@ return|return;
 endif|#
 directive|endif
 block|}
+if|if
+condition|(
+name|slide_end
+operator|>
+name|asoc
+operator|->
+name|mapping_array_size
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|panic
+argument_list|(
+literal|"would overrun buffer"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"Gak, would have overrun map end:%d slide_end:%d\n"
+argument_list|,
+name|asoc
+operator|->
+name|mapping_array_size
+argument_list|,
+name|slide_end
+argument_list|)
+expr_stmt|;
+name|slide_end
+operator|=
+name|asoc
+operator|->
+name|mapping_array_size
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|distance
 operator|=
 operator|(
@@ -11969,7 +11849,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -12024,7 +11907,10 @@ block|{
 comment|/* 			 * Here we do NOT slide forward the array so that 			 * hopefully when more data comes in to fill it up 			 * we will be able to slide it forward. Really I 			 * don't think this should happen :-0 			 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -12125,7 +12011,10 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -12320,11 +12209,17 @@ block|{
 if|if
 condition|(
 operator|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|)
 operator|&&
 operator|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_use_dac
+argument_list|)
 operator|)
 operator|&&
 operator|(
@@ -13455,7 +13350,10 @@ case|:
 comment|/* 				 * Now, what do we do with KNOWN chunks that 				 * are NOT in the right place? 				 *  				 * For now, I do nothing but ignore them. We 				 * may later want to add sysctl stuff to 				 * switch out and do either an ABORT() or 				 * possibly process them. 				 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_strict_data_order
+argument_list|)
 condition|)
 block|{
 name|struct
@@ -13775,7 +13673,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_THRESHOLD_LOGGING
 condition|)
@@ -14638,7 +14539,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_SACK_LOGGING_ENABLE
 condition|)
@@ -14729,7 +14633,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_CWND_LOGGING_ENABLE
 condition|)
@@ -14804,7 +14711,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_SACK_LOGGING_ENABLE
 condition|)
@@ -14834,7 +14744,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FLIGHT_LOGGING_ENABLE
 condition|)
@@ -15174,7 +15087,10 @@ block|}
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -15313,7 +15229,10 @@ expr_stmt|;
 comment|/* 				 * We must add this stuff back in to assure 				 * timers and such get started. 				 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FLIGHT_LOGGING_ENABLE
 condition|)
@@ -15377,7 +15296,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_SACK_LOGGING_ENABLE
 condition|)
@@ -15613,9 +15535,15 @@ block|}
 comment|/* CMT DAC algo: finding out if SACK is a mixed SACK */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|&&
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_use_dac
+argument_list|)
 condition|)
 block|{
 name|TAILQ_FOREACH
@@ -15697,7 +15625,10 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -16062,7 +15993,10 @@ block|{
 comment|/* 			 * Strike the TSN if in fast-recovery and cum-ack 			 * moved. 			 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -16104,9 +16038,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|&&
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_use_dac
+argument_list|)
 condition|)
 block|{
 comment|/* 				 * CMT DAC algorithm: If SACK flag is set to 				 * 0, then lowest_newack test will not pass 				 * because it would have been set to the 				 * cumack earlier. If not already to be 				 * rtx'd, If not a mixed sack and if tp1 is 				 * not between two sacked TSNs, then mark by 				 * one more. NOTE that we are marking by one 				 * additional time since the SACK DAC flag 				 * indicates that two packets have been 				 * received after this missing TSN. 				 */
@@ -16144,7 +16084,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -16193,7 +16136,10 @@ name|doing_fast_retransmit
 operator|)
 operator|&&
 operator|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|==
 literal|0
 operator|)
@@ -16257,7 +16203,10 @@ block|{
 comment|/* 					 * Strike the TSN, since this ack is 					 * beyond where things were when we 					 * did a FR. 					 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -16303,9 +16252,15 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|&&
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_use_dac
+argument_list|)
 condition|)
 block|{
 comment|/* 						 * CMT DAC algorithm: If 						 * SACK flag is set to 0, 						 * then lowest_newack test 						 * will not pass because it 						 * would have been set to 						 * the cumack earlier. If 						 * not already to be rtx'd, 						 * If not a mixed sack and 						 * if tp1 is not between two 						 * sacked TSNs, then mark by 						 * one more. NOTE that we 						 * are marking by one 						 * additional time since the 						 * SACK DAC flag indicates 						 * that two packets have 						 * been received after this 						 * missing TSN. 						 */
@@ -16343,7 +16298,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -16418,7 +16376,10 @@ block|{
 comment|/* Strike the TSN */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -16460,9 +16421,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|&&
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_use_dac
+argument_list|)
 condition|)
 block|{
 comment|/* 				 * CMT DAC algorithm: If SACK flag is set to 				 * 0, then lowest_newack test will not pass 				 * because it would have been set to the 				 * cumack earlier. If not already to be 				 * rtx'd, If not a mixed sack and if tp1 is 				 * not between two sacked TSNs, then mark by 				 * one more. NOTE that we are marking by one 				 * additional time since the SACK DAC flag 				 * indicates that two packets have been 				 * received after this missing TSN. 				 */
@@ -16500,7 +16467,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -16553,7 +16523,10 @@ decl_stmt|;
 comment|/* printf("OK, we are now ready to FR this guy\n"); */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FR_LOGGING_ENABLE
 condition|)
@@ -16601,7 +16574,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 condition|)
 block|{
 comment|/* 				 * CMT: Using RTX_SSTHRESH policy for CMT. 				 * If CMT is being used, then pick dest with 				 * largest ssthresh for any retransmission. 				 */
@@ -16620,9 +16596,15 @@ expr_stmt|;
 comment|/* sa_ignore NO_NULL_CHK */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|&&
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_pf
+argument_list|)
 condition|)
 block|{
 comment|/* 					 * JRS 5/18/07 - If CMT PF is on, 					 * use the PF version of 					 * find_alt_net() 					 */
@@ -16817,7 +16799,10 @@ block|}
 comment|/* fix counts and things */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FLIGHT_LOGGING_ENABLE
 condition|)
@@ -16885,7 +16870,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_LOG_RWND_ENABLE
 condition|)
@@ -16902,7 +16890,10 @@ name|tp1
 operator|->
 name|send_size
 argument_list|,
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_peer_chunk_oh
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -16916,7 +16907,10 @@ name|tp1
 operator|->
 name|send_size
 operator|+
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_peer_chunk_oh
+argument_list|)
 operator|)
 expr_stmt|;
 comment|/* remove from the total flight */
@@ -17423,7 +17417,10 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_WAKE_LOGGING_ENABLE
 condition|)
@@ -17656,7 +17653,10 @@ name|SCTP_DATAGRAM_UNSENT
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FLIGHT_LOGGING_ENABLE
 condition|)
@@ -17876,7 +17876,10 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_LOG_SACK_ARRIVALS_ENABLE
 condition|)
@@ -18017,7 +18020,10 @@ name|asoc
 operator|->
 name|sent_queue_cnt
 operator|*
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_peer_chunk_oh
+argument_list|)
 operator|)
 argument_list|)
 argument_list|)
@@ -18106,7 +18112,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_strict_sacks
+argument_list|)
 condition|)
 block|{
 name|uint32_t
@@ -18351,7 +18360,10 @@ name|cumack
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_THRESHOLD_LOGGING
 condition|)
@@ -18498,7 +18510,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FLIGHT_LOGGING_ENABLE
 condition|)
@@ -18646,7 +18661,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_CWND_LOGGING_ENABLE
 condition|)
@@ -18770,7 +18788,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_SACK_LOGGING_ENABLE
 condition|)
@@ -18866,7 +18887,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_WAKE_LOGGING_ENABLE
 condition|)
@@ -19004,7 +19028,10 @@ else|else
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_WAKE_LOGGING_ENABLE
 condition|)
@@ -19321,7 +19348,10 @@ name|asoc
 operator|->
 name|sent_queue_cnt
 operator|*
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_peer_chunk_oh
+argument_list|)
 operator|)
 argument_list|)
 argument_list|)
@@ -19538,7 +19568,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_early_fr
+argument_list|)
 condition|)
 block|{
 if|if
@@ -20203,7 +20236,10 @@ block|}
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_SACK_RWND_LOGGING_ENABLE
 condition|)
@@ -20499,7 +20535,10 @@ name|rwnd
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_LOG_SACK_ARRIVALS_ENABLE
 condition|)
@@ -20556,7 +20595,10 @@ name|peers_rwnd
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_THRESHOLD_LOGGING
 condition|)
@@ -20596,7 +20638,10 @@ name|asoc
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_SACK_LOGGING_ENABLE
 condition|)
@@ -20626,7 +20671,10 @@ name|num_dup
 operator|)
 operator|&&
 operator|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 operator|(
 name|SCTP_FR_LOGGING_ENABLE
@@ -20807,7 +20855,10 @@ block|}
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_strict_sacks
+argument_list|)
 condition|)
 block|{
 comment|/* reality check */
@@ -21102,7 +21153,10 @@ block|{
 comment|/* nothing left on send/sent and strmq */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_LOG_RWND_ENABLE
 condition|)
@@ -21195,7 +21249,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_early_fr
+argument_list|)
 condition|)
 block|{
 if|if
@@ -21429,7 +21486,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FLIGHT_LOGGING_ENABLE
 condition|)
@@ -21594,7 +21654,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_SACK_LOGGING_ENABLE
 condition|)
@@ -21625,7 +21688,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_CWND_LOGGING_ENABLE
 condition|)
@@ -21856,7 +21922,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_strict_sacks
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * validate the biggest_tsn_acked in the gap acks if 			 * strict adherence is wanted. 			 */
@@ -21894,7 +21963,10 @@ comment|/* cancel ALL T3-send timer if accum moved */
 comment|/*******************************************/
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 condition|)
 block|{
 name|TAILQ_FOREACH
@@ -22175,7 +22247,10 @@ block|}
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_SACK_LOGGING_ENABLE
 condition|)
@@ -22283,7 +22358,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_WAKE_LOGGING_ENABLE
 condition|)
@@ -22420,7 +22498,10 @@ else|else
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_WAKE_LOGGING_ENABLE
 condition|)
@@ -22561,7 +22642,10 @@ name|SCTP_DATAGRAM_SENT
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_FLIGHT_LOGGING_ENABLE
 condition|)
@@ -22712,7 +22796,10 @@ block|{
 comment|/* stop all timers */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_early_fr
+argument_list|)
 condition|)
 block|{
 if|if
@@ -22820,7 +22907,10 @@ block|{
 comment|/* nothing left on sendqueue.. consider done */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_LOG_RWND_ENABLE
 condition|)
@@ -23354,9 +23444,15 @@ block|}
 comment|/* 	 * CMT DAC algorithm: If SACK DAC flag was 0, then no extra marking 	 * to be done. Setting this_sack_lowest_newack to the cum_ack will 	 * automatically ensure that. 	 */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_on_off
+argument_list|)
 operator|&&
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_cmt_use_dac
+argument_list|)
 operator|&&
 operator|(
 name|cmt_dac_flag
@@ -23790,7 +23886,10 @@ block|}
 comment|/* Adjust and set the new rwnd value */
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_LOG_RWND_ENABLE
 condition|)
@@ -23812,7 +23911,10 @@ name|asoc
 operator|->
 name|sent_queue_cnt
 operator|*
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_peer_chunk_oh
+argument_list|)
 operator|)
 argument_list|,
 name|a_rwnd
@@ -23840,7 +23942,10 @@ name|asoc
 operator|->
 name|sent_queue_cnt
 operator|*
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_peer_chunk_oh
+argument_list|)
 operator|)
 argument_list|)
 argument_list|)
@@ -24014,7 +24119,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_early_fr
+argument_list|)
 condition|)
 block|{
 if|if
@@ -24194,7 +24302,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_SACK_RWND_LOGGING_ENABLE
 condition|)
@@ -24773,7 +24884,10 @@ name|new_cum_tsn
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -24854,7 +24968,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)
@@ -25117,7 +25234,10 @@ name|new_cum_tsn
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_logging_level
+argument_list|)
 operator|&
 name|SCTP_MAP_LOGGING_ENABLE
 condition|)

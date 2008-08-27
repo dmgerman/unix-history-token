@@ -87,14 +87,14 @@ begin_define
 define|#
 directive|define
 name|SCTP_AUTH_DEBUG
-value|(sctp_debug_on& SCTP_DEBUG_AUTH1)
+value|(SCTP_BASE_SYSCTL(sctp_debug_on)& SCTP_DEBUG_AUTH1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_AUTH_DEBUG2
-value|(sctp_debug_on& SCTP_DEBUG_AUTH2)
+value|(SCTP_BASE_SYSCTL(sctp_debug_on)& SCTP_DEBUG_AUTH2)
 end_define
 
 begin_endif
@@ -9229,7 +9229,10 @@ block|}
 if|if
 condition|(
 operator|!
+name|SCTP_BASE_SYSCTL
+argument_list|(
 name|sctp_asconf_auth_nochk
+argument_list|)
 operator|&&
 name|peer_supports_asconf
 operator|&&

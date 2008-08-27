@@ -594,6 +594,53 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SCTP_BASE_INFO
+parameter_list|(
+name|__m
+parameter_list|)
+value|system_base_info.sctppcbinfo.__m
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_BASE_STATS
+value|system_base_info.sctpstat
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_BASE_STAT
+parameter_list|(
+name|__m
+parameter_list|)
+value|system_base_info.sctpstat.__m
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_BASE_SYSCTL
+parameter_list|(
+name|__m
+parameter_list|)
+value|system_base_info.sctpsysctl.__m
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_BASE_VAR
+parameter_list|(
+name|__m
+parameter_list|)
+value|system_base_info.__m
+end_define
+
 begin_comment
 comment|/*  *  */
 end_comment
@@ -639,7 +686,7 @@ name|params
 modifier|...
 parameter_list|)
 define|\
-value|{									\     do {								\ 	if (sctp_debug_on& level ) {					\ 	    printf(params);						\ 	}								\     } while (0);							\ }
+value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    printf(params);						\ 	}								\     } while (0);							\ }
 end_define
 
 begin_define
@@ -652,7 +699,7 @@ parameter_list|,
 name|addr
 parameter_list|)
 define|\
-value|{									\     do {								\ 	if (sctp_debug_on& level ) {					\ 	    sctp_print_address(addr);					\ 	}								\     } while (0);							\ }
+value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    sctp_print_address(addr);					\ 	}								\     } while (0);							\ }
 end_define
 
 begin_define
@@ -667,7 +714,7 @@ parameter_list|,
 name|sh
 parameter_list|)
 define|\
-value|{									\     do {								\ 	    if (sctp_debug_on& level) {				\ 		    sctp_print_address_pkt(iph, sh);			\ 	    }								\     } while (0);							\ }
+value|{									\     do {								\ 	    if (SCTP_BASE_SYSCTL(sctp_debug_on)& level) {		\ 		    sctp_print_address_pkt(iph, sh);			\ 	    }								\     } while (0);							\ }
 end_define
 
 begin_else
@@ -746,7 +793,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|if(sctp_logging_level& SCTP_LTRACE_CHUNK_ENABLE) CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
+value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_CHUNK_ENABLE) CTR6(KTR_SUBSYS, "SCTP:%d[%d]:%x-%x-%x-%x", SCTP_LOG_CHUNK_PROC, 0, a, b, c, d)
 end_define
 
 begin_else
@@ -797,7 +844,7 @@ name|file
 parameter_list|,
 name|err
 parameter_list|)
-value|if(sctp_logging_level& SCTP_LTRACE_ERROR_ENABLE) \                                                          printf("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     m, inp, stcb, net, file, __LINE__, err);
+value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \                                                          printf("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     m, inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_define
@@ -815,7 +862,7 @@ name|file
 parameter_list|,
 name|err
 parameter_list|)
-value|if(sctp_logging_level& SCTP_LTRACE_ERROR_ENABLE) \                                                           printf("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     inp, stcb, net, file, __LINE__, err);
+value|if(SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \                                                           printf("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 								     inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_else
@@ -1241,17 +1288,6 @@ parameter_list|()
 value|(ticks)
 end_define
 
-begin_comment
-comment|/* The packed define for 64 bit platforms */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_PACKED
-value|__attribute__((packed))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1600,6 +1636,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_ENABLE_UDP_CSUM
+parameter_list|(
+name|m
+parameter_list|)
+value|do { \ 					m->m_pkthdr.csum_flags = CSUM_UDP; \ 					m->m_pkthdr.csum_data = offsetof(struct udphdr, uh_sum); \ 				} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_GET_PKT_VRFID
 parameter_list|(
 name|m
@@ -1855,7 +1901,7 @@ name|ro
 parameter_list|,
 name|vrf_id
 parameter_list|)
-value|in_rtalloc_ign((struct route *)ro, 0UL, vrf_id)
+value|rtalloc_ign((struct route *)ro, 0UL)
 end_define
 
 begin_comment

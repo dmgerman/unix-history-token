@@ -154,6 +154,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sctp_add_or_del_interfaces
+parameter_list|(
+name|int
+function_decl|(
+modifier|*
+name|pred
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+parameter_list|,
+name|int
+name|add
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
