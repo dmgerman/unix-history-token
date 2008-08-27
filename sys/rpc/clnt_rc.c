@@ -1856,6 +1856,14 @@ operator|->
 name|rc_client
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|rc
+operator|->
+name|rc_lock
+argument_list|)
+expr_stmt|;
 name|mem_free
 argument_list|(
 name|rc
