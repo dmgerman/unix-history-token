@@ -2852,7 +2852,7 @@ block|}
 block|}
 block|}
 comment|/* Restore metadata. */
-comment|/* 	 * Look up the "real" UID only if we're going to need it.  We 	 * need this for TODO_SGID because chown() requires both. 	 */
+comment|/* 	 * Look up the "real" UID only if we're going to need it. 	 * TODO: the TODO_SGID condition can be dropped here, can't it? 	 */
 if|if
 condition|(
 name|a
@@ -2897,6 +2897,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Look up the "real" GID only if we're going to need it. */
+comment|/* TODO: the TODO_SUID condition can be dropped here, can't it? */
 if|if
 condition|(
 name|a
@@ -4647,11 +4648,22 @@ operator|~
 name|TODO_TIMES
 expr_stmt|;
 comment|/* Never use an immediate chmod(). */
+comment|/* We can't avoid the chmod() entirely if EXTRACT_PERM 			 * because of SysV SGID inheritance. */
 if|if
 condition|(
+operator|(
 name|mode
 operator|!=
 name|final_mode
+operator|)
+operator|||
+operator|(
+name|a
+operator|->
+name|flags
+operator|&
+name|ARCHIVE_EXTRACT_PERM
+operator|)
 condition|)
 name|a
 operator|->
@@ -6848,7 +6860,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note: Although we can skip setting the user id if the desired user  * id matches the current user, we cannot skip setting the group, as  * many systems set the gid bit based on the containing directory.  So  * we have to perform a chown syscall if we want to restore the SGID  * bit.  (The alternative is to stat() and then possibly chown(); it's  * more efficient to skip the stat() and just always chown().)  Note  * that a successful chown() here clears the TODO_SGID_CHECK bit, which  * allows set_mode to skip the stat() check for the GID.  */
+comment|/*  * Note: Although we can skip setting the user id if the desired user  * id matches the current user, we cannot skip setting the group, as  * many systems set the gid based on the containing directory.  So  * we have to perform a chown syscall if we want to set the SGID  * bit.  (The alternative is to stat() and then possibly chown(); it's  * more efficient to skip the stat() and just always chown().)  Note  * that a successful chown() here clears the TODO_SGID_CHECK bit, which  * allows set_mode to skip the stat() check for the GID.  */
 end_comment
 
 begin_function
