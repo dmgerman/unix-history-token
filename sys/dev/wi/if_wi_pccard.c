@@ -484,6 +484,13 @@ name|PCMCIA_CARD
 argument_list|(
 name|ELSA
 argument_list|,
+name|APDL325_IEEE
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
+name|ELSA
+argument_list|,
 name|XI330_IEEE
 argument_list|)
 block|,
