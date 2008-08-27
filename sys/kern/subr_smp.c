@@ -1391,13 +1391,6 @@ comment|/* set static function pointers */
 name|smp_rv_cpumask
 operator|=
 name|map
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-name|curcpu
-operator|)
 expr_stmt|;
 name|smp_rv_setup_func
 operator|=
@@ -1444,6 +1437,13 @@ comment|/* signal other processors, which will enter the IPI with interrupts off
 name|ipi_selected
 argument_list|(
 name|map
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+name|curcpu
+operator|)
 argument_list|,
 name|IPI_RENDEZVOUS
 argument_list|)
@@ -1463,7 +1463,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-comment|/* call executor function for the current CPU */
 name|smp_rendezvous_action
 argument_list|()
 expr_stmt|;
