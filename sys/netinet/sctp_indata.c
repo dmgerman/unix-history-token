@@ -13272,6 +13272,10 @@ argument_list|,
 name|op_err
 argument_list|,
 literal|0
+argument_list|,
+name|net
+operator|->
+name|port
 argument_list|)
 expr_stmt|;
 return|return
@@ -13481,6 +13485,10 @@ argument_list|,
 name|op_err
 argument_list|,
 literal|0
+argument_list|,
+name|net
+operator|->
+name|port
 argument_list|)
 expr_stmt|;
 return|return

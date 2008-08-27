@@ -150,6 +150,38 @@ value|SCTP_DEFAULT_AUTO_ASCONF
 end_define
 
 begin_comment
+comment|/* autoasconf: Enable SCTP Auto-ASCONF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MULTIPLEASCONFS_DESC
+value|"Enable SCTP Muliple-ASCONFs"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MULTIPLEASCONFS_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MULTIPLEASCONFS_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_MULTIPLEASCONFS_DEFAULT
+value|SCTP_DEFAULT_MULTIPLE_ASCONFS
+end_define
+
+begin_comment
 comment|/* ecn_enable: Enable SCTP ECN */
 end_comment
 
@@ -1813,6 +1845,70 @@ name|SCTPCTL_MOBILITY_FASTHANDOFF_DEFAULT
 value|SCTP_DEFAULT_MOBILITY_FASTHANDOFF
 end_define
 
+begin_comment
+comment|/* Enable SCTP/UDP tunneling for clients*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_DESC
+value|"Enable SCTP/UDP tunneling for client"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_DEFAULT
+value|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_MIN
+end_define
+
+begin_comment
+comment|/* Enable SCTP/UDP tunneling port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_UDP_TUNNELING_PORT_DESC
+value|"Set the SCTP/UDP tunneling port"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_UDP_TUNNELING_PORT_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_UDP_TUNNELING_PORT_MAX
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_UDP_TUNNELING_PORT_DEFAULT
+value|SCTP_OVER_UDP_TUNNELING_PORT
+end_define
+
 begin_if
 if|#
 directive|if
@@ -1890,6 +1986,13 @@ begin_decl_stmt
 specifier|extern
 name|uint32_t
 name|sctp_auto_asconf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|sctp_multiple_asconfs
 decl_stmt|;
 end_decl_stmt
 
@@ -2286,6 +2389,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|sctp_udp_tunneling_for_client_enable
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|sctp_udp_tunneling_port
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#

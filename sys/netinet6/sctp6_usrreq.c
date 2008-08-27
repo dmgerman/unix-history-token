@@ -873,6 +873,8 @@ argument_list|,
 name|sh
 argument_list|,
 name|vrf_id
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -913,6 +915,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|vrf_id
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1035,6 +1039,8 @@ argument_list|,
 name|ecn_bits
 argument_list|,
 name|vrf_id
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* inp's ref-count reduced&& stcb unlocked */

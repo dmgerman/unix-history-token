@@ -929,6 +929,16 @@ parameter_list|)
 value|((ifn)->ifn_type == IFT_LOOP)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_ROUTE_IS_REAL_LOOP
+parameter_list|(
+name|ro
+parameter_list|)
+value|((ro)->ro_rt&& (ro)->ro_rt->rt_ifa&& (ro)->ro_rt->rt_ifa->ifa_ifp&& (ro)->ro_rt->rt_ifa->ifa_ifp->if_type == IFT_LOOP)
+end_define
+
 begin_comment
 comment|/*  * Access to IFN's to help with src-addr-selection  */
 end_comment
@@ -1076,6 +1086,16 @@ parameter_list|,
 name|number
 parameter_list|)
 value|{ \ 	zone = uma_zcreate(name, size, NULL, NULL, NULL, NULL, UMA_ALIGN_PTR,\ 		UMA_ZFLAG_FULL); \ 	uma_zone_set_max(zone, number); \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ZONE_DESTROY
+parameter_list|(
+name|zone
+parameter_list|)
+value|uma_zdestroy(zone)
 end_define
 
 begin_comment

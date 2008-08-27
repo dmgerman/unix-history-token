@@ -1821,6 +1821,13 @@ name|SCTP_PCB_FLAGS_NEEDS_MAPPED_V4
 value|0x00800000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_MULTIPLE_ASCONFS
+value|0x01000000
+end_define
+
 begin_comment
 comment|/*-  * mobility_features parameters (by micchie).Note  * these features are applied against the  * sctp_mobility_features flags.. not the sctp_features  * flags.  */
 end_comment

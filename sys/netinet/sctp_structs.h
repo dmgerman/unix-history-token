@@ -626,6 +626,10 @@ comment|/* error stats on destination */
 name|uint16_t
 name|error_count
 decl_stmt|;
+comment|/* UDP port number in case of UDP tunneling */
+name|uint16_t
+name|port
+decl_stmt|;
 name|uint8_t
 name|fast_retran_loss_recovery
 decl_stmt|;
@@ -1535,6 +1539,48 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* used to save ASCONF chunks for retransmission */
+end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|sctp_asconf_head
+argument_list|,
+name|sctp_asconf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|sctp_asconf
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|sctp_asconf
+argument_list|)
+name|next
+expr_stmt|;
+name|uint32_t
+name|serial_number
+decl_stmt|;
+name|uint16_t
+name|snd_count
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|data
+decl_stmt|;
+name|uint16_t
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* used to save ASCONF-ACK chunks for retransmission */
 end_comment
 
@@ -1689,6 +1735,11 @@ name|struct
 name|sctpchunk_listhead
 name|control_send_queue
 decl_stmt|;
+comment|/* ASCONF chunk queue */
+name|struct
+name|sctpchunk_listhead
+name|asconf_send_queue
+decl_stmt|;
 comment|/* 	 * Once a TSN hits the wire it is moved to the sent_queue. We 	 * maintain two counts here (don't know if any but retran_cnt is 	 * needed). The idea is that the sent_queue_retran_cnt reflects how 	 * many chunks have been marked for retranmission by either T3-rxt 	 * or FR. 	 */
 name|struct
 name|sctpchunk_listhead
@@ -1810,6 +1861,9 @@ decl_stmt|;
 comment|/* ASCONF next seq I am sending out, inits at init-tsn */
 name|uint32_t
 name|asconf_seq_out
+decl_stmt|;
+name|uint32_t
+name|asconf_seq_out_acked
 decl_stmt|;
 comment|/* ASCONF last received ASCONF from peer, starts at peer's TSN-1 */
 name|uint32_t
@@ -2247,9 +2301,6 @@ name|uint16_t
 name|def_net_failure
 decl_stmt|;
 comment|/* 	 * lock flag: 0 is ok to send, 1+ (duals as a retran count) is 	 * awaiting ACK 	 */
-name|uint16_t
-name|asconf_sent
-decl_stmt|;
 name|uint16_t
 name|mapping_array_size
 decl_stmt|;
