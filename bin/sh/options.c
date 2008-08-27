@@ -1429,6 +1429,12 @@ name|newparam
 expr_stmt|;
 name|shellparam
 operator|.
+name|reset
+operator|=
+literal|1
+expr_stmt|;
+name|shellparam
+operator|.
 name|optnext
 operator|=
 name|NULL
@@ -1681,12 +1687,6 @@ name|argptr
 argument_list|)
 expr_stmt|;
 block|}
-name|shellparam
-operator|.
-name|reset
-operator|=
-literal|1
-expr_stmt|;
 name|INTON
 expr_stmt|;
 return|return
