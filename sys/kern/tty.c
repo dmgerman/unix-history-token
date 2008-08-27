@@ -2966,11 +2966,6 @@ name|termios
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 break|break;
 case|case
 name|TIOCGETD
