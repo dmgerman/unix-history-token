@@ -6046,12 +6046,6 @@ name|separator
 init|=
 literal|'\0'
 decl_stmt|;
-name|int
-name|lastdotdot
-init|=
-literal|0
-decl_stmt|;
-comment|/* True if last elt copied was '..' */
 name|dest
 operator|=
 name|src
@@ -6235,29 +6229,10 @@ name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
-name|lastdotdot
-operator|=
-literal|1
-expr_stmt|;
 block|}
-else|else
-name|lastdotdot
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 				 * Note: Under no circumstances do we 				 * remove '..' elements.  In 				 * particular, restoring 				 * '/foo/../bar/' should create the 				 * 'foo' dir as a side-effect. 				 */
 block|}
-else|else
-name|lastdotdot
-operator|=
-literal|0
-expr_stmt|;
 block|}
-else|else
-name|lastdotdot
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Copy current element, including leading '/'. */
 if|if
 condition|(
@@ -6308,30 +6283,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * We've just copied zero or more path elements, not including the 	 * final '/'. 	 */
-if|if
-condition|(
-name|lastdotdot
-condition|)
-block|{
-comment|/* Trailing '..' is always wrong. */
-name|archive_set_error
-argument_list|(
-operator|&
-name|a
-operator|->
-name|archive
-argument_list|,
-name|ARCHIVE_ERRNO_MISC
-argument_list|,
-literal|"Path contains trailing '..'"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ARCHIVE_FAILED
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|dest
