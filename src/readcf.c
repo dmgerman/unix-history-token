@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.664 2007/07/10 17:01:22 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.666 2008/02/14 17:25:14 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9544,6 +9544,36 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_ADDR_TYPE_MODES */
+if|#
+directive|if
+name|_FFR_BADRCPT_SHUTDOWN
+define|#
+directive|define
+name|O_RCPTSHUTD
+value|0xe1
+block|{
+literal|"BadRcptShutdown"
+block|,
+name|O_RCPTSHUTD
+block|,
+name|OI_SAFE
+block|}
+block|,
+define|#
+directive|define
+name|O_RCPTSHUTDG
+value|0xe2
+block|{
+literal|"BadRcptShutdownGood"
+block|,
+name|O_RCPTSHUTDG
+block|,
+name|OI_SAFE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_BADRCPT_SHUTDOWN */
 block|{
 name|NULL
 block|,
@@ -15248,6 +15278,34 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_ADDR_TYPE_MODES */
+if|#
+directive|if
+name|_FFR_BADRCPT_SHUTDOWN
+case|case
+name|O_RCPTSHUTD
+case|:
+name|BadRcptShutdown
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_RCPTSHUTDG
+case|:
+name|BadRcptShutdownGood
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_BADRCPT_SHUTDOWN */
 default|default:
 if|if
 condition|(

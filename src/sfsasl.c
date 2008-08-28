@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2006, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 8.115 2006/04/18 21:34:07 ca Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.117 2008/01/31 18:48:29 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2244,6 +2244,37 @@ comment|/* ETIMEDOUT */
 end_comment
 
 begin_comment
+comment|/* **  SET_TLS_RD_TMO -- read secured information for the caller ** **	Parameters: **		rd_tmo -- read timeout ** **	Results: **		none **	This is a hack: there is no way to pass it in */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|tls_rd_tmo
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|set_tls_rd_tmo
+parameter_list|(
+name|rd_tmo
+parameter_list|)
+name|int
+name|rd_tmo
+decl_stmt|;
+block|{
+name|tls_rd_tmo
+operator|=
+name|rd_tmo
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* **  TLS_READ -- read secured information for the caller ** **	Parameters: **		fp -- the file pointer **		buf -- the location to place the data **		size -- the number of bytes to read from connection ** **	Results: **		-1 on error **		otherwise the number of bytes read */
 end_comment
 
@@ -2440,9 +2471,17 @@ name|wfd
 argument_list|,
 name|tlsstart
 argument_list|,
+operator|(
+name|tls_rd_tmo
+operator|<
+literal|0
+operator|)
+condition|?
 name|TimeOuts
 operator|.
 name|to_datablock
+else|:
+name|tls_rd_tmo
 argument_list|,
 name|ssl_err
 argument_list|,

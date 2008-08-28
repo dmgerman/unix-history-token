@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.967 2007/10/01 16:22:14 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.975 2008/03/31 16:32:13 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2339,6 +2339,15 @@ comment|/* MILTER */
 name|size_t
 name|inplen
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_BADRCPT_SHUTDOWN
+name|int
+name|n_badrcpts_adj
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_BADRCPT_SHUTDOWN */
 name|SevenBitInput_Saved
 operator|=
 name|SevenBitInput
@@ -3489,6 +3498,13 @@ comment|/* SASL */
 if|#
 directive|if
 name|STARTTLS
+name|set_tls_rd_tmo
+argument_list|(
+name|TimeOuts
+operator|.
+name|to_nextcommand
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* STARTTLS */
@@ -3637,6 +3653,10 @@ operator|->
 name|e_sendqueue
 operator|=
 name|NULL
+expr_stmt|;
+name|lognullconnection
+operator|=
+name|false
 expr_stmt|;
 goto|goto
 name|doquit
@@ -9832,6 +9852,111 @@ name|e_nrcpts
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|_FFR_BADRCPT_SHUTDOWN
+comment|/* 			**  hack to deal with hack, see below: 			**  n_badrcpts is increased is limit is reached. 			*/
+name|n_badrcpts_adj
+operator|=
+operator|(
+name|BadRcptThrottle
+operator|>
+literal|0
+operator|&&
+name|n_badrcpts
+operator|>
+name|BadRcptThrottle
+operator|&&
+name|LogLevel
+operator|>
+literal|5
+operator|)
+condition|?
+name|n_badrcpts
+operator|-
+literal|1
+else|:
+name|n_badrcpts
+expr_stmt|;
+if|if
+condition|(
+name|BadRcptShutdown
+operator|>
+literal|0
+operator|&&
+name|n_badrcpts_adj
+operator|>=
+name|BadRcptShutdown
+operator|&&
+operator|(
+name|BadRcptShutdownGood
+operator|==
+literal|0
+operator|||
+name|smtp
+operator|.
+name|sm_nrcpts
+operator|==
+literal|0
+operator|||
+operator|(
+name|n_badrcpts_adj
+operator|*
+literal|100
+operator|/
+operator|(
+name|smtp
+operator|.
+name|sm_nrcpts
+operator|+
+name|n_badrcpts
+operator|)
+operator|>=
+name|BadRcptShutdownGood
+operator|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|5
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"%s: Possible SMTP RCPT flood, shutting down connection."
+argument_list|,
+name|CurSmtpClient
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"421 4.7.0 %s Too many bad recipients; closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+comment|/* arrange to ignore any current send list */
+name|e
+operator|->
+name|e_sendqueue
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|doquit
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_BADRCPT_SHUTDOWN */
 if|if
 condition|(
 name|BadRcptThrottle
@@ -14795,14 +14920,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|sm_rpool_free
-argument_list|(
-name|e
-operator|->
-name|e_rpool
-argument_list|)
-expr_stmt|;
-comment|/* 	**  At this point, e ==&MainEnvelope, but if we did splitting, 	**  then CurEnv may point to an envelope structure that was just 	**  freed with the rpool.  So reset CurEnv *before* calling 	**  newenvelope. 	*/
 name|CurEnv
 operator|=
 name|e
@@ -14812,6 +14929,13 @@ operator|=
 name|e
 operator|->
 name|e_features
+expr_stmt|;
+name|sm_rpool_free
+argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|)
 expr_stmt|;
 name|newenvelope
 argument_list|(

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.413 2007/09/26 23:29:11 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.414 2007/11/02 17:30:38 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9589,7 +9589,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 	**  Initialize to 1 instead of 0 because this code gets called 	**  before proc_list_add() gets called, so we (the daemon child 	**  for this connection) don't count ourselves. 	*/
+comment|/* 	**  This code gets called before proc_list_add() gets called, 	**  so we (the daemon child for this connection) have not yet 	**  counted ourselves.  Hence initialize the counter to 1 	**  instead of 0 to compensate. 	*/
 name|n
 operator|=
 literal|1
