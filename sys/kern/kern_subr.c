@@ -1391,6 +1391,17 @@ name|char
 modifier|*
 name|iov_base
 decl_stmt|;
+name|WITNESS_WARN
+argument_list|(
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Calling ureadc()"
+argument_list|)
+expr_stmt|;
 name|again
 label|:
 if|if
