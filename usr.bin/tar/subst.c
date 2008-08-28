@@ -87,6 +87,7 @@ name|char
 modifier|*
 name|result
 decl_stmt|;
+name|unsigned
 name|int
 name|global
 range|:
