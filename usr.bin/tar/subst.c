@@ -53,6 +53,24 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|REG_BASIC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|REG_BASIC
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|subst_rule
