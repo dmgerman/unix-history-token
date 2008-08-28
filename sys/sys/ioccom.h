@@ -131,8 +131,7 @@ name|num
 parameter_list|,
 name|len
 parameter_list|)
-define|\
-value|((unsigned long)(inout | ((len& IOCPARM_MASK)<< 16) | ((group)<< 8) | (num)))
+value|((unsigned long) \ 	((inout) | (((len)& IOCPARM_MASK)<< 16) | ((group)<< 8) | (num)))
 end_define
 
 begin_define
