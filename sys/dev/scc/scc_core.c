@@ -424,6 +424,9 @@ name|scc_bfe_attach
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|u_int
+name|ipc
 parameter_list|)
 block|{
 name|struct
@@ -698,11 +701,14 @@ index|[
 name|c
 index|]
 expr_stmt|;
+comment|/* 		 * XXX temporary hack. If we have more than 1 interrupt 		 * per channel, allocate the first for the channel. At 		 * this time only the macio bus front-end has more than 		 * 1 interrupt per channel and we don't use the 2nd and 		 * 3rd, because we don't support DMA yet. 		 */
 name|ch
 operator|->
 name|ch_irid
 operator|=
 name|c
+operator|*
+name|ipc
 expr_stmt|;
 name|ch
 operator|->
@@ -724,6 +730,13 @@ operator||
 name|RF_SHAREABLE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ipc
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 comment|/* 	 * Create the control structures for our children. Probe devices 	 * and query them to see if we can reset the hardware. 	 */
 name|sysdev

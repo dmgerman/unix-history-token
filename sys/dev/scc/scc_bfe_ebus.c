@@ -206,6 +206,28 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|scc_ebus_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|scc_bfe_attach
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -225,7 +247,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|scc_bfe_attach
+name|scc_ebus_attach
 argument_list|)
 block|,
 name|DEVMETHOD
