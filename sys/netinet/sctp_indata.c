@@ -1676,6 +1676,9 @@ goto|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -1713,7 +1716,54 @@ argument_list|(
 literal|"Bad chunking ??"
 argument_list|)
 expr_stmt|;
-return|return;
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|control_pdapi
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|control_pdapi
+operator|->
+name|tail_mbuf
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+name|SCTP_PRINTF
+argument_list|(
+literal|"This should not happen control_pdapi NULL?\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|SCTP_PRINTF
+argument_list|(
+literal|"Bad chunking ??\n"
+argument_list|)
+expr_stmt|;
+name|SCTP_PRINTF
+argument_list|(
+literal|"Dumping re-assembly queue this will probably hose the association\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+goto|goto
+name|abandon
+goto|;
 block|}
 block|}
 name|cntDel

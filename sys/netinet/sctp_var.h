@@ -291,6 +291,12 @@ parameter_list|)
 value|{ \ 	if ((__net)) {  \ 		if (atomic_fetchadd_int(&(__net)->ref_count, -1) == 1) { \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->fr_timer.timer); \                         if ((__net)->ro.ro_rt) { \ 				RTFREE((__net)->ro.ro_rt); \ 				(__net)->ro.ro_rt = NULL; \                         } \ 			if ((__net)->src_addr_selected) { \ 				sctp_free_ifa((__net)->ro._s_addr); \ 				(__net)->ro._s_addr = NULL; \ 			} \                         (__net)->src_addr_selected = 0; \ 			(__net)->dest_state = SCTP_ADDR_NOT_REACHABLE; \ 			SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_net), (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -306,6 +312,32 @@ name|m
 parameter_list|)
 value|{ \ 	uint32_t val; \ 	val = atomic_fetchadd_int(&(sb)->sb_cc,-(SCTP_BUF_LEN((m)))); \ 	if (val< SCTP_BUF_LEN((m))) { \ 	   panic("sb_cc goes negative"); \ 	} \ 	val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \ 	if (val< MSIZE) { \ 	    panic("sb_mbcnt goes negative"); \ 	} \ 	if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\ 	  val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-(SCTP_BUF_LEN((m)))); \ 	  if (val< SCTP_BUF_LEN((m))) {\ 	     panic("stcb->sb_cc goes negative"); \ 	  } \ 	  val = atomic_fetchadd_int(&(stcb)->asoc.my_rwnd_control_len,-(MSIZE)); \ 	  if (val< MSIZE) { \ 	     panic("asoc->mbcnt goes negative"); \ 	  } \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|sctp_sbfree
+parameter_list|(
+name|ctl
+parameter_list|,
+name|stcb
+parameter_list|,
+name|sb
+parameter_list|,
+name|m
+parameter_list|)
+value|{ \ 	uint32_t val; \ 	val = atomic_fetchadd_int(&(sb)->sb_cc,-(SCTP_BUF_LEN((m)))); \ 	if (val< SCTP_BUF_LEN((m))) { \ 	    (sb)->sb_cc = 0;\ 	} \ 	val = atomic_fetchadd_int(&(sb)->sb_mbcnt,-(MSIZE)); \ 	if (val< MSIZE) { \ 	    (sb)->sb_mbcnt = 0; \ 	} \ 	if (((ctl)->do_not_ref_stcb == 0)&& stcb) {\ 	  val = atomic_fetchadd_int(&(stcb)->asoc.sb_cc,-(SCTP_BUF_LEN((m)))); \ 	  if (val< SCTP_BUF_LEN((m))) {\ 	      (stcb)->asoc.sb_cc = 0; \ 	  } \ 	  val = atomic_fetchadd_int(&(stcb)->asoc.my_rwnd_control_len,-(MSIZE)); \ 	  if (val< MSIZE) { \ 	     (stcb)->asoc.my_rwnd_control_len = 0; \ 	  } \ 	} \ 	if (SCTP_BUF_TYPE(m) != MT_DATA&& SCTP_BUF_TYPE(m) != MT_HEADER&& \ 	    SCTP_BUF_TYPE(m) != MT_OOBDATA) \ 		atomic_subtract_int(&(sb)->sb_ctl,SCTP_BUF_LEN((m))); \ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
