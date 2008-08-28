@@ -312,6 +312,17 @@ file|"tree.h"
 end_include
 
 begin_comment
+comment|/* Size of buffer for holding file data prior to writing. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FILEDATABUFLEN
+value|65536
+end_define
+
+begin_comment
 comment|/* Fixed size of uname/gname caches. */
 end_comment
 
@@ -866,12 +877,6 @@ argument_list|,
 literal|"no files or directories specified"
 argument_list|)
 expr_stmt|;
-comment|/* We want to catch SIGINFO and SIGUSR1. */
-name|siginfo_init
-argument_list|(
-name|bsdtar
-argument_list|)
-expr_stmt|;
 name|a
 operator|=
 name|archive_write_new
@@ -1112,42 +1117,6 @@ argument_list|,
 name|bsdtar
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bsdtar
-operator|->
-name|option_totals
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Total bytes written: "
-name|BSDTAR_FILESIZE_PRINTF
-literal|"\n"
-argument_list|,
-operator|(
-name|BSDTAR_FILESIZE_TYPE
-operator|)
-name|archive_position_compressed
-argument_list|(
-name|a
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|archive_write_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-comment|/* Restore old SIGINFO + SIGUSR1 handlers. */
-name|siginfo_done
-argument_list|(
-name|bsdtar
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1186,12 +1155,6 @@ name|r
 decl_stmt|;
 comment|/* Sanity-test some arguments and the file. */
 name|test_for_append
-argument_list|(
-name|bsdtar
-argument_list|)
-expr_stmt|;
-comment|/* We want to catch SIGINFO and SIGUSR1. */
-name|siginfo_init
 argument_list|(
 name|bsdtar
 argument_list|)
@@ -1510,36 +1473,6 @@ name|bsdtar
 argument_list|)
 expr_stmt|;
 comment|/* XXX check return val XXX */
-if|if
-condition|(
-name|bsdtar
-operator|->
-name|option_totals
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Total bytes written: "
-name|BSDTAR_FILESIZE_PRINTF
-literal|"\n"
-argument_list|,
-operator|(
-name|BSDTAR_FILESIZE_TYPE
-operator|)
-name|archive_position_compressed
-argument_list|(
-name|a
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|archive_write_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|bsdtar
@@ -1618,12 +1551,6 @@ name|ARCHIVE_FORMAT_TAR_PAX_RESTRICTED
 expr_stmt|;
 comment|/* Sanity-test some arguments and the file. */
 name|test_for_append
-argument_list|(
-name|bsdtar
-argument_list|)
-expr_stmt|;
-comment|/* We want to catch SIGINFO and SIGUSR1. */
-name|siginfo_init
 argument_list|(
 name|bsdtar
 argument_list|)
@@ -1922,36 +1849,6 @@ argument_list|,
 name|bsdtar
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bsdtar
-operator|->
-name|option_totals
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Total bytes written: "
-name|BSDTAR_FILESIZE_PRINTF
-literal|"\n"
-argument_list|,
-operator|(
-name|BSDTAR_FILESIZE_TYPE
-operator|)
-name|archive_position_compressed
-argument_list|(
-name|a
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|archive_write_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|bsdtar
@@ -2060,6 +1957,39 @@ decl_stmt|,
 modifier|*
 name|sparse_entry
 decl_stmt|;
+comment|/* We want to catch SIGINFO and SIGUSR1. */
+name|siginfo_init
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+comment|/* Allocate a buffer for file data. */
+if|if
+condition|(
+operator|(
+name|bsdtar
+operator|->
+name|buff
+operator|=
+name|malloc
+argument_list|(
+name|FILEDATABUFLEN
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"cannot allocate memory"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2191,7 +2121,9 @@ name|return_value
 operator|=
 literal|1
 expr_stmt|;
-return|return;
+goto|goto
+name|cleanup
+goto|;
 block|}
 block|}
 name|set_chdir
@@ -2365,6 +2297,52 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|cleanup
+label|:
+comment|/* Free file data buffer. */
+name|free
+argument_list|(
+name|bsdtar
+operator|->
+name|buff
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|option_totals
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Total bytes written: "
+name|BSDTAR_FILESIZE_PRINTF
+literal|"\n"
+argument_list|,
+operator|(
+name|BSDTAR_FILESIZE_TYPE
+operator|)
+name|archive_position_compressed
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|archive_write_finish
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+comment|/* Restore old SIGINFO + SIGUSR1 handlers. */
+name|siginfo_done
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2971,14 +2949,6 @@ modifier|*
 name|ina
 parameter_list|)
 block|{
-name|char
-name|buff
-index|[
-literal|64
-operator|*
-literal|1024
-index|]
-decl_stmt|;
 name|ssize_t
 name|bytes_read
 decl_stmt|;
@@ -2996,12 +2966,11 @@ name|archive_read_data
 argument_list|(
 name|ina
 argument_list|,
+name|bsdtar
+operator|->
 name|buff
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buff
-argument_list|)
+name|FILEDATABUFLEN
 argument_list|)
 expr_stmt|;
 while|while
@@ -3024,6 +2993,8 @@ name|archive_write_data
 argument_list|(
 name|a
 argument_list|,
+name|bsdtar
+operator|->
 name|buff
 argument_list|,
 name|bytes_read
@@ -3067,12 +3038,11 @@ name|archive_read_data
 argument_list|(
 name|ina
 argument_list|,
+name|bsdtar
+operator|->
 name|buff
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buff
-argument_list|)
+name|FILEDATABUFLEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -4343,7 +4313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Helper function to copy file to archive, with stack-allocated buffer. */
+comment|/* Helper function to copy file to archive. */
 end_comment
 
 begin_function
@@ -4370,14 +4340,6 @@ name|int
 name|fd
 parameter_list|)
 block|{
-name|char
-name|buff
-index|[
-literal|64
-operator|*
-literal|1024
-index|]
-decl_stmt|;
 name|ssize_t
 name|bytes_read
 decl_stmt|;
@@ -4389,19 +4351,17 @@ name|progress
 init|=
 literal|0
 decl_stmt|;
-comment|/* XXX TODO: Allocate buffer on heap and store pointer to 	 * it in bsdtar structure; arrange cleanup as well. XXX */
 name|bytes_read
 operator|=
 name|read
 argument_list|(
 name|fd
 argument_list|,
+name|bsdtar
+operator|->
 name|buff
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buff
-argument_list|)
+name|FILEDATABUFLEN
 argument_list|)
 expr_stmt|;
 while|while
@@ -4424,9 +4384,11 @@ name|archive_write_data
 argument_list|(
 name|a
 argument_list|,
+name|bsdtar
+operator|->
 name|buff
 argument_list|,
-name|bytes_read
+name|FILEDATABUFLEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -4496,12 +4458,11 @@ name|read
 argument_list|(
 name|fd
 argument_list|,
+name|bsdtar
+operator|->
 name|buff
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buff
-argument_list|)
+name|FILEDATABUFLEN
 argument_list|)
 expr_stmt|;
 block|}
