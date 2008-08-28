@@ -440,7 +440,6 @@ operator|++
 name|i
 control|)
 block|{
-comment|/* 		 * Check that that jumps are forward, and within 		 * the code block. 		 */
 name|p
 operator|=
 operator|&
@@ -449,7 +448,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 		 * Check that the instruction is valid. 		 */
+comment|/* 		 * Check that the code is valid. 		 */
 if|if
 condition|(
 operator|(
@@ -489,6 +488,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 		 * Check that that jumps are forward, and within 		 * the code block. 		 */
 if|if
 condition|(
 name|BPF_CLASS
