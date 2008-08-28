@@ -16,7 +16,7 @@ init|=
 block|{
 name|BPF_STMT
 argument_list|(
-literal|0xdead
+literal|0x55
 argument_list|,
 literal|0
 argument_list|)
