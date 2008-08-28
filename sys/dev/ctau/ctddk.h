@@ -2134,6 +2134,9 @@ name|int
 name|debug
 decl_stmt|;
 name|int
+name|debug_shadow
+decl_stmt|;
+name|int
 name|e1_first_int
 decl_stmt|;
 name|unsigned

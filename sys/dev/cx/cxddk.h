@@ -1804,6 +1804,9 @@ decl_stmt|;
 name|int
 name|debug
 decl_stmt|;
+name|int
+name|debug_shadow
+decl_stmt|;
 name|void
 modifier|*
 name|attach

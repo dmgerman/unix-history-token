@@ -941,6 +941,11 @@ name|char
 name|debug
 decl_stmt|;
 comment|/* debug level, 0..2 */
+name|unsigned
+name|char
+name|debug_shadow
+decl_stmt|;
+comment|/* debug shadow */
 name|void
 function_decl|(
 modifier|*
