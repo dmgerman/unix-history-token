@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2006 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/branches/sam_hal/ah.h#19 $  */
+comment|/*-  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: //depot/sw/branches/sam_hal/ah.h#32 $  */
 end_comment
 
 begin_ifndef
@@ -350,6 +350,21 @@ init|=
 literal|30
 block|,
 comment|/* HAL_INT_RXORN treated as fatal */
+name|HAL_CAP_HT
+init|=
+literal|31
+block|,
+comment|/* hardware can support HT */
+name|HAL_CAP_NUMTXCHAIN
+init|=
+literal|32
+block|,
+comment|/* # TX chains supported */
+name|HAL_CAP_NUMRXCHAIN
+init|=
+literal|33
+block|,
+comment|/* # RX chains supported */
 name|HAL_CAP_RXTSTAMP_PREC
 init|=
 literal|34
@@ -723,6 +738,10 @@ block|,
 name|HAL_PKT_TYPE_GRP_POLL
 init|=
 literal|6
+block|,
+name|HAL_PKT_TYPE_AMPDU
+init|=
+literal|7
 block|, }
 name|HAL_PKT_TYPE
 typedef|;
@@ -785,7 +804,12 @@ name|HAL_RX_FILTER_PHYRADAR
 init|=
 literal|0x00000200
 block|,
-comment|/* Allow phy radar errors*/
+comment|/* Allow phy radar errors */
+name|HAL_RX_FILTER_COMPBAR
+init|=
+literal|0x00000400
+block|,
+comment|/* Allow compressed BAR */
 block|}
 name|HAL_RX_FILTER
 typedef|;
@@ -906,6 +930,16 @@ init|=
 literal|0x02000000
 block|,
 comment|/* Non-common mapping */
+name|HAL_INT_CST
+init|=
+literal|0x10000000
+block|,
+comment|/* Non-common mapping */
+name|HAL_INT_GTT
+init|=
+literal|0x20000000
+block|,
+comment|/* Non-common mapping */
 name|HAL_INT_FATAL
 init|=
 literal|0x40000000
@@ -985,14 +1019,14 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|u_int32_t
+name|channelFlags
+decl_stmt|;
+comment|/* see below */
 name|u_int16_t
 name|channel
 decl_stmt|;
 comment|/* setting in Mhz */
-name|u_int16_t
-name|channelFlags
-decl_stmt|;
-comment|/* see below */
 name|u_int8_t
 name|privFlags
 decl_stmt|;
@@ -1021,7 +1055,7 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_CW_INT
-value|0x0002
+value|0x00002
 end_define
 
 begin_comment
@@ -1032,7 +1066,7 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_TURBO
-value|0x0010
+value|0x00010
 end_define
 
 begin_comment
@@ -1043,7 +1077,7 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_CCK
-value|0x0020
+value|0x00020
 end_define
 
 begin_comment
@@ -1054,7 +1088,7 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_OFDM
-value|0x0040
+value|0x00040
 end_define
 
 begin_comment
@@ -1065,18 +1099,18 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_2GHZ
-value|0x0080
+value|0x00080
 end_define
 
 begin_comment
-comment|/* 2 GHz spectrum channel. */
+comment|/* 2 GHz spectrum channel */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CHANNEL_5GHZ
-value|0x0100
+value|0x00100
 end_define
 
 begin_comment
@@ -1087,7 +1121,7 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_PASSIVE
-value|0x0200
+value|0x00200
 end_define
 
 begin_comment
@@ -1098,7 +1132,7 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_DYN
-value|0x0400
+value|0x00400
 end_define
 
 begin_comment
@@ -1109,7 +1143,7 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_XR
-value|0x0800
+value|0x00800
 end_define
 
 begin_comment
@@ -1120,7 +1154,7 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_STURBO
-value|0x2000
+value|0x02000
 end_define
 
 begin_comment
@@ -1131,7 +1165,7 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_HALF
-value|0x4000
+value|0x04000
 end_define
 
 begin_comment
@@ -1142,11 +1176,44 @@ begin_define
 define|#
 directive|define
 name|CHANNEL_QUARTER
-value|0x8000
+value|0x08000
 end_define
 
 begin_comment
 comment|/* Quarter rate channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_HT20
+value|0x10000
+end_define
+
+begin_comment
+comment|/* 11n 20MHZ channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_HT40PLUS
+value|0x20000
+end_define
+
+begin_comment
+comment|/* 11n 40MHZ channel w/ ext chan above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_HT40MINUS
+value|0x40000
+end_define
+
+begin_comment
+comment|/* 11n 40MHZ channel w/ ext chan below */
 end_comment
 
 begin_comment
@@ -1286,9 +1353,51 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHANNEL_G_HT20
+value|(CHANNEL_G|CHANNEL_HT20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_A_HT20
+value|(CHANNEL_A|CHANNEL_HT20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_G_HT40PLUS
+value|(CHANNEL_G|CHANNEL_HT40PLUS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_G_HT40MINUS
+value|(CHANNEL_G|CHANNEL_HT40MINUS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_A_HT40PLUS
+value|(CHANNEL_A|CHANNEL_HT40PLUS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_A_HT40MINUS
+value|(CHANNEL_A|CHANNEL_HT40MINUS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHANNEL_ALL
 define|\
-value|(CHANNEL_OFDM|CHANNEL_CCK| CHANNEL_2GHZ | CHANNEL_5GHZ | CHANNEL_TURBO)
+value|(CHANNEL_OFDM | CHANNEL_CCK| CHANNEL_2GHZ | CHANNEL_5GHZ | \ 	 CHANNEL_TURBO | CHANNEL_HT20 | CHANNEL_HT40PLUS | CHANNEL_HT40MINUS)
 end_define
 
 begin_define
@@ -1453,9 +1562,33 @@ init|=
 literal|0x400
 block|,
 comment|/* 11A quarter rate channels */
+name|HAL_MODE_11NG_HT20
+init|=
+literal|0x008000
+block|,
+name|HAL_MODE_11NA_HT20
+init|=
+literal|0x010000
+block|,
+name|HAL_MODE_11NG_HT40PLUS
+init|=
+literal|0x020000
+block|,
+name|HAL_MODE_11NG_HT40MINUS
+init|=
+literal|0x040000
+block|,
+name|HAL_MODE_11NA_HT40PLUS
+init|=
+literal|0x080000
+block|,
+name|HAL_MODE_11NA_HT40MINUS
+init|=
+literal|0x100000
+block|,
 name|HAL_MODE_ALL
 init|=
-literal|0xfff
+literal|0xffffff
 block|}
 enum|;
 end_enum
@@ -1471,7 +1604,7 @@ comment|/* NB: for proper padding */
 name|u_int8_t
 name|rateCodeToIndex
 index|[
-literal|32
+literal|144
 index|]
 decl_stmt|;
 comment|/* back mapping */
@@ -1485,7 +1618,7 @@ name|u_int8_t
 name|phy
 decl_stmt|;
 comment|/* CCK/OFDM/XR */
-name|u_int16_t
+name|u_int32_t
 name|rateKbps
 decl_stmt|;
 comment|/* transfer rate in kbs */
@@ -1541,6 +1674,144 @@ decl_stmt|;
 comment|/* rates */
 block|}
 name|HAL_RATE_SET
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * 802.11n specific structures and enums  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_CHAINTYPE_TX
+init|=
+literal|1
+block|,
+comment|/* Tx chain type */
+name|HAL_CHAINTYPE_RX
+init|=
+literal|2
+block|,
+comment|/* RX chain type */
+block|}
+name|HAL_CHAIN_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int
+name|Tries
+decl_stmt|;
+name|u_int
+name|Rate
+decl_stmt|;
+name|u_int
+name|PktDuration
+decl_stmt|;
+name|u_int
+name|ChSel
+decl_stmt|;
+name|u_int
+name|RateFlags
+decl_stmt|;
+define|#
+directive|define
+name|HAL_RATESERIES_RTS_CTS
+value|0x0001
+comment|/* use rts/cts w/this series */
+define|#
+directive|define
+name|HAL_RATESERIES_2040
+value|0x0002
+comment|/* use ext channel for series */
+define|#
+directive|define
+name|HAL_RATESERIES_HALFGI
+value|0x0004
+comment|/* use half-gi for series */
+block|}
+name|HAL_11N_RATE_SERIES
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_HT_MACMODE_20
+init|=
+literal|0
+block|,
+comment|/* 20 MHz operation */
+name|HAL_HT_MACMODE_2040
+init|=
+literal|1
+block|,
+comment|/* 20/40 MHz operation */
+block|}
+name|HAL_HT_MACMODE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_HT_PHYMODE_20
+init|=
+literal|0
+block|,
+comment|/* 20 MHz operation */
+name|HAL_HT_PHYMODE_2040
+init|=
+literal|1
+block|,
+comment|/* 20/40 MHz operation */
+block|}
+name|HAL_HT_PHYMODE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_HT_EXTPROTSPACING_20
+init|=
+literal|0
+block|,
+comment|/* 20 MHz spacing */
+name|HAL_HT_EXTPROTSPACING_25
+init|=
+literal|1
+block|,
+comment|/* 25 MHz spacing */
+block|}
+name|HAL_HT_EXTPROTSPACING
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_RX_CLEAR_CTL_LOW
+init|=
+literal|0x1
+block|,
+comment|/* force control channel to appear busy */
+name|HAL_RX_CLEAR_EXT_LOW
+init|=
+literal|0x2
+block|,
+comment|/* force extension channel to appear busy */
+block|}
+name|HAL_HT_RXCLEAR
 typedef|;
 end_typedef
 
@@ -1766,7 +2037,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Like HAL_BEACON_STATE but for non-station mode setup.  * NB: see above flag definitions   */
+comment|/*  * Like HAL_BEACON_STATE but for non-station mode setup.  * NB: see above flag definitions for bt_intval.   */
 end_comment
 
 begin_typedef
@@ -1793,6 +2064,22 @@ name|u_int32_t
 name|bt_nextswba
 decl_stmt|;
 comment|/* next SWBA in 1/8th TU */
+name|u_int32_t
+name|bt_flags
+decl_stmt|;
+comment|/* timer enables */
+define|#
+directive|define
+name|HAL_BEACON_TBTT_EN
+value|0x00000001
+define|#
+directive|define
+name|HAL_BEACON_DBA_EN
+value|0x00000002
+define|#
+directive|define
+name|HAL_BEACON_SWBA_EN
+value|0x00000004
 block|}
 name|HAL_BEACON_TIMERS
 typedef|;
@@ -1871,7 +2158,7 @@ comment|/* HAL ABI version */
 define|#
 directive|define
 name|HAL_ABI_VERSION
-value|0x06102600
+value|0x08060800
 comment|/* YYMMDDnn */
 name|u_int16_t
 name|ah_devid
@@ -3045,6 +3332,32 @@ name|HAL_BOOL
 name|__ahdecl
 function_decl|(
 modifier|*
+name|ah_setSifsTime
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|u_int
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getSifsTime
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
 name|ah_setSlotTime
 function_decl|)
 parameter_list|(
@@ -3478,7 +3791,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the Vendor ID for Vendor SKU's which can modify the  * channel properties returned by ath_hal_init_channels.  * Return AH_TRUE if set succeeds  */
+comment|/*  * Set the Vendor ID for Vendor SKU's which can modify the  * channel properties returned by ath_hal_init_channels.  */
 end_comment
 
 begin_function_decl
@@ -3535,7 +3848,7 @@ parameter_list|,
 name|HAL_CTRY_CODE
 name|cc
 parameter_list|,
-name|u_int16_t
+name|u_int
 name|modeSelect
 parameter_list|,
 name|HAL_BOOL
@@ -3585,28 +3898,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return rate table for specified mode (11a, 11b, 11g, etc).  */
-end_comment
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|HAL_RATE_TABLE
-modifier|*
-name|__ahdecl
-name|ath_hal_getratetable
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|u_int
-name|mode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Calculate the transmit duration of a frame.  */
 end_comment
 
@@ -3646,6 +3937,22 @@ specifier|extern
 name|HAL_BOOL
 name|__ahdecl
 name|ath_hal_ispublicsafetysku
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Return if device is operating in 900 MHz band.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ath_hal_isgsmsku
 parameter_list|(
 name|struct
 name|ath_hal
