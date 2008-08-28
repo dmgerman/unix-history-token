@@ -1880,7 +1880,7 @@ name|sysctl_domainname
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"NAme of the current YP/NIS domain"
+literal|"Name of the current YP/NIS domain"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
