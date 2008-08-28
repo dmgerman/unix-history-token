@@ -44,6 +44,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIBKERN_INLINE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LIBKERN_INLINE
+value|static __inline
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIBKERN_BODY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* BCD conversions. */
 end_comment
@@ -1252,9 +1276,30 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|LIBKERN_INLINE
+name|void
+modifier|*
+name|memset
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBKERN_BODY
+end_ifdef
+
 begin_function
-specifier|static
-name|__inline
+name|LIBKERN_INLINE
 name|void
 modifier|*
 name|memset
@@ -1315,6 +1360,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
