@@ -140,6 +140,10 @@ name|option_null
 decl_stmt|;
 comment|/* --null */
 name|char
+name|option_numeric_owner
+decl_stmt|;
+comment|/* --numeric-owner */
+name|char
 name|option_stdout
 decl_stmt|;
 comment|/* -O */
@@ -208,6 +212,11 @@ decl_stmt|;
 comment|/* Used for -C parsing in -cT */
 comment|/* 	 * Data for various subsystems.  Full definitions are located in 	 * the file where they are used. 	 */
 name|struct
+name|archive_entry_linkresolver
+modifier|*
+name|resolver
+decl_stmt|;
+name|struct
 name|archive_dir
 modifier|*
 name|archive_dir
@@ -217,12 +226,6 @@ name|struct
 name|name_cache
 modifier|*
 name|gname_cache
-decl_stmt|;
-comment|/* for write.c */
-name|struct
-name|links_cache
-modifier|*
-name|links_cache
 decl_stmt|;
 comment|/* for write.c */
 name|struct
@@ -249,6 +252,12 @@ modifier|*
 name|siginfo
 decl_stmt|;
 comment|/* for siginfo.c */
+name|struct
+name|substitution
+modifier|*
+name|substitution
+decl_stmt|;
+comment|/* for subst.c */
 block|}
 struct|;
 end_struct
@@ -631,6 +640,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|unmatched_inclusions_warn
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+name|bsdtar
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|usage
 parameter_list|(
@@ -654,6 +680,64 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|HAVE_REGEX_H
+end_if
+
+begin_function_decl
+name|void
+name|add_substitution
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|apply_substitution
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cleanup_substitution
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
