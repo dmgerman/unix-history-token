@@ -1371,8 +1371,6 @@ parameter_list|,
 name|vap
 parameter_list|,
 name|fl
-parameter_list|,
-name|cr
 parameter_list|)
 value|((vap)->va_size = (vp)->v_size, 0)
 define|#
