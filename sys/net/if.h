@@ -633,7 +633,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_RXCSUM
-value|0x0001
+value|0x00001
 end_define
 
 begin_comment
@@ -644,7 +644,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_TXCSUM
-value|0x0002
+value|0x00002
 end_define
 
 begin_comment
@@ -655,7 +655,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_NETCONS
-value|0x0004
+value|0x00004
 end_define
 
 begin_comment
@@ -666,7 +666,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_VLAN_MTU
-value|0x0008
+value|0x00008
 end_define
 
 begin_comment
@@ -677,7 +677,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_VLAN_HWTAGGING
-value|0x0010
+value|0x00010
 end_define
 
 begin_comment
@@ -688,7 +688,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_JUMBO_MTU
-value|0x0020
+value|0x00020
 end_define
 
 begin_comment
@@ -699,7 +699,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_POLLING
-value|0x0040
+value|0x00040
 end_define
 
 begin_comment
@@ -710,7 +710,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_VLAN_HWCSUM
-value|0x0080
+value|0x00080
 end_define
 
 begin_comment
@@ -721,7 +721,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_TSO4
-value|0x0100
+value|0x00100
 end_define
 
 begin_comment
@@ -732,7 +732,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_TSO6
-value|0x0200
+value|0x00200
 end_define
 
 begin_comment
@@ -743,7 +743,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_LRO
-value|0x0400
+value|0x00400
 end_define
 
 begin_comment
@@ -754,7 +754,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_WOL_UCAST
-value|0x0800
+value|0x00800
 end_define
 
 begin_comment
@@ -765,7 +765,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_WOL_MCAST
-value|0x1000
+value|0x01000
 end_define
 
 begin_comment
@@ -776,7 +776,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_WOL_MAGIC
-value|0x2000
+value|0x02000
 end_define
 
 begin_comment
@@ -787,7 +787,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_TOE4
-value|0x4000
+value|0x04000
 end_define
 
 begin_comment
@@ -798,11 +798,22 @@ begin_define
 define|#
 directive|define
 name|IFCAP_TOE6
-value|0x8000
+value|0x08000
 end_define
 
 begin_comment
 comment|/* interface can offload TCP6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_VLAN_HWFILTER
+value|0x10000
+end_define
+
+begin_comment
+comment|/* interface hw can filter vlan tag */
 end_comment
 
 begin_define
