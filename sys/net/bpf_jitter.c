@@ -73,6 +73,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -226,6 +232,8 @@ argument_list|,
 name|M_BPFJIT
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -394,6 +402,19 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|memset
+argument_list|(
+name|filter
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|filter
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* No filter means accept all */
 if|if
 condition|(
