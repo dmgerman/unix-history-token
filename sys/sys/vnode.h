@@ -788,6 +788,17 @@ begin_comment
 comment|/* vnode backs the md device */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VV_FORCEINSMQ
+value|0x1000
+end_define
+
+begin_comment
+comment|/* force the insmntque to succeed */
+end_comment
+
 begin_comment
 comment|/*  * Vnode attributes.  A field value of VNOVAL represents a field whose value  * is unavailable (getattr) or which is not to be changed (setattr).  */
 end_comment
