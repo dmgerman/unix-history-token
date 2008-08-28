@@ -244,7 +244,7 @@ name|uname_cache
 decl_stmt|;
 comment|/* for write.c */
 name|struct
-name|siginfo
+name|siginfo_data
 modifier|*
 name|siginfo
 decl_stmt|;

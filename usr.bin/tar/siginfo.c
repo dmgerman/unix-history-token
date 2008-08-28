@@ -69,7 +69,7 @@ end_decl_stmt
 
 begin_struct
 struct|struct
-name|siginfo
+name|siginfo_data
 block|{
 comment|/* What sort of operation are we doing? */
 name|char
@@ -174,7 +174,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|siginfo
+name|siginfo_data
 argument_list|)
 argument_list|)
 operator|)
