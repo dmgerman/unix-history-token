@@ -485,6 +485,19 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|q_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Be quiet */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|u_flag
 init|=
 literal|0
@@ -1427,7 +1440,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"BIab:f:ipstuv1234"
+literal|"BIab:f:ipqstuv1234"
 argument_list|)
 operator|)
 operator|!=
@@ -1491,6 +1504,14 @@ case|case
 literal|'p'
 case|:
 name|print_config_flag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|q_flag
 operator|=
 literal|1
 expr_stmt|;
@@ -2317,7 +2338,7 @@ name|stderr
 argument_list|,
 literal|"%s%s"
 argument_list|,
-literal|"usage: fdisk [-BIaipstu] [-b bootcode] [-1234] [disk]\n"
+literal|"usage: fdisk [-BIaipqstu] [-b bootcode] [-1234] [disk]\n"
 argument_list|,
 literal|"       fdisk -f configfile [-itv] [disk]\n"
 argument_list|)
@@ -4267,6 +4288,12 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|q_flag
+condition|)
+comment|/* GEOM errors are benign, not all devices supported */
 name|warnx
 argument_list|(
 literal|"%s"
