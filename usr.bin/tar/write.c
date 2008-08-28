@@ -943,6 +943,12 @@ argument_list|,
 literal|"no files or directories specified"
 argument_list|)
 expr_stmt|;
+comment|/* We want to catch SIGINFO and SIGUSR1. */
+name|siginfo_init
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
 name|a
 operator|=
 name|archive_write_new
@@ -1211,6 +1217,12 @@ block|}
 name|archive_write_finish
 argument_list|(
 name|a
+argument_list|)
+expr_stmt|;
+comment|/* Restore old SIGINFO + SIGUSR1 handlers. */
+name|siginfo_done
+argument_list|(
+name|bsdtar
 argument_list|)
 expr_stmt|;
 block|}
@@ -2746,6 +2758,30 @@ name|in_entry
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|siginfo_setinfo
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|"copying"
+argument_list|,
+name|archive_entry_pathname
+argument_list|(
+name|in_entry
+argument_list|)
+argument_list|,
+name|archive_entry_size
+argument_list|(
+name|in_entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|siginfo_printinfo
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|e
 operator|=
 name|archive_write_header
@@ -2897,6 +2933,11 @@ decl_stmt|;
 name|ssize_t
 name|bytes_written
 decl_stmt|;
+name|off_t
+name|progress
+init|=
+literal|0
+decl_stmt|;
 name|bytes_read
 operator|=
 name|archive_read_data
@@ -2918,6 +2959,13 @@ operator|>
 literal|0
 condition|)
 block|{
+name|siginfo_printinfo
+argument_list|(
+name|bsdtar
+argument_list|,
+name|progress
+argument_list|)
+expr_stmt|;
 name|bytes_written
 operator|=
 name|archive_write_data
@@ -2957,6 +3005,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|progress
+operator|+=
+name|bytes_written
+expr_stmt|;
 name|bytes_read
 operator|=
 name|archive_read_data
@@ -4007,6 +4059,32 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Record what we're doing, for the benefit of SIGINFO / SIGUSR1. */
+name|siginfo_setinfo
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|"adding"
+argument_list|,
+name|archive_entry_pathname
+argument_list|(
+name|entry
+argument_list|)
+argument_list|,
+name|archive_entry_size
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Handle SIGINFO / SIGUSR1 request if one was made. */
+name|siginfo_printinfo
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|e
 operator|=
 name|archive_write_header
@@ -4184,6 +4262,11 @@ decl_stmt|;
 name|ssize_t
 name|bytes_written
 decl_stmt|;
+name|off_t
+name|progress
+init|=
+literal|0
+decl_stmt|;
 comment|/* XXX TODO: Allocate buffer on heap and store pointer to 	 * it in bsdtar structure; arrange cleanup as well. XXX */
 name|bytes_read
 operator|=
@@ -4206,6 +4289,13 @@ operator|>
 literal|0
 condition|)
 block|{
+name|siginfo_printinfo
+argument_list|(
+name|bsdtar
+argument_list|,
+name|progress
+argument_list|)
+expr_stmt|;
 name|bytes_written
 operator|=
 name|archive_write_data
@@ -4269,6 +4359,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|progress
+operator|+=
+name|bytes_written
+expr_stmt|;
 name|bytes_read
 operator|=
 name|read
