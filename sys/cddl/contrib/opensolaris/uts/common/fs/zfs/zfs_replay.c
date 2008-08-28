@@ -1954,8 +1954,6 @@ operator|&
 name|va
 argument_list|,
 name|kcred
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

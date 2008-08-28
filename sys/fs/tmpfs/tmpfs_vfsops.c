@@ -896,8 +896,6 @@ argument_list|,
 name|mp
 operator|->
 name|mnt_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

@@ -3045,8 +3045,6 @@ argument_list|,
 name|fp
 operator|->
 name|f_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3285,8 +3283,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|active_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3689,8 +3685,6 @@ operator|&
 name|vattr
 argument_list|,
 name|active_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

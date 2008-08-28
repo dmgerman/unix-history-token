@@ -413,8 +413,6 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

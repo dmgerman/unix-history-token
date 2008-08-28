@@ -5297,8 +5297,6 @@ argument_list|,
 name|curthread
 operator|->
 name|td_ucred
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Lose the lock but keep the ref. 	 */

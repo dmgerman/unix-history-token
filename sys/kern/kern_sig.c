@@ -14222,8 +14222,6 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 operator|||
 name|vattr
@@ -14448,8 +14446,6 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

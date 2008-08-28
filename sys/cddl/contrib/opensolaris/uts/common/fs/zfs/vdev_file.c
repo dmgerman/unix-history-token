@@ -253,8 +253,6 @@ operator|&
 name|vattr
 argument_list|,
 literal|0
-argument_list|,
-name|kcred
 argument_list|)
 expr_stmt|;
 if|if

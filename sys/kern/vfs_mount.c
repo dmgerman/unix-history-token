@@ -4763,8 +4763,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

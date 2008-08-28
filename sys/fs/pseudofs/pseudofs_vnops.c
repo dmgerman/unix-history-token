@@ -516,10 +516,6 @@ argument_list|,
 name|va
 operator|->
 name|a_cred
-argument_list|,
-name|va
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1002,9 +998,7 @@ name|error
 operator|=
 name|pn_attr
 argument_list|(
-name|va
-operator|->
-name|a_td
+name|curthread
 argument_list|,
 name|proc
 argument_list|,

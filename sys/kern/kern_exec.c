@@ -3307,6 +3307,8 @@ operator|->
 name|vp
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|done1
@@ -5456,8 +5458,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

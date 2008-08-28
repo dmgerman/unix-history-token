@@ -832,6 +832,7 @@ name|NULLVP
 condition|)
 if|if
 condition|(
+operator|!
 name|VOP_GETATTR
 argument_list|(
 name|udvp
@@ -842,11 +843,7 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
-operator|==
-literal|0
 operator|&&
 operator|(
 name|va
@@ -3374,9 +3371,7 @@ name|un_lowervp
 expr_stmt|;
 name|td
 operator|=
-name|ap
-operator|->
-name|a_td
+name|curthread
 expr_stmt|;
 if|if
 condition|(
@@ -3401,8 +3396,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|==
@@ -3473,8 +3466,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3694,9 +3685,7 @@ name|un_lowervp
 expr_stmt|;
 name|td
 operator|=
-name|ap
-operator|->
-name|a_td
+name|curthread
 expr_stmt|;
 name|vap
 operator|=
@@ -3843,8 +3832,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|UNIONFS_INTERNAL_DEBUG
@@ -6098,8 +6085,6 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -6836,8 +6821,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=

@@ -2183,8 +2183,6 @@ operator|->
 name|ni_cnd
 operator|.
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

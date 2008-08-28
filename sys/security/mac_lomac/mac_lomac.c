@@ -2559,8 +2559,6 @@ argument_list|,
 name|curthread
 operator|->
 name|td_ucred
-argument_list|,
-name|curthread
 argument_list|)
 operator|==
 literal|0

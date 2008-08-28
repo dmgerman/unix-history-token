@@ -259,8 +259,6 @@ operator|->
 name|proc
 operator|->
 name|p_ucred
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 if|if

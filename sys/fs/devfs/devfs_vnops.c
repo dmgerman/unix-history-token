@@ -6104,6 +6104,11 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|int
 name|c
 decl_stmt|,
@@ -6126,6 +6131,10 @@ operator|=
 name|ap
 operator|->
 name|a_vp
+expr_stmt|;
+name|td
+operator|=
+name|curthread
 expr_stmt|;
 if|if
 condition|(
@@ -6349,9 +6358,7 @@ name|error
 operator|=
 name|priv_check
 argument_list|(
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|,
 name|PRIV_VFS_CHOWN
 argument_list|)
@@ -6412,9 +6419,7 @@ name|error
 operator|=
 name|priv_check
 argument_list|(
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|,
 name|PRIV_VFS_ADMIN
 argument_list|)
@@ -6477,9 +6482,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 operator|)
 operator|&&
@@ -6507,9 +6510,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 operator|)
 operator|)

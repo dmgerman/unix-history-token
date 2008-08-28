@@ -953,17 +953,16 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-comment|/*out*/
-name|struct
 name|vattr
 modifier|*
 name|vap
 parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 name|DECL
 argument_list|(
 name|coda_getattr
@@ -977,6 +976,12 @@ argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
 comment|/* 	 * Send the open to venus. 	 */
+name|p
+operator|=
+name|curthread
+operator|->
+name|td_proc
+expr_stmt|;
 name|INIT_IN
 argument_list|(
 operator|&
@@ -1067,13 +1072,13 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-parameter_list|,
+parameter_list|)
+block|{
 name|struct
 name|proc
 modifier|*
 name|p
-parameter_list|)
-block|{
+decl_stmt|;
 name|DECL_NO_OUT
 argument_list|(
 name|coda_setattr
@@ -1087,6 +1092,12 @@ argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
 comment|/* 	 * Send the open to venus. 	 */
+name|p
+operator|=
+name|curthread
+operator|->
+name|td_proc
+expr_stmt|;
 name|INIT_IN
 argument_list|(
 operator|&

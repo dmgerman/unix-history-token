@@ -984,8 +984,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the file type on the server is inconsistent with 		 * what it was when we created the vnode, kill the 		 * bogus vnode now and fall through to the code below 		 * to create a new one with the right type. 		 */
@@ -1803,8 +1801,6 @@ operator|&
 name|va
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|smbfs_smb_close

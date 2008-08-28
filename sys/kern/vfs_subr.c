@@ -10601,8 +10601,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -18871,8 +18869,6 @@ argument_list|,
 name|curthread
 operator|->
 name|td_ucred
-argument_list|,
-name|curthread
 argument_list|)
 condition|)
 return|return
@@ -19212,9 +19208,9 @@ modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|thread
+name|ucred
 modifier|*
-name|td
+name|cred
 parameter_list|)
 block|{
 name|struct
@@ -19262,11 +19258,7 @@ argument_list|,
 operator|&
 name|atimeattr
 argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
+name|cred
 argument_list|)
 expr_stmt|;
 block|}

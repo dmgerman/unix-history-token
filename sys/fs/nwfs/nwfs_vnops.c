@@ -752,10 +752,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -792,10 +788,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1244,7 +1236,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1286,6 +1278,13 @@ name|VTONWFS
 argument_list|(
 name|vp
 argument_list|)
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
 decl_stmt|;
 name|struct
 name|nw_entry_info
@@ -1381,9 +1380,7 @@ argument_list|,
 operator|&
 name|fattr
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|,
 name|ap
 operator|->
@@ -1416,9 +1413,7 @@ argument_list|,
 operator|&
 name|fattr
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|,
 name|ap
 operator|->
@@ -1490,7 +1485,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1703,9 +1698,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -1752,10 +1745,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|np
@@ -2089,20 +2078,14 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|cnp
-operator|->
-name|cn_thread
 argument_list|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|fmode
 operator|=
 name|AR_READ
@@ -3043,20 +3026,14 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|cnp
-operator|->
-name|cn_thread
 argument_list|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -4158,6 +4135,7 @@ name|vpp
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|VOP_GETATTR
 argument_list|(
 name|vp
@@ -4168,11 +4146,7 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
-operator|==
-literal|0
 operator|&&
 name|vattr
 operator|.

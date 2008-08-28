@@ -4052,7 +4052,7 @@ parameter_list|(
 name|ap
 parameter_list|)
 define|\
-value|struct vattr va;						\ 	int error, osize, ooffset, noffset;				\ 									\ 	osize = ooffset = noffset = 0;					\ 	if (!VN_KNLIST_EMPTY((ap)->a_vp)) {				\ 		error = VOP_GETATTR((ap)->a_vp,&va, (ap)->a_cred,	\ 		    curthread);						\ 		if (error)						\ 			return (error);					\ 		ooffset = (ap)->a_uio->uio_offset;			\ 		osize = va.va_size;					\ 	}
+value|struct vattr va;						\ 	int error, osize, ooffset, noffset;				\ 									\ 	osize = ooffset = noffset = 0;					\ 	if (!VN_KNLIST_EMPTY((ap)->a_vp)) {				\ 		error = VOP_GETATTR((ap)->a_vp,&va, (ap)->a_cred);	\ 		if (error)						\ 			return (error);					\ 		ooffset = (ap)->a_uio->uio_offset;			\ 		osize = va.va_size;					\ 	}
 end_define
 
 begin_define
@@ -4382,9 +4382,9 @@ modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|thread
+name|ucred
 modifier|*
-name|td
+name|cred
 parameter_list|)
 function_decl|;
 end_function_decl

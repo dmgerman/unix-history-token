@@ -1787,7 +1787,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2009,7 +2009,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;

@@ -986,8 +986,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -1261,8 +1259,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -1942,8 +1938,6 @@ operator|&
 name|preat
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2127,8 +2121,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|postat_ret
@@ -2140,8 +2132,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2904,8 +2894,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -3589,8 +3577,6 @@ operator|&
 name|attr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -4169,8 +4155,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4924,8 +4908,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -5799,8 +5781,6 @@ operator|&
 name|forat
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -6100,8 +6080,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -7488,8 +7466,6 @@ operator|&
 name|forat
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -7885,8 +7861,6 @@ operator|&
 name|va
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -9298,8 +9272,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9641,8 +9613,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9711,8 +9681,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9765,8 +9733,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -9849,8 +9815,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -10916,8 +10880,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -11034,8 +10996,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -11645,8 +11605,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -11729,8 +11687,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -12882,8 +12838,6 @@ operator|&
 name|fdiraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -12918,8 +12872,6 @@ operator|&
 name|tdiraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -13489,8 +13441,6 @@ operator|&
 name|at
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -13743,8 +13693,6 @@ operator|&
 name|at
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|out2
@@ -13772,8 +13720,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -13856,8 +13802,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -14794,8 +14738,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -14858,8 +14800,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -15642,8 +15582,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -15673,8 +15611,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -15782,8 +15718,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -16465,8 +16399,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -16549,8 +16481,6 @@ operator|&
 name|diraft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -17186,8 +17116,6 @@ operator|&
 name|at
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|#
@@ -17433,8 +17361,6 @@ operator|&
 name|at
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -18714,8 +18640,6 @@ operator|&
 name|at
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|#
@@ -18935,8 +18859,6 @@ operator|&
 name|at
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -19532,8 +19454,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 condition|)
 block|{
@@ -20384,8 +20304,6 @@ operator|&
 name|bfor
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -20743,8 +20661,6 @@ operator|&
 name|aft
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -21117,8 +21033,6 @@ operator|&
 name|at
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -21732,8 +21646,6 @@ operator|&
 name|at
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -22223,8 +22135,6 @@ operator|&
 name|at
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -22670,8 +22580,6 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

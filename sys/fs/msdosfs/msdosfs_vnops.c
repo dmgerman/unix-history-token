@@ -967,7 +967,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1475,7 +1475,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1528,6 +1528,13 @@ name|ap
 operator|->
 name|a_cred
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -1538,7 +1545,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"msdosfs_setattr(): vp %p, vap %p, cred %p, p %p\n"
+literal|"msdosfs_setattr(): vp %p, vap %p, cred %p\n"
 argument_list|,
 name|ap
 operator|->
@@ -1547,10 +1554,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2051,9 +2054,7 @@ literal|0
 argument_list|,
 name|cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2117,9 +2118,7 @@ name|VADMIN
 argument_list|,
 name|cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2136,9 +2135,7 @@ name|VWRITE
 argument_list|,
 name|cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2153,9 +2150,7 @@ name|VADMIN
 argument_list|,
 name|cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 if|if

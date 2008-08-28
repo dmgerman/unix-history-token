@@ -1452,7 +1452,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1474,6 +1474,13 @@ init|=
 name|ap
 operator|->
 name|a_vap
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
 decl_stmt|;
 name|struct
 name|file
@@ -1651,9 +1658,7 @@ name|error
 operator|=
 name|fget
 argument_list|(
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|,
 name|fd
 argument_list|,
@@ -1689,24 +1694,18 @@ argument_list|,
 operator|&
 name|stb
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 name|fdrop
 argument_list|(
 name|fp
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1997,7 +1996,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2025,6 +2024,13 @@ name|struct
 name|file
 modifier|*
 name|fp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
 decl_stmt|;
 name|unsigned
 name|fd
@@ -2067,9 +2073,7 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|ap
-operator|->
-name|a_td
+name|td
 operator|->
 name|td_proc
 operator|->
@@ -2167,10 +2171,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -2190,9 +2190,7 @@ name|fdrop
 argument_list|(
 name|fp
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 return|return

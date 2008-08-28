@@ -764,10 +764,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -804,10 +800,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1143,7 +1135,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1241,9 +1233,7 @@ argument_list|(
 operator|&
 name|scred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|curthread
 argument_list|,
 name|ap
 operator|->
@@ -1333,7 +1323,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1398,6 +1388,13 @@ name|SSTOVC
 argument_list|(
 name|ssp
 argument_list|)
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
 decl_stmt|;
 name|u_quad_t
 name|tsize
@@ -1502,9 +1499,7 @@ argument_list|(
 operator|&
 name|scred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|,
 name|ap
 operator|->
@@ -1824,9 +1819,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1845,9 +1838,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1864,9 +1855,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 if|#
@@ -1910,9 +1899,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|,
 name|NULL
 argument_list|)
@@ -1923,7 +1910,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/*				error = smbfs_smb_setfattrNT(np, 0, mtime, atime,&scred); 				VOP_GETATTR(vp,&vattr, ap->a_cred, ap->a_td);*/
+comment|/*					error = smbfs_smb_setfattrNT(np, 0, 					    mtime, atime,&scred); 					VOP_GETATTR(vp,&vattr, ap->a_cred); */
 if|if
 condition|(
 name|mtime
@@ -1945,9 +1932,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2113,10 +2098,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|np
@@ -2430,10 +2411,6 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|cnp
-operator|->
-name|cn_thread
 argument_list|)
 operator|)
 condition|)
@@ -3260,10 +3237,6 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|cnp
-operator|->
-name|cn_thread
 argument_list|)
 operator|)
 condition|)
@@ -4136,8 +4109,6 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5305,8 +5276,6 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the file type on the server is inconsistent 		 * with what it was when we created the vnode, 		 * kill the bogus vnode now and fall through to 		 * the code below to create a new one with the 		 * right type. 		 */

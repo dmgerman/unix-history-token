@@ -5241,8 +5241,6 @@ operator|&
 name|vattr
 argument_list|,
 name|NOCRED
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 if|if

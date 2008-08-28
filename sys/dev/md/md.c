@@ -4650,8 +4650,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)

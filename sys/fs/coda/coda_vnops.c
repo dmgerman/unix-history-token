@@ -1505,8 +1505,6 @@ operator|&
 name|attr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 operator|==
 literal|0
@@ -1991,15 +1989,6 @@ name|ap
 operator|->
 name|a_cred
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
-decl_stmt|;
 comment|/* locals */
 name|struct
 name|vnode
@@ -2106,10 +2095,6 @@ operator|->
 name|c_fid
 argument_list|,
 name|cred
-argument_list|,
-name|td
-operator|->
-name|td_proc
 argument_list|,
 name|vap
 argument_list|)
@@ -2250,15 +2235,6 @@ name|ap
 operator|->
 name|a_cred
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
-decl_stmt|;
 comment|/* locals */
 name|struct
 name|vnode
@@ -2326,10 +2302,6 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|td
-operator|->
-name|td_proc
 argument_list|)
 expr_stmt|;
 if|if

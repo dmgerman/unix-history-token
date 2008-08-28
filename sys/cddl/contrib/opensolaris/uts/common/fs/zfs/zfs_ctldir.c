@@ -1075,7 +1075,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2761,7 +2761,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3360,10 +3360,6 @@ name|vpp
 parameter_list|,
 name|int
 name|lktype
-parameter_list|,
-name|kthread_t
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|VN_HOLD
@@ -3443,7 +3439,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3469,10 +3465,6 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3494,10 +3486,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 name|zfsctl_traverse_end
@@ -3550,8 +3538,6 @@ argument_list|,
 name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 if|if

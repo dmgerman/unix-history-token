@@ -5647,8 +5647,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -7466,11 +7464,6 @@ modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
 name|ucred
 modifier|*
 name|cred
@@ -7506,8 +7499,6 @@ operator|&
 name|va
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -7972,8 +7963,6 @@ operator|=
 name|can_hardlink
 argument_list|(
 name|vp
-argument_list|,
-name|td
 argument_list|,
 name|td
 operator|->
@@ -9847,8 +9836,6 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -13189,8 +13176,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -13841,8 +13826,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -14637,8 +14620,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -15703,6 +15684,7 @@ name|numtimes
 operator|<
 literal|3
 operator|&&
+operator|!
 name|VOP_GETATTR
 argument_list|(
 name|vp
@@ -15713,11 +15695,7 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
-operator|==
-literal|0
 operator|&&
 name|timespeccmp
 argument_list|(
@@ -15843,8 +15821,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -17066,8 +17042,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -21219,8 +21193,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -22425,8 +22397,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 ifdef|#

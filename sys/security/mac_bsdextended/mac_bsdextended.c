@@ -2156,8 +2156,6 @@ operator|&
 name|vap
 argument_list|,
 name|cred
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 if|if

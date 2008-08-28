@@ -5067,10 +5067,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5128,7 +5124,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct vop_getattr_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	struct vattr *a_vap; 	struct ucred *a_cred; 	struct thread *a_td; };
+unit|struct vop_getattr_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	struct vattr *a_vap; 	struct ucred *a_cred; };
 endif|#
 directive|endif
 end_endif
@@ -5354,7 +5350,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct vop_setattr_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	struct vattr *a_vap; 	struct ucred *a_cred; 	struct thread *a_td; };
+unit|struct vop_setattr_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	struct vattr *a_vap; 	struct ucred *a_cred; };
 endif|#
 directive|endif
 end_endif
@@ -5389,6 +5385,11 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|int
 name|c
 decl_stmt|,
@@ -5400,6 +5401,10 @@ decl_stmt|;
 name|gid_t
 name|gid
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|vap
 operator|=
 name|ap
@@ -5594,9 +5599,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5651,9 +5654,7 @@ name|error
 operator|=
 name|priv_check
 argument_list|(
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|,
 name|PRIV_MQ_ADMIN
 argument_list|)
@@ -5714,9 +5715,7 @@ name|error
 operator|=
 name|priv_check
 argument_list|(
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|,
 name|PRIV_MQ_ADMIN
 argument_list|)
@@ -5775,9 +5774,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 operator|)
 operator|&&
@@ -5805,9 +5802,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 operator|)
 operator|)

@@ -174,12 +174,6 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-comment|/*out*/
-name|struct
 name|vattr
 modifier|*
 name|vap
@@ -208,11 +202,6 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
 parameter_list|)
 function_decl|;
 end_function_decl

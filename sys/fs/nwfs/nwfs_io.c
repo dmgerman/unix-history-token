@@ -930,8 +930,6 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -966,8 +964,6 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1235,8 +1231,6 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

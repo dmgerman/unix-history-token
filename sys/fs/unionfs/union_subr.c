@@ -2517,8 +2517,6 @@ operator|&
 name|lva
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -3745,8 +3743,6 @@ argument_list|,
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -3930,8 +3926,6 @@ argument_list|,
 name|cn
 operator|.
 name|cn_cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4375,8 +4369,6 @@ operator|&
 name|lva
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5388,8 +5380,6 @@ operator|&
 name|uva
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5532,8 +5522,6 @@ operator|&
 name|va
 argument_list|,
 name|cred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=

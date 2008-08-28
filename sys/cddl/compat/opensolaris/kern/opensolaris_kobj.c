@@ -485,13 +485,6 @@ operator|->
 name|ptr
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-name|struct
 name|vattr
 name|va
 decl_stmt|;
@@ -516,11 +509,9 @@ argument_list|,
 operator|&
 name|va
 argument_list|,
-name|td
+name|curthread
 operator|->
 name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
