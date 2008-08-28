@@ -17,7 +17,7 @@ block|{
 name|BPF_STMT
 argument_list|(
 name|BPF_LDX
-operator||
+operator|+
 name|BPF_IMM
 argument_list|,
 literal|0xffffffff
@@ -26,7 +26,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|0
@@ -35,9 +35,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|30
@@ -50,7 +50,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|1
@@ -59,9 +59,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|28
@@ -74,7 +74,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|2
@@ -83,9 +83,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|26
@@ -98,7 +98,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|3
@@ -107,9 +107,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|24
@@ -122,7 +122,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|4
@@ -131,9 +131,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|22
@@ -146,7 +146,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|5
@@ -155,9 +155,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|20
@@ -170,7 +170,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|6
@@ -179,9 +179,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|18
@@ -194,7 +194,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|7
@@ -203,9 +203,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|16
@@ -218,7 +218,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|8
@@ -227,9 +227,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|14
@@ -242,7 +242,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|9
@@ -251,9 +251,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|12
@@ -266,7 +266,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|10
@@ -275,9 +275,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|10
@@ -290,7 +290,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|11
@@ -299,9 +299,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|8
@@ -314,7 +314,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|12
@@ -323,9 +323,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|6
@@ -338,7 +338,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|13
@@ -347,9 +347,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|4
@@ -362,7 +362,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|14
@@ -371,9 +371,9 @@ block|,
 name|BPF_JUMP
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JSET
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|2
@@ -386,7 +386,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|15
@@ -395,7 +395,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_RET
-operator||
+operator|+
 name|BPF_A
 argument_list|,
 literal|0
@@ -474,7 +474,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Expeced signal */
+comment|/* Expected signal */
 end_comment
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Test 0015:	BPF_JMP|BPF_JA  *  * $FreeBSD$  */
+comment|/*-  * Test 0015:	BPF_JMP+BPF_JA  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -17,7 +17,7 @@ block|{
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_IMM
 argument_list|,
 literal|0xc0decafe
@@ -26,7 +26,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_JMP
-operator||
+operator|+
 name|BPF_JA
 argument_list|,
 literal|1
@@ -35,7 +35,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_IMM
 argument_list|,
 literal|0xdeadc0de
@@ -123,7 +123,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Expeced signal */
+comment|/* Expected signal */
 end_comment
 
 begin_decl_stmt

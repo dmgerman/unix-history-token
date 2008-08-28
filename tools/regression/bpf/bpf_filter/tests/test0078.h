@@ -17,7 +17,7 @@ block|{
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_IMM
 argument_list|,
 literal|0xdeadc0de
@@ -33,7 +33,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_MISC
-operator||
+operator|+
 name|BPF_TXA
 argument_list|,
 literal|0
@@ -121,7 +121,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Expeced signal */
+comment|/* Expected signal */
 end_comment
 
 begin_ifdef

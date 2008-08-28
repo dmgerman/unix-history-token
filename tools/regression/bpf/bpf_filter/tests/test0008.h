@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Test 0008:	BPF_LDX|BPF_W|BPF_LEN& BPF_MISC|BPF_TXA  *  * $FreeBSD$  */
+comment|/*-  * Test 0008:	BPF_LDX+BPF_W+BPF_LEN& BPF_MISC+BPF_TXA  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -17,9 +17,9 @@ block|{
 name|BPF_STMT
 argument_list|(
 name|BPF_LDX
-operator||
+operator|+
 name|BPF_W
-operator||
+operator|+
 name|BPF_LEN
 argument_list|,
 literal|0
@@ -28,7 +28,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_MISC
-operator||
+operator|+
 name|BPF_TXA
 argument_list|,
 literal|0
@@ -110,7 +110,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Expeced signal */
+comment|/* Expected signal */
 end_comment
 
 begin_decl_stmt

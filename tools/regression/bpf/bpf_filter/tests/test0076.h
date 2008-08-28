@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Test 0076:	Check boundary conditions (BPF_LDX|BPF_MEM)  *  * $FreeBSD$  */
+comment|/*-  * Test 0076:	Check boundary conditions (BPF_LDX+BPF_MEM)  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -17,7 +17,7 @@ block|{
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_IMM
 argument_list|,
 literal|0xdeadc0de
@@ -26,7 +26,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LDX
-operator||
+operator|+
 name|BPF_MEM
 argument_list|,
 literal|0xffffffff
@@ -35,7 +35,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_MISC
-operator||
+operator|+
 name|BPF_TXA
 argument_list|,
 literal|0
@@ -123,7 +123,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Expeced signal */
+comment|/* Expected signal */
 end_comment
 
 begin_ifdef

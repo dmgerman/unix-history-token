@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Test 0028:	BPF_ALU|BPF_AND|BPF_X  *  * $FreeBSD$  */
+comment|/*-  * Test 0028:	BPF_ALU+BPF_AND+BPF_X  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -17,7 +17,7 @@ block|{
 name|BPF_STMT
 argument_list|(
 name|BPF_LD
-operator||
+operator|+
 name|BPF_IMM
 argument_list|,
 literal|0xdeadc0de
@@ -26,7 +26,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_LDX
-operator||
+operator|+
 name|BPF_IMM
 argument_list|,
 literal|0xc0decafe
@@ -35,9 +35,9 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_ALU
-operator||
+operator|+
 name|BPF_AND
-operator||
+operator|+
 name|BPF_X
 argument_list|,
 literal|0
@@ -46,7 +46,7 @@ block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_RET
-operator||
+operator|+
 name|BPF_A
 argument_list|,
 literal|0
@@ -125,7 +125,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Expeced signal */
+comment|/* Expected signal */
 end_comment
 
 begin_decl_stmt
