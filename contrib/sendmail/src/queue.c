@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.975 2007/06/18 20:08:40 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.977 2008/02/15 23:19:58 ca Exp $"
 argument_list|)
 end_macro
 
@@ -24819,7 +24819,7 @@ name|LOG_ERR
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"func=init_sem, sem_key=%ld, sm_sem_start=%d"
+literal|"func=init_sem, sem_key=%ld, sm_sem_start=%d, error=%s"
 argument_list|,
 operator|(
 name|long
@@ -24827,6 +24827,12 @@ operator|)
 name|SemKey
 argument_list|,
 name|SemId
+argument_list|,
+name|sm_errstring
+argument_list|(
+operator|-
+name|SemId
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;

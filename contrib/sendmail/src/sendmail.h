@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1052 2007/10/05 23:06:30 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1059 2008/02/15 23:19:58 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -9788,6 +9788,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MD_LOCAL
+value|'l'
+end_define
+
+begin_comment
+comment|/* like daemon, but localhost only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MD_VERIFY
 value|'v'
 end_define
@@ -9882,6 +9893,44 @@ end_define
 
 begin_comment
 comment|/* queue run */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_LOCAL_DAEMON
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|LocalDaemon
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_LOCAL_DAEMON */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LocalDaemon
+value|false
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_LOCAL_DAEMON */
 end_comment
 
 begin_comment
@@ -14125,6 +14174,43 @@ end_decl_stmt
 
 begin_comment
 comment|/* Throttle rejected RCPTs per SMTP message */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_BADRCPT_SHUTDOWN
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|BadRcptShutdown
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Shutdown connection for rejected RCPTs */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|BadRcptShutdownGood
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* above even when there are good RCPTs */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_BADRCPT_SHUTDOWN */
 end_comment
 
 begin_decl_stmt
@@ -18846,6 +18932,52 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|STARTTLS
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_tls_rd_tmo
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* STARTTLS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|set_tls_rd_tmo
+parameter_list|(
+name|rd_tmo
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* STARTTLS */
+end_comment
 
 begin_decl_stmt
 specifier|extern

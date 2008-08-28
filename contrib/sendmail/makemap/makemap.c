@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002, 2004, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: makemap.c,v 8.178 2007/05/11 18:45:39 ca Exp $"
+literal|"@(#)$Id: makemap.c,v 8.179 2008/04/14 02:06:16 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1559,7 +1559,7 @@ name|smioout
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"%.*s\t%.*s\n"
+literal|"%.*s%c%.*s\n"
 argument_list|,
 operator|(
 name|int
@@ -1575,6 +1575,16 @@ operator|)
 name|db_key
 operator|.
 name|data
+argument_list|,
+operator|(
+name|sep
+operator|!=
+literal|'\0'
+operator|)
+condition|?
+name|sep
+else|:
+literal|'\t'
 argument_list|,
 operator|(
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2004, 2006, 2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2004, 2006-2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.159 2007/04/23 22:22:50 ca Exp $"
+literal|"@(#)$Id: engine.c,v 8.162 2008/02/27 01:34:14 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4365,6 +4365,11 @@ return|return
 name|_SMFIS_ABORT
 return|;
 block|}
+name|fix_stm
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ctx

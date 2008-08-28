@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.678 2007/03/08 00:33:40 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.680 2008/02/14 00:20:26 ca Exp $"
 argument_list|)
 end_macro
 
@@ -5005,6 +5005,13 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
+name|LocalDaemon
+condition|?
+name|htonl
+argument_list|(
+name|INADDR_LOOPBACK
+argument_list|)
+else|:
 name|INADDR_ANY
 expr_stmt|;
 name|port
@@ -5043,6 +5050,10 @@ name|sin6
 operator|.
 name|sin6_addr
 operator|=
+name|LocalDaemon
+condition|?
+name|in6addr_loopback
+else|:
 name|in6addr_any
 expr_stmt|;
 name|port
@@ -8642,6 +8653,13 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
+name|LocalDaemon
+condition|?
+name|htonl
+argument_list|(
+name|INADDR_LOOPBACK
+argument_list|)
+else|:
 name|INADDR_ANY
 expr_stmt|;
 else|else
@@ -8699,6 +8717,10 @@ name|sin6
 operator|.
 name|sin6_addr
 operator|=
+name|LocalDaemon
+condition|?
+name|in6addr_loopback
+else|:
 name|in6addr_any
 expr_stmt|;
 else|else
@@ -13003,6 +13025,10 @@ condition|)
 block|{
 name|sm_syslog
 argument_list|(
+name|LocalDaemon
+condition|?
+name|LOG_WARNING
+else|:
 name|LOG_CRIT
 argument_list|,
 name|NOQID
@@ -13044,6 +13070,10 @@ condition|)
 block|{
 name|sm_syslog
 argument_list|(
+name|LocalDaemon
+condition|?
+name|LOG_WARNING
+else|:
 name|LOG_ALERT
 argument_list|,
 name|NOQID
