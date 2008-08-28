@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"test.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -29,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"test.h"
 end_include
 
 begin_comment
@@ -3650,6 +3650,7 @@ condition|(
 operator|!
 name|quiet_flag
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%d: %s\n"
@@ -3664,6 +3665,12 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Always explicitly chdir() in case the last test moved us to 	 * a strange place. 	 */
 if|if
 condition|(
