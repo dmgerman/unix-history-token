@@ -3114,6 +3114,10 @@ argument_list|(
 literal|"last acked>= chk on sent-Q"
 argument_list|)
 expr_stmt|;
+comment|/* to keep compiler happy */
+goto|goto
+name|start_again
+goto|;
 else|#
 directive|else
 name|SCTP_PRINTF
