@@ -2133,6 +2133,64 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|static
+name|u_short
+name|bpf_code_map
+index|[]
+init|=
+block|{
+literal|0x10ff
+block|,
+comment|/* 0x00-0x0f: 1111111100001000 */
+literal|0x3070
+block|,
+comment|/* 0x10-0x1f: 0000111000001100 */
+literal|0x3131
+block|,
+comment|/* 0x20-0x2f: 1000110010001100 */
+literal|0x3031
+block|,
+comment|/* 0x30-0x3f: 1000110000001100 */
+literal|0x3131
+block|,
+comment|/* 0x40-0x4f: 1000110010001100 */
+literal|0x1011
+block|,
+comment|/* 0x50-0x5f: 1000100000001000 */
+literal|0x1013
+block|,
+comment|/* 0x60-0x6f: 1100100000001000 */
+literal|0x1010
+block|,
+comment|/* 0x70-0x7f: 0000100000001000 */
+literal|0x0093
+block|,
+comment|/* 0x80-0x8f: 1100100100000000 */
+literal|0x0000
+block|,
+comment|/* 0x90-0x9f: 0000000000000000 */
+literal|0x0000
+block|,
+comment|/* 0xa0-0xaf: 0000000000000000 */
+literal|0x0002
+block|,
+comment|/* 0xb0-0xbf: 0100000000000000 */
+literal|0x0000
+block|,
+comment|/* 0xc0-0xcf: 0000000000000000 */
+literal|0x0000
+block|,
+comment|/* 0xd0-0xdf: 0000000000000000 */
+literal|0x0000
+block|,
+comment|/* 0xe0-0xef: 0000000000000000 */
+literal|0x0000
+comment|/* 0xf0-0xff: 0000000000000000 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Return true if the 'fcode' is a valid filter program.  * The constraints are that each jump be forward and to a valid  * code.  The code must terminate with either an accept or reject.  *  * The kernel needs to be able to verify an application's filter code.  * Otherwise, a bogus program could easily crash the system.  */
 end_comment
@@ -2200,7 +2258,6 @@ operator|++
 name|i
 control|)
 block|{
-comment|/* 		 * Check that that jumps are forward, and within 		 * the code block. 		 */
 name|p
 operator|=
 operator|&
@@ -2209,6 +2266,45 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* 		 * Check that the code is valid. 		 */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|code
+operator|&
+literal|0xff00
+operator|)
+operator|||
+operator|!
+operator|(
+name|bpf_code_map
+index|[
+name|p
+operator|->
+name|code
+operator|>>
+literal|4
+index|]
+operator|&
+operator|(
+literal|1
+operator|<<
+operator|(
+name|p
+operator|->
+name|code
+operator|&
+literal|0xf
+operator|)
+operator|)
+operator|)
+condition|)
+return|return
+literal|0
+return|;
+comment|/* 		 * Check that that jumps are forward, and within 		 * the code block. 		 */
 if|if
 condition|(
 name|BPF_CLASS
