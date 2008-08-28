@@ -2382,7 +2382,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|sctp_recover_sent_list
 parameter_list|(
