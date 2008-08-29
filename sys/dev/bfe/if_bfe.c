@@ -7098,8 +7098,6 @@ decl_stmt|;
 name|u_int32_t
 name|istat
 decl_stmt|,
-name|imask
-decl_stmt|,
 name|flag
 decl_stmt|;
 name|ifp
@@ -7122,19 +7120,10 @@ argument_list|,
 name|BFE_ISTAT
 argument_list|)
 expr_stmt|;
-name|imask
-operator|=
-name|CSR_READ_4
-argument_list|(
-name|sc
-argument_list|,
-name|BFE_IMASK
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Defer unsolicited interrupts - This is necessary because setting the 	 * chips interrupt mask register to 0 doesn't actually stop the 	 * interrupts 	 */
 name|istat
 operator|&=
-name|imask
+name|BFE_IMASK_DEF
 expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
@@ -7156,6 +7145,16 @@ comment|/* not expecting this interrupt, disregard it */
 if|if
 condition|(
 name|istat
+operator|==
+literal|0
+operator|||
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
 operator|==
 literal|0
 condition|)
@@ -7310,12 +7309,6 @@ expr_stmt|;
 comment|/* We have packets pending, fire them out */
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-operator|&&
 operator|!
 name|IFQ_DRV_IS_EMPTY
 argument_list|(
