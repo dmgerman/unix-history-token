@@ -5350,14 +5350,25 @@ name|uint32_t
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * NB: when space is zero we make one more trip around 		 * the loop to advance to the next mbuf where there is 		 * data.  This handles the case where there are 4*n 		 * bytes in an mbuf followed by<4 bytes in a later mbuf. 		 * By making an extra trip we'll drop out of the loop 		 * with m pointing at the mbuf with 3 bytes and space 		 * set as required by the remainder handling below. 		 */
 if|if
 condition|(
+name|data_len
+operator|==
+literal|0
+operator|||
+operator|(
 name|data_len
 operator|<
 sizeof|sizeof
 argument_list|(
 name|uint32_t
 argument_list|)
+operator|&&
+name|space
+operator|!=
+literal|0
+operator|)
 condition|)
 break|break;
 name|m
@@ -5612,6 +5623,22 @@ name|m_len
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Catch degenerate cases like mbuf[4*n+1 bytes] followed by 	 * mbuf[2 bytes].  I don't believe these should happen; if they 	 * do then we'll need more involved logic. 	 */
+name|KASSERT
+argument_list|(
+name|data_len
+operator|<=
+name|space
+argument_list|,
+operator|(
+literal|"not enough data, data_len %u space %u\n"
+operator|,
+name|data_len
+operator|,
+name|space
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Last block and padding (0x5a, 4..7 x 0) */
 switch|switch
 condition|(
