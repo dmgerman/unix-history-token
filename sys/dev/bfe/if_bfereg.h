@@ -3909,6 +3909,14 @@ decl_stmt|;
 name|u_int32_t
 name|bfe_flags
 decl_stmt|;
+define|#
+directive|define
+name|BFE_FLAG_DETACH
+value|0x4000
+define|#
+directive|define
+name|BFE_FLAG_LINK
+value|0x8000
 name|u_int32_t
 name|bfe_imask
 decl_stmt|;
@@ -3931,9 +3939,6 @@ name|u_int32_t
 name|bfe_tx_dma
 decl_stmt|,
 name|bfe_rx_dma
-decl_stmt|;
-name|u_int32_t
-name|bfe_link
 decl_stmt|;
 name|int
 name|bfe_watchdog_timer
