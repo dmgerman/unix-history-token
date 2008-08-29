@@ -2562,11 +2562,6 @@ argument_list|,
 literal|"failed to allocate DMA resources\n"
 argument_list|)
 expr_stmt|;
-name|bfe_release_resources
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ENXIO
