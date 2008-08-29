@@ -341,6 +341,13 @@ block|{
 name|size_t
 name|l
 decl_stmt|;
+name|tty_lock_assert
+argument_list|(
+name|tp
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX: Still allow character input when there's no space in the 	 * buffers, but we haven't entered the high watermark. This is 	 * to allow backspace characters to be inserted when in 	 * canonical mode. 	 */
 name|l
 operator|=
