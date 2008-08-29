@@ -131,8 +131,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUC_SIZE1
+value|roundup(CPUC_SIZE, CPU_CACHE_COHERENCE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUC_PADSIZE
-value|CPU_CACHE_COHERENCE_SIZE - CPUC_SIZE
+value|CPUC_SIZE1 - CPUC_SIZE
 end_define
 
 begin_typedef
