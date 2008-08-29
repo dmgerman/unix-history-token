@@ -45,6 +45,16 @@ begin_comment
 comment|/* Initial contents of argv[0] */
 end_comment
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|ProgName
+init|=
+literal|"sysinstall"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void

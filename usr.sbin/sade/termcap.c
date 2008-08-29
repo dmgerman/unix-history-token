@@ -151,7 +151,7 @@ name|DebugFD
 operator|=
 name|open
 argument_list|(
-literal|"sysinstall.debug"
+literal|"sade.debug"
 argument_list|,
 name|O_WRONLY
 operator||
