@@ -252,6 +252,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Maximum bpf program instructions */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bpf_maxinsns
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Internal helper functions */
 end_comment
 
@@ -2206,6 +2217,12 @@ decl_stmt|;
 comment|/* Check program for validity */
 if|if
 condition|(
+name|hp0
+operator|->
+name|bpf_prog_len
+operator|>
+name|bpf_maxinsns
+operator|||
 operator|!
 name|bpf_validate
 argument_list|(
