@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Test 0080:	Check uninitialized scratch memory.  *  * Note:	This behavior is not guaranteed with bpf_filter(9).  *  * $FreeBSD$  */
+comment|/*-  * Test 0080:	Check uninitialized scratch memory (only for JIT compiler).  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -14,6 +14,9 @@ name|pc
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|BPF_JIT_COMPILER
 name|BPF_STMT
 argument_list|(
 name|BPF_LDX
@@ -40,9 +43,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|30
-argument_list|,
 literal|0
+argument_list|,
+literal|29
 argument_list|,
 literal|0
 argument_list|)
@@ -64,9 +67,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|28
-argument_list|,
 literal|0
+argument_list|,
+literal|27
 argument_list|,
 literal|0
 argument_list|)
@@ -88,9 +91,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|26
-argument_list|,
 literal|0
+argument_list|,
+literal|25
 argument_list|,
 literal|0
 argument_list|)
@@ -112,9 +115,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|24
-argument_list|,
 literal|0
+argument_list|,
+literal|23
 argument_list|,
 literal|0
 argument_list|)
@@ -136,9 +139,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|22
-argument_list|,
 literal|0
+argument_list|,
+literal|21
 argument_list|,
 literal|0
 argument_list|)
@@ -160,9 +163,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|20
-argument_list|,
 literal|0
+argument_list|,
+literal|19
 argument_list|,
 literal|0
 argument_list|)
@@ -184,9 +187,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|18
-argument_list|,
 literal|0
+argument_list|,
+literal|17
 argument_list|,
 literal|0
 argument_list|)
@@ -208,9 +211,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|16
-argument_list|,
 literal|0
+argument_list|,
+literal|15
 argument_list|,
 literal|0
 argument_list|)
@@ -232,9 +235,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|14
-argument_list|,
 literal|0
+argument_list|,
+literal|13
 argument_list|,
 literal|0
 argument_list|)
@@ -256,9 +259,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|12
-argument_list|,
 literal|0
+argument_list|,
+literal|11
 argument_list|,
 literal|0
 argument_list|)
@@ -280,9 +283,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|10
-argument_list|,
 literal|0
+argument_list|,
+literal|9
 argument_list|,
 literal|0
 argument_list|)
@@ -304,9 +307,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|8
-argument_list|,
 literal|0
+argument_list|,
+literal|7
 argument_list|,
 literal|0
 argument_list|)
@@ -328,9 +331,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|6
-argument_list|,
 literal|0
+argument_list|,
+literal|5
 argument_list|,
 literal|0
 argument_list|)
@@ -352,9 +355,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|4
-argument_list|,
 literal|0
+argument_list|,
+literal|3
 argument_list|,
 literal|0
 argument_list|)
@@ -376,9 +379,9 @@ name|BPF_JSET
 operator|+
 name|BPF_X
 argument_list|,
-literal|2
-argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -392,6 +395,19 @@ argument_list|,
 literal|15
 argument_list|)
 block|,
+else|#
+directive|else
+name|BPF_STMT
+argument_list|(
+name|BPF_LD
+operator|+
+name|BPF_IMM
+argument_list|,
+literal|0
+argument_list|)
+block|,
+endif|#
+directive|endif
 name|BPF_STMT
 argument_list|(
 name|BPF_RET
