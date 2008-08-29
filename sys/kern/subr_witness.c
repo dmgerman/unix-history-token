@@ -2158,7 +2158,7 @@ name|char
 modifier|*
 name|w_notrunning
 init|=
-literal|"Witness not running, witness_watch == 0\n"
+literal|"Witness not running\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3722,8 +3722,8 @@ comment|/* 	 * If we shouldn't watch this lock, then just clear lo_witness. 	 * 
 if|if
 condition|(
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|panicstr
 operator|!=
@@ -4520,8 +4520,8 @@ block|{
 if|if
 condition|(
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|panicstr
 operator|!=
@@ -4714,8 +4714,8 @@ condition|(
 name|witness_cold
 operator|||
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|lock
 operator|->
@@ -5908,7 +5908,8 @@ name|witness_cold
 operator|||
 name|witness_watch
 operator|==
-literal|0
+operator|-
+literal|1
 operator|||
 name|lock
 operator|->
@@ -6236,8 +6237,8 @@ operator|==
 name|NULL
 operator|||
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|panicstr
 operator|!=
@@ -6476,8 +6477,8 @@ operator|==
 name|NULL
 operator|||
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|panicstr
 operator|!=
@@ -6721,10 +6722,6 @@ if|if
 condition|(
 name|witness_cold
 operator|||
-name|witness_watch
-operator|==
-literal|0
-operator|||
 name|lock
 operator|->
 name|lo_witness
@@ -6845,6 +6842,13 @@ goto|goto
 name|found
 goto|;
 block|}
+comment|/* 	 * When disabling WITNESS through witness_watch we could end up in 	 * having registered locks in the locks list queue. 	 * We have to make sure we flush these queues, so just search for 	 * eventual registered locks and remove them. 	 */
+if|if
+condition|(
+name|witness_watch
+operator|>
+literal|0
+condition|)
 name|panic
 argument_list|(
 literal|"lock (%s) %s not locked @ %s:%d"
@@ -6862,6 +6866,8 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+else|else
+return|return;
 name|found
 label|:
 comment|/* First, check for shared/exclusive mismatches. */
@@ -6875,6 +6881,10 @@ operator|&
 name|LI_EXCLUSIVE
 operator|)
 operator|!=
+literal|0
+operator|&&
+name|witness_watch
+operator|>
 literal|0
 operator|&&
 operator|(
@@ -6932,6 +6942,10 @@ operator|&
 name|LI_EXCLUSIVE
 operator|)
 operator|==
+literal|0
+operator|&&
+name|witness_watch
+operator|>
 literal|0
 operator|&&
 operator|(
@@ -7352,8 +7366,8 @@ condition|(
 name|witness_cold
 operator|||
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|panicstr
 operator|!=
@@ -7664,8 +7678,8 @@ condition|(
 name|witness_cold
 operator|||
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|lock
 operator|->
@@ -7714,8 +7728,8 @@ condition|(
 name|witness_cold
 operator|||
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|lock
 operator|->
@@ -7782,8 +7796,8 @@ expr_stmt|;
 if|if
 condition|(
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|panicstr
 operator|!=
@@ -8428,7 +8442,8 @@ argument_list|)
 expr_stmt|;
 name|witness_watch
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -8486,7 +8501,8 @@ argument_list|)
 expr_stmt|;
 name|witness_watch
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -8764,7 +8780,8 @@ argument_list|)
 expr_stmt|;
 name|witness_watch
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 return|return
@@ -9025,8 +9042,8 @@ expr_stmt|;
 if|if
 condition|(
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 condition|)
 block|{
 name|mtx_unlock_spin
@@ -9052,7 +9069,8 @@ condition|)
 block|{
 name|witness_watch
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -9194,7 +9212,8 @@ if|if
 condition|(
 name|witness_watch
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -9220,7 +9239,8 @@ condition|)
 block|{
 name|witness_watch
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -9800,8 +9820,8 @@ operator|==
 name|NULL
 operator|||
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|panicstr
 operator|!=
@@ -9946,8 +9966,8 @@ operator|==
 name|NULL
 operator|||
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|panicstr
 operator|!=
@@ -10094,8 +10114,8 @@ operator|==
 name|NULL
 operator|||
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 operator|||
 name|panicstr
 operator|!=
@@ -10487,8 +10507,8 @@ expr_stmt|;
 if|if
 condition|(
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 condition|)
 return|return;
 name|witness_list_locks
@@ -10745,8 +10765,8 @@ expr_stmt|;
 if|if
 condition|(
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 condition|)
 block|{
 name|error
@@ -11497,8 +11517,8 @@ decl_stmt|;
 if|if
 condition|(
 name|witness_watch
-operator|==
-literal|0
+operator|<
+literal|1
 condition|)
 block|{
 name|error
@@ -11695,10 +11715,6 @@ name|error
 decl_stmt|,
 name|value
 decl_stmt|;
-name|value
-operator|=
-name|witness_watch
-expr_stmt|;
 name|error
 operator|=
 name|sysctl_handle_int
@@ -11733,19 +11749,24 @@ return|;
 if|if
 condition|(
 name|value
-operator|==
-name|witness_watch
-condition|)
-return|return
+operator|>
+literal|1
+operator|||
+name|value
+operator|<
+operator|-
+literal|1
+operator|||
 operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
+name|witness_watch
+operator|==
+operator|-
+literal|1
+operator|&&
 name|value
 operator|!=
-literal|0
+name|witness_watch
+operator|)
 condition|)
 return|return
 operator|(
@@ -11754,7 +11775,7 @@ operator|)
 return|;
 name|witness_watch
 operator|=
-literal|0
+name|value
 expr_stmt|;
 return|return
 operator|(
