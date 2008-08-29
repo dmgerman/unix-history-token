@@ -2674,6 +2674,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CISS_TL_PERF_INTR_OPQ
+value|(CISS_TL_SIMPLE_INTR_OPQ_SA5 | CISS_TL_SIMPLE_INTR_OPQ_SA5B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_TL_PERF_INTR_MSI
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|CISS_TL_PERF_POST_CMD
 parameter_list|(
 name|sc
@@ -2717,10 +2731,6 @@ name|CISS_MSI_COUNT
 value|4
 end_define
 
-begin_comment
-comment|/*  * XXX Here we effectively trust the BIOS to set the IMR correctly.  But if  * we don't trust it, will we get into trouble with wrongly assuming what it  * should be?  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2729,7 +2739,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {								\ 	(sc)->ciss_interrupt_mask =					\ 	     CISS_TL_SIMPLE_READ(sc, CISS_TL_SIMPLE_IMR);		\ 	CISS_TL_SIMPLE_WRITE(sc, CISS_TL_SIMPLE_IMR, ~0);		\     } while (0)
+value|CISS_TL_SIMPLE_WRITE(sc, CISS_TL_SIMPLE_IMR, \ 			     CISS_TL_SIMPLE_READ(sc, CISS_TL_SIMPLE_IMR) | (sc)->ciss_interrupt_mask)
 end_define
 
 begin_define
@@ -2740,7 +2750,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|CISS_TL_SIMPLE_WRITE(sc, CISS_TL_SIMPLE_IMR, (sc)->ciss_interrupt_mask)
+value|CISS_TL_SIMPLE_WRITE(sc, CISS_TL_SIMPLE_IMR, \ 			     CISS_TL_SIMPLE_READ(sc, CISS_TL_SIMPLE_IMR)& ~(sc)->ciss_interrupt_mask)
 end_define
 
 begin_endif
