@@ -316,10 +316,12 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|EXTRACT_LONG
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 return|;
 block|}
 name|m0
