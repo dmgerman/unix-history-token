@@ -69,7 +69,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* deadline = pri + (lbolt>> time_shift) */
+comment|/* deadline = pri + (LBOLT>> time_shift) */
 end_comment
 
 begin_decl_stmt
