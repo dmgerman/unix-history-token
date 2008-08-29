@@ -1101,12 +1101,6 @@ begin_comment
 comment|/* ... */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_comment
 comment|/* Hardware extension mode register for RSB-2000/3000. */
 end_comment
@@ -1159,11 +1153,6 @@ directive|define
 name|EMR_EFMODE
 value|0x80
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
