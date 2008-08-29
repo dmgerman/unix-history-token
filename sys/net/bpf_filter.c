@@ -174,7 +174,7 @@ parameter_list|,
 name|k
 parameter_list|)
 define|\
-value|{ \ 	register int len = m->m_len; \  \ 	while (k>= len) { \ 		k -= len; \ 		m = m->m_next; \ 		if (m == 0) \ 			return 0; \ 		len = m->m_len; \ 	} \ }
+value|{ \ 	register int len = m->m_len; \  \ 	while (k>= len) { \ 		k -= len; \ 		m = m->m_next; \ 		if (m == 0) \ 			return (0); \ 		len = m->m_len; \ 	} \ }
 end_define
 
 begin_function_decl
@@ -375,6 +375,7 @@ case|:
 return|return
 operator|(
 operator|(
+operator|(
 name|u_int32_t
 operator|)
 name|cp
@@ -416,6 +417,7 @@ name|np
 index|[
 literal|2
 index|]
+operator|)
 return|;
 case|case
 literal|2
@@ -423,6 +425,7 @@ case|:
 return|return
 operator|(
 operator|(
+operator|(
 name|u_int32_t
 operator|)
 name|cp
@@ -464,9 +467,11 @@ name|np
 index|[
 literal|1
 index|]
+operator|)
 return|;
 default|default:
 return|return
+operator|(
 operator|(
 operator|(
 name|u_int32_t
@@ -510,6 +515,7 @@ name|np
 index|[
 literal|0
 index|]
+operator|)
 return|;
 block|}
 name|bad
@@ -776,7 +782,9 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 else|#
 directive|else
@@ -855,7 +863,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|A
 operator|=
@@ -881,7 +891,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 continue|continue;
 else|#
@@ -987,7 +999,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|A
 operator|=
@@ -1010,7 +1024,9 @@ continue|continue;
 else|#
 directive|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 endif|#
 directive|endif
@@ -1062,7 +1078,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|m
 operator|=
@@ -1097,7 +1115,9 @@ continue|continue;
 else|#
 directive|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 endif|#
 directive|endif
@@ -1334,7 +1354,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|A
 operator|=
@@ -1434,7 +1456,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|m
 operator|=
@@ -1520,7 +1544,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|m
 operator|=
@@ -1561,7 +1587,9 @@ continue|continue;
 else|#
 directive|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 endif|#
 directive|endif
@@ -1924,7 +1952,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|A
 operator|/=
@@ -2211,19 +2241,15 @@ begin_function
 name|int
 name|bpf_validate
 parameter_list|(
-name|f
-parameter_list|,
-name|len
-parameter_list|)
 specifier|const
 name|struct
 name|bpf_insn
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2244,7 +2270,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* An empty filter means accept all. */
 if|if
@@ -2254,7 +2282,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -2290,7 +2320,9 @@ name|code
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* 		 * Check that that jumps are forward, and within 		 * the code block. 		 */
 if|if
@@ -2362,7 +2394,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 continue|continue;
 block|}
@@ -2411,7 +2445,9 @@ operator|>=
 name|BPF_MEMWORDS
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 continue|continue;
 block|}
@@ -2437,10 +2473,13 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|BPF_CLASS
 argument_list|(
 name|f
@@ -2454,6 +2493,7 @@ name|code
 argument_list|)
 operator|==
 name|BPF_RET
+operator|)
 return|;
 block|}
 end_function
