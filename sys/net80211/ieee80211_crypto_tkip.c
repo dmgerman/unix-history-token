@@ -5631,7 +5631,7 @@ operator|<=
 name|space
 argument_list|,
 operator|(
-literal|"not enough data, data_len %u space %u\n"
+literal|"not enough data, data_len %zu space %u\n"
 operator|,
 name|data_len
 operator|,
