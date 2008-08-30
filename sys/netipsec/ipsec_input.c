@@ -276,6 +276,23 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ENC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/if_enc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2180,6 +2197,21 @@ comment|/* record data transfer */
 ifdef|#
 directive|ifdef
 name|DEV_ENC
+name|encif
+operator|->
+name|if_ipackets
+operator|++
+expr_stmt|;
+name|encif
+operator|->
+name|if_ibytes
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 comment|/* 	 * Pass the mbuf to enc0 for bpf and pfil. We will filter the IPIP 	 * packet later after it has been decapsulated. 	 */
 name|ipsec_bpf
 argument_list|(
