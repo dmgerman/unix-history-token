@@ -4704,6 +4704,7 @@ operator|&
 name|TF_NOOPT
 operator|)
 expr_stmt|;
+comment|/* By the time we drop the lock these should no longer be used. */
 name|so
 operator|=
 name|NULL
