@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_define
@@ -64,7 +64,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.963 2007/06/29 20:07:37 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.967 2008/03/31 16:32:13 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1117,6 +1117,16 @@ name|SUBMIT_UNKNOWN
 expr_stmt|;
 if|#
 directive|if
+name|_FFR_LOCAL_DAEMON
+name|LocalDaemon
+operator|=
+name|false
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LOCAL_DAEMON */
+if|#
+directive|if
 name|XDEBUG
 name|checkfd012
 argument_list|(
@@ -1506,6 +1516,24 @@ operator|=
 name|j
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_LOCAL_DAEMON
+case|case
+name|MD_LOCAL
+case|:
+name|OpMode
+operator|=
+name|MD_DAEMON
+expr_stmt|;
+name|LocalDaemon
+operator|=
+name|true
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_LOCAL_DAEMON */
 case|case
 name|MD_FREEZE
 case|:

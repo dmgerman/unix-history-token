@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 2003-2004, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Jose Marcio Martins da Cruz - Ecole des Mines de Paris  *   Jose-Marcio.Martins@ensmp.fr  */
+comment|/*  *  Copyright (c) 2003-2004, 2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Jose Marcio Martins da Cruz - Ecole des Mines de Paris  *   Jose-Marcio.Martins@ensmp.fr  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: worker.c,v 8.9 2006/12/18 18:26:51 ca Exp $"
+literal|"@(#)$Id: worker.c,v 8.10 2007/12/03 22:06:05 ca Exp $"
 argument_list|)
 end_macro
 
@@ -803,19 +803,6 @@ return|return
 name|MI_FAILURE
 return|;
 block|}
-name|POOL_LEV_DPRINTF
-argument_list|(
-literal|4
-argument_list|,
-operator|(
-literal|"PIPE r=[%d] w=[%d]"
-operator|,
-name|RD_PIPE
-operator|,
-name|WR_PIPE
-operator|)
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)

@@ -34,7 +34,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"$Id: sm_resolve.c,v 8.35 2007/06/25 16:20:14 ca Exp $"
+literal|"$Id: sm_resolve.c,v 8.36 2008/02/11 23:04:16 ca Exp $"
 argument_list|)
 end_macro
 
@@ -409,7 +409,8 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|ushort
+name|unsigned
+name|short
 name|ans_cnt
 decl_stmt|,
 name|ui
@@ -575,7 +576,8 @@ operator|=
 name|ntohs
 argument_list|(
 operator|(
-name|ushort
+name|unsigned
+name|short
 operator|)
 name|r
 operator|->
