@@ -4520,7 +4520,8 @@ block|{
 if|if
 condition|(
 name|witness_watch
-operator|<
+operator|==
+operator|-
 literal|1
 operator|||
 name|panicstr
@@ -4577,6 +4578,8 @@ expr_stmt|;
 comment|/* 	 * If we already have either an explicit or implied lock order that 	 * is the other way around, then return an error. 	 */
 if|if
 condition|(
+name|witness_watch
+operator|&&
 name|isitmydescendant
 argument_list|(
 name|lock2
@@ -6237,7 +6240,8 @@ operator|==
 name|NULL
 operator|||
 name|witness_watch
-operator|<
+operator|==
+operator|-
 literal|1
 operator|||
 name|panicstr
@@ -6259,6 +6263,11 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|witness_watch
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -6317,6 +6326,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 name|instance
 operator|=
 name|find_instance
@@ -6351,6 +6361,11 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|witness_watch
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -6415,6 +6430,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 name|instance
 operator|->
 name|li_flags
@@ -6477,7 +6493,8 @@ operator|==
 name|NULL
 operator|||
 name|witness_watch
-operator|<
+operator|==
+operator|-
 literal|1
 operator|||
 name|panicstr
@@ -6499,6 +6516,11 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|witness_watch
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -6557,6 +6579,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 name|instance
 operator|=
 name|find_instance
@@ -6591,6 +6614,11 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|witness_watch
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -6655,6 +6683,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 name|instance
 operator|->
 name|li_flags
@@ -6842,7 +6871,7 @@ goto|goto
 name|found
 goto|;
 block|}
-comment|/* 	 * When disabling WITNESS through witness_watch we could end up in 	 * having registered locks in the locks list queue. 	 * We have to make sure we flush these queues, so just search for 	 * eventual registered locks and remove them. 	 */
+comment|/* 	 * When disabling WITNESS through witness_watch we could end up in 	 * having registered locks in the td_sleeplocks queue. 	 * We have to make sure we flush these queues, so just search for 	 * eventual register locks and remove them. 	 */
 if|if
 condition|(
 name|witness_watch
@@ -7796,7 +7825,8 @@ expr_stmt|;
 if|if
 condition|(
 name|witness_watch
-operator|<
+operator|==
+operator|-
 literal|1
 operator|||
 name|panicstr
@@ -9042,7 +9072,8 @@ expr_stmt|;
 if|if
 condition|(
 name|witness_watch
-operator|<
+operator|==
+operator|-
 literal|1
 condition|)
 block|{
@@ -9820,7 +9851,8 @@ operator|==
 name|NULL
 operator|||
 name|witness_watch
-operator|<
+operator|==
+operator|-
 literal|1
 operator|||
 name|panicstr
@@ -9966,7 +9998,8 @@ operator|==
 name|NULL
 operator|||
 name|witness_watch
-operator|<
+operator|==
+operator|-
 literal|1
 operator|||
 name|panicstr
@@ -11715,6 +11748,10 @@ name|error
 decl_stmt|,
 name|value
 decl_stmt|;
+name|value
+operator|=
+name|witness_watch
+expr_stmt|;
 name|error
 operator|=
 name|sysctl_handle_int
