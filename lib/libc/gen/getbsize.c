@@ -300,6 +300,10 @@ name|n
 operator|=
 literal|512
 expr_stmt|;
+name|max
+operator|=
+name|MAXB
+expr_stmt|;
 name|mul
 operator|=
 literal|1
