@@ -2422,10 +2422,16 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|drm_drawable_free_all
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|DRM_LOCK
+argument_list|()
 expr_stmt|;
 comment|/* Clear AGP information */
 if|if
