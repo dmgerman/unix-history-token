@@ -382,7 +382,35 @@ name|pcpu
 modifier|*
 name|pc
 parameter_list|)
-block|{ }
+block|{
+name|db_printf
+argument_list|(
+literal|"PPC: hwref   = %#x\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_hwref
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"PPC: ipimask = %#x\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_ipimask
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"PPC: pir     = %#x\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_pir
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 end_unit
