@@ -393,16 +393,18 @@ argument_list|)
 expr_stmt|;
 name|failure
 argument_list|(
-literal|"Old bug: if no atime specified, atime got set to Jan 1, 1970"
+literal|"No atime was specified, so atime should get set to mtime"
 argument_list|)
 expr_stmt|;
-name|assert
+name|assertEqualInt
 argument_list|(
 name|st
 operator|.
 name|st_atime
-operator|!=
-literal|0
+argument_list|,
+name|st
+operator|.
+name|st_mtime
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
