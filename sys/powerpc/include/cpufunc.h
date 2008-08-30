@@ -245,6 +245,19 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|void
+name|powerpc_sync
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile ("sync");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|register_t
 name|intr_disable
 parameter_list|(
