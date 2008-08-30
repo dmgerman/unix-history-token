@@ -2948,7 +2948,7 @@ name|fscanf
 argument_list|(
 name|f
 argument_list|,
-literal|" %1024s "
+literal|" %1023s "
 argument_list|,
 name|word
 argument_list|)
