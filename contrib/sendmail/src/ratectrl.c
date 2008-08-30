@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ratectrl.c,v 8.11 2006/08/15 23:24:57 ca Exp $"
+literal|"@(#)$Id: ratectrl.c,v 8.12 2008/02/11 22:56:05 ca Exp $"
 argument_list|)
 end_macro
 
@@ -234,7 +234,7 @@ name|NOQID
 argument_list|,
 literal|"global connection rate: %d"
 argument_list|,
-name|globalRate
+name|totalrate
 argument_list|)
 expr_stmt|;
 endif|#

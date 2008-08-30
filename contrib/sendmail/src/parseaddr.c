@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.401 2007/09/27 23:33:59 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.403 2008/02/08 02:27:35 ca Exp $"
 argument_list|)
 end_macro
 
@@ -7108,6 +7108,9 @@ decl_stmt|;
 name|int
 name|endtoken
 decl_stmt|;
+name|bool
+name|external
+decl_stmt|;
 name|STAB
 modifier|*
 name|map
@@ -7636,6 +7639,12 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|external
+operator|=
+name|replac
+operator|!=
+name|NULL
+expr_stmt|;
 comment|/* if no replacement, use default */
 if|if
 condition|(
@@ -7726,7 +7735,11 @@ argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
+name|external
+condition|?
 name|NULL
+else|:
+name|IntTokenTab
 argument_list|,
 name|false
 argument_list|)
@@ -10409,7 +10422,7 @@ decl_stmt|;
 name|natomtok
 operator|=
 operator|(
-name|ExtTokenTab
+name|IntTokenTab
 index|[
 operator|*
 operator|*

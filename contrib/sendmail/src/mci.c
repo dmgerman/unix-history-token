@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.218 2006/08/15 23:24:57 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.221 2007/11/13 23:44:25 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -4219,14 +4219,13 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* 		**  Reserve space for trailing '/', at least one 		**  character, and '\0' 		*/
 name|len
 operator|=
 sizeof|sizeof
 argument_list|(
 name|newpath
 argument_list|)
-operator|-
-name|MAXNAMLEN
 operator|-
 literal|3
 expr_stmt|;
@@ -4244,6 +4243,11 @@ operator|>=
 name|len
 condition|)
 block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -4259,6 +4263,18 @@ literal|"mci_traverse: path \"%s\" too long"
 argument_list|,
 name|pathname
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|closedir
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 return|return
 operator|-
@@ -4279,6 +4295,19 @@ name|newptr
 operator|++
 operator|=
 literal|'/'
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|newpath
+argument_list|)
+operator|-
+operator|(
+name|newptr
+operator|-
+name|newpath
+operator|)
 expr_stmt|;
 comment|/* 		**  repeat until no file has been removed 		**  this may become ugly when several files "expire" 		**  during these loops, but it's better than doing 		**  a rewinddir() inside the inner loop 		*/
 do|do
@@ -4315,9 +4344,8 @@ operator|==
 literal|'.'
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|sm_strlcpy
 argument_list|(
 name|newptr
@@ -4326,18 +4354,42 @@ name|e
 operator|->
 name|d_name
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|newpath
+name|len
 argument_list|)
-operator|-
-operator|(
+operator|>=
+name|len
+condition|)
+block|{
+comment|/* Skip truncated copies */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|56
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+block|{
+operator|*
 name|newptr
-operator|-
+operator|=
+literal|'\0'
+expr_stmt|;
+name|sm_dprintf
+argument_list|(
+literal|"mci_traverse: path \"%s%s\" too long"
+argument_list|,
 name|newpath
-operator|)
+argument_list|,
+name|e
+operator|->
+name|d_name
 argument_list|)
 expr_stmt|;
+block|}
+continue|continue;
+block|}
 if|if
 condition|(
 name|StopRequest
