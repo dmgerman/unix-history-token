@@ -3413,6 +3413,10 @@ name|unload
 operator|!=
 name|NULL
 condition|)
+block|{
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
 name|dev
 operator|->
 name|driver
@@ -3422,6 +3426,10 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
+block|}
 name|delete_unrhdr
 argument_list|(
 name|dev
