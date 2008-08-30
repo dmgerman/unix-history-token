@@ -546,11 +546,13 @@ name|callframe
 modifier|*
 name|cf
 decl_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"cpu_set_fork_handler: called with td=%08x func=%08x arg=%08x"
+literal|"%s called with td=%08x func=%08x arg=%08x"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|u_int
@@ -1118,11 +1120,9 @@ name|stack
 operator|->
 name|ss_size
 operator|-
-literal|2
-operator|*
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint64_t
 argument_list|)
 operator|)
 operator|&
