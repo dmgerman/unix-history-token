@@ -3452,7 +3452,9 @@ condition|(
 name|powerpc_pow_enabled
 condition|)
 block|{
-asm|__asm __volatile("sync");
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
 name|mtmsr
 argument_list|(
 name|msr
