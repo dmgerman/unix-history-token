@@ -140,6 +140,12 @@ name|archive_write_set_format_cpio
 block|}
 block|,
 block|{
+literal|"mtree"
+block|,
+name|archive_write_set_format_mtree
+block|}
+block|,
+block|{
 literal|"newc"
 block|,
 name|archive_write_set_format_cpio_newc

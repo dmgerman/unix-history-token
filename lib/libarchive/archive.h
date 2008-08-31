@@ -1431,6 +1431,15 @@ name|archive
 modifier|*
 parameter_list|)
 function_decl|;
+name|__LA_DECL
+name|int
+name|archive_write_set_format_mtree
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* TODO: int archive_write_set_format_old_tar(struct archive *); */
 name|__LA_DECL
 name|int

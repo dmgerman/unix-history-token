@@ -109,6 +109,12 @@ name|archive_write_set_format_cpio
 block|}
 block|,
 block|{
+name|ARCHIVE_FORMAT_MTREE
+block|,
+name|archive_write_set_format_mtree
+block|}
+block|,
+block|{
 name|ARCHIVE_FORMAT_SHAR
 block|,
 name|archive_write_set_format_shar
