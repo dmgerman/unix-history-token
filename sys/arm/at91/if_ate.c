@@ -878,7 +878,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * No MAC address configured. Generate the fake one. 		 */
+comment|/* 		 * No MAC address configured. Generate the random one. 		 */
 if|if
 condition|(
 name|bootverbose
@@ -887,7 +887,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Generating fake ethernet address.\n"
+literal|"Generating random ethernet address.\n"
 argument_list|)
 expr_stmt|;
 name|rnd
@@ -901,7 +901,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0x00
+literal|0x02
 expr_stmt|;
 name|eaddr
 index|[
