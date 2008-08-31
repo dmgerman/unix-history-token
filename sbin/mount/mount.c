@@ -2882,7 +2882,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|ret
 operator|)
 return|;
 block|}
