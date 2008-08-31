@@ -2751,7 +2751,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENOTTY
+name|EIO
 operator|)
 return|;
 block|}
