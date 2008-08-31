@@ -3157,33 +3157,6 @@ name|mode
 operator||=
 name|S_IFLNK
 expr_stmt|;
-comment|/* This is a cosmetic change, symlinks do not have a mode. */
-if|if
-condition|(
-name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_NOSYMFOLLOW
-condition|)
-name|sb
-operator|->
-name|st_mode
-operator|&=
-operator|~
-name|ACCESSPERMS
-expr_stmt|;
-comment|/* 0000 */
-else|else
-name|sb
-operator|->
-name|st_mode
-operator||=
-name|ACCESSPERMS
-expr_stmt|;
-comment|/* 0777 */
 break|break;
 case|case
 name|VSOCK
