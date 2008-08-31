@@ -706,7 +706,7 @@ name|u_int
 name|gidset_size
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|struct
