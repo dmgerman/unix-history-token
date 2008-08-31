@@ -2686,7 +2686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Store a path as given by the user process for auditing into the audit  * record stored on the user thread. This function will allocate the memory  * to store the path info if not already available. This memory will be freed  * when the audit record is freed.  *  * XXXAUDIT: Possibly assert that the memory isn't already allocated?  */
+comment|/*  * Store a path as given by the user process for auditing into the audit  * record stored on the user thread.  This function will allocate the memory  * to store the path info if not already available.  This memory will be  * freed when the audit record is freed.  *  * XXXAUDIT: Possibly assert that the memory isn't already allocated?  */
 end_comment
 
 begin_function
