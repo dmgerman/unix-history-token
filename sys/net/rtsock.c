@@ -174,20 +174,6 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|sockaddr
-name|route_dst
-init|=
-block|{
-literal|2
-block|,
-name|PF_ROUTE
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|sockaddr
 name|route_src
 init|=
 block|{
@@ -729,9 +715,6 @@ name|route_proto
 argument_list|,
 operator|&
 name|route_src
-argument_list|,
-operator|&
-name|route_dst
 argument_list|)
 expr_stmt|;
 block|}
@@ -966,13 +949,6 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-name|rp
-operator|->
-name|rcb_faddr
-operator|=
-operator|&
-name|route_src
-expr_stmt|;
 name|route_cb
 operator|.
 name|any_count
