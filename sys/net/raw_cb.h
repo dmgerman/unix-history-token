@@ -117,7 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* protosw entries */
+comment|/*  * Generic protosw entries for raw socket protocols.  */
 end_comment
 
 begin_decl_stmt
@@ -133,7 +133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* usrreq entries */
+comment|/*  * Library routines for raw socket usrreq functions; will always be wrapped  * so that protocol-specific functions can be handled.  */
 end_comment
 
 begin_function_decl
@@ -171,22 +171,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* what the ??? */
-end_comment
-
-begin_else
-unit|pr_input_t	raw_input;
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|void
 name|raw_input
@@ -210,10 +194,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * Generic pr_usrreqs entries for raw socket protocols, usually wrapped so  * that protocol-specific functions can be handled.  */
+end_comment
 
 begin_decl_stmt
 specifier|extern
