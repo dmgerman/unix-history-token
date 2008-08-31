@@ -605,6 +605,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|F_ONCE
+value|0x200000
+end_define
+
+begin_define
+define|#
+directive|define
 name|F_AUDIBLE
 value|0x400000
 end_define
@@ -1689,7 +1696,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:c:dfHg:h:I:i:l:mnNp:qrRS:s:tvwW"
+literal|"a:b:c:dfHg:h:I:i:l:mnNop:qrRS:s:tvwW"
 name|ADDOPTS
 argument_list|)
 operator|)
@@ -2315,6 +2322,14 @@ case|:
 name|options
 operator||=
 name|F_NIGROUP
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|options
+operator||=
+name|F_ONCE
 expr_stmt|;
 break|break;
 case|case
@@ -6016,11 +6031,29 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+operator|(
+name|options
+operator|&
+name|F_ONCE
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|nreceived
+operator|>
+literal|0
+operator|)
+operator|||
+operator|(
 name|npackets
+operator|>
+literal|0
 operator|&&
 name|nreceived
 operator|>=
 name|npackets
+operator|)
 condition|)
 break|break;
 if|if
@@ -14157,7 +14190,7 @@ name|IPV6_USE_MIN_MTU
 literal|"m"
 endif|#
 directive|endif
-literal|"nNqrRtvwW] "
+literal|"nNoqrRtvwW] "
 literal|"[-a addrtype] [-b bufsiz] [-c count] [-g gateway]\n"
 literal|"             [-h hoplimit] [-I interface] [-i wait] [-l preload]"
 if|#
