@@ -637,6 +637,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|0
