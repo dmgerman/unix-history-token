@@ -6020,13 +6020,6 @@ name|mmu_t
 name|mmu
 parameter_list|)
 block|{
-name|CTR0
-argument_list|(
-name|KTR_PMAP
-argument_list|,
-literal|"moea_init"
-argument_list|)
-expr_stmt|;
 name|moea_upvo_zone
 operator|=
 name|uma_zcreate
@@ -7379,21 +7372,6 @@ decl_stmt|;
 name|int
 name|pteidx
 decl_stmt|;
-name|CTR4
-argument_list|(
-name|KTR_PMAP
-argument_list|,
-literal|"moea_protect: pm=%p sva=%#x eva=%#x prot=%#x"
-argument_list|,
-name|pm
-argument_list|,
-name|sva
-argument_list|,
-name|eva
-argument_list|,
-name|prot
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|pm
