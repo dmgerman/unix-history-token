@@ -8514,11 +8514,12 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SC_NO_HISTORY
-name|struct
-name|tty
-modifier|*
-name|tp
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct tty *tp;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* !SC_NO_HISTORY */
@@ -8605,41 +8606,13 @@ name|scp
 argument_list|)
 expr_stmt|;
 block|}
-name|tp
-operator|=
-name|SC_DEV
-argument_list|(
-name|scp
-operator|->
-name|sc
-argument_list|,
-name|scp
-operator|->
-name|index
-argument_list|)
-expr_stmt|;
-name|tty_lock
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tty_opened
-argument_list|(
-name|tp
-argument_list|)
-condition|)
-name|sctty_outwakeup
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-name|tty_unlock
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * XXX: Now that TTY's have their own locks, we cannot process 	 * any data after disabling scroll lock. cnputs already holds a 	 * spinlock. 	 */
+block|tp = SC_DEV(scp->sc, scp->index); 	tty_lock(tp); 	if (tty_opened(tp)) 	    sctty_outwakeup(tp); 	tty_unlock(tp);
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
