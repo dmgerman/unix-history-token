@@ -17,7 +17,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_VERSION
-value|fprintf (stderr, " (FreeBSD/x86-64 ELF)");
+value|fprintf (stderr, " (FreeBSD/amd64 ELF)");
 end_define
 
 begin_undef
