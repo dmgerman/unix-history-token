@@ -100,6 +100,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VSLINENO
+value|0x20
+end_define
+
+begin_comment
+comment|/* expansion of $LINENO, the line number \ 				   follows immediately */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VSQUOTE
 value|0x80
 end_define
