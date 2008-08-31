@@ -1571,6 +1571,7 @@ operator|)
 return|;
 block|}
 else|else
+block|{
 name|insize
 operator|=
 name|strlen
@@ -1578,6 +1579,11 @@ argument_list|(
 name|mbsarg
 argument_list|)
 expr_stmt|;
+name|nconv
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * Allocate buffer for the result and perform the conversion, 	 * converting at most `size' bytes of the input multibyte string to 	 * wide characters for printing. 	 */
 name|convbuf
 operator|=
