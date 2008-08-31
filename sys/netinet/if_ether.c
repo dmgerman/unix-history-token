@@ -3325,7 +3325,7 @@ condition|)
 goto|goto
 name|reply
 goto|;
-comment|/* 	 * We look for any FIBs that has this address to find 	 * the interface etc. 	 * For sanity checks that are FIB independent we abort the loop. 	 */
+comment|/* 	 * We look for any FIB that has this address to find 	 * the interface etc. 	 * For sanity checks that are FIB independent we abort the loop. 	 */
 for|for
 control|(
 name|fibnum
