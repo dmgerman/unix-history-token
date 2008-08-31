@@ -1134,7 +1134,7 @@ name|AUE_SEMCTL_STAT
 operator|)
 return|;
 default|default:
-comment|/* We will audit a bad command */
+comment|/* We will audit a bad command. */
 return|return
 operator|(
 name|AUE_SEMCTL
