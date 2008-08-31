@@ -170,6 +170,11 @@ decl_stmt|,
 modifier|*
 name|rname
 decl_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|rsize
 operator|=
 name|tsize
