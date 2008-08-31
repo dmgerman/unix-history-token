@@ -5565,11 +5565,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-if|if
-condition|(
-name|sopt
-condition|)
-block|{
 name|level
 operator|=
 name|sopt
@@ -5600,17 +5595,10 @@ name|sopt
 operator|->
 name|sopt_td
 expr_stmt|;
-block|}
-else|else
-block|{
-name|panic
-argument_list|(
-literal|"ip6_ctloutput: arg soopt is NULL"
-argument_list|)
-expr_stmt|;
-block|}
 name|error
 operator|=
+literal|0
+expr_stmt|;
 name|optval
 operator|=
 literal|0
@@ -7874,11 +7862,6 @@ name|op
 decl_stmt|,
 name|optname
 decl_stmt|;
-if|if
-condition|(
-name|sopt
-condition|)
-block|{
 name|level
 operator|=
 name|sopt
@@ -7902,13 +7885,6 @@ operator|=
 name|sopt
 operator|->
 name|sopt_valsize
-expr_stmt|;
-block|}
-else|else
-name|panic
-argument_list|(
-literal|"ip6_raw_ctloutput: arg soopt is NULL"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
