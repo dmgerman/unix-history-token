@@ -306,25 +306,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|restore_intr
-parameter_list|(
-name|unsigned
-name|int
-name|msr
-parameter_list|)
-block|{
-name|mtmsr
-argument_list|(
-name|msr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_expr_stmt
 specifier|static
 name|__inline
