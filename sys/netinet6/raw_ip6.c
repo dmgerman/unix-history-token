@@ -2605,13 +2605,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|inp
-operator|->
-name|in6p_icmp6filt
-condition|)
-block|{
 name|FREE
 argument_list|(
 name|inp
@@ -2621,13 +2614,6 @@ argument_list|,
 name|M_PCB
 argument_list|)
 expr_stmt|;
-name|inp
-operator|->
-name|in6p_icmp6filt
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|in6_pcbdetach
 argument_list|(
 name|inp
