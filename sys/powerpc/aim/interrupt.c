@@ -205,6 +205,19 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"%s: EXC=%x"
+argument_list|,
+name|__func__
+argument_list|,
+name|framep
+operator|->
+name|exc
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|framep
