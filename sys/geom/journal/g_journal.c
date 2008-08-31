@@ -13979,11 +13979,6 @@ name|struct
 name|g_class
 modifier|*
 name|classp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -14160,8 +14155,6 @@ name|LK_NOWAIT
 argument_list|,
 operator|&
 name|mountlist_mtx
-argument_list|,
-name|td
 argument_list|)
 condition|)
 continue|continue;
@@ -14609,8 +14602,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -14766,13 +14757,6 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-name|struct
 name|g_class
 modifier|*
 name|mp
@@ -14879,8 +14863,6 @@ expr_stmt|;
 name|g_journal_do_switch
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|GJ_TIMER_STOP

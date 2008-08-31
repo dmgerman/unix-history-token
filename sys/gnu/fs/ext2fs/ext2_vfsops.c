@@ -712,8 +712,6 @@ argument_list|,
 name|LK_NOWAIT
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 condition|)
 return|return
@@ -735,8 +733,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

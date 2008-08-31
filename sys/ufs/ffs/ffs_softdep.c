@@ -3787,8 +3787,6 @@ name|LK_NOWAIT
 argument_list|,
 operator|&
 name|mountlist_mtx
-argument_list|,
-name|td
 argument_list|)
 condition|)
 continue|continue;
@@ -3846,8 +3844,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}

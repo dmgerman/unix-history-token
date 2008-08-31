@@ -546,8 +546,6 @@ name|LK_NOWAIT
 argument_list|,
 operator|&
 name|mountlist_mtx
-argument_list|,
-name|td
 argument_list|)
 condition|)
 block|{
@@ -700,8 +698,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -926,8 +922,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -981,8 +975,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
@@ -2299,8 +2291,6 @@ name|LK_NOWAIT
 argument_list|,
 operator|&
 name|mountlist_mtx
-argument_list|,
-name|td
 argument_list|)
 condition|)
 block|{
@@ -2421,8 +2411,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2533,8 +2521,6 @@ block|{
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
@@ -2579,8 +2565,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3687,8 +3671,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 condition|)
 continue|continue;
@@ -3716,8 +3698,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

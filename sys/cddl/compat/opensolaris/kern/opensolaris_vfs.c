@@ -785,6 +785,8 @@ argument_list|,
 name|fspath
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1112,8 +1114,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1163,8 +1163,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vfs_mount_destroy

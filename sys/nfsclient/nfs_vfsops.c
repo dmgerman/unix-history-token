@@ -1355,8 +1355,6 @@ argument_list|,
 name|LK_NOWAIT
 argument_list|,
 name|NULL
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1400,8 +1398,6 @@ block|{
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1791,8 +1787,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 return|return

@@ -2039,9 +2039,9 @@ modifier|*
 name|fspath
 parameter_list|,
 name|struct
-name|thread
+name|ucred
 modifier|*
-name|td
+name|cred
 parameter_list|)
 block|{
 name|struct
@@ -2106,8 +2106,6 @@ argument_list|,
 name|LK_NOWAIT
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|mp
@@ -2172,9 +2170,7 @@ name|mnt_cred
 operator|=
 name|crdup
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|cred
 argument_list|)
 expr_stmt|;
 name|mp
@@ -2183,9 +2179,7 @@ name|mnt_stat
 operator|.
 name|f_owner
 operator|=
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_uid
 expr_stmt|;
@@ -2218,9 +2212,7 @@ argument_list|)
 expr_stmt|;
 name|mac_mount_create
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|cred
 argument_list|,
 name|mp
 argument_list|)
@@ -4621,8 +4613,6 @@ argument_list|,
 name|LK_NOWAIT
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 condition|)
 block|{
@@ -4669,8 +4659,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -4940,6 +4928,8 @@ argument_list|,
 name|fspath
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5267,8 +5257,6 @@ block|}
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|VI_LOCK
@@ -5481,8 +5469,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5517,8 +5503,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vfs_mount_destroy
@@ -7337,6 +7321,8 @@ argument_list|,
 literal|"/dev"
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|error
@@ -7724,8 +7710,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* Unlink the no longer needed /dev/dev -> / symlink */
