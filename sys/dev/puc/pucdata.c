@@ -2158,9 +2158,11 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"Oxford Semiconductor OX16PCI954 UARTs"
+literal|"Oxford Semiconductor OX16PCI954 UARTs 4-port type 1"
 block|,
 name|DEFAULT_RCLK
+operator|*
+literal|10
 block|,
 name|PUC_PORT_4S
 block|,
@@ -2180,9 +2182,11 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"Oxford Semiconductor OX16PCI954 UARTs"
+literal|"Oxford Semiconductor OX16PCI954 UARTs 4-port type 2"
 block|,
 name|DEFAULT_RCLK
+operator|*
+literal|10
 block|,
 name|PUC_PORT_4S
 block|,
@@ -2233,6 +2237,30 @@ block|,
 literal|0x10
 block|,
 literal|4
+block|,
+literal|0
+block|, 	}
+block|,
+block|{
+literal|0x14d2
+block|,
+literal|0x8010
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"VScom PCI-100L"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_1S
+block|,
+literal|0x14
+block|,
+literal|0
 block|,
 literal|0
 block|, 	}
@@ -2457,6 +2485,28 @@ literal|0
 block|, 	}
 block|,
 block|{
+literal|0x14db
+block|,
+literal|0x2152
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Avlab Low Profile PCI 4 Serial"
+block|,
+name|DEFAULT_RCLK
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|4
+block|,
+literal|0
+block|, 	}
+block|,
+block|{
 literal|0x1592
 block|,
 literal|0x0781
@@ -2498,6 +2548,28 @@ block|,
 name|DEFAULT_RCLK
 block|,
 name|PUC_PORT_4S
+block|,
+literal|0x1c
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x6666
+block|,
+literal|0x0002
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Decision Computer Inc, PCCOM 8-port serial"
+block|,
+name|DEFAULT_RCLK
+block|,
+name|PUC_PORT_8S
 block|,
 literal|0x1c
 block|,
