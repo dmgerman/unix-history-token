@@ -895,27 +895,27 @@ operator|=
 name|arc4random
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Set OUI to Atmel. 		 */
+comment|/* 		 * Set OUI to convenient locally assigned address.  'b' 		 * is 0x62, which has the locally assigned bit set, and 		 * the broadcast/multicast bit clear. 		 */
 name|eaddr
 index|[
 literal|0
 index|]
 operator|=
-literal|0x02
+literal|'b'
 expr_stmt|;
 name|eaddr
 index|[
 literal|1
 index|]
 operator|=
-literal|0x04
+literal|'s'
 expr_stmt|;
 name|eaddr
 index|[
 literal|2
 index|]
 operator|=
-literal|0x25
+literal|'d'
 expr_stmt|;
 name|eaddr
 index|[
