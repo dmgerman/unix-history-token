@@ -243,8 +243,20 @@ define|#
 directive|define
 name|DRIVER_SELF_SPECS
 define|\
-value|"%{!EB:%{!EL:%(endian_spec)}}", \   "%{!march=*: -march=mips32}"
+value|"%{!march=*: -march=mips32}"
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|"%{!EB:%{!EL:%(endian_spec)}}",
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
