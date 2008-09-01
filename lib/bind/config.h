@@ -901,12 +901,39 @@ comment|/* #undef WITH_IDN */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel and VAX). */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__BIG_ENDIAN__
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+name|__LITTLE_ENDIAN__
+end_elif
+
 begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
+comment|/* # undef WORDS_BIGENDIAN */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to empty if `const' does not conform to ANSI C. */
