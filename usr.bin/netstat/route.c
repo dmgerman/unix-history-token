@@ -704,14 +704,14 @@ name|rnh
 decl_stmt|,
 name|head
 decl_stmt|;
+name|size_t
+name|intsize
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 name|int
 name|numfibs
-decl_stmt|;
-name|size_t
-name|intsize
 decl_stmt|;
 name|intsize
 operator|=
