@@ -491,12 +491,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|reg |= PCIB_BCR_MASTER_ABORT_MODE | PCIB_BCR_SERR_ENABLE |
+else|#
+directive|else
 name|reg
 operator||=
-name|PCIB_BCR_MASTER_ABORT_MODE
-operator||
 name|PCIB_BCR_SERR_ENABLE
 operator||
+endif|#
+directive|endif
 name|PCIB_BCR_PERR_ENABLE
 expr_stmt|;
 ifdef|#
