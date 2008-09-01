@@ -4,7 +4,7 @@ comment|/* $OpenBSD: auth-krb5.c,v 1.19 2006/08/03 03:34:41 deraadt Exp $ */
 end_comment
 
 begin_comment
-comment|/*  *    Kerberos v5 authentication and ticket-passing routines.  *  * $xFreeBSD: src/crypto/openssh/auth-krb5.c,v 1.6 2001/02/13 16:58:04 assar Exp$  */
+comment|/*  *    Kerberos v5 authentication and ticket-passing routines.  *  * $FreeBSD: src/crypto/openssh/auth-krb5.c,v 1.6 2001/02/13 16:58:04 assar Exp $  */
 end_comment
 
 begin_comment
@@ -16,14 +16,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#

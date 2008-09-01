@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-skey.c,v 1.26 2006/08/05 08:28:24 dtucker Exp $ */
+comment|/* $OpenBSD: auth-skey.c,v 1.27 2007/01/21 01:41:54 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -12,14 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -45,76 +37,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPIE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<opie.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|skey
-value|opie
-end_define
-
-begin_define
-define|#
-directive|define
-name|skeychallenge
-parameter_list|(
-name|k
-parameter_list|,
-name|u
-parameter_list|,
-name|c
-parameter_list|)
-value|opiechallenge((k), (u), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|skey_haskey
-parameter_list|(
-name|u
-parameter_list|)
-value|opie_haskey((u))
-end_define
-
-begin_define
-define|#
-directive|define
-name|skey_passcheck
-parameter_list|(
-name|u
-parameter_list|,
-name|r
-parameter_list|)
-value|opie_passverify((u), (r))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<skey.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

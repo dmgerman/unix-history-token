@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-pubkey.c,v 1.15 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: auth2-pubkey.c,v 1.19 2008/07/03 21:46:58 otto Exp $ */
 end_comment
 
 begin_comment
@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -41,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -795,10 +807,6 @@ name|linenum
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|stat
-name|st
-decl_stmt|;
 name|Key
 modifier|*
 name|found
@@ -820,36 +828,17 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-comment|/* Fail quietly if file does not exist */
-if|if
-condition|(
-name|stat
-argument_list|(
-name|file
-argument_list|,
-operator|&
-name|st
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-comment|/* Restore the privileged uid. */
-name|restore_uid
-argument_list|()
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-comment|/* Open the file containing the authorized keys. */
 name|f
 operator|=
-name|fopen
+name|auth_openkeyfile
 argument_list|(
 name|file
 argument_list|,
-literal|"r"
+name|pw
+argument_list|,
+name|options
+operator|.
+name|strict_modes
 argument_list|)
 expr_stmt|;
 if|if
@@ -858,51 +847,6 @@ operator|!
 name|f
 condition|)
 block|{
-comment|/* Restore the privileged uid. */
-name|restore_uid
-argument_list|()
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-if|if
-condition|(
-name|options
-operator|.
-name|strict_modes
-operator|&&
-name|secure_filename
-argument_list|(
-name|f
-argument_list|,
-name|file
-argument_list|,
-name|pw
-argument_list|,
-name|line
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-name|logit
-argument_list|(
-literal|"Authentication refused: %s"
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
 name|restore_uid
 argument_list|()
 expr_stmt|;

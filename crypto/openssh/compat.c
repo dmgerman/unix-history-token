@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.c,v 1.76 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: compat.c,v 1.77 2006/12/12 03:58:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -12,14 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -464,6 +456,8 @@ block|,
 name|SSH_BUG_DEBUG
 operator||
 name|SSH_BUG_FIRSTKEX
+operator||
+name|SSH_BUG_RFWD_ADDR
 block|}
 block|,
 block|{

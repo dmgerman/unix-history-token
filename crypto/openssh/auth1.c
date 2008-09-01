@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth1.c,v 1.70 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: auth1.c,v 1.73 2008/07/04 23:30:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -12,14 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -55,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/sys-queue.h"
 end_include
 
 begin_include
@@ -1185,6 +1183,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|authctxt
+operator|->
+name|failures
+operator|>=
+name|options
+operator|.
+name|max_authtries
+condition|)
+goto|goto
+name|skip
+goto|;
+if|if
+condition|(
 operator|(
 name|meth
 operator|=
@@ -1520,6 +1531,8 @@ literal|"Access denied."
 expr_stmt|;
 name|packet_disconnect
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -1567,11 +1580,11 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|++
 name|authctxt
 operator|->
 name|failures
-operator|++
-operator|>
+operator|>=
 name|options
 operator|.
 name|max_authtries

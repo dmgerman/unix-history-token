@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: queue.h,v 1.25 2004/04/08 16:08:21 henning Exp $	*/
+comment|/*	$OpenBSD: queue.h,v 1.32 2007/04/30 18:42:34 pedro Exp $	*/
 end_comment
 
 begin_comment
@@ -503,6 +503,56 @@ begin_comment
 comment|/*  * This file defines five types of data structures: singly-linked lists,   * lists, simple queues, tail queues, and circular queues.  *  *  * A singly-linked list is headed by a single forward pointer. The elements  * are singly linked for minimum space and pointer manipulation overhead at  * the expense of O(n) removal for arbitrary elements. New elements can be  * added to the list after an existing element or at the head of the list.  * Elements being removed from the head of the list should use the explicit  * macro for this purpose for optimum efficiency. A singly-linked list may  * only be traversed in the forward direction.  Singly-linked lists are ideal  * for applications with large datasets and few or no removals or for  * implementing a LIFO queue.  *  * A list is headed by a single forward pointer (or an array of forward  * pointers for a hash table header). The elements are doubly linked  * so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before  * or after an existing element or at the head of the list. A list  * may only be traversed in the forward direction.  *  * A simple queue is headed by a pair of pointers, one the head of the  * list and the other to the tail of the list. The elements are singly  * linked to save space, so elements can only be removed from the  * head of the list. New elements can be added to the list before or after  * an existing element, at the head of the list, or at the end of the  * list. A simple queue may only be traversed in the forward direction.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  *  * A circle queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or after  * an existing element, at the head of the list, or at the end of the list.  * A circle queue may be traversed in either direction, but has a more  * complex end of list detection.  *  * For details on the use of these macros, see the queue(3) manual page.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|QUEUE_MACRO_DEBUG
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_Q_INVALIDATE
+parameter_list|(
+name|a
+parameter_list|)
+value|(a) = ((void *)-1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_Q_INVALIDATE
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Singly-linked List definitions.  */
 end_comment
@@ -705,7 +755,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if ((head)->slh_first == (elm)) {				\ 		SLIST_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = (head)->slh_first;		\ 		while( curelm->field.sle_next != (elm) )		\ 			curelm = curelm->field.sle_next;		\ 		curelm->field.sle_next =				\ 		    curelm->field.sle_next->field.sle_next;		\ 	}								\ } while (0)
+value|do {			\ 	if ((head)->slh_first == (elm)) {				\ 		SLIST_REMOVE_HEAD((head), field);			\ 	} else {							\ 		struct type *curelm = (head)->slh_first;		\ 									\ 		while (curelm->field.sle_next != (elm))			\ 			curelm = curelm->field.sle_next;		\ 		curelm->field.sle_next =				\ 		    curelm->field.sle_next->field.sle_next;		\ 		_Q_INVALIDATE((elm)->field.sle_next);			\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -879,7 +929,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {					\ 	if ((elm)->field.le_next != NULL)				\ 		(elm)->field.le_next->field.le_prev =			\ 		    (elm)->field.le_prev;				\ 	*(elm)->field.le_prev = (elm)->field.le_next;			\ } while (0)
+value|do {					\ 	if ((elm)->field.le_next != NULL)				\ 		(elm)->field.le_next->field.le_prev =			\ 		    (elm)->field.le_prev;				\ 	*(elm)->field.le_prev = (elm)->field.le_next;			\ 	_Q_INVALIDATE((elm)->field.le_prev);				\ 	_Q_INVALIDATE((elm)->field.le_next);				\ } while (0)
 end_define
 
 begin_define
@@ -893,7 +943,7 @@ name|elm2
 parameter_list|,
 name|field
 parameter_list|)
-value|do {				\ 	if (((elm2)->field.le_next = (elm)->field.le_next) != NULL)	\ 		(elm2)->field.le_next->field.le_prev =			\&(elm2)->field.le_next;				\ 	(elm2)->field.le_prev = (elm)->field.le_prev;			\ 	*(elm2)->field.le_prev = (elm2);				\ } while (0)
+value|do {				\ 	if (((elm2)->field.le_next = (elm)->field.le_next) != NULL)	\ 		(elm2)->field.le_next->field.le_prev =			\&(elm2)->field.le_next;				\ 	(elm2)->field.le_prev = (elm)->field.le_prev;			\ 	*(elm2)->field.le_prev = (elm2);				\ 	_Q_INVALIDATE((elm)->field.le_prev);				\ 	_Q_INVALIDATE((elm)->field.le_next);				\ } while (0)
 end_define
 
 begin_comment
@@ -1067,11 +1117,9 @@ name|SIMPLEQ_REMOVE_HEAD
 parameter_list|(
 name|head
 parameter_list|,
-name|elm
-parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (((head)->sqh_first = (elm)->field.sqe_next) == NULL)	\ 		(head)->sqh_last =&(head)->sqh_first;			\ } while (0)
+value|do {			\ 	if (((head)->sqh_first = (head)->sqh_first->field.sqe_next) == NULL) \ 		(head)->sqh_last =&(head)->sqh_first;			\ } while (0)
 end_define
 
 begin_comment
@@ -1315,7 +1363,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {				\ 	if (((elm)->field.tqe_next) != NULL)				\ 		(elm)->field.tqe_next->field.tqe_prev =			\ 		    (elm)->field.tqe_prev;				\ 	else								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 	*(elm)->field.tqe_prev = (elm)->field.tqe_next;			\ } while (0)
+value|do {				\ 	if (((elm)->field.tqe_next) != NULL)				\ 		(elm)->field.tqe_next->field.tqe_prev =			\ 		    (elm)->field.tqe_prev;				\ 	else								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 	*(elm)->field.tqe_prev = (elm)->field.tqe_next;			\ 	_Q_INVALIDATE((elm)->field.tqe_prev);				\ 	_Q_INVALIDATE((elm)->field.tqe_next);				\ } while (0)
 end_define
 
 begin_define
@@ -1331,7 +1379,7 @@ name|elm2
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (((elm2)->field.tqe_next = (elm)->field.tqe_next) != NULL)	\ 		(elm2)->field.tqe_next->field.tqe_prev =		\&(elm2)->field.tqe_next;				\ 	else								\ 		(head)->tqh_last =&(elm2)->field.tqe_next;		\ 	(elm2)->field.tqe_prev = (elm)->field.tqe_prev;			\ 	*(elm2)->field.tqe_prev = (elm2);				\ } while (0)
+value|do {			\ 	if (((elm2)->field.tqe_next = (elm)->field.tqe_next) != NULL)	\ 		(elm2)->field.tqe_next->field.tqe_prev =		\&(elm2)->field.tqe_next;				\ 	else								\ 		(head)->tqh_last =&(elm2)->field.tqe_next;		\ 	(elm2)->field.tqe_prev = (elm)->field.tqe_prev;			\ 	*(elm2)->field.tqe_prev = (elm2);				\ 	_Q_INVALIDATE((elm)->field.tqe_prev);				\ 	_Q_INVALIDATE((elm)->field.tqe_next);				\ } while (0)
 end_define
 
 begin_comment
@@ -1565,7 +1613,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {				\ 	if ((elm)->field.cqe_next == CIRCLEQ_END(head))			\ 		(head)->cqh_last = (elm)->field.cqe_prev;		\ 	else								\ 		(elm)->field.cqe_next->field.cqe_prev =			\ 		    (elm)->field.cqe_prev;				\ 	if ((elm)->field.cqe_prev == CIRCLEQ_END(head))			\ 		(head)->cqh_first = (elm)->field.cqe_next;		\ 	else								\ 		(elm)->field.cqe_prev->field.cqe_next =			\ 		    (elm)->field.cqe_next;				\ } while (0)
+value|do {				\ 	if ((elm)->field.cqe_next == CIRCLEQ_END(head))			\ 		(head)->cqh_last = (elm)->field.cqe_prev;		\ 	else								\ 		(elm)->field.cqe_next->field.cqe_prev =			\ 		    (elm)->field.cqe_prev;				\ 	if ((elm)->field.cqe_prev == CIRCLEQ_END(head))			\ 		(head)->cqh_first = (elm)->field.cqe_next;		\ 	else								\ 		(elm)->field.cqe_prev->field.cqe_next =			\ 		    (elm)->field.cqe_next;				\ 	_Q_INVALIDATE((elm)->field.cqe_prev);				\ 	_Q_INVALIDATE((elm)->field.cqe_next);				\ } while (0)
 end_define
 
 begin_define
@@ -1581,7 +1629,7 @@ name|elm2
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (((elm2)->field.cqe_next = (elm)->field.cqe_next) ==		\ 	    CIRCLEQ_END(head))						\ 		(head).cqh_last = (elm2);				\ 	else								\ 		(elm2)->field.cqe_next->field.cqe_prev = (elm2);	\ 	if (((elm2)->field.cqe_prev = (elm)->field.cqe_prev) ==		\ 	    CIRCLEQ_END(head))						\ 		(head).cqh_first = (elm2);				\ 	else								\ 		(elm2)->field.cqe_prev->field.cqe_next = (elm2);	\ } while (0)
+value|do {			\ 	if (((elm2)->field.cqe_next = (elm)->field.cqe_next) ==		\ 	    CIRCLEQ_END(head))						\ 		(head).cqh_last = (elm2);				\ 	else								\ 		(elm2)->field.cqe_next->field.cqe_prev = (elm2);	\ 	if (((elm2)->field.cqe_prev = (elm)->field.cqe_prev) ==		\ 	    CIRCLEQ_END(head))						\ 		(head).cqh_first = (elm2);				\ 	else								\ 		(elm2)->field.cqe_prev->field.cqe_next = (elm2);	\ 	_Q_INVALIDATE((elm)->field.cqe_prev);				\ 	_Q_INVALIDATE((elm)->field.cqe_next);				\ } while (0)
 end_define
 
 begin_endif

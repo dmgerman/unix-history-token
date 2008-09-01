@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ttymodes.c,v 1.26 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: ttymodes.c,v 1.28 2008/07/07 00:31:41 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -788,6 +788,23 @@ condition|)
 block|{
 if|if
 condition|(
+name|fd
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"tty_make_modes: no fd or tio"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
+if|if
+condition|(
 name|tcgetattr
 argument_list|(
 name|fd
@@ -900,7 +917,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|debug3("tty_make_modes: %d %d", OP, tio.c_cc[NAME]); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, special_char_encode(tio.c_cc[NAME]));
+value|buffer_put_char(&buf, OP); \ 	put_arg(&buf, special_char_encode(tio.c_cc[NAME]));
 define|#
 directive|define
 name|TTYMODE
@@ -912,7 +929,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|debug3("tty_make_modes: %d %d", OP, ((tio.FIELD& NAME) != 0)); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, ((tio.FIELD& NAME) != 0));
+value|buffer_put_char(&buf, OP); \ 	put_arg(&buf, ((tio.FIELD& NAME) != 0));
 include|#
 directive|include
 file|"ttymodes.h"
@@ -1022,8 +1039,6 @@ name|void
 parameter_list|)
 function_decl|;
 name|int
-name|arg
-decl_stmt|,
 name|arg_size
 decl_stmt|;
 if|if
@@ -1243,7 +1258,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|case OP: \ 	  n_bytes += arg_size; \ 	  tio.c_cc[NAME] = special_char_decode(get_arg()); \ 	  debug3("tty_parse_modes: %d %d", OP, tio.c_cc[NAME]); \ 	  break;
+value|case OP: \ 	  n_bytes += arg_size; \ 	  tio.c_cc[NAME] = special_char_decode(get_arg()); \ 	  break;
 define|#
 directive|define
 name|TTYMODE
@@ -1255,7 +1270,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|case OP: \ 	  n_bytes += arg_size; \ 	  if ((arg = get_arg())) \ 	    tio.FIELD |= NAME; \ 	  else \ 	    tio.FIELD&= ~NAME;	\ 	  debug3("tty_parse_modes: %d %d", OP, arg); \ 	  break;
+value|case OP: \ 	  n_bytes += arg_size; \ 	  if (get_arg()) \ 	    tio.FIELD |= NAME; \ 	  else \ 	    tio.FIELD&= ~NAME;	\ 	  break;
 include|#
 directive|include
 file|"ttymodes.h"

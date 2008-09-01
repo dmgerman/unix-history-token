@@ -4,10 +4,6 @@ comment|/* $OpenBSD: includes.h,v 1.54 2006/07/22 20:48:23 stevesk Exp $ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * This file includes most of the needed system headers.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
@@ -226,7 +222,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_PATHS
+name|HAVE_PATHS_H
 end_ifdef
 
 begin_include
@@ -787,6 +783,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_comment
 comment|/*  * On HP-UX 11.11, shadow.h and prot.h provide conflicting declarations  * of getspnam when _INCLUDE__STDC__ is defined, so we unset it here.  */

@@ -4,7 +4,7 @@ comment|/* This file has be substantially modified from the original OpenBSD sou
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: bindresvport.c,v 1.16 2005/04/01 07:44:03 otto Exp $	*/
+comment|/*	$OpenBSD: bindresvport.c,v 1.17 2005/12/21 01:40:22 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -113,12 +113,12 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|in
 decl_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
-name|sin6
+name|in6
 decl_stmt|;
 name|u_int16_t
 modifier|*
@@ -214,7 +214,7 @@ operator|==
 name|AF_INET
 condition|)
 block|{
-name|sin
+name|in
 operator|=
 operator|(
 expr|struct
@@ -234,7 +234,7 @@ expr_stmt|;
 name|portp
 operator|=
 operator|&
-name|sin
+name|in
 operator|->
 name|sin_port
 expr_stmt|;
@@ -247,7 +247,7 @@ operator|==
 name|AF_INET6
 condition|)
 block|{
-name|sin6
+name|in6
 operator|=
 operator|(
 expr|struct
@@ -267,7 +267,7 @@ expr_stmt|;
 name|portp
 operator|=
 operator|&
-name|sin6
+name|in6
 operator|->
 name|sin6_port
 expr_stmt|;

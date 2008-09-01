@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.h,v 1.36 2006/08/18 10:27:16 djm Exp $ */
+comment|/* $OpenBSD: misc.h,v 1.38 2008/06/12 20:38:28 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -216,6 +216,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ms_subtract_diff
+parameter_list|(
+name|struct
+name|timeval
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ms_to_timeval
+parameter_list|(
+name|struct
+name|timeval
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|passwd
 modifier|*
@@ -224,6 +251,17 @@ parameter_list|(
 name|struct
 name|passwd
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ssh_gai_strerror
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

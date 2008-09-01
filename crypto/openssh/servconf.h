@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.79 2006/08/14 12:40:25 dtucker Exp $ */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$	*/
+comment|/* $OpenBSD: servconf.h,v 1.85 2008/06/10 04:50:25 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -171,6 +167,28 @@ end_define
 begin_comment
 comment|/* Default for MaxAuthTries */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_SESSIONS_MAX
+value|10
+end_define
+
+begin_comment
+comment|/* Default for MaxSessions */
+end_comment
+
+begin_comment
+comment|/* Magic name for internal sftp-server */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTERNAL_SFTP_NAME
+value|"internal-sftp"
+end_define
 
 begin_typedef
 typedef|typedef
@@ -378,6 +396,9 @@ comment|/* If true, compression is allowed */
 name|int
 name|allow_tcp_forwarding
 decl_stmt|;
+name|int
+name|allow_agent_forwarding
+decl_stmt|;
 name|u_int
 name|num_allow_users
 decl_stmt|;
@@ -464,6 +485,9 @@ decl_stmt|;
 name|int
 name|max_authtries
 decl_stmt|;
+name|int
+name|max_sessions
+decl_stmt|;
 name|char
 modifier|*
 name|banner
@@ -502,6 +526,10 @@ name|permit_tun
 decl_stmt|;
 name|int
 name|num_permitted_opens
+decl_stmt|;
+name|char
+modifier|*
+name|chroot_directory
 decl_stmt|;
 block|}
 name|ServerOptions
@@ -634,6 +662,18 @@ parameter_list|(
 name|ServerOptions
 modifier|*
 parameter_list|,
+name|ServerOptions
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dump_config
+parameter_list|(
 name|ServerOptions
 modifier|*
 parameter_list|)

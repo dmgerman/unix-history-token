@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.c,v 1.4 2006/02/22 11:24:47 dtucker Exp $ */
+comment|/* $Id: openssl-compat.c,v 1.6 2008/02/28 08:13:52 dtucker Exp $ */
 end_comment
 
 begin_comment

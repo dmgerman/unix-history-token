@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_fdpass.h,v 1.3 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: monitor_fdpass.h,v 1.4 2007/09/04 03:21:03 djm Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ name|_MM_FDPASS_H_
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|mm_send_fd
 parameter_list|(
 name|int

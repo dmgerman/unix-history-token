@@ -49,24 +49,11 @@ directive|include
 file|"log.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|OPENSSL_VERSION_NUMBER
-operator|<
-literal|0x00906000L
-end_if
-
-begin_define
-define|#
-directive|define
-name|SSH_OLD_EVP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
+end_include
 
 begin_comment
 comment|/*  * SSH1 uses a variation on Blowfish, all bytes must be swapped before  * and after encryption/decryption. Thus the swap_bytes stuff (yuk).  */

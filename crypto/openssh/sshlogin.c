@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshlogin.c,v 1.25 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: sshlogin.c,v 1.26 2007/09/11 15:47:17 gilles Exp $ */
 end_comment
 
 begin_comment
@@ -254,22 +254,15 @@ operator|&
 name|last_login_time
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strchr
+name|time_string
+index|[
+name|strcspn
 argument_list|(
 name|time_string
 argument_list|,
-literal|'\n'
+literal|"\n"
 argument_list|)
-condition|)
-operator|*
-name|strchr
-argument_list|(
-name|time_string
-argument_list|,
-literal|'\n'
-argument_list|)
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.h,v 1.58 2006/08/18 09:15:20 markus Exp $ */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $OpenBSD: auth.h,v 1.61 2008/07/02 12:03:51 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -971,12 +967,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|secure_filename
-parameter_list|(
 name|FILE
 modifier|*
-parameter_list|,
+name|auth_openkeyfile
+parameter_list|(
 specifier|const
 name|char
 modifier|*
@@ -985,10 +979,7 @@ name|struct
 name|passwd
 modifier|*
 parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1144,30 +1135,6 @@ name|AUTH_FAIL_MSG
 value|"Too many authentication failures for %.100s"
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SKEY
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPIE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SKEY_PROMPT
-value|"\nOPIE Password: "
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1207,16 +1174,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

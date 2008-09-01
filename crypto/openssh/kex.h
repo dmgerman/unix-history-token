@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.h,v 1.44 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: kex.h,v 1.46 2007/06/07 19:37:34 pvalchev Exp $ */
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/hmac.h>
 end_include
 
 begin_define
@@ -230,11 +236,6 @@ decl_stmt|;
 name|int
 name|enabled
 decl_stmt|;
-specifier|const
-name|EVP_MD
-modifier|*
-name|md
-decl_stmt|;
 name|u_int
 name|mac_len
 decl_stmt|;
@@ -244,6 +245,22 @@ name|key
 decl_stmt|;
 name|u_int
 name|key_len
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+specifier|const
+name|EVP_MD
+modifier|*
+name|evp_md
+decl_stmt|;
+name|HMAC_CTX
+name|evp_ctx
+decl_stmt|;
+name|struct
+name|umac_ctx
+modifier|*
+name|umac_ctx
 decl_stmt|;
 block|}
 struct|;

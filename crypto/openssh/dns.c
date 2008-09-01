@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.c,v 1.23 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: dns.c,v 1.25 2008/06/12 00:03:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -483,6 +483,24 @@ decl_stmt|,
 modifier|*
 name|ai
 decl_stmt|;
+comment|/* 	 * We shouldn't ever get a null host but if we do then log an error 	 * and return -1 which stops DNS key fingerprint processing. 	 */
+if|if
+condition|(
+name|hostname
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"is_numeric_hostname called with NULL hostname"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|memset
 argument_list|(
 operator|&
@@ -514,7 +532,7 @@ name|getaddrinfo
 argument_list|(
 name|hostname
 argument_list|,
-literal|"0"
+name|NULL
 argument_list|,
 operator|&
 name|hints

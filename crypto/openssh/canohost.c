@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.c,v 1.61 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: canohost.c,v 1.63 2008/06/12 00:03:49 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|"canohost.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_function_decl
@@ -393,7 +399,7 @@ name|getaddrinfo
 argument_list|(
 name|name
 argument_list|,
-literal|"0"
+name|NULL
 argument_list|,
 operator|&
 name|hints
@@ -1225,16 +1231,7 @@ literal|"get_socket_address: getnameinfo %d failed: %s"
 argument_list|,
 name|flags
 argument_list|,
-name|r
-operator|==
-name|EAI_SYSTEM
-condition|?
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-else|:
-name|gai_strerror
+name|ssh_gai_strerror
 argument_list|(
 name|r
 argument_list|)
@@ -1678,16 +1675,7 @@ name|fatal
 argument_list|(
 literal|"get_sock_port: getnameinfo NI_NUMERICSERV failed: %s"
 argument_list|,
-name|r
-operator|==
-name|EAI_SYSTEM
-condition|?
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-else|:
-name|gai_strerror
+name|ssh_gai_strerror
 argument_list|(
 name|r
 argument_list|)

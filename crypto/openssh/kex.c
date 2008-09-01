@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.c,v 1.76 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: kex.c,v 1.79 2007/06/05 06:52:37 djm Exp $ */
 end_comment
 
 begin_comment
@@ -332,7 +332,7 @@ block|{
 name|Buffer
 name|b
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|char
@@ -471,7 +471,7 @@ argument_list|)
 expr_stmt|;
 name|debug2
 argument_list|(
-literal|"kex_parse_kexinit: reserved %d "
+literal|"kex_parse_kexinit: reserved %u "
 argument_list|,
 name|i
 argument_list|)
@@ -530,6 +530,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 specifier|static
@@ -834,6 +838,10 @@ name|KEX_INIT_SENT
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 name|void
@@ -1295,7 +1303,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mac_init
+name|mac_setup
 argument_list|(
 name|mac
 argument_list|,
@@ -1510,7 +1518,7 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"no kex alg"
+literal|"Unable to negotiate a key exchange method"
 argument_list|)
 expr_stmt|;
 if|if

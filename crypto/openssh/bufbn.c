@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufbn.c,v 1.4 2006/11/06 21:25:28 markus Exp $*/
+comment|/* $OpenBSD: bufbn.c,v 1.6 2007/06/02 09:04:58 djm Exp $*/
 end_comment
 
 begin_comment
@@ -238,7 +238,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retrieves an BIGNUM from the buffer.  */
+comment|/*  * Retrieves a BIGNUM from the buffer.  */
 end_comment
 
 begin_function
@@ -268,7 +268,7 @@ decl_stmt|,
 modifier|*
 name|bin
 decl_stmt|;
-comment|/* Get the number for bits. */
+comment|/* Get the number of bits. */
 if|if
 condition|(
 name|buffer_get_ret
@@ -463,7 +463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stores an BIGNUM in the buffer in SSH2 format.  */
+comment|/*  * Stores a BIGNUM in the buffer in SSH2 format.  */
 end_comment
 
 begin_function
@@ -837,6 +837,11 @@ block|{
 name|error
 argument_list|(
 literal|"buffer_get_bignum2_ret: BN_bin2bn failed"
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|bin
 argument_list|)
 expr_stmt|;
 return|return
