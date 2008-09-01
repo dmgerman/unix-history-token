@@ -10241,9 +10241,9 @@ block|,
 block|{
 literal|"TX_MOD_TIMER_MODE"
 block|,
-literal|9
+literal|8
 block|,
-literal|7
+literal|8
 block|}
 block|,
 block|{
