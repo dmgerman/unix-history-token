@@ -803,7 +803,7 @@ argument_list|,
 argument|nbp
 argument_list|)
 block|{
-comment|/*  		 * Reasons to skip this buffer: it has already been considered 		 * on this pass, this pass is the first time through on a 		 * synchronous flush request and the buffer being considered 		 * is metadata, the buffer has dependencies that will cause 		 * it to be redirtied and it has not already been deferred, 		 * or it is already being written. 		 */
+comment|/* 		 * Reasons to skip this buffer: it has already been considered 		 * on this pass, this pass is the first time through on a 		 * synchronous flush request and the buffer being considered 		 * is metadata, the buffer has dependencies that will cause 		 * it to be redirtied and it has not already been deferred, 		 * or it is already being written. 		 */
 if|if
 condition|(
 operator|(
@@ -1062,7 +1062,7 @@ name|lbn
 operator|)
 condition|)
 block|{
-comment|/*  			 * If the buffer is for data that has been truncated 			 * off the file, then throw it away. 			 */
+comment|/* 			 * If the buffer is for data that has been truncated 			 * off the file, then throw it away. 			 */
 name|bremfree
 argument_list|(
 name|bp
@@ -1098,7 +1098,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Since we may have slept during the I/O, we need  		 * to start from a known point. 		 */
+comment|/* 		 * Since we may have slept during the I/O, we need 		 * to start from a known point. 		 */
 name|VI_LOCK
 argument_list|(
 name|vp
@@ -1155,7 +1155,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Ensure that any filesystem metatdata associated 		 * with the vnode has been written. 		 */
+comment|/* 		 * Ensure that any filesystem metatdata associated 		 * with the vnode has been written. 		 */
 name|splx
 argument_list|(
 name|s
@@ -1856,7 +1856,7 @@ name|lbn
 operator|+
 literal|1
 expr_stmt|;
-comment|/* 		 * size of buffer.  The buffer representing the 		 * end of the file is rounded up to the size of 		 * the block type ( fragment or full block,  		 * depending ). 		 */
+comment|/* 		 * size of buffer.  The buffer representing the 		 * end of the file is rounded up to the size of 		 * the block type ( fragment or full block, 		 * depending ). 		 */
 name|size
 operator|=
 name|blksize
@@ -1961,7 +1961,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*  			 * Otherwise if we are allowed to cluster, 			 * grab as much as we can. 			 * 			 * XXX  This may not be a win if we are not 			 * doing sequential access. 			 */
+comment|/* 			 * Otherwise if we are allowed to cluster, 			 * grab as much as we can. 			 * 			 * XXX  This may not be a win if we are not 			 * doing sequential access. 			 */
 name|error
 operator|=
 name|cluster_read
@@ -2039,7 +2039,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Failing all of the above, just read what the  			 * user asked for. Interestingly, the same as 			 * the first option above. 			 */
+comment|/* 			 * Failing all of the above, just read what the 			 * user asked for. Interestingly, the same as 			 * the first option above. 			 */
 name|error
 operator|=
 name|bread
@@ -2185,7 +2185,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * This can only happen in the case of an error 	 * because the loop above resets bp to NULL on each iteration 	 * and on normal completion has not set a new value into it. 	 * so it must have come from a 'break' statement 	 */
+comment|/* 	 * This can only happen in the case of an error 	 * because the loop above resets bp to NULL on each iteration 	 * and on normal completion has not set a new value into it. 	 * so it must have come from a 'break' statement 	 */
 if|if
 condition|(
 name|bp
@@ -2800,7 +2800,7 @@ operator|+
 name|xfersize
 argument_list|)
 expr_stmt|;
-comment|/*       		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer.                  */
+comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer.                  */
 if|if
 condition|(
 name|fs
@@ -3021,7 +3021,7 @@ operator||=
 name|B_RELBUF
 expr_stmt|;
 block|}
-comment|/* 		 * If IO_SYNC each buffer is written synchronously.  Otherwise 		 * if we have a severe page deficiency write the buffer  		 * asynchronously.  Otherwise try to cluster, and if that 		 * doesn't do it then either do an async write (if O_DIRECT), 		 * or a delayed write (if not). 		 */
+comment|/* 		 * If IO_SYNC each buffer is written synchronously.  Otherwise 		 * if we have a severe page deficiency write the buffer 		 * asynchronously.  Otherwise try to cluster, and if that 		 * doesn't do it then either do an async write (if O_DIRECT), 		 * or a delayed write (if not). 		 */
 if|if
 condition|(
 name|ioflag
@@ -3670,7 +3670,7 @@ name|lbn
 operator|+
 literal|1
 expr_stmt|;
-comment|/* 		 * size of buffer.  The buffer representing the 		 * end of the file is rounded up to the size of 		 * the block type ( fragment or full block,  		 * depending ). 		 */
+comment|/* 		 * size of buffer.  The buffer representing the 		 * end of the file is rounded up to the size of 		 * the block type ( fragment or full block, 		 * depending ). 		 */
 name|size
 operator|=
 name|sblksize
@@ -3944,7 +3944,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * This can only happen in the case of an error 	 * because the loop above resets bp to NULL on each iteration 	 * and on normal completion has not set a new value into it. 	 * so it must have come from a 'break' statement 	 */
+comment|/* 	 * This can only happen in the case of an error 	 * because the loop above resets bp to NULL on each iteration 	 * and on normal completion has not set a new value into it. 	 * so it must have come from a 'break' statement 	 */
 if|if
 condition|(
 name|bp
@@ -4334,7 +4334,7 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
-comment|/*       		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer.                  */
+comment|/* 		 * We must perform a read-before-write if the transfer size 		 * does not cover the entire buffer.                  */
 if|if
 condition|(
 name|fs
@@ -4517,7 +4517,7 @@ operator||=
 name|B_RELBUF
 expr_stmt|;
 block|}
-comment|/* 		 * If IO_SYNC each buffer is written synchronously.  Otherwise 		 * if we have a severe page deficiency write the buffer  		 * asynchronously.  Otherwise try to cluster, and if that 		 * doesn't do it then either do an async write (if O_DIRECT), 		 * or a delayed write (if not). 		 */
+comment|/* 		 * If IO_SYNC each buffer is written synchronously.  Otherwise 		 * if we have a severe page deficiency write the buffer 		 * asynchronously.  Otherwise try to cluster, and if that 		 * doesn't do it then either do an async write (if O_DIRECT), 		 * or a delayed write (if not). 		 */
 if|if
 condition|(
 name|ioflag
