@@ -60,7 +60,7 @@ directive|define
 name|FBSD_TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do									\     {									\ 	builtin_define_with_int_value ("__FreeBSD__", FBSD_MAJOR);	\ 	builtin_define_std ("unix");					\ 	builtin_define ("__KPRINTF_ATTRIBUTE__");		       	\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=bsd");					\ 	builtin_assert ("system=FreeBSD");				\ 	FBSD_NATIVE_TARGET_OS_CPP_BUILTINS();				\ 	FBSD_TARGET_CPU_CPP_BUILTINS();					\     }									\   while (0)
+value|do									\     {									\ 	builtin_define_with_int_value ("__FreeBSD__", FBSD_MAJOR);	\ 	builtin_define_std ("unix");					\ 	builtin_define_std ("__unix__");				\ 	builtin_define ("__KPRINTF_ATTRIBUTE__");			\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=bsd");					\ 	builtin_assert ("system=FreeBSD");				\ 	FBSD_NATIVE_TARGET_OS_CPP_BUILTINS();				\ 	FBSD_TARGET_CPU_CPP_BUILTINS();					\     }									\   while (0)
 end_define
 
 begin_comment
