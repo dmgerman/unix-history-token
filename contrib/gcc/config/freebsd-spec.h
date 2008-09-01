@@ -301,5 +301,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|FBSD_SIZE_TYPE
+define|\
+value|(POINTER_SIZE == 64 ? "long unsigned int" : "unsigned int")
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBSD_PTRDIFF_TYPE
+define|\
+value|(POINTER_SIZE == 64 ? "long int" : "int")
+end_define
+
 end_unit
 
