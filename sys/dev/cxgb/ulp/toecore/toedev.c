@@ -343,6 +343,9 @@ operator|&
 name|offload_db_lock
 argument_list|)
 expr_stmt|;
+name|toedev_registration_count
+operator|++
+expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
