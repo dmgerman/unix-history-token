@@ -1550,7 +1550,7 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|int
+name|int64_t
 name|spacefree
 decl_stmt|;
 name|struct
