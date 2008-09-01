@@ -18142,10 +18142,15 @@ name|fvp
 operator|==
 name|tdvp
 condition|)
+block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* 	 * If the source is the same as the destination (that is, if they 	 * are links to the same vnode), then there is nothing to do. 	 */
 if|if
 condition|(
