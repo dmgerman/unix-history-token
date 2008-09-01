@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -78,12 +84,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/protosw.h>
 end_include
 
 begin_include
@@ -2206,7 +2206,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%6u %6u  "
+literal|"%6u %6u "
 argument_list|,
 name|so
 operator|->

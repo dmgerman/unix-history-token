@@ -704,13 +704,16 @@ name|rnh
 decl_stmt|,
 name|head
 decl_stmt|;
+name|size_t
+name|intsize
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 name|int
 name|numfibs
 decl_stmt|;
-name|i
+name|intsize
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -727,7 +730,7 @@ operator|&
 name|fibnum
 argument_list|,
 operator|&
-name|i
+name|intsize
 argument_list|,
 name|NULL
 argument_list|,
@@ -751,7 +754,7 @@ operator|&
 name|numfibs
 argument_list|,
 operator|&
-name|i
+name|intsize
 argument_list|,
 name|NULL
 argument_list|,
@@ -1291,6 +1294,7 @@ name|size_cols
 parameter_list|(
 name|int
 name|ef
+name|__unused
 parameter_list|,
 name|struct
 name|radix_node
@@ -4583,6 +4587,7 @@ name|dst
 parameter_list|,
 name|in_addr_t
 name|addr
+name|__unused
 parameter_list|,
 name|u_long
 name|mask
