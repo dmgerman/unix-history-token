@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: namedconf.c,v 1.21.44.36 2008/01/24 23:45:28 tbox Exp $ */
+comment|/* $Id: namedconf.c,v 1.21.44.36.2.1 2008/07/23 12:03:53 marka Exp $ */
 end_comment
 
 begin_include
@@ -3206,6 +3206,15 @@ block|}
 block|,
 block|{
 literal|"recursive-clients"
+block|,
+operator|&
+name|cfg_type_uint32
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"reserved-sockets"
 block|,
 operator|&
 name|cfg_type_uint32

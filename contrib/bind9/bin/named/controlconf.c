@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2006, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: controlconf.c,v 1.28.2.9.2.13 2008/01/17 23:45:27 tbox Exp $ */
+comment|/* $Id: controlconf.c,v 1.28.2.9.2.13.4.2 2008/07/23 23:16:25 marka Exp $ */
 end_comment
 
 begin_include
@@ -5431,6 +5431,8 @@ operator|&
 name|listener
 operator|->
 name|address
+argument_list|,
+name|ISC_SOCKET_REUSEADDRESS
 argument_list|)
 expr_stmt|;
 if|if

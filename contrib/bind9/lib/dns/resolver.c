@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.c,v 1.218.2.18.4.77.2.1 2008/05/22 21:11:15 each Exp $ */
+comment|/* $Id: resolver.c,v 1.218.2.18.4.77.2.3 2008/07/24 05:00:46 jinmei Exp $ */
 end_comment
 
 begin_include
@@ -4387,6 +4387,8 @@ name|tcpsocket
 argument_list|,
 operator|&
 name|addr
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10623,6 +10625,20 @@ name|event
 operator|->
 name|ev_arg
 decl_stmt|;
+name|isc_timerevent_t
+modifier|*
+name|tevent
+init|=
+operator|(
+name|isc_timerevent_t
+operator|*
+operator|)
+name|event
+decl_stmt|;
+name|resquery_t
+modifier|*
+name|query
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_FCTX
@@ -10668,7 +10684,51 @@ operator|->
 name|timeouts
 operator|++
 expr_stmt|;
-comment|/* 		 * We could cancel the running queries here, or we could let 		 * them keep going.  Right now we choose the latter... 		 */
+comment|/* 		 * We could cancel the running queries here, or we could let 		 * them keep going.  Since we normally use separate sockets for 		 * different queries, we adopt the former approach to reduce 		 * the number of open sockets: cancel the oldest query if it 		 * expired after the query had started (this is usually the 		 * case but is not always so, depending on the task schedule 		 * timing). 		 */
+name|query
+operator|=
+name|ISC_LIST_HEAD
+argument_list|(
+name|fctx
+operator|->
+name|queries
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|query
+operator|!=
+name|NULL
+operator|&&
+name|isc_time_compare
+argument_list|(
+operator|&
+name|tevent
+operator|->
+name|due
+argument_list|,
+operator|&
+name|query
+operator|->
+name|start
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+name|fctx_cancelquery
+argument_list|(
+operator|&
+name|query
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ISC_TRUE
+argument_list|)
+expr_stmt|;
+block|}
 name|fctx
 operator|->
 name|attributes

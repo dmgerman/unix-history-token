@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: client.c,v 1.176.2.13.4.38.4.1 2008/05/22 21:11:13 each Exp $ */
+comment|/* $Id: client.c,v 1.176.2.13.4.38.4.2 2008/07/23 07:28:11 tbox Exp $ */
 end_comment
 
 begin_include
@@ -4457,7 +4457,7 @@ name|rcode
 operator|=
 name|rcode
 expr_stmt|;
-comment|/* 	 * FORMERR loop avoidance:  If we sent a FORMERR message 	 * with the same ID to the same client less than two 	 * seconds ago, assume that we are in an infinite error  	 * packet dialog with a server for some protocol whose  	 * error responses look enough like DNS queries to 	 * elicit a FORMERR response.  Drop a packet to break 	 * the loop. 	 */
+comment|/* 	 * FORMERR loop avoidance:  If we sent a FORMERR message 	 * with the same ID to the same client less than two 	 * seconds ago, assume that we are in an infinite error 	 * packet dialog with a server for some protocol whose 	 * error responses look enough like DNS queries to 	 * elicit a FORMERR response.  Drop a packet to break 	 * the loop. 	 */
 if|if
 condition|(
 name|rcode
@@ -5926,7 +5926,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* 	 * Determine the destination address.  If the receiving interface is 	 * bound to a specific address, we simply use it regardless of the 	 * address family.  All IPv4 queries should fall into this case. 	 * Otherwise, if this is a TCP query, get the address from the 	 * receiving socket (this needs a system call and can be heavy). 	 * For IPv6 UDP queries, we get this from the pktinfo structure (if 	 * supported). 	 * If all the attempts fail (this can happen due to memory shortage, 	 * etc), we regard this as an error for safety.  	 */
+comment|/* 	 * Determine the destination address.  If the receiving interface is 	 * bound to a specific address, we simply use it regardless of the 	 * address family.  All IPv4 queries should fall into this case. 	 * Otherwise, if this is a TCP query, get the address from the 	 * receiving socket (this needs a system call and can be heavy). 	 * For IPv6 UDP queries, we get this from the pktinfo structure (if 	 * supported). 	 * If all the attempts fail (this can happen due to memory shortage, 	 * etc), we regard this as an error for safety. 	 */
 if|if
 condition|(
 operator|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.h,v 1.45.2.2.4.5.4.1 2008/05/22 21:11:16 each Exp $ */
+comment|/* $Id: dispatch.h,v 1.45.2.2.4.5.4.2 2008/07/23 07:28:11 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -506,7 +506,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Stops the flow of responses for the provided id and destination.  * If "sockevent" is non-NULL, the dispatch event and associated buffer is  * also returned to the system.  *  * Requires:  *	"resp" != NULL and "*resp" contain a value previously allocated  *	by dns_dispatch_addresponse();  *  *	May only be called from within the task given as the 'task'   * 	argument to dns_dispatch_addresponse() when allocating '*resp'.  */
+comment|/*  * Stops the flow of responses for the provided id and destination.  * If "sockevent" is non-NULL, the dispatch event and associated buffer is  * also returned to the system.  *  * Requires:  *	"resp" != NULL and "*resp" contain a value previously allocated  *	by dns_dispatch_addresponse();  *  *	May only be called from within the task given as the 'task'  * 	argument to dns_dispatch_addresponse() when allocating '*resp'.  */
 end_comment
 
 begin_function_decl
@@ -541,7 +541,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return the local address for this dispatch.  * This currently only works for dispatches using UDP sockets.  *  * Requires:  *	disp is valid.  *	addrp to be non null.  *  * Returns:  *	ISC_R_SUCCESS	  *	ISC_R_NOTIMPLEMENTED  */
+comment|/*  * Return the local address for this dispatch.  * This currently only works for dispatches using UDP sockets.  *  * Requires:  *	disp is valid.  *	addrp to be non null.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOTIMPLEMENTED  */
 end_comment
 
 begin_function_decl
@@ -579,7 +579,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the bits described by "mask" to the corresponding values in  * "attributes".  *  * That is:  *  *	new = (old& ~mask) | (attributes& mask)  *  * This function has a side effect when DNS_DISPATCHATTR_NOLISTEN changes.   * When the flag becomes off, the dispatch will start receiving on the  * corresponding socket.  When the flag becomes on, receive events on the  * corresponding socket will be canceled.  *  * Requires:  *	disp is valid.  *  *	attributes are reasonable for the dispatch.  That is, setting the UDP  *	attribute on a TCP socket isn't reasonable.  */
+comment|/*  * Set the bits described by "mask" to the corresponding values in  * "attributes".  *  * That is:  *  *	new = (old& ~mask) | (attributes& mask)  *  * This function has a side effect when DNS_DISPATCHATTR_NOLISTEN changes.  * When the flag becomes off, the dispatch will start receiving on the  * corresponding socket.  When the flag becomes on, receive events on the  * corresponding socket will be canceled.  *  * Requires:  *	disp is valid.  *  *	attributes are reasonable for the dispatch.  That is, setting the UDP  *	attribute on a TCP socket isn't reasonable.  */
 end_comment
 
 begin_function_decl

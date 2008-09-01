@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dighost.c,v 1.221.2.19.2.46 2008/01/17 23:45:26 tbox Exp $ */
+comment|/* $Id: dighost.c,v 1.221.2.19.2.46.4.2 2008/07/23 23:16:25 marka Exp $ */
 end_comment
 
 begin_comment
@@ -10150,6 +10150,8 @@ name|sock
 argument_list|,
 operator|&
 name|bind_address
+argument_list|,
+name|ISC_SOCKET_REUSEADDRESS
 argument_list|)
 expr_stmt|;
 else|else
@@ -10193,6 +10195,8 @@ name|sock
 argument_list|,
 operator|&
 name|bind_any
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -10422,6 +10426,8 @@ name|sock
 argument_list|,
 operator|&
 name|bind_address
+argument_list|,
+name|ISC_SOCKET_REUSEADDRESS
 argument_list|)
 expr_stmt|;
 block|}
@@ -10451,6 +10457,8 @@ name|sock
 argument_list|,
 operator|&
 name|bind_any
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
