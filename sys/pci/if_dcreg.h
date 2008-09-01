@@ -964,6 +964,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DC_HAS_BROKEN_RXSTATE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(DC_IS_CENTAUR(x) || DC_IS_CONEXANT(x) || (DC_IS_DAVICOM(x)&&	\ 	pci_get_revid((x)->dc_dev)>= DC_REVISION_DM9102A))
+end_define
+
+begin_define
+define|#
+directive|define
 name|DC_TXSTATE_RESET
 value|0x00000000
 end_define
