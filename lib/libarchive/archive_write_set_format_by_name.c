@@ -110,13 +110,13 @@ index|[]
 init|=
 block|{
 block|{
-literal|"arbsd"
+literal|"ar"
 block|,
 name|archive_write_set_format_ar_bsd
 block|}
 block|,
 block|{
-literal|"ar"
+literal|"arbsd"
 block|,
 name|archive_write_set_format_ar_bsd
 block|}
