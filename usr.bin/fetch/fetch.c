@@ -2003,7 +2003,7 @@ name|url
 operator|->
 name|scheme
 argument_list|,
-literal|"ftp"
+name|SCHEME_FTP
 argument_list|)
 operator|==
 literal|0
@@ -2060,7 +2060,7 @@ name|url
 operator|->
 name|scheme
 argument_list|,
-literal|"http"
+name|SCHEME_HTTP
 argument_list|)
 operator|==
 literal|0
