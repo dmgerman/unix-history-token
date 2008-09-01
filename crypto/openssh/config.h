@@ -3971,7 +3971,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_LONG_INT
-value|8
+value|4
 end_define
 
 begin_comment
@@ -3982,7 +3982,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_LONG_LONG_INT
-value|4
+value|8
 end_define
 
 begin_comment
