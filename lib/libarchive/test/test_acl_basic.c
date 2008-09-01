@@ -868,7 +868,7 @@ block|}
 block|}
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
 comment|/* Known broken before 1.9.0. */

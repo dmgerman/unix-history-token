@@ -1349,7 +1349,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
 comment|/* libarchive< 1.9 doesn't get this right */
@@ -1416,9 +1416,16 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_API_VERSION
-operator|>
-literal|1
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|2000000
+name|archive_read_finish
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|assert
 argument_list|(
 literal|0
@@ -1427,13 +1434,6 @@ name|archive_read_finish
 argument_list|(
 name|a
 argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|archive_read_finish
-argument_list|(
-name|a
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1468,7 +1468,7 @@ expr_stmt|;
 comment|/* 	 * libarchive< 1.9 doesn't support the newer --posix sparse formats 	 * from GNU tar 1.15 and later. 	 */
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
 name|skipping

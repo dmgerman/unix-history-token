@@ -39,7 +39,7 @@ begin_block
 block|{
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
 name|skipping

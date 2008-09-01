@@ -257,7 +257,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 comment|/* dev */
@@ -290,7 +290,7 @@ directive|endif
 comment|/* devmajor/devminor are tested specially below. */
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 comment|/* filetype */
@@ -515,7 +515,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 comment|/* ino */
@@ -862,7 +862,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 comment|/* nlink */
@@ -1021,7 +1021,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 comment|/* rdev */
@@ -1114,7 +1114,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|strcpy
@@ -1675,7 +1675,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_dev
@@ -1719,7 +1719,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_ino
@@ -1749,7 +1749,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_nlink
@@ -1770,7 +1770,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_rdev
@@ -1889,7 +1889,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -1961,7 +1961,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -2008,7 +2008,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -2035,7 +2035,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -2092,7 +2092,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
 name|skipping
@@ -2374,7 +2374,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
 name|skipping
@@ -2500,7 +2500,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_dev
@@ -2523,7 +2523,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_filetype
@@ -2558,7 +2558,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_ino
@@ -2588,7 +2588,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_nlink
@@ -2609,7 +2609,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_rdev
@@ -2702,7 +2702,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -2774,7 +2774,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -2821,7 +2821,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -2848,7 +2848,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -2905,7 +2905,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
 name|skipping
@@ -3250,7 +3250,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|<
 literal|1009000
 name|skipping
@@ -3362,7 +3362,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -3449,7 +3449,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -3747,7 +3747,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -3862,7 +3862,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_dev
@@ -3883,7 +3883,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_ino
@@ -3920,7 +3920,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_nlink
@@ -3982,7 +3982,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -4007,7 +4007,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -4041,7 +4041,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|assertEqualInt
@@ -4179,7 +4179,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_dev
@@ -4246,7 +4246,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_ino
@@ -4345,7 +4345,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_nlink
@@ -4447,7 +4447,7 @@ directive|if
 name|__FreeBSD__
 if|#
 directive|if
-name|ARCHIVE_VERSION_STAMP
+name|ARCHIVE_VERSION_NUMBER
 operator|>=
 literal|1009000
 name|archive_entry_set_dev

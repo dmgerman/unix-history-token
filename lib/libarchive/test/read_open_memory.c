@@ -100,9 +100,9 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|ARCHIVE_API_VERSION
+name|ARCHIVE_VERSION_NUMBER
 operator|<
-literal|2
+literal|2000000
 end_if
 
 begin_function_decl
@@ -478,9 +478,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|ARCHIVE_API_VERSION
+name|ARCHIVE_VERSION_NUMBER
 operator|<
-literal|2
+literal|2000000
 end_if
 
 begin_decl_stmt
