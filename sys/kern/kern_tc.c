@@ -4276,7 +4276,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"%ju.%016jx too long\n"
+literal|"t_delta %ju.%016jx too long\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -4329,7 +4329,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"%ju.%016jx too short\n"
+literal|"t_delta %ju.%016jx too short\n"
 argument_list|,
 operator|(
 name|uintmax_t
