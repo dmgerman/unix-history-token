@@ -7038,10 +7038,6 @@ name|f_prevcount
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|wmsg
-condition|)
 name|free
 argument_list|(
 name|wmsg
