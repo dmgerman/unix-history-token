@@ -5683,7 +5683,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tresult
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
@@ -5701,7 +5701,7 @@ argument_list|,
 name|zname
 argument_list|)
 expr_stmt|;
-name|result
+name|tresult
 operator|=
 name|ISC_R_FAILURE
 expr_stmt|;

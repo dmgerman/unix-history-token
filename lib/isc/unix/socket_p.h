@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: socket_p.h,v 1.7.18.2 2005/04/29 00:17:08 marka Exp $ */
+comment|/* $Id: socket_p.h,v 1.7.18.2.52.1 2008/07/29 04:47:31 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -46,9 +46,11 @@ name|isc__socketmgr_getfdsets
 parameter_list|(
 name|fd_set
 modifier|*
+modifier|*
 name|readset
 parameter_list|,
 name|fd_set
+modifier|*
 modifier|*
 name|writeset
 parameter_list|,
