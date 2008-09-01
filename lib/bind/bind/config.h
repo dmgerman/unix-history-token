@@ -78,12 +78,14 @@ begin_define
 define|#
 directive|define
 name|HAVE_MEMMOVE
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|HAVE_MEMCHR
+value|1
 end_define
 
 begin_comment
