@@ -286,14 +286,14 @@ modifier|*
 name|relatab
 decl_stmt|;
 name|int
-name|nrela
+name|nrelatab
 decl_stmt|;
 name|Elf_relent
 modifier|*
 name|reltab
 decl_stmt|;
 name|int
-name|nrel
+name|nreltab
 decl_stmt|;
 name|Elf_Sym
 modifier|*
@@ -1178,7 +1178,7 @@ name|SHT_REL
 case|:
 name|ef
 operator|->
-name|nrel
+name|nreltab
 operator|++
 expr_stmt|;
 break|break;
@@ -1187,7 +1187,7 @@ name|SHT_RELA
 case|:
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 operator|++
 expr_stmt|;
 break|break;
@@ -1299,7 +1299,7 @@ if|if
 condition|(
 name|ef
 operator|->
-name|nrel
+name|nreltab
 operator|!=
 literal|0
 condition|)
@@ -1311,7 +1311,7 @@ name|malloc
 argument_list|(
 name|ef
 operator|->
-name|nrel
+name|nreltab
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1332,7 +1332,7 @@ if|if
 condition|(
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 operator|!=
 literal|0
 condition|)
@@ -1344,7 +1344,7 @@ name|malloc
 argument_list|(
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1380,7 +1380,7 @@ operator|||
 operator|(
 name|ef
 operator|->
-name|nrel
+name|nreltab
 operator|!=
 literal|0
 operator|&&
@@ -1394,7 +1394,7 @@ operator|||
 operator|(
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 operator|!=
 literal|0
 operator|&&
@@ -1972,11 +1972,11 @@ name|rl
 operator|!=
 name|ef
 operator|->
-name|nrel
+name|nreltab
 condition|)
 name|panic
 argument_list|(
-literal|"lost rel"
+literal|"lost reltab"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1985,11 +1985,11 @@ name|ra
 operator|!=
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 condition|)
 name|panic
 argument_list|(
-literal|"lost rela"
+literal|"lost relatab"
 argument_list|)
 expr_stmt|;
 comment|/* Local intra-module relocations */
@@ -2578,13 +2578,13 @@ literal|0
 expr_stmt|;
 name|ef
 operator|->
-name|nrel
+name|nreltab
 operator|=
 literal|0
 expr_stmt|;
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 operator|=
 literal|0
 expr_stmt|;
@@ -2796,7 +2796,7 @@ name|SHT_REL
 case|:
 name|ef
 operator|->
-name|nrel
+name|nreltab
 operator|++
 expr_stmt|;
 break|break;
@@ -2805,7 +2805,7 @@ name|SHT_RELA
 case|:
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 operator|++
 expr_stmt|;
 break|break;
@@ -2937,7 +2937,7 @@ if|if
 condition|(
 name|ef
 operator|->
-name|nrel
+name|nreltab
 operator|!=
 literal|0
 condition|)
@@ -2949,7 +2949,7 @@ name|malloc
 argument_list|(
 name|ef
 operator|->
-name|nrel
+name|nreltab
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -2970,7 +2970,7 @@ if|if
 condition|(
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 operator|!=
 literal|0
 condition|)
@@ -2982,7 +2982,7 @@ name|malloc
 argument_list|(
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3018,7 +3018,7 @@ operator|||
 operator|(
 name|ef
 operator|->
-name|nrel
+name|nreltab
 operator|!=
 literal|0
 operator|&&
@@ -3032,7 +3032,7 @@ operator|||
 operator|(
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 operator|!=
 literal|0
 operator|&&
@@ -4326,11 +4326,11 @@ name|rl
 operator|!=
 name|ef
 operator|->
-name|nrel
+name|nreltab
 condition|)
 name|panic
 argument_list|(
-literal|"lost rel"
+literal|"lost reltab"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4339,11 +4339,11 @@ name|ra
 operator|!=
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 condition|)
 name|panic
 argument_list|(
-literal|"lost rela"
+literal|"lost relatab"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4675,7 +4675,7 @@ name|i
 operator|<
 name|ef
 operator|->
-name|nrel
+name|nreltab
 condition|;
 name|i
 operator|++
@@ -4715,7 +4715,7 @@ name|i
 operator|<
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 condition|;
 name|i
 operator|++
@@ -5122,7 +5122,7 @@ name|i
 operator|<
 name|ef
 operator|->
-name|nrel
+name|nreltab
 condition|;
 name|i
 operator|++
@@ -5294,7 +5294,7 @@ name|i
 operator|<
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 condition|;
 name|i
 operator|++
@@ -6831,7 +6831,7 @@ name|i
 operator|<
 name|ef
 operator|->
-name|nrel
+name|nreltab
 condition|;
 name|i
 operator|++
@@ -6975,7 +6975,7 @@ name|i
 operator|<
 name|ef
 operator|->
-name|nrela
+name|nrelatab
 condition|;
 name|i
 operator|++
