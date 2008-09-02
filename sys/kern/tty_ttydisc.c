@@ -4472,9 +4472,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|tty_lock_assert
 argument_list|(
 name|tp
@@ -4495,7 +4492,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|ret
+name|len
 operator|=
 name|ttyoutq_read
 argument_list|(
@@ -4519,12 +4516,12 @@ argument_list|(
 operator|&
 name|tty_nout
 argument_list|,
-name|ret
+name|len
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|len
 operator|)
 return|;
 block|}
