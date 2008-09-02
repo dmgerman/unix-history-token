@@ -3214,6 +3214,17 @@ expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
+name|pcb
+operator|->
+name|pcb_flags
+operator|&=
+operator|~
+operator|(
+name|PCB_32BIT
+operator||
+name|PCB_GS32BIT
+operator|)
+expr_stmt|;
 name|load_ds
 argument_list|(
 name|_udatasel
