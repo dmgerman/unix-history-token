@@ -3336,9 +3336,14 @@ literal|1
 expr_stmt|;
 name|l1_pages
 operator|=
-literal|4
+name|xen_start_info
+operator|->
+name|nr_pt_frames
+operator|-
+name|l2_pages
+operator|-
+name|l3_pages
 expr_stmt|;
-comment|/* XXX not certain if this varies */
 name|KPTphysoff
 operator|=
 operator|(
@@ -3576,7 +3581,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PAE */
-comment|/* unmap remaining pages from initial 4MB chunk */
+comment|/* unmap remaining pages from initial 4MB chunk 	 * 	 */
 for|for
 control|(
 name|tmpva
@@ -3660,7 +3665,7 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
-comment|/* 		 * ensure that all page table pages have been zeroed 		 */
+comment|/* 		 * make sure that all the initial page table pages 		 * have been zeroed 		 */
 name|PT_SET_MA
 argument_list|(
 name|cur_space
@@ -3693,6 +3698,9 @@ name|PT_SET_MA
 argument_list|(
 name|cur_space
 argument_list|,
+operator|(
+name|vm_paddr_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
