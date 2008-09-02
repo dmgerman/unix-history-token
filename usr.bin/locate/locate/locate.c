@@ -1358,7 +1358,7 @@ name|rus
 decl_stmt|;
 name|getrusage
 argument_list|(
-literal|0
+name|RUSAGE_SELF
 argument_list|,
 operator|&
 name|rus
