@@ -1211,7 +1211,7 @@ expr_stmt|;
 comment|/* Start timer */
 name|getrusage
 argument_list|(
-literal|0
+name|RUSAGE_SELF
 argument_list|,
 operator|&
 name|before
@@ -1266,7 +1266,7 @@ expr_stmt|;
 comment|/* Stop timer */
 name|getrusage
 argument_list|(
-literal|0
+name|RUSAGE_SELF
 argument_list|,
 operator|&
 name|after
