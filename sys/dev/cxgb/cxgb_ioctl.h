@@ -28,27 +28,13 @@ literal|0x40
 block|,
 name|CH_GETREG
 block|,
-name|CH_SETTPI
-block|,
-name|CH_GETTPI
-block|,
-name|CH_DEVUP
-block|,
 name|CH_GETMTUTAB
 block|,
 name|CH_SETMTUTAB
 block|,
-name|CH_GETMTU
-block|,
 name|CH_SET_PM
 block|,
 name|CH_GET_PM
-block|,
-name|CH_GET_TCAM
-block|,
-name|CH_SET_TCAM
-block|,
-name|CH_GET_TCB
 block|,
 name|CH_READ_TCAM_WORD
 block|,
@@ -60,17 +46,9 @@ name|CH_GET_SGE_DESC
 block|,
 name|CH_LOAD_FW
 block|,
-name|CH_GET_PROTO
-block|,
-name|CH_SET_PROTO
-block|,
 name|CH_SET_TRACE_FILTER
 block|,
-name|CH_SET_QSET_PARAMS
-block|,
 name|CH_GET_QSET_PARAMS
-block|,
-name|CH_SET_QSET_NUM
 block|,
 name|CH_GET_QSET_NUM
 block|,
@@ -78,15 +56,39 @@ name|CH_SET_PKTSCHED
 block|,
 name|CH_IFCONF_GETREGS
 block|,
-name|CH_GETMIIREGS
+name|CH_GET_MIIREG
 block|,
-name|CH_SETMIIREGS
+name|CH_SET_MIIREG
 block|,
-name|CH_SET_FILTER
+name|CH_GET_EEPROM
 block|,
 name|CH_SET_HW_SCHED
 block|,
-name|CH_DEL_FILTER
+name|CH_LOAD_BOOT
+block|,
+name|CH_CLEAR_STATS
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/* statistics categories */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|STATS_PORT
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+name|STATS_QUEUE
+init|=
+literal|1
+operator|<<
+literal|2
 block|, }
 enum|;
 end_enum
@@ -148,9 +150,6 @@ struct|struct
 name|ch_desc
 block|{
 name|uint32_t
-name|cmd
-decl_stmt|;
-name|uint32_t
 name|queue_num
 decl_stmt|;
 name|uint32_t
@@ -174,9 +173,6 @@ struct|struct
 name|ch_mem_range
 block|{
 name|uint32_t
-name|cmd
-decl_stmt|;
-name|uint32_t
 name|mem_id
 decl_stmt|;
 name|uint32_t
@@ -195,6 +191,22 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+block|{
+name|MEM_CM
+block|,
+name|MEM_PMRX
+block|,
+name|MEM_PMTX
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* ch_mem_range.mem_id values */
+end_comment
 
 begin_struct
 struct|struct
@@ -244,9 +256,6 @@ begin_struct
 struct|struct
 name|ch_pktsched_params
 block|{
-name|uint32_t
-name|cmd
-decl_stmt|;
 name|uint8_t
 name|sched
 decl_stmt|;
@@ -270,9 +279,6 @@ begin_struct
 struct|struct
 name|ch_hw_sched
 block|{
-name|uint32_t
-name|cmd
-decl_stmt|;
 name|uint8_t
 name|sched
 decl_stmt|;
@@ -290,7 +296,7 @@ name|int32_t
 name|class_ipg
 decl_stmt|;
 comment|/* tenths of nanoseconds */
-name|uint32_t
+name|int32_t
 name|flow_ipg
 decl_stmt|;
 comment|/* usec */
@@ -300,142 +306,8 @@ end_struct
 
 begin_struct
 struct|struct
-name|ch_filter_tuple
-block|{
-name|uint32_t
-name|sip
-decl_stmt|;
-name|uint32_t
-name|dip
-decl_stmt|;
-name|uint16_t
-name|sport
-decl_stmt|;
-name|uint16_t
-name|dport
-decl_stmt|;
-name|uint16_t
-name|vlan
-range|:
-literal|12
-decl_stmt|;
-name|uint16_t
-name|vlan_prio
-range|:
-literal|3
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ch_filter
-block|{
-name|uint32_t
-name|cmd
-decl_stmt|;
-name|uint32_t
-name|filter_id
-decl_stmt|;
-name|struct
-name|ch_filter_tuple
-name|val
-decl_stmt|;
-name|struct
-name|ch_filter_tuple
-name|mask
-decl_stmt|;
-name|uint16_t
-name|mac_addr_idx
-decl_stmt|;
-name|uint8_t
-name|mac_hit
-range|:
-literal|1
-decl_stmt|;
-name|uint8_t
-name|proto
-range|:
-literal|2
-decl_stmt|;
-name|uint8_t
-name|want_filter_id
-range|:
-literal|1
-decl_stmt|;
-comment|/* report filter TID instead of RSS hash */
-name|uint8_t
-name|pass
-range|:
-literal|1
-decl_stmt|;
-comment|/* whether to pass or drop packets */
-name|uint8_t
-name|rss
-range|:
-literal|1
-decl_stmt|;
-comment|/* use RSS or specified qset */
-name|uint8_t
-name|qset
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TCB_SIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TCB_SIZE
-value|128
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TCB size in 32-bit words */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCB_WORDS
-value|(TCB_SIZE / 4)
-end_define
-
-begin_enum
-enum|enum
-block|{
-name|MEM_CM
-block|,
-name|MEM_PMRX
-block|,
-name|MEM_PMTX
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* ch_mem_range.mem_id values */
-end_comment
-
-begin_struct
-struct|struct
 name|ch_mtus
 block|{
-name|uint32_t
-name|cmd
-decl_stmt|;
 name|uint32_t
 name|nmtus
 decl_stmt|;
@@ -453,9 +325,6 @@ begin_struct
 struct|struct
 name|ch_pm
 block|{
-name|uint32_t
-name|cmd
-decl_stmt|;
 name|uint32_t
 name|tx_pg_sz
 decl_stmt|;
@@ -477,54 +346,8 @@ end_struct
 
 begin_struct
 struct|struct
-name|ch_tcam
-block|{
-name|uint32_t
-name|cmd
-decl_stmt|;
-name|uint32_t
-name|tcam_size
-decl_stmt|;
-name|uint32_t
-name|nservers
-decl_stmt|;
-name|uint32_t
-name|nroutes
-decl_stmt|;
-name|uint32_t
-name|nfilters
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ch_tcb
-block|{
-name|uint32_t
-name|cmd
-decl_stmt|;
-name|uint32_t
-name|tcb_index
-decl_stmt|;
-name|uint32_t
-name|tcb_data
-index|[
-name|TCB_WORDS
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|ch_tcam_word
 block|{
-name|uint32_t
-name|cmd
-decl_stmt|;
 name|uint32_t
 name|addr
 decl_stmt|;
@@ -542,9 +365,6 @@ begin_struct
 struct|struct
 name|ch_trace
 block|{
-name|uint32_t
-name|cmd
-decl_stmt|;
 name|uint32_t
 name|sip
 decl_stmt|;
@@ -573,15 +393,18 @@ name|uint32_t
 name|vlan
 range|:
 literal|12
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|vlan_mask
 range|:
 literal|12
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|intf
 range|:
 literal|4
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|intf_mask
 range|:
 literal|4
@@ -596,19 +419,23 @@ name|uint8_t
 name|invert_match
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|config_tx
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|config_rx
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|trace_tx
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
+name|uint8_t
 name|trace_rx
 range|:
 literal|1
@@ -626,7 +453,7 @@ end_define
 
 begin_struct
 struct|struct
-name|ifconf_regs
+name|ch_ifconf_regs
 block|{
 name|uint32_t
 name|version
@@ -645,7 +472,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|mii_data
+name|ch_mii_data
 block|{
 name|uint32_t
 name|phy_id
@@ -658,6 +485,27 @@ name|val_in
 decl_stmt|;
 name|uint32_t
 name|val_out
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ch_eeprom
+block|{
+name|uint32_t
+name|magic
+decl_stmt|;
+name|uint32_t
+name|offset
+decl_stmt|;
+name|uint32_t
+name|len
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|data
 decl_stmt|;
 block|}
 struct|;
@@ -680,8 +528,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHELSIO_GETMTUTAB
+value|_IOR('f', CH_GETMTUTAB, struct ch_mtus)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_SETMTUTAB
+value|_IOW('f', CH_SETMTUTAB, struct ch_mtus)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_SET_PM
+value|_IOW('f', CH_SET_PM, struct ch_pm)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_GET_PM
+value|_IOR('f', CH_GET_PM, struct ch_pm)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHELSIO_READ_TCAM_WORD
-value|_IOR('f', CH_READ_TCAM_WORD, struct ch_tcam)
+value|_IOWR('f', CH_READ_TCAM_WORD, struct ch_tcam_word)
 end_define
 
 begin_define
@@ -708,43 +584,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHELSIO_GET_QSET_PARAMS
-value|_IOWR('f', CH_GET_QSET_PARAMS, struct ch_qset_params)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHELSIO_SET_QSET_PARAMS
-value|_IOW('f', CH_SET_QSET_PARAMS, struct ch_qset_params)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHELSIO_GET_QSET_NUM
-value|_IOWR('f', CH_GET_QSET_NUM, struct ch_reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHELSIO_SET_QSET_NUM
-value|_IOW('f', CH_SET_QSET_NUM, struct ch_reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHELSIO_GETMTUTAB
-value|_IOR('f', CH_GET_QSET_NUM, struct ch_mtus)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHELSIO_SETMTUTAB
-value|_IOW('f', CH_SET_QSET_NUM, struct ch_mtus)
+name|CHELSIO_LOAD_FW
+value|_IOWR('f', CH_LOAD_FW, struct ch_mem_range)
 end_define
 
 begin_define
@@ -757,6 +598,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHELSIO_GET_QSET_PARAMS
+value|_IOWR('f', CH_GET_QSET_PARAMS, struct ch_qset_params)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_GET_QSET_NUM
+value|_IOR('f', CH_GET_QSET_NUM, struct ch_reg)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHELSIO_SET_PKTSCHED
 value|_IOW('f', CH_SET_PKTSCHED, struct ch_pktsched_params)
 end_define
@@ -764,57 +619,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHELSIO_IFCONF_GETREGS
-value|_IOWR('f', CH_IFCONF_GETREGS, struct ifconf_regs)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCGMIIREG
-value|_IOWR('f', CH_GETMIIREGS, struct mii_data)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCSMIIREG
-value|_IOWR('f', CH_SETMIIREGS, struct mii_data)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CHELSIO_SET_HW_SCHED
-value|_IOWR('f', CH_SET_HW_SCHED, struct ch_hw_sched)
+value|_IOW('f', CH_SET_HW_SCHED, struct ch_hw_sched)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHELSIO_SET_FILTER
-value|_IOW('f', CH_SET_FILTER, struct ch_filter)
+name|CHELSIO_LOAD_BOOT
+value|_IOW('f', CH_LOAD_BOOT, struct ch_mem_range)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHELSIO_DEL_FILTER
-value|_IOW('f', CH_DEL_FILTER, struct ch_filter)
+name|CHELSIO_CLEAR_STATS
+value|_IO('f', CH_CLEAR_STATS)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHELSIO_DEVUP
-value|_IO('f', CH_DEVUP)
+name|CHELSIO_IFCONF_GETREGS
+value|_IOWR('f', CH_IFCONF_GETREGS, struct ch_ifconf_regs)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHELSIO_GET_TCB
-value|_IOWR('f', CH_GET_TCB, struct ch_tcb)
+name|CHELSIO_GET_MIIREG
+value|_IOWR('f', CH_GET_MIIREG, struct ch_mii_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_SET_MIIREG
+value|_IOW('f', CH_SET_MIIREG, struct ch_mii_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_GET_EEPROM
+value|_IOWR('f', CH_GET_EEPROM, struct ch_eeprom)
 end_define
 
 begin_endif
