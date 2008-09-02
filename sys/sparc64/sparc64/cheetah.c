@@ -174,9 +174,12 @@ name|PAGE_SIZE
 condition|;
 name|pa
 operator|+=
+name|PCPU_GET
+argument_list|(
 name|cache
 operator|.
 name|dc_linesize
+argument_list|)
 control|)
 name|stxa_sync
 argument_list|(
