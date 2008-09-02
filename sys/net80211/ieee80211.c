@@ -2495,6 +2495,11 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+name|if_free
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
