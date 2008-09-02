@@ -8637,13 +8637,6 @@ name|mbuf
 modifier|*
 name|nextrecord
 decl_stmt|;
-name|int
-name|orig_resid
-init|=
-name|uio
-operator|->
-name|uio_resid
-decl_stmt|;
 if|if
 condition|(
 name|psa
@@ -9008,7 +9001,6 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* XXXRW: sbwait() may not be as happy without sblock(). */
 name|error
 operator|=
 name|sbwait
@@ -9128,10 +9120,6 @@ operator|->
 name|m_type
 operator|)
 argument_list|)
-expr_stmt|;
-name|orig_resid
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -9544,10 +9532,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|orig_resid
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -9571,11 +9555,6 @@ operator|=
 name|cmn
 expr_stmt|;
 block|}
-name|orig_resid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXXRW: why this? */
 block|}
 name|KASSERT
 argument_list|(
