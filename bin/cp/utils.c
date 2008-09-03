@@ -960,14 +960,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|from_fd
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Don't remove the target even after an error.  The target might 	 * not be a regular file, or its attributes might be important, 	 * or its contents might be irreplaceable.  It would only be safe 	 * to remove it if we created it and its length is 0. 	 */
 if|if
 condition|(
@@ -1038,6 +1030,14 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|from_fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rval
