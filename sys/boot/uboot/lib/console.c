@@ -29,6 +29,12 @@ directive|include
 file|"bootstrap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"glue.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|console
@@ -147,7 +153,9 @@ name|arg
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

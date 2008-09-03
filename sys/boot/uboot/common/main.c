@@ -112,16 +112,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|char
-name|bootargs
-index|[
-literal|128
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|unsigned
 name|char
@@ -470,26 +460,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|char
-modifier|*
-modifier|*
-name|bargv
-decl_stmt|;
-name|char
-modifier|*
-name|ch
-decl_stmt|;
-name|int
-name|bargc
-decl_stmt|,
-name|i
-decl_stmt|;
 name|struct
 name|api_signature
 modifier|*
 name|sig
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -559,6 +538,9 @@ name|printf
 argument_list|(
 literal|"Compatible API signature found @%x\n"
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|sig
 argument_list|)
 expr_stmt|;
@@ -914,7 +896,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"heap base at %p, top at %p, used %ld\n"
+literal|"heap base at %p, top at %p, used %d\n"
 argument_list|,
 name|end
 argument_list|,

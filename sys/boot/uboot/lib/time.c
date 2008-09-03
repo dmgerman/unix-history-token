@@ -23,6 +23,12 @@ directive|include
 file|<stand.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"glue.h"
+end_include
+
 begin_comment
 comment|/*  * Return the time in seconds since the beginning of the day.  */
 end_comment
@@ -58,7 +64,9 @@ operator|=
 name|secs
 expr_stmt|;
 return|return
+operator|(
 name|secs
+operator|)
 return|;
 block|}
 end_function

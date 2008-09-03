@@ -17,6 +17,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<stand.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"glue.h"
+end_include
+
 begin_function
 name|void
 name|exit

@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/metadata.h>
 end_include
 
@@ -52,6 +58,20 @@ include|#
 directive|include
 file|"bootstrap.h"
 end_include
+
+begin_function_decl
+specifier|extern
+name|vm_offset_t
+name|md_load
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|vm_offset_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -198,13 +218,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|EFTYPE
 operator|)
 return|;
-block|}
 name|e
 operator|=
 operator|(
@@ -241,7 +259,7 @@ operator|)
 return|;
 name|printf
 argument_list|(
-literal|"Kernel entry at 0x%lx ...\n"
+literal|"Kernel entry at 0x%x ...\n"
 argument_list|,
 name|e
 operator|->

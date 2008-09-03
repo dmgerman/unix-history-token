@@ -19,6 +19,12 @@ directive|define
 name|_API_GLUE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"api_public.h"
+end_include
+
 begin_function_decl
 name|int
 name|syscall

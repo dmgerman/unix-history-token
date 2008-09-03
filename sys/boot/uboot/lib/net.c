@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"glue.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libuboot.h"
 end_include
 
@@ -208,18 +214,6 @@ parameter_list|(
 name|struct
 name|netif
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|device_info
-modifier|*
-name|ub_dev_get
-parameter_list|(
-name|int
-name|i
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -455,12 +449,16 @@ operator|++
 control|)
 if|if
 condition|(
+operator|(
 name|di
 operator|=
 name|ub_dev_get
 argument_list|(
 name|i
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 if|if
 condition|(
@@ -556,11 +554,6 @@ name|nif
 operator|->
 name|nif_devdata
 decl_stmt|;
-name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
 name|size_t
 name|sendlen
 decl_stmt|;
@@ -573,6 +566,11 @@ name|defined
 argument_list|(
 name|NETIF_DEBUG
 argument_list|)
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"net_put: desc 0x%x, pkt 0x%x, len %d\n"
@@ -946,8 +944,6 @@ name|di
 decl_stmt|;
 name|int
 name|err
-decl_stmt|,
-name|i
 decl_stmt|;
 name|sc
 operator|=
@@ -960,6 +956,7 @@ name|uboot_softc
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|ub_dev_open
@@ -968,6 +965,9 @@ name|sc
 operator|->
 name|sc_handle
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -1138,6 +1138,7 @@ name|err
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|ub_dev_close
@@ -1146,6 +1147,9 @@ name|sc
 operator|->
 name|sc_handle
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|panic
 argument_list|(
