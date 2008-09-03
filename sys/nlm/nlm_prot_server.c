@@ -2993,6 +2993,11 @@ operator|&
 name|rpc
 argument_list|)
 condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 if|if
 condition|(
 name|rpc
