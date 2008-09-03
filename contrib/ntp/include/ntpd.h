@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ntp_debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_select.h"
 end_include
 
@@ -44,85 +50,6 @@ include|#
 directive|include
 file|"recvbuff.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYS_WINNT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|exit
-value|service_exit
-end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|service_exit
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*	declare the service threads */
-end_comment
-
-begin_function_decl
-name|void
-name|service_main
-parameter_list|(
-name|DWORD
-parameter_list|,
-name|LPTSTR
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|service_ctrl
-parameter_list|(
-name|DWORD
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|worker_thread
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|sleep
-parameter_list|(
-name|x
-parameter_list|)
-value|Sleep((DWORD) x * 1000
-comment|/* milliseconds */
-value|);
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYS_WINNT */
-end_comment
 
 begin_comment
 comment|/* ntp_config.c */
@@ -460,6 +387,7 @@ name|set_sys_var
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -521,6 +449,65 @@ begin_comment
 comment|/* ntp_io.c */
 end_comment
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|interface_info
+block|{
+name|struct
+name|interface
+modifier|*
+name|interface
+decl_stmt|;
+name|u_char
+name|action
+decl_stmt|;
+block|}
+name|interface_info_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|interface_receiver_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|interface_info_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|int
+name|disable_dynamic_updates
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|interface_enumerate
+name|P
+argument_list|(
+operator|(
+name|interface_receiver_t
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -549,6 +536,75 @@ argument_list|(
 operator|(
 expr|struct
 name|sockaddr_storage
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|enable_broadcast
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|interface
+operator|*
+operator|,
+expr|struct
+name|sockaddr_storage
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|enable_multicast_if
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|interface
+operator|*
+operator|,
+expr|struct
+name|sockaddr_storage
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|interface_dump
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|interface
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|interface_update
+name|P
+argument_list|(
+operator|(
+name|interface_receiver_t
+operator|,
+name|void
 operator|*
 operator|)
 argument_list|)
@@ -692,6 +748,41 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|collect_timing
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|recvbuf
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|l_fp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_SIGNALED_IO
 end_ifdef
 
@@ -733,6 +824,41 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|UNBLOCK_IO_AND_ALARM
+parameter_list|()
+value|unblock_io_and_alarm()
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_IO_AND_ALARM
+parameter_list|()
+value|block_io_and_alarm()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UNBLOCK_IO_AND_ALARM
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLOCK_IO_AND_ALARM
+parameter_list|()
+end_define
 
 begin_endif
 endif|#
@@ -830,8 +956,6 @@ name|peer
 operator|*
 operator|,
 name|double
-operator|,
-name|double
 operator|)
 argument_list|)
 decl_stmt|;
@@ -875,6 +999,20 @@ operator|(
 name|void
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|sys_clocktime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|sys_tai
 decl_stmt|;
 end_decl_stmt
 
@@ -923,7 +1061,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|ntp_monitor
 name|P
 argument_list|(
@@ -931,6 +1069,22 @@ operator|(
 expr|struct
 name|recvbuf
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ntp_monclearinterface
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|interface
+operator|*
+name|interface
 operator|)
 argument_list|)
 decl_stmt|;
@@ -996,8 +1150,6 @@ operator|,
 name|int
 operator|,
 name|int
-operator|,
-name|int
 operator|*
 operator|)
 argument_list|)
@@ -1014,6 +1166,27 @@ name|P
 argument_list|(
 operator|(
 name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_peerdstadr
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|peer
+operator|*
+name|peer
+operator|,
+expr|struct
+name|interface
+operator|*
+name|interface
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1159,6 +1332,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|refresh_all_peerinterfaces
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|unpeer
 name|P
 argument_list|(
@@ -1224,19 +1410,6 @@ operator|(
 expr|struct
 name|recvbuf
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|resetmanycast
-name|P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1325,7 +1498,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|make_keylist
 name|P
 argument_list|(
@@ -1471,6 +1644,62 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|iffpar_file
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|EVP_PKEY
+modifier|*
+name|iffpar_pkey
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|gqpar_file
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|EVP_PKEY
+modifier|*
+name|gqpar_pkey
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|mvpar_file
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|EVP_PKEY
+modifier|*
+name|mvpar_pkey
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|value
+name|tai_leap
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1517,6 +1746,22 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|peer_crypto_clear
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|peer
+operator|*
+name|peer
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|peer_clear
 name|P
 argument_list|(
@@ -1545,9 +1790,6 @@ operator|*
 operator|,
 expr|struct
 name|pkt
-operator|*
-operator|,
-name|l_fp
 operator|*
 operator|)
 argument_list|)
@@ -1837,6 +2079,8 @@ operator|(
 expr|struct
 name|sockaddr_storage
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1923,6 +2167,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|timer_interfacetimeout
+name|P
+argument_list|(
+operator|(
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|int
+name|interface_interval
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1973,7 +2238,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|hourly_stats
+name|write_stats
 name|P
 argument_list|(
 operator|(
@@ -1992,6 +2257,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2127,6 +2393,32 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|record_timing_stats
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -2139,6 +2431,13 @@ name|sockaddr_storage
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|old_drift
 decl_stmt|;
 end_decl_stmt
 
@@ -2162,28 +2461,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
 name|sys_phone
 index|[]
-index|[
-name|MAXDIAL
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* ACTS phone numbers */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|pps_device
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PPS device name */
 end_comment
 
 begin_if
@@ -2217,18 +2502,6 @@ end_endif
 begin_comment
 comment|/* ntp_control.c */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|struct ctl_trap; extern struct ctl_trap ctl_trap[];
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2442,6 +2715,47 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of the file with configuration info */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|HANDLE
+name|ResolverEventHandle
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|resolver_pipe_fd
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used to let the resolver process alert the parent process */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYS_WINNT */
 end_comment
 
 begin_comment
@@ -2812,17 +3126,6 @@ begin_comment
 comment|/* count of ntpdate peers */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|forground_process
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* run the process in the forground */
-end_comment
-
 begin_comment
 comment|/*  * Clock state machine variables  */
 end_comment
@@ -2896,12 +3199,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|double
-name|sys_error
+name|clock_jitter
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* system RMS error (s) */
+comment|/* clock jitter (s) */
 end_comment
 
 begin_decl_stmt
@@ -2912,7 +3215,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* system RMS jitter (s) */
+comment|/* system jitter (s) */
 end_comment
 
 begin_comment
@@ -3079,7 +3382,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of active associations */
+comment|/* mobilized associations */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|peer_preempt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* preemptable associations */
 end_comment
 
 begin_comment
@@ -3178,6 +3492,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* our current peer */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|peer
+modifier|*
+name|sys_pps
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* our current PPS peer */
 end_comment
 
 begin_decl_stmt
@@ -3341,6 +3668,17 @@ begin_comment
 comment|/* max ttl mapping vector index */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|leap_next
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* leap consensus */
+end_comment
+
 begin_comment
 comment|/*  * Statistics counters  */
 end_comment
@@ -3465,19 +3803,11 @@ directive|ifdef
 name|REFCLOCK
 end_ifdef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PPS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|HAVE_PPSAPI
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -3656,6 +3986,24 @@ begin_comment
 comment|/* write stats to fileset? */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|stats_write_period
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of seconds between writes. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|stats_write_tolerance
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ntpd.c */
 end_comment
@@ -3697,8 +4045,19 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_CLOCKCTL
+name|HAVE_DROPROOT
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|droproot
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag: try to drop root privileges after startup */
+end_comment
 
 begin_decl_stmt
 specifier|extern

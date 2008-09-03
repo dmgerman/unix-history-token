@@ -111,6 +111,15 @@ name|cbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * safeguard against sign extensions and other mishaps on 64 bit platforms 	 * the code following is designed for and only for 32-bit inputs and 	 * only 32-bit worth of input are supplied.          */
+name|fpi
+operator|&=
+literal|0xffffffff
+expr_stmt|;
+name|fpv
+operator|&=
+literal|0xffffffff
+expr_stmt|;
 comment|/* 	 * Work on the integral part.  This is biased by what I know 	 * compiles fairly well for a 68000. 	 */
 name|cp
 operator|=
@@ -167,6 +176,16 @@ operator|<<
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|<
+name|cbuf
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* rather die a horrible death than trash the memory */
 operator|*
 operator|--
 name|cp
@@ -251,6 +270,16 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|<
+name|cbuf
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* rather die a horrible death than trash the memory */
 operator|*
 operator|--
 name|cp
@@ -429,6 +458,23 @@ operator|==
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|cpend
+operator|>
+operator|(
+name|cbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|cbuf
+argument_list|)
+operator|)
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* rather die a horrible death than trash the memory */
 block|}
 comment|/* 		 * Rounding is rotten 		 */
 if|if

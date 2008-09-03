@@ -44,6 +44,13 @@ name|MAXARGS
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOREARGS
+value|10
+end_define
+
 begin_comment
 comment|/*  * Flags for forming descriptors.  */
 end_comment
@@ -80,7 +87,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UINT
+name|NTP_UINT
 value|0x2
 end_define
 
@@ -91,7 +98,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INT
+name|NTP_INT
 value|0x3
 end_define
 
@@ -102,7 +109,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ADD
+name|NTP_ADD
 value|0x4
 end_define
 
@@ -122,13 +129,16 @@ comment|/* IP version */
 end_comment
 
 begin_comment
-comment|/*  * Arguments are returned in a union  */
+comment|/*  * Arguments are returned in a struct - no  * union space saving is attempted.   */
 end_comment
 
 begin_typedef
 typedef|typedef
-union|union
+struct|struct
 block|{
+name|u_char
+name|type
+decl_stmt|;
 name|char
 modifier|*
 name|string
@@ -164,6 +174,8 @@ name|arg_v
 name|argval
 index|[
 name|MAXARGS
+operator|+
+name|MOREARGS
 index|]
 decl_stmt|;
 name|int

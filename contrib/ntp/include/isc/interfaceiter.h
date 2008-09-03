@@ -90,6 +90,16 @@ name|isc_uint32_t
 name|flags
 decl_stmt|;
 comment|/* Flags; see below. */
+name|unsigned
+name|int
+name|ifindex
+decl_stmt|;
+comment|/* Interface Index */
+name|unsigned
+name|int
+name|scopeid
+decl_stmt|;
+comment|/* Scope id for Multicasting */
 block|}
 struct|;
 end_struct

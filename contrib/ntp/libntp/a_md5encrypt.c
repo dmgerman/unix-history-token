@@ -388,10 +388,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|htonl
-argument_list|(
 name|addr_refid
-argument_list|)
 operator|)
 return|;
 block|}

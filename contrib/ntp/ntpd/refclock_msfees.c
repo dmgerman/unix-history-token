@@ -207,8 +207,16 @@ directive|include
 file|"ntp_stdlib.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|dbg
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* 	fudgefactor	= fudgetime1; 	os_delay	= fudgetime2; 	   offset_fudge	= os_delay + fudgefactor + inherent_delay; 	stratumtouse	= fudgeval1& 0xf 	debug		= fudgeval2; 	sloppyclockflag	= flags& CLK_FLAG1; 		1	  log smoothing summary when processing sample 		4	  dump the buffer from the clock 		8	  EIOGETKD the last n uS time stamps 	if (flags& CLK_FLAG2&& unitinuse) ees->leaphold = 0; 	ees->dump_vals	= flags& CLK_FLAG3; 	ees->usealldata	= flags& CLK_FLAG4;   	bug->values[0] = (ees->lasttime) ? current_time - ees->lasttime : 0; 	bug->values[1] = (ees->clocklastgood)?current_time-ees->clocklastgood:0; 	bug->values[2] = (u_long)ees->status; 	bug->values[3] = (u_long)ees->lastevent; 	bug->values[4] = (u_long)ees->reason; 	bug->values[5] = (u_long)ees->nsamples; 	bug->values[6] = (u_long)ees->codestate; 	bug->values[7] = (u_long)ees->day; 	bug->values[8] = (u_long)ees->hour; 	bug->values[9] = (u_long)ees->minute; 	bug->values[10] = (u_long)ees->second; 	bug->values[11] = (u_long)ees->tz; 	bug->values[12] = ees->yearstart; 	bug->values[13] = (ees->leaphold> current_time) ? 				ees->leaphold - current_time : 0; 	bug->values[14] = inherent_delay[unit].l_uf; 	bug->values[15] = offset_fudge[unit].l_uf;  	bug->times[0] = ees->reftime; 	bug->times[1] = ees->arrvtime; 	bug->times[2] = ees->lastsampletime; 	bug->times[3] = ees->offset; 	bug->times[4] = ees->lowoffset; 	bug->times[5] = ees->highoffset; 	bug->times[6] = inherent_delay[unit]; 	bug->times[8] = os_delay[unit]; 	bug->times[7] = fudgefactor[unit]; 	bug->times[9] = offset_fudge[unit]; 	bug->times[10]= ees->yearstart, 0; 	*/
+comment|/* 	fudgefactor	= fudgetime1; 	os_delay	= fudgetime2; 	   offset_fudge	= os_delay + fudgefactor + inherent_delay; 	stratumtouse	= fudgeval1& 0xf 	dbg		= fudgeval2; 	sloppyclockflag	= flags& CLK_FLAG1; 		1	  log smoothing summary when processing sample 		4	  dump the buffer from the clock 		8	  EIOGETKD the last n uS time stamps 	if (flags& CLK_FLAG2&& unitinuse) ees->leaphold = 0; 	ees->dump_vals	= flags& CLK_FLAG3; 	ees->usealldata	= flags& CLK_FLAG4;   	bug->values[0] = (ees->lasttime) ? current_time - ees->lasttime : 0; 	bug->values[1] = (ees->clocklastgood)?current_time-ees->clocklastgood:0; 	bug->values[2] = (u_long)ees->status; 	bug->values[3] = (u_long)ees->lastevent; 	bug->values[4] = (u_long)ees->reason; 	bug->values[5] = (u_long)ees->nsamples; 	bug->values[6] = (u_long)ees->codestate; 	bug->values[7] = (u_long)ees->day; 	bug->values[8] = (u_long)ees->hour; 	bug->values[9] = (u_long)ees->minute; 	bug->values[10] = (u_long)ees->second; 	bug->values[11] = (u_long)ees->tz; 	bug->values[12] = ees->yearstart; 	bug->values[13] = (ees->leaphold> current_time) ? 				ees->leaphold - current_time : 0; 	bug->values[14] = inherent_delay[unit].l_uf; 	bug->values[15] = offset_fudge[unit].l_uf;  	bug->times[0] = ees->reftime; 	bug->times[1] = ees->arrvtime; 	bug->times[2] = ees->lastsampletime; 	bug->times[3] = ees->offset; 	bug->times[4] = ees->lowoffset; 	bug->times[5] = ees->highoffset; 	bug->times[6] = inherent_delay[unit]; 	bug->times[8] = os_delay[unit]; 	bug->times[7] = fudgefactor[unit]; 	bug->times[9] = offset_fudge[unit]; 	bug->times[10]= ees->yearstart, 0; 	*/
 end_comment
 
 begin_comment
@@ -3151,7 +3159,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|debug
+name|dbg
 operator|&
 name|DB_LOG_AWAITMORE
 operator|)
@@ -3402,7 +3410,7 @@ block|{
 comment|/* Incomplete.  Wait for more. */
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_LOG_AWAITMORE
 condition|)
@@ -4230,7 +4238,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_PRINT_EV
 condition|)
@@ -4436,7 +4444,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_PRINT_CDT
 condition|)
@@ -4725,7 +4733,7 @@ name|serial
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_PRINT_CDTC
 condition|)
@@ -4830,7 +4838,7 @@ expr_stmt|;
 comment|/* Dump the deltas each minute */
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_DUMP_DELTAS
 condition|)
@@ -6149,7 +6157,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_LOG_DELTAS
 condition|)
@@ -6186,7 +6194,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_PRINT_DELTAS
 condition|)
@@ -6244,7 +6252,7 @@ name|fsecs
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_INC_PPS
 condition|)
@@ -6298,7 +6306,7 @@ else|else
 block|{
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_LOG_DELTAS
 condition|)
@@ -6335,7 +6343,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_PRINT_DELTAS
 condition|)
@@ -6405,7 +6413,7 @@ name|call_pps_sample
 operator|&&
 operator|!
 operator|(
-name|debug
+name|dbg
 operator|&
 name|DB_NO_PPS
 operator|)
@@ -6439,7 +6447,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 name|DB_LOG_SAMPLES
 condition|)
@@ -6488,7 +6496,7 @@ operator|/
 literal|4295
 argument_list|,
 operator|(
-name|debug
+name|dbg
 operator|&
 name|DB_NO_PPS
 operator|)
@@ -6876,10 +6884,21 @@ expr_stmt|;
 comment|/* Sort the offsets, trim off the extremes, then choose one. */
 name|qsort
 argument_list|(
+ifdef|#
+directive|ifdef
+name|QSORT_USES_VOID_P
+operator|(
+name|void
+operator|*
+operator|)
+else|#
+directive|else
 operator|(
 name|char
 operator|*
 operator|)
+endif|#
+directive|endif
 name|coffs
 argument_list|,
 operator|(
@@ -7115,7 +7134,7 @@ expr_stmt|;
 comment|/* ++++ */
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 operator|(
 name|DB_SYSLOG_SMPLI
@@ -7126,7 +7145,7 @@ condition|)
 name|msyslog
 argument_list|(
 operator|(
-name|debug
+name|dbg
 operator|&
 name|DB_SYSLOG_SMPLE
 operator|)
@@ -7137,7 +7156,7 @@ name|LOG_INFO
 argument_list|,
 literal|"I: [%x] Offset=%06d (%d), disp=%f%s [%d], %d %d=%d %d:%d %d=%d %d"
 argument_list|,
-name|debug
+name|dbg
 operator|&
 operator|(
 name|DB_SYSLOG_SMPLI
@@ -7453,7 +7472,7 @@ literal|4
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 operator|(
 name|DB_SYSLOG_SMTHI
@@ -7464,7 +7483,7 @@ condition|)
 name|msyslog
 argument_list|(
 operator|(
-name|debug
+name|dbg
 operator|&
 name|DB_SYSLOG_SMTHE
 operator|)
@@ -7475,7 +7494,7 @@ name|LOG_INFO
 argument_list|,
 literal|"I: [%x] Smooth data: %ld -> %ld, dispersion now %f"
 argument_list|,
-name|debug
+name|dbg
 operator|&
 operator|(
 name|DB_SYSLOG_SMTHI
@@ -7521,7 +7540,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 operator|(
 name|DB_SYSLOG_NSMTHI
@@ -7532,7 +7551,7 @@ condition|)
 name|msyslog
 argument_list|(
 operator|(
-name|debug
+name|dbg
 operator|&
 name|DB_SYSLOG_NSMTHE
 operator|)
@@ -7543,7 +7562,7 @@ name|LOG_INFO
 argument_list|,
 literal|"[%x] No smooth as delta not %d< %ld< %d"
 argument_list|,
-name|debug
+name|dbg
 operator|&
 operator|(
 name|DB_SYSLOG_NSMTHI
@@ -7569,7 +7588,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|debug
+name|dbg
 operator|&
 operator|(
 name|DB_SYSLOG_NSMTHI
@@ -7580,7 +7599,7 @@ condition|)
 name|msyslog
 argument_list|(
 operator|(
-name|debug
+name|dbg
 operator|&
 name|DB_SYSLOG_NSMTHE
 operator|)
@@ -7591,7 +7610,7 @@ name|LOG_INFO
 argument_list|,
 literal|"I: [%x] No smooth as flag=%x and old=%x=%d (%d:%d)"
 argument_list|,
-name|debug
+name|dbg
 operator|&
 operator|(
 name|DB_SYSLOG_NSMTHI

@@ -217,6 +217,9 @@ name|filegen_register
 name|P
 argument_list|(
 operator|(
+name|char
+operator|*
+operator|,
 specifier|const
 name|char
 operator|*

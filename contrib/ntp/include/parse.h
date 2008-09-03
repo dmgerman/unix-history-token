@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/include/parse.h,v 4.5 1998/08/09 22:23:32 kardel RELEASE_19990228_A  *  * parse.h,v 4.5 1998/08/09 22:23:32 kardel RELEASE_19990228_A  *  * Copyright (C) 1989-1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/include/parse.h,v 4.12 2007/01/14 08:36:03 kardel RELEASE_20070114_A  *  * parse.h,v 4.12 2007/01/14 08:36:03 kardel RELEASE_20070114_A  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -38,7 +38,7 @@ name|char
 name|parsehrcsid
 index|[]
 init|=
-literal|"parse.h,v 4.5 1998/08/09 22:23:32 kardel RELEASE_19990228_A"
+literal|"parse.h,v 4.12 2007/01/14 08:36:03 kardel RELEASE_20070114_A"
 decl_stmt|;
 end_decl_stmt
 
@@ -916,23 +916,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PARSE_STATISTICS
-value|0x08
+name|PARSE_TRUSTTIME
+value|CLK_FLAG1
 end_define
 
 begin_comment
-comment|/* enable statistics */
+comment|/* use flag1 to indicate the time2 references mean the trust time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARSE_CLEAR
+value|CLK_FLAG2
+end_define
+
+begin_comment
+comment|/* use flag2 to control pps on assert */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARSE_PPSKERNEL
+value|CLK_FLAG3
+end_define
+
+begin_comment
+comment|/* use flag3 to bind PPS to kernel */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PARSE_LEAP_DELETE
-value|0x04
+value|CLK_FLAG4
 end_define
 
 begin_comment
-comment|/* delete leap */
+comment|/* use flag4 to force leap deletion - only necessary when earth slows down */
 end_comment
 
 begin_define
@@ -975,7 +997,6 @@ end_comment
 begin_typedef
 typedef|typedef
 union|union
-name|timestamp
 block|{
 name|struct
 name|timeval
@@ -2046,7 +2067,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * History:  *  * parse.h,v  * Revision 4.5  1998/08/09 22:23:32  kardel  * 4.0.73e2 adjustments  *  * Revision 4.4  1998/06/14 21:09:27  kardel  * Sun acc cleanup  *  * Revision 4.3  1998/06/13 11:49:25  kardel  * STREAM macro gone in favor of HAVE_SYS_STREAM_H  *  * Revision 4.2  1998/06/12 15:14:25  kardel  * fixed prototypes  *  * Revision 4.1  1998/05/24 10:07:59  kardel  * removed old data structure cruft (new input model)  * new PARSE_INP* macros for input handling  * removed old SYNC_* macros from old input model  * (struct clockformat): removed old parse functions in favor of the  * new input model  * updated prototypes  *  * form V3 3.31 - log info deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * parse.h,v  * Revision 4.12  2007/01/14 08:36:03  kardel  * make timestamp union anonymous to avoid conflicts with  * some OSes that choose to create a nameing conflic here.  *  * Revision 4.11  2005/06/25 10:58:45  kardel  * add missing log keywords  *  * Revision 4.5  1998/08/09 22:23:32  kardel  * 4.0.73e2 adjustments  *  * Revision 4.4  1998/06/14 21:09:27  kardel  * Sun acc cleanup  *  * Revision 4.3  1998/06/13 11:49:25  kardel  * STREAM macro gone in favor of HAVE_SYS_STREAM_H  *  * Revision 4.2  1998/06/12 15:14:25  kardel  * fixed prototypes  *  * Revision 4.1  1998/05/24 10:07:59  kardel  * removed old data structure cruft (new input model)  * new PARSE_INP* macros for input handling  * removed old SYNC_* macros from old input model  * (struct clockformat): removed old parse functions in favor of the  * new input model  * updated prototypes  *  * form V3 3.31 - log info deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/data_mbg.c,v 4.3 1999/02/21 12:17:42 kardel RELEASE_19991128_A  *  * $Created: Sun Jul 20 12:08:14 1997 $  *  * Copyright (C) 1997, 1998 by Frank Kardel  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/data_mbg.c,v 4.8 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *  * data_mbg.c,v 4.8 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *  * $Created: Sun Jul 20 12:08:14 1997 $  *  * Copyright (c) 1997-2005 by Frank Kardel<kardel<AT> ntp.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -99,12 +99,13 @@ name|mbg_time_status_str
 name|P
 argument_list|(
 operator|(
-name|unsigned
 name|char
 operator|*
 operator|*
 operator|,
 name|unsigned
+name|int
+operator|,
 name|int
 operator|)
 argument_list|)
@@ -890,7 +891,6 @@ specifier|static
 name|void
 name|mbg_time_status_str
 parameter_list|(
-name|unsigned
 name|char
 modifier|*
 modifier|*
@@ -899,6 +899,9 @@ parameter_list|,
 name|unsigned
 name|int
 name|status
+parameter_list|,
+name|int
+name|size
 parameter_list|)
 block|{
 specifier|static
@@ -968,8 +971,10 @@ condition|(
 name|status
 condition|)
 block|{
-name|unsigned
 name|char
+modifier|*
+name|start
+decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
@@ -978,6 +983,8 @@ name|state
 modifier|*
 name|s
 decl_stmt|;
+name|start
+operator|=
 name|p
 operator|=
 operator|*
@@ -1014,40 +1021,47 @@ operator|*
 name|buffpp
 condition|)
 block|{
-operator|*
+name|strncpy
+argument_list|(
 name|p
-operator|++
-operator|=
-literal|','
+argument_list|,
+literal|", "
+argument_list|,
+name|size
+operator|-
+operator|(
+name|p
+operator|-
+name|start
+operator|)
+argument_list|)
 expr_stmt|;
-operator|*
 name|p
-operator|++
-operator|=
-literal|' '
+operator|+=
+literal|2
 expr_stmt|;
 block|}
-name|strcpy
+name|strncpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|p
 argument_list|,
 name|s
 operator|->
 name|string
+argument_list|,
+name|size
+operator|-
+operator|(
+name|p
+operator|-
+name|start
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
 operator|+=
 name|strlen
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -1066,7 +1080,6 @@ begin_function
 name|void
 name|mbg_tm_str
 parameter_list|(
-name|unsigned
 name|char
 modifier|*
 modifier|*
@@ -1075,16 +1088,24 @@ parameter_list|,
 name|TM
 modifier|*
 name|tmp
+parameter_list|,
+name|int
+name|size
 parameter_list|)
 block|{
-name|sprintf
-argument_list|(
-operator|(
 name|char
-operator|*
-operator|)
+modifier|*
+name|s
+init|=
 operator|*
 name|buffpp
+decl_stmt|;
+name|snprintf
+argument_list|(
+operator|*
+name|buffpp
+argument_list|,
+name|size
 argument_list|,
 literal|"%04d-%02d-%02d %02d:%02d:%02d.%07ld (%c%02d%02d) "
 argument_list|,
@@ -1156,10 +1177,6 @@ name|buffpp
 operator|+=
 name|strlen
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|*
 name|buffpp
 argument_list|)
@@ -1171,6 +1188,15 @@ argument_list|,
 name|tmp
 operator|->
 name|status
+argument_list|,
+name|size
+operator|-
+operator|(
+operator|*
+name|buffpp
+operator|-
+name|s
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1180,7 +1206,6 @@ begin_function
 name|void
 name|mbg_tgps_str
 parameter_list|(
-name|unsigned
 name|char
 modifier|*
 modifier|*
@@ -1189,16 +1214,17 @@ parameter_list|,
 name|T_GPS
 modifier|*
 name|tgpsp
+parameter_list|,
+name|int
+name|size
 parameter_list|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|*
 name|buffpp
+argument_list|,
+name|size
 argument_list|,
 literal|"week %d + %ld days + %ld.%07ld sec"
 argument_list|,
@@ -1228,10 +1254,6 @@ name|buffpp
 operator|+=
 name|strlen
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|*
 name|buffpp
 argument_list|)
@@ -2433,7 +2455,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * data_mbg.c,v  * Revision 4.3  1999/02/21 12:17:42  kardel  * 4.91f reconcilation  *  * Revision 4.2  1998/06/14 21:09:39  kardel  * Sun acc cleanup  *  * Revision 4.1  1998/05/24 08:02:06  kardel  * trimmed version log  *  * Revision 4.0  1998/04/10 19:45:33  kardel  * Start 4.0 release version numbering  */
+comment|/*  * data_mbg.c,v  * Revision 4.8  2006/06/22 18:40:01  kardel  * clean up signedness (gcc 4)  *  * Revision 4.7  2005/10/07 22:11:10  kardel  * bounded buffer implementation  *  * Revision 4.6.2.1  2005/09/25 10:23:06  kardel  * support bounded buffers  *  * Revision 4.6  2005/04/16 17:32:10  kardel  * update copyright  *  * Revision 4.5  2004/11/14 15:29:41  kardel  * support PPSAPI, upgrade Copyright to Berkeley style  *  * Revision 4.3  1999/02/21 12:17:42  kardel  * 4.91f reconcilation  *  * Revision 4.2  1998/06/14 21:09:39  kardel  * Sun acc cleanup  *  * Revision 4.1  1998/05/24 08:02:06  kardel  * trimmed version log  *  * Revision 4.0  1998/04/10 19:45:33  kardel  * Start 4.0 release version numbering  */
 end_comment
 
 end_unit

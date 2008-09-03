@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_machine.h"
 end_include
 
@@ -286,6 +292,43 @@ end_endif
 begin_comment
 comment|/* not sizeof(int) == 4 */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|u_char
+name|ntp_u_int8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_short
+name|ntp_u_int16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int32
+name|ntp_u_int32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ntp_uint64_t
+block|{
+name|u_int32
+name|val
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|ntp_uint64_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef

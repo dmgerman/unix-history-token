@@ -8,10 +8,6 @@ comment|/*static char *sccsid = "from: @(#)ctime.c	5.26 (Berkeley) 2/23/91";*/
 end_comment
 
 begin_comment
-comment|/*static char *rcsid = "mktime.c,v 1.1.1.3 1998/11/15 19:23:34 kardel RELEASE_19990228_A";*/
-end_comment
-
-begin_comment
 comment|/*  * This implementation of mktime is lifted straight from the NetBSD (BSD 4.4)  * version.  I modified it slightly to divorce it from the internals of the  * ctime library.  Thus this version can't use details of the internal  * timezone state file to figure out strange unnormalized struct tm values,  * as might result from someone doing date math on the tm struct then passing  * it to mktime.  *  * It just does as well as it can at normalizing the tm input, then does a  * binary search of the time space using the system's localtime() function.  *  * The original binary search was defective in that it didn't consider the  * setting of tm_isdst when comparing tm values, causing the search to be  * flubbed for times near the dst/standard time changeover.  The original  * code seems to make up for this by grubbing through the timezone info  * whenever the binary search barfed.  Since I don't have that luxury in  * portable code, I have to take care of tm_isdst in the comparison routine.  * This requires knowing how many minutes offset dst is from standard time.  *  * So, if you live somewhere in the world where dst is not 60 minutes offset,  * and your vendor doesn't supply mktime(), you'll have to edit this variable  * by hand.  Sorry about that.  */
 end_comment
 
@@ -25,10 +21,16 @@ begin_if
 if|#
 directive|if
 operator|!
+name|defined
+argument_list|(
 name|HAVE_MKTIME
+argument_list|)
 operator|||
 operator|!
+name|defined
+argument_list|(
 name|HAVE_TIMEGM
+argument_list|)
 end_if
 
 begin_ifndef
@@ -146,20 +148,6 @@ name|y
 parameter_list|)
 value|((((y) % 4) == 0&& ((y) % 100) != 0) || ((y) % 400) == 0)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|time_t
-name|time
-name|P
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1048,12 +1036,11 @@ begin_comment
 comment|/* !HAVE_MKTIME || !HAVE_TIMEGM */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_MKTIME
-end_if
+end_ifndef
 
 begin_function
 specifier|static
@@ -1146,12 +1133,11 @@ begin_comment
 comment|/* !HAVE_MKTIME */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_TIMEGM
-end_if
+end_ifndef
 
 begin_function
 name|time_t

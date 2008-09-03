@@ -114,6 +114,8 @@ end_endif
 begin_if
 if|#
 directive|if
+literal|0
+operator|&&
 name|defined
 argument_list|(
 name|CLOCK_TRAK
@@ -125,15 +127,8 @@ name|PPS
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|refclock
-name|refclock_trak
-decl_stmt|;
-end_decl_stmt
-
 begin_else
+unit|extern	struct refclock	refclock_trak;
 else|#
 directive|else
 end_else
@@ -502,6 +497,8 @@ end_endif
 begin_if
 if|#
 directive|if
+literal|0
+operator|&&
 name|defined
 argument_list|(
 name|CLOCK_MSFEES
@@ -513,15 +510,8 @@ name|PPS
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|refclock
-name|refclock_msfees
-decl_stmt|;
-end_decl_stmt
-
 begin_else
+unit|extern	struct refclock	refclock_msfees;
 else|#
 directive|else
 end_else
@@ -758,68 +748,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CLOCK_PTBACTS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|refclock
-name|refclock_ptb
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|refclock_ptb
-value|refclock_none
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CLOCK_USNO
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|refclock
-name|refclock_usno
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|refclock_usno
-value|refclock_none
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|CLOCK_HPGPS
 end_ifdef
 
@@ -978,11 +906,6 @@ directive|if
 name|defined
 argument_list|(
 name|CLOCK_ONCORE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_PPSAPI
 argument_list|)
 end_if
 
@@ -1449,9 +1372,9 @@ name|refclock_local
 block|,
 comment|/* 1 REFCLK_LOCAL */
 operator|&
-name|refclock_trak
+name|refclock_none
 block|,
-comment|/* 2 REFCLK_GPS_TRAK */
+comment|/* 2 deprecated: REFCLK_GPS_TRAK */
 operator|&
 name|refclock_pst
 block|,
@@ -1497,13 +1420,13 @@ name|refclock_leitch
 block|,
 comment|/* 13 REFCLK_ATOM_LEITCH */
 operator|&
-name|refclock_msfees
+name|refclock_none
 block|,
-comment|/* 14 REFCLK_MSF_EES */
+comment|/* 14 deprecated: REFCLK_MSF_EES */
 operator|&
-name|refclock_true
+name|refclock_none
 block|,
-comment|/* 15 alias for REFCLK_TRUETIME */
+comment|/* 15 not used */
 operator|&
 name|refclock_bancomm
 block|,
@@ -1515,7 +1438,7 @@ comment|/* 17 REFCLK_GPS_DATUM */
 operator|&
 name|refclock_acts
 block|,
-comment|/* 18 REFCLK_NIST_ACTS */
+comment|/* 18 REFCLK_ACTS */
 operator|&
 name|refclock_heath
 block|,
@@ -1533,17 +1456,17 @@ name|refclock_atom
 block|,
 comment|/* 22 REFCLK_ATOM_PPS */
 operator|&
-name|refclock_ptb
+name|refclock_none
 block|,
-comment|/* 23 REFCLK_PTB_ACTS */
+comment|/* 23 not used */
 operator|&
-name|refclock_usno
+name|refclock_none
 block|,
-comment|/* 24 REFCLK_USNO */
+comment|/* 24 not used */
 operator|&
-name|refclock_true
+name|refclock_none
 block|,
-comment|/* 25 alias for REFCLK_TRUETIME */
+comment|/* 25 not used */
 operator|&
 name|refclock_hpgps
 block|,

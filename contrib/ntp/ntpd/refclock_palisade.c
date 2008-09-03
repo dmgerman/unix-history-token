@@ -2135,7 +2135,7 @@ literal|3
 argument_list|)
 argument_list|)
 operator|*
-literal|1000000
+literal|1000000000
 argument_list|)
 expr_stmt|;
 if|if

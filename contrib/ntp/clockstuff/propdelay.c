@@ -423,6 +423,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
 name|int
 name|debug
 decl_stmt|;
@@ -1472,7 +1473,7 @@ name|double
 name|arg
 decl_stmt|;
 name|double
-name|div
+name|divby
 decl_stmt|;
 name|int
 name|isneg
@@ -1639,7 +1640,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|div
+name|divby
 operator|=
 literal|60.0
 expr_stmt|;
@@ -1692,9 +1693,9 @@ argument_list|(
 name|buf
 argument_list|)
 operator|/
-name|div
+name|divby
 expr_stmt|;
-name|div
+name|divby
 operator|=
 literal|3600.0
 expr_stmt|;
@@ -1713,7 +1714,7 @@ argument_list|(
 name|cp
 argument_list|)
 operator|/
-name|div
+name|divby
 expr_stmt|;
 block|}
 else|else

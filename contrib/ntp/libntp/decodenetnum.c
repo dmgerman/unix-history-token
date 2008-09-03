@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_stdlib.h"
 end_include
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/include/mbg_gps166.h,v 4.1 1998/06/12 15:07:30 kardel RELEASE_19990228_A  *  * $Created: Sun Jul 20 09:20:50 1997 $  *  * Copyright (C) 1997, 1998 by Frank Kardel  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/include/mbg_gps166.h,v 4.7 2006/06/22 18:41:43 kardel RELEASE_20060622_A  *  * mbg_gps166.h,v 4.7 2006/06/22 18:41:43 kardel RELEASE_20060622_A  *  * $Created: Sun Jul 20 09:20:50 1997 $  *  * File GPSSERIO.H Copyright (c) by Meinberg Funkuhren (www.meinberg.de)  *  * Linkage to PARSE:  * Copyright (c) 1997-2005 by Frank Kardel<kardel<AT> ntp.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -24,7 +24,7 @@ comment|/*                                                                      
 end_comment
 
 begin_comment
-comment|/*   File:         GPSSERIO.H                    4.1          */
+comment|/*   File:         GPSSERIO.H                    4.1                       */
 end_comment
 
 begin_comment
@@ -1813,13 +1813,14 @@ name|mbg_tm_str
 name|P
 argument_list|(
 operator|(
-name|unsigned
 name|char
 operator|*
 operator|*
 operator|,
 name|TM
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1831,13 +1832,14 @@ name|mbg_tgps_str
 name|P
 argument_list|(
 operator|(
-name|unsigned
 name|char
 operator|*
 operator|*
 operator|,
 name|T_GPS
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2243,7 +2245,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * mbg_gps166.h,v  * Revision 4.1  1998/06/12 15:07:30  kardel  * fixed prototyping  *  * Revision 4.0  1998/04/10 19:50:42  kardel  * Start 4.0 release version numbering  *  * Revision 1.1  1998/04/10 19:27:34  kardel  * initial NTP VERSION 4 integration of PARSE with GPS166 binary support  *  * Revision 1.1  1997/10/06 20:55:38  kardel  * new parse structure  *  */
+comment|/*  * History:  *  * mbg_gps166.h,v  * Revision 4.7  2006/06/22 18:41:43  kardel  * clean up signedness (gcc 4)  *  * Revision 4.6  2005/10/07 22:11:56  kardel  * bounded buffer implementation  *  * Revision 4.5.2.1  2005/09/25 10:23:48  kardel  * support bounded buffers  *  * Revision 4.5  2005/06/25 10:58:45  kardel  * add missing log keywords  *  * Revision 4.1  1998/06/12 15:07:30  kardel  * fixed prototyping  *  * Revision 4.0  1998/04/10 19:50:42  kardel  * Start 4.0 release version numbering  *  * Revision 1.1  1998/04/10 19:27:34  kardel  * initial NTP VERSION 4 integration of PARSE with GPS166 binary support  *  * Revision 1.1  1997/10/06 20:55:38  kardel  * new parse structure  *  */
 end_comment
 
 end_unit

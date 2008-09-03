@@ -184,19 +184,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CERT_SIGN
-value|0x01
-end_define
-
-begin_comment
-comment|/* certificate is signed */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CERT_TRUST
-value|0x02
+value|0x01
 end_define
 
 begin_comment
@@ -206,8 +195,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CERT_PRIV
+name|CERT_SIGN
+value|0x02
+end_define
+
+begin_comment
+comment|/* certificate is signed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CERT_VALID
 value|0x04
+end_define
+
+begin_comment
+comment|/* certificate is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CERT_PRIV
+value|0x08
 end_define
 
 begin_comment
@@ -459,7 +470,7 @@ value|XEVNT_CMD(4)
 end_define
 
 begin_comment
-comment|/* bad procedure or data */
+comment|/* bad or missing public key */
 end_comment
 
 begin_define
@@ -525,7 +536,7 @@ value|XEVNT_CMD(10)
 end_define
 
 begin_comment
-comment|/* certificate expired */
+comment|/* host certificate expired */
 end_comment
 
 begin_define
@@ -569,7 +580,29 @@ value|XEVNT_CMD(14)
 end_define
 
 begin_comment
-comment|/* bad or missing identification */
+comment|/* bad or missing group key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEVNT_ERR
+value|XEVNT_CMD(15)
+end_define
+
+begin_comment
+comment|/* protocol error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEVNT_SRV
+value|XEVNT_CMD(16)
+end_define
+
+begin_comment
+comment|/* server certificate expired */
 end_comment
 
 begin_comment
@@ -708,6 +741,17 @@ begin_comment
 comment|/* private key password */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CRYPTO_CONF_IDENT
+value|12
+end_define
+
+begin_comment
+comment|/* specify identity scheme */
+end_comment
+
 begin_comment
 comment|/*  * Miscellaneous crypto stuff  */
 end_comment
@@ -754,6 +798,17 @@ end_define
 
 begin_comment
 comment|/* maximum extension field size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAI_1972
+value|10
+end_define
+
+begin_comment
+comment|/* initial TAI offset (s) */
 end_comment
 
 begin_comment
@@ -899,11 +954,11 @@ comment|/* serial number */
 name|tstamp_t
 name|first
 decl_stmt|;
-comment|/* valid not before */
+comment|/* not valid before */
 name|tstamp_t
 name|last
 decl_stmt|;
-comment|/* valid not after */
+comment|/* not valid after */
 name|char
 modifier|*
 name|subject
@@ -994,17 +1049,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* leapseconds table */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|sys_tai
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current UTC offset from TAI */
 end_comment
 
 begin_endif
