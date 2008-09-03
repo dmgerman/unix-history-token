@@ -4877,6 +4877,19 @@ operator|!
 name|validated
 condition|)
 return|return;
+comment|/* 	 * In case the suggested mtu is less than IPV6_MMTU, we 	 * only need to remember that it was for above mentioned 	 * "alwaysfrag" case. 	 * Try to be as close to the spec as possible. 	 */
+if|if
+condition|(
+name|mtu
+operator|<
+name|IPV6_MMTU
+condition|)
+name|mtu
+operator|=
+name|IPV6_MMTU
+operator|-
+literal|8
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
