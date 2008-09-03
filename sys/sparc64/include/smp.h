@@ -18,22 +18,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPU_CLKSYNC
+name|CPU_TICKSYNC
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|CPU_INIT
+name|CPU_STICKSYNC
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|CPU_BOOTSTRAP
+name|CPU_INIT
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_BOOTSTRAP
+value|4
 end_define
 
 begin_ifndef
@@ -169,6 +176,9 @@ name|csa_pcpu
 decl_stmt|;
 name|u_long
 name|csa_tick
+decl_stmt|;
+name|u_long
+name|csa_stick
 decl_stmt|;
 name|u_long
 name|csa_ver

@@ -85,6 +85,12 @@ name|VER_MAXWIN_SIZE
 value|(5)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -189,6 +195,15 @@ name|sparc64_model
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
 
 begin_comment
 comment|/* Known implementations. */

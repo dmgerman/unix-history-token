@@ -17,10 +17,9 @@ end_define
 
 begin_function_decl
 name|void
-name|tick_init
+name|tick_clear
 parameter_list|(
-name|u_long
-name|clock
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
