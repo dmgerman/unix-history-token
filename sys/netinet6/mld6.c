@@ -1014,7 +1014,7 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|int
+name|u_long
 name|timer
 decl_stmt|;
 comment|/* timer value in the MLD query header */
@@ -1428,9 +1428,6 @@ argument_list|(
 name|in6m
 argument_list|)
 operator|>
-operator|(
-name|u_long
-operator|)
 name|timer
 condition|)
 block|{
@@ -1438,24 +1435,18 @@ name|in6m
 operator|->
 name|in6m_timer
 operator|=
+literal|1
+operator|+
+operator|(
 name|arc4random
 argument_list|()
 operator|%
-call|(
-name|int
-call|)
-argument_list|(
-call|(
-name|long
-call|)
-argument_list|(
 name|timer
+operator|)
 operator|*
 name|hz
-argument_list|)
 operator|/
 literal|1000
-argument_list|)
 expr_stmt|;
 name|mld_starttimer
 argument_list|(
