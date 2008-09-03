@@ -8780,9 +8780,14 @@ operator|!=
 name|NULL
 condition|)
 continue|continue;
-name|sprintf
+name|snprintf
 argument_list|(
 name|errmsg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errmsg
+argument_list|)
 argument_list|,
 literal|"mount option<%s> is unknown"
 argument_list|,
