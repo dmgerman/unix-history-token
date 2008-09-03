@@ -727,6 +727,34 @@ case|:
 break|break;
 ifndef|#
 directive|ifndef
+name|EM_MIPS
+define|#
+directive|define
+name|EM_MIPS
+value|8
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|EM_MIPS_RS4_BE
+comment|/* same as EM_MIPS_RS3_LE */
+define|#
+directive|define
+name|EM_MIPS_RS4_BE
+value|10
+endif|#
+directive|endif
+case|case
+name|EM_MIPS
+case|:
+break|break;
+case|case
+comment|/* EM_MIPS_RS3_LE */
+name|EM_MIPS_RS4_BE
+case|:
+break|break;
+ifndef|#
+directive|ifndef
 name|EM_IA_64
 define|#
 directive|define
