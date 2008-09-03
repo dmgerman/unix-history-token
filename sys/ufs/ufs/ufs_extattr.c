@@ -3492,7 +3492,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|,
-name|IREAD
+name|VREAD
 argument_list|)
 expr_stmt|;
 if|if
@@ -4277,7 +4277,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|,
-name|IWRITE
+name|VWRITE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4753,7 +4753,7 @@ name|cred
 argument_list|,
 name|td
 argument_list|,
-name|IWRITE
+name|VWRITE
 argument_list|)
 expr_stmt|;
 if|if
