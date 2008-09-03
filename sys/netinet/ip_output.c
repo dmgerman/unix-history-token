@@ -4581,15 +4581,14 @@ name|mbuf
 modifier|*
 name|copym
 decl_stmt|;
+comment|/* 	 * Make a deep copy of the packet because we're going to 	 * modify the pack in order to generate checksums. 	 */
 name|copym
 operator|=
-name|m_copy
+name|m_dup
 argument_list|(
 name|m
 argument_list|,
-literal|0
-argument_list|,
-name|M_COPYALL
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
