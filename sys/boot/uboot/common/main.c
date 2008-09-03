@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Benno Rice<benno@jeamland.net>  * Copyright (c) 2000 Stephane Potvin<sepotvin@videotron.ca>  * Copyright (c) 2007 Semihalf, Rafal Jaworowski<raj@semihalf.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2000 Benno Rice<benno@jeamland.net>  * Copyright (c) 2000 Stephane Potvin<sepotvin@videotron.ca>  * Copyright (c) 2007-2008 Semihalf, Rafal Jaworowski<raj@semihalf.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -166,56 +166,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
-name|dump_si
-parameter_list|(
-name|struct
-name|sys_info
-modifier|*
-name|si
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"sys info:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  clkbus\t= 0x%08x\n"
-argument_list|,
-name|si
-operator|->
-name|clk_bus
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  clkcpu\t= 0x%08x\n"
-argument_list|,
-name|si
-operator|->
-name|clk_cpu
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  bar\t\t= 0x%08x\n"
-argument_list|,
-name|si
-operator|->
-name|bar
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|dump_sig
@@ -287,7 +237,7 @@ argument_list|(
 literal|" _etext (sdata) = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|_etext
 argument_list|)
@@ -297,7 +247,7 @@ argument_list|(
 literal|" _edata         = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|_edata
 argument_list|)
@@ -307,7 +257,7 @@ argument_list|(
 literal|" __sbss_start   = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|__sbss_start
 argument_list|)
@@ -317,7 +267,7 @@ argument_list|(
 literal|" __sbss_end     = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|__sbss_end
 argument_list|)
@@ -327,7 +277,7 @@ argument_list|(
 literal|" __sbss_start   = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|__bss_start
 argument_list|)
@@ -337,7 +287,7 @@ argument_list|(
 literal|" _end           = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|_end
 argument_list|)
@@ -347,7 +297,7 @@ argument_list|(
 literal|" syscall entry  = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|syscall_ptr
 argument_list|)
@@ -362,35 +312,21 @@ specifier|static
 name|uint64_t
 name|memsize
 parameter_list|(
-name|int
-name|flags
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|sys_info
 modifier|*
 name|si
-decl_stmt|;
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+block|{
 name|uint64_t
 name|size
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|si
-operator|=
-name|ub_get_sys_info
-argument_list|()
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
+name|int
+name|i
+decl_stmt|;
 name|size
 operator|=
 literal|0
@@ -454,6 +390,110 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|meminfo
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint64_t
+name|size
+decl_stmt|;
+name|struct
+name|sys_info
+modifier|*
+name|si
+decl_stmt|;
+name|int
+name|t
+index|[
+literal|3
+index|]
+init|=
+block|{
+name|MR_ATTR_DRAM
+block|,
+name|MR_ATTR_FLASH
+block|,
+name|MR_ATTR_SRAM
+block|}
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|si
+operator|=
+name|ub_get_sys_info
+argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"could not retrieve system info"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|size
+operator|=
+name|memsize
+argument_list|(
+name|si
+argument_list|,
+name|t
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s:\t %lldMB\n"
+argument_list|,
+name|ub_mem_type
+argument_list|(
+name|t
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|,
+name|size
+operator|/
+literal|1024
+operator|/
+literal|1024
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -480,8 +520,10 @@ name|sig
 argument_list|)
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|syscall_ptr
 operator|=
@@ -496,8 +538,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|2
+operator|)
 return|;
 if|if
 condition|(
@@ -508,8 +552,10 @@ operator|>
 name|API_SIG_VERSION
 condition|)
 return|return
+operator|(
 operator|-
 literal|3
+operator|)
 return|;
 comment|/* Clear BSS sections */
 name|bzero
@@ -588,17 +634,16 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"no devices found"
+literal|"no U-Boot devices found"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Number of U-Boot devices found %d\n"
+literal|"Number of U-Boot devices: %d\n"
 argument_list|,
 name|devs_no
 argument_list|)
 expr_stmt|;
-comment|/* XXX all our dv_init()s currently don't do anything... */
 comment|/* 	 * March through the device switch probing for things. 	 */
 for|for
 control|(
@@ -661,35 +706,9 @@ argument_list|,
 name|bootprog_date
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Memory: %lldMB\n"
-argument_list|,
-name|memsize
-argument_list|(
-name|MR_ATTR_DRAM
-argument_list|)
-operator|/
-literal|1024
-operator|/
-literal|1024
-argument_list|)
+name|meminfo
+argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"FLASH:  %lldMB\n"
-argument_list|,
-name|memsize
-argument_list|(
-name|MR_ATTR_FLASH
-argument_list|)
-operator|/
-literal|1024
-operator|/
-literal|1024
-argument_list|)
-expr_stmt|;
-comment|//	printf("SRAM:   %lldMB\n", memsize(MR_ATTR_SRAM) / 1024 / 1024);
 comment|/* XXX only support netbooting for now */
 for|for
 control|(
@@ -861,7 +880,9 @@ argument_list|()
 expr_stmt|;
 comment|/* doesn't return */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -967,6 +988,170 @@ condition|(
 literal|1
 condition|)
 empty_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|COMMAND_SET
+argument_list|(
+name|devinfo
+argument_list|,
+literal|"devinfo"
+argument_list|,
+literal|"show U-Boot devices"
+argument_list|,
+name|command_devinfo
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+name|int
+name|command_devinfo
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|devs_no
+operator|=
+name|ub_dev_enum
+argument_list|()
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|command_errmsg
+operator|=
+literal|"no U-Boot devices found!?"
+expr_stmt|;
+return|return
+operator|(
+name|CMD_ERROR
+operator|)
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"U-Boot devices:\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|devs_no
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|ub_dump_di
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|CMD_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|COMMAND_SET
+argument_list|(
+name|sysinfo
+argument_list|,
+literal|"sysinfo"
+argument_list|,
+literal|"show U-Boot system info"
+argument_list|,
+name|command_sysinfo
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+name|int
+name|command_sysinfo
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+name|struct
+name|sys_info
+modifier|*
+name|si
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|si
+operator|=
+name|ub_get_sys_info
+argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|command_errmsg
+operator|=
+literal|"could not retrieve U-Boot sys info!?"
+expr_stmt|;
+return|return
+operator|(
+name|CMD_ERROR
+operator|)
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"U-Boot system info:\n"
+argument_list|)
+expr_stmt|;
+name|ub_dump_si
+argument_list|(
+name|si
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|CMD_OK
+operator|)
+return|;
 block|}
 end_function
 
