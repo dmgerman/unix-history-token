@@ -238,14 +238,17 @@ name|STRTOG_Neg
 init|=
 literal|0x08
 block|,
+comment|/* does not affect STRTOG_Inexlo or STRTOG_Inexhi */
 name|STRTOG_Inexlo
 init|=
 literal|0x10
 block|,
+comment|/* returned result rounded toward zero */
 name|STRTOG_Inexhi
 init|=
 literal|0x20
 block|,
+comment|/* returned result rounded away from zero */
 name|STRTOG_Inexact
 init|=
 literal|0x30
