@@ -39,8 +39,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_DIAG_SHIFT
+name|TD_DIAG_SF_SHIFT
 value|(41)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_CH_SHIFT
+value|(43)
 end_define
 
 begin_define
@@ -74,8 +81,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_DIAG_BITS
+name|TD_DIAG_SF_BITS
 value|(9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_CH_BITS
+value|(7)
 end_define
 
 begin_define
@@ -96,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|TD_PA_BITS
-value|TD_PA_SF_BITS
+value|TD_PA_CH_BITS
 end_define
 
 begin_define
@@ -123,8 +137,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_DIAG_MASK
-value|((1UL<< TD_DIAG_BITS) - 1)
+name|TD_DIAG_SF_MASK
+value|((1UL<< TD_DIAG_SF_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_CH_MASK
+value|((1UL<< TD_RSVD_CH_BITS) - 1)
 end_define
 
 begin_define
