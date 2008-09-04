@@ -371,6 +371,13 @@ name|MII_PHY_DESC
 argument_list|(
 name|MARVELL
 argument_list|,
+name|E1116R
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|MARVELL
+argument_list|,
 name|E1118
 argument_list|)
 block|,
