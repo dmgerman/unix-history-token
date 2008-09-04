@@ -1216,6 +1216,16 @@ name|ver
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Do CPU-specific Initialization. 	 */
+if|if
+condition|(
+name|cpu_impl
+operator|>=
+name|CPU_IMPL_ULTRASPARCIII
+condition|)
+name|cheetah_init
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Clear (S)TICK timer (including NPT). 	 */
 name|tick_clear
 argument_list|()
