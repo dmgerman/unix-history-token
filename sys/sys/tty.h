@@ -301,6 +301,10 @@ name|int
 name|t_writepos
 decl_stmt|;
 comment|/* (t) Where input was interrupted. */
+name|int
+name|t_compatflags
+decl_stmt|;
+comment|/* (t) COMPAT_43TTY flags. */
 comment|/* Init/lock-state devices. */
 name|struct
 name|termios

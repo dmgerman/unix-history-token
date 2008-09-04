@@ -603,12 +603,12 @@ name|sg_kill
 expr_stmt|;
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|=
 operator|(
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|&
 literal|0xffff0000
 operator|)
@@ -854,12 +854,12 @@ name|TIOCLSET
 condition|)
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|=
 operator|(
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|&
 literal|0xffff
 operator|)
@@ -877,7 +877,7 @@ else|else
 block|{
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|=
 operator|(
 name|ttcompatgetflags
@@ -891,7 +891,7 @@ operator||
 operator|(
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|&
 literal|0xffff
 operator|)
@@ -905,7 +905,7 @@ name|TIOCLBIS
 condition|)
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator||=
 operator|*
 operator|(
@@ -919,7 +919,7 @@ expr_stmt|;
 else|else
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|&=
 operator|~
 operator|(
@@ -1156,7 +1156,7 @@ name|sg_flags
 operator|=
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|=
 name|ttcompatgetflags
 argument_list|(
@@ -1334,7 +1334,7 @@ name|TIOCLGET
 case|:
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|=
 operator|(
 name|ttcompatgetflags
@@ -1348,7 +1348,7 @@ operator||
 operator|(
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|&
 literal|0xffff
 operator|)
@@ -1362,7 +1362,7 @@ name|data
 operator|=
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 operator|>>
 literal|16
 expr_stmt|;
@@ -1851,7 +1851,7 @@ name|flags
 init|=
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 decl_stmt|;
 name|tcflag_t
 name|iflag
@@ -2262,7 +2262,7 @@ name|flags
 init|=
 name|tp
 operator|->
-name|t_flags
+name|t_compatflags
 decl_stmt|;
 name|tcflag_t
 name|iflag
