@@ -4122,13 +4122,6 @@ name|archive
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_write_finish
-argument_list|(
-name|cpio
-operator|->
-name|archive
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4170,6 +4163,13 @@ literal|"blocks"
 argument_list|)
 expr_stmt|;
 block|}
+name|archive_write_finish
+argument_list|(
+name|cpio
+operator|->
+name|archive
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
