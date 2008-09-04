@@ -3296,7 +3296,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|bm_start
+name|bm_start_locked
 argument_list|(
 name|ifp
 argument_list|)
