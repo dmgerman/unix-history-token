@@ -315,6 +315,15 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|clktype
+name|clktypes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Configuration flag values  */
 end_comment
@@ -693,7 +702,7 @@ begin_define
 define|#
 directive|define
 name|LDISC_STD
-value|0x0
+value|0x00
 end_define
 
 begin_comment
@@ -704,7 +713,7 @@ begin_define
 define|#
 directive|define
 name|LDISC_CLK
-value|0x1
+value|0x01
 end_define
 
 begin_comment
@@ -715,7 +724,7 @@ begin_define
 define|#
 directive|define
 name|LDISC_CLKPPS
-value|0x2
+value|0x02
 end_define
 
 begin_comment
@@ -726,7 +735,7 @@ begin_define
 define|#
 directive|define
 name|LDISC_ACTS
-value|0x4
+value|0x04
 end_define
 
 begin_comment
@@ -737,7 +746,7 @@ begin_define
 define|#
 directive|define
 name|LDISC_CHU
-value|0x8
+value|0x08
 end_define
 
 begin_comment
@@ -764,6 +773,39 @@ end_define
 
 begin_comment
 comment|/* raw binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LDISC_ECHO
+value|0x40
+end_define
+
+begin_comment
+comment|/* enable echo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LDISC_REMOTE
+value|0x80
+end_define
+
+begin_comment
+comment|/* remote mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LDISC_7O1
+value|0x100
+end_define
+
+begin_comment
+comment|/* 7-bit, odd parity for Z3801A */
 end_comment
 
 begin_struct
@@ -1049,9 +1091,21 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|u_long
-name|clock_flags
-decl_stmt|;
+name|void
+argument_list|(
+argument|*clock_timer
+argument_list|)
+name|P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|peer
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -1181,9 +1235,41 @@ operator|(
 name|char
 operator|*
 operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|refclock_setup
+name|P
+argument_list|(
+operator|(
 name|int
 operator|,
-name|int
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|refclock_timer
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|peer
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1213,7 +1299,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1276,6 +1362,29 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|refclock_gtlin
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|recvbuf
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|l_fp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|refclock_gtraw
 name|P
 argument_list|(
 operator|(

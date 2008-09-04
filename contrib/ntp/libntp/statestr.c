@@ -559,7 +559,7 @@ operator|&
 operator|~
 name|CRPT_EVENT
 block|,
-literal|"bad_procedure_or_data"
+literal|"bad_or_missing_public_key"
 block|}
 block|,
 block|{
@@ -604,7 +604,7 @@ operator|&
 operator|~
 name|CRPT_EVENT
 block|,
-literal|"certificate not verified"
+literal|"certificate_not_verified"
 block|}
 block|,
 block|{
@@ -613,7 +613,7 @@ operator|&
 operator|~
 name|CRPT_EVENT
 block|,
-literal|"certificate_expired"
+literal|"host certificate_expired"
 block|}
 block|,
 block|{
@@ -649,7 +649,25 @@ operator|&
 operator|~
 name|CRPT_EVENT
 block|,
-literal|"bad or missing identification"
+literal|"bad_or_missing_group_key"
+block|}
+block|,
+block|{
+name|XEVNT_ERR
+operator|&
+operator|~
+name|CRPT_EVENT
+block|,
+literal|"protocol_error"
+block|}
+block|,
+block|{
+name|XEVNT_SRV
+operator|&
+operator|~
+name|CRPT_EVENT
+block|,
+literal|"server certificate expired"
 block|}
 block|,
 block|{

@@ -167,11 +167,11 @@ literal|"MSF_EES"
 block|}
 block|,
 block|{
-name|REFCLK_GPSTM_TRUE
+name|REFCLK_NONE
 block|,
-literal|"TrueTime (old GPSTM driver) Receiver (15)"
+literal|"not used (15)"
 block|,
-literal|"GPSTM_TRUE"
+literal|"NOT_USED"
 block|}
 block|,
 block|{
@@ -191,11 +191,11 @@ literal|"GPS_DATUM"
 block|}
 block|,
 block|{
-name|REFCLK_NIST_ACTS
+name|REFCLK_ACTS
 block|,
-literal|"NIST Automated Computer Time Service (18)"
+literal|"Automated Computer Time Service (18)"
 block|,
-literal|"ACTS_NIST"
+literal|"ACTS_MODEM"
 block|}
 block|,
 block|{
@@ -231,27 +231,27 @@ literal|"PPS"
 block|}
 block|,
 block|{
-name|REFCLK_PTB_ACTS
+name|REFCLK_NONE
 block|,
-literal|"PTB Automated Computer Time Service (23)"
+literal|"not used (23)"
 block|,
-literal|"ACTS_PTB"
+literal|"NOT_USED"
 block|}
 block|,
 block|{
-name|REFCLK_USNO
+name|REFCLK_NONE
 block|,
-literal|"Naval Observatory dialup (24)"
+literal|"not used (24)"
 block|,
-literal|"ACTS_USNO"
+literal|"NOT_USED"
 block|}
 block|,
 block|{
-name|REFCLK_TRUETIME
+name|REFCLK_NONE
 block|,
-literal|"TrueTime (generic) Receivers (25)"
+literal|"not used (25)"
 block|,
-literal|"TRUETIME"
+literal|"NOT_USED"
 block|}
 block|,
 block|{

@@ -729,30 +729,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DECL_MRAND48_0
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|mrand48
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|DECL_NLIST_0
 end_ifdef
 
@@ -1095,30 +1071,6 @@ name|char
 operator|*
 operator|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DECL_SRAND48_0
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|srand48
-name|P
-argument_list|(
-operator|(
-name|long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1990,7 +1942,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|extern	int	atoi		P((char *)); extern	int	dup2		P((int, int)); extern	int	execve		P((char *, char **,char **)); extern	int	fork		P((void)); extern	int	getdtablesize	P((void)); extern	int	qsort		(void *, int , int, 				   int P((*compar)(void *, void *))); extern	long	random		P((void)); extern	long	mrand48		P((void)); extern	int	setpgrp		P((int, int)); extern	void	srandom		P((unsigned int)); extern	void	bcopy		P((const char *, char *, int));
+unit|extern	int	atoi		P((char *)); extern	int	dup2		P((int, int)); extern	int	execve		P((char *, char **,char **)); extern	int	fork		P((void)); extern	int	getdtablesize	P((void)); extern	int	qsort		(void *, int , int, 				   int P((*compar)(void *, void *))); extern	int	setpgrp		P((int, int)); extern	void	bcopy		P((const char *, char *, int));
 endif|#
 directive|endif
 end_endif
@@ -2401,7 +2353,7 @@ name|NTP_POSIX_SOURCE
 end_ifndef
 
 begin_ifdef
-unit|extern	int	atoi		P((char *)); extern	void	bzero		P((char *, int)); extern	int	bcmp		P((char *, char *, int)); extern	void	bcopy		P((const char *, char *, int)); extern	int	execve		P((char *, char **,char **)); extern	int	fork		P((void)); extern	int	getdtablesize	P((void)); extern	int	ran		P((void)); extern	int	rand		P((void)); extern	void	srand		P((unsigned int));
+unit|extern	int	atoi		P((char *)); extern	void	bzero		P((char *, int)); extern	int	bcmp		P((char *, char *, int)); extern	void	bcopy		P((const char *, char *, int)); extern	int	execve		P((char *, char **,char **)); extern	int	fork		P((void)); extern	int	getdtablesize	P((void)); extern	int	ran		P((void));
 ifdef|#
 directive|ifdef
 name|_TIME_H_

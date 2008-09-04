@@ -1858,6 +1858,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|rc
 operator|=
 name|SETTIMEOFDAY
@@ -1914,6 +1918,10 @@ decl_stmt|;
 name|set_tod_using
 operator|=
 literal|"stime"
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 name|rc
 operator|=
@@ -2047,9 +2055,6 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -2064,8 +2069,6 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|i

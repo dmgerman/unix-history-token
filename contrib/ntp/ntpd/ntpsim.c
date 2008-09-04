@@ -15,6 +15,12 @@ directive|include
 file|"ntpsim.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ntpdsim-opts.h"
+end_include
+
 begin_comment
 comment|/*  * Defines...  */
 end_comment
@@ -251,9 +257,6 @@ expr_stmt|;
 name|init_lib
 argument_list|()
 expr_stmt|;
-name|init_random
-argument_list|()
-expr_stmt|;
 name|init_request
 argument_list|()
 expr_stmt|;
@@ -277,6 +280,29 @@ argument_list|(
 name|MON_OFF
 argument_list|)
 expr_stmt|;
+block|{
+name|int
+name|optct
+init|=
+name|optionProcess
+argument_list|(
+operator|&
+name|ntpdsimOptions
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+decl_stmt|;
+name|argc
+operator|-=
+name|optct
+expr_stmt|;
+name|argv
+operator|+=
+name|optct
+expr_stmt|;
+block|}
 name|getconfig
 argument_list|(
 name|argc
@@ -288,6 +314,15 @@ name|initializing
 operator|=
 literal|0
 expr_stmt|;
+name|loop_config
+argument_list|(
+name|LOOP_DRIFTCOMP
+argument_list|,
+name|old_drift
+operator|/
+literal|1e6
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Watch out here, we want the real time, not the silly stuff. 	 */
 name|gettimeofday
 argument_list|(
@@ -297,7 +332,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|srand48
+name|ntp_srandom
 argument_list|(
 name|seed
 operator|.
@@ -691,7 +726,7 @@ decl_stmt|;
 name|timer
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Process buffers received. They had better be in order by 	 * receive timestamp. 	 */
+comment|/* 	 * Process buffers received. They had better be in order by 	 * receive timestamp. Note that there are no additional buffers 	 * in the current implementation of ntpsim. 	 */
 while|while
 condition|(
 name|n
@@ -711,9 +746,7 @@ name|n
 operator|->
 name|rbuflist
 operator|=
-name|rbuf
-operator|->
-name|next
+name|NULL
 expr_stmt|;
 call|(
 name|rbuf
@@ -1052,12 +1085,6 @@ name|interface
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rbuf
-operator|.
-name|next
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* 	 * Very carefully predict the time of arrival for the received 	 * packet.  	 */
 name|LFPTOD
 argument_list|(
@@ -1189,19 +1216,13 @@ operator|->
 name|recv_time
 argument_list|)
 expr_stmt|;
-name|rbuf
-operator|->
-name|next
-operator|=
-name|NULL
-expr_stmt|;
 name|obuf
 operator|=
 name|n
 operator|->
 name|rbuflist
 expr_stmt|;
-comment|/* 	 * In the present incarnation, no more than one buffer can be on 	 * the queue; however, we sniff the queue anyway as a hint for 	 * further development. 	 */
+comment|/* 	 * In the present incarnation, no more than one buffer can be on 	 * the queue;  	 */
 if|if
 condition|(
 name|obuf
@@ -1212,29 +1233,6 @@ block|{
 name|n
 operator|->
 name|rbuflist
-operator|=
-name|rbuf
-expr_stmt|;
-block|}
-else|else
-block|{
-while|while
-condition|(
-name|obuf
-operator|->
-name|next
-operator|!=
-name|NULL
-condition|)
-name|obuf
-operator|=
-name|obuf
-operator|->
-name|next
-expr_stmt|;
-name|obuf
-operator|->
-name|next
 operator|=
 name|rbuf
 expr_stmt|;

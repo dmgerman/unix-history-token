@@ -114,6 +114,19 @@ begin_comment
 comment|/*  * These routines provide support for the event timer.	The timer is  * implemented by an interrupt routine which sets a flag once every  * 2**EVENT_TIMEOUT seconds (currently 4), and a timer routine which  * is called when the mainline code gets around to seeing the flag.  * The timer routine dispatches the clock adjustment code if its time  * has come, then searches the timer queue for expiries which are  * dispatched to the transmit procedure.  Finally, we call the hourly  * procedure to do cleanup and print a message.  */
 end_comment
 
+begin_decl_stmt
+specifier|volatile
+name|int
+name|interface_interval
+init|=
+literal|300
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* update interface every 5 minutes as default */
+end_comment
+
 begin_comment
 comment|/*  * Alarm flag.	The mainline code imports this.  */
 end_comment
@@ -154,12 +167,12 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|u_long
-name|hourly_timer
+name|stats_timer
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hour timer */
+comment|/* stats timer */
 end_comment
 
 begin_decl_stmt
@@ -171,6 +184,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* huff-n'-puff timer */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|interface_timer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interface update timer */
 end_comment
 
 begin_ifdef
@@ -779,6 +803,8 @@ name|SYS_CYGWIN32
 argument_list|)
 name|HANDLE
 name|hToken
+init|=
+name|INVALID_HANDLE_VALUE
 decl_stmt|;
 name|TOKEN_PRIVILEGES
 name|tkp
@@ -799,11 +825,15 @@ name|adjust_timer
 operator|=
 literal|1
 expr_stmt|;
-name|hourly_timer
+name|stats_timer
 operator|=
-name|HOUR
+literal|0
 expr_stmt|;
 name|huffpuff_timer
+operator|=
+literal|0
+expr_stmt|;
+name|interface_timer
 operator|=
 literal|0
 expr_stmt|;
@@ -1375,6 +1405,65 @@ expr_stmt|;
 name|kod_proto
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|REFCLOCK
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|NTP_HASH_SIZE
+condition|;
+name|n
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|peer
+operator|=
+name|peer_hash
+index|[
+name|n
+index|]
+init|;
+name|peer
+operator|!=
+literal|0
+condition|;
+name|peer
+operator|=
+name|next_peer
+control|)
+block|{
+name|next_peer
+operator|=
+name|peer
+operator|->
+name|next
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_REFCLOCK
+condition|)
+name|refclock_timer
+argument_list|(
+name|peer
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* REFCLOCK */
 block|}
 comment|/* 	 * Now dispatch any peers whose event timer has expired. Be careful 	 * here, since the peer structure might go away as the result of 	 * the call. 	 */
 for|for
@@ -1385,7 +1474,7 @@ literal|0
 init|;
 name|n
 operator|<
-name|HASH_SIZE
+name|NTP_HASH_SIZE
 condition|;
 name|n
 operator|++
@@ -1573,20 +1662,65 @@ block|}
 endif|#
 directive|endif
 comment|/* OPENSSL */
-comment|/* 	 * Finally, call the hourly routine. 	 */
+comment|/* 	 * interface update timer 	 */
 if|if
 condition|(
-name|hourly_timer
+name|interface_interval
+operator|&&
+name|interface_timer
 operator|<=
 name|current_time
 condition|)
 block|{
-name|hourly_timer
-operator|+=
-name|HOUR
+name|timer_interfacetimeout
+argument_list|(
+name|current_time
+operator|+
+name|interface_interval
+argument_list|)
 expr_stmt|;
-name|hourly_stats
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"timer: interface update\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|interface_update
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Finally, periodically write stats. 	 */
+if|if
+condition|(
+name|stats_timer
+operator|<=
+name|current_time
+condition|)
+block|{
+if|if
+condition|(
+name|stats_timer
+operator|!=
+literal|0
+condition|)
+name|write_stats
 argument_list|()
+expr_stmt|;
+name|stats_timer
+operator|+=
+name|stats_write_period
 expr_stmt|;
 block|}
 block|}
@@ -1697,6 +1831,21 @@ end_endif
 begin_comment
 comment|/* SYS_WINNT */
 end_comment
+
+begin_function
+name|void
+name|timer_interfacetimeout
+parameter_list|(
+name|u_long
+name|timeout
+parameter_list|)
+block|{
+name|interface_timer
+operator|=
+name|timeout
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * timer_clr_stats - clear timer module stat counters  */

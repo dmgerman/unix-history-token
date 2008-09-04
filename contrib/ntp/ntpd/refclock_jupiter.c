@@ -93,44 +93,11 @@ directive|ifdef
 name|HAVE_PPSAPI
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_TIMEPPS_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<timepps.h>
+file|"ppsapi_timepps.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TIMEPPS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/timepps.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -387,6 +354,10 @@ name|u_int
 name|assert
 decl_stmt|;
 comment|/* pps edge to use */
+name|u_int
+name|hardpps
+decl_stmt|;
+comment|/* enable kernel mode */
 name|struct
 name|timespec
 name|ts
@@ -649,10 +620,6 @@ operator|(
 expr|struct
 name|instance
 operator|*
-operator|,
-name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1104,6 +1071,18 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_PPSAPI
+name|instance
+operator|->
+name|assert
+operator|=
+literal|1
+expr_stmt|;
+name|instance
+operator|->
+name|hardpps
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Start the PPSAPI interface if it is there. Default to use 	 * the assert edge and do not enable the kernel hardpps. 	 */
 if|if
 condition|(
@@ -1141,10 +1120,6 @@ operator|!
 name|jupiter_ppsapi
 argument_list|(
 name|instance
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 goto|goto
@@ -1504,15 +1479,7 @@ name|struct
 name|instance
 modifier|*
 name|instance
-parameter_list|,
 comment|/* unit structure pointer */
-name|int
-name|enb_clear
-parameter_list|,
-comment|/* clear enable */
-name|int
-name|enb_hardpps
-comment|/* hardpps enable */
 parameter_list|)
 block|{
 name|int
@@ -1563,7 +1530,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|enb_clear
+operator|!
+name|instance
+operator|->
+name|assert
 condition|)
 name|instance
 operator|->
@@ -1610,8 +1580,9 @@ name|LOG_ERR
 argument_list|,
 literal|"refclock_jupiter: invalid capture edge %d"
 argument_list|,
-operator|!
-name|enb_clear
+name|instance
+operator|->
+name|assert
 argument_list|)
 expr_stmt|;
 return|return
@@ -1660,7 +1631,9 @@ return|;
 block|}
 if|if
 condition|(
-name|enb_hardpps
+name|instance
+operator|->
+name|hardpps
 condition|)
 block|{
 if|if
@@ -1679,11 +1652,8 @@ name|pps_params
 operator|.
 name|mode
 operator|&
-operator|(
-name|PPS_CAPTUREASSERT
-operator||
-name|PPS_CAPTURECLEAR
-operator|)
+operator|~
+name|PPS_TSFMT_TSPEC
 argument_list|,
 name|PPS_TSFMT_TSPEC
 argument_list|)
@@ -1754,7 +1724,9 @@ name|pps_params
 operator|.
 name|mode
 argument_list|,
-name|enb_hardpps
+name|instance
+operator|->
+name|hardpps
 argument_list|)
 expr_stmt|;
 block|}
@@ -2241,13 +2213,6 @@ expr_stmt|;
 name|jupiter_ppsapi
 argument_list|(
 name|instance
-argument_list|,
-operator|!
-name|instance
-operator|->
-name|assert
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2984,7 +2949,7 @@ name|msyslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"jupiter_receive: %s chan ver %s, %s (%s)\n"
+literal|"jupiter_receive: %s chan ver %s, %s (%s)"
 argument_list|,
 name|ip
 operator|->
@@ -3925,6 +3890,9 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|debug
@@ -3959,6 +3927,8 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|va_end
 argument_list|(
 name|ap
@@ -4234,11 +4204,6 @@ argument_list|)
 block|,
 literal|0
 block|,
-operator|(
-name|u_char
-operator|)
-name|putshort
-argument_list|(
 name|JUPITER_FLAG_REQUEST
 operator||
 name|JUPITER_FLAG_NAK
@@ -4246,7 +4211,6 @@ operator||
 name|JUPITER_FLAG_CONN
 operator||
 name|JUPITER_FLAG_LOG
-argument_list|)
 block|,
 literal|0
 block|}
@@ -4397,17 +4361,11 @@ literal|0
 block|,
 literal|0
 block|,
-operator|(
-name|u_char
-operator|)
-name|putshort
-argument_list|(
 name|JUPITER_FLAG_REQUEST
 operator||
 name|JUPITER_FLAG_NAK
 operator||
 name|JUPITER_FLAG_DISC
-argument_list|)
 block|,
 literal|0
 block|}
@@ -4506,17 +4464,11 @@ literal|0
 block|,
 literal|0
 block|,
-operator|(
-name|u_char
-operator|)
-name|putshort
-argument_list|(
 name|JUPITER_FLAG_REQUEST
 operator||
 name|JUPITER_FLAG_NAK
 operator||
 name|JUPITER_FLAG_QUERY
-argument_list|)
 block|,
 literal|0
 block|}
@@ -4644,15 +4596,9 @@ argument_list|)
 block|,
 literal|0
 block|,
-operator|(
-name|u_char
-operator|)
-name|putshort
-argument_list|(
 name|JUPITER_FLAG_REQUEST
 operator||
 name|JUPITER_FLAG_NAK
-argument_list|)
 block|,
 literal|0
 block|}

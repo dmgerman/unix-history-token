@@ -48,6 +48,18 @@ directive|include
 file|"ntp_types.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<isc/list.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/result.h>
+end_include
+
 begin_comment
 comment|/*  * recvbuf memory management  */
 end_comment
@@ -191,16 +203,24 @@ begin_comment
 comment|/* hail Mary */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|struct
+name|recvbuf
+name|recvbuf_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|recvbuf
 block|{
-name|struct
-name|recvbuf
-modifier|*
-name|next
-decl_stmt|;
-comment|/* next buffer in chain */
+name|ISC_LINK
+argument_list|(
+argument|recvbuf_t
+argument_list|)
+name|link
+expr_stmt|;
 union|union
 block|{
 name|struct
@@ -234,14 +254,8 @@ if|#
 directive|if
 name|defined
 name|HAVE_IO_COMPLETION_PORT
-name|IoCompletionInfo
-name|iocompletioninfo
-decl_stmt|;
 name|WSABUF
 name|wsabuff
-decl_stmt|;
-name|DWORD
-name|AddressLength
 decl_stmt|;
 else|#
 directive|else
@@ -252,6 +266,10 @@ decl_stmt|;
 comment|/* where packet came from */
 endif|#
 directive|endif
+name|int
+name|src_addr_len
+decl_stmt|;
+comment|/* source address length */
 name|struct
 name|interface
 modifier|*
@@ -262,6 +280,10 @@ name|SOCKET
 name|fd
 decl_stmt|;
 comment|/* fd on which it was received */
+name|int
+name|msg_flags
+decl_stmt|;
+comment|/* Flags received about the packet */
 name|l_fp
 name|recv_time
 decl_stmt|;
@@ -299,6 +321,9 @@ decl_stmt|;
 block|}
 name|recv_space
 union|;
+name|int
+name|used
+decl_stmt|;
 define|#
 directive|define
 name|recv_pkt
@@ -343,21 +368,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|recvbuf
-modifier|*
-name|getrecvbufs
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  Get a free buffer (typically used so an async  *  read can directly place data into the buffer  *  *  The buffer is removed from the free list. Make sure  *  you put it back with freerecvbuf() or   */
 end_comment
@@ -376,6 +386,29 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* signal safe - no malloc */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|recvbuf
+modifier|*
+name|get_free_recv_buffer_alloc
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* signal unsafe - may malloc */
+end_comment
 
 begin_comment
 comment|/*   Add a buffer to the full list  */
@@ -466,6 +499,23 @@ name|struct
 name|recvbuf
 modifier|*
 name|get_full_recv_buffer
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Checks to see if there are buffers to process  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|isc_boolean_t
+name|has_full_recv_buffer
 name|P
 argument_list|(
 operator|(

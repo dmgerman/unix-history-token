@@ -175,30 +175,13 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_TIMEPPS_H
+name|HAVE_PPSAPI
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<timepps.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TIMEPPS_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/timepps.h>
+file|"ppsapi_timepps.h"
 end_include
 
 begin_endif
@@ -206,10 +189,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* HAVE_PPSAPI */
+end_comment
 
 begin_comment
 comment|/*  * This driver supports the Magnavox Model MX 4200 GPS Receiver  * adapted to precision timing applications.  It requires the  * ppsclock line discipline or streams module described in the  * Line Disciplines and Streams Drivers page. It also requires a  * gadget box and 1-PPS level converter, such as described in the  * Pulse-per-second (PPS) Signal Interfacing page.  *  * It's likely that other compatible Magnavox receivers such as the  * MX 4200D, MX 9212, MX 9012R, MX 9112 will be supported by this code.  */
@@ -4747,8 +4729,12 @@ name|mx4200_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"mx4200_pps: time_pps_fetch: serial=%d, %s\n"
+literal|"mx4200_pps: time_pps_fetch: serial=%ul, %s\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|up
 operator|->
 name|pps_i
@@ -4789,8 +4775,12 @@ name|mx4200_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"mx4200_pps: assert_sequence serial not incrementing: %d\n"
+literal|"mx4200_pps: assert_sequence serial not incrementing: %ul\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|up
 operator|->
 name|pps_i
@@ -4860,7 +4850,7 @@ name|mx4200_debug
 argument_list|(
 name|peer
 argument_list|,
-literal|"mx4200_pps: missed %d pps events\n"
+literal|"mx4200_pps: missed %ul pps events\n"
 argument_list|,
 name|up
 operator|->
@@ -4872,7 +4862,7 @@ name|up
 operator|->
 name|lastserial
 operator|-
-literal|1
+literal|1UL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5013,6 +5003,9 @@ end_comment
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|va_list
 name|ap
 decl_stmt|;
@@ -5085,6 +5078,8 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_block
 

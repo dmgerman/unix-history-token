@@ -23,35 +23,20 @@ directive|define
 name|_NTP_RFC2553_H_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_SS_MAXSIZE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_SS_SIZE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_IPV6
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/*  * Ensure that we include the configuration file before we check  * for IPV6  */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -59,6 +44,21 @@ include|#
 directive|include
 file|"ntp_types.h"
 end_include
+
+begin_comment
+comment|/*  * Don't include any additional IPv6 definitions  * We are defining our own here.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_IPV6_H
+value|1
+end_define
+
+begin_comment
+comment|/*  * If various macros are not defined we need to define them  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -85,88 +85,54 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_TYPE_U_INT8_T
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_SS_MAXSIZE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_SS_ALIGNSIZE
+argument_list|)
+end_if
 
-begin_typedef
-typedef|typedef
-name|u_char
-name|u_int8_t
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|_SS_MAXSIZE
+value|128
+end_define
 
-begin_typedef
-typedef|typedef
-name|u_short
-name|u_int16_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int32
-name|u_int32_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_TYPE_U_INT8_T */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_TYPE_U_INT64_T
-end_ifndef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|u_int64_t
-block|{
-name|u_int32
-name|val
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|u_int64_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_TYPE_U_INT64_T */
-end_comment
-
-begin_comment
-comment|/*  * IPv6 address  */
-end_comment
+begin_define
+define|#
+directive|define
+name|_SS_ALIGNSIZE
+value|(sizeof(ntp_uint64_t))
+end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYS_WINNT
+name|HAVE_SA_LEN_IN_STRUCT_SOCKADDR
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|in6_addr
-value|in_addr6
+name|_SS_PAD1SIZE
+value|(_SS_ALIGNSIZE - sizeof(u_char) - sizeof(ntp_u_int8_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_PAD2SIZE
+value|(_SS_MAXSIZE - sizeof(u_char) - sizeof(ntp_u_int8_t) - \ 				_SS_PAD1SIZE - _SS_ALIGNSIZE)
 end_define
 
 begin_else
@@ -174,54 +140,18 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/*  * Don't include any additional IPv6 definitions  * We are defining our own here.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ISC_IPV6_H
-value|1
+name|_SS_PAD1SIZE
+value|(_SS_ALIGNSIZE - sizeof(short))
 end_define
 
-begin_struct
-struct|struct
-name|in6_addr
-block|{
-union|union
-block|{
-name|u_int8_t
-name|__u6_addr8
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|u_int16_t
-name|__u6_addr16
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|u_int32_t
-name|__u6_addr32
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|__u6_addr
-union|;
-comment|/* 128-bit IP6 address */
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
-name|s6_addr
-value|__u6_addr.__u6_addr8
+name|_SS_PAD2SIZE
+value|(_SS_MAXSIZE - sizeof(short) - \ 				_SS_PAD1SIZE - _SS_ALIGNSIZE)
 end_define
 
 begin_endif
@@ -230,8 +160,162 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* HAVE_SA_LEN_IN_STRUCT_SOCKADDR */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * If we don't have the sockaddr_storage structure  * we need to define it  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRUCT_SOCKADDR_STORAGE
+end_ifndef
+
+begin_struct
+struct|struct
+name|sockaddr_storage
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SA_LEN_IN_STRUCT_SOCKADDR
+name|ntp_u_int8_t
+name|ss_len
+decl_stmt|;
+comment|/* address length */
+name|ntp_u_int8_t
+name|ss_family
+decl_stmt|;
+comment|/* address family */
+else|#
+directive|else
+name|short
+name|ss_family
+decl_stmt|;
+comment|/* address family */
+endif|#
+directive|endif
+name|char
+name|__ss_pad1
+index|[
+name|_SS_PAD1SIZE
+index|]
+decl_stmt|;
+name|ntp_uint64_t
+name|__ss_align
+decl_stmt|;
+comment|/* force desired structure storage alignment */
+name|char
+name|__ss_pad2
+index|[
+name|_SS_PAD2SIZE
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Finally if the platform doesn't support IPv6 we need some  * additional definitions  */
+end_comment
+
+begin_comment
+comment|/*  * Flag values for getaddrinfo()  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AI_NUMERICHOST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AI_PASSIVE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* get address to use bind() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AI_CANONNAME
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* fill ai_canonname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AI_NUMERICHOST
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* prevent name resolution */
+end_comment
+
+begin_comment
+comment|/* valid flags for addrinfo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AI_MASK
+define|\
+value|(AI_PASSIVE | AI_CANONNAME | AI_NUMERICHOST | AI_ADDRCONFIG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AI_ADDRCONFIG
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* only if any address is assigned */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISC_PLATFORM_HAVEIPV6
+end_ifndef
+
+begin_comment
 comment|/*  * Definition of some useful macros to handle IP6 addresses  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_NEEDIN6ADDRANY
+end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -264,6 +348,91 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * IPv6 address  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|in6_addr
+value|in_addr6
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|in6_addr
+block|{
+union|union
+block|{
+name|ntp_u_int8_t
+name|__u6_addr8
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|ntp_u_int16_t
+name|__u6_addr16
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|ntp_u_int32_t
+name|__u6_addr32
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|__u6_addr
+union|;
+comment|/* 128-bit IP6 address */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|s6_addr
+value|__u6_addr.__u6_addr8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISC_PLATFORM_HAVEIPV6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ISC_PLATFORM_NEEDIN6ADDRANY
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -272,6 +441,11 @@ name|in6_addr
 name|in6addr_any
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -292,11 +466,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAVE_SA_LEN_IN_STRUCT_SOCKADDR
-name|u_int8_t
+name|ntp_u_int8_t
 name|sin6_len
 decl_stmt|;
 comment|/* length of this struct(sa_family_t)*/
-name|u_int8_t
+name|ntp_u_int8_t
 name|sin6_family
 decl_stmt|;
 comment|/* AF_INET6 (sa_family_t) */
@@ -308,11 +482,11 @@ decl_stmt|;
 comment|/* AF_INET6 (sa_family_t) */
 endif|#
 directive|endif
-name|u_int16_t
+name|ntp_u_int16_t
 name|sin6_port
 decl_stmt|;
 comment|/* Transport layer port # (in_port_t)*/
-name|u_int32_t
+name|ntp_u_int32_t
 name|sin6_flowinfo
 decl_stmt|;
 comment|/* IP6 flow information */
@@ -321,7 +495,7 @@ name|in6_addr
 name|sin6_addr
 decl_stmt|;
 comment|/* IP6 address */
-name|u_int32_t
+name|ntp_u_int32_t
 name|sin6_scope_id
 decl_stmt|;
 comment|/* scope zone index */
@@ -352,7 +526,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[12]) == 0))
+value|((*(const ntp_u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const ntp_u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const ntp_u_int32_t *)(const void *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(const ntp_u_int32_t *)(const void *)(&(a)->s6_addr[12]) == 0))
 end_define
 
 begin_endif
@@ -386,60 +560,23 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * RFC 2553: protocol-independent placeholder for socket addresses  */
+comment|/*  * Unicast link / site local.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_SS_MAXSIZE
-value|128
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN6_IS_ADDR_LINKLOCAL
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SS_ALIGNSIZE
-value|(sizeof(u_int64_t))
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SA_LEN_IN_STRUCT_SOCKADDR
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_SS_PAD1SIZE
-value|(_SS_ALIGNSIZE - sizeof(u_char) - sizeof(u_int8_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SS_PAD2SIZE
-value|(_SS_MAXSIZE - sizeof(u_char) - sizeof(u_int8_t) - \ 				_SS_PAD1SIZE - _SS_ALIGNSIZE)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_SS_PAD1SIZE
-value|(_SS_ALIGNSIZE - sizeof(short))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SS_PAD2SIZE
-value|(_SS_MAXSIZE - sizeof(short) - \ 				_SS_PAD1SIZE - _SS_ALIGNSIZE)
+name|IN6_IS_ADDR_LINKLOCAL
+parameter_list|(
+name|a
+parameter_list|)
+value|(\ (*((u_long *)((a)->s6_addr)    ) == 0xfe)&& \ ((*((u_long *)((a)->s6_addr) + 1)& 0xc0) == 0x80))
 end_define
 
 begin_endif
@@ -447,52 +584,26 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* HAVE_SA_LEN_IN_STRUCT_SOCKADDR */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN6_IS_ADDR_SITELOCAL
+end_ifndef
 
-begin_struct
-struct|struct
-name|sockaddr_storage
-block|{
-ifdef|#
-directive|ifdef
-name|HAVE_SA_LEN_IN_STRUCT_SOCKADDR
-name|u_int8_t
-name|ss_len
-decl_stmt|;
-comment|/* address length */
-name|u_int8_t
-name|ss_family
-decl_stmt|;
-comment|/* address family */
-else|#
-directive|else
-name|short
-name|ss_family
-decl_stmt|;
-comment|/* address family */
+begin_define
+define|#
+directive|define
+name|IN6_IS_ADDR_SITELOCAL
+parameter_list|(
+name|a
+parameter_list|)
+value|(\ (*((u_long *)((a)->s6_addr)    ) == 0xfe)&& \ ((*((u_long *)((a)->s6_addr) + 1)& 0xc0) == 0xc0))
+end_define
+
+begin_endif
 endif|#
 directive|endif
-name|char
-name|__ss_pad1
-index|[
-name|_SS_PAD1SIZE
-index|]
-decl_stmt|;
-name|u_int64_t
-name|__ss_align
-decl_stmt|;
-comment|/* force desired structure storage alignment */
-name|char
-name|__ss_pad2
-index|[
-name|_SS_PAD2SIZE
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
+end_endif
 
 begin_struct
 struct|struct
@@ -685,130 +796,6 @@ name|EAI_MAX
 value|14
 end_define
 
-begin_comment
-comment|/*  * Flag values for getaddrinfo()  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AI_PASSIVE
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* get address to use bind() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AI_CANONNAME
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* fill ai_canonname */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AI_NUMERICHOST
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* prevent name resolution */
-end_comment
-
-begin_comment
-comment|/* valid flags for addrinfo */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AI_MASK
-define|\
-value|(AI_PASSIVE | AI_CANONNAME | AI_NUMERICHOST | AI_ADDRCONFIG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AI_ADDRCONFIG
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* only if any address is assigned */
-end_comment
-
-begin_comment
-comment|/*  * Constants for getnameinfo()  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NI_MAXHOST
-value|1025
-end_define
-
-begin_define
-define|#
-directive|define
-name|NI_MAXSERV
-value|32
-end_define
-
-begin_comment
-comment|/*  * Flag values for getnameinfo()  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NI_NOFQDN
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|NI_NUMERICHOST
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|NI_NAMEREQD
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|NI_NUMERICSERV
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|NI_DGRAM
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|NI_WITHSCOPEID
-value|0x00000020
-end_define
-
 begin_decl_stmt
 name|int
 name|getaddrinfo
@@ -893,13 +880,99 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Constants for getnameinfo()  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NI_MAXHOST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NI_MAXHOST
+value|1025
+end_define
+
+begin_define
+define|#
+directive|define
+name|NI_MAXSERV
+value|32
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _SS_MAXSIZE */
+comment|/*  * Flag values for getnameinfo()  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NI_NUMERICHOST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NI_NOFQDN
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|NI_NUMERICHOST
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|NI_NAMEREQD
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|NI_NUMERICSERV
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|NI_DGRAM
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|NI_WITHSCOPEID
+value|0x00000020
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ISC_PLATFORM_HAVEIPV6 */
 end_comment
 
 begin_endif

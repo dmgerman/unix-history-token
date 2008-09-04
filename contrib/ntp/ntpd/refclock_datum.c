@@ -265,6 +265,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DATUM_DEV
+value|"/dev/datum"
+end_define
+
+begin_comment
+comment|/* device name */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DATUM_MAX_ERROR2
 value|(DATUM_MAX_ERROR*DATUM_MAX_ERROR)
 end_define
@@ -622,6 +633,9 @@ name|datum_pts_unit
 modifier|*
 name|datum_pts
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_TERMIOS
@@ -647,6 +661,36 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	** Open the Datum PTS device 	*/
+name|fd
+operator|=
+name|open
+argument_list|(
+name|DATUM_DEV
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Datum_PTS: open(\"%s\", O_RDWR) failed: %m"
+argument_list|,
+name|DATUM_DEV
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* 	** Create the memory for the new unit 	*/
 name|temp_datum_pts_unit
 operator|=
@@ -750,17 +794,11 @@ operator|=
 literal|0.0
 expr_stmt|;
 comment|/* initialize the sigma2 to 0 */
-comment|/* 	** Open the Datum PTS device 	*/
 name|datum_pts
 operator|->
 name|PTS_fd
 operator|=
-name|open
-argument_list|(
-literal|"/dev/datum"
-argument_list|,
-name|O_RDWR
-argument_list|)
+name|fd
 expr_stmt|;
 name|fcntl
 argument_list|(

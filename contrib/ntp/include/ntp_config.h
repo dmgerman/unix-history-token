@@ -151,7 +151,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONFIG_PPS
+name|CONFIG_CDELAY
 value|10
 end_define
 
@@ -347,7 +347,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONFIG_CDELAY
+name|CONFIG_END
 value|38
 end_define
 
@@ -452,6 +452,27 @@ define|#
 directive|define
 name|CONF_MOD_NOSELECT
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_MOD_TRUE
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_MOD_PREEMPT
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_MOD_DYNAMIC
+value|14
 end_define
 
 begin_comment
@@ -674,31 +695,6 @@ value|6
 end_define
 
 begin_comment
-comment|/*  * "pps" modifier keywords  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONF_PPS_ASSERT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONF_PPS_CLEAR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONF_PPS_HARDPPS
-value|3
-end_define
-
-begin_comment
 comment|/*  * "discard" modifier keywords  */
 end_comment
 
@@ -790,29 +786,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONF_TOS_MINSANE
+name|CONF_TOS_MAXCLOCK
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_TOS_FLOOR
+name|CONF_TOS_MINSANE
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_TOS_CEILING
+name|CONF_TOS_FLOOR
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_TOS_COHORT
+name|CONF_TOS_CEILING
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_COHORT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_MINDISP
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_MAXDIST
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_MAXHOP
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_BEACON
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_TOS_ORPHAN
+value|11
 end_define
 
 begin_ifdef
@@ -870,29 +908,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_IFFPAR
+name|CONF_CRYPTO_IDENT
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_GQPAR
+name|CONF_CRYPTO_IFFPAR
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_MVPAR
+name|CONF_CRYPTO_GQPAR
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONF_CRYPTO_PW
+name|CONF_CRYPTO_MVPAR
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONF_CRYPTO_PW
+value|11
 end_define
 
 begin_endif

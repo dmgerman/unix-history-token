@@ -97,6 +97,35 @@ directive|include
 file|"ntp_stdlib.h"
 end_include
 
+begin_comment
+comment|/* Don't include ISC's version of IPv6 variables and structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_IPV6_H
+value|1
+end_define
+
+begin_include
+include|#
+directive|include
+file|"isc/net.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"isc/result.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"isc/sockaddr.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -154,12 +183,6 @@ ifndef|#
 directive|ifndef
 name|SYS_WINNT
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -245,23 +268,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__QNXNTO__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"adjtime.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|SYS_VXWORKS
 end_ifdef
 
@@ -296,6 +302,34 @@ block|{
 literal|0
 block|,
 literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SYS_WINNT
+argument_list|)
+end_elif
+
+begin_comment
+comment|/*  * Windows does not abort a select select call if SIGALRM goes off  * so a 200 ms timeout is needed  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|timeval
+name|timeout
+init|=
+block|{
+literal|0
+block|,
+literal|1000000
+operator|/
+name|TIMER_HZ
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -394,6 +428,25 @@ name|,
 literal|"winmm"
 name|)
 end_pragma
+
+begin_function_decl
+name|isc_boolean_t
+name|ntp_port_inuse
+parameter_list|(
+name|int
+name|af
+parameter_list|,
+name|u_short
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|UINT
+name|wTimerRes
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -550,6 +603,20 @@ comment|/* 8 suitable for crystal time base */
 end_comment
 
 begin_comment
+comment|/*  * for get_systime()  */
+end_comment
+
+begin_decl_stmt
+name|s_char
+name|sys_precision
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* local clock precision (log2 s) */
+end_comment
+
+begin_comment
 comment|/*  * Debugging flag  */
 end_comment
 
@@ -578,6 +645,10 @@ name|nbsock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* the number of sockets used */
+end_comment
+
 begin_decl_stmt
 name|SOCKET
 name|fd
@@ -586,10 +657,6 @@ name|MAX_AF
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* support up to 2 sockets */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -632,7 +699,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|SOCKET
 name|maxfd
 decl_stmt|;
 end_decl_stmt
@@ -688,24 +755,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Unpriviledged port flag.  */
+comment|/*  * Unprivileged port flag.  */
 end_comment
 
 begin_decl_stmt
 name|int
 name|unpriv_port
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Time to spend measuring drift rate  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|rate
 init|=
 literal|0
 decl_stmt|;
@@ -1348,13 +1403,8 @@ name|simple_query
 operator|=
 literal|0
 expr_stmt|;
-comment|/*    * Unpriviledged port flag.    */
+comment|/*    * Unprivileged port flag.    */
 name|unpriv_port
-operator|=
-literal|0
-expr_stmt|;
-comment|/*    * Time to spend measuring drift rate    */
-name|rate
 operator|=
 literal|0
 expr_stmt|;
@@ -1498,10 +1548,8 @@ block|{
 name|int
 name|was_alarmed
 decl_stmt|;
-name|struct
-name|recvbuf
-modifier|*
-name|rbuflist
+name|int
+name|tot_recvbufs
 decl_stmt|;
 name|struct
 name|recvbuf
@@ -1604,6 +1652,20 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Check to see if we have IPv6. Otherwise force the -4 flag */
+if|if
+condition|(
+name|isc_net_probeipv6
+argument_list|()
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|ai_fam_templ
+operator|=
+name|AF_INET
+expr_stmt|;
+block|}
 name|errflg
 operator|=
 literal|0
@@ -1631,7 +1693,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46a:bBde:k:o:p:qr:st:uv"
+literal|"46a:bBde:k:o:p:qst:uv"
 argument_list|)
 operator|)
 operator|!=
@@ -1830,63 +1892,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'r'
-case|:
-name|c
-operator|=
-name|atoi
-argument_list|(
-name|ntp_optarg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|<=
-literal|0
-operator|||
-name|c
-operator|>
-operator|(
-literal|60
-operator|*
-literal|60
-operator|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: rate (%d) is invalid: 0 - %d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|c
-argument_list|,
-operator|(
-literal|60
-operator|*
-literal|60
-operator|)
-argument_list|)
-expr_stmt|;
-name|errflg
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|rate
-operator|=
-name|c
-expr_stmt|;
-block|}
-break|break;
-case|case
 literal|'s'
 case|:
 name|syslogit
@@ -1997,7 +2002,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-46bBdqsuv] [-a key#] [-e delay] [-k file] [-p samples] [-o version#] [-r rate] [-t timeo] server ...\n"
+literal|"usage: %s [-46bBdqsuv] [-a key#] [-e delay] [-k file] [-p samples] [-o version#] [-t timeo] server ...\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -2025,6 +2030,23 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+comment|/* Win32 does not implement line buffering */
+name|setvbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IONBF
+argument_list|,
+name|BUFSIZ
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|setvbuf
 argument_list|(
 name|stdout
@@ -2036,6 +2058,9 @@ argument_list|,
 name|BUFSIZ
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* SYS_WINNT */
 else|#
 directive|else
 name|setlinebuf
@@ -2320,35 +2345,17 @@ name|sys_authkey
 argument_list|)
 condition|)
 block|{
-name|char
-name|buf
-index|[
-literal|10
-index|]
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|msyslog
 argument_list|(
-name|buf
+name|LOG_ERR
 argument_list|,
-literal|"%lu"
+literal|"authentication key %lu unknown"
 argument_list|,
 operator|(
 name|unsigned
 name|long
 operator|)
 name|sys_authkey
-argument_list|)
-expr_stmt|;
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"authentication key %s unknown"
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2452,15 +2459,6 @@ name|was_alarmed
 operator|=
 literal|0
 expr_stmt|;
-name|rbuflist
-operator|=
-operator|(
-expr|struct
-name|recvbuf
-operator|*
-operator|)
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|complete_servers
@@ -2506,9 +2504,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|rbuflist
+name|tot_recvbufs
 operator|=
-name|getrecvbufs
+name|full_recvbuffs
 argument_list|()
 expr_stmt|;
 comment|/* get received buffers */
@@ -2517,13 +2515,8 @@ condition|(
 operator|!
 name|was_alarmed
 operator|&&
-name|rbuflist
+name|tot_recvbufs
 operator|==
-operator|(
-expr|struct
-name|recvbuf
-operator|*
-operator|)
 literal|0
 condition|)
 block|{
@@ -2591,21 +2584,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-ifndef|#
-directive|ifndef
-name|SYS_WINNT
-name|nfound
-operator|==
-operator|-
-literal|1
-else|#
-directive|else
 name|nfound
 operator|==
 name|SOCKET_ERROR
-endif|#
-directive|endif
-comment|/* SYS_WINNT */
 condition|)
 block|{
 ifndef|#
@@ -2616,6 +2597,15 @@ condition|(
 name|errno
 operator|!=
 name|EINTR
+condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|WSAGetLastError
+argument_list|()
+operator|!=
+name|WSAEINTR
 condition|)
 endif|#
 directive|endif
@@ -2635,7 +2625,13 @@ directive|endif
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
 block|{
 ifndef|#
 directive|ifndef
@@ -2676,36 +2672,26 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|rbuflist
+name|tot_recvbufs
 operator|=
-name|getrecvbufs
+name|full_recvbuffs
 argument_list|()
 expr_stmt|;
 comment|/* get received buffers */
 block|}
 comment|/* 		 * Out here, signals are unblocked.  Call receive 		 * procedure for each incoming packet. 		 */
+name|rbuf
+operator|=
+name|get_full_recv_buffer
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
-name|rbuflist
+name|rbuf
 operator|!=
-operator|(
-expr|struct
-name|recvbuf
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
-name|rbuf
-operator|=
-name|rbuflist
-expr_stmt|;
-name|rbuflist
-operator|=
-name|rbuf
-operator|->
-name|next
-expr_stmt|;
 name|receive
 argument_list|(
 name|rbuf
@@ -2715,6 +2701,11 @@ name|freerecvbuf
 argument_list|(
 name|rbuf
 argument_list|)
+expr_stmt|;
+name|rbuf
+operator|=
+name|get_full_recv_buffer
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 		 * Call timer to process any timeouts 		 */
@@ -2765,7 +2756,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * transmit - transmit a packet to the given server, or mark it completed.  *		  This is called by the timeout routine and by the receive  *		  procedure.  */
+comment|/*  * transmit - transmit a packet to the given server, or mark it completed.  *		This is called by the timeout routine and by the receive  *		procedure.  */
 end_comment
 
 begin_function
@@ -2861,7 +2852,7 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If we're here, send another message to the server.    Fill in 	 * the packet and let 'er rip. 	 */
+comment|/* 	 * If we're here, send another message to the server.  Fill in 	 * the packet and let 'er rip. 	 */
 name|xpkt
 operator|.
 name|li_vn_mode
@@ -5230,7 +5221,7 @@ literal|0
 index|]
 expr_stmt|;
 block|}
-comment|/* 	 * That's it.    Return our server. 	 */
+comment|/* 	 * That's it.  Return our server. 	 */
 return|return
 name|sys_server
 return|;
@@ -5403,6 +5394,8 @@ if|if
 condition|(
 name|simple_query
 operator|||
+name|debug
+operator|||
 name|l_step_systime
 argument_list|(
 operator|&
@@ -5515,11 +5508,94 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * is_unreachable - check to see if we have a route to given destination  *		    (non-blocking).  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|is_reachable
+parameter_list|(
+name|struct
+name|sockaddr_storage
+modifier|*
+name|dst
+parameter_list|)
+block|{
+name|SOCKET
+name|sockfd
+decl_stmt|;
+name|sockfd
+operator|=
+name|socket
+argument_list|(
+name|dst
+operator|->
+name|ss_family
+argument_list|,
+name|SOCK_DGRAM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sockfd
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|connect
+argument_list|(
+name|sockfd
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|dst
+argument_list|,
+name|SOCKLEN
+argument_list|(
+name|dst
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|closesocket
+argument_list|(
+name|sockfd
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|closesocket
+argument_list|(
+name|sockfd
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* XXX ELIMINATE: merge BIG slew into adj_systime in lib/systime.c */
 end_comment
 
 begin_comment
-comment|/*  * addserver - determine a server's address and allocate a new structure  *		   for it.  */
+comment|/*  * addserver - determine a server's address and allocate a new structure  *		for it.  */
 end_comment
 
 begin_function
@@ -5543,6 +5619,9 @@ name|struct
 name|addrinfo
 modifier|*
 name|addrResult
+decl_stmt|,
+modifier|*
+name|ptr
 decl_stmt|;
 comment|/* Address infos structure to store hints for getaddrinfo */
 name|struct
@@ -5633,6 +5712,44 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* Conduct more refined error analysis */
+if|if
+condition|(
+name|error
+operator|==
+name|EAI_FAIL
+operator|||
+name|error
+operator|==
+name|EAI_AGAIN
+condition|)
+block|{
+comment|/* Name server is unusable. Exit after failing on the 			   first server, in order to shorten the timeout caused 			   by waiting for resolution of several servers */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Name server cannot be used, exiting"
+argument_list|)
+expr_stmt|;
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"name server cannot be used, reason: %s\n"
+argument_list|,
+name|gai_strerror
+argument_list|(
+name|error
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -5687,6 +5804,39 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* We must get all returned server in case the first one fails */
+for|for
+control|(
+name|ptr
+operator|=
+name|addrResult
+init|;
+name|ptr
+operator|!=
+name|NULL
+condition|;
+name|ptr
+operator|=
+name|ptr
+operator|->
+name|ai_next
+control|)
+block|{
+if|if
+condition|(
+name|is_reachable
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_storage
+operator|*
+operator|)
+name|ptr
+operator|->
+name|ai_addr
+argument_list|)
+condition|)
+block|{
 name|server
 operator|=
 operator|(
@@ -5720,7 +5870,6 @@ name|server
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* For now we only get the first returned server of the addrinfo list */
 name|memset
 argument_list|(
 operator|&
@@ -5748,11 +5897,11 @@ operator|->
 name|srcadr
 operator|)
 argument_list|,
-name|addrResult
+name|ptr
 operator|->
 name|ai_addr
 argument_list|,
-name|addrResult
+name|ptr
 operator|->
 name|ai_addrlen
 argument_list|)
@@ -5808,6 +5957,13 @@ name|server
 expr_stmt|;
 block|}
 block|}
+block|}
+name|freeaddrinfo
+argument_list|(
+name|addrResult
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -5837,6 +5993,65 @@ name|server
 modifier|*
 name|mc_server
 decl_stmt|;
+name|isc_sockaddr_t
+name|laddr
+decl_stmt|;
+name|isc_sockaddr_t
+name|saddr
+decl_stmt|;
+if|if
+condition|(
+name|addr
+operator|->
+name|ss_family
+operator|==
+name|AF_INET
+condition|)
+block|{
+name|isc_sockaddr_fromin
+argument_list|(
+operator|&
+name|laddr
+argument_list|,
+operator|&
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|addr
+operator|)
+operator|->
+name|sin_addr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|isc_sockaddr_fromin6
+argument_list|(
+operator|&
+name|laddr
+argument_list|,
+operator|&
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+name|addr
+operator|)
+operator|->
+name|sin6_addr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|mc_server
 operator|=
 name|NULL
@@ -5881,71 +6096,46 @@ control|)
 block|{
 if|if
 condition|(
-name|memcmp
-argument_list|(
-name|addr
-argument_list|,
-operator|&
 name|server
 operator|->
 name|srcadr
-argument_list|,
-name|SOCKLEN
-argument_list|(
-name|addr
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-name|server
-return|;
-comment|/* Multicast compatibility to verify here... I'm not sure it's working */
-if|if
-condition|(
-name|addr
-operator|->
+operator|.
 name|ss_family
 operator|==
 name|AF_INET
 condition|)
 block|{
-if|if
-condition|(
-name|IN_MULTICAST
+name|isc_sockaddr_fromin
 argument_list|(
-name|ntohl
-argument_list|(
+operator|&
+name|saddr
+argument_list|,
+operator|&
 operator|(
 operator|(
 expr|struct
 name|sockaddr_in
 operator|*
 operator|)
-name|addr
+operator|&
+name|server
+operator|->
+name|srcadr
 operator|)
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
+argument_list|,
+literal|0
 argument_list|)
-argument_list|)
-condition|)
-name|mc_server
-operator|=
-name|server
 expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|AF_INET6
-if|if
-condition|(
-name|IN6_IS_ADDR_MULTICAST
+name|isc_sockaddr_fromin6
 argument_list|(
+operator|&
+name|saddr
+argument_list|,
 operator|&
 operator|(
 operator|(
@@ -5953,28 +6143,61 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
-operator|(
 operator|&
 name|server
 operator|->
 name|srcadr
 operator|)
-operator|)
 operator|->
 name|sin6_addr
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|isc_sockaddr_eqaddr
+argument_list|(
+operator|&
+name|laddr
+argument_list|,
+operator|&
+name|saddr
+argument_list|)
+operator|==
+name|ISC_TRUE
+condition|)
+return|return
+name|server
+return|;
+if|if
+condition|(
+name|addr
+operator|->
+name|ss_family
+operator|==
+name|server
+operator|->
+name|srcadr
+operator|.
+name|ss_family
+condition|)
+block|{
+if|if
+condition|(
+name|isc_sockaddr_ismulticast
+argument_list|(
+operator|&
+name|saddr
+argument_list|)
+operator|==
+name|ISC_TRUE
 condition|)
 name|mc_server
 operator|=
 name|server
 expr_stmt|;
-else|#
-directive|else
-return|return
-literal|0
-return|;
-endif|#
-directive|endif
 block|}
 block|}
 if|if
@@ -6048,7 +6271,6 @@ name|server
 operator|->
 name|srcadr
 argument_list|,
-operator|&
 name|addr
 argument_list|,
 sizeof|sizeof
@@ -6233,6 +6455,41 @@ begin_comment
 comment|/* SYS_WINNT */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|callTimeEndPeriod
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|timeEndPeriod
+argument_list|(
+name|wTimerRes
+argument_list|)
+expr_stmt|;
+name|wTimerRes
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYS_WINNT */
+end_comment
+
 begin_comment
 comment|/*  * init_alarm - set up the timer interrupt  */
 end_comment
@@ -6269,8 +6526,6 @@ name|TIMECAPS
 name|tc
 decl_stmt|;
 name|UINT
-name|wTimerRes
-decl_stmt|,
 name|wTimerID
 decl_stmt|;
 endif|#
@@ -6488,7 +6743,7 @@ if|#
 directive|if
 name|defined
 name|SYS_CYGWIN32
-comment|/* 	 * Get previleges needed for fiddling with the clock 	 */
+comment|/* 	 * Get privileges needed for fiddling with the clock 	 */
 comment|/* get the current process token handle */
 if|if
 condition|(
@@ -6599,7 +6854,7 @@ comment|/* SYS_WINNT */
 name|_tzset
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Get previleges needed for fiddling with the clock 	 */
+comment|/* 	 * Get privileges needed for fiddling with the clock 	 */
 comment|/* get the current process token handle */
 if|if
 condition|(
@@ -6757,6 +7012,11 @@ argument_list|(
 name|wTimerRes
 argument_list|)
 expr_stmt|;
+name|atexit
+argument_list|(
+name|callTimeEndPeriod
+argument_list|)
+expr_stmt|;
 comment|/* start the timer event */
 name|wTimerID
 operator|=
@@ -6856,6 +7116,18 @@ name|optval
 init|=
 literal|1
 decl_stmt|;
+name|int
+name|check_ntp_port_in_use
+init|=
+operator|!
+name|debug
+operator|&&
+operator|!
+name|simple_query
+operator|&&
+operator|!
+name|unpriv_port
+decl_stmt|;
 comment|/* 	 * Init buffer free list and stat counters 	 */
 name|init_recvbuff
 argument_list|(
@@ -6872,7 +7144,7 @@ argument_list|,
 literal|"ntp"
 argument_list|)
 expr_stmt|;
-comment|/*          * Init hints addrinfo structure          */
+comment|/* 	 * Init hints addrinfo structure 	 */
 name|memset
 argument_list|(
 operator|&
@@ -6885,6 +7157,12 @@ argument_list|(
 name|hints
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|hints
+operator|.
+name|ai_family
+operator|=
+name|ai_fam_templ
 expr_stmt|;
 name|hints
 operator|.
@@ -6930,12 +7208,42 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+if|if
+condition|(
+name|check_ntp_port_in_use
+operator|&&
+name|ntp_port_inuse
+argument_list|(
+name|AF_INET
+argument_list|,
+name|NTP_PORT
+argument_list|)
+condition|)
+block|{
+name|netsyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"the NTP socket is in use, exiting: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Remember the address of the addrinfo structure chain */
 name|ressave
 operator|=
 name|res
 expr_stmt|;
-comment|/*          * For each structure returned, open and bind socket          */
+comment|/* 	 * For each structure returned, open and bind socket 	 */
 for|for
 control|(
 name|nbsock
@@ -6958,9 +7266,6 @@ name|ai_next
 control|)
 block|{
 comment|/* create a datagram (UDP) socket */
-if|if
-condition|(
-operator|(
 name|fd
 index|[
 name|nbsock
@@ -6980,11 +7285,20 @@ name|res
 operator|->
 name|ai_protocol
 argument_list|)
-operator|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|fd
+index|[
+name|nbsock
+index|]
+operator|==
+name|SOCKET_ERROR
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|SYS_WINNT
 if|if
 condition|(
 name|errno
@@ -6999,6 +7313,30 @@ name|errno
 operator|==
 name|EPFNOSUPPORT
 condition|)
+else|#
+directive|else
+name|int
+name|err
+init|=
+name|WSAGetLastError
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+name|WSAEPROTONOSUPPORT
+operator|||
+name|err
+operator|==
+name|WSAEAFNOSUPPORT
+operator|||
+name|err
+operator|==
+name|WSAEPFNOSUPPORT
+condition|)
+endif|#
+directive|endif
 continue|continue;
 name|netsyslog
 argument_list|(
@@ -7125,17 +7463,10 @@ name|res
 operator|->
 name|ai_family
 expr_stmt|;
-comment|/* 	 * bind the socket to the NTP port 	 */
+comment|/* 		 * bind the socket to the NTP port 		 */
 if|if
 condition|(
-operator|!
-name|debug
-operator|&&
-operator|!
-name|simple_query
-operator|&&
-operator|!
-name|unpriv_port
+name|check_ntp_port_in_use
 condition|)
 block|{
 if|if
@@ -7244,9 +7575,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|SOCKET
-operator|)
 name|maxfd
 operator|<
 name|fd
@@ -7269,7 +7597,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * set non-blocking, 	 */
+comment|/* 		 * set non-blocking, 		 */
 ifndef|#
 directive|ifndef
 name|SYS_WINNT
@@ -7494,7 +7822,7 @@ decl_stmt|;
 name|SOCKET
 name|sock
 init|=
-literal|0
+name|INVALID_SOCKET
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -7548,7 +7876,7 @@ if|if
 condition|(
 name|sock
 operator|==
-literal|0
+name|INVALID_SOCKET
 condition|)
 block|{
 name|netsyslog
@@ -7594,17 +7922,16 @@ name|dest
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SYS_WINNT
 if|if
 condition|(
 name|cc
 operator|==
-operator|-
-literal|1
+name|SOCKET_ERROR
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|SYS_WINNT
 if|if
 condition|(
 name|errno
@@ -7617,13 +7944,6 @@ name|ENOBUFS
 condition|)
 else|#
 directive|else
-if|if
-condition|(
-name|cc
-operator|==
-name|SOCKET_ERROR
-condition|)
-block|{
 name|err
 operator|=
 name|WSAGetLastError
@@ -7656,7 +7976,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * input_handler - receive packets asynchronously  */
+end_comment
+
+begin_function
 name|void
 name|input_handler
 parameter_list|(
@@ -7759,7 +8085,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/*                  * Determine which socket received data                  */
+comment|/* 		 * Determine which socket received data 		 */
 for|for
 control|(
 name|i
@@ -7827,7 +8153,7 @@ operator|&
 name|tvzero
 argument_list|)
 expr_stmt|;
-comment|/*                  * Determine which socket received data                  */
+comment|/* 		 * Determine which socket received data 		 */
 for|for
 control|(
 name|i
@@ -7836,7 +8162,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|maxfd
+name|nbsock
 condition|;
 name|i
 operator|++
@@ -8062,6 +8388,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -8071,7 +8400,13 @@ operator|&&
 operator|!
 name|defined
 name|SYS_CYGWIN32
+end_if
+
+begin_comment
 comment|/*  * adj_systime - do a big long slew of the system time  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|l_adj_systime
@@ -8259,10 +8594,22 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* SYS_WINNT */
+end_comment
+
+begin_comment
 comment|/*  * This fuction is not the same as lib/systime step_systime!!!  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|l_step_systime
@@ -8420,7 +8767,7 @@ endif|#
 directive|endif
 else|#
 directive|else
-comment|/* SLEWALWAYS  */
+comment|/* SLEWALWAYS */
 if|if
 condition|(
 name|debug
@@ -8445,8 +8792,17 @@ endif|#
 directive|endif
 comment|/* SLEWALWAYS */
 block|}
+end_function
+
+begin_comment
 comment|/* XXX ELIMINATE printserver similar in ntptrace.c, ntpdate.c */
+end_comment
+
+begin_comment
 comment|/*  * printserver - print detail information for a server  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|printserver
@@ -8973,6 +9329,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -8980,6 +9339,9 @@ name|defined
 argument_list|(
 name|HAVE_VSPRINTF
 argument_list|)
+end_if
+
+begin_function
 name|int
 name|vsprintf
 parameter_list|(
@@ -9047,23 +9409,47 @@ name|len
 operator|)
 return|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 literal|0
+end_if
+
+begin_comment
 comment|/* override function in library since SA_RESTART makes ALL syscalls restart */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|SA_RESTART
-block|void signal_no_reset( 	int sig, 	void (*func)() 	) { 	int n; 	struct sigaction vec;  	vec.sa_handler = func; 	sigemptyset(&vec.sa_mask); 	vec.sa_flags = 0;  	while (1) 	{ 		n = sigaction(sig,&vec, NULL); 		if (n == -1&& errno == EINTR) 			continue; 		break; 	} 	if (n == -1) 	{ 		perror("sigaction"); 		exit(1); 	} }
+end_ifdef
+
+begin_endif
+unit|void signal_no_reset( 	int sig, 	void (*func)() 	) { 	int n; 	struct sigaction vec;  	vec.sa_handler = func; 	sigemptyset(&vec.sa_mask); 	vec.sa_flags = 0;  	while (1) 	{ 		n = sigaction(sig,&vec, NULL); 		if (n == -1&& errno == EINTR) 			continue; 		break; 	} 	if (n == -1) 	{ 		perror("sigaction"); 		exit(1); 	} }
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAVE_NETINFO
+end_ifdef
+
+begin_function
 specifier|static
 name|ni_namelist
 modifier|*
@@ -9214,6 +9600,142 @@ block|}
 return|return
 operator|(
 name|namelist
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_function
+name|isc_boolean_t
+name|ntp_port_inuse
+parameter_list|(
+name|int
+name|af
+parameter_list|,
+name|u_short
+name|port
+parameter_list|)
+block|{
+comment|/* 	 * Check if NTP socket is already in use on this system 	 * This is only for Windows Systems, as they tend not to fail on the real bind() below 	 */
+name|SOCKET
+name|checksocket
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|checkservice
+decl_stmt|;
+name|checksocket
+operator|=
+name|socket
+argument_list|(
+name|af
+argument_list|,
+name|SOCK_DGRAM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|checksocket
+operator|==
+name|INVALID_SOCKET
+condition|)
+block|{
+return|return
+operator|(
+name|ISC_TRUE
+operator|)
+return|;
+block|}
+name|checkservice
+operator|.
+name|sin_family
+operator|=
+operator|(
+name|short
+operator|)
+name|AF_INET
+expr_stmt|;
+name|checkservice
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_LOOPBACK
+expr_stmt|;
+name|checkservice
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|port
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bind
+argument_list|(
+name|checksocket
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|checkservice
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|checkservice
+argument_list|)
+argument_list|)
+operator|==
+name|SOCKET_ERROR
+condition|)
+block|{
+if|if
+condition|(
+name|WSAGetLastError
+argument_list|()
+operator|==
+name|WSAEADDRINUSE
+condition|)
+block|{
+name|closesocket
+argument_list|(
+name|checksocket
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_TRUE
+operator|)
+return|;
+block|}
+block|}
+name|closesocket
+argument_list|(
+name|checksocket
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_FALSE
 operator|)
 return|;
 block|}

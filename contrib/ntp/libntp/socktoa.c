@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -113,11 +107,15 @@ name|sock
 operator|==
 name|NULL
 condition|)
-name|printf
+name|strcpy
 argument_list|(
+name|buffer
+argument_list|,
 literal|"null"
 argument_list|)
 expr_stmt|;
+else|else
+block|{
 switch|switch
 condition|(
 name|sock
@@ -125,6 +123,7 @@ operator|->
 name|ss_family
 condition|)
 block|{
+default|default:
 case|case
 name|AF_INET
 case|:
@@ -164,6 +163,13 @@ argument_list|,
 name|LIB_BUFLENGTH
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|default: 			strcpy(buffer, "unknown");
+endif|#
+directive|endif
+block|}
 block|}
 return|return
 name|buffer

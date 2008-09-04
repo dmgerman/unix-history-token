@@ -99,12 +99,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"..\ports\winnt\libntp\log.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"..\ports\winnt\libntp\messages.h"
 end_include
 

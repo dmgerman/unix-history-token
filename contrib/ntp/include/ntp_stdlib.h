@@ -408,19 +408,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_long
-name|calleapwhen
-name|P
-argument_list|(
-operator|(
-name|u_long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_long
 name|calyearstart
 name|P
 argument_list|(
@@ -576,19 +563,6 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|init_lib
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|init_random
 name|P
 argument_list|(
 operator|(
@@ -1174,6 +1148,7 @@ name|getauthkeys
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1352,25 +1327,6 @@ end_decl_stmt
 begin_comment
 comment|/* key length */
 end_comment
-
-begin_comment
-comment|/* clocktypes.c */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|clktype
-struct_decl|;
-end_struct_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|clktype
-name|clktypes
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* getopt.c */

@@ -30,13 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_rfc2553.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|"ntp_rfc2553.h"
 end_include
 
 begin_include
@@ -712,7 +712,7 @@ name|L_RSHIFTU
 parameter_list|(
 name|v
 parameter_list|)
-value|M_RSHIFT((v)->l_ui, (v)->l_uf)
+value|M_RSHIFTU((v)->l_ui, (v)->l_uf)
 end_define
 
 begin_define
@@ -1183,6 +1183,25 @@ name|P
 argument_list|(
 operator|(
 name|double
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tm
+modifier|*
+name|ntp2unix_tm
+name|P
+argument_list|(
+operator|(
+name|u_long
+name|ntp
+operator|,
+name|int
+name|local
 operator|)
 argument_list|)
 decl_stmt|;
