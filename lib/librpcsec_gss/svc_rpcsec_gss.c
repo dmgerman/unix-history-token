@@ -3986,7 +3986,7 @@ decl_stmt|;
 if|if
 condition|(
 name|seq
-operator|<
+operator|<=
 name|client
 operator|->
 name|cl_seqlast
