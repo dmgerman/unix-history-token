@@ -5362,7 +5362,9 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|EAGAIN
+operator|(
+name|ESRCH
+operator|)
 return|;
 if|if
 condition|(
@@ -5377,7 +5379,9 @@ name|np
 argument_list|)
 expr_stmt|;
 return|return
-name|EAGAIN
+operator|(
+name|ESRCH
+operator|)
 return|;
 block|}
 name|PROC_UNLOCK
