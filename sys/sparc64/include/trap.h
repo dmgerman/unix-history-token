@@ -405,6 +405,17 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_function_decl
+name|void
+name|sun4u_set_traptable
+parameter_list|(
+name|void
+modifier|*
+name|tba_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 specifier|const

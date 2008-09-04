@@ -1831,6 +1831,12 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Take over the trap table via the PROM.  Using the PROM for this 	 * is necessary in order to set obp-control-relinquished to true 	 * within the PROM so obtaining /virtual-memory/translations doesn't 	 * trigger a fatal reset error or worse things further down the road. 	 * XXX it should be possible to use this soley instead of writing 	 * %tba in cpu_setregs().  Doing so causes a hang however. 	 */
+name|sun4u_set_traptable
+argument_list|(
+name|tl0_base
+argument_list|)
+expr_stmt|;
 comment|/* 	 * It's now safe to use the real DELAY(). 	 */
 name|delay_func
 operator|=
