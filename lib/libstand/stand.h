@@ -1115,33 +1115,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|free_region
-parameter_list|(
-name|void
-modifier|*
-name|start
-parameter_list|,
-name|void
-modifier|*
-name|end
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* disklabel support (undocumented, may be junk) */
 end_comment
