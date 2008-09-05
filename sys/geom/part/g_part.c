@@ -210,6 +210,7 @@ literal|"apple-hfs"
 block|,
 name|G_PART_ALIAS_APPLE_HFS
 block|}
+block|,
 block|{
 literal|"efi"
 block|,
@@ -257,7 +258,7 @@ literal|"mbr"
 block|,
 name|G_PART_ALIAS_MBR
 block|}
-block|, }
+block|}
 struct|;
 end_struct
 
