@@ -1485,12 +1485,7 @@ operator||
 name|clkdiv
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (sc->vcc_pin) { 		if (sc->power_mode == MMC_POWER_OFF) 			gpio_set(sc->vcc_pin, 0); 		else 			gpio_set(sc->vcc_pin, 1); 	}
-endif|#
-directive|endif
+comment|/* XXX We need to turn the device on/off here with a GPIO pin */
 return|return
 operator|(
 literal|0
