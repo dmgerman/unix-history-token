@@ -695,12 +695,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|archive_entry_set_size
+name|archive_entry_unset_size
 argument_list|(
 operator|*
 name|e
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|archive_entry_copy_hardlink
@@ -816,12 +814,10 @@ operator|=
 name|t
 expr_stmt|;
 comment|/* Make the old entry into a hardlink. */
-name|archive_entry_set_size
+name|archive_entry_unset_size
 argument_list|(
 operator|*
 name|e
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|archive_entry_copy_hardlink
