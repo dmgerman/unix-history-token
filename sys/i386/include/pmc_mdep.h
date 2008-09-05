@@ -224,11 +224,11 @@ parameter_list|(
 name|I
 parameter_list|)
 define|\
-value|(((I)& 0xffffffff) == 0xe5894855)
+value|(((I)& 0x00ffffff) == 0xe58955)
 end_define
 
 begin_comment
-comment|/* pushq %rbp; movq %rsp,%rbp */
+comment|/* pushl %ebp; movl %esp,%ebp */
 end_comment
 
 begin_define
@@ -239,11 +239,11 @@ parameter_list|(
 name|I
 parameter_list|)
 define|\
-value|(((I)& 0x00ffffff) == 0x00e58948)
+value|(((I)& 0x0000ffff) == 0xe589)
 end_define
 
 begin_comment
-comment|/* movq %rsp,%rbp */
+comment|/* movl %esp,%ebp */
 end_comment
 
 begin_define
