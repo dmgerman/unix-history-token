@@ -925,14 +925,6 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|uint32_t status;
-comment|/* Reading the status also clears the interrupt */
-block|status = RD4(sc, SSC_SR); 	if (status == 0) 		return; 	AT91_SSC_LOCK(sc); 	AT91_SSC_UNLOCK(sc);
-endif|#
-directive|endif
 name|wakeup
 argument_list|(
 name|sc
@@ -999,12 +991,6 @@ name|flags
 operator||=
 name|OPENED
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|// Enable interrupts
-endif|#
-directive|endif
 block|}
 name|AT91_SSC_UNLOCK
 argument_list|(
@@ -1065,12 +1051,6 @@ operator|&=
 operator|~
 name|OPENED
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|// Disable interrupts
-endif|#
-directive|endif
 name|AT91_SSC_UNLOCK
 argument_list|(
 name|sc
