@@ -1879,7 +1879,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * We enter this block if rt0 was NULL, 		 * or if rt found by in_rt_check() didn't have llinfo. 		 * we should get a cloned route, which since it should 		 * come from the local interface should have a ll entry. 		 * if may be incoplete but that's ok. 		 * XXXMRT if we haven't found a fibnum is that OK? 		 */
+comment|/* 		 * We enter this block if rt0 was NULL, 		 * or if rt found by in_rt_check() didn't have llinfo. 		 * We should get a cloned route from the local interface, 		 * so it should have an ll entry. 		 * It may be incomplete but that's ok. 		 * XXXMRT if we haven't found a fibnum is that OK? 		 */
 name|rt
 operator|=
 name|arplookup
