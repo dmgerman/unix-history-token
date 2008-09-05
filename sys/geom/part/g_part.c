@@ -252,6 +252,12 @@ literal|"mbr"
 block|,
 name|G_PART_ALIAS_MBR
 block|}
+block|,
+block|{
+literal|"hfs"
+block|,
+name|G_PART_ALIAS_APPLE_HFS
+block|}
 block|}
 struct|;
 end_struct

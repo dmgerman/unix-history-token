@@ -74,6 +74,9 @@ comment|/* A ZFS file system entry. */
 name|G_PART_ALIAS_MBR
 block|,
 comment|/* A MBR (extended) partition entry. */
+name|G_PART_ALIAS_APPLE_HFS
+block|,
+comment|/* An HFS file system entry. */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}
