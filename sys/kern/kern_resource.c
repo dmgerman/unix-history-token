@@ -4018,7 +4018,7 @@ block|}
 else|else
 block|{
 comment|/* tu< ruxp->rux_tu */
-comment|/* 		 * What happene here was likely that a laptop, which ran at 		 * a reduced clock frequency at boot, kicked into high gear. 		 * The wisdom of spamming this message in that case is 		 * dubious, but it might also be indicative of something 		 * serious, so lets keep it and hope laptops can be made 		 * more truthful about their CPU speed via ACPI. 		 */
+comment|/* 		 * What happened here was likely that a laptop, which ran at 		 * a reduced clock frequency at boot, kicked into high gear. 		 * The wisdom of spamming this message in that case is 		 * dubious, but it might also be indicative of something 		 * serious, so lets keep it and hope laptops can be made 		 * more truthful about their CPU speed via ACPI. 		 */
 name|printf
 argument_list|(
 literal|"calcru: runtime went backwards from %ju usec "
