@@ -483,6 +483,13 @@ name|z_ctldir
 operator|=
 name|vp
 expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2740,6 +2747,13 @@ name|se_node
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|vp
@@ -3082,6 +3096,13 @@ operator|->
 name|zc_id
 operator|=
 name|objset
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

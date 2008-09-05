@@ -1529,6 +1529,12 @@ operator|(
 name|zp
 operator|)
 return|;
+name|vp
+operator|->
+name|v_vflag
+operator||=
+name|VV_FORCEINSMQ
+expr_stmt|;
 name|error
 operator|=
 name|insmntque
@@ -1539,6 +1545,13 @@ name|zfsvfs
 operator|->
 name|z_vfs
 argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_vflag
+operator|&=
+operator|~
+name|VV_FORCEINSMQ
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -2774,6 +2787,12 @@ operator|=
 name|B_TRUE
 expr_stmt|;
 comment|/* z_prefetch default is enabled */
+name|vp
+operator|->
+name|v_vflag
+operator||=
+name|VV_FORCEINSMQ
+expr_stmt|;
 name|err
 operator|=
 name|insmntque
@@ -2784,6 +2803,13 @@ name|zfsvfs
 operator|->
 name|z_vfs
 argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_vflag
+operator|&=
+operator|~
+name|VV_FORCEINSMQ
 expr_stmt|;
 name|KASSERT
 argument_list|(
