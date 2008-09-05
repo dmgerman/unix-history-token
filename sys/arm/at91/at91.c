@@ -1529,12 +1529,6 @@ name|rm_descr
 operator|=
 literal|"AT91 Memory"
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|sc->sc_usbmem_rman.rm_type = RMAN_ARRAY; 	sc->sc_usbmem_rman.rm_descr = "AT91RM9200 USB Memory-mapped regs";
-endif|#
-directive|endif
 if|if
 condition|(
 name|rman_init
@@ -2063,12 +2057,6 @@ break|break;
 case|case
 name|SYS_RES_MEMORY
 case|:
-if|#
-directive|if
-literal|0
-block|if (start>= 0x00300000&& start<= 0x003fffff) 			rle->res = rman_reserve_resource(&sc->sc_usbmem_rman, 			    start, end, count, flags, child); 		else
-endif|#
-directive|endif
 name|rle
 operator|->
 name|res
