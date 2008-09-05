@@ -254,7 +254,7 @@ name|G_PART_ALIAS_MBR
 block|}
 block|,
 block|{
-literal|"hfs"
+literal|"apple-hfs"
 block|,
 name|G_PART_ALIAS_APPLE_HFS
 block|}
