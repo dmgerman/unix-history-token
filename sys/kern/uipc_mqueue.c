@@ -6957,7 +6957,7 @@ name|mq
 operator|->
 name|mq_mutex
 argument_list|,
-literal|"mqueue"
+literal|"mqueue lock"
 argument_list|,
 name|NULL
 argument_list|,
