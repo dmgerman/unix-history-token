@@ -524,6 +524,10 @@ name|u_int
 name|sc_opkthdrlen
 decl_stmt|;
 comment|/* header length of 						   output packet */
+name|u_int
+name|sc_obufactive
+decl_stmt|;
+comment|/* Active bytes in buffer */
 name|struct
 name|ucom_callback
 modifier|*
