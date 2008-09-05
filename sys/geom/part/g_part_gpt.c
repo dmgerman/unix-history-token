@@ -675,6 +675,16 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|uuid
+name|gpt_uuid_apple_hfs
+init|=
+name|GPT_ENT_TYPE_APPLE_HFS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|uuid
 name|gpt_uuid_efi
 init|=
 name|GPT_ENT_TYPE_EFI
@@ -758,16 +768,6 @@ name|uuid
 name|gpt_uuid_mbr
 init|=
 name|GPT_ENT_TYPE_MBR
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|uuid
-name|gpt_uuid_apple_hfs
-init|=
-name|GPT_ENT_TYPE_APPLE_HFS
 decl_stmt|;
 end_decl_stmt
 

@@ -206,6 +206,11 @@ index|]
 init|=
 block|{
 block|{
+literal|"apple-hfs"
+block|,
+name|G_PART_ALIAS_APPLE_HFS
+block|}
+block|{
 literal|"efi"
 block|,
 name|G_PART_ALIAS_EFI
@@ -252,13 +257,7 @@ literal|"mbr"
 block|,
 name|G_PART_ALIAS_MBR
 block|}
-block|,
-block|{
-literal|"apple-hfs"
-block|,
-name|G_PART_ALIAS_APPLE_HFS
-block|}
-block|}
+block|, }
 struct|;
 end_struct
 
