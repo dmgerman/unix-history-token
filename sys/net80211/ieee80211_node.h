@@ -306,16 +306,6 @@ define|#
 directive|define
 name|IEEE80211_NODE_BOOST
 value|0x0080
-define|#
-directive|define
-name|IEEE80211_NODE_PSUPDATE
-value|0x0200
-comment|/* power save state changed */
-define|#
-directive|define
-name|IEEE80211_NODE_CHWUPDATE
-value|0x0400
-comment|/* 11n channel width change */
 name|uint16_t
 name|ni_flags
 decl_stmt|;
