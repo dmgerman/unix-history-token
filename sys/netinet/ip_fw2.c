@@ -487,13 +487,6 @@ name|ipfw_dyn_rule_zone
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|IPFW_DEFAULT_RULE
-value|65535
-end_define
-
 begin_comment
 comment|/*  * Data structure to cache our ucred related  * information. This structure only gets used if  * the user specified UID/GID based constraints in  * a firewall rule.  */
 end_comment
@@ -814,6 +807,26 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Set upper limit of matches of ipfw rules logged"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_net_inet_ip_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|default_rule
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+name|IPFW_DEFAULT_RULE
+argument_list|,
+literal|"The default/max possible rule number."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
