@@ -6019,6 +6019,8 @@ name|tap
 decl_stmt|;
 name|uint8_t
 name|dialogtoken
+decl_stmt|,
+name|policy
 decl_stmt|;
 name|uint16_t
 name|baparamset
@@ -6354,6 +6356,15 @@ argument_list|,
 name|IEEE80211_BAPS_BUFSIZ
 argument_list|)
 expr_stmt|;
+name|policy
+operator|=
+name|MS
+argument_list|(
+name|baparamset
+argument_list|,
+name|IEEE80211_BAPS_POLICY
+argument_list|)
+expr_stmt|;
 name|batimeout
 operator|=
 name|LE_READ_2
@@ -6472,6 +6483,66 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+comment|/* NB: assumes IEEE80211_AGGR_IMMEDIATE is 1 */
+if|if
+condition|(
+name|policy
+operator|!=
+operator|(
+name|tap
+operator|->
+name|txa_flags
+operator|&
+name|IEEE80211_AGGR_IMMEDIATE
+operator|)
+condition|)
+block|{
+name|IEEE80211_DISCARD_MAC
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_ACTION
+operator||
+name|IEEE80211_MSG_11N
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|"ADDBA response"
+argument_list|,
+literal|"policy mismatch: expecting %s, "
+literal|"received %s, tid %d code %d"
+argument_list|,
+name|tap
+operator|->
+name|txa_flags
+operator|&
+name|IEEE80211_AGGR_IMMEDIATE
+argument_list|,
+name|policy
+argument_list|,
+name|tid
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_addba_badpolicy
+operator|++
+expr_stmt|;
+return|return;
+block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX we take MIN in ieee80211_addba_response */
+block|if (bufsiz> IEEE80211_AGGR_BAWMAX) { 				IEEE80211_DISCARD_MAC(vap, 				    IEEE80211_MSG_ACTION | IEEE80211_MSG_11N, 				    ni->ni_macaddr, "ADDBA response", 				    "BA window too large: max %d, " 				    "received %d, tid %d code %d", 				    bufsiz, IEEE80211_AGGR_BAWMAX, tid, code); 				vap->iv_stats.is_addba_badbawinsize++; 				return; 			}
+endif|#
+directive|endif
 name|IEEE80211_NOTE
 argument_list|(
 name|vap

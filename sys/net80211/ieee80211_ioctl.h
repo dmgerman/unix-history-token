@@ -679,6 +679,10 @@ name|is_addba_badtoken
 decl_stmt|;
 comment|/* ADDBA response w/ wrong 						   dialogtoken */
 name|uint32_t
+name|is_addba_badpolicy
+decl_stmt|;
+comment|/* ADDBA resp w/ wrong policy */
+name|uint32_t
 name|is_ampdu_stop
 decl_stmt|;
 comment|/* A-MPDU stream stopped */
@@ -713,7 +717,7 @@ comment|/* beacon miss notification */
 name|uint32_t
 name|is_spare
 index|[
-literal|14
+literal|13
 index|]
 decl_stmt|;
 block|}
