@@ -1855,7 +1855,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* compressed */
+comment|/* Compressed Bitmap */
 end_comment
 
 begin_define
@@ -1865,6 +1865,10 @@ name|IEEE80211_BAR_MTID
 value|0x0002
 end_define
 
+begin_comment
+comment|/* Multi-TID */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1873,8 +1877,30 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* no-ack policy */
+comment|/* No-Ack policy */
 end_comment
+
+begin_comment
+comment|/* BAR Starting Sequence Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_BAR_SEQ_START
+value|0xfff0
+end_define
+
+begin_comment
+comment|/* starting seqnum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_BAR_SEQ_START_S
+value|4
+end_define
 
 begin_struct
 struct|struct
@@ -4210,6 +4236,46 @@ init|=
 literal|24
 block|,
 comment|/* 11i */
+name|IEEE80211_REASON_UNSPECIFIED_QOS
+init|=
+literal|32
+block|,
+comment|/* 11e */
+name|IEEE80211_REASON_INSUFFICIENT_BW
+init|=
+literal|33
+block|,
+comment|/* 11e */
+name|IEEE80211_REASON_TOOMANY_FRAMES
+init|=
+literal|34
+block|,
+comment|/* 11e */
+name|IEEE80211_REASON_OUTSIDE_TXOP
+init|=
+literal|35
+block|,
+comment|/* 11e */
+name|IEEE80211_REASON_LEAVING_QBSS
+init|=
+literal|36
+block|,
+comment|/* 11e */
+name|IEEE80211_REASON_BAD_MECHANISM
+init|=
+literal|37
+block|,
+comment|/* 11e */
+name|IEEE80211_REASON_SETUP_NEEDED
+init|=
+literal|38
+block|,
+comment|/* 11e */
+name|IEEE80211_REASON_TIMEOUT
+init|=
+literal|39
+block|,
+comment|/* 11e */
 name|IEEE80211_STATUS_SUCCESS
 init|=
 literal|0
