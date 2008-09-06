@@ -5578,6 +5578,12 @@ if|if
 condition|(
 name|vap
 operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_STA
+operator|&&
+name|vap
+operator|->
 name|iv_state
 operator|==
 name|IEEE80211_S_RUN
