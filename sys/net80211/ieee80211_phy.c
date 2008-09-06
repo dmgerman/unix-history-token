@@ -147,6 +147,26 @@ begin_comment
 comment|/* XXX */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|B
+parameter_list|(
+name|r
+parameter_list|)
+value|(0x80 | r)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Mb
+parameter_list|(
+name|x
+parameter_list|)
+value|(x*1000)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -154,86 +174,118 @@ name|ieee80211_rate_table
 name|ieee80211_11b_table
 init|=
 block|{
+operator|.
+name|rateCount
+operator|=
 literal|4
 block|,
-comment|/* number of rates, XXX no PBCC */
+comment|/* XXX no PBCC */
+operator|.
+name|info
+operator|=
 block|{
+comment|/*                                   short            ctrl  */
+comment|/*                                Preamble  dot11Rate Rate */
+index|[
 literal|0
-block|}
-block|,
+index|]
+operator|=
 block|{
-comment|/*                               short            ctrl  */
-comment|/*                            Preamble  dot11Rate Rate */
-comment|/*   1 Mb */
-block|{
+operator|.
+name|phy
+operator|=
 name|CCK
 block|,
 literal|1000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|2
-operator|)
+argument_list|)
 block|,
 literal|0
 block|}
 block|,
-comment|/*   2 Mb */
+comment|/*   1 Mb */
+index|[
+literal|1
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|CCK
 block|,
 literal|2000
 block|,
 literal|0x04
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|4
-operator|)
+argument_list|)
 block|,
 literal|1
 block|}
 block|,
-comment|/* 5.5 Mb */
+comment|/*   2 Mb */
+index|[
+literal|2
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|CCK
 block|,
 literal|5500
 block|,
 literal|0x04
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|11
-operator|)
+argument_list|)
 block|,
 literal|1
 block|}
 block|,
-comment|/*  11 Mb */
+comment|/* 5.5 Mb */
+index|[
+literal|3
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|CCK
 block|,
 literal|11000
 block|,
 literal|0x04
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|22
-operator|)
+argument_list|)
 block|,
 literal|1
 block|}
 block|,
-comment|/*  22 Mb */
+comment|/*  11 Mb */
+index|[
+literal|4
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|PBCC
 block|,
 literal|22000
@@ -244,6 +296,7 @@ literal|44
 block|,
 literal|3
 block|}
+comment|/*  22 Mb */
 block|}
 block|, }
 decl_stmt|;
@@ -256,86 +309,113 @@ name|ieee80211_rate_table
 name|ieee80211_11g_table
 init|=
 block|{
+operator|.
+name|rateCount
+operator|=
 literal|12
 block|,
-comment|/* number of rates */
+operator|.
+name|info
+operator|=
 block|{
+comment|/*                                   short            ctrl  */
+comment|/*                                Preamble  dot11Rate Rate */
+index|[
 literal|0
-block|}
-block|,
+index|]
+operator|=
 block|{
-comment|/*                               short            ctrl  */
-comment|/*                            Preamble  dot11Rate Rate */
-comment|/*   1 Mb */
-block|{
+operator|.
+name|phy
+operator|=
 name|CCK
 block|,
 literal|1000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|2
-operator|)
+argument_list|)
 block|,
 literal|0
 block|}
 block|,
-comment|/*   2 Mb */
+index|[
+literal|1
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|CCK
 block|,
 literal|2000
 block|,
 literal|0x04
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|4
-operator|)
+argument_list|)
 block|,
 literal|1
 block|}
 block|,
-comment|/* 5.5 Mb */
+index|[
+literal|2
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|CCK
 block|,
 literal|5500
 block|,
 literal|0x04
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|11
-operator|)
+argument_list|)
 block|,
 literal|2
 block|}
 block|,
-comment|/*  11 Mb */
+index|[
+literal|3
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|CCK
 block|,
 literal|11000
 block|,
 literal|0x04
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|22
-operator|)
+argument_list|)
 block|,
 literal|3
 block|}
 block|,
-comment|/*   6 Mb */
+index|[
+literal|4
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|6000
@@ -347,8 +427,14 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*   9 Mb */
+index|[
+literal|5
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|9000
@@ -360,8 +446,14 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  12 Mb */
+index|[
+literal|6
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|12000
@@ -373,8 +465,14 @@ block|,
 literal|6
 block|}
 block|,
-comment|/*  18 Mb */
+index|[
+literal|7
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|18000
@@ -386,8 +484,14 @@ block|,
 literal|6
 block|}
 block|,
-comment|/*  24 Mb */
+index|[
+literal|8
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|24000
@@ -399,8 +503,14 @@ block|,
 literal|8
 block|}
 block|,
-comment|/*  36 Mb */
+index|[
+literal|9
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|36000
@@ -412,8 +522,14 @@ block|,
 literal|8
 block|}
 block|,
-comment|/*  48 Mb */
+index|[
+literal|10
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|48000
@@ -425,8 +541,14 @@ block|,
 literal|8
 block|}
 block|,
-comment|/*  54 Mb */
+index|[
+literal|11
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|54000
@@ -449,35 +571,47 @@ name|ieee80211_rate_table
 name|ieee80211_11a_table
 init|=
 block|{
+operator|.
+name|rateCount
+operator|=
 literal|8
 block|,
-comment|/* number of rates */
+operator|.
+name|info
+operator|=
 block|{
+comment|/*                                   short            ctrl  */
+comment|/*                                Preamble  dot11Rate Rate */
+index|[
 literal|0
-block|}
-block|,
+index|]
+operator|=
 block|{
-comment|/*                               short            ctrl  */
-comment|/*                            Preamble  dot11Rate Rate */
-comment|/*   6 Mb */
-block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|6000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|12
-operator|)
+argument_list|)
 block|,
 literal|0
 block|}
 block|,
-comment|/*   9 Mb */
+index|[
+literal|1
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|9000
@@ -489,25 +623,36 @@ block|,
 literal|0
 block|}
 block|,
-comment|/*  12 Mb */
+index|[
+literal|2
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|12000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|24
-operator|)
+argument_list|)
 block|,
 literal|2
 block|}
 block|,
-comment|/*  18 Mb */
+index|[
+literal|3
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|18000
@@ -519,25 +664,36 @@ block|,
 literal|2
 block|}
 block|,
-comment|/*  24 Mb */
+index|[
+literal|4
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|24000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|48
-operator|)
+argument_list|)
 block|,
 literal|4
 block|}
 block|,
-comment|/*  36 Mb */
+index|[
+literal|5
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|36000
@@ -549,8 +705,14 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  48 Mb */
+index|[
+literal|6
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|48000
@@ -562,8 +724,14 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  54 Mb */
+index|[
+literal|7
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|54000
@@ -586,35 +754,47 @@ name|ieee80211_rate_table
 name|ieee80211_half_table
 init|=
 block|{
+operator|.
+name|rateCount
+operator|=
 literal|8
 block|,
-comment|/* number of rates */
+operator|.
+name|info
+operator|=
 block|{
+comment|/*                                   short            ctrl  */
+comment|/*                                Preamble  dot11Rate Rate */
+index|[
 literal|0
-block|}
-block|,
+index|]
+operator|=
 block|{
-comment|/*                               short            ctrl  */
-comment|/*                            Preamble  dot11Rate Rate */
-comment|/*   6 Mb */
-block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|3000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|6
-operator|)
+argument_list|)
 block|,
 literal|0
 block|}
 block|,
-comment|/*   9 Mb */
+index|[
+literal|1
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|4500
@@ -626,25 +806,36 @@ block|,
 literal|0
 block|}
 block|,
-comment|/*  12 Mb */
+index|[
+literal|2
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|6000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|12
-operator|)
+argument_list|)
 block|,
 literal|2
 block|}
 block|,
-comment|/*  18 Mb */
+index|[
+literal|3
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|9000
@@ -656,25 +847,36 @@ block|,
 literal|2
 block|}
 block|,
-comment|/*  24 Mb */
+index|[
+literal|4
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|12000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|24
-operator|)
+argument_list|)
 block|,
 literal|4
 block|}
 block|,
-comment|/*  36 Mb */
+index|[
+literal|5
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|18000
@@ -686,8 +888,14 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  48 Mb */
+index|[
+literal|6
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|24000
@@ -699,8 +907,14 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  54 Mb */
+index|[
+literal|7
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|27000
@@ -723,35 +937,47 @@ name|ieee80211_rate_table
 name|ieee80211_quarter_table
 init|=
 block|{
+operator|.
+name|rateCount
+operator|=
 literal|8
 block|,
-comment|/* number of rates */
+operator|.
+name|info
+operator|=
 block|{
+comment|/*                                   short            ctrl  */
+comment|/*                                Preamble  dot11Rate Rate */
+index|[
 literal|0
-block|}
-block|,
+index|]
+operator|=
 block|{
-comment|/*                               short            ctrl  */
-comment|/*                            Preamble  dot11Rate Rate */
-comment|/*   6 Mb */
-block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|1500
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|3
-operator|)
+argument_list|)
 block|,
 literal|0
 block|}
 block|,
-comment|/*   9 Mb */
+index|[
+literal|1
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|2250
@@ -763,25 +989,36 @@ block|,
 literal|0
 block|}
 block|,
-comment|/*  12 Mb */
+index|[
+literal|2
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|3000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
-literal|6
-operator|)
+name|B
+argument_list|(
+literal|9
+argument_list|)
 block|,
 literal|2
 block|}
 block|,
-comment|/*  18 Mb */
+index|[
+literal|3
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|4500
@@ -793,25 +1030,36 @@ block|,
 literal|2
 block|}
 block|,
-comment|/*  24 Mb */
+index|[
+literal|4
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|6000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|12
-operator|)
+argument_list|)
 block|,
 literal|4
 block|}
 block|,
-comment|/*  36 Mb */
+index|[
+literal|5
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|9000
@@ -823,8 +1071,14 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  48 Mb */
+index|[
+literal|6
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|12000
@@ -836,8 +1090,14 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  54 Mb */
+index|[
+literal|7
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|OFDM
 block|,
 literal|13500
@@ -860,55 +1120,72 @@ name|ieee80211_rate_table
 name|ieee80211_turbog_table
 init|=
 block|{
+operator|.
+name|rateCount
+operator|=
 literal|7
 block|,
-comment|/* number of rates */
+operator|.
+name|info
+operator|=
 block|{
+comment|/*                                   short            ctrl  */
+comment|/*                                Preamble  dot11Rate Rate */
+index|[
 literal|0
-block|}
-block|,
+index|]
+operator|=
 block|{
-comment|/*                               short            ctrl  */
-comment|/*                            Preamble  dot11Rate Rate */
-comment|/*   6 Mb */
-block|{
-name|TURBO
-block|,
-literal|6000
-block|,
-literal|0x00
-block|,
-operator|(
-literal|0x80
-operator||
-literal|12
-operator|)
-block|,
-literal|0
-block|}
-block|,
-comment|/*  12 Mb */
-block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
 literal|12000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
+literal|12
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+index|[
+literal|1
+index|]
+operator|=
+block|{
+operator|.
+name|phy
+operator|=
+name|TURBO
+block|,
+literal|24000
+block|,
+literal|0x00
+block|,
+name|B
+argument_list|(
 literal|24
-operator|)
+argument_list|)
 block|,
 literal|1
 block|}
 block|,
-comment|/*  18 Mb */
+index|[
+literal|2
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|18000
+literal|36000
 block|,
 literal|0x00
 block|,
@@ -917,28 +1194,39 @@ block|,
 literal|1
 block|}
 block|,
-comment|/*  24 Mb */
+index|[
+literal|3
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|24000
+literal|48000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|48
-operator|)
+argument_list|)
 block|,
 literal|3
 block|}
 block|,
-comment|/*  36 Mb */
+index|[
+literal|4
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|36000
+literal|72000
 block|,
 literal|0x00
 block|,
@@ -947,11 +1235,17 @@ block|,
 literal|3
 block|}
 block|,
-comment|/*  48 Mb */
+index|[
+literal|5
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|48000
+literal|96000
 block|,
 literal|0x00
 block|,
@@ -960,11 +1254,17 @@ block|,
 literal|3
 block|}
 block|,
-comment|/*  54 Mb */
+index|[
+literal|6
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|54000
+literal|108000
 block|,
 literal|0x00
 block|,
@@ -984,38 +1284,50 @@ name|ieee80211_rate_table
 name|ieee80211_turboa_table
 init|=
 block|{
+operator|.
+name|rateCount
+operator|=
 literal|8
 block|,
-comment|/* number of rates */
+operator|.
+name|info
+operator|=
 block|{
+comment|/*                                   short            ctrl  */
+comment|/*                                Preamble  dot11Rate Rate */
+index|[
 literal|0
-block|}
-block|,
+index|]
+operator|=
 block|{
-comment|/*                               short            ctrl  */
-comment|/*                            Preamble  dot11Rate Rate */
-comment|/*   6 Mb */
-block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|6000
+literal|12000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|12
-operator|)
+argument_list|)
 block|,
 literal|0
 block|}
 block|,
-comment|/*   9 Mb */
+index|[
+literal|1
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|9000
+literal|18000
 block|,
 literal|0x00
 block|,
@@ -1024,28 +1336,39 @@ block|,
 literal|0
 block|}
 block|,
-comment|/*  12 Mb */
+index|[
+literal|2
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|12000
+literal|24000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|24
-operator|)
+argument_list|)
 block|,
 literal|2
 block|}
 block|,
-comment|/*  18 Mb */
+index|[
+literal|3
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|18000
+literal|36000
 block|,
 literal|0x00
 block|,
@@ -1054,28 +1377,39 @@ block|,
 literal|2
 block|}
 block|,
-comment|/*  24 Mb */
+index|[
+literal|4
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|24000
+literal|48000
 block|,
 literal|0x00
 block|,
-operator|(
-literal|0x80
-operator||
+name|B
+argument_list|(
 literal|48
-operator|)
+argument_list|)
 block|,
 literal|4
 block|}
 block|,
-comment|/*  36 Mb */
+index|[
+literal|5
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|36000
+literal|72000
 block|,
 literal|0x00
 block|,
@@ -1084,11 +1418,17 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  48 Mb */
+index|[
+literal|6
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|48000
+literal|96000
 block|,
 literal|0x00
 block|,
@@ -1097,11 +1437,17 @@ block|,
 literal|4
 block|}
 block|,
-comment|/*  54 Mb */
+index|[
+literal|7
+index|]
+operator|=
 block|{
+operator|.
+name|phy
+operator|=
 name|TURBO
 block|,
-literal|54000
+literal|108000
 block|,
 literal|0x00
 block|,
@@ -1113,6 +1459,18 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|Mb
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|B
+end_undef
 
 begin_undef
 undef|#
