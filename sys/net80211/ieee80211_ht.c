@@ -5941,6 +5941,7 @@ operator|&
 name|IEEE80211_AGGR_RUNNING
 condition|)
 block|{
+comment|/* XXX clear aggregation queue */
 name|tap
 operator|->
 name|txa_flags
