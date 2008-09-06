@@ -9613,11 +9613,11 @@ name|ni
 operator|->
 name|ni_chw
 operator|==
-literal|20
+literal|40
 condition|?
-literal|", HT20"
-else|:
 literal|", HT40"
+else|:
+literal|", HT20"
 operator|)
 else|:
 literal|""
