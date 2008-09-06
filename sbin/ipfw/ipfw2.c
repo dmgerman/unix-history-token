@@ -11983,7 +11983,7 @@ literal|2
 operator|&&
 name|rulenum
 operator|==
-literal|65535
+name|IPFW_DEFAULT_RULE
 operator|)
 condition|)
 name|errx
@@ -12773,7 +12773,7 @@ name|r
 operator|->
 name|rulenum
 operator|<
-literal|65535
+name|IPFW_DEFAULT_RULE
 operator|&&
 operator|(
 name|char
@@ -25567,7 +25567,9 @@ name|tag
 argument_list|,
 literal|1
 argument_list|,
-literal|65534
+name|IPFW_DEFAULT_RULE
+operator|-
+literal|1
 argument_list|,
 name|i
 argument_list|,
@@ -27601,7 +27603,9 @@ name|conn_limit
 argument_list|,
 literal|1
 argument_list|,
-literal|65534
+name|IPFW_DEFAULT_RULE
+operator|-
+literal|1
 argument_list|,
 name|TOK_LIMIT
 argument_list|,
@@ -28153,7 +28157,9 @@ name|tag
 argument_list|,
 literal|1
 argument_list|,
-literal|65534
+name|IPFW_DEFAULT_RULE
+operator|-
+literal|1
 argument_list|,
 name|TOK_TAGGED
 argument_list|,
@@ -30026,7 +30032,7 @@ literal|0
 expr_stmt|;
 name|lrule
 operator|=
-literal|65535
+name|IPFW_DEFAULT_RULE
 expr_stmt|;
 comment|/* max ipfw rule number */
 name|ac
