@@ -1370,7 +1370,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"\thtopmode 0x%x htstbc 0x%x reqcw %u chw %u\n"
+literal|"\thtopmode 0x%x htstbc 0x%x chw %u\n"
 argument_list|,
 name|ni
 operator|->
@@ -1379,10 +1379,6 @@ argument_list|,
 name|ni
 operator|->
 name|ni_htstbc
-argument_list|,
-name|ni
-operator|->
-name|ni_reqcw
 argument_list|,
 name|ni
 operator|->

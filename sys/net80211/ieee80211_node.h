@@ -557,10 +557,6 @@ name|ni_htstbc
 decl_stmt|;
 comment|/* HT */
 name|uint8_t
-name|ni_reqcw
-decl_stmt|;
-comment|/* requested tx channel width */
-name|uint8_t
 name|ni_chw
 decl_stmt|;
 comment|/* negotiated channel width */
