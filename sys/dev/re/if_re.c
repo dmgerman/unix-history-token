@@ -5487,6 +5487,8 @@ name|RL_FLAG_INVMAR
 operator||
 name|RL_FLAG_PHYWAKE
 operator||
+name|RL_FLAG_PAR
+operator||
 name|RL_FLAG_DESCV2
 operator||
 name|RL_FLAG_MACSTAT
