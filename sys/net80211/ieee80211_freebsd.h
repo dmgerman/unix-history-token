@@ -325,7 +325,7 @@ name|_qlen
 parameter_list|,
 name|_age
 parameter_list|)
-value|do {		\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ifq)->ifq_tail != NULL) { 			\ 		_age -= M_AGE_GET((_ifq)->ifq_tail);		\ 		(_ifq)->ifq_tail->m_nextpkt = (_m);		\ 	} else { 						\ 		(_ifq)->ifq_head = (_m); 			\ 	}							\ 	M_AGE_SET(_m, _age);					\ 	(_ifq)->ifq_tail = (_m); 				\ 	(_qlen) = ++(_ifq)->ifq_len; 				\ } while (0)
+value|do {		\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ifq)->ifq_tail != NULL) { 			\ 		_age -= M_AGE_GET((_ifq)->ifq_head);		\ 		(_ifq)->ifq_tail->m_nextpkt = (_m);		\ 	} else { 						\ 		(_ifq)->ifq_head = (_m); 			\ 	}							\ 	M_AGE_SET(_m, _age);					\ 	(_ifq)->ifq_tail = (_m); 				\ 	(_qlen) = ++(_ifq)->ifq_len; 				\ } while (0)
 end_define
 
 begin_comment
