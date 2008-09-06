@@ -126,11 +126,6 @@ name|txa_nextrequest
 decl_stmt|;
 comment|/* soonest to make next ADDBA request */
 name|struct
-name|ifqueue
-name|txa_q
-decl_stmt|;
-comment|/* packet queue */
-name|struct
 name|callout
 name|txa_timer
 decl_stmt|;

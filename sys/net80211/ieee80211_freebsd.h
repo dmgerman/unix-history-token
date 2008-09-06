@@ -444,27 +444,6 @@ parameter_list|)
 value|do {\ 	_AGEQ_ENQUEUE(&ni->ni_savedq, _m, _qlen, _age);		\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_TAPQ_INIT
-parameter_list|(
-name|_tap
-parameter_list|)
-value|do {				\ 	mtx_init(&(tap)->txa_q.ifq_mtx, "ampdu tx queue", NULL, MTX_DEF); \ 	(_tap)->txa_q.ifq_maxlen = IEEE80211_AGGR_BAWMAX;	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_TAPQ_DESTROY
-parameter_list|(
-name|_tap
-parameter_list|)
-define|\
-value|mtx_destroy(&(_tap)->txa_q.ifq_mtx)
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef

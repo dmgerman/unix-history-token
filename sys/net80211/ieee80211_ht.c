@@ -3486,11 +3486,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|IEEE80211_TAPQ_DESTROY
-argument_list|(
-name|tap
-argument_list|)
-expr_stmt|;
 name|tap
 operator|->
 name|txa_lastsample
@@ -5881,15 +5876,6 @@ operator|&
 name|IEEE80211_AGGR_RUNNING
 condition|)
 block|{
-comment|/* clear aggregation queue */
-name|ieee80211_drain_ifq
-argument_list|(
-operator|&
-name|tap
-operator|->
-name|txa_q
-argument_list|)
-expr_stmt|;
 name|tap
 operator|->
 name|txa_flags
@@ -7005,11 +6991,6 @@ literal|0
 condition|)
 block|{
 comment|/* do deferred setup of state */
-name|IEEE80211_TAPQ_INIT
-argument_list|(
-name|tap
-argument_list|)
-expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
