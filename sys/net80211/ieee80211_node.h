@@ -652,6 +652,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_NODE_HT_ALL
+define|\
+value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_NODE_AID
 parameter_list|(
 name|ni

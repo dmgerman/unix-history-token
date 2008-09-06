@@ -3618,13 +3618,7 @@ operator|->
 name|ni_flags
 operator|&=
 operator|~
-operator|(
-name|IEEE80211_NODE_HT
-operator||
-name|IEEE80211_NODE_HTCOMPAT
-operator||
-name|IEEE80211_NODE_AMPDU
-operator|)
+name|IEEE80211_NODE_HT_ALL
 expr_stmt|;
 block|}
 end_function
