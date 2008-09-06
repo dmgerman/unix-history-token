@@ -420,7 +420,7 @@ begin_define
 define|#
 directive|define
 name|PAGESIZE_2POW
-value|12
+value|13
 end_define
 
 begin_define
