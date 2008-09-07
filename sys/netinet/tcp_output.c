@@ -1454,9 +1454,11 @@ operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"%s: len< 0"
+literal|"[%s:%d]: len< 0"
 operator|,
 name|__func__
+operator|,
+name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2694,6 +2696,22 @@ literal|"tcphdr too big"
 argument_list|)
 expr_stmt|;
 comment|/*#endif*/
+comment|/* 	 * This KASSERT is here to catch edge cases at a well defined place. 	 * Before, those had triggered (random) panic conditions further down. 	 */
+name|KASSERT
+argument_list|(
+name|len
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"[%s:%d]: len< 0"
+operator|,
+name|__func__
+operator|,
+name|__LINE__
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Grab a header mbuf, attaching a copy of data to 	 * be transmitted, and initialize the header from 	 * the template for sends on this connection. 	 */
 if|if
 condition|(
