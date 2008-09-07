@@ -707,7 +707,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Verify link was followed. */
+comment|/* Verify link was replaced. */
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -897,7 +897,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Verify link was followed. */
+comment|/* Verify link was replaced. */
 name|assertEqualInt
 argument_list|(
 literal|0
