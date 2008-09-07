@@ -1785,10 +1785,13 @@ name|ip6
 operator|->
 name|ip6_plen
 operator|=
+name|htons
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tcphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ip6
