@@ -133,5 +133,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|LINUX_RT_SIGF_SC
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|l_ucontext
+argument_list|,
+name|uc_mcontext
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
