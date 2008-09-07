@@ -921,6 +921,11 @@ name|st_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|ARCHIVE_VERSION_NUMBER
