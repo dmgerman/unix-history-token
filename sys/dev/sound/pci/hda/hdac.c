@@ -734,6 +734,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACER_A4715_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ACER, 0x0133)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACER_3681WXM_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ACER, 0x0110)
 end_define
@@ -914,6 +921,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LENOVO_3KN200_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x384e)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LENOVO_TCA55_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0x1015)
 end_define
@@ -1077,6 +1091,13 @@ define|#
 directive|define
 name|FL_S7020D_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(FL, 0x1326)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_U1010_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(FL, 0x142d)
 end_define
 
 begin_define
@@ -3688,6 +3709,33 @@ operator|-
 literal|1
 block|}
 block|,
+block|{
+name|LENOVO_3KN200_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC861VD
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|27
+block|,
+block|{
+literal|20
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
 comment|/* { LENOVO_TCA55_SUBVENDOR, HDA_CODEC_AD1986A, HDAC_HP_SWITCH_CTL, 	    0, 0, -1, 26, { 27, 28, 29, 30, -1 }, -1 }, */
 block|{
 name|LG_LW20_SUBVENDOR
@@ -3799,6 +3847,33 @@ block|}
 block|,
 block|{
 name|ACER_A4710_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC268
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|20
+block|,
+block|{
+literal|21
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|ACER_A4715_SUBVENDOR
 block|,
 name|HDA_CODEC_ALC268
 block|,
@@ -3950,6 +4025,33 @@ literal|20
 block|,
 block|{
 literal|16
+block|,
+operator|-
+literal|1
+block|}
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|FL_U1010_SUBVENDOR
+block|,
+name|HDA_CODEC_ALC262
+block|,
+name|HDAC_HP_SWITCH_CTL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+literal|20
+block|,
+block|{
+literal|21
 block|,
 operator|-
 literal|1
