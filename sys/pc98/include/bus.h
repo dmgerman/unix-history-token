@@ -98,11 +98,33 @@ name|BUS_SPACE_UNRESTRICTED
 value|(~0)
 end_define
 
+begin_comment
+comment|/*  * address relocation table  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BUS_SPACE_IAT_MAXSIZE
 value|33
+end_define
+
+begin_typedef
+typedef|typedef
+name|bus_addr_t
+modifier|*
+name|bus_space_iat_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_IAT_SZ
+parameter_list|(
+name|IOTARRAY
+parameter_list|)
+value|(sizeof(IOTARRAY)/sizeof(bus_addr_t))
 end_define
 
 begin_comment
@@ -446,6 +468,51 @@ value|i386_memio_unmap((t), (h), (s))
 end_define
 
 begin_comment
+comment|/*  *      int bus_space_map_load (bus_space_tag_t t, bus_space_handle_t bsh,  *          bus_size_t size, bus_space_iat_t iat, u_int flags);  *  * Load I/O address table of bus space.  */
+end_comment
+
+begin_function_decl
+name|int
+name|i386_memio_map_load
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|size
+parameter_list|,
+name|bus_space_iat_t
+name|iat
+parameter_list|,
+name|u_int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|bus_space_map_load
+parameter_list|(
+name|t
+parameter_list|,
+name|h
+parameter_list|,
+name|s
+parameter_list|,
+name|iat
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|i386_memio_map_load((t), (h), (s), (iat), (f))
+end_define
+
+begin_comment
 comment|/*  *      int bus_space_subregion (bus_space_tag_t t,  *          bus_space_handle_t bsh, bus_size_t offset, bus_size_t size,  *          bus_space_handle_t *nbshp);  *  * Get a new handle for a subregion of an already-mapped area of bus space.  */
 end_comment
 
@@ -548,6 +615,23 @@ name|bsh2
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|bus_space_compare
+parameter_list|(
+name|t1
+parameter_list|,
+name|h1
+parameter_list|,
+name|t2
+parameter_list|,
+name|h2
+parameter_list|)
+define|\
+value|i386_memio_compare((t1), (h1), (t2), (h2))
+end_define
 
 begin_comment
 comment|/*  * Access methods for bus resources and address space.  */
