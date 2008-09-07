@@ -4,15 +4,131 @@ comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * modified for PC9801 by M.Ishii   *			Kyoto University Microcomputer Club (KMC)  */
+comment|/*  * modified for PC9801 by M.Ishii   *			Kyoto University Microcomputer Club (KMC)  *  * modified for 8251(FIFO) by Seigo TANIMURA<tanimura@FreeBSD.org>  */
 end_comment
 
 begin_comment
-comment|/*  * modified for 8251(FIFO) by Seigo TANIMURA<tanimura@FreeBSD.org>  */
+comment|/* i8251 mode register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD8251_5BITS
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD8251_6BITS
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD8251_7BITS
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD8251_8BITS
+value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD8251_PENAB
+value|0x10
+end_define
+
+begin_comment
+comment|/* parity enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD8251_PEVEN
+value|0x20
+end_define
+
+begin_comment
+comment|/* parity even */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD8251_STOP1
+value|0x40
+end_define
+
+begin_comment
+comment|/* 1 stop bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD8251_STOP15
+value|0x80
+end_define
+
+begin_comment
+comment|/* 1.5 stop bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD8251_STOP2
+value|0xc0
+end_define
+
+begin_comment
+comment|/* 2 stop bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD8251_CLKx1
+value|0x01
+end_define
+
+begin_comment
+comment|/* x1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD8251_CLKx16
+value|0x02
+end_define
+
+begin_comment
+comment|/* x16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD8251_CLKx64
+value|0x03
+end_define
+
+begin_comment
+comment|/* x64 */
 end_comment
 
 begin_comment
-comment|/* define command and status code */
+comment|/* i8251 command register */
 end_comment
 
 begin_define
@@ -100,7 +216,11 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* enter hunt mode (only synchronous mode)*/
+comment|/* enter hunt mode */
+end_comment
+
+begin_comment
+comment|/* i8251 status register */
 end_comment
 
 begin_define
@@ -172,12 +292,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STS8251_BD_SD
+name|STS8251_BI
 value|0x40
 end_define
 
 begin_comment
-comment|/* break detect (async) / sync detect (sync) */
+comment|/* break detect */
 end_comment
 
 begin_define
@@ -191,10 +311,14 @@ begin_comment
 comment|/* DSR is asserted */
 end_comment
 
+begin_comment
+comment|/* i8251F line status register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|STS8251F_TxEMP
+name|FLSR_TxEMP
 value|0x01
 end_define
 
@@ -205,7 +329,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STS8251F_TxRDY
+name|FLSR_TxRDY
 value|0x02
 end_define
 
@@ -216,7 +340,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STS8251F_RxRDY
+name|FLSR_RxRDY
 value|0x04
 end_define
 
@@ -227,7 +351,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STS8251F_OE
+name|FLSR_OE
 value|0x10
 end_define
 
@@ -238,7 +362,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STS8251F_PE
+name|FLSR_PE
 value|0x20
 end_define
 
@@ -249,341 +373,291 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STS8251F_BD_SD
+name|FLSR_BI
 value|0x80
 end_define
 
 begin_comment
-comment|/* break detect (async) / sync detect (sync) */
+comment|/* break detect */
+end_comment
+
+begin_comment
+comment|/* i8251F modem status register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTR8251F_DTCT
-value|0x60
+name|MSR_DCD
+value|0x80
 end_define
 
 begin_comment
-comment|/* FIFO detection mask */
+comment|/* Current Data Carrier Detect */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTR8251F_INTRV
-value|0x0e
+name|MSR_RI
+value|0x40
 end_define
 
 begin_comment
-comment|/* interrupt event */
+comment|/* Current Ring Indicator */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTR8251F_TO
+name|MSR_DSR
+value|0x20
+end_define
+
+begin_comment
+comment|/* Current Data Set Ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_CTS
+value|0x10
+end_define
+
+begin_comment
+comment|/* Current Clear to Send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_DDCD
+value|0x08
+end_define
+
+begin_comment
+comment|/* DCD has changed state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_TERI
+value|0x04
+end_define
+
+begin_comment
+comment|/* RI has toggled low to high */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_DDSR
+value|0x02
+end_define
+
+begin_comment
+comment|/* DSR has changed state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_DCTS
+value|0x01
+end_define
+
+begin_comment
+comment|/* CTS has changed state */
+end_comment
+
+begin_comment
+comment|/* i8251F interrupt identification register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IIR_FIFO_CK1
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|IIR_FIFO_CK2
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|IIR_IMASK
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|IIR_RXTOUT
 value|0x0c
 end_define
 
 begin_comment
-comment|/* receive timeout */
+comment|/* Receiver timeout */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTR8251F_LSTS
+name|IIR_RLS
 value|0x06
 end_define
 
 begin_comment
-comment|/* line status */
+comment|/* Line status change */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTR8251F_RxRDY
+name|IIR_RXRDY
 value|0x04
 end_define
 
 begin_comment
-comment|/* receive READY */
+comment|/* Receiver ready */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTR8251F_TxRDY
+name|IIR_TXRDY
 value|0x02
 end_define
 
 begin_comment
-comment|/* transmit READY */
+comment|/* Transmitter ready */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTR8251F_ISEV
+name|IIR_NOPEND
 value|0x01
 end_define
 
 begin_comment
-comment|/* event occured */
+comment|/* Transmitter ready */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTR8251F_MSTS
+name|IIR_MLSC
 value|0x00
 end_define
 
 begin_comment
-comment|/* modem status */
+comment|/* Modem status */
+end_comment
+
+begin_comment
+comment|/* i8251F fifo control register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CTRL8251F_ENABLE
+name|FIFO_ENABLE
 value|0x01
 end_define
 
 begin_comment
-comment|/* enable FIFO */
+comment|/* Turn the FIFO on */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CTRL8251F_RCV_RST
+name|FIFO_RCV_RST
 value|0x02
 end_define
 
 begin_comment
-comment|/* reset receive FIFO */
+comment|/* Reset RX FIFO */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CTRL8251F_XMT_RST
+name|FIFO_XMT_RST
 value|0x04
 end_define
 
 begin_comment
-comment|/* reset transmit FIFO */
+comment|/* Reset TX FIFO */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MOD8251_5BITS
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOD8251_6BITS
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOD8251_7BITS
+name|FIFO_LSR_EN
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOD8251_8BITS
-value|0x0c
+name|FIFO_MSR_EN
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOD8251_PDISAB
+name|FIFO_TRIGGER_1
 value|0x00
 end_define
 
 begin_comment
-comment|/* parity disable */
+comment|/* Trigger RXRDY intr on 1 character */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MOD8251_PODD
-value|0x10
-end_define
-
-begin_comment
-comment|/* parity odd */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOD8251_PEVEN
-value|0x30
-end_define
-
-begin_comment
-comment|/* parity even */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOD8251_STOP1
+name|FIFO_TRIGGER_4
 value|0x40
 end_define
 
 begin_comment
-comment|/* stop bit len = 1bit */
+comment|/* ibid 4 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MOD8251_STOP2
+name|FIFO_TRIGGER_8
+value|0x80
+end_define
+
+begin_comment
+comment|/* ibid 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIFO_TRIGGER_14
 value|0xc0
 end_define
 
 begin_comment
-comment|/* stop bit len = 2bit */
+comment|/* ibid 14 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MOD8251_CLKX16
-value|0x02
-end_define
-
-begin_comment
-comment|/* x16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOD8251_CLKX1
-value|0x01
-end_define
-
-begin_comment
-comment|/* x1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CICSCD_CD
-value|0x20
-end_define
-
-begin_comment
-comment|/* CD */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CICSCD_CS
-value|0x40
-end_define
-
-begin_comment
-comment|/* CS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CICSCD_CI
-value|0x80
-end_define
-
-begin_comment
-comment|/* CI */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CICSCDF_CS
-value|0x10
-end_define
-
-begin_comment
-comment|/* CS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CICSCDF_DR
-value|0x20
-end_define
-
-begin_comment
-comment|/* DR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CICSCDF_CI
-value|0x40
-end_define
-
-begin_comment
-comment|/* CI */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CICSCDF_CD
-value|0x80
-end_define
-
-begin_comment
-comment|/* CD */
-end_comment
-
-begin_comment
-comment|/* interrupt mask control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEN_Rx
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEN_TxEMP
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEN_Tx
-value|0x04
-end_define
 
 end_unit
 
