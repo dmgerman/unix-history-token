@@ -475,7 +475,7 @@ name|new
 decl_stmt|;
 name|new
 operator|=
-name|tcp_mssdflt
+name|V_tcp_mssdflt
 expr_stmt|;
 name|error
 operator|=
@@ -513,7 +513,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 else|else
-name|tcp_mssdflt
+name|V_tcp_mssdflt
 operator|=
 name|new
 expr_stmt|;
@@ -575,7 +575,7 @@ name|new
 decl_stmt|;
 name|new
 operator|=
-name|tcp_v6mssdflt
+name|V_tcp_v6mssdflt
 expr_stmt|;
 name|error
 operator|=
@@ -613,7 +613,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 else|else
-name|tcp_v6mssdflt
+name|V_tcp_v6mssdflt
 operator|=
 name|new
 expr_stmt|;
