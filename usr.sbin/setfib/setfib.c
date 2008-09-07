@@ -270,7 +270,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: invalid FIB (max %s)"
+literal|"%s: invalid FIB (max %d)"
 argument_list|,
 name|optarg
 argument_list|,
