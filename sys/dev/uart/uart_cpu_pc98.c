@@ -179,7 +179,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|i386_memio_compare
+name|bus_space_compare
 argument_list|(
 name|b1
 operator|->
