@@ -862,6 +862,26 @@ name|ASMC_MP_TEMPDESCS
 block|}
 block|,
 block|{
+literal|"MacBookAir1,1"
+block|,
+literal|"Apple SMC MacBook Air"
+block|,
+name|ASMC_SMS_FUNCS
+block|,
+name|ASMC_FAN_FUNCS
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|ASMC_MBA_TEMPS
+block|,
+name|ASMC_MBA_TEMPNAMES
+block|,
+name|ASMC_MBA_TEMPDESCS
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
