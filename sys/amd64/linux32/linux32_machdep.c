@@ -6609,6 +6609,8 @@ operator|->
 name|pcb_flags
 operator||=
 name|PCB_32BIT
+operator||
+name|PCB_GS32BIT
 expr_stmt|;
 name|wrmsr
 argument_list|(
