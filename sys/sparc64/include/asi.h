@@ -682,6 +682,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|AA_DMMU_TAG_ACCESS_EXT
+value|0x60
+end_define
+
+begin_comment
+comment|/* US-III family */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ASI_DMMU_TSB_8KB_PTR_REG
 value|0x59
 end_define
