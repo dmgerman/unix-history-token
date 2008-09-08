@@ -137,11 +137,6 @@ comment|/* copyin/out fault recovery */
 comment|/* 32-bit segment descriptor */
 name|struct
 name|user_segment_descriptor
-modifier|*
-name|pcb_gs32p
-decl_stmt|;
-name|struct
-name|user_segment_descriptor
 name|pcb_gs32sd
 decl_stmt|;
 block|}
