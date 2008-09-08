@@ -2003,6 +2003,19 @@ begin_comment
 comment|/* log STP state changes */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|bridge_inherit_mac
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* share MAC with first bridge member */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -2125,6 +2138,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Log STP state changes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_bridge
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|inherit_mac
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bridge_inherit_mac
+argument_list|,
+literal|0
+argument_list|,
+literal|"Inherit MAC address from the first bridge member"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4463,6 +4497,8 @@ expr_stmt|;
 comment|/* 	 * If removing the interface that gave the bridge its mac address, set 	 * the mac address of the bridge to the address of the next member, or 	 * to its default address if no members are left. 	 */
 if|if
 condition|(
+name|bridge_inherit_mac
+operator|&&
 operator|!
 name|memcmp
 argument_list|(
@@ -4945,6 +4981,8 @@ block|}
 comment|/* 	 * Assign the interface's MAC address to the bridge if it's the first 	 * member and the MAC address of the bridge has not been changed from 	 * the default randomly generated one. 	 */
 if|if
 condition|(
+name|bridge_inherit_mac
+operator|&&
 name|LIST_EMPTY
 argument_list|(
 operator|&
