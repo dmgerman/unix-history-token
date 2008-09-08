@@ -18,19 +18,10 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
-name|int
-name|sc_rid
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|sc_res
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_regh
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_regt
 decl_stmt|;
 name|u_int
 name|sc_rev
@@ -62,7 +53,7 @@ decl_stmt|;
 name|int
 name|sc_active
 decl_stmt|;
-comment|/* DMA active ? */
+comment|/* DMA active? */
 name|bus_dmamap_t
 name|sc_dmamap
 decl_stmt|;
@@ -150,8 +141,7 @@ name|L64854_GCSR
 parameter_list|(
 name|sc
 parameter_list|)
-define|\
-value|(bus_space_read_4((sc)->sc_regt, (sc)->sc_regh, L64854_REG_CSR))
+value|bus_read_4((sc)->sc_res, L64854_REG_CSR)
 end_define
 
 begin_define
@@ -163,8 +153,7 @@ name|sc
 parameter_list|,
 name|csr
 parameter_list|)
-define|\
-value|bus_space_write_4((sc)->sc_regt, (sc)->sc_regh, L64854_REG_CSR, csr)
+value|bus_write_4((sc)->sc_res, L64854_REG_CSR, csr)
 end_define
 
 begin_comment
