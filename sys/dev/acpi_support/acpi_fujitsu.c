@@ -973,7 +973,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Snag our default values for the hotkys / hotkey states. */
+comment|/* Snag our default values for the hotkeys / hotkey states. */
 name|ACPI_SERIAL_BEGIN
 argument_list|(
 name|fujitsu
