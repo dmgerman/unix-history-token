@@ -3475,7 +3475,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* global descriptor table */
+comment|/* global descriptor tables */
 end_comment
 
 begin_decl_stmt
@@ -3717,7 +3717,7 @@ argument_list|)
 operator|-
 literal|1
 block|,
-comment|/* length - all address space */
+comment|/* length */
 name|SDT_SYSTSS
 block|,
 comment|/* segment type */
