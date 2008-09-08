@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bootstrap.h"
 end_include
 
@@ -2351,9 +2357,9 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|membar
+name|flush
 argument_list|(
-name|Sync
+name|KERNBASE
 argument_list|)
 expr_stmt|;
 name|wrpr

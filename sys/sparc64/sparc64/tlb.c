@@ -107,6 +107,12 @@ directive|include
 file|<machine/tlb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
+end_include
+
 begin_expr_stmt
 name|PMAP_STATS_VAR
 argument_list|(
@@ -235,9 +241,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|membar
+name|flush
 argument_list|(
-name|Sync
+name|KERNBASE
 argument_list|)
 expr_stmt|;
 name|intr_restore
@@ -372,9 +378,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|membar
+name|flush
 argument_list|(
-name|Sync
+name|KERNBASE
 argument_list|)
 expr_stmt|;
 name|intr_restore
@@ -532,9 +538,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|membar
+name|flush
 argument_list|(
-name|Sync
+name|KERNBASE
 argument_list|)
 expr_stmt|;
 block|}
