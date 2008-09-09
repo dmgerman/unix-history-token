@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|RANDOMDEV
-value|"/dev/urandom"
+value|"/dev/random"
 end_define
 
 begin_define
@@ -723,6 +723,10 @@ argument_list|()
 expr_stmt|;
 name|arc4_stir
 argument_list|()
+expr_stmt|;
+name|rs_stired
+operator|=
+literal|1
 expr_stmt|;
 name|THREAD_UNLOCK
 argument_list|()
