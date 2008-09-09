@@ -225,10 +225,6 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Tell malloc that the thread is exiting. */
-name|_malloc_thread_cleanup
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -267,6 +263,20 @@ argument_list|)
 expr_stmt|;
 comment|/* Never reach! */
 block|}
+name|THREAD_LIST_UNLOCK
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+comment|/* Tell malloc that the thread is exiting. */
+name|_malloc_thread_cleanup
+argument_list|()
+expr_stmt|;
+name|THREAD_LIST_LOCK
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|THR_LOCK
 argument_list|(
 name|curthread
