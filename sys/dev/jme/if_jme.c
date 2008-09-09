@@ -3626,7 +3626,7 @@ name|sc
 operator|->
 name|jme_rev
 operator|==
-name|DEVICEREVID_JMC260
+name|DEVICEID_JMC260
 condition|)
 block|{
 name|sc
