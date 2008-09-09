@@ -999,14 +999,6 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|from_fd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|close
