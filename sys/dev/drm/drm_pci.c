@@ -200,8 +200,36 @@ return|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-name|DRM_UNLOCK
-argument_list|()
+comment|/* Make sure we aren't holding locks here */
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|dev_lock
+argument_list|)
+condition|)
+name|DRM_ERROR
+argument_list|(
+literal|"called while holding dev_lock\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|dma_lock
+argument_list|)
+condition|)
+name|DRM_ERROR
+argument_list|(
+literal|"called while holding dma_lock\n"
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -258,9 +286,6 @@ argument_list|,
 name|M_DRM
 argument_list|)
 expr_stmt|;
-name|DRM_LOCK
-argument_list|()
-expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -307,16 +332,10 @@ argument_list|,
 name|M_DRM
 argument_list|)
 expr_stmt|;
-name|DRM_LOCK
-argument_list|()
-expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
-name|DRM_LOCK
-argument_list|()
-expr_stmt|;
 name|ret
 operator|=
 name|bus_dmamap_load

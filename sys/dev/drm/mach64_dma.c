@@ -2995,6 +2995,14 @@ argument_list|(
 literal|"Allocating data memory ...\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|DRM_UNLOCK
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|cpu_addr_dmah
 operator|=
 name|drm_pci_alloc
@@ -3008,6 +3016,14 @@ argument_list|,
 literal|0xfffffffful
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|DRM_LOCK
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
