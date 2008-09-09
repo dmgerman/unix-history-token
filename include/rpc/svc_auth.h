@@ -27,8 +27,16 @@ begin_comment
 comment|/*  * Server side authenticator  */
 end_comment
 
-begin_function_decl
+begin_expr_stmt
 name|__BEGIN_DECLS
+specifier|extern
+expr|struct
+name|svc_auth_ops
+name|svc_auth_null_ops
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 specifier|extern
 name|enum
 name|auth_stat

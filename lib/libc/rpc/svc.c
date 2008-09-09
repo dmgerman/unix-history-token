@@ -2308,6 +2308,15 @@ name|xp_p3
 operator|=
 name|ext
 expr_stmt|;
+name|ext
+operator|->
+name|xp_auth
+operator|.
+name|svc_ah_ops
+operator|=
+operator|&
+name|svc_auth_null_ops
+expr_stmt|;
 return|return
 operator|(
 name|xprt

@@ -157,7 +157,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|svc_auth_ops
 name|svc_auth_null_ops
@@ -467,7 +466,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|svc_auth_ops
 name|svc_auth_null_ops
