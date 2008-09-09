@@ -2466,7 +2466,7 @@ parameter_list|,
 name|_rd
 parameter_list|)
 define|\
-value|(*(uint16_t *)(((uint8_t *)(_ah)) + 520) = (_rd))
+value|(*(uint16_t *)(((uint8_t *)&(_ah)[1]) + 128) = (_rd))
 end_define
 
 begin_define
