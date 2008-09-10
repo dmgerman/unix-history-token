@@ -4221,13 +4221,17 @@ decl_stmt|;
 name|int
 name|sc_flags
 decl_stmt|;
+define|#
+directive|define
+name|ZYD_FLAG_FWLOADED
+value|(1<< 0)
+define|#
+directive|define
+name|ZYD_FLAG_DETACHING
+value|(1<< 1)
 name|int
 name|sc_if_flags
 decl_stmt|;
-define|#
-directive|define
-name|ZD1211_FWLOADED
-value|(1<< 0)
 name|uint8_t
 name|sc_bssid
 index|[

@@ -1975,7 +1975,7 @@ name|sc
 operator|->
 name|sc_flags
 operator||=
-name|ZD1211_FWLOADED
+name|ZYD_FLAG_FWLOADED
 expr_stmt|;
 comment|/* complete the attach process */
 return|return
@@ -2919,6 +2919,13 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* set a flag to indicate we're detaching.  */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|ZYD_FLAG_DETACHING
+expr_stmt|;
 comment|/* protect a race when we have listeners related with the driver.  */
 name|ifp
 operator|->
@@ -15706,6 +15713,15 @@ name|ifp
 operator|->
 name|if_l2com
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|ZYD_FLAG_DETACHING
+condition|)
+return|return;
 name|ZYD_LOCK
 argument_list|(
 name|sc
