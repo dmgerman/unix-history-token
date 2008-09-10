@@ -76,7 +76,7 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/*  * Simple regression test for sendfile.  Creates a file sized at three pages  * and then proceeds to send it over a series of sockets, exercising a number  * of cases and performing limited validation.  */
+comment|/*  * Simple regression test for sendfile.  Creates a file sized at four pages  * and then proceeds to send it over a series of sockets, exercising a number  * of cases and performing limited validation.  */
 end_comment
 
 begin_define
