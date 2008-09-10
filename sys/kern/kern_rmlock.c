@@ -1552,6 +1552,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|_rm_wlock
@@ -1697,6 +1699,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|_rm_rlock

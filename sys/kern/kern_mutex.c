@@ -699,6 +699,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|_get_sleep_lock
@@ -1036,6 +1038,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|_get_spin_lock
@@ -2416,6 +2420,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 while|while

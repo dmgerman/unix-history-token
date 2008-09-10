@@ -890,6 +890,10 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|lock_object
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1185,9 +1189,11 @@ parameter_list|,
 name|file
 parameter_list|,
 name|line
+parameter_list|,
+name|interlock
 parameter_list|)
 define|\
-value|witness_checkorder((lock), (flags), (file), (line))
+value|witness_checkorder((lock), (flags), (file), (line), (interlock))
 end_define
 
 begin_define
@@ -1417,6 +1423,8 @@ parameter_list|,
 name|file
 parameter_list|,
 name|line
+parameter_list|,
+name|interlock
 parameter_list|)
 end_define
 
@@ -1583,7 +1591,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|WITNESS_CHECKORDER(&(l)->lock_object, LOP_EXCLUSIVE, LOCK_FILE,	\ 	    LOCK_LINE)
+value|WITNESS_CHECKORDER(&(l)->lock_object, LOP_EXCLUSIVE, LOCK_FILE,	\ 	    LOCK_LINE, NULL)
 end_define
 
 begin_define
@@ -1594,7 +1602,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|WITNESS_CHECKORDER(&(l)->lock_object, 0, LOCK_FILE, LOCK_LINE)
+value|WITNESS_CHECKORDER(&(l)->lock_object, 0, LOCK_FILE, LOCK_LINE, NULL)
 end_define
 
 begin_endif

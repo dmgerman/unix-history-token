@@ -791,6 +791,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|error
@@ -1067,6 +1069,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|error

@@ -1774,6 +1774,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|ilk
 argument_list|)
 expr_stmt|;
 for|for
@@ -2228,6 +2230,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|ilk
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If curthread already holds the lock and this one is 		 * allowed to recurse, simply recurse on it. 		 */
@@ -3099,6 +3103,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|ilk
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Trying to drain a lock we already own will result in a 		 * deadlock. 		 */

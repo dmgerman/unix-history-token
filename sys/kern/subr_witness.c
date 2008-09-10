@@ -4670,6 +4670,11 @@ name|file
 parameter_list|,
 name|int
 name|line
+parameter_list|,
+name|struct
+name|lock_object
+modifier|*
+name|interlock
 parameter_list|)
 block|{
 name|struct
@@ -4688,6 +4693,9 @@ name|lock1
 decl_stmt|,
 modifier|*
 name|lock2
+decl_stmt|,
+modifier|*
+name|plock
 decl_stmt|;
 name|struct
 name|lock_class
@@ -4979,8 +4987,8 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* 	 * Try to perform most checks without a lock.  If this succeeds we 	 * can skip acquiring the lock and return success. 	 */
-name|lock1
+comment|/* 	 * Find the previously acquired lock, but ignore interlocks. 	 */
+name|plock
 operator|=
 operator|&
 operator|(
@@ -5000,9 +5008,59 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|interlock
+operator|!=
+name|NULL
+operator|&&
+name|plock
+operator|->
+name|li_lock
+operator|==
+name|interlock
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+name|lock_list
+operator|)
+operator|->
+name|ll_count
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* 			 * The interlock is the only lock we hold, so 			 * nothing to do. 			 */
+return|return;
+block|}
+name|plock
+operator|=
+operator|&
+operator|(
+operator|*
+name|lock_list
+operator|)
+operator|->
+name|ll_children
+index|[
+operator|(
+operator|*
+name|lock_list
+operator|)
+operator|->
+name|ll_count
+operator|-
+literal|2
+index|]
+expr_stmt|;
+block|}
+comment|/* 	 * Try to perform most checks without a lock.  If this succeeds we 	 * can skip acquiring the lock and return success. 	 */
 name|w1
 operator|=
-name|lock1
+name|plock
 operator|->
 name|li_lock
 operator|->
@@ -5236,6 +5294,27 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* 			 * Ignore the interlock the first time we see it. 			 */
+if|if
+condition|(
+name|interlock
+operator|!=
+name|NULL
+operator|&&
+name|interlock
+operator|==
+name|lock1
+operator|->
+name|li_lock
+condition|)
+block|{
+name|interlock
+operator|=
+name|NULL
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 			 * If this lock doesn't undergo witness checking, 			 * then skip it. 			 */
 name|w1
 operator|=
 name|lock1
@@ -5244,7 +5323,6 @@ name|li_lock
 operator|->
 name|lo_witness
 expr_stmt|;
-comment|/* 			 * If this lock doesn't undergo witness checking, 			 * then skip it. 			 */
 if|if
 condition|(
 name|w1
@@ -5766,26 +5844,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|lock1
-operator|=
-operator|&
-operator|(
-operator|*
-name|lock_list
-operator|)
-operator|->
-name|ll_children
-index|[
-operator|(
-operator|*
-name|lock_list
-operator|)
-operator|->
-name|ll_count
-operator|-
-literal|1
-index|]
-expr_stmt|;
 comment|/* 	 * If requested, build a new lock order.  However, don't build a new 	 * relationship between a sleepable lock and Giant if it is in the 	 * wrong direction.  The correct lock order is that sleepable locks 	 * always come before Giant. 	 */
 if|if
 condition|(
@@ -5795,7 +5853,7 @@ name|LOP_NEWORDER
 operator|&&
 operator|!
 operator|(
-name|lock1
+name|plock
 operator|->
 name|li_lock
 operator|==
@@ -5828,7 +5886,7 @@ name|w
 operator|->
 name|w_name
 argument_list|,
-name|lock1
+name|plock
 operator|->
 name|li_lock
 operator|->
@@ -5839,7 +5897,7 @@ argument_list|)
 expr_stmt|;
 name|itismychild
 argument_list|(
-name|lock1
+name|plock
 operator|->
 name|li_lock
 operator|->

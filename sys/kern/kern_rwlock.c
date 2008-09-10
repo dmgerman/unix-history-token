@@ -868,6 +868,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|__rw_wlock
@@ -1309,6 +1311,8 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
