@@ -689,22 +689,15 @@ block|}
 comment|/* return the remaining time in milliseconds */
 return|return
 operator|(
-operator|(
-call|(
-name|u_long
-call|)
-argument_list|(
 name|diff
 operator|.
 name|tv_sec
 operator|*
-literal|1000000
+literal|1000
 operator|+
 name|diff
 operator|.
 name|tv_usec
-argument_list|)
-operator|)
 operator|/
 literal|1000
 operator|)
