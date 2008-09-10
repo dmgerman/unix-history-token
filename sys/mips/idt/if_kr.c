@@ -212,7 +212,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/idt/if_krreg.h>
+file|<mips/idt/if_krreg.h>
 end_include
 
 begin_define

@@ -112,19 +112,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/maltareg.h>
+file|<mips/malta/maltareg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/gtreg.h>
+file|<mips/malta/gtreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/gtvar.h>
+file|<mips/malta/gtvar.h>
 end_include
 
 begin_include

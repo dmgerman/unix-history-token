@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/adm5120/uart_dev_adm5120.h>
+file|<mips/adm5120/uart_dev_adm5120.h>
 end_include
 
 begin_include

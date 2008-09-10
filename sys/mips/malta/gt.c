@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/gtvar.h>
+file|<mips/malta/gtvar.h>
 end_include
 
 begin_function

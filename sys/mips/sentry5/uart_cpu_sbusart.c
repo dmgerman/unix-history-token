@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/sentry5/sentry5reg.h>
+file|<mips/sentry5/sentry5reg.h>
 end_include
 
 begin_decl_stmt

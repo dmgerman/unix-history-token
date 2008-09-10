@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/sentry5/s5reg.h>
+file|<mips/sentry5/s5reg.h>
 end_include
 
 begin_include

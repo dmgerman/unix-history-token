@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/maltareg.h>
+file|<mips/malta/maltareg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/obiovar.h>
+file|<mips/malta/obiovar.h>
 end_include
 
 begin_function_decl

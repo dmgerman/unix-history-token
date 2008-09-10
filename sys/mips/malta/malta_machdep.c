@@ -218,7 +218,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/yamon.h>
+file|<mips/malta/yamon.h>
 end_include
 
 begin_endif
@@ -258,7 +258,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/maltareg.h>
+file|<mips/malta/maltareg.h>
 end_include
 
 begin_decl_stmt

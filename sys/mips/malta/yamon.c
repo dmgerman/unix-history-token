@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/yamon.h>
+file|<mips/malta/yamon.h>
 end_include
 
 begin_function

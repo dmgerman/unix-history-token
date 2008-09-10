@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/adm5120/adm5120reg.h>
+file|<mips/adm5120/adm5120reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/mips32/adm5120/obiovar.h>
+file|<mips/adm5120/obiovar.h>
 end_include
 
 begin_comment

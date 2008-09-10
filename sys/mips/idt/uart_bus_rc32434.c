@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/mips32/idt/idtreg.h>
+file|<mips/idt/idtreg.h>
 end_include
 
 begin_include

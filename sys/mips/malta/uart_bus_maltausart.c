@@ -116,7 +116,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<mips/mips32/malta/maltareg.h>
+file|<mips/malta/maltareg.h>
 end_include
 
 begin_include
