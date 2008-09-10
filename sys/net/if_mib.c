@@ -477,6 +477,7 @@ condition|)
 return|return
 name|error
 return|;
+break|break;
 case|case
 name|IFDATA_DRIVERNAME
 case|:
