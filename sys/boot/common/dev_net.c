@@ -381,6 +381,17 @@ operator|)
 return|;
 block|}
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+name|netdev_opens
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|netdev_opens
 operator|++
