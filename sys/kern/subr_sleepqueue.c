@@ -1526,15 +1526,6 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
-name|MPASS
-argument_list|(
-name|td
-operator|->
-name|td_flags
-operator|&
-name|TDF_SINTR
-argument_list|)
-expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
