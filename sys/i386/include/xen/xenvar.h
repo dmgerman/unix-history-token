@@ -245,7 +245,7 @@ name|VTOP
 parameter_list|(
 name|x
 parameter_list|)
-value|((uintptr_t)(((uint8_t *)(x)) - KERNBASE))
+value|((((uintptr_t)(x))) - KERNBASE)
 end_define
 
 begin_define
@@ -255,7 +255,7 @@ name|PTOV
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) + KERNBASE)
+value|(((uintptr_t)(x)) + KERNBASE)
 end_define
 
 begin_define

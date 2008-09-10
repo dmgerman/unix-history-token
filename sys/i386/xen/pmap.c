@@ -643,7 +643,6 @@ comment|/* PG_PS or-in */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|nkpt
 decl_stmt|;

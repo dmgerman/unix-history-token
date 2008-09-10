@@ -3103,13 +3103,30 @@ name|unsigned
 name|long
 name|i
 decl_stmt|;
-name|HYPERVISOR_vm_assist
-argument_list|(
-name|VMASST_CMD_enable
-argument_list|,
-name|VMASST_TYPE_writable_pagetables
-argument_list|)
+name|int
+name|ncpus
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|ncpus
+operator|=
+name|MAXCPU
 expr_stmt|;
+else|#
+directive|else
+name|ncpus
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+block|HYPERVISOR_vm_assist(VMASST_CMD_enable, VMASST_TYPE_writable_pagetables);
+endif|#
+directive|endif
 name|HYPERVISOR_vm_assist
 argument_list|(
 name|VMASST_CMD_enable
@@ -3947,6 +3964,8 @@ expr_stmt|;
 name|cur_space
 operator|+=
 name|PAGE_SIZE
+operator|*
+name|ncpus
 expr_stmt|;
 comment|/* allocate page for ldt */
 name|ldt
@@ -3957,6 +3976,10 @@ name|descriptor
 operator|*
 operator|)
 name|cur_space
+expr_stmt|;
+name|cur_space
+operator|+=
+name|PAGE_SIZE
 expr_stmt|;
 name|cur_space
 operator|+=
@@ -4089,17 +4112,6 @@ name|long
 operator|)
 name|xen_phys_machine
 expr_stmt|;
-if|#
-directive|if
-literal|0
-operator|&&
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-block|for (i = 0; i< ncpus; i++) { 		int j, npages = (sizeof(struct privatespace) + 1)/PAGE_SIZE;  		for (j = 0; j< npages; j++) { 			vm_paddr_t ma = xpmap_ptom(cur_space); 			cur_space += PAGE_SIZE; 			PT_SET_VA_MA(SMPpt + i*npages + j, ma | PG_KERNEL, FALSE); 		} 	} 	xen_flush_queue();
-endif|#
-directive|endif
 name|set_iopl
 operator|.
 name|iopl
