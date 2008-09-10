@@ -125,6 +125,12 @@ directive|include
 file|<net/if_types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -3341,6 +3347,10 @@ condition|(
 name|revision
 operator|==
 literal|2
+operator|||
+name|revision
+operator|==
+literal|3
 condition|)
 return|return
 name|dump_regs_t3b
@@ -5260,43 +5270,15 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
-end_if
-
 begin_define
 define|#
 directive|define
 name|ntohll
 parameter_list|(
-name|n
+name|x
 parameter_list|)
-value|(n)
+value|be64toh((x))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ntohll
-parameter_list|(
-name|n
-parameter_list|)
-value|bswap_64(n)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -5796,7 +5778,6 @@ operator|(
 name|uint64_t
 operator|*
 operator|)
-operator|&
 name|mr
 operator|.
 name|buf
