@@ -849,6 +849,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASI_IMMU_DEMAP
+value|0x57
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASI_DMMU
 value|0x58
 end_define
