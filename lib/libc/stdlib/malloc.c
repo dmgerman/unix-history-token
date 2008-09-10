@@ -192,6 +192,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -368,7 +374,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * The const_size2bin table is sized according to PAGESIZE_2POW, but for  * correctness reasons, we never assume that  * (pagesize == (1U<< * PAGESIZE_2POW)).  *  * Minimum alignment of allocations is 2^QUANTUM_2POW bytes.  */
+comment|/*  * Minimum alignment of allocations is 2^QUANTUM_2POW bytes.  */
 end_comment
 
 begin_ifdef
@@ -376,13 +382,6 @@ ifdef|#
 directive|ifdef
 name|__i386__
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PAGESIZE_2POW
-value|12
-end_define
 
 begin_define
 define|#
@@ -419,13 +418,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|PAGESIZE_2POW
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
 name|QUANTUM_2POW
 value|4
 end_define
@@ -447,13 +439,6 @@ ifdef|#
 directive|ifdef
 name|__alpha__
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PAGESIZE_2POW
-value|13
-end_define
 
 begin_define
 define|#
@@ -489,13 +474,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|PAGESIZE_2POW
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
 name|QUANTUM_2POW
 value|4
 end_define
@@ -523,13 +501,6 @@ ifdef|#
 directive|ifdef
 name|__amd64__
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PAGESIZE_2POW
-value|12
-end_define
 
 begin_define
 define|#
@@ -566,13 +537,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|PAGESIZE_2POW
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
 name|QUANTUM_2POW
 value|3
 end_define
@@ -604,13 +568,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|PAGESIZE_2POW
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
 name|QUANTUM_2POW
 value|3
 end_define
@@ -638,13 +595,6 @@ ifdef|#
 directive|ifdef
 name|__powerpc__
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PAGESIZE_2POW
-value|12
-end_define
 
 begin_define
 define|#
@@ -947,7 +897,7 @@ begin_define
 define|#
 directive|define
 name|RUN_MAX_SMALL
-value|(12 * pagesize)
+value|(12 * PAGE_SIZE)
 end_define
 
 begin_comment
@@ -1618,7 +1568,7 @@ name|contention
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * bins is used to store rings of free regions of the following sizes, 	 * assuming a 16-byte quantum, 4kB pagesize, and default MALLOC_OPTIONS. 	 * 	 *   bins[i] | size | 	 *   --------+------+ 	 *        0  |    2 | 	 *        1  |    4 | 	 *        2  |    8 | 	 *   --------+------+ 	 *        3  |   16 | 	 *        4  |   32 | 	 *        5  |   48 | 	 *        6  |   64 | 	 *           :      : 	 *           :      : 	 *       33  |  496 | 	 *       34  |  512 | 	 *   --------+------+ 	 *       35  | 1024 | 	 *       36  | 2048 | 	 *   --------+------+ 	 */
+comment|/* 	 * bins is used to store rings of free regions of the following sizes, 	 * assuming a 16-byte quantum, 4kB page size, and default 	 * MALLOC_OPTIONS. 	 * 	 *   bins[i] | size | 	 *   --------+------+ 	 *        0  |    2 | 	 *        1  |    4 | 	 *        2  |    8 | 	 *   --------+------+ 	 *        3  |   16 | 	 *        4  |   32 | 	 *        5  |   48 | 	 *        6  |   64 | 	 *           :      : 	 *           :      : 	 *       33  |  496 | 	 *       34  |  512 | 	 *   --------+------+ 	 *       35  | 1024 | 	 *       36  | 2048 | 	 *   --------+------+ 	 */
 name|arena_bin_t
 name|bins
 index|[
@@ -1747,31 +1697,6 @@ begin_decl_stmt
 specifier|static
 name|unsigned
 name|ncpus
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* VM page size. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|size_t
-name|pagesize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|size_t
-name|pagesize_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|size_t
-name|pagesize_2pow
 decl_stmt|;
 end_decl_stmt
 
@@ -2029,11 +1954,7 @@ specifier|const
 name|uint8_t
 name|const_size2bin
 index|[
-operator|(
-literal|1U
-operator|<<
-name|PAGESIZE_2POW
-operator|)
+name|PAGE_SIZE
 operator|-
 literal|255
 index|]
@@ -2394,7 +2315,7 @@ comment|/* 3840 */
 if|#
 directive|if
 operator|(
-name|PAGESIZE_2POW
+name|PAGE_SHIFT
 operator|==
 literal|13
 operator|)
@@ -4787,7 +4708,7 @@ value|(((s) + SUBPAGE_MASK)& ~SUBPAGE_MASK)
 end_define
 
 begin_comment
-comment|/* Return the smallest pagesize multiple that is>= s. */
+comment|/* Return the smallest PAGE_SIZE multiple that is>= s. */
 end_comment
 
 begin_define
@@ -4798,7 +4719,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|(((s) + pagesize_mask)& ~pagesize_mask)
+value|(((s) + PAGE_MASK)& ~PAGE_MASK)
 end_define
 
 begin_ifdef
@@ -6246,7 +6167,7 @@ index|]
 operator|.
 name|run_size
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 argument_list|,
 ifdef|#
 directive|ifdef
@@ -8804,7 +8725,7 @@ operator|->
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 decl_stmt|;
 name|size_t
 name|b_size
@@ -8814,7 +8735,7 @@ operator|->
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 decl_stmt|;
 name|ret
 operator|=
@@ -10023,7 +9944,7 @@ argument_list|)
 if|#
 directive|if
 operator|(
-name|PAGESIZE_2POW
+name|PAGE_SHIFT
 operator|==
 literal|13
 operator|)
@@ -10133,11 +10054,7 @@ operator|+
 literal|3
 operator|)
 operator|>=
-operator|(
-literal|1U
-operator|<<
-name|PAGESIZE_2POW
-operator|)
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -10366,7 +10283,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 argument_list|)
 expr_stmt|;
 name|total_pages
@@ -10382,17 +10299,17 @@ operator|.
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 expr_stmt|;
 name|need_pages
 operator|=
 operator|(
 name|size
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 name|assert
@@ -10453,7 +10370,7 @@ operator|=
 operator|(
 name|rem_pages
 operator|<<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 operator||
 operator|(
@@ -10468,7 +10385,7 @@ index|]
 operator|.
 name|bits
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|chunk
@@ -10487,7 +10404,7 @@ operator|=
 operator|(
 name|rem_pages
 operator|<<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 operator||
 operator|(
@@ -10504,7 +10421,7 @@ index|]
 operator|.
 name|bits
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|arena_avail_tree_insert
@@ -10585,13 +10502,13 @@ operator|+
 name|i
 operator|)
 operator|<<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|pagesize
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* CHUNK_MAP_ZEROED is cleared below. */
@@ -11067,7 +10984,7 @@ argument_list|(
 operator|(
 name|size
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 operator|==
 literal|0
@@ -11148,7 +11065,7 @@ operator|+
 operator|(
 name|pageind
 operator|<<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 operator|)
 expr_stmt|;
@@ -11205,7 +11122,7 @@ operator|+
 operator|(
 name|arena_chunk_header_npages
 operator|<<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 operator|)
 expr_stmt|;
@@ -11471,14 +11388,14 @@ operator|+
 operator|(
 name|i
 operator|<<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 operator|)
 argument_list|,
 operator|(
 name|npages
 operator|<<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 argument_list|,
 name|MADV_FREE
@@ -11600,7 +11517,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 argument_list|)
 expr_stmt|;
 name|assert
@@ -11646,7 +11563,7 @@ operator|.
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 expr_stmt|;
 else|else
 name|size
@@ -11662,7 +11579,7 @@ operator|=
 operator|(
 name|size
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 comment|/* Mark pages as unallocated in the chunk map. */
@@ -11815,7 +11732,7 @@ index|]
 operator|.
 name|bits
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|chunk
@@ -11847,7 +11764,7 @@ index|]
 operator|.
 name|bits
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 comment|/* Try to coalesce forward. */
@@ -11892,7 +11809,7 @@ operator|.
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 decl_stmt|;
 comment|/* 		 * Remove successor from runs_avail; the coalesced run is 		 * inserted later. 		 */
 name|arena_avail_tree_remove
@@ -11921,7 +11838,7 @@ name|run_pages
 operator|=
 name|size
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 expr_stmt|;
 name|assert
 argument_list|(
@@ -11940,7 +11857,7 @@ operator|.
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 operator|==
 name|nrun_size
@@ -11967,7 +11884,7 @@ index|]
 operator|.
 name|bits
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|chunk
@@ -11999,7 +11916,7 @@ index|]
 operator|.
 name|bits
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 block|}
@@ -12043,13 +11960,13 @@ operator|.
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 decl_stmt|;
 name|run_ind
 operator|-=
 name|prun_size
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 expr_stmt|;
 comment|/* 		 * Remove predecessor from runs_avail; the coalesced run is 		 * inserted later. 		 */
 name|arena_avail_tree_remove
@@ -12076,7 +11993,7 @@ name|run_pages
 operator|=
 name|size
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 expr_stmt|;
 name|assert
 argument_list|(
@@ -12091,7 +12008,7 @@ operator|.
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 operator|==
 name|prun_size
@@ -12118,7 +12035,7 @@ index|]
 operator|.
 name|bits
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|chunk
@@ -12150,7 +12067,7 @@ index|]
 operator|.
 name|bits
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 block|}
@@ -12186,7 +12103,7 @@ name|bits
 operator|&
 operator|(
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator||
 name|CHUNK_MAP_ALLOCATED
 operator|)
@@ -12257,7 +12174,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|size_t
 name|head_npages
@@ -12268,7 +12185,7 @@ operator|-
 name|newsize
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|assert
 argument_list|(
@@ -12368,14 +12285,14 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|size_t
 name|npages
 init|=
 name|newsize
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|assert
 argument_list|(
@@ -12513,7 +12430,7 @@ operator|->
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 ifdef|#
@@ -12934,7 +12851,7 @@ name|assert
 argument_list|(
 name|min_run_size
 operator|>=
-name|pagesize
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|assert
@@ -13076,7 +12993,7 @@ expr_stmt|;
 comment|/* Try more aggressive settings. */
 name|try_run_size
 operator|+=
-name|pagesize
+name|PAGE_SIZE
 expr_stmt|;
 name|try_nregs
 operator|=
@@ -14696,7 +14613,7 @@ argument_list|(
 operator|(
 name|size
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 operator|==
 literal|0
@@ -14707,7 +14624,7 @@ argument_list|(
 operator|(
 name|alignment
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 operator|==
 literal|0
@@ -14800,7 +14717,7 @@ argument_list|(
 operator|(
 name|offset
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 operator|==
 literal|0
@@ -15048,12 +14965,12 @@ if|if
 condition|(
 name|ceil_size
 operator|<=
-name|pagesize
+name|PAGE_SIZE
 operator|||
 operator|(
 name|alignment
 operator|<=
-name|pagesize
+name|PAGE_SIZE
 operator|&&
 name|ceil_size
 operator|<=
@@ -15092,7 +15009,7 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* 		 * (ceil_size< size) protects against very large sizes within 		 * pagesize of SIZE_T_MAX. 		 * 		 * (ceil_size + alignment< ceil_size) protects against the 		 * combination of maximal alignment and ceil_size large enough 		 * to cause overflow.  This is similar to the first overflow 		 * check above, but it needs to be repeated due to the new 		 * ceil_size value, which may now be *equal* to maximal 		 * alignment, whereas before we only detected overflow if the 		 * original size was *greater* than maximal alignment. 		 */
+comment|/* 		 * (ceil_size< size) protects against very large sizes within 		 * PAGE_SIZE of SIZE_T_MAX. 		 * 		 * (ceil_size + alignment< ceil_size) protects against the 		 * combination of maximal alignment and ceil_size large enough 		 * to cause overflow.  This is similar to the first overflow 		 * check above, but it needs to be repeated due to the new 		 * ceil_size value, which may now be *equal* to maximal 		 * alignment, whereas before we only detected overflow if the 		 * original size was *greater* than maximal alignment. 		 */
 if|if
 condition|(
 name|ceil_size
@@ -15126,11 +15043,11 @@ name|ceil_size
 operator|+
 name|alignment
 operator|-
-name|pagesize
+name|PAGE_SIZE
 expr_stmt|;
 else|else
 block|{
-comment|/* 			 * It is possible that (alignment<< 1) will cause 			 * overflow, but it doesn't matter because we also 			 * subtract pagesize, which in the case of overflow 			 * leaves us with a very large run_size.  That causes 			 * the first conditional below to fail, which means 			 * that the bogus run_size value never gets used for 			 * anything important. 			 */
+comment|/* 			 * It is possible that (alignment<< 1) will cause 			 * overflow, but it doesn't matter because we also 			 * subtract PAGE_SIZE, which in the case of overflow 			 * leaves us with a very large run_size.  That causes 			 * the first conditional below to fail, which means 			 * that the bogus run_size value never gets used for 			 * anything important. 			 */
 name|run_size
 operator|=
 operator|(
@@ -15139,7 +15056,7 @@ operator|<<
 literal|1
 operator|)
 operator|-
-name|pagesize
+name|PAGE_SIZE
 expr_stmt|;
 block|}
 if|if
@@ -15287,7 +15204,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 name|mapbits
@@ -15335,7 +15252,7 @@ operator|(
 name|mapbits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 decl_stmt|;
 name|assert
@@ -15363,7 +15280,7 @@ operator|=
 name|mapbits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 expr_stmt|;
 name|assert
 argument_list|(
@@ -15558,7 +15475,7 @@ operator|->
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|assert
@@ -15664,7 +15581,7 @@ name|chunk
 operator|)
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|arena_chunk_map_t
 modifier|*
@@ -15812,7 +15729,7 @@ name|runcur_chunk
 operator|)
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|arena_chunk_map_t
 modifier|*
@@ -15864,7 +15781,7 @@ name|chunk
 operator|)
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|arena_chunk_map_t
 modifier|*
@@ -16086,7 +16003,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 decl_stmt|;
 name|arena_chunk_map_t
@@ -16228,7 +16145,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 name|mapelm
@@ -16253,7 +16170,7 @@ operator|->
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|assert
@@ -16608,7 +16525,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|size_t
 name|size
@@ -16623,7 +16540,7 @@ operator|.
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -16776,7 +16693,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 name|mapelm
@@ -17140,14 +17057,14 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|size_t
 name|npages
 init|=
 name|oldsize
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 decl_stmt|;
 name|assert
 argument_list|(
@@ -17164,7 +17081,7 @@ operator|.
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -17234,7 +17151,7 @@ operator|.
 name|bits
 operator|&
 operator|~
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 operator|>=
 name|size
@@ -17264,7 +17181,7 @@ operator|+
 name|npages
 operator|)
 operator|<<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 operator|)
 argument_list|,
@@ -17969,7 +17886,7 @@ directive|endif
 comment|/* Initialize bins. */
 name|prev_run_size
 operator|=
-name|pagesize
+name|PAGE_SIZE
 expr_stmt|;
 name|i
 operator|=
@@ -18632,7 +18549,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 name|mapelm
@@ -18935,7 +18852,7 @@ operator|)
 name|chunk
 operator|)
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 name|mapelm
@@ -21411,68 +21328,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* Get page size. */
-block|{
-name|long
-name|result
-decl_stmt|;
-name|result
-operator|=
-name|sysconf
-argument_list|(
-name|_SC_PAGESIZE
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|result
-operator|!=
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|pagesize
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|result
-expr_stmt|;
-comment|/* 		 * We assume that pagesize is a power of 2 when calculating 		 * pagesize_mask and pagesize_2pow. 		 */
-name|assert
-argument_list|(
-operator|(
-operator|(
-name|result
-operator|-
-literal|1
-operator|)
-operator|&
-name|result
-operator|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-name|pagesize_mask
-operator|=
-name|result
-operator|-
-literal|1
-expr_stmt|;
-name|pagesize_2pow
-operator|=
-name|ffs
-argument_list|(
-operator|(
-name|int
-operator|)
-name|result
-argument_list|)
-operator|-
-literal|1
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -21858,7 +21713,7 @@ if|if
 condition|(
 name|opt_cspace_max_2pow
 operator|<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|-
 literal|1
 condition|)
@@ -21974,7 +21829,7 @@ if|if
 condition|(
 name|opt_chunk_2pow
 operator|>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|+
 literal|1
 condition|)
@@ -22361,12 +22216,12 @@ name|assert
 argument_list|(
 name|sspace_min
 operator|<
-name|pagesize
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|sspace_max
 operator|=
-name|pagesize
+name|PAGE_SIZE
 operator|-
 name|SUBPAGE
 expr_stmt|;
@@ -22471,7 +22326,7 @@ operator|=
 operator|(
 name|chunksize
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 block|{
@@ -22504,14 +22359,14 @@ operator|=
 operator|(
 name|header_size
 operator|>>
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 operator|+
 operator|(
 operator|(
 name|header_size
 operator|&
-name|pagesize_mask
+name|PAGE_MASK
 operator|)
 operator|!=
 literal|0
@@ -22525,7 +22380,7 @@ operator|-
 operator|(
 name|arena_chunk_header_npages
 operator|<<
-name|pagesize_2pow
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 name|UTRACE
@@ -22560,7 +22415,7 @@ name|assert
 argument_list|(
 name|chunksize
 operator|>=
-name|pagesize
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* Initialize chunks data. */
