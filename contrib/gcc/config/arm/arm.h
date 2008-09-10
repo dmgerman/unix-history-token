@@ -1351,6 +1351,12 @@ name|WCHAR_TYPE
 value|(TARGET_AAPCS_BASED ? "unsigned int" : "int")
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_TYPE_SIZE
+end_undef
+
 begin_define
 define|#
 directive|define
