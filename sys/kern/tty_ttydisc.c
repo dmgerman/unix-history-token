@@ -2200,6 +2200,14 @@ do|;
 block|}
 name|done
 label|:
+if|if
+condition|(
+operator|!
+name|tty_gone
+argument_list|(
+name|tp
+argument_list|)
+condition|)
 name|ttydevsw_outwakeup
 argument_list|(
 name|tp
