@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_policy.h>
 end_include
 
@@ -1521,7 +1527,7 @@ name|vap
 operator|->
 name|va_mode
 operator|&
-name|VSUID
+name|S_ISUID
 operator|)
 expr_stmt|;
 if|if
@@ -1568,7 +1574,7 @@ name|vap
 operator|->
 name|va_mode
 operator|&
-name|VSGID
+name|S_ISGID
 operator|)
 expr_stmt|;
 if|if

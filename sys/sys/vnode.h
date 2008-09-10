@@ -1131,39 +1131,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VSVTX
-value|001000
-end_define
-
-begin_comment
-comment|/* save swapped text even after use */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VSGID
-value|002000
-end_define
-
-begin_comment
-comment|/* set group id on execution */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VSUID
-value|004000
-end_define
-
-begin_comment
-comment|/* set user id on execution */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VADMIN
 value|010000
 end_define

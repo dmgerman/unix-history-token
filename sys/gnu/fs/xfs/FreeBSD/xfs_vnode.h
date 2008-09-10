@@ -2747,7 +2747,7 @@ parameter_list|,
 name|mode
 parameter_list|)
 define|\
-value|((vp)->v_vnode->v_type == VREG&& ((mode)& (VSGID|(VEXEC>>3))) == VSGID)
+value|((vp)->v_vnode->v_type == VREG&& ((mode)& (S_ISGID|(VEXEC>>3))) == S_ISGID)
 end_define
 
 begin_function_decl

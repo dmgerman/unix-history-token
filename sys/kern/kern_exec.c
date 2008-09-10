@@ -221,6 +221,12 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2699,7 +2705,7 @@ name|attr
 operator|.
 name|va_mode
 operator|&
-name|VSUID
+name|S_ISUID
 operator|)
 operator|&&
 name|oldcred
@@ -2717,7 +2723,7 @@ name|attr
 operator|.
 name|va_mode
 operator|&
-name|VSGID
+name|S_ISGID
 operator|)
 operator|&&
 name|oldcred
@@ -2919,7 +2925,7 @@ name|attr
 operator|.
 name|va_mode
 operator|&
-name|VSUID
+name|S_ISUID
 condition|)
 name|change_euid
 argument_list|(
@@ -2934,7 +2940,7 @@ name|attr
 operator|.
 name|va_mode
 operator|&
-name|VSGID
+name|S_ISGID
 condition|)
 name|change_egid
 argument_list|(

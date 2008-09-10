@@ -4523,7 +4523,7 @@ name|vap
 operator|->
 name|va_mode
 operator|&
-name|VSVTX
+name|S_ISVTX
 operator|)
 operator|&&
 name|secpolicy_vnode_stky_modify
@@ -4536,7 +4536,7 @@ operator|->
 name|va_mode
 operator|&=
 operator|~
-name|VSVTX
+name|S_ISVTX
 expr_stmt|;
 if|if
 condition|(
