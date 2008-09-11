@@ -131,6 +131,12 @@ directive|include
 file|<netinet/toedev.h>
 end_include
 
+begin_decl_stmt
+name|uint32_t
+name|toedev_registration_count
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|tcp_offload_connect
@@ -164,6 +170,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|toedev_registration_count
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 	 * Look up the route used for the connection to  	 * determine if it uses an interface capable of 	 * offloading the connection. 	 */
 name|rt
 operator|=
@@ -171,7 +188,7 @@ name|rtalloc1
 argument_list|(
 name|nam
 argument_list|,
-literal|1
+literal|0
 comment|/*report*/
 argument_list|,
 literal|0

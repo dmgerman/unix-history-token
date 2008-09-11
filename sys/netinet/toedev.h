@@ -32,6 +32,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|toedev_registration_count
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Parameter values for offload_get_phys_egress(). */
 end_comment
