@@ -1804,12 +1804,6 @@ name|q
 operator|->
 name|polling
 operator|=
-name|adap
-operator|->
-name|params
-operator|.
-name|rev
-operator|>
 literal|0
 expr_stmt|;
 name|q

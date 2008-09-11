@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*****************************************************************************  *                                                                           *  * File:                                                                     *  *  version.h                                                                *  *                                                                           *  * Description:                                                              *  *  cxgbtool userspace utility version defines.                              *  *                                                                           *  * http://www.chelsio.com                                                    *  *                                                                           *  * Copyright (c) 2003 - 2007 Chelsio Communications, Inc.                    *  * All rights reserved.                                                      *  *                                                                           *  * Maintainers: maintainers@chelsio.com                                      *  *                                                                           *  * History:                                                                  *  *                                                                           *  ****************************************************************************/
+comment|/*****************************************************************************  *                                                                           *  * File:                                                                     *  *  version.h                                                                *  *                                                                           *  * Description:                                                              *  *  cxgbtool userspace utility version defines.                              *  *                                                                           *  * http://www.chelsio.com                                                    *  *                                                                           *  * Copyright (c) 2003 - 2008 Chelsio Communications, Inc.                    *  * All rights reserved.                                                      *  *                                                                           *  * Maintainers: maintainers@chelsio.com                                      *  *                                                                           *  * History:                                                                  *  *                                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -34,14 +34,14 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.8"
+value|"1.15f"
 end_define
 
 begin_define
 define|#
 directive|define
 name|COPYRIGHT
-value|"Copyright (c) 2004-2007 Chelsio Communications"
+value|"Copyright (c) 2004-2008 Chelsio Communications"
 end_define
 
 begin_endif
