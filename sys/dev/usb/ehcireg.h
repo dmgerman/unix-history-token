@@ -155,15 +155,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EHCI_LEGSUP_LEGSUP
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|EHCI_LEGSUP_OSOWNED
-value|0x01000000
+name|EHCI_LEGSUP_OS_SEM
+value|0x03
 end_define
 
 begin_comment
@@ -173,8 +166,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EHCI_LEGSUP_BIOSOWNED
-value|0x00010000
+name|EHCI_LEGSUP_BIOS_SEM
+value|0x02
 end_define
 
 begin_comment
