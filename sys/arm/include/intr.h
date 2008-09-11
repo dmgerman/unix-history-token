@@ -164,6 +164,8 @@ begin_function_decl
 name|int
 name|arm_remove_irqhandler
 parameter_list|(
+name|int
+parameter_list|,
 name|void
 modifier|*
 parameter_list|)
