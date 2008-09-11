@@ -578,6 +578,16 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+name|disable_interrupts
+argument_list|(
+name|I32_bit
+argument_list|)
+expr_stmt|;
 name|intr_enabled
 operator|&=
 operator|~
@@ -589,6 +599,11 @@ operator|)
 expr_stmt|;
 name|ixp425_set_intrmask
 argument_list|()
+expr_stmt|;
+name|restore_interrupts
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
 comment|/*XXX; If it's a GPIO interrupt, ACK it know. Can it be a problem ?*/
 if|if
@@ -624,6 +639,16 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+name|disable_interrupts
+argument_list|(
+name|I32_bit
+argument_list|)
+expr_stmt|;
 name|intr_enabled
 operator||=
 operator|(
@@ -634,6 +659,11 @@ operator|)
 expr_stmt|;
 name|ixp425_set_intrmask
 argument_list|()
+expr_stmt|;
+name|restore_interrupts
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
 block|}
 end_function
