@@ -555,47 +555,6 @@ parameter_list|)
 value|((x)& 0xFFFFFF)
 end_define
 
-begin_define
-define|#
-directive|define
-name|S_HASHTYPE
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_HASHTYPE
-value|0x3
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_HASHTYPE
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> S_HASHTYPE)& M_HASHTYPE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_QNUM
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|G_QNUM
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> S_QNUM)& 0xFFFF)
-end_define
-
 begin_comment
 comment|/* tid is assumed to be 24-bits */
 end_comment
@@ -745,6 +704,54 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|S_HASHTYPE
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_HASHTYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_HASHTYPE)& M_HASHTYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_QNUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_QNUM
+value|0xFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_QNUM
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_QNUM)& M_QNUM)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -872,7 +879,7 @@ value|(((x)>> S_WR_BCNTLFLT)& M_WR_BCNTLFLT)
 end_define
 
 begin_comment
-comment|/* Applicable to BYPASS WRs only: the uP will added a CPL_BARRIER before  * and after the BYPASS WR if the ATOMIC bit is set.  */
+comment|/*  * Applicable to BYPASS WRs only: the uP will add a CPL_BARRIER before  * and after the BYPASS WR if the ATOMIC bit is set.  */
 end_comment
 
 begin_define
@@ -900,7 +907,7 @@ value|V_WR_ATOMIC(1U)
 end_define
 
 begin_comment
-comment|/* Applicable to BYPASS WRs only: the uP will flush buffered non abort  * related WRs.  */
+comment|/*  * Applicable to BYPASS WRs only: the uP will flush buffered non abort  * related WRs.  */
 end_comment
 
 begin_define
