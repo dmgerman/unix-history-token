@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -254,6 +260,26 @@ name|mtx
 name|pcicfg_mtx
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mcfg_enable
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pci.mcfg"
+argument_list|,
+operator|&
+name|mcfg_enable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -2125,6 +2151,16 @@ name|i
 decl_stmt|,
 name|slot
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|mcfg_enable
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|minbus
