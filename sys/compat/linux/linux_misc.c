@@ -2390,22 +2390,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-comment|/* 		 * See fs/select.c in the Linux kernel.  Without this, 		 * Maelstrom doesn't work. 		 */
-if|if
-condition|(
-name|error
-operator|==
-name|ERESTART
-condition|)
-name|error
-operator|=
-name|EINTR
-expr_stmt|;
 goto|goto
 name|select_out
 goto|;
-block|}
 if|if
 condition|(
 name|args
