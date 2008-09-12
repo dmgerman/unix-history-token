@@ -4004,8 +4004,52 @@ name|EEXIST
 condition|)
 block|{
 comment|/* 		 * We know something is in the way, but we don't know what; 		 * we need to find out before we go any further. 		 */
+name|int
+name|r
+init|=
+literal|0
+decl_stmt|;
+comment|/* 		 * The SECURE_SYMLINK logic has already removed a 		 * symlink to a dir if the client wants that.  So 		 * follow the symlink if we're creating a dir. 		 */
 if|if
 condition|(
+name|S_ISDIR
+argument_list|(
+name|a
+operator|->
+name|mode
+argument_list|)
+condition|)
+name|r
+operator|=
+name|stat
+argument_list|(
+name|a
+operator|->
+name|name
+argument_list|,
+operator|&
+name|a
+operator|->
+name|st
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If it's not a dir (or it's a broken symlink), 		 * then don't follow it. 		 */
+if|if
+condition|(
+name|r
+operator|!=
+literal|0
+operator|||
+operator|!
+name|S_ISDIR
+argument_list|(
+name|a
+operator|->
+name|mode
+argument_list|)
+condition|)
+name|r
+operator|=
 name|lstat
 argument_list|(
 name|a
@@ -4017,6 +4061,10 @@ name|a
 operator|->
 name|st
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|!=
 literal|0
 condition|)
@@ -4039,7 +4087,6 @@ name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
-comment|/* TODO: if it's a symlink... */
 comment|/* 		 * NO_OVERWRITE_NEWER doesn't apply to directories. 		 */
 if|if
 condition|(
