@@ -3,12 +3,6 @@ begin_comment
 comment|/*	$NetBSD: umodem.c,v 1.45 2002/09/23 05:51:23 simonb Exp $	*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UFOMA_HANDSFREE
-end_define
-
 begin_include
 include|#
 directive|include
