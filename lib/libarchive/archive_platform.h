@@ -214,6 +214,25 @@ begin_if
 if|#
 directive|if
 operator|!
+name|HAVE_DECL_SSIZE_MAX
+end_if
+
+begin_define
+define|#
+directive|define
+name|SSIZE_MAX
+value|((ssize_t)(SIZE_MAX>> 1))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
 name|HAVE_DECL_UINT32_MAX
 end_if
 

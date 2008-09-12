@@ -107,6 +107,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_DECL_SSIZE_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_DECL_STRERROR_R
 value|1
 end_define
@@ -416,6 +423,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRRCHR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_STAT_ST_BLKSIZE
 value|1
 end_define
 

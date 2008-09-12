@@ -2309,6 +2309,9 @@ operator|&
 name|ARCHIVE_EXTRACT_SPARSE
 condition|)
 block|{
+if|#
+directive|if
+name|HAVE_STRUCT_STAT_ST_BLKSIZE
 if|if
 condition|(
 operator|(
@@ -2335,6 +2338,18 @@ name|pst
 operator|->
 name|st_blksize
 expr_stmt|;
+else|#
+directive|else
+comment|/* XXX TODO XXX Is there a more appropriate choice here ? */
+comment|/* This needn't match the filesystem allocation size. */
+name|block_size
+operator|=
+literal|16
+operator|*
+literal|1024
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
