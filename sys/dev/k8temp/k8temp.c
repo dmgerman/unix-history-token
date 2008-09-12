@@ -839,7 +839,7 @@ name|CTLFLAG_RD
 argument_list|,
 name|dev
 argument_list|,
-name|SENSOR0_CORE0
+name|SENSOR1_CORE0
 argument_list|,
 name|k8temp_sysctl
 argument_list|,
@@ -867,7 +867,7 @@ name|CTLFLAG_RD
 argument_list|,
 name|dev
 argument_list|,
-name|SENSOR0_CORE0
+name|SENSOR1_CORE1
 argument_list|,
 name|k8temp_sysctl
 argument_list|,
