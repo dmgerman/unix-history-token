@@ -149,7 +149,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* Per struct cdev data. */
+comment|/* Per file descriptor data. */
 end_comment
 
 begin_struct
@@ -177,14 +177,6 @@ name|struct
 name|ipmi_softc
 modifier|*
 name|ipmi_softc
-decl_stmt|;
-name|struct
-name|cdev
-modifier|*
-name|ipmi_cdev
-decl_stmt|;
-name|int
-name|ipmi_open
 decl_stmt|;
 name|int
 name|ipmi_closing
@@ -287,30 +279,14 @@ decl_stmt|;
 name|int
 name|ipmi_detaching
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CLONING
 name|int
-name|ipmi_cloning
+name|ipmi_opened
 decl_stmt|;
-name|u_int
-name|ipmi_cdev_mask
-decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ipmi_device
-argument_list|)
-name|ipmi_cdevs
-expr_stmt|;
-else|#
-directive|else
 name|struct
-name|ipmi_device
-name|ipmi_idev
+name|cdev
+modifier|*
+name|ipmi_cdev
 decl_stmt|;
-endif|#
-directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -318,14 +294,6 @@ argument|ipmi_request
 argument_list|)
 name|ipmi_pending_requests
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CLONING
-name|eventhandler_tag
-name|ipmi_clone_tag
-decl_stmt|;
-endif|#
-directive|endif
 name|eventhandler_tag
 name|ipmi_watchdog_tag
 decl_stmt|;
