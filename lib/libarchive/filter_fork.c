@@ -235,7 +235,8 @@ index|[
 literal|0
 index|]
 operator|==
-name|STDOUT_FILENO
+literal|1
+comment|/* stdout */
 condition|)
 block|{
 if|if
@@ -294,7 +295,8 @@ index|[
 literal|1
 index|]
 operator|==
-name|STDIN_FILENO
+literal|0
+comment|/* stdin */
 condition|)
 block|{
 if|if
@@ -395,7 +397,8 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|STDIN_FILENO
+literal|0
+comment|/* stdin */
 argument_list|)
 operator|==
 operator|-
@@ -413,7 +416,8 @@ index|[
 literal|0
 index|]
 operator|!=
-name|STDIN_FILENO
+literal|0
+comment|/* stdin */
 condition|)
 name|close
 argument_list|(
@@ -432,7 +436,8 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|STDOUT_FILENO
+literal|1
+comment|/* stdout */
 argument_list|)
 operator|==
 operator|-
@@ -450,7 +455,8 @@ index|[
 literal|1
 index|]
 operator|!=
-name|STDOUT_FILENO
+literal|1
+comment|/* stdout */
 condition|)
 name|close
 argument_list|(
