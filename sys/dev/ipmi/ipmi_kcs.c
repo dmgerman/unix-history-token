@@ -660,7 +660,7 @@ name|sc
 operator|->
 name|ipmi_dev
 argument_list|,
-literal|"KCS Error retry exhausted\n"
+literal|"KCS: Error retry exhausted\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2196,7 +2196,7 @@ comment|/* Clear OBF */
 if|if
 condition|(
 name|status
-operator|&&
+operator|&
 name|KCS_STATUS_OBF
 condition|)
 name|data
@@ -2379,7 +2379,7 @@ comment|/* Clear OBF */
 if|if
 condition|(
 name|status
-operator|&&
+operator|&
 name|KCS_STATUS_OBF
 condition|)
 name|data
