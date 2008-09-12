@@ -7856,7 +7856,7 @@ condition|)
 goto|goto
 name|step6
 goto|;
-comment|/* 		 * When new data is acked, open the congestion window. 		 * If the window gives us less than ssthresh packets 		 * in flight, open exponentially (maxseg per packet). 		 * Otherwise open linearly: maxseg per window 		 * (maxseg^2 / cwnd per packet). 		 */
+comment|/* 		 * When new data is acked, open the congestion window. 		 * If the window gives us less than ssthresh packets 		 * in flight, open exponentially (maxseg per packet). 		 * Otherwise open linearly: maxseg per window 		 * (maxseg^2 / cwnd per packet). 		 * If cwnd> maxseg^2, fix the cwnd increment at 1 byte 		 * to avoid capping cwnd (as suggested in RFC2581). 		 */
 if|if
 condition|(
 operator|(
@@ -7904,11 +7904,18 @@ name|snd_ssthresh
 condition|)
 name|incr
 operator|=
+name|max
+argument_list|(
+operator|(
 name|incr
 operator|*
 name|incr
 operator|/
 name|cw
+operator|)
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
