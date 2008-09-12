@@ -3045,7 +3045,7 @@ break|break;
 default|default:
 name|warn
 argument_list|(
-literal|"ioctl MLXD_CHECKASYNC"
+literal|"ioctl MLXD_REBUILDASYNC"
 argument_list|)
 expr_stmt|;
 block|}

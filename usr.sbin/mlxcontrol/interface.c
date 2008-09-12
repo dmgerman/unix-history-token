@@ -248,12 +248,14 @@ name|int
 name|i
 decl_stmt|,
 name|fd
+decl_stmt|,
+name|ctrlfd
 decl_stmt|;
 comment|/* Get the device */
 if|if
 condition|(
 operator|(
-name|fd
+name|ctrlfd
 operator|=
 name|open
 argument_list|(
@@ -284,7 +286,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|fd
+name|ctrlfd
 argument_list|,
 name|MLX_NEXT_CHILD
 argument_list|,
@@ -294,7 +296,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|close
+argument_list|(
+name|ctrlfd
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* check that we can open this unit */
 if|if
 condition|(

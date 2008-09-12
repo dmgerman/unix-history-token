@@ -3520,7 +3520,7 @@ name|sc
 operator|->
 name|mlx_sysdrive
 index|[
-literal|0
+name|i
 index|]
 operator|.
 name|ms_disk
