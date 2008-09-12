@@ -212,6 +212,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_FTRUNCATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_FUTIMES
 value|1
 end_define

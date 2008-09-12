@@ -2918,6 +2918,9 @@ comment|/* Hopefully, this is the common case. */
 block|}
 else|else
 block|{
+if|#
+directive|if
+name|HAVE_FTRUNCATE
 if|if
 condition|(
 name|ftruncate
@@ -2959,6 +2962,8 @@ name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 comment|/* 		 * Explicitly stat the file as some platforms might not 		 * implement the XSI option to extend files via ftruncate. 		 */
 name|a
 operator|->
