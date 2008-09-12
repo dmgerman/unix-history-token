@@ -51,6 +51,12 @@ argument_list|)
 operator|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|"archive.h"
+end_include
+
 begin_comment
 comment|/*  * On non-Posix systems, allow the program to build, but choke if  * this function is actually invoked.  */
 end_comment
