@@ -454,7 +454,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|sleepq_resume_thread
 parameter_list|(
 name|struct
@@ -1734,6 +1734,8 @@ argument_list|(
 name|wchan
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|sleepq_resume_thread
 argument_list|(
 name|sq
@@ -1743,7 +1745,20 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+comment|/* 			 * This thread hasn't gone to sleep yet, so it 			 * should not be swapped out. 			 */
+name|panic
+argument_list|(
+literal|"not waking up swapper"
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 name|mtx_unlock_spin
 argument_list|(
@@ -1875,6 +1890,8 @@ argument_list|(
 name|wchan
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|sleepq_resume_thread
 argument_list|(
 name|sq
@@ -1884,7 +1901,20 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+comment|/* 			 * This thread hasn't gone to sleep yet, so it 			 * should not be swapped out. 			 */
+name|panic
+argument_list|(
+literal|"not waking up swapper"
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -2432,7 +2462,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|sleepq_resume_thread
 parameter_list|(
 name|struct
@@ -2694,11 +2724,14 @@ argument_list|,
 name|pri
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|setrunnable
 argument_list|(
 name|td
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -2860,7 +2893,7 @@ comment|/*  * Find the highest priority thread sleeping on a wait channel and re
 end_comment
 
 begin_function
-name|void
+name|int
 name|sleepq_signal
 parameter_list|(
 name|void
@@ -2889,6 +2922,9 @@ name|td
 decl_stmt|,
 modifier|*
 name|besttd
+decl_stmt|;
+name|int
+name|wakeup_swapper
 decl_stmt|;
 name|CTR2
 argument_list|(
@@ -2942,7 +2978,11 @@ name|sq
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|KASSERT
 argument_list|(
 name|sq
@@ -3007,6 +3047,8 @@ argument_list|(
 name|besttd
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_resume_thread
 argument_list|(
 name|sq
@@ -3021,6 +3063,11 @@ argument_list|(
 name|besttd
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|wakeup_swapper
+operator|)
+return|;
 block|}
 end_function
 
@@ -3029,7 +3076,7 @@ comment|/*  * Resume all threads sleeping on a specified wait channel.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|sleepq_broadcast
 parameter_list|(
 name|void
@@ -3055,6 +3102,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+decl_stmt|;
+name|int
+name|wakeup_swapper
 decl_stmt|;
 name|CTR2
 argument_list|(
@@ -3114,7 +3164,11 @@ argument_list|(
 name|wchan
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|KASSERT
 argument_list|(
@@ -3136,6 +3190,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Resume all blocked threads on the sleep queue. */
+name|wakeup_swapper
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -3169,6 +3227,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|sleepq_resume_thread
 argument_list|(
 name|sq
@@ -3177,6 +3237,10 @@ name|td
 argument_list|,
 name|pri
 argument_list|)
+condition|)
+name|wakeup_swapper
+operator|=
+literal|1
 expr_stmt|;
 name|thread_unlock
 argument_list|(
@@ -3189,6 +3253,11 @@ argument_list|(
 name|wchan
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|wakeup_swapper
+operator|)
+return|;
 block|}
 end_function
 
@@ -3225,9 +3294,16 @@ name|void
 modifier|*
 name|wchan
 decl_stmt|;
+name|int
+name|wakeup_swapper
+decl_stmt|;
 name|td
 operator|=
 name|arg
+expr_stmt|;
+name|wakeup_swapper
+operator|=
+literal|0
 expr_stmt|;
 name|CTR3
 argument_list|(
@@ -3325,6 +3401,8 @@ name|td_flags
 operator||=
 name|TDF_TIMEOUT
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_resume_thread
 argument_list|(
 name|sq
@@ -3339,6 +3417,13 @@ name|thread_unlock
 argument_list|(
 name|td
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -3394,6 +3479,8 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|setrunnable
 argument_list|(
 name|td
@@ -3411,6 +3498,13 @@ name|thread_unlock
 argument_list|(
 name|td
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -3437,6 +3531,9 @@ name|struct
 name|sleepqueue
 modifier|*
 name|sq
+decl_stmt|;
+name|int
+name|wakeup_swapper
 decl_stmt|;
 comment|/* 	 * Look up the sleep queue for this wait channel, then re-check 	 * that the thread is asleep on that channel, if it is not, then 	 * bail. 	 */
 name|MPASS
@@ -3503,6 +3600,8 @@ operator|==
 name|wchan
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_resume_thread
 argument_list|(
 name|sq
@@ -3523,6 +3622,13 @@ argument_list|(
 name|wchan
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3531,7 +3637,7 @@ comment|/*  * Abort a thread as if an interrupt had occurred.  Only abort  * int
 end_comment
 
 begin_function
-name|void
+name|int
 name|sleepq_abort
 parameter_list|(
 name|struct
@@ -3596,7 +3702,11 @@ name|td_flags
 operator|&
 name|TDF_TIMEOUT
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|CTR3
 argument_list|(
 name|KTR_PROC
@@ -3650,7 +3760,11 @@ argument_list|(
 name|td
 argument_list|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|wchan
 operator|=
 name|td
@@ -3679,6 +3793,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Thread is asleep on sleep queue sq, so wake it up. */
+return|return
+operator|(
 name|sleepq_resume_thread
 argument_list|(
 name|sq
@@ -3688,7 +3804,8 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

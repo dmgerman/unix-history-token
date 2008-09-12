@@ -1646,6 +1646,9 @@ block|{
 name|uintptr_t
 name|x
 decl_stmt|;
+name|int
+name|wakeup_swapper
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|sx
@@ -1775,6 +1778,10 @@ name|lock_object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Preserve SX_LOCK_EXCLUSIVE_WAITERS while downgraded to a single 	 * shared lock.  If there are any shared waiters, wake them up. 	 */
+name|wakeup_swapper
+operator|=
+literal|0
+expr_stmt|;
 name|x
 operator|=
 name|sx
@@ -1806,6 +1813,8 @@ name|x
 operator|&
 name|SX_LOCK_SHARED_WAITERS
 condition|)
+name|wakeup_swapper
+operator|=
 name|sleepq_broadcast
 argument_list|(
 operator|&
@@ -1847,6 +1856,13 @@ name|file
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2597,6 +2613,8 @@ name|x
 decl_stmt|;
 name|int
 name|queue
+decl_stmt|,
+name|wakeup_swapper
 decl_stmt|;
 name|MPASS
 argument_list|(
@@ -2790,6 +2808,8 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_broadcast
 argument_list|(
 operator|&
@@ -2804,6 +2824,13 @@ literal|1
 argument_list|,
 name|queue
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -3450,6 +3477,9 @@ block|{
 name|uintptr_t
 name|x
 decl_stmt|;
+name|int
+name|wakeup_swapper
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -3695,6 +3725,8 @@ argument_list|,
 name|sx
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|sleepq_broadcast
 argument_list|(
 operator|&
@@ -3709,6 +3741,13 @@ literal|1
 argument_list|,
 name|SQ_EXCLUSIVE_QUEUE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 break|break;
 block|}

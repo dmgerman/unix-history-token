@@ -1401,6 +1401,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|wakeup_swapper
+decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -1686,6 +1689,8 @@ operator|->
 name|p_singlethread
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|thread_unsuspend_one
 argument_list|(
 name|p
@@ -1699,6 +1704,13 @@ name|p
 operator|->
 name|p_singlethread
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -2236,6 +2248,8 @@ name|p
 decl_stmt|;
 name|int
 name|remaining
+decl_stmt|,
+name|wakeup_swapper
 decl_stmt|;
 name|td
 operator|=
@@ -2439,6 +2453,10 @@ condition|)
 goto|goto
 name|stopme
 goto|;
+name|wakeup_swapper
+operator|=
+literal|0
+expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -2502,6 +2520,8 @@ argument_list|(
 name|td2
 argument_list|)
 condition|)
+name|wakeup_swapper
+operator||=
 name|thread_unsuspend_one
 argument_list|(
 name|td2
@@ -2522,6 +2542,8 @@ operator|&
 name|TDF_SINTR
 operator|)
 condition|)
+name|wakeup_swapper
+operator||=
 name|sleepq_abort
 argument_list|(
 name|td2
@@ -2549,6 +2571,8 @@ operator|&
 name|TDF_BOUNDARY
 operator|)
 condition|)
+name|wakeup_swapper
+operator||=
 name|thread_unsuspend_one
 argument_list|(
 name|td2
@@ -2569,6 +2593,8 @@ operator|&
 name|TDF_SINTR
 operator|)
 condition|)
+name|wakeup_swapper
+operator||=
 name|sleepq_abort
 argument_list|(
 name|td2
@@ -2654,6 +2680,13 @@ name|td2
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -2816,6 +2849,9 @@ name|struct
 name|proc
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|wakeup_swapper
 decl_stmt|;
 name|td
 operator|=
@@ -3038,6 +3074,8 @@ operator|->
 name|p_singlethread
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|thread_unsuspend_one
 argument_list|(
 name|p
@@ -3051,6 +3089,13 @@ name|p
 operator|->
 name|p_singlethread
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -3324,7 +3369,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|thread_unsuspend_one
 parameter_list|(
 name|struct
@@ -3378,11 +3423,14 @@ operator|->
 name|p_suspcount
 operator|--
 expr_stmt|;
+return|return
+operator|(
 name|setrunnable
 argument_list|(
 name|td
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -3405,6 +3453,9 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|int
+name|wakeup_swapper
+decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -3418,6 +3469,10 @@ name|p
 argument_list|,
 name|MA_OWNED
 argument_list|)
+expr_stmt|;
+name|wakeup_swapper
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3448,6 +3503,8 @@ name|td
 argument_list|)
 condition|)
 block|{
+name|wakeup_swapper
+operator||=
 name|thread_unsuspend_one
 argument_list|(
 name|td
@@ -3492,6 +3549,8 @@ operator|->
 name|p_singlethread
 argument_list|)
 expr_stmt|;
+name|wakeup_swapper
+operator|=
 name|thread_unsuspend_one
 argument_list|(
 name|p
@@ -3507,6 +3566,13 @@ name|p_singlethread
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3530,6 +3596,9 @@ name|struct
 name|proc
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|wakeup_swapper
 decl_stmt|;
 name|td
 operator|=
@@ -3572,7 +3641,11 @@ name|p_singlethread
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * If there are other threads they mey now run, 	 * unless of course there is a blanket 'stop order' 	 * on the process. The single threader must be allowed 	 * to continue however as this is a bad place to stop. 	 */
+name|wakeup_swapper
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * If there are other threads they may now run, 	 * unless of course there is a blanket 'stop order' 	 * on the process. The single threader must be allowed 	 * to continue however as this is a bad place to stop. 	 */
 if|if
 condition|(
 operator|(
@@ -3612,6 +3685,8 @@ name|td
 argument_list|)
 condition|)
 block|{
+name|wakeup_swapper
+operator||=
 name|thread_unsuspend_one
 argument_list|(
 name|td
@@ -3629,6 +3704,13 @@ name|PROC_SUNLOCK
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wakeup_swapper
+condition|)
+name|kick_proc0
+argument_list|()
 expr_stmt|;
 block|}
 end_function
