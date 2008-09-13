@@ -260,6 +260,12 @@ begin_comment
 comment|/* Note: assumes x86 page size of 4K. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PAGE_SHIFT
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -300,6 +306,11 @@ error|#
 directive|error
 error|PAGE_SHIFT undefined!
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
