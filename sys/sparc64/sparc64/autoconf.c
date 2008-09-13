@@ -203,13 +203,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_ISA
+comment|/* 	 * We bypass isa_probe_children(9) here in order to avoid 	 * invasive probes done by identify-routines of ISA drivers, 	 * which in turn can trigger master/target aborts, and the 	 * addition of ISA hints, which might erroneously exist. 	 */
 if|if
 condition|(
 name|isa_bus_device
 operator|!=
 name|NULL
 condition|)
-name|isa_probe_children
+operator|(
+name|void
+operator|)
+name|bus_generic_attach
 argument_list|(
 name|isa_bus_device
 argument_list|)
