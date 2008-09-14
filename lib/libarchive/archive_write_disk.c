@@ -8504,12 +8504,15 @@ name|HAVE_FCHFLAGS
 argument_list|)
 operator|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|__linux
+name|HAVE_STRUCT_STAT_ST_FLAGS
 argument_list|)
 end_if
+
+begin_comment
+comment|/*  * BSD reads flags using stat() and sets them with one of {f,l,}chflags()  */
+end_comment
 
 begin_function
 specifier|static
@@ -8738,11 +8741,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__linux
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|EXT2_IOC_GETFLAGS
 argument_list|)
 operator|&&
@@ -8753,7 +8751,7 @@ argument_list|)
 end_elif
 
 begin_comment
-comment|/*  * Linux has flags too, but uses ioctl() to access them instead of  * having a separate chflags() system call.  */
+comment|/*  * Linux uses ioctl() to read and write file flags.  */
 end_comment
 
 begin_function
@@ -9041,10 +9039,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* Not HAVE_CHFLAGS&& Not __linux */
-end_comment
 
 begin_comment
 comment|/*  * Of course, some systems have neither BSD chflags() nor Linux' flags  * support through ioctl().  */
