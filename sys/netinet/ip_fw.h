@@ -16,7 +16,7 @@ name|_IPFW2_H
 end_define
 
 begin_comment
-comment|/*  * The default rule number.  It is also the max possible rule number.  */
+comment|/*  * The default rule number.  By the design of ip_fw, the default rule  * is the last one, so its number can also serve as the highest number  * allowed for a rule.  The ip_fw code relies on both meanings of this  * constant.   */
 end_comment
 
 begin_define
