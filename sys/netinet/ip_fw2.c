@@ -831,6 +831,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_net_inet_ip_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tables_max
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+name|IPFW_TABLES_MAX
+argument_list|,
+literal|"The maximum number of tables."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is stored in dyn_count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. XXX we should make them survive.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
 end_comment
