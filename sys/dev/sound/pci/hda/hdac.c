@@ -2711,6 +2711,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC267
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0267)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC268
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0268)
 end_define
@@ -2718,8 +2725,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC269
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0269)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC272
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0272)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC660
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0660)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC662
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0662)
 end_define
 
 begin_define
@@ -3212,15 +3240,45 @@ literal|"Realtek ALC262"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC267
+block|,
+literal|"Realtek ALC267"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC268
 block|,
 literal|"Realtek ALC268"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC269
+block|,
+literal|"Realtek ALC269"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC272
+block|,
+literal|"Realtek ALC272"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC660
 block|,
 literal|"Realtek ALC660"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC662
+block|,
+literal|"Realtek ALC662"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC663
+block|,
+literal|"Realtek ALC663"
 block|}
 block|,
 block|{
@@ -8722,7 +8780,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s: Unable to allocate functiom groups\n"
+literal|"%s: Unable to allocate function groups\n"
 argument_list|,
 name|__func__
 argument_list|)
