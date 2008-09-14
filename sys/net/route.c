@@ -6711,7 +6711,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rt_check() is invoked on each layer 2 output path, prior to  * encapsulating outbound packets.  *  * The function is mostly used to find a routing entry for the gateway,  * which in some protocol families could also point to the link-level  * address for the gateway itself (the side effect of revalidating the  * route to the destination is rather pointless at this stage, we did it  * already a moment before in the pr_output() routine to locate the ifp  * and gateway to use).  *  * When we remove the layer-3 to layer-2 mapping tables from the  * routing table, this function can be removed.  *  * === On input ===  *   *dst is the address of the NEXT HOP (which coincides with the  *	final destination if directly reachable);  *   *lrt0 points to the cached route to the final destination;  *   *lrt is not meaningful;  *    fibnum is the index to the correct network fib for this packet  *  * === Operation ===  * If the route is marked down try to find a new route.  If the route  * to the gateway is gone, try to setup a new route.  Otherwise,  * if the route is marked for packets to be rejected, enforce that.  *  * === On return ===  *   *dst is unchanged;  *   *lrt0 points to the (possibly new) route to the final destination  *   *lrt points to the route to the next hop  *  * Their values are meaningful ONLY if no error is returned.  */
+comment|/*  * rt_check() is invoked on each layer 2 output path, prior to  * encapsulating outbound packets.  *  * The function is mostly used to find a routing entry for the gateway,  * which in some protocol families could also point to the link-level  * address for the gateway itself (the side effect of revalidating the  * route to the destination is rather pointless at this stage, we did it  * already a moment before in the pr_output() routine to locate the ifp  * and gateway to use).  *  * When we remove the layer-3 to layer-2 mapping tables from the  * routing table, this function can be removed.  *  * === On input ===  *   *dst is the address of the NEXT HOP (which coincides with the  *	final destination if directly reachable);  *   *lrt0 points to the cached route to the final destination;  *   *lrt is not meaningful;  *  * === Operation ===  * If the route is marked down try to find a new route.  If the route  * to the gateway is gone, try to setup a new route.  Otherwise,  * if the route is marked for packets to be rejected, enforce that.  *  * === On return ===  *   *dst is unchanged;  *   *lrt0 points to the (possibly new) route to the final destination  *   *lrt points to the route to the next hop  *  * Their values are meaningful ONLY if no error is returned.  */
 end_comment
 
 begin_function
@@ -6736,48 +6736,6 @@ modifier|*
 name|dst
 parameter_list|)
 block|{
-return|return
-operator|(
-name|rt_check_fib
-argument_list|(
-name|lrt
-argument_list|,
-name|lrt0
-argument_list|,
-name|dst
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|rt_check_fib
-parameter_list|(
-name|struct
-name|rtentry
-modifier|*
-modifier|*
-name|lrt
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-modifier|*
-name|lrt0
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|dst
-parameter_list|,
-name|u_int
-name|fibnum
-parameter_list|)
-block|{
 name|struct
 name|rtentry
 modifier|*
@@ -6787,6 +6745,9 @@ name|struct
 name|rtentry
 modifier|*
 name|rt0
+decl_stmt|;
+name|u_int
+name|fibnum
 decl_stmt|;
 name|int
 name|error
@@ -6809,6 +6770,15 @@ name|rt0
 operator|=
 operator|*
 name|lrt0
+expr_stmt|;
+name|fibnum
+operator|=
+operator|(
+operator|*
+name|rt0
+operator|)
+operator|->
+name|rt_fibnum
 expr_stmt|;
 comment|/* NB: the locking here is tortuous... */
 name|RT_LOCK
@@ -6941,7 +6911,6 @@ argument_list|(
 name|rt0
 argument_list|)
 expr_stmt|;
-comment|/* XXX MRT link level looked up in table 0 */
 name|rt
 operator|=
 name|rtalloc1_fib
@@ -6954,7 +6923,7 @@ literal|1
 argument_list|,
 literal|0UL
 argument_list|,
-literal|0
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if

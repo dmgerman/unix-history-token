@@ -1718,7 +1718,8 @@ decl_stmt|;
 name|int
 name|fibnum
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -1822,7 +1823,7 @@ name|rt_fibnum
 expr_stmt|;
 name|error
 operator|=
-name|in_rt_check
+name|rt_check
 argument_list|(
 operator|&
 name|rt
@@ -1831,8 +1832,6 @@ operator|&
 name|rt0
 argument_list|,
 name|dst
-argument_list|,
-name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -1872,6 +1871,23 @@ name|rt
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If we had no mbuf and no route, then hope the caller 	 * has a fib in mind because we are running out of ideas. 	 * I think this should not happen in current code. 	 * (kmacy would know). 	 */
+if|if
+condition|(
+name|fibnum
+operator|==
+operator|-
+literal|1
+condition|)
+name|fibnum
+operator|=
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_fibnum
+expr_stmt|;
+comment|/* last gasp */
 if|if
 condition|(
 name|la
@@ -1879,7 +1895,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * We enter this block if rt0 was NULL, 		 * or if rt found by in_rt_check() didn't have llinfo. 		 * We should get a cloned route from the local interface, 		 * so it should have an ll entry. 		 * It may be incomplete but that's ok. 		 * XXXMRT if we haven't found a fibnum is that OK? 		 */
+comment|/* 		 * We enter this block if rt0 was NULL, 		 * or if rt found by rt_check() didn't have llinfo. 		 * we should get a cloned route, which since it should 		 * come from the local interface should have a ll entry. 		 * It may be incomplete but that's ok. 		 */
 name|rt
 operator|=
 name|arplookup
