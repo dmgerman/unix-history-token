@@ -1018,25 +1018,11 @@ block|,
 name|USB_PRODUCT_PERACOM_SERIAL1
 block|}
 block|,
-comment|/* Novatel Wireless Merlin cards */
-block|{
-name|USB_VENDOR_NOVATEL
-block|,
-name|USB_PRODUCT_NOVATEL_U740
-block|}
-block|,
-comment|/* Dell version of the above */
+comment|/* Dell version of the Novatel 740 */
 block|{
 name|USB_VENDOR_DELL
 block|,
 name|USB_PRODUCT_DELL_U740
-block|}
-block|,
-comment|/* Novatel Wireless Merlin v740 */
-block|{
-name|USB_VENDOR_NOVATEL
-block|,
-name|USB_PRODUCT_NOVATEL_V740
 block|}
 block|,
 comment|/* Option Vodafone MC3G */
@@ -1081,11 +1067,16 @@ block|,
 name|USB_PRODUCT_HUAWEI_MOBILE
 block|}
 block|,
-comment|/* Sierra Wireless LENOVO UMTS card */
 block|{
-name|USB_VENDOR_SIERRA
+name|USB_VENDOR_HUAWEI
 block|,
-name|USB_PRODUCT_SIERRA_MC8755_3
+name|USB_PRODUCT_HUAWEI_E270
+block|}
+block|,
+block|{
+name|USB_VENDOR_MERLIN
+block|,
+name|USB_PRODUCT_MERLIN_V620
 block|}
 block|,
 comment|/* Qualcomm, Inc. ZTE CDMA */
@@ -1093,6 +1084,270 @@ block|{
 name|USB_VENDOR_QUALCOMMINC
 block|,
 name|USB_PRODUCT_QUALCOMMINC_CDMA_MSM
+block|}
+block|,
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_CDMA_MODEM
+block|}
+block|,
+comment|/* Novatel Wireless Merlin ES620 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_ES620
+block|}
+block|,
+comment|/* Novatel Wireless Merlin U720 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_U720
+block|}
+block|,
+comment|/* Novatel Wireless Merlin U727 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_U727
+block|}
+block|,
+comment|/* Novatel Wireless Merlin U740 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_U740
+block|}
+block|,
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_U740_2
+block|}
+block|,
+comment|/* Novatel Wireless Merlin U950D */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_U950D
+block|}
+block|,
+comment|/* Novatel Wireless Merlin V620 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_V620
+block|}
+block|,
+comment|/* Novatel Wireless Merlin V640 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_V640
+block|}
+block|,
+comment|/* Novatel Wireless Merlin V720 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_V720
+block|}
+block|,
+comment|/* Novatel Wireless Merlin V740 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_V740
+block|}
+block|,
+comment|/* Novatel Wireless Merlin X950D */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_X950D
+block|}
+block|,
+comment|/* Novatel Wireless Merlin U870 */
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_U870
+block|}
+block|,
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
+name|USB_PRODUCT_NOVATEL_XU870
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 580 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AIRCARD580
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 595 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AIRCARD595
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 595U */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AC595U
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 597E */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AC597E
+block|}
+block|,
+comment|/* Sierra Wireless Compass 597 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_C597
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 880 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AC880
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 880E */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AC880E
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 880U */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AC880U
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 881 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AC881
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 881E */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AC881E
+block|}
+block|,
+comment|/* Sierra Wireless AirCard 881U */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AC881U
+block|}
+block|,
+comment|/* Sierra Wireless EM5625 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_EM5625
+block|}
+block|,
+comment|/* Sierra Wireless MC5720 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC5720
+block|}
+block|,
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC5720_2
+block|}
+block|,
+comment|/* Sierra Wireless MC5725 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC5725
+block|}
+block|,
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MINI5725
+block|}
+block|,
+comment|/* Sierra Wireless MC8755 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AIRCARD875
+block|}
+block|,
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC8755
+block|}
+block|,
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC8755_2
+block|}
+block|,
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC8755_3
+block|}
+block|,
+comment|/* Sierra Wireless MC8765 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC8765
+block|}
+block|,
+comment|/* Sierra Wireless MC8775 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_AC875U
+block|}
+block|,
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC8775_2
+block|}
+block|,
+comment|/* Sierra Wireless MC8780 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC8780
+block|}
+block|,
+comment|/* Sierra Wireless MC8781 */
+block|{
+name|USB_VENDOR_SIERRA
+block|,
+name|USB_PRODUCT_SIERRA_MC8781
 block|}
 block|,
 block|{
