@@ -2753,6 +2753,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC663
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0663)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC861
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0861)
 end_define
