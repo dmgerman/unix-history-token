@@ -192,7 +192,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|uintptr_t
+name|uint64_t
 name|psaddr_t
 typedef|;
 end_typedef
