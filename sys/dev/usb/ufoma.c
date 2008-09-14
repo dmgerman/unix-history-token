@@ -3,6 +3,12 @@ begin_comment
 comment|/*	$NetBSD: umodem.c,v 1.45 2002/09/23 05:51:23 simonb Exp $	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UFOMA_HANDSFREE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -2599,7 +2605,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s:ACTIVATE:%s\n"
+literal|"%s:ACTIVATE(%x):%s\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -2607,6 +2613,8 @@ name|ucom
 operator|->
 name|sc_dev
 argument_list|)
+argument_list|,
+name|state
 argument_list|,
 name|usbd_errstr
 argument_list|(
@@ -3810,8 +3818,11 @@ block|}
 name|ucom
 operator|->
 name|sc_state
-operator||=
+operator|&=
+operator|~
+operator|(
 name|UCS_TXBUSY
+operator|)
 expr_stmt|;
 block|}
 end_function
@@ -4271,6 +4282,9 @@ decl_stmt|;
 name|int
 name|ls
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4281,6 +4295,18 @@ condition|)
 block|{
 return|return ;
 comment|/*Set it later*/
+block|}
+comment|/*Don't send line state emulation request for OBEX port*/
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_currentmode
+operator|==
+name|UMCPC_ACM_MODE_OBEX
+condition|)
+block|{
+return|return;
 block|}
 name|ls
 operator|=
@@ -4345,9 +4371,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|err
+operator|=
 name|usbd_do_request
 argument_list|(
 name|ucom
@@ -4360,6 +4385,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"LINE_STATE:%s\n"
+argument_list|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4569,6 +4610,29 @@ operator|(
 literal|"ufoma_set_line_coding: already set\n"
 operator|)
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|USBD_NORMAL_COMPLETION
+operator|)
+return|;
+block|}
+comment|/*Don't send line state emulation request for OBEX port*/
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_currentmode
+operator|==
+name|UMCPC_ACM_MODE_OBEX
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_line_state
+operator|=
+operator|*
+name|state
 expr_stmt|;
 return|return
 operator|(
