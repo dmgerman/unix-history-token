@@ -498,6 +498,7 @@ begin_function_decl
 name|int
 name|thr_pread_int
 parameter_list|(
+specifier|const
 name|struct
 name|td_thragent
 modifier|*
@@ -514,6 +515,7 @@ begin_function_decl
 name|int
 name|thr_pread_long
 parameter_list|(
+specifier|const
 name|struct
 name|td_thragent
 modifier|*
@@ -530,13 +532,14 @@ begin_function_decl
 name|int
 name|thr_pread_ptr
 parameter_list|(
+specifier|const
 name|struct
 name|td_thragent
 modifier|*
 parameter_list|,
 name|psaddr_t
 parameter_list|,
-name|uint64_t
+name|psaddr_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -546,6 +549,7 @@ begin_function_decl
 name|int
 name|thr_pwrite_int
 parameter_list|(
+specifier|const
 name|struct
 name|td_thragent
 modifier|*
@@ -561,6 +565,7 @@ begin_function_decl
 name|int
 name|thr_pwrite_long
 parameter_list|(
+specifier|const
 name|struct
 name|td_thragent
 modifier|*
@@ -576,13 +581,14 @@ begin_function_decl
 name|int
 name|thr_pwrite_ptr
 parameter_list|(
+specifier|const
 name|struct
 name|td_thragent
 modifier|*
 parameter_list|,
 name|psaddr_t
 parameter_list|,
-name|uint64_t
+name|psaddr_t
 parameter_list|)
 function_decl|;
 end_function_decl

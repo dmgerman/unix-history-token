@@ -57,8 +57,7 @@ operator|.
 name|th_p
 operator|=
 operator|(
-name|td_thrhandle_t
-operator|*
+name|uintptr_t
 operator|)
 name|newthread
 expr_stmt|;
@@ -125,8 +124,7 @@ operator|.
 name|th_p
 operator|=
 operator|(
-name|td_thrhandle_t
-operator|*
+name|uintptr_t
 operator|)
 name|curthread
 expr_stmt|;

@@ -228,9 +228,7 @@ block|{
 name|td_thr_events_e
 name|event
 decl_stmt|;
-specifier|const
-name|td_thrhandle_t
-modifier|*
+name|psaddr_t
 name|th_p
 decl_stmt|;
 name|uintptr_t
