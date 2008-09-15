@@ -5157,6 +5157,17 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|gs32p
+argument_list|,
+operator|&
+name|gdt
+index|[
+name|GUGS32_SEL
+index|]
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize mutexes. 	 * 	 * icu_lock: in order to allow an interrupt to occur in a critical 	 * 	     section, to set pcpu->ipending (etc...) properly, we 	 *	     must be able to get the icu lock, so it can't be 	 *	     under witness. 	 */
 name|mutex_init
 argument_list|()
