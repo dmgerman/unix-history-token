@@ -728,6 +728,8 @@ operator||
 name|PSL_DR
 operator||
 name|PSL_ME
+operator||
+name|PSL_RI
 expr_stmt|;
 name|mtmsr
 argument_list|(

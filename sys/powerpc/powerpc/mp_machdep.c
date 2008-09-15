@@ -202,8 +202,6 @@ name|mfmsr
 argument_list|()
 operator||
 name|PSL_EE
-operator||
-name|PSL_RI
 argument_list|)
 expr_stmt|;
 name|sched_throw

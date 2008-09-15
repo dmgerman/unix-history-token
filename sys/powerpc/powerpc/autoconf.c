@@ -208,28 +208,6 @@ name|powerpc_enable_intr
 argument_list|()
 expr_stmt|;
 comment|/* Enable external interrupts. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AIM
-argument_list|)
-name|mtmsr
-argument_list|(
-name|mfmsr
-argument_list|()
-operator||
-name|PSL_EE
-operator||
-name|PSL_RI
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|E500
-argument_list|)
 name|mtmsr
 argument_list|(
 name|mfmsr
@@ -238,8 +216,6 @@ operator||
 name|PSL_EE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|cninit_finish
 argument_list|()
 expr_stmt|;
