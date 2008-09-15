@@ -2481,6 +2481,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
