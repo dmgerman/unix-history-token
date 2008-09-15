@@ -322,6 +322,12 @@ name|dtrace_trap_func
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|dtrace_doubletrap_func_t
+name|dtrace_doubletrap_func
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This is a hook which is initialised by the systrace module  * when it is loaded. This keeps the DTrace syscall provider  * implementation opaque.   */
 end_comment
@@ -2673,6 +2679,23 @@ modifier|*
 name|frame
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+if|if
+condition|(
+name|dtrace_doubletrap_func
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|dtrace_doubletrap_func
+call|)
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\nFatal double fault\n"
