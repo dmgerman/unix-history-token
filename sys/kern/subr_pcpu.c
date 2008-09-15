@@ -539,9 +539,9 @@ block|}
 end_block
 
 begin_macro
-name|DB_SHOW_COMMAND
+name|DB_SHOW_ALL_COMMAND
 argument_list|(
-argument|allpcpu
+argument|pcpu
 argument_list|,
 argument|db_show_cpu_all
 argument_list|)
@@ -609,6 +609,16 @@ block|}
 block|}
 block|}
 end_block
+
+begin_expr_stmt
+name|DB_SHOW_ALIAS
+argument_list|(
+name|allpcpu
+argument_list|,
+name|db_show_cpu_all
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -48,6 +48,26 @@ begin_comment
 comment|/* type definitions */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_comment
+comment|/* LIST_* */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_comment
+comment|/* SYSINIT */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -196,6 +216,54 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * There are three "command tables":  * - One for simple commands; a list of these is displayed  *   by typing 'help' at the debugger prompt.  * - One for sub-commands of 'show'; to see this type 'show'  *   without any arguments.  * - The last one for sub-commands of 'show all'; type 'show all'  *   without any argument to get a list.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|command
+struct_decl|;
+end_struct_decl
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|command_table
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|command_table
+name|db_cmd_table
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|command_table
+name|db_show_table
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|command_table
+name|db_show_all_table
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Type signature for a function implementing a ddb command.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|void
@@ -217,6 +285,133 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/*  * Command table entry.  */
+end_comment
+
+begin_struct
+struct|struct
+name|command
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* command name */
+name|db_cmdfcn_t
+modifier|*
+name|fcn
+decl_stmt|;
+comment|/* function to call */
+name|int
+name|flag
+decl_stmt|;
+comment|/* extra info: */
+define|#
+directive|define
+name|CS_OWN
+value|0x1
+comment|/* non-standard syntax */
+define|#
+directive|define
+name|CS_MORE
+value|0x2
+comment|/* standard syntax, but may have other words 				 * at end */
+define|#
+directive|define
+name|CS_SET_DOT
+value|0x100
+comment|/* set dot after command */
+name|struct
+name|command_table
+modifier|*
+name|more
+decl_stmt|;
+comment|/* another level of command */
+name|LIST_ENTRY
+argument_list|(
+argument|command
+argument_list|)
+name|next
+expr_stmt|;
+comment|/* next entry in the command table */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Arrange for the specified ddb command to be defined and  * bound to the specified function.  Commands can be defined  * in modules in which case they will be available only when  * the module is loaded.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_DB_SET
+parameter_list|(
+name|_suffix
+parameter_list|,
+name|_name
+parameter_list|,
+name|_func
+parameter_list|,
+name|list
+parameter_list|,
+name|_flag
+parameter_list|,
+name|_more
+parameter_list|)
+define|\
+value|static struct command __CONCAT(_name,_suffix) = {		\ 	.name	= __STRING(_name),				\ 	.fcn	= _func,					\ 	.flag	= _flag,					\ 	.more	= _more						\ };								\ static void __CONCAT(__CONCAT(_name,_suffix),_add)(void *arg __unused) \     { db_command_register(&list,&__CONCAT(_name,_suffix)); }	\ SYSINIT(__CONCAT(_name,_suffix), SI_SUB_KLD, SI_ORDER_ANY,	\     __CONCAT(__CONCAT(_name,_suffix),_add), NULL);		\ static void __CONCAT(__CONCAT(_name,_suffix),_del)(void *arg __unused) \     { db_command_unregister(&list,&__CONCAT(_name,_suffix)); }	\ SYSUNINIT(__CONCAT(_name,_suffix), SI_SUB_KLD, SI_ORDER_ANY,	\     __CONCAT(__CONCAT(_name,_suffix),_del), NULL);
+end_define
+
+begin_comment
+comment|/*  * Like _DB_SET but also create the function declaration which  * must be followed immediately by the body; e.g.  *   _DB_FUNC(_cmd, panic, db_panic, db_cmd_table, 0, NULL)  *   {  *	...panic implementation...  *   }  *  * This macro is mostly used to define commands placed in one of  * the ddb command tables; see DB_COMMAND, etc. below.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_DB_FUNC
+parameter_list|(
+name|_suffix
+parameter_list|,
+name|_name
+parameter_list|,
+name|_func
+parameter_list|,
+name|list
+parameter_list|,
+name|_flag
+parameter_list|,
+name|_more
+parameter_list|)
+define|\
+value|static db_cmdfcn_t _func;					\ _DB_SET(_suffix, _name, _func, list, _flag, _more);		\ static void							\ _func(db_expr_t addr, boolean_t have_addr, db_expr_t count, char *modif)
+end_define
+
+begin_comment
+comment|/* common idom provided for backwards compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_FUNC
+parameter_list|(
+name|_name
+parameter_list|,
+name|_func
+parameter_list|,
+name|list
+parameter_list|,
+name|_flag
+parameter_list|,
+name|_more
+parameter_list|)
+define|\
+value|_DB_FUNC(_cmd, _name, _func, list, _flag, _more)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -227,7 +422,20 @@ parameter_list|,
 name|func_name
 parameter_list|)
 define|\
-value|DB_FUNC(cmd_name, func_name, db_cmd_set, 0, NULL)
+value|_DB_FUNC(_cmd, cmd_name, func_name, db_cmd_table, 0, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DB_ALIAS
+parameter_list|(
+name|alias_name
+parameter_list|,
+name|func_name
+parameter_list|)
+define|\
+value|_DB_SET(_cmd, alias_name, func_name, db_cmd_table, 0, NULL)
 end_define
 
 begin_define
@@ -240,7 +448,20 @@ parameter_list|,
 name|func_name
 parameter_list|)
 define|\
-value|DB_FUNC(cmd_name, func_name, db_show_cmd_set, 0, NULL)
+value|_DB_FUNC(_show, cmd_name, func_name, db_show_table, 0, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DB_SHOW_ALIAS
+parameter_list|(
+name|alias_name
+parameter_list|,
+name|func_name
+parameter_list|)
+define|\
+value|_DB_SET(_show, alias_name, func_name, db_show_table, 0, NULL)
 end_define
 
 begin_define
@@ -253,45 +474,20 @@ parameter_list|,
 name|func_name
 parameter_list|)
 define|\
-value|DB_FUNC(cmd_name, func_name, db_show_all_cmd_set, 0, NULL)
+value|_DB_FUNC(_show_all, cmd_name, func_name, db_show_all_table, 0, NULL)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DB_SET
+name|DB_SHOW_ALL_ALIAS
 parameter_list|(
-name|cmd_name
+name|alias_name
 parameter_list|,
 name|func_name
-parameter_list|,
-name|set
-parameter_list|,
-name|flag
-parameter_list|,
-name|more
 parameter_list|)
 define|\
-value|static const struct command __CONCAT(cmd_name,_cmd) = {		\ 	__STRING(cmd_name),					\ 	func_name,						\ 	flag,							\ 	more							\ };								\ TEXT_SET(set, __CONCAT(cmd_name,_cmd))
-end_define
-
-begin_define
-define|#
-directive|define
-name|DB_FUNC
-parameter_list|(
-name|cmd_name
-parameter_list|,
-name|func_name
-parameter_list|,
-name|set
-parameter_list|,
-name|flag
-parameter_list|,
-name|more
-parameter_list|)
-define|\
-value|static db_cmdfcn_t	func_name;				\ 								\ DB_SET(cmd_name, func_name, set, flag, more);			\ 								\ static void							\ func_name(addr, have_addr, count, modif)			\ 	db_expr_t addr;						\ 	boolean_t have_addr;					\ 	db_expr_t count;					\ 	char *modif;
+value|_DB_SET(_show_all, alias_name, func_name, db_show_all_table, 0, NULL)
 end_define
 
 begin_decl_stmt
@@ -755,6 +951,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|db_command_register
+parameter_list|(
+name|struct
+name|command_table
+modifier|*
+parameter_list|,
+name|struct
+name|command
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|db_command_unregister
+parameter_list|(
+name|struct
+name|command_table
+modifier|*
+parameter_list|,
+name|struct
+name|command
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|db_cmdfcn_t
 name|db_breakpoint_cmd
@@ -910,84 +1136,6 @@ name|db_cmdfcn_t
 name|db_write_cmd
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Command table.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|command
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|command_table
-block|{
-name|struct
-name|command
-modifier|*
-name|table
-decl_stmt|;
-name|struct
-name|command
-modifier|*
-modifier|*
-name|aux_tablep
-decl_stmt|;
-name|struct
-name|command
-modifier|*
-modifier|*
-name|aux_tablep_end
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|command
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* command name */
-name|db_cmdfcn_t
-modifier|*
-name|fcn
-decl_stmt|;
-comment|/* function to call */
-name|int
-name|flag
-decl_stmt|;
-comment|/* extra info: */
-define|#
-directive|define
-name|CS_OWN
-value|0x1
-comment|/* non-standard syntax */
-define|#
-directive|define
-name|CS_MORE
-value|0x2
-comment|/* standard syntax, but may have other words 				 * at end */
-define|#
-directive|define
-name|CS_SET_DOT
-value|0x100
-comment|/* set dot after command */
-name|struct
-name|command_table
-modifier|*
-name|more
-decl_stmt|;
-comment|/* another level of command */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Interface between DDB and the DDB output capture facility.  */

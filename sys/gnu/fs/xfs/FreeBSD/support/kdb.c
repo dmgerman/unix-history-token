@@ -65,7 +65,7 @@ argument|xfs
 argument_list|,
 argument|xfs_ddb_cmd
 argument_list|,
-argument|db_cmd_set
+argument|db_cmd_table
 argument_list|,
 argument|CS_MORE
 argument_list|,

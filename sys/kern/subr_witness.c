@@ -10707,9 +10707,9 @@ block|}
 end_block
 
 begin_macro
-name|DB_SHOW_COMMAND
+name|DB_SHOW_ALL_COMMAND
 argument_list|(
-argument|alllocks
+argument|locks
 argument_list|,
 argument|db_witness_list_all
 argument_list|)
@@ -10786,6 +10786,15 @@ block|}
 block|}
 block|}
 end_block
+
+begin_macro
+name|DB_SHOW_ALIAS
+argument_list|(
+argument|alllocks
+argument_list|,
+argument|db_witness_list_all
+argument_list|)
+end_macro
 
 begin_macro
 name|DB_SHOW_COMMAND

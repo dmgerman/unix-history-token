@@ -4896,17 +4896,11 @@ comment|/* Alias 'show sleepqueue' to 'show sleepq'. */
 end_comment
 
 begin_expr_stmt
-name|DB_SET
+name|DB_SHOW_ALIAS
 argument_list|(
 name|sleepqueue
 argument_list|,
 name|db_show_sleepqueue
-argument_list|,
-name|db_show_cmd_set
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

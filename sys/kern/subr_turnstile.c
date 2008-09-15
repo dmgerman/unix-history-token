@@ -4836,9 +4836,9 @@ block|}
 end_block
 
 begin_macro
-name|DB_SHOW_COMMAND
+name|DB_SHOW_ALL_COMMAND
 argument_list|(
-argument|allchains
+argument|chains
 argument_list|,
 argument|db_show_allchains
 argument_list|)
@@ -4916,6 +4916,15 @@ block|}
 block|}
 block|}
 end_block
+
+begin_macro
+name|DB_SHOW_ALIAS
+argument_list|(
+argument|allchains
+argument_list|,
+argument|db_show_allchains
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * Show all the threads a particular thread is waiting on based on  * sleepable locks.  */
