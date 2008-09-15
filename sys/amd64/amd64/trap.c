@@ -2226,6 +2226,13 @@ argument_list|(
 operator|&
 name|gdt
 index|[
+name|NGDT
+operator|*
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+operator|+
 name|IDXSEL
 argument_list|(
 name|frame
