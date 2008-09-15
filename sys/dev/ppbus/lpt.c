@@ -1270,7 +1270,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|int
-name|zero
+name|rid
 init|=
 literal|0
 decl_stmt|,
@@ -1283,9 +1283,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|intptr_t
-name|irq
 decl_stmt|;
 name|sc
 operator|->
@@ -1341,50 +1338,23 @@ name|sc_irq
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* retrieve the ppbus irq */
-name|BUS_READ_IVAR
-argument_list|(
-name|ppbus
-argument_list|,
-name|dev
-argument_list|,
-name|PPBUS_IVAR_IRQ
-argument_list|,
-operator|&
-name|irq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|irq
-operator|>
-literal|0
-condition|)
-block|{
 comment|/* declare our interrupt handler */
 name|sc
 operator|->
 name|intr_resource
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
 operator|&
-name|zero
-argument_list|,
-name|irq
-argument_list|,
-name|irq
-argument_list|,
-literal|1
+name|rid
 argument_list|,
 name|RF_SHAREABLE
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
@@ -1429,12 +1399,7 @@ block|}
 name|lprintf
 argument_list|(
 operator|(
-literal|"irq %x %x\n"
-operator|,
-operator|(
-name|int
-operator|)
-name|irq
+literal|"irq %x\n"
 operator|,
 name|sc
 operator|->

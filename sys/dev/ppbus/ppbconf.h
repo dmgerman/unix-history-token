@@ -709,13 +709,6 @@ name|PPBUS_IVAR_AVM
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|PPBUS_IVAR_IRQ
-value|2
-end_define
-
 begin_comment
 comment|/* other fields are reserved to the ppbus internals */
 end_comment
@@ -821,13 +814,6 @@ name|PPC_IVAR_EPP_PROTO
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|PPC_IVAR_IRQ
-value|1
-end_define
-
 begin_comment
 comment|/*  * Maximum size of the PnP info string  */
 end_comment
@@ -916,15 +902,6 @@ modifier|*
 name|ppb_owner
 decl_stmt|;
 comment|/* device which owns the bus */
-name|struct
-name|resource
-modifier|*
-name|irq_res
-decl_stmt|;
-name|void
-modifier|*
-name|intr_cookie
-decl_stmt|;
 block|}
 struct|;
 end_struct

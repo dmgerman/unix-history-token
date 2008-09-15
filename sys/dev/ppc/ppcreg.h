@@ -320,10 +320,14 @@ name|void
 modifier|*
 name|intr_cookie
 decl_stmt|;
-name|int
-name|ppc_registered
+name|struct
+name|intr_event
+modifier|*
+name|ppc_intr_event
 decl_stmt|;
-comment|/* 1 if ppcintr() is the registered interrupt */
+name|int
+name|ppc_child_handlers
+decl_stmt|;
 block|}
 struct|;
 end_struct

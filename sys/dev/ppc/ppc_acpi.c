@@ -201,7 +201,14 @@ name|DEVMETHOD
 argument_list|(
 name|bus_alloc_resource
 argument_list|,
-name|bus_generic_alloc_resource
+name|ppc_alloc_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_release_resource
+argument_list|,
+name|ppc_release_resource
 argument_list|)
 block|,
 comment|/* ppbus interface */
