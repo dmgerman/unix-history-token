@@ -6772,10 +6772,7 @@ name|NULL
 expr_stmt|;
 name|fibnum
 operator|=
-operator|(
-operator|*
 name|rt0
-operator|)
 operator|->
 name|rt_fibnum
 expr_stmt|;
