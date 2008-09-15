@@ -157,7 +157,7 @@ comment|/* Handler does not need Giant. */
 end_comment
 
 begin_comment
-comment|/*  * Describe an interrupt event.  An event holds a list of handlers.  * The 'pre_ithread', 'post_ithread', 'post_filter', and 'assign_cpu'  * hooks are used to invoke MD code for certain operations.  *  * The 'pre_ithread' hook is called when an interrupt thread for  * handlers without filters is scheduled.  It is responsible for  * ensuring that 1) the system won't be swamped with an interrupt  * storm from the associated source while the ithread runs and 2) the  * current CPU is able to receive interrupts from other interrupt  * sources.  The first is usually accomplished by disabling  * level-triggered interrupts until the ithread completes.  The second  * is accomplished on some platforms by acknowledging the interrupt  * via an EOI.  *  * The 'post_ithread' hook is invoked when an ithread finishes.  It is  * responsible for ensuring that the associated interrupt source will  * trigger an interrupt when it is asserted in the future.  Usually  * this is implemented by enabling a level-triggered interrupt that  * was previously disabled via the 'pre_ithread' hook.  *  * The 'post_filter' hook is invoked when a filter handles an  * interrupt.  It is responsible for ensuring that the current CPU is  * able to receive interrupts again.  On some platforms this is done  * by acknowledging the interrupts via an EOI.  *  * The 'assign_cpu' hook is used to bind an interrupt source to a  * specific CPU.  If the interrupt cannot be bound, this function may  * return an error.  */
+comment|/*  * Describe an interrupt event.  An event holds a list of handlers.  * The 'pre_ithread', 'post_ithread', 'post_filter', and 'assign_cpu'  * hooks are used to invoke MD code for certain operations.  *  * The 'pre_ithread' hook is called when an interrupt thread for  * handlers without filters is scheduled.  It is responsible for  * ensuring that 1) the system won't be swamped with an interrupt  * storm from the associated source while the ithread runs and 2) the  * current CPU is able to receive interrupts from other interrupt  * sources.  The first is usually accomplished by disabling  * level-triggered interrupts until the ithread completes.  The second  * is accomplished on some platforms by acknowledging the interrupt  * via an EOI.  *  * The 'post_ithread' hook is invoked when an ithread finishes.  It is  * responsible for ensuring that the associated interrupt source will  * trigger an interrupt when it is asserted in the future.  Usually  * this is implemented by enabling a level-triggered interrupt that  * was previously disabled via the 'pre_ithread' hook.  *  * The 'post_filter' hook is invoked when a filter handles an  * interrupt.  It is responsible for ensuring that the current CPU is  * able to receive interrupts again.  On some platforms this is done  * by acknowledging the interrupts via an EOI.  *  * The 'assign_cpu' hook is used to bind an interrupt source to a  * specific CPU.  If the interrupt cannot be bound, this function may  * return an error.  *  * Note that device drivers may also use interrupt events to manage  * multiplexing interrupt interrupt handler into handlers for child  * devices.  In that case, the above hooks are not used.  The device  * can create an event for its interrupt resource and register child  * event handlers with that event.  It can then use  * intr_event_execute_handlers() to execute non-filter handlers.  * Currently filter handlers are not supported by this, but that can  * be added by splitting out the filter loop from intr_event_handle()  * if desired.  */
 end_comment
 
 begin_struct
@@ -382,6 +382,12 @@ directive|define
 name|SWI_TQ_GIANT
 value|6
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 specifier|extern
@@ -645,6 +651,23 @@ begin_function_decl
 name|int
 name|intr_event_destroy
 parameter_list|(
+name|struct
+name|intr_event
+modifier|*
+name|ie
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|intr_event_execute_handlers
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|struct
 name|intr_event
 modifier|*
