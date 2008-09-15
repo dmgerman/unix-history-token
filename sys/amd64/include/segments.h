@@ -1068,7 +1068,7 @@ comment|/* TSS for entering kernel etc */
 end_comment
 
 begin_comment
-comment|/* slot 6 is second half of GPROC0_SEL */
+comment|/* slot 7 is second half of GPROC0_SEL */
 end_comment
 
 begin_define
