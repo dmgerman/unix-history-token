@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -63,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<sys/filedesc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
 end_include
 
 begin_include
@@ -139,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/namei.h>
 end_include
 
 begin_include
@@ -249,6 +243,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -15376,7 +15376,7 @@ literal|0
 end_if
 
 begin_comment
-unit|int freebsd32_xxx(struct thread *td, struct freebsd32_xxx_args *uap) { 	int error; 	struct yyy32 *p32, s32; 	struct yyy *p = NULL, s;  	if (uap->zzz) { 		error = copyin(uap->zzz,&s32, sizeof(s32)); 		if (error) 			return (error);
+unit|int freebsd32_xxx(struct thread *td, struct freebsd32_xxx_args *uap) { 	struct yyy32 *p32, s32; 	struct yyy *p = NULL, s; 	struct xxx_arg ap; 	int error;  	if (uap->zzz) { 		error = copyin(uap->zzz,&s32, sizeof(s32)); 		if (error) 			return (error);
 comment|/* translate in */
 end_comment
 
