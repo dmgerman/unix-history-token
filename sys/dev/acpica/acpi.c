@@ -7146,7 +7146,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|type
 decl_stmt|;
-comment|/*      * 1. I/O port and memory system resource holders      * 2. Embedded controllers (to handle early accesses)      * 3. PCI Link Devices      * ACPI_DEV_BASE_ORDER. Host-PCI bridges      * ACPI_DEV_BASE_ORDER + 10. CPUs      */
+comment|/*      * 1. I/O port and memory system resource holders      * 2. Embedded controllers (to handle early accesses)      * 3. PCI Link Devices      * 100000. CPUs      */
 name|AcpiGetType
 argument_list|(
 name|handle
@@ -7209,21 +7209,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|acpi_MatchHid
-argument_list|(
-name|handle
-argument_list|,
-literal|"PNP0A03"
-argument_list|)
-condition|)
-operator|*
-name|order
-operator|=
-name|ACPI_DEV_BASE_ORDER
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|type
 operator|==
 name|ACPI_TYPE_PROCESSOR
@@ -7231,9 +7216,7 @@ condition|)
 operator|*
 name|order
 operator|=
-name|ACPI_DEV_BASE_ORDER
-operator|+
-literal|10
+literal|100000
 expr_stmt|;
 block|}
 end_function
@@ -7419,7 +7402,7 @@ operator|!=
 name|NULL
 condition|)
 break|break;
-comment|/*  	     * Create a placeholder device for this node.  Sort the 	     * placeholder so that the probe/attach passes will run 	     * breadth-first.  Orders less than ACPI_DEV_BASE_ORDER 	     * are reserved for special objects (i.e., system 	     * resources).  Orders between ACPI_DEV_BASE_ORDER and 100 	     * are used for Host-PCI bridges (and effectively all 	     * their children) and CPUs.  Larger values are used for 	     * all other devices. 	     */
+comment|/*  	     * Create a placeholder device for this node.  Sort the 	     * placeholder so that the probe/attach passes will run 	     * breadth-first.  Orders less than ACPI_DEV_BASE_ORDER 	     * are reserved for special objects (i.e., system 	     * resources).  CPU devices have a very high order to 	     * ensure they are probed after other devices. 	     */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
