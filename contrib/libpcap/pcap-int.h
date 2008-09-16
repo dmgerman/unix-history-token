@@ -353,7 +353,7 @@ name|struct
 name|pcap_md
 name|md
 decl_stmt|;
-comment|/* 	 * Read buffer. 	 */
+comment|/* 	 * Read buffer -- for file descriptor read buffer model. 	 */
 name|int
 name|bufsize
 decl_stmt|;
@@ -367,6 +367,42 @@ name|bp
 decl_stmt|;
 name|int
 name|cc
+decl_stmt|;
+name|int
+name|to_ms
+decl_stmt|;
+comment|/* 	 * Zero-copy read buffer -- for zero-copy BPF.  'buffer' above will 	 * alternative between these two actual mmap'd buffers as required. 	 * As there is a header on the front size of the mmap'd buffer, only 	 * some of the buffer is exposed to libpcap as a whole via bufsize; 	 * zbufsize is the true size.  zbuffer tracks the current zbuf 	 * assocated with buffer so that it can be used to decide which the 	 * next buffer to read will be. 	 */
+name|u_char
+modifier|*
+name|zbuf1
+decl_stmt|,
+modifier|*
+name|zbuf2
+decl_stmt|,
+modifier|*
+name|zbuffer
+decl_stmt|;
+name|u_int
+name|zbufsize
+decl_stmt|;
+name|u_int
+name|timeout
+decl_stmt|;
+name|u_int
+name|zerocopy
+decl_stmt|;
+name|u_int
+name|interrupted
+decl_stmt|;
+name|struct
+name|timespec
+name|firstsel
+decl_stmt|;
+comment|/* 	 * If there's currently a buffer being actively processed, then it is 	 * referenced here; 'buffer' is also pointed at it, but offset by the 	 * size of the header. 	 */
+name|struct
+name|bpf_zbuf_header
+modifier|*
+name|bzh
 decl_stmt|;
 comment|/* 	 * Place holder for pcap_next(). 	 */
 name|u_char
