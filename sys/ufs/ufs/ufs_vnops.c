@@ -1440,11 +1440,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|vdropl
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -1454,7 +1449,7 @@ operator|&
 name|VI_DOOMED
 condition|)
 block|{
-name|VI_UNLOCK
+name|vdropl
 argument_list|(
 name|vp
 argument_list|)
@@ -1467,7 +1462,7 @@ goto|goto
 name|relock
 goto|;
 block|}
-name|VI_UNLOCK
+name|vdropl
 argument_list|(
 name|vp
 argument_list|)
