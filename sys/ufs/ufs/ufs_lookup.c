@@ -1307,12 +1307,6 @@ goto|goto
 name|searchloop
 goto|;
 block|}
-name|dp
-operator|->
-name|i_offset
-operator|=
-name|i_offset
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1675,12 +1669,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-name|dp
-operator|->
-name|i_offset
-operator|=
-name|i_offset
-expr_stmt|;
 comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 */
 if|if
 condition|(
@@ -1695,6 +1683,12 @@ name|ISLASTCN
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|LOCKPARENT
+condition|)
 name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vdp
@@ -1727,7 +1721,13 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Return pointer to current entry in dp->i_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in dp->i_count. 		 * Save directory inode pointer in ndp->ni_dvp for dirremove(). 		 */
+comment|/* 		 * Return pointer to current entry in dp->i_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in dp->i_count. 		 * Save directory inode pointer in ndp->ni_dvp for dirremove(). 		 * 		 * Technically we shouldn't be setting these in the 		 * WANTPARENT case (first lookup in rename()), but any 		 * lookups that will result in directory changes will 		 * overwrite these. 		 */
+name|dp
+operator|->
+name|i_offset
+operator|=
+name|i_offset
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1912,6 +1912,12 @@ name|error
 operator|)
 return|;
 comment|/* 		 * Careful about locking second inode. 		 * This can only occur if the target is ".". 		 */
+name|dp
+operator|->
+name|i_offset
+operator|=
+name|i_offset
+expr_stmt|;
 if|if
 condition|(
 name|dp
