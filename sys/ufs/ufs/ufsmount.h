@@ -403,6 +403,17 @@ name|inode
 modifier|*
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|um_rdonly
+function_decl|)
+parameter_list|(
+name|struct
+name|inode
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -513,6 +524,16 @@ parameter_list|,
 name|bb
 parameter_list|)
 value|((aa)->um_ifree(aa, bb))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFS_RDONLY
+parameter_list|(
+name|aa
+parameter_list|)
+value|((aa)->i_ump->um_rdonly(aa))
 end_define
 
 begin_define

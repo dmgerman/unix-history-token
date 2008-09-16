@@ -3718,6 +3718,12 @@ name|um_ifree
 operator|=
 name|ffs_ifree
 expr_stmt|;
+name|ump
+operator|->
+name|um_rdonly
+operator|=
+name|ffs_rdonly
+expr_stmt|;
 name|mtx_init
 argument_list|(
 name|UFS_MTX
