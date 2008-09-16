@@ -71,14 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20080913_0111"
-end_define
-
-begin_define
-define|#
-directive|define
-name|HDA_WIDGET_PARSER_REV
-value|2
+value|"20080916_0112"
 end_define
 
 begin_expr_stmt
@@ -97,6 +90,16 @@ parameter_list|(
 name|stmt
 parameter_list|)
 value|do {			\ 	if (bootverbose != 0 || snd_verbose> 3) {	\ 		stmt					\ 	}						\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_BOOTHVERBOSE
+parameter_list|(
+name|stmt
+parameter_list|)
+value|do {			\ 	if (snd_verbose> 3) {				\ 		stmt					\ 	}						\ } while(0)
 end_define
 
 begin_if
@@ -6854,7 +6857,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"    CORB size: %d\n"
@@ -7219,7 +7222,7 @@ goto|goto
 name|hdac_dma_alloc_fail
 goto|;
 block|}
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"%s: size=%ju -> roundsz=%ju\n"
@@ -8735,7 +8738,7 @@ argument_list|(
 name|subnode
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"\tstartnode=%d endnode=%d\n"
@@ -15744,7 +15747,7 @@ name|fmt
 decl_stmt|,
 name|dfmt
 decl_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(ch->pdevinfo->dev,
 literal|"PCMDIR_%s: Stream setup fmt=%08x speed=%d\n"
@@ -15988,7 +15991,7 @@ name|chn
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(ch->pdevinfo->dev,
 literal|"PCMDIR_%s: Stream setup nid=%d: "
@@ -18582,7 +18585,7 @@ name|HDA_AMP_VOL_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(pdevinfo->dev,
 literal|"Recsel (%s): nid %d source %d %s\n"
@@ -18626,7 +18629,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(pdevinfo->dev,
 literal|"Recsel (%s): nid %d source %d select\n"
@@ -19271,7 +19274,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"TCSEL: 0x%02d -> 0x%02d\n"
@@ -19588,7 +19591,7 @@ argument_list|)
 block|}
 endif|#
 directive|endif
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"DMA Coherency: %s / vendor=0x%04x\n"
@@ -19712,7 +19715,7 @@ goto|goto
 name|hdac_attach_fail
 goto|;
 comment|/* Quiesce everything */
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Reset controller...\n"
@@ -19942,11 +19945,10 @@ expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"         GPIO: 0x%08x\n"
-argument|, 		    devinfo->function.audio.gpio); 		device_printf(sc->dev,
-literal|"               NumGPIO=%d NumGPO=%d "
+literal|"GPIO: 0x%08x "
+literal|"NumGPIO=%d NumGPO=%d "
 literal|"NumGPI=%d GPIWake=%d GPIUnsol=%d\n"
-argument|, 		    HDA_PARAM_GPIO_COUNT_NUM_GPIO(devinfo->function.audio.gpio), 		    HDA_PARAM_GPIO_COUNT_NUM_GPO(devinfo->function.audio.gpio), 		    HDA_PARAM_GPIO_COUNT_NUM_GPI(devinfo->function.audio.gpio), 		    HDA_PARAM_GPIO_COUNT_GPI_WAKE(devinfo->function.audio.gpio), 		    HDA_PARAM_GPIO_COUNT_GPI_UNSOL(devinfo->function.audio.gpio));
+argument|, 		    devinfo->function.audio.gpio, 		    HDA_PARAM_GPIO_COUNT_NUM_GPIO(devinfo->function.audio.gpio), 		    HDA_PARAM_GPIO_COUNT_NUM_GPO(devinfo->function.audio.gpio), 		    HDA_PARAM_GPIO_COUNT_NUM_GPI(devinfo->function.audio.gpio), 		    HDA_PARAM_GPIO_COUNT_GPI_WAKE(devinfo->function.audio.gpio), 		    HDA_PARAM_GPIO_COUNT_GPI_UNSOL(devinfo->function.audio.gpio));
 argument_list|)
 empty_stmt|;
 name|res
@@ -21698,7 +21700,7 @@ block|}
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"%d associations found\n"
+literal|"%d associations found:\n"
 argument|, max); 		for (i =
 literal|0
 argument|; i< max; i++) { 			device_printf(sc->dev,
@@ -21718,7 +21720,7 @@ literal|16
 argument|; j++) { 				if (as[i].pins[j] ==
 literal|0
 argument|) 					continue; 				device_printf(sc->dev,
-literal|"  Pin nid=%d seq=%d\n"
+literal|" Pin nid=%d seq=%d\n"
 argument|, 				    as[i].pins[j], j); 			} 		}
 argument_list|)
 empty_stmt|;
@@ -22417,7 +22419,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|if (!only) { 			device_printf(devinfo->codec->sc->dev,
 literal|" %*stracing via nid %d\n"
@@ -22444,7 +22446,7 @@ operator|!=
 name|as
 condition|)
 block|{
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|if (!only) { 				device_printf(devinfo->codec->sc->dev,
 literal|" %*snid %d busy by association %d\n"
@@ -22477,7 +22479,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|if (!only) { 					device_printf(devinfo->codec->sc->dev,
 literal|" %*snid %d busy by seqmask %x\n"
@@ -22521,7 +22523,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" %*snid %d busy by seqmask %x\n"
@@ -22793,7 +22795,7 @@ name|seq
 operator|)
 expr_stmt|;
 block|}
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|if (!only) { 			device_printf(devinfo->codec->sc->dev,
 literal|" %*snid %d returned %d\n"
@@ -22897,7 +22899,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" %*stracing via nid %d\n"
@@ -22924,7 +22926,7 @@ operator|!=
 name|as
 condition|)
 block|{
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" %*snid %d busy by association %d\n"
@@ -23148,7 +23150,7 @@ name|seq
 operator|)
 expr_stmt|;
 block|}
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" %*snid %d returned %d\n"
@@ -23436,15 +23438,15 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Tracing pin %d with min nid %d"
 argument|, 			    ases[as].pins[i], min); 			if (hpredir>=
 literal|0
 argument|) 				printf(
-literal|" and hpredir %d\n"
-argument|, hpredir); 			else 				printf(
+literal|" and hpredir %d"
+argument|, hpredir); 			printf(
 literal|"\n"
 argument|);
 argument_list|)
@@ -23491,8 +23493,14 @@ name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Unable to trace pin %d seq %d with min "
-literal|"nid %d hpredir %d\n"
-argument|, 				    ases[as].pins[i], i, min, hpredir);
+literal|"nid %d"
+argument|, 				    ases[as].pins[i], i, min); 				if (hpredir>=
+literal|0
+argument|) 					printf(
+literal|" and hpredir %d"
+argument|, hpredir); 				printf(
+literal|"\n"
+argument|);
 argument_list|)
 empty_stmt|;
 return|return
@@ -23504,11 +23512,15 @@ block|}
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
-literal|" Pin %d traced to DAC %d%s\n"
-argument|, 			    ases[as].pins[i], res, 			    ases[as].fakeredir?
+literal|" Pin %d traced to DAC %d"
+argument|, 			    ases[as].pins[i], res); 			if (hpredir>=
+literal|0
+argument|) 				printf(
+literal|" and hpredir %d"
+argument|, hpredir); 			if (ases[as].fakeredir) 				printf(
 literal|" with fake redirection"
-argument|:
-literal|""
+argument|); 			printf(
+literal|"\n"
 argument|);
 argument_list|)
 empty_stmt|;
@@ -23745,7 +23757,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Tracing pin %d to ADC %d\n"
@@ -23785,7 +23797,7 @@ comment|/* If we failed - return to previous and redo it. */
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
-literal|" Unable to trace pin %d to ADC %d\n"
+literal|" Unable to trace pin %d to ADC %d, undo traces\n"
 argument|, 					    ases[as].pins[i], j);
 argument_list|)
 empty_stmt|;
@@ -23829,8 +23841,8 @@ block|}
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
-literal|" Traced to ADC %d\n"
-argument|, 				    j);
+literal|" Pin %d traced to ADC %d\n"
+argument|, 				    ases[as].pins[i], j);
 argument_list|)
 empty_stmt|;
 name|ases
@@ -23872,7 +23884,7 @@ end_comment
 
 begin_function
 specifier|static
-name|nid_t
+name|int
 name|hdac_audio_trace_to_out
 parameter_list|(
 name|struct
@@ -23955,7 +23967,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" %*stracing via nid %d\n"
@@ -24001,7 +24013,7 @@ operator|==
 name|HDA_CTL_OUT
 condition|)
 block|{
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" %*snid %d found output association %d\n"
@@ -24020,7 +24032,7 @@ return|;
 block|}
 else|else
 block|{
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" %*snid %d busy by input association %d\n"
@@ -24200,7 +24212,7 @@ operator|=
 operator|-
 literal|2
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" %*snid %d returned %d\n"
@@ -24432,13 +24444,15 @@ operator|!=
 name|HDA_PARAM_AUDIO_WIDGET_CAP_TYPE_BEEP_WIDGET
 condition|)
 continue|continue;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Tracing nid %d to out\n"
 argument|, 			    j);
 argument_list|)
 empty_stmt|;
+if|if
+condition|(
 name|hdac_audio_trace_to_out
 argument_list|(
 name|devinfo
@@ -24449,7 +24463,16 @@ name|nid
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+name|HDA_BOOTVERBOSE
+argument_list|(
+argument|device_printf(devinfo->codec->sc->dev,
+literal|" nid %d traced to out\n"
+argument|, 				    j);
+argument_list|)
+empty_stmt|;
+block|}
 name|w
 operator|->
 name|bindas
@@ -24953,7 +24976,7 @@ name|enable
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling nid %d due to it's"
@@ -25071,7 +25094,7 @@ name|enable
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling pin nid %d due"
@@ -25200,7 +25223,7 @@ name|done
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling ctl %d nid %d cnid %d due"
@@ -25316,7 +25339,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling nid %d connection %d due"
@@ -25397,7 +25420,7 @@ name|done
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling nid %d due to all it's"
@@ -25526,7 +25549,7 @@ name|done
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling nid %d due to all it's"
@@ -25648,7 +25671,7 @@ name|enable
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling unassociated nid %d.\n"
@@ -25767,7 +25790,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling connection to input pin "
@@ -25979,7 +26002,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling connection from output pin "
@@ -26230,7 +26253,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling unselected connection "
@@ -26424,7 +26447,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling crossassociatement connection "
@@ -26558,7 +26581,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling crossassociatement connection "
@@ -28327,13 +28350,6 @@ name|j
 decl_stmt|,
 name|res
 decl_stmt|;
-name|HDA_BOOTVERBOSE
-argument_list|(
-argument|device_printf(devinfo->codec->sc->dev,
-literal|"HWiP: HDA Widget Parser - Revision %d\n"
-argument|, 		    HDA_WIDGET_PARSER_REV);
-argument_list|)
-empty_stmt|;
 comment|/* Trace all associations in order of their numbers, */
 for|for
 control|(
@@ -31250,7 +31266,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"         Format:"
+literal|"                "
 argument_list|)
 expr_stmt|;
 if|if
@@ -31319,7 +31335,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"       PCM size:"
+literal|"                "
 argument_list|)
 expr_stmt|;
 if|if
@@ -31384,14 +31400,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"       PCM rate:"
+literal|" bits,"
 argument_list|)
 expr_stmt|;
 if|if
@@ -31521,7 +31530,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n"
+literal|" KHz\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -31546,8 +31555,6 @@ parameter_list|)
 block|{
 name|uint32_t
 name|pincap
-decl_stmt|,
-name|wcap
 decl_stmt|;
 name|pincap
 operator|=
@@ -31558,14 +31565,6 @@ operator|.
 name|pin
 operator|.
 name|cap
-expr_stmt|;
-name|wcap
-operator|=
-name|w
-operator|->
-name|param
-operator|.
-name|widget_cap
 expr_stmt|;
 name|device_printf
 argument_list|(
@@ -31762,18 +31761,6 @@ argument_list|(
 literal|" EAPD"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|HDA_PARAM_AUDIO_WIDGET_CAP_UNSOL_CAP
-argument_list|(
-name|wcap
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|" : UNSOL"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
@@ -31922,7 +31909,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"nid %d 0x%08x as %2d seq %2d %13s %5s "
+literal|" nid %d 0x%08x as %2d seq %2d %13s %5s "
 literal|"jack %2d loc %2d color %7s misc %d%s\n"
 argument_list|,
 name|w
@@ -32334,24 +32321,11 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"            nid: %d [%s]%s\n"
+literal|"            nid: %d%s\n"
 argument_list|,
 name|w
 operator|->
 name|nid
-argument_list|,
-name|HDA_PARAM_AUDIO_WIDGET_CAP_DIGITAL
-argument_list|(
-name|w
-operator|->
-name|param
-operator|.
-name|widget_cap
-argument_list|)
-condition|?
-literal|"DIGITAL"
-else|:
-literal|"ANALOG"
 argument_list|,
 operator|(
 name|w
@@ -32372,7 +32346,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"           name: %s\n"
+literal|"           Name: %s\n"
 argument_list|,
 name|w
 operator|->
@@ -32385,7 +32359,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"     widget_cap: 0x%08x\n"
+literal|"     Widget cap: 0x%08x\n"
 argument_list|,
 name|w
 operator|->
@@ -32394,19 +32368,154 @@ operator|.
 name|widget_cap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+operator|&
+literal|0x0ee1
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"    Parse flags: 0x%x\n"
-argument_list|,
-name|w
-operator|->
-name|pflags
+literal|"                "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|HDA_PARAM_AUDIO_WIDGET_CAP_LR_SWAP
+argument_list|(
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" LRSWAP"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HDA_PARAM_AUDIO_WIDGET_CAP_POWER_CTRL
+argument_list|(
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" PWR"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HDA_PARAM_AUDIO_WIDGET_CAP_DIGITAL
+argument_list|(
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" DIGITAL"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HDA_PARAM_AUDIO_WIDGET_CAP_UNSOL_CAP
+argument_list|(
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" UNSOL"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HDA_PARAM_AUDIO_WIDGET_CAP_PROC_WIDGET
+argument_list|(
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" PROC"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HDA_PARAM_AUDIO_WIDGET_CAP_STRIPE
+argument_list|(
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" STRIPE"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HDA_PARAM_AUDIO_WIDGET_CAP_STEREO
+argument_list|(
+name|w
+operator|->
+name|param
+operator|.
+name|widget_cap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" STEREO"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|w
+operator|->
+name|bindas
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -32424,6 +32533,22 @@ operator|->
 name|bindseqmask
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|w
+operator|->
+name|ossmask
+operator|!=
+literal|0
+operator|||
+name|w
+operator|->
+name|ossdev
+operator|>=
+literal|0
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -32472,6 +32597,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|w
@@ -32612,6 +32738,15 @@ argument_list|,
 literal|" Input"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|nconns
+operator|>
+literal|0
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -32625,14 +32760,6 @@ operator|->
 name|nconns
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|w
-operator|->
-name|nconns
-operator|>
-literal|0
-condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -32642,6 +32769,7 @@ argument_list|,
 literal|"          |\n"
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|j
@@ -36124,7 +36252,7 @@ operator|&
 name|quirks_off
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"HDA Config: on=0x%08x off=0x%08x\n"
@@ -36166,7 +36294,7 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Start the corb and rirb engines */
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Starting CORB Engine...\n"
@@ -36178,7 +36306,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Starting RIRB Engine...\n"
@@ -36190,7 +36318,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Enabling controller interrupt...\n"
@@ -36265,7 +36393,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Scanning HDA codecs ...\n"
@@ -36337,7 +36465,15 @@ name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"\n"
-argument|);
+argument|); 				device_printf(sc->dev,
+literal|"Processing %s FG cad=%d nid=%d...\n"
+argument|, 				    (devinfo->node_type == HDA_PARAM_FCT_GRP_TYPE_NODE_TYPE_AUDIO) ?
+literal|"audio"
+argument|: 				    (devinfo->node_type == HDA_PARAM_FCT_GRP_TYPE_NODE_TYPE_MODEM) ?
+literal|"modem"
+argument|:
+literal|"unknown"
+argument|, 				    devinfo->codec->cad, devinfo->nid);
 argument_list|)
 empty_stmt|;
 if|if
@@ -36349,12 +36485,11 @@ operator|!=
 name|HDA_PARAM_FCT_GRP_TYPE_NODE_TYPE_AUDIO
 condition|)
 block|{
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"Power down unsupported non-audio FG"
-literal|" cad=%d nid=%d to the D3 state...\n"
-argument|, 					    codec->cad, devinfo->nid);
+literal|"Powering down...\n"
+argument|);
 argument_list|)
 empty_stmt|;
 name|hdac_command
@@ -36381,11 +36516,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"Power up audio FG cad=%d nid=%d...\n"
-argument|, 				    devinfo->codec->cad, devinfo->nid);
+literal|"Powering up...\n"
+argument|);
 argument_list|)
 empty_stmt|;
 name|hdac_powerup
@@ -36393,7 +36528,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Parsing audio FG...\n"
@@ -36405,7 +36540,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Parsing Ctls...\n"
@@ -36417,7 +36552,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Parsing vendor patch...\n"
@@ -36450,7 +36585,7 @@ operator|&=
 operator|~
 name|quirks_off
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Disabling nonaudio...\n"
@@ -36462,7 +36597,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Disabling useless...\n"
@@ -36478,7 +36613,12 @@ name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Patched pins configuration:\n"
-argument|); 				hdac_dump_pin_configs(devinfo); 				device_printf(sc->dev,
+argument|); 				hdac_dump_pin_configs(devinfo);
+argument_list|)
+empty_stmt|;
+name|HDA_BOOTHVERBOSE
+argument_list|(
+argument|device_printf(sc->dev,
 literal|"Parsing pin associations...\n"
 argument|);
 argument_list|)
@@ -36488,7 +36628,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Building AFG tree...\n"
@@ -36500,7 +36640,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Disabling unassociated "
@@ -36513,7 +36653,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Disabling nonselected "
@@ -36526,7 +36666,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Disabling useless...\n"
@@ -36538,7 +36678,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Disabling "
@@ -36551,7 +36691,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Disabling useless...\n"
@@ -36563,7 +36703,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Binding associations to channels...\n"
@@ -36575,7 +36715,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Assigning names to signal sources...\n"
@@ -36587,7 +36727,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Assigning mixers to the tree...\n"
@@ -36599,7 +36739,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Preparing pin controls...\n"
@@ -36611,7 +36751,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"AFG commit...\n"
@@ -36623,7 +36763,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"Ctls commit...\n"
@@ -36635,7 +36775,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
 literal|"HP switch init...\n"
@@ -37155,9 +37295,7 @@ argument_list|(
 argument|if (devinfo->function.audio.quirks !=
 literal|0
 argument|) { 					device_printf(sc->dev,
-literal|"\n"
-argument|); 					device_printf(sc->dev,
-literal|"HDA config/quirks:"
+literal|"FG config/quirks:"
 argument|); 					for (i =
 literal|0
 argument|; i< HDAC_QUIRKS_TAB_LEN; i++) { 						if ((devinfo->function.audio.quirks& 						    hdac_quirks_tab[i].value) == 						    hdac_quirks_tab[i].value) 							printf(
@@ -37172,7 +37310,12 @@ argument|); 				device_printf(sc->dev,
 literal|"| DUMPING HDA NODES |\n"
 argument|); 				device_printf(sc->dev,
 literal|"+-------------------+\n"
-argument|); 				hdac_dump_nodes(devinfo);  				device_printf(sc->dev,
+argument|); 				hdac_dump_nodes(devinfo);
+argument_list|)
+empty_stmt|;
+name|HDA_BOOTHVERBOSE
+argument_list|(
+argument|device_printf(sc->dev,
 literal|"\n"
 argument|); 				device_printf(sc->dev,
 literal|"+------------------------+\n"
@@ -37416,7 +37559,7 @@ name|fg_index
 decl_stmt|,
 name|i
 decl_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Suspend...\n"
@@ -37435,7 +37578,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Stop streams...\n"
@@ -37554,7 +37697,7 @@ index|[
 name|fg_index
 index|]
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Power down FG"
@@ -37586,7 +37729,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Reset controller...\n"
@@ -37663,7 +37806,7 @@ operator|->
 name|poll_jack
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Suspend done\n"
@@ -37713,7 +37856,7 @@ name|fg_index
 decl_stmt|,
 name|i
 decl_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Resume...\n"
@@ -37733,7 +37876,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Quiesce everything */
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Reset controller...\n"
@@ -37759,7 +37902,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Start the corb and rirb engines */
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Starting CORB Engine...\n"
@@ -37771,7 +37914,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Starting RIRB Engine...\n"
@@ -37783,7 +37926,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Enabling controller interrupt...\n"
@@ -37923,7 +38066,7 @@ operator|!=
 name|HDA_PARAM_FCT_GRP_TYPE_NODE_TYPE_AUDIO
 condition|)
 block|{
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Power down unsupported non-audio FG"
@@ -37955,7 +38098,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Power up audio FG cad=%d nid=%d...\n"
@@ -37967,7 +38110,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"AFG commit...\n"
@@ -37979,7 +38122,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Ctls commit...\n"
@@ -37991,7 +38134,7 @@ argument_list|(
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"HP switch init...\n"
@@ -38045,7 +38188,7 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(pdevinfo->dev,
 literal|"OSS mixer reinitialization...\n"
@@ -38081,7 +38224,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Start streams...\n"
@@ -38150,7 +38293,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Resume done\n"
@@ -38703,7 +38846,7 @@ operator||
 name|SD_F_MPSAFE
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"OSS mixer initialization...\n"
@@ -38731,7 +38874,7 @@ argument_list|,
 literal|"Can't register mixer\n"
 argument_list|)
 expr_stmt|;
-name|HDA_BOOTVERBOSE
+name|HDA_BOOTHVERBOSE
 argument_list|(
 argument|device_printf(dev,
 literal|"Registering PCM channels...\n"
