@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sockopt.h>
 end_include
 
