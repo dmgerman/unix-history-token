@@ -321,7 +321,7 @@ name|pcpu
 operator|*
 name|ret
 block|;
-asm|__asm ("mfsprg %0, 0" : "=r"(ret));
+asm|__asm __volatile("mfsprg %0, 0" : "=r"(ret));
 return|return
 operator|(
 name|ret
