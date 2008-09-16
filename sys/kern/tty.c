@@ -3919,6 +3919,15 @@ modifier|*
 name|pg
 parameter_list|)
 block|{
+name|MPASS
+argument_list|(
+name|tp
+operator|->
+name|t_sessioncnt
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
 name|tty_lock_assert
 argument_list|(
 name|tp
@@ -3939,6 +3948,11 @@ operator|->
 name|t_pgrp
 operator|=
 name|NULL
+expr_stmt|;
+name|tty_unlock
+argument_list|(
+name|tp
+argument_list|)
 expr_stmt|;
 block|}
 end_function

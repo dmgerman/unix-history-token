@@ -2807,11 +2807,6 @@ argument_list|,
 name|pgrp
 argument_list|)
 expr_stmt|;
-name|tty_unlock
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 block|}
 name|mtx_destroy
 argument_list|(
