@@ -2764,11 +2764,6 @@ begin_function
 name|void
 name|pmap_cpu_bootstrap
 parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|trcp
-parameter_list|,
 name|int
 name|ap
 parameter_list|)
@@ -2779,24 +2774,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|trcp
-index|[
-literal|0
-index|]
-operator|=
-literal|0x1000
-expr_stmt|;
-name|trcp
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|uint32_t
-operator|)
-operator|&
-name|pmap_cpu_bootstrap
-expr_stmt|;
 if|if
 condition|(
 name|ap
@@ -2813,24 +2790,10 @@ name|isync
 argument_list|()
 expr_stmt|;
 block|}
-name|trcp
-index|[
-literal|0
-index|]
-operator|=
-literal|0x1001
-expr_stmt|;
 asm|__asm __volatile("mtdbatu 1,%0" :: "r"(battable[8].batu));
 asm|__asm __volatile("mtdbatl 1,%0" :: "r"(battable[8].batl));
 name|isync
 argument_list|()
-expr_stmt|;
-name|trcp
-index|[
-literal|0
-index|]
-operator|=
-literal|0x1002
 expr_stmt|;
 asm|__asm __volatile("mtibatu 1,%0" :: "r"(0));
 asm|__asm __volatile("mtdbatu 2,%0" :: "r"(0));
@@ -2839,13 +2802,6 @@ asm|__asm __volatile("mtdbatu 3,%0" :: "r"(0));
 asm|__asm __volatile("mtibatu 3,%0" :: "r"(0));
 name|isync
 argument_list|()
-expr_stmt|;
-name|trcp
-index|[
-literal|0
-index|]
-operator|=
-literal|0x1003
 expr_stmt|;
 for|for
 control|(
@@ -2869,23 +2825,9 @@ argument_list|,
 name|EMPTY_SEGMENT
 argument_list|)
 expr_stmt|;
-name|trcp
-index|[
-literal|0
-index|]
-operator|=
-literal|0x1004
-expr_stmt|;
 asm|__asm __volatile("mtsr %0,%1" :: "n"(KERNEL_SR), "r"(KERNEL_SEGMENT));
 asm|__asm __volatile("mtsr %0,%1" :: "n"(KERNEL2_SR), "r"(KERNEL2_SEGMENT));
 asm|__asm __volatile("sync");
-name|trcp
-index|[
-literal|0
-index|]
-operator|=
-literal|0x1005
-expr_stmt|;
 name|sdr
 operator|=
 operator|(
@@ -2903,29 +2845,8 @@ asm|__asm __volatile("mtsdr1 %0" :: "r"(sdr));
 name|isync
 argument_list|()
 expr_stmt|;
-name|trcp
-index|[
-literal|0
-index|]
-operator|=
-literal|0x1006
-expr_stmt|;
-name|trcp
-index|[
-literal|1
-index|]
-operator|=
-name|sdr
-expr_stmt|;
 name|tlbia
 argument_list|()
-expr_stmt|;
-name|trcp
-index|[
-literal|0
-index|]
-operator|=
-literal|0x1007
 expr_stmt|;
 block|}
 end_function
@@ -2962,12 +2883,6 @@ name|j
 decl_stmt|;
 name|int
 name|ofw_mappings
-decl_stmt|;
-name|uint32_t
-name|trace
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|vm_size_t
 name|size
@@ -4517,8 +4432,6 @@ end_expr_stmt
 begin_expr_stmt
 name|pmap_cpu_bootstrap
 argument_list|(
-name|trace
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;

@@ -142,30 +142,9 @@ begin_function
 name|void
 name|machdep_ap_bootstrap
 parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-name|trcp
+name|void
 parameter_list|)
 block|{
-name|trcp
-index|[
-literal|0
-index|]
-operator|=
-literal|0x3000
-expr_stmt|;
-name|trcp
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|uint32_t
-operator|)
-operator|&
-name|machdep_ap_bootstrap
-expr_stmt|;
 comment|// __asm __volatile("mtspr 1023,%0" :: "r"(PCPU_GET(cpuid)));
 asm|__asm __volatile("mfspr %0,1023" : "=r"(pcpup->pc_pir));
 name|pcpup

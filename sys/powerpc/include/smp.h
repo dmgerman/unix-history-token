@@ -167,10 +167,6 @@ begin_function_decl
 name|void
 name|pmap_cpu_bootstrap
 parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -180,9 +176,7 @@ begin_function_decl
 name|uint32_t
 name|cpudep_ap_bootstrap
 parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -191,9 +185,7 @@ begin_function_decl
 name|void
 name|machdep_ap_bootstrap
 parameter_list|(
-specifier|volatile
-name|uint32_t
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
