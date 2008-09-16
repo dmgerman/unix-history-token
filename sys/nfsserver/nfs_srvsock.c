@@ -336,11 +336,6 @@ modifier|*
 name|slp
 parameter_list|,
 name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
 name|mbuf
 modifier|*
 modifier|*

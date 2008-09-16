@@ -1768,11 +1768,6 @@ name|int
 modifier|*
 name|retdirattr_retp
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|int
 name|pubflag
 parameter_list|)
@@ -2457,7 +2452,7 @@ name|cnp
 operator|->
 name|cn_thread
 operator|=
-name|td
+name|curthread
 expr_stmt|;
 name|VREF
 argument_list|(
