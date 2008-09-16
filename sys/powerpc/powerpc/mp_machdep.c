@@ -131,6 +131,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
+specifier|static
+name|uint32_t
+name|ap_tbl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|mp_ipi_test
 init|=
@@ -145,8 +153,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// __asm __volatile("mtspr 1023,%0" :: "r"(PCPU_GET(cpuid)));
-asm|__asm __volatile("mfspr %0,1023" : "=r"(pcpup->pc_pir));
 name|pcpup
 operator|->
 name|pc_awake
@@ -160,6 +166,27 @@ operator|==
 literal|0
 condition|)
 empty_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_TBL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_TBU
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_TBL
+argument_list|,
+name|ap_tbl
+argument_list|)
+expr_stmt|;
 asm|__asm __volatile("mtdec %0" :: "r"(ap_decr));
 name|ap_awake
 operator|++
@@ -173,6 +200,15 @@ name|PCPU_GET
 argument_list|(
 name|idlethread
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|curpcb
+argument_list|,
+name|curthread
+operator|->
+name|td_pcb
 argument_list|)
 expr_stmt|;
 name|mtmsr
@@ -705,9 +741,38 @@ name|ap_awake
 operator|=
 literal|1
 expr_stmt|;
+asm|__asm __volatile("mftb %0" : "=r"(ap_tbl));
+name|ap_tbl
+operator|+=
+literal|10
+expr_stmt|;
 asm|__asm __volatile("mfdec %0" : "=r"(ap_decr));
 name|ap_state
 operator|++
+expr_stmt|;
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_TBL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_TBU
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_TBL
+argument_list|,
+name|ap_tbl
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
