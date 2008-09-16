@@ -694,7 +694,7 @@ name|WARN_ON
 parameter_list|(
 name|condition
 parameter_list|)
-value|do { \         if (__predict_false((condition)!=0)) { \                 log(LOG_WARNING, "BUG: warning at %s:%d/%s()\n", __FILE__, __LINE__, __FUNCTION__); \                 kdb_backtrace(); \         } \ } while (0)
+value|do { \        if (__predict_false((condition)!=0)) {  \                 log(LOG_WARNING, "BUG: warning at %s:%d/%s()\n", __FILE__, __LINE__, __FUNCTION__); \                 kdb_backtrace(); \         } \ } while (0)
 end_define
 
 begin_else
