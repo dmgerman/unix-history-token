@@ -243,40 +243,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TLBIE
-parameter_list|(
-name|va
-parameter_list|)
-value|__asm __volatile("tlbie %0" :: "r"(va))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TLBSYNC
-parameter_list|()
-value|__asm __volatile("tlbsync");
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYNC
-parameter_list|()
-value|__asm __volatile("sync");
-end_define
-
-begin_define
-define|#
-directive|define
-name|EIEIO
-parameter_list|()
-value|__asm __volatile("eieio");
-end_define
-
-begin_define
-define|#
-directive|define
 name|VSID_MAKE
 parameter_list|(
 name|sr
@@ -547,6 +513,18 @@ begin_decl_stmt
 name|struct
 name|mtx
 name|moea_table_mutex
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* tlbie instruction synchronization */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|tlbie_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -1082,16 +1060,6 @@ parameter_list|(
 name|mmu_t
 parameter_list|,
 name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|tlbia
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1876,6 +1844,73 @@ end_expr_stmt
 
 begin_function
 specifier|static
+name|void
+name|tlbie
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|)
+block|{
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbie_mtx
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("tlbie %0" :: "r"(va));
+asm|__asm __volatile("tlbsync");
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|tlbie_mtx
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|tlbia
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vm_offset_t
+name|va
+decl_stmt|;
+for|for
+control|(
+name|va
+operator|=
+literal|0
+init|;
+name|va
+operator|<
+literal|0x00040000
+condition|;
+name|va
+operator|+=
+literal|0x00001000
+control|)
+block|{
+asm|__asm __volatile("tlbie %0" :: "r"(va));
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
+block|}
+asm|__asm __volatile("tlbsync");
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|__inline
 name|int
 name|va_to_sr
@@ -2371,19 +2406,10 @@ operator|&=
 operator|~
 name|ptebit
 expr_stmt|;
-name|TLBIE
+name|tlbie
 argument_list|(
 name|va
 argument_list|)
-expr_stmt|;
-name|EIEIO
-argument_list|()
-expr_stmt|;
-name|TLBSYNC
-argument_list|()
-expr_stmt|;
-name|SYNC
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2428,7 +2454,7 @@ name|pvo_pt
 operator|->
 name|pte_lo
 expr_stmt|;
-name|EIEIO
+name|powerpc_sync
 argument_list|()
 expr_stmt|;
 name|pt
@@ -2439,7 +2465,7 @@ name|pvo_pt
 operator|->
 name|pte_hi
 expr_stmt|;
-name|SYNC
+name|powerpc_sync
 argument_list|()
 expr_stmt|;
 name|moea_pte_valid
@@ -2484,7 +2510,7 @@ operator|~
 name|PTE_VALID
 expr_stmt|;
 comment|/* 	 * Force the reg& chg bits back into the PTEs. 	 */
-name|SYNC
+name|powerpc_sync
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Invalidate the pte. 	 */
@@ -2495,22 +2521,10 @@ operator|&=
 operator|~
 name|PTE_VALID
 expr_stmt|;
-name|SYNC
-argument_list|()
-expr_stmt|;
-name|TLBIE
+name|tlbie
 argument_list|(
 name|va
 argument_list|)
-expr_stmt|;
-name|EIEIO
-argument_list|()
-expr_stmt|;
-name|TLBSYNC
-argument_list|()
-expr_stmt|;
-name|SYNC
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Save the reg& chg bits. 	 */
 name|moea_pte_synch
@@ -2779,6 +2793,9 @@ condition|(
 name|ap
 condition|)
 block|{
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
 asm|__asm __volatile("mtdbatu 0,%0" :: "r"(battable[0].batu));
 asm|__asm __volatile("mtdbatl 0,%0" :: "r"(battable[0].batl));
 name|isync
@@ -2827,7 +2844,9 @@ argument_list|)
 expr_stmt|;
 asm|__asm __volatile("mtsr %0,%1" :: "n"(KERNEL_SR), "r"(KERNEL_SEGMENT));
 asm|__asm __volatile("mtsr %0,%1" :: "n"(KERNEL2_SR), "r"(KERNEL2_SEGMENT));
-asm|__asm __volatile("sync");
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
 name|sdr
 operator|=
 operator|(
@@ -3832,6 +3851,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|mtx_init
+argument_list|(
+operator|&
+name|tlbie_mtx
+argument_list|,
+literal|"tlbie"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* 	 * Initialise the unmanaged pvo pool. 	 */
 end_comment
@@ -4755,12 +4789,10 @@ operator|->
 name|pm_active
 operator|&=
 operator|~
-operator|(
 name|PCPU_GET
 argument_list|(
 name|cpumask
 argument_list|)
-operator|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
@@ -5385,13 +5417,8 @@ operator|)
 condition|)
 block|{
 name|pte_lo
-operator|&=
-operator|~
-operator|(
-name|PTE_I
-operator||
-name|PTE_G
-operator|)
+operator|=
+name|PTE_M
 expr_stmt|;
 break|break;
 block|}
@@ -6192,7 +6219,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|SYNC
+name|powerpc_sync
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -6499,13 +6526,8 @@ operator|)
 condition|)
 block|{
 name|pte_lo
-operator|&=
-operator|~
-operator|(
-name|PTE_I
-operator||
-name|PTE_G
-operator|)
+operator|=
+name|PTE_M
 expr_stmt|;
 break|break;
 block|}
@@ -8117,56 +8139,6 @@ name|pa
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|tlbia
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|caddr_t
-name|i
-decl_stmt|;
-name|SYNC
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-operator|(
-name|caddr_t
-operator|)
-literal|0x00040000
-condition|;
-name|i
-operator|+=
-literal|0x00001000
-control|)
-block|{
-name|TLBIE
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-name|EIEIO
-argument_list|()
-expr_stmt|;
-block|}
-name|TLBSYNC
-argument_list|()
-expr_stmt|;
-name|SYNC
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -9963,7 +9935,7 @@ return|;
 block|}
 block|}
 comment|/* 	 * No luck, now go through the hard part of looking at the PTEs 	 * themselves.  Sync so that any pending REF/CHG bits are flushed to 	 * the PTEs. 	 */
-name|SYNC
+name|powerpc_sync
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -10103,7 +10075,7 @@ name|ptebit
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Sync so that any pending REF/CHG bits are flushed to the PTEs (so 	 * we can reset the right ones).  note that since the pvo entries and 	 * list heads are accessed via BAT0 and are never placed in the page 	 * table, we don't have to worry about further accesses setting the 	 * REF/CHG bits. 	 */
-name|SYNC
+name|powerpc_sync
 argument_list|()
 expr_stmt|;
 comment|/* 	 * For each pvo entry, clear the pvo's ptebit.  If this pvo has a 	 * valid pte clear the ptebit from the valid pte. 	 */
@@ -10609,12 +10581,11 @@ argument_list|,
 name|ppa
 argument_list|)
 expr_stmt|;
-name|TLBIE
+name|tlbie
 argument_list|(
 name|tmpva
 argument_list|)
 expr_stmt|;
-comment|/* XXX or should it be invalidate-all ? */
 name|size
 operator|-=
 name|PAGE_SIZE
