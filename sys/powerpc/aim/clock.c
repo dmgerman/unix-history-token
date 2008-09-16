@@ -99,6 +99,12 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
 begin_comment
 comment|/*  * Initially we assume a processor with a bus frequency of 12.5 MHz.  */
 end_comment
@@ -207,14 +213,6 @@ argument_list|(
 name|tick
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|nticks
-operator|--
-operator|>
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|PCPU_GET
@@ -222,6 +220,14 @@ argument_list|(
 name|cpuid
 argument_list|)
 operator|==
+literal|0
+condition|)
+block|{
+while|while
+condition|(
+name|nticks
+operator|--
+operator|>
 literal|0
 condition|)
 name|hardclock
@@ -237,7 +243,16 @@ name|frame
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+while|while
+condition|(
+name|nticks
+operator|--
+operator|>
+literal|0
+condition|)
 name|hardclock_cpu
 argument_list|(
 name|TRAPF_USERMODE
@@ -491,9 +506,14 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
+name|register_t
+name|tb
+decl_stmt|;
+asm|__asm __volatile("mftb %0" : "=r"(tb));
 return|return
-name|mftb
-argument_list|()
+operator|(
+name|tb
+operator|)
 return|;
 block|}
 end_function
