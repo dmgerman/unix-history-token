@@ -698,12 +698,17 @@ name|pru_soreceive
 operator|=
 name|soreceive_dgram
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|udp6_usrreqs
 operator|.
 name|pru_soreceive
 operator|=
 name|soreceive_dgram
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|inp
 operator|=
