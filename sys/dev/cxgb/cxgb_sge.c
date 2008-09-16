@@ -6975,7 +6975,7 @@ name|PIO_LEN
 argument_list|)
 condition|)
 block|{
-comment|/* pkt not undersized but fits in PIO_LEN 			 * Indicates a TSO bug 			 * 			 */
+comment|/* pkt not undersized but fits in PIO_LEN 			 * Indicates a TSO bug at the higher levels. 			 * 			 */
 name|DPRINTF
 argument_list|(
 literal|"**5592 Fix** mbuf=%p,len=%d,tso_segsz=%d,csum_flags=%#x,flags=%#x"
