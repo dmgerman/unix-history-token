@@ -860,7 +860,7 @@ name|EV_ALIAS
 argument_list|(
 literal|"dc-misses"
 argument_list|,
-literal|"k7-dc-misses,mask=moesi"
+literal|"k7-dc-misses"
 argument_list|)
 block|,
 name|EV_ALIAS
