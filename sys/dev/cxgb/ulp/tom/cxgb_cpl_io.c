@@ -8030,16 +8030,10 @@ condition|(
 name|optval
 operator|>
 name|IPTOS_PREC_CRITIC_ECP
-operator|&&
-operator|!
-name|suser
-argument_list|(
-name|curthread
-argument_list|)
 condition|)
 return|return
 operator|(
-name|EPERM
+name|EINVAL
 operator|)
 return|;
 name|inp

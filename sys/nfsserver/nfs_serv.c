@@ -9260,9 +9260,11 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_MKNOD_DEV
 argument_list|,
 literal|0
 argument_list|)
@@ -10552,9 +10554,11 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_cred
+name|priv_check_cred
 argument_list|(
 name|cred
+argument_list|,
+name|PRIV_VFS_MKNOD_DEV
 argument_list|,
 literal|0
 argument_list|)

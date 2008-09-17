@@ -2584,37 +2584,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Continue to support external modules that rely on suser(9) -- for now.  */
-end_comment
-
-begin_function_decl
-name|int
-name|suser
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|suser_cred
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
