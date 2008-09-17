@@ -5304,7 +5304,7 @@ name|__P4SETMASK
 parameter_list|(
 name|M
 parameter_list|)
-value|do {				\ 	pmask = p4_mask_##M; 				\ } while (0)
+value|do {				\ 	pmask = p4_mask_##M;				\ } while (0)
 switch|switch
 condition|(
 name|pe
