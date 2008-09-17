@@ -141,13 +141,6 @@ directive|include
 file|<dev/sbni/if_sbnivar.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ASM_CRC
-value|1
-end_define
-
 begin_function_decl
 specifier|static
 name|void
@@ -5100,137 +5093,8 @@ begin_comment
 comment|/* -------------------------------------------------------------------------- */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ASM_CRC
-end_ifdef
-
 begin_function
 specifier|static
-name|u_int32_t
-name|calc_crc32
-parameter_list|(
-name|u_int32_t
-name|crc
-parameter_list|,
-name|caddr_t
-name|p
-parameter_list|,
-name|u_int
-name|len
-parameter_list|)
-block|{
-specifier|register
-name|u_int32_t
-name|_crc
-asm|__asm ("ax");
-name|_crc
-init|=
-name|crc
-decl_stmt|;
-asm|__asm __volatile (
-literal|"xorl	%%ebx, %%ebx\n"
-literal|"movl	%1, %%esi\n"
-literal|"movl	%2, %%ecx\n"
-literal|"movl	$crc32tab, %%edi\n"
-literal|"shrl	$2, %%ecx\n"
-literal|"jz	1f\n"
-literal|".align 4\n"
-literal|"0:\n"
-literal|"movb	%%al, %%bl\n"
-literal|"movl	(%%esi), %%edx\n"
-literal|"shrl	$8, %%eax\n"
-literal|"xorb	%%dl, %%bl\n"
-literal|"shrl	$8, %%edx\n"
-literal|"xorl	(%%edi,%%ebx,4), %%eax\n"
-literal|"movb	%%al, %%bl\n"
-literal|"shrl	$8, %%eax\n"
-literal|"xorb	%%dl, %%bl\n"
-literal|"shrl	$8, %%edx\n"
-literal|"xorl	(%%edi,%%ebx,4), %%eax\n"
-literal|"movb	%%al, %%bl\n"
-literal|"shrl	$8, %%eax\n"
-literal|"xorb	%%dl, %%bl\n"
-literal|"movb	%%dh, %%dl\n"
-literal|"xorl	(%%edi,%%ebx,4), %%eax\n"
-literal|"movb	%%al, %%bl\n"
-literal|"shrl	$8, %%eax\n"
-literal|"xorb	%%dl, %%bl\n"
-literal|"addl	$4, %%esi\n"
-literal|"xorl	(%%edi,%%ebx,4), %%eax\n"
-literal|"decl	%%ecx\n"
-literal|"jnz	0b\n"
-literal|"1:\n"
-literal|"movl	%2, %%ecx\n"
-literal|"andl	$3, %%ecx\n"
-literal|"jz	2f\n"
-literal|"movb	%%al, %%bl\n"
-literal|"shrl	$8, %%eax\n"
-literal|"xorb	(%%esi), %%bl\n"
-literal|"xorl	(%%edi,%%ebx,4), %%eax\n"
-literal|"decl	%%ecx\n"
-literal|"jz	2f\n"
-literal|"movb	%%al, %%bl\n"
-literal|"shrl	$8, %%eax\n"
-literal|"xorb	1(%%esi), %%bl\n"
-literal|"xorl	(%%edi,%%ebx,4), %%eax\n"
-literal|"decl	%%ecx\n"
-literal|"jz	2f\n"
-literal|"movb	%%al, %%bl\n"
-literal|"shrl	$8, %%eax\n"
-literal|"xorb	2(%%esi), %%bl\n"
-literal|"xorl	(%%edi,%%ebx,4), %%eax\n"
-literal|"2:\n"
-operator|:
-literal|"=a"
-operator|(
-name|_crc
-operator|)
-operator|:
-literal|"g"
-operator|(
-name|p
-operator|)
-operator|,
-literal|"g"
-operator|(
-name|len
-operator|)
-operator|:
-literal|"bx"
-operator|,
-literal|"cx"
-operator|,
-literal|"dx"
-operator|,
-literal|"si"
-operator|,
-literal|"di"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|_crc
-operator|)
-return|;
-end_return
-
-begin_else
-unit|}
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ASM_CRC */
-end_comment
-
-begin_function
-unit|static
 name|u_int32_t
 name|calc_crc32
 parameter_list|(
@@ -5267,15 +5131,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ASM_CRC */
-end_comment
 
 begin_decl_stmt
 specifier|static
