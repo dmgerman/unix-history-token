@@ -210,7 +210,6 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
-name|buf
 parameter_list|,
 name|size_t
 parameter_list|)
