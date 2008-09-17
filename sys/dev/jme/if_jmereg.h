@@ -40,8 +40,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEVICEREVID_JMC250
-value|0x10
+name|DEVICEREVID_JMC250_A0
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEREVID_JMC250_A2
+value|0x11
 end_define
 
 begin_comment
@@ -58,8 +65,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEVICEREVID_JMC260
-value|0x20
+name|DEVICEREVID_JMC260_A0
+value|0x00
 end_define
 
 begin_comment
