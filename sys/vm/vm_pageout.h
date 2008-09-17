@@ -139,6 +139,18 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
+name|boolean_t
+name|vm_pageout_fallback_object_lock
+parameter_list|(
+name|vm_page_t
+parameter_list|,
+name|vm_page_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vm_pageout_flush
 parameter_list|(
