@@ -2926,8 +2926,8 @@ literal|"\020"
 literal|"\001SSE3"
 comment|/* SSE3 */
 literal|"\002<b1>"
-literal|"\003RSVD2"
-comment|/* "Reserved" bit 2 */
+literal|"\003DTES64"
+comment|/* 64-bit Debug Trace */
 literal|"\004MON"
 comment|/* MONITOR/MWAIT Instructions */
 literal|"\005DS_CPL"
@@ -2956,11 +2956,12 @@ literal|"\021<b16>"
 literal|"\022<b17>"
 literal|"\023DCA"
 comment|/* Direct Cache Access */
-literal|"\024<b19>"
-literal|"\025<b20>"
-literal|"\026<b21>"
+literal|"\024SSE4.1"
+literal|"\025SSE4.2"
+literal|"\026x2APIC"
+comment|/* xAPIC Extensions */
 literal|"\027<b22>"
-literal|"\030<b23>"
+literal|"\030POPCNT"
 literal|"\031<b24>"
 literal|"\032<b25>"
 literal|"\033<b26>"
@@ -3040,8 +3041,8 @@ literal|"\031<s24>"
 comment|/* Same */
 literal|"\032FFXSR"
 comment|/* Fast FXSAVE/FXRSTOR */
-literal|"\033<b26>"
-comment|/* Undefined */
+literal|"\033Page1GB"
+comment|/* 1-GB large page support */
 literal|"\034RDTSCP"
 comment|/* RDTSCP */
 literal|"\035<b28>"

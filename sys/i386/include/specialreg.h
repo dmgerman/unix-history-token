@@ -518,6 +518,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_DTES64
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_MON
 value|0x00000008
 end_define
@@ -599,6 +606,34 @@ name|CPUID2_DCA
 value|0x00040000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPUID2_SSE41
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_SSE42
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_X2APIC
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_POPCNT
+value|0x00800000
+end_define
+
 begin_comment
 comment|/*  * Important bits in the AMD extended cpuid flags  */
 end_comment
@@ -636,6 +671,13 @@ define|#
 directive|define
 name|AMDID_FFXSR
 value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDID_PAGE1GB
+value|0x04000000
 end_define
 
 begin_define
