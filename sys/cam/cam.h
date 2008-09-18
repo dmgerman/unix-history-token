@@ -284,6 +284,9 @@ comment|/* The request was too large for this host */
 name|CAM_REQUEUE_REQ
 block|,
 comment|/* 				 * This request should be requeued to preserve 				 * transaction ordering.  This typically occurs 				 * when the SIM recognizes an error that should 				 * freeze the queue and must place additional 				 * requests for the target at the sim level 				 * back into the XPT queue. 				 */
+name|CAM_SCSI_IT_NEXUS_LOST
+block|,
+comment|/* Initiator/Target Nexus lost. */
 name|CAM_IDE
 init|=
 literal|0x33
