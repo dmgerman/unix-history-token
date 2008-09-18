@@ -5770,6 +5770,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* We need a Tx algorithm and at least one port */
 if|if
 condition|(
 name|sc
@@ -5777,6 +5778,10 @@ operator|->
 name|sc_proto
 operator|!=
 name|LAGG_PROTO_NONE
+operator|&&
+name|sc
+operator|->
+name|sc_count
 condition|)
 name|error
 operator|=
