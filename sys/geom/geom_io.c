@@ -2734,7 +2734,7 @@ argument_list|(
 name|KTR_GEOM
 argument_list|,
 literal|"g_up biodone bp %p provider %s off "
-literal|"%ld len %ld"
+literal|"%jd len %ld"
 argument_list|,
 name|bp
 argument_list|,
