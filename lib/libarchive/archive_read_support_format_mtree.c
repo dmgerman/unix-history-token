@@ -2099,7 +2099,7 @@ name|mtree
 operator|->
 name|archive_format
 operator|=
-name|ARCHIVE_FORMAT_MTREE_V1
+name|ARCHIVE_FORMAT_MTREE
 expr_stmt|;
 name|mtree
 operator|->

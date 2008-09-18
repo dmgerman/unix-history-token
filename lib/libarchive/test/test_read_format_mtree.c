@@ -147,7 +147,7 @@ argument_list|(
 name|a
 argument_list|)
 argument_list|,
-name|ARCHIVE_FORMAT_MTREE_V1
+name|ARCHIVE_FORMAT_MTREE
 argument_list|)
 expr_stmt|;
 name|assertEqualString
