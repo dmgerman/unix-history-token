@@ -511,7 +511,7 @@ parameter_list|(
 name|syscallname
 parameter_list|)
 define|\
-value|static struct sysent syscallname##_sysent = {           \     (sizeof(struct syscallname ## _args )               \      / sizeof(register_t)),                             \     (sy_call_t *)& syscallname,                         \     SYS_AUE_##syscallname                               \ }
+value|static struct sysent syscallname##_sysent = {			\ 	(sizeof(struct syscallname ## _args )			\ 	    / sizeof(register_t)),				\ 	(sy_call_t *)& syscallname,				\ 	SYS_AUE_##syscallname					\ }
 end_define
 
 begin_define
@@ -530,7 +530,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|static struct syscall_module_data name##_syscall_mod = {       \        evh, arg, offset, new_sysent, { 0, NULL, AUE_NULL }     \ };                                                             \                                                                \ static moduledata_t name##_mod = {                             \        #name,                                                  \        syscall_module_handler,                                 \&name##_syscall_mod                                     \ };                                                             \ DECLARE_MODULE(name, name##_mod, SI_SUB_SYSCALLS, SI_ORDER_MIDDLE)
+value|static struct syscall_module_data name##_syscall_mod = {	\ 	evh, arg, offset, new_sysent, { 0, NULL, AUE_NULL }	\ };								\ 								\ static moduledata_t name##_mod = {				\ 	#name,							\ 	syscall_module_handler,					\&name##_syscall_mod					\ };								\ DECLARE_MODULE(name, name##_mod, SI_SUB_SYSCALLS, SI_ORDER_MIDDLE)
 end_define
 
 begin_define
@@ -541,7 +541,7 @@ parameter_list|(
 name|syscallname
 parameter_list|)
 define|\
-value|static int syscallname##_syscall = SYS_##syscallname;   \ MAKE_SYSENT(syscallname);                               \ SYSCALL_MODULE(syscallname,                             \& syscallname##_syscall,& syscallname##_sysent,    \     NULL, NULL);
+value|static int syscallname##_syscall = SYS_##syscallname;		\ MAKE_SYSENT(syscallname);					\ SYSCALL_MODULE(syscallname,					\& syscallname##_syscall,& syscallname##_sysent,		\     NULL, NULL)
 end_define
 
 begin_define
@@ -552,7 +552,7 @@ parameter_list|(
 name|syscallname
 parameter_list|)
 define|\
-value|(sysent[SYS_##syscallname].sy_call !=		\ 			(sy_call_t *)lkmnosys&&	\ 	sysent[SYS_##syscallname].sy_call !=		\ 			(sy_call_t *)lkmressys)
+value|(sysent[SYS_##syscallname].sy_call != (sy_call_t *)lkmnosys&&	\ 	sysent[SYS_##syscallname].sy_call != (sy_call_t *)lkmressys)
 end_define
 
 begin_function_decl
