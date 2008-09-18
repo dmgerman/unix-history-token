@@ -16287,25 +16287,13 @@ operator|->
 name|bge_miibus
 argument_list|)
 expr_stmt|;
-comment|/* Don't mess with the PHY in IPMI/ASF mode */
+comment|/* 		 * Do not touch PHY if we have link up. This could break 		 * IPMI/ASF mode or produce extra input errors 		 * (extra errors was reported for bcm5701& bcm5704). 		 */
 if|if
 condition|(
 operator|!
-operator|(
-operator|(
-name|sc
-operator|->
-name|bge_asf_mode
-operator|&
-name|ASF_STACKUP
-operator|)
-operator|&&
-operator|(
 name|sc
 operator|->
 name|bge_link
-operator|)
-operator|)
 condition|)
 name|mii_tick
 argument_list|(
