@@ -1536,14 +1536,6 @@ begin_comment
 comment|/* Pri. error caused by PIO access */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CEAFSR_ERRMASK
-define|\
-value|(CEAFSR_P_PIO | CEAFSR_P_DRD | CEAFSR_P_DWR |			\ 	CEAFSR_S_PIO | CEAFSR_S_DRD | CEAFSR_S_DWR)
-end_define
-
 begin_comment
 comment|/* PCI asynchronous fault status register */
 end_comment
@@ -1668,14 +1660,6 @@ end_define
 begin_comment
 comment|/* UPA MID causing error transaction */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIAFSR_ERRMASK
-define|\
-value|(PCIAFSR_P_MA | PCIAFSR_P_TA | PCIAFSR_P_RTRY |	PCIAFSR_P_RERR |\ 	PCIAFSR_S_MA | PCIAFSR_S_TA | PCIAFSR_S_RTRY | PCIAFSR_S_RERR)
-end_define
 
 begin_comment
 comment|/* PCI diagnostic register */
