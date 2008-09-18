@@ -26,31 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syscall.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -62,11 +44,23 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
+file|<sys/syscall.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysproto.h>
 end_include
 
 begin_comment
-comment|/*  * Acts like "nosys" but can be identified in sysent for dynamic call   * number assignment for a limited number of calls.   *   * Place holder for system call slots reserved for loadable modules.  */
+comment|/*  * Acts like "nosys" but can be identified in sysent for dynamic call  * number assignment for a limited number of calls.  *  * Place holder for system call slots reserved for loadable modules.  */
 end_comment
 
 begin_function
@@ -144,6 +138,9 @@ modifier|*
 name|old_sysent
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -152,9 +149,6 @@ operator|==
 name|NO_SYSCALL
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -191,7 +185,9 @@ operator|==
 name|SYS_MAXSYSCALL
 condition|)
 return|return
+operator|(
 name|ENFILE
+operator|)
 return|;
 operator|*
 name|offset
@@ -213,7 +209,9 @@ operator|>=
 name|SYS_MAXSYSCALL
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 elseif|else
 if|if
@@ -247,7 +245,9 @@ operator|)
 name|lkmressys
 condition|)
 return|return
+operator|(
 name|EEXIST
+operator|)
 return|;
 operator|*
 name|old_sysent
@@ -268,7 +268,9 @@ operator|*
 name|new_sysent
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -302,7 +304,9 @@ operator|*
 name|old_sysent
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -329,11 +333,6 @@ name|syscall_module_data
 modifier|*
 name|data
 init|=
-operator|(
-expr|struct
-name|syscall_module_data
-operator|*
-operator|)
 name|arg
 decl_stmt|;
 name|modspecific_t
@@ -381,7 +380,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|ms
@@ -427,12 +428,14 @@ name|chainarg
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/*                 * MOD_LOAD failed, so just return without calling the                 * chained handler since we didn't pass along the MOD_LOAD                 * event.                 */
+comment|/* 		 * MOD_LOAD failed, so just return without calling the 		 * chained handler since we didn't pass along the MOD_LOAD 		 * event. 		 */
 if|if
 condition|(
 name|data
@@ -491,9 +494,11 @@ name|old_sysent
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
-default|default :
+default|default:
 return|return
 name|EOPNOTSUPP
 return|;
@@ -505,6 +510,7 @@ operator|->
 name|chainevh
 condition|)
 return|return
+operator|(
 name|data
 operator|->
 name|chainevh
@@ -517,10 +523,13 @@ name|data
 operator|->
 name|chainarg
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
