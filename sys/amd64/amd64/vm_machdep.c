@@ -1575,7 +1575,7 @@ literal|500000
 argument_list|)
 expr_stmt|;
 comment|/* wait 0.5 sec to see if that did it */
-comment|/* 	 * Attempt to force a reset via the Reset Control register at 	 * I/O port 0xcf9.  Bit 2 forces a system reset when it is 	 * written as 1.  Bit 1 selects the type of reset to attempt: 	 * 0 selects a "soft" reset, and 1 selects a "hard" reset.  We 	 * try to do a "soft" reset first, and then a "hard" reset. 	 */
+comment|/* 	 * Attempt to force a reset via the Reset Control register at 	 * I/O port 0xcf9.  Bit 2 forces a system reset when it 	 * transitions from 0 to 1.  Bit 1 selects the type of reset 	 * to attempt: 0 selects a "soft" reset, and 1 selects a 	 * "hard" reset.  We try a "hard" reset.  The first write sets 	 * bit 1 to select a "hard" reset and clears bit 2.  The 	 * second write forces a 0 -> 1 transition in bit 2 to trigger 	 * a reset. 	 */
 name|outb
 argument_list|(
 literal|0xcf9
