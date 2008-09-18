@@ -91,6 +91,13 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|__LA_INT64_T
+value|__int64
+end_define
+
+begin_define
+define|#
+directive|define
 name|__LA_SSIZE_T
 value|long
 end_define
@@ -123,6 +130,13 @@ end_include
 begin_comment
 comment|/* ssize_t, uid_t, and gid_t */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|__LA_INT64_T
+value|int64_t
+end_define
 
 begin_define
 define|#
@@ -976,7 +990,7 @@ parameter_list|)
 function_decl|;
 comment|/*  * Retrieve the byte offset in UNCOMPRESSED data where last-read  * header started.  */
 name|__LA_DECL
-name|int64_t
+name|__LA_INT64_T
 name|archive_read_header_position
 parameter_list|(
 name|struct
@@ -1820,7 +1834,7 @@ function_decl|;
 comment|/*  * Accessor functions to read/set various information in  * the struct archive object:  */
 comment|/* Bytes written after compression or read before decompression. */
 name|__LA_DECL
-name|int64_t
+name|__LA_INT64_T
 name|archive_position_compressed
 parameter_list|(
 name|struct
@@ -1830,7 +1844,7 @@ parameter_list|)
 function_decl|;
 comment|/* Bytes written to compressor or read from decompressor. */
 name|__LA_DECL
-name|int64_t
+name|__LA_INT64_T
 name|archive_position_uncompressed
 parameter_list|(
 name|struct

@@ -58,6 +58,13 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|__LA_INT64_T
+value|__int64
+end_define
+
+begin_define
+define|#
+directive|define
 name|__LA_UID_T
 value|unsigned int
 end_define
@@ -93,6 +100,13 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|__LA_INT64_T
+value|int64_t
+end_define
 
 begin_define
 define|#
@@ -641,7 +655,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|int64_t
+name|__LA_INT64_T
 name|archive_entry_size
 parameter_list|(
 name|struct
@@ -1176,7 +1190,7 @@ name|struct
 name|archive_entry
 modifier|*
 parameter_list|,
-name|int64_t
+name|__LA_INT64_T
 parameter_list|)
 function_decl|;
 name|__LA_DECL
