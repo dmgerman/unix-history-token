@@ -26,7 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fnv_hash.h>
 end_include
 
 begin_include
@@ -44,13 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -86,25 +86,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/filedesc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fnv_hash.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
