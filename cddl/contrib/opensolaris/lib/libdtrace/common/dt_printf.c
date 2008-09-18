@@ -1838,6 +1838,12 @@ name|defined
 argument_list|(
 name|__powerpc__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
 case|case
 expr|sizeof
 operator|(
