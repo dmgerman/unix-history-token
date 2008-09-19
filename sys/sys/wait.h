@@ -196,7 +196,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Option bits for the third argument of wait4.  WNOHANG causes the  * wait to not hang if there are no stopped or terminated processes, rather  * returning an error indication in this case (pid==0).  WUNTRACED  * indicates that the caller should receive status about untraced children  * which stop due to signals.  If children are stopped and a wait without  * this option is done, it is as though they were still running... nothing  * about them is returned.  */
+comment|/*  * Option bits for the third argument of wait4.  WNOHANG causes the  * wait to not hang if there are no stopped or terminated processes, rather  * returning an error indication in this case (pid==0).  WUNTRACED  * indicates that the caller should receive status about untraced children  * which stop due to signals.  If children are stopped and a wait without  * this option is done, it is as though they were still running... nothing  * about them is returned. WNOWAIT only request information about zombie,  * leaving the proc around, available for later waits.  */
 end_comment
 
 begin_define
@@ -224,12 +224,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WSTOPPED
+value|WUNTRACED
+end_define
+
+begin_comment
+comment|/* SUS compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WCONTINUED
 value|4
 end_define
 
 begin_comment
 comment|/* Report a job control continued process. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WNOWAIT
+value|8
+end_define
+
+begin_comment
+comment|/* Poll only. Don't delete the proc entry. */
 end_comment
 
 begin_if
