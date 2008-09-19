@@ -166,15 +166,7 @@ name|mips_mask_irq
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Unimplemented: %s\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
+block|{  }
 end_function
 
 begin_function
@@ -183,15 +175,7 @@ name|mips_unmask_irq
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Unimplemented: %s\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
+block|{  }
 end_function
 
 begin_function
@@ -303,7 +287,7 @@ name|irq
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|irq
 argument_list|,
 operator|(
 name|mask_fn
@@ -315,10 +299,7 @@ name|mask_fn
 operator|)
 name|mips_unmask_irq
 argument_list|,
-operator|(
-name|mask_fn
-operator|)
-name|mips_unmask_irq
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -530,7 +511,7 @@ name|irq
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|irq
 argument_list|,
 operator|(
 name|mask_fn
@@ -542,10 +523,7 @@ name|mask_fn
 operator|)
 name|mips_unmask_irq
 argument_list|,
-operator|(
-name|mask_fn
-operator|)
-name|mips_unmask_irq
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -621,11 +599,6 @@ name|tf
 parameter_list|)
 block|{
 name|struct
-name|intr_handler
-modifier|*
-name|ih
-decl_stmt|;
-name|struct
 name|intr_event
 modifier|*
 name|event
@@ -639,8 +612,6 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|intr
-decl_stmt|,
-name|thread
 decl_stmt|;
 name|critical_enter
 argument_list|()
@@ -778,59 +749,32 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Execute fast handlers. */
-name|thread
-operator|=
-literal|0
-expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|ih
-argument_list|,
-argument|&event->ie_handlers
-argument_list|,
-argument|ih_next
-argument_list|)
-block|{
 if|if
 condition|(
-name|ih
-operator|->
-name|ih_filter
-operator|==
-name|NULL
-condition|)
-name|thread
-operator|=
-literal|1
-expr_stmt|;
-else|else
-name|ih
-operator|->
-name|ih_filter
+name|intr_event_handle
 argument_list|(
-name|ih
-operator|->
-name|ih_argument
-condition|?
-name|ih
-operator|->
-name|ih_argument
-else|:
+name|event
+argument_list|,
 name|tf
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"stray %s interrupt %d\n"
+argument_list|,
+name|hard
+condition|?
+literal|"hard"
+else|:
+literal|"soft"
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Schedule thread if needed. */
-if|if
-condition|(
-name|thread
-condition|)
-name|intr_event_schedule_thread
-argument_list|(
-name|event
-argument_list|)
-expr_stmt|;
 block|}
 name|KASSERT
 argument_list|(
