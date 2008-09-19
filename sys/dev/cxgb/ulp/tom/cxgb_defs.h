@@ -102,6 +102,22 @@ name|listen_ctx
 struct_decl|;
 end_struct_decl
 
+begin_function_decl
+name|void
+name|cxgb_log_tcb
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|sc
+parameter_list|,
+name|unsigned
+name|int
+name|tid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_typedef
 typedef|typedef
 name|void

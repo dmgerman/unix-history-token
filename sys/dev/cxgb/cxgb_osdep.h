@@ -316,22 +316,6 @@ name|KTR_CXGB
 value|KTR_SPARE2
 end_define
 
-begin_function_decl
-name|void
-name|cxgb_log_tcb
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|sc
-parameter_list|,
-name|unsigned
-name|int
-name|tid
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
