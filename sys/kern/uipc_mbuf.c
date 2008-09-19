@@ -8584,23 +8584,7 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
-comment|/* 	 * The smallest unit returned by m_getm2() is a single mbuf 	 * with pkthdr.  We can't align past it.  Align align itself. 	 */
-if|if
-condition|(
-name|align
-condition|)
-name|align
-operator|&=
-operator|~
-operator|(
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
-operator|-
-literal|1
-operator|)
-expr_stmt|;
+comment|/* 	 * The smallest unit returned by m_getm2() is a single mbuf 	 * with pkthdr.  We can't align past it. 	 */
 if|if
 condition|(
 name|align
