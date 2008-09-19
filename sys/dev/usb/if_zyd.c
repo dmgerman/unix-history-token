@@ -1823,6 +1823,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|zyd_wakeup
+parameter_list|(
+name|struct
+name|zyd_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|int
@@ -2919,13 +2931,6 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* set a flag to indicate we're detaching.  */
-name|sc
-operator|->
-name|sc_flags
-operator||=
-name|ZYD_FLAG_DETACHING
-expr_stmt|;
 comment|/* protect a race when we have listeners related with the driver.  */
 name|ifp
 operator|->
@@ -2950,6 +2955,13 @@ name|ieee80211_ifdetach
 argument_list|(
 name|ic
 argument_list|)
+expr_stmt|;
+comment|/* set a flag to indicate we're detaching.  */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|ZYD_FLAG_DETACHING
 expr_stmt|;
 name|usb_rem_task
 argument_list|(
@@ -2981,6 +2993,11 @@ operator|&
 name|sc
 operator|->
 name|sc_watchdog_ch
+argument_list|)
+expr_stmt|;
+name|zyd_wakeup
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|zyd_close_pipes
@@ -4575,6 +4592,17 @@ decl_stmt|;
 name|usbd_status
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|ZYD_FLAG_DETACHING
+condition|)
+return|return
+name|ENXIO
+return|;
 if|if
 condition|(
 operator|(
@@ -15733,15 +15761,6 @@ name|ifp
 operator|->
 name|if_l2com
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|ZYD_FLAG_DETACHING
-condition|)
-return|return;
 name|ZYD_LOCK
 argument_list|(
 name|sc
@@ -15828,6 +15847,43 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|zyd_wakeup
+parameter_list|(
+name|struct
+name|zyd_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|rq
+modifier|*
+name|rqp
+decl_stmt|;
+name|STAILQ_FOREACH
+argument_list|(
+argument|rqp
+argument_list|,
+argument|&sc->sc_rqh
+argument_list|,
+argument|rq
+argument_list|)
+block|{
+name|wakeup
+argument_list|(
+name|rqp
+operator|->
+name|odata
+argument_list|)
+expr_stmt|;
+comment|/* wakeup sleeping caller */
+block|}
 block|}
 end_function
 
