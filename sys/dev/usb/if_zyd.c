@@ -4445,7 +4445,27 @@ argument_list|,
 operator|&
 name|sc
 operator|->
+name|sc_scantask
+argument_list|)
+expr_stmt|;
+name|usb_rem_task
+argument_list|(
+name|sc
+operator|->
+name|sc_udev
+argument_list|,
+operator|&
+name|sc
+operator|->
 name|sc_task
+argument_list|)
+expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_watchdog_ch
 argument_list|)
 expr_stmt|;
 comment|/* do it in a process context */
