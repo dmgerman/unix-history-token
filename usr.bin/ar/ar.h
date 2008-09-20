@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|BSDAR_VERSION
-value|"1.0.2"
+value|"1.1.0"
 end_define
 
 begin_comment
@@ -232,7 +232,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure encapsulates the "global" data for "ar" program.   */
+comment|/*  * Structure encapsulates the "global" data for "ar" program.  */
 end_comment
 
 begin_struct
@@ -245,6 +245,12 @@ modifier|*
 name|filename
 decl_stmt|;
 comment|/* archive name. */
+specifier|const
+name|char
+modifier|*
+name|addlib
+decl_stmt|;
+comment|/* target of ADDLIB. */
 specifier|const
 name|char
 modifier|*
@@ -471,6 +477,30 @@ name|struct
 name|bsdar
 modifier|*
 name|bsdar
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ar_mode_A
+parameter_list|(
+name|struct
+name|bsdar
+modifier|*
+name|bsdar
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ar_mode_script
+parameter_list|(
+name|struct
+name|bsdar
+modifier|*
+name|ar
 parameter_list|)
 function_decl|;
 end_function_decl
