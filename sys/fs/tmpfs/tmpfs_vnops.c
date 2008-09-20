@@ -1539,21 +1539,8 @@ name|vap
 operator|->
 name|va_filerev
 operator|=
-name|VNOVAL
-expr_stmt|;
-name|vap
-operator|->
-name|va_vaflags
-operator|=
 literal|0
 expr_stmt|;
-name|vap
-operator|->
-name|va_spare
-operator|=
-name|VNOVAL
-expr_stmt|;
-comment|/* XXX */
 return|return
 literal|0
 return|;

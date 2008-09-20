@@ -5539,12 +5539,6 @@ name|va_filerev
 operator|=
 literal|0
 expr_stmt|;
-name|vap
-operator|->
-name|va_vaflags
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 name|error
