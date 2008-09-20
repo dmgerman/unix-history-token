@@ -17509,8 +17509,6 @@ decl_stmt|;
 name|int
 name|ac
 decl_stmt|,
-name|i
-decl_stmt|,
 name|space
 decl_stmt|,
 name|lsnat
@@ -18549,8 +18547,6 @@ name|av
 decl_stmt|;
 name|int
 name|ac
-decl_stmt|,
-name|i
 decl_stmt|,
 name|space
 decl_stmt|;
@@ -19614,10 +19610,6 @@ modifier|*
 name|n
 decl_stmt|;
 comment|/* Nat instance configuration. */
-name|struct
-name|in_addr
-name|ip
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -30011,10 +30003,6 @@ modifier|*
 name|p
 decl_stmt|;
 name|char
-modifier|*
-modifier|*
-name|lav
-decl_stmt|,
 modifier|*
 name|endptr
 decl_stmt|;
