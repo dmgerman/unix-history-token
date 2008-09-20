@@ -3274,6 +3274,24 @@ operator|=
 operator|&
 name|vattr
 expr_stmt|;
+comment|/* 	 * Initialize defaults for new and unusual fields, so that file 	 * systems which don't support these fields don't need to know 	 * about them. 	 */
+name|vap
+operator|->
+name|va_birthtime
+operator|.
+name|tv_sec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|vap
+operator|->
+name|va_birthtime
+operator|.
+name|tv_nsec
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|VOP_GETATTR
