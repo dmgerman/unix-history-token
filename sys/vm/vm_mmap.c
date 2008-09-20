@@ -1389,6 +1389,12 @@ goto|goto
 name|done
 goto|;
 block|}
+name|td
+operator|->
+name|td_fpop
+operator|=
+name|fp
+expr_stmt|;
 name|error
 operator|=
 name|vm_mmap
@@ -1415,6 +1421,12 @@ name|handle
 argument_list|,
 name|pos
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_fpop
+operator|=
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
