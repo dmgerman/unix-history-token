@@ -639,7 +639,7 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
-name|ifc_simple_destroy
+name|if_clone_destroyif
 argument_list|(
 operator|&
 name|wlan_cloner

@@ -146,24 +146,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|if_clone_destroyif
-parameter_list|(
-name|struct
-name|if_clone
-modifier|*
-name|ifc
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -696,7 +678,6 @@ comment|/*  * Destroy a clone network interface.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|if_clone_destroyif
 parameter_list|(
