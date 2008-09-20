@@ -1363,11 +1363,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VATTR_NULL
-argument_list|(
-name|vap
-argument_list|)
-expr_stmt|;
 name|tmpfs_update
 argument_list|(
 name|vp

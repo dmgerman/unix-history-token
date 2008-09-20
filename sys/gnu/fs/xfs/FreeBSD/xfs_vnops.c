@@ -977,11 +977,6 @@ name|error
 decl_stmt|;
 comment|/* extract the xfs vnode from the private data */
 comment|//xfs_vnode_t	*xvp = (xfs_vnode_t *)vp->v_data;
-name|VATTR_NULL
-argument_list|(
-name|vap
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&

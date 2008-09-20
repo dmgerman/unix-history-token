@@ -5387,11 +5387,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|VATTR_NULL
-argument_list|(
-name|vap
-argument_list|)
-expr_stmt|;
 name|vap
 operator|->
 name|va_type
