@@ -29930,6 +29930,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|tbl
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|errx
