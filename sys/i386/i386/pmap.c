@@ -12548,7 +12548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Tries to promote the 512 or 1024, contiguous 4KB page mappings that are  * within a single page table page to a single 2- or 4MB page mapping.  For  * promotion to occur, two conditions must be met: (1) the 4KB page mappings  * must map aligned, contiguous physical memory and (2) the 4KB page mappings  * must have identical characteristics.   *  * Managed (PG_MANAGED) mappings within the kernel address space are not  * promoted.  The reason is that kernel PDEs are replicated in each pmap but  * pmap_clear_ptes() and pmap_ts_referenced() only read the PDE from the kernel  * pmap.  */
+comment|/*  * Tries to promote the 512 or 1024, contiguous 4KB page mappings that are  * within a single page table page (PTP) to a single 2- or 4MB page mapping.  * For promotion to occur, two conditions must be met: (1) the 4KB page  * mappings must map aligned, contiguous physical memory and (2) the 4KB page  * mappings must have identical characteristics.  *  * Managed (PG_MANAGED) mappings within the kernel address space are not  * promoted.  The reason is that kernel PDEs are replicated in each pmap but  * pmap_clear_ptes() and pmap_ts_referenced() only read the PDE from the kernel  * pmap.  */
 end_comment
 
 begin_function
@@ -12579,14 +12579,13 @@ name|firstpte
 decl_stmt|,
 name|oldpte
 decl_stmt|,
+name|pa
+decl_stmt|,
 modifier|*
 name|pte
 decl_stmt|;
 name|vm_offset_t
 name|oldpteva
-decl_stmt|;
-name|vm_paddr_t
-name|pa
 decl_stmt|;
 name|vm_page_t
 name|mpte
@@ -12598,6 +12597,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Examine the first PTE in the specified PTP.  Abort if this PTE is 	 * either invalid, unused, or does not map the first 4KB physical page 	 * within a 2- or 4MB page. 	 */
 name|firstpte
 operator|=
 name|vtopte
@@ -12608,6 +12608,8 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|setpde
+label|:
 name|newpde
 operator|=
 operator|*
@@ -12619,6 +12621,12 @@ operator|(
 name|newpde
 operator|&
 operator|(
+operator|(
+name|PG_FRAME
+operator|&
+name|PDRMASK
+operator|)
+operator||
 name|PG_A
 operator||
 name|PG_V
@@ -12696,35 +12704,74 @@ operator|)
 operator|==
 name|PG_RW
 condition|)
+block|{
+comment|/* 		 * When PG_M is already clear, PG_RW can be cleared without 		 * a TLB invalidation. 		 */
+if|if
+condition|(
+operator|!
+name|atomic_cmpset_int
+argument_list|(
+operator|(
+name|u_int
+operator|*
+operator|)
+name|firstpte
+argument_list|,
+name|newpde
+argument_list|,
+name|newpde
+operator|&
+operator|~
+name|PG_RW
+argument_list|)
+condition|)
+goto|goto
+name|setpde
+goto|;
 name|newpde
 operator|&=
 operator|~
 name|PG_RW
 expr_stmt|;
-comment|/*  	 * Check all the ptes before promotion 	 */
+block|}
+comment|/*  	 * Examine each of the other PTEs in the specified PTP.  Abort if this 	 * PTE maps an unexpected 4KB physical page or does not have identical 	 * characteristics to the first PTE. 	 */
 name|pa
 operator|=
+operator|(
 name|newpde
 operator|&
+operator|(
 name|PG_PS_FRAME
+operator||
+name|PG_A
+operator||
+name|PG_V
+operator|)
+operator|)
+operator|+
+name|NBPDR
+operator|-
+name|PAGE_SIZE
 expr_stmt|;
 for|for
 control|(
 name|pte
 operator|=
 name|firstpte
-init|;
-name|pte
-operator|<
-name|firstpte
 operator|+
 name|NPTEPG
+operator|-
+literal|1
+init|;
+name|pte
+operator|>
+name|firstpte
 condition|;
 name|pte
-operator|++
+operator|--
 control|)
 block|{
-name|retry
+name|setpte
 label|:
 name|oldpte
 operator|=
@@ -12736,7 +12783,13 @@ condition|(
 operator|(
 name|oldpte
 operator|&
+operator|(
 name|PG_FRAME
+operator||
+name|PG_A
+operator||
+name|PG_V
+operator|)
 operator|)
 operator|!=
 name|pa
@@ -12795,7 +12848,7 @@ name|PG_RW
 argument_list|)
 condition|)
 goto|goto
-name|retry
+name|setpte
 goto|;
 name|oldpte
 operator|&=
@@ -12865,7 +12918,7 @@ expr_stmt|;
 return|return;
 block|}
 name|pa
-operator|+=
+operator|-=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
