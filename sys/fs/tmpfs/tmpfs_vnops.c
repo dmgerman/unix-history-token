@@ -1522,7 +1522,7 @@ name|node
 operator|->
 name|tn_rdev
 else|:
-name|VNOVAL
+name|NODEV
 expr_stmt|;
 name|vap
 operator|->

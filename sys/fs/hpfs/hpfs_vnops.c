@@ -1983,9 +1983,8 @@ name|vap
 operator|->
 name|va_rdev
 operator|=
-literal|0
+name|NODEV
 expr_stmt|;
-comment|/* XXX UNODEV ? */
 name|vap
 operator|->
 name|va_size
