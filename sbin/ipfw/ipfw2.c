@@ -29719,6 +29719,14 @@ argument_list|,
 literal|"getsockopt(IP_FW_TABLE_GETSIZE)"
 argument_list|)
 expr_stmt|;
+comment|/* If a is zero we have nothing to do, the table is empty. */
+if|if
+condition|(
+name|a
+operator|==
+literal|0
+condition|)
+return|return;
 name|l
 operator|=
 sizeof|sizeof
