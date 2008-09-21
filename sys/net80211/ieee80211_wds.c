@@ -1817,10 +1817,10 @@ name|m
 operator|->
 name|m_flags
 operator|&
-name|M_AMPDU
+name|M_AMPDU_MPDU
 condition|)
 block|{
-comment|/* 		 * Fastpath for A-MPDU reorder q resubmission.  Frames 		 * w/ M_AMPDU marked have already passed through here 		 * but were received out of order and been held on the 		 * reorder queue.  When resubmitted they are marked 		 * with the M_AMPDU flag and we can bypass most of the 		 * normal processing. 		 */
+comment|/* 		 * Fastpath for A-MPDU reorder q resubmission.  Frames 		 * w/ M_AMPDU_MPDU marked have already passed through 		 * here but were received out of order and been held on 		 * the reorder queue.  When resubmitted they are marked 		 * with the M_AMPDU_MPDU flag and we can bypass most of 		 * the normal processing. 		 */
 name|wh
 operator|=
 name|mtod
@@ -2473,20 +2473,16 @@ name|ni
 operator|->
 name|ni_inact_reload
 expr_stmt|;
-comment|/* 		 * Handle A-MPDU re-ordering.  The station must be 		 * associated and negotiated HT.  The frame must be 		 * a QoS frame (not QoS null data) and not previously 		 * processed for A-MPDU re-ordering.  If the frame is 		 * to be processed directly then ieee80211_ampdu_reorder 		 * will return 0; otherwise it has consumed the mbuf 		 * and we should do nothing more with it. 		 */
+comment|/* 		 * Handle A-MPDU re-ordering.  If the frame is to be 		 * processed directly then ieee80211_ampdu_reorder 		 * will return 0; otherwise it has consumed the mbuf 		 * and we should do nothing more with it. 		 */
 if|if
 condition|(
 operator|(
-name|ni
+name|m
 operator|->
-name|ni_flags
+name|m_flags
 operator|&
-name|IEEE80211_NODE_HT
+name|M_AMPDU
 operator|)
-operator|&&
-name|subtype
-operator|==
-name|IEEE80211_FC0_SUBTYPE_QOS
 operator|&&
 name|ieee80211_ampdu_reorder
 argument_list|(

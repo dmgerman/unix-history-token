@@ -4249,13 +4249,12 @@ name|tap
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * Operational, mark frame for aggregation. 				 */
-name|qos
-index|[
-literal|0
-index|]
+comment|/* 				 * Operational, mark frame for aggregation. 				 * 				 * NB: We support only immediate BA's for 				 * AMPDU which means we set the QoS control 				 * field to "normal ack" (0) to get "implicit 				 * block ack" behaviour. 				 */
+name|m
+operator|->
+name|m_flags
 operator||=
-name|IEEE80211_QOS_ACKPOLICY_BA
+name|M_AMPDU_MPDU
 expr_stmt|;
 block|}
 elseif|else
@@ -4326,6 +4325,20 @@ index|]
 operator||=
 name|IEEE80211_FC0_SUBTYPE_QOS
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_AMPDU_MPDU
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * NB: don't assign a sequence # to potential 			 * aggregates; we expect this happens at the 			 * point the frame comes off any aggregation q 			 * as otherwise we may introduce holes in the 			 * BA sequence space and/or make window accouting 			 * more difficult. 			 * 			 * XXX may want to control this with a driver 			 * capability; this may also change when we pull 			 * aggregation up into net80211 			 */
 operator|*
 operator|(
 name|uint16_t
@@ -4347,6 +4360,15 @@ operator|<<
 name|IEEE80211_SEQ_SEQ_SHIFT
 argument_list|)
 expr_stmt|;
+name|ni
+operator|->
+name|ni_txseqs
+index|[
+name|tid
+index|]
+operator|++
+expr_stmt|;
+block|}
 name|ni
 operator|->
 name|ni_txseqs

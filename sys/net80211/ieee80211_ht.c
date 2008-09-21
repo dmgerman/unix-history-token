@@ -1588,7 +1588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dispatch a frame from the A-MPDU reorder queue.  The  * frame is fed back into ieee80211_input marked with an  * M_AMPDU flag so it doesn't come back to us (it also  * permits ieee80211_input to optimize re-processing).  */
+comment|/*  * Dispatch a frame from the A-MPDU reorder queue.  The  * frame is fed back into ieee80211_input marked with an  * M_AMPDU_MPDU flag so it doesn't come back to us (it also  * permits ieee80211_input to optimize re-processing).  */
 end_comment
 
 begin_function
@@ -1612,10 +1612,10 @@ name|m
 operator|->
 name|m_flags
 operator||=
-name|M_AMPDU
+name|M_AMPDU_MPDU
 expr_stmt|;
 comment|/* bypass normal processing */
-comment|/* NB: rssi, noise, and rstamp are ignored w/ M_AMPDU set */
+comment|/* NB: rssi, noise, and rstamp are ignored w/ M_AMPDU_MPDU set */
 operator|(
 name|void
 operator|)
@@ -2377,6 +2377,31 @@ name|off
 decl_stmt|;
 name|KASSERT
 argument_list|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_AMPDU
+operator||
+name|M_AMPDU_MPDU
+operator|)
+operator|)
+operator|==
+name|M_AMPDU
+argument_list|,
+operator|(
+literal|"!a-mpdu or already re-ordered, flags 0x%x"
+operator|,
+name|m
+operator|->
+name|m_flags
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|ni
 operator|->
 name|ni_flags
@@ -2400,22 +2425,23 @@ name|ieee80211_qosframe
 operator|*
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|wh
 operator|->
 name|i_fc
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 name|IEEE80211_FC0_QOSDATA
-argument_list|,
-operator|(
-literal|"not QoS data"
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|/* 		 * Not QoS data, shouldn't get here but just 		 * return it to the caller for processing. 		 */
+return|return
+name|PROCESS
+return|;
+block|}
 if|if
 condition|(
 operator|(

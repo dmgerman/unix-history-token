@@ -968,9 +968,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_AMPDU_MPDU
+value|M_PROTO8
+end_define
+
+begin_comment
+comment|/* ok for A-MPDU aggregation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_80211_TX
 define|\
-value|(M_LINK0|M_WDS|M_EAPOL|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB)
+value|(M_LINK0|M_WDS|M_EAPOL|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
 end_define
 
 begin_comment
@@ -985,7 +996,7 @@ value|M_PROTO1
 end_define
 
 begin_comment
-comment|/* A-MPDU processing done */
+comment|/* A-MPDU subframe */
 end_comment
 
 begin_define
@@ -999,11 +1010,33 @@ begin_comment
 comment|/* WEP done by hardware */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|M_AMPDU_MPDU
+value|M_PROTO8
+end_define
+
+begin_comment
+comment|/* A-MPDU re-order done */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|M_80211_RX
-value|(M_AMPDU|M_WEP)
+value|(M_AMPDU|M_WEP|M_AMPDU_MPDU)
 end_define
 
 begin_comment
