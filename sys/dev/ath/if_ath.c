@@ -13050,6 +13050,11 @@ name|ni
 operator|->
 name|ni_intval
 argument_list|,
+operator|(
+name|long
+name|long
+name|unsigned
+operator|)
 name|le64toh
 argument_list|(
 name|tsfadjust
