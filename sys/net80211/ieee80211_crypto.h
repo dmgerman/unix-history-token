@@ -129,38 +129,53 @@ decl_stmt|;
 define|#
 directive|define
 name|IEEE80211_KEY_XMIT
-value|0x01
+value|0x0001
 comment|/* key used for xmit */
 define|#
 directive|define
 name|IEEE80211_KEY_RECV
-value|0x02
+value|0x0002
 comment|/* key used for recv */
 define|#
 directive|define
 name|IEEE80211_KEY_GROUP
-value|0x04
+value|0x0004
 comment|/* key used for WPA group operation */
 define|#
 directive|define
 name|IEEE80211_KEY_SWENCRYPT
-value|0x10
+value|0x0010
 comment|/* host-based encrypt */
 define|#
 directive|define
 name|IEEE80211_KEY_SWDECRYPT
-value|0x20
+value|0x0020
 comment|/* host-based decrypt */
 define|#
 directive|define
 name|IEEE80211_KEY_SWENMIC
-value|0x40
+value|0x0040
 comment|/* host-based enmic */
 define|#
 directive|define
 name|IEEE80211_KEY_SWDEMIC
-value|0x80
+value|0x0080
 comment|/* host-based demic */
+define|#
+directive|define
+name|IEEE80211_KEY_DEVKEY
+value|0x0100
+comment|/* device key request completed */
+define|#
+directive|define
+name|IEEE80211_KEY_CIPHER0
+value|0x1000
+comment|/* cipher-specific action 0 */
+define|#
+directive|define
+name|IEEE80211_KEY_CIPHER1
+value|0x2000
+comment|/* cipher-specific action 1 */
 name|ieee80211_keyix
 name|wk_keyix
 decl_stmt|;

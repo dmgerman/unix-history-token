@@ -1570,7 +1570,6 @@ name|struct
 name|ieee80211vap
 modifier|*
 parameter_list|,
-specifier|const
 name|struct
 name|ieee80211_key
 modifier|*

@@ -3988,11 +3988,15 @@ name|wk_keylen
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|wk
 operator|->
-name|wk_keyix
+name|wk_flags
+operator|&
+name|IEEE80211_KEY_DEVKEY
+operator|)
 operator|==
-name|IEEE80211_KEYIX_NONE
+literal|0
 condition|)
 return|return;
 name|db_printf
