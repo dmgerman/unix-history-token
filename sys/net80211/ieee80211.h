@@ -891,14 +891,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_QOS_ESOP
+name|IEEE80211_QOS_EOSP
 value|0x10
 end_define
+
+begin_comment
+comment|/* EndOfService Period*/
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_QOS_ESOP_S
+name|IEEE80211_QOS_EOSP_S
 value|4
 end_define
 
@@ -2446,11 +2450,11 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_SMPS_OFF
-value|0x0000
+value|0x000c
 end_define
 
 begin_comment
-comment|/* none (static mode) */
+comment|/* disabled */
 end_comment
 
 begin_define
@@ -2472,11 +2476,11 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTCAP_SMPS_ENA
-value|0x000c
+value|0x0000
 end_define
 
 begin_comment
-comment|/* enabled */
+comment|/* enabled (static mode) */
 end_comment
 
 begin_define
