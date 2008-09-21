@@ -7060,9 +7060,7 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: enable AMPDU on %s, avgpps %d pkts %d"
-argument_list|,
-name|__func__
+literal|"enable AMPDU on %s, avgpps %d pkts %d"
 argument_list|,
 name|ieee80211_wme_acnames
 index|[
