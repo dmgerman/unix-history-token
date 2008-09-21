@@ -858,7 +858,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%s  token %u qbytes %d qframes %d seqstart %u start %u wnd %u\n"
+literal|"%s  token %u qbytes %d qframes %d start %u wnd %u\n"
 argument_list|,
 name|sep
 argument_list|,
@@ -873,10 +873,6 @@ argument_list|,
 name|tap
 operator|->
 name|txa_qframes
-argument_list|,
-name|tap
-operator|->
-name|txa_seqstart
 argument_list|,
 name|tap
 operator|->

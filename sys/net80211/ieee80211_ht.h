@@ -108,11 +108,13 @@ name|txa_qframes
 decl_stmt|;
 comment|/* data queued (frames) */
 name|ieee80211_seq
-name|txa_seqstart
-decl_stmt|;
-name|ieee80211_seq
 name|txa_start
 decl_stmt|;
+comment|/* BA window left edge */
+name|ieee80211_seq
+name|txa_seqpending
+decl_stmt|;
+comment|/* new txa_start pending BAR response */
 name|uint16_t
 name|txa_wnd
 decl_stmt|;

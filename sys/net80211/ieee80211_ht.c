@@ -5764,10 +5764,6 @@ name|tap
 operator|->
 name|txa_start
 operator|=
-name|tap
-operator|->
-name|txa_seqstart
-operator|=
 literal|0
 expr_stmt|;
 name|bufsiz
@@ -7168,6 +7164,26 @@ operator|->
 name|txa_ac
 argument_list|)
 expr_stmt|;
+name|tap
+operator|->
+name|txa_start
+operator|=
+name|ni
+operator|->
+name|ni_txseqs
+index|[
+name|tid
+index|]
+expr_stmt|;
+name|tid
+operator|=
+name|WME_AC_TO_TID
+argument_list|(
+name|tap
+operator|->
+name|txa_ac
+argument_list|)
+expr_stmt|;
 name|args
 index|[
 literal|0
@@ -7283,7 +7299,7 @@ operator|=
 name|dialogtoken
 expr_stmt|;
 comment|/* allocate token */
-comment|/* NB: after calling ic_addba_request so driver can set seqstart */
+comment|/* NB: after calling ic_addba_request so driver can set txa_start */
 name|args
 index|[
 literal|3
@@ -7293,7 +7309,7 @@ name|SM
 argument_list|(
 name|tap
 operator|->
-name|txa_seqstart
+name|txa_start
 argument_list|,
 name|IEEE80211_BASEQ_START
 argument_list|)
