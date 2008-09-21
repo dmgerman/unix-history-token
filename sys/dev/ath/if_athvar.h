@@ -2456,6 +2456,33 @@ define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_REG_DMN, 0, (_prd)) == HAL_OK)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setregdomain
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rd
+parameter_list|)
+define|\
+value|(*(uint16_t *)(((uint8_t *)&(_ah)[1]) + 176) = (_rd))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -2468,6 +2495,11 @@ parameter_list|)
 define|\
 value|(*(uint16_t *)(((uint8_t *)&(_ah)[1]) + 128) = (_rd))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
