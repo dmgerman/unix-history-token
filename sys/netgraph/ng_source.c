@@ -2321,11 +2321,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: can't find interface %d\n"
+literal|"%s: can't find interface %s\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|V_if_index
+name|ifname
 argument_list|)
 expr_stmt|;
 return|return
