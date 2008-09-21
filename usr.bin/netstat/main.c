@@ -105,11 +105,22 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETGRAPH
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netgraph/ng_socket.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1528,6 +1539,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETGRAPH
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|protox
@@ -1601,6 +1618,11 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2241,6 +2263,9 @@ name|af
 operator|=
 name|AF_APPLETALK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETGRAPH
 elseif|else
 if|if
 condition|(
@@ -2266,6 +2291,8 @@ name|af
 operator|=
 name|AF_NETGRAPH
 expr_stmt|;
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -3119,6 +3146,9 @@ operator|->
 name|pr_name
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETGRAPH
 if|if
 condition|(
 name|af
@@ -3151,6 +3181,9 @@ operator|->
 name|pr_name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETGRAPH */
 if|if
 condition|(
 operator|(
