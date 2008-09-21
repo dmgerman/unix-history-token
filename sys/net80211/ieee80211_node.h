@@ -382,6 +382,12 @@ name|uint16_t
 name|ni_vlan
 decl_stmt|;
 comment|/* vlan tag */
+specifier|const
+name|struct
+name|ieee80211_txparam
+modifier|*
+name|ni_txparms
+decl_stmt|;
 name|uint32_t
 name|ni_jointime
 decl_stmt|;
