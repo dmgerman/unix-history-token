@@ -8901,6 +8901,11 @@ block|}
 name|ieee80211_ht_node_init
 argument_list|(
 name|ni
+argument_list|)
+expr_stmt|;
+name|ieee80211_ht_updatehtcap
+argument_list|(
+name|ni
 argument_list|,
 name|htcap
 argument_list|)
