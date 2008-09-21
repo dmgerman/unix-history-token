@@ -10557,7 +10557,7 @@ case|:
 comment|/* 1 */
 name|ret
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 break|break;
 default|default:

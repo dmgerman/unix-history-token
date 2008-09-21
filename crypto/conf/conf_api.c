@@ -388,6 +388,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sk_CONF_VALUE_delete_ptr
 argument_list|(
 name|ts

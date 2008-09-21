@@ -112,11 +112,19 @@ directive|include
 file|<openssl/bio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|BN_LLONG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SIXTY_FOUR_BIT
+argument_list|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -208,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|LLONG
-value|_int64
+value|__int64
 end_define
 
 begin_else

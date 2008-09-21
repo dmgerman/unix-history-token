@@ -139,6 +139,9 @@ comment|/* Just set cmp function here. We don't sort because that 		 * would aff
 case|case
 name|ASN1_OP_D2I_POST
 case|:
+operator|(
+name|void
+operator|)
 name|sk_X509_REVOKED_set_cmp_func
 argument_list|(
 name|a

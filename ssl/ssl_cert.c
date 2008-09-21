@@ -2882,6 +2882,9 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_X509_NAME_set_cmp_func
 argument_list|(
 name|stack

@@ -4171,6 +4171,12 @@ name|fd
 decl_stmt|;
 name|BIGNUM
 name|v
+decl_stmt|,
+modifier|*
+name|pv
+init|=
+operator|&
+name|v
 decl_stmt|;
 name|BN_init
 argument_list|(
@@ -4183,8 +4189,7 @@ condition|(
 operator|!
 name|bn_wexpand
 argument_list|(
-operator|&
-name|v
+name|pv
 argument_list|,
 name|dsa
 operator|->

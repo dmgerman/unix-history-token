@@ -1228,6 +1228,9 @@ argument_list|(
 name|ptmp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_X509_VERIFY_PARAM_delete
 argument_list|(
 name|param_table

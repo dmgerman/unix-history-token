@@ -197,12 +197,6 @@ specifier|extern
 name|int
 name|OPENSSL_NONPIC_relocated
 decl_stmt|;
-name|int
-name|OPENSSL_isservice
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -2300,6 +2300,10 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|i
+operator|>=
+literal|14
+operator|&&
 operator|(
 name|v
 index|[
@@ -2689,6 +2693,10 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|i
+operator|>=
+literal|12
+operator|&&
 operator|(
 name|v
 index|[
@@ -2860,8 +2868,6 @@ name|obase
 expr_stmt|;
 name|b
 operator|=
-name|s
-operator|=
 name|X509_NAME_oneline
 argument_list|(
 name|name
@@ -2875,7 +2881,7 @@ if|if
 condition|(
 operator|!
 operator|*
-name|s
+name|b
 condition|)
 block|{
 name|OPENSSL_free
@@ -2888,7 +2894,10 @@ literal|1
 return|;
 block|}
 name|s
-operator|++
+operator|=
+name|b
+operator|+
+literal|1
 expr_stmt|;
 comment|/* skip the first slash */
 name|c
@@ -3068,12 +3077,12 @@ goto|goto
 name|err
 goto|;
 name|c
-operator|+=
-name|i
+operator|=
+name|s
+operator|+
+literal|1
 expr_stmt|;
-name|c
-operator|++
-expr_stmt|;
+comment|/* skip following slash */
 if|if
 condition|(
 operator|*

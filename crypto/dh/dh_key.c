@@ -477,7 +477,7 @@ name|prk
 argument_list|,
 name|priv_key
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 expr_stmt|;
 block|}
@@ -765,7 +765,7 @@ name|dh
 operator|->
 name|priv_key
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 expr_stmt|;
 block|}

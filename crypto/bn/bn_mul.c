@@ -1694,6 +1694,10 @@ begin_comment
 comment|/* r is 2*n2 words in size,  * a and b are both n2 words in size.  * n2 must be a power of 2.  * We multiply and return the result.  * t must be 2*n2 words in size  * We calculate  * a[0]*b[0]  * a[0]*b[0]+a[1]*b[1]+(a[0]-a[1])*(b[1]-b[0])  * a[1]*b[1]  */
 end_comment
 
+begin_comment
+comment|/* dnX may not be positive, but n2/2+dnX has to be */
+end_comment
+
 begin_function
 name|void
 name|bn_mul_recursive
@@ -1769,11 +1773,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" bn_mul_recursive %d * %d\n"
+literal|" bn_mul_recursive %d%+d * %d%+d\n"
 argument_list|,
 name|n2
 argument_list|,
+name|dna
+argument_list|,
 name|n2
+argument_list|,
+name|dnb
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2750,6 +2758,10 @@ begin_comment
 comment|/* n+tn is the word length  * t needs to be n*4 is size, as does r */
 end_comment
 
+begin_comment
+comment|/* tnX may not be negative but less than n */
+end_comment
+
 begin_function
 name|void
 name|bn_mul_part_recursive
@@ -2815,15 +2827,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" bn_mul_part_recursive (%d+%d) * (%d+%d)\n"
+literal|" bn_mul_part_recursive (%d%+d) * (%d%+d)\n"
+argument_list|,
+name|n
 argument_list|,
 name|tna
 argument_list|,
 name|n
 argument_list|,
 name|tnb
-argument_list|,
-name|n
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3595,12 +3607,13 @@ name|i
 operator|/=
 literal|2
 expr_stmt|;
+comment|/* these simplified conditions work 					 * exclusively because difference 					 * between tna and tnb is 1 or 0 */
 if|if
 condition|(
 name|i
 operator|<
 name|tna
-operator|&&
+operator|||
 name|i
 operator|<
 name|tnb
@@ -3651,11 +3664,11 @@ elseif|else
 if|if
 condition|(
 name|i
-operator|<=
+operator|==
 name|tna
-operator|&&
+operator|||
 name|i
-operator|<=
+operator|==
 name|tnb
 condition|)
 block|{

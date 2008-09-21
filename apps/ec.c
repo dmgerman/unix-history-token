@@ -1018,7 +1018,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"                 possilbe values:"
+literal|"                 possible values:"
 literal|" named_curve (default)\n"
 argument_list|)
 expr_stmt|;

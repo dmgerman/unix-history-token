@@ -2130,6 +2130,9 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_ASIdOrRange_delete
 argument_list|(
 name|choice

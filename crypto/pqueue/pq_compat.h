@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opensslconf.h"
+file|<openssl/opensslconf.h>
 end_include
 
 begin_include

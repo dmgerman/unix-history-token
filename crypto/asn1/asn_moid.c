@@ -447,8 +447,6 @@ index|[
 name|p
 operator|-
 name|ln
-operator|+
-literal|1
 index|]
 operator|=
 literal|0

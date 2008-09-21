@@ -780,7 +780,7 @@ parameter_list|,
 name|fnerrcode
 parameter_list|)
 define|\
-value|do \ 		{ \ 		if ((s) == NULL || (s)->meth) \ 			{ \ 			STOREerr((fncode), ERR_R_PASSED_NULL_PARAMETER); \ 			return 0; \ 			} \ 		if ((s)->meth->fnname == NULL) \ 			{ \ 			STOREerr((fncode), (fnerrcode)); \ 			return 0; \ 			} \ 		} \ 	while(0)
+value|do \ 		{ \ 		if ((s) == NULL || (s)->meth == NULL) \ 			{ \ 			STOREerr((fncode), ERR_R_PASSED_NULL_PARAMETER); \ 			return 0; \ 			} \ 		if ((s)->meth->fnname == NULL) \ 			{ \ 			STOREerr((fncode), (fnerrcode)); \ 			return 0; \ 			} \ 		} \ 	while(0)
 end_define
 
 begin_comment

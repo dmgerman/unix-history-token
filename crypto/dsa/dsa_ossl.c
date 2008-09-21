@@ -858,7 +858,7 @@ argument_list|(
 operator|&
 name|k
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 expr_stmt|;
 block|}

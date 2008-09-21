@@ -49,6 +49,12 @@ directive|include
 file|<openssl/objects.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_comment
 comment|/* obj_dat.h is generated from objects.h by obj_dat.pl */
 end_comment

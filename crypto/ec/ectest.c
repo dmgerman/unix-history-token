@@ -3980,7 +3980,7 @@ name|EC_POINT
 modifier|*
 name|points
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
 specifier|const
@@ -3988,8 +3988,11 @@ name|BIGNUM
 modifier|*
 name|scalars
 index|[
-literal|3
+literal|4
 index|]
+decl_stmt|;
+name|BIGNUM
+name|scalar3
 decl_stmt|;
 if|if
 condition|(
@@ -4019,6 +4022,13 @@ expr_stmt|;
 name|points
 index|[
 literal|2
+index|]
+operator|=
+name|Q
+expr_stmt|;
+name|points
+index|[
+literal|3
 index|]
 operator|=
 name|Q
@@ -4342,6 +4352,26 @@ operator|=
 name|z
 expr_stmt|;
 comment|/* z = -(x+y) */
+name|BN_init
+argument_list|(
+operator|&
+name|scalar3
+argument_list|)
+expr_stmt|;
+name|BN_zero
+argument_list|(
+operator|&
+name|scalar3
+argument_list|)
+expr_stmt|;
+name|scalars
+index|[
+literal|3
+index|]
+operator|=
+operator|&
+name|scalar3
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4353,7 +4383,7 @@ name|P
 argument_list|,
 name|NULL
 argument_list|,
-literal|3
+literal|4
 argument_list|,
 name|points
 argument_list|,
@@ -4381,6 +4411,12 @@ argument_list|(
 name|stdout
 argument_list|,
 literal|" ok\n\n"
+argument_list|)
+expr_stmt|;
+name|BN_free
+argument_list|(
+operator|&
+name|scalar3
 argument_list|)
 expr_stmt|;
 block|}

@@ -97,7 +97,7 @@ parameter_list|,
 name|ksched
 parameter_list|)
 define|\
-value|static int cname##_cfb##cbits##_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cfb##cbits##_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num, ctx->encrypt);\ 	return 1;\ }
+value|static int cname##_cfb##cbits##_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cfb##cbits##_encrypt(in, out, (long)(cbits==1?inl*8:inl),&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num, ctx->encrypt);\ 	return 1;\ }
 end_define
 
 begin_define

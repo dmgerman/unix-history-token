@@ -575,9 +575,20 @@ value|0x0080
 comment|/* new with 0.9.6j and 0.9.7b; the built-in                                                 * RSA implementation now uses blinding by                                                 * default (ignoring RSA_FLAG_BLINDING),                                                 * but other engines might not need it                                                 */
 define|#
 directive|define
-name|RSA_FLAG_NO_EXP_CONSTTIME
+name|RSA_FLAG_NO_CONSTTIME
 value|0x0100
+comment|/* new with 0.9.8f; the built-in RSA 						* implementation now uses constant time 						* operations by default in private key operations, 						* e.g., constant time modular exponentiation,                                                  * modular inverse without leaking branches,                                                  * division without leaking branches. This                                                  * flag disables these constant time                                                  * operations and results in faster RSA                                                  * private key operations.                                                 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
+define|#
+directive|define
+name|RSA_FLAG_NO_EXP_CONSTTIME
+value|RSA_FLAG_NO_CONSTTIME
+comment|/* deprecated name for the flag*/
 comment|/* new with 0.9.7h; the built-in RSA                                                 * implementation now uses constant time                                                 * modular exponentiation for secret exponents                                                 * by default. This flag causes the                                                 * faster variable sliding window method to                                                 * be used for all exponents.                                                 */
+endif|#
+directive|endif
 define|#
 directive|define
 name|RSA_PKCS1_PADDING
@@ -955,6 +966,9 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RC4
 name|int
 name|i2d_RSA_NET
 parameter_list|(
@@ -1119,6 +1133,8 @@ name|verify
 parameter_list|)
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 comment|/* The following 2 functions sign and verify a X509_SIG ASN1 object  * inside PKCS#1 padded RSA encryption */
 name|int
 name|RSA_sign

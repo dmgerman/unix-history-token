@@ -57,6 +57,12 @@ directive|include
 file|<openssl/pqueue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/rand.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -1469,6 +1475,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|unsigned
 name|short
 name|version
 decl_stmt|;
@@ -1691,6 +1698,10 @@ operator|!=
 name|s
 operator|->
 name|version
+operator|&&
+name|version
+operator|!=
+name|DTLS1_BAD_VER
 condition|)
 block|{
 name|SSLerr
@@ -1726,6 +1737,18 @@ operator|)
 operator|!=
 operator|(
 name|DTLS1_VERSION
+operator|&
+literal|0xff00
+operator|)
+operator|&&
+operator|(
+name|version
+operator|&
+literal|0xff00
+operator|)
+operator|!=
+operator|(
+name|DTLS1_BAD_VER
 operator|&
 literal|0xff00
 operator|)
@@ -1766,6 +1789,12 @@ goto|goto
 name|f_err
 goto|;
 block|}
+name|s
+operator|->
+name|client_version
+operator|=
+name|version
+expr_stmt|;
 comment|/* now s->rstate == SSL_ST_READ_BODY */
 block|}
 comment|/* s->rstate == SSL_ST_READ_BODY, get and decode the data */
@@ -2656,12 +2685,20 @@ operator|<
 name|dest_maxlen
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DTLS1_AD_MISSING_HANDSHAKE_MESSAGE
+comment|/* 				 * for normal alerts rr->length is 2, while 				 * dest_maxlen is 7 if we were to handle this 				 * non-existing alert... 				 */
+name|FIX
+name|ME
+endif|#
+directive|endif
 name|s
 operator|->
 name|rstate
-operator|=
+init|=
 name|SSL_ST_READ_HEADER
-expr_stmt|;
+decl_stmt|;
 name|rr
 operator|->
 name|length
@@ -3353,24 +3390,31 @@ operator|&
 name|ccs_hdr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ccs_hdr
-operator|.
-name|seq
-operator|==
-name|s
-operator|->
-name|d1
-operator|->
-name|handshake_read_seq
-condition|)
-block|{
-comment|/* 'Change Cipher Spec' is just a single byte, so we know 			 * exactly what the record payload has to look like */
+comment|/* 'Change Cipher Spec' is just a single byte, so we know 		 * exactly what the record payload has to look like */
 comment|/* XDTLS: check that epoch is consistent */
 if|if
 condition|(
 operator|(
+name|s
+operator|->
+name|client_version
+operator|==
+name|DTLS1_BAD_VER
+operator|&&
+name|rr
+operator|->
+name|length
+operator|!=
+literal|3
+operator|)
+operator|||
+operator|(
+name|s
+operator|->
+name|client_version
+operator|!=
+name|DTLS1_BAD_VER
+operator|&&
 name|rr
 operator|->
 name|length
@@ -3477,7 +3521,14 @@ argument_list|,
 name|SSL3_CC_READ
 argument_list|)
 expr_stmt|;
-comment|/* handshake read seq is reset upon handshake completion */
+if|if
+condition|(
+name|s
+operator|->
+name|client_version
+operator|==
+name|DTLS1_BAD_VER
+condition|)
 name|s
 operator|->
 name|d1
@@ -3488,19 +3539,6 @@ expr_stmt|;
 goto|goto
 name|start
 goto|;
-block|}
-else|else
-block|{
-name|rr
-operator|->
-name|length
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|start
-goto|;
-block|}
 block|}
 comment|/* Unexpected handshake message (Client Hello, or protocol violation) */
 if|if
@@ -4446,8 +4484,6 @@ operator|+=
 name|i
 expr_stmt|;
 return|return
-name|tot
-operator|+
 name|i
 return|;
 block|}
@@ -4709,6 +4745,35 @@ name|type
 operator|=
 name|type
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|client_version
+operator|==
+name|DTLS1_BAD_VER
+condition|)
+operator|*
+operator|(
+name|p
+operator|++
+operator|)
+operator|=
+name|DTLS1_BAD_VER
+operator|>>
+literal|8
+operator|,
+operator|*
+operator|(
+name|p
+operator|++
+operator|)
+operator|=
+name|DTLS1_BAD_VER
+operator|&
+literal|0xff
+expr_stmt|;
+else|else
 operator|*
 operator|(
 name|p
@@ -4722,7 +4787,7 @@ name|version
 operator|>>
 literal|8
 operator|)
-expr_stmt|;
+operator|,
 operator|*
 operator|(
 name|p
@@ -4922,13 +4987,27 @@ operator|=
 name|p
 expr_stmt|;
 comment|/* ssl3_enc can only have an error on read */
+if|if
+condition|(
+name|bs
+condition|)
+comment|/* bs != 0 in case of CBC */
+block|{
+name|RAND_pseudo_bytes
+argument_list|(
+name|p
+argument_list|,
+name|bs
+argument_list|)
+expr_stmt|;
+comment|/* master IV and last CBC residue stand for 		 * the rest of randomness */
 name|wr
 operator|->
 name|length
 operator|+=
 name|bs
 expr_stmt|;
-comment|/* bs != 0 in case of CBC.  The enc fn provides 						* the randomness */
+block|}
 name|s
 operator|->
 name|method
@@ -5740,14 +5819,9 @@ name|unsigned
 name|char
 name|buf
 index|[
-literal|2
-operator|+
-literal|2
-operator|+
-literal|3
+name|DTLS1_AL_HEADER_LENGTH
 index|]
 decl_stmt|;
-comment|/* alert level + alert desc + message seq +frag_off */
 name|unsigned
 name|char
 modifier|*
@@ -5805,6 +5879,9 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DTLS1_AD_MISSING_HANDSHAKE_MESSAGE
 if|if
 condition|(
 name|s
@@ -5859,6 +5936,8 @@ name|ptr
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|i
 operator|=
 name|do_dtls1_write
@@ -5912,6 +5991,9 @@ literal|0
 index|]
 operator|==
 name|SSL3_AL_FATAL
+ifdef|#
+directive|ifdef
+name|DTLS1_AD_MISSING_HANDSHAKE_MESSAGE
 operator|||
 name|s
 operator|->
@@ -5923,6 +6005,8 @@ literal|1
 index|]
 operator|==
 name|DTLS1_AD_MISSING_HANDSHAKE_MESSAGE
+endif|#
+directive|endif
 condition|)
 operator|(
 name|void

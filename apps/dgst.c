@@ -845,6 +845,22 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-fips-fingerprint"
+argument_list|)
+condition|)
+name|hmac_key
+operator|=
+literal|"etaonrishdlcupfm"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-hmac"
 argument_list|)
 condition|)
@@ -1043,6 +1059,13 @@ argument_list|,
 literal|"-binary         output in binary form\n"
 argument_list|)
 expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-hmac key       create hashed MAC with key\n"
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE
@@ -1059,7 +1082,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm (default)\n"
+literal|"-%-14s to use the %s message digest algorithm (default)\n"
 argument_list|,
 name|LN_md5
 argument_list|,
@@ -1070,7 +1093,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_md4
 argument_list|,
@@ -1081,7 +1104,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_md2
 argument_list|,
@@ -1095,7 +1118,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_sha1
 argument_list|,
@@ -1106,7 +1129,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_sha
 argument_list|,
@@ -1120,7 +1143,18 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
+argument_list|,
+name|LN_sha224
+argument_list|,
+name|LN_sha224
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_sha256
 argument_list|,
@@ -1136,7 +1170,18 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
+argument_list|,
+name|LN_sha384
+argument_list|,
+name|LN_sha384
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_sha512
 argument_list|,
@@ -1151,7 +1196,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_mdc2
 argument_list|,
@@ -1162,7 +1207,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_ripemd160
 argument_list|,

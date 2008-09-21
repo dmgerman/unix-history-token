@@ -55,10 +55,16 @@ define|#
 directive|define
 name|DTLS1_BAD_VER
 value|0x0100
+if|#
+directive|if
+literal|0
+comment|/* this alert description is not specified anywhere... */
 define|#
 directive|define
 name|DTLS1_AD_MISSING_HANDSHAKE_MESSAGE
 value|110
+endif|#
+directive|endif
 comment|/* lengths of messages */
 define|#
 directive|define
@@ -84,10 +90,21 @@ define|#
 directive|define
 name|DTLS1_CCS_HEADER_LENGTH
 value|1
+ifdef|#
+directive|ifdef
+name|DTLS1_AD_MISSING_HANDSHAKE_MESSAGE
 define|#
 directive|define
 name|DTLS1_AL_HEADER_LENGTH
 value|7
+else|#
+directive|else
+define|#
+directive|define
+name|DTLS1_AL_HEADER_LENGTH
+value|2
+endif|#
+directive|endif
 typedef|typedef
 struct|struct
 name|dtls1_bitmap_st

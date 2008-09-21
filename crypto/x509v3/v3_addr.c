@@ -2946,6 +2946,9 @@ block|{
 case|case
 name|IANA_AFI_IPV4
 case|:
+operator|(
+name|void
+operator|)
 name|sk_IPAddressOrRange_set_cmp_func
 argument_list|(
 name|aors
@@ -2957,6 +2960,9 @@ break|break;
 case|case
 name|IANA_AFI_IPV6
 case|:
+operator|(
+name|void
+operator|)
 name|sk_IPAddressOrRange_set_cmp_func
 argument_list|(
 name|aors
@@ -4183,6 +4189,9 @@ argument_list|,
 name|merged
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_IPAddressOrRange_delete
 argument_list|(
 name|aors
@@ -5481,6 +5490,9 @@ condition|)
 return|return
 literal|0
 return|;
+operator|(
+name|void
+operator|)
 name|sk_IPAddressFamily_set_cmp_func
 argument_list|(
 name|b
@@ -5741,6 +5753,9 @@ argument_list|(
 name|X509_V_ERR_INVALID_EXTENSION
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_IPAddressFamily_set_cmp_func
 argument_list|(
 name|ext
@@ -5883,6 +5898,9 @@ block|}
 block|}
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
 name|sk_IPAddressFamily_set_cmp_func
 argument_list|(
 name|x

@@ -2554,6 +2554,7 @@ name|BN_BITS2
 operator|-
 name|d0
 expr_stmt|;
+comment|/* clear up the top d1 bits */
 if|if
 condition|(
 name|d0
@@ -2574,7 +2575,14 @@ operator|)
 operator|>>
 name|d1
 expr_stmt|;
-comment|/* clear up the top d1 bits */
+else|else
+name|z
+index|[
+name|dN
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|z
 index|[
 literal|0

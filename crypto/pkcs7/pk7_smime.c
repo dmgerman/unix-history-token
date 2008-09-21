@@ -1784,6 +1784,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|p7bio

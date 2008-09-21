@@ -10233,12 +10233,10 @@ end_if
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
+modifier|*
 name|dummy
 init|=
-operator|(
-name|int
-operator|)
 operator|&
 name|dummy
 decl_stmt|;

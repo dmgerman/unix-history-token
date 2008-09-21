@@ -2786,6 +2786,8 @@ operator|->
 name|tmp
 operator|.
 name|session_id_length
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3008,6 +3010,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sk_SSL_CIPHER_delete
 argument_list|(
 name|prio

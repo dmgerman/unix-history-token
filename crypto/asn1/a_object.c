@@ -43,6 +43,12 @@ directive|include
 file|<openssl/objects.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_function
 name|int
 name|i2d_ASN1_OBJECT

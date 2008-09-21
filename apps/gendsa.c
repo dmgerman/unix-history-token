@@ -498,6 +498,29 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
+name|OPENSSL_NO_SEED
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-seed"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|enc
+operator|=
+name|EVP_seed_cbc
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
 name|OPENSSL_NO_AES
 elseif|else
 if|if
@@ -695,6 +718,25 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -idea     - encrypt the generated key with IDEA in cbc mode\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SEED
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -seed\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"                 encrypt PEM output with cbc seed\n"
 argument_list|)
 expr_stmt|;
 endif|#

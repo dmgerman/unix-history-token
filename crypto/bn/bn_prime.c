@@ -1377,7 +1377,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|BN_ULONG
+name|prime_t
 name|mods
 index|[
 name|NUMPRIMES
@@ -1428,6 +1428,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|prime_t
+operator|)
 name|BN_mod_word
 argument_list|(
 name|rnd

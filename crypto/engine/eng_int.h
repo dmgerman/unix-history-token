@@ -355,6 +355,9 @@ decl_stmt|;
 name|ENGINE_LOAD_KEY_PTR
 name|load_pubkey
 decl_stmt|;
+name|ENGINE_SSL_CLIENT_CERT_PTR
+name|load_ssl_client_cert
+decl_stmt|;
 specifier|const
 name|ENGINE_CMD_DEFN
 modifier|*

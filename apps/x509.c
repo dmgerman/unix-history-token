@@ -236,6 +236,8 @@ literal|" -noout          - no certificate output\n"
 block|,
 literal|" -ocspid         - print OCSP hash values for the subject name and public key\n"
 block|,
+literal|" -ocspurl        - print OCSP Responder URL(s)\n"
+block|,
 literal|" -trustout       - output a \"trusted\" certificate\n"
 block|,
 literal|" -clrtrust       - clear all trusted purposes\n"
@@ -658,6 +660,11 @@ init|=
 literal|0
 decl_stmt|,
 name|email
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|ocsp_uri
 init|=
 literal|0
 decl_stmt|;
@@ -1907,6 +1914,24 @@ operator|==
 literal|0
 condition|)
 name|email
+operator|=
+operator|++
+name|num
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-ocsp_uri"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ocsp_uri
 operator|=
 operator|++
 name|num
@@ -3729,9 +3754,17 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|email
 operator|==
 name|i
+operator|)
+operator|||
+operator|(
+name|ocsp_uri
+operator|==
+name|i
+operator|)
 condition|)
 block|{
 name|int
@@ -3741,9 +3774,23 @@ name|STACK
 modifier|*
 name|emlst
 decl_stmt|;
+if|if
+condition|(
+name|email
+operator|==
+name|i
+condition|)
 name|emlst
 operator|=
 name|X509_get1_email
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+else|else
+name|emlst
+operator|=
+name|X509_get1_ocsp
 argument_list|(
 name|x
 argument_list|)

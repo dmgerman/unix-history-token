@@ -545,9 +545,20 @@ name|BN_FLG_STATIC_DATA
 value|0x02
 define|#
 directive|define
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 value|0x04
-comment|/* avoid leaking exponent information through timings                             	      * (BN_mod_exp_mont() will call BN_mod_exp_mont_consttime) */
+comment|/* avoid leaking exponent information through timing,                                       * BN_mod_exp_mont() will call BN_mod_exp_mont_consttime,                                       * BN_div() will call BN_div_no_branch,                                       * BN_mod_inverse() will call BN_mod_inverse_no_branch.                                       */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
+define|#
+directive|define
+name|BN_FLG_EXP_CONSTTIME
+value|BN_FLG_CONSTTIME
+comment|/* deprecated name for the flag */
+comment|/* avoid leaking exponent information through timings                                       * (BN_mod_exp_mont() will call BN_mod_exp_mont_consttime) */
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DEPRECATED
@@ -643,10 +654,20 @@ name|BIGNUM
 name|Ni
 decl_stmt|;
 comment|/* R*(1/R mod N) - N*Ni = 1 	                * (Ni is only stored for bignum algorithm) */
+if|#
+directive|if
+literal|0
+comment|/* OpenSSL 0.9.9 preview: */
+block|BN_ULONG n0[2];
+comment|/* least significant word(s) of Ni */
+else|#
+directive|else
 name|BN_ULONG
 name|n0
 decl_stmt|;
 comment|/* least significant word of Ni */
+endif|#
+directive|endif
 name|int
 name|flags
 decl_stmt|;
@@ -2541,6 +2562,7 @@ name|BIGNUM
 modifier|*
 name|Ai
 parameter_list|,
+comment|/* const */
 name|BIGNUM
 modifier|*
 name|mod
@@ -2688,6 +2710,7 @@ name|BIGNUM
 modifier|*
 name|e
 parameter_list|,
+comment|/* const */
 name|BIGNUM
 modifier|*
 name|m
@@ -3920,6 +3943,10 @@ name|BN_F_BN_DIV
 value|107
 define|#
 directive|define
+name|BN_F_BN_DIV_NO_BRANCH
+value|138
+define|#
+directive|define
 name|BN_F_BN_DIV_RECP
 value|130
 define|#
@@ -3990,6 +4017,10 @@ define|#
 directive|define
 name|BN_F_BN_MOD_INVERSE
 value|110
+define|#
+directive|define
+name|BN_F_BN_MOD_INVERSE_NO_BRANCH
+value|139
 define|#
 directive|define
 name|BN_F_BN_MOD_LSHIFT_QUICK

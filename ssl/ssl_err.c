@@ -4,7 +4,7 @@ comment|/* ssl/ssl_err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -681,6 +681,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL3_DO_CHANGE_CIPHER_SPEC
+argument_list|)
+block|,
+literal|"SSL3_DO_CHANGE_CIPHER_SPEC"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL3_ENC
 argument_list|)
 block|,
@@ -703,6 +712,15 @@ name|SSL_F_SSL3_GET_CERTIFICATE_REQUEST
 argument_list|)
 block|,
 literal|"SSL3_GET_CERTIFICATE_REQUEST"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_GET_CERT_STATUS
+argument_list|)
+block|,
+literal|"SSL3_GET_CERT_STATUS"
 block|}
 block|,
 block|{
@@ -771,6 +789,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL3_GET_NEW_SESSION_TICKET
+argument_list|)
+block|,
+literal|"SSL3_GET_NEW_SESSION_TICKET"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL3_GET_RECORD
 argument_list|)
 block|,
@@ -802,6 +829,15 @@ name|SSL_F_SSL3_GET_SERVER_HELLO
 argument_list|)
 block|,
 literal|"SSL3_GET_SERVER_HELLO"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL3_NEW_SESSION_TICKET
+argument_list|)
+block|,
+literal|"SSL3_NEW_SESSION_TICKET"
 block|}
 block|,
 block|{
@@ -942,6 +978,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_ADD_CLIENTHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"SSL_ADD_CLIENTHELLO_TLSEXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_ADD_DIR_CERT_SUBJECTS_TO_STACK
 argument_list|)
 block|,
@@ -955,6 +1000,15 @@ name|SSL_F_SSL_ADD_FILE_CERT_SUBJECTS_TO_STACK
 argument_list|)
 block|,
 literal|"SSL_add_file_cert_subjects_to_stack"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_ADD_SERVERHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"SSL_ADD_SERVERHELLO_TLSEXT"
 block|}
 block|,
 block|{
@@ -1018,6 +1072,15 @@ name|SSL_F_SSL_CHECK_PRIVATE_KEY
 argument_list|)
 block|,
 literal|"SSL_check_private_key"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_CHECK_SERVERHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"SSL_CHECK_SERVERHELLO_TLSEXT"
 block|}
 block|,
 block|{
@@ -1099,6 +1162,15 @@ name|SSL_F_SSL_CTX_SET_CIPHER_LIST
 argument_list|)
 block|,
 literal|"SSL_CTX_set_cipher_list"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_CTX_SET_CLIENT_CERT_ENGINE
+argument_list|)
+block|,
+literal|"SSL_CTX_set_client_cert_engine"
 block|}
 block|,
 block|{
@@ -1306,6 +1378,24 @@ name|SSL_F_SSL_PEEK
 argument_list|)
 block|,
 literal|"SSL_peek"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_PREPARE_CLIENTHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"SSL_PREPARE_CLIENTHELLO_TLSEXT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|SSL_F_SSL_PREPARE_SERVERHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"SSL_PREPARE_SERVERHELLO_TLSEXT"
 block|}
 block|,
 block|{
@@ -2047,6 +2137,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_CLIENTHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"clienthello tlsext"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_COMPRESSED_LENGTH_TOO_LONG
 argument_list|)
 block|,
@@ -2285,6 +2384,24 @@ name|SSL_R_INVALID_PURPOSE
 argument_list|)
 block|,
 literal|"invalid purpose"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_INVALID_STATUS_RESPONSE
+argument_list|)
+block|,
+literal|"invalid status response"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_INVALID_TICKET_KEYS_LENGTH
+argument_list|)
+block|,
+literal|"invalid ticket keys length"
 block|}
 block|,
 block|{
@@ -2677,6 +2794,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_NO_CLIENT_CERT_METHOD
+argument_list|)
+block|,
+literal|"no client cert method"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_NO_CLIENT_CERT_RECEIVED
 argument_list|)
 block|,
@@ -2798,6 +2924,15 @@ name|SSL_R_PACKET_LENGTH_TOO_LONG
 argument_list|)
 block|,
 literal|"packet length too long"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_PARSE_TLSEXT
+argument_list|)
+block|,
+literal|"parse tlsext"
 block|}
 block|,
 block|{
@@ -3010,6 +3145,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_SERVERHELLO_TLSEXT
+argument_list|)
+block|,
+literal|"serverhello tlsext"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_SESSION_ID_CONTEXT_UNINITIALIZED
 argument_list|)
 block|,
@@ -3050,6 +3194,24 @@ name|SSL_R_SSL2_CONNECTION_ID_TOO_LONG
 argument_list|)
 block|,
 literal|"ssl2 connection id too long"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_SSL3_EXT_INVALID_SERVERNAME
+argument_list|)
+block|,
+literal|"ssl3 ext invalid servername"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_SSL3_EXT_INVALID_SERVERNAME_TYPE
+argument_list|)
+block|,
+literal|"ssl3 ext invalid servername type"
 block|}
 block|,
 block|{
@@ -3361,6 +3523,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_TLS_INVALID_ECPOINTFORMAT_LIST
+argument_list|)
+block|,
+literal|"tls invalid ecpointformat list"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_TLS_PEER_DID_NOT_RESPOND_WITH_CERTIFICATE_LIST
 argument_list|)
 block|,
@@ -3635,6 +3806,15 @@ name|SSL_R_UNSUPPORTED_SSL_VERSION
 argument_list|)
 block|,
 literal|"unsupported ssl version"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_UNSUPPORTED_STATUS_TYPE
+argument_list|)
+block|,
+literal|"unsupported status type"
 block|}
 block|,
 block|{

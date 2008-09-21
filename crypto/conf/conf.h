@@ -303,6 +303,10 @@ define|#
 directive|define
 name|CONF_MFLAGS_IGNORE_MISSING_FILE
 value|0x10
+define|#
+directive|define
+name|CONF_MFLAGS_DEFAULT_SECTION
+value|0x20
 name|int
 name|CONF_set_default_method
 parameter_list|(

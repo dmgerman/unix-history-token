@@ -235,7 +235,7 @@ operator|>
 literal|1
 condition|)
 block|{
-comment|/* 		 * Unlike all other x86 [and x86_64] implementations, 		 * Intel P4 core [including EM64T] was found to perform 		 * poorly with wider RC4_INT. Performance improvement 		 * for IA-32 hand-coded assembler turned out to be 2.8x 		 * if re-coded for RC4_CHAR! It's however inappropriate 		 * to just switch to RC4_CHAR for x86[_64], as non-P4 		 * implementations suffer from significant performance 		 * losses then, e.g. PIII exhibits>2x deterioration, 		 * and so does Opteron. In order to assure optimal 		 * all-round performance, let us [try to] detect P4 at 		 * run-time by checking upon HTT bit in CPU capability 		 * vector and set up compressed key schedule, which is 		 * recognized by correspondingly updated assembler 		 * module... 		 *<appro@fy.chalmers.se> 		 */
+comment|/* 		 * Unlike all other x86 [and x86_64] implementations, 		 * Intel P4 core [including EM64T] was found to perform 		 * poorly with wider RC4_INT. Performance improvement 		 * for IA-32 hand-coded assembler turned out to be 2.8x 		 * if re-coded for RC4_CHAR! It's however inappropriate 		 * to just switch to RC4_CHAR for x86[_64], as non-P4 		 * implementations suffer from significant performance 		 * losses then, e.g. PIII exhibits>2x deterioration, 		 * and so does Opteron. In order to assure optimal 		 * all-round performance, we detect P4 at run-time by 		 * checking upon reserved bit 20 in CPU capability 		 * vector and set up compressed key schedule, which is 		 * recognized by correspondingly updated assembler 		 * module... Bit 20 is set up by OPENSSL_ia32_cpuid. 		 * 		 *<appro@fy.chalmers.se> 		 */
 if|if
 condition|(
 name|OPENSSL_ia32cap_P
@@ -243,7 +243,7 @@ operator|&
 operator|(
 literal|1
 operator|<<
-literal|28
+literal|20
 operator|)
 condition|)
 block|{

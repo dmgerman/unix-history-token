@@ -725,6 +725,9 @@ literal|1
 expr_stmt|;
 else|else
 comment|/* If we found a place with a NULL pointer, put our pointer 		   in it.  */
+operator|(
+name|void
+operator|)
 name|sk_CRYPTO_dynlock_set
 argument_list|(
 name|dyn_locks
@@ -891,6 +894,9 @@ operator|<=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sk_CRYPTO_dynlock_set
 argument_list|(
 name|dyn_locks

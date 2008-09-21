@@ -778,6 +778,9 @@ operator|-=
 name|chunk
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out

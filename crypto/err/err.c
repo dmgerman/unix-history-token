@@ -418,6 +418,32 @@ literal|"OCSP routines"
 block|}
 block|,
 block|{
+name|ERR_PACK
+argument_list|(
+name|ERR_LIB_FIPS
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"FIPS routines"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+name|ERR_LIB_CMS
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"CMS routines"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
