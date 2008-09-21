@@ -6566,7 +6566,7 @@ name|wh
 operator|->
 name|i_addr2
 argument_list|,
-literal|"%sassoc success at aid %d: %s preamble, %s slot time%s%s%s%s%s%s"
+literal|"%sassoc success at aid %d: %s preamble, %s slot time%s%s%s%s%s%s%s"
 argument_list|,
 name|ISREASSOC
 argument_list|(
@@ -6649,6 +6649,24 @@ operator|&
 name|IEEE80211_NODE_AMPDU
 condition|?
 literal|" (+AMPDU)"
+else|:
+literal|""
+argument_list|,
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_MIMO_RTS
+condition|?
+literal|" (+SMPS-DYN)"
+else|:
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_MIMO_PS
+condition|?
+literal|" (+SMPS)"
 else|:
 literal|""
 argument_list|,

@@ -2867,6 +2867,17 @@ begin_comment
 comment|/* CAPABILITY: HT operation */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTC_SMPS
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: MIMO power save*/
+end_comment
+
 begin_function_decl
 name|void
 name|ieee80211_ifattach

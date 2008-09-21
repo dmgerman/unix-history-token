@@ -327,6 +327,16 @@ directive|define
 name|IEEE80211_NODE_AMPDU_TX
 value|0x000800
 comment|/* AMPDU tx enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_MIMO_PS
+value|0x001000
+comment|/* MIMO power save enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_MIMO_RTS
+value|0x002000
+comment|/* send RTS in MIMO PS */
 name|uint16_t
 name|ni_associd
 decl_stmt|;
@@ -650,7 +660,7 @@ define|#
 directive|define
 name|IEEE80211_NODE_HT_ALL
 define|\
-value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU)
+value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU | IEEE80211_NODE_MIMO_PS | \ 	 IEEE80211_NODE_MIMO_RTS)
 end_define
 
 begin_define
