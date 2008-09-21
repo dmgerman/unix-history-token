@@ -4611,34 +4611,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|SM(x, IEEE80211_HTINFO_OPMODE)
-if|if
-condition|(
-name|protmode
-operator|==
-name|ic
-operator|->
-name|ic_curhtprotmode
-condition|)
-return|return;
-if|if
-condition|(
-name|OPMODE
-argument_list|(
-name|ic
-operator|->
-name|ic_curhtprotmode
-argument_list|)
-operator|==
-name|IEEE80211_HTINFO_OPMODE_MIXED
-operator|&&
-name|OPMODE
-argument_list|(
-name|protmode
-argument_list|)
-operator|==
-name|IEEE80211_HTINFO_OPMODE_PROTOPT
-condition|)
-return|return;
 name|IEEE80211_LOCK
 argument_list|(
 name|ic
@@ -4652,7 +4624,9 @@ operator|&
 name|IEEE80211_HTINFO_NONHT_PRESENT
 argument_list|,
 operator|(
-literal|"missing NONHT_PRESENT"
+literal|"protmode 0x%x"
+operator|,
+name|protmode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4668,6 +4642,33 @@ name|ic_lastnonht
 operator|=
 name|ticks
 expr_stmt|;
+if|if
+condition|(
+name|protmode
+operator|!=
+name|ic
+operator|->
+name|ic_curhtprotmode
+operator|&&
+operator|(
+name|OPMODE
+argument_list|(
+name|ic
+operator|->
+name|ic_curhtprotmode
+argument_list|)
+operator|!=
+name|IEEE80211_HTINFO_OPMODE_MIXED
+operator|||
+name|OPMODE
+argument_list|(
+name|protmode
+argument_list|)
+operator|==
+name|IEEE80211_HTINFO_OPMODE_PROTOPT
+operator|)
+condition|)
+block|{
 comment|/* push beacon update */
 name|ic
 operator|->
@@ -4680,6 +4681,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+block|}
 name|IEEE80211_UNLOCK
 argument_list|(
 name|ic
