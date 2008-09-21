@@ -268,6 +268,77 @@ name|u_int
 name|ni_scangen
 decl_stmt|;
 comment|/* gen# for timeout scan */
+name|u_int
+name|ni_flags
+decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_NODE_AUTH
+value|0x000001
+comment|/* authorized for data */
+define|#
+directive|define
+name|IEEE80211_NODE_QOS
+value|0x000002
+comment|/* QoS enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_ERP
+value|0x000004
+comment|/* ERP enabled */
+comment|/* NB: this must have the same value as IEEE80211_FC1_PWR_MGT */
+define|#
+directive|define
+name|IEEE80211_NODE_PWR_MGT
+value|0x000010
+comment|/* power save mode enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_AREF
+value|0x000020
+comment|/* authentication ref held */
+define|#
+directive|define
+name|IEEE80211_NODE_HT
+value|0x000040
+comment|/* HT enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_HTCOMPAT
+value|0x000080
+comment|/* HT setup w/ vendor OUI's */
+define|#
+directive|define
+name|IEEE80211_NODE_WPS
+value|0x000100
+comment|/* WPS association */
+define|#
+directive|define
+name|IEEE80211_NODE_TSN
+value|0x000200
+comment|/* TSN association */
+define|#
+directive|define
+name|IEEE80211_NODE_AMPDU_RX
+value|0x000400
+comment|/* AMPDU rx enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_AMPDU_TX
+value|0x000800
+comment|/* AMPDU tx enabled */
+name|uint16_t
+name|ni_associd
+decl_stmt|;
+comment|/* association ID */
+name|uint16_t
+name|ni_vlan
+decl_stmt|;
+comment|/* vlan tag */
+name|uint16_t
+name|ni_txpower
+decl_stmt|;
+comment|/* current transmit power */
 name|uint8_t
 name|ni_authmode
 decl_stmt|;
@@ -306,82 +377,11 @@ define|#
 directive|define
 name|IEEE80211_NODE_BOOST
 value|0x0080
-name|uint16_t
-name|ni_flags
-decl_stmt|;
-comment|/* special-purpose state */
-define|#
-directive|define
-name|IEEE80211_NODE_AUTH
-value|0x0001
-comment|/* authorized for data */
-define|#
-directive|define
-name|IEEE80211_NODE_QOS
-value|0x0002
-comment|/* QoS enabled */
-define|#
-directive|define
-name|IEEE80211_NODE_ERP
-value|0x0004
-comment|/* ERP enabled */
-comment|/* NB: this must have the same value as IEEE80211_FC1_PWR_MGT */
-define|#
-directive|define
-name|IEEE80211_NODE_PWR_MGT
-value|0x0010
-comment|/* power save mode enabled */
-define|#
-directive|define
-name|IEEE80211_NODE_AREF
-value|0x0020
-comment|/* authentication ref held */
-define|#
-directive|define
-name|IEEE80211_NODE_HT
-value|0x0040
-comment|/* HT enabled */
-define|#
-directive|define
-name|IEEE80211_NODE_HTCOMPAT
-value|0x0080
-comment|/* HT setup w/ vendor OUI's */
-define|#
-directive|define
-name|IEEE80211_NODE_WPS
-value|0x0100
-comment|/* WPS association */
-define|#
-directive|define
-name|IEEE80211_NODE_TSN
-value|0x0200
-comment|/* TSN association */
-define|#
-directive|define
-name|IEEE80211_NODE_AMPDU_RX
-value|0x0400
-comment|/* AMPDU rx enabled */
-define|#
-directive|define
-name|IEEE80211_NODE_AMPDU_TX
-value|0x0800
-comment|/* AMPDU tx enabled */
+comment|/* Dynamic Turbo boosted */
 name|uint16_t
 name|ni_ath_defkeyix
 decl_stmt|;
 comment|/* Atheros def key index */
-name|uint16_t
-name|ni_associd
-decl_stmt|;
-comment|/* assoc response */
-name|uint16_t
-name|ni_txpower
-decl_stmt|;
-comment|/* current transmit power */
-name|uint16_t
-name|ni_vlan
-decl_stmt|;
-comment|/* vlan tag */
 specifier|const
 name|struct
 name|ieee80211_txparam
