@@ -786,6 +786,8 @@ parameter_list|,
 name|struct
 name|ieee80211_tx_ampdu
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

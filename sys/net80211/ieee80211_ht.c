@@ -7381,6 +7381,9 @@ name|struct
 name|ieee80211_tx_ampdu
 modifier|*
 name|tap
+parameter_list|,
+name|int
+name|reason
 parameter_list|)
 block|{
 name|struct
@@ -7426,13 +7429,15 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: stop BA stream for AC %d"
+literal|"%s: stop BA stream for AC %d (reason %d)"
 argument_list|,
 name|__func__
 argument_list|,
 name|tap
 operator|->
 name|txa_ac
+argument_list|,
+name|reason
 argument_list|)
 expr_stmt|;
 name|vap
@@ -7475,7 +7480,7 @@ index|[
 literal|2
 index|]
 operator|=
-literal|1
+name|reason
 expr_stmt|;
 comment|/* XXX reason code */
 name|ieee80211_send_action
@@ -7502,13 +7507,15 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: BA stream for AC %d not running"
+literal|"%s: BA stream for AC %d not running (reason %d)"
 argument_list|,
 name|__func__
 argument_list|,
 name|tap
 operator|->
 name|txa_ac
+argument_list|,
+name|reason
 argument_list|)
 expr_stmt|;
 name|vap
