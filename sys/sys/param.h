@@ -743,17 +743,6 @@ begin_comment
 comment|/* Clist block size, must be a power of 2. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CBQSIZE
-value|(CBLOCK/NBBY)
-end_define
-
-begin_comment
-comment|/* Quote bytes/cblock - can do better. */
-end_comment
-
 begin_comment
 comment|/* Data chars/clist. */
 end_comment
@@ -762,7 +751,7 @@ begin_define
 define|#
 directive|define
 name|CBSIZE
-value|(CBLOCK - sizeof(struct cblock *) - CBQSIZE)
+value|(CBLOCK - sizeof(struct cblock *))
 end_define
 
 begin_define
