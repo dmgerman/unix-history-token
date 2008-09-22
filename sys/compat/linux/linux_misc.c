@@ -1402,7 +1402,7 @@ name|td_ucred
 argument_list|,
 name|vp
 argument_list|,
-name|FREAD
+name|VREAD
 argument_list|)
 expr_stmt|;
 if|if
