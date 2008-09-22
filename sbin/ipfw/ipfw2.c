@@ -29234,7 +29234,7 @@ name|len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|a
+name|tables_max
 argument_list|)
 expr_stmt|;
 if|if
