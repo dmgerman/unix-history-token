@@ -1624,7 +1624,7 @@ name|P4_ESCR_MARK_ROW_STANDALONE
 parameter_list|(
 name|E
 parameter_list|)
-value|do {				\ 	KASSERT(p4_escrdisp[(E)]<= 0, ("[p4,%d] row disposition error",\ 		    __LINE__));						\ 	atomic_add_int(&p4_escrdisp[(E)], -1);				\ 	KASSERT(p4_escrdisp[(E)]>= (-mp_ncpus), ("[p4,%d] row "	\ 		"disposition error", __LINE__));			\ } while (0)
+value|do {				\ 	KASSERT(p4_escrdisp[(E)]<= 0, ("[p4,%d] row disposition error",\ 		    __LINE__));						\ 	atomic_add_int(&p4_escrdisp[(E)], -1);				\ 	KASSERT(p4_escrdisp[(E)]>= (-pmc_cpu_max_active()), 		\ 		("[p4,%d] row disposition error", __LINE__));		\ } while (0)
 end_define
 
 begin_define
@@ -1811,7 +1811,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[p4,%d] insane cpu number %d"
@@ -1830,11 +1831,11 @@ name|INI
 argument_list|,
 literal|0
 argument_list|,
-literal|"p4-init cpu=%d logical=%d"
+literal|"p4-init cpu=%d is-primary=%d"
 argument_list|,
 name|cpu
 argument_list|,
-name|pmc_cpu_is_logical
+name|pmc_cpu_is_primary
 argument_list|(
 name|cpu
 argument_list|)
@@ -1845,7 +1846,8 @@ expr_stmt|;
 comment|/* 	 * The two CPUs in an HT pair share their per-cpu state. 	 * 	 * For HT capable CPUs, we assume that the two logical 	 * processors in the HT pair get two consecutive CPU ids 	 * starting with an even id #. 	 * 	 * The primary CPU (the even numbered CPU of the pair) would 	 * have been initialized prior to the initialization for the 	 * secondary. 	 */
 if|if
 condition|(
-name|pmc_cpu_is_logical
+operator|!
+name|pmc_cpu_is_primary
 argument_list|(
 name|cpu
 argument_list|)
@@ -2523,7 +2525,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[p4,%d] illegal CPU value %d"
@@ -2977,7 +2980,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[amd,%d] illegal CPU value %d"
@@ -3266,7 +3270,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[p4,%d] illegal CPU %d"
@@ -3792,7 +3797,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[p4,%d] illegal CPU %d"
@@ -4838,7 +4844,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[p4,%d] illegal CPU value %d"
@@ -5572,7 +5579,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[p4,%d] illegal CPU value %d"
@@ -6580,7 +6588,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[p4,%d] illegal CPU %d"

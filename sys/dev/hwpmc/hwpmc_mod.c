@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2007 Joseph Koshy  * Copyright (c) 2007 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by A. Joseph Koshy under  * sponsorship from the FreeBSD Foundation and Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2003-2008 Joseph Koshy  * Copyright (c) 2007 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by A. Joseph Koshy under  * sponsorship from the FreeBSD Foundation and Google, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -332,7 +332,7 @@ name|PMC_MARK_ROW_STANDALONE
 parameter_list|(
 name|R
 parameter_list|)
-value|do {					  \ 	KASSERT(pmc_pmcdisp[(R)]<= 0, ("[pmc,%d] row disposition error", \ 		    __LINE__));						  \ 	atomic_add_int(&pmc_pmcdisp[(R)], -1);				  \ 	KASSERT(pmc_pmcdisp[(R)]>= (-mp_ncpus), ("[pmc,%d] row "	  \ 		"disposition error", __LINE__));			  \ } while (0)
+value|do {					  \ 	KASSERT(pmc_pmcdisp[(R)]<= 0, ("[pmc,%d] row disposition error", \ 		    __LINE__));						  \ 	atomic_add_int(&pmc_pmcdisp[(R)], -1);				  \ 	KASSERT(pmc_pmcdisp[(R)]>= (-pmc_cpu_max_active()),		  \ 		("[pmc,%d] row disposition error", __LINE__));		  \ } while (0)
 end_define
 
 begin_define
@@ -2568,7 +2568,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[pmc,%d] bad cpu number %d"
@@ -2579,19 +2580,17 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* never move to a disabled CPU */
+comment|/* Never move to an inactive CPU. */
 name|KASSERT
 argument_list|(
-name|pmc_cpu_is_disabled
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
-operator|==
-literal|0
 argument_list|,
 operator|(
-literal|"[pmc,%d] selecting "
-literal|"disabled CPU %d"
+literal|"[pmc,%d] selecting inactive "
+literal|"CPU %d"
 operator|,
 name|__LINE__
 operator|,
@@ -4881,7 +4880,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[pmc,%d] wierd CPU id %d"
@@ -5324,7 +5324,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[pmc,%d wierd CPU id %d"
@@ -8139,7 +8140,8 @@ name|maxloop
 operator|=
 literal|100
 operator|*
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -9610,7 +9612,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
@@ -9802,7 +9805,8 @@ literal|0
 operator|&&
 name|cpu
 operator|<
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|,
 operator|(
 literal|"[pmc,%d] illegal cpu=%d"
@@ -9815,7 +9819,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
@@ -10375,7 +10380,8 @@ name|gci
 operator|.
 name|pm_ncpu
 operator|=
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 expr_stmt|;
 name|gci
 operator|.
@@ -10628,11 +10634,8 @@ if|if
 condition|(
 name|cpu
 operator|>=
-operator|(
-name|unsigned
-name|int
-operator|)
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 condition|)
 block|{
 name|error
@@ -10643,7 +10646,8 @@ break|break;
 block|}
 if|if
 condition|(
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
@@ -11009,7 +11013,11 @@ literal|0
 operator|||
 name|cpu
 operator|>=
-name|mp_ncpus
+operator|(
+name|int
+operator|)
+name|pmc_cpu_max
+argument_list|()
 condition|)
 block|{
 name|error
@@ -11020,7 +11028,8 @@ break|break;
 block|}
 if|if
 condition|(
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
@@ -11320,10 +11329,8 @@ name|PMC_CPU_ANY
 operator|&&
 name|cpu
 operator|>=
-operator|(
-name|u_int
-operator|)
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 operator|)
 condition|)
 block|{
@@ -11371,7 +11378,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Check that a disabled CPU is not being asked for. 		 */
+comment|/* 		 * Check that an inactive CPU is not being asked for. 		 */
 if|if
 condition|(
 name|PMC_IS_SYSTEM_MODE
@@ -11379,7 +11386,8 @@ argument_list|(
 name|mode
 argument_list|)
 operator|&&
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
@@ -13176,7 +13184,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
@@ -15898,6 +15907,10 @@ name|error
 decl_stmt|,
 name|n
 decl_stmt|;
+name|unsigned
+name|int
+name|maxcpu
+decl_stmt|;
 name|struct
 name|pmc_binding
 name|pb
@@ -16099,6 +16112,11 @@ condition|)
 return|return
 name|ENOSYS
 return|;
+name|maxcpu
+operator|=
+name|pmc_cpu_max
+argument_list|()
+expr_stmt|;
 comment|/* allocate space for the per-cpu array */
 name|MALLOC
 argument_list|(
@@ -16109,7 +16127,7 @@ name|pmc_cpu
 operator|*
 operator|*
 argument_list|,
-name|mp_ncpus
+name|maxcpu
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -16138,7 +16156,7 @@ argument_list|(
 name|pmc_value_t
 argument_list|)
 operator|*
-name|mp_ncpus
+name|maxcpu
 operator|*
 name|md
 operator|->
@@ -16149,7 +16167,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* perform cpu dependent initialization */
+comment|/* Perform CPU-dependent initialization. */
 name|pmc_save_cpu_binding
 argument_list|(
 operator|&
@@ -16164,7 +16182,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|mp_ncpus
+name|maxcpu
 condition|;
 name|cpu
 operator|++
@@ -16172,7 +16190,8 @@ control|)
 block|{
 if|if
 condition|(
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
@@ -16224,7 +16243,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|mp_ncpus
+name|maxcpu
 condition|;
 name|cpu
 operator|++
@@ -16232,7 +16251,8 @@ control|)
 block|{
 if|if
 condition|(
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
@@ -16656,6 +16676,10 @@ block|{
 name|int
 name|cpu
 decl_stmt|;
+name|unsigned
+name|int
+name|maxcpu
+decl_stmt|;
 name|struct
 name|pmc_ownerhash
 modifier|*
@@ -17010,7 +17034,12 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* free the per-cpu sample buffers */
+comment|/* Free the per-cpu sample buffers. */
+name|maxcpu
+operator|=
+name|pmc_cpu_max
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|cpu
@@ -17019,7 +17048,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|mp_ncpus
+name|maxcpu
 condition|;
 name|cpu
 operator|++
@@ -17027,7 +17056,8 @@ control|)
 block|{
 if|if
 condition|(
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
@@ -17122,7 +17152,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|mp_ncpus
+name|maxcpu
 condition|;
 name|cpu
 operator|++
@@ -17148,10 +17178,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmc_cpu_is_disabled
+operator|!
+name|pmc_cpu_is_active
 argument_list|(
 name|cpu
 argument_list|)
+operator|||
+name|pmc_pcpu
+index|[
+name|cpu
+index|]
+operator|==
+name|NULL
 condition|)
 continue|continue;
 name|pmc_select_cpu
@@ -17161,14 +17199,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmc_pcpu
-index|[
-name|cpu
-index|]
+name|md
+operator|->
+name|pmd_cleanup
 condition|)
-operator|(
-name|void
-operator|)
 name|md
 operator|->
 name|pmd_cleanup
@@ -17308,11 +17342,12 @@ name|INI
 argument_list|,
 literal|1
 argument_list|,
-literal|"syscall=%d ncpus=%d"
+literal|"syscall=%d maxcpu=%d"
 argument_list|,
 name|pmc_syscall_num
 argument_list|,
-name|mp_ncpus
+name|pmc_cpu_max
+argument_list|()
 argument_list|)
 expr_stmt|;
 break|break;

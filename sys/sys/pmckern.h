@@ -360,7 +360,7 @@ value|(__predict_false(pmc_cpumask& (1<< (C))))
 end_define
 
 begin_comment
-comment|/* helper functions */
+comment|/*  * Helper functions.  */
 end_comment
 
 begin_function_decl
@@ -373,15 +373,69 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* deprecated */
+end_comment
+
 begin_function_decl
 name|int
-name|pmc_cpu_is_logical
+name|pmc_cpu_is_active
 parameter_list|(
 name|int
 name|_cpu
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|pmc_cpu_is_present
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmc_cpu_is_primary
+parameter_list|(
+name|int
+name|_cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|int
+name|pmc_cpu_max
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_function_decl
+name|int
+name|pmc_cpu_max_active
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
