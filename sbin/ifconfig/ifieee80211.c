@@ -7714,6 +7714,15 @@ name|isanyarg
 argument_list|(
 name|val
 argument_list|)
+operator|||
+name|strcasecmp
+argument_list|(
+name|val
+argument_list|,
+literal|"na"
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|v
 operator|=
@@ -20773,7 +20782,7 @@ name|verbose
 condition|)
 name|LINE_CHECK
 argument_list|(
-literal|"ampdudensity -"
+literal|"ampdudensity NA"
 argument_list|)
 expr_stmt|;
 break|break;
