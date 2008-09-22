@@ -3119,7 +3119,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* General purpose register 1. reserved for future use. */
+comment|/* General purpose register 1. */
 end_comment
 
 begin_define
@@ -3127,6 +3127,79 @@ define|#
 directive|define
 name|JME_GPREG1
 value|0x080C
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPREG1_RSS_IPV6_10_100
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* JMC250 A2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPREG1_HDPX_FIX
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* JMC250 A2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPREG1_INTDLY_UNIT_16US
+value|0x00000018
+end_define
+
+begin_comment
+comment|/* JMC250 A1, A2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPREG1_INTDLY_UNIT_1US
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* JMC250 A1, A2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPREG1_INTDLY_UNIT_256NS
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* JMC250 A1, A2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPREG1_INTDLY_UNIT_16NS
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* JMC250 A1, A2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPREG1_INTDLY_MASK
+value|0x00000007
 end_define
 
 begin_comment
