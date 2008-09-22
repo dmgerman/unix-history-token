@@ -337,6 +337,11 @@ directive|define
 name|IEEE80211_NODE_MIMO_RTS
 value|0x002000
 comment|/* send RTS in MIMO PS */
+define|#
+directive|define
+name|IEEE80211_NODE_RIFS
+value|0x004000
+comment|/* RIFS enabled */
 name|uint16_t
 name|ni_associd
 decl_stmt|;
@@ -660,7 +665,7 @@ define|#
 directive|define
 name|IEEE80211_NODE_HT_ALL
 define|\
-value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU | IEEE80211_NODE_MIMO_PS | \ 	 IEEE80211_NODE_MIMO_RTS)
+value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU | IEEE80211_NODE_MIMO_PS | \ 	 IEEE80211_NODE_MIMO_RTS | IEEE80211_NODE_RIFS)
 end_define
 
 begin_define

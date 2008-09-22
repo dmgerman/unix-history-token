@@ -2567,6 +2567,17 @@ begin_comment
 comment|/* CONF: HT vendor OUI's */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_RIFS
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* CONF: RIFS enabled */
+end_comment
+
 begin_comment
 comment|/* ic_caps/iv_caps: device driver capabilities */
 end_comment
@@ -2876,6 +2887,17 @@ end_define
 
 begin_comment
 comment|/* CAPABILITY: MIMO power save*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTC_RIFS
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: RIFS support */
 end_comment
 
 begin_function_decl

@@ -9806,7 +9806,7 @@ name|IEEE80211_MSG_DEBUG
 argument_list|,
 name|ni
 argument_list|,
-literal|"station associated at aid %d: %s preamble, %s slot time%s%s%s%s%s%s%s"
+literal|"station associated at aid %d: %s preamble, %s slot time%s%s%s%s%s%s%s%s"
 argument_list|,
 name|IEEE80211_NODE_AID
 argument_list|(
@@ -9898,6 +9898,16 @@ operator|&
 name|IEEE80211_NODE_MIMO_PS
 condition|?
 literal|" (+SMPS)"
+else|:
+literal|""
+argument_list|,
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_RIFS
+condition|?
+literal|" (+RIFS)"
 else|:
 literal|""
 argument_list|,
