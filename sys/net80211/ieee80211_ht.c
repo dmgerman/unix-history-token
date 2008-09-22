@@ -6264,12 +6264,6 @@ name|txa_flags
 operator||=
 name|IEEE80211_AGGR_IMMEDIATE
 expr_stmt|;
-name|tap
-operator|->
-name|txa_start
-operator|=
-literal|0
-expr_stmt|;
 name|bufsiz
 operator|=
 name|MS
