@@ -906,12 +906,6 @@ name|vers
 condition|)
 block|{
 case|case
-name|MPC750
-case|:
-case|case
-name|IBM750FX
-case|:
-case|case
 name|MPC7400
 case|:
 case|case
@@ -932,6 +926,21 @@ case|:
 case|case
 name|MPC7457
 case|:
+comment|/* G3 systems don't have an L3 cache, so only check 			 * for G4 and above */
+name|l3cr_config
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_L3CR
+argument_list|)
+expr_stmt|;
+comment|/* Fallthrough */
+case|case
+name|MPC750
+case|:
+case|case
+name|IBM750FX
+case|:
 name|cpu_print_speed
 argument_list|()
 expr_stmt|;
@@ -945,13 +954,6 @@ operator|=
 name|mfspr
 argument_list|(
 name|SPR_L2CR
-argument_list|)
-expr_stmt|;
-name|l3cr_config
-operator|=
-name|mfspr
-argument_list|(
-name|SPR_L3CR
 argument_list|)
 expr_stmt|;
 if|if
