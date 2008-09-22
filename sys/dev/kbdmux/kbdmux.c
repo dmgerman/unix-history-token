@@ -347,6 +347,8 @@ name|KBDMUX_LOCK
 parameter_list|(
 name|s
 parameter_list|)
+define|\
+value|mtx_lock(&Giant)
 end_define
 
 begin_define
@@ -356,6 +358,8 @@ name|KBDMUX_UNLOCK
 parameter_list|(
 name|s
 parameter_list|)
+define|\
+value|mtx_unlock(&Giant)
 end_define
 
 begin_define
