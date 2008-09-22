@@ -4266,6 +4266,18 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 			 * XXXRW: We release UDP-layer locks before calling 			 * udp_send() in order to avoid recursion.  However, 			 * this does mean there is a short window where inp's 			 * fields are unstable.  Could this lead to a 			 * potential race in which the factors causing us to 			 * select the UDPv4 output routine are invalidated? 			 */
+name|INP_WUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|V_udbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sin6
@@ -4287,8 +4299,8 @@ index|]
 operator|.
 name|pr_usrreqs
 expr_stmt|;
-name|error
-operator|=
+comment|/* addr will just be freed in sendit(). */
+return|return
 operator|(
 call|(
 modifier|*
@@ -4310,11 +4322,7 @@ argument_list|,
 name|td
 argument_list|)
 operator|)
-expr_stmt|;
-comment|/* addr will just be freed in sendit(). */
-goto|goto
-name|out
-goto|;
+return|;
 block|}
 block|}
 endif|#
