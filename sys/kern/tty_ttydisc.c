@@ -4289,7 +4289,8 @@ name|tty
 modifier|*
 name|tp
 parameter_list|,
-name|char
+specifier|const
+name|void
 modifier|*
 name|buf
 parameter_list|,
