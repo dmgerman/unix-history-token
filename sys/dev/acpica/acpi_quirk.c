@@ -581,7 +581,7 @@ condition|)
 name|bzero
 argument_list|(
 operator|&
-name|fadt
+name|dsdt
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -607,7 +607,7 @@ condition|)
 name|bzero
 argument_list|(
 operator|&
-name|fadt
+name|xsdt
 argument_list|,
 sizeof|sizeof
 argument_list|(
