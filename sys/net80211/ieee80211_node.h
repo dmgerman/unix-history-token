@@ -342,6 +342,16 @@ directive|define
 name|IEEE80211_NODE_RIFS
 value|0x004000
 comment|/* RIFS enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_SGI20
+value|0x008000
+comment|/* Short GI in HT20 enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_SGI40
+value|0x010000
+comment|/* Short GI in HT40 enabled */
 name|uint16_t
 name|ni_associd
 decl_stmt|;
@@ -665,7 +675,7 @@ define|#
 directive|define
 name|IEEE80211_NODE_HT_ALL
 define|\
-value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU | IEEE80211_NODE_MIMO_PS | \ 	 IEEE80211_NODE_MIMO_RTS | IEEE80211_NODE_RIFS)
+value|(IEEE80211_NODE_HT | IEEE80211_NODE_HTCOMPAT | \ 	 IEEE80211_NODE_AMPDU | IEEE80211_NODE_MIMO_PS | \ 	 IEEE80211_NODE_MIMO_RTS | IEEE80211_NODE_RIFS | \ 	 IEEE80211_NODE_SGI20 | IEEE80211_NODE_SGI40)
 end_define
 
 begin_define
