@@ -22,6 +22,44 @@ name|caddr_t32
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|ioc_toc_header32
+block|{
+name|u_short
+name|len
+decl_stmt|;
+name|u_char
+name|starting_track
+decl_stmt|;
+name|u_char
+name|ending_track
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ioc_read_toc_entry32
+block|{
+name|u_char
+name|address_format
+decl_stmt|;
+name|u_char
+name|starting_track
+decl_stmt|;
+name|u_short
+name|data_len
+decl_stmt|;
+name|uint32_t
+name|data
+decl_stmt|;
+comment|/* struct cd_toc_entry* */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -84,6 +122,20 @@ comment|/* padding for future ideas */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CDIOREADTOCENTRYS_32
+value|_IOWR('c', 5, struct ioc_read_toc_entry32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDIOREADTOCHEADER_32
+value|_IOR('c', 4, struct ioc_toc_header32)
+end_define
 
 begin_define
 define|#
