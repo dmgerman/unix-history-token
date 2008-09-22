@@ -379,21 +379,9 @@ expr_stmt|;
 comment|/* Prevent spurious wakeups. */
 if|if
 condition|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TF_STOPPED
-condition|)
-return|return;
-if|if
-condition|(
-name|ttyoutq_bytesused
+name|ttydisc_getc_poll
 argument_list|(
-operator|&
 name|tp
-operator|->
-name|t_outq
 argument_list|)
 operator|==
 literal|0

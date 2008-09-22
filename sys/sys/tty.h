@@ -219,6 +219,11 @@ directive|define
 name|TF_ZOMBIE
 value|0x4000
 comment|/* Modem disconnect received. */
+define|#
+directive|define
+name|TF_HOOK
+value|0x8000
+comment|/* TTY has hook attached. */
 name|unsigned
 name|int
 name|t_revokecnt
@@ -332,6 +337,12 @@ modifier|*
 name|t_devsw
 decl_stmt|;
 comment|/* (c) Driver hooks. */
+name|struct
+name|ttyhook
+modifier|*
+name|t_hook
+decl_stmt|;
+comment|/* (t) Capture/inject hook. */
 comment|/* Process signal delivery. */
 name|struct
 name|pgrp
@@ -352,9 +363,14 @@ decl_stmt|;
 comment|/* (t) Backpointing sessions. */
 name|void
 modifier|*
-name|t_softc
+name|t_devswsoftc
 decl_stmt|;
 comment|/* (c) Soft config, for drivers. */
+name|void
+modifier|*
+name|t_hooksoftc
+decl_stmt|;
+comment|/* (t) Soft config, for hooks. */
 name|struct
 name|cdev
 modifier|*
@@ -855,7 +871,7 @@ name|tty_softc
 parameter_list|(
 name|tp
 parameter_list|)
-value|((tp)->t_softc)
+value|((tp)->t_devswsoftc)
 end_define
 
 begin_define
@@ -925,13 +941,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/ttydisc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ttydevsw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ttydisc.h>
+file|<sys/ttyhook.h>
 end_include
 
 begin_endif

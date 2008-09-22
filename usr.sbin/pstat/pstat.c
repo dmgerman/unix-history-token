@@ -1444,6 +1444,12 @@ literal|'Z'
 block|}
 block|,
 block|{
+name|TF_HOOK
+block|,
+literal|'s'
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|'\0'
