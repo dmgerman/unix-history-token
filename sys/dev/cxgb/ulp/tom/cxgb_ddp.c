@@ -170,19 +170,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_osdep.h>
+file|<cxgb_osdep.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/sys/mbufq.h>
+file|<sys/mbufq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_tcp_offload.h>
+file|<ulp/tom/cxgb_tcp_offload.h>
 end_include
 
 begin_include
@@ -218,37 +218,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/t3cdev.h>
+file|<t3cdev.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_firmware_exports.h>
+file|<common/cxgb_firmware_exports.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_t3_cpl.h>
+file|<common/cxgb_t3_cpl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_tcb.h>
+file|<common/cxgb_tcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/common/cxgb_ctl_defs.h>
+file|<common/cxgb_ctl_defs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_offload.h>
+file|<cxgb_offload.h>
 end_include
 
 begin_include
@@ -284,49 +284,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/sys/mvec.h>
+file|<sys/mvec.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/toecore/cxgb_toedev.h>
+file|<ulp/toecore/cxgb_toedev.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_defs.h>
+file|<ulp/tom/cxgb_defs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_tom.h>
+file|<ulp/tom/cxgb_tom.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_t3_ddp.h>
+file|<ulp/tom/cxgb_t3_ddp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_toepcb.h>
+file|<ulp/tom/cxgb_toepcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_tcp.h>
+file|<ulp/tom/cxgb_tcp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_vm.h>
+file|<ulp/tom/cxgb_vm.h>
 end_include
 
 begin_define

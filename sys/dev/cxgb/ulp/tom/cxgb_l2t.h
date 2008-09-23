@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/toecore/cxgb_toedev.h>
+file|<ulp/toecore/cxgb_toedev.h>
 end_include
 
 begin_include

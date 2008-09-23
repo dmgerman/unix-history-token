@@ -62,19 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/cxgb_t3fw.h>
+file|<cxgb_t3fw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/t3b_protocol_sram.h>
+file|<t3b_protocol_sram.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/t3b_tp_eeprom.h>
+file|<t3b_tp_eeprom.h>
 end_include
 
 begin_function

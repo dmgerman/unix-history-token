@@ -449,7 +449,7 @@ end_enum
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_toepcb.h>
+file|<ulp/tom/cxgb_toepcb.h>
 end_include
 
 begin_struct_decl

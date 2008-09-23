@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/sys/mbufq.h>
+file|<sys/mbufq.h>
 end_include
 
 begin_struct

@@ -15,22 +15,11 @@ directive|define
 name|_CXGB_CONFIG_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CONFIG_DEFINED
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|CONFIG_CHELSIO_T3_CORE
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

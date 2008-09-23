@@ -15,33 +15,11 @@ directive|define
 name|__CHELSIO_COMMON_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DEFINED
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<cxgb_osdep.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/cxgb_osdep.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_enum
 enum|enum
@@ -2416,33 +2394,11 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DEFINED
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<cxgb_adapter.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/cxgb_adapter.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#

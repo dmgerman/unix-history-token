@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_vm.h>
+file|<ulp/tom/cxgb_vm.h>
 end_include
 
 begin_define

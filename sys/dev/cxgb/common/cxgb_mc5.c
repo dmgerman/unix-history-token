@@ -17,12 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DEFINED
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -34,28 +28,6 @@ include|#
 directive|include
 file|<common/cxgb_regs.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/common/cxgb_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/cxgb/common/cxgb_regs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_enum
 enum|enum

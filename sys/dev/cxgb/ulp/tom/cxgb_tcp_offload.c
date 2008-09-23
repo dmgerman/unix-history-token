@@ -150,7 +150,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/cxgb/ulp/tom/cxgb_tcp_offload.h>
+file|<ulp/tom/cxgb_tcp_offload.h>
 end_include
 
 begin_comment
