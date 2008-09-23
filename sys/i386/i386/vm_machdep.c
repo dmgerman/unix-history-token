@@ -582,6 +582,9 @@ name|struct
 name|proc_ldt
 modifier|*
 name|pldt
+decl_stmt|,
+modifier|*
+name|pldt1
 decl_stmt|;
 name|mtx_lock_spin
 argument_list|(
@@ -592,7 +595,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|pldt
+name|pldt1
 operator|=
 name|mdp1
 operator|->
@@ -601,7 +604,7 @@ operator|)
 operator|!=
 name|NULL
 operator|&&
-name|pldt
+name|pldt1
 operator|->
 name|ldt_refcnt
 operator|>
@@ -614,7 +617,7 @@ name|user_ldt_alloc
 argument_list|(
 name|mdp1
 argument_list|,
-name|pldt
+name|pldt1
 operator|->
 name|ldt_len
 argument_list|)
@@ -641,9 +644,9 @@ argument_list|(
 name|mdp1
 argument_list|)
 expr_stmt|;
-name|user_ldt_free
+name|user_ldt_deref
 argument_list|(
-name|td1
+name|pldt1
 argument_list|)
 expr_stmt|;
 block|}

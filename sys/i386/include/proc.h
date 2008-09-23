@@ -138,6 +138,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|user_ldt_deref
+parameter_list|(
+name|struct
+name|proc_ldt
+modifier|*
+name|pldt
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
