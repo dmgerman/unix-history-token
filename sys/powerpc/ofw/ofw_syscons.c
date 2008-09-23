@@ -1113,33 +1113,15 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|OF_getprop
-argument_list|(
-name|node
-argument_list|,
-literal|"device_type"
-argument_list|,
-name|type
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|type
-argument_list|,
-literal|"display"
-argument_list|)
-operator|!=
-literal|0
+name|node
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
-comment|/* 		 * Attaching to "/chosen/stdout" has failed, try 		 * using "screen" directly. 		 */
+comment|/* 		 * The "/chosen/stdout" does not exist try 		 * using "screen" directly. 		 */
 name|node
 operator|=
 name|OF_finddevice
@@ -1147,6 +1129,7 @@ argument_list|(
 literal|"screen"
 argument_list|)
 expr_stmt|;
+block|}
 name|OF_getprop
 argument_list|(
 name|node
@@ -1177,7 +1160,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 comment|/* Only support 8 and 32-bit framebuffers */
 name|OF_getprop
 argument_list|(
