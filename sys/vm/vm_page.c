@@ -5701,6 +5701,19 @@ name|act_count
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Clear any references to the page.  Otherwise, the page daemon will 	 * immediately reactivate the page. 	 */
+name|vm_page_flag_clear
+argument_list|(
+name|m
+argument_list|,
+name|PG_REFERENCED
+argument_list|)
+expr_stmt|;
+name|pmap_clear_reference
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
