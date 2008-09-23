@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp_lro.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -180,6 +174,23 @@ begin_include
 include|#
 directive|include
 file|<dev/cxgb/ulp/toecore/cxgb_toedev.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LRO_SUPPORTED
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_lro.h>
 end_include
 
 begin_endif
@@ -559,6 +570,12 @@ name|PIO_LEN
 value|(WR_LEN - sizeof(struct cpl_tx_pkt_lso))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LRO_SUPPORTED
+end_ifdef
+
 begin_struct
 struct|struct
 name|lro_state
@@ -574,6 +591,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1000,10 +1022,15 @@ index|[
 name|SGE_RXQ_PER_SET
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LRO_SUPPORTED
 name|struct
 name|lro_state
 name|lro
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sge_txq
 name|txq

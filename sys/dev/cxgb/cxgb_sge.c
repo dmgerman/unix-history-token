@@ -9118,6 +9118,9 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|LRO_SUPPORTED
 name|tcp_lro_free
 argument_list|(
 operator|&
@@ -9128,6 +9131,8 @@ operator|.
 name|ctrl
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bzero
 argument_list|(
 name|q
@@ -12446,7 +12451,10 @@ name|EXT_JUMBOP
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * We allocate and setup the lro_ctrl structure irrespective of whether 	 * lro is available and/or enabled. 	 */
+ifdef|#
+directive|ifdef
+name|LRO_SUPPORTED
+comment|/* Allocate and setup the lro_ctrl structure */
 name|q
 operator|->
 name|lro
@@ -12505,6 +12513,8 @@ name|pi
 operator|->
 name|ifp
 expr_stmt|;
+endif|#
+directive|endif
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -13576,6 +13586,11 @@ name|ext_free
 operator|=
 name|ext_free_handler
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800016
 name|m
 operator|->
 name|m_ext
@@ -13599,6 +13614,25 @@ name|uintptr_t
 operator|)
 name|type
 expr_stmt|;
+else|#
+directive|else
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_args
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|type
+expr_stmt|;
+endif|#
+directive|endif
 name|m
 operator|->
 name|m_ext
@@ -14824,6 +14858,9 @@ name|sleeping
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LRO_SUPPORTED
 name|int
 name|lro_enabled
 init|=
@@ -14845,6 +14882,8 @@ name|lro
 operator|.
 name|ctrl
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|mbuf
 modifier|*
@@ -15555,6 +15594,9 @@ argument_list|,
 name|ethpad
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LRO_SUPPORTED
 if|if
 condition|(
 name|lro_enabled
@@ -15580,6 +15622,8 @@ block|{
 comment|/* successfully queue'd for LRO */
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 comment|/* 				 * LRO not enabled, packet unsuitable for LRO, 				 * or unable to queue.  Pass it up right now in 				 * either case. 				 */
 name|struct
@@ -15668,6 +15712,9 @@ argument_list|,
 name|ngathered
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LRO_SUPPORTED
 comment|/* Flush LRO */
 while|while
 condition|(
@@ -15712,6 +15759,8 @@ name|queued
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|sleeping
@@ -19544,6 +19593,9 @@ argument_list|,
 literal|"dump of the transmit queue"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LRO_SUPPORTED
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
@@ -19648,6 +19700,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Now add a node for mac stats. */
 name|poid

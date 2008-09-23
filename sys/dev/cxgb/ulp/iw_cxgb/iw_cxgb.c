@@ -161,11 +161,36 @@ directive|include
 file|<sys/eventhandler.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800044
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/vimage.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|V_ifnet
+value|ifnet
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
