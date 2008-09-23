@@ -2209,6 +2209,8 @@ name|sc
 operator|->
 name|sc_txdmar
 argument_list|,
+literal|0
+argument_list|,
 name|bus_get_dma_tag
 argument_list|(
 name|dev
@@ -2229,6 +2231,8 @@ argument_list|(
 name|sc
 operator|->
 name|sc_rxdmar
+argument_list|,
+literal|0
 argument_list|,
 name|bus_get_dma_tag
 argument_list|(

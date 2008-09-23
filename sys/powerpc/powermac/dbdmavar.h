@@ -85,11 +85,13 @@ begin_struct
 struct|struct
 name|dbdma_channel
 block|{
-name|bus_space_tag_t
-name|sc_bt
+name|struct
+name|resource
+modifier|*
+name|sc_regs
 decl_stmt|;
-name|bus_space_handle_t
-name|sc_bh
+name|u_int
+name|sc_off
 decl_stmt|;
 name|struct
 name|dbdma_command
@@ -128,6 +130,13 @@ define|#
 directive|define
 name|CHAN_STATUS_REG
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_CMDPTR_HI
+value|0x08
 end_define
 
 begin_define

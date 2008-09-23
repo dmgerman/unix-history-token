@@ -193,6 +193,9 @@ name|resource
 modifier|*
 name|dbdma_regs
 parameter_list|,
+name|u_int
+name|offset
+parameter_list|,
 name|bus_dma_tag_t
 name|parent_dma
 parameter_list|,
