@@ -1247,6 +1247,26 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * If you get an error here, then you set KVA_PAGES wrong! See the  * description of KVA_PAGES in sys/i386/include/pmap.h. It must be  * multiple of 4 for a normal kernel, or a multiple of 8 for a PAE.  */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|KERNBASE
+operator|%
+operator|(
+literal|1
+operator|<<
+literal|24
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Move the kernel virtual free pointer to the next  * 4MB.  This is used to help improve performance  * by using a large (4MB) page for much of the kernel  * (.text, .data, .bss)  */
 end_comment
 
