@@ -4713,30 +4713,11 @@ name|p_vmspace
 operator|->
 name|vm_pmap
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|pmr
-operator|=
-operator|(
-name|pmap_t
-operator|)
-name|moea_kextract
-argument_list|(
-name|mmu
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|pm
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
 name|pmr
 operator|=
 name|pm
+operator|->
+name|pmap_phys
 expr_stmt|;
 name|pm
 operator|->
@@ -5799,6 +5780,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 operator|&
 name|PTE_RPGN
@@ -5889,6 +5872,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_hi
 operator|&
 name|PTE_VALID
@@ -5899,6 +5884,8 @@ operator|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&
@@ -5924,6 +5911,8 @@ argument_list|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&
@@ -6249,6 +6238,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 operator|&
 name|PTE_PP
@@ -6271,6 +6262,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 operator|&=
 operator|~
@@ -6279,6 +6272,8 @@ expr_stmt|;
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator||=
@@ -6299,6 +6294,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|)
 expr_stmt|;
 name|lo
@@ -6307,11 +6304,15 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 expr_stmt|;
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&=
@@ -6326,6 +6327,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|,
 name|pvo
 operator|->
@@ -6633,10 +6636,7 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|UMA_MD_SMALL_ALLOC
-comment|/* 	 * Allow direct mappings 	 */
+comment|/* 	 * Allow direct mappings on 32-bit OEA 	 */
 if|if
 condition|(
 name|va
@@ -6650,8 +6650,6 @@ name|va
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 name|PMAP_LOCK
 argument_list|(
 name|kernel_pmap
@@ -6688,6 +6686,8 @@ operator|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&
@@ -7041,6 +7041,37 @@ operator|=
 literal|0
 expr_stmt|;
 asm|__asm __volatile("mftb %0" : "=r"(entropy));
+if|if
+condition|(
+operator|(
+name|pmap
+operator|->
+name|pmap_phys
+operator|=
+operator|(
+name|pmap_t
+operator|)
+name|moea_kextract
+argument_list|(
+name|mmu
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|pmap
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|pmap
+operator|->
+name|pmap_phys
+operator|=
+name|pmap
+expr_stmt|;
+block|}
 comment|/* 	 * Allocate some segment registers for this pmap. 	 */
 for|for
 control|(
@@ -7422,6 +7453,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 operator|&=
 operator|~
@@ -7430,6 +7463,8 @@ expr_stmt|;
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator||=
@@ -7451,6 +7486,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|,
 name|pvo
 operator|->
@@ -8268,6 +8305,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 operator|&
 name|PTE_RPGN
@@ -8279,6 +8318,8 @@ operator|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&
@@ -8493,6 +8534,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|,
 name|sr
 argument_list|,
@@ -8532,6 +8575,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 operator|&
 name|PVO_WIRED
@@ -8561,6 +8606,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|)
 expr_stmt|;
 if|if
@@ -8651,6 +8698,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|,
 name|pvo
 operator|->
@@ -8690,6 +8739,8 @@ condition|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&
@@ -8735,6 +8786,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 operator|&
 name|PTE_RPGN
@@ -8754,6 +8807,8 @@ argument_list|,
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&
@@ -8853,6 +8908,8 @@ condition|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_hi
 operator|&
@@ -9091,6 +9148,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_hi
 operator|&
 name|PTE_VALID
@@ -9118,6 +9177,8 @@ operator|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_hi
 operator|&
@@ -9153,6 +9214,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_hi
 operator|&
 operator|~
@@ -9169,6 +9232,8 @@ operator|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_hi
 operator|&
@@ -9200,6 +9265,8 @@ operator|^
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|)
@@ -9245,6 +9312,8 @@ condition|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_hi
 operator|&
@@ -9405,6 +9474,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|,
 name|sr
 argument_list|,
@@ -9413,6 +9484,8 @@ argument_list|,
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_hi
 operator|&
@@ -9431,6 +9504,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|)
 expr_stmt|;
 if|if
@@ -9504,6 +9579,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|)
 condition|)
 block|{
@@ -9592,6 +9669,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|)
 condition|)
 block|{
@@ -9622,6 +9701,8 @@ name|source_pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_hi
 operator|&=
 operator|~
@@ -9635,6 +9716,8 @@ operator|&
 name|victim_pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|,
 name|victim_pvo
 operator|->
@@ -9649,6 +9732,8 @@ operator|&
 name|source_pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|)
 expr_stmt|;
 name|PVO_PTEGIDX_CLR
@@ -9909,6 +9994,8 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 operator|&
 name|ptebit
@@ -9979,6 +10066,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -9992,6 +10081,8 @@ condition|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&
@@ -10123,6 +10214,8 @@ operator|&
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 argument_list|)
 expr_stmt|;
 if|if
@@ -10130,6 +10223,8 @@ condition|(
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&
@@ -10165,11 +10260,15 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
+name|pte
+operator|.
 name|pte_lo
 expr_stmt|;
 name|pvo
 operator|->
 name|pvo_pte
+operator|.
+name|pte
 operator|.
 name|pte_lo
 operator|&=

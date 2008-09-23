@@ -111,6 +111,11 @@ name|u_int
 name|pm_context
 decl_stmt|;
 name|struct
+name|pmap
+modifier|*
+name|pmap_phys
+decl_stmt|;
+name|struct
 name|pmap_statistics
 name|pm_stats
 decl_stmt|;
@@ -145,11 +150,21 @@ argument_list|)
 name|pvo_olink
 expr_stmt|;
 comment|/* Link to overflow entry */
+union|union
+block|{
 name|struct
 name|pte
-name|pvo_pte
+name|pte
 decl_stmt|;
-comment|/* PTE */
+comment|/* 32 bit PTE */
+name|struct
+name|lpte
+name|lpte
+decl_stmt|;
+comment|/* 64 bit PTE */
+block|}
+name|pvo_pte
+union|;
 name|pmap_t
 name|pvo_pmap
 decl_stmt|;
@@ -176,7 +191,7 @@ begin_struct
 struct|struct
 name|md_page
 block|{
-name|u_int
+name|u_int64_t
 name|mdpg_attrs
 decl_stmt|;
 name|struct

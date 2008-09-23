@@ -540,6 +540,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADDR_API_SHFT64
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADDR_POFF
 value|0x00000fff
 end_define
