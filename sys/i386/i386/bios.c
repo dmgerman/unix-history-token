@@ -2351,7 +2351,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|memcmp
+name|bcmp
 argument_list|(
 name|str
 argument_list|,

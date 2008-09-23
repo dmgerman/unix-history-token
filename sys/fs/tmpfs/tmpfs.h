@@ -1169,7 +1169,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|(de->td_namelen == (uint16_t)len&& \     memcmp((de)->td_name, (name), (de)->td_namelen) == 0)
+value|(de->td_namelen == (uint16_t)len&& \     bcmp((de)->td_name, (name), (de)->td_namelen) == 0)
 end_define
 
 begin_comment

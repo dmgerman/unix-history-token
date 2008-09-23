@@ -410,7 +410,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|memcmp
+name|bcmp
 argument_list|(
 operator|&
 name|ct

@@ -347,7 +347,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|memcmp
+name|bcmp
 argument_list|(
 name|sal_systbl
 operator|->

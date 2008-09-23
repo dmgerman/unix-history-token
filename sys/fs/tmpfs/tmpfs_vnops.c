@@ -4518,7 +4518,7 @@ name|tcnp
 operator|->
 name|cn_namelen
 operator|||
-name|memcmp
+name|bcmp
 argument_list|(
 name|fcnp
 operator|->
