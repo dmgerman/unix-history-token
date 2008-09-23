@@ -2653,20 +2653,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ldt_warnings
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|NUM_LDT_WARNINGS
-value|10
-end_define
-
 begin_function
 name|int
 name|i386_set_ldt
@@ -2934,32 +2920,6 @@ literal|1
 operator|)
 condition|)
 block|{
-comment|/* complain a for a while if using old methods */
-if|if
-condition|(
-name|ldt_warnings
-operator|++
-operator|<
-name|NUM_LDT_WARNINGS
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Warning: pid %d used static ldt allocation.\n"
-argument_list|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"See the i386_set_ldt man page for more info\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* verify range of descriptors to modify */
 name|largest_ld
 operator|=
