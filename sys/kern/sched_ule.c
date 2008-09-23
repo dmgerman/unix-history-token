@@ -9182,6 +9182,16 @@ name|curthread
 operator|->
 name|td_sched
 expr_stmt|;
+comment|/* 	 * Ticks is updated asynchronously on a single cpu.  Check here to 	 * avoid incrementing ts_ticks multiple times in a single tick. 	 */
+if|if
+condition|(
+name|ts
+operator|->
+name|ts_ltick
+operator|==
+name|ticks
+condition|)
+return|return;
 comment|/* Adjust ticks for pctcpu */
 name|ts
 operator|->
