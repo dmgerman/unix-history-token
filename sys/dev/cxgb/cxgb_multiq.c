@@ -347,6 +347,13 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|txq_fills
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|sysctl_oid_list
 name|sysctl__hw_cxgb_children
@@ -2052,6 +2059,18 @@ argument_list|,
 name|TXQ_ETH
 argument_list|)
 condition|)
+block|{
+name|qs
+operator|->
+name|port
+operator|->
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_OACTIVE
+expr_stmt|;
 name|clrbit
 argument_list|(
 operator|&
@@ -2062,6 +2081,7 @@ argument_list|,
 name|TXQ_ETH
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|reclaimable
@@ -3153,7 +3173,7 @@ operator|->
 name|ifp
 operator|->
 name|if_drv_flags
-operator|&&
+operator|&
 name|IFF_DRV_RUNNING
 operator|)
 operator|==
@@ -3403,7 +3423,7 @@ literal|1
 argument_list|,
 literal|"cxgbidle"
 argument_list|,
-name|sleep_ticks
+name|idleticks
 argument_list|)
 expr_stmt|;
 block|}
@@ -4260,6 +4280,12 @@ name|txq_stopped
 argument_list|,
 name|TXQ_ETH
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 if|if
