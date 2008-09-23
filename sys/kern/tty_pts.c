@@ -257,6 +257,11 @@ directive|define
 name|PTS_PKT
 value|0x1
 comment|/* Packet mode. */
+define|#
+directive|define
+name|PTS_FINISHED
+value|0x2
+comment|/* Return errors on read()/write(). */
 name|char
 name|pts_pkt
 decl_stmt|;
@@ -495,12 +500,11 @@ block|}
 comment|/* Maybe the device isn't used anyway. */
 if|if
 condition|(
-name|tty_opened
-argument_list|(
-name|tp
-argument_list|)
-operator|==
-literal|0
+name|psc
+operator|->
+name|pts_flags
+operator|&
+name|PTS_FINISHED
 condition|)
 break|break;
 comment|/* Wait for more data. */
@@ -764,12 +768,11 @@ block|}
 comment|/* Maybe the device isn't used anyway. */
 if|if
 condition|(
-name|tty_opened
-argument_list|(
-name|tp
-argument_list|)
-operator|==
-literal|0
+name|psc
+operator|->
+name|pts_flags
+operator|&
+name|PTS_FINISHED
 condition|)
 block|{
 name|error
@@ -1412,12 +1415,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tty_opened
-argument_list|(
-name|tp
-argument_list|)
-operator|==
-literal|0
+name|psc
+operator|->
+name|pts_flags
+operator|&
+name|PTS_FINISHED
 condition|)
 block|{
 comment|/* Slave device is not opened. */
@@ -1925,6 +1927,42 @@ end_function
 
 begin_function
 specifier|static
+name|int
+name|ptsdrv_open
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+block|{
+name|struct
+name|pts_softc
+modifier|*
+name|psc
+init|=
+name|tty_softc
+argument_list|(
+name|tp
+argument_list|)
+decl_stmt|;
+name|psc
+operator|->
+name|pts_flags
+operator|&=
+operator|~
+name|PTS_FINISHED
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|ptsdrv_close
 parameter_list|(
@@ -1934,6 +1972,16 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
+name|struct
+name|pts_softc
+modifier|*
+name|psc
+init|=
+name|tty_softc
+argument_list|(
+name|tp
+argument_list|)
+decl_stmt|;
 comment|/* Wake up any blocked readers/writers. */
 name|ptsdrv_outwakeup
 argument_list|(
@@ -1944,6 +1992,12 @@ name|ptsdrv_inwakeup
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+name|psc
+operator|->
+name|pts_flags
+operator||=
+name|PTS_FINISHED
 expr_stmt|;
 block|}
 end_function
@@ -2144,6 +2198,11 @@ operator|.
 name|tsw_inwakeup
 operator|=
 name|ptsdrv_inwakeup
+block|,
+operator|.
+name|tsw_open
+operator|=
+name|ptsdrv_open
 block|,
 operator|.
 name|tsw_close
