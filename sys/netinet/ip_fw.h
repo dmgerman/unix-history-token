@@ -16,6 +16,17 @@ name|_IPFW2_H
 end_define
 
 begin_comment
+comment|/*  * The default rule number.  By the design of ip_fw, the default rule  * is the last one, so its number can also serve as the highest number  * allowed for a rule.  The ip_fw code relies on both meanings of this  * constant.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_DEFAULT_RULE
+value|65535
+end_define
+
+begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
 end_comment
 
