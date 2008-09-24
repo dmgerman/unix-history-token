@@ -1574,7 +1574,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * If set to 0, witness is disabled.  Otherwise witness performs full lock order  * checking for all locks.  At runtime, witness is allowed to be turned off.  * witness is not allowed be turned on once it is turned off, however.  */
+comment|/*  * If set to 0, lock order checking is disabled.  If set to -1,  * witness is completely disabled.  Otherwise witness performs full  * lock order checking for all locks.  At runtime, lock order checking  * may be toggled.  However, witness cannot be reenabled once it is  * completely disabled.  */
 end_comment
 
 begin_decl_stmt
