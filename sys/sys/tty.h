@@ -558,6 +558,16 @@ parameter_list|)
 value|mtx_assert((tp)->t_mtx, (ma))
 end_define
 
+begin_define
+define|#
+directive|define
+name|tty_getlock
+parameter_list|(
+name|tp
+parameter_list|)
+value|((tp)->t_mtx)
+end_define
+
 begin_comment
 comment|/* Device node creation. */
 end_comment
