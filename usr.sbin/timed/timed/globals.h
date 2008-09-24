@@ -107,13 +107,6 @@ name|SECDAY
 value|(24*SECHR)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sock
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Best expected round trip for a measurement.  * This is essentially the number of milliseconds per CPU tick (CLK_TCK?).  * All delays shorter than this are usually reported as 0.  */
 end_comment
