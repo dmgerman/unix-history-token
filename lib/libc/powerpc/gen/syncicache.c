@@ -90,11 +90,11 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_STANDALONE
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -130,6 +130,14 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_decl_stmt
+name|int
+name|cacheline_size
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
