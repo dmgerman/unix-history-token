@@ -111,6 +111,12 @@ directive|include
 file|<cxgb_include.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ulp/toecore/cxgb_toedev.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct

@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ulp/tom/cxgb_l2t.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<common/cxgb_tcb.h>
 end_include
 
@@ -240,6 +234,12 @@ name|ctx
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_struct_decl
+struct_decl|struct
+name|l2t_entry
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct

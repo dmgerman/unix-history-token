@@ -206,6 +206,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ulp/tom/cxgb_l2t.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ulp/iw_cxgb/iw_cxgb_wr.h>
 end_include
 

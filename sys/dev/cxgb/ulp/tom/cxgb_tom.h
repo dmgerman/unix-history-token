@@ -21,6 +21,12 @@ directive|include
 file|<sys/protosw.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/toedev.h>
+end_include
+
 begin_define
 define|#
 directive|define

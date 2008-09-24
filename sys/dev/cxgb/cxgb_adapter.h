@@ -132,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ulp/toecore/cxgb_toedev.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbufq.h>
 end_include
 

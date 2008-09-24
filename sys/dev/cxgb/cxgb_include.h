@@ -87,11 +87,5 @@ directive|include
 file|<common/jhash.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ulp/toecore/cxgb_toedev.h>
-end_include
-
 end_unit
 

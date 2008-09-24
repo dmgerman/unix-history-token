@@ -350,6 +350,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ulp/tom/cxgb_l2t.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ulp/tom/cxgb_defs.h>
 end_include
 
