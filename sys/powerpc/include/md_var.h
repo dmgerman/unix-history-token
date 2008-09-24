@@ -84,31 +84,12 @@ name|powerpc_pow_enabled
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_STANDALONE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CACHELINESIZE
-value|32
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|extern
+name|int
+name|cacheline_size
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
