@@ -3855,6 +3855,10 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|TF_ACTIVITY
+value|(TF_GONE|TF_OPENED|TF_HOOK|TF_OPENCLOSE)
 if|if
 condition|(
 name|tp
@@ -3868,13 +3872,7 @@ name|tp
 operator|->
 name|t_flags
 operator|&
-operator|(
-name|TF_GONE
-operator||
-name|TF_OPENED
-operator||
-name|TF_HOOK
-operator|)
+name|TF_ACTIVITY
 operator|)
 operator|!=
 name|TF_GONE
