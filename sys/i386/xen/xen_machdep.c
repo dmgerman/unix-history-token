@@ -2024,15 +2024,12 @@ operator|=
 name|DOMID_SELF
 block|}
 decl_stmt|;
-name|set_xen_guest_handle
-argument_list|(
 name|reservation
 operator|.
 name|extent_start
-argument_list|,
+operator|=
 operator|&
 name|mfn
-argument_list|)
 expr_stmt|;
 name|balloon_lock
 argument_list|(
@@ -2378,15 +2375,12 @@ operator|=
 name|DOMID_SELF
 block|}
 decl_stmt|;
-name|set_xen_guest_handle
-argument_list|(
 name|reservation
 operator|.
 name|extent_start
-argument_list|,
+operator|=
 operator|&
 name|mfn
-argument_list|)
 expr_stmt|;
 name|pfn0
 operator|=
@@ -3051,6 +3045,13 @@ name|curoffset
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nkpt
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|initvalues
@@ -3129,6 +3130,30 @@ decl_stmt|;
 name|int
 name|ncpus
 decl_stmt|;
+name|nkpt
+operator|=
+name|min
+argument_list|(
+name|max
+argument_list|(
+operator|(
+name|startinfo
+operator|->
+name|nr_pages
+operator|>>
+name|NPGPTD_SHIFT
+operator|)
+argument_list|,
+name|nkpt
+argument_list|)
+argument_list|,
+name|NPGPTD
+operator|*
+name|NPDEPG
+operator|-
+name|KPTDI
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -3142,12 +3167,6 @@ name|ncpus
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|HYPERVISOR_vm_assist(VMASST_CMD_enable, VMASST_TYPE_writable_pagetables);
 endif|#
 directive|endif
 name|HYPERVISOR_vm_assist
@@ -3776,7 +3795,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* allocate remainder of NKPT pages */
+comment|/* allocate remainder of nkpt pages */
 for|for
 control|(
 name|offset
@@ -3795,7 +3814,7 @@ literal|1
 init|;
 name|i
 operator|<
-name|NKPT
+name|nkpt
 condition|;
 name|i
 operator|++

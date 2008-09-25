@@ -1833,6 +1833,12 @@ operator|&
 name|allpmaps_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nkpt
+operator|==
+literal|0
+condition|)
 name|nkpt
 operator|=
 name|NKPT
