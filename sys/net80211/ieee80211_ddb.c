@@ -111,6 +111,12 @@ directive|include
 file|<ddb/ddb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ddb/db_sym.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -216,6 +222,19 @@ directive|define
 name|IEEE80211_AGGR_BITS
 define|\
 value|"\20\1IMMEDIATE\2XCHGPEND\3RUNNING\4SETUP\5NAK"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DB_PRINTSYM
+parameter_list|(
+name|prefix
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|db_printf(prefix " "); \ 	db_printsym((db_addr_t) addr, DB_STGY_ANY); \ 	db_printf("\n");
 end_define
 
 begin_function_decl
@@ -2529,126 +2548,126 @@ condition|(
 name|showprocs
 condition|)
 block|{
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_key_alloc %p\n"
+literal|"\tiv_key_alloc"
 argument_list|,
 name|vap
 operator|->
 name|iv_key_alloc
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_key_delete %p\n"
+literal|"\tiv_key_delete"
 argument_list|,
 name|vap
 operator|->
 name|iv_key_delete
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_key_set %p\n"
+literal|"\tiv_key_set"
 argument_list|,
 name|vap
 operator|->
 name|iv_key_set
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_key_update_begin %p\n"
+literal|"\tiv_key_update_begin"
 argument_list|,
 name|vap
 operator|->
 name|iv_key_update_begin
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_key_update_end %p\n"
+literal|"\tiv_key_update_end"
 argument_list|,
 name|vap
 operator|->
 name|iv_key_update_end
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_opdetach %p\n"
+literal|"\tiv_opdetach"
 argument_list|,
 name|vap
 operator|->
 name|iv_opdetach
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_input %p\n"
+literal|"\tiv_input"
 argument_list|,
 name|vap
 operator|->
 name|iv_input
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_recv_mgmt %p\n"
+literal|"\tiv_recv_mgmt"
 argument_list|,
 name|vap
 operator|->
 name|iv_recv_mgmt
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_deliver_data %p\n"
+literal|"\tiv_deliver_data"
 argument_list|,
 name|vap
 operator|->
 name|iv_deliver_data
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_bmiss %p\n"
+literal|"\tiv_bmiss"
 argument_list|,
 name|vap
 operator|->
 name|iv_bmiss
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_reset %p\n"
+literal|"\tiv_reset"
 argument_list|,
 name|vap
 operator|->
 name|iv_reset
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_update_beacon %p\n"
+literal|"\tiv_update_beacon"
 argument_list|,
 name|vap
 operator|->
 name|iv_update_beacon
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_newstate %p\n"
+literal|"\tiv_newstate"
 argument_list|,
 name|vap
 operator|->
 name|iv_newstate
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tiv_output %p\n"
+literal|"\tiv_output"
 argument_list|,
 name|vap
 operator|->
@@ -3270,18 +3289,18 @@ condition|(
 name|showprocs
 condition|)
 block|{
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_vap_create %p\n"
+literal|"\tic_vap_create"
 argument_list|,
 name|ic
 operator|->
 name|ic_vap_create
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_vap_delete %p\n"
+literal|"\tic_vap_delete"
 argument_list|,
 name|ic
 operator|->
@@ -3295,216 +3314,216 @@ comment|/* operating mode attachment */
 block|ieee80211vap_attach	ic_vattach[IEEE80211_OPMODE_MAX];
 endif|#
 directive|endif
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_newassoc %p\n"
+literal|"\tic_newassoc"
 argument_list|,
 name|ic
 operator|->
 name|ic_newassoc
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_getradiocaps %p\n"
+literal|"\tic_getradiocaps"
 argument_list|,
 name|ic
 operator|->
 name|ic_getradiocaps
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_setregdomain %p\n"
+literal|"\tic_setregdomain"
 argument_list|,
 name|ic
 operator|->
 name|ic_setregdomain
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_send_mgmt %p\n"
+literal|"\tic_send_mgmt"
 argument_list|,
 name|ic
 operator|->
 name|ic_send_mgmt
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_raw_xmit %p\n"
+literal|"\tic_raw_xmit"
 argument_list|,
 name|ic
 operator|->
 name|ic_raw_xmit
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_updateslot %p\n"
+literal|"\tic_updateslot"
 argument_list|,
 name|ic
 operator|->
 name|ic_updateslot
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_update_mcast %p\n"
+literal|"\tic_update_mcast"
 argument_list|,
 name|ic
 operator|->
 name|ic_update_mcast
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_update_promisc %p\n"
+literal|"\tic_update_promisc"
 argument_list|,
 name|ic
 operator|->
 name|ic_update_promisc
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_node_alloc %p\n"
+literal|"\tic_node_alloc"
 argument_list|,
 name|ic
 operator|->
 name|ic_node_alloc
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_node_free %p\n"
+literal|"\tic_node_free"
 argument_list|,
 name|ic
 operator|->
 name|ic_node_free
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_node_cleanup %p\n"
+literal|"\tic_node_cleanup"
 argument_list|,
 name|ic
 operator|->
 name|ic_node_cleanup
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_node_getrssi %p\n"
+literal|"\tic_node_getrssi"
 argument_list|,
 name|ic
 operator|->
 name|ic_node_getrssi
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_node_getsignal %p\n"
+literal|"\tic_node_getsignal"
 argument_list|,
 name|ic
 operator|->
 name|ic_node_getsignal
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_node_getmimoinfo %p\n"
+literal|"\tic_node_getmimoinfo"
 argument_list|,
 name|ic
 operator|->
 name|ic_node_getmimoinfo
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_scan_start %p\n"
+literal|"\tic_scan_start"
 argument_list|,
 name|ic
 operator|->
 name|ic_scan_start
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_scan_end %p\n"
+literal|"\tic_scan_end"
 argument_list|,
 name|ic
 operator|->
 name|ic_scan_end
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_set_channel %p\n"
+literal|"\tic_set_channel"
 argument_list|,
 name|ic
 operator|->
 name|ic_set_channel
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_scan_curchan %p\n"
+literal|"\tic_scan_curchan"
 argument_list|,
 name|ic
 operator|->
 name|ic_scan_curchan
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_scan_mindwell %p\n"
+literal|"\tic_scan_mindwell"
 argument_list|,
 name|ic
 operator|->
 name|ic_scan_mindwell
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_recv_action %p\n"
+literal|"\tic_recv_action"
 argument_list|,
 name|ic
 operator|->
 name|ic_recv_action
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_send_action %p\n"
+literal|"\tic_send_action"
 argument_list|,
 name|ic
 operator|->
 name|ic_send_action
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_addba_request %p\n"
+literal|"\tic_addba_request"
 argument_list|,
 name|ic
 operator|->
 name|ic_addba_request
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_addba_response %p\n"
+literal|"\tic_addba_response"
 argument_list|,
 name|ic
 operator|->
 name|ic_addba_response
 argument_list|)
 expr_stmt|;
-name|db_printf
+name|DB_PRINTSYM
 argument_list|(
-literal|"\tic_addba_stop %p\n"
+literal|"\tic_addba_stop"
 argument_list|,
 name|ic
 operator|->
