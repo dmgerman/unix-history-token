@@ -978,9 +978,8 @@ comment|/*  * Initialize the command lists from the static tables.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|db_cmd_init
+name|db_command_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1084,22 +1083,6 @@ directive|undef
 name|N
 block|}
 end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|_cmd_init
-argument_list|,
-name|SI_SUB_KLD
-argument_list|,
-name|SI_ORDER_FIRST
-argument_list|,
-name|db_cmd_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Register a command.  */

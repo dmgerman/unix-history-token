@@ -830,6 +830,9 @@ name|tabsz
 decl_stmt|,
 name|strsz
 decl_stmt|;
+name|db_command_init
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ksym_end
