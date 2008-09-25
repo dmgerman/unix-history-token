@@ -10619,18 +10619,6 @@ literal|6
 expr_stmt|;
 break|break;
 block|}
-comment|/* lkmressys */
-case|case
-literal|370
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
 comment|/* extattr_set_fd */
 case|case
 literal|371
@@ -24169,11 +24157,6 @@ default|default:
 break|break;
 block|}
 empty_stmt|;
-break|break;
-comment|/* lkmressys */
-case|case
-literal|370
-case|:
 break|break;
 comment|/* extattr_set_fd */
 case|case
