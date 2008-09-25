@@ -176,6 +176,11 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800016
 name|void
 modifier|*
 name|ext_arg1
@@ -186,6 +191,15 @@ modifier|*
 name|ext_arg2
 decl_stmt|;
 comment|/* optional argument pointer */
+else|#
+directive|else
+name|void
+modifier|*
+name|ext_args
+decl_stmt|;
+comment|/* optional argument pointer */
+endif|#
+directive|endif
 name|u_int
 name|ext_size
 decl_stmt|;
