@@ -4408,6 +4408,23 @@ argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * These are radio devices with auto-install flash disks for win/mac.  	 * We want the ubsa driver to kick them into shape instead. 	 */
+if|if
+condition|(
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idVendor
+argument_list|)
+operator|==
+name|USB_VENDOR_HUAWEI
+condition|)
+return|return
+operator|(
+name|UMATCH_NONE
+operator|)
+return|;
 comment|/* An entry specifically for Y-E Data devices as they don't fit in the 	 * device description table. 	 */
 if|if
 condition|(
