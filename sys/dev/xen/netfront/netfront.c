@@ -3648,16 +3648,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|set_xen_guest_handle
-argument_list|(
 name|reservation
 operator|.
 name|extent_start
-argument_list|,
+operator|=
 name|sc
 operator|->
 name|rx_pfn_array
-argument_list|)
 expr_stmt|;
 name|reservation
 operator|.
