@@ -1291,6 +1291,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|RemoteAddDate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Always set the date on remote messages */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|UniquePriority
 decl_stmt|;
 end_decl_stmt
@@ -1614,6 +1625,8 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1855,7 +1868,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"468Aa:b:cCdf:kl:m:nop:P:sS:uv"
+literal|"468Aa:b:cCdf:kl:m:nop:P:sS:Tuv"
 argument_list|)
 operator|)
 operator|!=
@@ -2317,6 +2330,14 @@ operator|.
 name|name
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|RemoteAddDate
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3516,6 +3537,12 @@ argument_list|(
 name|hname
 argument_list|,
 name|line
+argument_list|,
+name|RemoteAddDate
+condition|?
+name|ADDDATE
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3611,6 +3638,8 @@ argument_list|(
 name|LocalHostName
 argument_list|,
 name|line
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3808,7 +3837,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: syslogd [-468ACcdknosuv] [-a allowed_peer]"
+literal|"usage: syslogd [-468ACcdknosTuv] [-a allowed_peer]"
 argument_list|,
 literal|"               [-b bind_address] [-f config_file]"
 argument_list|,
@@ -3842,6 +3871,9 @@ parameter_list|,
 name|char
 modifier|*
 name|msg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|char
@@ -4124,7 +4156,7 @@ name|line
 argument_list|,
 name|hname
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
