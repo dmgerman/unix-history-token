@@ -3,22 +3,22 @@ begin_comment
 comment|/*-  * Copyright (c) 1998-1999 Andrew Gallatin  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_COMPAT_FREEBSD32_FREEBSD32_UTIL_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_COMPAT_FREEBSD32_FREEBSD32_UTIL_H_
+end_define
 
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
@@ -36,7 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
 end_include
 
 begin_struct
@@ -95,6 +107,15 @@ name|FREEBSD32_PS_STRINGS
 define|\
 value|(FREEBSD32_USRSTACK - sizeof(struct freebsd32_ps_strings))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_COMPAT_FREEBSD32_FREEBSD32_UTIL_H_ */
+end_comment
 
 end_unit
 
