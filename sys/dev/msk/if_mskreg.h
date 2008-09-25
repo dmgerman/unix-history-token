@@ -15401,6 +15401,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSK_RX_BUF_ALIGN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSK_JUMBO_RX_RING_CNT
 value|MSK_RX_RING_CNT
 end_define
@@ -15954,6 +15961,9 @@ decl_stmt|;
 name|uint32_t
 name|msk_intrhwemask
 decl_stmt|;
+name|uint32_t
+name|msk_pflags
+decl_stmt|;
 name|int
 name|msk_suspended
 decl_stmt|;
@@ -16152,6 +16162,13 @@ decl_stmt|;
 name|int
 name|msk_link
 decl_stmt|;
+name|uint32_t
+name|msk_flags
+decl_stmt|;
+define|#
+directive|define
+name|MSK_FLAG_RAMBUF
+value|0x0010
 name|struct
 name|callout
 name|msk_tick_ch
