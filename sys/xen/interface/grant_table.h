@@ -88,7 +88,7 @@ value|(3U<<0)
 end_define
 
 begin_comment
-comment|/*  * Subflags for GTF_permit_access.  *  GTF_readonly: Restrict @domid to read-only mappings and accesses. [GST]  *  GTF_reading: Grant entry is currently mapped for reading by @domid. [XEN]  *  GTF_writing: Grant entry is currently mapped for writing by @domid. [XEN]  */
+comment|/*  * Subflags for GTF_permit_access.  *  GTF_readonly: Restrict @domid to read-only mappings and accesses. [GST]  *  GTF_reading: Grant entry is currently mapped for reading by @domid. [XEN]  *  GTF_writing: Grant entry is currently mapped for writing by @domid. [XEN]  *  GTF_PAT, GTF_PWT, GTF_PCD: (x86) cache attribute flags for the grant [GST]  */
 end_comment
 
 begin_define
@@ -131,6 +131,48 @@ define|#
 directive|define
 name|GTF_writing
 value|(1U<<_GTF_writing)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_GTF_PWT
+value|(5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTF_PWT
+value|(1U<<_GTF_PWT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_GTF_PCD
+value|(6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTF_PCD
+value|(1U<<_GTF_PCD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_GTF_PAT
+value|(7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTF_PAT
+value|(1U<<_GTF_PAT)
 end_define
 
 begin_comment
@@ -328,12 +370,25 @@ name|int16_t
 name|status
 decl_stmt|;
 comment|/* GNTST_* */
+ifdef|#
+directive|ifdef
+name|__LP64__
 name|XEN_GUEST_HANDLE
 argument_list|(
-argument|ulong
+argument|uint64_t
 argument_list|)
 name|frame_list
 expr_stmt|;
+else|#
+directive|else
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|uint32_t
+argument_list|)
+name|frame_list
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -586,6 +641,56 @@ begin_expr_stmt
 name|DEFINE_XEN_GUEST_HANDLE
 argument_list|(
 name|gnttab_query_size_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * GNTTABOP_unmap_and_replace: Destroy one or more grant-reference mappings  * tracked by<handle> but atomically replace the page table entry with one  * pointing to the machine address under<new_addr>.<new_addr> will be  * redirected to the null entry.  * NOTES:  *  1. The call may fail in an undefined manner if either mapping is not  *     tracked by<handle>.  *  2. After executing a batch of unmaps, it is guaranteed that no stale  *     mappings will remain in the device or host TLBs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GNTTABOP_unmap_and_replace
+value|7
+end_define
+
+begin_struct
+struct|struct
+name|gnttab_unmap_and_replace
+block|{
+comment|/* IN parameters. */
+name|uint64_t
+name|host_addr
+decl_stmt|;
+name|uint64_t
+name|new_addr
+decl_stmt|;
+name|grant_handle_t
+name|handle
+decl_stmt|;
+comment|/* OUT parameters. */
+name|int16_t
+name|status
+decl_stmt|;
+comment|/* GNTST_* */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|gnttab_unmap_and_replace
+name|gnttab_unmap_and_replace_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|gnttab_unmap_and_replace_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -25,6 +25,10 @@ begin_comment
 comment|/*  * Prototype for this hypercall is:  *   long callback_op(int cmd, void *extra_args)  * @cmd        == CALLBACKOP_??? (callback operation).  * @extra_args == Operation-specific extra arguments (NULL if none).  */
 end_comment
 
+begin_comment
+comment|/* ia64, x86: Callback for event delivery. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -32,12 +36,20 @@ name|CALLBACKTYPE_event
 value|0
 end_define
 
+begin_comment
+comment|/* x86: Failsafe callback when guest state cannot be restored by Xen. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CALLBACKTYPE_failsafe
 value|1
 end_define
+
+begin_comment
+comment|/* x86/64 hypervisor: Syscall by 64-bit guest app ('64-on-64-on-64'). */
+end_comment
 
 begin_define
 define|#
@@ -47,25 +59,47 @@ value|2
 end_define
 
 begin_comment
-comment|/* x86_64 only */
-end_comment
-
-begin_comment
-comment|/*  * sysenter is only available on x86_32 with the  * supervisor_mode_kernel option enabled.  */
+comment|/*  * x86/32 hypervisor: Only available on x86/32 when supervisor_mode_kernel  *     feature is enabled. Do not use this callback type in new code.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CALLBACKTYPE_sysenter
+name|CALLBACKTYPE_sysenter_deprecated
 value|3
 end_define
+
+begin_comment
+comment|/* x86: Callback for NMI delivery. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|CALLBACKTYPE_nmi
 value|4
+end_define
+
+begin_comment
+comment|/*  * x86: sysenter is only available as follows:  * - 32-bit hypervisor: with the supervisor_mode_kernel feature enabled  * - 64-bit hypervisor: 32-bit guest applications on Intel CPUs  *                      ('32-on-32-on-64', '32-on-64-on-64')  *                      [nb. also 64-bit guest applications on Intel CPUs  *                           ('64-on-64-on-64'), but syscall is preferred]  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLBACKTYPE_sysenter
+value|5
+end_define
+
+begin_comment
+comment|/*  * x86/64 hypervisor: Syscall by 32-bit guest app on AMD CPUs  *                    ('32-on-32-on-64', '32-on-64-on-64')  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLBACKTYPE_syscall32
+value|7
 end_define
 
 begin_comment
@@ -170,6 +204,32 @@ name|callback_unregister_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|<
+literal|0x00030207
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|CALLBACKTYPE_sysenter
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CALLBACKTYPE_sysenter
+value|CALLBACKTYPE_sysenter_deprecated
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

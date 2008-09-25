@@ -331,12 +331,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__ASSEMBLY__
-end_ifndef
-
 begin_comment
 comment|/*  * int HYPERVISOR_set_segment_base(unsigned int which, unsigned long base)  *  @which == SEGBASE_*  ;  @base == 64-bit base address  * Returns 0 on success.  */
 end_comment
@@ -402,6 +396,12 @@ name|VGCF_IN_SYSCALL
 value|VGCF_in_syscall
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLY__
+end_ifndef
+
 begin_struct
 struct|struct
 name|iret_context
@@ -431,11 +431,20 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STRICT_ANSI__
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Anonymous union includes both 32- and 64-bit names (e.g., eax/rax). */

@@ -356,7 +356,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* arg == struct vcpu_info */
+comment|/* arg == vcpu_register_vcpu_info_t */
 end_comment
 
 begin_struct
@@ -394,6 +394,81 @@ name|vcpu_register_vcpu_info_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Send an NMI to the specified VCPU. @extra_arg == NULL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCPUOP_send_nmi
+value|11
+end_define
+
+begin_comment
+comment|/*   * Get the physical ID information for a pinned vcpu's underlying physical  * processor.  The physical ID informmation is architecture-specific.  * On x86: id[31:0]=apic_id, id[63:32]=acpi_id, and all values 0xff and  *         greater are reserved.  * This command returns -EINVAL if it is not a valid operation for this VCPU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCPUOP_get_physid
+value|12
+end_define
+
+begin_comment
+comment|/* arg == vcpu_get_physid_t */
+end_comment
+
+begin_struct
+struct|struct
+name|vcpu_get_physid
+block|{
+name|uint64_t
+name|phys_id
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|vcpu_get_physid
+name|vcpu_get_physid_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|vcpu_get_physid_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|xen_vcpu_physid_to_x86_apicid
+parameter_list|(
+name|physid
+parameter_list|)
+define|\
+value|((((uint32_t)(physid))>= 0xff) ? 0xff : ((uint8_t)(physid)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|xen_vcpu_physid_to_x86_acpiid
+parameter_list|(
+name|physid
+parameter_list|)
+define|\
+value|((((uint32_t)((physid)>>32))>= 0xff) ? 0xff : ((uint8_t)((physid)>>32)))
+end_define
 
 begin_endif
 endif|#

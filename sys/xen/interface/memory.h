@@ -45,12 +45,10 @@ struct|struct
 name|xen_memory_reservation
 block|{
 comment|/*      * XENMEM_increase_reservation:      *   OUT: MFN (*not* GMFN) bases of extents that were allocated      * XENMEM_decrease_reservation:      *   IN:  GMFN bases of extents to free      * XENMEM_populate_physmap:      *   IN:  GPFN bases of extents to populate with memory      *   OUT: GMFN bases of extents that were allocated      *   (NB. This command also updates the mach_to_phys translation table)      */
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|xen_pfn_t
-argument_list|)
+name|xen_pfn_t
+modifier|*
 name|extent_start
-expr_stmt|;
+decl_stmt|;
 comment|/* Number of extents, and size/alignment of each (2^extent_order pages). */
 name|xen_ulong_t
 name|nr_extents
@@ -198,12 +196,9 @@ name|int
 name|max_extents
 decl_stmt|;
 comment|/*      * Pointer to buffer to fill with list of extent starts. If there are      * any large discontiguities in the machine address space, 2MB gaps in      * the machphys table will be represented by an MFN base of zero.      */
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|xen_pfn_t
-argument_list|)
+name|xen_pfn_t
 name|extent_start
-expr_stmt|;
+decl_stmt|;
 comment|/*      * Number of extents written to the above array. This will be smaller      * than 'max_extents' if the machphys table is smaller than max_e * 2MB.      */
 name|unsigned
 name|int
@@ -360,19 +355,13 @@ name|xen_ulong_t
 name|nr_gpfns
 decl_stmt|;
 comment|/* List of GPFNs to translate. */
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|xen_pfn_t
-argument_list|)
+name|xen_pfn_t
 name|gpfn_list
-expr_stmt|;
+decl_stmt|;
 comment|/*      * Output list to contain MFN translations. May be the same as the input      * list (in which case each input GPFN is overwritten with the output MFN).      */
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|xen_pfn_t
-argument_list|)
+name|xen_pfn_t
 name|mfn_list
-expr_stmt|;
+decl_stmt|;
 block|}
 struct|;
 end_struct

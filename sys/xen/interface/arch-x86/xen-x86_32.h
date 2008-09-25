@@ -28,88 +28,6 @@ name|__XEN_PUBLIC_ARCH_X86_XEN_X86_32_H__
 end_define
 
 begin_comment
-comment|/* Structural guest handles introduced in 0x00030201. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__DEFINE_XEN_GUEST_HANDLE
-parameter_list|(
-name|name
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|typedef struct name { type *p; } __guest_handle_ ## name
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFINE_XEN_GUEST_HANDLE
-parameter_list|(
-name|name
-parameter_list|)
-value|__DEFINE_XEN_GUEST_HANDLE(name, name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__XEN_GUEST_HANDLE
-parameter_list|(
-name|name
-parameter_list|)
-value|__guest_handle_ ## name
-end_define
-
-begin_define
-define|#
-directive|define
-name|XEN_GUEST_HANDLE
-parameter_list|(
-name|name
-parameter_list|)
-value|__XEN_GUEST_HANDLE(name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|set_xen_guest_handle
-parameter_list|(
-name|hnd
-parameter_list|,
-name|val
-parameter_list|)
-value|do { (hnd).p = val; } while (0)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__XEN_TOOLS__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|get_xen_guest_handle
-parameter_list|(
-name|val
-parameter_list|,
-name|hnd
-parameter_list|)
-value|do { val = (hnd).p; } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Hypercall interface:  *  Input:  %ebx, %ecx, %edx, %esi, %edi (arguments 1-5)  *  Output: %eax  * Access is via hypercall page (set up by guest loader or via a Xen MSR):  *  call hypercall_page + hypercall-number * 32  * Clobbered: Argument registers (e.g., 2-arg hypercall clobbers %ebx,%ecx)  */
 end_comment
 
@@ -294,6 +212,10 @@ define|\
 value|mk_unsigned_long(__MACH2PHYS_VIRT_END_PAE)
 end_define
 
+begin_comment
+comment|/* Non-PAE bounds are obsolete. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -339,12 +261,6 @@ define|\
 value|mk_unsigned_long(__MACH2PHYS_VIRT_END_NONPAE)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_X86_PAE
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -365,43 +281,6 @@ directive|define
 name|__MACH2PHYS_VIRT_END
 value|__MACH2PHYS_VIRT_END_PAE
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_warning
-warning|#
-directive|warning
-literal|"not using PAE!!!"
-end_warning
-
-begin_define
-define|#
-directive|define
-name|__HYPERVISOR_VIRT_START
-value|__HYPERVISOR_VIRT_START_NONPAE
-end_define
-
-begin_define
-define|#
-directive|define
-name|__MACH2PHYS_VIRT_START
-value|__MACH2PHYS_VIRT_START_NONPAE
-end_define
-
-begin_define
-define|#
-directive|define
-name|__MACH2PHYS_VIRT_END
-value|__MACH2PHYS_VIRT_END_NONPAE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -481,13 +360,13 @@ end_if
 begin_undef
 undef|#
 directive|undef
-name|__DEFINE_XEN_GUEST_HANDLE
+name|___DEFINE_XEN_GUEST_HANDLE
 end_undef
 
 begin_define
 define|#
 directive|define
-name|__DEFINE_XEN_GUEST_HANDLE
+name|___DEFINE_XEN_GUEST_HANDLE
 parameter_list|(
 name|name
 parameter_list|,
@@ -526,11 +405,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEN_GUEST_HANDLE_64
+name|__XEN_GUEST_HANDLE_64
 parameter_list|(
 name|name
 parameter_list|)
 value|__guest_handle_64_ ## name
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_GUEST_HANDLE_64
+parameter_list|(
+name|name
+parameter_list|)
+value|__XEN_GUEST_HANDLE_64(name)
 end_define
 
 begin_endif
@@ -634,10 +523,8 @@ typedef|;
 end_typedef
 
 begin_expr_stmt
-name|__DEFINE_XEN_GUEST_HANDLE
+name|DEFINE_XEN_GUEST_HANDLE
 argument_list|(
-name|foobarbaz
-argument_list|,
 name|cpu_user_regs_t
 argument_list|)
 expr_stmt|;

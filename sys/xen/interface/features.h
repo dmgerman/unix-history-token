@@ -70,6 +70,17 @@ name|XENFEAT_pae_pgdir_above_4gb
 value|4
 end_define
 
+begin_comment
+comment|/* x86: Does this Xen host support the MMU_PT_UPDATE_PRESERVE_AD hypercall? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFEAT_mmu_pt_update_preserve_ad
+value|5
+end_define
+
 begin_define
 define|#
 directive|define
