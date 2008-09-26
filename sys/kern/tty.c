@@ -789,6 +789,8 @@ name|si_drv1
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 comment|/* Disallow access when the TTY belongs to a different prison. */
 if|if
