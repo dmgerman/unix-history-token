@@ -114,10 +114,6 @@ name|CFECONS_POLL_HZ
 value|4
 end_define
 
-begin_comment
-comment|/* 50-100 works best on Ultra2 */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
