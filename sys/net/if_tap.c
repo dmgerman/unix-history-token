@@ -985,12 +985,9 @@ argument_list|(
 operator|&
 name|tap_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|unit
 operator||
 name|extra
-argument_list|)
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -1819,12 +1816,9 @@ argument_list|(
 operator|&
 name|tap_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|unit
 operator||
 name|extra
-argument_list|)
 argument_list|,
 name|UID_ROOT
 argument_list|,

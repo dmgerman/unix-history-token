@@ -2336,10 +2336,7 @@ argument_list|(
 operator|&
 name|audit_pipe_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|u
-argument_list|)
 argument_list|,
 name|UID_ROOT
 argument_list|,

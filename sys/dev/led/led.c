@@ -1318,12 +1318,9 @@ argument_list|(
 operator|&
 name|led_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|sc
 operator|->
 name|unit
-argument_list|)
 argument_list|,
 name|UID_ROOT
 argument_list|,

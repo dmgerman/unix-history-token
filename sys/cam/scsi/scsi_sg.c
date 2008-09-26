@@ -1139,12 +1139,9 @@ name|devstat_new_entry
 argument_list|(
 literal|"sg"
 argument_list|,
-name|unit2minor
-argument_list|(
 name|periph
 operator|->
 name|unit_number
-argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1179,12 +1176,9 @@ argument_list|(
 operator|&
 name|sg_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|periph
 operator|->
 name|unit_number
-argument_list|)
 argument_list|,
 name|UID_ROOT
 argument_list|,

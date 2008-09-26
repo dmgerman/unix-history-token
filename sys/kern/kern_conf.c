@@ -4738,12 +4738,9 @@ name|newdev
 argument_list|(
 name|csw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|unit
 operator||
 name|extra
-argument_list|)
 argument_list|,
 name|ndev
 argument_list|)

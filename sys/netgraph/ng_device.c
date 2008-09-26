@@ -669,12 +669,9 @@ argument_list|(
 operator|&
 name|ngd_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|priv
 operator|->
 name|unit
-argument_list|)
 argument_list|,
 name|UID_ROOT
 argument_list|,

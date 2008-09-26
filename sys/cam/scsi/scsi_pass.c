@@ -968,12 +968,9 @@ name|devstat_new_entry
 argument_list|(
 literal|"pass"
 argument_list|,
-name|unit2minor
-argument_list|(
 name|periph
 operator|->
 name|unit_number
-argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1008,12 +1005,9 @@ argument_list|(
 operator|&
 name|pass_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|periph
 operator|->
 name|unit_number
-argument_list|)
 argument_list|,
 name|UID_ROOT
 argument_list|,

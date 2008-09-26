@@ -128,10 +128,7 @@ argument_list|(
 operator|&
 name|dtrace_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|u
-argument_list|)
 argument_list|,
 name|cred
 argument_list|,

@@ -936,10 +936,7 @@ argument_list|(
 operator|&
 name|tun_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|unit
-argument_list|)
 argument_list|,
 name|UID_UUCP
 argument_list|,
@@ -1189,10 +1186,7 @@ argument_list|(
 operator|&
 name|tun_cdevsw
 argument_list|,
-name|unit2minor
-argument_list|(
 name|u
-argument_list|)
 argument_list|,
 name|UID_UUCP
 argument_list|,
