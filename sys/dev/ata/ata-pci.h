@@ -966,6 +966,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_IT8213F
+value|0x82131283
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_JMICRON_ID
 value|0x197b
 end_define
