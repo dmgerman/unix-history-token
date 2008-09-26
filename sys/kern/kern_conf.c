@@ -207,7 +207,7 @@ modifier|*
 name|devsw
 parameter_list|,
 name|int
-name|minornr
+name|unit
 parameter_list|,
 name|struct
 name|ucred
@@ -2919,7 +2919,7 @@ modifier|*
 name|devsw
 parameter_list|,
 name|int
-name|minornr
+name|unit
 parameter_list|,
 name|struct
 name|ucred
@@ -2971,7 +2971,7 @@ name|newdev
 argument_list|(
 name|devsw
 argument_list|,
-name|minornr
+name|unit
 argument_list|,
 name|dev
 argument_list|)
@@ -3170,7 +3170,7 @@ modifier|*
 name|devsw
 parameter_list|,
 name|int
-name|minornr
+name|unit
 parameter_list|,
 name|uid_t
 name|uid
@@ -3212,7 +3212,7 @@ literal|0
 argument_list|,
 name|devsw
 argument_list|,
-name|minornr
+name|unit
 argument_list|,
 name|NULL
 argument_list|,
@@ -3252,7 +3252,7 @@ modifier|*
 name|devsw
 parameter_list|,
 name|int
-name|minornr
+name|unit
 parameter_list|,
 name|struct
 name|ucred
@@ -3299,7 +3299,7 @@ literal|0
 argument_list|,
 name|devsw
 argument_list|,
-name|minornr
+name|unit
 argument_list|,
 name|cr
 argument_list|,
@@ -3342,7 +3342,7 @@ modifier|*
 name|devsw
 parameter_list|,
 name|int
-name|minornr
+name|unit
 parameter_list|,
 name|struct
 name|ucred
@@ -3389,7 +3389,7 @@ name|flags
 argument_list|,
 name|devsw
 argument_list|,
-name|minornr
+name|unit
 argument_list|,
 name|cr
 argument_list|,

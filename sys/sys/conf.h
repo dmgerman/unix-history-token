@@ -1213,7 +1213,7 @@ modifier|*
 name|_devsw
 parameter_list|,
 name|int
-name|_minor
+name|_unit
 parameter_list|,
 name|uid_t
 name|_uid
@@ -1255,7 +1255,7 @@ modifier|*
 name|_devsw
 parameter_list|,
 name|int
-name|_minor
+name|_unit
 parameter_list|,
 name|struct
 name|ucred
@@ -1319,7 +1319,7 @@ modifier|*
 name|_devsw
 parameter_list|,
 name|int
-name|_minornr
+name|_unit
 parameter_list|,
 name|struct
 name|ucred
