@@ -289,6 +289,47 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Make sure that u_long is at least 64 bits when PAGE_SIZE is 32K. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PAGE_SIZE
+operator|==
+literal|32768
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|u_long
+argument_list|)
+operator|>=
+literal|8
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  *	vm_set_page_size:  *  *	Sets the page size, perhaps based upon the memory  *	size.  Must be called before any use of page-size  *	dependent functions.  */
 end_comment
 
