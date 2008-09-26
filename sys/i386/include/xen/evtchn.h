@@ -188,6 +188,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ipi_pcpu
+parameter_list|(
+name|unsigned
+name|int
+name|cpu
+parameter_list|,
+name|int
+name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * CHARACTER-DEVICE DEFINITIONS  */
 end_comment
