@@ -835,6 +835,16 @@ name|cdevsw
 modifier|*
 name|csw
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
+name|file
+modifier|*
+name|fpop
+decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -885,6 +895,22 @@ operator|=
 name|PROT_READ
 expr_stmt|;
 comment|/* XXX should pass in? */
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|fpop
+operator|=
+name|td
+operator|->
+name|td_fpop
+expr_stmt|;
+name|td
+operator|->
+name|td_fpop
+operator|=
+name|NULL
+expr_stmt|;
 name|ret
 operator|=
 call|(
@@ -919,6 +945,12 @@ operator|(
 literal|"dev_pager_getpage: map function returns error"
 operator|)
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_fpop
+operator|=
+name|fpop
 expr_stmt|;
 name|dev_relthread
 argument_list|(
