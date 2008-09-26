@@ -659,6 +659,9 @@ name|dev
 argument_list|,
 literal|"bridge registers addr 0x%08x vaddr %p\n"
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|sc
 operator|->
 name|sc_bh
@@ -766,6 +769,9 @@ name|dev
 argument_list|,
 literal|"mapped pci config space at 0x%08x\n"
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|sc_cfg_hand
 argument_list|)
 expr_stmt|;
