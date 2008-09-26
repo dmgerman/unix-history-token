@@ -2777,6 +2777,12 @@ case|:
 case|case
 name|XenbusStateClosed
 case|:
+case|case
+name|XenbusStateReconfigured
+case|:
+case|case
+name|XenbusStateReconfiguring
+case|:
 break|break;
 case|case
 name|XenbusStateInitWait
@@ -3648,13 +3654,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|set_xen_guest_handle
+argument_list|(
 name|reservation
 operator|.
 name|extent_start
-operator|=
+argument_list|,
 name|sc
 operator|->
 name|rx_pfn_array
+argument_list|)
 expr_stmt|;
 name|reservation
 operator|.
@@ -4530,8 +4539,6 @@ name|grant_tx_ref
 index|[
 name|id
 index|]
-argument_list|,
-name|GNTMAP_readonly
 argument_list|)
 expr_stmt|;
 name|gnttab_release_grant_reference
@@ -5535,8 +5542,6 @@ operator|=
 name|gnttab_end_foreign_access_ref
 argument_list|(
 name|ref
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7965,8 +7970,6 @@ condition|)
 name|gnttab_end_foreign_access
 argument_list|(
 name|ref
-argument_list|,
-literal|0
 argument_list|,
 name|page
 argument_list|)

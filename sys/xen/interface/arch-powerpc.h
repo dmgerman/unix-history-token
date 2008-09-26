@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Copyright (C) IBM Corp. 2005, 2006  *  * Authors: Hollis Blanchard<hollisb@us.ibm.com>  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"xen.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,7 +24,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__DEFINE_XEN_GUEST_HANDLE
+name|___DEFINE_XEN_GUEST_HANDLE
 parameter_list|(
 name|name
 parameter_list|,
@@ -26,6 +32,19 @@ name|type
 parameter_list|)
 define|\
 value|typedef struct { \         int __pad[(sizeof (long long) - sizeof (void *)) / sizeof (int)]; \         type *p; \     } __attribute__((__aligned__(8))) __guest_handle_ ## name
+end_define
+
+begin_define
+define|#
+directive|define
+name|__DEFINE_XEN_GUEST_HANDLE
+parameter_list|(
+name|name
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|___DEFINE_XEN_GUEST_HANDLE(name, type);   \     ___DEFINE_XEN_GUEST_HANDLE(const_##name, const type)
 end_define
 
 begin_define
@@ -90,81 +109,6 @@ directive|ifndef
 name|__ASSEMBLY__
 end_ifndef
 
-begin_comment
-comment|/* Guest handles for primitive C types. */
-end_comment
-
-begin_macro
-name|__DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-argument|uchar
-argument_list|,
-argument|unsigned char
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|__DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-argument|uint
-argument_list|,
-argument|unsigned int
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|__DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-argument|ulong
-argument_list|,
-argument|unsigned long
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|char
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|long
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|void
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -173,14 +117,6 @@ name|long
 name|xen_pfn_t
 typedef|;
 end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_pfn_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_define
 define|#

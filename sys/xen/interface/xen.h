@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<xen/interface/xen-compat.h>
+file|"xen-compat.h"
 end_include
 
 begin_if
@@ -38,7 +38,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<xen/interface/arch-x86/xen.h>
+file|"arch-x86/xen.h"
 end_include
 
 begin_elif
@@ -56,21 +56,6 @@ directive|include
 file|"arch-ia64.h"
 end_include
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"arch-powerpc.h"
-end_include
-
 begin_else
 else|#
 directive|else
@@ -81,6 +66,100 @@ error|#
 directive|error
 literal|"Unsupported architecture"
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLY__
+end_ifndef
+
+begin_comment
+comment|/* Guest handles for primitive C types. */
+end_comment
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|char
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|__DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+argument|uchar
+argument_list|,
+argument|unsigned char
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|__DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+argument|uint
+argument_list|,
+argument|unsigned int
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|long
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|__DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+argument|ulong
+argument_list|,
+argument|unsigned long
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|void
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_pfn_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -296,7 +375,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__HYPERVISOR_acm_op
+name|__HYPERVISOR_xsm_op
 value|27
 end_define
 
@@ -475,12 +554,6 @@ name|__XEN_INTERFACE_VERSION__
 operator|<
 literal|0x00030202
 end_if
-
-begin_warning
-warning|#
-directive|warning
-warning|using compat ops
-end_warning
 
 begin_undef
 undef|#
@@ -697,7 +770,7 @@ value|24
 end_define
 
 begin_comment
-comment|/*  * MMU-UPDATE REQUESTS  *   * HYPERVISOR_mmu_update() accepts a list of (ptr, val) pairs.  * A foreigndom (FD) can be specified (or DOMID_SELF for none).  * Where the FD has some effect, it is described below.  * ptr[1:0] specifies the appropriate MMU_* command.  *   * ptr[1:0] == MMU_NORMAL_PT_UPDATE:  * Updates an entry in a page table. If updating an L1 table, and the new  * table entry is valid/present, the mapped frame must belong to the FD, if  * an FD has been specified. If attempting to map an I/O page then the  * caller assumes the privilege of the FD.  * FD == DOMID_IO: Permit /only/ I/O mappings, at the priv level of the caller.  * FD == DOMID_XEN: Map restricted areas of Xen's heap space.  * ptr[:2]  -- Machine address of the page-table entry to modify.  * val      -- Value to write.  *   * ptr[1:0] == MMU_MACHPHYS_UPDATE:  * Updates an entry in the machine->pseudo-physical mapping table.  * ptr[:2]  -- Machine address within the frame whose mapping to modify.  *             The frame must belong to the FD, if one is specified.  * val      -- Value to write into the mapping entry.  */
+comment|/*  * MMU-UPDATE REQUESTS  *   * HYPERVISOR_mmu_update() accepts a list of (ptr, val) pairs.  * A foreigndom (FD) can be specified (or DOMID_SELF for none).  * Where the FD has some effect, it is described below.  * ptr[1:0] specifies the appropriate MMU_* command.  *   * ptr[1:0] == MMU_NORMAL_PT_UPDATE:  * Updates an entry in a page table. If updating an L1 table, and the new  * table entry is valid/present, the mapped frame must belong to the FD, if  * an FD has been specified. If attempting to map an I/O page then the  * caller assumes the privilege of the FD.  * FD == DOMID_IO: Permit /only/ I/O mappings, at the priv level of the caller.  * FD == DOMID_XEN: Map restricted areas of Xen's heap space.  * ptr[:2]  -- Machine address of the page-table entry to modify.  * val      -- Value to write.  *   * ptr[1:0] == MMU_MACHPHYS_UPDATE:  * Updates an entry in the machine->pseudo-physical mapping table.  * ptr[:2]  -- Machine address within the frame whose mapping to modify.  *             The frame must belong to the FD, if one is specified.  * val      -- Value to write into the mapping entry.  *   * ptr[1:0] == MMU_PT_UPDATE_PRESERVE_AD:  * As MMU_NORMAL_PT_UPDATE above, but A/D bits currently in the PTE are ORed  * with those in @val.  */
 end_comment
 
 begin_define
@@ -708,7 +781,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* checked '*ptr = val'. ptr is MA.       */
+comment|/* checked '*ptr = val'. ptr is MA.      */
 end_comment
 
 begin_define
@@ -719,7 +792,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* ptr = MA of frame to modify entry for  */
+comment|/* ptr = MA of frame to modify entry for */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMU_PT_UPDATE_PRESERVE_AD
+value|2
+end_define
+
+begin_comment
+comment|/* atomically: *ptr = val | (*ptr&(A|D)) */
 end_comment
 
 begin_comment
@@ -867,12 +951,25 @@ name|int
 name|nr_ents
 decl_stmt|;
 comment|/* TLB_FLUSH_MULTI, INVLPG_MULTI */
-name|XEN_GUEST_HANDLE_00030205
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|>=
+literal|0x00030205
+name|XEN_GUEST_HANDLE
 argument_list|(
 argument|void
 argument_list|)
 name|vcpumask
 expr_stmt|;
+else|#
+directive|else
+name|void
+modifier|*
+name|vcpumask
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|arg2
 union|;
@@ -1575,6 +1672,17 @@ begin_comment
 comment|/* Is this the initial control domain? */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SIF_PM_MASK
+value|(0xFF<<8)
+end_define
+
+begin_comment
+comment|/* reserve 1 byte for xen-pm options */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1659,6 +1767,21 @@ name|rsvd_pos
 decl_stmt|,
 name|rsvd_size
 decl_stmt|;
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|>=
+literal|0x00030206
+comment|/* VESA capabilities (offset 0xa, VESA command 0x4f00). */
+name|uint32_t
+name|gbl_caps
+decl_stmt|;
+comment|/* Mode attributes (offset 0x0, VESA command 0x4f01). */
+name|uint16_t
+name|mode_attrs
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|vesa_lfb
 struct|;
@@ -1719,32 +1842,40 @@ value|__mk_unsigned_long(x)
 end_define
 
 begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
+name|__DEFINE_XEN_GUEST_HANDLE
 argument_list|(
+name|uint8
+argument_list|,
 name|uint8_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
+name|__DEFINE_XEN_GUEST_HANDLE
 argument_list|(
+name|uint16
+argument_list|,
 name|uint16_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
+name|__DEFINE_XEN_GUEST_HANDLE
 argument_list|(
+name|uint32
+argument_list|,
 name|uint32_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
+name|__DEFINE_XEN_GUEST_HANDLE
 argument_list|(
+name|uint64
+argument_list|,
 name|uint64_t
 argument_list|)
 expr_stmt|;

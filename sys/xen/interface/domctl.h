@@ -1370,11 +1370,12 @@ name|XEN_DOMAINSETUP_query
 value|(1UL<<_XEN_DOMAINSETUP_query)
 end_define
 
-begin_expr_stmt
-name|define
+begin_define
+define|#
+directive|define
 name|_XEN_DOMAINSETUP_sioemu_guest
-literal|2
-end_expr_stmt
+value|2
+end_define
 
 begin_define
 define|#

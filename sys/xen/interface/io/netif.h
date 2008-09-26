@@ -172,8 +172,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XEN_NETIF_EXTRA_TYPE_MAX
+name|XEN_NETIF_EXTRA_TYPE_MCAST_ADD
 value|(2)
+end_define
+
+begin_comment
+comment|/* u.mcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_NETIF_EXTRA_TYPE_MCAST_DEL
+value|(3)
+end_define
+
+begin_comment
+comment|/* u.mcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_NETIF_EXTRA_TYPE_MAX
+value|(4)
 end_define
 
 begin_comment
@@ -223,6 +245,7 @@ decl_stmt|;
 comment|/* XEN_NETIF_EXTRA_FLAG_* */
 union|union
 block|{
+comment|/*          * XEN_NETIF_EXTRA_TYPE_GSO:          */
 struct|struct
 block|{
 comment|/*              * Maximum payload size of each segment. For example, for TCP this              * is just the path MSS.              */
@@ -246,6 +269,19 @@ comment|/* XEN_NETIF_GSO_FEAT_* */
 block|}
 name|gso
 struct|;
+comment|/*          * XEN_NETIF_EXTRA_TYPE_MCAST_{ADD,DEL}:          * Backend advertises availability via 'feature-multicast-control'          * xenbus node containing value '1'.          * Frontend requests this feature by advertising          * 'request-multicast-control' xenbus node containing value '1'.          * If multicast control is requested then multicast flooding is          * disabled and the frontend must explicitly register its interest          * in multicast groups using dummy transmit requests containing          * MCAST_{ADD,DEL} extra-info fragments.          */
+struct|struct
+block|{
+name|uint8_t
+name|addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* Address to add/remove. */
+block|}
+name|mcast
+struct|;
 name|uint16_t
 name|pad
 index|[
@@ -258,6 +294,14 @@ union|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|netif_extra_info
+name|netif_extra_info_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct

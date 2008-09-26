@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|XEN_SYSCTL_INTERFACE_VERSION
-value|0x00000003
+value|0x00000006
 end_define
 
 begin_comment
@@ -76,23 +76,34 @@ begin_struct
 struct|struct
 name|xen_sysctl_readconsole
 block|{
-comment|/* IN variables. */
-name|uint32_t
+comment|/* IN: Non-zero -> clear after reading. */
+name|uint8_t
 name|clear
 decl_stmt|;
-comment|/* Non-zero -> clear after reading. */
+comment|/* IN: Non-zero -> start index specified by @index field. */
+name|uint8_t
+name|incremental
+decl_stmt|;
+name|uint8_t
+name|pad0
+decl_stmt|,
+name|pad1
+decl_stmt|;
+comment|/*      * IN:  Start index for consuming from ring buffer (if @incremental);      * OUT: End index after consuming from ring buffer.      */
+name|uint32_t
+name|index
+decl_stmt|;
+comment|/* IN: Virtual address to write console data. */
 name|XEN_GUEST_HANDLE_64
 argument_list|(
 argument|char
 argument_list|)
 name|buffer
 expr_stmt|;
-comment|/* Buffer start */
-comment|/* IN/OUT variables. */
+comment|/* IN: Size of buffer; OUT: Bytes written to buffer. */
 name|uint32_t
 name|count
 decl_stmt|;
-comment|/* In: Buffer size;  Out: Used buffer size  */
 block|}
 struct|;
 end_struct
@@ -202,6 +213,42 @@ name|XEN_SYSCTL_physinfo
 value|3
 end_define
 
+begin_comment
+comment|/* (x86) The platform supports HVM guests. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_XEN_SYSCTL_PHYSCAP_hvm
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_PHYSCAP_hvm
+value|(1u<<_XEN_SYSCTL_PHYSCAP_hvm)
+end_define
+
+begin_comment
+comment|/* (x86) The platform supports HVM-guest direct access to I/O devices. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_XEN_SYSCTL_PHYSCAP_hvm_directio
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_PHYSCAP_hvm_directio
+value|(1u<<_XEN_SYSCTL_PHYSCAP_hvm_directio)
+end_define
+
 begin_struct
 struct|struct
 name|xen_sysctl_physinfo
@@ -213,7 +260,7 @@ name|uint32_t
 name|cores_per_socket
 decl_stmt|;
 name|uint32_t
-name|sockets_per_node
+name|nr_cpus
 decl_stmt|;
 name|uint32_t
 name|nr_nodes
@@ -235,6 +282,21 @@ name|hw_cap
 index|[
 literal|8
 index|]
+decl_stmt|;
+comment|/*      * IN: maximum addressable entry in the caller-provided cpu_to_node array.      * OUT: largest cpu identifier in the system.      * If OUT is greater than IN then the cpu_to_node array is truncated!      */
+name|uint32_t
+name|max_cpu_id
+decl_stmt|;
+comment|/*      * If not NULL, this array is filled with node identifier for each cpu.      * If a cpu has no node information (e.g., cpu not present) then the      * sentinel value ~0u is written.      * The size of this array is specified by the caller in @max_cpu_id.      * If the actual @max_cpu_id is smaller than the array then the trailing      * elements of the array will not be written by the sysctl.      */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint32
+argument_list|)
+name|cpu_to_node
+expr_stmt|;
+comment|/* XEN_SYSCTL_PHYSCAP_??? */
+name|uint32_t
+name|capabilities
 decl_stmt|;
 block|}
 struct|;
@@ -542,7 +604,7 @@ begin_struct
 struct|struct
 name|xen_sysctl_cpuinfo
 block|{
-name|uint64_t
+name|uint64_aligned_t
 name|idletime
 decl_stmt|;
 block|}
@@ -603,6 +665,313 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_availheap
+value|9
+end_define
+
+begin_struct
+struct|struct
+name|xen_sysctl_availheap
+block|{
+comment|/* IN variables. */
+name|uint32_t
+name|min_bitwidth
+decl_stmt|;
+comment|/* Smallest address width (zero if don't care). */
+name|uint32_t
+name|max_bitwidth
+decl_stmt|;
+comment|/* Largest address width (zero if don't care). */
+name|int32_t
+name|node
+decl_stmt|;
+comment|/* NUMA node of interest (-1 for all nodes). */
+comment|/* OUT variables. */
+name|uint64_aligned_t
+name|avail_bytes
+decl_stmt|;
+comment|/* Bytes available in the specified region. */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_availheap
+name|xen_sysctl_availheap_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_availheap_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_get_pmstat
+value|10
+end_define
+
+begin_struct
+struct|struct
+name|pm_px_val
+block|{
+name|uint64_aligned_t
+name|freq
+decl_stmt|;
+comment|/* Px core frequency */
+name|uint64_aligned_t
+name|residency
+decl_stmt|;
+comment|/* Px residency time */
+name|uint64_aligned_t
+name|count
+decl_stmt|;
+comment|/* Px transition count */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|pm_px_val
+name|pm_px_val_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|pm_px_val_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|pm_px_stat
+block|{
+name|uint8_t
+name|total
+decl_stmt|;
+comment|/* total Px states */
+name|uint8_t
+name|usable
+decl_stmt|;
+comment|/* usable Px states */
+name|uint8_t
+name|last
+decl_stmt|;
+comment|/* last Px state */
+name|uint8_t
+name|cur
+decl_stmt|;
+comment|/* current Px state */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint64
+argument_list|)
+name|trans_pt
+expr_stmt|;
+comment|/* Px transition table */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|pm_px_val_t
+argument_list|)
+name|pt
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|pm_px_stat
+name|pm_px_stat_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|pm_px_stat_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|pm_cx_stat
+block|{
+name|uint32_t
+name|nr
+decl_stmt|;
+comment|/* entry nr in triggers& residencies, including C0 */
+name|uint32_t
+name|last
+decl_stmt|;
+comment|/* last Cx state */
+name|uint64_aligned_t
+name|idle_time
+decl_stmt|;
+comment|/* idle time from boot */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint64
+argument_list|)
+name|triggers
+expr_stmt|;
+comment|/* Cx trigger counts */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint64
+argument_list|)
+name|residencies
+expr_stmt|;
+comment|/* Cx residencies */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xen_sysctl_get_pmstat
+block|{
+define|#
+directive|define
+name|PMSTAT_CATEGORY_MASK
+value|0xf0
+define|#
+directive|define
+name|PMSTAT_PX
+value|0x10
+define|#
+directive|define
+name|PMSTAT_CX
+value|0x20
+define|#
+directive|define
+name|PMSTAT_get_max_px
+value|(PMSTAT_PX | 0x1)
+define|#
+directive|define
+name|PMSTAT_get_pxstat
+value|(PMSTAT_PX | 0x2)
+define|#
+directive|define
+name|PMSTAT_reset_pxstat
+value|(PMSTAT_PX | 0x3)
+define|#
+directive|define
+name|PMSTAT_get_max_cx
+value|(PMSTAT_CX | 0x1)
+define|#
+directive|define
+name|PMSTAT_get_cxstat
+value|(PMSTAT_CX | 0x2)
+define|#
+directive|define
+name|PMSTAT_reset_cxstat
+value|(PMSTAT_CX | 0x3)
+name|uint32_t
+name|type
+decl_stmt|;
+name|uint32_t
+name|cpuid
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|pm_px_stat
+name|getpx
+decl_stmt|;
+name|struct
+name|pm_cx_stat
+name|getcx
+decl_stmt|;
+comment|/* other struct for tx, etc */
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_get_pmstat
+name|xen_sysctl_get_pmstat_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_get_pmstat_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_cpu_hotplug
+value|11
+end_define
+
+begin_struct
+struct|struct
+name|xen_sysctl_cpu_hotplug
+block|{
+comment|/* IN variables */
+name|uint32_t
+name|cpu
+decl_stmt|;
+comment|/* Physical cpu. */
+define|#
+directive|define
+name|XEN_SYSCTL_CPU_HOTPLUG_ONLINE
+value|0
+define|#
+directive|define
+name|XEN_SYSCTL_CPU_HOTPLUG_OFFLINE
+value|1
+name|uint32_t
+name|op
+decl_stmt|;
+comment|/* hotplug opcode */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_cpu_hotplug
+name|xen_sysctl_cpu_hotplug_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_cpu_hotplug_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|xen_sysctl
@@ -647,6 +1016,18 @@ decl_stmt|;
 name|struct
 name|xen_sysctl_getcpuinfo
 name|getcpuinfo
+decl_stmt|;
+name|struct
+name|xen_sysctl_availheap
+name|availheap
+decl_stmt|;
+name|struct
+name|xen_sysctl_get_pmstat
+name|get_pmstat
+decl_stmt|;
+name|struct
+name|xen_sysctl_cpu_hotplug
+name|cpu_hotplug
 decl_stmt|;
 name|uint8_t
 name|pad

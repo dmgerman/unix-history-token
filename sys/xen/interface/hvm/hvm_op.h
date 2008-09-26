@@ -223,6 +223,204 @@ name|HVMOP_flush_tlbs
 value|5
 end_define
 
+begin_comment
+comment|/* Following tools-only interfaces may change in future. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__XEN__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__XEN_TOOLS__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Track dirty VRAM. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HVMOP_track_dirty_vram
+value|6
+end_define
+
+begin_struct
+struct|struct
+name|xen_hvm_track_dirty_vram
+block|{
+comment|/* Domain to be tracked. */
+name|domid_t
+name|domid
+decl_stmt|;
+comment|/* First pfn to track. */
+name|uint64_aligned_t
+name|first_pfn
+decl_stmt|;
+comment|/* Number of pages to track. */
+name|uint64_aligned_t
+name|nr
+decl_stmt|;
+comment|/* OUT variable. */
+comment|/* Dirty bitmap buffer. */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint8
+argument_list|)
+name|dirty_bitmap
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_hvm_track_dirty_vram
+name|xen_hvm_track_dirty_vram_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_hvm_track_dirty_vram_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Notify that some pages got modified by the Device Model. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HVMOP_modified_memory
+value|7
+end_define
+
+begin_struct
+struct|struct
+name|xen_hvm_modified_memory
+block|{
+comment|/* Domain to be updated. */
+name|domid_t
+name|domid
+decl_stmt|;
+comment|/* First pfn. */
+name|uint64_aligned_t
+name|first_pfn
+decl_stmt|;
+comment|/* Number of pages. */
+name|uint64_aligned_t
+name|nr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_hvm_modified_memory
+name|xen_hvm_modified_memory_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_hvm_modified_memory_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|HVMOP_set_mem_type
+value|8
+end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HVMMEM_ram_rw
+block|,
+comment|/* Normal read/write guest RAM */
+name|HVMMEM_ram_ro
+block|,
+comment|/* Read-only; writes are discarded */
+name|HVMMEM_mmio_dm
+block|,
+comment|/* Reads and write go to the device model */
+block|}
+name|hvmmem_type_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Notify that a region of memory is to be treated in a specific way. */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_hvm_set_mem_type
+block|{
+comment|/* Domain to be updated. */
+name|domid_t
+name|domid
+decl_stmt|;
+comment|/* Memory type */
+name|hvmmem_type_t
+name|hvmmem_type
+decl_stmt|;
+comment|/* First pfn. */
+name|uint64_aligned_t
+name|first_pfn
+decl_stmt|;
+comment|/* Number of pages. */
+name|uint64_aligned_t
+name|nr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_hvm_set_mem_type
+name|xen_hvm_set_mem_type_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_hvm_set_mem_type_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__XEN__) || defined(__XEN_TOOLS__) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

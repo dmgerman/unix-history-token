@@ -53,6 +53,15 @@ block|,
 name|XenbusStateClosed
 init|=
 literal|6
+block|,
+comment|/*      * Reconfiguring: The device is being reconfigured.      */
+name|XenbusStateReconfiguring
+init|=
+literal|7
+block|,
+name|XenbusStateReconfigured
+init|=
+literal|8
 block|}
 enum|;
 end_enum

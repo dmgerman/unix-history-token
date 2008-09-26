@@ -3,6 +3,12 @@ begin_comment
 comment|/******************************************************************************  * arch-ia64/hypervisor-if.h  *   * Guest OS interface to IA64 Xen.  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"xen.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -14,6 +20,32 @@ define|#
 directive|define
 name|__HYPERVISOR_IF_IA64_H__
 end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__STRICT_ANSI__
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Anonymous structs/unions are a GNU extension."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Structural guest handles introduced in 0x00030201. */
@@ -30,7 +62,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|__DEFINE_XEN_GUEST_HANDLE
+name|___DEFINE_XEN_GUEST_HANDLE
 parameter_list|(
 name|name
 parameter_list|,
@@ -48,7 +80,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|__DEFINE_XEN_GUEST_HANDLE
+name|___DEFINE_XEN_GUEST_HANDLE
 parameter_list|(
 name|name
 parameter_list|,
@@ -62,6 +94,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|__DEFINE_XEN_GUEST_HANDLE
+parameter_list|(
+name|name
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|___DEFINE_XEN_GUEST_HANDLE(name, type);   \     ___DEFINE_XEN_GUEST_HANDLE(const_##name, const type)
+end_define
 
 begin_define
 define|#
@@ -141,94 +186,6 @@ directive|ifndef
 name|__ASSEMBLY__
 end_ifndef
 
-begin_comment
-comment|/* Guest handles for primitive C types. */
-end_comment
-
-begin_macro
-name|__DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-argument|uchar
-argument_list|,
-argument|unsigned char
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|__DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-argument|uint
-argument_list|,
-argument|unsigned int
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|__DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-argument|ulong
-argument_list|,
-argument|unsigned long
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|__DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-argument|u64
-argument_list|,
-argument|unsigned long
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|char
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|long
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|void
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -236,14 +193,6 @@ name|long
 name|xen_pfn_t
 typedef|;
 end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_pfn_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_define
 define|#
@@ -309,6 +258,24 @@ name|MAX_VIRT_CPUS
 value|64
 end_define
 
+begin_comment
+comment|/* IO ports location for PV.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_PORTS_PADDR
+value|0x00000ffffc000000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IO_PORTS_SIZE
+value|0x0000000004000000UL
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -323,218 +290,42 @@ name|xen_ulong_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__XEN_TOOLS__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|XEN_PAGE_SIZE
+value|XC_PAGE_SIZE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|XEN_PAGE_SIZE
+value|PAGE_SIZE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|INVALID_MFN
 value|(~0UL)
 end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_G
-value|(1UL<< 30)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_M
-value|(1UL<< 20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_K
-value|(1UL<< 10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_START
-value|(3 * MEM_G)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMIO_SIZE
-value|(512 * MEM_M)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VGA_IO_START
-value|0xA0000UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|VGA_IO_SIZE
-value|0x20000
-end_define
-
-begin_define
-define|#
-directive|define
-name|LEGACY_IO_START
-value|(MMIO_START + MMIO_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LEGACY_IO_SIZE
-value|(64*MEM_M)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IO_PAGE_START
-value|(LEGACY_IO_START + LEGACY_IO_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IO_PAGE_SIZE
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|STORE_PAGE_START
-value|(IO_PAGE_START + IO_PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STORE_PAGE_SIZE
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUFFER_IO_PAGE_START
-value|(STORE_PAGE_START+STORE_PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUFFER_IO_PAGE_SIZE
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUFFER_PIO_PAGE_START
-value|(BUFFER_IO_PAGE_START+BUFFER_IO_PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUFFER_PIO_PAGE_SIZE
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|IO_SAPIC_START
-value|0xfec00000UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|IO_SAPIC_SIZE
-value|0x100000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIB_START
-value|0xfee00000UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIB_SIZE
-value|0x200000
-end_define
-
-begin_define
-define|#
-directive|define
-name|GFW_START
-value|(4*MEM_G -16*MEM_M)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GFW_SIZE
-value|(16*MEM_M)
-end_define
-
-begin_comment
-comment|/* Nvram belongs to GFW memory space  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NVRAM_SIZE
-value|(MEM_K * 64)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVRAM_START
-value|(GFW_START + 10 * MEM_M)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVRAM_VALID_SIG
-value|0x4650494e45584948
-end_define
-
-begin_comment
-comment|// "HIXENIPF"
-end_comment
-
-begin_struct
-struct|struct
-name|nvram_save_addr
-block|{
-name|unsigned
-name|long
-name|addr
-decl_stmt|;
-name|unsigned
-name|long
-name|signature
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -560,306 +351,6 @@ union|;
 block|}
 struct|;
 end_struct
-
-begin_struct
-struct|struct
-name|cpu_user_regs
-block|{
-comment|/* The following registers are saved by SAVE_MIN: */
-name|unsigned
-name|long
-name|b6
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|b7
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|ar_csd
-decl_stmt|;
-comment|/* used by cmp8xchg16 (scratch) */
-name|unsigned
-name|long
-name|ar_ssd
-decl_stmt|;
-comment|/* reserved for future use (scratch) */
-name|unsigned
-name|long
-name|r8
-decl_stmt|;
-comment|/* scratch (return value register 0) */
-name|unsigned
-name|long
-name|r9
-decl_stmt|;
-comment|/* scratch (return value register 1) */
-name|unsigned
-name|long
-name|r10
-decl_stmt|;
-comment|/* scratch (return value register 2) */
-name|unsigned
-name|long
-name|r11
-decl_stmt|;
-comment|/* scratch (return value register 3) */
-name|unsigned
-name|long
-name|cr_ipsr
-decl_stmt|;
-comment|/* interrupted task's psr */
-name|unsigned
-name|long
-name|cr_iip
-decl_stmt|;
-comment|/* interrupted task's instruction pointer */
-name|unsigned
-name|long
-name|cr_ifs
-decl_stmt|;
-comment|/* interrupted task's function state */
-name|unsigned
-name|long
-name|ar_unat
-decl_stmt|;
-comment|/* interrupted task's NaT register (preserved) */
-name|unsigned
-name|long
-name|ar_pfs
-decl_stmt|;
-comment|/* prev function state  */
-name|unsigned
-name|long
-name|ar_rsc
-decl_stmt|;
-comment|/* RSE configuration */
-comment|/* The following two are valid only if cr_ipsr.cpl> 0: */
-name|unsigned
-name|long
-name|ar_rnat
-decl_stmt|;
-comment|/* RSE NaT */
-name|unsigned
-name|long
-name|ar_bspstore
-decl_stmt|;
-comment|/* RSE bspstore */
-name|unsigned
-name|long
-name|pr
-decl_stmt|;
-comment|/* 64 predicate registers (1 bit each) */
-name|unsigned
-name|long
-name|b0
-decl_stmt|;
-comment|/* return pointer (bp) */
-name|unsigned
-name|long
-name|loadrs
-decl_stmt|;
-comment|/* size of dirty partition<< 16 */
-name|unsigned
-name|long
-name|r1
-decl_stmt|;
-comment|/* the gp pointer */
-name|unsigned
-name|long
-name|r12
-decl_stmt|;
-comment|/* interrupted task's memory stack pointer */
-name|unsigned
-name|long
-name|r13
-decl_stmt|;
-comment|/* thread pointer */
-name|unsigned
-name|long
-name|ar_fpsr
-decl_stmt|;
-comment|/* floating point status (preserved) */
-name|unsigned
-name|long
-name|r15
-decl_stmt|;
-comment|/* scratch */
-comment|/* The remaining registers are NOT saved for system calls.  */
-name|unsigned
-name|long
-name|r14
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r2
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r3
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r16
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r17
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r18
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r19
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r20
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r21
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r22
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r23
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r24
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r25
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r26
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r27
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r28
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r29
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r30
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r31
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|ar_ccv
-decl_stmt|;
-comment|/* compare/exchange value (scratch) */
-comment|/*      * Floating point registers that the kernel considers scratch:      */
-name|struct
-name|pt_fpreg
-name|f6
-decl_stmt|;
-comment|/* scratch */
-name|struct
-name|pt_fpreg
-name|f7
-decl_stmt|;
-comment|/* scratch */
-name|struct
-name|pt_fpreg
-name|f8
-decl_stmt|;
-comment|/* scratch */
-name|struct
-name|pt_fpreg
-name|f9
-decl_stmt|;
-comment|/* scratch */
-name|struct
-name|pt_fpreg
-name|f10
-decl_stmt|;
-comment|/* scratch */
-name|struct
-name|pt_fpreg
-name|f11
-decl_stmt|;
-comment|/* scratch */
-name|unsigned
-name|long
-name|r4
-decl_stmt|;
-comment|/* preserved */
-name|unsigned
-name|long
-name|r5
-decl_stmt|;
-comment|/* preserved */
-name|unsigned
-name|long
-name|r6
-decl_stmt|;
-comment|/* preserved */
-name|unsigned
-name|long
-name|r7
-decl_stmt|;
-comment|/* preserved */
-name|unsigned
-name|long
-name|eml_unat
-decl_stmt|;
-comment|/* used for emulating instruction */
-name|unsigned
-name|long
-name|pad0
-decl_stmt|;
-comment|/* alignment pad */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|cpu_user_regs
-name|cpu_user_regs_t
-typedef|;
-end_typedef
 
 begin_union
 union|union
@@ -1331,17 +822,9 @@ decl_stmt|;
 comment|// kernel registers
 name|unsigned
 name|long
-name|pkrs
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|// protection key registers
-name|unsigned
-name|long
 name|tmp
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
 comment|// temp registers (e.g. for hyperprivops)
@@ -1417,6 +900,46 @@ name|arch_vcpu_info_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * This structure is used for magic page in domain pseudo physical address  * space and the result of XENMEM_machine_memory_map.  * As the XENMEM_machine_memory_map result,  * xen_memory_map::nr_entries indicates the size in bytes   * including struct xen_ia64_memmap_info. Not the number of entries.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_ia64_memmap_info
+block|{
+name|uint64_t
+name|efi_memmap_size
+decl_stmt|;
+comment|/* size of EFI memory map */
+name|uint64_t
+name|efi_memdesc_size
+decl_stmt|;
+comment|/* size of an EFI memory map descriptor */
+name|uint32_t
+name|efi_memdesc_version
+decl_stmt|;
+comment|/* memory descriptor version */
+name|void
+modifier|*
+name|memdesc
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* array of efi_memory_desc_t */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_ia64_memmap_info
+name|xen_ia64_memmap_info_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|arch_shared_info
@@ -1430,10 +953,20 @@ comment|/* Interrupt vector for event channel.  */
 name|int
 name|evtchn_vector
 decl_stmt|;
+comment|/* PFN of memmap_info page */
+name|unsigned
+name|int
+name|memmap_info_num_pages
+decl_stmt|;
+comment|/* currently only = 1 case is                                           supported. */
+name|unsigned
+name|long
+name|memmap_info_pfn
+decl_stmt|;
 name|uint64_t
 name|pad
 index|[
-literal|32
+literal|31
 index|]
 decl_stmt|;
 block|}
@@ -1480,23 +1013,240 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|ia64_tr_entry
+name|ia64_tr_entry_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|ia64_tr_entry_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
-name|vcpu_extra_regs
+name|vcpu_tr_regs
 block|{
 name|struct
 name|ia64_tr_entry
 name|itrs
 index|[
-literal|8
+literal|12
 index|]
 decl_stmt|;
 name|struct
 name|ia64_tr_entry
 name|dtrs
 index|[
+literal|12
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_union
+union|union
+name|vcpu_ar_regs
+block|{
+name|unsigned
+name|long
+name|ar
+index|[
+literal|128
+index|]
+decl_stmt|;
+struct|struct
+block|{
+name|unsigned
+name|long
+name|kr
+index|[
 literal|8
 index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv1
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|rsc
+decl_stmt|;
+name|unsigned
+name|long
+name|bsp
+decl_stmt|;
+name|unsigned
+name|long
+name|bspstore
+decl_stmt|;
+name|unsigned
+name|long
+name|rnat
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv2
+decl_stmt|;
+name|unsigned
+name|long
+name|fcr
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv3
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|eflag
+decl_stmt|;
+name|unsigned
+name|long
+name|csd
+decl_stmt|;
+name|unsigned
+name|long
+name|ssd
+decl_stmt|;
+name|unsigned
+name|long
+name|cflg
+decl_stmt|;
+name|unsigned
+name|long
+name|fsr
+decl_stmt|;
+name|unsigned
+name|long
+name|fir
+decl_stmt|;
+name|unsigned
+name|long
+name|fdr
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv4
+decl_stmt|;
+name|unsigned
+name|long
+name|ccv
+decl_stmt|;
+comment|/* 32 */
+name|unsigned
+name|long
+name|rsv5
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|unat
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv6
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|fpsr
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv7
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|itc
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv8
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|ign1
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|pfs
+decl_stmt|;
+comment|/* 64 */
+name|unsigned
+name|long
+name|lc
+decl_stmt|;
+name|unsigned
+name|long
+name|ec
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv9
+index|[
+literal|45
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|ign2
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+struct|;
+block|}
+union|;
+end_union
+
+begin_union
+union|union
+name|vcpu_cr_regs
+block|{
+name|unsigned
+name|long
+name|cr
+index|[
+literal|128
+index|]
+decl_stmt|;
+struct|struct
+block|{
+name|unsigned
+name|long
+name|dcr
+decl_stmt|;
+comment|// CR0
+name|unsigned
+name|long
+name|itm
 decl_stmt|;
 name|unsigned
 name|long
@@ -1504,11 +1254,293 @@ name|iva
 decl_stmt|;
 name|unsigned
 name|long
-name|dcr
+name|rsv1
+index|[
+literal|5
+index|]
 decl_stmt|;
 name|unsigned
 name|long
-name|event_callback_ip
+name|pta
+decl_stmt|;
+comment|// CR8
+name|unsigned
+name|long
+name|rsv2
+index|[
+literal|7
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|ipsr
+decl_stmt|;
+comment|// CR16
+name|unsigned
+name|long
+name|isr
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv3
+decl_stmt|;
+name|unsigned
+name|long
+name|iip
+decl_stmt|;
+name|unsigned
+name|long
+name|ifa
+decl_stmt|;
+name|unsigned
+name|long
+name|itir
+decl_stmt|;
+name|unsigned
+name|long
+name|iipa
+decl_stmt|;
+name|unsigned
+name|long
+name|ifs
+decl_stmt|;
+name|unsigned
+name|long
+name|iim
+decl_stmt|;
+comment|// CR24
+name|unsigned
+name|long
+name|iha
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv4
+index|[
+literal|38
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|lid
+decl_stmt|;
+comment|// CR64
+name|unsigned
+name|long
+name|ivr
+decl_stmt|;
+name|unsigned
+name|long
+name|tpr
+decl_stmt|;
+name|unsigned
+name|long
+name|eoi
+decl_stmt|;
+name|unsigned
+name|long
+name|irr
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|itv
+decl_stmt|;
+comment|// CR72
+name|unsigned
+name|long
+name|pmv
+decl_stmt|;
+name|unsigned
+name|long
+name|cmcv
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv5
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|lrr0
+decl_stmt|;
+comment|// CR80
+name|unsigned
+name|long
+name|lrr1
+decl_stmt|;
+name|unsigned
+name|long
+name|rsv6
+index|[
+literal|46
+index|]
+decl_stmt|;
+block|}
+struct|;
+block|}
+union|;
+end_union
+
+begin_struct
+struct|struct
+name|vcpu_guest_context_regs
+block|{
+name|unsigned
+name|long
+name|r
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|b
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|bank
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|ip
+decl_stmt|;
+name|unsigned
+name|long
+name|psr
+decl_stmt|;
+name|unsigned
+name|long
+name|cfm
+decl_stmt|;
+name|unsigned
+name|long
+name|pr
+decl_stmt|;
+name|unsigned
+name|int
+name|nats
+decl_stmt|;
+comment|/* NaT bits for r1-r31.  */
+name|unsigned
+name|int
+name|bnats
+decl_stmt|;
+comment|/* Nat bits for banked registers.  */
+name|union
+name|vcpu_ar_regs
+name|ar
+decl_stmt|;
+name|union
+name|vcpu_cr_regs
+name|cr
+decl_stmt|;
+name|struct
+name|pt_fpreg
+name|f
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|dbr
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|ibr
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|rr
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|pkr
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* FIXME: cpuid,pmd,pmc */
+name|unsigned
+name|long
+name|xip
+decl_stmt|;
+name|unsigned
+name|long
+name|xpsr
+decl_stmt|;
+name|unsigned
+name|long
+name|xfs
+decl_stmt|;
+name|unsigned
+name|long
+name|xr
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|struct
+name|vcpu_tr_regs
+name|tr
+decl_stmt|;
+comment|/* Physical registers in case of debug event.  */
+name|unsigned
+name|long
+name|excp_iipa
+decl_stmt|;
+name|unsigned
+name|long
+name|excp_ifa
+decl_stmt|;
+name|unsigned
+name|long
+name|excp_isr
+decl_stmt|;
+name|unsigned
+name|int
+name|excp_vector
+decl_stmt|;
+comment|/*          * The rbs is intended to be the image of the stacked registers still          * in the cpu (not yet stored in memory).  It is laid out as if it          * were written in memory at a 512 (64*8) aligned address + offset.          * rbs_voff is (offset / 8).  rbs_nat contains NaT bits for the          * remaining rbs registers.  rbs_rnat contains NaT bits for in memory          * rbs registers.          * Note: loadrs is 2**14 bytes == 2**11 slots.          */
+name|unsigned
+name|int
+name|rbs_voff
+decl_stmt|;
+name|unsigned
+name|long
+name|rbs
+index|[
+literal|2048
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|rbs_rnat
+decl_stmt|;
+comment|/*          * RSE.N_STACKED_PHYS via PAL_RSE_INFO          * Strictly this isn't cpu context, but this value is necessary          * for domain save/restore. So is here.          */
+name|unsigned
+name|long
+name|num_phys_stacked
 decl_stmt|;
 block|}
 struct|;
@@ -1521,21 +1553,36 @@ block|{
 define|#
 directive|define
 name|VGCF_EXTRA_REGS
-value|(1<<1)
-comment|/* Get/Set extra regs.  */
+value|(1UL<< 1)
+comment|/* Set extra regs.  */
+define|#
+directive|define
+name|VGCF_SET_CR_IRR
+value|(1UL<< 2)
+comment|/* Set cr_irr[0:3]. */
+define|#
+directive|define
+name|VGCF_online
+value|(1UL<< 3)
+comment|/* make this vcpu online */
 name|unsigned
 name|long
 name|flags
 decl_stmt|;
 comment|/* VGCF_* flags */
 name|struct
-name|cpu_user_regs
-name|user_regs
+name|vcpu_guest_context_regs
+name|regs
 decl_stmt|;
-name|struct
-name|vcpu_extra_regs
-name|extra_regs
+name|unsigned
+name|long
+name|event_callback_ip
 decl_stmt|;
+comment|/* xen doesn't share privregs pages with hvm domain so that this member      * doesn't make sense for hvm domain.      * ~0UL is already used for INVALID_P2M_ENTRY. */
+define|#
+directive|define
+name|VGC_PRIVREGS_HVM
+value|(~(-2UL))
 name|unsigned
 name|long
 name|privregs_pfn
@@ -1671,6 +1718,17 @@ value|9
 end_define
 
 begin_comment
+comment|/* get fpswa revision */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA64_DOM0VP_fpswa_revision
+value|10
+end_define
+
+begin_comment
 comment|/* Add an I/O port space range */
 end_comment
 
@@ -1679,6 +1737,39 @@ define|#
 directive|define
 name|IA64_DOM0VP_add_io_space
 value|11
+end_define
+
+begin_comment
+comment|/* expose the foreign domain's p2m table into privileged domain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA64_DOM0VP_expose_foreign_p2m
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA64_DOM0VP_EFP_ALLOC_PTE
+value|0x1
+end_define
+
+begin_comment
+comment|/* allocate p2m table */
+end_comment
+
+begin_comment
+comment|/* unexpose the foreign domain's p2m table into privileged domain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA64_DOM0VP_unexpose_foreign_p2m
+value|13
 end_define
 
 begin_comment
@@ -1762,6 +1853,24 @@ define|#
 directive|define
 name|ASSIGN_pgc_allocated
 value|(1UL<< _ASSIGN_pgc_allocated)
+end_define
+
+begin_comment
+comment|/* Page is an IO page.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ASSIGN_io
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSIGN_io
+value|(1UL<< _ASSIGN_io)
 end_define
 
 begin_comment
@@ -2099,8 +2208,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|HYPERPRIVOP_SET_RR0_TO_RR4
+value|(HYPERPRIVOP_START + 0x19)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HYPERPRIVOP_MAX
-value|(0x19)
+value|(0x1a)
 end_define
 
 begin_comment
@@ -2112,6 +2228,17 @@ define|#
 directive|define
 name|__HYPERVISOR_ia64_fast_eoi
 value|__HYPERVISOR_arch_1
+end_define
+
+begin_comment
+comment|/* Extra debug features.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__HYPERVISOR_ia64_debug_op
+value|__HYPERVISOR_arch_2
 end_define
 
 begin_comment
@@ -2132,27 +2259,121 @@ name|XENCOMM_INLINE_FLAG
 value|0x8000000000000000UL
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLY__
+end_ifndef
+
+begin_comment
+comment|/*  * Optimization features.  * The hypervisor may do some special optimizations for guests. This hypercall  * can be used to switch on/of these special optimizations.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|XENCOMM_IS_INLINE
-parameter_list|(
-name|addr
-parameter_list|)
-define|\
-value|(((unsigned long)(addr)& XENCOMM_INLINE_MASK) == XENCOMM_INLINE_FLAG)
+name|__HYPERVISOR_opt_feature
+value|0x700UL
 end_define
 
 begin_define
 define|#
 directive|define
-name|XENCOMM_INLINE_ADDR
-parameter_list|(
-name|addr
-parameter_list|)
-define|\
-value|((unsigned long)(addr)& ~XENCOMM_INLINE_MASK)
+name|XEN_IA64_OPTF_OFF
+value|0x0
 end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_IA64_OPTF_ON
+value|0x1
+end_define
+
+begin_comment
+comment|/*  * If this feature is switched on, the hypervisor inserts the  * tlb entries without calling the guests traphandler.  * This is useful in guests using region 7 for identity mapping  * like the linux kernel does.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_IA64_OPTF_IDENT_MAP_REG7
+value|1
+end_define
+
+begin_comment
+comment|/* Identity mapping of region 4 addresses in HVM. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_IA64_OPTF_IDENT_MAP_REG4
+value|2
+end_define
+
+begin_comment
+comment|/* Identity mapping of region 5 addresses in HVM. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_IA64_OPTF_IDENT_MAP_REG5
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_IA64_OPTF_IDENT_MAP_NOT_SET
+value|(0)
+end_define
+
+begin_struct
+struct|struct
+name|xen_ia64_opt_feature
+block|{
+name|unsigned
+name|long
+name|cmd
+decl_stmt|;
+comment|/* Which feature */
+name|unsigned
+name|char
+name|on
+decl_stmt|;
+comment|/* Switch feature on/off */
+union|union
+block|{
+struct|struct
+block|{
+comment|/* The page protection bit mask of the pte. 			 	 * This will be or'ed with the pte. */
+name|unsigned
+name|long
+name|pgprot
+decl_stmt|;
+name|unsigned
+name|long
+name|key
+decl_stmt|;
+comment|/* A protection key for itir. */
+block|}
+struct|;
+block|}
+union|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ASSEMBLY__ */
+end_comment
 
 begin_comment
 comment|/* xen perfmon */
@@ -2254,6 +2475,23 @@ end_endif
 begin_comment
 comment|/* XEN */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLY__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"arch-ia64/hvm/memmap.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

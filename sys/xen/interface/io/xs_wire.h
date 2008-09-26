@@ -56,6 +56,8 @@ block|,
 name|XS_IS_DOMAIN_INTRODUCED
 block|,
 name|XS_RESUME
+block|,
+name|XS_SET_TARGET
 block|}
 enum|;
 end_enum
@@ -110,6 +112,10 @@ name|x
 parameter_list|)
 value|{ x, #x }
 end_define
+
+begin_comment
+comment|/* LINTED: static unused */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -303,6 +309,35 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Violating this is very bad.  See docs/misc/xenstore.txt. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENSTORE_PAYLOAD_MAX
+value|4096
+end_define
+
+begin_comment
+comment|/* Violating these just gets you an error back */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENSTORE_ABS_PATH_MAX
+value|3072
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENSTORE_REL_PATH_MAX
+value|2048
+end_define
 
 begin_endif
 endif|#

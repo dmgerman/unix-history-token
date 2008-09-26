@@ -82,41 +82,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IOREQ_TYPE_AND
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOREQ_TYPE_OR
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOREQ_TYPE_XOR
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOREQ_TYPE_XCHG
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOREQ_TYPE_ADD
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
 name|IOREQ_TYPE_TIMEOFFSET
 value|7
 end_define
@@ -131,13 +96,6 @@ end_define
 begin_comment
 comment|/* mapcache */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IOREQ_TYPE_SUB
-value|9
-end_define
 
 begin_comment
 comment|/*  * VMExit dispatcher should cooperate with instruction decoder to  * prepare this structure and notify service OS and DM by sending  * virq  */
@@ -182,6 +140,11 @@ decl_stmt|;
 comment|/*  1=read, 0=write             */
 name|uint8_t
 name|df
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|pad
 range|:
 literal|1
 decl_stmt|;
@@ -261,12 +224,63 @@ name|shared_iopage_t
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|buf_ioreq
+block|{
+name|uint8_t
+name|type
+decl_stmt|;
+comment|/* I/O type                    */
+name|uint8_t
+name|pad
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|dir
+range|:
+literal|1
+decl_stmt|;
+comment|/* 1=read, 0=write             */
+name|uint8_t
+name|size
+range|:
+literal|2
+decl_stmt|;
+comment|/* 0=>1, 1=>2, 2=>4, 3=>8. If 8, use two buf_ioreqs */
+name|uint32_t
+name|addr
+range|:
+literal|20
+decl_stmt|;
+comment|/* physical address            */
+name|uint32_t
+name|data
+decl_stmt|;
+comment|/* data                        */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|buf_ioreq
+name|buf_ioreq_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
 name|IOREQ_BUFFER_SLOT_NUM
-value|80
+value|511
 end_define
+
+begin_comment
+comment|/* 8 bytes each, plus 2 4-byte indexes */
+end_comment
 
 begin_struct
 struct|struct
@@ -280,8 +294,8 @@ name|unsigned
 name|int
 name|write_pointer
 decl_stmt|;
-name|ioreq_t
-name|ioreq
+name|buf_ioreq_t
+name|buf_ioreq
 index|[
 name|IOREQ_BUFFER_SLOT_NUM
 index|]
@@ -394,20 +408,6 @@ begin_comment
 comment|/* defined(__ia64__) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__x86_64__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -429,14 +429,19 @@ name|ACPI_PM_TMR_BLK_ADDRESS
 value|(ACPI_PM1A_EVT_BLK_ADDRESS + 0x08)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|ACPI_GPE0_BLK_ADDRESS
+value|(ACPI_PM_TMR_BLK_ADDRESS + 0x20)
+end_define
 
-begin_comment
-comment|/* defined(__i386__) || defined(__x86_64__) */
-end_comment
+begin_define
+define|#
+directive|define
+name|ACPI_GPE0_BLK_LEN
+value|0x08
+end_define
 
 begin_endif
 endif|#

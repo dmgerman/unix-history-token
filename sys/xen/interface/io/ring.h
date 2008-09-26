@@ -15,6 +15,49 @@ directive|define
 name|__XEN_PUBLIC_IO_RING_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"../xen-compat.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|<
+literal|0x00030208
+end_if
+
+begin_define
+define|#
+directive|define
+name|xen_mb
+parameter_list|()
+value|mb()
+end_define
+
+begin_define
+define|#
+directive|define
+name|xen_rmb
+parameter_list|()
+value|rmb()
+end_define
+
+begin_define
+define|#
+directive|define
+name|xen_wmb
+parameter_list|()
+value|wmb()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -358,7 +401,7 @@ name|RING_PUSH_REQUESTS
 parameter_list|(
 name|_r
 parameter_list|)
-value|do {                                     \     wmb();
+value|do {                                     \     xen_wmb();
 comment|/* back sees requests /before/ updated producer index */
 value|\     (_r)->sring->req_prod = (_r)->req_prod_pvt;                         \ } while (0)
 end_define
@@ -370,8 +413,8 @@ name|RING_PUSH_RESPONSES
 parameter_list|(
 name|_r
 parameter_list|)
-value|do {                                    \     wmb();
-comment|/* front sees responses /before/ updated producer index */
+value|do {                                    \     xen_wmb();
+comment|/* front sees resps /before/ updated producer index */
 value|\     (_r)->sring->rsp_prod = (_r)->rsp_prod_pvt;                         \ } while (0)
 end_define
 
@@ -388,9 +431,9 @@ name|_r
 parameter_list|,
 name|_notify
 parameter_list|)
-value|do {           \     RING_IDX __old = (_r)->sring->req_prod;                             \     RING_IDX __new = (_r)->req_prod_pvt;                                \     wmb();
+value|do {           \     RING_IDX __old = (_r)->sring->req_prod;                             \     RING_IDX __new = (_r)->req_prod_pvt;                                \     xen_wmb();
 comment|/* back sees requests /before/ updated producer index */
-value|\     (_r)->sring->req_prod = __new;                                      \     mb();
+value|\     (_r)->sring->req_prod = __new;                                      \     xen_mb();
 comment|/* back sees new requests /before/ we check req_event */
 value|\     (_notify) = ((RING_IDX)(__new - (_r)->sring->req_event)<           \                  (RING_IDX)(__new - __old));                            \ } while (0)
 end_define
@@ -404,10 +447,10 @@ name|_r
 parameter_list|,
 name|_notify
 parameter_list|)
-value|do {          \     RING_IDX __old = (_r)->sring->rsp_prod;                             \     RING_IDX __new = (_r)->rsp_prod_pvt;                                \     wmb();
-comment|/* front sees responses /before/ updated producer index */
-value|\     (_r)->sring->rsp_prod = __new;                                      \     mb();
-comment|/* front sees new responses /before/ we check rsp_event */
+value|do {          \     RING_IDX __old = (_r)->sring->rsp_prod;                             \     RING_IDX __new = (_r)->rsp_prod_pvt;                                \     xen_wmb();
+comment|/* front sees resps /before/ updated producer index */
+value|\     (_r)->sring->rsp_prod = __new;                                      \     xen_mb();
+comment|/* front sees new resps /before/ we check rsp_event */
 value|\     (_notify) = ((RING_IDX)(__new - (_r)->sring->rsp_event)<           \                  (RING_IDX)(__new - __old));                            \ } while (0)
 end_define
 
@@ -420,7 +463,7 @@ name|_r
 parameter_list|,
 name|_work_to_do
 parameter_list|)
-value|do {             \     (_work_to_do) = RING_HAS_UNCONSUMED_REQUESTS(_r);                   \     if (_work_to_do) break;                                             \     (_r)->sring->req_event = (_r)->req_cons + 1;                        \     mb();                                                               \     (_work_to_do) = RING_HAS_UNCONSUMED_REQUESTS(_r);                   \ } while (0)
+value|do {             \     (_work_to_do) = RING_HAS_UNCONSUMED_REQUESTS(_r);                   \     if (_work_to_do) break;                                             \     (_r)->sring->req_event = (_r)->req_cons + 1;                        \     xen_mb();                                                           \     (_work_to_do) = RING_HAS_UNCONSUMED_REQUESTS(_r);                   \ } while (0)
 end_define
 
 begin_define
@@ -432,7 +475,7 @@ name|_r
 parameter_list|,
 name|_work_to_do
 parameter_list|)
-value|do {            \     (_work_to_do) = RING_HAS_UNCONSUMED_RESPONSES(_r);                  \     if (_work_to_do) break;                                             \     (_r)->sring->rsp_event = (_r)->rsp_cons + 1;                        \     mb();                                                               \     (_work_to_do) = RING_HAS_UNCONSUMED_RESPONSES(_r);                  \ } while (0)
+value|do {            \     (_work_to_do) = RING_HAS_UNCONSUMED_RESPONSES(_r);                  \     if (_work_to_do) break;                                             \     (_r)->sring->rsp_event = (_r)->rsp_cons + 1;                        \     xen_mb();                                                           \     (_work_to_do) = RING_HAS_UNCONSUMED_RESPONSES(_r);                  \ } while (0)
 end_define
 
 begin_endif

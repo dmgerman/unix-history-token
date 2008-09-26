@@ -76,6 +76,10 @@ name|int32_t
 name|rel_y
 decl_stmt|;
 comment|/* relative Y motion */
+name|int32_t
+name|rel_z
+decl_stmt|;
+comment|/* relative Z motion (wheel) */
 block|}
 struct|;
 end_struct
@@ -116,6 +120,10 @@ name|int32_t
 name|abs_y
 decl_stmt|;
 comment|/* absolute Y position (in FB pixels) */
+name|int32_t
+name|rel_z
+decl_stmt|;
+comment|/* relative Z motion (wheel) */
 block|}
 struct|;
 end_struct

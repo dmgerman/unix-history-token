@@ -370,25 +370,12 @@ name|int16_t
 name|status
 decl_stmt|;
 comment|/* GNTST_* */
-ifdef|#
-directive|ifdef
-name|__LP64__
 name|XEN_GUEST_HANDLE
 argument_list|(
-argument|uint64_t
+argument|ulong
 argument_list|)
 name|frame_list
 expr_stmt|;
-else|#
-directive|else
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|uint32_t
-argument_list|)
-name|frame_list
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

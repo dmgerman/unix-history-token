@@ -62,6 +62,34 @@ name|XEN_PCI_OP_conf_write
 value|(1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|XEN_PCI_OP_enable_msi
+value|(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_PCI_OP_disable_msi
+value|(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_PCI_OP_enable_msix
+value|(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_PCI_OP_disable_msix
+value|(5)
+end_define
+
 begin_comment
 comment|/* xen_pci_op error numbers */
 end_comment
@@ -112,6 +140,31 @@ name|XEN_PCI_ERR_op_failed
 value|(-5)
 end_define
 
+begin_comment
+comment|/*  * it should be PAGE_SIZE-sizeof(struct xen_pci_op))/sizeof(struct msix_entry))  * Should not exceed 128  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SH_INFO_MAX_VEC
+value|128
+end_define
+
+begin_struct
+struct|struct
+name|xen_msix_entry
+block|{
+name|uint16_t
+name|vector
+decl_stmt|;
+name|uint16_t
+name|entry
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|xen_pci_op
@@ -145,6 +198,18 @@ decl_stmt|;
 comment|/* IN/OUT: Contains the result after a READ or the value to WRITE */
 name|uint32_t
 name|value
+decl_stmt|;
+comment|/* IN: Contains extra infor for this operation */
+name|uint32_t
+name|info
+decl_stmt|;
+comment|/*IN:  param for msi-x */
+name|struct
+name|xen_msix_entry
+name|msix_entries
+index|[
+name|SH_INFO_MAX_VEC
+index|]
 decl_stmt|;
 block|}
 struct|;

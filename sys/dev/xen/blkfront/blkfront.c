@@ -1952,6 +1952,12 @@ case|:
 case|case
 name|XenbusStateClosed
 case|:
+case|case
+name|XenbusStateReconfigured
+case|:
+case|case
+name|XenbusStateReconfiguring
+case|:
 break|break;
 case|case
 name|XenbusStateConnected
@@ -3916,8 +3922,6 @@ name|info
 operator|->
 name|ring_ref
 argument_list|,
-literal|0
-argument_list|,
 name|info
 operator|->
 name|ring
@@ -4007,8 +4011,6 @@ name|i
 index|]
 operator|.
 name|gref
-argument_list|,
-literal|0
 argument_list|,
 literal|0UL
 argument_list|)

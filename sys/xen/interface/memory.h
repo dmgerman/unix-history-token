@@ -40,15 +40,78 @@ name|XENMEM_populate_physmap
 value|6
 end_define
 
+begin_if
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|>=
+literal|0x00030209
+end_if
+
+begin_comment
+comment|/*  * Maximum # bits addressable by the user of the allocated region (e.g., I/O   * devices often have a 32-bit limitation even in 64-bit systems). If zero   * then the user has no addressing restriction. This field is not used by   * XENMEM_decrease_reservation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEMF_address_bits
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEMF_get_address_bits
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xffu)
+end_define
+
+begin_comment
+comment|/* NUMA node to allocate from. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEMF_node
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) + 1)<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEMF_get_node
+parameter_list|(
+name|x
+parameter_list|)
+value|((((x)>> 8) - 1)& 0xffu)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|xen_memory_reservation
 block|{
 comment|/*      * XENMEM_increase_reservation:      *   OUT: MFN (*not* GMFN) bases of extents that were allocated      * XENMEM_decrease_reservation:      *   IN:  GMFN bases of extents to free      * XENMEM_populate_physmap:      *   IN:  GPFN bases of extents to populate with memory      *   OUT: GMFN bases of extents that were allocated      *   (NB. This command also updates the mach_to_phys translation table)      */
-name|xen_pfn_t
-modifier|*
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_pfn_t
+argument_list|)
 name|extent_start
-decl_stmt|;
+expr_stmt|;
 comment|/* Number of extents, and size/alignment of each (2^extent_order pages). */
 name|xen_ulong_t
 name|nr_extents
@@ -57,11 +120,24 @@ name|unsigned
 name|int
 name|extent_order
 decl_stmt|;
-comment|/*      * Maximum # bits addressable by the user of the allocated region (e.g.,       * I/O devices often have a 32-bit limitation even in 64-bit systems). If       * zero then the user has no addressing restriction.      * This field is not used by XENMEM_decrease_reservation.      */
+if|#
+directive|if
+name|__XEN_INTERFACE_VERSION__
+operator|>=
+literal|0x00030209
+comment|/* XENMEMF flags. */
+name|unsigned
+name|int
+name|mem_flags
+decl_stmt|;
+else|#
+directive|else
 name|unsigned
 name|int
 name|address_bits
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*      * Domain whose reservation is being changed.      * Unprivileged domains can specify only DOMID_SELF.      */
 name|domid_t
 name|domid
@@ -196,9 +272,12 @@ name|int
 name|max_extents
 decl_stmt|;
 comment|/*      * Pointer to buffer to fill with list of extent starts. If there are      * any large discontiguities in the machine address space, 2MB gaps in      * the machphys table will be represented by an MFN base of zero.      */
-name|xen_pfn_t
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_pfn_t
+argument_list|)
 name|extent_start
-decl_stmt|;
+expr_stmt|;
 comment|/*      * Number of extents written to the above array. This will be smaller      * than 'max_extents' if the machphys table is smaller than max_e * 2MB.      */
 name|unsigned
 name|int
@@ -299,6 +378,11 @@ directive|define
 name|XENMAPSPACE_grant_table
 value|1
 comment|/* grant table page */
+define|#
+directive|define
+name|XENMAPSPACE_mfn
+value|2
+comment|/* usual MFN */
 name|unsigned
 name|int
 name|space
@@ -332,6 +416,49 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Unmaps the page appearing at a particular GPFN from the specified guest's  * pseudophysical address space.  * arg == addr of xen_remove_from_physmap_t.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEM_remove_from_physmap
+value|15
+end_define
+
+begin_struct
+struct|struct
+name|xen_remove_from_physmap
+block|{
+comment|/* Which domain to change the mapping for. */
+name|domid_t
+name|domid
+decl_stmt|;
+comment|/* GPFN of the current mapping of the page. */
+name|xen_pfn_t
+name|gpfn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_remove_from_physmap
+name|xen_remove_from_physmap_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_remove_from_physmap_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Translates a list of domain-specific GPFNs into MFNs. Returns a -ve error  * code on failure. This call only works for auto-translated guests.  */
 end_comment
 
@@ -355,13 +482,19 @@ name|xen_ulong_t
 name|nr_gpfns
 decl_stmt|;
 comment|/* List of GPFNs to translate. */
-name|xen_pfn_t
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_pfn_t
+argument_list|)
 name|gpfn_list
-decl_stmt|;
+expr_stmt|;
 comment|/*      * Output list to contain MFN translations. May be the same as the input      * list (in which case each input GPFN is overwritten with the output MFN).      */
-name|xen_pfn_t
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_pfn_t
+argument_list|)
 name|mfn_list
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -403,10 +536,12 @@ name|int
 name|nr_entries
 decl_stmt|;
 comment|/*      * Entries in the buffer are in the same format as returned by the      * BIOS INT 0x15 EAX=0xE820 call.      */
-name|void
-modifier|*
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|void
+argument_list|)
 name|buffer
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 end_struct

@@ -66,6 +66,49 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Framebuffer resize notification event  * Capable backend sets feature-resize in xenstore.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFB_TYPE_RESIZE
+value|3
+end_define
+
+begin_struct
+struct|struct
+name|xenfb_resize
+block|{
+name|uint8_t
+name|type
+decl_stmt|;
+comment|/* XENFB_TYPE_RESIZE */
+name|int32_t
+name|width
+decl_stmt|;
+comment|/* width in pixels */
+name|int32_t
+name|height
+decl_stmt|;
+comment|/* height in pixels */
+name|int32_t
+name|stride
+decl_stmt|;
+comment|/* stride in bytes */
+name|int32_t
+name|depth
+decl_stmt|;
+comment|/* depth in bits */
+name|int32_t
+name|offset
+decl_stmt|;
+comment|/* offset of the framebuffer in bytes */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -84,6 +127,10 @@ name|struct
 name|xenfb_update
 name|update
 decl_stmt|;
+name|struct
+name|xenfb_resize
+name|resize
+decl_stmt|;
 name|char
 name|pad
 index|[
@@ -99,8 +146,42 @@ comment|/* In events (backend -> frontend) */
 end_comment
 
 begin_comment
-comment|/*  * Frontends should ignore unknown in events.  * No in events currently defined.  */
+comment|/*  * Frontends should ignore unknown in events.  */
 end_comment
+
+begin_comment
+comment|/*  * Framebuffer refresh period advice  * Backend sends it to advise the frontend their preferred period of  * refresh.  Frontends that keep the framebuffer constantly up-to-date  * just ignore it.  Frontends that use the advice should immediately  * refresh the framebuffer (and send an update notification event if  * those have been requested), then use the update frequency to guide  * their periodical refreshs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFB_TYPE_REFRESH_PERIOD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENFB_NO_REFRESH
+value|0
+end_define
+
+begin_struct
+struct|struct
+name|xenfb_refresh_period
+block|{
+name|uint8_t
+name|type
+decl_stmt|;
+comment|/* XENFB_TYPE_UPDATE_PERIOD */
+name|uint32_t
+name|period
+decl_stmt|;
+comment|/* period of refresh, in ms,                       * XENFB_NO_REFRESH if no refresh is needed */
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -115,6 +196,10 @@ name|xenfb_in_event
 block|{
 name|uint8_t
 name|type
+decl_stmt|;
+name|struct
+name|xenfb_refresh_period
+name|refresh_period
 decl_stmt|;
 name|char
 name|pad
@@ -254,12 +339,12 @@ name|uint8_t
 name|depth
 decl_stmt|;
 comment|/* the depth of a pixel (in bits) */
-comment|/*      * Framebuffer page directory      *      * Each directory page holds PAGE_SIZE / sizeof(*pd)      * framebuffer pages, and can thus map up to PAGE_SIZE *      * PAGE_SIZE / sizeof(*pd) bytes.  With PAGE_SIZE == 4096 and      * sizeof(unsigned long) == 4, that's 4 Megs.  Two directory      * pages should be enough for a while.      */
+comment|/*      * Framebuffer page directory      *      * Each directory page holds PAGE_SIZE / sizeof(*pd)      * framebuffer pages, and can thus map up to PAGE_SIZE *      * PAGE_SIZE / sizeof(*pd) bytes.  With PAGE_SIZE == 4096 and      * sizeof(unsigned long) == 4/8, that's 4 Megs 32 bit and 2 Megs      * 64 bit.  256 directories give enough room for a 512 Meg      * framebuffer with a max resolution of 12,800x10,240.  Should      * be enough for a while with room leftover for expansion.      */
 name|unsigned
 name|long
 name|pd
 index|[
-literal|2
+literal|256
 index|]
 decl_stmt|;
 block|}
@@ -267,7 +352,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Wart: xenkbd needs to know resolution.  Put it here until a better  * solution is found, but don't leak it to the backend.  */
+comment|/*  * Wart: xenkbd needs to know default resolution.  Put it here until a  * better solution is found, but don't leak it to the backend.  */
 end_comment
 
 begin_ifdef

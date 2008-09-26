@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|__XEN_LATEST_INTERFACE_VERSION__
-value|0x00030205
+value|0x00030209
 end_define
 
 begin_if
@@ -86,48 +86,6 @@ error|#
 directive|error
 literal|"These header files do not support the requested interface version."
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Fields defined as a Xen guest handle since 0x00030205. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__XEN_INTERFACE_VERSION__
-operator|>=
-literal|0x00030205
-end_if
-
-begin_define
-define|#
-directive|define
-name|XEN_GUEST_HANDLE_00030205
-parameter_list|(
-name|type
-parameter_list|)
-value|XEN_GUEST_HANDLE(type)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XEN_GUEST_HANDLE_00030205
-parameter_list|(
-name|type
-parameter_list|)
-value|type *
-end_define
 
 begin_endif
 endif|#

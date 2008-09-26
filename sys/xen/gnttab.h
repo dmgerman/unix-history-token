@@ -111,8 +111,8 @@ parameter_list|(
 name|grant_ref_t
 name|ref
 parameter_list|,
-name|unsigned
-name|long
+name|void
+modifier|*
 name|page
 parameter_list|)
 function_decl|;
@@ -498,10 +498,10 @@ name|gnttab_unmap_and_replace
 modifier|*
 name|unmap
 parameter_list|,
-name|maddr_t
+name|vm_paddr_t
 name|addr
 parameter_list|,
-name|maddr_t
+name|vm_paddr_t
 name|new_addr
 parameter_list|,
 name|grant_handle_t
@@ -520,7 +520,7 @@ name|unmap
 operator|->
 name|host_addr
 operator|=
-name|__pa
+name|vtophys
 argument_list|(
 name|addr
 argument_list|)
@@ -529,7 +529,7 @@ name|unmap
 operator|->
 name|new_addr
 operator|=
-name|__pa
+name|vtophys
 argument_list|(
 name|new_addr
 argument_list|)
