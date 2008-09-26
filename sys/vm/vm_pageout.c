@@ -4899,12 +4899,13 @@ block|{
 name|tpcount
 operator|=
 operator|(
+name|int64_t
+operator|)
 name|vm_pageout_stats_max
 operator|*
 name|cnt
 operator|.
 name|v_active_count
-operator|)
 operator|/
 name|cnt
 operator|.
