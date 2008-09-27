@@ -9524,6 +9524,13 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+else|else
+operator|*
+name|ugid_lookupp
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 comment|/* 	 * If we have already been here and the packet has no 	 * PCB entry associated with it, then we can safely 	 * assume that this is a no match. 	 */
 if|if
