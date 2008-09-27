@@ -1781,7 +1781,7 @@ literal|1
 operator|||
 name|sectors
 operator|>
-literal|63
+literal|255
 condition|)
 goto|goto
 name|invalid_label
