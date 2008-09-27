@@ -53959,12 +53959,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|cr
-operator|=
-name|dev
-operator|->
-name|si_cred
-expr_stmt|;
+comment|/* 		 * Disable this until we have the ability to set user 		 * credentials for DTrace. 		 * cr = dev->si_cred; 		 */
 name|m
 operator|=
 name|dev2unit
