@@ -363,7 +363,7 @@ name|UFMUNIT
 parameter_list|(
 name|n
 parameter_list|)
-value|(minor(n))
+value|(dev2unit(n))
 end_define
 
 begin_decl_stmt

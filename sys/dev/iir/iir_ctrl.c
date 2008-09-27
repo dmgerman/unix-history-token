@@ -515,7 +515,7 @@ name|gdt
 decl_stmt|;
 name|minor_no
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -591,7 +591,7 @@ name|gdt
 decl_stmt|;
 name|minor_no
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -665,7 +665,7 @@ name|gdt
 decl_stmt|;
 name|minor_no
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -739,7 +739,7 @@ name|gdt
 decl_stmt|;
 name|minor_no
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -824,7 +824,7 @@ name|gdt
 decl_stmt|;
 name|minor_no
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

@@ -221,7 +221,7 @@ name|MSE_UNIT
 parameter_list|(
 name|dev
 parameter_list|)
-value|(minor(dev)>> 1)
+value|(dev2unit(dev)>> 1)
 end_define
 
 begin_define
@@ -231,7 +231,7 @@ name|MSE_NBLOCKIO
 parameter_list|(
 name|dev
 parameter_list|)
-value|(minor(dev)& 0x1)
+value|(dev2unit(dev)& 0x1)
 end_define
 
 begin_define

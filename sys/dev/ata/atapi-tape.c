@@ -1315,7 +1315,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|minor
+name|dev2unit
 argument_list|(
 name|cdev
 argument_list|)

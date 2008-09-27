@@ -271,7 +271,7 @@ name|UMSUNIT
 parameter_list|(
 name|s
 parameter_list|)
-value|(minor(s)&0x1f)
+value|(dev2unit(s)&0x1f)
 end_define
 
 begin_define

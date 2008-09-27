@@ -53967,7 +53967,7 @@ name|si_cred
 expr_stmt|;
 name|m
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -63996,7 +63996,7 @@ decl_stmt|;
 comment|/* 	 * The first minor device is the one that is cloned so there is 	 * nothing more to do here. 	 */
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -64352,7 +64352,7 @@ decl_stmt|;
 comment|/* Check if this is not a cloned device. */
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

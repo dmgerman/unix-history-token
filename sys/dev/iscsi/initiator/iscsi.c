@@ -485,7 +485,7 @@ literal|7
 argument_list|,
 literal|"dev=%d"
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -493,7 +493,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -508,7 +508,7 @@ return|;
 block|}
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -614,7 +614,7 @@ name|si_drv1
 expr_stmt|;
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -649,7 +649,7 @@ literal|2
 argument_list|,
 literal|"session=%d flags=%x"
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -764,7 +764,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -847,7 +847,7 @@ literal|6
 argument_list|,
 literal|"dev=%d cmd=%d"
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -1193,7 +1193,7 @@ name|si_drv2
 expr_stmt|;
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

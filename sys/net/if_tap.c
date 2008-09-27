@@ -2033,7 +2033,7 @@ name|name
 argument_list|,
 name|unit
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2257,7 +2257,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2488,7 +2488,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2745,7 +2745,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4063,7 +4063,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4107,7 +4107,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4330,7 +4330,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4413,7 +4413,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4463,7 +4463,7 @@ name|uio
 operator|->
 name|uio_resid
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4689,7 +4689,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4738,7 +4738,7 @@ name|if_snd
 operator|.
 name|ifq_len
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4767,7 +4767,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4888,7 +4888,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4913,7 +4913,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4936,7 +4936,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -5087,7 +5087,7 @@ name|if_snd
 operator|.
 name|ifq_len
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -5108,7 +5108,7 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

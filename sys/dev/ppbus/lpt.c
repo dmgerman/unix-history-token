@@ -1731,7 +1731,7 @@ name|unit
 init|=
 name|LPTUNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -1811,7 +1811,7 @@ name|sc_flags
 operator|=
 name|LPTFLAGS
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2284,7 +2284,7 @@ name|unit
 init|=
 name|LPTUNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2728,7 +2728,7 @@ name|unit
 init|=
 name|LPTUNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2929,7 +2929,7 @@ name|unit
 init|=
 name|LPTUNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3679,7 +3679,7 @@ name|unit
 init|=
 name|LPTUNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

@@ -344,7 +344,7 @@ name|APMDEV
 parameter_list|(
 name|dev
 parameter_list|)
-value|(minor(dev)&0x0f)
+value|(dev2unit(dev)&0x0f)
 end_define
 
 begin_define

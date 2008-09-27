@@ -24,7 +24,7 @@ name|RP_PORT
 parameter_list|(
 name|x
 parameter_list|)
-value|(minor(x)& 0x3f)
+value|(dev2unit(x)& 0x3f)
 end_define
 
 begin_define

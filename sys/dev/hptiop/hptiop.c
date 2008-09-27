@@ -1115,7 +1115,7 @@ parameter_list|(
 name|dev
 parameter_list|)
 define|\
-value|((struct hpt_iop_hba *)devclass_get_softc(hptiop_devclass, minor(dev)))
+value|((struct hpt_iop_hba *)devclass_get_softc(hptiop_devclass, dev2unit(dev)))
 end_define
 
 begin_endif

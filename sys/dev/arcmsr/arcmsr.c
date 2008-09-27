@@ -1313,7 +1313,7 @@ directive|else
 name|int
 name|unit
 init|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -1450,7 +1450,7 @@ directive|else
 name|int
 name|unit
 init|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -1596,7 +1596,7 @@ directive|else
 name|int
 name|unit
 init|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

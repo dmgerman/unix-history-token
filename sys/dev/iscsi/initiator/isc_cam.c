@@ -541,7 +541,7 @@ literal|3
 argument_list|,
 literal|"dev=%d sc=%p"
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

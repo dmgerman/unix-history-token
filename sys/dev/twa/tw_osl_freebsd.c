@@ -169,7 +169,7 @@ block|{
 name|TW_INT32
 name|unit
 init|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -237,7 +237,7 @@ block|{
 name|TW_INT32
 name|unit
 init|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

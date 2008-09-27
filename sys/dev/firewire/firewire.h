@@ -1774,7 +1774,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|unit2minor((f) | (((u)& 0xff)<< 8) | (s& 0xff))
+value|((f) | (((u)& 0xff)<< 8) | (s& 0xff))
 end_define
 
 begin_define

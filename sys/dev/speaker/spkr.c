@@ -2015,7 +2015,7 @@ directive|endif
 comment|/* DEBUG */
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2127,7 +2127,7 @@ directive|endif
 comment|/* DEBUG */
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2272,7 +2272,7 @@ directive|endif
 comment|/* DEBUG */
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2377,7 +2377,7 @@ directive|endif
 comment|/* DEBUG */
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

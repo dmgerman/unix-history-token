@@ -198,7 +198,7 @@ name|GDC_UNIT
 parameter_list|(
 name|dev
 parameter_list|)
-value|minor(dev)
+value|dev2unit(dev)
 end_define
 
 begin_define

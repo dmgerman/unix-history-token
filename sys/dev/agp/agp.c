@@ -292,7 +292,7 @@ name|KDEV2DEV
 parameter_list|(
 name|kdev
 parameter_list|)
-value|devclass_get_device(agp_devclass, minor(kdev))
+value|devclass_get_device(agp_devclass, dev2unit(kdev))
 end_define
 
 begin_comment

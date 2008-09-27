@@ -2744,7 +2744,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -2787,7 +2787,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

@@ -415,7 +415,7 @@ name|devclass_get_softc
 argument_list|(
 name|smapi_devclass
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

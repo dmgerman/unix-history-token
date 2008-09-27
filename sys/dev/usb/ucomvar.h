@@ -122,7 +122,7 @@ name|UCOMUNIT
 parameter_list|(
 name|x
 parameter_list|)
-value|(minor(x)& UCOMUNIT_MASK)
+value|(dev2unit(x)& UCOMUNIT_MASK)
 end_define
 
 begin_define
@@ -132,7 +132,7 @@ name|UCOMDIALOUT
 parameter_list|(
 name|x
 parameter_list|)
-value|(minor(x)& UCOMDIALOUT_MASK)
+value|(dev2unit(x)& UCOMDIALOUT_MASK)
 end_define
 
 begin_define
@@ -142,7 +142,7 @@ name|UCOMCALLUNIT
 parameter_list|(
 name|x
 parameter_list|)
-value|(minor(x)& UCOMCALLUNIT_MASK)
+value|(dev2unit(x)& UCOMCALLUNIT_MASK)
 end_define
 
 begin_define

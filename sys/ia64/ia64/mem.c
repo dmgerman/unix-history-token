@@ -269,7 +269,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -372,7 +372,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -547,7 +547,7 @@ block|{
 comment|/* 	 * /dev/mem is the only one that makes sense through this 	 * interface.  For /dev/kmem any physaddr we return here 	 * could be transient and hence incorrect or invalid at 	 * a later time. 	 */
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

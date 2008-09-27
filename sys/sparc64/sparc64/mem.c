@@ -309,7 +309,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -586,7 +586,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

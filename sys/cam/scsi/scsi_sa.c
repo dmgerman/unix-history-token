@@ -642,7 +642,7 @@ parameter_list|(
 name|DEV
 parameter_list|)
 define|\
-value|(((minor(DEV)& 0xF0)>> 4) |  ((minor(DEV)& 0x3f0000)>> 16))
+value|(((dev2unit(DEV)& 0xF0)>> 4) |  ((dev2unit(DEV)& 0x3f0000)>> 16))
 end_define
 
 begin_define
@@ -652,7 +652,7 @@ name|SAMODE
 parameter_list|(
 name|z
 parameter_list|)
-value|((minor(z)& 0x3))
+value|((dev2unit(z)& 0x3))
 end_define
 
 begin_define
@@ -662,7 +662,7 @@ name|SADENSITY
 parameter_list|(
 name|z
 parameter_list|)
-value|(((minor(z)>> 2)& 0x3))
+value|(((dev2unit(z)>> 2)& 0x3))
 end_define
 
 begin_define
@@ -672,7 +672,7 @@ name|SA_IS_CTRL
 parameter_list|(
 name|z
 parameter_list|)
-value|(minor(z)& (1<< 29))
+value|(dev2unit(z)& (1<< 29))
 end_define
 
 begin_define

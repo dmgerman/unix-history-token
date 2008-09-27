@@ -2701,7 +2701,7 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3053,7 +3053,7 @@ switch|switch
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3164,7 +3164,7 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3203,7 +3203,7 @@ switch|switch
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3302,7 +3302,7 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3341,7 +3341,7 @@ switch|switch
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3460,7 +3460,7 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3550,7 +3550,7 @@ switch|switch
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3639,7 +3639,7 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3649,7 +3649,7 @@ if|if
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3792,7 +3792,7 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3852,7 +3852,7 @@ switch|switch
 condition|(
 name|FUNCTION
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -5459,7 +5459,7 @@ name|UNIT
 parameter_list|(
 name|x
 parameter_list|)
-value|(minor((x)& 0x0f))
+value|(dev2unit((x)& 0x0f))
 end_define
 
 begin_define
@@ -5469,7 +5469,7 @@ name|FUNCTION
 parameter_list|(
 name|x
 parameter_list|)
-value|(minor((x>> 4)& 0x0f))
+value|(dev2unit((x>> 4)& 0x0f))
 end_define
 
 begin_comment

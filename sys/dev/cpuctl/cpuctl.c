@@ -621,7 +621,7 @@ decl_stmt|;
 name|int
 name|cpu
 init|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -1915,7 +1915,7 @@ name|cpu
 decl_stmt|;
 name|cpu
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

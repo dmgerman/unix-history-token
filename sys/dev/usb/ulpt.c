@@ -664,7 +664,7 @@ name|ULPTUNIT
 parameter_list|(
 name|s
 parameter_list|)
-value|(minor(s)& 0x1f)
+value|(dev2unit(s)& 0x1f)
 end_define
 
 begin_define
@@ -674,7 +674,7 @@ name|ULPTFLAGS
 parameter_list|(
 name|s
 parameter_list|)
-value|(minor(s)& 0xe0)
+value|(dev2unit(s)& 0xe0)
 end_define
 
 begin_decl_stmt

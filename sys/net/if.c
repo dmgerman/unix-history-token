@@ -1329,7 +1329,7 @@ operator|)
 return|;
 name|idx
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -1492,7 +1492,7 @@ return|;
 block|}
 name|idx
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

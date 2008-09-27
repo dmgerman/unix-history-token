@@ -229,14 +229,14 @@ name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
 operator|!=
 name|CDEV_MINOR_MEM
 operator|&&
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -248,7 +248,7 @@ name|EIO
 return|;
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -374,7 +374,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -560,7 +560,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -575,7 +575,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

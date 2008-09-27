@@ -3030,7 +3030,7 @@ name|devsw
 operator|->
 name|d_name
 operator|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -3684,7 +3684,7 @@ argument_list|,
 operator|(
 literal|"WARNING: Driver mistake: destroy_dev on %d\n"
 operator|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -4166,7 +4166,7 @@ argument_list|)
 expr_stmt|;
 name|mynor
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

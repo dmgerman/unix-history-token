@@ -1412,7 +1412,7 @@ name|tdfx_devclass
 argument_list|,
 name|UNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -1492,7 +1492,7 @@ name|tdfx_devclass
 argument_list|,
 name|UNIT
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -1563,7 +1563,7 @@ comment|/*  	 * mmap(2) is called by a user process to request that an area of m
 comment|/**** OLD GET CONFIG ****/
 comment|/* struct tdfx_softc* tdfx_info; */
 comment|/* Get the configuration for our card XXX*/
-comment|/*tdfx_info = (struct tdfx_softc*)devclass_get_softc(tdfx_devclass, 			UNIT(minor(dev)));*/
+comment|/*tdfx_info = (struct tdfx_softc*)devclass_get_softc(tdfx_devclass, 			UNIT(dev2unit(dev)));*/
 comment|/************************/
 name|struct
 name|tdfx_softc

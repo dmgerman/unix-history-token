@@ -279,7 +279,7 @@ block|}
 comment|/* minor device 0 is physical memory */
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -519,7 +519,7 @@ comment|/* minor device 1 is kernel memory */
 elseif|else
 if|if
 condition|(
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

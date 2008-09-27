@@ -766,7 +766,7 @@ name|SESUNIT
 parameter_list|(
 name|x
 parameter_list|)
-value|(minor((x)))
+value|(dev2unit((x)))
 end_define
 
 begin_decl_stmt

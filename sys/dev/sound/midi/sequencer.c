@@ -341,7 +341,7 @@ name|MIDIUNIT
 parameter_list|(
 name|y
 parameter_list|)
-value|((minor(y)>> 4)& 0x0f)
+value|((dev2unit(y)>> 4)& 0x0f)
 end_define
 
 begin_define
@@ -351,7 +351,7 @@ name|MIDIDEV
 parameter_list|(
 name|y
 parameter_list|)
-value|(minor(y)& 0x0f)
+value|(dev2unit(y)& 0x0f)
 end_define
 
 begin_comment

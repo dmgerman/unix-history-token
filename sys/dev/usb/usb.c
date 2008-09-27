@@ -174,7 +174,7 @@ name|USBUNIT
 parameter_list|(
 name|d
 parameter_list|)
-value|(minor(d))
+value|(dev2unit(d))
 end_define
 
 begin_comment

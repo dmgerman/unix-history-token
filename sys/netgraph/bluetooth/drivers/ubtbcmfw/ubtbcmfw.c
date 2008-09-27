@@ -248,7 +248,7 @@ name|UBTBCMFW_UNIT
 parameter_list|(
 name|n
 parameter_list|)
-value|((minor(n)>> 4)& 0xf)
+value|((dev2unit(n)>> 4)& 0xf)
 end_define
 
 begin_define
@@ -258,7 +258,7 @@ name|UBTBCMFW_ENDPOINT
 parameter_list|(
 name|n
 parameter_list|)
-value|(minor(n)& 0xf)
+value|(dev2unit(n)& 0xf)
 end_define
 
 begin_define

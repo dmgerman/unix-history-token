@@ -1036,7 +1036,7 @@ argument_list|(
 operator|&
 name|firewire_cdevsw
 argument_list|,
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)

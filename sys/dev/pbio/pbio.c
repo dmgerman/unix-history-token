@@ -309,7 +309,7 @@ name|UNIT
 parameter_list|(
 name|dev
 parameter_list|)
-value|(minor(dev)>> 2)
+value|(dev2unit(dev)>> 2)
 end_define
 
 begin_define
@@ -319,7 +319,7 @@ name|PORT
 parameter_list|(
 name|dev
 parameter_list|)
-value|(minor(dev)& 0x3)
+value|(dev2unit(dev)& 0x3)
 end_define
 
 begin_define
