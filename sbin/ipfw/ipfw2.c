@@ -29877,6 +29877,8 @@ block|{
 name|table_list
 argument_list|(
 name|ent
+argument_list|,
+name|is_all
 argument_list|)
 expr_stmt|;
 block|}
