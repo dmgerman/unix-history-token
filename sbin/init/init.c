@@ -354,6 +354,7 @@ value|"default"
 end_define
 
 begin_function_decl
+specifier|static
 name|void
 name|handle
 parameter_list|(
@@ -365,6 +366,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|delset
 parameter_list|(
@@ -377,6 +379,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|stall
 parameter_list|(
@@ -399,6 +402,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|warning
 parameter_list|(
@@ -421,6 +425,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|emergency
 parameter_list|(
@@ -443,6 +448,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|disaster
 parameter_list|(
@@ -452,6 +458,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|badsys
 parameter_list|(
@@ -461,6 +468,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|runshutdown
 parameter_list|(
@@ -512,6 +520,7 @@ function_decl|;
 end_typedef
 
 begin_function_decl
+specifier|static
 name|state_func_t
 name|single_user
 parameter_list|(
@@ -521,6 +530,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|state_func_t
 name|runcom
 parameter_list|(
@@ -530,6 +540,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|state_func_t
 name|read_ttys
 parameter_list|(
@@ -539,6 +550,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|state_func_t
 name|multi_user
 parameter_list|(
@@ -548,6 +560,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|state_func_t
 name|clean_ttys
 parameter_list|(
@@ -557,6 +570,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|state_func_t
 name|catatonia
 parameter_list|(
@@ -566,6 +580,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|state_func_t
 name|death
 parameter_list|(
@@ -575,6 +590,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|state_func_t
 name|run_script
 parameter_list|(
@@ -635,6 +651,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|transition
 parameter_list|(
@@ -644,12 +661,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|state_t
 name|requested_transition
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|setctty
 parameter_list|(
@@ -661,6 +680,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -672,6 +692,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|write_stderr
 parameter_list|(
@@ -776,6 +797,7 @@ typedef|;
 end_typedef
 
 begin_function_decl
+specifier|static
 name|void
 name|free_session
 parameter_list|(
@@ -786,6 +808,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|session_t
 modifier|*
 name|new_session
@@ -803,6 +826,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|session_t
 modifier|*
 name|sessions
@@ -810,6 +834,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -822,6 +847,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|start_window_system
 parameter_list|(
@@ -832,6 +858,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|collect_child
 parameter_list|(
@@ -841,6 +868,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|pid_t
 name|start_getty
 parameter_list|(
@@ -851,6 +879,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|transition_handler
 parameter_list|(
@@ -860,6 +889,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|alrm_handler
 parameter_list|(
@@ -869,6 +899,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setsecuritylevel
 parameter_list|(
@@ -878,6 +909,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|getsecuritylevel
 parameter_list|(
@@ -887,6 +919,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|setupargv
 parameter_list|(
@@ -907,6 +940,7 @@ name|LOGIN_CAP
 end_ifdef
 
 begin_function_decl
+specifier|static
 name|void
 name|setprocresources
 parameter_list|(
@@ -923,12 +957,14 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|clang
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|clear_session_logs
 parameter_list|(
@@ -939,6 +975,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|start_session_db
 parameter_list|(
@@ -948,6 +985,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|add_session
 parameter_list|(
@@ -958,6 +996,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|del_session
 parameter_list|(
@@ -968,6 +1007,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|session_t
 modifier|*
 name|find_session
@@ -978,6 +1018,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|DB
 modifier|*
 name|session_db
@@ -1857,6 +1898,7 @@ comment|/*  * Associate a function with a signal handler.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|handle
 parameter_list|(
@@ -1962,6 +2004,7 @@ comment|/*  * Delete a set of signals from a mask.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|delset
 parameter_list|(
@@ -2020,6 +2063,7 @@ comment|/*  * Log a message and sleep for a while (to give someone an opportunit
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|stall
 parameter_list|(
@@ -2068,6 +2112,7 @@ comment|/*  * Like stall(), but doesn't sleep.  * If cpp had variadic macros, th
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|warning
 parameter_list|(
@@ -2111,6 +2156,7 @@ comment|/*  * Log an emergency message.  * NB: should send a message to the sess
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|emergency
 parameter_list|(
@@ -2154,6 +2200,7 @@ comment|/*  * Catch a SIGSYS signal.  *  * These may arise if a system does not 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|badsys
 parameter_list|(
@@ -2188,6 +2235,7 @@ comment|/*  * Catch an unexpected signal.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|disaster
 parameter_list|(
@@ -2233,6 +2281,7 @@ comment|/*  * Get the security level of the kernel.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|getsecuritylevel
 parameter_list|(
@@ -2335,6 +2384,7 @@ comment|/*  * Set the security level of the kernel.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|setsecuritylevel
 parameter_list|(
@@ -2442,6 +2492,7 @@ comment|/*  * Change states in the finite state machine.  * The initial state is
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|transition
 parameter_list|(
@@ -2473,6 +2524,7 @@ comment|/*  * Close out the accounting files for a login session.  * NB: should 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|clear_session_logs
 parameter_list|(
@@ -2520,6 +2572,7 @@ comment|/*  * Start a session and allocate a controlling terminal.  * Only calle
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|setctty
 parameter_list|(
@@ -2595,6 +2648,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2639,6 +2693,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_stderr
 parameter_list|(
@@ -2668,6 +2723,7 @@ comment|/*  * Bring the system up single user.  */
 end_comment
 
 begin_function
+specifier|static
 name|state_func_t
 name|single_user
 parameter_list|(
@@ -3302,6 +3358,7 @@ comment|/*  * Run the system startup script.  */
 end_comment
 
 begin_function
+specifier|static
 name|state_func_t
 name|runcom
 parameter_list|(
@@ -3356,6 +3413,7 @@ comment|/*  * Run a shell script.  * Returns 0 on success, otherwise the next tr
 end_comment
 
 begin_function
+specifier|static
 name|state_func_t
 name|run_script
 parameter_list|(
@@ -3822,6 +3880,7 @@ comment|/*  * Open the session database.  *  * NB: We could pass in the size her
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|start_session_db
 parameter_list|(
@@ -3903,6 +3962,7 @@ comment|/*  * Add a new login session.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|add_session
 parameter_list|(
@@ -3991,6 +4051,7 @@ comment|/*  * Delete an old login session.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|del_session
 parameter_list|(
@@ -4059,6 +4120,7 @@ comment|/*  * Look up a login session by pid.  */
 end_comment
 
 begin_function
+specifier|static
 name|session_t
 modifier|*
 name|find_session
@@ -4146,6 +4208,7 @@ comment|/*  * Construct an argument vector from a command line.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -4257,6 +4320,7 @@ comment|/*  * Deallocate a session descriptor.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|free_session
 parameter_list|(
@@ -4356,6 +4420,7 @@ comment|/*  * Allocate a new session descriptor.  * Mark it SE_PRESENT.  */
 end_comment
 
 begin_function
+specifier|static
 name|session_t
 modifier|*
 name|new_session
@@ -4590,6 +4655,7 @@ comment|/*  * Calculate getty and if useful window argv vectors.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|setupargv
 parameter_list|(
@@ -4919,6 +4985,7 @@ comment|/*  * Walk the list of ttys and create sessions for each active line.  *
 end_comment
 
 begin_function
+specifier|static
 name|state_func_t
 name|read_ttys
 parameter_list|(
@@ -5045,6 +5112,7 @@ comment|/*  * Start a window system running.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|start_window_system
 parameter_list|(
@@ -5296,6 +5364,7 @@ comment|/*  * Start a login session running.  */
 end_comment
 
 begin_function
+specifier|static
 name|pid_t
 name|start_getty
 parameter_list|(
@@ -5592,6 +5661,7 @@ comment|/*  * Collect exit status for a child.  * If an exiting login, start a n
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|collect_child
 parameter_list|(
@@ -5761,6 +5831,7 @@ comment|/*  * Catch a signal and request a state transition.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|transition_handler
 parameter_list|(
@@ -5833,6 +5904,7 @@ comment|/*  * Take the system multiuser.  */
 end_comment
 
 begin_function
+specifier|static
 name|state_func_t
 name|multi_user
 parameter_list|(
@@ -5979,6 +6051,7 @@ comment|/*  * This is an (n*2)+(n^2) algorithm.  We hope it isn't run often...  
 end_comment
 
 begin_function
+specifier|static
 name|state_func_t
 name|clean_ttys
 parameter_list|(
@@ -6484,6 +6557,7 @@ comment|/*  * Block further logins.  */
 end_comment
 
 begin_function
+specifier|static
 name|state_func_t
 name|catatonia
 parameter_list|(
@@ -6528,6 +6602,7 @@ comment|/*  * Note SIGALRM.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|alrm_handler
 parameter_list|(
@@ -6552,6 +6627,7 @@ comment|/*  * Bring the system down to single user.  */
 end_comment
 
 begin_function
+specifier|static
 name|state_func_t
 name|death
 parameter_list|(
@@ -6748,6 +6824,7 @@ comment|/*  * Run the system shutdown script.  *  * Exit codes:      XXX I shoul
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|runshutdown
 parameter_list|(
@@ -7544,6 +7621,7 @@ name|LOGIN_CAP
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|setprocresources
 parameter_list|(
