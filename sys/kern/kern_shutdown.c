@@ -1905,6 +1905,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2124,6 +2127,9 @@ condition|)
 name|bootopt
 operator||=
 name|RB_NOSYNC
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 name|boot
 argument_list|(
