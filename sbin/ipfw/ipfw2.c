@@ -13673,6 +13673,7 @@ literal|"		redirect_port linkspec|redirect_proto linkspec}\n"
 literal|"set [disable N... enable N...] | move [rule] X to Y | swap X Y | show\n"
 literal|"set N {show|list|zero|resetlog|delete} [N{,N}] | flush\n"
 literal|"table N {add ip[/bits] [value] | delete ip[/bits] | flush | list}\n"
+literal|"table all {flush | list}\n"
 literal|"\n"
 literal|"RULE-BODY:	check-state [PARAMS] | ACTION [PARAMS] ADDR [OPTION_LIST]\n"
 literal|"ACTION:	check-state | allow | count | deny | unreach{,6} CODE |\n"
@@ -29192,12 +29193,15 @@ name|table_list
 parameter_list|(
 name|ipfw_table_entry
 name|ent
+parameter_list|,
+name|int
+name|need_header
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * This one handles all table-related commands  * 	ipfw table N add addr[/masklen] [value]  * 	ipfw table N delete addr[/masklen]  * 	ipfw table N flush  * 	ipfw table N list  */
+comment|/*  * This one handles all table-related commands  * 	ipfw table N add addr[/masklen] [value]  * 	ipfw table N delete addr[/masklen]  * 	ipfw table {N | all} flush  * 	ipfw table {N | all} list  */
 end_comment
 
 begin_function
@@ -29220,12 +29224,18 @@ decl_stmt|;
 name|int
 name|do_add
 decl_stmt|;
+name|int
+name|is_all
+decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|uint32_t
+name|a
 decl_stmt|;
 name|uint32_t
 name|tables_max
@@ -29311,6 +29321,43 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
+name|is_all
+operator|=
+literal|0
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ac
+operator|&&
+name|_substrcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"all"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ent
+operator|.
+name|tbl
+operator|=
+literal|0
+expr_stmt|;
+name|is_all
+operator|=
+literal|1
+expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
@@ -29323,7 +29370,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"table number required"
+literal|"table number or 'all' keyword required"
 argument_list|)
 expr_stmt|;
 if|if
@@ -29349,6 +29396,37 @@ expr_stmt|;
 name|NEED1
 argument_list|(
 literal|"table needs command"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is_all
+operator|&&
+name|_substrcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"list"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|_substrcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"flush"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"table number required"
 argument_list|)
 expr_stmt|;
 if|if
@@ -29710,6 +29788,22 @@ operator|==
 literal|0
 condition|)
 block|{
+name|a
+operator|=
+name|is_all
+condition|?
+name|tables_max
+else|:
+operator|(
+name|ent
+operator|.
+name|tbl
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+do|do
+block|{
 if|if
 condition|(
 name|do_cmd
@@ -29739,6 +29833,17 @@ literal|"setsockopt(IP_FW_TABLE_FLUSH)"
 argument_list|)
 expr_stmt|;
 block|}
+do|while
+condition|(
+operator|++
+name|ent
+operator|.
+name|tbl
+operator|<
+name|a
+condition|)
+do|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -29753,11 +29858,38 @@ operator|==
 literal|0
 condition|)
 block|{
+name|a
+operator|=
+name|is_all
+condition|?
+name|tables_max
+else|:
+operator|(
+name|ent
+operator|.
+name|tbl
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+do|do
+block|{
 name|table_list
 argument_list|(
 name|ent
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+operator|++
+name|ent
+operator|.
+name|tbl
+operator|<
+name|a
+condition|)
+do|;
 block|}
 else|else
 name|errx
@@ -29780,6 +29912,9 @@ name|table_list
 parameter_list|(
 name|ipfw_table_entry
 name|ent
+parameter_list|,
+name|int
+name|need_header
 parameter_list|)
 block|{
 name|ipfw_table
@@ -29903,6 +30038,23 @@ argument_list|(
 name|EX_OSERR
 argument_list|,
 literal|"getsockopt(IP_FW_TABLE_LIST)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tbl
+operator|->
+name|cnt
+operator|&&
+name|need_header
+condition|)
+name|printf
+argument_list|(
+literal|"---table(%d)---\n"
+argument_list|,
+name|tbl
+operator|->
+name|tbl
 argument_list|)
 expr_stmt|;
 for|for
