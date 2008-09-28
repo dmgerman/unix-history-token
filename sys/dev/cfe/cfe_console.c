@@ -508,7 +508,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 block|}
 end_function
@@ -754,7 +754,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|result
@@ -892,7 +892,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 end_function
 
