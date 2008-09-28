@@ -235,7 +235,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->dev), \ 	    "mmc", MTX_DEF)
+value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->dev),	\ 	    "mmc", MTX_DEF)
 end_define
 
 begin_define
