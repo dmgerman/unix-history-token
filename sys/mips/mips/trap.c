@@ -1270,8 +1270,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Enable hardware interrupts if they were on before the trap. If it 	 * was off disable all (splhigh) so we don't accidently enable it 	 * when doing a spllower(). 	 */
-comment|/*XXX do in locore? */
+comment|/* 	 * Enable hardware interrupts if they were on before the trap. If it 	 * was off disable all so we don't accidently enable it when doing a 	 * return to userland. 	 */
 if|if
 condition|(
 name|trapframe
