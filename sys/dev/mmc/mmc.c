@@ -883,9 +883,10 @@ name|uint32_t
 name|ocr
 parameter_list|)
 block|{
-comment|// XXX
 return|return
 name|ocr
+operator|&
+name|MMC_OCR_VOLTAGE
 return|;
 block|}
 end_function

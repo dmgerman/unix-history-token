@@ -1111,6 +1111,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MMC_OCR_VOLTAGE
+value|0x3fffffffU
+end_define
+
+begin_comment
+comment|/* Vdd Voltage mask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MMC_OCR_LOW_VOLTAGE
 value|(1u<< 7)
 end_define
