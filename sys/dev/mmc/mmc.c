@@ -159,6 +159,10 @@ name|mmc_csd
 name|csd
 decl_stmt|;
 comment|/* csd decoded */
+name|u_char
+name|read_only
+decl_stmt|;
+comment|/* True when the device is read-only */
 block|}
 struct|;
 end_struct
@@ -3253,7 +3257,21 @@ name|resp
 operator|>>
 literal|16
 expr_stmt|;
-comment|// RO check
+if|if
+condition|(
+name|mmcbr_get_ro
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+condition|)
+name|ivar
+operator|->
+name|read_only
+operator|=
+literal|1
+expr_stmt|;
 name|mmc_send_csd
 argument_list|(
 name|sc
@@ -3889,6 +3907,21 @@ operator|->
 name|csd
 operator|.
 name|tran_speed
+expr_stmt|;
+break|break;
+case|case
+name|MMC_IVAR_READ_ONLY
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|result
+operator|=
+name|ivar
+operator|->
+name|read_only
 expr_stmt|;
 break|break;
 block|}
