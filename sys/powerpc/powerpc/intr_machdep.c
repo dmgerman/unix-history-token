@@ -819,17 +819,6 @@ name|vector
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* Send ourself a test IPI message. */
-name|ipi_self
-argument_list|(
-name|IPI_PPC_TEST
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0

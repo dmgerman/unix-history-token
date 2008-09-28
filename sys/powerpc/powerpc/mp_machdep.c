@@ -138,14 +138,6 @@ name|ap_tbl
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|mp_ipi_test
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|machdep_ap_bootstrap
@@ -645,20 +637,6 @@ operator|<=
 literal|1
 condition|)
 return|return;
-if|if
-condition|(
-name|mp_ipi_test
-operator|!=
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"SMP: ERROR: sending of a test IPI failed\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|cpus
 operator|=
 literal|0
@@ -995,13 +973,6 @@ name|self
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|IPI_PPC_TEST
-case|:
-name|mp_ipi_test
-operator|++
-expr_stmt|;
-break|break;
 block|}
 block|}
 return|return
@@ -1101,43 +1072,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Send an IPI to all CPUs, including myself. */
-end_comment
-
-begin_function
-name|void
-name|ipi_all
-parameter_list|(
-name|int
-name|ipi
-parameter_list|)
-block|{
-name|struct
-name|pcpu
-modifier|*
-name|pc
-decl_stmt|;
-name|SLIST_FOREACH
-argument_list|(
-argument|pc
-argument_list|,
-argument|&cpuhead
-argument_list|,
-argument|pc_allcpu
-argument_list|)
-block|{
-name|ipi_send
-argument_list|(
-name|pc
-argument_list|,
-name|ipi
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
 comment|/* Send an IPI to all CPUs EXCEPT myself. */
 end_comment
 
@@ -1177,28 +1111,6 @@ name|ipi
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/* Send an IPI to myself. */
-end_comment
-
-begin_function
-name|void
-name|ipi_self
-parameter_list|(
-name|int
-name|ipi
-parameter_list|)
-block|{
-name|ipi_send
-argument_list|(
-name|pcpup
-argument_list|,
-name|ipi
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

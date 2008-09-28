@@ -49,28 +49,11 @@ name|IPI_STOP
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPI_PPC_TEST
-value|4
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
-
-begin_function_decl
-name|void
-name|ipi_all
-parameter_list|(
-name|int
-name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -89,16 +72,6 @@ parameter_list|(
 name|cpumask_t
 name|cpus
 parameter_list|,
-name|int
-name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipi_self
-parameter_list|(
 name|int
 name|ipi
 parameter_list|)

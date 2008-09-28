@@ -338,28 +338,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * send an IPI INTerrupt containing 'vector' to all CPUs, including myself  */
-end_comment
-
-begin_function
-name|void
-name|ipi_all
-parameter_list|(
-name|u_int
-name|ipi
-parameter_list|)
-block|{
-name|ipi_selected
-argument_list|(
-name|all_cpus
-argument_list|,
-name|ipi
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * send an IPI to all CPUs EXCEPT myself  */
 end_comment
 
@@ -376,31 +354,6 @@ argument_list|(
 name|PCPU_GET
 argument_list|(
 name|other_cpus
-argument_list|)
-argument_list|,
-name|ipi
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * send an IPI to myself  */
-end_comment
-
-begin_function
-name|void
-name|ipi_self
-parameter_list|(
-name|u_int
-name|ipi
-parameter_list|)
-block|{
-name|ipi_selected
-argument_list|(
-name|PCPU_GET
-argument_list|(
-name|cpumask
 argument_list|)
 argument_list|,
 name|ipi

@@ -57,13 +57,6 @@ name|IPI_MCA_RENDEZ
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPI_TEST
-value|4
-end_define
-
 begin_comment
 comment|/* Machine independent IPIs. */
 end_comment
@@ -72,35 +65,35 @@ begin_define
 define|#
 directive|define
 name|IPI_AST
-value|5
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_RENDEZVOUS
-value|6
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_STOP
-value|7
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_PREEMPT
-value|8
+value|7
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_COUNT
-value|9
+value|8
 end_define
 
 begin_ifndef
@@ -125,16 +118,6 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|ipi_all
-parameter_list|(
-name|int
-name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ipi_all_but_self
 parameter_list|(
 name|int
@@ -150,16 +133,6 @@ parameter_list|(
 name|cpumask_t
 name|cpus
 parameter_list|,
-name|int
-name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipi_self
-parameter_list|(
 name|int
 name|ipi
 parameter_list|)

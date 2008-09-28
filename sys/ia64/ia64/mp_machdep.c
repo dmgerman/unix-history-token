@@ -263,14 +263,6 @@ name|LID_SAPIC_MASK
 value|0xffff0000UL
 end_define
 
-begin_decl_stmt
-name|int
-name|mp_ipi_test
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Variables used by os_boot_rendez and ia64_ap_startup */
 end_comment
@@ -987,20 +979,6 @@ name|pc_cpuid
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|pc
-operator|->
-name|pc_awake
-operator|=
-literal|1
-expr_stmt|;
-name|ipi_self
-argument_list|(
-name|IPI_TEST
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -1030,17 +1008,6 @@ operator|<=
 literal|1
 condition|)
 return|return;
-if|if
-condition|(
-name|mp_ipi_test
-operator|!=
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"SMP: WARNING: sending of a test IPI failed\n"
-argument_list|)
-expr_stmt|;
 name|cpus
 operator|=
 literal|0
@@ -1171,43 +1138,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * send an IPI to all CPUs, including myself.  */
-end_comment
-
-begin_function
-name|void
-name|ipi_all
-parameter_list|(
-name|int
-name|ipi
-parameter_list|)
-block|{
-name|struct
-name|pcpu
-modifier|*
-name|pc
-decl_stmt|;
-name|SLIST_FOREACH
-argument_list|(
-argument|pc
-argument_list|,
-argument|&cpuhead
-argument_list|,
-argument|pc_allcpu
-argument_list|)
-block|{
-name|ipi_send
-argument_list|(
-name|pc
-argument_list|,
-name|ipi
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
 comment|/*  * send an IPI to all CPUs EXCEPT myself.  */
 end_comment
 
@@ -1247,28 +1177,6 @@ name|ipi
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * send an IPI to myself.  */
-end_comment
-
-begin_function
-name|void
-name|ipi_self
-parameter_list|(
-name|int
-name|ipi
-parameter_list|)
-block|{
-name|ipi_send
-argument_list|(
-name|pcpup
-argument_list|,
-name|ipi
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -281,17 +281,6 @@ literal|0x30
 operator|+
 literal|1
 expr_stmt|;
-name|ipi_vector
-index|[
-name|IPI_TEST
-index|]
-operator|=
-name|ceil
-operator|-
-literal|0x30
-operator|+
-literal|2
-expr_stmt|;
 block|}
 end_function
 

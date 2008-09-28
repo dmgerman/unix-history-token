@@ -290,16 +290,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipi_all
-parameter_list|(
-name|u_int
-name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ipi_all_but_self
 parameter_list|(
 name|u_int
