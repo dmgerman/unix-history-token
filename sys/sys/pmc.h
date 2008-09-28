@@ -1056,7 +1056,7 @@ comment|/* what kind of CPU */
 name|uint32_t
 name|pm_ncpu
 decl_stmt|;
-comment|/* number of CPUs */
+comment|/* max CPU number */
 name|uint32_t
 name|pm_npmc
 decl_stmt|;
