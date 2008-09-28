@@ -4576,10 +4576,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Changes:  *	 * Replace splhigh()/splx() with critical_enter()/critical_exit()  *	 * Use the VM_ALLOC_WIRED flag for allocating the new page.  */
-end_comment
-
-begin_comment
 comment|/*  * grow the number of kernel page table entries, if needed  */
 end_comment
 
