@@ -368,41 +368,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEV_BSHIFT
-value|9
-end_define
-
-begin_comment
-comment|/* log2(DEV_BSIZE) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|BLKDEV_IOSIZE
 value|2048
 end_define
 
-begin_define
-define|#
-directive|define
-name|DFLTPHYS
-value|(64 * 1024)
-end_define
-
 begin_comment
-comment|/* default max raw I/O transfer size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXPHYS
-value|(128 * 1024)
-end_define
-
-begin_comment
-comment|/* max raw I/O transfer size */
+comment|/* xxx: Why is this 1/2 page? */
 end_comment
 
 begin_define
@@ -412,29 +383,12 @@ name|MAXDUMPPGS
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|CLSIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLBYTES
-value|(CLSIZE * NBPG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLSIZELOG2
-value|0
-end_define
+begin_comment
+comment|/* xxx: why is this only one? */
+end_comment
 
 begin_comment
-comment|/*  * NOTE: In FreeBSD, Uarea's don't have a fixed address.  *	 Therefore, any code imported from OpenBSD which depends on  *	 UADDR, UVPN and KERNELSTACK requires porting.  */
+comment|/*  * NOTE: In FreeBSD, Uarea's don't have a fixed address.  *	 Therefore, any code imported from OpenBSD which depends on  *	 UADDR, UVPN and KERNELSTACK requires porting.  * XXX: 3 stack pages?  Not 4 which would be more efficient from a tlb  * XXX: point of view.  */
 end_comment
 
 begin_define
@@ -467,98 +421,6 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Constants related to network buffer management.  * MCLBYTES must be no larger than CLBYTES (the software page size), and,  * on machines that exchange pages of input or output buffers with mbuf  * clusters (MAPPED_MBUFS), MCLBYTES must also be an integral multiple  * of the hardware page size.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MSIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MSIZE
-value|256
-end_define
-
-begin_comment
-comment|/* size of an mbuf */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MSIZE */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MCLSHIFT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MCLSHIFT
-value|11
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MCLSHIFT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCLBYTES
-value|(1<< MCLSHIFT)
-end_define
-
-begin_comment
-comment|/* enough for whole Ethernet packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCLOFSET
-value|(MCLBYTES - 1)
-end_define
-
-begin_comment
-comment|/*  * Size of kernel malloc arena in CLBYTES-sized logical pages  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKMEMCLUSTERS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NKMEMCLUSTERS
-value|(4096*1024/CLBYTES)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* pages ("clicks") (4096 bytes) to disk blocks */
 end_comment
 
@@ -580,54 +442,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)>> (PGSHIFT - DEV_BSHIFT))
-end_define
-
-begin_comment
-comment|/* pages to bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ctob
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< PGSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|btoc
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x) + PGOFSET)>> PGSHIFT)
-end_define
-
-begin_comment
-comment|/* bytes to disk blocks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|btodb
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)>> DEV_BSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dbtob
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< DEV_BSHIFT)
 end_define
 
 begin_comment
