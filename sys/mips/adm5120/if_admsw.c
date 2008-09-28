@@ -5061,7 +5061,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * admsw_init:		[ifnet interface function]  *  *	Initialize the interface.  Must be called at splnet().  */
+comment|/*  * admsw_init:		[ifnet interface function]  *  *	Initialize the interface.  */
 end_comment
 
 begin_function
