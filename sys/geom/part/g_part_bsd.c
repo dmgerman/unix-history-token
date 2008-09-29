@@ -1618,7 +1618,7 @@ operator|==
 name|DISKMAGIC
 operator|)
 condition|?
-name|G_PART_PROBE_PRI_NORM
+name|G_PART_PROBE_PRI_HIGH
 else|:
 name|ENXIO
 operator|)
