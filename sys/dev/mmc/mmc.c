@@ -4001,6 +4001,8 @@ operator|->
 name|csd
 operator|.
 name|capacity
+operator|/
+name|DEV_BSIZE
 expr_stmt|;
 break|break;
 case|case
