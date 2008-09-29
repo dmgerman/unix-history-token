@@ -623,7 +623,7 @@ argument_list|(
 name|busdev
 argument_list|)
 argument_list|,
-name|dev
+name|busdev
 argument_list|)
 expr_stmt|;
 if|if
@@ -840,7 +840,7 @@ argument_list|(
 name|busdev
 argument_list|)
 argument_list|,
-name|dev
+name|busdev
 argument_list|)
 expr_stmt|;
 if|if
