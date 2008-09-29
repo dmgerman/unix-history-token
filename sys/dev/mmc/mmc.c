@@ -3256,6 +3256,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3289,8 +3291,12 @@ operator|!=
 name|MMC_ERR_NONE
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
 literal|"Error reading CID %d\n"
 argument_list|,
 name|err
