@@ -5205,11 +5205,26 @@ argument_list|(
 name|swap_zone
 argument_list|)
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"swap zone exhausted, increase kern.maxswzone\n"
 argument_list|)
 expr_stmt|;
+name|vm_pageout_oom
+argument_list|(
+name|VM_OOM_SWAPZ
+argument_list|)
+expr_stmt|;
+name|pause
+argument_list|(
+literal|"swzonex"
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|VM_WAIT
 expr_stmt|;
 name|VM_OBJECT_LOCK

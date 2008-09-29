@@ -2662,24 +2662,6 @@ name|addl_page_shortage
 decl_stmt|,
 name|addl_page_shortage_init
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|bigproc
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|vm_offset_t
-name|size
-decl_stmt|,
-name|bigsize
-decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
@@ -4113,7 +4095,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * If we are critically low on one of RAM or swap and low on 	 * the other, kill the largest process.  However, we avoid 	 * doing this on the first pass in order to give ourselves a 	 * chance to flush out dirty vnode-backed pages and to allow 	 * active pages to be moved to the inactive queue and reclaimed. 	 * 	 * We keep the process bigproc locked once we find it to keep anyone 	 * from messing with it; however, there is a possibility of 	 * deadlock if process B is bigproc and one of it's child processes 	 * attempts to propagate a signal to B while we are waiting for A's 	 * lock while walking this list.  To avoid this, we don't block on 	 * the process lock but just skip a process if it is already locked. 	 */
+comment|/* 	 * If we are critically low on one of RAM or swap and low on 	 * the other, kill the largest process.  However, we avoid 	 * doing this on the first pass in order to give ourselves a 	 * chance to flush out dirty vnode-backed pages and to allow 	 * active pages to be moved to the inactive queue and reclaimed. 	 */
 if|if
 condition|(
 name|pass
@@ -4140,7 +4122,41 @@ literal|0
 operator|)
 operator|)
 condition|)
+name|vm_pageout_oom
+argument_list|(
+name|VM_OOM_MEM
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|vm_pageout_oom
+parameter_list|(
+name|int
+name|shortage
+parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|bigproc
+decl_stmt|;
+name|vm_offset_t
+name|size
+decl_stmt|,
+name|bigsize
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+comment|/* 	 * We keep the process bigproc locked once we find it to keep anyone 	 * from messing with it; however, there is a possibility of 	 * deadlock if process B is bigproc and one of it's child processes 	 * attempts to propagate a signal to B while we are waiting for A's 	 * lock while walking this list.  To avoid this, we don't block on 	 * the process lock but just skip a process if it is already locked. 	 */
 name|bigproc
 operator|=
 name|NULL
@@ -4173,7 +4189,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 			 * If this is a system or protected process, skip it. 			 */
+comment|/* 		 * If this is a system or protected process, skip it. 		 */
 if|if
 condition|(
 operator|(
@@ -4224,7 +4240,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * If the process is in a non-running type state, 			 * don't touch it.  Check all the threads individually. 			 */
+comment|/* 		 * If the process is in a non-running type state, 		 * don't touch it.  Check all the threads individually. 		 */
 name|breakout
 operator|=
 literal|0
@@ -4291,7 +4307,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * get the process size 			 */
+comment|/* 		 * get the process size 		 */
 if|if
 condition|(
 operator|!
@@ -4332,6 +4348,12 @@ operator|->
 name|vm_map
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|shortage
+operator|==
+name|VM_OOM_MEM
+condition|)
 name|size
 operator|+=
 name|vmspace_resident_count
@@ -4341,7 +4363,7 @@ operator|->
 name|p_vmspace
 argument_list|)
 expr_stmt|;
-comment|/* 			 * if the this process is bigger than the biggest one 			 * remember it. 			 */
+comment|/* 		 * if the this process is bigger than the biggest one 		 * remember it. 		 */
 if|if
 condition|(
 name|size
@@ -4416,7 +4438,6 @@ operator|.
 name|v_free_count
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
