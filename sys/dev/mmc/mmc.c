@@ -676,9 +676,7 @@ operator|!=
 name|dev
 condition|)
 block|{
-comment|// Keep track of the last rca that we've selected.  If
-comment|// we're asked to do it again, don't.  We never unselect
-comment|// unless the bus code itself wants the mmc bus.
+comment|/* 		 * Keep track of the last rca that we've selected.  If 		 * we're asked to do it again, don't.  We never 		 * unselect unless the bus code itself wants the mmc 		 * bus, and constantly reselecting causes problems. 		 */
 name|rca
 operator|=
 name|mmc_get_rca
@@ -721,11 +719,11 @@ operator|=
 name|rca
 expr_stmt|;
 block|}
-comment|// XXX should set bus width here?
+comment|/* XXX should set bus width here? */
 block|}
 else|else
 block|{
-comment|// If there's a card selected, stand down.
+comment|/* 		 * If there's a card selected, stand down. 		 */
 if|if
 condition|(
 name|sc
@@ -759,7 +757,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|// XXX should set bus width here?
+comment|/* XXX should set bus width here? */
 block|}
 return|return
 operator|(
@@ -976,7 +974,7 @@ name|mmc_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|//	printf("Wakeup for req %p done_data %p\n", req, req->done_data);
+comment|/*	printf("Wakeup for req %p done_data %p\n", req, req->done_data); */
 name|sc
 operator|=
 operator|(
@@ -1043,7 +1041,7 @@ name|done_data
 operator|=
 name|sc
 expr_stmt|;
-comment|//	printf("Submitting request %p sc %p\n", req, sc);
+comment|/*	printf("Submitting request %p sc %p\n", req, sc); */
 name|MMCBR_REQUEST
 argument_list|(
 name|device_get_parent
@@ -1106,7 +1104,7 @@ operator|==
 name|EAGAIN
 condition|)
 do|;
-comment|//	printf("Request %p done with error %d\n", req, err);
+comment|/*	printf("Request %p done with error %d\n", req, err); */
 name|MMC_UNLOCK
 argument_list|(
 name|sc
@@ -1228,7 +1226,7 @@ name|cmd
 operator|=
 name|cmd
 expr_stmt|;
-comment|//	printf("CMD: %x ARG %x\n", cmd->opcode, cmd->arg);
+comment|/*	printf("CMD: %x ARG %x\n", cmd->opcode, cmd->arg); */
 name|mmc_wait_for_req
 argument_list|(
 name|sc
@@ -2350,7 +2348,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|// XXX write me
+comment|/* XXX write me */
 name|panic
 argument_list|(
 literal|"write mmc cid decoder"
@@ -3461,7 +3459,7 @@ operator|!=
 name|power_on
 condition|)
 block|{
-comment|// First, try SD modes
+comment|/* 		 * First, try SD modes 		 */
 name|mmcbr_set_mode
 argument_list|(
 name|dev
@@ -3501,7 +3499,7 @@ operator|!=
 name|MMC_ERR_NONE
 condition|)
 block|{
-comment|// Failed, try MMC
+comment|/* 			 * Failed, try MMC 			 */
 name|mmcbr_set_mode
 argument_list|(
 name|dev
@@ -3524,7 +3522,7 @@ operator|!=
 name|MMC_ERR_NONE
 condition|)
 return|return;
-comment|// Failed both, punt! XXX power down?
+comment|/* Failed both, punt! XXX powerdown? */
 block|}
 name|mmcbr_set_ocr
 argument_list|(
@@ -3577,7 +3575,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|// XXX recompute vdd based on new cards?
+comment|/* XXX recompute vdd based on new cards? */
 block|}
 comment|/* 	 * Make sure that we have a mutually agreeable voltage to at least 	 * one card on the bus. 	 */
 if|if
@@ -3647,7 +3645,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|//	mmc_update_children_sysctl(dev);
+comment|/*	mmc_update_children_sysctl(dev);*/
 block|}
 end_function
 
@@ -3861,7 +3859,7 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-comment|// XXX probe/attach/detach children?
+comment|/* XXX probe/attach/detach children? */
 block|}
 end_function
 
@@ -4026,22 +4024,10 @@ name|uintptr_t
 name|value
 parameter_list|)
 block|{
-comment|// None are writable ATM
-switch|switch
-condition|(
-name|which
-condition|)
-block|{
-default|default:
+comment|/* 	 * None are writable ATM 	 */
 return|return
 operator|(
 name|EINVAL
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
