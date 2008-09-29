@@ -8900,7 +8900,7 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
-name|TAILQ_INSERT_TAIL
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|g_part_schemes
