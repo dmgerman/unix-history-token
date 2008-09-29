@@ -513,7 +513,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 for|for
 control|(
@@ -586,7 +588,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -904,9 +908,11 @@ name|ocr
 parameter_list|)
 block|{
 return|return
+operator|(
 name|ocr
 operator|&
 name|MMC_OCR_VOLTAGE
+operator|)
 return|;
 block|}
 end_function
@@ -947,7 +953,9 @@ name|i
 operator|)
 condition|)
 return|return
+operator|(
 name|i
+operator|)
 return|;
 return|return
 operator|(
@@ -1146,12 +1154,14 @@ name|brdev
 argument_list|)
 decl_stmt|;
 return|return
+operator|(
 name|mmc_wait_for_req
 argument_list|(
 name|sc
 argument_list|,
 name|req
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1784,7 +1794,9 @@ literal|0
 index|]
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
@@ -1931,7 +1943,9 @@ literal|0
 index|]
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
@@ -2177,6 +2191,7 @@ name|shift
 operator|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
 operator|&
 operator|(
@@ -2187,6 +2202,7 @@ name|size
 operator|)
 operator|-
 literal|1
+operator|)
 operator|)
 return|;
 block|}
@@ -3786,7 +3802,9 @@ literal|1000
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|max_dtr
+operator|)
 return|;
 block|}
 end_function
