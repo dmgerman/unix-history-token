@@ -9432,7 +9432,7 @@ name|ugp
 parameter_list|,
 name|int
 modifier|*
-name|lookup
+name|ugid_lookupp
 parameter_list|,
 name|struct
 name|inpcb
@@ -9466,7 +9466,7 @@ condition|(
 name|inp
 operator|&&
 operator|*
-name|lookup
+name|ugid_lookupp
 operator|==
 literal|0
 condition|)
@@ -9493,7 +9493,7 @@ name|ugp
 argument_list|)
 expr_stmt|;
 operator|*
-name|lookup
+name|ugid_lookupp
 operator|=
 literal|1
 expr_stmt|;
@@ -9503,7 +9503,7 @@ comment|/* 	 * If we have already been here and the packet has no 	 * PCB entry 
 if|if
 condition|(
 operator|*
-name|lookup
+name|ugid_lookupp
 operator|==
 operator|-
 literal|1
@@ -9559,7 +9559,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|lookup
+name|ugid_lookupp
 operator|==
 literal|0
 condition|)
@@ -9650,7 +9650,7 @@ name|ugp
 argument_list|)
 expr_stmt|;
 operator|*
-name|lookup
+name|ugid_lookupp
 operator|=
 literal|1
 expr_stmt|;
@@ -9669,14 +9669,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|lookup
+name|ugid_lookupp
 operator|==
 literal|0
 condition|)
 block|{
 comment|/* 			 * If the lookup did not yield any results, there 			 * is no sense in coming back and trying again. So 			 * we can set lookup to -1 and ensure that we wont 			 * bother the pcb system again. 			 */
 operator|*
-name|lookup
+name|ugid_lookupp
 operator|=
 operator|-
 literal|1
