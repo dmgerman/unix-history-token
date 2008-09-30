@@ -5302,11 +5302,7 @@ name|uap
 operator|->
 name|stat
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|kld_file_stat
-argument_list|)
+name|version
 argument_list|)
 operator|)
 return|;
