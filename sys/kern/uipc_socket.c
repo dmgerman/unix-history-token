@@ -9069,7 +9069,7 @@ operator|.
 name|sb_mb
 argument_list|,
 operator|(
-literal|"soreceive: m != so->so_rcv.sb_mb"
+literal|"soreceive_dgram: m != sb_mb"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9215,7 +9215,7 @@ operator|==
 name|nextrecord
 argument_list|,
 operator|(
-literal|"soreceive: post-control, nextrecord !sync"
+literal|"soreceive_dgram: post-control, nextrecord !sync"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9237,7 +9237,7 @@ operator|==
 name|m
 argument_list|,
 operator|(
-literal|"soreceive: post-control, sb_mb!=m"
+literal|"soreceive_dgram: post-control, sb_mb!=m"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9252,7 +9252,7 @@ operator|==
 name|m
 argument_list|,
 operator|(
-literal|"soreceive: post-control, lastrecord!=m"
+literal|"soreceive_dgram: lastrecord != m"
 operator|)
 argument_list|)
 expr_stmt|;
