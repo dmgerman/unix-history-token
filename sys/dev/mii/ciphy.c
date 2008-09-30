@@ -989,14 +989,16 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
+comment|/* 		 * Only retry autonegotiation every mii_anegticks seconds. 		 */
 if|if
 condition|(
 name|sc
 operator|->
 name|mii_ticks
 operator|<=
-name|MII_ANEGTICKS
+name|sc
+operator|->
+name|mii_anegticks
 condition|)
 break|break;
 name|sc
