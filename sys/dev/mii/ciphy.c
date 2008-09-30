@@ -978,10 +978,20 @@ operator|&
 name|BMSR_LINK
 condition|)
 break|break;
-comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
+comment|/* Announce link loss right after it happens. */
 if|if
 condition|(
 operator|++
+name|sc
+operator|->
+name|mii_ticks
+operator|==
+literal|0
+condition|)
+break|break;
+comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
+if|if
+condition|(
 name|sc
 operator|->
 name|mii_ticks
