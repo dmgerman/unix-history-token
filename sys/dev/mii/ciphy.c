@@ -329,6 +329,13 @@ argument_list|,
 name|VSC8601
 argument_list|)
 block|,
+name|MII_PHY_DESC
+argument_list|(
+name|VITESSE
+argument_list|,
+name|VSC8211
+argument_list|)
+block|,
 name|MII_PHY_END
 block|}
 decl_stmt|;
@@ -1596,6 +1603,9 @@ name|MII_MODEL_CICADA_CS8244
 case|:
 case|case
 name|MII_MODEL_VITESSE_VSC8601
+case|:
+case|case
+name|MII_MODEL_VITESSE_VSC8211
 case|:
 break|break;
 default|default:
