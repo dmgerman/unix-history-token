@@ -381,7 +381,7 @@ name|bus_dma_tag_t
 name|tag
 parameter_list|,
 name|bus_dmamap_t
-name|map
+name|dmamap
 parameter_list|,
 name|vm_offset_t
 name|addr
@@ -420,6 +420,9 @@ name|struct
 name|ddp_gather_list
 modifier|*
 name|p
+decl_stmt|;
+name|vm_map_t
+name|map
 decl_stmt|;
 comment|/* 	 * XXX need x86 agnostic check 	 */
 if|if
@@ -491,10 +494,23 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|map
+operator|=
+operator|&
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_vmspace
+operator|->
+name|vm_map
+expr_stmt|;
 name|err
 operator|=
 name|vm_fault_hold_user_pages
 argument_list|(
+name|map
+argument_list|,
 name|addr
 argument_list|,
 name|p
@@ -503,7 +519,9 @@ name|dgl_pages
 argument_list|,
 name|npages
 argument_list|,
-name|VM_HOLD_WRITEABLE
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
 argument_list|)
 expr_stmt|;
 if|if
