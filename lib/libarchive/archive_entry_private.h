@@ -159,6 +159,12 @@ decl_stmt|;
 name|uint32_t
 name|aest_mtime_nsec
 decl_stmt|;
+name|int64_t
+name|aest_birthtime
+decl_stmt|;
+name|uint32_t
+name|aest_birthtime_nsec
+decl_stmt|;
 name|gid_t
 name|aest_gid
 decl_stmt|;
@@ -229,6 +235,10 @@ define|#
 directive|define
 name|AE_SET_MTIME
 value|16
+define|#
+directive|define
+name|AE_SET_BIRTHTIME
+value|32
 define|#
 directive|define
 name|AE_SET_SIZE
