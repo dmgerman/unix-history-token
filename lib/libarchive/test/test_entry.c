@@ -3805,6 +3805,14 @@ name|tv_nsec
 operator|=
 literal|3210987
 expr_stmt|;
+name|st
+operator|.
+name|st_birthtimespec
+operator|.
+name|tv_nsec
+operator|=
+literal|7459386
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* Copy them into the entry. */
@@ -3956,6 +3964,16 @@ name|e
 argument_list|)
 argument_list|,
 literal|3210987
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|archive_entry_birthtime_nsec
+argument_list|(
+name|e
+argument_list|)
+argument_list|,
+literal|7459386
 argument_list|)
 expr_stmt|;
 endif|#
