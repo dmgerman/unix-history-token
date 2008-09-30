@@ -383,7 +383,7 @@ name|suser_cred
 argument_list|(
 name|u1
 argument_list|,
-literal|0
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|==
 literal|0
