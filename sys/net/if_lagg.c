@@ -6980,15 +6980,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|ifp
-operator|->
-name|if_oerrors
-operator|++
-expr_stmt|;
 return|return
 operator|(
 name|error
