@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -61,6 +65,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function
 name|int
 name|main
@@ -68,13 +84,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|getosreldate
-argument_list|(
-name|void
-argument_list|)
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"Compilation release date: %d\n"
@@ -104,6 +113,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
