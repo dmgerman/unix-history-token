@@ -406,6 +406,7 @@ name|data
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* test_write_disk_times has more detailed tests of this area. */
 name|assertEqualInt
 argument_list|(
 name|st
