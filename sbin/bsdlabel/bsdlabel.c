@@ -1071,7 +1071,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
 literal|"error getting providername for %s"
 argument_list|,

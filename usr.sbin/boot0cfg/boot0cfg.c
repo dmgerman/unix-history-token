@@ -1354,9 +1354,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Error opening %s\n"
+literal|"error opening %s"
 argument_list|,
 name|fname
 argument_list|)
@@ -1377,9 +1377,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Error getting providername for %s\n"
+literal|"error getting providername for %s"
 argument_list|,
 name|fname
 argument_list|)

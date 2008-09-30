@@ -4114,9 +4114,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Error getting providername for %s\n"
+literal|"Error getting providername for %s"
 argument_list|,
 name|disk
 argument_list|)
