@@ -4220,7 +4220,7 @@ if|#
 directive|if
 literal|0
 comment|/* !MULTIQ */
-block|if (__predict_false(err)) { 		if (err == ENOMEM) { 			ifp->if_drv_flags |= IFF_DRV_OACTIVE; 			IFQ_LOCK(&ifp->if_snd); 			IFQ_DRV_PREPEND(&ifp->if_snd, m_vec[0]); 			IFQ_UNLOCK(&ifp->if_snd); 		} 	} 	else if ((err == 0)&&  (txq->size<= txq->in_use + TX_MAX_DESC)&& 	    (ifp->if_drv_flags& IFF_DRV_OACTIVE) == 0) { 		setbit(&qs->txq_stopped, TXQ_ETH); 		ifp->if_drv_flags |= IFF_DRV_OACTIVE; 		err = ENOSPC; 	}
+block|if (__predict_false(err)) { 		if (err == ENOMEM) { 			ifp->if_drv_flags |= IFF_DRV_OACTIVE; 			IFQ_LOCK(&ifp->if_snd); 			IFQ_DRV_PREPEND(&ifp->if_snd, m_vec[0]); 			IFQ_UNLOCK(&ifp->if_snd); 		} 	} 	else if ((err == 0)&&  (txq->size<= txq->in_use + TX_MAX_DESC)&& 	    (ifp->if_drv_flags& IFF_DRV_OACTIVE) == 0) { 		setbit(&qs->txq_stopped, TXQ_ETH); 		ifp->if_drv_flags |= IFF_DRV_OACTIVE; 		txq_fills++; 		err = ENOSPC; 	}
 else|#
 directive|else
 if|if
@@ -4247,6 +4247,9 @@ block|{
 name|err
 operator|=
 name|ENOSPC
+expr_stmt|;
+name|txq_fills
+operator|++
 expr_stmt|;
 name|setbit
 argument_list|(
