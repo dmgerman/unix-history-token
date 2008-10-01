@@ -395,7 +395,7 @@ name|char
 name|smp_header_thr
 index|[]
 init|=
-literal|"  PID%s %-*.*s  THR PRI NICE   SIZE    RES STATE  C   TIME %6s COMMAND"
+literal|"  PID%s %-*.*s  THR PRI NICE   SIZE    RES STATE  C    TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,7 +406,7 @@ name|smp_header
 index|[]
 init|=
 literal|"  PID%s %-*.*s "
-literal|"PRI NICE   SIZE    RES STATE  C   TIME %6s COMMAND"
+literal|"PRI NICE   SIZE    RES STATE  C    TIME %6s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -415,7 +415,7 @@ define|#
 directive|define
 name|smp_Proc_format
 define|\
-value|"%5d%s %-*.*s %s%3d %4s%7s %6s %-6.6s %1x%7s %5.2f%% %.*s"
+value|"%5d%s %-*.*s %s%3d %4s%7s %6s %-6.6s %2d%7s %5.2f%% %.*s"
 end_define
 
 begin_decl_stmt
