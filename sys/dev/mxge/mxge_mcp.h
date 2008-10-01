@@ -580,6 +580,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MXGEFW_ETH_SEND_GO
+value|0x380000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_ETH_SEND_STOP
+value|0x3C0000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MXGEFW_ETH_SEND
 parameter_list|(
 name|n
@@ -614,6 +628,7 @@ block|,
 comment|/* Parameters which must be set by the driver before it can      issue MXGEFW_CMD_ETHERNET_UP. They persist until the next      MXGEFW_CMD_RESET is issued */
 name|MXGEFW_CMD_SET_INTRQ_DMA
 block|,
+comment|/* data0 = LSW of the host address    * data1 = MSW of the host address    * data2 = slice number if multiple slices are used    */
 name|MXGEFW_CMD_SET_BIG_BUFFER_SIZE
 block|,
 comment|/* in bytes, power of 2 */
@@ -627,6 +642,7 @@ name|MXGEFW_CMD_GET_SMALL_RX_OFFSET
 block|,
 name|MXGEFW_CMD_GET_BIG_RX_OFFSET
 block|,
+comment|/* data0 = slice number if multiple slices are used */
 name|MXGEFW_CMD_GET_IRQ_ACK_OFFSET
 block|,
 name|MXGEFW_CMD_GET_IRQ_DEASSERT_OFFSET
@@ -642,6 +658,10 @@ comment|/* Parameters which refer to rings stored in the host,      and whose si
 name|MXGEFW_CMD_SET_INTRQ_SIZE
 block|,
 comment|/* in bytes */
+define|#
+directive|define
+name|MXGEFW_CMD_SET_INTRQ_SIZE_FLAG_NO_STRICT_SIZE_CHECK
+value|(1<< 31)
 comment|/* command to bring ethernet interface up.  Above parameters      (plus mtu& mac address) must have been exchanged prior      to issuing this command  */
 name|MXGEFW_CMD_ETHERNET_UP
 block|,
@@ -687,7 +707,7 @@ name|MXGEFW_LEAVE_ALL_MULTICAST_GROUPS
 block|,
 name|MXGEFW_CMD_SET_STATS_DMA_V2
 block|,
-comment|/* data0, data1 = bus addr,      data2 = sizeof(struct mcp_irq_data) from driver point of view, allows      adding new stuff to mcp_irq_data without changing the ABI */
+comment|/* data0, data1 = bus addr,    * data2 = sizeof(struct mcp_irq_data) from driver point of view, allows    * adding new stuff to mcp_irq_data without changing the ABI    *    * If multiple slices are used, data2 contains both the size of the    * structure (in the lower 16 bits) and the slice number    * (in the upper 16 bits).    */
 name|MXGEFW_CMD_UNALIGNED_TEST
 block|,
 comment|/* same than DMA_TEST (same args) but abort with UNALIGNED on unaligned      chipset */
@@ -701,15 +721,19 @@ name|MXGEFW_CMD_GET_MAX_RSS_QUEUES
 block|,
 name|MXGEFW_CMD_ENABLE_RSS_QUEUES
 block|,
-comment|/* data0 = number of slices n (0, 1, ..., n-1) to enable    * data1 = interrupt mode.    * 0=share one INTx/MSI, 1=use one MSI-X per queue.    * If all queues share one interrupt, the driver must have set    * RSS_SHARED_INTERRUPT_DMA before enabling queues.    */
+comment|/* data0 = number of slices n (0, 1, ..., n-1) to enable    * data1 = interrupt mode | use of multiple transmit queues.    * 0=share one INTx/MSI.    * 1=use one MSI-X per queue.    * If all queues share one interrupt, the driver must have set    * RSS_SHARED_INTERRUPT_DMA before enabling queues.    * 2=enable both receive and send queues.    * Without this bit set, only one send queue (slice 0's send queue)    * is enabled.  The receive queues are always enabled.    */
 define|#
 directive|define
 name|MXGEFW_SLICE_INTR_MODE_SHARED
-value|0
+value|0x0
 define|#
 directive|define
 name|MXGEFW_SLICE_INTR_MODE_ONE_PER_SLICE
-value|1
+value|0x1
+define|#
+directive|define
+name|MXGEFW_SLICE_ENABLE_MULTIPLE_TX_QUEUES
+value|0x2
 name|MXGEFW_CMD_GET_RSS_SHARED_INTERRUPT_MASK_OFFSET
 block|,
 name|MXGEFW_CMD_SET_RSS_SHARED_INTERRUPT_DMA
@@ -729,7 +753,7 @@ block|,
 comment|/* tell nic that the secret key's been updated */
 name|MXGEFW_CMD_SET_RSS_ENABLE
 block|,
-comment|/* data0 = enable/disable rss    * 0: disable rss.  nic does not distribute receive packets.    * 1: enable rss.  nic distributes receive packets among queues.    * data1 = hash type    * 1: IPV4            (required by RSS)    * 2: TCP_IPV4        (required by RSS)    * 3: IPV4 | TCP_IPV4 (required by RSS)    * 4: source port    */
+comment|/* data0 = enable/disable rss    * 0: disable rss.  nic does not distribute receive packets.    * 1: enable rss.  nic distributes receive packets among queues.    * data1 = hash type    * 1: IPV4            (required by RSS)    * 2: TCP_IPV4        (required by RSS)    * 3: IPV4 | TCP_IPV4 (required by RSS)    * 4: source port    * 5: source port + destination port    */
 define|#
 directive|define
 name|MXGEFW_RSS_HASH_TYPE_IPV4
@@ -742,6 +766,14 @@ define|#
 directive|define
 name|MXGEFW_RSS_HASH_TYPE_SRC_PORT
 value|0x4
+define|#
+directive|define
+name|MXGEFW_RSS_HASH_TYPE_SRC_DST_PORT
+value|0x5
+define|#
+directive|define
+name|MXGEFW_RSS_HASH_TYPE_MAX
+value|0x5
 name|MXGEFW_CMD_GET_MAX_TSO6_HDR_SIZE
 block|,
 comment|/* Return data = the max. size of the entire headers of a IPv6 TSO packet.    * If the header size of a IPv6 TSO packet is larger than the specified    * value, then the driver must not use TSO.    * This size restriction only applies to IPv6 TSO.    * For IPv4 TSO, the maximum size of the headers is fixed, and the NIC    * always has enough header buffer to store maximum-sized headers.    */
@@ -789,8 +821,33 @@ name|MXGEFW_CMD_SET_THROTTLE_FACTOR
 block|,
 comment|/* set the throttle factor for ethp_z8e      data0 = throttle_factor      throttle_factor = 256 * pcie-raw-speed / tx_speed      tx_speed = 256 * pcie-raw-speed / throttle_factor       For PCI-E x8: pcie-raw-speed == 16Gb/s      For PCI-E x4: pcie-raw-speed == 8Gb/s       ex1: throttle_factor == 0x1a0 (416), tx_speed == 1.23GB/s == 9.846 Gb/s      ex2: throttle_factor == 0x200 (512), tx_speed == 1.0GB/s == 8 Gb/s       with tx_boundary == 2048, max-throttle-factor == 8191 => min-speed == 500Mb/s      with tx_boundary == 4096, max-throttle-factor == 4095 => min-speed == 1Gb/s   */
 name|MXGEFW_CMD_VPUMP_UP
+block|,
 comment|/* Allocates VPump Connection, Send Request and Zero copy buffer address tables */
-block|}
+name|MXGEFW_CMD_GET_VPUMP_CLK
+block|,
+comment|/* Get the lanai clock */
+name|MXGEFW_CMD_GET_DCA_OFFSET
+block|,
+comment|/* offset of dca control for WDMAs */
+comment|/* VMWare NetQueue commands */
+name|MXGEFW_CMD_NETQ_GET_FILTERS_PER_QUEUE
+block|,
+name|MXGEFW_CMD_NETQ_ADD_FILTER
+block|,
+comment|/* data0 = filter_id<< 16 | queue<< 8 | type */
+comment|/* data1 = MS4 of MAC Addr */
+comment|/* data2 = LS2_MAC<< 16 | VLAN_tag */
+name|MXGEFW_CMD_NETQ_DEL_FILTER
+block|,
+comment|/* data0 = filter_id */
+name|MXGEFW_CMD_NETQ_QUERY1
+block|,
+name|MXGEFW_CMD_NETQ_QUERY2
+block|,
+name|MXGEFW_CMD_NETQ_QUERY3
+block|,
+name|MXGEFW_CMD_NETQ_QUERY4
+block|,  }
 enum|;
 end_enum
 
@@ -835,6 +892,8 @@ block|,
 name|MXGEFW_CMD_ERROR_XFP_FAILURE
 block|,
 name|MXGEFW_CMD_ERROR_XFP_ABSENT
+block|,
+name|MXGEFW_CMD_ERROR_BAD_PCIE_LINK
 block|}
 enum|;
 end_enum
@@ -982,6 +1041,38 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* definitions for NETQ filter type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_NETQ_FILTERTYPE_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_NETQ_FILTERTYPE_MACADDR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_NETQ_FILTERTYPE_VLAN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MXGEFW_NETQ_FILTERTYPE_VLANMACADDR
+value|3
+end_define
 
 begin_endif
 endif|#
