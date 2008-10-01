@@ -268,7 +268,7 @@ specifier|static
 name|int
 name|lookup_shared
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
