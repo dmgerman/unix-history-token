@@ -8367,14 +8367,14 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|tp
-operator|=
-name|inp_inpcbtotcpcb
+name|inp_wlock
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|inp_wlock
+name|tp
+operator|=
+name|inp_inpcbtotcpcb
 argument_list|(
 name|inp
 argument_list|)
@@ -15225,6 +15225,17 @@ name|lso
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill out information for entering us into the syncache 	 */
+name|bzero
+argument_list|(
+operator|&
+name|inc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|inc
 operator|.
 name|inc_fport
@@ -17017,6 +17028,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill out information for entering us into the syncache 	 */
+name|bzero
+argument_list|(
+operator|&
+name|inc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|inc
 operator|.
 name|inc_fport
