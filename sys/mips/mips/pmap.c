@@ -1911,11 +1911,9 @@ if|if
 condition|(
 name|need_wired_tlb_page_pool
 condition|)
-block|{
 name|pmap_init_fpage
 argument_list|()
 expr_stmt|;
-block|}
 comment|/* 	 * Initialize the address space (zone) for the pv entries.  Set a 	 * high water mark so that the system can recover from excessive 	 * numbers of pv entries. 	 */
 name|pvzone
 operator|=
@@ -4602,8 +4600,15 @@ name|i
 decl_stmt|,
 name|req
 decl_stmt|;
-name|critical_enter
-argument_list|()
+name|mtx_assert
+argument_list|(
+operator|&
+name|kernel_map
+operator|->
+name|system_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4918,9 +4923,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
