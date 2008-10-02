@@ -1283,6 +1283,13 @@ name|nd6_debug
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nd6_onlink_ns_rfc4861
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

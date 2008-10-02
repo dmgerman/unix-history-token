@@ -1432,6 +1432,18 @@ end_endif
 
 begin_decl_stmt
 name|int
+name|nd6_onlink_ns_rfc4861
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* allow 'on-link' nd6 NS (as in RFC 4861) */
+end_comment
+
+begin_decl_stmt
+name|int
 name|ip6_forwarding
 init|=
 name|IPV6FORWARDING
@@ -2990,6 +3002,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet6_icmp6
+argument_list|,
+name|ICMPV6CTL_ND6_ONLINKNSRFC4861
+argument_list|,
+name|nd6_onlink_ns_rfc4861
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nd6_onlink_ns_rfc4861
+argument_list|,
+literal|0
+argument_list|,
+literal|"Accept 'on-link' nd6 NS in compliance with RFC 4861."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
