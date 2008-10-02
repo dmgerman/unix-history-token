@@ -697,8 +697,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_syncache
 argument_list|,
 name|OID_AUTO
@@ -707,7 +711,6 @@ name|bucketlimit
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
-operator|&
 name|tcp_syncache
 operator|.
 name|bucket_limit
@@ -720,8 +723,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_syncache
 argument_list|,
 name|OID_AUTO
@@ -730,7 +737,6 @@ name|cachelimit
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
-operator|&
 name|tcp_syncache
 operator|.
 name|cache_limit
@@ -743,8 +749,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_syncache
 argument_list|,
 name|OID_AUTO
@@ -753,7 +763,6 @@ name|count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|tcp_syncache
 operator|.
 name|cache_count
@@ -766,8 +775,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_syncache
 argument_list|,
 name|OID_AUTO
@@ -776,7 +789,6 @@ name|hashsize
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
-operator|&
 name|tcp_syncache
 operator|.
 name|hashsize
@@ -789,8 +801,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_syncache
 argument_list|,
 name|OID_AUTO
@@ -799,7 +815,6 @@ name|rexmtlimit
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_syncache
 operator|.
 name|rexmt_limit
@@ -820,8 +835,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_syncache
 argument_list|,
 name|OID_AUTO
@@ -830,7 +849,6 @@ name|rst_on_sock_fail
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_sc_rst_sock_fail
 argument_list|,
 literal|0
@@ -948,6 +966,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1009,6 +1032,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1301,6 +1329,13 @@ modifier|*
 name|sch
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|sch
+operator|->
+name|sch_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|syncache
 modifier|*
@@ -1446,6 +1481,13 @@ modifier|*
 name|sch
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|sch
+operator|->
+name|sch_vnet
+argument_list|)
+expr_stmt|;
 name|SCH_LOCK_ASSERT
 argument_list|(
 name|sch
@@ -1628,6 +1670,13 @@ operator|*
 operator|)
 name|xsch
 decl_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|sch
+operator|->
+name|sch_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|syncache
 modifier|*
@@ -1907,6 +1956,11 @@ modifier|*
 name|schp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|syncache
 modifier|*
@@ -2101,6 +2155,11 @@ modifier|*
 name|th
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|syncache
 modifier|*
@@ -2388,6 +2447,11 @@ modifier|*
 name|inc
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|syncache
 modifier|*
@@ -2457,6 +2521,11 @@ modifier|*
 name|th
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|syncache
 modifier|*
@@ -2590,6 +2659,13 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|lso
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -3602,6 +3678,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|syncache
 modifier|*
@@ -4300,6 +4381,13 @@ modifier|*
 name|toepcb
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|inp
+operator|->
+name|inp_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|tcpcb
 modifier|*
@@ -5465,6 +5553,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -6492,6 +6585,11 @@ modifier|*
 name|toepcb
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -6575,6 +6673,11 @@ modifier|*
 name|flowlabel
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|MD5_CTX
 name|ctx
 decl_stmt|;
@@ -7062,6 +7165,11 @@ modifier|*
 name|so
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|MD5_CTX
 name|ctx
 decl_stmt|;
@@ -7649,6 +7757,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|syncache_head
 modifier|*
@@ -7724,6 +7837,11 @@ modifier|*
 name|pcbs_exported
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|xtcpcb
 name|xt

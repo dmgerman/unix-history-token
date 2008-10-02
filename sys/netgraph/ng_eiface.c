@@ -1087,6 +1087,11 @@ name|node_p
 name|node
 parameter_list|)
 block|{
+name|INIT_VNET_NETGRAPH
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -1941,6 +1946,11 @@ name|node_p
 name|node
 parameter_list|)
 block|{
+name|INIT_VNET_NETGRAPH
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|const
 name|priv_p
 name|priv
@@ -1960,6 +1970,14 @@ name|priv
 operator|->
 name|ifp
 decl_stmt|;
+comment|/* 	 * the ifnet may be in a different vnet than the netgraph node,  	 * hence we have to change the current vnet context here. 	 */
+name|CURVNET_SET_QUIET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|ether_ifdetach
 argument_list|(
 name|ifp
@@ -1969,6 +1987,9 @@ name|if_free
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 name|free_unr
 argument_list|(

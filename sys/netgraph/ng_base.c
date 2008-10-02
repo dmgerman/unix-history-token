@@ -530,17 +530,6 @@ begin_comment
 comment|/* XXX Don't need to initialise them because it's a LIST */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NG_ID_HASH_SIZE
-value|128
-end_define
-
-begin_comment
-comment|/* most systems wont need even this many */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
@@ -2374,6 +2363,11 @@ modifier|*
 name|nodepp
 parameter_list|)
 block|{
+name|INIT_VNET_NETGRAPH
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|node_p
 name|node
 decl_stmt|;
@@ -2931,6 +2925,11 @@ name|ng_ID_t
 name|ID
 parameter_list|)
 block|{
+name|INIT_VNET_NETGRAPH
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|node_p
 name|node
 decl_stmt|;
@@ -3014,6 +3013,11 @@ modifier|*
 name|name
 parameter_list|)
 block|{
+name|INIT_VNET_NETGRAPH
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -3214,6 +3218,11 @@ modifier|*
 name|name
 parameter_list|)
 block|{
+name|INIT_VNET_NETGRAPH
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|node_p
 name|node
 decl_stmt|;
@@ -8721,6 +8730,11 @@ name|hook_p
 name|lasthook
 parameter_list|)
 block|{
+name|INIT_VNET_NETGRAPH
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 init|=

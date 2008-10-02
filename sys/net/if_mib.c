@@ -82,8 +82,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_net
+argument_list|,
 name|_net_link_generic_system
 argument_list|,
 name|IFMIB_IFCOUNT
@@ -92,7 +96,6 @@ name|ifcount
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|if_index
 argument_list|,
 literal|0
@@ -111,6 +114,11 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 comment|/* XXX bad syntax! */
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 modifier|*
 name|name

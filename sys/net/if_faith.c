@@ -1231,6 +1231,11 @@ modifier|*
 name|in6
 decl_stmt|;
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|rtentry
 modifier|*

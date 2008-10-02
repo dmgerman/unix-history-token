@@ -270,8 +270,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_reass
 argument_list|,
 name|OID_AUTO
@@ -280,7 +284,6 @@ name|maxsegments
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
-operator|&
 name|tcp_reass_maxseg
 argument_list|,
 literal|0
@@ -299,8 +302,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_reass
 argument_list|,
 name|OID_AUTO
@@ -309,7 +316,6 @@ name|cursegments
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|tcp_reass_qsize
 argument_list|,
 literal|0
@@ -329,8 +335,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_reass
 argument_list|,
 name|OID_AUTO
@@ -339,7 +349,6 @@ name|maxqlen
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_reass_maxqlen
 argument_list|,
 literal|0
@@ -359,8 +368,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_reass
 argument_list|,
 name|OID_AUTO
@@ -369,7 +382,6 @@ name|overflows
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|tcp_reass_overflows
 argument_list|,
 literal|0
@@ -393,6 +405,11 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|V_tcp_reass_maxseg
 operator|=
 name|nmbclusters
@@ -422,6 +439,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|V_tcp_reass_maxseg
 operator|=
 name|nmbclusters
@@ -506,6 +528,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|tseg_qent
 modifier|*

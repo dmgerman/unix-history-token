@@ -306,8 +306,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_gif
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|IPCTL_GIF_TTL
@@ -316,7 +320,6 @@ name|gifttl
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ip_gif_ttl
 argument_list|,
 literal|0
@@ -344,6 +347,13 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_GIF
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|gif_softc
 modifier|*
@@ -1170,6 +1180,11 @@ name|int
 name|off
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -1611,6 +1626,11 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*

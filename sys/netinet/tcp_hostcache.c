@@ -461,8 +461,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -471,7 +475,6 @@ name|cachelimit
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
-operator|&
 name|tcp_hostcache
 operator|.
 name|cache_limit
@@ -484,8 +487,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -494,7 +501,6 @@ name|hashsize
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
-operator|&
 name|tcp_hostcache
 operator|.
 name|hashsize
@@ -507,8 +513,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -517,7 +527,6 @@ name|bucketlimit
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
-operator|&
 name|tcp_hostcache
 operator|.
 name|bucket_limit
@@ -530,8 +539,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -540,7 +553,6 @@ name|count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|tcp_hostcache
 operator|.
 name|cache_count
@@ -553,8 +565,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -563,7 +579,6 @@ name|expire
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_hostcache
 operator|.
 name|expire
@@ -576,8 +591,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -586,7 +605,6 @@ name|prune
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_hostcache
 operator|.
 name|prune
@@ -599,8 +617,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_hostcache
 argument_list|,
 name|OID_AUTO
@@ -609,7 +631,6 @@ name|purge
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_hostcache
 operator|.
 name|purgeall
@@ -715,6 +736,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -999,6 +1025,11 @@ modifier|*
 name|inc
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|hash
 decl_stmt|;
@@ -1178,6 +1209,11 @@ modifier|*
 name|inc
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|hash
 decl_stmt|;
@@ -1493,6 +1529,11 @@ modifier|*
 name|hc_metrics_lite
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|hc_metrics
 modifier|*
@@ -1633,6 +1674,11 @@ modifier|*
 name|inc
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|hc_metrics
 modifier|*
@@ -1712,6 +1758,11 @@ name|u_long
 name|mtu
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|hc_metrics
 modifier|*
@@ -1830,6 +1881,11 @@ modifier|*
 name|hcml
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|hc_metrics
 modifier|*
@@ -2251,6 +2307,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|bufsize
 decl_stmt|;
@@ -2561,6 +2622,11 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|hc_metrics
 modifier|*

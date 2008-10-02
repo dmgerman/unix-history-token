@@ -955,6 +955,11 @@ name|u_int
 name|fibnum
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|radix_node_head
 modifier|*
@@ -1396,6 +1401,11 @@ modifier|*
 name|rt
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|radix_node_head
 modifier|*
@@ -1706,6 +1716,11 @@ name|u_int
 name|fibnum
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|rtentry
 modifier|*
@@ -3100,6 +3115,11 @@ modifier|*
 name|rt
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|radix_node
 modifier|*
@@ -3477,6 +3497,11 @@ name|u_int
 name|fibnum
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 init|=
@@ -5201,6 +5226,11 @@ modifier|*
 name|gate
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 comment|/* XXX dst may be overwritten, can we move this to below */
 name|struct
 name|radix_node_head
@@ -5810,6 +5840,11 @@ name|int
 name|fibnum
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sockaddr
 modifier|*

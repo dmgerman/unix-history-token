@@ -2015,6 +2015,13 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
+name|INIT_VNET_NET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -2137,6 +2144,13 @@ name|int
 name|shared
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|dst
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ether_header
 modifier|*
@@ -3277,6 +3291,13 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
+name|INIT_VNET_NET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allow dummynet and/or ipfw to claim the frame. 	 * Do not do this for PROMISC frames in case we are re-entered. 	 */
 if|if
 condition|(
@@ -4220,8 +4241,12 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_net
+argument_list|,
 name|_net_link_ether
 argument_list|,
 name|OID_AUTO
@@ -4230,7 +4255,6 @@ name|ipfw
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ether_ipfw
 argument_list|,
 literal|0

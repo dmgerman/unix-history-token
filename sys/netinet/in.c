@@ -251,8 +251,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -261,7 +265,6 @@ name|subnets_are_local
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|subnetsarelocal
 argument_list|,
 literal|0
@@ -281,8 +284,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -291,7 +298,6 @@ name|same_prefix_carp_only
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|sameprefixcarponly
 argument_list|,
 literal|0
@@ -330,6 +336,11 @@ name|in_addr
 name|in
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|register
 name|u_long
 name|i
@@ -431,6 +442,11 @@ name|in_addr
 name|in
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*
@@ -891,6 +907,12 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+comment|/* both so and ifp can be NULL here! */
 specifier|register
 name|struct
 name|ifreq
@@ -3505,6 +3527,13 @@ name|int
 name|scrub
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 specifier|register
 name|u_long
 name|i
@@ -4031,6 +4060,11 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*
@@ -4278,6 +4312,11 @@ modifier|*
 name|target
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*
@@ -4711,6 +4750,13 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|in_multi
 modifier|*
@@ -4793,6 +4839,13 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|in_pcbpurgeif0
 argument_list|(
 operator|&

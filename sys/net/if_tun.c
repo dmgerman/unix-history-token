@@ -166,6 +166,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1125,6 +1131,14 @@ name|append_unit
 operator|=
 literal|0
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* find any existing device, or allocate new unit number */
 name|i
 operator|=
@@ -1233,6 +1247,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1275,6 +1292,16 @@ argument_list|)
 operator|->
 name|if_dunit
 operator|)
+argument_list|)
+expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TUN2IFP
+argument_list|(
+name|tp
+argument_list|)
+operator|->
+name|if_vnet
 argument_list|)
 expr_stmt|;
 name|dev
@@ -1336,6 +1363,9 @@ name|tp
 argument_list|,
 name|M_TUN
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2279,6 +2309,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * junk all pending output 	 */
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splimp
@@ -2426,6 +2463,9 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|funsetown
 argument_list|(
 operator|&
@@ -4722,12 +4762,22 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|netisr_dispatch
 argument_list|(
 name|isr
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

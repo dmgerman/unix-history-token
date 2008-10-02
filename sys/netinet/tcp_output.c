@@ -312,8 +312,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -322,7 +326,6 @@ name|path_mtu_discovery
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|path_mtu_discovery
 argument_list|,
 literal|1
@@ -341,8 +344,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -351,7 +358,6 @@ name|slowstart_flightsize
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ss_fltsz
 argument_list|,
 literal|1
@@ -370,8 +376,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -380,7 +390,6 @@ name|local_slowstart_flightsize
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ss_fltsz_local
 argument_list|,
 literal|1
@@ -399,8 +408,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -409,7 +422,6 @@ name|newreno
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_do_newreno
 argument_list|,
 literal|0
@@ -428,8 +440,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -438,7 +454,6 @@ name|tso
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_do_tso
 argument_list|,
 literal|0
@@ -457,8 +472,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -467,7 +486,6 @@ name|sendbuf_auto
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_do_autosndbuf
 argument_list|,
 literal|0
@@ -488,8 +506,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -498,7 +520,6 @@ name|sendbuf_inc
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_autosndbuf_inc
 argument_list|,
 literal|0
@@ -519,8 +540,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -529,7 +554,6 @@ name|sendbuf_max
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_autosndbuf_max
 argument_list|,
 literal|0
@@ -553,6 +577,15 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -5021,6 +5054,11 @@ modifier|*
 name|optp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|u_int
 name|mask
 decl_stmt|,

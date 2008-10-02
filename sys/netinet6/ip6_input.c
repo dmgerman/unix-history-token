@@ -476,6 +476,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip6protosw
 modifier|*
@@ -729,6 +734,11 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 comment|/* nd6_timer_init */
 name|callout_init
 argument_list|(
@@ -824,6 +834,16 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*
@@ -2942,6 +2962,11 @@ modifier|*
 name|offp
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -3245,6 +3270,11 @@ modifier|*
 name|plenp
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*
@@ -3752,6 +3782,11 @@ name|int
 name|off
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*

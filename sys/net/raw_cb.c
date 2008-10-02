@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/raw_cb.h>
 end_include
 
@@ -194,6 +200,13 @@ name|int
 name|proto
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|rawcb
 modifier|*

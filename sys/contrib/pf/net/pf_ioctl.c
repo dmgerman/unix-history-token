@@ -19936,6 +19936,11 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 comment|/* 	 * IPv6 is not affected by ip_len/ip_off byte order changes. 	 */
 name|int
 name|chk

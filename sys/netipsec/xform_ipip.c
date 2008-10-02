@@ -269,8 +269,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_inet_ipip
 argument_list|,
 name|OID_AUTO
@@ -279,7 +283,6 @@ name|ipip_allow
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ipip_allow
 argument_list|,
 literal|0
@@ -290,8 +293,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_STRUCT
+name|SYSCTL_V_STRUCT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_inet_ipip
 argument_list|,
 name|IPSECCTL_STATS
@@ -300,7 +307,6 @@ name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|ipipstat
 argument_list|,
 name|ipipstat
@@ -477,6 +483,16 @@ modifier|*
 name|gifp
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|register
 name|struct
 name|sockaddr_in
@@ -1461,6 +1477,22 @@ name|int
 name|protoff
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* INET */
 name|struct
 name|secasvar
 modifier|*

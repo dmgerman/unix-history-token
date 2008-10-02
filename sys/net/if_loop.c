@@ -460,6 +460,11 @@ name|caddr_t
 name|params
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -865,6 +870,13 @@ name|int
 name|hlen
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|int
 name|isr
 decl_stmt|;

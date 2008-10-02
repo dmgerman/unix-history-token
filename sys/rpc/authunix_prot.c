@@ -175,6 +175,16 @@ decl_stmt|;
 name|uint32_t
 name|junk
 decl_stmt|;
+name|INIT_VPROCG
+argument_list|(
+name|TD_TO_VPROCG
+argument_list|(
+operator|&
+name|thread0
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX revisit - fixme! */
 name|mtx_lock
 argument_list|(
 operator|&

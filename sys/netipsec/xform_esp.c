@@ -232,8 +232,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_inet_esp
 argument_list|,
 name|OID_AUTO
@@ -242,7 +246,6 @@ name|esp_enable
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|esp_enable
 argument_list|,
 literal|0
@@ -253,8 +256,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_STRUCT
+name|SYSCTL_V_STRUCT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_inet_esp
 argument_list|,
 name|IPSECCTL_STATS
@@ -263,7 +270,6 @@ name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|espstat
 argument_list|,
 name|espstat
@@ -411,6 +417,11 @@ modifier|*
 name|sav
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|size_t
 name|size
 decl_stmt|;
@@ -535,6 +546,11 @@ modifier|*
 name|xsp
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|enc_xform
 modifier|*
@@ -1069,6 +1085,11 @@ name|int
 name|protoff
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|auth_hash
 modifier|*
@@ -2059,6 +2080,11 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|u_int8_t
 name|lastthree
 index|[
@@ -3074,6 +3100,11 @@ name|int
 name|protoff
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|enc_xform
 modifier|*
@@ -4273,6 +4304,11 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|tdb_crypto
 modifier|*

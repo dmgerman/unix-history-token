@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/in6_var.h>
 end_include
 
@@ -197,6 +203,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|SCOPE6_LOCK_INIT
 argument_list|()
 expr_stmt|;
@@ -350,6 +361,13 @@ modifier|*
 name|idlist
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -808,6 +826,13 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Currently, this function just sets the default "interfaces" 	 * and "links" according to the given interface. 	 * We might eventually have to separate the notion of "link" from 	 * "interface" and provide a user interface to set the default. 	 */
 name|SCOPE6_LOCK
 argument_list|()
@@ -877,6 +902,11 @@ modifier|*
 name|idlist
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|SCOPE6_LOCK
 argument_list|()
 expr_stmt|;
@@ -906,6 +936,11 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|u_int32_t
 name|id
 decl_stmt|;
@@ -966,6 +1001,11 @@ name|int
 name|defaultok
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -1098,6 +1138,11 @@ modifier|*
 name|sin6
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|char
 name|ip6buf
 index|[

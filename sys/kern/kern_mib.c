@@ -1095,6 +1095,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
 begin_decl_stmt
 name|char
 name|hostname
@@ -1103,6 +1109,11 @@ name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This mutex is used to protect the hostname and domainname variables, and  * perhaps in the future should also protect hostid, hostuid, and others.  */
@@ -1138,6 +1149,16 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VPROCG
+argument_list|(
+name|TD_TO_VPROCG
+argument_list|(
+name|req
+operator|->
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|struct
 name|prison
 modifier|*
@@ -1751,6 +1772,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
 begin_decl_stmt
 name|char
 name|domainname
@@ -1763,6 +1790,11 @@ end_decl_stmt
 begin_comment
 comment|/* Protected by hostname_mtx. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1789,7 +1821,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|domainname
+name|V_domainname
 argument_list|,
 name|tmpdomainname
 argument_list|,
@@ -1839,7 +1871,7 @@ name|bcopy
 argument_list|(
 name|tmpdomainname
 argument_list|,
-name|domainname
+name|V_domainname
 argument_list|,
 name|MAXHOSTNAMELEN
 argument_list|)

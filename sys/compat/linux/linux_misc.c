@@ -3271,6 +3271,14 @@ modifier|*
 name|args
 parameter_list|)
 block|{
+name|INIT_VPROCG
+argument_list|(
+name|TD_TO_VPROCG
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|struct
 name|l_new_utsname
 name|utsname

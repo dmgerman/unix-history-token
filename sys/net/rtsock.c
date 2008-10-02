@@ -1446,6 +1446,13 @@ parameter_list|,
 name|a2
 parameter_list|)
 value|(bcmp((a1), (a2), (a1)->sa_len) == 0)
+name|INIT_VNET_NET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|rt_msghdr
 modifier|*
@@ -5502,6 +5509,11 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|m_tag
 modifier|*
@@ -5915,6 +5927,11 @@ modifier|*
 name|w
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -6336,6 +6353,11 @@ modifier|*
 name|w
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -6629,6 +6651,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 modifier|*
 name|name

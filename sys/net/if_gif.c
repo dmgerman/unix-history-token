@@ -549,6 +549,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -558,9 +564,18 @@ name|MAX_GIF_NEST
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_gif
+argument_list|,
 name|_net_link_gif
 argument_list|,
 name|OID_AUTO
@@ -569,7 +584,6 @@ name|max_nesting
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|max_gif_nesting
 argument_list|,
 literal|0
@@ -578,6 +592,49 @@ literal|"Max nested tunnels"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet6_ip6
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_V_INT
+argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_gif
+argument_list|,
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_GIF_HLIM
+argument_list|,
+name|gifhlim
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+name|ip6_gif_hlim
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * By default, we disallow creation of multiple tunnels between the same  * pair of addresses.  Some applications require this functionality so  * we allow control over this check here.  */
@@ -618,8 +675,12 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_gif
+argument_list|,
 name|_net_link_gif
 argument_list|,
 name|OID_AUTO
@@ -628,7 +689,6 @@ name|parallel_tunnels
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|parallel_tunnels
 argument_list|,
 literal|0
@@ -712,6 +772,11 @@ name|caddr_t
 name|params
 decl_stmt|;
 block|{
+name|INIT_VNET_GIF
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|gif_softc
 modifier|*
@@ -1647,6 +1712,13 @@ name|rt
 decl_stmt|;
 comment|/* added in net2 */
 block|{
+name|INIT_VNET_GIF
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|gif_softc
 modifier|*
@@ -3689,6 +3761,13 @@ modifier|*
 name|dst
 decl_stmt|;
 block|{
+name|INIT_VNET_GIF
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|gif_softc
 modifier|*

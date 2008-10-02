@@ -3737,7 +3737,7 @@ name|buf
 operator|->
 name|hw
 argument_list|,
-name|V_hostname
+name|G_hostname
 argument_list|)
 expr_stmt|;
 block|}

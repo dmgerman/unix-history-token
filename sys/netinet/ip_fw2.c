@@ -674,8 +674,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_V_PROC
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -688,7 +692,6 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
 argument_list|,
-operator|&
 name|fw_enable
 argument_list|,
 literal|0
@@ -703,8 +706,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -713,7 +720,6 @@ name|autoinc_step
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|autoinc_step
 argument_list|,
 literal|0
@@ -724,8 +730,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -736,7 +746,6 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
 argument_list|,
-operator|&
 name|fw_one_pass
 argument_list|,
 literal|0
@@ -747,8 +756,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -757,7 +770,6 @@ name|debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|fw_debug
 argument_list|,
 literal|0
@@ -768,8 +780,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -780,7 +796,6 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
 argument_list|,
-operator|&
 name|fw_verbose
 argument_list|,
 literal|0
@@ -1085,8 +1100,12 @@ comment|/* max # of dynamic rules */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1095,7 +1114,6 @@ name|dyn_buckets
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|dyn_buckets
 argument_list|,
 literal|0
@@ -1106,8 +1124,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1116,7 +1138,6 @@ name|curr_dyn_buckets
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|curr_dyn_buckets
 argument_list|,
 literal|0
@@ -1127,8 +1148,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1137,7 +1162,6 @@ name|dyn_count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|dyn_count
 argument_list|,
 literal|0
@@ -1148,8 +1172,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1158,7 +1186,6 @@ name|dyn_max
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|dyn_max
 argument_list|,
 literal|0
@@ -1169,8 +1196,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1179,7 +1210,6 @@ name|static_count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|static_count
 argument_list|,
 literal|0
@@ -1190,8 +1220,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1200,7 +1234,6 @@ name|dyn_ack_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|dyn_ack_lifetime
 argument_list|,
 literal|0
@@ -1211,8 +1244,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1221,7 +1258,6 @@ name|dyn_syn_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|dyn_syn_lifetime
 argument_list|,
 literal|0
@@ -1232,8 +1268,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1242,7 +1282,6 @@ name|dyn_fin_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|dyn_fin_lifetime
 argument_list|,
 literal|0
@@ -1253,8 +1292,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1263,7 +1306,6 @@ name|dyn_rst_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|dyn_rst_lifetime
 argument_list|,
 literal|0
@@ -1274,8 +1316,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1284,7 +1330,6 @@ name|dyn_udp_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|dyn_udp_lifetime
 argument_list|,
 literal|0
@@ -1295,8 +1340,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1305,7 +1354,6 @@ name|dyn_short_lifetime
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|dyn_short_lifetime
 argument_list|,
 literal|0
@@ -1316,8 +1364,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -1326,7 +1378,6 @@ name|dyn_keepalive
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|dyn_keepalive
 argument_list|,
 literal|0
@@ -2481,6 +2532,11 @@ modifier|*
 name|ip6_addr
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -3389,6 +3445,11 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ether_header
 modifier|*
@@ -4922,6 +4983,11 @@ modifier|*
 name|id
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|u_int32_t
 name|i
 decl_stmt|;
@@ -5037,6 +5103,11 @@ modifier|*
 name|keep_me
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|static
 name|u_int32_t
 name|last_remove
@@ -5302,6 +5373,11 @@ modifier|*
 name|tcp
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 comment|/* 	 * stateful ipfw extensions. 	 * Lookup into dynamic session queue 	 */
 define|#
 directive|define
@@ -6096,6 +6172,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|IPFW_DYN_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -6218,6 +6299,11 @@ modifier|*
 name|rule
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|ipfw_dyn_rule
 modifier|*
 name|r
@@ -6443,6 +6529,11 @@ modifier|*
 name|rule
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|ipfw_dyn_rule
 modifier|*
 name|q
@@ -6665,6 +6756,11 @@ name|uint32_t
 name|tablearg
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|static
 name|int
 name|last_log
@@ -7387,6 +7483,11 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -8247,6 +8348,11 @@ name|uint32_t
 name|value
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|radix_node_head
 modifier|*
@@ -9466,6 +9572,11 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|inpcbinfo
 modifier|*
@@ -9856,6 +9967,16 @@ modifier|*
 name|args
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Local variables holding state during the processing of a packet: 	 * 	 * IMPORTANT NOTE: to speed up the processing of rules, there 	 * are some assumption on the values of the variables, which 	 * are documented here. Should you change them, please check 	 * the implementation of the various instructions to make sure 	 * that they still work. 	 * 	 * args->eh	The MAC header. It is non-null for a layer2 	 *	packet, it is NULL for a layer-3 packet. 	 * **notyet** 	 * args->L3offset Offset in the packet to the L3 (IP or equiv.) header. 	 * 	 * m | args->m	Pointer to the mbuf, as received from the caller. 	 *	It may change if ipfw_chk() does an m_pullup, or if it 	 *	consumes the packet because it calls send_reject(). 	 *	XXX This has to change, so that ipfw_chk() never modifies 	 *	or consumes the buffer. 	 * ip	is the beginning of the ip(4 or 6) header. 	 *	Calculated by adding the L3offset to the start of data. 	 *	(Until we start using L3offset, the packet is 	 *	supposed to start with the ip header). 	 */
 name|struct
 name|mbuf
@@ -15172,6 +15293,11 @@ modifier|*
 name|input_rule
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -15527,6 +15653,11 @@ modifier|*
 name|prev
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -16363,6 +16494,11 @@ name|int
 name|log_only
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -17748,6 +17884,11 @@ name|size_t
 name|space
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|char
 modifier|*
 name|bp
@@ -18149,6 +18290,11 @@ define|#
 directive|define
 name|RULE_MAXSIZE
 value|(256*sizeof(u_int32_t))
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -19526,6 +19672,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip_fw
 name|default_rule

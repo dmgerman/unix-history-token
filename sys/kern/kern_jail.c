@@ -2363,6 +2363,15 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+name|INIT_VPROCG
+argument_list|(
+name|cred
+operator|->
+name|cr_vimage
+operator|->
+name|v_procg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|jailed

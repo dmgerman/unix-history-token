@@ -395,8 +395,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_STRUCT
+name|SYSCTL_V_STRUCT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|TCPCTL_STATS
@@ -405,7 +409,6 @@ name|stats
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcpstat
 argument_list|,
 name|tcpstat
@@ -454,8 +457,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -464,7 +471,6 @@ name|blackhole
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|blackhole
 argument_list|,
 literal|0
@@ -483,8 +489,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -493,7 +503,6 @@ name|delayed_ack
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_delack_enabled
 argument_list|,
 literal|0
@@ -513,8 +522,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -523,7 +536,6 @@ name|drop_synfin
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|drop_synfin
 argument_list|,
 literal|0
@@ -543,8 +555,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -553,7 +569,6 @@ name|rfc3042
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_do_rfc3042
 argument_list|,
 literal|0
@@ -573,8 +588,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -583,7 +602,6 @@ name|rfc3390
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_do_rfc3390
 argument_list|,
 literal|0
@@ -628,8 +646,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_ecn
 argument_list|,
 name|OID_AUTO
@@ -638,7 +660,6 @@ name|enable
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_do_ecn
 argument_list|,
 literal|0
@@ -649,8 +670,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_ecn
 argument_list|,
 name|OID_AUTO
@@ -659,7 +684,6 @@ name|maxretries
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_ecn_maxretries
 argument_list|,
 literal|0
@@ -679,8 +703,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -689,7 +717,6 @@ name|insecure_rst
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_insecure_rst
 argument_list|,
 literal|0
@@ -708,8 +735,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -718,7 +749,6 @@ name|recvbuf_auto
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_do_autorcvbuf
 argument_list|,
 literal|0
@@ -739,8 +769,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -749,7 +783,6 @@ name|recvbuf_inc
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_autorcvbuf_inc
 argument_list|,
 literal|0
@@ -770,8 +803,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -780,7 +817,6 @@ name|recvbuf_max
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_autorcvbuf_max
 argument_list|,
 literal|0
@@ -1120,6 +1156,11 @@ name|int
 name|proto
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -1244,6 +1285,31 @@ name|int
 name|off0
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|IPSEC
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|struct
 name|tcphdr
 modifier|*
@@ -3939,6 +4005,13 @@ name|uint8_t
 name|iptos
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|tp
+operator|->
+name|t_vnet
+argument_list|)
+expr_stmt|;
 name|int
 name|thflags
 decl_stmt|,
@@ -10145,6 +10218,11 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|opt
 decl_stmt|,
@@ -10746,6 +10824,15 @@ name|int
 name|rtt
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_vnet
+argument_list|)
+expr_stmt|;
 name|int
 name|delta
 decl_stmt|;
@@ -10993,6 +11080,15 @@ modifier|*
 name|metricptr
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_vnet
+argument_list|)
+expr_stmt|;
 name|int
 name|mss
 decl_stmt|;
@@ -12070,6 +12166,11 @@ modifier|*
 name|inc
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|mss
 init|=

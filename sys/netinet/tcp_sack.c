@@ -320,8 +320,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_sack
 argument_list|,
 name|OID_AUTO
@@ -330,7 +334,6 @@ name|enable
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_do_sack
 argument_list|,
 literal|0
@@ -361,8 +364,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_sack
 argument_list|,
 name|OID_AUTO
@@ -371,7 +378,6 @@ name|maxholes
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_sack_maxholes
 argument_list|,
 literal|0
@@ -391,8 +397,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_sack
 argument_list|,
 name|OID_AUTO
@@ -401,7 +411,6 @@ name|globalmaxholes
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_sack_globalmaxholes
 argument_list|,
 literal|0
@@ -421,8 +430,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_sack
 argument_list|,
 name|OID_AUTO
@@ -431,7 +444,6 @@ name|globalholes
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|tcp_sack_globalholes
 argument_list|,
 literal|0
@@ -838,6 +850,15 @@ name|tcp_seq
 name|end
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sackhole
 modifier|*
@@ -940,6 +961,13 @@ modifier|*
 name|hole
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|tp
+operator|->
+name|t_vnet
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|sack_hole_zone

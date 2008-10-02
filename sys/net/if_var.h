@@ -2790,6 +2790,12 @@ begin_comment
 comment|/* DEVICE_POLLING */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

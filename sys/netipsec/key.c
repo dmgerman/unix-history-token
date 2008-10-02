@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1175,8 +1181,12 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_DEBUG_LEVEL
@@ -1184,8 +1194,7 @@ argument_list|,
 name|debug
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|key_debug_level
 argument_list|,
 literal|0
@@ -1200,8 +1209,12 @@ comment|/* max count of trial for the decision of spi value */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_SPI_TRY
@@ -1209,8 +1222,7 @@ argument_list|,
 name|spi_trycnt
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|key_spi_trycnt
 argument_list|,
 literal|0
@@ -1225,8 +1237,12 @@ comment|/* minimum spi value to allocate automatically. */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_SPI_MIN_VALUE
@@ -1234,8 +1250,7 @@ argument_list|,
 name|spi_minval
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|key_spi_minval
 argument_list|,
 literal|0
@@ -1250,8 +1265,12 @@ comment|/* maximun spi value to allocate automatically. */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_SPI_MAX_VALUE
@@ -1259,8 +1278,7 @@ argument_list|,
 name|spi_maxval
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|key_spi_maxval
 argument_list|,
 literal|0
@@ -1275,8 +1293,12 @@ comment|/* interval to initialize randseed */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_RANDOM_INT
@@ -1284,8 +1306,7 @@ argument_list|,
 name|int_random
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|key_int_random
 argument_list|,
 literal|0
@@ -1300,8 +1321,12 @@ comment|/* lifetime for larval SA */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_LARVAL_LIFETIME
@@ -1309,8 +1334,7 @@ argument_list|,
 name|larval_lifetime
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|key_larval_lifetime
 argument_list|,
 literal|0
@@ -1325,8 +1349,12 @@ comment|/* counter for blocking to send SADB_ACQUIRE to IKEd */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_BLOCKACQ_COUNT
@@ -1334,8 +1362,7 @@ argument_list|,
 name|blockacq_count
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|key_blockacq_count
 argument_list|,
 literal|0
@@ -1350,8 +1377,12 @@ comment|/* lifetime for blocking to send SADB_ACQUIRE to IKEd */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_BLOCKACQ_LIFETIME
@@ -1359,8 +1390,7 @@ argument_list|,
 name|blockacq_lifetime
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|key_blockacq_lifetime
 argument_list|,
 literal|0
@@ -1375,8 +1405,12 @@ comment|/* ESP auth */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_ESP_AUTH
@@ -1384,8 +1418,7 @@ argument_list|,
 name|esp_auth
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|ipsec_esp_auth
 argument_list|,
 literal|0
@@ -1400,8 +1433,12 @@ comment|/* minimum ESP key length */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_ESP_KEYMIN
@@ -1409,8 +1446,7 @@ argument_list|,
 name|esp_keymin
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|ipsec_esp_keymin
 argument_list|,
 literal|0
@@ -1425,8 +1461,12 @@ comment|/* minimum AH key length */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_AH_KEYMIN
@@ -1434,8 +1474,7 @@ argument_list|,
 name|ah_keymin
 argument_list|,
 name|CTLFLAG_RW
-argument_list|, \
-operator|&
+argument_list|,
 name|ipsec_ah_keymin
 argument_list|,
 literal|0
@@ -1450,8 +1489,12 @@ comment|/* perfered old SA rather than new SA */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipsec
+argument_list|,
 name|_net_key
 argument_list|,
 name|KEYCTL_PREFERED_OLDSA
@@ -1459,8 +1502,7 @@ argument_list|,
 name|preferred_oldsa
 argument_list|,
 name|CTLFLAG_RW
-argument_list|,\
-operator|&
+argument_list|,
 name|key_preferred_oldsa
 argument_list|,
 literal|0
@@ -3484,6 +3526,11 @@ name|u_int
 name|dir
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|dir
@@ -3542,6 +3589,11 @@ name|int
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -3757,6 +3809,11 @@ name|int
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -4033,6 +4090,11 @@ name|int
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -4420,6 +4482,11 @@ modifier|*
 name|saidx
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|u_int
 name|level
 decl_stmt|;
@@ -4668,6 +4735,11 @@ parameter_list|(
 name|a
 parameter_list|)
 value|_ARRAYLEN(a)
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secashead
 modifier|*
@@ -4837,6 +4909,11 @@ name|u_int
 name|state
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secasvar
 modifier|*
@@ -5405,6 +5482,11 @@ name|int
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secashead
 modifier|*
@@ -5685,6 +5767,11 @@ name|int
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -5778,6 +5865,11 @@ modifier|*
 name|so
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
 name|so
@@ -6072,6 +6164,11 @@ name|int
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secasvar
 modifier|*
@@ -6331,6 +6428,11 @@ modifier|*
 name|spidx
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -6413,6 +6515,11 @@ name|u_int32_t
 name|id
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -6521,6 +6628,11 @@ name|int
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -6652,6 +6764,11 @@ modifier|*
 name|error
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -8471,6 +8588,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_address
 modifier|*
@@ -9764,6 +9886,11 @@ name|u_int32_t
 name|key_getnewspid
 parameter_list|()
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|u_int32_t
 name|newid
 init|=
@@ -9891,6 +10018,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_address
 modifier|*
@@ -10375,6 +10507,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|u_int32_t
 name|id
 decl_stmt|;
@@ -10866,6 +11003,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|u_int32_t
 name|id
 decl_stmt|;
@@ -11099,6 +11241,11 @@ modifier|*
 name|sp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -11356,6 +11503,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_msg
 modifier|*
@@ -11628,6 +11780,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -12887,6 +13044,11 @@ modifier|*
 name|saidx
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secashead
 modifier|*
@@ -13025,6 +13187,11 @@ modifier|*
 name|sah
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secasvar
 modifier|*
@@ -13246,6 +13413,11 @@ name|int
 name|tag
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secasvar
 modifier|*
@@ -14078,6 +14250,11 @@ modifier|*
 name|saidx
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secashead
 modifier|*
@@ -14153,6 +14330,11 @@ name|u_int32_t
 name|spi
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secashead
 modifier|*
@@ -14284,6 +14466,11 @@ name|u_int32_t
 name|spi
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secasvar
 modifier|*
@@ -14416,6 +14603,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 init|=
@@ -15525,6 +15717,11 @@ modifier|*
 name|sav
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -17426,6 +17623,11 @@ modifier|*
 name|type
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|seckey
 modifier|*
@@ -17584,6 +17786,11 @@ modifier|*
 name|type
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|seclifetime
 modifier|*
@@ -17691,6 +17898,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|INET
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
@@ -17855,6 +18067,11 @@ modifier|*
 name|sin6
 decl_stmt|;
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|in6_ifaddr
 modifier|*
@@ -19350,6 +19567,11 @@ name|time_t
 name|now
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|static
 name|u_int16_t
 name|sptree_scangen
@@ -19529,6 +19751,11 @@ name|time_t
 name|now
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secashead
 modifier|*
@@ -19952,6 +20179,11 @@ name|time_t
 name|now
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secacq
 modifier|*
@@ -20039,6 +20271,11 @@ name|time_t
 name|now
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secspacq
 modifier|*
@@ -20128,11 +20365,26 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|VNET_ITERATOR_DECL
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 name|time_t
 name|now
 init|=
 name|time_second
 decl_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 name|key_flush_spd
 argument_list|(
 name|now
@@ -20153,6 +20405,10 @@ argument_list|(
 name|now
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|IPSEC_DEBUG2
@@ -20475,6 +20731,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_address
 modifier|*
@@ -21681,6 +21942,11 @@ modifier|*
 name|saidx
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|u_int32_t
 name|newspi
 decl_stmt|;
@@ -21952,6 +22218,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_sa
 modifier|*
@@ -23013,6 +23284,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_sa
 modifier|*
@@ -23750,6 +24026,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|const
 name|struct
 name|sadb_ident
@@ -24377,6 +24658,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_sa
 modifier|*
@@ -25016,6 +25302,11 @@ name|u_int16_t
 name|proto
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_address
 modifier|*
@@ -25422,6 +25713,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_sa
 modifier|*
@@ -26012,6 +26308,11 @@ modifier|*
 name|key_getcomb_esp
 parameter_list|()
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_comb
 modifier|*
@@ -26419,6 +26720,11 @@ modifier|*
 name|max
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 operator|*
 name|min
 operator|=
@@ -26512,6 +26818,11 @@ modifier|*
 name|key_getcomb_ah
 parameter_list|()
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_comb
 modifier|*
@@ -27155,6 +27466,11 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -27654,6 +27970,11 @@ modifier|*
 name|saidx
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secacq
 modifier|*
@@ -27782,6 +28103,11 @@ modifier|*
 name|saidx
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secacq
 modifier|*
@@ -27837,6 +28163,11 @@ name|u_int32_t
 name|seq
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secacq
 modifier|*
@@ -27888,6 +28219,11 @@ modifier|*
 name|spidx
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secspacq
 modifier|*
@@ -28001,6 +28337,11 @@ modifier|*
 name|spidx
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secspacq
 modifier|*
@@ -28078,6 +28419,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|const
 name|struct
 name|sadb_address
@@ -28625,6 +28971,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secreg
 modifier|*
@@ -29525,6 +29876,11 @@ modifier|*
 name|so
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secreg
 modifier|*
@@ -30324,6 +30680,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_msg
 modifier|*
@@ -30723,6 +31084,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secashead
 modifier|*
@@ -31512,6 +31878,11 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_msg
 modifier|*
@@ -32703,6 +33074,11 @@ modifier|*
 name|mhp
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -33483,6 +33859,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -33772,6 +34153,11 @@ modifier|*
 name|dst
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secashead
 modifier|*

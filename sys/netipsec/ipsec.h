@@ -2080,13 +2080,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<netipsec/vipsec.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !_KERNEL */
+comment|/* ! KERNEL */
 end_comment
 
 begin_endif

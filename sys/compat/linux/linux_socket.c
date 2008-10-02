@@ -2141,6 +2141,16 @@ modifier|*
 name|args
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|struct
 name|socket_args
 comment|/* { 		int domain; 		int type; 		int protocol; 	} */

@@ -2079,6 +2079,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET_QUIET
+argument_list|(
+name|ifp_p
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -2345,6 +2352,9 @@ name|error
 operator|)
 return|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2801,6 +2811,11 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|const
 name|char
 modifier|*

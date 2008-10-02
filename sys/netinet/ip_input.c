@@ -335,8 +335,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|IPCTL_FORWARDING
@@ -345,7 +349,6 @@ name|forwarding
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ipforwarding
 argument_list|,
 literal|0
@@ -369,8 +372,12 @@ comment|/* XXX */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|IPCTL_SENDREDIRECTS
@@ -379,7 +386,6 @@ name|redirect
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ipsendredirects
 argument_list|,
 literal|0
@@ -398,8 +404,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|IPCTL_DEFTTL
@@ -408,7 +418,6 @@ name|ttl
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ip_defttl
 argument_list|,
 literal|0
@@ -428,8 +437,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|IPCTL_KEEPFAITH
@@ -438,7 +451,6 @@ name|keepfaith
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ip_keepfaith
 argument_list|,
 literal|0
@@ -458,8 +470,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -468,7 +484,6 @@ name|sendsourcequench
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ip_sendsourcequench
 argument_list|,
 literal|0
@@ -487,8 +502,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -497,7 +516,6 @@ name|random_id
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ip_do_randomid
 argument_list|,
 literal|0
@@ -521,8 +539,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -531,7 +553,6 @@ name|check_interface
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ip_checkinterface
 argument_list|,
 literal|0
@@ -682,8 +703,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_STRUCT
+name|SYSCTL_V_STRUCT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|IPCTL_STATS
@@ -692,7 +717,6 @@ name|stats
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ipstat
 argument_list|,
 name|ipstat
@@ -848,8 +872,12 @@ comment|/* Total # of reass queues */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -858,7 +886,6 @@ name|fragpackets
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|nipq
 argument_list|,
 literal|0
@@ -876,8 +903,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -886,7 +917,6 @@ name|maxfragsperpacket
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|maxfragsperpacket
 argument_list|,
 literal|0
@@ -950,8 +980,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|OID_AUTO
@@ -960,7 +994,6 @@ name|stealth
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|ipstealth
 argument_list|,
 literal|0
@@ -1032,6 +1065,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|protosw
 modifier|*
@@ -1374,6 +1412,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -2790,6 +2833,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 comment|/* 	 * -1 for unlimited allocation. 	 */
 if|if
 condition|(
@@ -2845,6 +2893,11 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|V_maxnipq
@@ -2881,6 +2934,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -2988,6 +3046,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -4364,6 +4427,11 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -4432,6 +4500,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|VNET_ITERATOR_DECL
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 name|struct
 name|ipq
 modifier|*
@@ -4442,6 +4515,24 @@ name|i
 decl_stmt|;
 name|IPQ_LOCK
 argument_list|()
+expr_stmt|;
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|vnet_iter
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -4524,7 +4615,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * If we are over the maximum number of fragments 	 * (due to the limit being lowered), drain off 	 * enough to get down to the new limit. 	 */
+comment|/* 		 * If we are over the maximum number of fragments 		 * (due to the limit being lowered), drain off 		 * enough to get down to the new limit. 		 */
 if|if
 condition|(
 name|V_maxnipq
@@ -4603,6 +4694,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|IPQ_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -4620,11 +4718,34 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|VNET_ITERATOR_DECL
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 name|int
 name|i
 decl_stmt|;
 name|IPQ_LOCK
 argument_list|()
+expr_stmt|;
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|vnet_iter
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -4688,6 +4809,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|IPQ_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -5130,6 +5258,11 @@ name|int
 name|srcrt
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -5960,6 +6093,13 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|inp
+operator|->
+name|inp_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|inp
@@ -6534,6 +6674,13 @@ modifier|*
 name|so
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -6594,6 +6741,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|V_ip_rsvpd
 operator|=
 name|NULL
@@ -6632,6 +6784,11 @@ name|off
 parameter_list|)
 comment|/* XXX must fixup manually */
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rsvp_input_p

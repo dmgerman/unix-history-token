@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/raw_cb.h>
 end_include
 
@@ -133,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -157,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|<netipsec/key_debug.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netipsec/ipsec.h>
 end_include
 
 begin_include
@@ -248,6 +266,11 @@ modifier|*
 name|so
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sadb_msg
 modifier|*
@@ -487,6 +510,11 @@ name|int
 name|promisc
 decl_stmt|;
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -724,6 +752,11 @@ name|target
 decl_stmt|;
 comment|/*target of the resulting message*/
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -1081,6 +1114,16 @@ name|int
 name|target
 decl_stmt|;
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -1589,6 +1632,11 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|keycb
 modifier|*
@@ -1870,6 +1918,11 @@ modifier|*
 name|so
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|keycb
 modifier|*
@@ -2285,6 +2338,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(

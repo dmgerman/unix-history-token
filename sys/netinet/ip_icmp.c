@@ -220,8 +220,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_STRUCT
+name|SYSCTL_V_STRUCT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|ICMPCTL_STATS
@@ -230,7 +234,6 @@ name|stats
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|icmpstat
 argument_list|,
 name|icmpstat
@@ -250,8 +253,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|ICMPCTL_MASKREPL
@@ -260,7 +267,6 @@ name|maskrepl
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|icmpmaskrepl
 argument_list|,
 literal|0
@@ -280,8 +286,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_V_UINT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
@@ -290,7 +300,6 @@ name|maskfake
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|icmpmaskfake
 argument_list|,
 literal|0
@@ -310,8 +319,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
@@ -320,7 +333,6 @@ name|drop_redirect
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|drop_redirect
 argument_list|,
 literal|0
@@ -340,8 +352,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
@@ -350,7 +366,6 @@ name|log_redirect
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|log_redirect
 argument_list|,
 literal|0
@@ -370,8 +385,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|ICMPCTL_ICMPLIM
@@ -380,7 +399,6 @@ name|icmplim
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|icmplim
 argument_list|,
 literal|0
@@ -400,8 +418,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
@@ -410,7 +432,6 @@ name|icmplim_output
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|icmplim_output
 argument_list|,
 literal|0
@@ -431,8 +452,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_STRING
+name|SYSCTL_V_STRING
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
@@ -441,7 +466,6 @@ name|reply_src
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|reply_src
 argument_list|,
 name|IFNAMSIZ
@@ -461,8 +485,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
@@ -471,7 +499,6 @@ name|reply_from_interface
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|icmp_rfi
 argument_list|,
 literal|0
@@ -492,8 +519,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
@@ -502,7 +533,6 @@ name|quotelen
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|icmp_quotelen
 argument_list|,
 literal|0
@@ -527,8 +557,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
@@ -537,7 +571,6 @@ name|bmcastecho
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|icmpbmcastecho
 argument_list|,
 literal|0
@@ -629,6 +662,11 @@ name|int
 name|mtu
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 specifier|register
 name|struct
 name|ip
@@ -1027,7 +1065,7 @@ name|tcphlen
 argument_list|,
 name|min
 argument_list|(
-name|icmp_quotelen
+name|V_icmp_quotelen
 argument_list|,
 name|oip
 operator|->
@@ -1049,7 +1087,7 @@ literal|8
 argument_list|,
 name|min
 argument_list|(
-name|icmp_quotelen
+name|V_icmp_quotelen
 argument_list|,
 name|oip
 operator|->
@@ -1478,6 +1516,11 @@ name|int
 name|off
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|icmp
 modifier|*
@@ -2199,7 +2242,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|icmpbmcastecho
+name|V_icmpbmcastecho
 operator|&&
 operator|(
 name|m
@@ -2251,7 +2294,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|icmpbmcastecho
+name|V_icmpbmcastecho
 operator|&&
 operator|(
 name|m
@@ -2332,7 +2375,7 @@ name|ICMP_MASKREQ
 case|:
 if|if
 condition|(
-name|icmpmaskrepl
+name|V_icmpmaskrepl
 operator|==
 literal|0
 condition|)
@@ -2427,7 +2470,7 @@ name|ICMP_MASKREPLY
 expr_stmt|;
 if|if
 condition|(
-name|icmpmaskfake
+name|V_icmpmaskfake
 operator|==
 literal|0
 condition|)
@@ -2448,7 +2491,7 @@ name|icp
 operator|->
 name|icmp_mask
 operator|=
-name|icmpmaskfake
+name|V_icmpmaskfake
 expr_stmt|;
 if|if
 condition|(
@@ -2546,7 +2589,7 @@ name|ICMP_REDIRECT
 case|:
 if|if
 condition|(
-name|log_redirect
+name|V_log_redirect
 condition|)
 block|{
 name|u_long
@@ -2733,7 +2776,7 @@ block|}
 comment|/* 		 * RFC1812 says we must ignore ICMP redirects if we 		 * are acting as router. 		 */
 if|if
 condition|(
-name|drop_redirect
+name|V_drop_redirect
 operator|||
 name|V_ipforwarding
 condition|)
@@ -3000,6 +3043,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -3228,7 +3276,7 @@ block|}
 comment|/* 	 * If the packet was transiting through us, use the address of 	 * the interface the packet came through in.  If that interface 	 * doesn't have a suitable IP address, the normal selection 	 * criteria apply. 	 */
 if|if
 condition|(
-name|icmp_rfi
+name|V_icmp_rfi
 operator|&&
 name|m
 operator|->
@@ -3274,7 +3322,7 @@ block|}
 comment|/* 	 * If the incoming packet was not addressed directly to us, use 	 * designated interface for icmp replies specified by sysctl 	 * net.inet.icmp.reply_src (default not set). Otherwise continue 	 * with normal source selection. 	 */
 if|if
 condition|(
-name|reply_src
+name|V_reply_src
 index|[
 literal|0
 index|]
@@ -3286,7 +3334,7 @@ name|ifn
 operator|=
 name|ifunit
 argument_list|(
-name|reply_src
+name|V_reply_src
 argument_list|)
 operator|)
 condition|)
@@ -4231,6 +4279,11 @@ name|int
 name|which
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|N
@@ -4291,7 +4344,7 @@ struct|;
 comment|/* 	 * Return ok status if feature disabled or argument out of range. 	 */
 if|if
 condition|(
-name|icmplim
+name|V_icmplim
 operator|>
 literal|0
 operator|&&
@@ -4339,7 +4392,7 @@ name|r
 operator|->
 name|curpps
 argument_list|,
-name|icmplim
+name|V_icmplim
 argument_list|)
 condition|)
 return|return
@@ -4350,11 +4403,11 @@ comment|/* discard packet */
 comment|/* 		 * If we've dropped below the threshold after having 		 * rate-limited traffic print the message.  This preserves 		 * the previous behaviour at the expense of added complexity. 		 */
 if|if
 condition|(
-name|icmplim_output
+name|V_icmplim_output
 operator|&&
 name|opps
 operator|>
-name|icmplim
+name|V_icmplim
 condition|)
 name|printf
 argument_list|(
@@ -4366,7 +4419,7 @@ name|type
 argument_list|,
 name|opps
 argument_list|,
-name|icmplim
+name|V_icmplim
 argument_list|)
 expr_stmt|;
 block|}

@@ -9315,6 +9315,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Symbol translation macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INIT_VNET_PF
+parameter_list|(
+name|vnet
+parameter_list|)
+define|\
+value|INIT_FROM_VNET(vnet, VNET_MOD_PF, struct vnet_pf, vnet_pf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_PF
+parameter_list|(
+name|sym
+parameter_list|)
+value|VSYM(vnet_pf, sym)
+end_define
+
 begin_endif
 endif|#
 directive|endif

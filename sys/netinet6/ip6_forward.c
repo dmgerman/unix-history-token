@@ -266,6 +266,11 @@ name|int
 name|srcrt
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*
@@ -332,6 +337,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|secpolicy
 modifier|*

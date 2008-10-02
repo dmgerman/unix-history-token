@@ -373,8 +373,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_link_ether_inet
 argument_list|,
 name|OID_AUTO
@@ -383,7 +387,6 @@ name|maxtries
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|arp_maxtries
 argument_list|,
 literal|0
@@ -394,8 +397,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_link_ether_inet
 argument_list|,
 name|OID_AUTO
@@ -404,7 +411,6 @@ name|useloopback
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|useloopback
 argument_list|,
 literal|0
@@ -415,8 +421,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_link_ether_inet
 argument_list|,
 name|OID_AUTO
@@ -425,7 +435,6 @@ name|proxyall
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|arp_proxyall
 argument_list|,
 literal|0
@@ -638,6 +647,16 @@ modifier|*
 name|info
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|sockaddr
 modifier|*
@@ -1699,6 +1718,13 @@ modifier|*
 name|desten
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|llinfo_arp
 modifier|*
@@ -2812,6 +2838,13 @@ operator|.
 name|s_addr
 operator|=
 literal|0
+expr_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

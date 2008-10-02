@@ -1066,6 +1066,12 @@ comment|/*CONSTCOND*/
 value|0)
 end_define
 
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

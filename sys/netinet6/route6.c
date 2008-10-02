@@ -145,6 +145,11 @@ name|int
 name|proto
 parameter_list|)
 block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ip6_hdr
 modifier|*
@@ -419,7 +424,7 @@ literal|0
 end_if
 
 begin_ifdef
-unit|static int ip6_rthdr0(struct mbuf *m, struct ip6_hdr *ip6, struct ip6_rthdr0 *rh0) { 	int addrs, index; 	struct in6_addr *nextaddr, tmpaddr; 	struct in6_ifaddr *ifa;  	if (rh0->ip6r0_segleft == 0) 		return (0);  	if (rh0->ip6r0_len % 2
+unit|static int ip6_rthdr0(struct mbuf *m, struct ip6_hdr *ip6, struct ip6_rthdr0 *rh0) { 	INIT_VNET_INET6(curvnet); 	int addrs, index; 	struct in6_addr *nextaddr, tmpaddr; 	struct in6_ifaddr *ifa;  	if (rh0->ip6r0_segleft == 0) 		return (0);  	if (rh0->ip6r0_len % 2
 ifdef|#
 directive|ifdef
 name|COMPAT_RFC1883

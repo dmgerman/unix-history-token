@@ -529,8 +529,12 @@ comment|/* one hour is "really old" */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|IPCTL_RTEXPIRE
@@ -539,7 +543,6 @@ name|rtexpire
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|rtq_reallyold
 argument_list|,
 literal|0
@@ -563,8 +566,12 @@ comment|/* never automatically crank down to less */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|IPCTL_RTMINEXPIRE
@@ -573,7 +580,6 @@ name|rtminexpire
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|rtq_minreallyold
 argument_list|,
 literal|0
@@ -597,8 +603,12 @@ comment|/* 128 cached routes is "too many" */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_ip
 argument_list|,
 name|IPCTL_RTMAXCACHE
@@ -607,7 +617,6 @@ name|rtmaxcache
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|rtq_toomany
 argument_list|,
 literal|0
@@ -637,6 +646,11 @@ modifier|*
 name|head
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|rtentry
 modifier|*
@@ -792,6 +806,11 @@ modifier|*
 name|rock
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|rtqk_arg
 modifier|*
@@ -1322,6 +1341,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|VNET_ITERATOR_DECL
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 name|struct
 name|radix_node_head
 modifier|*
@@ -1334,6 +1358,24 @@ decl_stmt|;
 name|int
 name|fibnum
 decl_stmt|;
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_NET
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|fibnum
@@ -1415,6 +1457,13 @@ name|rnh
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1442,6 +1491,11 @@ name|int
 name|off
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|radix_node_head
 modifier|*
@@ -1650,6 +1704,11 @@ name|int
 name|delete
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|in_ifadown_arg
 name|arg
