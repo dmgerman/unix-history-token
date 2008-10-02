@@ -428,15 +428,10 @@ name|disk
 operator|->
 name|d_mediasize
 operator|=
-operator|(
-operator|(
-name|off_t
-operator|)
 name|mmc_get_media_size
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 operator|*
 name|mmc_get_sector_size
 argument_list|(

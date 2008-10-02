@@ -3991,7 +3991,7 @@ name|MMC_IVAR_MEDIA_SIZE
 case|:
 operator|*
 operator|(
-name|int
+name|off_t
 operator|*
 operator|)
 name|result
@@ -4002,7 +4002,7 @@ name|csd
 operator|.
 name|capacity
 operator|/
-name|DEV_BSIZE
+name|MMC_SECTOR_SIZE
 expr_stmt|;
 break|break;
 case|case
@@ -4030,7 +4030,7 @@ operator|*
 operator|)
 name|result
 operator|=
-literal|512
+name|MMC_SECTOR_SIZE
 expr_stmt|;
 break|break;
 case|case
