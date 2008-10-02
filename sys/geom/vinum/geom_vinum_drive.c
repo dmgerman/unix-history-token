@@ -1252,14 +1252,6 @@ name|ret
 decl_stmt|;
 define|#
 directive|define
-name|GV_SET32BE
-parameter_list|(
-name|field
-parameter_list|)
-define|\
-value|do {							\ 		*((uint32_t *)&d_hdr[off]) = htobe32(field);	\ 		off += 4;					\ 	} while (0)
-define|#
-directive|define
 name|GV_SET64BE
 parameter_list|(
 name|field
