@@ -773,9 +773,13 @@ name|struct
 name|section_table
 modifier|*
 name|sections
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|sections_end
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|s
