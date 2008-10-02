@@ -408,11 +408,9 @@ name|disk
 operator|->
 name|d_maxsize
 operator|=
-literal|256
-operator|*
-literal|1024
+name|MAXPHYS
 expr_stmt|;
-comment|/* This is completely empirical */
+comment|/* Maybe ask bridge? */
 name|sc
 operator|->
 name|disk
