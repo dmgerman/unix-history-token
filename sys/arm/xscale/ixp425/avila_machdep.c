@@ -1803,6 +1803,17 @@ expr_stmt|;
 name|kdb_init
 argument_list|()
 expr_stmt|;
+comment|/* use static kernel environment if so configured */
+if|if
+condition|(
+name|envmode
+operator|==
+literal|1
+condition|)
+name|kern_envp
+operator|=
+name|static_env
+expr_stmt|;
 return|return
 operator|(
 operator|(
