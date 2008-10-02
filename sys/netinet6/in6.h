@@ -2543,8 +2543,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPV6CTL_MAXID
+name|ICMPV6CTL_ND6_ONLINKNSRFC4861
 value|47
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_MAXID
+value|48
 end_define
 
 begin_endif
