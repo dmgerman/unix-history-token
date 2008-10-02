@@ -812,6 +812,21 @@ argument_list|,
 name|setvlandev
 argument_list|)
 block|,
+comment|/* NB: non-clone cmds */
+name|DEF_CMD_ARG
+argument_list|(
+literal|"vlan"
+argument_list|,
+name|setvlantag
+argument_list|)
+block|,
+name|DEF_CMD_ARG
+argument_list|(
+literal|"vlandev"
+argument_list|,
+name|setvlandev
+argument_list|)
+block|,
 comment|/* XXX For compatibility.  Should become DEF_CMD() some day. */
 name|DEF_CMD_OPTARG
 argument_list|(
