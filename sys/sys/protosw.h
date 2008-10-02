@@ -864,9 +864,6 @@ begin_struct
 struct|struct
 name|pr_usrreqs
 block|{
-name|double
-name|__Break_the_struct_layout_for_now
-decl_stmt|;
 name|void
 function_decl|(
 modifier|*
