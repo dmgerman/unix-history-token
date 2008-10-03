@@ -14842,6 +14842,9 @@ name|lro
 operator|.
 name|enabled
 decl_stmt|;
+name|int
+name|skip_lro
+decl_stmt|;
 name|struct
 name|lro_ctrl
 modifier|*
@@ -15569,6 +15572,24 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LRO_SUPPORTED
+comment|/* 			 * The T304 sends incoming packets on any qset.  If LRO 			 * is also enabled, we could end up sending packet up 			 * lro_ctrl->ifp's input.  That is incorrect. 			 * 			 * The mbuf's rcvif was derived from the cpl header and 			 * is accurate.  Skip LRO and just use that. 			 */
+name|skip_lro
+operator|=
+name|__predict_false
+argument_list|(
+name|qs
+operator|->
+name|port
+operator|->
+name|ifp
+operator|!=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lro_enabled
@@ -15576,6 +15597,9 @@ operator|&&
 name|lro_ctrl
 operator|->
 name|lro_cnt
+operator|&&
+operator|!
+name|skip_lro
 operator|&&
 operator|(
 name|tcp_lro_rx
