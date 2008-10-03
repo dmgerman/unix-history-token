@@ -526,7 +526,7 @@ argument_list|,
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|name
 argument_list|,
 name|dev2udev
@@ -1219,7 +1219,8 @@ name|dev
 init|=
 name|arg1
 decl_stmt|;
-name|drm_file_t
+name|struct
+name|drm_file
 modifier|*
 name|priv
 decl_stmt|,
@@ -1264,7 +1265,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|drm_file_t
+expr|struct
+name|drm_file
 argument_list|)
 operator|*
 name|privcount

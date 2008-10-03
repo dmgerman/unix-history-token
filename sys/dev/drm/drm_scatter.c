@@ -84,7 +84,8 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_scatter_gather_t
+name|struct
+name|drm_scatter_gather
 modifier|*
 name|request
 parameter_list|)
@@ -358,7 +359,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_scatter_gather_t
+name|struct
+name|drm_scatter_gather
 modifier|*
 name|request
 init|=
@@ -408,7 +410,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_scatter_gather_t
+name|struct
+name|drm_scatter_gather
 modifier|*
 name|request
 init|=
@@ -454,7 +457,7 @@ name|EINVAL
 return|;
 name|DRM_DEBUG
 argument_list|(
-literal|"sg free virtual  = 0x%lx\n"
+literal|"sg free virtual = 0x%lx\n"
 argument_list|,
 name|entry
 operator|->

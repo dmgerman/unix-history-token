@@ -54,7 +54,8 @@ end_comment
 
 begin_function
 specifier|static
-name|drm_file_t
+name|struct
+name|drm_file
 modifier|*
 name|drm_find_file
 parameter_list|(
@@ -145,7 +146,8 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_file_t
+name|struct
+name|drm_file
 modifier|*
 name|priv
 parameter_list|,
@@ -496,7 +498,8 @@ name|sequence
 init|=
 literal|0
 decl_stmt|;
-name|drm_auth_t
+name|struct
+name|drm_auth
 modifier|*
 name|auth
 init|=
@@ -629,13 +632,15 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_auth_t
+name|struct
+name|drm_auth
 modifier|*
 name|auth
 init|=
 name|data
 decl_stmt|;
-name|drm_file_t
+name|struct
+name|drm_file
 modifier|*
 name|priv
 decl_stmt|;

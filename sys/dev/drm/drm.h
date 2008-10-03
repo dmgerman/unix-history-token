@@ -2706,6 +2706,57 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|drm_gem_close
+block|{
+comment|/** Handle of the object to be closed. */
+name|uint32_t
+name|handle
+decl_stmt|;
+name|uint32_t
+name|pad
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|drm_gem_flink
+block|{
+comment|/** Handle for the object being named */
+name|uint32_t
+name|handle
+decl_stmt|;
+comment|/** Returned global name */
+name|uint32_t
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|drm_gem_open
+block|{
+comment|/** Name of object being opened */
+name|uint32_t
+name|name
+decl_stmt|;
+comment|/** Returned handle for the object */
+name|uint32_t
+name|handle
+decl_stmt|;
+comment|/** Returned size of the object */
+name|uint64_t
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/**  * \name Ioctls Definitions  */
 end_comment
@@ -2827,7 +2878,28 @@ begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MODESET_CTL
-value|DRM_IOW(0x08, struct drm_modeset_ctl)
+value|DRM_IOW(0x08,  struct drm_modeset_ctl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_GEM_CLOSE
+value|DRM_IOW (0x09, struct drm_gem_close)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_GEM_FLINK
+value|DRM_IOWR(0x0a, struct drm_gem_flink)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_GEM_OPEN
+value|DRM_IOWR(0x0b, struct drm_gem_open)
 end_define
 
 begin_define
@@ -3283,30 +3355,11 @@ begin_comment
 comment|/* typedef area */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__KERNEL__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_typedef
 typedef|typedef

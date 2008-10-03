@@ -182,7 +182,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_draw_t
+name|struct
+name|drm_draw
 modifier|*
 name|draw
 init|=
@@ -298,12 +299,14 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_draw_t
+name|struct
+name|drm_draw
 modifier|*
 name|draw
 init|=
 operator|(
-name|drm_draw_t
+expr|struct
+name|drm_draw
 operator|*
 operator|)
 name|data

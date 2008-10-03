@@ -518,7 +518,7 @@ condition|(
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|dma_ioctl
 condition|)
 block|{
@@ -528,7 +528,7 @@ operator|-
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|dma_ioctl
 argument_list|(
 name|dev

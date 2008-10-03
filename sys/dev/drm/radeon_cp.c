@@ -3053,13 +3053,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Start with assuming that writeback doesn't work */
-name|dev_priv
-operator|->
-name|writeback_works
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Initialize the scratch register pointer.  This will cause 	 * the scratch register values to be written out to memory 	 * whenever they are updated. 	 * 	 * We simply put this behind the ring read pointer, this works 	 * with PCI GART as well as (whatever kind of) AGP GART 	 */
 name|RADEON_WRITE
 argument_list|(
@@ -5722,6 +5715,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Start with assuming that writeback doesn't work */
+name|dev_priv
+operator|->
+name|writeback_works
+operator|=
+literal|0
+expr_stmt|;
 name|radeon_cp_load_microcode
 argument_list|(
 name|dev_priv

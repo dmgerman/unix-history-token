@@ -511,7 +511,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_ctx_priv_map_t
+name|struct
+name|drm_ctx_priv_map
 modifier|*
 name|request
 init|=
@@ -598,7 +599,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_ctx_priv_map_t
+name|struct
+name|drm_ctx_priv_map
 modifier|*
 name|request
 init|=
@@ -811,7 +813,7 @@ literal|"Lock isn't held after context switch\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If a context switch is ever initiated                                    when the kernel holds the lock, release                                    that lock here. */
+comment|/* If a context switch is ever initiated 	   when the kernel holds the lock, release 	   that lock here. */
 name|clear_bit
 argument_list|(
 literal|0
@@ -847,13 +849,15 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_ctx_res_t
+name|struct
+name|drm_ctx_res
 modifier|*
 name|res
 init|=
 name|data
 decl_stmt|;
-name|drm_ctx_t
+name|struct
+name|drm_ctx
 name|ctx
 decl_stmt|;
 name|int
@@ -956,7 +960,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_ctx_t
+name|struct
+name|drm_ctx
 modifier|*
 name|ctx
 init|=
@@ -1025,7 +1030,7 @@ condition|(
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|context_ctor
 operator|&&
 name|ctx
@@ -1041,7 +1046,7 @@ expr_stmt|;
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|context_ctor
 argument_list|(
 name|dev
@@ -1106,7 +1111,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_ctx_t
+name|struct
+name|drm_ctx
 modifier|*
 name|ctx
 init|=
@@ -1144,7 +1150,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_ctx_t
+name|struct
+name|drm_ctx
 modifier|*
 name|ctx
 init|=
@@ -1195,7 +1202,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_ctx_t
+name|struct
+name|drm_ctx
 modifier|*
 name|ctx
 init|=
@@ -1244,7 +1252,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_ctx_t
+name|struct
+name|drm_ctx
 modifier|*
 name|ctx
 init|=
@@ -1273,7 +1282,7 @@ condition|(
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|context_dtor
 condition|)
 block|{
@@ -1283,7 +1292,7 @@ expr_stmt|;
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|context_dtor
 argument_list|(
 name|dev

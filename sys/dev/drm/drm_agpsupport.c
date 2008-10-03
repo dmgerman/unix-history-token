@@ -27,12 +27,6 @@ directive|include
 file|"dev/drm/drmP.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_if
 if|#
 directive|if
@@ -77,11 +71,6 @@ directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Returns 1 if AGP or 0 if not. */
 end_comment
@@ -100,9 +89,6 @@ name|int
 name|cap
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 if|#
 directive|if
 name|__FreeBSD_version
@@ -226,14 +212,6 @@ literal|0
 return|;
 endif|#
 directive|endif
-else|#
-directive|else
-comment|/* XXX: fill me in for non-FreeBSD */
-return|return
-literal|1
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -252,7 +230,7 @@ condition|(
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|device_is_agp
 operator|!=
 name|NULL
@@ -269,7 +247,7 @@ modifier|*
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|device_is_agp
 call|)
 argument_list|(
@@ -331,7 +309,8 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_agp_info_t
+name|struct
+name|drm_agp_info
 modifier|*
 name|info
 parameter_list|)
@@ -478,7 +457,8 @@ block|{
 name|int
 name|err
 decl_stmt|;
-name|drm_agp_info_t
+name|struct
+name|drm_agp_info
 name|info
 decl_stmt|;
 name|err
@@ -502,7 +482,8 @@ name|err
 return|;
 operator|*
 operator|(
-name|drm_agp_info_t
+expr|struct
+name|drm_agp_info
 operator|*
 operator|)
 name|data
@@ -691,7 +672,8 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_agp_mode_t
+name|struct
+name|drm_agp_mode
 name|mode
 parameter_list|)
 block|{
@@ -768,14 +750,16 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_agp_mode_t
+name|struct
+name|drm_agp_mode
 name|mode
 decl_stmt|;
 name|mode
 operator|=
 operator|*
 operator|(
-name|drm_agp_mode_t
+expr|struct
+name|drm_agp_mode
 operator|*
 operator|)
 name|data
@@ -800,7 +784,8 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_agp_buffer_t
+name|struct
+name|drm_agp_buffer
 modifier|*
 name|request
 parameter_list|)
@@ -1044,7 +1029,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_agp_buffer_t
+name|struct
+name|drm_agp_buffer
 name|request
 decl_stmt|;
 name|int
@@ -1054,7 +1040,8 @@ name|request
 operator|=
 operator|*
 operator|(
-name|drm_agp_buffer_t
+expr|struct
+name|drm_agp_buffer
 operator|*
 operator|)
 name|data
@@ -1077,7 +1064,8 @@ argument_list|()
 expr_stmt|;
 operator|*
 operator|(
-name|drm_agp_buffer_t
+expr|struct
+name|drm_agp_buffer
 operator|*
 operator|)
 name|data
@@ -1156,7 +1144,8 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_agp_binding_t
+name|struct
+name|drm_agp_binding
 modifier|*
 name|request
 parameter_list|)
@@ -1266,7 +1255,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_agp_binding_t
+name|struct
+name|drm_agp_binding
 name|request
 decl_stmt|;
 name|int
@@ -1276,7 +1266,8 @@ name|request
 operator|=
 operator|*
 operator|(
-name|drm_agp_binding_t
+expr|struct
+name|drm_agp_binding
 operator|*
 operator|)
 name|data
@@ -1312,7 +1303,8 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_agp_binding_t
+name|struct
+name|drm_agp_binding
 modifier|*
 name|request
 parameter_list|)
@@ -1457,7 +1449,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_agp_binding_t
+name|struct
+name|drm_agp_binding
 name|request
 decl_stmt|;
 name|int
@@ -1467,7 +1460,8 @@ name|request
 operator|=
 operator|*
 operator|(
-name|drm_agp_binding_t
+expr|struct
+name|drm_agp_binding
 operator|*
 operator|)
 name|data
@@ -1503,7 +1497,8 @@ name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_agp_buffer_t
+name|struct
+name|drm_agp_buffer
 modifier|*
 name|request
 parameter_list|)
@@ -1654,7 +1649,8 @@ modifier|*
 name|file_priv
 parameter_list|)
 block|{
-name|drm_agp_buffer_t
+name|struct
+name|drm_agp_buffer
 name|request
 decl_stmt|;
 name|int
@@ -1664,7 +1660,8 @@ name|request
 operator|=
 operator|*
 operator|(
-name|drm_agp_buffer_t
+expr|struct
+name|drm_agp_buffer
 operator|*
 operator|)
 name|data
