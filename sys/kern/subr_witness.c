@@ -5170,17 +5170,17 @@ name|printf
 argument_list|(
 literal|" 1st %s @ %s:%d\n"
 argument_list|,
-name|lock1
+name|plock
 operator|->
 name|li_lock
 operator|->
 name|lo_name
 argument_list|,
-name|lock1
+name|plock
 operator|->
 name|li_file
 argument_list|,
-name|lock1
+name|plock
 operator|->
 name|li_line
 argument_list|)
