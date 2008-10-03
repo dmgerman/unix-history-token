@@ -75,6 +75,8 @@ init|=
 literal|1
 block|,
 name|NGM_TTY_SET_HOTCHAR
+block|,
+name|NGM_TTY_SET_TTY
 block|, }
 enum|;
 end_enum
