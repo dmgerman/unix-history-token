@@ -1896,6 +1896,8 @@ argument_list|(
 name|len
 operator|*
 literal|4
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* max expansion from strnvis() */
@@ -1913,6 +1915,15 @@ name|VIS_SAFE
 operator||
 name|VIS_OCTAL
 argument_list|)
+expr_stmt|;
+name|msg
+index|[
+name|len
+operator|*
+literal|4
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|fprintf
 argument_list|(
