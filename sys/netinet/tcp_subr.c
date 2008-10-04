@@ -5358,9 +5358,7 @@ name|cru2x
 argument_list|(
 name|inp
 operator|->
-name|inp_socket
-operator|->
-name|so_cred
+name|inp_cred
 argument_list|,
 operator|&
 name|xuc
@@ -5794,9 +5792,7 @@ name|cru2x
 argument_list|(
 name|inp
 operator|->
-name|inp_socket
-operator|->
-name|so_cred
+name|inp_cred
 argument_list|,
 operator|&
 name|xuc

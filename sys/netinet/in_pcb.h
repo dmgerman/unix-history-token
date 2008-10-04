@@ -333,6 +333,12 @@ modifier|*
 name|inp_socket
 decl_stmt|;
 comment|/* (i)  back pointer to socket */
+name|struct
+name|ucred
+modifier|*
+name|inp_cred
+decl_stmt|;
+comment|/* (c) cache of socket cred */
 name|u_int32_t
 name|inp_flow
 decl_stmt|;
