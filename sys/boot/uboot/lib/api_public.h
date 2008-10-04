@@ -274,7 +274,7 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|u_int64_t
+name|uint64_t
 name|lbasize_t
 typedef|;
 end_typedef
