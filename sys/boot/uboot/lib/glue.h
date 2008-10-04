@@ -59,6 +59,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|UB_MAX_MR
+value|5
+end_define
+
+begin_comment
+comment|/* max mem regions number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UB_MAX_DEV
+value|6
+end_define
+
+begin_comment
+comment|/* max devices number */
+end_comment
+
 begin_comment
 comment|/*  * The ub_ library calls are part of the application, not U-Boot code!  They  * are front-end wrappers that are used by the consumer application: they  * prepare arguments for particular syscall and jump to the low level  * syscall()  */
 end_comment
@@ -252,6 +274,10 @@ name|len
 parameter_list|,
 name|lbastart_t
 name|start
+parameter_list|,
+name|lbasize_t
+modifier|*
+name|rlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -286,6 +312,10 @@ name|buf
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+modifier|*
+name|rlen
 parameter_list|)
 function_decl|;
 end_function_decl

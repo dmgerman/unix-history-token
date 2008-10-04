@@ -70,6 +70,17 @@ begin_comment
 comment|/* I/O error		*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|API_ESYSC
+value|6
+end_define
+
+begin_comment
+comment|/* syscall error	*/
+end_comment
+
 begin_typedef
 typedef|typedef
 name|int
