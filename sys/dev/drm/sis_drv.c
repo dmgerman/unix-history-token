@@ -213,17 +213,6 @@ argument_list|(
 name|nbdev
 argument_list|)
 decl_stmt|;
-name|bzero
-argument_list|(
-name|dev
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|drm_device
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|dev
 operator|->
 name|driver
