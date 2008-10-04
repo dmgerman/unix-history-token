@@ -412,6 +412,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"ae"
+argument_list|,
+literal|"Attansic/Atheros L2 FastEthernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"age"
 argument_list|,
 literal|"Attansic/Atheros L1 Gigabit Ethernet"
