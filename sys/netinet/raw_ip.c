@@ -1449,11 +1449,6 @@ name|s_addr
 operator|)
 condition|)
 block|{
-name|INP_RUNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 if|if
