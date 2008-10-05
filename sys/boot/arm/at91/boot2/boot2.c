@@ -1328,9 +1328,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|// Although dp_start is aligned within the disk partition structure,
-comment|// DOSPARTOFF is 446, which is only word (2) aligned, not longword (4)
-comment|// aligned.  Cope by using memcpy to fetch the start of this partition.
+comment|/* 		 * Although dp_start is aligned within the disk 		 * partition structure, DOSPARTOFF is 446, which is 		 * only word (2) aligned, not longword (4) aligned. 		 * Cope by using memcpy to fetch the start of this 		 * partition. 		 */
 name|memcpy
 argument_list|(
 operator|&
