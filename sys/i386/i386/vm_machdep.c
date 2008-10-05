@@ -1527,6 +1527,16 @@ name|trapframe
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If the current thread has the trap bit set (i.e. a debugger had 	 * single stepped the process to the system call), we need to clear 	 * the trap flag from the new frame. Otherwise, the new thread will 	 * receive a (likely unexpected) SIGTRAP when it executes the first 	 * instruction after returning to userland. 	 */
+name|td
+operator|->
+name|td_frame
+operator|->
+name|tf_eflags
+operator|&=
+operator|~
+name|PSL_T
+expr_stmt|;
 comment|/* 	 * Set registers for trampoline to user mode.  Leave space for the 	 * return address on stack.  These are the kernel mode register values. 	 */
 ifdef|#
 directive|ifdef
