@@ -163,15 +163,6 @@ end_function
 
 begin_function
 name|void
-name|Update
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
 name|board_init
 parameter_list|(
 name|void
