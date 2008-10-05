@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Redistribution and use in source and binary forms are freely  * permitted provided that the above copyright notice and this  * paragraph and the following disclaimer are duplicated in all  * such forms.  *  * This software is provided "AS IS" and without any express or  * implied warranties, including, without limitation, the implied  * warranties of merchantability and fitness for a particular  * purpose.  */
+comment|/*-  * Copyright (c) 2008 John Hay  * Copyright (c) 2006 Warner Losh  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Redistribution and use in source and binary forms are freely  * permitted provided that the above copyright notice and this  * paragraph and the following disclaimer are duplicated in all  * such forms.  *  * This software is provided "AS IS" and without any express or  * implied warranties, including, without limitation, the implied  * warranties of merchantability and fitness for a particular  * purpose.  */
 end_comment
 
 begin_include
@@ -201,8 +201,15 @@ begin_comment
 comment|/* #define RBX_QUIET	0x15	   -q */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RBX_NOINTR
+value|0x1c
+end_define
+
 begin_comment
-comment|/* #define RBX_NOINTR	0x1c	   -n */
+comment|/* -n */
 end_comment
 
 begin_comment
@@ -246,11 +253,18 @@ name|PATH_KERNEL
 value|"/boot/kernel/kernel.gz.tramp"
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|_end
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|NOPT
-value|5
+value|6
 end_define
 
 begin_define
@@ -274,13 +288,6 @@ value|((opts)& OPT_SET(opt))
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|char
@@ -289,7 +296,7 @@ index|[
 name|NOPT
 index|]
 init|=
-literal|"agrsv"
+literal|"agnrsv"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,6 +314,8 @@ block|{
 name|RBX_ASKNAME
 block|,
 name|RBX_GDB
+block|,
+name|RBX_NOINTR
 block|,
 name|RBX_DFLTROOT
 block|,
@@ -418,6 +427,45 @@ include|#
 directive|include
 file|"ufsread.c"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|printf(fmt, __VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -597,9 +645,6 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
-name|board_init
-argument_list|()
-expr_stmt|;
 name|dmadat
 operator|=
 operator|(
@@ -616,11 +661,14 @@ literal|20
 operator|)
 operator|)
 expr_stmt|;
-comment|/* Process configuration file */
+name|board_init
+argument_list|()
+expr_stmt|;
 name|autoboot
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Process configuration file */
 if|if
 condition|(
 operator|(
@@ -661,7 +709,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: %s"
+literal|"%s: %s\n"
 argument_list|,
 name|PATH_CONFIG
 argument_list|,
@@ -675,7 +723,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Present the user with the boot2 prompt. */
 if|if
 condition|(
 operator|*
@@ -690,6 +737,7 @@ argument_list|,
 name|PATH_KERNEL
 argument_list|)
 expr_stmt|;
+comment|/* Present the user with the boot2 prompt. */
 for|for
 control|(
 init|;
@@ -709,6 +757,14 @@ operator|!
 name|autoboot
 operator|||
 operator|(
+name|OPT_CHECK
+argument_list|(
+name|RBX_NOINTR
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
 name|c
 operator|=
 name|getc
@@ -717,8 +773,8 @@ literal|2
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1
+literal|0
+operator|)
 condition|)
 name|getstr
 argument_list|(
