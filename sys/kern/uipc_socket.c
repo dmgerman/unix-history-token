@@ -8577,7 +8577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Optimized version of soreceive() for simple datagram cases from userspace;  * this is experimental, and while heavily tested, may contain errors.  */
+comment|/*  * Optimized version of soreceive() for simple datagram cases from userspace.  * Unlike in the stream case, we're able to drop a datagram if copyout()  * fails, and because we handle datagrams atomically, we don't need to use a  * sleep lock to prevent I/O interlacing.  */
 end_comment
 
 begin_function
@@ -8795,8 +8795,7 @@ literal|"soreceive_dgram: P_CONNREQUIRED"
 operator|)
 argument_list|)
 expr_stmt|;
-name|restart
-label|:
+comment|/* 	 * Loop blocking while waiting for a datagram. 	 */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -8805,6 +8804,9 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|(
 name|m
 operator|=
 name|so
@@ -8812,32 +8814,23 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_mb
-expr_stmt|;
-comment|/* 	 * If we have less data than requested, block awaiting more (subject 	 * to any timeout) if: 	 *   1. the current count is less than the low water mark, or 	 *   2. MSG_WAITALL is set, and it is possible to do the entire 	 *	receive operation at once if we block (resid<= hiwat). 	 *   3. MSG_DONTWAIT is not set 	 * If MSG_WAITALL is set but resid is larger than the receive buffer, 	 * we have to do the receive in sections, and thus risk returning a 	 * short count if a timeout or signal occurs after we start. 	 */
-if|if
-condition|(
-name|m
+operator|)
 operator|==
 name|NULL
 condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|m
-operator|!=
-name|NULL
-operator|||
-operator|!
 name|so
 operator|->
 name|so_rcv
 operator|.
 name|sb_cc
+operator|==
+literal|0
 argument_list|,
 operator|(
-literal|"receive: m == %p so->so_rcv.sb_cc == %u"
-operator|,
-name|m
+literal|"soreceive_dgram: sb_mb NULL but sb_cc %u"
 operator|,
 name|so
 operator|->
@@ -8854,15 +8847,6 @@ operator|->
 name|so_error
 condition|)
 block|{
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
-goto|goto
-name|dontblock
-goto|;
 name|error
 operator|=
 name|so
@@ -8889,14 +8873,6 @@ name|error
 operator|)
 return|;
 block|}
-name|SOCKBUF_LOCK_ASSERT
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -8906,41 +8882,6 @@ operator|.
 name|sb_state
 operator|&
 name|SBS_CANTRCVMORE
-condition|)
-block|{
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-name|SOCKBUF_UNLOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-else|else
-goto|goto
-name|dontblock
-goto|;
-block|}
-if|if
-condition|(
-name|uio
-operator|->
-name|uio_resid
-operator|==
-literal|0
 condition|)
 block|{
 name|SOCKBUF_UNLOCK
@@ -8986,13 +8927,9 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|EWOULDBLOCK
-expr_stmt|;
 return|return
 operator|(
-name|error
+name|EWOULDBLOCK
 operator|)
 return|;
 block|}
@@ -9022,6 +8959,11 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|SOCKBUF_UNLOCK
 argument_list|(
 operator|&
@@ -9030,22 +8972,13 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-goto|goto
-name|restart
-goto|;
 block|}
-name|dontblock
-label|:
-comment|/* 	 * From this point onward, we maintain 'nextrecord' as a cache of the 	 * pointer to the next record in the socket buffer.  We must keep the 	 * various socket buffer pointers and local stack versions of the 	 * pointers in sync, pushing out modifications before dropping the 	 * socket buffer mutex, and re-reading them when picking it up. 	 * 	 * Otherwise, we will race with the network stack appending new data 	 * or records onto the socket buffer by using inconsistent/stale 	 * versions of the field, possibly resulting in socket buffer 	 * corruption. 	 * 	 * By holding the high-level sblock(), we prevent simultaneous 	 * readers from pulling off the front of the socket buffer. 	 */
+block|}
 name|SOCKBUF_LOCK_ASSERT
 argument_list|(
 operator|&
@@ -9068,21 +9001,6 @@ name|td_ru
 operator|.
 name|ru_msgrcv
 operator|++
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|m
-operator|==
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mb
-argument_list|,
-operator|(
-literal|"soreceive_dgram: m != sb_mb"
-operator|)
-argument_list|)
 expr_stmt|;
 name|SBLASTRECORDCHK
 argument_list|(
@@ -9268,14 +9186,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|SOCKBUF_LOCK_ASSERT
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|)
-expr_stmt|;
 name|SBLASTRECORDCHK
 argument_list|(
 operator|&
@@ -9395,7 +9305,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Packet to copyout() is now in 'm' and it is disconnected from the 	 * queue. 	 * 	 * Process one or more MT_CONTROL mbufs present before any data mbufs 	 * in the first mbuf chain on the socket buffer.  If MSG_PEEK, we 	 * just copy the data; if !MSG_PEEK, we call into the protocol to 	 * perform externalization (or freeing if controlp == NULL). 	 */
+comment|/* 	 * Packet to copyout() is now in 'm' and it is disconnected from the 	 * queue. 	 * 	 * Process one or more MT_CONTROL mbufs present before any data mbufs 	 * in the first mbuf chain on the socket buffer.  We call into the 	 * protocol to perform externalization (or freeing if controlp == 	 * NULL). 	 */
 if|if
 condition|(
 name|m
@@ -9666,12 +9576,6 @@ condition|(
 name|m
 operator|!=
 name|NULL
-operator|&&
-name|pr
-operator|->
-name|pr_flags
-operator|&
-name|PR_ATOMIC
 condition|)
 name|flags
 operator||=
