@@ -122,43 +122,11 @@ begin_comment
 comment|/* connects block until accepted */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_KERNEL
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|socket
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|int
-name|uipc_connect2
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so1
-parameter_list|,
-name|struct
-name|socket
-modifier|*
-name|so2
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
+end_ifndef
 
 begin_comment
 comment|/* actual length of an initialized sockaddr_un */
@@ -181,7 +149,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_endif

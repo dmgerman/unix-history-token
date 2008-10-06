@@ -711,6 +711,22 @@ end_define
 begin_function_decl
 specifier|static
 name|int
+name|uipc_connect2
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|uipc_ctloutput
 parameter_list|(
 name|struct
@@ -2389,6 +2405,7 @@ comment|/*  * uipc_connect2() is not static as it is invoked directly by fifofs.
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|uipc_connect2
 parameter_list|(
