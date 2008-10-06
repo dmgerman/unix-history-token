@@ -3336,6 +3336,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vfs_donmount
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fsflags
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|fsoptions
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vfs_getnewfsid
 parameter_list|(
