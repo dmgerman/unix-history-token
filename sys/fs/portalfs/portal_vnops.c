@@ -760,7 +760,7 @@ name|so3
 expr_stmt|;
 return|return
 operator|(
-name|uipc_connect2
+name|soconnect2
 argument_list|(
 name|so
 argument_list|,
