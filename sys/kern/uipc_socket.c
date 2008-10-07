@@ -5801,24 +5801,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-comment|/* XXXRW: Temporary debugging. */
-name|KASSERT
-argument_list|(
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_sosend
-operator|!=
-name|sosend
-argument_list|,
-operator|(
-literal|"sosend: protocol calls sosend"
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|so
@@ -9532,24 +9514,6 @@ modifier|*
 name|flagsp
 parameter_list|)
 block|{
-comment|/* XXXRW: Temporary debugging. */
-name|KASSERT
-argument_list|(
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_soreceive
-operator|!=
-name|soreceive
-argument_list|,
-operator|(
-literal|"soreceive: protocol calls soreceive"
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|so
@@ -12418,24 +12382,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-comment|/* XXXRW: Temporary debugging. */
-name|KASSERT
-argument_list|(
-name|so
-operator|->
-name|so_proto
-operator|->
-name|pr_usrreqs
-operator|->
-name|pru_sopoll
-operator|!=
-name|sopoll
-argument_list|,
-operator|(
-literal|"sopoll: protocol calls sopoll"
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|so
