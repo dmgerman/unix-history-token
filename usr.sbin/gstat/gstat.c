@@ -122,6 +122,8 @@ specifier|static
 name|int
 name|flag_a
 decl_stmt|,
+name|flag_b
+decl_stmt|,
 name|flag_c
 decl_stmt|,
 name|flag_d
@@ -136,6 +138,16 @@ init|=
 literal|1000000
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PRINTMSG
+parameter_list|(
+modifier|...
+parameter_list|)
+value|do {						\ 		if (flag_b&& !loop)					\ 			printf(__VA_ARGS__);				\ 		else if (!flag_b)					\ 			printw(__VA_ARGS__);				\ 	} while(0)
+end_define
 
 begin_function_decl
 specifier|static
@@ -195,6 +207,8 @@ decl_stmt|,
 name|maxy
 decl_stmt|,
 name|line_len
+decl_stmt|,
+name|loop
 decl_stmt|,
 name|max_flen
 decl_stmt|;
@@ -297,6 +311,28 @@ decl_stmt|;
 name|HistEvent
 name|hist_ev
 decl_stmt|;
+name|hist
+operator|=
+name|NULL
+expr_stmt|;
+name|el
+operator|=
+name|NULL
+expr_stmt|;
+name|maxx
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|curx
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|loop
+operator|=
+literal|1
+expr_stmt|;
 name|f_s
 index|[
 literal|0
@@ -315,7 +351,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adcf:I:"
+literal|"adcf:I:b"
 argument_list|)
 operator|)
 operator|!=
@@ -332,6 +368,14 @@ case|case
 literal|'a'
 case|:
 name|flag_a
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|flag_b
 operator|=
 literal|1
 expr_stmt|;
@@ -589,6 +633,12 @@ argument_list|,
 literal|"geom_stats_snapshot()"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|flag_b
+condition|)
+block|{
 comment|/* Setup curses */
 name|initscr
 argument_list|()
@@ -783,6 +833,7 @@ argument_list|,
 name|f_s
 argument_list|)
 expr_stmt|;
+block|}
 name|geom_stats_snapshot_timestamp
 argument_list|(
 name|sq
@@ -873,7 +924,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|"dT: %5.3fs  w: %.3fs"
 argument_list|,
@@ -897,11 +948,17 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|"  filter: "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|flag_b
+condition|)
+block|{
 name|getyx
 argument_list|(
 name|stdscr
@@ -920,6 +977,7 @@ argument_list|,
 name|maxx
 argument_list|)
 expr_stmt|;
+block|}
 name|strncpy
 argument_list|(
 name|pf_s
@@ -1010,7 +1068,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -1018,22 +1076,22 @@ name|pf_s
 argument_list|)
 expr_stmt|;
 block|}
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" L(q)  ops/s   "
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" r/s   kBps   ms/r   "
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" w/s   kBps   ms/w   "
 argument_list|)
@@ -1042,12 +1100,12 @@ if|if
 condition|(
 name|flag_d
 condition|)
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" d/s   kBps   ms/d   "
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|"%%busy Name\n"
 argument_list|)
@@ -1173,6 +1231,12 @@ name|flag_c
 condition|)
 continue|continue;
 comment|/* Do not print past end of window */
+if|if
+condition|(
+operator|!
+name|flag_b
+condition|)
+block|{
 name|getyx
 argument_list|(
 name|stdscr
@@ -1189,6 +1253,7 @@ operator|>
 literal|0
 condition|)
 continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -1254,7 +1319,7 @@ operator|->
 name|sequence1
 condition|)
 block|{
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|"*\n"
 argument_list|)
@@ -1385,7 +1450,7 @@ name|gsp
 expr_stmt|;
 continue|continue;
 block|}
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %4ju"
 argument_list|,
@@ -1395,7 +1460,7 @@ operator|)
 name|u64
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1408,7 +1473,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1421,7 +1486,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1445,7 +1510,7 @@ index|]
 operator|>
 literal|1e3
 condition|)
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1459,7 +1524,7 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.1f"
 argument_list|,
@@ -1472,7 +1537,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1485,7 +1550,7 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1509,7 +1574,7 @@ index|]
 operator|>
 literal|1e3
 condition|)
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1523,7 +1588,7 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.1f"
 argument_list|,
@@ -1541,7 +1606,7 @@ condition|(
 name|flag_d
 condition|)
 block|{
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1554,7 +1619,7 @@ literal|8
 index|]
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1578,7 +1643,7 @@ index|]
 operator|>
 literal|1e3
 condition|)
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.0f"
 argument_list|,
@@ -1592,7 +1657,7 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.1f"
 argument_list|,
@@ -1638,6 +1703,11 @@ name|i
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|flag_b
+condition|)
 name|attron
 argument_list|(
 name|COLOR_PAIR
@@ -1646,7 +1716,7 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %6.1lf"
 argument_list|,
@@ -1659,6 +1729,11 @@ literal|7
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|flag_b
+condition|)
 name|attroff
 argument_list|(
 name|COLOR_PAIR
@@ -1667,7 +1742,7 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|"|"
 argument_list|)
@@ -1679,7 +1754,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" ??"
 argument_list|)
@@ -1701,7 +1776,7 @@ name|gid
 operator|->
 name|lg_ptr
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %s"
 argument_list|,
@@ -1727,7 +1802,7 @@ name|gid
 operator|->
 name|lg_ptr
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|" %s/%s/%s"
 argument_list|,
@@ -1753,10 +1828,15 @@ name|lg_name
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|flag_b
+condition|)
 name|clrtoeol
 argument_list|()
 expr_stmt|;
-name|printw
+name|PRINTMSG
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -1773,6 +1853,29 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag_b
+condition|)
+block|{
+comment|/* We loop extra to make sure we get the information. */
+if|if
+condition|(
+operator|!
+name|loop
+condition|)
+break|break;
+name|loop
+operator|=
+literal|0
+expr_stmt|;
+name|usleep
+argument_list|(
+name|flag_I
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|getyx
 argument_list|(
 name|stdscr
@@ -2047,6 +2150,12 @@ break|break;
 block|}
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|flag_b
+condition|)
+block|{
 name|endwin
 argument_list|()
 expr_stmt|;
@@ -2055,6 +2164,7 @@ argument_list|(
 name|el
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|EX_OK
@@ -2075,7 +2185,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: gstat [-acd] [-f filter] [-I interval]\n"
+literal|"usage: gstat [-abcd] [-f filter] [-I interval]\n"
 argument_list|)
 expr_stmt|;
 name|exit
