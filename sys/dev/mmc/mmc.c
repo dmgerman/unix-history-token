@@ -7421,7 +7421,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|mmc
 argument_list|,
-name|sdh
+name|sdhci
 argument_list|,
 name|mmc_driver
 argument_list|,
