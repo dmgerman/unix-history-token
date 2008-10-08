@@ -7014,7 +7014,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * Zero the pointer before calling unp_discard since it may 		 * end up in unp_gc().. 		 * 		 * XXXRW: This is less true than it used to be. 		 */
 name|fp
 operator|=
 operator|*
