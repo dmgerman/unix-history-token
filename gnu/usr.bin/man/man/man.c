@@ -598,6 +598,12 @@ literal|"latin1"
 block|}
 block|,
 block|{
+literal|"UTF-8"
+block|,
+literal|"utf8"
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
