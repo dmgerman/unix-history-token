@@ -2665,7 +2665,11 @@ operator|~
 operator|(
 literal|0xF
 operator|<<
+operator|(
 name|grp
+operator|*
+literal|4
+operator|)
 operator|)
 expr_stmt|;
 name|cmd
@@ -2674,7 +2678,11 @@ name|arg
 operator||=
 name|value
 operator|<<
+operator|(
 name|grp
+operator|*
+literal|4
+operator|)
 expr_stmt|;
 name|cmd
 operator|.
