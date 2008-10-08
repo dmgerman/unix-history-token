@@ -142,6 +142,19 @@ block|}
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|mmc_bus_timing
+block|{
+name|bus_timing_normal
+init|=
+literal|0
+block|,
+name|bus_timing_hs
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|mmc_ios
@@ -170,6 +183,10 @@ decl_stmt|;
 name|enum
 name|mmc_power_mode
 name|power_mode
+decl_stmt|;
+name|enum
+name|mmc_bus_timing
+name|timing
 decl_stmt|;
 block|}
 struct|;
@@ -215,6 +232,11 @@ directive|define
 name|MMC_CAP_8_BIT_DATA
 value|(1<< 1)
 comment|/* Can do 8-bit data transfers */
+define|#
+directive|define
+name|MMC_CAP_HSPEED
+value|(1<< 2)
+comment|/* Can do High Speed transfers */
 name|enum
 name|mmc_card_mode
 name|mode

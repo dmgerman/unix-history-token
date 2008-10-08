@@ -55,6 +55,8 @@ name|MMCBR_IVAR_VDD
 block|,
 name|MMCBR_IVAR_CAPS
 block|,
+name|MMCBR_IVAR_TIMING
+block|,
 comment|//    MMCBR_IVAR_,
 block|}
 enum|;
@@ -206,6 +208,17 @@ argument_list|(
 argument|caps
 argument_list|,
 argument|CAPS
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|MMCBR_ACCESSOR
+argument_list|(
+argument|timing
+argument_list|,
+argument|TIMING
 argument_list|,
 argument|int
 argument_list|)

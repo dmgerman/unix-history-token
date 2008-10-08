@@ -31,6 +31,8 @@ name|MMC_IVAR_TRAN_SPEED
 block|,
 name|MMC_IVAR_READ_ONLY
 block|,
+name|MMC_IVAR_HIGH_CAP
+block|,
 comment|//    MMC_IVAR_,
 block|}
 enum|;
@@ -116,6 +118,17 @@ argument_list|(
 argument|read_only
 argument_list|,
 argument|READ_ONLY
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|MMC_ACCESSOR
+argument_list|(
+argument|high_cap
+argument_list|,
+argument|HIGH_CAP
 argument_list|,
 argument|int
 argument_list|)
