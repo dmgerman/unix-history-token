@@ -1955,7 +1955,11 @@ operator|&
 name|MMC_OCR_CARD_BUSY
 operator|)
 operator|||
+operator|(
 name|ocr
+operator|&
+name|MMC_OCR_VOLTAGE
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2110,7 +2114,11 @@ operator|&
 name|MMC_OCR_CARD_BUSY
 operator|)
 operator|||
+operator|(
 name|ocr
+operator|&
+name|MMC_OCR_VOLTAGE
+operator|)
 operator|==
 literal|0
 condition|)
