@@ -3954,6 +3954,12 @@ operator|->
 name|sv_pagesize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|have_interp
 operator|=
 name|TRUE
