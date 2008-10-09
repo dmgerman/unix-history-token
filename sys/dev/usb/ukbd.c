@@ -7912,7 +7912,7 @@ name|mod
 argument_list|,
 name|what
 argument_list|,
-literal|0
+name|arg
 argument_list|)
 return|;
 block|}

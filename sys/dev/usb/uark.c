@@ -875,7 +875,7 @@ label|:
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"uftdi_attach: ATTACH ERROR\n"
+literal|"uark_attach: ATTACH ERROR\n"
 operator|)
 argument_list|)
 expr_stmt|;
