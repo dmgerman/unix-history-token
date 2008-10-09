@@ -253,7 +253,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * P6 Event descriptor  */
+comment|/*  * P6 Event descriptor  *  * The 'pm_flags' field has the following structure:  * - The upper 4 bits are used to track which counter an event is valid on.  * - The lower bits form a bitmask of flags indicating support for the event  *   on a given CPU.  */
 end_comment
 
 begin_struct
@@ -278,6 +278,130 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|P6F_CTR
+parameter_list|(
+name|C
+parameter_list|)
+value|(1<< (28 + (C)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_CTR0
+value|P6F_CTR(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_CTR1
+value|P6F_CTR(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F
+parameter_list|(
+name|CPU
+parameter_list|)
+value|(1<< ((CPU) - PMC_CPU_INTEL_P6))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_P6F
+parameter_list|(
+name|C
+parameter_list|)
+value|P6F(PMC_CPU_INTEL_##C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_P6
+value|_P6F(P6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_CL
+value|_P6F(CL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_PII
+value|_P6F(PII)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_PIII
+value|_P6F(PIII)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_PM
+value|_P6F(PM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_ALL_CPUS
+value|(P6F_P6 | P6F_PII | P6F_CL | P6F_PIII | P6F_PM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_ALL_CTRS
+value|(P6F_CTR0 | P6F_CTR1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6F_ALL
+value|(P6F_ALL_CPUS | P6F_ALL_CTRS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6_EVENT_VALID_FOR_CPU
+parameter_list|(
+name|P
+parameter_list|,
+name|CPU
+parameter_list|)
+value|((P)->pm_flags& P6F(CPU))
+end_define
+
+begin_define
+define|#
+directive|define
+name|P6_EVENT_VALID_FOR_CTR
+parameter_list|(
+name|P
+parameter_list|,
+name|CTR
+parameter_list|)
+value|((P)->pm_flags& P6F_CTR(CTR))
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -301,64 +425,6 @@ name|UMASK
 parameter_list|)
 define|\
 value|{					\ 		.pm_event = PMC_EV_P6_##NAME,	\ 		.pm_evsel = (EVSEL),		\ 		.pm_flags = (FLAGS),		\ 		.pm_unitmask = (UMASK)		\ 	}
-define|#
-directive|define
-name|P6F_P6
-value|(1<< PMC_CPU_INTEL_P6)
-define|#
-directive|define
-name|P6F_CL
-value|(1<< PMC_CPU_INTEL_CL)
-define|#
-directive|define
-name|P6F_PII
-value|(1<< PMC_CPU_INTEL_PII)
-define|#
-directive|define
-name|P6F_PIII
-value|(1<< PMC_CPU_INTEL_PIII)
-define|#
-directive|define
-name|P6F_PM
-value|(1<< PMC_CPU_INTEL_PM)
-define|#
-directive|define
-name|P6F_CTR0
-value|0x0001
-define|#
-directive|define
-name|P6F_CTR1
-value|0x0002
-define|#
-directive|define
-name|P6F_ALL_CPUS
-value|(P6F_P6 | P6F_PII | P6F_CL | P6F_PIII | P6F_PM)
-define|#
-directive|define
-name|P6F_ALL_CTRS
-value|(P6F_CTR0 | P6F_CTR1)
-define|#
-directive|define
-name|P6F_ALL
-value|(P6F_ALL_CPUS | P6F_ALL_CTRS)
-define|#
-directive|define
-name|P6_EVENT_VALID_FOR_CPU
-parameter_list|(
-name|P
-parameter_list|,
-name|CPU
-parameter_list|)
-value|((P)->pm_flags& (1<< (CPU)))
-define|#
-directive|define
-name|P6_EVENT_VALID_FOR_CTR
-parameter_list|(
-name|P
-parameter_list|,
-name|CTR
-parameter_list|)
-value|((P)->pm_flags& (1<< (CTR)))
 name|P6_EVDESCR
 argument_list|(
 name|DATA_MEM_REFS
