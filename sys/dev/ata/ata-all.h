@@ -3111,6 +3111,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ata_atapi
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ata_pmode
 parameter_list|(
 name|struct
