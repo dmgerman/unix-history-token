@@ -95,7 +95,7 @@ value|(PMC_VERSION_MAJOR<< 24 |		\ 	PMC_VERSION_MINOR<< 16 | PMC_VERSION_PATCH)
 end_define
 
 begin_comment
-comment|/*  * Kinds of CPUs known  */
+comment|/*  * Kinds of CPUs known.  *  * We keep track of CPU variants that need to be distinguished in  * some way for PMC operations.  CPU names are grouped by manufacturer  * and numbered sparsely in order to minimize changes to the ABI involved  * when new CPUs are added.  */
 end_comment
 
 begin_define
@@ -104,7 +104,7 @@ directive|define
 name|__PMC_CPUS
 parameter_list|()
 define|\
-value|__PMC_CPU(AMD_K7,     "AMD K7")			\ 	__PMC_CPU(AMD_K8,     "AMD K8")			\ 	__PMC_CPU(INTEL_P5,   "Intel Pentium")		\ 	__PMC_CPU(INTEL_P6,   "Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,   "Intel Celeron")		\ 	__PMC_CPU(INTEL_PII,  "Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII, "Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,   "Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,  "Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE, "Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,"Intel Core2")		\ 	__PMC_CPU(INTEL_ATOM, "Intel Atom")
+value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom")
 end_define
 
 begin_enum
@@ -120,9 +120,11 @@ name|__PMC_CPU
 parameter_list|(
 name|S
 parameter_list|,
+name|V
+parameter_list|,
 name|D
 parameter_list|)
-value|PMC_CPU_##S ,
+value|PMC_CPU_##S = V,
 name|__PMC_CPUS
 argument_list|()
 block|}
@@ -140,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CPU_LAST
-value|PMC_CPU_INTEL_PIV
+value|PMC_CPU_INTEL_ATOM
 end_define
 
 begin_comment
@@ -205,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CLASS_LAST
-value|PMC_CLASS_P4
+value|PMC_CLASS_IAP
 end_define
 
 begin_comment
@@ -491,6 +493,18 @@ block|{
 undef|#
 directive|undef
 name|__PMC_EV
+undef|#
+directive|undef
+name|__PMC_EV_BLOCK
+define|#
+directive|define
+name|__PMC_EV_BLOCK
+parameter_list|(
+name|C
+parameter_list|,
+name|V
+parameter_list|)
+value|PMC_EV_ ## C ## __BLOCK_START = (V) - 1 ,
 define|#
 directive|define
 name|__PMC_EV
@@ -498,8 +512,6 @@ parameter_list|(
 name|C
 parameter_list|,
 name|N
-parameter_list|,
-name|D
 parameter_list|)
 value|PMC_EV_ ## C ## _ ## N ,
 name|__PMC_EVENTS
@@ -507,20 +519,6 @@ argument_list|()
 block|}
 enum|;
 end_enum
-
-begin_define
-define|#
-directive|define
-name|PMC_EVENT_FIRST
-value|PMC_EV_TSC_TSC
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMC_EVENT_LAST
-value|PMC_EV_P5_LAST
-end_define
 
 begin_comment
 comment|/*  * PMC SYSCALL INTERFACE  */
