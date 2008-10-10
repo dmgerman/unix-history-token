@@ -630,7 +630,7 @@ name|self
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|U3G_DEBUG
 name|sc
 operator|->
 name|sc_intr_number
