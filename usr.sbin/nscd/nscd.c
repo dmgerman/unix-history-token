@@ -309,16 +309,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|print_version_info
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|processing_loop
 parameter_list|(
 name|cache
@@ -406,32 +396,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|void
-name|print_version_info
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|TRACE_IN
-argument_list|(
-name|print_version_info
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"nscd v0.2 (20 Oct 2005)\nwas developed during SoC 2005\n"
-argument_list|)
-expr_stmt|;
-name|TRACE_OUT
-argument_list|(
-name|print_version_info
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -2884,10 +2848,6 @@ name|interactive_mode
 decl_stmt|;
 comment|/* by default all debug messages are omitted */
 name|TRACE_OFF
-argument_list|()
-expr_stmt|;
-comment|/* startup output */
-name|print_version_info
 argument_list|()
 expr_stmt|;
 comment|/* parsing command line arguments */
