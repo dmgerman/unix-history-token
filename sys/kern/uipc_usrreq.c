@@ -2552,7 +2552,7 @@ name|unp2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We hold the global lock, so it's OK to acquire multiple pcb locks 	 * at a time. 	 */
+comment|/* 	 * We hold the global lock exclusively, so it's OK to acquire 	 * multiple pcb locks at a time. 	 */
 while|while
 condition|(
 operator|!
@@ -3344,10 +3344,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* pru_rcvoob is EOPNOTSUPP */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -3712,7 +3708,6 @@ block|}
 case|case
 name|SOCK_STREAM
 case|:
-comment|/* 		 * Connect if not connected yet. 		 * 		 * Note: A better implementation would complain if not equal 		 * to the peer's address. 		 */
 if|if
 condition|(
 operator|(
@@ -4006,7 +4001,7 @@ literal|"uipc_send unknown socktype"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * SEND_EOF is equivalent to a SEND followed by a SHUTDOWN. 	 */
+comment|/* 	 * PRUS_EOF is equivalent to pru_send followed by pru_shutdown. 	 */
 if|if
 condition|(
 name|flags
@@ -5580,7 +5575,7 @@ if|if
 condition|(
 name|vfslocked
 condition|)
-comment|/*  		 * Giant has been previously acquired. This means filesystem 		 * isn't MPSAFE. Do it once again. 		 */
+comment|/*  		 * Giant has been previously acquired. This means filesystem 		 * isn't MPSAFE.  Do it once again. 		 */
 name|mtx_lock
 argument_list|(
 operator|&
