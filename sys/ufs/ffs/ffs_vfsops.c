@@ -2221,8 +2221,6 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|td
-argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -2729,8 +2727,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -4666,8 +4662,6 @@ expr_stmt|;
 name|g_vfs_close
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -5651,8 +5645,6 @@ argument_list|(
 name|ump
 operator|->
 name|um_cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock

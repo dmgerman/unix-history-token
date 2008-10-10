@@ -6051,8 +6051,6 @@ name|vp
 argument_list|,
 name|flags
 argument_list|,
-name|td
-argument_list|,
 name|slpflag
 argument_list|,
 literal|0
@@ -6090,8 +6088,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|,
 literal|0
 argument_list|,

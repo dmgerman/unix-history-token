@@ -4761,11 +4761,6 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|int
 name|slpflag
 parameter_list|,
@@ -4841,8 +4836,6 @@ argument_list|(
 name|bo
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5149,11 +5142,6 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|int
 name|slpflag
 parameter_list|,
@@ -5189,8 +5177,6 @@ operator|->
 name|v_bufobj
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|,
 name|slpflag
 argument_list|,
@@ -11123,8 +11109,6 @@ name|vp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|td
-argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -11137,8 +11121,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|,
 literal|0
 argument_list|,

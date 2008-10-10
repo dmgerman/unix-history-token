@@ -182,10 +182,6 @@ parameter_list|,
 name|struct
 name|mount
 modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1277,8 +1273,6 @@ argument_list|(
 name|devvp
 argument_list|,
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2435,8 +2429,6 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|td
-argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -2676,8 +2668,6 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|td
-argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -2838,8 +2828,6 @@ parameter_list|(
 name|devvp
 parameter_list|,
 name|mp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|vnode
@@ -2850,11 +2838,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -3001,8 +2984,6 @@ expr_stmt|;
 name|g_vfs_close
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -3534,8 +3515,6 @@ expr_stmt|;
 name|g_vfs_close
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -3832,8 +3811,6 @@ argument_list|(
 name|ump
 operator|->
 name|um_cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock

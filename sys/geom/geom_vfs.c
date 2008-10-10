@@ -625,11 +625,6 @@ name|struct
 name|g_consumer
 modifier|*
 name|cp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -662,8 +657,6 @@ argument_list|(
 name|bo
 argument_list|,
 name|V_SAVE
-argument_list|,
-name|td
 argument_list|,
 literal|0
 argument_list|,

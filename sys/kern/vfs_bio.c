@@ -14879,11 +14879,6 @@ name|bo
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 return|return
@@ -14896,7 +14891,7 @@ name|__bo_vnode
 argument_list|,
 name|waitfor
 argument_list|,
-name|td
+name|curthread
 argument_list|)
 operator|)
 return|;

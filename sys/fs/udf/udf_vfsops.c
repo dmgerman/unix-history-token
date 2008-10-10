@@ -383,10 +383,6 @@ parameter_list|,
 name|struct
 name|mount
 modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -881,8 +877,6 @@ argument_list|(
 name|devvp
 argument_list|,
 name|mp
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -1205,11 +1199,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -1538,8 +1527,6 @@ expr_stmt|;
 name|g_vfs_close
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -2217,8 +2204,6 @@ expr_stmt|;
 name|g_vfs_close
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -2351,8 +2336,6 @@ argument_list|(
 name|udfmp
 operator|->
 name|im_cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock

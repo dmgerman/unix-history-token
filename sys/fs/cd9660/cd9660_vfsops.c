@@ -319,11 +319,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -851,8 +846,6 @@ argument_list|(
 name|devvp
 argument_list|,
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -917,8 +910,6 @@ parameter_list|(
 name|devvp
 parameter_list|,
 name|mp
-parameter_list|,
-name|td
 parameter_list|)
 name|struct
 name|vnode
@@ -929,11 +920,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1177,8 +1163,6 @@ expr_stmt|;
 name|g_vfs_close
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -2390,8 +2374,6 @@ expr_stmt|;
 name|g_vfs_close
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -2568,8 +2550,6 @@ argument_list|(
 name|isomp
 operator|->
 name|im_cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock

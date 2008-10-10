@@ -63,12 +63,6 @@ name|buf_ops
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -153,11 +147,6 @@ modifier|*
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_typedef
@@ -226,10 +215,8 @@ parameter_list|(
 name|bo
 parameter_list|,
 name|w
-parameter_list|,
-name|td
 parameter_list|)
-value|((bo)->bo_ops->bop_sync((bo), (w), (td)))
+value|((bo)->bo_ops->bop_sync((bo), (w)))
 end_define
 
 begin_define
@@ -456,11 +443,6 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|int
 name|slpflag
 parameter_list|,
@@ -499,11 +481,6 @@ name|bo
 parameter_list|,
 name|int
 name|waitfor
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl

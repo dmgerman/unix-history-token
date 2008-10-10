@@ -2135,8 +2135,6 @@ expr_stmt|;
 name|g_vfs_close
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -2362,8 +2360,6 @@ name|ntm_devvp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|td
-argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -2380,8 +2376,6 @@ argument_list|(
 name|ntmp
 operator|->
 name|ntm_cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock

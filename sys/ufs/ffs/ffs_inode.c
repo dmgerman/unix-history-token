@@ -965,8 +965,6 @@ name|vp
 argument_list|,
 name|V_ALT
 argument_list|,
-name|td
-argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -1457,8 +1455,6 @@ condition|?
 literal|0
 else|:
 name|V_NORMAL
-argument_list|,
-name|td
 argument_list|,
 literal|0
 argument_list|,

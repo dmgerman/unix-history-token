@@ -986,8 +986,6 @@ name|V_SAVE
 operator||
 name|V_NORMAL
 argument_list|,
-name|curthread
-argument_list|,
 literal|0
 argument_list|,
 literal|0

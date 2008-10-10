@@ -2906,11 +2906,6 @@ parameter_list|,
 name|int
 name|save
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|int
 name|slpflag
 parameter_list|,

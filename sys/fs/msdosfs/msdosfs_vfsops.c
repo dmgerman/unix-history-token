@@ -313,11 +313,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1887,8 +1882,6 @@ argument_list|(
 name|devvp
 argument_list|,
 name|mp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2029,11 +2022,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|struct
@@ -3587,8 +3575,6 @@ expr_stmt|;
 name|g_vfs_close
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
@@ -3957,8 +3943,6 @@ argument_list|(
 name|pmp
 operator|->
 name|pm_cp
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock

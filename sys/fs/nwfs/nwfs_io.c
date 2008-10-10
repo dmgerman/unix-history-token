@@ -3136,8 +3136,6 @@ name|vp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|td
-argument_list|,
 name|PCATCH
 argument_list|,
 literal|0
@@ -3202,8 +3200,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|V_SAVE
-argument_list|,
-name|td
 argument_list|,
 name|PCATCH
 argument_list|,

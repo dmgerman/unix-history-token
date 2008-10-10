@@ -93,11 +93,6 @@ name|struct
 name|g_consumer
 modifier|*
 name|cp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
