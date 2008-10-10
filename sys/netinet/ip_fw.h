@@ -377,7 +377,7 @@ decl_stmt|;
 name|u_int8_t
 name|len
 decl_stmt|;
-comment|/* numer of 32-byte words */
+comment|/* number of 32-bit words */
 define|#
 directive|define
 name|F_NOT
