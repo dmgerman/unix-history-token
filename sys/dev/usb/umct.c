@@ -1453,7 +1453,7 @@ name|err
 condition|)
 name|printf
 argument_list|(
-literal|"%s: ubsa_request: %s\n"
+literal|"%s: umct_request: %s\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
