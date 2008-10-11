@@ -2484,7 +2484,13 @@ operator|)
 operator|<<
 literal|16
 argument_list|,
+operator|(
+name|rca
+condition|?
 name|MMC_RSP_R1B
+else|:
+name|MMC_RSP_NONE
+operator|)
 operator||
 name|MMC_CMD_AC
 argument_list|,
