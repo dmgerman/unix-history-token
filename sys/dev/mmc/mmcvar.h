@@ -15,6 +15,12 @@ directive|define
 name|DEV_MMC_MMCVAR_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<dev/mmc/bridge.h>
+end_include
+
 begin_enum
 enum|enum
 name|mmc_device_ivars
@@ -32,6 +38,10 @@ block|,
 name|MMC_IVAR_READ_ONLY
 block|,
 name|MMC_IVAR_HIGH_CAP
+block|,
+name|MMC_IVAR_CARD_TYPE
+block|,
+name|MMC_IVAR_BUS_WIDTH
 block|,
 comment|//    MMC_IVAR_,
 block|}
@@ -129,6 +139,28 @@ argument_list|(
 argument|high_cap
 argument_list|,
 argument|HIGH_CAP
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|MMC_ACCESSOR
+argument_list|(
+argument|card_type
+argument_list|,
+argument|CARD_TYPE
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|MMC_ACCESSOR
+argument_list|(
+argument|bus_width
+argument_list|,
+argument|BUS_WIDTH
 argument_list|,
 argument|int
 argument_list|)
