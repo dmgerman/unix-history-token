@@ -2402,10 +2402,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * uipc_connect2() is not static as it is invoked directly by fifofs.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
