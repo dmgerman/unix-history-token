@@ -1025,13 +1025,6 @@ block|,
 name|USB_PRODUCT_MERLIN_V620
 block|}
 block|,
-comment|/* Qualcomm, Inc. ZTE CDMA */
-block|{
-name|USB_VENDOR_QUALCOMMINC
-block|,
-name|USB_PRODUCT_QUALCOMMINC_CDMA_MSM
-block|}
-block|,
 comment|/* Novatel */
 block|{
 name|USB_VENDOR_NOVATEL
