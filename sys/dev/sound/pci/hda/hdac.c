@@ -24648,7 +24648,13 @@ expr|struct
 name|hdac_chan
 argument_list|)
 operator|*
+operator|(
+name|sc
+operator|->
+name|num_chans
+operator|+
 name|cnt
+operator|)
 argument_list|,
 name|M_HDAC
 argument_list|,
@@ -24749,10 +24755,6 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* Assign associations in order of their numbers, */
-name|free
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|j
