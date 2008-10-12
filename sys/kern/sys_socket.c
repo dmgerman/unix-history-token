@@ -1066,8 +1066,15 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* 	 * If SBS_CANTRCVMORE is set, but there's still data left in the 	 * receive buffer, the socket is still readable. 	 * 	 * XXXRW: perhaps should lock socket buffer so st_size result is 	 * consistent. 	 */
-comment|/* Unlocked read. */
+comment|/* 	 * If SBS_CANTRCVMORE is set, but there's still data left in the 	 * receive buffer, the socket is still readable. 	 */
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1100,6 +1107,31 @@ name|S_IRGRP
 operator||
 name|S_IROTH
 expr_stmt|;
+name|ub
+operator|->
+name|st_size
+operator|=
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_cc
+operator|-
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_ctl
+expr_stmt|;
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
+comment|/* Unlocked read. */
 if|if
 condition|(
 operator|(
@@ -1123,22 +1155,6 @@ operator||
 name|S_IWGRP
 operator||
 name|S_IWOTH
-expr_stmt|;
-name|ub
-operator|->
-name|st_size
-operator|=
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_cc
-operator|-
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_ctl
 expr_stmt|;
 name|ub
 operator|->
