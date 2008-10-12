@@ -489,8 +489,8 @@ expr_stmt|;
 if|if
 condition|(
 name|mb
-operator|>
-literal|1024
+operator|>=
+literal|10240
 condition|)
 block|{
 comment|/* 1GiB = 1024 MiB */
