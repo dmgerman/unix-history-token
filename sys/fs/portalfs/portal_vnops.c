@@ -1003,7 +1003,6 @@ name|bad
 goto|;
 comment|/* 	 * Wait for connection to complete 	 */
 comment|/* 	 * XXX: Since the mount point is holding a reference on the 	 * underlying server socket, it is not easy to find out whether 	 * the server process is still running.  To handle this problem 	 * we loop waiting for the new socket to be connected (something 	 * which will only happen if the server is still running) or for 	 * the reference count on the server socket to drop to 1, which 	 * will happen if the server dies.  Sleep for 5 second intervals 	 * and keep polling the reference count.   XXX. 	 */
-comment|/* XXXRW: Locking? */
 name|SOCK_LOCK
 argument_list|(
 name|so
