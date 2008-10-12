@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20080916_0112"
+value|"20081013_0113"
 end_define
 
 begin_expr_stmt
