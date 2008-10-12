@@ -4107,7 +4107,11 @@ name|in6p_laddr
 operator|=
 name|in6addr_any
 expr_stmt|;
-comment|/* XXXRW: so_state locking? */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -4116,6 +4120,11 @@ operator|~
 name|SS_ISCONNECTED
 expr_stmt|;
 comment|/* XXX */
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 name|INP_WUNLOCK
