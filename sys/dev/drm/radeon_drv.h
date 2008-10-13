@@ -122,6 +122,8 @@ name|CHIP_RV380
 block|,
 name|CHIP_R420
 block|,
+name|CHIP_R423
+block|,
 name|CHIP_RV410
 block|,
 name|CHIP_RS400
@@ -1697,6 +1699,10 @@ name|RADEON_SCISSOR_2_ENABLE
 value|(1<< 30)
 end_define
 
+begin_comment
+comment|/*  * PCIE radeons (rv370/rv380, rv410, r423/r430/r480, r5xx)  * don't have an explicit bus mastering disable bit.  It's handled  * by the PCI D-states.  PMI_BM_DIS disables D-state bus master  * handling, not bus mastering itself.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1704,11 +1710,97 @@ name|RADEON_BUS_CNTL
 value|0x0030
 end_define
 
+begin_comment
+comment|/* r1xx, r2xx, r300, r(v)350, r420/r481, rs480 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RADEON_BUS_MASTER_DIS
 value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* rs400, rs690/rs740 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RS400_BUS_MASTER_DIS
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS400_MSI_REARM
+value|(1<< 20)
+end_define
+
+begin_comment
+comment|/* see RS480_MSI_REARM in AIC_CNTL for rs480 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_BUS_CNTL1
+value|0x0034
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PMI_BM_DIS
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PMI_INT_DIS
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV370_BUS_CNTL
+value|0x004c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV370_PMI_BM_DIS
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV370_PMI_INT_DIS
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_MSI_REARM_EN
+value|0x0160
+end_define
+
+begin_comment
+comment|/* rv370/rv380, rv410, r423/r430/r480, r5xx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RV370_MSI_REARM_EN
+value|(1<< 0)
 end_define
 
 begin_define
@@ -4685,6 +4777,13 @@ define|#
 directive|define
 name|RADEON_PCIGART_TRANSLATE_EN
 value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_MSI_REARM
+value|(1<< 3)
 end_define
 
 begin_define
