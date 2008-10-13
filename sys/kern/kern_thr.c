@@ -561,6 +561,15 @@ name|rtprio
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|rtpp
 operator|=
 operator|&
