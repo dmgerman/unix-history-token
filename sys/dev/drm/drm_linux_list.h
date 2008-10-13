@@ -236,7 +236,7 @@ parameter_list|,
 name|head
 parameter_list|)
 define|\
-value|for (entry = (head)->next, temp = (entry)->next;		\ 	temp != head; 						\ 	entry = temp, temp = temp->next)
+value|for (entry = (head)->next, temp = (entry)->next;		\ 	entry != head; 						\ 	entry = temp, temp = entry->next)
 end_define
 
 end_unit
