@@ -69,6 +69,13 @@ name|DEVICEREVID_JMC260_A0
 value|0x00
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_JMC2XX_MASK
+value|0x0FF0
+end_define
+
 begin_comment
 comment|/* JMC250 PCI configuration register. */
 end_comment
