@@ -111,7 +111,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|ufs2_daddr_t
 parameter_list|,
 specifier|const
 name|char
@@ -1990,6 +1990,9 @@ name|cg
 operator|->
 name|cg_cgx
 operator|*
+operator|(
+name|ufs2_daddr_t
+operator|)
 name|fs
 operator|->
 name|fs_ipg
@@ -2021,6 +2024,9 @@ name|cg
 operator|->
 name|cg_cgx
 operator|*
+operator|(
+name|ufs2_daddr_t
+operator|)
 name|fs
 operator|->
 name|fs_ipg
@@ -2054,6 +2060,9 @@ name|cg
 operator|->
 name|cg_cgx
 operator|*
+operator|(
+name|ufs2_daddr_t
+operator|)
 name|fs
 operator|->
 name|fs_fpg
@@ -2599,7 +2608,7 @@ name|int
 name|mapsize
 parameter_list|,
 comment|/* size of above two maps */
-name|int
+name|ufs2_daddr_t
 name|startvalue
 parameter_list|,
 comment|/* resource value for first element in map */
@@ -2644,11 +2653,11 @@ name|l
 decl_stmt|,
 name|m
 decl_stmt|,
-name|n
-decl_stmt|,
 name|size
 decl_stmt|;
-name|int
+name|ufs2_daddr_t
+name|n
+decl_stmt|,
 name|astart
 decl_stmt|,
 name|aend
@@ -2828,7 +2837,9 @@ modifier|*
 name|msg
 call|)
 argument_list|(
-literal|"ALLOCATED %s %d MARKED FREE\n"
+literal|"ALLOCATED %s %"
+name|PRId64
+literal|" MARKED FREE\n"
 argument_list|,
 name|name
 argument_list|,
@@ -2841,7 +2852,11 @@ modifier|*
 name|msg
 call|)
 argument_list|(
-literal|"%s %sS %d-%d MARKED FREE\n"
+literal|"%s %sS %"
+name|PRId64
+literal|"-%"
+name|PRId64
+literal|" MARKED FREE\n"
 argument_list|,
 literal|"ALLOCATED"
 argument_list|,
@@ -2959,7 +2974,9 @@ literal|1
 condition|)
 name|pwarn
 argument_list|(
-literal|"%s %s %d MARKED USED\n"
+literal|"%s %s %"
+name|PRId64
+literal|" MARKED USED\n"
 argument_list|,
 literal|"UNALLOCATED"
 argument_list|,
@@ -2975,7 +2992,11 @@ name|debug
 condition|)
 name|pwarn
 argument_list|(
-literal|"%s %sS %d-%ld MARKED USED\n"
+literal|"%s %sS %"
+name|PRId64
+literal|"-%"
+name|PRId64
+literal|" MARKED USED\n"
 argument_list|,
 literal|"UNALLOCATED"
 argument_list|,
@@ -3093,7 +3114,9 @@ modifier|*
 name|msg
 call|)
 argument_list|(
-literal|"ALLOCATED %s %d MARKED FREE\n"
+literal|"ALLOCATED %s %"
+name|PRId64
+literal|" MARKED FREE\n"
 argument_list|,
 name|name
 argument_list|,
@@ -3106,7 +3129,11 @@ modifier|*
 name|msg
 call|)
 argument_list|(
-literal|"ALLOCATED %sS %d-%d MARKED FREE\n"
+literal|"ALLOCATED %sS %"
+name|PRId64
+literal|"-%"
+name|PRId64
+literal|" MARKED FREE\n"
 argument_list|,
 name|name
 argument_list|,
@@ -3178,7 +3205,9 @@ literal|1
 condition|)
 name|pwarn
 argument_list|(
-literal|"UNALLOCATED %s %d MARKED USED\n"
+literal|"UNALLOCATED %s %"
+name|PRId64
+literal|" MARKED USED\n"
 argument_list|,
 name|name
 argument_list|,
@@ -3188,7 +3217,11 @@ expr_stmt|;
 else|else
 name|pwarn
 argument_list|(
-literal|"UNALLOCATED %sS %d-%ld MARKED USED\n"
+literal|"UNALLOCATED %sS %"
+name|PRId64
+literal|"-%"
+name|PRId64
+literal|" MARKED USED\n"
 argument_list|,
 name|name
 argument_list|,
