@@ -998,6 +998,131 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|cpu_functions
+name|feroceon_cpufuncs
+init|=
+block|{
+comment|/* CPU functions */
+name|cpufunc_id
+block|,
+comment|/* id			*/
+name|cpufunc_nullop
+block|,
+comment|/* cpwait		*/
+comment|/* MMU functions */
+name|cpufunc_control
+block|,
+comment|/* control		*/
+name|cpufunc_domains
+block|,
+comment|/* Domain		*/
+name|feroceon_setttb
+block|,
+comment|/* Setttb		*/
+name|cpufunc_faultstatus
+block|,
+comment|/* Faultstatus		*/
+name|cpufunc_faultaddress
+block|,
+comment|/* Faultaddress		*/
+comment|/* TLB functions */
+name|armv4_tlb_flushID
+block|,
+comment|/* tlb_flushID		*/
+name|arm10_tlb_flushID_SE
+block|,
+comment|/* tlb_flushID_SE	*/
+name|armv4_tlb_flushI
+block|,
+comment|/* tlb_flushI		*/
+name|arm10_tlb_flushI_SE
+block|,
+comment|/* tlb_flushI_SE	*/
+name|armv4_tlb_flushD
+block|,
+comment|/* tlb_flushD		*/
+name|armv4_tlb_flushD_SE
+block|,
+comment|/* tlb_flushD_SE	*/
+comment|/* Cache operations */
+name|armv5_ec_icache_sync_all
+block|,
+comment|/* icache_sync_all	*/
+name|armv5_ec_icache_sync_range
+block|,
+comment|/* icache_sync_range	*/
+name|armv5_ec_dcache_wbinv_all
+block|,
+comment|/* dcache_wbinv_all	*/
+name|feroceon_dcache_wbinv_range
+block|,
+comment|/* dcache_wbinv_range	*/
+name|feroceon_dcache_inv_range
+block|,
+comment|/* dcache_inv_range	*/
+name|feroceon_dcache_wb_range
+block|,
+comment|/* dcache_wb_range	*/
+name|armv5_ec_idcache_wbinv_all
+block|,
+comment|/* idcache_wbinv_all	*/
+name|feroceon_idcache_wbinv_range
+block|,
+comment|/* idcache_wbinv_all	*/
+name|feroceon_l2cache_wbinv_all
+block|,
+comment|/* l2cache_wbinv_all    */
+name|feroceon_l2cache_wbinv_range
+block|,
+comment|/* l2cache_wbinv_range  */
+name|feroceon_l2cache_inv_range
+block|,
+comment|/* l2cache_inv_range    */
+name|feroceon_l2cache_wb_range
+block|,
+comment|/* l2cache_wb_range     */
+comment|/* Other functions */
+name|cpufunc_nullop
+block|,
+comment|/* flush_prefetchbuf	*/
+name|armv4_drain_writebuf
+block|,
+comment|/* drain_writebuf	*/
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_C	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* flush_brnchtgt_E	*/
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+block|,
+comment|/* sleep		*/
+comment|/* Soft functions */
+name|cpufunc_null_fixup
+block|,
+comment|/* dataabt_fixup	*/
+name|cpufunc_null_fixup
+block|,
+comment|/* prefetchabt_fixup	*/
+name|arm10_context_switch
+block|,
+comment|/* context_switch	*/
+name|arm10_setup
+comment|/* cpu setup		*/
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2998,8 +3123,85 @@ operator|||
 name|cputype
 operator|==
 name|CPU_ID_ARM1026EJS
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88FR131
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_VD
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_41
 condition|)
 block|{
+if|if
+condition|(
+name|cputype
+operator|==
+name|CPU_ID_MV88FR131
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_VD
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_41
+condition|)
+block|{
+name|cpufuncs
+operator|=
+name|feroceon_cpufuncs
+expr_stmt|;
+comment|/* 			 * Workaround for Marvell MV78100 CPU: Cache prefetch 			 * mechanism may affect the cache coherency validity, 			 * so it needs to be disabled. 			 * 			 * Refer to errata document MV-S501058-00C.pdf (p. 3.1 			 * L2 Prefetching Mechanism) for details. 			 */
+if|if
+condition|(
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_VD
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_MV88FR571_41
+condition|)
+block|{
+name|feroceon_control_ext
+argument_list|(
+literal|0xffffffff
+argument_list|,
+name|FC_DCACHE_STREAM_EN
+operator||
+name|FC_WR_ALLOC_EN
+operator||
+name|FC_BRANCH_TARG_BUF_DIS
+operator||
+name|FC_L2CACHE_EN
+operator||
+name|FC_L2_PREF_DIS
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|feroceon_control_ext
+argument_list|(
+literal|0xffffffff
+argument_list|,
+name|FC_DCACHE_STREAM_EN
+operator||
+name|FC_WR_ALLOC_EN
+operator||
+name|FC_BRANCH_TARG_BUF_DIS
+operator||
+name|FC_L2CACHE_EN
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
 name|cpufuncs
 operator|=
 name|armv5_ec_cpufuncs

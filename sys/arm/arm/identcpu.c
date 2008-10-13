@@ -145,6 +145,8 @@ block|,
 name|CPU_CLASS_XSCALE
 block|,
 name|CPU_CLASS_ARM11J
+block|,
+name|CPU_CLASS_MARVELL
 block|}
 enum|;
 end_enum
@@ -1322,6 +1324,36 @@ block|,
 name|CPU_CLASS_ARM11J
 block|,
 literal|"ARM1136J-S R1"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_MV88FR131
+block|,
+name|CPU_CLASS_MARVELL
+block|,
+literal|"Feroceon 88FR131"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_MV88FR571_VD
+block|,
+name|CPU_CLASS_MARVELL
+block|,
+literal|"Feroceon 88FR571-VD"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
+name|CPU_ID_MV88FR571_41
+block|,
+name|CPU_CLASS_MARVELL
+block|,
+literal|"Early Feroceon 88FR571"
 block|,
 name|generic_steppings
 block|}

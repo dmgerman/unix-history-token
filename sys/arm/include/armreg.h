@@ -727,6 +727,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_MV88FR131
+value|0x56251310
+end_define
+
+begin_comment
+comment|/* Marvell Feroceon 88FR131 Core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_MV88FR571_VD
+value|0x56155710
+end_define
+
+begin_comment
+comment|/* Marvell Feroceon 88FR571-VD Core (ID from datasheet) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_MV88FR571_41
+value|0x41159260
+end_define
+
+begin_comment
+comment|/* Marvell Feroceon 88FR571-VD Core (actual ID from CPU reg) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_FA526
 value|0x66015260
 end_define
@@ -1274,6 +1307,120 @@ end_define
 
 begin_comment
 comment|/* Enable L2 for LLR Cache */
+end_comment
+
+begin_comment
+comment|/* Marvell Feroceon Extra Features Register (CP15 register 1, opcode2 0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_DCACHE_REPL_LOCK
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Replace DCache Lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_DCACHE_STREAM_EN
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* DCache Streaming Switch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_WR_ALLOC_EN
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Enable Write Allocate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_L2_PREF_DIS
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* L2 Cache Prefetch Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_L2_INV_EVICT_LINE
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* L2 Invalidates Uncorrectable Error Line Eviction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_L2CACHE_EN
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* L2 enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_ICACHE_REPL_LOCK
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Replace ICache Lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_GLOB_HIST_REG_EN
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Branch Global History Register Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_BRANCH_TARG_BUF_DIS
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Branch Target Buffer Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_L1_PAR_ERR_EN
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* L1 Parity Error Enable */
 end_comment
 
 begin_comment
