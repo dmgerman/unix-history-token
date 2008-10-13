@@ -175,7 +175,7 @@ name|unique_len
 operator|+
 literal|1
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -209,7 +209,7 @@ name|free
 argument_list|(
 name|busid
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 return|return
@@ -255,7 +255,7 @@ name|free
 argument_list|(
 name|busid
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 return|return
@@ -311,7 +311,7 @@ name|free
 argument_list|(
 name|busid
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 return|return
@@ -411,7 +411,7 @@ name|unique_len
 operator|+
 literal|1
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|,
 name|M_NOWAIT
 argument_list|)

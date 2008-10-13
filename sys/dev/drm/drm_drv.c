@@ -1526,7 +1526,7 @@ name|dev
 operator|->
 name|unique
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 name|dev
@@ -1587,7 +1587,7 @@ name|free
 argument_list|(
 name|pt
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAGIC
 argument_list|)
 expr_stmt|;
 block|}
@@ -1687,7 +1687,7 @@ name|free
 argument_list|(
 name|entry
 argument_list|,
-name|M_DRM
+name|DRM_MEM_AGPLISTS
 argument_list|)
 expr_stmt|;
 block|}
@@ -2551,7 +2551,7 @@ name|dev
 operator|->
 name|agp
 argument_list|,
-name|M_DRM
+name|DRM_MEM_AGPLISTS
 argument_list|)
 expr_stmt|;
 name|dev
@@ -3278,7 +3278,7 @@ name|free
 argument_list|(
 name|file_priv
 argument_list|,
-name|M_DRM
+name|DRM_MEM_FILES
 argument_list|)
 expr_stmt|;
 comment|/* ======================================================== 	 * End inline drm_release 	 */

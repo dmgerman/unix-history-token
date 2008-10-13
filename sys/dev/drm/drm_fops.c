@@ -107,7 +107,7 @@ operator|*
 name|priv
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_FILES
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -145,7 +145,7 @@ name|free
 argument_list|(
 name|priv
 argument_list|,
-name|M_DRM
+name|DRM_MEM_FILES
 argument_list|)
 expr_stmt|;
 return|return
@@ -241,7 +241,7 @@ name|free
 argument_list|(
 name|priv
 argument_list|,
-name|M_DRM
+name|DRM_MEM_FILES
 argument_list|)
 expr_stmt|;
 name|DRM_UNLOCK

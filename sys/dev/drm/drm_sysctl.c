@@ -182,7 +182,7 @@ sizeof|sizeof
 expr|*
 name|info
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|,
 name|M_WAITOK
 operator||
@@ -463,7 +463,7 @@ name|dev
 operator|->
 name|sysctl
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 name|dev
@@ -694,7 +694,7 @@ argument_list|)
 operator|*
 name|mapcount
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -856,7 +856,7 @@ name|free
 argument_list|(
 name|tempmaps
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 return|return
@@ -949,7 +949,7 @@ name|dma
 operator|->
 name|buf_count
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1197,7 +1197,7 @@ name|free
 argument_list|(
 name|templists
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 return|return
@@ -1271,7 +1271,7 @@ argument_list|)
 operator|*
 name|privcount
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1390,7 +1390,7 @@ name|free
 argument_list|(
 name|tempprivs
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 return|return

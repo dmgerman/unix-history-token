@@ -225,7 +225,7 @@ operator|->
 name|context_sareas
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SAREA
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -291,7 +291,7 @@ operator|->
 name|context_sareas
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SAREA
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -369,7 +369,7 @@ name|malloc
 argument_list|(
 name|PAGE_SIZE
 argument_list|,
-name|M_DRM
+name|DRM_MEM_CTXBITMAP
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -470,7 +470,7 @@ name|dev
 operator|->
 name|context_sareas
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SAREA
 argument_list|)
 expr_stmt|;
 name|free
@@ -479,7 +479,7 @@ name|dev
 operator|->
 name|ctx_bitmap
 argument_list|,
-name|M_DRM
+name|DRM_MEM_CTXBITMAP
 argument_list|)
 expr_stmt|;
 name|DRM_UNLOCK

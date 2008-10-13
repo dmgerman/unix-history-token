@@ -305,7 +305,7 @@ expr|struct
 name|drm_driver_info
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|,
 name|M_WAITOK
 operator||
@@ -363,7 +363,7 @@ name|dev
 operator|->
 name|driver
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 return|return

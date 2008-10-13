@@ -194,7 +194,7 @@ operator|*
 name|entry
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAGIC
 argument_list|,
 name|M_ZERO
 operator||
@@ -455,7 +455,7 @@ name|free
 argument_list|(
 name|pt
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAGIC
 argument_list|)
 expr_stmt|;
 return|return

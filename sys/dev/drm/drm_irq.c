@@ -444,21 +444,11 @@ operator|)
 name|dev
 argument_list|)
 expr_stmt|;
-name|drm_free
+name|free
 argument_list|(
 name|dev
 operator|->
 name|vblank
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|drm_vblank_info
-argument_list|)
-operator|*
-name|dev
-operator|->
-name|num_crtcs
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|)
@@ -527,17 +517,21 @@ name|dev
 operator|->
 name|vblank
 operator|=
-name|drm_calloc
+name|malloc
 argument_list|(
-name|num_crtcs
-argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|drm_vblank_info
 argument_list|)
+operator|*
+name|num_crtcs
 argument_list|,
 name|DRM_MEM_DRIVER
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1986,7 +1980,7 @@ if|#
 directive|if
 literal|0
 comment|/* disabled */
-block|drm_vbl_sig_t *vbl_sig = malloc(sizeof(drm_vbl_sig_t), M_DRM, 		    M_NOWAIT | M_ZERO); 		if (vbl_sig == NULL) 			return ENOMEM;  		vbl_sig->sequence = vblwait->request.sequence; 		vbl_sig->signo = vblwait->request.signal; 		vbl_sig->pid = DRM_CURRENTPID;  		vblwait->reply.sequence = atomic_read(&dev->vbl_received); 		 		DRM_SPINLOCK(&dev->vbl_lock); 		TAILQ_INSERT_HEAD(&dev->vbl_sig_list, vbl_sig, link); 		DRM_SPINUNLOCK(&dev->vbl_lock); 		ret = 0;
+block|drm_vbl_sig_t *vbl_sig = malloc(sizeof(drm_vbl_sig_t), 		    DRM_MEM_DRIVER, M_NOWAIT | M_ZERO); 		if (vbl_sig == NULL) 			return ENOMEM;  		vbl_sig->sequence = vblwait->request.sequence; 		vbl_sig->signo = vblwait->request.signal; 		vbl_sig->pid = DRM_CURRENTPID;  		vblwait->reply.sequence = atomic_read(&dev->vbl_received); 		 		DRM_SPINLOCK(&dev->vbl_lock); 		TAILQ_INSERT_HEAD(&dev->vbl_sig_list, vbl_sig, link); 		DRM_SPINUNLOCK(&dev->vbl_lock); 		ret = 0;
 endif|#
 directive|endif
 name|ret

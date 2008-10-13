@@ -836,7 +836,7 @@ operator|*
 name|entry
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_AGPLISTS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -901,7 +901,7 @@ name|free
 argument_list|(
 name|entry
 argument_list|,
-name|M_DRM
+name|DRM_MEM_AGPLISTS
 argument_list|)
 expr_stmt|;
 return|return
@@ -1621,7 +1621,7 @@ name|free
 argument_list|(
 name|entry
 argument_list|,
-name|M_DRM
+name|DRM_MEM_AGPLISTS
 argument_list|)
 expr_stmt|;
 return|return
@@ -1746,7 +1746,7 @@ operator|*
 name|head
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_AGPLISTS
 argument_list|,
 name|M_NOWAIT
 operator||

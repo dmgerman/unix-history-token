@@ -459,7 +459,7 @@ operator|*
 name|map
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|,
 name|M_ZERO
 operator||
@@ -577,7 +577,7 @@ name|map
 operator|->
 name|size
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -614,7 +614,7 @@ name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|)
 expr_stmt|;
 name|DRM_LOCK
@@ -669,14 +669,14 @@ name|map
 operator|->
 name|handle
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|)
 expr_stmt|;
 return|return
@@ -759,7 +759,7 @@ operator|->
 name|mtrr
 expr_stmt|;
 comment|/* for getmap */
-comment|/*for (entry = dev->agp->memory; entry; entry = entry->next) { 			if ((map->offset>= entry->bound)&& 			    (map->offset + map->size<= 			    entry->bound + entry->pages * PAGE_SIZE)) { 				valid = 1; 				break; 			} 		} 		if (!valid) { 			free(map, M_DRM); 			DRM_LOCK(); 			return EACCES; 		}*/
+comment|/*for (entry = dev->agp->memory; entry; entry = entry->next) { 			if ((map->offset>= entry->bound)&& 			    (map->offset + map->size<= 			    entry->bound + entry->pages * PAGE_SIZE)) { 				valid = 1; 				break; 			} 		} 		if (!valid) { 			free(map, DRM_MEM_MAPS); 			DRM_LOCK(); 			return EACCES; 		}*/
 break|break;
 case|case
 name|_DRM_SCATTER_GATHER
@@ -776,7 +776,7 @@ name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|)
 expr_stmt|;
 name|DRM_LOCK
@@ -859,7 +859,7 @@ name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|)
 expr_stmt|;
 name|DRM_LOCK
@@ -904,7 +904,7 @@ name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|)
 expr_stmt|;
 name|DRM_LOCK
@@ -1253,7 +1253,7 @@ name|map
 operator|->
 name|handle
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1320,7 +1320,7 @@ name|free
 argument_list|(
 name|map
 argument_list|,
-name|M_DRM
+name|DRM_MEM_MAPS
 argument_list|)
 expr_stmt|;
 block|}
@@ -1481,7 +1481,7 @@ name|entry
 operator|->
 name|seglist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SEGS
 argument_list|)
 expr_stmt|;
 name|entry
@@ -1525,7 +1525,7 @@ index|]
 operator|.
 name|dev_private
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 block|}
@@ -1535,7 +1535,7 @@ name|entry
 operator|->
 name|buflist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 name|entry
@@ -1770,7 +1770,7 @@ operator|->
 name|buflist
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -1928,7 +1928,7 @@ name|buf
 operator|->
 name|dev_priv_size
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2011,7 +2011,7 @@ operator|->
 name|buflist
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2309,7 +2309,7 @@ operator|->
 name|buflist
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2332,7 +2332,7 @@ operator|->
 name|seglist
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SEGS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2364,7 +2364,7 @@ operator|->
 name|pagelist
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2392,7 +2392,7 @@ name|free
 argument_list|(
 name|temp_pagelist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|)
 expr_stmt|;
 name|free
@@ -2401,7 +2401,7 @@ name|entry
 operator|->
 name|seglist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SEGS
 argument_list|)
 expr_stmt|;
 name|free
@@ -2410,7 +2410,7 @@ name|entry
 operator|->
 name|buflist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 return|return
@@ -2544,7 +2544,7 @@ name|free
 argument_list|(
 name|temp_pagelist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|)
 expr_stmt|;
 return|return
@@ -2774,7 +2774,7 @@ name|buf
 operator|->
 name|dev_priv_size
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2814,7 +2814,7 @@ name|free
 argument_list|(
 name|temp_pagelist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|)
 expr_stmt|;
 return|return
@@ -2868,7 +2868,7 @@ operator|->
 name|buflist
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2892,7 +2892,7 @@ name|free
 argument_list|(
 name|temp_pagelist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|)
 expr_stmt|;
 return|return
@@ -2948,7 +2948,7 @@ name|dma
 operator|->
 name|pagelist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|)
 expr_stmt|;
 name|dma
@@ -3229,7 +3229,7 @@ operator|->
 name|buflist
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3392,7 +3392,7 @@ name|buf
 operator|->
 name|dev_priv_size
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3488,7 +3488,7 @@ operator|->
 name|buflist
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|,
 name|M_NOWAIT
 argument_list|)

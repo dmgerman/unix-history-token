@@ -167,7 +167,7 @@ argument_list|(
 name|drm_dma_handle_t
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DMA
 argument_list|,
 name|M_ZERO
 operator||
@@ -286,7 +286,7 @@ name|free
 argument_list|(
 name|dmah
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DMA
 argument_list|)
 expr_stmt|;
 return|return
@@ -332,7 +332,7 @@ name|free
 argument_list|(
 name|dmah
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DMA
 argument_list|)
 expr_stmt|;
 return|return
@@ -397,7 +397,7 @@ name|free
 argument_list|(
 name|dmah
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DMA
 argument_list|)
 expr_stmt|;
 return|return
@@ -461,7 +461,7 @@ name|free
 argument_list|(
 name|dmah
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DMA
 argument_list|)
 expr_stmt|;
 block|}

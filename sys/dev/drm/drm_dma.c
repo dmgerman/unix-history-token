@@ -51,7 +51,7 @@ operator|->
 name|dma
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -218,7 +218,7 @@ index|]
 operator|.
 name|seglist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SEGS
 argument_list|)
 expr_stmt|;
 block|}
@@ -271,7 +271,7 @@ index|]
 operator|.
 name|dev_private
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 block|}
@@ -286,7 +286,7 @@ index|]
 operator|.
 name|buflist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 block|}
@@ -297,7 +297,7 @@ name|dma
 operator|->
 name|buflist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 name|free
@@ -306,7 +306,7 @@ name|dma
 operator|->
 name|pagelist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|)
 expr_stmt|;
 name|free
@@ -315,7 +315,7 @@ name|dev
 operator|->
 name|dma
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 name|dev

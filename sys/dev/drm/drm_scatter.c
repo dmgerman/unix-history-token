@@ -53,7 +53,7 @@ name|entry
 operator|->
 name|handle
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|)
 expr_stmt|;
 name|free
@@ -62,14 +62,14 @@ name|entry
 operator|->
 name|busaddr
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|entry
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SGLISTS
 argument_list|)
 expr_stmt|;
 block|}
@@ -120,7 +120,7 @@ operator|*
 name|entry
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SGLISTS
 argument_list|,
 name|M_WAITOK
 operator||
@@ -179,7 +179,7 @@ operator|->
 name|busaddr
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|,
 name|M_WAITOK
 operator||
@@ -216,7 +216,7 @@ name|pages
 operator|<<
 name|PAGE_SHIFT
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|,
 name|M_WAITOK
 operator||
