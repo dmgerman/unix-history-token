@@ -856,6 +856,9 @@ block|{
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
+name|cpu_l2cache_wbinv_all
+argument_list|()
+expr_stmt|;
 name|cpu_tlb_flushID
 argument_list|()
 expr_stmt|;
