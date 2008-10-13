@@ -9,9 +9,11 @@ name|recvfile
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -24,9 +26,11 @@ name|xmitfile
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)

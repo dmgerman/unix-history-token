@@ -267,14 +267,12 @@ specifier|static
 name|struct
 name|tftphdr
 modifier|*
+comment|/* init for either read-ahead or write-behind */
 name|rw_init
 parameter_list|(
-name|x
-parameter_list|)
-comment|/* init for either read-ahead or write-behind */
 name|int
 name|x
-decl_stmt|;
+parameter_list|)
 comment|/* zero for write-behind, one for read-head */
 block|{
 name|newline
@@ -339,26 +337,20 @@ begin_function
 name|int
 name|readit
 parameter_list|(
-name|file
-parameter_list|,
-name|dpp
-parameter_list|,
-name|convert
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 comment|/* file opened for read */
 name|struct
 name|tftphdr
 modifier|*
 modifier|*
 name|dpp
-decl_stmt|;
+parameter_list|,
 name|int
 name|convert
-decl_stmt|;
+parameter_list|)
 comment|/* if true, convert to ascii */
 block|{
 name|struct
@@ -439,18 +431,14 @@ begin_function
 name|void
 name|read_ahead
 parameter_list|(
-name|file
-parameter_list|,
-name|convert
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 comment|/* file opened for read */
 name|int
 name|convert
-decl_stmt|;
+parameter_list|)
 comment|/* if true, convert to ascii */
 block|{
 specifier|register
@@ -660,29 +648,22 @@ begin_function
 name|int
 name|writeit
 parameter_list|(
-name|file
-parameter_list|,
-name|dpp
-parameter_list|,
-name|ct
-parameter_list|,
-name|convert
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|struct
 name|tftphdr
 modifier|*
 modifier|*
 name|dpp
-decl_stmt|;
+parameter_list|,
 name|int
 name|ct
-decl_stmt|,
+parameter_list|,
+name|int
 name|convert
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfs
 index|[
@@ -763,17 +744,13 @@ begin_function
 name|int
 name|write_behind
 parameter_list|(
-name|file
-parameter_list|,
-name|convert
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|int
 name|convert
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -985,11 +962,9 @@ begin_function
 name|int
 name|synchnet
 parameter_list|(
-name|f
-parameter_list|)
 name|int
 name|f
-decl_stmt|;
+parameter_list|)
 comment|/* socket to flush */
 block|{
 name|int
