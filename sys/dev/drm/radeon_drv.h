@@ -130,6 +130,8 @@ name|CHIP_RS480
 block|,
 name|CHIP_RS690
 block|,
+name|CHIP_RS740
+block|,
 name|CHIP_RV515
 block|,
 name|CHIP_R520
@@ -6527,7 +6529,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|do {									\         if ((dev_priv->flags& RADEON_FAMILY_MASK) == CHIP_RS690)       \ 	        RS690_WRITE_MCIND( addr, val );                         \ 	else                                                            \ 	        RS480_WRITE_MCIND( addr, val );                         \ } while (0)
+value|do {									\     if (((dev_priv->flags& RADEON_FAMILY_MASK) == CHIP_RS690) ||	\ 	((dev_priv->flags& RADEON_FAMILY_MASK) == CHIP_RS740))		\ 	        RS690_WRITE_MCIND( addr, val );                         \ 	else                                                            \ 	        RS480_WRITE_MCIND( addr, val );                         \ } while (0)
 end_define
 
 begin_define
