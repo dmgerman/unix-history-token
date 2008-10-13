@@ -636,6 +636,13 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
 name|OF_close
 argument_list|(
 name|odp
@@ -643,6 +650,8 @@ operator|->
 name|handle
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|odp
