@@ -1186,7 +1186,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"CSIHPbijnpquvs:d:U:m:o:t"
+literal|"CSIHPbijnquvs:d:U:m:o:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1601,21 +1601,13 @@ operator|=
 name|Yes
 expr_stmt|;
 break|break;
-case|case
-literal|'p'
-case|:
-name|pcpu_stats
-operator|=
-name|No
-expr_stmt|;
-break|break;
 default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"Top version %s\n"
-literal|"Usage: %s [-bCHIijnqStuv] [-d count] [-m io | cpu] [-o field] [-s time]\n"
+literal|"Usage: %s [-bCHIijnPqStuv] [-d count] [-m io | cpu] [-o field] [-s time]\n"
 literal|"       [-U username] [number]\n"
 argument_list|,
 name|version_string
