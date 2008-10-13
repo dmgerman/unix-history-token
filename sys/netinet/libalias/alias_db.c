@@ -1603,7 +1603,7 @@ block|{
 comment|/* First trial and all subsequent are random. */
 name|port_sys
 operator|=
-name|random
+name|arc4random
 argument_list|()
 operator|&
 name|ALIAS_PORT_MASK
@@ -1866,7 +1866,7 @@ directive|endif
 block|}
 name|port_sys
 operator|=
-name|random
+name|arc4random
 argument_list|()
 operator|&
 name|ALIAS_PORT_MASK
@@ -2247,7 +2247,7 @@ name|FIND_EVEN_ALIAS_BASE
 condition|)
 name|port_sys
 operator|=
-name|random
+name|arc4random
 argument_list|()
 operator|&
 name|ALIAS_PORT_MASK_EVEN
@@ -2255,7 +2255,7 @@ expr_stmt|;
 else|else
 name|port_sys
 operator|=
-name|random
+name|arc4random
 argument_list|()
 operator|&
 name|ALIAS_PORT_MASK
@@ -2353,7 +2353,7 @@ name|FIND_EVEN_ALIAS_BASE
 condition|)
 name|port_sys
 operator|=
-name|random
+name|arc4random
 argument_list|()
 operator|&
 name|ALIAS_PORT_MASK_EVEN
@@ -2361,7 +2361,7 @@ expr_stmt|;
 else|else
 name|port_sys
 operator|=
-name|random
+name|arc4random
 argument_list|()
 operator|&
 name|ALIAS_PORT_MASK
