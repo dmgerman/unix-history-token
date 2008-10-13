@@ -2184,6 +2184,21 @@ name|sorf
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|audit_pipe_preselect
+argument_list|(
+name|auid
+argument_list|,
+name|AUE_CORE
+argument_list|,
+name|class
+argument_list|,
+name|sorf
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
 condition|)
 return|return;
 comment|/* 	 * If we are interested in seeing this audit record, allocate it. 	 * Where possible coredump records should contain a pathname and arg32 	 * (signal) tokens. 	 */
