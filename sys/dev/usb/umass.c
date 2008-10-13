@@ -4424,7 +4424,7 @@ argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * These are radio devices with auto-install flash disks for win/mac.  	 * We want the ubsa driver to kick them into shape instead. 	 */
+comment|/* These are 3G modes (E220, Mobile, etc.) devices with auto-install 	 * flash disks for Windows/MacOSX through the first interface. 	 * We are assuming that these vendors will not produce mass storage 	 * devices. See the list of supported parts in u3g, if this happens to 	 * be a mistake in the future. 	 */
 if|if
 condition|(
 name|UGETW
@@ -4436,11 +4436,58 @@ argument_list|)
 operator|==
 name|USB_VENDOR_HUAWEI
 condition|)
+block|{
+comment|/* The interface is reset in the u3g driver 		 * (u3g_huawei_reinit()). Allow generic attachment to the 		 * second interface though. Some Huawei devices contain an SD 		 * card slot. 		 */
+name|id
+operator|=
+name|usbd_get_interface_descriptor
+argument_list|(
+name|iface
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|id
+operator|==
+name|NULL
+operator|||
+name|id
+operator|->
+name|bInterfaceNumber
+operator|==
+literal|0
+condition|)
 return|return
-operator|(
 name|UMATCH_NONE
-operator|)
 return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idVendor
+argument_list|)
+operator|==
+name|USB_VENDOR_QUALCOMMINC
+operator|||
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idVendor
+argument_list|)
+operator|==
+name|USB_VENDOR_NOVATEL
+condition|)
+block|{
+comment|/* Device by these vendors will automatically reappear as a 		 * ucom device if ignored (or if sent an eject command). 		 */
+return|return
+name|UMATCH_NONE
+return|;
+block|}
 comment|/* An entry specifically for Y-E Data devices as they don't fit in the 	 * device description table. 	 */
 if|if
 condition|(
@@ -4901,7 +4948,7 @@ return|;
 block|}
 return|return
 operator|(
-name|UMATCH_DEVCLASS_DEVSUBCLASS_DEVPROTO
+name|UMATCH_IFACECLASS_IFACESUBCLASS_IFACEPROTO
 operator|)
 return|;
 block|}
