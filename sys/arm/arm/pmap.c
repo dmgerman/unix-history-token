@@ -14103,7 +14103,7 @@ operator|&
 name|cmtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hook in the page, zero it, and purge the cache for that 	 * zeroed page. Invalidate the TLB as needed. 	 */
+comment|/* 	 * Hook in the page, zero it, invalidate the TLB as needed. 	 * 	 * Note the temporary zero-page mapping must be a non-cached page in 	 * ordert to work without corruption when write-allocate is enabled. 	 */
 operator|*
 name|cdst_pte
 operator|=
@@ -14116,13 +14116,6 @@ argument_list|(
 name|PTE_KERNEL
 argument_list|,
 name|VM_PROT_WRITE
-argument_list|)
-operator||
-name|pte_l2_s_cache_mode
-expr_stmt|;
-name|PTE_SYNC
-argument_list|(
-name|cdst_pte
 argument_list|)
 expr_stmt|;
 name|cpu_tlb_flushD_SE
@@ -14141,7 +14134,6 @@ name|size
 operator|!=
 name|PAGE_SIZE
 condition|)
-block|{
 name|bzero
 argument_list|(
 operator|(
@@ -14157,31 +14149,12 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|cpu_dcache_wbinv_range
-argument_list|(
-name|cdstp
-operator|+
-name|off
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
 name|bzero_page
 argument_list|(
 name|cdstp
 argument_list|)
 expr_stmt|;
-name|cpu_dcache_wbinv_range
-argument_list|(
-name|cdstp
-argument_list|,
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
