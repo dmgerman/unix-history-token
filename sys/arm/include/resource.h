@@ -64,6 +64,17 @@ begin_comment
 comment|/* i/o ports */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SYS_RES_GPIO
+value|5
+end_define
+
+begin_comment
+comment|/* general purpose i/o */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

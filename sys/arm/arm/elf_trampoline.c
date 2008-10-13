@@ -320,6 +320,27 @@ name|cpu_l2cache_wbinv_all
 value|xscalec3_l2cache_purge
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_KIRKWOOD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_DISCOVERY
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|cpu_l2cache_wbinv_all
+value|feroceon_l2cache_wbinv_all
+end_define
+
 begin_else
 else|#
 directive|else
