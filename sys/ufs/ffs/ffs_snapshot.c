@@ -4865,6 +4865,20 @@ argument_list|,
 name|cg
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Recomputation of summary information might not have been performed 	 * at mount time.  Sync up summary information for current cylinder 	 * group while data is in memory to ensure that result of background 	 * fsck is slightly more consistent. 	 */
+name|fs
+operator|->
+name|fs_cs
+argument_list|(
+name|fs
+argument_list|,
+name|cg
+argument_list|)
+operator|=
+name|cgp
+operator|->
+name|cg_cs
+expr_stmt|;
 name|UFS_UNLOCK
 argument_list|(
 name|ip
