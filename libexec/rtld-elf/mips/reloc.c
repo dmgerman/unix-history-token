@@ -3,6 +3,14 @@ begin_comment
 comment|/*	$NetBSD: mdreloc.c,v 1.23 2003/07/26 15:04:38 mrg Exp $	*/
 end_comment
 
+begin_comment
+comment|/*	$NetBSD: mips_reloc.c,v 1.53 2008/07/24 04:39:25 matt Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright 1997 Michael L. Hitch<mhitch@montana.edu>  * Portions copyright 2002 Charles M. Hannum<root@ihack.net>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -169,6 +177,21 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * It is possible for the compiler to emit relocations for unaligned data.  * We handle this situation with these inlines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RELOC_ALIGNED_P
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((uintptr_t)(x)& (sizeof(void *) - 1)) == 0)
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -180,9 +203,32 @@ modifier|*
 name|where
 parameter_list|)
 block|{
+if|if
+condition|(
+name|__predict_true
+argument_list|(
+name|RELOC_ALIGNED_P
+argument_list|(
+name|where
+argument_list|)
+argument_list|)
+condition|)
+return|return
+operator|*
+operator|(
+name|Elf_Addr
+operator|*
+operator|)
+name|where
+return|;
+else|else
+block|{
 name|Elf_Addr
 name|res
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memcpy
 argument_list|(
 operator|&
@@ -197,14 +243,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|res
-operator|)
 return|;
+block|}
 block|}
 end_function
 
 begin_function
+specifier|static
+name|__inline
 name|void
 name|store_ptr
 parameter_list|(
@@ -216,6 +263,29 @@ name|Elf_Addr
 name|val
 parameter_list|)
 block|{
+if|if
+condition|(
+name|__predict_true
+argument_list|(
+name|RELOC_ALIGNED_P
+argument_list|(
+name|where
+argument_list|)
+argument_list|)
+condition|)
+operator|*
+operator|(
+name|Elf_Addr
+operator|*
+operator|)
+name|where
+operator|=
+name|val
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
 name|memcpy
 argument_list|(
 name|where
@@ -764,21 +834,6 @@ name|target
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * It is possible for the compiler to emit relocations for unaligned data.  * We handle this situation with these inlines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RELOC_ALIGNED_P
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((uintptr_t)(x)& (sizeof(void *) - 1)) == 0)
-end_define
 
 begin_comment
 comment|/*  * Process non-PLT relocations  */
