@@ -19172,7 +19172,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"IP_FW_NAT_CFG: ipfw_nat not present, please load it.\n"
+literal|"IP_FW_NAT_CFG: %s\n"
+argument_list|,
+literal|"ipfw_nat not present, please load it"
 argument_list|)
 expr_stmt|;
 name|error
@@ -19201,16 +19203,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"IP_FW_NAT_DEL: ipfw_nat not present, please load it.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ipfw_nat not loaded: %d\n"
+literal|"IP_FW_NAT_DEL: %s\n"
 argument_list|,
-name|sopt
-operator|->
-name|sopt_name
+literal|"ipfw_nat not present, please load it"
 argument_list|)
 expr_stmt|;
 name|error
@@ -19239,7 +19234,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"IP_FW_NAT_GET_CFG: ipfw_nat not present, please load it.\n"
+literal|"IP_FW_NAT_GET_CFG: %s\n"
+argument_list|,
+literal|"ipfw_nat not present, please load it"
 argument_list|)
 expr_stmt|;
 name|error
@@ -19268,7 +19265,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"IP_FW_NAT_GET_LOG: ipfw_nat not present, please load it.\n"
+literal|"IP_FW_NAT_GET_LOG: %s\n"
+argument_list|,
+literal|"ipfw_nat not present, please load it"
 argument_list|)
 expr_stmt|;
 name|error
