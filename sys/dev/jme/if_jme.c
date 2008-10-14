@@ -2320,23 +2320,8 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* Check for the end of EEPROM descriptor. */
 if|if
 condition|(
-operator|(
-name|fup
-operator|&
-name|JME_EEPROM_DESC_END
-operator|)
-operator|==
-name|JME_EEPROM_DESC_END
-condition|)
-break|break;
-if|if
-condition|(
-operator|(
-name|uint8_t
-operator|)
 name|JME_EEPROM_MKDESC
 argument_list|(
 name|JME_EEPROM_FUNC0
@@ -2344,7 +2329,15 @@ argument_list|,
 name|JME_EEPROM_PAGE_BAR1
 argument_list|)
 operator|==
+operator|(
 name|fup
+operator|&
+operator|(
+name|JME_EEPROM_FUNC_MASK
+operator||
+name|JME_EEPROM_PAGE_MASK
+operator|)
+operator|)
 condition|)
 block|{
 if|if
@@ -2408,6 +2401,18 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+comment|/* Check for the end of EEPROM descriptor. */
+if|if
+condition|(
+operator|(
+name|fup
+operator|&
+name|JME_EEPROM_DESC_END
+operator|)
+operator|==
+name|JME_EEPROM_DESC_END
+condition|)
+break|break;
 comment|/* Try next eeprom descriptor. */
 name|offset
 operator|+=
