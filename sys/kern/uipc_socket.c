@@ -8864,6 +8864,12 @@ operator|.
 name|sb_state
 operator|&
 name|SBS_CANTRCVMORE
+operator|||
+name|uio
+operator|->
+name|uio_resid
+operator|==
+literal|0
 condition|)
 block|{
 name|SOCKBUF_UNLOCK
