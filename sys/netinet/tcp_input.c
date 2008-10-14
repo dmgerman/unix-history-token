@@ -5044,7 +5044,7 @@ name|newsize
 argument_list|,
 name|so
 argument_list|,
-name|curthread
+name|NULL
 argument_list|)
 condition|)
 name|so
