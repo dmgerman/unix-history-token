@@ -2978,8 +2978,113 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_STAC9274
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7620)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9274D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7621)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9273X
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7622)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9273D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7623)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9272X
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7624)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9272D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7625)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9271X
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7626)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_STAC9271D
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7627)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9274X5NH
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7628)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9274D5NH
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7629)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9250
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7634)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9251
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7636)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD700X
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7638)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD700D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7639)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD206X
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7645)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD206D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7646)
 end_define
 
 begin_define
@@ -3006,6 +3111,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_STAC9221_A2
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7682)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_STAC9221D
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7683)
 end_define
@@ -3020,8 +3132,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_STAC9205
+name|HDA_CODEC_STAC9200D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7691)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD005
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7698)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD005D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7699)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9205X
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x76a0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9205D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x76a1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9204X
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x76a2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9204D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x76a3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9220_A2
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7880)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9220_A1
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7882)
 end_define
 
 begin_define
@@ -3029,6 +3197,108 @@ define|#
 directive|define
 name|HDA_CODEC_STACXXXX
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0xffff)
+end_define
+
+begin_comment
+comment|/* IDT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_VENDORID
+value|0x111d
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD75BX
+value|HDA_CODEC_CONSTRUCT(IDT, 0x7603)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD83C1X
+value|HDA_CODEC_CONSTRUCT(IDT, 0x7604)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD81B1X
+value|HDA_CODEC_CONSTRUCT(IDT, 0x7605)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD75B3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x7608)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD73D1
+value|HDA_CODEC_CONSTRUCT(IDT, 0x7674)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD73C1
+value|HDA_CODEC_CONSTRUCT(IDT, 0x7675)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD73E1
+value|HDA_CODEC_CONSTRUCT(IDT, 0x7676)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD71B8
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76b0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD71B7
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76b2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD71B5
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76b6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD83C1C
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76d4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD81B1C
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76d5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDTXXXX
+value|HDA_CODEC_CONSTRUCT(IDT, 0xffff)
 end_define
 
 begin_comment
@@ -3217,6 +3487,17 @@ value|HDA_CODEC_CONSTRUCT(NVIDIA, 0xffff)
 end_define
 
 begin_comment
+comment|/* INTEL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELXXXX
+value|HDA_CODEC_CONSTRUCT(INTEL, 0xffff)
+end_define
+
+begin_comment
 comment|/* Codecs */
 end_comment
 
@@ -3382,15 +3663,33 @@ literal|"CMedia CMI9880"
 block|}
 block|,
 block|{
-name|HDA_CODEC_STAC9221
+name|HDA_CODEC_STAC9200D
 block|,
-literal|"Sigmatel STAC9221"
+literal|"Sigmatel STAC9200D"
 block|}
 block|,
 block|{
-name|HDA_CODEC_STAC9221D
+name|HDA_CODEC_STAC9204X
 block|,
-literal|"Sigmatel STAC9221D"
+literal|"Sigmatel STAC9204X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9204D
+block|,
+literal|"Sigmatel STAC9204D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9205X
+block|,
+literal|"Sigmatel STAC9205X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9205D
+block|,
+literal|"Sigmatel STAC9205D"
 block|}
 block|,
 block|{
@@ -3400,45 +3699,39 @@ literal|"Sigmatel STAC9220"
 block|}
 block|,
 block|{
+name|HDA_CODEC_STAC9220_A1
+block|,
+literal|"Sigmatel STAC9220_A1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9220_A2
+block|,
+literal|"Sigmatel STAC9220_A2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9221
+block|,
+literal|"Sigmatel STAC9221"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9221_A2
+block|,
+literal|"Sigmatel STAC9221_A2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9221D
+block|,
+literal|"Sigmatel STAC9221D"
+block|}
+block|,
+block|{
 name|HDA_CODEC_STAC922XD
 block|,
 literal|"Sigmatel STAC9220D/9223D"
-block|}
-block|,
-block|{
-name|HDA_CODEC_STAC9230X
-block|,
-literal|"Sigmatel STAC9230X"
-block|}
-block|,
-block|{
-name|HDA_CODEC_STAC9230D
-block|,
-literal|"Sigmatel STAC9230D"
-block|}
-block|,
-block|{
-name|HDA_CODEC_STAC9229X
-block|,
-literal|"Sigmatel STAC9229X"
-block|}
-block|,
-block|{
-name|HDA_CODEC_STAC9229D
-block|,
-literal|"Sigmatel STAC9229D"
-block|}
-block|,
-block|{
-name|HDA_CODEC_STAC9228X
-block|,
-literal|"Sigmatel STAC9228X"
-block|}
-block|,
-block|{
-name|HDA_CODEC_STAC9228D
-block|,
-literal|"Sigmatel STAC9228D"
 block|}
 block|,
 block|{
@@ -3454,21 +3747,225 @@ literal|"Sigmatel STAC9227D"
 block|}
 block|,
 block|{
+name|HDA_CODEC_STAC9228X
+block|,
+literal|"Sigmatel STAC9228X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9228D
+block|,
+literal|"Sigmatel STAC9228D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9229X
+block|,
+literal|"Sigmatel STAC9229X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9229D
+block|,
+literal|"Sigmatel STAC9229D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9230X
+block|,
+literal|"Sigmatel STAC9230X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9230D
+block|,
+literal|"Sigmatel STAC9230D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9250
+block|,
+literal|"Sigmatel STAC9250"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9251
+block|,
+literal|"Sigmatel STAC9251"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9271X
+block|,
+literal|"Sigmatel STAC9271X"
+block|}
+block|,
+block|{
 name|HDA_CODEC_STAC9271D
 block|,
 literal|"Sigmatel STAC9271D"
 block|}
 block|,
 block|{
-name|HDA_CODEC_STAC9205
+name|HDA_CODEC_STAC9272X
 block|,
-literal|"Sigmatel STAC9205"
+literal|"Sigmatel STAC9272X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9272D
+block|,
+literal|"Sigmatel STAC9272D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9273X
+block|,
+literal|"Sigmatel STAC9273X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9273D
+block|,
+literal|"Sigmatel STAC9273D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9274
+block|,
+literal|"Sigmatel STAC9274"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9274D
+block|,
+literal|"Sigmatel STAC9274D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9274X5NH
+block|,
+literal|"Sigmatel STAC9274X5NH"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9274D5NH
+block|,
+literal|"Sigmatel STAC9274D5NH"
 block|}
 block|,
 block|{
 name|HDA_CODEC_STAC9872AK
 block|,
 literal|"Sigmatel STAC9872AK"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD005
+block|,
+literal|"IDT 92HD005"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD005D
+block|,
+literal|"IDT 92HD005D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD206X
+block|,
+literal|"IDT 92HD206X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD206D
+block|,
+literal|"IDT 92HD206D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD700X
+block|,
+literal|"IDT 92HD700X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD700D
+block|,
+literal|"IDT 92HD700D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD71B5
+block|,
+literal|"IDT 92HD71B5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD71B7
+block|,
+literal|"IDT 92HD71B7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD71B8
+block|,
+literal|"IDT 92HD71B8"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD73C1
+block|,
+literal|"IDT 92HD73C1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD73D1
+block|,
+literal|"IDT 92HD73D1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD73E1
+block|,
+literal|"IDT 92HD73E1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD75B3
+block|,
+literal|"IDT 92HD75B3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD75BX
+block|,
+literal|"IDT 92HD75BX"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD81B1C
+block|,
+literal|"IDT 92HD81B1C"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD81B1X
+block|,
+literal|"IDT 92HD81B1X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD83C1C
+block|,
+literal|"IDT 92HD83C1C"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD83C1X
+block|,
+literal|"IDT 92HD83C1X"
 block|}
 block|,
 block|{
@@ -3614,6 +4111,18 @@ block|{
 name|HDA_CODEC_NVIDIAXXXX
 block|,
 literal|"NVidia (Unknown)"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELXXXX
+block|,
+literal|"Intel (Unknown)"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDTXXXX
+block|,
+literal|"IDT (Unknown)"
 block|}
 block|, }
 struct|;
@@ -21931,7 +22440,7 @@ block|,
 block|{
 name|DELL_D630_SUBVENDOR
 block|,
-name|HDA_CODEC_STAC9205
+name|HDA_CODEC_STAC9205X
 block|,
 name|HDA_QUIRK_GPIO0
 block|,
@@ -21941,7 +22450,7 @@ block|,
 block|{
 name|DELL_V1500_SUBVENDOR
 block|,
-name|HDA_CODEC_STAC9205
+name|HDA_CODEC_STAC9205X
 block|,
 name|HDA_QUIRK_GPIO0
 block|,
