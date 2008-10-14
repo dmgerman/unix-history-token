@@ -291,11 +291,6 @@ directive|define
 name|U3GFL_HUAWEI_INIT
 value|0x0001
 comment|/* Send USB command to reset iface to ucom mode */
-define|#
-directive|define
-name|U3GFL_EJECT
-value|0x0002
-comment|/* Send SCSI eject to reset first iface to ucom mode */
 block|}
 struct|;
 end_struct
@@ -417,6 +412,16 @@ block|{
 block|{
 name|USB_VENDOR_NOVATEL
 block|,
+name|USB_PRODUCT_NOVATEL_MC950D
+block|}
+block|,
+name|U3GFL_NONE
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_NOVATEL
+block|,
 name|USB_PRODUCT_NOVATEL_U720
 block|}
 block|,
@@ -457,10 +462,10 @@ block|{
 block|{
 name|USB_VENDOR_NOVATEL
 block|,
-name|USB_PRODUCT_NOVATEL_U950D
+name|USB_PRODUCT_NOVATEL_U870
 block|}
 block|,
-name|U3GFL_EJECT
+name|U3GFL_NONE
 block|}
 block|,
 block|{
@@ -508,16 +513,6 @@ block|{
 name|USB_VENDOR_NOVATEL
 block|,
 name|USB_PRODUCT_NOVATEL_X950D
-block|}
-block|,
-name|U3GFL_NONE
-block|}
-block|,
-block|{
-block|{
-name|USB_VENDOR_NOVATEL
-block|,
-name|USB_PRODUCT_NOVATEL_U870
 block|}
 block|,
 name|U3GFL_NONE
