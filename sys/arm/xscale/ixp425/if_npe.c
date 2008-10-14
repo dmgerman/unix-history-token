@@ -2283,6 +2283,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|dma
 argument_list|)
 argument_list|)
