@@ -4424,7 +4424,7 @@ argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
-comment|/* These are 3G modes (E220, Mobile, etc.) devices with auto-install 	 * flash disks for Windows/MacOSX through the first interface. 	 * We are assuming that these vendors will not produce mass storage 	 * devices. See the list of supported parts in u3g, if this happens to 	 * be a mistake in the future. 	 */
+comment|/* These are 3G modem devices (E220, Mobile, etc.) with auto-install 	 * flash disks for Windows/MacOSX through the first interface. We are 	 * assuming that these vendors will not produce mass storage devices. 	 * See the list of supported parts in u3g, if this happens to be a 	 * mistake in the future. 	 */
 if|if
 condition|(
 name|UGETW
@@ -4437,7 +4437,7 @@ operator|==
 name|USB_VENDOR_HUAWEI
 condition|)
 block|{
-comment|/* The interface is reset in the u3g driver 		 * (u3g_huawei_reinit()). Allow generic attachment to the 		 * second interface though. Some Huawei devices contain an SD 		 * card slot. 		 */
+comment|/* The interface is reset in the u3g driver. Allow generic 		 * attachment to the second interface though. Some Huawei 		 * devices contain an SD card slot. 		 */
 name|id
 operator|=
 name|usbd_get_interface_descriptor
