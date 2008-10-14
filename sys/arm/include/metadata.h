@@ -18,7 +18,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MODINFOMD_SMAP
+name|MODINFOMD_BOOTINFO
 value|0x1001
 end_define
 
