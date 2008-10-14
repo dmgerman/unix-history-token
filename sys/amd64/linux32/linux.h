@@ -3762,6 +3762,39 @@ define|\
 value|(LINUX_CLONE_VM | LINUX_CLONE_FS | LINUX_CLONE_FILES |	\ 	LINUX_CLONE_SIGHAND | LINUX_CLONE_THREAD)
 end_define
 
+begin_comment
+comment|/* robust futexes */
+end_comment
+
+begin_struct
+struct|struct
+name|linux_robust_list
+block|{
+name|l_uintptr_t
+name|next
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|linux_robust_list_head
+block|{
+name|struct
+name|linux_robust_list
+name|list
+decl_stmt|;
+name|l_ulong
+name|futex_offset
+decl_stmt|;
+name|l_uintptr_t
+name|pending_list
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

@@ -221,43 +221,6 @@ begin_comment
 comment|/* if (oldval>= CMPARG) wake */
 end_comment
 
-begin_comment
-comment|/* This is defined by Linux user-space */
-end_comment
-
-begin_struct
-struct|struct
-name|linux_robust_list
-block|{
-name|struct
-name|linux_robust_list
-modifier|*
-name|next
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|linux_robust_list_head
-block|{
-name|struct
-name|linux_robust_list
-name|list
-decl_stmt|;
-name|l_ulong
-name|futex_offset
-decl_stmt|;
-name|struct
-name|linux_robust_list
-modifier|*
-name|pending_list
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
