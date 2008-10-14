@@ -391,6 +391,39 @@ begin_comment
 comment|/* workaround for VIA / ATI chipsets */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EHCI_SCFLG_SETMODE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* set bridge mode again after init (Marvell) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_SCFLG_FORCESPEED
+value|0x0008
+end_define
+
+begin_comment
+comment|/* force speed (Marvell) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_SCFLG_NORESTERM
+value|0x0010
+end_define
+
+begin_comment
+comment|/* don't terminate reset sequence (Marvell) */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
