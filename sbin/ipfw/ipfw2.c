@@ -18798,22 +18798,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-specifier|static
-name|void
-name|show_nat
-parameter_list|(
-name|int
-name|ac
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|av
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|void
@@ -20051,32 +20035,6 @@ argument_list|,
 literal|"setsockopt(%s)"
 argument_list|,
 literal|"IP_FW_NAT_CFG"
-argument_list|)
-expr_stmt|;
-comment|/* After every modification, we show the resultant rule. */
-name|int
-name|_ac
-init|=
-literal|3
-decl_stmt|;
-name|char
-modifier|*
-name|_av
-index|[]
-init|=
-block|{
-literal|"show"
-block|,
-literal|"config"
-block|,
-name|id
-block|}
-decl_stmt|;
-name|show_nat
-argument_list|(
-name|_ac
-argument_list|,
-name|_av
 argument_list|)
 expr_stmt|;
 block|}
@@ -30303,6 +30261,11 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|test_only
+condition|)
+return|return;
 comment|/* Parse parameters. */
 for|for
 control|(
@@ -30494,6 +30457,13 @@ condition|?
 literal|"LOG"
 else|:
 literal|"CONFIG"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"nbytes %b\n"
+argument_list|,
+name|nbytes
 argument_list|)
 expr_stmt|;
 block|}
