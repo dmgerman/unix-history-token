@@ -19156,7 +19156,6 @@ break|break;
 case|case
 name|IP_FW_NAT_CFG
 case|:
-block|{
 if|if
 condition|(
 name|IPFW_NAT_LOADED
@@ -19182,12 +19181,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
 name|IP_FW_NAT_DEL
 case|:
-block|{
 if|if
 condition|(
 name|IPFW_NAT_LOADED
@@ -19213,12 +19210,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
 name|IP_FW_NAT_GET_CONFIG
 case|:
-block|{
 if|if
 condition|(
 name|IPFW_NAT_LOADED
@@ -19244,12 +19239,10 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
 name|IP_FW_NAT_GET_LOG
 case|:
-block|{
 if|if
 condition|(
 name|IPFW_NAT_LOADED
@@ -19274,7 +19267,6 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 block|}
 break|break;
 default|default:
