@@ -572,6 +572,18 @@ literal|"Intrepid I/O Controller"
 block|}
 block|,
 block|{
+literal|0x0041106b
+block|,
+literal|"K2 KeyLargo I/O Controller"
+block|}
+block|,
+block|{
+literal|0x004f106b
+block|,
+literal|"Shasta I/O Controller"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -1192,9 +1204,9 @@ name|sc
 operator|->
 name|sc_node
 operator|=
-name|OF_finddevice
+name|ofw_bus_get_node
 argument_list|(
-literal|"mac-io"
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Locate the device node and it's base address 	 */

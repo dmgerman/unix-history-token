@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -123,12 +129,6 @@ begin_include
 include|#
 directive|include
 file|<machine/ofw_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<powerpc/ofw/ofw_pci.h>
 end_include
 
 begin_define
@@ -1032,7 +1032,7 @@ name|node
 decl_stmt|;
 name|node
 operator|=
-name|ofw_pci_find_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)

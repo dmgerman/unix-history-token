@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/nexusvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -137,6 +131,21 @@ literal|"nexus device information"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_enum
+enum|enum
+name|nexus_ivars
+block|{
+name|NEXUS_IVAR_NODE
+block|,
+name|NEXUS_IVAR_NAME
+block|,
+name|NEXUS_IVAR_DEVICE_TYPE
+block|,
+name|NEXUS_IVAR_COMPATIBLE
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct

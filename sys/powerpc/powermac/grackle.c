@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -78,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/nexusvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pio.h>
 end_include
 
@@ -97,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<powerpc/ofw/ofw_pci.h>
 end_include
 
 begin_include
@@ -371,6 +365,24 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * ofw_bus interface  */
+end_comment
+
+begin_function_decl
+specifier|static
+name|phandle_t
+name|grackle_get_node
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Local routines.  */
 end_comment
 
@@ -518,6 +530,14 @@ argument_list|,
 name|grackle_route_interrupt
 argument_list|)
 block|,
+comment|/* ofw_bus interface */
+name|DEVMETHOD
+argument_list|(
+name|ofw_bus_get_node
+argument_list|,
+name|grackle_get_node
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -580,6 +600,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|type
@@ -589,14 +610,14 @@ name|compatible
 decl_stmt|;
 name|type
 operator|=
-name|nexus_get_device_type
+name|ofw_bus_get_type
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
 name|compatible
 operator|=
-name|nexus_get_compatible
+name|ofw_bus_get_compat
 argument_list|(
 name|dev
 argument_list|)
@@ -702,7 +723,7 @@ name|error
 decl_stmt|;
 name|node
 operator|=
-name|nexus_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)
@@ -1141,20 +1162,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Write out the correct PIC interrupt values to config space 	 * of all devices on the bus. 	 */
-name|ofw_pci_fixup
-argument_list|(
-name|dev
-argument_list|,
-name|sc
-operator|->
-name|sc_bus
-argument_list|,
-name|sc
-operator|->
-name|sc_node
-argument_list|)
-expr_stmt|;
 name|device_add_child
 argument_list|(
 name|dev
@@ -2259,6 +2266,39 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|phandle_t
+name|grackle_get_node
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|grackle_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
+comment|/* We only have one child, the PCI bus, which needs our own node. */
+return|return
+name|sc
+operator|->
+name|sc_node
+return|;
 block|}
 end_function
 

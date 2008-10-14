@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/nexusvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pio.h>
 end_include
 

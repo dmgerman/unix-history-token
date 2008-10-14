@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -89,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/nexusvar.h>
 end_include
 
 begin_include
@@ -489,11 +489,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|type
 init|=
-name|nexus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)
@@ -805,7 +806,7 @@ name|sc
 operator|->
 name|sc_node
 operator|=
-name|nexus_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)
