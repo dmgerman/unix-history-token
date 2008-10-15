@@ -689,6 +689,10 @@ modifier|*
 name|td_fpop
 decl_stmt|;
 comment|/* (k) file referencing cdev under op */
+name|int
+name|td_dbgflags
+decl_stmt|;
+comment|/* (c) Userland debugger flags */
 define|#
 directive|define
 name|td_endzero
@@ -1145,12 +1149,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_XSIG
+name|TDF_UNUSED18
 value|0x00040000
 end_define
 
 begin_comment
-comment|/* Thread is exchanging signal under trace */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -1178,12 +1182,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_DBSUSPEND
+name|TDF_UNUSED21
 value|0x00200000
 end_define
 
 begin_comment
-comment|/* Thread is suspended by debugger */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -1283,6 +1287,32 @@ end_define
 
 begin_comment
 comment|/* AST-based MAC event pending. */
+end_comment
+
+begin_comment
+comment|/* Userland debug flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_SUSPEND
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Thread is suspended by debugger */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_XSIG
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Thread is exchanging signal under trace */
 end_comment
 
 begin_comment
