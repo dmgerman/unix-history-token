@@ -4415,8 +4415,13 @@ name|xenbus_running
 operator|=
 literal|1
 expr_stmt|;
-name|pause
+name|tsleep
 argument_list|(
+operator|&
+name|lbolt
+argument_list|,
+literal|0
+argument_list|,
 literal|"xenbus"
 argument_list|,
 name|hz
@@ -4572,7 +4577,7 @@ name|err
 return|;
 name|err
 operator|=
-name|kproc_create
+name|kthread_create
 argument_list|(
 name|xenwatch_thread
 argument_list|,
@@ -4603,7 +4608,7 @@ name|p_pid
 expr_stmt|;
 name|err
 operator|=
-name|kproc_create
+name|kthread_create
 argument_list|(
 name|xenbus_thread
 argument_list|,
