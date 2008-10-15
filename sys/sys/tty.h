@@ -136,6 +136,7 @@ name|int
 name|t_flags
 decl_stmt|;
 comment|/* (t) Terminal option flags. */
+comment|/* Keep flags in sync with db_show_tty and pstat(8). */
 define|#
 directive|define
 name|TF_NOPREFIX
