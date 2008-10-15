@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_pci.h>
 end_include
 
@@ -4111,6 +4117,20 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+comment|/* This is a fake device, so make sure there is no OF node for it */
+if|if
+condition|(
+name|ofw_bus_get_node
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+return|return
+name|ENXIO
+return|;
 name|device_set_desc
 argument_list|(
 name|dev
