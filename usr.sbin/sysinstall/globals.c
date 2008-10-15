@@ -84,6 +84,16 @@ comment|/* Are we restarting sysinstall? */
 end_comment
 
 begin_decl_stmt
+name|Boolean
+name|have_volumes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Media has more than one volume. */
+end_comment
+
+begin_decl_stmt
 name|Variable
 modifier|*
 name|VarHead
@@ -123,6 +133,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* Where to stick our status messages */
+end_comment
+
+begin_decl_stmt
+name|int
+name|low_volume
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Lowest volume number */
+end_comment
+
+begin_decl_stmt
+name|int
+name|high_volume
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Highest volume number */
 end_comment
 
 begin_decl_stmt

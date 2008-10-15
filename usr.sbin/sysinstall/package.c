@@ -155,6 +155,8 @@ argument_list|,
 name|tmp
 argument_list|,
 name|FALSE
+argument_list|,
+literal|0
 argument_list|)
 return|;
 else|else
