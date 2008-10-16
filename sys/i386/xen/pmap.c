@@ -5549,7 +5549,6 @@ name|allpmaps_lock
 argument_list|)
 expr_stmt|;
 comment|/* Wire in kernel global address entries. */
-comment|/* XXX copies current process, does not fill in MPPTDI */
 name|bcopy
 argument_list|(
 name|PTD
@@ -5662,23 +5661,6 @@ operator||
 name|PG_V
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SMP
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|MPPTDI
-index|]
-operator|=
-name|PTD
-index|[
-name|MPPTDI
-index|]
-expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -7018,20 +7000,6 @@ name|pm_pdir
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|MPPTDI
-index|]
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|pmap_qremove
 argument_list|(
 operator|(

@@ -620,12 +620,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|int
-name|gdtset
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|trap_info_t
 name|trap_table
@@ -5881,9 +5875,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SMP
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|XEN
+argument_list|)
 if|if
 condition|(
 name|mp_grab_cpu_hlt

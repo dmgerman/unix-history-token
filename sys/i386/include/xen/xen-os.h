@@ -161,7 +161,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|likely
+name|__predict_true
 argument_list|(
 name|gdtset
 argument_list|)
