@@ -337,13 +337,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|arp_allocated
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|arp_maxtries
 init|=
 literal|5
@@ -1023,9 +1016,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|arp_allocated
-operator|++
-expr_stmt|;
 comment|/* 		 * We are storing a route entry outside of radix tree. So, 		 * it can be found and accessed by other means than radix 		 * lookup. The routing code assumes that any rtentry detached 		 * from radix can be destroyed safely. To prevent this, we 		 * add an additional reference. 		 */
 name|RT_ADDREF
 argument_list|(
