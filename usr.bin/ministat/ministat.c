@@ -1832,6 +1832,11 @@ operator|->
 name|n
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 block|}
 name|ds
 operator|->
