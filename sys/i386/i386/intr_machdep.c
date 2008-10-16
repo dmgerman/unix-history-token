@@ -1118,6 +1118,9 @@ argument_list|(
 name|ie
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|XEN
 name|KASSERT
 argument_list|(
 name|error
@@ -1129,6 +1132,25 @@ literal|"bad stray interrupt"
 operator|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|log
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"bad stray interrupt %d"
+argument_list|,
+name|vector
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|critical_exit
 argument_list|()

@@ -258,6 +258,13 @@ begin_comment
 comment|/* LOG2(NBPDR) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NPGPTD_SHIFT
+value|9
+end_define
+
 begin_else
 else|#
 directive|else
@@ -280,6 +287,13 @@ end_define
 begin_comment
 comment|/* LOG2(NBPDR) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NPGPTD_SHIFT
+value|10
+end_define
 
 begin_endif
 endif|#

@@ -797,6 +797,9 @@ name|out
 goto|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|XEN
 if|if
 condition|(
 operator|(
@@ -899,6 +902,8 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|eva
 operator|=
 literal|0

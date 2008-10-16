@@ -621,7 +621,7 @@ end_function_decl
 
 begin_decl_stmt
 name|int
-name|gdt_set
+name|gdtset
 decl_stmt|;
 end_decl_stmt
 
@@ -10223,7 +10223,7 @@ name|r_gdt
 comment|/* unused */
 argument_list|)
 expr_stmt|;
-name|gdt_set
+name|gdtset
 operator|=
 literal|1
 expr_stmt|;
