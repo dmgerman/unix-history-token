@@ -382,6 +382,18 @@ name|UQ_MS_LEADING_BYTE
 block|}
 block|}
 block|,
+block|{
+name|USB_VENDOR_SONY
+block|,
+name|USB_PRODUCT_SONY_RF_RECEIVER
+block|,
+name|ANY
+block|,
+block|{
+name|UQ_MS_BAD_CLASS
+block|}
+block|}
+block|,
 comment|/* Devices which should be ignored by uhid */
 block|{
 name|USB_VENDOR_APC
