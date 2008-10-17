@@ -626,17 +626,6 @@ name|vmst
 operator|=
 name|vmst
 expr_stmt|;
-name|bzero
-argument_list|(
-name|vmst
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|vmst
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|vmst
 operator|->
 name|minidump
