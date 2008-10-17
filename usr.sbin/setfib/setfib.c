@@ -20,6 +20,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -50,10 +62,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -350,6 +369,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
