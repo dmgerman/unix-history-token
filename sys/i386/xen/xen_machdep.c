@@ -3823,8 +3823,6 @@ operator|,
 name|i
 operator|=
 name|l1_pages
-operator|-
-literal|1
 init|;
 name|i
 operator|<
