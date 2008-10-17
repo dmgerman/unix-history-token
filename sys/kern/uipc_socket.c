@@ -10227,6 +10227,12 @@ case|:
 case|case
 name|SO_NOSIGPIPE
 case|:
+case|case
+name|SO_NO_DDP
+case|:
+case|case
+name|SO_NO_OFFLOAD
+case|:
 name|error
 operator|=
 name|sooptcopyin
