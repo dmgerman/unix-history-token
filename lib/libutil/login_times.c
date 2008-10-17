@@ -331,7 +331,7 @@ decl_stmt|;
 comment|/* Make local copy and force lowercase to simplify parsing */
 name|p
 operator|=
-name|strncpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -340,16 +340,6 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-sizeof|sizeof
-name|buf
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 for|for
 control|(
