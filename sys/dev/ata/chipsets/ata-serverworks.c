@@ -372,7 +372,7 @@ name|ATA_HT1000_S1
 block|,
 literal|0x00
 block|,
-name|SWKS_100
+name|SWKS_MIO
 block|,
 literal|4
 block|,
@@ -1082,7 +1082,7 @@ name|dma
 operator|.
 name|max_iosize
 operator|=
-literal|126
+literal|64
 operator|*
 name|DEV_BSIZE
 expr_stmt|;

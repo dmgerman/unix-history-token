@@ -3249,7 +3249,7 @@ name|dma
 operator|.
 name|max_iosize
 operator|=
-literal|126
+literal|64
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
