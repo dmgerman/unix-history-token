@@ -9554,6 +9554,16 @@ name|mi_base
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 			 * XXX check for cache hit rate here 			 * 			 */
+name|q
+operator|->
+name|port
+operator|->
+name|ifp
+operator|->
+name|if_opackets
+operator|++
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -13282,6 +13292,11 @@ name|cpl
 argument_list|)
 operator|+
 name|ethpad
+expr_stmt|;
+name|ifp
+operator|->
+name|if_ipackets
+operator|++
 expr_stmt|;
 ifndef|#
 directive|ifndef
