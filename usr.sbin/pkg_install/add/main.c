@@ -1486,7 +1486,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* If no packages, yelp */
-elseif|else
 if|if
 condition|(
 operator|!
