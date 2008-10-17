@@ -4795,7 +4795,7 @@ block|}
 else|else
 name|error
 operator|=
-name|cr_canseesocket
+name|cr_canseeinpcb
 argument_list|(
 name|req
 operator|->
@@ -4804,8 +4804,6 @@ operator|->
 name|td_ucred
 argument_list|,
 name|inp
-operator|->
-name|inp_socket
 argument_list|)
 expr_stmt|;
 if|if
@@ -5335,7 +5333,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|cr_canseesocket
+name|cr_canseeinpcb
 argument_list|(
 name|req
 operator|->
@@ -5344,8 +5342,6 @@ operator|->
 name|td_ucred
 argument_list|,
 name|inp
-operator|->
-name|inp_socket
 argument_list|)
 expr_stmt|;
 if|if
@@ -5769,7 +5765,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|cr_canseesocket
+name|cr_canseeinpcb
 argument_list|(
 name|req
 operator|->
@@ -5778,8 +5774,6 @@ operator|->
 name|td_ucred
 argument_list|,
 name|inp
-operator|->
-name|inp_socket
 argument_list|)
 expr_stmt|;
 if|if

@@ -3032,7 +3032,7 @@ name|inp_gencnt
 operator|<=
 name|gencnt
 operator|&&
-name|cr_canseesocket
+name|cr_canseeinpcb
 argument_list|(
 name|req
 operator|->
@@ -3041,8 +3041,6 @@ operator|->
 name|td_ucred
 argument_list|,
 name|inp
-operator|->
-name|inp_socket
 argument_list|)
 operator|==
 literal|0
@@ -3454,7 +3452,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|cr_canseesocket
+name|cr_canseeinpcb
 argument_list|(
 name|req
 operator|->
@@ -3463,8 +3461,6 @@ operator|->
 name|td_ucred
 argument_list|,
 name|inp
-operator|->
-name|inp_socket
 argument_list|)
 expr_stmt|;
 if|if
