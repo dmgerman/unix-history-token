@@ -3172,6 +3172,8 @@ name|nkpt
 operator|=
 name|min
 argument_list|(
+name|min
+argument_list|(
 name|max
 argument_list|(
 operator|(
@@ -3190,6 +3192,15 @@ operator|*
 name|NPDEPG
 operator|-
 name|KPTDI
+argument_list|)
+argument_list|,
+operator|(
+name|HYPERVISOR_VIRT_START
+operator|-
+name|KERNBASE
+operator|)
+operator|>>
+name|PDRSHIFT
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3882,6 +3893,21 @@ operator|%
 name|NPDEPG
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|offset
+operator|+
+name|i
+operator|)
+operator|<<
+name|PDRSHIFT
+operator|)
+operator|==
+name|VM_MAX_KERNEL_ADDRESS
+condition|)
+break|break;
 comment|/* 		 * make sure that all the initial page table pages 		 * have been zeroed 		 */
 name|PT_SET_MA
 argument_list|(
