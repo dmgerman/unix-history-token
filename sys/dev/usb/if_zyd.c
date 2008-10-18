@@ -573,6 +573,13 @@ argument_list|,
 name|G200V2
 argument_list|)
 block|,
+name|ZYD_ZD1211_DEV
+argument_list|(
+name|ZYXEL
+argument_list|,
+name|G202
+argument_list|)
+block|,
 name|ZYD_ZD1211B_DEV
 argument_list|(
 name|ACCTON
