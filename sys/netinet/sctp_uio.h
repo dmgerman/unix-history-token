@@ -3307,6 +3307,9 @@ name|uint32_t
 name|mtu
 decl_stmt|;
 name|uint32_t
+name|peers_rwnd
+decl_stmt|;
+name|uint32_t
 name|refcnt
 decl_stmt|;
 name|uint16_t

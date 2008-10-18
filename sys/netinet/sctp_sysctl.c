@@ -2308,6 +2308,16 @@ name|smallest_mtu
 expr_stmt|;
 name|xstcb
 operator|.
+name|peers_rwnd
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|peers_rwnd
+expr_stmt|;
+name|xstcb
+operator|.
 name|refcnt
 operator|=
 name|stcb
