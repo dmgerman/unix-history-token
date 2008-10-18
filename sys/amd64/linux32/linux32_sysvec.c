@@ -4528,6 +4528,15 @@ operator|->
 name|pcb_flags
 operator||=
 name|PCB_FULLCTX
+operator||
+name|PCB_32BIT
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_flags
+operator|&=
+operator|~
+name|PCB_GS32BIT
 expr_stmt|;
 name|td
 operator|->
