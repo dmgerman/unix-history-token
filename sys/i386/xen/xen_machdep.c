@@ -3767,7 +3767,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|l1_pages
+literal|20
 condition|;
 name|i
 operator|++
@@ -3803,8 +3803,6 @@ block|{
 name|l1_pages
 operator|=
 name|i
-operator|-
-literal|1
 expr_stmt|;
 break|break;
 block|}
