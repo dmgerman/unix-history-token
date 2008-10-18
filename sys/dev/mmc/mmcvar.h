@@ -43,6 +43,8 @@ name|MMC_IVAR_CARD_TYPE
 block|,
 name|MMC_IVAR_BUS_WIDTH
 block|,
+name|MMC_IVAR_ERASE_SECTOR
+block|,
 comment|//    MMC_IVAR_,
 block|}
 enum|;
@@ -161,6 +163,17 @@ argument_list|(
 argument|bus_width
 argument_list|,
 argument|BUS_WIDTH
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|MMC_ACCESSOR
+argument_list|(
+argument|erase_sector
+argument_list|,
+argument|ERASE_SECTOR
 argument_list|,
 argument|int
 argument_list|)

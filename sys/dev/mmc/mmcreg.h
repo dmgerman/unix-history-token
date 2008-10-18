@@ -1162,6 +1162,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXT_CSD_ERASE_GRP_DEF
+value|175
+end_define
+
+begin_comment
+comment|/* R/W */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXT_CSD_BUS_WIDTH
 value|183
 end_define
@@ -1212,6 +1223,28 @@ end_define
 
 begin_comment
 comment|/* RO, 4 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_CSD_ERASE_TO_MULT
+value|223
+end_define
+
+begin_comment
+comment|/* RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_CSD_ERASE_GRP_SIZE
+value|224
+end_define
+
+begin_comment
+comment|/* RO */
 end_comment
 
 begin_comment
@@ -1606,9 +1639,8 @@ name|uint32_t
 name|wp_grp_size
 decl_stmt|;
 name|uint32_t
-name|sector_size
+name|erase_sector
 decl_stmt|;
-comment|/* Erase sector size! */
 name|uint64_t
 name|capacity
 decl_stmt|;
@@ -1666,6 +1698,44 @@ define|#
 directive|define
 name|SD_SCR_BUS_WIDTH_4
 value|(1<<2)
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mmc_sd_status
+block|{
+name|uint8_t
+name|bus_width
+decl_stmt|;
+name|uint8_t
+name|secured_mode
+decl_stmt|;
+name|uint16_t
+name|card_type
+decl_stmt|;
+name|uint16_t
+name|prot_area
+decl_stmt|;
+name|uint8_t
+name|speed_class
+decl_stmt|;
+name|uint8_t
+name|perf_move
+decl_stmt|;
+name|uint8_t
+name|au_size
+decl_stmt|;
+name|uint16_t
+name|erase_size
+decl_stmt|;
+name|uint8_t
+name|erase_timeout
+decl_stmt|;
+name|uint8_t
+name|erase_offset
+decl_stmt|;
 block|}
 struct|;
 end_struct
