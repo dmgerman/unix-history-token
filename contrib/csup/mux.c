@@ -3719,6 +3719,10 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+name|what
+operator|=
+literal|0
+expr_stmt|;
 name|again
 label|:
 name|id

@@ -2362,32 +2362,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|cur_coll
-operator|->
-name|co_options
-operator|&
-name|CO_CHECKOUTMODE
-operator|)
-condition|)
-block|{
-name|lprintf
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"Client only supports checkout mode\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
+comment|/*	if (!(cur_coll->co_options& CO_CHECKOUTMODE)) { 		lprintf(-1, "Client only supports checkout mode\n"); 		exit(1); 	}*/
 if|if
 condition|(
 operator|!
