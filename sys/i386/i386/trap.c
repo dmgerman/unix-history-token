@@ -566,19 +566,9 @@ comment|/* 15 unused */
 literal|""
 block|,
 comment|/* 16 unused */
-ifdef|#
-directive|ifdef
-name|XEN
-literal|"hypervisor callback"
-block|,
-comment|/* 17 T_HYPCALLBACK*/
-else|#
-directive|else
 literal|""
 block|,
 comment|/* 17 unused */
-endif|#
-directive|endif
 literal|"integer divide fault"
 block|,
 comment|/* 18 T_DIVIDE */
@@ -953,9 +943,6 @@ name|out
 goto|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|XEN
 if|if
 condition|(
 operator|(
@@ -1060,9 +1047,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* !XEN */
 name|eva
 operator|=
 literal|0
