@@ -11139,6 +11139,14 @@ decl_stmt|;
 comment|/* 	 * Group key allocation must be handled specially for 	 * parts that do not support multicast key cache search 	 * functionality.  For those parts the key id must match 	 * the h/w key index so lookups find the right key.  On 	 * parts w/ the key search facility we install the sender's 	 * mac address (with the high bit set) and let the hardware 	 * find the key w/o using the key id.  This is preferred as 	 * it permits us to support multiple users for adhoc and/or 	 * multi-station operation. 	 */
 if|if
 condition|(
+name|k
+operator|->
+name|wk_keyix
+operator|!=
+name|IEEE80211_KEYIX_NONE
+operator|||
+comment|/* global key */
+operator|(
 operator|(
 name|k
 operator|->
@@ -11151,6 +11159,7 @@ operator|!
 name|sc
 operator|->
 name|sc_mcastkey
+operator|)
 condition|)
 block|{
 if|if
