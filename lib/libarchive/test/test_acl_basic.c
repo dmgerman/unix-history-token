@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Exercise the system-independent portion of the ACL support.  * Check that archive_entry objects can save and restore ACL data  * and that pax archive can save and restore ACL data.  *  * This should work on all systems, regardless of whether local  * filesystems support ACLs or not.  */
+comment|/*  * Exercise the system-independent portion of the ACL support.  * Check that archive_entry objects can save and restore ACL data.  *  * This should work on all systems, regardless of whether local  * filesystems support ACLs or not.  */
 end_comment
 
 begin_struct
@@ -52,6 +52,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|acl_t
 name|acls0
@@ -98,6 +99,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|acl_t
 name|acls1
@@ -159,6 +161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|acl_t
 name|acls2
