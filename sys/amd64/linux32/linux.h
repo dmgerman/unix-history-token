@@ -338,6 +338,20 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|l_int
+name|l_timer_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|l_int
+name|l_mqd_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 block|{
 name|l_int
@@ -1624,7 +1638,8 @@ name|LINUX_SI_PAD_SIZE
 value|((LINUX_SI_MAX_SIZE/sizeof(l_int)) - 3)
 end_define
 
-begin_union
+begin_typedef
+typedef|typedef
 union|union
 name|l_sigval
 block|{
@@ -1635,8 +1650,9 @@ name|l_uintptr_t
 name|sival_ptr
 decl_stmt|;
 block|}
-union|;
-end_union
+name|l_sigval_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -1665,7 +1681,7 @@ block|{
 name|l_pid_t
 name|_pid
 decl_stmt|;
-name|l_uid16_t
+name|l_uid_t
 name|_uid
 decl_stmt|;
 block|}
@@ -1674,11 +1690,31 @@ name|_kill
 struct|;
 struct|struct
 block|{
-name|l_uint
-name|_timer1
+name|l_timer_t
+name|_tid
 decl_stmt|;
-name|l_uint
-name|_timer2
+name|l_int
+name|_overrun
+decl_stmt|;
+name|char
+name|_pad
+index|[
+sizeof|sizeof
+argument_list|(
+name|l_uid_t
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|l_int
+argument_list|)
+index|]
+decl_stmt|;
+name|l_sigval_t
+name|_sigval
+decl_stmt|;
+name|l_int
+name|_sys_private
 decl_stmt|;
 block|}
 name|__packed
@@ -1690,12 +1726,11 @@ name|l_pid_t
 name|_pid
 decl_stmt|;
 comment|/* sender's pid */
-name|l_uid16_t
+name|l_uid_t
 name|_uid
 decl_stmt|;
 comment|/* sender's uid */
-name|union
-name|l_sigval
+name|l_sigval_t
 name|_sigval
 decl_stmt|;
 block|}
@@ -1708,7 +1743,7 @@ name|l_pid_t
 name|_pid
 decl_stmt|;
 comment|/* which child */
-name|l_uid16_t
+name|l_uid_t
 name|_uid
 decl_stmt|;
 comment|/* sender's uid */
@@ -1738,7 +1773,7 @@ name|_sigfault
 struct|;
 struct|struct
 block|{
-name|l_int
+name|l_long
 name|_band
 decl_stmt|;
 comment|/* POLL_IN,POLL_OUT,POLL_MSG */
@@ -1770,6 +1805,27 @@ define|#
 directive|define
 name|lsi_uid
 value|_sifields._kill._uid
+end_define
+
+begin_define
+define|#
+directive|define
+name|lsi_tid
+value|_sifields._timer._tid
+end_define
+
+begin_define
+define|#
+directive|define
+name|lsi_overrun
+value|_sifields._timer._overrun
+end_define
+
+begin_define
+define|#
+directive|define
+name|lsi_sys_private
+value|_sifields._timer._sys_private
 end_define
 
 begin_define
@@ -3651,20 +3707,6 @@ directive|define
 name|LINUX_CLOCK_MONOTONIC_HR
 value|5
 end_define
-
-begin_typedef
-typedef|typedef
-name|int
-name|l_timer_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|l_mqd_t
-typedef|;
-end_typedef
 
 begin_define
 define|#
