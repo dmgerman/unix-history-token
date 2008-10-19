@@ -456,8 +456,13 @@ argument_list|(
 name|SAL_INFO_CMC
 argument_list|)
 expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
 name|ap_awake
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
