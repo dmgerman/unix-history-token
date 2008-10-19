@@ -96,28 +96,6 @@ begin_comment
 comment|/* alignment fault */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|T_HYPCALLBACK
-value|17
-end_define
-
-begin_comment
-comment|/* hypervisor upcall */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
