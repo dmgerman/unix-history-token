@@ -64,6 +64,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|u_int
+name|xen_rcr2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|xen_load_cr3
 parameter_list|(
@@ -1275,6 +1285,17 @@ block|{
 name|u_int
 name|data
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XEN
+return|return
+operator|(
+name|xen_rcr2
+argument_list|()
+operator|)
+return|;
+endif|#
+directive|endif
 asm|__asm __volatile("movl %%cr2,%0" : "=r" (data));
 return|return
 operator|(
