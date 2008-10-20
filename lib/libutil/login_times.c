@@ -249,7 +249,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ptr
+operator|)
 return|;
 block|}
 end_function
@@ -527,7 +529,9 @@ name|m
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|t
+operator|)
 return|;
 block|}
 end_function
@@ -684,7 +688,9 @@ block|}
 block|}
 block|}
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -704,6 +710,7 @@ name|t
 parameter_list|)
 block|{
 return|return
+operator|(
 name|in_ltm
 argument_list|(
 name|ltm
@@ -715,6 +722,7 @@ argument_list|)
 argument_list|,
 name|t
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -773,15 +781,19 @@ name|t
 argument_list|)
 condition|)
 return|return
+operator|(
 name|i
+operator|)
 return|;
 name|i
 operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -801,6 +813,7 @@ name|t
 parameter_list|)
 block|{
 return|return
+operator|(
 name|in_ltms
 argument_list|(
 name|ltm
@@ -812,6 +825,7 @@ argument_list|)
 argument_list|,
 name|t
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
