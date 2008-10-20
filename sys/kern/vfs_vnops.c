@@ -3972,6 +3972,26 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_VFS_LOCKS
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_holdcnt
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"vn_lock %p: zero hold count"
+operator|,
+name|vp
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|VOP_LOCK1
