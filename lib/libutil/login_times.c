@@ -329,8 +329,6 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* Make local copy and force lowercase to simplify parsing */
-name|p
-operator|=
 name|strlcpy
 argument_list|(
 name|buf
@@ -370,6 +368,10 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|buf
 expr_stmt|;
 while|while
 condition|(
