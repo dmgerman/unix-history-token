@@ -1661,6 +1661,8 @@ operator|=
 name|LK_SHARED
 operator||
 name|LK_INTERLOCK
+operator||
+name|LK_NOWAIT
 expr_stmt|;
 if|if
 condition|(
