@@ -733,6 +733,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|setclasscpumask
+parameter_list|(
+name|login_cap_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|setusercontext
 parameter_list|(
