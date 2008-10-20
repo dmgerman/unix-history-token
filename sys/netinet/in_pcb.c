@@ -2297,7 +2297,7 @@ condition|)
 name|V_ipport_tcpallocs
 operator|++
 expr_stmt|;
-comment|/* 		 * Simple check to ensure all ports are not used up causing 		 * a deadlock here. 		 */
+comment|/* 		 * Instead of having two loops further down counting up or down 		 * make sure that first is always<= last and go with only one 		 * code path implementing all logic. 		 */
 if|if
 condition|(
 name|first
