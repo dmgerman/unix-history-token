@@ -266,6 +266,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|FLOPEN_CAN_LOCK_AGAINST_SELF
+end_if
+
 begin_comment
 comment|/*  * Test that flopen() can lock against itself  */
 end_comment
@@ -379,6 +385,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Test that flopen() can lock against other processes  */
@@ -561,12 +572,17 @@ block|,
 name|test_flopen_open
 block|}
 block|,
+if|#
+directive|if
+name|FLOPEN_CAN_LOCK_AGAINST_SELF
 block|{
 literal|"flopen_lock_self"
 block|,
 name|test_flopen_lock_self
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"flopen_lock_other"
 block|,
