@@ -972,7 +972,9 @@ block|}
 block|}
 block|}
 return|return
+operator|(
 name|np
+operator|)
 return|;
 block|}
 end_function
@@ -1542,7 +1544,9 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1760,7 +1764,9 @@ name|lc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -1878,7 +1884,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|mymask
+operator|)
 return|;
 block|}
 end_function
@@ -2237,8 +2245,10 @@ name|llc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -2282,8 +2292,10 @@ name|llc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -2360,8 +2372,10 @@ name|label_string
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -2414,8 +2428,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -2456,8 +2472,10 @@ name|llc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|mymask
@@ -2523,8 +2541,10 @@ name|uid
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* Paranoia again */
 block|}
@@ -2575,7 +2595,9 @@ name|mymask
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
