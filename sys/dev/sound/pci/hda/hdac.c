@@ -9079,7 +9079,7 @@ decl_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"Probing codec %d...\n"
+literal|"Probing codec #%d...\n"
 argument|, cad);
 argument_list|)
 empty_stmt|;
@@ -9186,7 +9186,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"<HDA Codec #%d: %s>\n"
+literal|"HDA Codec #%d: %s\n"
 argument_list|,
 name|cad
 argument_list|,
@@ -9199,7 +9199,7 @@ expr_stmt|;
 name|HDA_BOOTVERBOSE
 argument_list|(
 argument|device_printf(sc->dev,
-literal|"<HDA Codec ID: 0x%08x>\n"
+literal|" HDA Codec ID: 0x%08x\n"
 argument|, 		    hdac_codec_id(codec)); 		device_printf(sc->dev,
 literal|"       Vendor: 0x%04x\n"
 argument|, 		    codec->vendor_id); 		device_printf(sc->dev,
@@ -19447,7 +19447,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"<HDA Driver Revision: %s>\n"
+literal|"HDA Driver Revision: %s\n"
 argument_list|,
 name|HDA_DRV_TEST_REV
 argument_list|)
