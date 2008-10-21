@@ -169,6 +169,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|amd_pminfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|via_feature_rng
 decl_stmt|;
 end_decl_stmt
