@@ -15659,6 +15659,14 @@ literal|"PCI hot-plug controller"
 block|}
 block|,
 block|{
+name|PCIC_BASEPERIPH
+block|,
+name|PCIS_BASEPERIPH_SDHC
+block|,
+literal|"SD host controller"
+block|}
+block|,
+block|{
 name|PCIC_INPUTDEV
 block|,
 operator|-
