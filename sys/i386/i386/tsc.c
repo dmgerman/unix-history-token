@@ -164,7 +164,18 @@ name|tsc_is_invariant
 argument_list|,
 literal|0
 argument_list|,
-literal|"Indicates the TSC is P-state invariant"
+literal|"Indicates whether the TSC is P-state invariant"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.timecounter.invariant_tsc"
+argument_list|,
+operator|&
+name|tsc_is_invariant
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -421,11 +432,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Register to find out about changes in CPU frequency. */
-if|if
-condition|(
-operator|!
-name|tsc_is_invariant
-condition|)
 name|tsc_pre_tag
 operator|=
 name|EVENTHANDLER_REGISTER
