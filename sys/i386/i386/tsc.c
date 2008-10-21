@@ -126,6 +126,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|tsc_is_invariant
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|u_int
 name|tsc_present
 decl_stmt|;
@@ -141,6 +147,27 @@ decl_stmt|,
 name|tsc_post_tag
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_timecounter
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|invariant_tsc
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|tsc_is_invariant
+argument_list|,
+literal|0
+argument_list|,
+literal|"Indicates the TSC is P-state invariant"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -394,6 +421,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Register to find out about changes in CPU frequency. */
+if|if
+condition|(
+operator|!
+name|tsc_is_invariant
+condition|)
 name|tsc_pre_tag
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -716,6 +748,8 @@ name|timecounter
 operator|!=
 operator|&
 name|tsc_timecounter
+operator|||
+name|tsc_is_invariant
 condition|)
 return|return;
 name|printf
@@ -755,12 +789,14 @@ name|int
 name|status
 parameter_list|)
 block|{
-comment|/* If there was an error during the transition, don't do anything. */
+comment|/* 	 * If there was an error during the transition or 	 * TSC is P-state invariant, don't do anything. 	 */
 if|if
 condition|(
 name|status
 operator|!=
 literal|0
+operator|||
+name|tsc_is_invariant
 condition|)
 return|return;
 comment|/* Total setting for this level gives the new frequency in MHz. */
