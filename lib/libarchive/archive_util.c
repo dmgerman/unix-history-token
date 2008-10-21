@@ -517,6 +517,11 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error_number
@@ -610,11 +615,6 @@ operator|->
 name|error_string
 operator|.
 name|s
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
 expr_stmt|;
 block|}
 end_function
