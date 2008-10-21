@@ -334,6 +334,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XEN
+end_ifndef
+
 begin_function_decl
 name|void
 name|ipi_bitmap_handler
@@ -344,6 +350,11 @@ name|frame
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|u_int
