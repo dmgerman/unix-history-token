@@ -17,6 +17,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * The reference file for this has been manually tweaked so that:  *   * file2 has length-at-end but file1 does not  *   * file2 has an invalid CRC  */
+end_comment
+
 begin_macro
 name|DEFINE_TEST
 argument_list|(
@@ -292,11 +296,16 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|failure
+argument_list|(
+literal|"file2 has length-at-end, so we shouldn't see a valid size"
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|18
+literal|0
 argument_list|,
-name|archive_entry_size
+name|archive_entry_size_is_set
 argument_list|(
 name|ae
 argument_list|)
