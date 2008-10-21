@@ -359,17 +359,6 @@ name|__CC_SUPPORTS_DYNAMIC_ARRAY_INIT
 value|1
 end_define
 
-begin_comment
-comment|/* XXX: sys/dev/mpt/mpilib/mpi_type.h uses it, someone should review it */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__CC_INT_IS_32BIT
-value|1
-end_define
-
 begin_endif
 endif|#
 directive|endif
