@@ -422,37 +422,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|preemptable
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|preempt_disable
-parameter_list|()
-value|(preemptable = 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|preempt_enable
-parameter_list|()
-value|(preemptable = 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|preempt_enable_no_resched
-parameter_list|()
-value|(preemptable = 1)
-end_define
-
 begin_comment
 comment|/*  * STI/CLI equivalents. These basically set and clear the virtual  * event_enable flag in teh shared_info structure. Note that when  * the enable bit is set, there may be pending events to be handled.  * We may therefore call into do_hypervisor_callback() directly.  */
 end_comment
@@ -463,7 +432,7 @@ directive|define
 name|__cli
 parameter_list|()
 define|\
-value|do {                                                                    \         vcpu_info_t *_vcpu;                                             \         preempt_disable();                                              \         _vcpu =&HYPERVISOR_shared_info->vcpu_info[smp_processor_id()]; \         _vcpu->evtchn_upcall_mask = 1;                                  \         preempt_enable_no_resched();                                    \         barrier();                                                      \ } while (0)
+value|do {                                                                    \         vcpu_info_t *_vcpu;                                             \         _vcpu =&HYPERVISOR_shared_info->vcpu_info[smp_processor_id()]; \         _vcpu->evtchn_upcall_mask = 1;                                  \         barrier();                                                      \ } while (0)
 end_define
 
 begin_define
@@ -472,20 +441,9 @@ directive|define
 name|__sti
 parameter_list|()
 define|\
-value|do {                                                                    \         vcpu_info_t *_vcpu;                                             \         barrier();                                                      \         preempt_disable();                                              \         _vcpu =&HYPERVISOR_shared_info->vcpu_info[smp_processor_id()]; \         _vcpu->evtchn_upcall_mask = 0;                                  \         barrier();
+value|do {                                                                    \         vcpu_info_t *_vcpu;                                             \         barrier();                                                      \         _vcpu =&HYPERVISOR_shared_info->vcpu_info[smp_processor_id()]; \         _vcpu->evtchn_upcall_mask = 0;                                  \         barrier();
 comment|/* unmask then check (avoid races) */
-value|\         if ( unlikely(_vcpu->evtchn_upcall_pending) )                   \                 force_evtchn_callback();                                \         preempt_enable();                                               \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__save_flags
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|do {                                                                          \     vcpu_info_t *vcpu;                                                        \     vcpu = HYPERVISOR_shared_info->vcpu_info[smp_processor_id()];             \     (x) = _vcpu->evtchn_upcall_mask;                                          \ } while (0)
+value|\         if ( unlikely(_vcpu->evtchn_upcall_pending) )                   \                 force_evtchn_callback();                                \ } while (0)
 end_define
 
 begin_define
@@ -496,9 +454,9 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {                                                                    \         vcpu_info_t *_vcpu;                                             \         barrier();                                                      \         preempt_disable();                                              \         _vcpu =&HYPERVISOR_shared_info->vcpu_info[smp_processor_id()]; \         if ((_vcpu->evtchn_upcall_mask = (x)) == 0) {                   \                 barrier();
+value|do {                                                                    \         vcpu_info_t *_vcpu;                                             \         barrier();                                                      \         _vcpu =&HYPERVISOR_shared_info->vcpu_info[smp_processor_id()]; \         if ((_vcpu->evtchn_upcall_mask = (x)) == 0) {                   \                 barrier();
 comment|/* unmask then check (avoid races) */
-value|\                 if ( unlikely(_vcpu->evtchn_upcall_pending) )           \                         force_evtchn_callback();                        \                 preempt_enable();                                       \         } else                                                          \                 preempt_enable_no_resched();                            \ } while (0)
+value|\                 if ( unlikely(_vcpu->evtchn_upcall_pending) )           \                         force_evtchn_callback();                        \         } 								\ } while (0)
 end_define
 
 begin_comment
