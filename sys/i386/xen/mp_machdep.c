@@ -712,6 +712,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|pmap_lazyfix_action
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|struct
 name|cpu_group
@@ -1200,7 +1210,11 @@ parameter_list|,
 name|uintptr_t
 name|b
 parameter_list|)
-block|{ 	 }
+block|{
+name|smp_rendezvous_action
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1214,7 +1228,11 @@ parameter_list|,
 name|uintptr_t
 name|b
 parameter_list|)
-block|{ 	 }
+block|{
+name|xen_tlb_flush
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1228,7 +1246,13 @@ parameter_list|,
 name|uintptr_t
 name|b
 parameter_list|)
-block|{ 	 }
+block|{
+name|xen_invlpg
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1242,7 +1266,41 @@ parameter_list|,
 name|uintptr_t
 name|b
 parameter_list|)
-block|{ 	 }
+block|{
+name|vm_offset_t
+name|start
+init|=
+operator|(
+name|vm_offset_t
+operator|)
+name|a
+decl_stmt|;
+name|vm_offset_t
+name|end
+init|=
+operator|(
+name|vm_offset_t
+operator|)
+name|b
+decl_stmt|;
+while|while
+condition|(
+name|start
+operator|<
+name|end
+condition|)
+block|{
+name|xen_invlpg
+argument_list|(
+name|start
+argument_list|)
+expr_stmt|;
+name|start
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+block|}
+block|}
 end_function
 
 begin_function
@@ -1256,7 +1314,11 @@ parameter_list|,
 name|uintptr_t
 name|b
 parameter_list|)
-block|{ 	 }
+block|{
+name|wbinvd
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1270,7 +1332,11 @@ parameter_list|,
 name|uintptr_t
 name|b
 parameter_list|)
-block|{ 	 }
+block|{
+name|pmap_lazyfix_action
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1284,7 +1350,7 @@ parameter_list|,
 name|uintptr_t
 name|b
 parameter_list|)
-block|{ 	 }
+block|{  	 }
 end_function
 
 begin_decl_stmt
@@ -2438,6 +2504,11 @@ argument_list|)
 expr_stmt|;
 comment|/* set up temporary P==V mapping for AP boot */
 comment|/* XXX this is a hack, we should boot the AP on its own stack/PTD */
+name|xen_smp_intr_init
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* start each AP */
 for|for
 control|(
@@ -4201,57 +4272,6 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|ipi_bitmap_handler
-parameter_list|(
-name|struct
-name|trapframe
-name|frame
-parameter_list|)
-block|{
-name|int
-name|cpu
-init|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-decl_stmt|;
-name|u_int
-name|ipi_bitmap
-decl_stmt|;
-name|ipi_bitmap
-operator|=
-name|atomic_readandclear_int
-argument_list|(
-operator|&
-name|cpu_ipi_pending
-index|[
-name|cpu
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ipi_bitmap
-operator|&
-operator|(
-literal|1
-operator|<<
-name|IPI_PREEMPT
-operator|)
-condition|)
-block|{
-name|sched_preempt
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_comment
 comment|/*  * send an IPI to a set of cpus.  */
 end_comment
@@ -4421,6 +4441,15 @@ name|old_pending
 condition|)
 continue|continue;
 block|}
+name|call_data
+operator|->
+name|func
+operator|=
+name|ipi_vectors
+index|[
+name|ipi
+index|]
+expr_stmt|;
 name|ipi_pcpu
 argument_list|(
 name|cpu
