@@ -468,7 +468,7 @@ argument_list|,
 name|getc_inject
 argument_list|)
 condition|)
-comment|/* buffer is inaccessable */
+comment|/* buffer is inaccessible */
 return|return
 operator|(
 literal|0
