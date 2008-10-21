@@ -459,6 +459,21 @@ block|{
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|ttyhook_hashook
+argument_list|(
+name|tp
+argument_list|,
+name|getc_inject
+argument_list|)
+condition|)
+comment|/* buffer is inaccessable */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 while|while
 condition|(
 name|ttyoutq_bytesused
