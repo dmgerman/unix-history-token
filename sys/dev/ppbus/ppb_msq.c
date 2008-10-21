@@ -132,6 +132,8 @@ name|int
 name|index
 decl_stmt|,
 name|epp
+decl_stmt|,
+name|mode
 decl_stmt|;
 name|struct
 name|ppb_xfer
@@ -175,12 +177,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* retrieve the device operating mode */
-switch|switch
-condition|(
+name|mode
+operator|=
 name|ppb_get_mode
 argument_list|(
 name|bus
 argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|mode
 condition|)
 block|{
 case|case
@@ -265,8 +271,6 @@ literal|"%s: unknown mode (%d)"
 argument_list|,
 name|__func__
 argument_list|,
-name|ppbdev
-operator|->
 name|mode
 argument_list|)
 expr_stmt|;

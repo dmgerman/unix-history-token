@@ -244,15 +244,8 @@ case|case
 name|PPB_NOINTR
 case|:
 comment|/* wait 10 ms */
-name|tsleep
+name|pause
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|bus
-argument_list|,
-name|PPBPRI
-argument_list|,
 literal|"ppbpoll"
 argument_list|,
 name|hz

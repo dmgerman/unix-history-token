@@ -1632,13 +1632,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: can't connect to the drive\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"can't connect to the drive\n"
 argument_list|)
 expr_stmt|;
 comment|/* disconnect and release the bus */
@@ -1703,13 +1703,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: can't disconnect from the drive\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"can't disconnect from the drive\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2436,13 +2436,13 @@ argument_list|,
 name|epp17_outstr_body
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: EPP mode\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"EPP mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2471,13 +2471,13 @@ argument_list|,
 name|spp_outbyte_submicroseq
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: PS2 mode\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"PS2 mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2508,13 +2508,13 @@ argument_list|,
 name|spp_outbyte_submicroseq
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: NIBBLE mode\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"NIBBLE mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
