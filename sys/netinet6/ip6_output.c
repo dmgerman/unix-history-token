@@ -11179,6 +11179,8 @@ init|;
 name|control
 operator|->
 name|m_len
+operator|>
+literal|0
 condition|;
 name|control
 operator|->
