@@ -1355,6 +1355,14 @@ literal|"telephony"
 block|}
 block|,
 block|{
+name|PCIC_MULTIMEDIA
+block|,
+name|PCIS_MULTIMEDIA_HDA
+block|,
+literal|"HDA"
+block|}
+block|,
+block|{
 name|PCIC_MEMORY
 block|,
 operator|-
