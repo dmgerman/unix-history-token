@@ -1609,7 +1609,7 @@ decl_stmt|;
 name|uint16_t
 name|tag
 decl_stmt|;
-comment|/* Allow dumping to a swap partition only. */
+comment|/* 	 * Allow dumping to a swap partition or a partition that 	 * has no type. 	 */
 name|table
 operator|=
 operator|(
@@ -1643,6 +1643,10 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
+name|tag
+operator|==
+literal|0
+operator|||
 name|tag
 operator|==
 name|VTOC_TAG_FREEBSD_SWAP
