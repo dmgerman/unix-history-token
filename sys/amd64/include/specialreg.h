@@ -830,7 +830,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|((((id)& CPUID_MODEL)>> 4) | \     ((((id)& CPUID_FAMILY)>= 0x600) ? \     (((id)& CPUID_EXT_MODEL)>> 12) : 0))
+value|((((id)& CPUID_MODEL)>> 4) | \     (((id)& CPUID_EXT_MODEL)>> 12))
 end_define
 
 begin_define
@@ -841,7 +841,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|((((id)& CPUID_FAMILY)>> 8) + \     ((((id)& CPUID_FAMILY) == 0xf00) ? \     (((id)& CPUID_EXT_FAMILY)>> 20) : 0))
+value|((((id)& CPUID_FAMILY)>> 8) + \     (((id)& CPUID_EXT_FAMILY)>> 20))
 end_define
 
 begin_comment
