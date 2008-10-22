@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -796,7 +802,11 @@ name|cred
 operator|->
 name|cr_label
 argument_list|,
-name|solabel
+name|so
+operator|->
+name|so_cred
+operator|->
+name|cr_label
 argument_list|)
 expr_stmt|;
 return|return
