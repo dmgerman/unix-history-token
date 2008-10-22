@@ -3156,7 +3156,7 @@ operator|)
 operator|!=
 literal|0
 operator|||
-name|AMD64_CPU_FAMILY
+name|I386_CPU_FAMILY
 argument_list|(
 name|cpu_id
 argument_list|)
