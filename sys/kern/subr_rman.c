@@ -3814,6 +3814,14 @@ name|uintptr_t
 operator|)
 name|rm
 expr_stmt|;
+if|if
+condition|(
+name|rm
+operator|->
+name|rm_descr
+operator|!=
+name|NULL
+condition|)
 name|strlcpy
 argument_list|(
 name|urm
