@@ -568,7 +568,6 @@ name|mib
 argument_list|,
 literal|2
 argument_list|,
-operator|&
 name|q
 argument_list|,
 operator|&
