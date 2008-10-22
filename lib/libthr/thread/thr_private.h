@@ -453,7 +453,7 @@ name|c_waiters
 decl_stmt|;
 specifier|volatile
 name|int
-name|c_wakeups
+name|c_broadcast
 decl_stmt|;
 name|int
 name|c_pshared
