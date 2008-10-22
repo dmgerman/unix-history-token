@@ -3137,6 +3137,7 @@ operator|!
 name|tsc_is_invariant
 operator|&&
 operator|(
+operator|(
 name|strcmp
 argument_list|(
 name|cpu_vendor
@@ -3153,6 +3154,7 @@ name|AMDPM_TSC_INVARIANT
 operator|)
 operator|!=
 literal|0
+operator|)
 operator|||
 name|I386_CPU_FAMILY
 argument_list|(
@@ -3162,7 +3164,6 @@ operator|>=
 literal|0x10
 operator|)
 condition|)
-block|)
 block|{
 name|tsc_is_invariant
 operator|=
@@ -3319,9 +3320,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -3393,9 +3391,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_elseif
-
-begin_if
 if|if
 condition|(
 name|strcmp
@@ -3410,13 +3405,7 @@ condition|)
 name|print_via_padlock_info
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* Avoid ugly blank lines: only print newline when we have to. */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|*
@@ -3429,18 +3418,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 operator|!
 name|bootverbose
 condition|)
 return|return;
-end_if
-
-begin_if
 if|if
 condition|(
 name|strcmp
@@ -3494,17 +3477,15 @@ condition|)
 name|print_transmeta_info
 argument_list|()
 expr_stmt|;
-end_if
+block|}
+end_function
 
-begin_macro
-unit|}  void
+begin_function
+name|void
 name|panicifcpuunsupported
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3601,7 +3582,7 @@ default|default:
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
