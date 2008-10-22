@@ -3051,7 +3051,9 @@ argument_list|)
 expr_stmt|;
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"SMC registers CR1=0x%x"
 argument_list|,
@@ -4286,7 +4288,9 @@ block|{
 comment|/* dump of registers */
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"0x%x - "
 argument_list|,
@@ -4482,7 +4486,9 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"W83757 compatible mode\n"
 argument_list|)
@@ -4512,7 +4518,9 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"not in parallel port mode\n"
 argument_list|)
@@ -4544,7 +4552,9 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"EPP SPP\n"
 argument_list|)
@@ -4571,7 +4581,9 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"ECP SPP\n"
 argument_list|)
@@ -4606,7 +4618,9 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"ECP+EPP SPP\n"
 argument_list|)
@@ -4705,7 +4719,9 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"ECP+EPP\n"
 argument_list|)
@@ -4737,7 +4753,9 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"ECP\n"
 argument_list|)
@@ -4765,7 +4783,9 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|dev
+name|ppc
+operator|->
+name|ppc_dev
 argument_list|,
 literal|"EPP SPP\n"
 argument_list|)
