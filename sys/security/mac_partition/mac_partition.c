@@ -882,7 +882,11 @@ name|cred
 operator|->
 name|cr_label
 argument_list|,
-name|socketlabel
+name|socket
+operator|->
+name|so_cred
+operator|->
+name|cr_label
 argument_list|)
 expr_stmt|;
 return|return
