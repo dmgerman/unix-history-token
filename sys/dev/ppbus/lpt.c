@@ -1465,6 +1465,10 @@ name|cdev_bypass
 operator|->
 name|si_drv2
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|LP_BYPASS
 expr_stmt|;
 return|return
@@ -1825,6 +1829,9 @@ name|sc
 operator|->
 name|sc_flags
 operator|=
+operator|(
+name|uintptr_t
+operator|)
 name|dev
 operator|->
 name|si_drv2

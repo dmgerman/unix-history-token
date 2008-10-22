@@ -578,6 +578,8 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"Failed to create character device\n"
 argument_list|)
 expr_stmt|;
@@ -1655,6 +1657,14 @@ init|=
 name|ppi
 operator|->
 name|ppi_device
+decl_stmt|;
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
+argument_list|(
+name|ppidev
+argument_list|)
 decl_stmt|;
 name|int
 name|error
