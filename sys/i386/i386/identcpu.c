@@ -3131,12 +3131,12 @@ operator|&=
 operator|~
 name|CPUID_HTT
 expr_stmt|;
+comment|/* 			 * If this CPU supports P-state invariant TSC then 			 * mention the capability. 			 */
 if|if
 condition|(
 operator|!
 name|tsc_is_invariant
 operator|&&
-operator|(
 operator|(
 name|strcmp
 argument_list|(
@@ -3148,20 +3148,25 @@ operator|==
 literal|0
 operator|&&
 operator|(
+operator|(
 name|amd_pminfo
 operator|&
 name|AMDPM_TSC_INVARIANT
 operator|)
 operator|!=
 literal|0
-operator|)
 operator|||
-name|I386_CPU_FAMILY
+name|AMD64_CPU_FAMILY
 argument_list|(
 name|cpu_id
 argument_list|)
 operator|>=
 literal|0x10
+operator|||
+name|cpu_id
+operator|==
+literal|0x60fb2
+operator|)
 operator|)
 condition|)
 block|{
@@ -3171,7 +3176,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n  P-state invariant TSC"
+literal|"\n  TSC: P-state invariant"
 argument_list|)
 expr_stmt|;
 block|}
