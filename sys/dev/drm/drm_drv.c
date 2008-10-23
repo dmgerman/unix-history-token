@@ -2805,7 +2805,7 @@ name|dev
 operator|=
 name|DRIVER_SOFTC
 argument_list|(
-name|minor
+name|dev2unit
 argument_list|(
 name|kdev
 argument_list|)

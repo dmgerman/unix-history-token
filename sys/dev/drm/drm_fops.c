@@ -64,7 +64,7 @@ decl_stmt|;
 name|int
 name|m
 init|=
-name|minor
+name|dev2unit
 argument_list|(
 name|kdev
 argument_list|)
