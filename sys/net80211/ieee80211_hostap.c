@@ -3785,7 +3785,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|FREE
 argument_list|(
 name|ni
 operator|->
@@ -8646,7 +8646,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|FREE
 argument_list|(
 name|ni
 operator|->

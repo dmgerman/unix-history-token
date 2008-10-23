@@ -1112,10 +1112,14 @@ literal|14
 index|]
 decl_stmt|;
 comment|/* sufficient for 32 bits */
-name|ctx
-operator|=
-name|malloc
+name|MALLOC
 argument_list|(
+name|ctx
+argument_list|,
+expr|struct
+name|sysctl_ctx_list
+operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1635,7 +1639,7 @@ operator|->
 name|iv_sysctl
 argument_list|)
 expr_stmt|;
-name|free
+name|FREE
 argument_list|(
 name|vap
 operator|->

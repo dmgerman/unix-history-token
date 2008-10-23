@@ -426,6 +426,41 @@ comment|/* for INET6 */
 end_comment
 
 begin_comment
+comment|/*  * Deprecated macro versions of not-quite-malloc() and free().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MALLOC
+parameter_list|(
+name|space
+parameter_list|,
+name|cast
+parameter_list|,
+name|size
+parameter_list|,
+name|type
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|((space) = (cast)malloc((u_long)(size), (type), (flags)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREE
+parameter_list|(
+name|addr
+parameter_list|,
+name|type
+parameter_list|)
+value|free((addr), (type))
+end_define
+
+begin_comment
 comment|/*  * XXX this should be declared in<sys/uio.h>, but that tends to fail  * because<sys/uio.h> is included in a header before the source file  * has a chance to include<sys/malloc.h> to get MALLOC_DECLARE() defined.  */
 end_comment
 
