@@ -760,7 +760,7 @@ name|sun_family
 operator|=
 name|PF_LOCAL
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|serv_addr
 operator|.
