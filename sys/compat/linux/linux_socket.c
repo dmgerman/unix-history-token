@@ -445,14 +445,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|MALLOC
-argument_list|(
 name|kosa
-argument_list|,
-expr|struct
-name|osockaddr
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|alloclen
 argument_list|,
 name|mtype
@@ -664,7 +660,7 @@ operator|)
 return|;
 name|out
 label|:
-name|FREE
+name|free
 argument_list|(
 name|kosa
 argument_list|,
@@ -1762,7 +1758,7 @@ if|if
 condition|(
 name|to
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|to
 argument_list|,

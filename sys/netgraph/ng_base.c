@@ -1043,7 +1043,7 @@ parameter_list|(
 name|hook
 parameter_list|)
 define|\
-value|MALLOC(hook, hook_p, sizeof(*hook), M_NETGRAPH_HOOK, M_NOWAIT | M_ZERO)
+value|hook = malloc(sizeof(*hook), M_NETGRAPH_HOOK, M_NOWAIT | M_ZERO)
 end_define
 
 begin_define
@@ -1054,7 +1054,7 @@ parameter_list|(
 name|node
 parameter_list|)
 define|\
-value|MALLOC(node, node_p, sizeof(*node), M_NETGRAPH_NODE, M_NOWAIT | M_ZERO)
+value|node = malloc(sizeof(*node), M_NETGRAPH_NODE, M_NOWAIT | M_ZERO)
 end_define
 
 begin_define
@@ -1525,7 +1525,7 @@ name|NG_FREE_HOOK
 parameter_list|(
 name|hook
 parameter_list|)
-value|do { FREE((hook), M_NETGRAPH_HOOK); } while (0)
+value|do { free((hook), M_NETGRAPH_HOOK); } while (0)
 end_define
 
 begin_define
@@ -1535,7 +1535,7 @@ name|NG_FREE_NODE
 parameter_list|(
 name|node
 parameter_list|)
-value|do { FREE((node), M_NETGRAPH_NODE); } while (0)
+value|do { free((node), M_NETGRAPH_NODE); } while (0)
 end_define
 
 begin_endif

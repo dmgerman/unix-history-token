@@ -2651,7 +2651,7 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* update paths, file handles, etc, here	XXX */
-name|FREE
+name|free
 argument_list|(
 name|nam
 argument_list|,
@@ -3236,7 +3236,7 @@ argument_list|,
 name|nmp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|nam
 argument_list|,
@@ -3360,7 +3360,7 @@ argument_list|(
 name|nmp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|nmp
 operator|->

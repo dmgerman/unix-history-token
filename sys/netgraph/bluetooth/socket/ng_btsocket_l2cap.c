@@ -7362,12 +7362,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|rt
-argument_list|,
-name|ng_btsocket_l2cap_rtentry_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -8246,7 +8244,7 @@ name|rt
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rt
 argument_list|,
@@ -8728,12 +8726,10 @@ operator|)
 return|;
 block|}
 comment|/* Allocate the PCB */
-name|MALLOC
-argument_list|(
 name|pcb
-argument_list|,
-name|ng_btsocket_l2cap_pcb_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -10295,7 +10291,7 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pcb
 argument_list|,

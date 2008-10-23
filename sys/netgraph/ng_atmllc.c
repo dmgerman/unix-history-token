@@ -269,14 +269,10 @@ name|ng_atmllc_priv
 modifier|*
 name|priv
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-expr|struct
-name|ng_atmllc_priv
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -400,7 +396,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

@@ -1847,16 +1847,12 @@ condition|)
 break|break;
 block|}
 comment|/* Alloc memory for attribute definitions */
-name|MALLOC
-argument_list|(
 name|ntmp
 operator|->
 name|ntm_ad
-argument_list|,
-expr|struct
-name|ntvattrdef
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|num
 operator|*
 sizeof|sizeof
@@ -2435,7 +2431,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ntmp
 operator|->
@@ -2444,7 +2440,7 @@ argument_list|,
 name|M_NTFSMNT
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ntmp
 argument_list|,
@@ -2616,13 +2612,10 @@ argument_list|)
 operator|->
 name|f_size
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|tmp
-argument_list|,
-name|u_int8_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|bmsize
 argument_list|,
 name|M_TEMP
@@ -2711,7 +2704,7 @@ name|cfree
 expr_stmt|;
 name|out
 label|:
-name|FREE
+name|free
 argument_list|(
 name|tmp
 argument_list|,

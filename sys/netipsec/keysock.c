@@ -1683,14 +1683,10 @@ name|error
 return|;
 block|}
 comment|/* XXX */
-name|MALLOC
-argument_list|(
 name|kp
-argument_list|,
-expr|struct
-name|keycb
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|kp

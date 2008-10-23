@@ -7933,7 +7933,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|PSLOT
 argument_list|(

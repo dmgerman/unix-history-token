@@ -2929,7 +2929,7 @@ name|fid_fragment
 operator|=
 literal|0
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ds
 operator|->
@@ -3031,15 +3031,12 @@ operator|)
 return|;
 block|}
 comment|/* 		 * File ID descriptors can only be at most one 		 * logical sector in size. 		 */
-name|MALLOC
-argument_list|(
 name|ds
 operator|->
 name|buf
-argument_list|,
-name|uint8_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|ds
 operator|->
 name|udfmp
@@ -3360,7 +3357,7 @@ name|buf
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|ds
 operator|->
@@ -3491,13 +3488,10 @@ name|uio_resid
 operator|/
 literal|8
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|cookies
-argument_list|,
-name|u_long
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|u_long
@@ -3978,7 +3972,7 @@ if|if
 condition|(
 name|error
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|cookies
 argument_list|,
@@ -5038,7 +5032,7 @@ name|fentry
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|unode
 operator|->

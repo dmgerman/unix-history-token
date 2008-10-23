@@ -2157,7 +2157,7 @@ if|if
 condition|(
 name|nam
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|nam
 argument_list|,
@@ -3176,14 +3176,10 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|nd
-argument_list|,
-expr|struct
-name|nfsrv_descript
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3253,7 +3249,7 @@ condition|(
 name|nam
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|nam
 argument_list|,

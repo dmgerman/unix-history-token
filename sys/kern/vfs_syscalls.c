@@ -19917,12 +19917,10 @@ name|uap
 operator|->
 name|count
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|dirbuf
-argument_list|,
-name|caddr_t
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|uap
 operator|->
 name|count
@@ -20104,7 +20102,7 @@ name|auio
 argument_list|)
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|dirbuf
 argument_list|,

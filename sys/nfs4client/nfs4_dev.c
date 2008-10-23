@@ -197,7 +197,7 @@ name|nfs4dev_upcall_get
 parameter_list|(
 name|MP
 parameter_list|)
-value|MALLOC((MP), struct nfs4dev_upcall *, sizeof(struct nfs4dev_upcall), M_NFS4DEV, M_WAITOK | M_ZERO)
+value|(MP) = malloc(sizeof(struct nfs4dev_upcall), M_NFS4DEV, M_WAITOK | M_ZERO)
 end_define
 
 begin_define
@@ -207,7 +207,7 @@ name|nfs4dev_upcall_put
 parameter_list|(
 name|MP
 parameter_list|)
-value|FREE((MP), M_NFS4DEV)
+value|free((MP), M_NFS4DEV)
 end_define
 
 begin_decl_stmt

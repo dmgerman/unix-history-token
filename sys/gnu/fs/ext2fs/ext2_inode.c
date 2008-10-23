@@ -1983,13 +1983,10 @@ name|bp
 operator|->
 name|b_data
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|copy
-argument_list|,
-name|int32_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|fs
 operator|->
 name|s_blocksize
@@ -2274,7 +2271,7 @@ name|blkcount
 expr_stmt|;
 block|}
 block|}
-name|FREE
+name|free
 argument_list|(
 name|copy
 argument_list|,
@@ -2579,7 +2576,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|vp
 operator|->

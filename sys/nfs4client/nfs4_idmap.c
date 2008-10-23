@@ -154,7 +154,7 @@ name|idmap_entry_get
 parameter_list|(
 name|ID
 parameter_list|)
-value|MALLOC((ID), struct idmap_entry, sizeof(struct idmap_entry), M_IDMAP, M_WAITOK | M_ZERO)
+value|(ID) = malloc(sizeof(struct idmap_entry), M_IDMAP, M_WAITOK | M_ZERO)
 end_define
 
 begin_define
@@ -164,7 +164,7 @@ name|idmap_entry_put
 parameter_list|(
 name|ID
 parameter_list|)
-value|FREE((ID), M_IDMAP)
+value|free((ID), M_IDMAP)
 end_define
 
 begin_struct
@@ -432,14 +432,10 @@ name|EFAULT
 return|;
 comment|/* XXX */
 block|}
-name|MALLOC
-argument_list|(
 name|e
-argument_list|,
-expr|struct
-name|idmap_entry
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -616,14 +612,10 @@ literal|"bad type"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|MALLOC
-argument_list|(
 name|e
-argument_list|,
-expr|struct
-name|idmap_entry
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1551,7 +1543,7 @@ argument_list|,
 name|id_entry_id
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|e
 argument_list|,
@@ -1617,7 +1609,7 @@ argument_list|,
 name|id_entry_id
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|e
 argument_list|,
@@ -1740,7 +1732,7 @@ argument_list|(
 literal|"idmap_add failed\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|e
 argument_list|,
@@ -1885,7 +1877,7 @@ argument_list|(
 literal|"idmap_add failed\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|e
 argument_list|,
@@ -1978,13 +1970,10 @@ name|EINVAL
 return|;
 block|}
 comment|/* XXX hack */
-name|MALLOC
-argument_list|(
 name|namestr
-argument_list|,
-name|char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|len
 operator|+
 literal|1
@@ -2043,7 +2032,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|namestr
 argument_list|,
@@ -2066,7 +2055,7 @@ argument_list|(
 literal|"no error from upcall, but no data returned\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|namestr
 argument_list|,
@@ -2092,7 +2081,7 @@ argument_list|(
 literal|"idmap_add failed\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|e
 argument_list|,
@@ -2112,7 +2101,7 @@ name|id_id
 operator|.
 name|uid
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|namestr
 argument_list|,
@@ -2185,13 +2174,10 @@ name|EINVAL
 return|;
 block|}
 comment|/* XXX hack */
-name|MALLOC
-argument_list|(
 name|namestr
-argument_list|,
-name|char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|len
 operator|+
 literal|1
@@ -2257,7 +2243,7 @@ argument_list|(
 literal|"error in upcall\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|namestr
 argument_list|,
@@ -2280,7 +2266,7 @@ argument_list|(
 literal|"no error from upcall, but no data returned\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|namestr
 argument_list|,
@@ -2306,7 +2292,7 @@ argument_list|(
 literal|"idmap_add failed\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|e
 argument_list|,
@@ -2326,7 +2312,7 @@ name|id_id
 operator|.
 name|gid
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|namestr
 argument_list|,

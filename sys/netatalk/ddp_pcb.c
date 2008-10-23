@@ -1252,14 +1252,10 @@ decl_stmt|;
 name|DDP_LIST_XLOCK_ASSERT
 argument_list|()
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|ddp
-argument_list|,
-expr|struct
-name|ddpcb
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|ddp
@@ -1545,7 +1541,7 @@ argument_list|(
 name|ddp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ddp
 argument_list|,

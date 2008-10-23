@@ -808,13 +808,10 @@ decl_stmt|;
 name|int
 name|npkts_per_sec
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|rp
-argument_list|,
-name|red_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|red_t
@@ -1203,7 +1200,7 @@ operator|->
 name|red_wtab
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rp
 argument_list|,
@@ -2583,14 +2580,10 @@ name|w
 operator|)
 return|;
 block|}
-name|MALLOC
-argument_list|(
 name|w
-argument_list|,
-expr|struct
-name|wtab
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2822,7 +2815,7 @@ name|w_next
 expr_stmt|;
 break|break;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|w
 argument_list|,
@@ -3380,13 +3373,10 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* allocate and initialize red_queue_t */
-name|MALLOC
-argument_list|(
 name|rqp
-argument_list|,
-name|red_queue_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|red_queue_t
@@ -3420,15 +3410,12 @@ name|red_queue_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|rqp
 operator|->
 name|rq_q
-argument_list|,
-name|class_queue_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|class_queue_t
@@ -3448,7 +3435,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|rqp
 argument_list|,
@@ -3501,7 +3488,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|rqp
 operator|->
@@ -3510,7 +3497,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 argument_list|,
@@ -3604,7 +3591,7 @@ operator|->
 name|rq_red
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 operator|->
@@ -3613,7 +3600,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 argument_list|,
@@ -4367,7 +4354,7 @@ operator|->
 name|rq_red
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 operator|->
@@ -4376,7 +4363,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 argument_list|,
@@ -5801,7 +5788,7 @@ comment|/*  * allocate flowvalve structure  */
 end_comment
 
 begin_comment
-unit|static struct flowvalve * fv_alloc(rp) 	struct red *rp; { 	struct flowvalve *fv; 	struct fve *fve; 	int i, num;  	num = FV_FLOWLISTSIZE; 	MALLOC(fv, struct flowvalve *, sizeof(struct flowvalve), 	       M_DEVBUF, M_WAITOK); 	if (fv == NULL) 		return (NULL); 	bzero(fv, sizeof(struct flowvalve));  	MALLOC(fv->fv_fves, struct fve *, sizeof(struct fve) * num, 	       M_DEVBUF, M_WAITOK); 	if (fv->fv_fves == NULL) { 		FREE(fv, M_DEVBUF); 		return (NULL); 	} 	bzero(fv->fv_fves, sizeof(struct fve) * num);  	fv->fv_flows = 0; 	TAILQ_INIT(&fv->fv_flowlist); 	for (i = 0; i< num; i++) { 		fve =&fv->fv_fves[i]; 		fve->fve_lastdrop.tv_sec = 0; 		TAILQ_INSERT_TAIL(&fv->fv_flowlist, fve, fve_lru); 	}
+unit|static struct flowvalve * fv_alloc(rp) 	struct red *rp; { 	struct flowvalve *fv; 	struct fve *fve; 	int i, num;  	num = FV_FLOWLISTSIZE; 	fv = malloc(sizeof(struct flowvalve), 	       M_DEVBUF, M_WAITOK); 	if (fv == NULL) 		return (NULL); 	bzero(fv, sizeof(struct flowvalve));  	fv->fv_fves = malloc(sizeof(struct fve) * num, 	       M_DEVBUF, M_WAITOK); 	if (fv->fv_fves == NULL) { 		free(fv, M_DEVBUF); 		return (NULL); 	} 	bzero(fv->fv_fves, sizeof(struct fve) * num);  	fv->fv_flows = 0; 	TAILQ_INIT(&fv->fv_flowlist); 	for (i = 0; i< num; i++) { 		fve =&fv->fv_fves[i]; 		fve->fve_lastdrop.tv_sec = 0; 		TAILQ_INSERT_TAIL(&fv->fv_flowlist, fve, fve_lru); 	}
 comment|/* initialize drop rate threshold in scaled fixed-point */
 end_comment
 
@@ -5811,7 +5798,7 @@ comment|/* initialize drop rate to fraction table */
 end_comment
 
 begin_comment
-unit|MALLOC(fv->fv_p2ftab, int *, sizeof(int) * BRTT_SIZE, 	       M_DEVBUF, M_WAITOK); 	if (fv->fv_p2ftab == NULL) { 		FREE(fv->fv_fves, M_DEVBUF); 		FREE(fv, M_DEVBUF); 		return (NULL); 	}
+unit|fv->fv_p2ftab = malloc(sizeof(int) * BRTT_SIZE, 	       M_DEVBUF, M_WAITOK); 	if (fv->fv_p2ftab == NULL) { 		free(fv->fv_fves, M_DEVBUF); 		free(fv, M_DEVBUF); 		return (NULL); 	}
 comment|/* 	 * create the p2f table. 	 * (shift is used to keep the precision) 	 */
 end_comment
 
@@ -5834,7 +5821,7 @@ modifier|*
 name|fv
 decl_stmt|;
 block|{
-name|FREE
+name|free
 argument_list|(
 name|fv
 operator|->
@@ -5843,7 +5830,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|fv
 operator|->
@@ -5852,7 +5839,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|fv
 argument_list|,

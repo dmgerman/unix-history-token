@@ -540,14 +540,10 @@ operator|)
 return|;
 block|}
 block|}
-name|MALLOC
-argument_list|(
 name|rti
-argument_list|,
-expr|struct
-name|router_info
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|rti

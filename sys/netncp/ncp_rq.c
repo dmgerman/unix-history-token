@@ -200,14 +200,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|rqp
-argument_list|,
-expr|struct
-name|ncp_rq
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*

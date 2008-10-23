@@ -1951,7 +1951,7 @@ if|if
 condition|(
 name|alloc
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|ptr
 argument_list|,
@@ -2025,7 +2025,7 @@ if|if
 condition|(
 name|alloc
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|ptr
 argument_list|,
@@ -2113,7 +2113,7 @@ if|if
 condition|(
 name|alloc
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|ptr
 argument_list|,

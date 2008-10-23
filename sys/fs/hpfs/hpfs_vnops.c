@@ -2905,7 +2905,7 @@ name|v_data
 operator|=
 name|NULL
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hp
 argument_list|,
@@ -4710,13 +4710,10 @@ name|off
 operator|)
 operator|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|cookies
-argument_list|,
-name|u_long
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|ncookies
 operator|*
 sizeof|sizeof

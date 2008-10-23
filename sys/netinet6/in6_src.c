@@ -4000,14 +4000,10 @@ decl_stmt|,
 modifier|*
 name|pol
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|new
-argument_list|,
-expr|struct
-name|addrsel_policyent
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -4082,7 +4078,7 @@ expr_stmt|;
 name|ADDRSEL_XUNLOCK
 argument_list|()
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|new
 argument_list|,

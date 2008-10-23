@@ -576,14 +576,10 @@ name|curthread
 decl_stmt|;
 endif|#
 directive|endif
-name|MALLOC
-argument_list|(
 name|auth
-argument_list|,
-expr|struct
-name|rpc_auth
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct

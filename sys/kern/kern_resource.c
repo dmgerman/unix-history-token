@@ -5575,7 +5575,7 @@ operator|->
 name|ui_proccnt
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|uip
 argument_list|,

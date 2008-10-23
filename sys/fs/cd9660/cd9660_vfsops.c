@@ -3202,14 +3202,10 @@ name|error
 operator|)
 return|;
 block|}
-name|MALLOC
-argument_list|(
 name|ip
-argument_list|,
-expr|struct
-name|iso_node
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct

@@ -937,12 +937,10 @@ name|priv_p
 name|priv
 decl_stmt|;
 comment|/* Initialize private descriptor. */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -986,7 +984,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -1552,7 +1550,7 @@ name|error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|entry
 argument_list|,
@@ -1855,7 +1853,7 @@ name|error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|entry
 argument_list|,
@@ -2124,7 +2122,7 @@ name|error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|entry
 argument_list|,
@@ -2443,7 +2441,7 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|entry
 argument_list|,
@@ -3349,7 +3347,7 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|entry
 argument_list|,
@@ -3366,7 +3364,7 @@ operator|->
 name|lib
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

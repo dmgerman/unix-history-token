@@ -2008,7 +2008,7 @@ argument_list|(
 literal|"null_reclaim: reclaiming a node with no lowervp"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|xp
 argument_list|,

@@ -1854,14 +1854,10 @@ operator|&=
 operator|~
 name|SI_CHEAPCLONE
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|sc
-argument_list|,
-expr|struct
-name|tun_softc
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*

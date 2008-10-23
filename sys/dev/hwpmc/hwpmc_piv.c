@@ -1924,14 +1924,10 @@ comment|/* decline to init */
 return|return
 name|ENXIO
 return|;
-name|MALLOC
-argument_list|(
 name|plcs
-argument_list|,
-expr|struct
-name|p4_logicalcpu
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2022,14 +2018,10 @@ return|return
 literal|0
 return|;
 block|}
-name|MALLOC
-argument_list|(
 name|pcs
-argument_list|,
-expr|struct
-name|p4_cpu
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2281,7 +2273,7 @@ operator|->
 name|pc_mtx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pcs
 argument_list|,
@@ -3939,7 +3931,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * If the system has HTT enabled, and the desired allocation 	 * mode is process-private, and the PMC row disposition is not 	 * FREE (0), decline the allocation. 	 */
+comment|/* 	 * If the system has HTT enabled, and the desired allocation 	 * mode is process-private, and the PMC row disposition is not 	 * free (0), decline the allocation. 	 */
 if|if
 condition|(
 name|p4_system_has_htt

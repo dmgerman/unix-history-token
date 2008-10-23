@@ -1933,14 +1933,10 @@ operator|~
 name|SI_CHEAPCLONE
 expr_stmt|;
 comment|/* allocate driver storage and create device */
-name|MALLOC
-argument_list|(
 name|tp
-argument_list|,
-expr|struct
-name|tap_softc
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*

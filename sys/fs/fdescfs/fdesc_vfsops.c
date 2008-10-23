@@ -217,14 +217,10 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|fmp
-argument_list|,
-expr|struct
-name|fdescmount
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct

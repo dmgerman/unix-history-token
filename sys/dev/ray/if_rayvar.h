@@ -917,7 +917,7 @@ name|com
 parameter_list|,
 name|ncom
 parameter_list|)
-value|do {					\     int i;								\     for (i = 0; i< ncom; i++)						\ 	    FREE(com[i], M_RAYCOM);					\ } while (0)
+value|do {					\     int i;								\     for (i = 0; i< ncom; i++)						\ 	    free(com[i], M_RAYCOM);					\ } while (0)
 end_define
 
 begin_comment

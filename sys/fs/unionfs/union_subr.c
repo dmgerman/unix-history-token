@@ -1109,14 +1109,10 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced elsewhere 	 * if MALLOC should block. 	 */
-name|MALLOC
-argument_list|(
 name|unp
-argument_list|,
-expr|struct
-name|unionfs_node
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1152,7 +1148,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|unp
 argument_list|,
@@ -1182,7 +1178,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|unp
 argument_list|,
@@ -1985,7 +1981,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|unp
 argument_list|,
@@ -2082,14 +2078,10 @@ return|return;
 block|}
 block|}
 comment|/* create a new unionfs node status */
-name|MALLOC
-argument_list|(
 name|unsp
-argument_list|,
-expr|struct
-name|unionfs_node_status
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct

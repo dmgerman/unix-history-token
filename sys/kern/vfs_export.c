@@ -1551,7 +1551,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|nfs_pub
 operator|.
@@ -1684,15 +1684,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|nfs_pub
 operator|.
 name|np_index
-argument_list|,
-name|char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|MAXNAMLEN
 operator|+
 literal|1
@@ -1766,7 +1763,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|nfs_pub
 operator|.

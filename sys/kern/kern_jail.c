@@ -682,14 +682,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|pr
-argument_list|,
-expr|struct
-name|prison
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1157,7 +1153,7 @@ name|pr_slots
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|pr
 operator|->
@@ -1199,7 +1195,7 @@ operator|->
 name|pr_mtx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pr
 argument_list|,
@@ -1778,7 +1774,7 @@ name|pr_slots
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|pr
 operator|->
@@ -1826,7 +1822,7 @@ name|pr_linux
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|pr
 operator|->
@@ -1835,7 +1831,7 @@ argument_list|,
 name|M_PRISON
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pr
 argument_list|,

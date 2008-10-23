@@ -230,14 +230,10 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|pn
-argument_list|,
-expr|struct
-name|pfs_node
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|pn
@@ -1297,7 +1293,7 @@ operator|->
 name|pn_mutex
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pn
 argument_list|,

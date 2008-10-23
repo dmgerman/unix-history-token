@@ -6643,13 +6643,10 @@ name|uio_resid
 operator|/
 literal|16
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|cookies
-argument_list|,
-name|u_long
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|ncookies
 operator|*
 sizeof|sizeof

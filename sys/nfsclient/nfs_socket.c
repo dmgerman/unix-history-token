@@ -5394,14 +5394,10 @@ argument_list|,
 name|dposp
 argument_list|)
 return|;
-name|MALLOC
-argument_list|(
 name|rep
-argument_list|,
-expr|struct
-name|nfsreq
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6631,7 +6627,7 @@ operator|->
 name|r_mtx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t

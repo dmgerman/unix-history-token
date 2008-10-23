@@ -318,14 +318,10 @@ argument_list|)
 expr_stmt|;
 comment|/* Used to be legal. */
 comment|/* XXX: M_TEMP??? */
-name|MALLOC
-argument_list|(
 name|uh
-argument_list|,
-expr|struct
-name|undefined_handler
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -408,7 +404,7 @@ argument_list|,
 name|uh_link
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|uh
 argument_list|,

@@ -526,19 +526,23 @@ operator|*
 name|ng_sppp_units
 argument_list|)
 expr_stmt|;
-name|MALLOC
+name|newarray
+operator|=
+name|malloc
 argument_list|(
-argument|newarray
-argument_list|,
-argument|unsigned char *
-argument_list|,
-argument|newlen * sizeof (*ng_sppp_units)
-argument_list|,
-argument|M_NETGRAPH_SPPP
-argument_list|,
-argument|M_NOWAIT
+name|newlen
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ng_sppp_units
 argument_list|)
-empty_stmt|;
+argument_list|,
+name|M_NETGRAPH_SPPP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|newarray
@@ -582,7 +586,7 @@ name|ng_sppp_units
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|ng_sppp_units
 argument_list|,
@@ -781,7 +785,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|ng_sppp_units
 argument_list|,
@@ -1018,12 +1022,10 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Allocate node and interface private structures */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1062,7 +1064,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -1113,14 +1115,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|pp
 argument_list|,
 name|M_NETGRAPH_SPPP
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -1708,7 +1710,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

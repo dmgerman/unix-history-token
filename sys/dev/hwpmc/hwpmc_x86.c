@@ -1105,14 +1105,10 @@ return|return
 name|NULL
 return|;
 block|}
-name|MALLOC
+name|pmc_mdep
+operator|=
+name|malloc
 argument_list|(
-name|pmc_mdep
-argument_list|,
-expr|struct
-name|pmc_mdep
-operator|*
-argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1276,7 +1272,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|pmc_mdep
 argument_list|,

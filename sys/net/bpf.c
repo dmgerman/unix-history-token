@@ -2417,14 +2417,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|d
-argument_list|,
-expr|struct
-name|bpf_d
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*

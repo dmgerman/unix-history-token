@@ -653,12 +653,10 @@ block|{
 name|sc_p
 name|sc
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|sc
-argument_list|,
-name|sc_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -4570,7 +4568,7 @@ operator|->
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sc
 argument_list|,

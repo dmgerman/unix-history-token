@@ -974,14 +974,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|MALLOC
-argument_list|(
 name|smp
-argument_list|,
-expr|struct
-name|smbmount
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*

@@ -813,7 +813,7 @@ literal|0
 comment|/* 	 * XXXRW: If this code is ever enabled, there's a race when running 	 * MPSAFE. 	 */
 block|tslp = NULL;
 comment|/* 	 * Add it to the list, as required. 	 */
-block|if (so->so_proto->pr_protocol == IPPROTO_UDP) { 		tslp = nfs_udpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				FREE(mynam, M_SONAME); 			return (EPERM); 		} 	}
+block|if (so->so_proto->pr_protocol == IPPROTO_UDP) { 		tslp = nfs_udpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				free(mynam, M_SONAME); 			return (EPERM); 		} 	}
 endif|#
 directive|endif
 name|siz
@@ -842,7 +842,7 @@ name|mynam
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|mynam
 argument_list|,
@@ -2059,7 +2059,7 @@ name|nd
 operator|->
 name|nd_nam2
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|nd
 operator|->
@@ -2263,7 +2263,7 @@ name|nd
 operator|->
 name|nd_nam2
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|nd
 operator|->
@@ -2380,7 +2380,7 @@ name|nd
 operator|->
 name|nd_nam2
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|nd
 operator|->
@@ -2412,7 +2412,7 @@ operator|->
 name|nd_cr
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -2729,7 +2729,7 @@ name|slp
 operator|->
 name|ns_nam
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|slp
 operator|->
@@ -2778,7 +2778,7 @@ name|rec
 operator|->
 name|nr_address
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|rec
 operator|->

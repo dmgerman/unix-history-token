@@ -1847,7 +1847,7 @@ name|npcb_inq
 operator|==
 literal|0
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|npcb
 argument_list|,

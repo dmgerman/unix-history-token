@@ -4144,14 +4144,10 @@ argument_list|,
 literal|"malloc(struct reiserfs_node)\n"
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|ip
-argument_list|,
-expr|struct
-name|reiserfs_node
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct

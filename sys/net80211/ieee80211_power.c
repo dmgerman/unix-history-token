@@ -225,15 +225,12 @@ argument_list|(
 name|uint8_t
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|vap
 operator|->
 name|iv_tim_bitmap
-argument_list|,
-name|uint8_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|vap
 operator|->
 name|iv_tim_len
@@ -292,7 +289,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|vap
 operator|->

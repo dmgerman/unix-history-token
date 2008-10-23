@@ -825,14 +825,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|MALLOC
-argument_list|(
 name|rp
-argument_list|,
-expr|struct
-name|rawcb
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|rp

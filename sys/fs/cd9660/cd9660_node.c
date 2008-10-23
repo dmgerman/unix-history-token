@@ -287,7 +287,7 @@ operator|->
 name|im_devvp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|vp
 operator|->

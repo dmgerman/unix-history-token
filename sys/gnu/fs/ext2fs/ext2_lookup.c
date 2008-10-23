@@ -495,12 +495,10 @@ name|iov_len
 operator|=
 name|count
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|dirbuf
-argument_list|,
-name|caddr_t
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|count
 argument_list|,
 name|M_TEMP
@@ -817,13 +815,10 @@ argument_list|(
 literal|"ext2_readdir: unexpected uio from NFS server"
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|cookies
-argument_list|,
-name|u_long
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|ncookies
 operator|*
 sizeof|sizeof
@@ -916,7 +911,7 @@ name|cookies
 expr_stmt|;
 block|}
 block|}
-name|FREE
+name|free
 argument_list|(
 name|dirbuf
 argument_list|,

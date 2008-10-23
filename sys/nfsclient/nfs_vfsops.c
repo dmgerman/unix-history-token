@@ -5855,14 +5855,10 @@ goto|goto
 name|out
 goto|;
 block|}
-name|MALLOC
-argument_list|(
 name|nam
-argument_list|,
-expr|struct
-name|sockaddr
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|args
 operator|.
 name|addrlen
@@ -6450,7 +6446,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|nam
 argument_list|,
@@ -6939,7 +6935,7 @@ argument_list|,
 name|nmp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|nam
 argument_list|,
@@ -7057,7 +7053,7 @@ argument_list|(
 name|nmp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|nmp
 operator|->

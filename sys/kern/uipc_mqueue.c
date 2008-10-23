@@ -7281,7 +7281,7 @@ argument_list|,
 name|msg_link
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|msg
 argument_list|,
@@ -7380,14 +7380,10 @@ argument_list|)
 operator|+
 name|msg_size
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|msg
-argument_list|,
-expr|struct
-name|mqueue_msg
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|len
 argument_list|,
 name|M_MQUEUEDATA
@@ -7423,7 +7419,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|msg
 argument_list|,
@@ -7560,7 +7556,7 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|msg
 argument_list|,

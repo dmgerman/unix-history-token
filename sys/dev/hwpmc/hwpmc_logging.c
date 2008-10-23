@@ -4290,14 +4290,10 @@ name|n
 operator|++
 control|)
 block|{
-name|MALLOC
-argument_list|(
 name|plb
-argument_list|,
-expr|struct
-name|pmclog_buffer
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 literal|1024
 operator|*
 name|pmclog_buffer_size
@@ -4403,7 +4399,7 @@ argument_list|,
 name|plb_next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|plb
 argument_list|,

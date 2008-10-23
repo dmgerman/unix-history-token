@@ -563,12 +563,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -938,14 +936,10 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Create filter. */
-name|MALLOC
-argument_list|(
 name|f
-argument_list|,
-expr|struct
-name|filter
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1102,7 +1096,7 @@ operator|->
 name|nent
 operator|--
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|f
 argument_list|,
@@ -1943,7 +1937,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -2042,7 +2036,7 @@ operator|->
 name|nent
 operator|--
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|f
 argument_list|,

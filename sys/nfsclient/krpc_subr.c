@@ -1238,7 +1238,7 @@ condition|(
 name|from
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|from
 argument_list|,

@@ -1048,12 +1048,10 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Allocate private structure */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2267,7 +2265,7 @@ operator|.
 name|mtx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

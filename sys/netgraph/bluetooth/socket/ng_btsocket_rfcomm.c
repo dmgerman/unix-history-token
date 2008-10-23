@@ -2017,12 +2017,10 @@ operator|)
 return|;
 block|}
 comment|/* Allocate the PCB */
-name|MALLOC
-argument_list|(
 name|pcb
-argument_list|,
-name|ng_btsocket_rfcomm_pcb_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3473,7 +3471,7 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pcb
 argument_list|,
@@ -4786,7 +4784,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|s
 argument_list|,
@@ -5517,12 +5515,10 @@ name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* Allocate the RFCOMM session */
-name|MALLOC
-argument_list|(
 name|s
-argument_list|,
-name|ng_btsocket_rfcomm_session_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -6112,7 +6108,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|s
 argument_list|,

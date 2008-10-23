@@ -2142,14 +2142,10 @@ name|nbpcb
 modifier|*
 name|nbp
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|nbp
-argument_list|,
-expr|struct
-name|nbpcb
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|nbp

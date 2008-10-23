@@ -622,14 +622,10 @@ operator|(
 name|error
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|ruleptr
-argument_list|,
-expr|struct
-name|mac_bsdextended_rule
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -853,7 +849,7 @@ name|ruleptr
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|ruleptr
 argument_list|,

@@ -2341,7 +2341,7 @@ name|n_name
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|np
 operator|->
@@ -2350,15 +2350,12 @@ argument_list|,
 name|M_NFSREQ
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|np
 operator|->
 name|n_name
-argument_list|,
-name|u_char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|np
 operator|->
 name|n_namelen
@@ -5290,7 +5287,7 @@ name|n_name
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|np
 operator|->
@@ -5299,15 +5296,12 @@ argument_list|,
 name|M_NFSREQ
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|np
 operator|->
 name|n_name
-argument_list|,
-name|u_char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|np
 operator|->
 name|n_namelen
@@ -7364,7 +7358,7 @@ name|mrep
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/*FREE(cnp->cn_pnbuf, M_NAMEI);*/
+comment|/*free(cnp->cn_pnbuf, M_NAMEI);*/
 if|if
 condition|(
 name|error
@@ -11032,14 +11026,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|MALLOC
-argument_list|(
 name|sp
-argument_list|,
-expr|struct
-name|sillyrename
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -11742,7 +11732,7 @@ name|n_name
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|np
 operator|->
@@ -11751,15 +11741,12 @@ argument_list|,
 name|M_NFSREQ
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|np
 operator|->
 name|n_name
-argument_list|,
-name|u_char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|np
 operator|->
 name|n_namelen

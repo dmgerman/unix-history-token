@@ -585,12 +585,10 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Initialize private descriptor */
-name|MALLOC
-argument_list|(
 name|privdata
-argument_list|,
-name|etf_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -776,14 +774,10 @@ block|}
 else|else
 block|{
 comment|/* 		 * Any other hook name is valid and can 		 * later be associated with a filter rule. 		 */
-name|MALLOC
-argument_list|(
 name|hpriv
-argument_list|,
-expr|struct
-name|ETF_hookinfo
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1126,14 +1120,10 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 				 * Ok, make the filter and put it in the  				 * hashtable ready for matching. 				 */
-name|MALLOC
-argument_list|(
 name|fil
-argument_list|,
-expr|struct
-name|filter
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1572,7 +1562,7 @@ operator|->
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|privdata
 argument_list|,
@@ -1683,7 +1673,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|fil1
 argument_list|,
@@ -1749,7 +1739,7 @@ name|hook
 argument_list|)
 condition|)
 comment|/* Paranoia */
-name|FREE
+name|free
 argument_list|(
 name|NG_HOOK_PRIVATE
 argument_list|(

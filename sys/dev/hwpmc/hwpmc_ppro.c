@@ -1895,14 +1895,10 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|pcs
-argument_list|,
-expr|struct
-name|p6_cpu
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2061,7 +2057,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|pcs
 argument_list|,

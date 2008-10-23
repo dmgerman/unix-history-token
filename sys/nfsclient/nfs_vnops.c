@@ -13828,14 +13828,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|MALLOC
-argument_list|(
 name|sp
-argument_list|,
-expr|struct
-name|sillyrename
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct

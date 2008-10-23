@@ -145,14 +145,10 @@ expr_stmt|;
 name|IPX_LIST_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|ipxp
-argument_list|,
-expr|struct
-name|ipxpcb
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|ipxp
@@ -1301,7 +1297,7 @@ argument_list|(
 name|ipxp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ipxp
 argument_list|,

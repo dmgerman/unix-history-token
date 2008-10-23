@@ -1855,13 +1855,10 @@ operator|.
 name|space
 expr_stmt|;
 comment|/* XXX M_WAITOK after driver lock released */
-name|MALLOC
-argument_list|(
 name|p
-argument_list|,
-name|void
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|space
 argument_list|,
 name|M_TEMP
@@ -1921,7 +1918,7 @@ operator|->
 name|i_len
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|p
 argument_list|,
@@ -2817,13 +2814,10 @@ operator|.
 name|space
 expr_stmt|;
 comment|/* XXX M_WAITOK after driver lock released */
-name|MALLOC
-argument_list|(
 name|p
-argument_list|,
-name|void
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|space
 argument_list|,
 name|M_TEMP
@@ -2913,7 +2907,7 @@ operator|->
 name|i_len
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|p
 argument_list|,
@@ -4071,14 +4065,10 @@ condition|)
 return|return
 name|EINVAL
 return|;
-name|MALLOC
-argument_list|(
 name|dc
-argument_list|,
-expr|struct
-name|ieee80211_devcaps_req
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4176,7 +4166,7 @@ name|dc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|dc
 argument_list|,
@@ -10421,14 +10411,10 @@ condition|)
 return|return
 name|EINVAL
 return|;
-name|MALLOC
-argument_list|(
 name|reg
-argument_list|,
-expr|struct
-name|ieee80211_regdomain_req
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -10481,7 +10467,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|reg
 argument_list|,
@@ -11236,7 +11222,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX racey */
-name|FREE
+name|free
 argument_list|(
 name|app
 argument_list|,
@@ -11269,14 +11255,10 @@ return|return
 name|EINVAL
 return|;
 comment|/* 	 * Allocate a new appie structure and copy in the user data. 	 * When done swap in the new structure.  Note that we do not 	 * guard against users holding a ref to the old structure; 	 * this must be handled outside this code. 	 * 	 * XXX bad bad bad 	 */
-name|MALLOC
-argument_list|(
 name|napp
-argument_list|,
-expr|struct
-name|ieee80211_appie
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -11324,7 +11306,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|napp
 argument_list|,
@@ -11354,7 +11336,7 @@ name|app
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|app
 argument_list|,

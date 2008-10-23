@@ -2459,14 +2459,10 @@ operator|(
 name|error
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|filter
-argument_list|,
-expr|struct
-name|icmp6_filter
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2516,7 +2512,7 @@ operator|&
 name|V_ripcbinfo
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|filter
 argument_list|,
@@ -2666,7 +2662,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|inp
 operator|->

@@ -5298,7 +5298,7 @@ parameter_list|(
 name|msg
 parameter_list|)
 define|\
-value|do {								\ 		if ((msg)) {						\ 			FREE((msg), M_NETGRAPH_MSG);			\ 			(msg) = NULL;					\ 		}	 						\ 	} while (0)
+value|do {								\ 		if ((msg)) {						\ 			free((msg), M_NETGRAPH_MSG);			\ 			(msg) = NULL;					\ 		}	 						\ 	} while (0)
 end_define
 
 begin_define

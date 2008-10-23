@@ -1196,7 +1196,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	MALLOC(var, type, size, name, M_NOWAIT); \     } while (0)
+value|do { \ 	var = (type)malloc(size, name, M_NOWAIT); \     } while (0)
 end_define
 
 begin_define
@@ -1208,7 +1208,7 @@ name|var
 parameter_list|,
 name|type
 parameter_list|)
-value|FREE(var, type)
+value|free(var, type)
 end_define
 
 begin_define
@@ -1223,7 +1223,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|do { \ 	MALLOC(var, type, size, M_SONAME, M_WAITOK | M_ZERO); \     } while (0)
+value|do { \ 	var = (type)malloc(size, M_SONAME, M_WAITOK | M_ZERO); \     } while (0)
 end_define
 
 begin_define
@@ -1233,7 +1233,7 @@ name|SCTP_FREE_SONAME
 parameter_list|(
 name|var
 parameter_list|)
-value|FREE(var, M_SONAME)
+value|free(var, M_SONAME)
 end_define
 
 begin_define

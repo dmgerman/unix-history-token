@@ -416,12 +416,10 @@ block|{
 name|sc_p
 name|privdata
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|privdata
-argument_list|,
-name|sc_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1456,7 +1454,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|privdata
 argument_list|,

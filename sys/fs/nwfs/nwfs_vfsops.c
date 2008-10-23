@@ -490,13 +490,10 @@ return|return
 literal|0
 return|;
 block|}
-name|MALLOC
-argument_list|(
 name|pe
-argument_list|,
-name|char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 literal|256
 operator|*
 literal|4
@@ -922,14 +919,10 @@ operator|->
 name|buffer_size
 expr_stmt|;
 comment|/* We must malloc our own mount info */
-name|MALLOC
-argument_list|(
 name|nmp
-argument_list|,
-expr|struct
-name|nwmount
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct

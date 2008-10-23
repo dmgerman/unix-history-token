@@ -232,13 +232,10 @@ literal|0
 condition|)
 break|break;
 block|}
-name|MALLOC
-argument_list|(
 name|p
-argument_list|,
-name|char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|len
 argument_list|,
 name|M_NCPDATA

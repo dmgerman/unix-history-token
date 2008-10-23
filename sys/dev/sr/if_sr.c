@@ -1428,14 +1428,10 @@ argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|sc
-argument_list|,
-expr|struct
-name|sr_softc
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|hc
 operator|->
 name|numports
@@ -2219,7 +2215,7 @@ expr_stmt|;
 block|}
 comment|/* XXX Stop the DMA. */
 comment|/* 	 * deallocate any system resources we may have 	 * allocated on behalf of this driver. 	 */
-name|FREE
+name|free
 argument_list|(
 name|hc
 operator|->

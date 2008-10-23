@@ -1062,14 +1062,10 @@ condition|)
 return|return
 name|ENOENT
 return|;
-name|MALLOC
-argument_list|(
 name|np
-argument_list|,
-expr|struct
-name|smbnode
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|np
@@ -1099,7 +1095,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|np
 argument_list|,
@@ -1127,7 +1123,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|np
 argument_list|,
@@ -1335,7 +1331,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/*		smb_name_free(np->n_name); 		FREE(np, M_SMBNODE);*/
+comment|/*		smb_name_free(np->n_name); 		free(np, M_SMBNODE);*/
 goto|goto
 name|loop
 goto|;
@@ -1646,7 +1642,7 @@ operator|->
 name|n_name
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|np
 argument_list|,

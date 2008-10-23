@@ -602,12 +602,10 @@ name|EINVAL
 operator|)
 return|;
 comment|/* Allocate memory for this hook's private data */
-name|MALLOC
-argument_list|(
 name|hpriv
-argument_list|,
-name|hpriv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1348,7 +1346,7 @@ argument_list|(
 name|hook
 argument_list|)
 decl_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hpriv
 argument_list|,

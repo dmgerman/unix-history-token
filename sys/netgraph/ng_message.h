@@ -1128,7 +1128,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|do {								\ 	  MALLOC((msg), struct ng_mesg *, sizeof(struct ng_mesg)	\ 	    + (len), M_NETGRAPH_MSG, (how) | M_ZERO);			\ 	  if ((msg) == NULL)						\ 	    break;							\ 	  (msg)->header.version = NG_VERSION;				\ 	  (msg)->header.typecookie = (cookie);				\ 	  (msg)->header.cmd = (cmdid);					\ 	  (msg)->header.arglen = (len);					\ 	  strncpy((msg)->header.cmdstr, #cmdid,				\ 	    sizeof((msg)->header.cmdstr) - 1);				\ 	} while (0)
+value|do {								\ 	  (msg) = malloc(sizeof(struct ng_mesg)				\ 	    + (len), M_NETGRAPH_MSG, (how) | M_ZERO);			\ 	  if ((msg) == NULL)						\ 	    break;							\ 	  (msg)->header.version = NG_VERSION;				\ 	  (msg)->header.typecookie = (cookie);				\ 	  (msg)->header.cmd = (cmdid);					\ 	  (msg)->header.arglen = (len);					\ 	  strncpy((msg)->header.cmdstr, #cmdid,				\ 	    sizeof((msg)->header.cmdstr) - 1);				\ 	} while (0)
 end_define
 
 begin_comment
@@ -1149,7 +1149,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|do {								\ 	  MALLOC((rsp), struct ng_mesg *, sizeof(struct ng_mesg)	\ 	    + (len), M_NETGRAPH_MSG, (how) | M_ZERO);			\ 	  if ((rsp) == NULL)						\ 	    break;							\ 	  (rsp)->header.version = NG_VERSION;				\ 	  (rsp)->header.arglen = (len);					\ 	  (rsp)->header.token = (msg)->header.token;			\ 	  (rsp)->header.typecookie = (msg)->header.typecookie;		\ 	  (rsp)->header.cmd = (msg)->header.cmd;			\ 	  bcopy((msg)->header.cmdstr, (rsp)->header.cmdstr,		\ 	    sizeof((rsp)->header.cmdstr));				\ 	  (rsp)->header.flags |= NGF_RESP;				\ 	} while (0)
+value|do {								\ 	  (rsp) = malloc(sizeof(struct ng_mesg)				\ 	    + (len), M_NETGRAPH_MSG, (how) | M_ZERO);			\ 	  if ((rsp) == NULL)						\ 	    break;							\ 	  (rsp)->header.version = NG_VERSION;				\ 	  (rsp)->header.arglen = (len);					\ 	  (rsp)->header.token = (msg)->header.token;			\ 	  (rsp)->header.typecookie = (msg)->header.typecookie;		\ 	  (rsp)->header.cmd = (msg)->header.cmd;			\ 	  bcopy((msg)->header.cmdstr, (rsp)->header.cmdstr,		\ 	    sizeof((rsp)->header.cmdstr));				\ 	  (rsp)->header.flags |= NGF_RESP;				\ 	} while (0)
 end_define
 
 begin_comment
@@ -1168,7 +1168,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|do {								\ 	  MALLOC((copy), struct ng_mesg *, sizeof(struct ng_mesg) +	\ 	    (msg)->header.arglen, M_NETGRAPH_MSG, (how) | M_ZERO);	\ 	  if ((copy) == NULL)						\ 	    break;							\ 	  (copy)->header.version = NG_VERSION;				\ 	  (copy)->header.arglen = (msg)->header.arglen;			\ 	  (copy)->header.token = (msg)->header.token;			\ 	  (copy)->header.typecookie = (msg)->header.typecookie;		\ 	  (copy)->header.cmd = (msg)->header.cmd;			\ 	  (copy)->header.flags = (msg)->header.flags;			\ 	  bcopy((msg)->header.cmdstr, (copy)->header.cmdstr,		\ 	    sizeof((copy)->header.cmdstr));				\ 	  if ((msg)->header.arglen> 0)					\ 	    bcopy((msg)->data, (copy)->data, (msg)->header.arglen);	\ 	} while (0)
+value|do {								\ 	  (copy) = malloc(sizeof(struct ng_mesg)			\ 	    + (msg)->header.arglen, M_NETGRAPH_MSG, (how) | M_ZERO);	\ 	  if ((copy) == NULL)						\ 	    break;							\ 	  (copy)->header.version = NG_VERSION;				\ 	  (copy)->header.arglen = (msg)->header.arglen;			\ 	  (copy)->header.token = (msg)->header.token;			\ 	  (copy)->header.typecookie = (msg)->header.typecookie;		\ 	  (copy)->header.cmd = (msg)->header.cmd;			\ 	  (copy)->header.flags = (msg)->header.flags;			\ 	  bcopy((msg)->header.cmdstr, (copy)->header.cmdstr,		\ 	    sizeof((copy)->header.cmdstr));				\ 	  if ((msg)->header.arglen> 0)					\ 	    bcopy((msg)->data, (copy)->data, (msg)->header.arglen);	\ 	} while (0)
 end_define
 
 begin_endif

@@ -482,14 +482,10 @@ name|tkip_ctx
 modifier|*
 name|ctx
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|ctx
-argument_list|,
-expr|struct
-name|tkip_ctx
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -557,7 +553,7 @@ name|k
 operator|->
 name|wk_private
 decl_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ctx
 argument_list|,

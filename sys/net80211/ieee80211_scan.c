@@ -315,14 +315,10 @@ name|scan_state
 modifier|*
 name|ss
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|ss
-argument_list|,
-expr|struct
-name|scan_state
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -465,7 +461,7 @@ name|ic_scan
 operator|=
 name|NULL
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|SCAN_PRIVATE
 argument_list|(

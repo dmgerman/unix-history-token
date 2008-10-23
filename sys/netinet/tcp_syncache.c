@@ -1154,16 +1154,12 @@ name|cache_limit
 argument_list|)
 expr_stmt|;
 comment|/* Allocate the hash table. */
-name|MALLOC
-argument_list|(
 name|V_tcp_syncache
 operator|.
 name|hashbase
-argument_list|,
-expr|struct
-name|syncache_head
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|V_tcp_syncache
 operator|.
 name|hashsize

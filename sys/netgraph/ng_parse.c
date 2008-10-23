@@ -3430,7 +3430,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sval
 argument_list|,
@@ -3547,7 +3547,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|s
 argument_list|,
@@ -3570,7 +3570,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|s
 argument_list|,
@@ -3768,7 +3768,7 @@ operator|->
 name|bufSize
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|sval
 argument_list|,
@@ -3795,7 +3795,7 @@ argument_list|,
 name|slen
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sval
 argument_list|,
@@ -4241,7 +4241,7 @@ operator|>
 name|USHRT_MAX
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|sval
 argument_list|,
@@ -4284,7 +4284,7 @@ argument_list|,
 name|slen
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sval
 argument_list|,
@@ -4419,7 +4419,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|s
 argument_list|,
@@ -4432,7 +4432,7 @@ name|error
 operator|)
 return|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|s
 argument_list|,
@@ -5412,7 +5412,7 @@ operator|*
 name|buflen
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|str
 argument_list|,
@@ -5432,7 +5432,7 @@ operator|>
 name|arraylen
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|str
 argument_list|,
@@ -5465,7 +5465,7 @@ operator|-
 name|slen
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|str
 argument_list|,
@@ -5907,13 +5907,10 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Initialize */
-name|MALLOC
-argument_list|(
 name|foff
-argument_list|,
-name|int
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|num
 operator|*
 sizeof|sizeof
@@ -6650,7 +6647,7 @@ name|foff
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|foff
 argument_list|,
@@ -6771,13 +6768,10 @@ modifier|*
 name|workBuf
 decl_stmt|;
 comment|/* Get workspace for checking default values */
-name|MALLOC
-argument_list|(
 name|workBuf
-argument_list|,
-name|u_char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|workSize
 argument_list|,
 name|M_NETGRAPH_PARSE
@@ -7129,7 +7123,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|workBuf
 argument_list|,
@@ -7194,7 +7188,7 @@ expr_stmt|;
 name|fail
 label|:
 comment|/* Clean up after failure */
-name|FREE
+name|free
 argument_list|(
 name|workBuf
 argument_list|,
@@ -8212,7 +8206,7 @@ condition|)
 return|return
 name|T_ERROR
 return|;
-name|FREE
+name|free
 argument_list|(
 name|t
 argument_list|,
@@ -8388,13 +8382,10 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|cbuf
-argument_list|,
-name|char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|strlen
 argument_list|(
 name|s
@@ -8781,7 +8772,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|FREE
+name|free
 argument_list|(
 name|cbuf
 argument_list|,
@@ -8827,13 +8818,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|cbuf
-argument_list|,
-name|char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|strlen
 argument_list|(
 name|raw

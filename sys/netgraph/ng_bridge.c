@@ -1011,12 +1011,10 @@ name|priv_p
 name|priv
 decl_stmt|;
 comment|/* Allocate and initialize private info */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1050,16 +1048,12 @@ name|timer
 argument_list|)
 expr_stmt|;
 comment|/* Allocate and initialize hash table, etc. */
-name|MALLOC
-argument_list|(
 name|priv
 operator|->
 name|tab
-argument_list|,
-expr|struct
-name|ng_bridge_bucket
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|MIN_BUCKETS
 operator|*
 sizeof|sizeof
@@ -1086,7 +1080,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -1337,19 +1331,15 @@ operator|(
 name|EISCONN
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|priv
 operator|->
 name|links
 index|[
 name|linkNum
 index|]
-argument_list|,
-expr|struct
-name|ng_bridge_link
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3143,7 +3133,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 operator|->
@@ -3152,7 +3142,7 @@ argument_list|,
 name|M_NETGRAPH_BRIDGE
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -3252,7 +3242,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 operator|->
@@ -3499,14 +3489,10 @@ block|}
 endif|#
 directive|endif
 comment|/* Allocate and initialize new hashtable entry */
-name|MALLOC
-argument_list|(
 name|hent
-argument_list|,
-expr|struct
-name|ng_bridge_hent
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3701,14 +3687,10 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Allocate and initialize new table */
-name|MALLOC
-argument_list|(
 name|newTab
-argument_list|,
-expr|struct
-name|ng_bridge_bucket
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|newNumBuckets
 operator|*
 sizeof|sizeof
@@ -3850,7 +3832,7 @@ name|newNumBuckets
 argument_list|)
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|priv
 operator|->
@@ -3981,7 +3963,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hent
 argument_list|,
@@ -4169,7 +4151,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hent
 argument_list|,

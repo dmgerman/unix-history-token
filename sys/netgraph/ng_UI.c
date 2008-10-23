@@ -241,12 +241,10 @@ name|priv_p
 name|priv
 decl_stmt|;
 comment|/* Allocate private structure */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -796,7 +794,7 @@ name|node
 argument_list|)
 decl_stmt|;
 comment|/* Take down netgraph node */
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

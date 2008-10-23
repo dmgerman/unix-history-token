@@ -4230,7 +4230,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|ni
 operator|->

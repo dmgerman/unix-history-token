@@ -11263,6 +11263,72 @@ begin_comment
 comment|/* IPFILTER_M_IPFILTER */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|800051
+end_if
+
+begin_define
+define|#
+directive|define
+name|KMALLOC
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|do {			\ 	a = (b)malloc(sizeof(*(a)), _M_IPF, M_NOWAIT); \     } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMALLOCS
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|do { \ 	a = (b)malloc((c), _M_IPF, ((c)> 4096) ? M_WAITOK : M_NOWAIT); \     } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KFREE
+parameter_list|(
+name|x
+parameter_list|)
+value|free((x), _M_IPF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KFREES
+parameter_list|(
+name|x
+parameter_list|,
+name|s
+parameter_list|)
+value|free((x), _M_IPF)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -11325,6 +11391,11 @@ name|s
 parameter_list|)
 value|FREE((x), _M_IPF)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

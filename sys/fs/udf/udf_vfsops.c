@@ -1344,14 +1344,10 @@ operator|->
 name|v_bufobj
 expr_stmt|;
 comment|/* XXX: should be M_WAITOK */
-name|MALLOC
-argument_list|(
 name|udfmp
-argument_list|,
-expr|struct
-name|udf_mnt
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2177,7 +2173,7 @@ name|udfmp
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|udfmp
 argument_list|,
@@ -2359,7 +2355,7 @@ name|s_table
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|udfmp
 operator|->
@@ -2368,7 +2364,7 @@ argument_list|,
 name|M_UDFMOUNT
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|udfmp
 argument_list|,
@@ -2985,16 +2981,12 @@ operator|->
 name|l_ad
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|unode
 operator|->
 name|fentry
-argument_list|,
-expr|struct
-name|file_entry
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|size
 argument_list|,
 name|M_UDFFENTRY
@@ -3542,16 +3534,12 @@ name|pmap
 operator|+=
 name|UDF_PMAP_TYPE2_SIZE
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|udfmp
 operator|->
 name|s_table
-argument_list|,
-expr|struct
-name|udf_sparing_table
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|le32toh
 argument_list|(
 name|pms
@@ -3657,7 +3645,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|udfmp
 operator|->
@@ -3715,7 +3703,7 @@ argument_list|(
 literal|"Invalid sparing table found\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|udfmp
 operator|->

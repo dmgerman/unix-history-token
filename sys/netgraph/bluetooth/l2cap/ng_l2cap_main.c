@@ -379,12 +379,10 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* Create new L2CAP node */
-name|MALLOC
-argument_list|(
 name|l2cap
-argument_list|,
-name|ng_l2cap_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -527,7 +525,7 @@ name|l2cap
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|l2cap
 argument_list|,

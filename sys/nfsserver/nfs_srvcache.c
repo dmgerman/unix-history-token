@@ -1000,7 +1000,7 @@ name|rc_flag
 operator|&
 name|RC_NAM
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|rp
 operator|->

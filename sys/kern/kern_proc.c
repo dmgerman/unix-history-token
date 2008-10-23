@@ -2816,7 +2816,7 @@ operator|->
 name|pg_mtx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pgrp
 argument_list|,
@@ -3243,7 +3243,7 @@ operator|->
 name|s_mtx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|s
 argument_list|,
@@ -6142,14 +6142,10 @@ name|pargs
 modifier|*
 name|pa
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|pa
-argument_list|,
-expr|struct
-name|pargs
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6198,7 +6194,7 @@ modifier|*
 name|pa
 parameter_list|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|pa
 argument_list|,

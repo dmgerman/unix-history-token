@@ -564,7 +564,7 @@ name|vp
 operator|->
 name|v_lock
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|xp
 argument_list|,
@@ -679,14 +679,10 @@ return|;
 block|}
 comment|/* 	 * We do not serialize vnode creation, instead we will check for 	 * duplicates later, when adding new vnode to hash. 	 * 	 * Note that duplicate can only appear in hash if the lowervp is 	 * locked LK_SHARED. 	 */
 comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if MALLOC should block. 	 */
-name|MALLOC
-argument_list|(
 name|xp
-argument_list|,
-expr|struct
-name|null_node
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -718,7 +714,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|xp
 argument_list|,

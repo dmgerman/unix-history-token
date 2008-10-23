@@ -423,12 +423,10 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Initialize private descriptor */
-name|MALLOC
-argument_list|(
 name|privdata
-argument_list|,
-name|xxx_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1405,7 +1403,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|privdata
 argument_list|,
@@ -1438,7 +1436,7 @@ operator|->
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|privdata
 argument_list|,

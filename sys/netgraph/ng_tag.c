@@ -856,12 +856,10 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Create hook private structure. */
-name|MALLOC
-argument_list|(
 name|hip
-argument_list|,
-name|hinfo_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -902,7 +900,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|hip
 argument_list|,
@@ -933,7 +931,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|hip
 argument_list|,
@@ -2263,7 +2261,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|hip
 operator|->
@@ -2272,7 +2270,7 @@ argument_list|,
 name|M_NETGRAPH_TAG
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hip
 operator|->
@@ -2281,7 +2279,7 @@ argument_list|,
 name|M_NETGRAPH_TAG
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hip
 argument_list|,
@@ -2388,14 +2386,10 @@ operator|->
 name|tag_len
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|hp
-argument_list|,
-expr|struct
-name|ng_tag_hookin
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|size
 argument_list|,
 name|M_NETGRAPH_TAG
@@ -2422,7 +2416,7 @@ name|in
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|hip
 operator|->
@@ -2585,14 +2579,10 @@ operator|->
 name|tag_len
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|hp
-argument_list|,
-expr|struct
-name|ng_tag_hookout
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|size
 argument_list|,
 name|M_NETGRAPH_TAG
@@ -2619,7 +2609,7 @@ name|out
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|hip
 operator|->

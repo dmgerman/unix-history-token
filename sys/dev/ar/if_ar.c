@@ -1777,7 +1777,7 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * deallocate any system resources we may have 	 * allocated on behalf of this driver. 	 */
-name|FREE
+name|free
 argument_list|(
 name|hc
 operator|->
@@ -4912,14 +4912,10 @@ decl_stmt|;
 name|u_long
 name|memst
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|sc
-argument_list|,
-expr|struct
-name|ar_softc
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|hc
 operator|->
 name|numports

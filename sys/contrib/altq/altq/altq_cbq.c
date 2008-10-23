@@ -1419,13 +1419,10 @@ name|ENODEV
 operator|)
 return|;
 comment|/* allocate and initialize cbq_state_t */
-name|MALLOC
-argument_list|(
 name|cbqp
-argument_list|,
-name|cbq_state_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|cbq_state_t
@@ -1579,7 +1576,7 @@ name|root_
 argument_list|)
 expr_stmt|;
 comment|/* deallocate cbq_state_t */
-name|FREE
+name|free
 argument_list|(
 name|cbqp
 argument_list|,
@@ -4440,13 +4437,10 @@ name|ENXIO
 operator|)
 return|;
 comment|/* allocate and initialize cbq_state_t */
-name|MALLOC
-argument_list|(
 name|new_cbqp
-argument_list|,
-name|cbq_state_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|cbq_state_t
@@ -4537,7 +4531,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|new_cbqp
 argument_list|,
@@ -4707,7 +4701,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* deallocate cbq_state_t */
-name|FREE
+name|free
 argument_list|(
 name|cbqp
 argument_list|,
