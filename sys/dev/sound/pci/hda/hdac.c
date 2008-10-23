@@ -350,6 +350,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_82801J
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x3a3e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_SCH
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x811b)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_ALL
 value|HDA_MODEL_CONSTRUCT(INTEL, 0xffff)
 end_define
@@ -2000,6 +2014,18 @@ block|{
 name|HDA_INTEL_82801I
 block|,
 literal|"Intel 82801I"
+block|}
+block|,
+block|{
+name|HDA_INTEL_82801J
+block|,
+literal|"Intel 82801J"
+block|}
+block|,
+block|{
+name|HDA_INTEL_SCH
+block|,
+literal|"Intel SCH"
 block|}
 block|,
 block|{
