@@ -2746,6 +2746,8 @@ name|params
 operator|->
 name|entry_name
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 switch|switch
 condition|(
@@ -2827,8 +2829,6 @@ argument_list|(
 literal|1
 argument_list|,
 name|entry_name_size
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|assert
@@ -2842,7 +2842,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|new_common_entry
 operator|->
@@ -3105,8 +3105,6 @@ argument_list|(
 literal|1
 argument_list|,
 name|entry_name_size
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|assert
@@ -3120,7 +3118,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|new_mp_entry
 operator|->
