@@ -326,26 +326,13 @@ end_endif
 begin_define
 define|#
 directive|define
-name|DEFINE_PER_CPU
-parameter_list|(
-name|type
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|__typeof__(type) per_cpu__##name
-end_define
-
-begin_define
-define|#
-directive|define
 name|per_cpu
 parameter_list|(
 name|var
 parameter_list|,
 name|cpu
 parameter_list|)
-value|(*((void)cpu,&per_cpu__##var))
+value|(pcpu_find((cpu))->pc_ ## var)
 end_define
 
 begin_comment

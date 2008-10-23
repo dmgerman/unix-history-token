@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -105,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<machine/xen/hypervisor.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
 end_include
 
 begin_comment
@@ -412,32 +424,6 @@ begin_comment
 comment|/* IRQ<-> VIRQ mapping. */
 end_comment
 
-begin_expr_stmt
-name|DEFINE_PER_CPU
-argument_list|(
-name|int
-argument_list|,
-name|virq_to_irq
-index|[
-name|NR_VIRQS
-index|]
-argument_list|)
-operator|=
-block|{
-index|[
-literal|0
-operator|...
-name|NR_VIRQS
-operator|-
-literal|1
-index|]
-operator|=
-operator|-
-literal|1
-block|}
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* IRQ<-> IPI mapping. */
 end_comment
@@ -447,6 +433,23 @@ ifndef|#
 directive|ifndef
 name|NR_IPIS
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"NR_IPIS not defined"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -459,32 +462,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|DEFINE_PER_CPU
-argument_list|(
-name|int
-argument_list|,
-name|ipi_to_irq
-index|[
-name|NR_IPIS
-index|]
-argument_list|)
-operator|=
-block|{
-index|[
-literal|0
-operator|...
-name|NR_IPIS
-operator|-
-literal|1
-index|]
-operator|=
-operator|-
-literal|1
-block|}
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Bitmap indicating which PIRQs require Xen to be notified on unmask. */
@@ -971,7 +948,9 @@ parameter_list|)
 block|{
 name|int
 name|irq
-init|=
+decl_stmt|;
+name|irq
+operator|=
 name|per_cpu
 argument_list|(
 name|ipi_to_irq
@@ -981,7 +960,23 @@ argument_list|)
 index|[
 name|vector
 index|]
-decl_stmt|;
+expr_stmt|;
+name|irq
+operator|=
+operator|(
+name|pcpu_find
+argument_list|(
+operator|(
+name|cpu
+operator|)
+argument_list|)
+operator|->
+name|pc_ipi_to_irq
+operator|)
+index|[
+name|vector
+index|]
+expr_stmt|;
 name|notify_remote_via_irq
 argument_list|(
 name|irq
@@ -1412,6 +1407,20 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|irq
+operator|=
+name|find_unbound_irq
+argument_list|()
+operator|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 name|bind_virq
 operator|.
 name|virq
@@ -1442,11 +1451,6 @@ operator|=
 name|bind_virq
 operator|.
 name|port
-expr_stmt|;
-name|irq
-operator|=
-name|find_unbound_irq
-argument_list|()
 expr_stmt|;
 name|evtchn_to_irq
 index|[
@@ -1495,6 +1499,8 @@ name|irq
 index|]
 operator|++
 expr_stmt|;
+name|out
+label|:
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1594,11 +1600,6 @@ operator|=
 name|bind_ipi
 operator|.
 name|port
-expr_stmt|;
-name|irq
-operator|=
-name|find_unbound_irq
-argument_list|()
 expr_stmt|;
 name|evtchn_to_irq
 index|[
@@ -2227,19 +2228,17 @@ name|char
 modifier|*
 name|devname
 parameter_list|,
-name|driver_intr_t
-name|handler
+name|driver_filter_t
+name|filter
 parameter_list|,
 name|unsigned
 name|long
 name|irqflags
 parameter_list|)
 block|{
-name|unsigned
 name|int
 name|irq
-decl_stmt|;
-name|int
+decl_stmt|,
 name|retval
 decl_stmt|;
 name|irq
@@ -2272,9 +2271,9 @@ name|devname
 argument_list|,
 name|irq
 argument_list|,
-name|NULL
+name|filter
 argument_list|,
-name|handler
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3195,6 +3194,12 @@ argument_list|(
 name|evtchn
 argument_list|)
 expr_stmt|;
+else|else
+name|panic
+argument_list|(
+literal|"invalid evtchn"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3418,6 +3423,16 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|XEN_PRIVILEGED_GUEST
+name|panic
+argument_list|(
+literal|"unexpected pirq call"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -4474,7 +4489,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|NR_CPUS
+name|mp_ncpus
 condition|;
 name|cpu
 operator|++
@@ -4829,7 +4844,7 @@ name|evtchn_init
 argument_list|,
 name|SI_SUB_INTR
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|evtchn_init
 argument_list|,

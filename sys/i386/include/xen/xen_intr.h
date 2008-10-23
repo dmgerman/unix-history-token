@@ -224,7 +224,7 @@ name|char
 modifier|*
 name|devname
 parameter_list|,
-name|driver_intr_t
+name|driver_filter_t
 name|handler
 parameter_list|,
 name|unsigned
