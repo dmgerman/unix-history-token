@@ -1405,6 +1405,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|uart_tty_free
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+comment|/* 	 * XXX: uart(4) could reuse the device unit number before it is 	 * being freed by the TTY layer. We should use this hook to free 	 * the device unit number, but unfortunately newbus does not 	 * seem to support such a construct. 	 */
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1448,6 +1462,11 @@ operator|.
 name|tsw_modem
 operator|=
 name|uart_tty_modem
+block|,
+operator|.
+name|tsw_free
+operator|=
+name|uart_tty_free
 block|, }
 decl_stmt|;
 end_decl_stmt
