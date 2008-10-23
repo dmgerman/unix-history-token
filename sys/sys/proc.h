@@ -2237,11 +2237,11 @@ name|thread
 modifier|*
 name|p_singlethread
 decl_stmt|;
-comment|/* (c + j) If single threading this is it */
+comment|/* (c) If single threading this is it */
 name|int
 name|p_suspcount
 decl_stmt|;
-comment|/* (j) Num threads in suspended mode. */
+comment|/* (c) Num threads in suspended mode. */
 name|struct
 name|thread
 modifier|*

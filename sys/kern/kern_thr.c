@@ -1320,11 +1320,6 @@ operator|->
 name|td_sigqueue
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Shutting down last thread in the proc.  This will actually 	 * call exit() in the trampoline when it returns. 	 */
 if|if
 condition|(
@@ -1340,16 +1335,16 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|thread_exit
 argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
