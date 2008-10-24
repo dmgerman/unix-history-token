@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_u3g.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"usbdevs.h"
 end_include
 
