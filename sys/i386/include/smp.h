@@ -492,14 +492,14 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|CALL_FUNCTION_VECTOR
+name|RESCHEDULE_VECTOR
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESCHEDULE_VECTOR
+name|CALL_FUNCTION_VECTOR
 value|1
 end_define
 
