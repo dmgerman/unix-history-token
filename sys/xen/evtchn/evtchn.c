@@ -352,28 +352,80 @@ block|,
 name|IRQT_LOCAL_PORT
 block|,
 name|IRQT_CALLER_PORT
+block|,
+name|_IRQT_COUNT
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|_IRQT_BITS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|_EVTCHN_BITS
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|_INDEX_BITS
+value|(32 - _IRQT_BITS - _EVTCHN_BITS)
+end_define
 
 begin_comment
 comment|/* Constructor for packed IRQ information. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
 name|mk_irq_info
 parameter_list|(
+name|uint32_t
 name|type
 parameter_list|,
+name|uint32_t
 name|index
 parameter_list|,
+name|uint32_t
 name|evtchn
 parameter_list|)
-define|\
-value|(((uint32_t)(type)<< 24) | ((uint32_t)(index)<< 16) | (uint32_t)(evtchn))
-end_define
+block|{
+return|return
+operator|(
+operator|(
+name|type
+operator|<<
+operator|(
+literal|32
+operator|-
+name|_IRQT_BITS
+operator|)
+operator|)
+operator||
+operator|(
+name|index
+operator|<<
+name|_EVTCHN_BITS
+operator|)
+operator||
+name|evtchn
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Constructor for packed IRQ information. */
+end_comment
 
 begin_comment
 comment|/* Convenient shorthand for packed representation of an unbound IRQ. */
@@ -387,38 +439,98 @@ value|mk_irq_info(IRQT_UNBOUND, 0, 0)
 end_define
 
 begin_comment
-comment|/* Accessor macros for packed IRQ information. */
+comment|/*  * Accessors for packed IRQ information.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|int
 name|evtchn_from_irq
 parameter_list|(
+name|int
 name|irq
 parameter_list|)
-value|((uint16_t)(irq_info[irq]))
-end_define
+block|{
+return|return
+name|irq_info
+index|[
+name|irq
+index|]
+operator|&
+operator|(
+operator|(
+literal|1U
+operator|<<
+name|_EVTCHN_BITS
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|int
 name|index_from_irq
 parameter_list|(
+name|int
 name|irq
 parameter_list|)
-value|((uint8_t)(irq_info[irq]>> 16))
-end_define
+block|{
+return|return
+operator|(
+name|irq_info
+index|[
+name|irq
+index|]
+operator|>>
+name|_EVTCHN_BITS
+operator|)
+operator|&
+operator|(
+operator|(
+literal|1U
+operator|<<
+name|_INDEX_BITS
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|int
 name|type_from_irq
 parameter_list|(
+name|int
 name|irq
 parameter_list|)
-value|((uint8_t)(irq_info[irq]>> 24))
-end_define
+block|{
+return|return
+name|irq_info
+index|[
+name|irq
+index|]
+operator|>>
+operator|(
+literal|32
+operator|-
+name|_IRQT_BITS
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* IRQ<-> VIRQ mapping. */
@@ -511,12 +623,12 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CONFIG_SMP
+name|SMP
 end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|u8
+name|uint8_t
 name|cpu_evtchn
 index|[
 name|NR_EVENT_CHANNELS
@@ -957,22 +1069,6 @@ name|ipi_to_irq
 argument_list|,
 name|cpu
 argument_list|)
-index|[
-name|vector
-index|]
-expr_stmt|;
-name|irq
-operator|=
-operator|(
-name|pcpu_find
-argument_list|(
-operator|(
-name|cpu
-operator|)
-argument_list|)
-operator|->
-name|pc_ipi_to_irq
-operator|)
 index|[
 name|vector
 index|]
@@ -1513,8 +1609,23 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+specifier|extern
+name|int
+name|bind_ipi_to_irq
+parameter_list|(
+name|unsigned
+name|int
+name|ipi
+parameter_list|,
+name|unsigned
+name|int
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
-specifier|static
 name|int
 name|bind_ipi_to_irq
 parameter_list|(
@@ -4480,6 +4591,9 @@ decl_stmt|,
 modifier|*
 name|tpin
 decl_stmt|;
+name|init_evtchn_cpu_bindings
+argument_list|()
+expr_stmt|;
 comment|/* No VIRQ or IPI bindings. */
 for|for
 control|(
