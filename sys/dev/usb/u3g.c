@@ -103,11 +103,24 @@ directive|include
 file|<dev/usb/ucomvar.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
 begin_include
 include|#
 directive|include
 file|"opt_u3g.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -551,7 +564,7 @@ block|,
 name|USB_PRODUCT_HUAWEI_E220
 block|}
 block|,
-name|U3GSP_HSDPA
+name|U3GSP_HSPA
 block|,
 name|U3GFL_HUAWEI_INIT
 block|}
@@ -1709,6 +1722,22 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|__FreeBSD_version
+operator|<
+literal|700000
+name|ucom_attach_tty
+argument_list|(
+name|ucom
+argument_list|,
+name|MINOR_CALLOUT
+argument_list|,
+name|devnamefmt
+argument_list|,
+name|portno
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
 name|__FreeBSD_version
 operator|<
 literal|800000
