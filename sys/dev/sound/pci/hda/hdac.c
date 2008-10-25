@@ -22860,7 +22860,7 @@ break|break;
 case|case
 name|HDA_CODEC_AD1981HD
 case|:
-comment|/* 		 * This codec has very unusual design with several 		 * points unappropriate for the present parser. 		 */
+comment|/* 		 * This codec has very unusual design with several 		 * points inappropriate for the present parser. 		 */
 comment|/* Disable recording from mono playback mix. */
 name|w
 operator|=
