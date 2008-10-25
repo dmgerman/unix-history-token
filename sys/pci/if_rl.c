@@ -5775,11 +5775,6 @@ operator|->
 name|rl_txthresh
 expr_stmt|;
 comment|/* error recovery */
-name|rl_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|rl_init_locked
 argument_list|(
 name|sc
@@ -6083,18 +6078,11 @@ name|status
 operator|&
 name|RL_ISR_SYSTEM_ERR
 condition|)
-block|{
-name|rl_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|rl_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -6263,18 +6251,11 @@ name|status
 operator|&
 name|RL_ISR_SYSTEM_ERR
 condition|)
-block|{
-name|rl_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|rl_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -6907,6 +6888,11 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Cancel pending I/O and free all RX/TX buffers. 	 */
 name|rl_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|rl_reset
 argument_list|(
 name|sc
 argument_list|)
