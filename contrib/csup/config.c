@@ -590,13 +590,6 @@ name|co_options
 operator||=
 name|CO_SETMODE
 expr_stmt|;
-comment|/* XXX We don't support the rsync updating algorithm yet. */
-name|coll
-operator|->
-name|co_options
-operator||=
-name|CO_NORSYNC
-expr_stmt|;
 name|error
 operator|=
 name|config_parse_refusefiles
