@@ -3172,6 +3172,11 @@ name|ieee80211vap
 modifier|*
 name|vap
 parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|,
 specifier|const
 name|struct
 name|ieee80211_scan_entry
@@ -3301,9 +3306,7 @@ name|ni
 operator|->
 name|ni_chan
 operator|=
-name|se
-operator|->
-name|se_chan
+name|chan
 expr_stmt|;
 name|ni
 operator|->

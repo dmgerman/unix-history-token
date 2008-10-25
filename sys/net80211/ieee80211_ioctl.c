@@ -7919,6 +7919,12 @@ argument_list|,
 name|lookup
 operator|.
 name|se
+operator|->
+name|se_chan
+argument_list|,
+name|lookup
+operator|.
+name|se
 argument_list|)
 condition|)
 return|return
