@@ -707,6 +707,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* XXX AUTH'd */
+comment|/* XXX mark vap to identify if associd is required */
 if|if
 condition|(
 name|ni
@@ -714,21 +715,25 @@ operator|->
 name|ni_associd
 operator|==
 literal|0
-condition|)
-block|{
-comment|/* 			 * Destination is not associated; must special 			 * case DWDS where we point iv_bss at the node 			 * for the associated station. 			 * XXX adhoc mode? 			 */
-if|if
-condition|(
-name|ni
-operator|!=
+operator|&&
+operator|(
 name|vap
 operator|->
-name|iv_bss
+name|iv_opmode
+operator|==
+name|IEEE80211_M_STA
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_HOSTAP
 operator|||
 name|IS_DWDS
 argument_list|(
 name|vap
 argument_list|)
+operator|)
 condition|)
 block|{
 name|IEEE80211_DISCARD_MAC
@@ -776,7 +781,6 @@ name|ni
 argument_list|)
 expr_stmt|;
 continue|continue;
-block|}
 block|}
 if|if
 condition|(
