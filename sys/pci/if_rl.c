@@ -5841,21 +5841,6 @@ name|rl_watchdog_timer
 operator|=
 literal|0
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sc
-operator|->
-name|rl_watchdog_timer
-operator|==
-literal|0
-condition|)
-name|sc
-operator|->
-name|rl_watchdog_timer
-operator|=
-literal|5
-expr_stmt|;
 block|}
 end_function
 
