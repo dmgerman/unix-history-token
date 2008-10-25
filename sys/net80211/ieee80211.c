@@ -1768,23 +1768,6 @@ name|opmode
 condition|)
 block|{
 case|case
-name|IEEE80211_M_STA
-case|:
-comment|/* auto-enable s/w beacon miss support */
-if|if
-condition|(
-name|flags
-operator|&
-name|IEEE80211_CLONE_NOBEACONS
-condition|)
-name|vap
-operator|->
-name|iv_flags_ext
-operator||=
-name|IEEE80211_FEXT_SWBMISS
-expr_stmt|;
-break|break;
-case|case
 name|IEEE80211_M_WDS
 case|:
 comment|/* 		 * WDS links must specify the bssid of the far end. 		 * For legacy operation this is a static relationship. 		 * For non-legacy operation the station must associate 		 * and be authorized to pass traffic.  Plumbing the 		 * vap to the proper node happens when the vap 		 * transitions to RUN state. 		 */
@@ -1817,6 +1800,19 @@ name|IEEE80211_FEXT_WDSLEGACY
 expr_stmt|;
 break|break;
 block|}
+comment|/* auto-enable s/w beacon miss support */
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_CLONE_NOBEACONS
+condition|)
+name|vap
+operator|->
+name|iv_flags_ext
+operator||=
+name|IEEE80211_FEXT_SWBMISS
+expr_stmt|;
 comment|/* 	 * Enable various functionality by default if we're 	 * capable; the driver can override us if it knows better. 	 */
 if|if
 condition|(
