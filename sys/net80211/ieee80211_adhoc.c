@@ -737,9 +737,9 @@ name|IEEE80211_DPRINTF
 argument_list|(
 name|vap
 argument_list|,
-name|IEEE80211_MSG_ANY
+name|IEEE80211_MSG_STATE
 argument_list|,
-literal|"%s: invalid state transition %s -> %s\n"
+literal|"%s: unexpected state transition %s -> %s\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3173,6 +3173,26 @@ operator|!=
 name|IEEE80211_S_RUN
 condition|)
 block|{
+name|IEEE80211_DISCARD
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_INPUT
+argument_list|,
+name|wh
+argument_list|,
+name|NULL
+argument_list|,
+literal|"wrong state %s"
+argument_list|,
+name|ieee80211_state_name
+index|[
+name|vap
+operator|->
+name|iv_state
+index|]
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|iv_stats
@@ -3193,6 +3213,21 @@ argument_list|)
 condition|)
 block|{
 comment|/* frame must be directed */
+name|IEEE80211_DISCARD
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_INPUT
+argument_list|,
+name|wh
+argument_list|,
+name|NULL
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"not unicast"
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|iv_stats
@@ -3422,6 +3457,26 @@ operator|!=
 name|IEEE80211_S_RUN
 condition|)
 block|{
+name|IEEE80211_DISCARD
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_INPUT
+argument_list|,
+name|wh
+argument_list|,
+name|NULL
+argument_list|,
+literal|"wrong state %s"
+argument_list|,
+name|ieee80211_state_name
+index|[
+name|vap
+operator|->
+name|iv_state
+index|]
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|iv_stats
@@ -3585,6 +3640,21 @@ case|:
 case|case
 name|IEEE80211_FC0_SUBTYPE_DISASSOC
 case|:
+name|IEEE80211_DISCARD
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_INPUT
+argument_list|,
+name|wh
+argument_list|,
+name|NULL
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"not handled"
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|iv_stats

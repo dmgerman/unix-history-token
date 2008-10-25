@@ -1445,9 +1445,9 @@ name|IEEE80211_DPRINTF
 argument_list|(
 name|vap
 argument_list|,
-name|IEEE80211_MSG_ANY
+name|IEEE80211_MSG_STATE
 argument_list|,
-literal|"%s: invalid state transition %s -> %s\n"
+literal|"%s: unexpected state transition %s -> %s\n"
 argument_list|,
 name|__func__
 argument_list|,
