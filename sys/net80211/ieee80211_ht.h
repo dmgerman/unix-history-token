@@ -52,6 +52,12 @@ begin_struct
 struct|struct
 name|ieee80211_tx_ampdu
 block|{
+name|struct
+name|ieee80211_node
+modifier|*
+name|txa_ni
+decl_stmt|;
+comment|/* back pointer */
 name|u_short
 name|txa_flags
 decl_stmt|;
@@ -80,6 +86,11 @@ directive|define
 name|IEEE80211_AGGR_NAK
 value|0x0010
 comment|/* peer NAK'd ADDBA request */
+define|#
+directive|define
+name|IEEE80211_AGGR_BARPEND
+value|0x0020
+comment|/* BAR response pending */
 name|uint8_t
 name|txa_ac
 decl_stmt|;
@@ -122,11 +133,11 @@ comment|/* BA window size */
 name|uint8_t
 name|txa_attempts
 decl_stmt|;
-comment|/* # ADDBA requests w/o a response */
+comment|/* # ADDBA/BAR requests w/o a response*/
 name|int
 name|txa_nextrequest
 decl_stmt|;
-comment|/* soonest to make next ADDBA request */
+comment|/* soonest to make next request */
 name|struct
 name|callout
 name|txa_timer
@@ -830,10 +841,11 @@ name|struct
 name|ieee80211_node
 modifier|*
 parameter_list|,
-specifier|const
 name|struct
 name|ieee80211_tx_ampdu
 modifier|*
+parameter_list|,
+name|ieee80211_seq
 parameter_list|)
 function_decl|;
 end_function_decl

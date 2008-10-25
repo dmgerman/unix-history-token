@@ -1166,6 +1166,25 @@ name|ieee80211_tx_ampdu
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* BAR response received */
+name|void
+function_decl|(
+modifier|*
+name|ic_bar_response
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+parameter_list|,
+name|int
+name|status
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
