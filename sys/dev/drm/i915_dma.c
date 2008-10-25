@@ -5967,6 +5967,10 @@ argument_list|,
 name|i915_set_status_page
 argument_list|,
 name|DRM_AUTH
+operator||
+name|DRM_MASTER
+operator||
+name|DRM_ROOT_ONLY
 argument_list|)
 block|,
 ifdef|#
