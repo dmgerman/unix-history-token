@@ -2584,7 +2584,6 @@ name|tp
 operator|->
 name|snd_fack
 expr_stmt|;
-return|return;
 block|}
 end_function
 

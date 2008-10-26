@@ -5534,7 +5534,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7119,7 +7118,6 @@ operator|.
 name|tcps_sc_sendcookie
 operator|++
 expr_stmt|;
-return|return;
 block|}
 end_function
 
