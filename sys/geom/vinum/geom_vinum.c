@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -89,17 +95,71 @@ directive|include
 file|<geom/vinum/geom_vinum_share.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_geom
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_endif
-unit|SYSCTL_DECL(_kern_geom); SYSCTL_NODE(_kern_geom, OID_AUTO, vinum, CTLFLAG_RW, 0, "GEOM_VINUM stuff"); SYSCTL_UINT(_kern_geom_vinum, OID_AUTO, debug, CTLFLAG_RW,&gv_debug, 0,     "Debug level");
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_kern_geom
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vinum
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"GEOM_VINUM stuff"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|u_int
+name|g_vinum_debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.vinum.debug"
+argument_list|,
+operator|&
+name|g_vinum_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_geom_vinum
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|g_vinum_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
@@ -1781,9 +1841,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"geom_vinum: %s: drive disapeared?\n"
+literal|0
+argument_list|,
+literal|"%s: drive disappeared?"
 argument_list|,
 name|d
 operator|->

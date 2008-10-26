@@ -687,9 +687,11 @@ operator|==
 name|GV_LEGACY_SPARC64
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"VINUM: detected legacy sparc64 header\n"
+literal|1
+argument_list|,
+literal|"detected legacy sparc64 header"
 argument_list|)
 expr_stmt|;
 name|m_hdr
@@ -823,9 +825,11 @@ operator|==
 name|GV_LEGACY_POWERPC
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"VINUM: detected legacy PowerPC header\n"
+literal|1
+argument_list|,
+literal|"detected legacy PowerPC header"
 argument_list|)
 expr_stmt|;
 name|m_hdr
@@ -959,9 +963,11 @@ operator|==
 name|GV_LEGACY_I386
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"VINUM: detected legacy i386 header\n"
+literal|1
+argument_list|,
+literal|"detected legacy i386 header"
 argument_list|)
 expr_stmt|;
 name|m_hdr
@@ -1084,9 +1090,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"VINUM: detected legacy amd64 header\n"
+literal|1
+argument_list|,
+literal|"detected legacy amd64 header"
 argument_list|)
 expr_stmt|;
 name|m_hdr
@@ -1887,9 +1895,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: drive %s has NULL hdr\n"
+literal|0
+argument_list|,
+literal|"drive %s has NULL hdr"
 argument_list|,
 name|d
 operator|->
@@ -1979,9 +1989,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: g_access failed on drive %s, errno %d\n"
+literal|0
+argument_list|,
+literal|"g_access failed on drive %s, errno %d"
 argument_list|,
 name|d
 operator|->
@@ -2021,9 +2033,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: writing vhdr failed on drive %s, "
+literal|0
+argument_list|,
+literal|"writing vhdr failed on drive %s, "
 literal|"errno %d"
 argument_list|,
 name|d
@@ -2056,9 +2070,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: writing first config copy failed "
+literal|0
+argument_list|,
+literal|"writing first config copy failed "
 literal|"on drive %s, errno %d"
 argument_list|,
 name|d
@@ -2092,9 +2108,11 @@ if|if
 condition|(
 name|error
 condition|)
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: writing second config copy failed "
+literal|0
+argument_list|,
+literal|"writing second config copy failed "
 literal|"on drive %s, errno %d"
 argument_list|,
 name|d
@@ -4155,10 +4173,12 @@ operator|->
 name|nend
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: dead drive '%s' has still "
-literal|"active requests, can't detach consumer\n"
+literal|0
+argument_list|,
+literal|"dead drive '%s' still has "
+literal|"active requests, cannot detach consumer"
 argument_list|,
 name|d
 operator|->
@@ -4221,9 +4241,11 @@ name|ace
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: lost drive '%s'\n"
+literal|1
+argument_list|,
+literal|"lost drive '%s'"
 argument_list|,
 name|d
 operator|->

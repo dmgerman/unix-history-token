@@ -1893,10 +1893,12 @@ block|{
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: rebuild of %s failed to access consumer: "
-literal|"%d\n"
+literal|0
+argument_list|,
+literal|"rebuild of %s failed to access consumer: "
+literal|"%d"
 argument_list|,
 name|p
 operator|->
@@ -1925,9 +1927,11 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: rebuild of %s started\n"
+literal|1
+argument_list|,
+literal|"rebuild of %s started"
 argument_list|,
 name|p
 operator|->
@@ -1980,10 +1984,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: rebuild of %s failed creating bio: "
-literal|"out of memory\n"
+literal|0
+argument_list|,
+literal|"rebuild of %s failed creating bio: "
+literal|"out of memory"
 argument_list|,
 name|p
 operator|->
@@ -2053,10 +2059,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: rebuild of %s failed at offset %jd "
-literal|"errno: %d\n"
+literal|0
+argument_list|,
+literal|"rebuild of %s failed at offset %jd "
+literal|"errno: %d"
 argument_list|,
 name|p
 operator|->
@@ -2146,9 +2154,11 @@ condition|(
 operator|!
 name|error
 condition|)
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: rebuild of %s finished\n"
+literal|1
+argument_list|,
+literal|"rebuild of %s finished"
 argument_list|,
 name|p
 operator|->
@@ -2270,10 +2280,12 @@ block|{
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: sync from '%s' failed to access "
-literal|"consumer: %d\n"
+literal|0
+argument_list|,
+literal|"sync from '%s' failed to access "
+literal|"consumer: %d"
 argument_list|,
 name|sync
 operator|->
@@ -2328,10 +2340,12 @@ expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: sync to '%s' failed to access "
-literal|"consumer: %d\n"
+literal|0
+argument_list|,
+literal|"sync to '%s' failed to access "
+literal|"consumer: %d"
 argument_list|,
 name|p
 operator|->
@@ -2354,9 +2368,11 @@ block|}
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: plex sync %s -> %s started\n"
+literal|1
+argument_list|,
+literal|"plex sync %s -> %s started"
 argument_list|,
 name|sync
 operator|->
@@ -2414,10 +2430,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: sync read from '%s' failed at "
-literal|"offset %jd; errno: %d\n"
+literal|0
+argument_list|,
+literal|"sync read from '%s' failed at "
+literal|"offset %jd; errno: %d"
 argument_list|,
 name|sync
 operator|->
@@ -2445,10 +2463,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: sync write to '%s' failed at "
-literal|"offset %jd; out of memory\n"
+literal|0
+argument_list|,
+literal|"sync write to '%s' failed at "
+literal|"offset %jd; out of memory"
 argument_list|,
 name|p
 operator|->
@@ -2536,9 +2556,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: sync write to '%s' failed at "
+literal|0
+argument_list|,
+literal|"sync write to '%s' failed at "
 literal|"offset %jd; errno: %d\n"
 argument_list|,
 name|p
@@ -2605,9 +2627,11 @@ condition|(
 operator|!
 name|error
 condition|)
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: plex sync %s -> %s finished\n"
+literal|1
+argument_list|,
+literal|"plex sync %s -> %s finished"
 argument_list|,
 name|sync
 operator|->
@@ -2842,10 +2866,12 @@ expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: subdisk '%s' init: failed to access "
-literal|"consumer; error: %d\n"
+literal|0
+argument_list|,
+literal|"subdisk '%s' init: failed to access "
+literal|"consumer; error: %d"
 argument_list|,
 name|s
 operator|->
@@ -2898,10 +2924,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: subdisk '%s' init: write failed"
-literal|" at offset %jd (drive offset %jd); error %d\n"
+literal|0
+argument_list|,
+literal|"subdisk '%s' init: write failed"
+literal|" at offset %jd (drive offset %jd); error %d"
 argument_list|,
 name|s
 operator|->
@@ -3006,9 +3034,11 @@ name|initialized
 operator|=
 literal|0
 expr_stmt|;
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: subdisk '%s' init: finished successfully\n"
+literal|1
+argument_list|,
+literal|"subdisk '%s' init: finished successfully"
 argument_list|,
 name|s
 operator|->

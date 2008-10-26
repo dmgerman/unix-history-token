@@ -1687,10 +1687,14 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: gv_rm_drive: couldn't access '%s', errno: "
-literal|"%d\n"
+literal|0
+argument_list|,
+literal|"%s: unable to access '%s', errno: "
+literal|"%d"
+argument_list|,
+name|__func__
 argument_list|,
 name|cp
 operator|->
@@ -1735,10 +1739,14 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: gv_rm_drive: couldn't write header to '%s'"
-literal|", errno: %d\n"
+literal|0
+argument_list|,
+literal|"%s: unable to write header to '%s'"
+literal|", errno: %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|cp
 operator|->

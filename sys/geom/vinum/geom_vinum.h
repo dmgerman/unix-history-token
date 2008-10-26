@@ -722,6 +722,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|g_vinum_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|G_VINUM_DEBUG
+parameter_list|(
+name|lvl
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {					\ 	if (g_vinum_debug>= (lvl)) {					\ 		printf("GEOM_VINUM");					\ 		if (g_vinum_debug> 0)					\ 			printf("[%u]", lvl);				\ 		printf(": ");						\ 		printf(__VA_ARGS__);					\ 		printf("\n");						\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VINUM_LOGREQ
+parameter_list|(
+name|lvl
+parameter_list|,
+name|bp
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {				\ 	if (g_vinum_debug>= (lvl)) {					\ 		printf("GEOM_VINUM");					\ 		if (g_vinum_debug> 0)					\ 			printf("[%u]", lvl);				\ 		printf(": ");						\ 		printf(__VA_ARGS__);					\ 		printf(" ");						\ 		g_print_bio(bp);					\ 		printf("\n");						\ 	}								\ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -968,9 +968,11 @@ name|state
 operator|!=
 name|oldstate
 condition|)
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: subdisk %s state change: %s -> %s\n"
+literal|1
+argument_list|,
+literal|"subdisk %s state change: %s -> %s"
 argument_list|,
 name|s
 operator|->
@@ -1154,9 +1156,11 @@ name|state
 operator|!=
 name|oldstate
 condition|)
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: plex %s state change: %s -> %s\n"
+literal|1
+argument_list|,
+literal|"plex %s state change: %s -> %s"
 argument_list|,
 name|p
 operator|->
