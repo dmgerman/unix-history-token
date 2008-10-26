@@ -1424,6 +1424,9 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
+name|int
+name|tid
+parameter_list|,
 specifier|const
 name|uint8_t
 name|sa
@@ -1729,8 +1732,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX probe response use per-vap seq#? */
-comment|/* NB: use non-QoS tid */
 operator|*
 operator|(
 name|uint16_t
@@ -1750,7 +1751,7 @@ name|ni
 operator|->
 name|ni_txseqs
 index|[
-name|IEEE80211_NONQOS_TID
+name|tid
 index|]
 operator|<<
 name|IEEE80211_SEQ_SEQ_SHIFT
@@ -1760,7 +1761,7 @@ name|ni
 operator|->
 name|ni_txseqs
 index|[
-name|IEEE80211_NONQOS_TID
+name|tid
 index|]
 operator|++
 expr_stmt|;
@@ -1790,6 +1791,11 @@ name|m
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+name|struct
+name|ieee80211_bpf_params
+modifier|*
+name|params
 parameter_list|)
 block|{
 name|struct
@@ -1931,6 +1937,8 @@ name|IEEE80211_FC0_TYPE_MGT
 operator||
 name|type
 argument_list|,
+name|IEEE80211_NONQOS_TID
+argument_list|,
 name|vap
 operator|->
 name|iv_myaddr
@@ -1946,30 +1954,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|m
+name|params
 operator|->
-name|m_flags
+name|ibp_flags
 operator|&
-name|M_LINK0
-operator|)
-operator|!=
-literal|0
-operator|&&
-name|ni
-operator|->
-name|ni_challenge
-operator|!=
-name|NULL
+name|IEEE80211_BPF_CRYPTO
 condition|)
 block|{
-name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_LINK0
-expr_stmt|;
 name|IEEE80211_NOTE_MAC
 argument_list|(
 name|vap
@@ -1995,28 +1986,24 @@ operator||=
 name|IEEE80211_FC1_WEP
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|type
 operator|!=
 name|IEEE80211_FC0_SUBTYPE_PROBE_RESP
-condition|)
-block|{
-comment|/* NB: force non-ProbeResp frames to the highest queue */
-name|M_WME_SETAC
-argument_list|(
-name|m
 argument_list|,
-name|WME_AC_VO
+operator|(
+literal|"probe response?"
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
 name|M_WME_SETAC
 argument_list|(
 name|m
 argument_list|,
-name|WME_AC_BE
+name|params
+operator|->
+name|ibp_pri
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2096,7 +2083,7 @@ name|ni
 argument_list|,
 name|m
 argument_list|,
-name|NULL
+name|params
 argument_list|)
 return|;
 block|}
@@ -2251,6 +2238,8 @@ argument_list|,
 name|IEEE80211_FC0_TYPE_DATA
 operator||
 name|IEEE80211_FC0_SUBTYPE_NODATA
+argument_list|,
+name|IEEE80211_NONQOS_TID
 argument_list|,
 name|vap
 operator|->
@@ -7516,6 +7505,8 @@ name|IEEE80211_FC0_TYPE_MGT
 operator||
 name|IEEE80211_FC0_SUBTYPE_PROBE_REQ
 argument_list|,
+name|IEEE80211_NONQOS_TID
+argument_list|,
 name|sa
 argument_list|,
 name|da
@@ -7793,6 +7784,10 @@ operator|->
 name|iv_bss
 decl_stmt|;
 name|struct
+name|ieee80211_bpf_params
+name|params
+decl_stmt|;
+name|struct
 name|mbuf
 modifier|*
 name|m
@@ -7857,6 +7852,19 @@ expr_stmt|;
 name|ieee80211_ref_node
 argument_list|(
 name|ni
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|params
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|params
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -8123,13 +8131,13 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|m_flags
+comment|/* mark frame for encryption */
+name|params
+operator|.
+name|ibp_flags
 operator||=
-name|M_LINK0
+name|IEEE80211_BPF_CRYPTO
 expr_stmt|;
-comment|/* WEP-encrypt, please */
 block|}
 block|}
 else|else
@@ -9449,6 +9457,42 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+comment|/* NB: force non-ProbeResp frames to the highest queue */
+name|params
+operator|.
+name|ibp_pri
+operator|=
+name|WME_AC_VO
+expr_stmt|;
+name|params
+operator|.
+name|ibp_rate0
+operator|=
+name|bss
+operator|->
+name|ni_txparms
+operator|->
+name|mgmtrate
+expr_stmt|;
+comment|/* NB: we know all frames are unicast */
+name|params
+operator|.
+name|ibp_try0
+operator|=
+name|bss
+operator|->
+name|ni_txparms
+operator|->
+name|maxretry
+expr_stmt|;
+name|params
+operator|.
+name|ibp_power
+operator|=
+name|bss
+operator|->
+name|ni_txpower
+expr_stmt|;
 return|return
 name|ieee80211_mgmt_output
 argument_list|(
@@ -9457,6 +9501,9 @@ argument_list|,
 name|m
 argument_list|,
 name|type
+argument_list|,
+operator|&
+name|params
 argument_list|)
 return|;
 name|bad
@@ -10443,6 +10490,8 @@ argument_list|,
 name|IEEE80211_FC0_TYPE_MGT
 operator||
 name|IEEE80211_FC0_SUBTYPE_PROBE_RESP
+argument_list|,
+name|IEEE80211_NONQOS_TID
 argument_list|,
 name|vap
 operator|->

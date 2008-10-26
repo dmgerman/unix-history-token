@@ -261,6 +261,10 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|ieee80211_bpf_params
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
