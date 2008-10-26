@@ -1986,6 +1986,13 @@ operator||=
 name|IEEE80211_FC1_WEP
 expr_stmt|;
 block|}
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_ENCAP
+expr_stmt|;
+comment|/* mark encapsulated */
 name|KASSERT
 argument_list|(
 name|type
@@ -2537,6 +2544,13 @@ name|len
 operator|=
 name|hdrlen
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_ENCAP
+expr_stmt|;
+comment|/* mark encapsulated */
 name|M_WME_SETAC
 argument_list|(
 name|m
@@ -4790,6 +4804,13 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_ENCAP
+expr_stmt|;
+comment|/* mark encapsulated */
 name|IEEE80211_NODE_STAT
 argument_list|(
 name|ni
@@ -7777,6 +7798,13 @@ name|bssid
 argument_list|)
 expr_stmt|;
 comment|/* XXX power management? */
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_ENCAP
+expr_stmt|;
+comment|/* mark encapsulated */
 name|M_WME_SETAC
 argument_list|(
 name|m
@@ -10851,6 +10879,13 @@ name|ni_bssid
 argument_list|)
 expr_stmt|;
 comment|/* XXX power management? */
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_ENCAP
+expr_stmt|;
+comment|/* mark encapsulated */
 name|M_WME_SETAC
 argument_list|(
 name|m

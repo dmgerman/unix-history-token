@@ -891,6 +891,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_ENCAP
+value|M_PROTO1
+end_define
+
+begin_comment
+comment|/* 802.11 encap done */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_WDS
 value|M_PROTO2
 end_define
@@ -970,7 +981,7 @@ define|#
 directive|define
 name|M_80211_TX
 define|\
-value|(M_WDS|M_EAPOL|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
+value|(M_ENCAP|M_WDS|M_EAPOL|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
 end_define
 
 begin_comment
