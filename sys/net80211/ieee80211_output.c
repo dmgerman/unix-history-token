@@ -4373,14 +4373,6 @@ index|]
 operator|++
 expr_stmt|;
 block|}
-name|ni
-operator|->
-name|ni_txseqs
-index|[
-name|tid
-index|]
-operator|++
-expr_stmt|;
 block|}
 else|else
 block|{
