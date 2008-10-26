@@ -4153,7 +4153,7 @@ expr_stmt|;
 comment|/* 	 * Drain power save queue and, if needed, clear TIM. 	 */
 if|if
 condition|(
-name|ieee80211_node_saveq_drain
+name|ieee80211_node_psq_drain
 argument_list|(
 name|ni
 argument_list|)
@@ -4304,9 +4304,12 @@ operator|->
 name|ni_ies
 argument_list|)
 expr_stmt|;
-name|IEEE80211_NODE_SAVEQ_DESTROY
+name|ieee80211_psq_cleanup
 argument_list|(
+operator|&
 name|ni
+operator|->
+name|ni_psq
 argument_list|)
 expr_stmt|;
 name|IEEE80211_NODE_WDSQ_DESTROY
@@ -4353,17 +4356,18 @@ directive|endif
 comment|/* 	 * Age frames on the power save queue. 	 */
 if|if
 condition|(
-name|ieee80211_node_saveq_age
+name|ieee80211_node_psq_age
 argument_list|(
 name|ni
 argument_list|)
 operator|!=
 literal|0
 operator|&&
-name|IEEE80211_NODE_SAVEQ_QLEN
-argument_list|(
 name|ni
-argument_list|)
+operator|->
+name|ni_psq
+operator|.
+name|psq_len
 operator|==
 literal|0
 operator|&&
@@ -4729,9 +4733,12 @@ name|ni_ath_defkeyix
 operator|=
 literal|0x7fff
 expr_stmt|;
-name|IEEE80211_NODE_SAVEQ_INIT
+name|ieee80211_psq_init
 argument_list|(
+operator|&
 name|ni
+operator|->
+name|ni_psq
 argument_list|,
 literal|"unknown"
 argument_list|)
@@ -4980,9 +4987,12 @@ operator|->
 name|ni_txpower
 expr_stmt|;
 comment|/* XXX optimize away */
-name|IEEE80211_NODE_SAVEQ_INIT
+name|ieee80211_psq_init
 argument_list|(
+operator|&
 name|ni
+operator|->
+name|ni_psq
 argument_list|,
 literal|"unknown"
 argument_list|)

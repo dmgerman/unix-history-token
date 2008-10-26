@@ -804,6 +804,9 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Station in power save mode; pass the frame 			 * to the 802.11 layer and continue.  We'll get 			 * the frame back when the time is right. 			 * XXX lose WDS vap linkage? 			 */
+operator|(
+name|void
+operator|)
 name|ieee80211_pwrsave
 argument_list|(
 name|ni

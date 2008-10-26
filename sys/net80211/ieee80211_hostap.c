@@ -9524,10 +9524,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-name|vap
-operator|->
-name|iv_ifp
 decl_stmt|;
 name|struct
 name|mbuf
@@ -9660,12 +9656,13 @@ comment|/* 		 * NB: We used to deauth the station but it turns out 		 * the Blac
 return|return;
 block|}
 comment|/* Okay, take the first queued packet and put it out... */
-name|IEEE80211_NODE_SAVEQ_DEQUEUE
+name|m
+operator|=
+name|ieee80211_node_psq_dequeue
 argument_list|(
 name|ni
 argument_list|,
-name|m
-argument_list|,
+operator|&
 name|qlen
 argument_list|)
 expr_stmt|;
@@ -9795,6 +9792,29 @@ operator||=
 name|M_PWR_SAV
 expr_stmt|;
 comment|/* bypass PS handling */
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_ENCAP
+condition|)
+name|ifp
+operator|=
+name|vap
+operator|->
+name|iv_ic
+operator|->
+name|ic_ifp
+expr_stmt|;
+else|else
+name|ifp
+operator|=
+name|vap
+operator|->
+name|iv_ifp
+expr_stmt|;
 name|IF_ENQUEUE
 argument_list|(
 operator|&

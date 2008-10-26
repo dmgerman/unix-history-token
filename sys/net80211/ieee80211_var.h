@@ -112,13 +112,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<net80211/ieee80211_node.h>
+file|<net80211/ieee80211_power.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net80211/ieee80211_power.h>
+file|<net80211/ieee80211_node.h>
 end_include
 
 begin_include

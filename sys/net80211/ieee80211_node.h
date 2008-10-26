@@ -614,10 +614,10 @@ name|ni_txrate
 decl_stmt|;
 comment|/* legacy rate/MCS */
 name|struct
-name|ifqueue
-name|ni_savedq
+name|ieee80211_psq
+name|ni_psq
 decl_stmt|;
-comment|/* ps-poll queue */
+comment|/* power save queue */
 name|struct
 name|ieee80211_nodestats
 name|ni_stats
