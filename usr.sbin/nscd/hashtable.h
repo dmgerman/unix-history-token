@@ -105,7 +105,7 @@ parameter_list|,
 name|_entries_size
 parameter_list|)
 define|\
-value|do {								\ 		hashtable_index_t var;					\ 		(table)->entries = (void *)malloc(			\ 			sizeof(*(table)->entries) * (_entries_size));	\ 		memset((table)->entries, 0, 				\ 			sizeof(*(table)->entries) * (_entries_size));	\ 		(table)->entries_size = (_entries_size);		\ 		for (var = 0; var< HASHTABLE_ENTRIES_COUNT(table); ++var) {\ 			(table)->entries[var].field.capacity = 		\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY;	\ 			(table)->entries[var].field.size = 0;		\ 			(table)->entries[var].field.values = (type *)malloc(\ 				sizeof(type) * 				\ 		    		HASHTABLE_INITIAL_ENTRIES_CAPACITY);	\ 			assert((table)->entries[var].field.values != NULL);\ 		}							\ 	} while (0)
+value|do {								\ 		hashtable_index_t var;					\ 		(table)->entries = (void *)calloc(1,			\ 			sizeof(*(table)->entries) * (_entries_size));	\ 		(table)->entries_size = (_entries_size);		\ 		for (var = 0; var< HASHTABLE_ENTRIES_COUNT(table); ++var) {\ 			(table)->entries[var].field.capacity = 		\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY;	\ 			(table)->entries[var].field.size = 0;		\ 			(table)->entries[var].field.values = (type *)malloc(\ 				sizeof(type) * 				\ 		    		HASHTABLE_INITIAL_ENTRIES_CAPACITY);	\ 			assert((table)->entries[var].field.values != NULL);\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
