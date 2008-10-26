@@ -1403,7 +1403,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the direction field and address fields of an outgoing  * non-QoS frame.  Note this should be called early on in  * constructing a frame as it sets i_fc[1]; other bits can  * then be or'd in.  */
+comment|/*  * Set the direction field and address fields of an outgoing  * frame.  Note this should be called early on in constructing  * a frame as it sets i_fc[1]; other bits can then be or'd in.  */
 end_comment
 
 begin_function
