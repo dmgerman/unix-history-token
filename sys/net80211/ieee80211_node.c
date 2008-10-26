@@ -2880,7 +2880,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if the current channel needs to change based on whether  * any vap's are using HT20/HT40.  This is used sync the state of  * ic_curchan after a channel width change on a running vap.  */
+comment|/*  * Check if the current channel needs to change based on whether  * any vap's are using HT20/HT40.  This is used to sync the state  * of ic_curchan after a channel width change on a running vap.  */
 end_comment
 
 begin_function
@@ -4347,12 +4347,16 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|IEEE80211_NODE_LOCK_ASSERT(&ic->ic_sta);
-endif|#
-directive|endif
+name|IEEE80211_NODE_LOCK_ASSERT
+argument_list|(
+operator|&
+name|vap
+operator|->
+name|iv_ic
+operator|->
+name|ic_sta
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Age frames on the power save queue. 	 */
 if|if
 condition|(
