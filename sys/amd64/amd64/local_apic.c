@@ -1682,14 +1682,11 @@ name|lapic_timer_hz
 operator|<
 literal|128
 condition|)
-block|{
 name|stathz
 operator|=
-literal|128
+name|lapic_timer_hz
 expr_stmt|;
-block|}
 else|else
-block|{
 name|stathz
 operator|=
 name|lapic_timer_hz
@@ -1700,7 +1697,6 @@ operator|/
 literal|128
 operator|)
 expr_stmt|;
-block|}
 name|profhz
 operator|=
 name|lapic_timer_hz
