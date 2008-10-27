@@ -407,7 +407,11 @@ operator|>
 operator|(
 name|PAGE_SIZE
 operator|/
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dbdma_command
+argument_list|)
 operator|)
 condition|)
 return|return
@@ -648,7 +652,7 @@ name|DBDMA_STATUS_DEAD
 expr_stmt|;
 name|control_reg
 operator|<<=
-literal|16
+name|DBDMA_REG_MASK_SHIFT
 expr_stmt|;
 name|control_reg
 operator||=
@@ -684,7 +688,7 @@ name|DBDMA_STATUS_PAUSE
 expr_stmt|;
 name|control_reg
 operator|<<=
-literal|16
+name|DBDMA_REG_MASK_SHIFT
 expr_stmt|;
 name|control_reg
 operator||=
@@ -726,7 +730,7 @@ name|DBDMA_STATUS_DEAD
 expr_stmt|;
 name|control_reg
 operator|<<=
-literal|16
+name|DBDMA_REG_MASK_SHIFT
 expr_stmt|;
 name|control_reg
 operator||=
@@ -764,7 +768,7 @@ name|DBDMA_STATUS_RUN
 expr_stmt|;
 name|control_reg
 operator|<<=
-literal|16
+name|DBDMA_REG_MASK_SHIFT
 expr_stmt|;
 name|dbdma_write_reg
 argument_list|(
@@ -817,7 +821,11 @@ name|sc_slots_pa
 operator|+
 name|slot
 operator|*
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dbdma_command
+argument_list|)
 expr_stmt|;
 name|dbdma_write_reg
 argument_list|(
@@ -908,7 +916,7 @@ name|mask
 expr_stmt|;
 name|control_reg
 operator|<<=
-literal|16
+name|DBDMA_REG_MASK_SHIFT
 expr_stmt|;
 name|control_reg
 operator||=
@@ -950,7 +958,7 @@ name|mask
 expr_stmt|;
 name|intr_select
 operator|<<=
-literal|16
+name|DBDMA_REG_MASK_SHIFT
 expr_stmt|;
 name|intr_select
 operator||=
@@ -992,7 +1000,7 @@ name|mask
 expr_stmt|;
 name|br_select
 operator|<<=
-literal|16
+name|DBDMA_REG_MASK_SHIFT
 expr_stmt|;
 name|br_select
 operator||=
@@ -1034,7 +1042,7 @@ name|mask
 expr_stmt|;
 name|wait_select
 operator|<<=
-literal|16
+name|DBDMA_REG_MASK_SHIFT
 expr_stmt|;
 name|wait_select
 operator||=
@@ -1163,7 +1171,11 @@ name|sc_slots_pa
 operator|+
 name|branch_slot
 operator|*
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dbdma_command
+argument_list|)
 expr_stmt|;
 else|else
 name|cmd
