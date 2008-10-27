@@ -2381,7 +2381,14 @@ block|}
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INVARIANTS
+end_ifndef
+
 begin_function
+specifier|static
 name|void
 name|sctp_recover_sent_list
 parameter_list|(
@@ -2657,6 +2664,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -2999,8 +3011,13 @@ name|tsnlast
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|INVARIANTS
 name|start_again
 label|:
+endif|#
+directive|endif
 name|chk
 operator|=
 name|TAILQ_FIRST
@@ -3113,10 +3130,6 @@ argument_list|(
 literal|"last acked>= chk on sent-Q"
 argument_list|)
 expr_stmt|;
-comment|/* to keep compiler happy */
-goto|goto
-name|start_again
-goto|;
 else|#
 directive|else
 name|SCTP_PRINTF
