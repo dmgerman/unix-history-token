@@ -2014,6 +2014,9 @@ literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
+name|u_int
+name|wmodes
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -3370,8 +3373,8 @@ name|ic_caps
 operator||=
 name|IEEE80211_C_FF
 expr_stmt|;
-if|if
-condition|(
+name|wmodes
+operator|=
 name|ath_hal_getwirelessmodes
 argument_list|(
 name|ah
@@ -3382,6 +3385,10 @@ name|ic_regdomain
 operator|.
 name|country
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wmodes
 operator|&
 operator|(
 name|HAL_MODE_108G
@@ -11813,7 +11820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Calculate the receive filter according to the  * operating mode and state:  *  * o always accept unicast, broadcast, and multicast traffic  * o accept PHY error frames when hardware doesn't have MIB support  *   to count and we need them for ANI (sta mode only at the moment)  *   and we are not scanning (ANI is disabled)  *   NB: only with recent hal's; older hal's add rx filter bits out  *       of sight and we need to blindly preserve them  * o probe request frames are accepted only when operating in  *   hostap, adhoc, or monitor modes  * o enable promiscuous mode  *   - when in monitor mode  *   - if interface marked PROMISC (assumes bridge setting is filtered)  * o accept beacons:  *   - when operating in station mode for collecting rssi data when  *     the station is otherwise quiet, or  *   - when operating in adhoc mode so the 802.11 layer creates  *     node table entries for peers,  *   - when scanning  *   - when doing s/w beacon miss (e.g. for ap+sta)  *   - when operating in ap mode in 11g to detect overlapping bss that  *     require protection  * o accept control frames:  *   - when in monitor mode  * XXX BAR frames for 11n  * XXX HT protection for 11n  */
+comment|/*  * Calculate the receive filter according to the  * operating mode and state:  *  * o always accept unicast, broadcast, and multicast traffic  * o accept PHY error frames when hardware doesn't have MIB support  *   to count and we need them for ANI (sta mode only until recently)  *   and we are not scanning (ANI is disabled)  *   NB: older hal's add rx filter bits out of sight and we need to  *	 blindly preserve them  * o probe request frames are accepted only when operating in  *   hostap, adhoc, or monitor modes  * o enable promiscuous mode  *   - when in monitor mode  *   - if interface marked PROMISC (assumes bridge setting is filtered)  * o accept beacons:  *   - when operating in station mode for collecting rssi data when  *     the station is otherwise quiet, or  *   - when operating in adhoc mode so the 802.11 layer creates  *     node table entries for peers,  *   - when scanning  *   - when doing s/w beacon miss (e.g. for ap+sta)  *   - when operating in ap mode in 11g to detect overlapping bss that  *     require protection  * o accept control frames:  *   - when in monitor mode  * XXX BAR frames for 11n  * XXX HT protection for 11n  */
 end_comment
 
 begin_function
@@ -11848,13 +11855,21 @@ decl_stmt|;
 name|u_int32_t
 name|rfilt
 decl_stmt|;
+name|rfilt
+operator|=
+name|HAL_RX_FILTER_UCAST
+operator||
+name|HAL_RX_FILTER_BCAST
+operator||
+name|HAL_RX_FILTER_MCAST
+expr_stmt|;
 if|#
 directive|if
 name|HAL_ABI_VERSION
 operator|<
 literal|0x08011600
 name|rfilt
-operator|=
+operator||=
 operator|(
 name|ath_hal_getrxfilter
 argument_list|(
@@ -11869,23 +11884,12 @@ operator||
 name|HAL_RX_FILTER_PHYERR
 operator|)
 operator|)
-operator||
-name|HAL_RX_FILTER_UCAST
-operator||
-name|HAL_RX_FILTER_BCAST
-operator||
-name|HAL_RX_FILTER_MCAST
 expr_stmt|;
-else|#
-directive|else
-name|rfilt
-operator|=
-name|HAL_RX_FILTER_UCAST
-operator||
-name|HAL_RX_FILTER_BCAST
-operator||
-name|HAL_RX_FILTER_MCAST
-expr_stmt|;
+elif|#
+directive|elif
+name|HAL_ABI_VERSION
+operator|<
+literal|0x08060100
 if|if
 condition|(
 name|ic
@@ -11894,6 +11898,24 @@ name|ic_opmode
 operator|==
 name|IEEE80211_M_STA
 operator|&&
+operator|!
+name|sc
+operator|->
+name|sc_needmib
+operator|&&
+operator|!
+name|sc
+operator|->
+name|sc_scanning
+condition|)
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_PHYERR
+expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
 operator|!
 name|sc
 operator|->

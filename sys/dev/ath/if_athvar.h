@@ -2472,6 +2472,18 @@ end_define
 begin_if
 if|#
 directive|if
+name|HAL_ABI_VERSION
+operator|<
+literal|0x08090100
+end_if
+
+begin_comment
+comment|/* XXX wrong for anything but amd64 and i386 */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__LP64__
@@ -2507,6 +2519,29 @@ name|_rd
 parameter_list|)
 define|\
 value|(*(uint16_t *)(((uint8_t *)&(_ah)[1]) + 128) = (_rd))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setregdomain
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rd
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_REG_DMN, 0, _rd, NULL)
 end_define
 
 begin_endif
