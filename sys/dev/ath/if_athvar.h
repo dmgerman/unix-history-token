@@ -1184,11 +1184,7 @@ name|sc_ledevent
 decl_stmt|;
 comment|/* time of last LED event */
 name|u_int8_t
-name|sc_rxrate
-decl_stmt|;
-comment|/* current rx rate for LED */
-name|u_int8_t
-name|sc_txrate
+name|sc_txrix
 decl_stmt|;
 comment|/* current tx rate for LED */
 name|u_int16_t
