@@ -24012,7 +24012,7 @@ decl_stmt|;
 name|u_int
 name|ix
 decl_stmt|;
-comment|/* 	 * NB: this assumes output has been stopped and 	 *     we do not need to block ath_tx_tasklet 	 */
+comment|/* 	 * NB: this assumes output has been stopped and 	 *     we do not need to block ath_tx_proc 	 */
 for|for
 control|(
 name|ix
