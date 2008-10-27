@@ -3386,9 +3386,9 @@ name|ieee80211_txparam
 modifier|*
 name|tp
 init|=
-name|an
+name|ni
 operator|->
-name|an_tp
+name|ni_txparms
 decl_stmt|;
 name|struct
 name|sample_node

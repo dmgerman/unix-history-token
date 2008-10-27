@@ -278,12 +278,6 @@ name|ieee80211_node
 name|an_node
 decl_stmt|;
 comment|/* base class */
-specifier|const
-name|struct
-name|ieee80211_txparam
-modifier|*
-name|an_tp
-decl_stmt|;
 name|u_int8_t
 name|an_mgmtrix
 decl_stmt|;

@@ -1141,25 +1141,15 @@ parameter_list|(
 name|_ix
 parameter_list|)
 value|(ni->ni_rates.rs_rates[(_ix)]& IEEE80211_RATE_VAL)
-name|struct
-name|ath_node
-modifier|*
-name|an
-init|=
-name|ATH_NODE
-argument_list|(
-name|ni
-argument_list|)
-decl_stmt|;
 specifier|const
 name|struct
 name|ieee80211_txparam
 modifier|*
 name|tp
 init|=
-name|an
+name|ni
 operator|->
-name|an_tp
+name|ni_txparms
 decl_stmt|;
 name|int
 name|srate
