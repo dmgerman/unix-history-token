@@ -317,6 +317,17 @@ block|, }
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|CTRY_XR9
+value|5001
+end_define
+
+begin_comment
+comment|/* Ubiquiti XR9 */
+end_comment
+
 begin_function_decl
 specifier|static
 name|struct
@@ -6378,6 +6389,12 @@ specifier|static
 name|void
 name|ath_mapchan
 parameter_list|(
+specifier|const
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
 name|HAL_CHANNEL
 modifier|*
 name|hc
@@ -6552,15 +6569,43 @@ name|channelFlags
 operator||=
 name|CHANNEL_HT40PLUS
 expr_stmt|;
-name|hc
-operator|->
-name|channel
-operator|=
+if|if
+condition|(
 name|IEEE80211_IS_CHAN_GSM
 argument_list|(
 name|chan
 argument_list|)
-condition|?
+condition|)
+block|{
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_regdomain
+operator|.
+name|country
+operator|==
+name|CTRY_XR9
+condition|)
+name|hc
+operator|->
+name|channel
+operator|=
+literal|2427
+operator|+
+operator|(
+name|chan
+operator|->
+name|ic_freq
+operator|-
+literal|907
+operator|)
+expr_stmt|;
+else|else
+name|hc
+operator|->
+name|channel
+operator|=
 literal|2422
 operator|+
 operator|(
@@ -6570,7 +6615,13 @@ name|chan
 operator|->
 name|ic_freq
 operator|)
-else|:
+expr_stmt|;
+block|}
+else|else
+name|hc
+operator|->
+name|channel
+operator|=
 name|chan
 operator|->
 name|ic_freq
@@ -6759,6 +6810,8 @@ expr_stmt|;
 comment|/* 	 * The basic interface to setting the hardware in a good 	 * state is ``reset''.  On return the hardware is known to 	 * be powered up and with interrupts disabled.  This must 	 * be followed by initialization of the appropriate bits 	 * and then setup of the interrupt mask. 	 */
 name|ath_mapchan
 argument_list|(
+name|ic
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -7238,6 +7291,8 @@ decl_stmt|;
 comment|/* 	 * Convert to a HAL channel description with the flags 	 * constrained to reflect the current operating mode. 	 */
 name|ath_mapchan
 argument_list|(
+name|ic
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -17204,6 +17259,8 @@ condition|)
 block|{
 name|ath_mapchan
 argument_list|(
+name|ic
+argument_list|,
 operator|&
 name|hchan
 argument_list|,
@@ -25182,6 +25239,8 @@ decl_stmt|;
 comment|/* 	 * Convert to a HAL channel description with 	 * the flags constrained to reflect the current 	 * operating mode. 	 */
 name|ath_mapchan
 argument_list|(
+name|ic
+argument_list|,
 operator|&
 name|hchan
 argument_list|,
@@ -27309,7 +27368,28 @@ name|ah
 argument_list|)
 condition|)
 block|{
-comment|/* remap to true frequencies */
+comment|/* 			 * Remap to true frequencies: Ubiquiti XR9 cards use a 			 * frequency mapping different from their SR9 cards. 			 * We define special country codes to deal with this.  			 */
+if|if
+condition|(
+name|cc
+operator|==
+name|CTRY_XR9
+condition|)
+name|ichan
+operator|->
+name|ic_freq
+operator|=
+literal|907
+operator|+
+operator|(
+name|ichan
+operator|->
+name|ic_freq
+operator|-
+literal|2427
+operator|)
+expr_stmt|;
+else|else
 name|ichan
 operator|->
 name|ic_freq
