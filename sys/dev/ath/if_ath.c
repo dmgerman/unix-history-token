@@ -26253,6 +26253,12 @@ name|vap
 operator|->
 name|iv_opmode
 operator|==
+name|IEEE80211_M_AHDEMO
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
 name|IEEE80211_M_IBSS
 operator|)
 expr_stmt|;
