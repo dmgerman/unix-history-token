@@ -29141,9 +29141,8 @@ index|]
 operator|.
 name|ieeerate
 operator||=
-literal|0x80
+name|IEEE80211_RATE_MCS
 expr_stmt|;
-comment|/* MCS */
 name|sc
 operator|->
 name|sc_hwmap
