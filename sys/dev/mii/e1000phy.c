@@ -613,6 +613,20 @@ name|MIIF_HAVEFIBER
 expr_stmt|;
 break|break;
 case|case
+name|MII_MODEL_MARVELL_E1149
+case|:
+comment|/* 		 * Some 88E1149 PHY's page select is initialized to 		 * point to other bank instead of copper/fiber bank 		 * which in turn resulted in wrong registers were 		 * accessed during PHY operation. It is believed that 		 * page 0 should be used for copper PHY so reinitialize 		 * E1000_EADR to select default copper PHY. If parent 		 * device know the type of PHY(either copper or fiber), 		 * that information should be used to select default 		 * type of PHY. 		 */
+name|PHY_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|E1000_EADR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|MII_MODEL_MARVELL_E3082
 case|:
 comment|/* 88E3082 10/100 Fast Ethernet PHY. */
