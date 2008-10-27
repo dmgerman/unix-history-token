@@ -23329,9 +23329,21 @@ name|bf
 operator|->
 name|bf_m
 argument_list|,
+operator|(
+name|bf
+operator|->
+name|bf_txflags
+operator|&
+name|HAL_TXDESC_NOACK
+operator|)
+operator|==
+literal|0
+condition|?
 name|ts
 operator|->
 name|ts_status
+else|:
+name|HAL_TXERR_XRETRY
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Reclaim reference to node. 			 * 			 * NB: the node may be reclaimed here if, for example 			 *     this is a DEAUTH message that was sent and the 			 *     node was timed out due to inactivity. 			 */
