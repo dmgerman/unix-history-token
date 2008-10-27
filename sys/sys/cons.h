@@ -135,12 +135,6 @@ modifier|*
 name|cn_putc
 decl_stmt|;
 comment|/* kernel putchar interface */
-name|struct
-name|tty
-modifier|*
-name|cn_tp
-decl_stmt|;
-comment|/* tty structure for console device */
 name|short
 name|cn_pri
 decl_stmt|;
@@ -150,10 +144,6 @@ modifier|*
 name|cn_arg
 decl_stmt|;
 comment|/* drivers method argument */
-name|int
-name|cn_unit
-decl_stmt|;
-comment|/* some drivers prefer this */
 name|int
 name|cn_flags
 decl_stmt|;
