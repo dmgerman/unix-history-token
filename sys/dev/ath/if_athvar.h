@@ -383,6 +383,29 @@ parameter_list|)
 value|do {						\     if ((y)>= -20)							\     	x = ATH_LPF_RSSI((x), ATH_RSSI_IN((y)), ATH_RSSI_LPF_LEN);	\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATH_EP_RND
+parameter_list|(
+name|x
+parameter_list|,
+name|mul
+parameter_list|)
+define|\
+value|((((x)%(mul))>= ((mul)/2)) ? ((x) + ((mul) - 1)) / (mul) : (x)/(mul))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RSSI
+parameter_list|(
+name|x
+parameter_list|)
+value|ATH_EP_RND(x, HAL_RSSI_EP_MULTIPLIER)
+end_define
+
 begin_struct
 struct|struct
 name|ath_buf
