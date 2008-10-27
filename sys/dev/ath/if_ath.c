@@ -11891,11 +11891,11 @@ name|ic_opmode
 operator|==
 name|IEEE80211_M_STA
 operator|||
-name|sc
+name|ic
 operator|->
-name|sc_opmode
+name|ic_opmode
 operator|==
-name|HAL_M_IBSS
+name|IEEE80211_M_IBSS
 operator|||
 name|sc
 operator|->
