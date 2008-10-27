@@ -332,6 +332,142 @@ name|EPSON_PC486_HA
 value|0x3b
 end_define
 
+begin_comment
+comment|/* IDE HDD geometry conversion. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AD_GEOM_ADJUST_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* Do nothing. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AD_GEOM_ADJUST_COMPATIDE
+value|1
+end_define
+
+begin_comment
+comment|/* PC-98 IDE BIOS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AD_GEOM_ADJUST_COMPATSCSI
+value|2
+end_define
+
+begin_comment
+comment|/* PC-98 SCSI. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AD_GEOM_ADJUST_COMPATCYL16
+value|100
+end_define
+
+begin_comment
+comment|/* Compat Rev. 1.28. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIASIZE_4_3G
+value|(4351LL * 1024LL * 1024LL)
+end_define
+
+begin_comment
+comment|/* 4351M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIASIZE_8G
+value|(8192LL * 1024LL * 1024LL)
+end_define
+
+begin_comment
+comment|/* 8192M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIASIZE_29_5G
+value|(30239LL * 1024LL * 1024LL)
+end_define
+
+begin_comment
+comment|/* 30239M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIASIZE_31_5G
+value|(32255LL * 1024 * 1024)
+end_define
+
+begin_comment
+comment|/* 32255M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIASIZE_32G
+value|(32768LL * 1024LL * 1024LL)
+end_define
+
+begin_comment
+comment|/* 32768M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIASIZE_60G
+value|(61440LL * 1024LL * 1024LL)
+end_define
+
+begin_comment
+comment|/* 61440M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIASIZE_120G
+value|(122400LL * 1024LL * 1024LL)
+end_define
+
+begin_comment
+comment|/* 122400M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIASIZE_127G
+value|(130558LL * 1024LL * 1024LL)
+end_define
+
+begin_comment
+comment|/* 130558M */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
