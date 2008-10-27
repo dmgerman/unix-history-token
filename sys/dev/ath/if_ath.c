@@ -22692,7 +22692,7 @@ argument_list|)
 expr_stmt|;
 name|bf
 operator|->
-name|bf_flags
+name|bf_txflags
 operator|=
 name|flags
 expr_stmt|;
@@ -23242,7 +23242,7 @@ operator|&&
 operator|(
 name|bf
 operator|->
-name|bf_flags
+name|bf_txflags
 operator|&
 name|HAL_TXDESC_NOACK
 operator|)
@@ -29160,7 +29160,7 @@ name|ds_data
 argument_list|,
 name|bf
 operator|->
-name|bf_flags
+name|bf_txflags
 argument_list|,
 operator|!
 name|done
@@ -32843,7 +32843,7 @@ argument_list|)
 expr_stmt|;
 name|bf
 operator|->
-name|bf_flags
+name|bf_txflags
 operator|=
 name|flags
 expr_stmt|;

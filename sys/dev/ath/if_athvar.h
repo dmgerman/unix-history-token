@@ -408,7 +408,7 @@ name|int
 name|bf_nseg
 decl_stmt|;
 name|int
-name|bf_flags
+name|bf_txflags
 decl_stmt|;
 comment|/* tx descriptor flags */
 name|struct
