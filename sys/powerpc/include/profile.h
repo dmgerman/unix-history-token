@@ -74,7 +74,7 @@ define|#
 directive|define
 name|MCOUNT
 define|\
-value|__asm("	.globl	_mcount						\n" \ "	.type	_mcount,@function				\n" \ "_mcount:							\n" \ "	stwu	%r1,-64(%r1)	/* alloca for reg save space */	\n" \ "	stw	%r3,16(%r1)	/* save parameter registers, */	\n" \ "	stw	%r4,20(%r1)    	/*  r3-10		     */	\n" \ "	stw	%r5,24(%r1)	       				\n" \ "	stw	%r6,28(%r1)	       				\n" \ "	stw	%r7,32(%r1)	       				\n" \ "	stw	%r8,36(%r1)	       				\n" \ "	stw	%r9,40(%r1)	       				\n" \ "	stw	%r10,44(%r1)					\n" \ "								\n" \ "	mflr	%r4		/* link register is 'selfpc' */	\n" \ "	stw	%r4,48(%r1)    	/* save since bl will scrub  */	\n" \ "	lwz	%r3,68(%r1)    	/* get 'frompc' from LR-save */	\n" \ "	bl	__mcount" _PLT "  /* __mcount(frompc, selfpc)*/	\n" \ "	lwz	%r3,68(%r1)					\n" \ "	mtlr	%r3		/* restore caller's lr	     */	\n" \ "	lwz	%r4,48(%r1)     			       	\n" \ "	mtctr	%r4		/* set up ctr for call back  */	\n" \ "				/* note that blr is not used!*/	\n" \ "	lwz	%r3,16(%r1)	/* restore r3-10 parameters  */	\n" \ "	lwz	%r4,20(%r1)	       				\n" \ "	lwz	%r5,24(%r1)	       				\n" \ "	lwz	%r6,28(%r1)	       				\n" \ "	lwz	%r7,32(%r1)	       				\n" \ "	lwz	%r8,36(%r1)	       				\n" \ "	lwz	%r9,40(%r1)	       				\n" \ "	lwz	%r10,44(%r1)					\n" \ "	addi	%r1,%r1,64	/* blow away alloca save area */ \n" \ "	bctr			/* return with indirect call */	\n" \ "_mcount_end:				\n" \ "	.size	_mcount,_mcount_end-_mcount");
+value|__asm(	"	.globl	_mcount			\n" \ 	"	.type	_mcount,@function	\n" \ 	"	.align	4			\n" \ 	"_mcount:				\n" \ 	"	stwu	%r1,-64(%r1)		\n" \ 	"	stw	%r3,16(%r1)		\n" \ 	"	stw	%r4,20(%r1)		\n" \ 	"	stw	%r5,24(%r1)		\n" \ 	"	stw	%r6,28(%r1)		\n" \ 	"	stw	%r7,32(%r1)		\n" \ 	"	stw	%r8,36(%r1)		\n" \ 	"	stw	%r9,40(%r1)		\n" \ 	"	stw	%r10,44(%r1)		\n" \ 	"	mflr	%r4			\n" \ 	"	stw	%r4,48(%r1)		\n" \ 	"	lwz	%r3,68(%r1)		\n" \ 	"	bl	__mcount" _PLT "	\n" \ 	"	lwz	%r3,68(%r1)		\n" \ 	"	mtlr	%r3			\n" \ 	"	lwz	%r4,48(%r1)		\n" \ 	"	mtctr	%r4			\n" \ 	"	lwz	%r3,16(%r1)		\n" \ 	"	lwz	%r4,20(%r1)		\n" \ 	"	lwz	%r5,24(%r1)		\n" \ 	"	lwz	%r6,28(%r1)		\n" \ 	"	lwz	%r7,32(%r1)		\n" \ 	"	lwz	%r8,36(%r1)		\n" \ 	"	lwz	%r9,40(%r1)		\n" \ 	"	lwz	%r10,44(%r1)		\n" \ 	"	addi	%r1,%r1,64		\n" \ 	"	bctr				\n" \ 	"_mcount_end:				\n" \ 	"	.size	_mcount,_mcount_end-_mcount");
 end_define
 
 begin_ifdef
@@ -90,7 +90,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|s = intr_disable();
+value|s = intr_disable()
 end_define
 
 begin_define
@@ -100,7 +100,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|intr_restore(s);
+value|intr_restore(s)
 end_define
 
 begin_define
@@ -110,44 +110,161 @@ name|MCOUNT_DECL
 parameter_list|(
 name|s
 parameter_list|)
-value|register_t s
+value|register_t s;
 end_define
 
-begin_function_decl
-name|void
-name|bintr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILING_LINT
+end_ifndef
 
-begin_function_decl
-name|void
-name|btrap
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
 
-begin_function_decl
-name|void
-name|eintr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<machine/trap.h>
+end_include
 
-begin_function_decl
+begin_define
+define|#
+directive|define
+name|__PROFILE_VECTOR_BASE
+value|EXC_RST
+end_define
+
+begin_define
+define|#
+directive|define
+name|__PROFILE_VECTOR_TOP
+value|(EXC_LAST + 0x100)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AIM */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|E500
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|interrupt_vector_base
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|interrupt_vector_top
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|__PROFILE_VECTOR_BASE
+value|(uintfptr_t)interrupt_vector_base
+end_define
+
+begin_define
+define|#
+directive|define
+name|__PROFILE_VECTOR_TOP
+value|(uintfptr_t)interrupt_vector_top
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* E500 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !COMPILING_LINT */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__PROFILE_VECTOR_BASE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__PROFILE_VECTOR_BASE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__PROFILE_VECTOR_TOP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__PROFILE_VECTOR_TOP
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+name|__inline
 name|void
-name|user
+name|powerpc_profile_interrupt
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|powerpc_profile_userspace
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
 
 begin_define
 define|#
@@ -157,7 +274,7 @@ parameter_list|(
 name|pc
 parameter_list|)
 define|\
-value|((pc< (uintfptr_t)VM_MAXUSER_ADDRESS) ? (uintfptr_t)user : pc)
+value|((pc< (uintfptr_t)VM_MAXUSER_ADDRESS) ?	\ 	    (uintfptr_t)powerpc_profile_userspace : pc)
 end_define
 
 begin_define
@@ -168,8 +285,21 @@ parameter_list|(
 name|pc
 parameter_list|)
 define|\
-value|((pc>= (uintfptr_t)btrap&& pc< (uintfptr_t)eintr) ?	\ 	    ((pc>= (uintfptr_t)bintr) ? (uintfptr_t)bintr :	\ 		(uintfptr_t)btrap) : ~0U)
+value|((pc>= __PROFILE_VECTOR_BASE&&		\ 	  pc< __PROFILE_VECTOR_TOP) ?			\ 	    (uintfptr_t)powerpc_profile_interrupt : ~0U)
 end_define
+
+begin_function_decl
+name|void
+name|__mcount
+parameter_list|(
+name|uintfptr_t
+name|frompc
+parameter_list|,
+name|uintfptr_t
+name|selfpc
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
