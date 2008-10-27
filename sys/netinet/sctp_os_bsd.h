@@ -189,29 +189,11 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|800044
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/vimage.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
