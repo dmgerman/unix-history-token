@@ -26269,14 +26269,6 @@ name|ni_bssid
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Notify the rate control algorithm so rates 	 * are setup should ath_beacon_alloc be called. 	 */
-name|ath_rate_newstate
-argument_list|(
-name|vap
-argument_list|,
-name|nstate
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Invoke the parent method to do net80211 work. 	 */
 name|error
 operator|=

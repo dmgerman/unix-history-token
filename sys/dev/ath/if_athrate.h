@@ -142,24 +142,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Update/reset rate control state for 802.11 state transitions.  * Important mostly as the analog to ath_rate_newassoc when operating  * in station mode.  */
-end_comment
-
-begin_function_decl
-name|void
-name|ath_rate_newstate
-parameter_list|(
-name|struct
-name|ieee80211vap
-modifier|*
-parameter_list|,
-name|enum
-name|ieee80211_state
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Transmit handling.  */
 end_comment
 
