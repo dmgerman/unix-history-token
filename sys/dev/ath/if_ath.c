@@ -26447,14 +26447,6 @@ break|break;
 case|case
 name|IEEE80211_M_STA
 case|:
-comment|/* 			 * Fakeup since we're not called by net80211. 			 */
-name|ath_newassoc
-argument_list|(
-name|ni
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Defer beacon timer configuration to the next 			 * beacon frame so we have a current TSF to use 			 * (any TSF collected when scanning is likely old). 			 */
 name|sc
 operator|->

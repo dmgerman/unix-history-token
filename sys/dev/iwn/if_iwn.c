@@ -20700,24 +20700,6 @@ return|return
 name|error
 return|;
 block|}
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_opmode
-operator|==
-name|IEEE80211_M_STA
-condition|)
-block|{
-comment|/* fake a join to init the tx rate */
-name|iwn_newassoc
-argument_list|(
-name|ni
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|error
 operator|=
 name|iwn_init_sensitivity

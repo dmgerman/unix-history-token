@@ -4331,24 +4331,6 @@ name|sc_bssid
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_STA
-condition|)
-block|{
-comment|/* fake a join to init the tx rate */
-name|zyd_newassoc
-argument_list|(
-name|ni
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 block|}
 default|default:
