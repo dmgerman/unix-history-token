@@ -146,7 +146,7 @@ parameter_list|(
 name|x
 modifier|...
 parameter_list|)
-value|do { if (u3gdebug) device_printf(sc->dev, ##x); } while (0)
+value|do { if (u3gdebug) device_printf(sc->sc_dev, ##x); } while (0)
 end_define
 
 begin_define
@@ -2410,18 +2410,6 @@ index|[
 literal|31
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|U3G_DEBUG
-name|device_t
-name|self
-init|=
-name|uaa
-operator|->
-name|device
-decl_stmt|;
-endif|#
-directive|endif
 name|usb_interface_descriptor_t
 modifier|*
 name|id
