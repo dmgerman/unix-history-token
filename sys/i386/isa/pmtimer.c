@@ -181,13 +181,11 @@ argument_list|)
 operator|==
 name|ENXIO
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* only one instance always */
 return|return
 operator|(
