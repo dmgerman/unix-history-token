@@ -2074,6 +2074,18 @@ goto|goto
 name|interpret
 goto|;
 block|}
+comment|/* 	 * NB: We unlock the vnode here because it is believed that none 	 * of the sv_copyout_strings/sv_fixup operations require the vnode. 	 */
+name|VOP_UNLOCK
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Copy out strings (args and env) and initialize stack base 	 */
 if|if
 condition|(
@@ -2219,17 +2231,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* close files on exec */
-name|VOP_UNLOCK
-argument_list|(
-name|imgp
-operator|->
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|fdcloseexec
 argument_list|(
 name|td
