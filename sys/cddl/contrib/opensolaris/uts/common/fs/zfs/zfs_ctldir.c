@@ -654,21 +654,21 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		accmode_t a_accmode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|int
-name|mode
+name|accmode_t
+name|accmode
 init|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 decl_stmt|;
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)

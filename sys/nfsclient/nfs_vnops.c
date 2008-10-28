@@ -1451,7 +1451,7 @@ condition|(
 operator|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VWRITE
 operator|)
@@ -1502,7 +1502,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VREAD
 condition|)
@@ -1528,7 +1528,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1544,7 +1544,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VEXEC
 condition|)
@@ -1559,7 +1559,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1577,7 +1577,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VEXEC
 condition|)
@@ -1795,7 +1795,7 @@ operator|&&
 operator|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VREAD
 operator|)
@@ -16888,12 +16888,12 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-name|mode_t
-name|mode
+name|accmode_t
+name|accmode
 init|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 decl_stmt|;
 name|struct
 name|vattr
@@ -16906,7 +16906,7 @@ comment|/* 	 * Disallow write attempts on filesystems mounted read-only; 	 * unl
 if|if
 condition|(
 operator|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 operator|)
@@ -16990,7 +16990,7 @@ name|vap
 operator|->
 name|va_gid
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|cred
 argument_list|,

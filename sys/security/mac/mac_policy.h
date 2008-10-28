@@ -50,6 +50,16 @@ begin_comment
 comment|/* XXX acl_type_t */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* XXX accmode_t */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|acl
@@ -5151,8 +5161,8 @@ name|label
 modifier|*
 name|vplabel
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 function_decl|;
 end_typedef
@@ -5627,8 +5637,8 @@ name|label
 modifier|*
 name|vplabel
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 function_decl|;
 end_typedef

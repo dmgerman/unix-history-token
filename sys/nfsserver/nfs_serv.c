@@ -451,7 +451,7 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|int
+name|accmode_t
 parameter_list|,
 name|struct
 name|ucred
@@ -22288,8 +22288,8 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|int
-name|flags
+name|accmode_t
+name|accmode
 parameter_list|,
 name|struct
 name|ucred
@@ -22330,7 +22330,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -22419,7 +22419,7 @@ name|VOP_ACCESS
 argument_list|(
 name|vp
 argument_list|,
-name|flags
+name|accmode
 argument_list|,
 name|cred
 argument_list|,

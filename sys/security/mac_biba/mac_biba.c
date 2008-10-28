@@ -12361,8 +12361,8 @@ name|label
 modifier|*
 name|vplabel
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
 name|struct
@@ -12402,7 +12402,7 @@ expr_stmt|;
 comment|/* XXX privilege override for admin? */
 if|if
 condition|(
-name|acc_mode
+name|accmode
 operator|&
 operator|(
 name|VREAD
@@ -12431,7 +12431,7 @@ return|;
 block|}
 if|if
 condition|(
-name|acc_mode
+name|accmode
 operator|&
 operator|(
 name|VWRITE

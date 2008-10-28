@@ -154,6 +154,17 @@ end_comment
 begin_typedef
 typedef|typedef
 name|int
+name|__accmode_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* access permissions */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
 name|__nl_item
 typedef|;
 end_typedef

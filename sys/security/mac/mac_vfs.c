@@ -1347,8 +1347,8 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
 name|int
@@ -1373,7 +1373,7 @@ name|vp
 operator|->
 name|v_label
 argument_list|,
-name|acc_mode
+name|accmode
 argument_list|)
 expr_stmt|;
 return|return
@@ -2170,8 +2170,8 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
 name|int
@@ -2196,7 +2196,7 @@ name|vp
 operator|->
 name|v_label
 argument_list|,
-name|acc_mode
+name|accmode
 argument_list|)
 expr_stmt|;
 return|return

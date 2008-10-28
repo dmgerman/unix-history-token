@@ -408,11 +408,12 @@ operator|&
 name|vat
 decl_stmt|;
 name|int
-name|mode
-decl_stmt|,
 name|fmode
 decl_stmt|,
 name|error
+decl_stmt|;
+name|accmode_t
+name|accmode
 decl_stmt|;
 name|int
 name|vfslocked
@@ -936,7 +937,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|mode
+name|accmode
 operator|=
 literal|0
 expr_stmt|;
@@ -968,7 +969,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|mode
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -979,7 +980,7 @@ name|fmode
 operator|&
 name|FREAD
 condition|)
-name|mode
+name|accmode
 operator||=
 name|VREAD
 expr_stmt|;
@@ -989,7 +990,7 @@ name|fmode
 operator|&
 name|FEXEC
 condition|)
-name|mode
+name|accmode
 operator||=
 name|VEXEC
 expr_stmt|;
@@ -999,7 +1000,7 @@ name|fmode
 operator|&
 name|O_APPEND
 condition|)
-name|mode
+name|accmode
 operator||=
 name|VAPPEND
 expr_stmt|;
@@ -1014,7 +1015,7 @@ name|cred
 argument_list|,
 name|vp
 argument_list|,
-name|mode
+name|accmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -1039,7 +1040,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1061,7 +1062,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|mode
+name|accmode
 condition|)
 block|{
 name|error
@@ -1070,7 +1071,7 @@ name|VOP_ACCESS
 argument_list|(
 name|vp
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|cred
 argument_list|,

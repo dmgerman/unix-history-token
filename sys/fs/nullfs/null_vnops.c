@@ -1179,17 +1179,17 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-name|mode_t
-name|mode
+name|accmode_t
+name|accmode
 init|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 decl_stmt|;
 comment|/* 	 * Disallow write attempts on read-only layers; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the filesystem. 	 */
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)

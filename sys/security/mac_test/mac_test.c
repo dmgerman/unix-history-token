@@ -10304,8 +10304,8 @@ name|label
 modifier|*
 name|vplabel
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
 name|LABEL_CHECK
@@ -11151,8 +11151,8 @@ name|label
 modifier|*
 name|vplabel
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
 name|LABEL_CHECK

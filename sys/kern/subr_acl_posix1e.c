@@ -92,7 +92,7 @@ name|acl
 modifier|*
 name|acl
 parameter_list|,
-name|mode_t
+name|accmode_t
 name|acc_mode
 parameter_list|,
 name|struct
@@ -113,13 +113,13 @@ decl_stmt|,
 modifier|*
 name|acl_mask
 decl_stmt|;
-name|mode_t
+name|accmode_t
 name|dac_granted
 decl_stmt|;
-name|mode_t
+name|accmode_t
 name|priv_granted
 decl_stmt|;
-name|mode_t
+name|accmode_t
 name|acl_mask_granted
 decl_stmt|;
 name|int

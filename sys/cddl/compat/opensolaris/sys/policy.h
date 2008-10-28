@@ -160,8 +160,8 @@ parameter_list|,
 name|uint64_t
 name|owner
 parameter_list|,
-name|int
-name|mode
+name|accmode_t
+name|accmode
 parameter_list|)
 function_decl|;
 end_function_decl

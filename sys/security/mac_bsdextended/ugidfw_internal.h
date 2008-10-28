@@ -157,8 +157,8 @@ name|label
 modifier|*
 name|vplabel
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -494,8 +494,8 @@ name|label
 modifier|*
 name|vplabel
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 function_decl|;
 end_function_decl

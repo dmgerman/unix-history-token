@@ -15853,8 +15853,8 @@ parameter_list|,
 name|gid_t
 name|file_gid
 parameter_list|,
-name|mode_t
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|,
 name|struct
 name|ucred
@@ -15866,10 +15866,10 @@ modifier|*
 name|privused
 parameter_list|)
 block|{
-name|mode_t
+name|accmode_t
 name|dac_granted
 decl_stmt|;
-name|mode_t
+name|accmode_t
 name|priv_granted
 decl_stmt|;
 comment|/* 	 * Look for a normal, non-privileged way to access the file/directory 	 * as requested.  If it exists, go with that. 	 */
@@ -15939,12 +15939,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 name|dac_granted
 operator|)
 operator|==
-name|acc_mode
+name|accmode
 condition|)
 return|return
 operator|(
@@ -16003,12 +16003,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 name|dac_granted
 operator|)
 operator|==
-name|acc_mode
+name|accmode
 condition|)
 return|return
 operator|(
@@ -16057,12 +16057,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 name|dac_granted
 operator|)
 operator|==
-name|acc_mode
+name|accmode
 condition|)
 return|return
 operator|(
@@ -16087,7 +16087,7 @@ comment|/* 		 * For directories, use PRIV_VFS_LOOKUP to satisfy VEXEC 		 * reque
 if|if
 condition|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 name|VEXEC
 operator|)
@@ -16122,7 +16122,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 name|VEXEC
 operator|)
@@ -16155,7 +16155,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 name|VREAD
 operator|)
@@ -16187,7 +16187,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 name|VWRITE
 operator|)
@@ -16223,7 +16223,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 name|VADMIN
 operator|)
@@ -16255,7 +16255,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 operator|(
 name|priv_granted
@@ -16264,7 +16264,7 @@ name|dac_granted
 operator|)
 operator|)
 operator|==
-name|acc_mode
+name|accmode
 condition|)
 block|{
 comment|/* XXX audit: privilege used */
@@ -16288,7 +16288,7 @@ block|}
 return|return
 operator|(
 operator|(
-name|acc_mode
+name|accmode
 operator|&
 name|VADMIN
 operator|)
@@ -16327,8 +16327,8 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|int
-name|access
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
 comment|/* 	 * Kernel-invoked always succeeds. 	 */
@@ -16374,7 +16374,7 @@ name|VOP_ACCESS
 argument_list|(
 name|vp
 argument_list|,
-name|access
+name|accmode
 argument_list|,
 name|cred
 argument_list|,

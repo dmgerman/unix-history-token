@@ -10206,8 +10206,9 @@ decl_stmt|;
 block|{
 name|int
 name|error
-decl_stmt|,
-name|flags
+decl_stmt|;
+name|accmode_t
+name|accmode
 decl_stmt|;
 comment|/* Flags == 0 means only check for existence. */
 name|error
@@ -10219,7 +10220,7 @@ condition|(
 name|user_flags
 condition|)
 block|{
-name|flags
+name|accmode
 operator|=
 literal|0
 expr_stmt|;
@@ -10229,7 +10230,7 @@ name|user_flags
 operator|&
 name|R_OK
 condition|)
-name|flags
+name|accmode
 operator||=
 name|VREAD
 expr_stmt|;
@@ -10239,7 +10240,7 @@ name|user_flags
 operator|&
 name|W_OK
 condition|)
-name|flags
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -10249,7 +10250,7 @@ name|user_flags
 operator|&
 name|X_OK
 condition|)
-name|flags
+name|accmode
 operator||=
 name|VEXEC
 expr_stmt|;
@@ -10264,7 +10265,7 @@ name|cred
 argument_list|,
 name|vp
 argument_list|,
-name|flags
+name|accmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -10281,7 +10282,7 @@ directive|endif
 if|if
 condition|(
 operator|(
-name|flags
+name|accmode
 operator|&
 name|VWRITE
 operator|)
@@ -10305,7 +10306,7 @@ name|VOP_ACCESS
 argument_list|(
 name|vp
 argument_list|,
-name|flags
+name|accmode
 argument_list|,
 name|cred
 argument_list|,
@@ -22010,11 +22011,12 @@ decl_stmt|;
 name|int
 name|fmode
 decl_stmt|,
-name|mode
-decl_stmt|,
 name|error
 decl_stmt|,
 name|type
+decl_stmt|;
+name|accmode_t
+name|accmode
 decl_stmt|;
 name|struct
 name|file
@@ -22196,7 +22198,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|mode
+name|accmode
 operator|=
 literal|0
 expr_stmt|;
@@ -22242,7 +22244,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|mode
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -22253,7 +22255,7 @@ name|fmode
 operator|&
 name|FREAD
 condition|)
-name|mode
+name|accmode
 operator||=
 name|VREAD
 expr_stmt|;
@@ -22263,7 +22265,7 @@ name|fmode
 operator|&
 name|O_APPEND
 condition|)
-name|mode
+name|accmode
 operator||=
 name|VAPPEND
 expr_stmt|;
@@ -22280,7 +22282,7 @@ name|td_ucred
 argument_list|,
 name|vp
 argument_list|,
-name|mode
+name|accmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -22294,7 +22296,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|mode
+name|accmode
 condition|)
 block|{
 name|error
@@ -22303,7 +22305,7 @@ name|VOP_ACCESS
 argument_list|(
 name|vp
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|td
 operator|->

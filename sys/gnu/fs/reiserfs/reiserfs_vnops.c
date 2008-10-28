@@ -226,17 +226,17 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|mode_t
-name|mode
+name|accmode_t
+name|accmode
 init|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 decl_stmt|;
 comment|/* 	 * Disallow write attempts on read-only file systems; unless the file 	 * is a socket, fifo, or a block or character device resident on the 	 * file system. 	 */
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -290,7 +290,7 @@ comment|/* If immutable bit set, nobody gets to write it. */
 if|if
 condition|(
 operator|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 operator|)
@@ -343,7 +343,7 @@ name|i_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->

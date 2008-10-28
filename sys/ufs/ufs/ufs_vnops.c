@@ -1313,7 +1313,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		accmode_t a_accmode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1337,12 +1337,12 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|mode_t
-name|mode
+name|accmode_t
+name|accmode
 init|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 decl_stmt|;
 name|int
 name|error
@@ -1368,7 +1368,7 @@ directive|endif
 comment|/* 	 * Disallow write attempts on read-only filesystems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the filesystem. 	 */
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1519,7 +1519,7 @@ comment|/* If immutable bit set, nobody gets to write it. */
 if|if
 condition|(
 operator|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 operator|)
@@ -1617,7 +1617,7 @@ name|i_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->
@@ -1650,7 +1650,7 @@ name|acl
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->
@@ -1691,7 +1691,7 @@ name|i_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->
@@ -1735,7 +1735,7 @@ name|i_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->

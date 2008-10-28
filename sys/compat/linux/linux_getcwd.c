@@ -1038,8 +1038,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|int
-name|perms
+name|accmode_t
+name|accmode
 init|=
 name|VEXEC
 decl_stmt|;
@@ -1168,7 +1168,7 @@ name|VOP_ACCESS
 argument_list|(
 name|lvp
 argument_list|,
-name|perms
+name|accmode
 argument_list|,
 name|td
 operator|->
@@ -1184,7 +1184,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|perms
+name|accmode
 operator|=
 name|VEXEC
 operator||

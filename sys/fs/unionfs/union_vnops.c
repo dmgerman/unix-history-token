@@ -2680,8 +2680,8 @@ specifier|static
 name|int
 name|unionfs_check_corrected_access
 parameter_list|(
-name|u_short
-name|mode
+name|accmode_t
+name|accmode
 parameter_list|,
 name|struct
 name|vattr
@@ -2750,7 +2750,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VEXEC
 condition|)
@@ -2760,7 +2760,7 @@ name|S_IXUSR
 expr_stmt|;
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VREAD
 condition|)
@@ -2770,7 +2770,7 @@ name|S_IRUSR
 expr_stmt|;
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -2831,7 +2831,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VEXEC
 condition|)
@@ -2841,7 +2841,7 @@ name|S_IXGRP
 expr_stmt|;
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VREAD
 condition|)
@@ -2851,7 +2851,7 @@ name|S_IRGRP
 expr_stmt|;
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -2879,7 +2879,7 @@ block|}
 comment|/* check other */
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VEXEC
 condition|)
@@ -2889,7 +2889,7 @@ name|S_IXOTH
 expr_stmt|;
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VREAD
 condition|)
@@ -2899,7 +2899,7 @@ name|S_IROTH
 expr_stmt|;
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -2965,8 +2965,8 @@ name|struct
 name|vattr
 name|va
 decl_stmt|;
-name|int
-name|mode
+name|accmode_t
+name|accmode
 decl_stmt|;
 name|int
 name|error
@@ -3014,11 +3014,11 @@ name|ap
 operator|->
 name|a_td
 expr_stmt|;
-name|mode
+name|accmode
 operator|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 expr_stmt|;
 name|error
 operator|=
@@ -3027,7 +3027,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 operator|)
@@ -3085,7 +3085,7 @@ name|VOP_ACCESS
 argument_list|(
 name|uvp
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|ap
 operator|->
@@ -3116,7 +3116,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -3224,7 +3224,7 @@ name|error
 operator|=
 name|unionfs_check_corrected_access
 argument_list|(
-name|mode
+name|accmode
 argument_list|,
 operator|&
 name|va
@@ -3247,12 +3247,12 @@ operator|)
 return|;
 block|}
 block|}
-name|mode
+name|accmode
 operator|&=
 operator|~
 name|VWRITE
 expr_stmt|;
-name|mode
+name|accmode
 operator||=
 name|VREAD
 expr_stmt|;
@@ -3264,7 +3264,7 @@ name|VOP_ACCESS
 argument_list|(
 name|lvp
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|ap
 operator|->

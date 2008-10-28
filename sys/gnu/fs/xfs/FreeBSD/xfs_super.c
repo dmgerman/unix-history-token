@@ -498,8 +498,8 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
-name|mode_t
-name|accessmode
+name|accmode_t
+name|accmode
 decl_stmt|;
 name|td
 operator|=
@@ -600,7 +600,7 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
-name|accessmode
+name|accmode
 operator|=
 name|VREAD
 expr_stmt|;
@@ -609,7 +609,7 @@ condition|(
 operator|!
 name|ronly
 condition|)
-name|accessmode
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -619,7 +619,7 @@ name|VOP_ACCESS
 argument_list|(
 name|devvp
 argument_list|,
-name|accessmode
+name|accmode
 argument_list|,
 name|td
 operator|->

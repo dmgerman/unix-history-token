@@ -262,6 +262,16 @@ begin_comment
 comment|/* XXX acl_type_t */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* accmode_t */
+end_comment
+
 begin_comment
 comment|/*  * Entry points to the TrustedBSD MAC Framework from the remainder of the  * kernel: entry points are named based on a principle object type and an  * action relating to it.  They are sorted alphabetically first by object  * type and then action.  In some situations, the principle object type is  * obvious, and in other cases, less so as multiple objects may be inolved  * in the operation.  */
 end_comment
@@ -3367,8 +3377,8 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3677,8 +3687,8 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 function_decl|;
 end_function_decl

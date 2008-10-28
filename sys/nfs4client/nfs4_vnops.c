@@ -1327,7 +1327,7 @@ condition|(
 operator|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VWRITE
 operator|)
@@ -1381,7 +1381,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VREAD
 condition|)
@@ -1407,7 +1407,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1423,7 +1423,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VEXEC
 condition|)
@@ -1438,7 +1438,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1456,7 +1456,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VEXEC
 condition|)
@@ -1594,7 +1594,7 @@ name|mode
 operator|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VREAD
 condition|?
@@ -1615,7 +1615,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1631,7 +1631,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VEXEC
 condition|)
@@ -1646,7 +1646,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1660,7 +1660,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VEXEC
 condition|)

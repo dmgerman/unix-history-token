@@ -269,14 +269,14 @@ parameter_list|,
 name|uint64_t
 name|owner
 parameter_list|,
-name|int
-name|mode
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
 if|if
 condition|(
 operator|(
-name|mode
+name|accmode
 operator|&
 name|VREAD
 operator|)
@@ -302,7 +302,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 operator|)
@@ -327,7 +327,7 @@ return|;
 block|}
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VEXEC
 condition|)

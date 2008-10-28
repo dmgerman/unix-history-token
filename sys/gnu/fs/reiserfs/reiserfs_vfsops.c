@@ -395,8 +395,8 @@ name|error
 decl_stmt|,
 name|len
 decl_stmt|;
-name|mode_t
-name|accessmode
+name|accmode_t
+name|accmode
 decl_stmt|;
 name|char
 modifier|*
@@ -650,7 +650,7 @@ operator|)
 return|;
 block|}
 comment|/* If mount by non-root, then verify that user has necessary 	 * permissions on the device. */
-name|accessmode
+name|accmode
 operator|=
 name|VREAD
 expr_stmt|;
@@ -666,7 +666,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|accessmode
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -676,7 +676,7 @@ name|VOP_ACCESS
 argument_list|(
 name|devvp
 argument_list|,
-name|accessmode
+name|accmode
 argument_list|,
 name|td
 operator|->

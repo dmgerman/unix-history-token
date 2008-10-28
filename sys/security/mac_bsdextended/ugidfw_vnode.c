@@ -130,10 +130,11 @@ name|label
 modifier|*
 name|vplabel
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
+comment|/* 	 * XXX: We pass accmode_t variable containing V* constants 	 *	as an int containing MBI_* constants. 	 */
 return|return
 operator|(
 name|ugidfw_check_vp
@@ -142,7 +143,10 @@ name|cred
 argument_list|,
 name|vp
 argument_list|,
-name|acc_mode
+operator|(
+name|int
+operator|)
+name|accmode
 argument_list|)
 operator|)
 return|;
@@ -661,10 +665,11 @@ name|label
 modifier|*
 name|vplabel
 parameter_list|,
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
+comment|/* 	 * XXX: We pass accmode_t variable containing V* constants 	 *	as an int containing MBI_* constants. 	 */
 return|return
 operator|(
 name|ugidfw_check_vp
@@ -673,7 +678,10 @@ name|cred
 argument_list|,
 name|vp
 argument_list|,
-name|acc_mode
+operator|(
+name|int
+operator|)
+name|accmode
 argument_list|)
 operator|)
 return|;

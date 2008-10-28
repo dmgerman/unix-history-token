@@ -549,7 +549,7 @@ name|va_gid
 argument_list|,
 name|va
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|va
 operator|->

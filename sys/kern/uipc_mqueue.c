@@ -5229,7 +5229,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct vop_access_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	int a_mode; 	struct ucred *a_cred; 	struct thread *a_td; };
+unit|struct vop_access_args { 	struct vop_generic_args a_gen; 	struct vnode *a_vp; 	accmode_t a_accmode; 	struct ucred *a_cred; 	struct thread *a_td; };
 endif|#
 directive|endif
 end_endif
@@ -5310,7 +5310,7 @@ name|va_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->
@@ -9707,8 +9707,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 init|=
 literal|0
 decl_stmt|;
@@ -9718,7 +9718,7 @@ name|flags
 operator|&
 name|FREAD
 condition|)
-name|acc_mode
+name|accmode
 operator||=
 name|VREAD
 expr_stmt|;
@@ -9728,7 +9728,7 @@ name|flags
 operator|&
 name|FWRITE
 condition|)
-name|acc_mode
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -9750,7 +9750,7 @@ name|pn
 operator|->
 name|mn_gid
 argument_list|,
-name|acc_mode
+name|accmode
 argument_list|,
 name|td
 operator|->
