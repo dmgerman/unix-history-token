@@ -756,9 +756,6 @@ name|void
 modifier|*
 name|sds_cookie
 decl_stmt|;
-name|bus_size_t
-name|sds_syncreg
-decl_stmt|;
 name|uint64_t
 name|sds_syncval
 decl_stmt|;
@@ -5077,8 +5074,10 @@ name|sds
 operator|->
 name|sds_sc
 decl_stmt|;
-name|uint64_t
+name|register_t
 name|reg
+decl_stmt|,
+name|s
 decl_stmt|;
 name|int
 name|timeout
@@ -5087,9 +5086,7 @@ name|SCHIZO_PCI_WRITE_8
 argument_list|(
 name|sc
 argument_list|,
-name|sds
-operator|->
-name|sds_syncreg
+name|TOMXMS_PCI_DMA_SYNC_PEND
 argument_list|,
 name|sds
 operator|->
@@ -5108,9 +5105,7 @@ name|SCHIZO_PCI_READ_8
 argument_list|(
 name|sc
 argument_list|,
-name|sds
-operator|->
-name|sds_syncreg
+name|TOMXMS_PCI_DMA_SYNC_PEND
 argument_list|)
 operator|&
 name|sds
@@ -5144,7 +5139,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|critical_enter
+name|s
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|reg
@@ -5165,9 +5162,24 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("stda %%f0, [%0] %1" 		    : : "r" (buf), "n" (ASI_BLK_COMMIT_S));
+asm|__asm __volatile("stda %%f0, [%0] %1"
+block|: :
+literal|"r"
+operator|(
+name|buf
+operator|)
+operator|,
+literal|"n"
+operator|(
+name|ASI_BLK_COMMIT_S
+operator|)
+block|)
+empty_stmt|;
+name|membar
+argument_list|(
+name|Sync
+argument_list|)
+expr_stmt|;
 name|wr
 argument_list|(
 name|fprs
@@ -5177,15 +5189,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|membar
+name|intr_restore
 argument_list|(
-name|Sync
+name|s
 argument_list|)
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
 block|}
+end_function
+
+begin_return
 return|return
 operator|(
 name|sds
@@ -5198,11 +5210,10 @@ name|sds_arg
 argument_list|)
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|schizo_intr_enable
 parameter_list|(
@@ -5501,28 +5512,20 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Schizo revision>= 2.3 (i.e. version>= 5) and Tomatillo bridges 	 * need to be manually told to sync DMA writes. 	 * Tomatillo revision<= 2.3 (i.e. version<= 4) bridges additionally 	 * need a block store as a workaround for a hardware bug. 	 * XXX setup of the wrapper and the contents of schizo_dmasync() 	 * should be moved to schizo(4)-specific bus_dma_tag_create() and 	 * bus_dmamap_sync() methods, respectively, once DMA tag creation 	 * is newbus'ified, so the wrapper isn't only applied for interrupt 	 * handlers but also for polling(4) callbacks. 	 */
+comment|/* 	 * Tomatillo and XMITS bridges need to be told to sync DMA writes 	 * based on the INO of the respective device. 	 * Tomatillo revision<= 2.3 (i.e. version<= 4) bridges additionally 	 * need a block store as a workaround for a hardware bug. 	 * XXX setup of the wrapper and the contents of schizo_dmasync() 	 * should be moved to schizo(4)-specific bus_dma_tag_create() and 	 * bus_dmamap_sync() methods, respectively, once DMA tag creation 	 * is newbus'ified, so the wrapper isn't only applied for interrupt 	 * handlers but also for polling(4) callbacks. 	 */
 if|if
 condition|(
-operator|(
-name|sc
-operator|->
-name|sc_mode
-operator|==
-name|SCHIZO_MODE_SCZ
-operator|&&
-name|sc
-operator|->
-name|sc_ver
-operator|>=
-literal|5
-operator|)
-operator|||
 name|sc
 operator|->
 name|sc_mode
 operator|==
 name|SCHIZO_MODE_TOM
+operator|||
+name|sc
+operator|->
+name|sc_mode
+operator|==
+name|SCHIZO_MODE_XMS
 condition|)
 block|{
 name|sds
@@ -5564,20 +5567,6 @@ operator|->
 name|sds_arg
 operator|=
 name|arg
-expr_stmt|;
-name|sds
-operator|->
-name|sds_syncreg
-operator|=
-name|sc
-operator|->
-name|sc_mode
-operator|==
-name|SCHIZO_MODE_SCZ
-condition|?
-name|SCZ_PCI_DMA_SYNC
-else|:
-name|TOMXMS_PCI_DMA_SYNC_PEND
 expr_stmt|;
 name|sds
 operator|->
