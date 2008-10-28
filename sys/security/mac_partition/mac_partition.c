@@ -185,7 +185,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|label_on_label
+name|partition_check
 parameter_list|(
 name|struct
 name|label
@@ -351,7 +351,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|label_on_label
+name|partition_check
 argument_list|(
 name|cr1
 operator|->
@@ -715,7 +715,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|label_on_label
+name|partition_check
 argument_list|(
 name|cred
 operator|->
@@ -761,7 +761,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|label_on_label
+name|partition_check
 argument_list|(
 name|cred
 operator|->
@@ -807,7 +807,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|label_on_label
+name|partition_check
 argument_list|(
 name|cred
 operator|->
@@ -856,7 +856,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|label_on_label
+name|partition_check
 argument_list|(
 name|cred
 operator|->
@@ -953,7 +953,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|label_on_label
+name|partition_check
 argument_list|(
 name|cred
 operator|->
