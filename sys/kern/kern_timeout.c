@@ -898,11 +898,15 @@ expr_stmt|;
 for|for
 control|(
 init|;
+operator|(
 name|cc
 operator|->
 name|cc_softticks
-operator|<
+operator|-
 name|ticks
+operator|)
+operator|<
+literal|0
 condition|;
 name|cc
 operator|->
