@@ -535,6 +535,19 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|stub_cred_associate_nfsd
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+specifier|static
 name|int
 name|stub_cred_check_relabel
 parameter_list|(
@@ -579,6 +592,32 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|stub_cred_create_init
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|stub_cred_create_swapper
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
+block|{  }
 end_function
 
 begin_function
@@ -2395,19 +2434,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|stub_proc_associate_nfsd
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
 name|int
 name|stub_proc_check_debug
 parameter_list|(
@@ -2793,32 +2819,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|stub_proc_create_init
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
-name|void
-name|stub_proc_create_swapper
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|)
-block|{  }
 end_function
 
 begin_function
@@ -5715,6 +5715,11 @@ operator|=
 name|stub_init_label
 block|,
 operator|.
+name|mpo_cred_associate_nfsd
+operator|=
+name|stub_cred_associate_nfsd
+block|,
+operator|.
 name|mpo_cred_check_relabel
 operator|=
 name|stub_cred_check_relabel
@@ -5728,6 +5733,16 @@ operator|.
 name|mpo_cred_copy_label
 operator|=
 name|stub_copy_label
+block|,
+operator|.
+name|mpo_cred_create_init
+operator|=
+name|stub_cred_create_init
+block|,
+operator|.
+name|mpo_cred_create_swapper
+operator|=
+name|stub_cred_create_swapper
 block|,
 operator|.
 name|mpo_cred_destroy_label
@@ -6210,11 +6225,6 @@ operator|=
 name|stub_priv_grant
 block|,
 operator|.
-name|mpo_proc_associate_nfsd
-operator|=
-name|stub_proc_associate_nfsd
-block|,
-operator|.
 name|mpo_proc_check_debug
 operator|=
 name|stub_proc_check_debug
@@ -6293,16 +6303,6 @@ operator|.
 name|mpo_proc_check_wait
 operator|=
 name|stub_proc_check_wait
-block|,
-operator|.
-name|mpo_proc_create_init
-operator|=
-name|stub_proc_create_init
-block|,
-operator|.
-name|mpo_proc_create_swapper
-operator|=
-name|stub_proc_create_swapper
 block|,
 operator|.
 name|mpo_socket_check_accept

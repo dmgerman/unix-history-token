@@ -1522,7 +1522,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_proc_associate_nfsd
+name|mac_cred_associate_nfsd
 argument_list|(
 name|nd
 operator|->
