@@ -1219,6 +1219,19 @@ name|reset
 operator|=
 name|ata_dbdma_reset
 expr_stmt|;
+comment|/* 	 * DBDMA's field for transfer size is 16 bits. This will overflow 	 * if we try to do a 64K transfer, so stop short of 64K. 	 */
+name|sc
+operator|->
+name|sc_ch
+operator|.
+name|dma
+operator|.
+name|segsize
+operator|=
+literal|126
+operator|*
+name|DEV_BSIZE
+expr_stmt|;
 name|sc
 operator|->
 name|sc_ch
