@@ -4557,11 +4557,6 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
