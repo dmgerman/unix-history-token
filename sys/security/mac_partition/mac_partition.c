@@ -298,7 +298,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Treat "0" as a no-op request. */
+comment|/* 	 * Treat "0" as a no-op request because it reflects an unset 	 * partition label.  If we ever want to support switching back to an 	 * unpartitioned state for a process, we'll need to differentiate the 	 * "not in a partition" and "no partition defined during internalize" 	 * conditions. 	 */
 if|if
 condition|(
 name|SLOT
