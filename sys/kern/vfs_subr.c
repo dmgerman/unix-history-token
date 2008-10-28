@@ -14963,7 +14963,9 @@ name|vpi_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|events
+operator|)
 return|;
 block|}
 name|vp
@@ -14997,7 +14999,9 @@ name|vpi_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
