@@ -1407,6 +1407,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|QUOTA
+comment|/* 			 * Inode is accounted in the quotas only if struct 			 * dquot is attached to it. VOP_ACCESS() is called 			 * from vn_open_cred() and provides a convenient 			 * point to call getinoquota(). 			 */
 if|if
 condition|(
 name|VOP_ISLOCKED
@@ -1417,6 +1418,7 @@ operator|!=
 name|LK_EXCLUSIVE
 condition|)
 block|{
+comment|/* 				 * Upgrade vnode lock, since getinoquota() 				 * requires exclusive lock to modify inode. 				 */
 name|relocked
 operator|=
 literal|1
