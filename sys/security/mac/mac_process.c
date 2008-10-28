@@ -226,7 +226,7 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|void
-name|mac_cred_mmapped_drop_perms_recurse
+name|mac_proc_vm_revoke_recurse
 parameter_list|(
 name|struct
 name|thread
@@ -1025,21 +1025,46 @@ end_comment
 
 begin_function
 name|void
-name|mac_cred_mmapped_drop_perms
+name|mac_proc_vm_revoke
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
+parameter_list|)
+block|{
 name|struct
 name|ucred
 modifier|*
 name|cred
-parameter_list|)
-block|{
+decl_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+name|cred
+operator|=
+name|crhold
+argument_list|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_ucred
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 comment|/* XXX freeze all other threads */
-name|mac_cred_mmapped_drop_perms_recurse
+name|mac_proc_vm_revoke_recurse
 argument_list|(
 name|td
 argument_list|,
@@ -1056,6 +1081,11 @@ name|vm_map
 argument_list|)
 expr_stmt|;
 comment|/* XXX allow other threads to continue */
+name|crfree
+argument_list|(
+name|cred
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1157,7 +1187,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mac_cred_mmapped_drop_perms_recurse
+name|mac_proc_vm_revoke_recurse
 parameter_list|(
 name|struct
 name|thread
@@ -1250,7 +1280,7 @@ operator|&
 name|MAP_ENTRY_IS_SUB_MAP
 condition|)
 block|{
-name|mac_cred_mmapped_drop_perms_recurse
+name|mac_proc_vm_revoke_recurse
 argument_list|(
 name|td
 argument_list|,

@@ -9491,7 +9491,7 @@ operator|=
 name|crget
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Prevent a lock order reversal in 		 * mac_cred_mmapped_drop_perms; ideally, the other user of 		 * subj->mtx wouldn't be holding Giant. 		 */
+comment|/* 		 * Prevent a lock order reversal in mac_proc_vm_revoke; 		 * ideally, the other user of subj->mtx wouldn't be holding 		 * Giant. 		 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -9603,11 +9603,9 @@ if|if
 condition|(
 name|dodrop
 condition|)
-name|mac_cred_mmapped_drop_perms
+name|mac_proc_vm_revoke
 argument_list|(
 name|curthread
-argument_list|,
-name|newcred
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
