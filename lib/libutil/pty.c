@@ -113,12 +113,6 @@ directive|include
 file|<termios.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
 begin_function
 name|int
 name|openpty
@@ -216,19 +210,6 @@ condition|(
 name|slavename
 operator|==
 name|NULL
-condition|)
-goto|goto
-name|bad
-goto|;
-if|if
-condition|(
-name|revoke
-argument_list|(
-name|slavename
-argument_list|)
-operator|==
-operator|-
-literal|1
 condition|)
 goto|goto
 name|bad
