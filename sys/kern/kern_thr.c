@@ -258,6 +258,13 @@ name|max_threads_per_proc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|max_threads_hits
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -718,11 +725,16 @@ name|p_numthreads
 operator|>=
 name|max_threads_per_proc
 condition|)
+block|{
+operator|++
+name|max_threads_hits
+expr_stmt|;
 return|return
 operator|(
 name|EPROCLIM
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|rtp
