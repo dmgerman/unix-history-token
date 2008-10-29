@@ -145,12 +145,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|MULTI_BLOCK_BROKEN
-end_define
-
 begin_comment
 comment|/* bus entry points */
 end_comment
@@ -916,24 +910,19 @@ name|sz
 decl_stmt|;
 name|int
 name|numblocks
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTI_BLOCK
-name|numblocks
-operator|=
+init|=
+name|min
+argument_list|(
 name|end
 operator|-
 name|block
-expr_stmt|;
-else|#
-directive|else
-name|numblocks
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
+argument_list|,
+name|mmc_get_max_data
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
