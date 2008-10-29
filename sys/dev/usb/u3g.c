@@ -128,11 +128,9 @@ directive|include
 file|"usbdevs.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|U3G_DEBUG
-end_define
+begin_comment
+comment|/* #define U3G_DEBUG */
+end_comment
 
 begin_ifdef
 ifdef|#
