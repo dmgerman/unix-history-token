@@ -128,9 +128,11 @@ directive|include
 file|"usbdevs.h"
 end_include
 
-begin_comment
-comment|//#define U3G_DEBUG
-end_comment
+begin_define
+define|#
+directive|define
+name|U3G_DEBUG
+end_define
 
 begin_ifdef
 ifdef|#
@@ -147,19 +149,6 @@ name|x
 modifier|...
 parameter_list|)
 value|do { if (u3gdebug) device_printf(sc->sc_dev, ##x); } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPRINTFN
-parameter_list|(
-name|n
-parameter_list|,
-name|x
-modifier|...
-parameter_list|)
-value|do { if (u3gdebug> (n)) device_printf(self, ##x); } while (0)
 end_define
 
 begin_decl_stmt
@@ -180,22 +169,6 @@ define|#
 directive|define
 name|DPRINTF
 parameter_list|(
-name|x
-modifier|...
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* nop */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DPRINTFN
-parameter_list|(
-name|n
-parameter_list|,
 name|x
 modifier|...
 parameter_list|)
@@ -546,12 +519,24 @@ block|{
 block|{
 name|USB_VENDOR_QUALCOMMINC
 block|,
+name|USB_PRODUCT_QUALCOMMINC_ZTE_STOR
+block|}
+block|,
+name|U3GSP_CDMA
+block|,
+name|U3GFL_SCSI_EJECT
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_QUALCOMMINC
+block|,
 name|USB_PRODUCT_QUALCOMMINC_CDMA_MSM
 block|}
 block|,
 name|U3GSP_CDMA
 block|,
-name|U3GFL_STUB_WAIT
+name|U3GFL_SCSI_EJECT
 block|}
 block|,
 comment|/* OEM: Huawei */
