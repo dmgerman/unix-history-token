@@ -1751,7 +1751,7 @@ literal|"ofdm"
 block|,
 literal|"OFDM"
 block|,
-literal|"cumulative ofdm phy error count"
+literal|"cumulative OFDM phy error count"
 block|}
 block|,
 define|#
@@ -1765,7 +1765,7 @@ literal|"cck"
 block|,
 literal|"CCK"
 block|,
-literal|"cumulative cck phy error count"
+literal|"cumulative CCK phy error count"
 block|}
 block|,
 define|#
@@ -1821,7 +1821,7 @@ literal|"ackbad"
 block|,
 literal|"ACKBAD"
 block|,
-literal|"bad ACK's"
+literal|"missing ACK's"
 block|}
 block|,
 define|#
@@ -1835,7 +1835,7 @@ literal|"rtsbad"
 block|,
 literal|"RTSBAD"
 block|,
-literal|"bad RTS"
+literal|"RTS without CTS"
 block|}
 block|,
 define|#
@@ -1849,7 +1849,7 @@ literal|"rtsgood"
 block|,
 literal|"RTSGOOD"
 block|,
-literal|"good RTS"
+literal|"successful RTS"
 block|}
 block|,
 define|#
@@ -2311,6 +2311,9 @@ name|firstepLevel
 decl_stmt|;
 name|uint8_t
 name|ofdmWeakSigDetectOff
+decl_stmt|;
+name|uint8_t
+name|cckWeakSigThreshold
 decl_stmt|;
 name|uint32_t
 name|listenTime
@@ -3743,6 +3746,14 @@ case|:
 name|ANI
 argument_list|(
 name|ofdmWeakSigDetectOff
+argument_list|)
+expr_stmt|;
+case|case
+name|S_ANI_CCK
+case|:
+name|ANI
+argument_list|(
+name|cckWeakSigThreshold
 argument_list|)
 expr_stmt|;
 case|case
@@ -5181,6 +5192,22 @@ case|:
 name|ANI
 argument_list|(
 name|firstepLevel
+argument_list|)
+expr_stmt|;
+case|case
+name|S_ANI_OFDM
+case|:
+name|ANI
+argument_list|(
+name|ofdmWeakSigDetectOff
+argument_list|)
+expr_stmt|;
+case|case
+name|S_ANI_CCK
+case|:
+name|ANI
+argument_list|(
+name|cckWeakSigThreshold
 argument_list|)
 expr_stmt|;
 case|case
