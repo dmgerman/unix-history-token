@@ -1640,6 +1640,17 @@ name|hz
 operator|*
 literal|4
 expr_stmt|;
+if|if
+condition|(
+name|lapic_timer_hz
+operator|<
+literal|128
+condition|)
+name|stathz
+operator|=
+name|lapic_timer_hz
+expr_stmt|;
+else|else
 name|stathz
 operator|=
 name|lapic_timer_hz
