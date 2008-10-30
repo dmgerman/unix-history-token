@@ -1812,11 +1812,6 @@ argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
-name|ata_start
-argument_list|(
-name|device
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|IOCATAATTACH
