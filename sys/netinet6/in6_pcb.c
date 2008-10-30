@@ -1399,7 +1399,7 @@ condition|(
 operator|*
 name|plocal_addr6
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
