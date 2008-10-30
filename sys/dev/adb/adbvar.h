@@ -42,6 +42,10 @@ name|device_t
 name|parent
 decl_stmt|;
 name|struct
+name|intr_config_hook
+name|enum_hook
+decl_stmt|;
+name|struct
 name|mtx
 name|sc_sync_mtx
 decl_stmt|;

@@ -3782,10 +3782,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|mask
-operator|=
-literal|0xffff
-expr_stmt|;
 comment|/* magical incantation to re-enable autopolling */
 name|uint8_t
 name|cmd
