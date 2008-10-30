@@ -129,7 +129,7 @@ file|"usbdevs.h"
 end_include
 
 begin_comment
-comment|/* #define U3G_DEBUG */
+comment|//#define U3G_DEBUG
 end_comment
 
 begin_ifdef
@@ -2558,9 +2558,16 @@ name|id
 operator|->
 name|bNumEndpoints
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"failed to find bulk-out pipe\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|usbd_open_pipe
@@ -2652,8 +2659,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|int
+name|err
+init|=
 name|usbd_transfer
 argument_list|(
 name|sc
@@ -2662,6 +2670,16 @@ name|sc_xfer
 argument_list|)
 operator|!=
 name|USBD_NORMAL_COMPLETION
+decl_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+name|USBD_NORMAL_COMPLETION
+operator|&&
+name|err
+operator|!=
+name|USBD_IN_PROGRESS
 condition|)
 block|{
 name|DPRINTF
@@ -2832,13 +2850,13 @@ name|u3g_dev_type
 operator|->
 name|flags
 operator|&
-name|U3GFL_SIERRA_INIT
+name|U3GFL_SCSI_EJECT
 operator|||
 name|u3g_dev_type
 operator|->
 name|flags
 operator|&
-name|U3GFL_SCSI_EJECT
+name|U3GFL_SIERRA_INIT
 operator|||
 name|u3g_dev_type
 operator|->
@@ -2951,12 +2969,6 @@ name|uaa
 operator|->
 name|device
 expr_stmt|;
-if|if
-condition|(
-name|uaa
-operator|->
-name|iface
-condition|)
 for|for
 control|(
 name|i
@@ -3035,7 +3047,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"sending CD eject command to change to modem mode \n"
+literal|"sending CD eject command to change to modem mode\n"
 argument_list|)
 expr_stmt|;
 if|if
