@@ -1554,7 +1554,7 @@ name|xfer
 operator|->
 name|done
 condition|?
-literal|0
+name|USBD_NORMAL_COMPLETION
 else|:
 name|USBD_IN_PROGRESS
 operator|)
