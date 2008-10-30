@@ -9230,11 +9230,16 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|IEEE80211_ATH_CAP
+argument_list|(
 name|ni
 operator|->
-name|ni_ath_flags
-operator|&
+name|ni_vap
+argument_list|,
+name|ni
+argument_list|,
 name|IEEE80211_NODE_FF
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Check queue length; if too deep drop this 			 * frame (tail drop considered good). 			 */
