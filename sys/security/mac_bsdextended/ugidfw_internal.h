@@ -21,6 +21,16 @@ end_comment
 
 begin_function_decl
 name|int
+name|ugidfw_accmode2mbi
+parameter_list|(
+name|accmode_t
+name|accmode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ugidfw_check
 parameter_list|(
 name|struct
