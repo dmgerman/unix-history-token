@@ -680,6 +680,8 @@ directive|ifdef
 name|INET6
 name|isipv6
 condition|?
+name|ntohs
+argument_list|(
 operator|(
 operator|(
 expr|struct
@@ -690,6 +692,7 @@ name|ipgen
 operator|)
 operator|->
 name|ip6_plen
+argument_list|)
 else|:
 endif|#
 directive|endif
