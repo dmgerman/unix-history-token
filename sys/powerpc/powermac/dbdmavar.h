@@ -85,11 +85,13 @@ begin_struct
 struct|struct
 name|dbdma_channel
 block|{
-name|bus_space_tag_t
-name|sc_bt
+name|struct
+name|resource
+modifier|*
+name|sc_regs
 decl_stmt|;
-name|bus_space_handle_t
-name|sc_bh
+name|u_int
+name|sc_off
 decl_stmt|;
 name|struct
 name|dbdma_command
@@ -133,6 +135,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHAN_CMDPTR_HI
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHAN_CMDPTR
 value|0x0C
 end_define
@@ -161,6 +170,13 @@ end_define
 begin_comment
 comment|/* Channel control is the write channel to channel status, the upper 16 bits    are a mask of which bytes to change */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DBDMA_REG_MASK_SHIFT
+value|16
+end_define
 
 begin_comment
 comment|/* Status bits 0-7 are device dependent status bits */
