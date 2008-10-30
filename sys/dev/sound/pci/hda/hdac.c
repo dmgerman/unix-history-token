@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081024_0114"
+value|"20081030_0115"
 end_define
 
 begin_expr_stmt
@@ -654,6 +654,13 @@ define|#
 directive|define
 name|DELL_D820_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(DELL, 0x01cc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DELL_V1400_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(DELL, 0x0227)
 end_define
 
 begin_define
@@ -22469,6 +22476,16 @@ block|,
 name|HDA_CODEC_STAC9205X
 block|,
 name|HDA_QUIRK_GPIO0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|DELL_V1400_SUBVENDOR
+block|,
+name|HDA_CODEC_STAC9228X
+block|,
+name|HDA_QUIRK_GPIO2
 block|,
 literal|0
 block|}
