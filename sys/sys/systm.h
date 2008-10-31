@@ -460,6 +460,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|inpcb
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|lock_object
 struct_decl|;
 end_struct_decl
@@ -1904,6 +1910,23 @@ name|struct
 name|socket
 modifier|*
 name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cr_canseeinpcb
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
