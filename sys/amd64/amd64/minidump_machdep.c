@@ -402,9 +402,16 @@ name|maxdumpsz
 decl_stmt|;
 name|maxdumpsz
 operator|=
+name|min
+argument_list|(
 name|di
 operator|->
 name|maxiosize
+argument_list|,
+name|MAXDUMPPGS
+operator|*
+name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

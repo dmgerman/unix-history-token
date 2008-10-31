@@ -792,16 +792,9 @@ name|di
 operator|.
 name|maxiosize
 operator|=
-name|min
-argument_list|(
 name|dp
 operator|->
 name|d_maxsize
-argument_list|,
-name|MAXDUMPPGS
-operator|*
-name|PAGE_SIZE
-argument_list|)
 expr_stmt|;
 name|di
 operator|.
