@@ -2763,6 +2763,21 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+comment|/* Don't annoy the user as we probe for partitions */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fmt
+argument_list|,
+literal|"Not ufs\n"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|va_start
 argument_list|(
 name|ap
