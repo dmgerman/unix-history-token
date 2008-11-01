@@ -355,7 +355,7 @@ name|ADDTRON_DEVICEID_8139
 block|,
 name|RL_8139
 block|,
-literal|"Addtron Technolgy 8139 10/100BaseTX"
+literal|"Addtron Technology 8139 10/100BaseTX"
 block|}
 block|,
 block|{
@@ -5688,7 +5688,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* No need to sync Rx memory block as we didn't mofify it. */
+comment|/* No need to sync Rx memory block as we didn't modify it. */
 block|}
 end_function
 
@@ -6034,7 +6034,7 @@ literal|0xbb39ce83
 block|}
 block|}
 decl_stmt|;
-comment|/* 	 * Tune the so-called twister registers of the RTL8139.  These 	 * are used to compensate for impendence mismatches.  The 	 * method for tuning these registes is undocumented and the 	 * following proceedure is collected from public sources. 	 */
+comment|/* 	 * Tune the so-called twister registers of the RTL8139.  These 	 * are used to compensate for impedance mismatches.  The 	 * method for tuning these registers is undocumented and the 	 * following procedure is collected from public sources. 	 */
 switch|switch
 condition|(
 name|sc
@@ -6045,7 +6045,7 @@ block|{
 case|case
 name|CHK_LINK
 case|:
-comment|/* 		 * If we have a sufficent link, then we can proceed in 		 * the state machine to the next stage.  If not, then 		 * disable further tuning after writing sane defaults. 		 */
+comment|/* 		 * If we have a sufficient link, then we can proceed in 		 * the state machine to the next stage.  If not, then 		 * disable further tuning after writing sane defaults. 		 */
 if|if
 condition|(
 name|CSR_READ_2
@@ -7036,7 +7036,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 		 * Make security concious people happy: zero out the 		 * bytes in the pad area, since we don't know what 		 * this mbuf cluster buffer's previous user might 		 * have left in it. 		 */
+comment|/* 		 * Make security-conscious people happy: zero out the 		 * bytes in the pad area, since we don't know what 		 * this mbuf cluster buffer's previous user might 		 * have left in it. 		 */
 name|bzero
 argument_list|(
 name|mtod
