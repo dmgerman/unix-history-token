@@ -912,6 +912,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* /dev/console selection. */
+end_comment
+
+begin_function_decl
+name|void
+name|ttyconsdev_select
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Pseudo-terminal hooks. */
 end_comment
 
