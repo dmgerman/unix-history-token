@@ -1707,6 +1707,9 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|sc
 operator|=
 name|CDEV_GET_SOFTC
@@ -1797,7 +1800,9 @@ name|EWOULDBLOCK
 return|;
 block|}
 comment|/* Otherwise, block on new data */
-name|cv_wait
+name|error
+operator|=
+name|cv_wait_sig
 argument_list|(
 operator|&
 name|sc
@@ -1810,6 +1815,25 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 block|}
 name|sc
 operator|->
