@@ -1591,9 +1591,14 @@ operator|->
 name|xt_outlow
 operator|)
 argument_list|,
+name|MIN
+argument_list|(
 name|xt
 operator|->
 name|xt_column
+argument_list|,
+literal|99999
+argument_list|)
 argument_list|,
 name|xt
 operator|->

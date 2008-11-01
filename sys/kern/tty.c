@@ -9175,9 +9175,14 @@ name|tp
 operator|->
 name|t_outlow
 argument_list|,
+name|MIN
+argument_list|(
 name|tp
 operator|->
 name|t_column
+argument_list|,
+literal|99999
+argument_list|)
 argument_list|,
 name|tp
 operator|->
