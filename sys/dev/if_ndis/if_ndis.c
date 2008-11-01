@@ -3399,7 +3399,9 @@ name|ndis_packet
 operator|*
 argument_list|)
 operator|*
-name|NDIS_TXPKTS
+name|sc
+operator|->
+name|ndis_maxpkts
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -3419,7 +3421,9 @@ name|sc
 operator|->
 name|ndis_txpool
 argument_list|,
-name|NDIS_TXPKTS
+name|sc
+operator|->
+name|ndis_maxpkts
 argument_list|,
 name|PROTOCOL_RESERVED_SIZE_IN_PACKET
 argument_list|)

@@ -627,6 +627,10 @@ name|lock
 operator|->
 name|mask
 argument_list|)
+operator|&
+name|lock
+operator|->
+name|mask
 condition|)
 block|{
 name|dbg
@@ -673,6 +677,10 @@ name|lock
 operator|->
 name|mask
 argument_list|)
+operator|&
+name|lock
+operator|->
+name|mask
 condition|)
 block|{
 name|dbg

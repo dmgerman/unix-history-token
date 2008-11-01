@@ -397,11 +397,14 @@ comment|/* (x) connection id / queue id */
 name|void
 modifier|*
 name|inp_pspare
-index|[
-literal|2
-index|]
 decl_stmt|;
 comment|/* (x) rtentry / general use */
+name|struct
+name|ucred
+modifier|*
+name|inp_cred
+decl_stmt|;
+comment|/* (c) cache of socket cred */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo

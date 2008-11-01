@@ -2132,6 +2132,30 @@ literal|0x9501
 block|,
 literal|0x131f
 block|,
+literal|0x2050
+block|,
+literal|"SIIG Cyber 4 PCI 16550"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|10
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x9501
+block|,
+literal|0x131f
+block|,
 literal|0x2051
 block|,
 literal|"SIIG Cyber 4S PCI 16C650 (20x family)"
@@ -2158,11 +2182,9 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"Oxford Semiconductor OX16PCI954 UARTs 4-port type 1"
+literal|"Oxford Semiconductor OX16PCI954 UARTs"
 block|,
 name|DEFAULT_RCLK
-operator|*
-literal|10
 block|,
 name|PUC_PORT_4S
 block|,
@@ -2182,11 +2204,9 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"Oxford Semiconductor OX16PCI954 UARTs 4-port type 2"
+literal|"Oxford Semiconductor OX16PCI954 UARTs"
 block|,
 name|DEFAULT_RCLK
-operator|*
-literal|10
 block|,
 name|PUC_PORT_4S
 block|,

@@ -5772,6 +5772,9 @@ name|u_int
 name|t
 init|=
 operator|(
+operator|(
+name|uint32_t
+operator|)
 name|curr_time
 operator|-
 name|q
@@ -6673,6 +6676,9 @@ name|q
 operator|->
 name|q_time
 operator|<
+operator|(
+name|uint32_t
+operator|)
 name|curr_time
 condition|)
 name|q

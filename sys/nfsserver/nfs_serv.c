@@ -6076,7 +6076,7 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
-comment|/* XXXRW: unlocked write. */
+comment|/* Unlocked write. */
 name|nfsrvstats
 operator|.
 name|srvvop_writes
@@ -7843,7 +7843,7 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
-comment|/* XXXRW: unlocked write. */
+comment|/* Unlocked write. */
 name|nfsrvstats
 operator|.
 name|srvvop_writes

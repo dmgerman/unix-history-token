@@ -102,7 +102,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|shl
+name|__shl
 parameter_list|(
 specifier|register
 name|digit
@@ -752,7 +752,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|shl
+name|__shl
 argument_list|(
 operator|&
 name|u
@@ -768,7 +768,7 @@ name|d
 argument_list|)
 expr_stmt|;
 comment|/* u<<= d */
-name|shl
+name|__shl
 argument_list|(
 operator|&
 name|v

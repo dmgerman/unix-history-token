@@ -191,7 +191,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(x)->ndis_txidx = ((x)->ndis_txidx + 1) % NDIS_TXPKTS
+value|(x)->ndis_txidx = ((x)->ndis_txidx + 1) % (x)->ndis_maxpkts
 end_define
 
 begin_if

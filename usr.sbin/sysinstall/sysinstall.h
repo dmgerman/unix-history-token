@@ -1877,6 +1877,10 @@ name|int
 name|installed
 decl_stmt|;
 comment|/* indicates if it is installed */
+name|int
+name|vol_checked
+decl_stmt|;
+comment|/* disc volume last checked for */
 name|char
 modifier|*
 name|maintainer
@@ -2090,6 +2094,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* On a syscons VTY?				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|have_volumes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Media has multiple volumes                   */
 end_comment
 
 begin_decl_stmt
@@ -2751,6 +2766,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* # cpus on machine */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|low_volume
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Lowest volume number */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|high_volume
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Highest volume number */
 end_comment
 
 begin_comment
@@ -4729,6 +4766,9 @@ name|who
 parameter_list|,
 name|Boolean
 name|depended
+parameter_list|,
+name|int
+name|current_volume
 parameter_list|)
 function_decl|;
 end_function_decl

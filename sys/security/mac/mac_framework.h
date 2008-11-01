@@ -1799,6 +1799,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|mac_check_inpcb_visible
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|mac_check_sysv_msgmsq
 parameter_list|(
 name|struct

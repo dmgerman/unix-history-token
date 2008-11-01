@@ -711,6 +711,38 @@ end_define
 begin_function_decl
 specifier|static
 name|int
+name|uipc_connect2
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|uipc_ctloutput
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|sockopt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|unp_connect
 parameter_list|(
 name|struct
@@ -762,6 +794,18 @@ name|struct
 name|unpcb
 modifier|*
 name|unp2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|unp_dispose
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -869,6 +913,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|unp_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|unp_internalize
 parameter_list|(
@@ -879,6 +933,23 @@ modifier|*
 parameter_list|,
 name|struct
 name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|unp_externalize
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -911,6 +982,14 @@ specifier|static
 name|struct
 name|domain
 name|localdomain
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pr_usrreqs
+name|uipc_usrreqs
 decl_stmt|;
 end_decl_stmt
 
@@ -2307,6 +2386,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|uipc_connect2
 parameter_list|(
@@ -2410,10 +2490,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* control is EOPNOTSUPP */
-end_comment
 
 begin_function
 specifier|static
@@ -4439,6 +4515,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pr_usrreqs
 name|uipc_usrreqs
@@ -4528,6 +4605,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|uipc_ctloutput
 parameter_list|(
@@ -6810,7 +6888,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * Zero the pointer before calling unp_discard since it may 		 * end up in unp_gc().. 		 * 		 * XXXRW: This is less true than it used to be. 		 */
 name|fp
 operator|=
 operator|*
@@ -6832,6 +6909,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|unp_externalize
 parameter_list|(
@@ -7409,6 +7487,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|unp_init
 parameter_list|(
@@ -7942,7 +8021,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/* 			 * Now replace the integer FDs with pointers to 			 * the associated global file table entry.. 			 */
+comment|/* 			 * Now replace the integer FDs with pointers to the 			 * associated global file table entry.. 			 */
 name|newlen
 operator|=
 name|oldfds
@@ -9223,6 +9302,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|unp_dispose
 parameter_list|(

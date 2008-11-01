@@ -10008,7 +10008,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Like fget() but loads the underlying socket, or returns an error if the  * descriptor does not represent a socket.  *  * We bump the ref count on the returned socket.  XXX Also obtain the SX lock  * in the future.  *  * XXXRW: fgetsock() and fputsock() are deprecated, as consumers should rely  * on their file descriptor reference to prevent the socket from being free'd  * during use.  */
+comment|/*  * Like fget() but loads the underlying socket, or returns an error if the  * descriptor does not represent a socket.  *  * We bump the ref count on the returned socket.  XXX Also obtain the SX lock  * in the future.  *  * Note: fgetsock() and fputsock() are deprecated, as consumers should rely  * on their file descriptor reference to prevent the socket from being free'd  * during use.  */
 end_comment
 
 begin_function
@@ -10156,7 +10156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drop the reference count on the socket and XXX release the SX lock in the  * future.  The last reference closes the socket.  *  * XXXRW: fputsock() is deprecated, see comment for fgetsock().  */
+comment|/*  * Drop the reference count on the socket and XXX release the SX lock in the  * future.  The last reference closes the socket.  *  * Note: fputsock() is deprecated, see comment for fgetsock().  */
 end_comment
 
 begin_function
