@@ -2999,8 +2999,6 @@ argument_list|(
 name|mp
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 continue|continue;

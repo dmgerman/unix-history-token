@@ -14151,10 +14151,9 @@ name|vfs_busy
 argument_list|(
 name|mp
 argument_list|,
-name|LK_NOWAIT
-argument_list|,
-operator|&
-name|mountlist_mtx
+name|MBF_NOWAIT
+operator||
+name|MBF_MNTLSTLOCK
 argument_list|)
 condition|)
 continue|continue;

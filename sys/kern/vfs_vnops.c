@@ -4340,6 +4340,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * VOP_GETWRITEMOUNT() returns with the mp refcount held through 	 * a vfs_ref(). 	 * As long as a vnode is not provided we need to acquire a 	 * refcount for the provided mountpoint too, in order to 	 * emulate a vfs_ref(). 	 */
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -4604,6 +4605,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * VOP_GETWRITEMOUNT() returns with the mp refcount held through 	 * a vfs_ref(). 	 * As long as a vnode is not provided we need to acquire a 	 * refcount for the provided mountpoint too, in order to 	 * emulate a vfs_ref(). 	 */
 name|MNT_ILOCK
 argument_list|(
 name|mp

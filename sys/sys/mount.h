@@ -441,18 +441,13 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *	l - mnt_lock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
 end_comment
 
 begin_struct
 struct|struct
 name|mount
 block|{
-name|struct
-name|lock
-name|mnt_lock
-decl_stmt|;
-comment|/* mount structure lock */
 name|struct
 name|mtx
 name|mnt_mtx
@@ -583,9 +578,9 @@ name|mnt_hashseed
 decl_stmt|;
 comment|/* Random seed for vfs_hash */
 name|int
-name|mnt_markercnt
+name|mnt_lockref
 decl_stmt|;
-comment|/* marker vnodes in use */
+comment|/* (i) Lock reference count */
 name|int
 name|mnt_holdcnt
 decl_stmt|;
@@ -1248,6 +1243,17 @@ end_define
 
 begin_comment
 comment|/* insmntque is not allowed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_DRAINING
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* lock draining is happening */
 end_comment
 
 begin_define
@@ -2104,6 +2110,31 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * vfs_busy specific flags and mask.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBF_NOWAIT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBF_MNTLSTLOCK
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBF_MASK
+value|(MBF_NOWAIT | MBF_MNTLSTLOCK)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -3334,10 +3365,6 @@ name|mount
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

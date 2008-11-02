@@ -542,10 +542,9 @@ name|vfs_busy
 argument_list|(
 name|mp
 argument_list|,
-name|LK_NOWAIT
-argument_list|,
-operator|&
-name|mountlist_mtx
+name|MBF_NOWAIT
+operator||
+name|MBF_MNTLSTLOCK
 argument_list|)
 condition|)
 block|{
@@ -920,8 +919,6 @@ argument_list|(
 name|mp
 argument_list|,
 literal|0
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 condition|)
@@ -2287,10 +2284,9 @@ name|vfs_busy
 argument_list|(
 name|mp
 argument_list|,
-name|LK_NOWAIT
-argument_list|,
-operator|&
-name|mountlist_mtx
+name|MBF_NOWAIT
+operator||
+name|MBF_MNTLSTLOCK
 argument_list|)
 condition|)
 block|{
@@ -3667,8 +3663,6 @@ condition|(
 name|vfs_busy
 argument_list|(
 name|mp
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)

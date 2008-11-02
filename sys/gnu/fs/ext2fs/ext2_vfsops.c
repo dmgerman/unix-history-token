@@ -705,9 +705,7 @@ name|vfs_busy
 argument_list|(
 name|mp
 argument_list|,
-name|LK_NOWAIT
-argument_list|,
-literal|0
+name|MBF_NOWAIT
 argument_list|)
 condition|)
 return|return

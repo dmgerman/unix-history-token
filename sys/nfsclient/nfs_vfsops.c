@@ -1352,9 +1352,7 @@ name|vfs_busy
 argument_list|(
 name|mp
 argument_list|,
-name|LK_NOWAIT
-argument_list|,
-name|NULL
+name|MBF_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

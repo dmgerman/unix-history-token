@@ -6792,7 +6792,7 @@ continue|continue;
 block|}
 else|else
 block|{
-comment|/* 			 * Terminate request if force-unmount in progress. 			 * Note that NFS could have vfs_busy'ed the mount, 			 * causing the unmount to wait for the mnt_lock, making 			 * this bit of logic necessary. 			 */
+comment|/* 			 * Terminate request if force-unmount in progress. 			 * Note that NFS could have vfs_busy'ed the mount, 			 * causing the unmount to wait and making this bit 			 * of logic necessary. 			 */
 if|if
 condition|(
 name|rep
