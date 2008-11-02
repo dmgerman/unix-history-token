@@ -1041,6 +1041,18 @@ if|if
 condition|(
 name|vcp
 condition|)
+block|{
+name|smb_vc_lock
+argument_list|(
+name|vcp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|scred
+operator|->
+name|scr_td
+argument_list|)
+expr_stmt|;
 name|smb_vc_put
 argument_list|(
 name|vcp
@@ -1048,6 +1060,7 @@ argument_list|,
 name|scred
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|error
 return|;
