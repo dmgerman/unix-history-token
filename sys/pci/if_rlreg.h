@@ -4342,12 +4342,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RL_TWISTER_ENABLE
-end_ifdef
-
 begin_enum
 enum|enum
 name|rl_twist
@@ -4366,11 +4360,6 @@ name|RETUNE
 block|}
 enum|;
 end_enum
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -4481,9 +4470,9 @@ decl_stmt|;
 name|int
 name|rl_if_flags
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|RL_TWISTER_ENABLE
+name|int
+name|rl_twister_enable
+decl_stmt|;
 name|enum
 name|rl_twist
 name|rl_twister
@@ -4494,8 +4483,6 @@ decl_stmt|;
 name|int
 name|rl_twist_col
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|suspended
 decl_stmt|;
