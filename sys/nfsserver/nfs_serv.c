@@ -367,7 +367,7 @@ name|nfs_async
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Tell client that writes were synced even though they were not"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -388,7 +388,7 @@ name|nfs_commit_blks
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of completed commits"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

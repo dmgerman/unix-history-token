@@ -299,7 +299,7 @@ name|nfs_iodmaxidle
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max number of seconds an nfsiod kthread will sleep before exiting"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -475,7 +475,7 @@ name|sysctl_iodmin
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|""
+literal|"Min number of nfsiod kthreads to keep as spares"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -646,7 +646,7 @@ name|sysctl_iodmax
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|""
+literal|"Max number of nfsiod kthreads"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -908,7 +908,7 @@ name|nfs_defect
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Allow nfsiods to migrate serving different mounts"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

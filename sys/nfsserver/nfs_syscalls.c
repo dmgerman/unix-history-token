@@ -335,7 +335,7 @@ name|nfs_privport
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Only allow clients using a privileged port"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -356,7 +356,7 @@ name|nfsrvw_procrastinate
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Delay value for write gathering"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -377,7 +377,7 @@ name|nfsrvw_procrastinate_v3
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Delay in seconds for NFSv3 write gathering"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

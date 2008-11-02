@@ -364,7 +364,7 @@ name|nfs_ip_paranoia
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Disallow accepting replies from IPs which differ from those sent"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -397,7 +397,7 @@ name|nfs_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Toggle debug flag"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -432,7 +432,7 @@ name|nfs_tprintf_initial_delay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Delay before printing \"nfs server not responding\" messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -466,7 +466,7 @@ name|nfs_tprintf_delay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Delay between printing \"nfs server not responding\" messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -753,7 +753,7 @@ name|nfs_diskless_valid
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Has the diskless struct been filled correctly"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -775,7 +775,7 @@ name|root_hostnam
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Path to nfs root"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -803,7 +803,7 @@ name|root_saddr
 argument_list|,
 literal|"%Ssockaddr_in"
 argument_list|,
-literal|""
+literal|"Diskless root nfs address"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

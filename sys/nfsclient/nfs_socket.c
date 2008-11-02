@@ -288,7 +288,7 @@ name|nfs_realign_test
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of realign tests done"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -309,7 +309,7 @@ name|nfs_realign_count
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of mbuf realignments done"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -330,7 +330,7 @@ name|nfs_bufpackets
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Buffer reservation size 2< x< 64"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -351,7 +351,7 @@ name|nfs_reconnects
 argument_list|,
 literal|0
 argument_list|,
-literal|"number of times the nfs client has had to reconnect"
+literal|"Number of times the nfs client has had to reconnect"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -372,7 +372,7 @@ name|nfs3_jukebox_delay
 argument_list|,
 literal|0
 argument_list|,
-literal|"number of seconds to delay a retry after receiving EJUKEBOX"
+literal|"Number of seconds to delay a retry after receiving EJUKEBOX"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -393,7 +393,7 @@ name|nfs_skip_wcc_data_onerr
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Disable weak cache consistency checking when server returns an error"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
