@@ -11173,7 +11173,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|100
+literal|500
 argument_list|,
 name|SBUF_AUTOEXTEND
 argument_list|)
