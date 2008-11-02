@@ -156,7 +156,7 @@ file|<security/audit/audit_private.h>
 end_include
 
 begin_comment
-comment|/*  * Implementation of a clonable special device providing a live stream of BSM  * audit data.  This is a "tee" of the data going to the file.  It provides  * unreliable but timely access to audit events.  Consumers of this interface  * should be very careful to avoid introducing event cycles.  Consumers may  * express interest via a set of preselection ioctls.  */
+comment|/*  * Implementation of a clonable special device providing a live stream of BSM  * audit data.  Consumers receive a "tee" of the system audit trail by  * default, but may also define alternative event selections using ioctls.  * This interface provides unreliable but timely access to audit events.  * Consumers should be very careful to avoid introducing event cycles.  */
 end_comment
 
 begin_comment
