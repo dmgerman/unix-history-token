@@ -890,8 +890,6 @@ argument_list|(
 name|vcp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -962,8 +960,6 @@ argument_list|(
 name|ssp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -1413,8 +1409,6 @@ argument_list|(
 name|vcp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -1440,8 +1434,6 @@ argument_list|(
 name|ssp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|sdp

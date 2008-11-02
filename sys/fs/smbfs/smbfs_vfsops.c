@@ -945,8 +945,6 @@ argument_list|(
 name|ssp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|mp
@@ -1729,8 +1727,6 @@ operator|->
 name|sm_share
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
