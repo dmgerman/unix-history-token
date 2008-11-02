@@ -3963,7 +3963,18 @@ name|device_t
 name|child
 parameter_list|)
 block|{
-comment|/* pci_set_powerstate(child, PCI_POWERSTATE_D3); */
+ifdef|#
+directive|ifdef
+name|ACPI_ENABLE_POWERDOWN_NODRIVER
+name|pci_set_powerstate
+argument_list|(
+name|child
+argument_list|,
+name|PCI_POWERSTATE_D3
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4047,7 +4058,16 @@ operator|==
 name|DS_NOTPRESENT
 condition|)
 block|{
-comment|/* pci_set_powerstate(child, PCI_POWERSTATE_D0); */
+ifdef|#
+directive|ifdef
+name|ACPI_ENABLE_POWERDOWN_NODRIVER
+name|pci_set_powerstate
+argument_list|(
+name|child
+argument_list|,
+name|PCI_POWERSTATE_D0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|device_probe_and_attach
@@ -4057,8 +4077,22 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-empty_stmt|;
-comment|/* pci_set_powerstate(child, PCI_POWERSTATE_D3); */
+name|pci_set_powerstate
+argument_list|(
+name|child
+argument_list|,
+name|PCI_POWERSTATE_D3
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|device_probe_and_attach
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 name|free
