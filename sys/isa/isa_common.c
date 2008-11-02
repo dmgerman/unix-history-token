@@ -1862,10 +1862,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Called after other devices have initialised to probe for isa devices.  */
-end_comment
-
 begin_function
 name|void
 name|isa_probe_children
@@ -3093,6 +3089,39 @@ operator|->
 name|id_config_attr
 expr_stmt|;
 break|break;
+case|case
+name|ISA_IVAR_PNP_CSN
+case|:
+operator|*
+name|result
+operator|=
+name|idev
+operator|->
+name|id_pnp_csn
+expr_stmt|;
+break|break;
+case|case
+name|ISA_IVAR_PNP_LDN
+case|:
+operator|*
+name|result
+operator|=
+name|idev
+operator|->
+name|id_pnp_ldn
+expr_stmt|;
+break|break;
+case|case
+name|ISA_IVAR_PNPBIOS_HANDLE
+case|:
+operator|*
+name|result
+operator|=
+name|idev
+operator|->
+name|id_pnpbios_handle
+expr_stmt|;
+break|break;
 default|default:
 return|return
 operator|(
@@ -4181,6 +4210,13 @@ name|size_t
 name|buflen
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+comment|/* id_pnphandle isn't there yet */
+block|struct isa_device *idev = DEVTOISA(child);  	if (idev->id_vendorid) 		snprintf(buf, buflen, "pnphandle=%d", idev->id_pnphandle);
+endif|#
+directive|endif
 comment|/* Nothing here yet */
 operator|*
 name|buf

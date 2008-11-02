@@ -110,7 +110,7 @@ value|40
 end_define
 
 begin_comment
-comment|/* plug-and-play hardware */
+comment|/* plug-and-play flexible hardware */
 end_comment
 
 begin_comment
@@ -349,6 +349,12 @@ block|,
 name|ISA_IVAR_COMPATID
 block|,
 name|ISA_IVAR_CONFIGATTR
+block|,
+name|ISA_IVAR_PNP_CSN
+block|,
+name|ISA_IVAR_PNP_LDN
+block|,
+name|ISA_IVAR_PNPBIOS_HANDLE
 block|}
 enum|;
 end_enum
@@ -525,6 +531,39 @@ argument_list|(
 argument|configattr
 argument_list|,
 argument|CONFIGATTR
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|ISA_ACCESSOR
+argument_list|(
+argument|pnp_csn
+argument_list|,
+argument|PNP_CSN
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|ISA_ACCESSOR
+argument_list|(
+argument|pnp_ldn
+argument_list|,
+argument|PNP_LDN
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|ISA_ACCESSOR
+argument_list|(
+argument|pnpbios_handle
+argument_list|,
+argument|PNPBIOS_HANDLE
 argument_list|,
 argument|int
 argument_list|)

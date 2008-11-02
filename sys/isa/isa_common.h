@@ -89,6 +89,18 @@ name|int
 name|id_config_attr
 decl_stmt|;
 comment|/* pnp config attributes */
+name|int
+name|id_pnpbios_handle
+decl_stmt|;
+comment|/* pnp handle, if any */
+name|int
+name|id_pnp_csn
+decl_stmt|;
+comment|/* pnp Card Number */
+name|int
+name|id_pnp_ldn
+decl_stmt|;
+comment|/* pnp Logical device on card */
 block|}
 struct|;
 end_struct

@@ -3196,6 +3196,15 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
+name|isa_set_pnpbios_handle
+argument_list|(
+name|dev
+argument_list|,
+name|pd
+operator|->
+name|handle
+argument_list|)
+expr_stmt|;
 name|ISA_SET_CONFIG_CALLBACK
 argument_list|(
 name|parent
