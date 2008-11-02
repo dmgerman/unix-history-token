@@ -2705,7 +2705,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Audit pipe ioctl() routine.  Handle file descriptor and audit pipe layer  * commands.  *  * Would be desirable to support filtering, although perhaps something simple  * like an event mask, as opposed to something complicated like BPF.  */
+comment|/*  * Audit pipe ioctl() routine.  Handle file descriptor and audit pipe layer  * commands.  */
 end_comment
 
 begin_function
