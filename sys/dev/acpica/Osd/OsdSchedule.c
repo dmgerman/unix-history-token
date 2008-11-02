@@ -577,35 +577,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
 comment|/* XXX do not add ACPI_FUNCTION_TRACE here, results in recursive call. */
-name|p
-operator|=
-name|curproc
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|p
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"%s: curproc is NULL!"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Returning 0 is not allowed. */
 return|return
 operator|(
-name|p
+name|curthread
 operator|->
-name|p_pid
+name|td_tid
 operator|+
 literal|1
 operator|)
