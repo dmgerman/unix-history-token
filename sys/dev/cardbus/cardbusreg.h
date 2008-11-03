@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|CARDBUS_MAPREG_MEM_ADDR_MASK
-value|0x0ffffff0
+value|0xfffffff0
 end_define
 
 begin_define
