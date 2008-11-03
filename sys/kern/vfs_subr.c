@@ -13054,24 +13054,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"    mnt_holdcnt = %d\n"
-argument_list|,
-name|mp
-operator|->
-name|mnt_holdcnt
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"    mnt_holdcntwaiters = %d\n"
-argument_list|,
-name|mp
-operator|->
-name|mnt_holdcntwaiters
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|"    mnt_secondary_writes = %d\n"
 argument_list|,
 name|mp

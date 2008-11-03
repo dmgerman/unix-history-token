@@ -582,14 +582,6 @@ name|mnt_lockref
 decl_stmt|;
 comment|/* (i) Lock reference count */
 name|int
-name|mnt_holdcnt
-decl_stmt|;
-comment|/* hold count */
-name|int
-name|mnt_holdcntwaiters
-decl_stmt|;
-comment|/* waits on hold count */
-name|int
 name|mnt_secondary_writes
 decl_stmt|;
 comment|/* (i) # of secondary writes */
