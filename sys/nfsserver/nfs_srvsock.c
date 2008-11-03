@@ -177,6 +177,12 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1711,6 +1717,12 @@ argument_list|(
 name|len
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|nd
+operator|->
+name|nd_credflavor
+operator|=
+name|RPCAUTH_UNIX
 expr_stmt|;
 block|}
 else|else
@@ -3665,6 +3677,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_LEGACYRPC */
+end_comment
 
 end_unit
 

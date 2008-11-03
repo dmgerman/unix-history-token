@@ -2468,6 +2468,15 @@ name|ucred
 modifier|*
 modifier|*
 name|credanonp
+parameter_list|,
+name|int
+modifier|*
+name|numsecflavors
+parameter_list|,
+name|int
+modifier|*
+modifier|*
+name|secflavors
 parameter_list|)
 block|{
 return|return

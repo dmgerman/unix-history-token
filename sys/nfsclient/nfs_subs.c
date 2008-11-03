@@ -304,6 +304,12 @@ begin_comment
 comment|/* start out unlimited */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|nfs_reqq
@@ -317,6 +323,11 @@ name|mtx
 name|nfs_reqq_mtx
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -1984,18 +1995,13 @@ argument_list|()
 expr_stmt|;
 comment|/* Init the nfsnode table */
 comment|/* 	 * Initialize reply list and start timer 	 */
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
 name|TAILQ_INIT
 argument_list|(
 operator|&
 name|nfs_reqq
-argument_list|)
-expr_stmt|;
-name|callout_init
-argument_list|(
-operator|&
-name|nfs_callout
-argument_list|,
-name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -2010,6 +2016,16 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|nfs_callout
+argument_list|,
+name|CALLOUT_MPSAFE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mtx_init
 argument_list|(
 operator|&
@@ -2063,6 +2079,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
 name|callout_stop
 argument_list|(
 operator|&
@@ -2082,6 +2101,8 @@ literal|"nfs_uninit: request queue not empty"
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Tell all nfsiod processes to exit. Clear nfs_iodmax, and wakeup 	 * any sleeping nfsiods so they check nfs_iodmax and exit. 	 */
 name|mtx_lock
 argument_list|(

@@ -226,6 +226,12 @@ directive|include
 file|<nfsserver/nfsrvcache.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -487,7 +493,7 @@ modifier|*
 name|nam
 decl_stmt|;
 name|struct
-name|nfsd_args
+name|nfsd_addsock_args
 name|nfsdarg
 decl_stmt|;
 name|int
@@ -727,7 +733,7 @@ name|uap
 operator|->
 name|flag
 operator|&
-name|NFSSVC_NFSD
+name|NFSSVC_OLDNFSD
 condition|)
 block|{
 name|error
@@ -3261,6 +3267,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_LEGACYRPC */
+end_comment
 
 end_unit
 

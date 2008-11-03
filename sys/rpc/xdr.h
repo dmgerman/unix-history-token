@@ -1610,6 +1610,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|xdrmbuf_append
+parameter_list|(
+name|XDR
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|mbuf
+modifier|*
+name|xdrmbuf_getall
+parameter_list|(
+name|XDR
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* XDR pseudo records for tcp */
 end_comment

@@ -1474,8 +1474,65 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Old export arguments without security flavor list  */
+end_comment
+
+begin_struct
+struct|struct
+name|oexport_args
+block|{
+name|int
+name|ex_flags
+decl_stmt|;
+comment|/* export related flags */
+name|uid_t
+name|ex_root
+decl_stmt|;
+comment|/* mapping for root uid */
+name|struct
+name|xucred
+name|ex_anon
+decl_stmt|;
+comment|/* mapping for anonymous user */
+name|struct
+name|sockaddr
+modifier|*
+name|ex_addr
+decl_stmt|;
+comment|/* net address to which exported */
+name|u_char
+name|ex_addrlen
+decl_stmt|;
+comment|/* and the net address length */
+name|struct
+name|sockaddr
+modifier|*
+name|ex_mask
+decl_stmt|;
+comment|/* mask of valid bits in saddr */
+name|u_char
+name|ex_masklen
+decl_stmt|;
+comment|/* and the smask length */
+name|char
+modifier|*
+name|ex_indexfile
+decl_stmt|;
+comment|/* index file for WebNFS URLs */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Export arguments for local filesystem mount calls.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXSECFLAVORS
+value|5
+end_define
 
 begin_struct
 struct|struct
@@ -1519,6 +1576,17 @@ modifier|*
 name|ex_indexfile
 decl_stmt|;
 comment|/* index file for WebNFS URLs */
+name|int
+name|ex_numsecflavors
+decl_stmt|;
+comment|/* security flavor count */
+name|int
+name|ex_secflavors
+index|[
+name|MAXSECFLAVORS
+index|]
+decl_stmt|;
+comment|/* list of security flavors */
 block|}
 struct|;
 end_struct
@@ -2441,6 +2509,15 @@ name|ucred
 modifier|*
 modifier|*
 name|credanonp
+parameter_list|,
+name|int
+modifier|*
+name|numsecflavors
+parameter_list|,
+name|int
+modifier|*
+modifier|*
+name|secflavors
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2762,9 +2839,13 @@ parameter_list|,
 name|EXFLG
 parameter_list|,
 name|CRED
+parameter_list|,
+name|NUMSEC
+parameter_list|,
+name|SEC
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_checkexp)(MP, NAM, EXFLG, CRED)
+value|(*(MP)->mnt_op->vfs_checkexp)(MP, NAM, EXFLG, CRED, NUMSEC, SEC)
 end_define
 
 begin_define

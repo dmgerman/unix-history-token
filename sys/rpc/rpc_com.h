@@ -502,6 +502,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|bindresvport
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct_decl
 struct_decl|struct
 name|xucred

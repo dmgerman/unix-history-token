@@ -464,6 +464,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -479,6 +485,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Clear nameidata fields that are tested in nsfmout cleanup code prior  * to using first nfsm macro (that might jump to the cleanup code).  */
@@ -793,7 +804,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -1200,7 +1211,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -1838,7 +1849,7 @@ argument_list|,
 operator|&
 name|tvfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -2452,6 +2463,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|nd
+argument_list|,
+name|nfsd
 argument_list|,
 name|fhp
 argument_list|,
@@ -3450,7 +3463,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -3975,7 +3988,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -5649,7 +5662,7 @@ argument_list|,
 operator|&
 name|tvfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -6235,6 +6248,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
+begin_comment
+comment|/*  * XXX dfr - write gathering isn't supported by the new RPC code since  * its really only useful for NFSv2. If there is a real need, we could  * attempt to fit it into the filehandle affinity system, e.g. by  * looking to see if there are queued write requests that overlap this  * one.  */
+end_comment
 
 begin_comment
 comment|/*  * For the purposes of write gathering, we must decide if the credential  * associated with two pending requests have equivilent privileges.  Since  * NFS only uses a subset of the BSD ucred -- the effective uid and group  * IDs -- we have a compare routine that checks only the relevant fields.  */
@@ -7364,7 +7387,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -8443,6 +8466,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * nfs create service  * now does a truncate to 0 length via. setattr if it already exists  */
 end_comment
@@ -8764,6 +8792,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|nd
+argument_list|,
+name|nfsd
 argument_list|,
 name|fhp
 argument_list|,
@@ -10255,6 +10285,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
+name|nfsd
+argument_list|,
 name|fhp
 argument_list|,
 name|len
@@ -11355,6 +11387,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
+name|nfsd
+argument_list|,
 name|fhp
 argument_list|,
 name|len
@@ -12060,6 +12094,8 @@ argument_list|(
 operator|&
 name|fromnd
 argument_list|,
+name|nfsd
+argument_list|,
 name|ffhp
 argument_list|,
 name|len
@@ -12231,6 +12267,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|tond
+argument_list|,
+name|nfsd
 argument_list|,
 name|tfhp
 argument_list|,
@@ -13249,7 +13287,7 @@ argument_list|,
 operator|&
 name|tvfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -13402,6 +13440,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|nd
+argument_list|,
+name|nfsd
 argument_list|,
 name|dfhp
 argument_list|,
@@ -14144,6 +14184,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|nd
+argument_list|,
+name|nfsd
 argument_list|,
 name|fhp
 argument_list|,
@@ -15171,6 +15213,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
+name|nfsd
+argument_list|,
 name|fhp
 argument_list|,
 name|len
@@ -16069,6 +16113,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
+name|nfsd
+argument_list|,
 name|fhp
 argument_list|,
 name|len
@@ -16900,7 +16946,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -18425,7 +18471,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -20092,7 +20138,7 @@ argument_list|,
 operator|&
 name|tvfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -20810,7 +20856,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -21414,7 +21460,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -21526,24 +21572,12 @@ name|NFSX_V3FSINFO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX 	 * There should be filesystem VFS OP(s) to get this information. 	 * For now, assume ufs. 	 */
-if|if
-condition|(
-name|slp
-operator|->
-name|ns_so
-operator|->
-name|so_type
-operator|==
-name|SOCK_DGRAM
-condition|)
 name|pref
 operator|=
-name|NFS_MAXDGRAMDATA
-expr_stmt|;
-else|else
-name|pref
-operator|=
-name|NFS_MAXDATA
+name|NFS_SRVMAXDATA
+argument_list|(
+name|nfsd
+argument_list|)
 expr_stmt|;
 name|sip
 operator|->
@@ -21861,7 +21895,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,

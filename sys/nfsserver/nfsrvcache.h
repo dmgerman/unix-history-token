@@ -39,6 +39,12 @@ name|NFSRVCACHE_MIN_SIZE
 value|64
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_struct
 struct|struct
 name|nfsrvcache
@@ -224,6 +230,11 @@ directive|define
 name|RC_NAM
 value|0x40
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

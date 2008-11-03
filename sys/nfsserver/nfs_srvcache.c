@@ -115,6 +115,12 @@ directive|include
 file|<nfsserver/nfsrvcache.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|long
@@ -1584,6 +1590,15 @@ literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_LEGACYRPC */
+end_comment
 
 end_unit
 

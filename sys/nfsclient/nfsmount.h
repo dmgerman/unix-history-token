@@ -15,6 +15,89 @@ directive|define
 name|_NFSCLIENT_NFSMOUNT_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_LEGACYRPC
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|RPC_SUCCESS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|RPC_PROGUNAVAIL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|RPC_PROCUNAVAIL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|AUTH_OK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|AUTH_BADCRED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|AUTH_BADVERF
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|AUTH_TOOWEAK
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<rpc/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/auth.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/clnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpcsec_gss.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_struct
 struct|struct
 name|nfs_tcp_mountstate
@@ -46,6 +129,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Mount structure.  * One allocated on every NFS mount.  * Holds NFS specific information for mount.  */
@@ -93,12 +181,17 @@ name|rpcclnt
 name|nm_rpcclnt
 decl_stmt|;
 comment|/* rpc state */
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
 name|struct
 name|socket
 modifier|*
 name|nm_so
 decl_stmt|;
 comment|/* Rpc socket */
+endif|#
+directive|endif
 name|int
 name|nm_sotype
 decl_stmt|;
@@ -125,6 +218,9 @@ name|int
 name|nm_retry
 decl_stmt|;
 comment|/* Max retries */
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
 name|int
 name|nm_srtt
 index|[
@@ -149,6 +245,8 @@ name|int
 name|nm_timeouts
 decl_stmt|;
 comment|/* Request timeouts */
+endif|#
+directive|endif
 name|int
 name|nm_deadthresh
 decl_stmt|;
@@ -233,10 +331,15 @@ name|int
 name|nm_tprintf_delay
 decl_stmt|;
 comment|/* interval for messages */
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
 name|struct
 name|nfs_tcp_mountstate
 name|nm_nfstcpstate
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|nm_hostname
 index|[
@@ -244,6 +347,39 @@ name|MNAMELEN
 index|]
 decl_stmt|;
 comment|/* server's name */
+ifndef|#
+directive|ifndef
+name|NFS_LEGACYRPC
+name|int
+name|nm_secflavor
+decl_stmt|;
+comment|/* auth flavor to use for rpc */
+name|struct
+name|__rpc_client
+modifier|*
+name|nm_client
+decl_stmt|;
+name|struct
+name|rpc_timers
+name|nm_timers
+index|[
+name|NFS_MAX_TIMER
+index|]
+decl_stmt|;
+comment|/* RTT Timers for rpcs */
+name|char
+name|nm_principal
+index|[
+name|MNAMELEN
+index|]
+decl_stmt|;
+comment|/* GSS-API principal of server */
+name|gss_OID
+name|nm_mech_oid
+decl_stmt|;
+comment|/* OID of selected GSS-API mechanism */
+endif|#
+directive|endif
 comment|/* NFSv4 */
 name|uint64_t
 name|nm_clientid
