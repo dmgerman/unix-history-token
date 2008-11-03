@@ -1288,6 +1288,8 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
+name|LOCKSHARED
+operator||
 name|LOCKLEAF
 operator||
 name|MPSAFE
@@ -1732,7 +1734,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3925,6 +3927,8 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
+name|LOCKSHARED
+operator||
 name|LOCKLEAF
 operator||
 name|AUDITVNODE1
@@ -4304,6 +4308,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKSHARED
 operator||
 name|LOCKLEAF
 operator||
@@ -9795,7 +9801,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -10624,6 +10630,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKSHARED
 operator||
 name|LOCKLEAF
 operator||
@@ -12393,6 +12401,8 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 operator||
+name|LOCKSHARED
+operator||
 name|LOCKLEAF
 operator||
 name|MPSAFE
@@ -12769,6 +12779,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|NOFOLLOW
+operator||
+name|LOCKSHARED
 operator||
 name|LOCKLEAF
 operator||
