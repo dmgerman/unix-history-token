@@ -1565,7 +1565,9 @@ name|LK_EXCLUSIVE
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|lkflags
+operator|)
 return|;
 block|}
 end_function
