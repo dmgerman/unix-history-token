@@ -2806,7 +2806,7 @@ argument_list|)
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
-name|cbdev
+name|child
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -2923,7 +2923,7 @@ argument_list|)
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
-name|cbdev
+name|child
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -2973,6 +2973,20 @@ operator|&
 name|PCIM_CIS_ADDR_MASK
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cardbus_cis_debug
+condition|)
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"CIS offset is %#x\n"
+argument_list|,
+operator|*
+name|start
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|res
