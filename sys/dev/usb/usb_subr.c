@@ -4829,7 +4829,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* consumed */
 name|found
