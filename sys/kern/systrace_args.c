@@ -16605,6 +16605,38 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+comment|/* gssd_syscall */
+case|case
+literal|505
+case|:
+block|{
+name|struct
+name|gssd_syscall_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|path
+expr_stmt|;
+comment|/* char * */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 default|default:
 operator|*
 name|n_args
@@ -28425,6 +28457,28 @@ case|:
 name|p
 operator|=
 literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* gssd_syscall */
+case|case
+literal|505
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"char *"
 expr_stmt|;
 break|break;
 default|default:
