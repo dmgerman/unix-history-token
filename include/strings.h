@@ -138,6 +138,17 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|ffsll
+argument_list|(
+name|long
+name|long
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|fls
 argument_list|(
 name|int
@@ -150,6 +161,17 @@ begin_decl_stmt
 name|int
 name|flsl
 argument_list|(
+name|long
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flsll
+argument_list|(
+name|long
 name|long
 argument_list|)
 name|__pure2
