@@ -4781,6 +4781,12 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XEN
+return|return;
+endif|#
+directive|endif
 comment|/* 	 * Finish setting up the local APIC on the BSP once we know how to 	 * properly program the LINT pins. 	 */
 name|lapic_setup
 argument_list|(

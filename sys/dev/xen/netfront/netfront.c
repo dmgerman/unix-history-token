@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -1657,7 +1663,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_arg1
+name|ext_args
 operator|=
 operator|(
 name|caddr_t
@@ -3354,7 +3360,7 @@ name|m_new
 operator|->
 name|m_ext
 operator|.
-name|ext_arg1
+name|ext_args
 operator|=
 operator|(
 name|vm_paddr_t
@@ -5500,7 +5506,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_arg1
+name|ext_args
 expr_stmt|;
 name|mmu
 operator|->

@@ -4572,7 +4572,7 @@ name|err
 return|;
 name|err
 operator|=
-name|kproc_create
+name|kthread_create
 argument_list|(
 name|xenwatch_thread
 argument_list|,
@@ -4603,7 +4603,7 @@ name|p_pid
 expr_stmt|;
 name|err
 operator|=
-name|kproc_create
+name|kthread_create
 argument_list|(
 name|xenbus_thread
 argument_list|,

@@ -37,6 +37,28 @@ begin_comment
 comment|/* what is the priority level of a selector */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SEL_KPL
+value|1
+end_define
+
+begin_comment
+comment|/* kernel priority level */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -47,6 +69,11 @@ end_define
 begin_comment
 comment|/* kernel priority level */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1255,12 +1282,35 @@ begin_comment
 comment|/* For the NDIS layer */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NGDT
+value|9
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|NGDT
 value|19
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Entries in the Local Descriptor Table (LDT)  */
@@ -1363,6 +1413,35 @@ name|_default_ldt
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|union
+name|descriptor
+modifier|*
+name|gdt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|union
+name|descriptor
+modifier|*
+name|ldt
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|extern
 name|union
@@ -1371,6 +1450,22 @@ name|gdt
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|union
+name|descriptor
+name|ldt
+index|[
+name|NLDT
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1387,17 +1482,6 @@ name|struct
 name|gate_descriptor
 modifier|*
 name|idt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|union
-name|descriptor
-name|ldt
-index|[
-name|NLDT
-index|]
 decl_stmt|;
 end_decl_stmt
 

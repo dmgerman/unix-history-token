@@ -288,6 +288,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XEN
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -307,6 +313,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -393,6 +404,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XEN
+end_ifndef
 
 begin_function
 specifier|static
@@ -501,6 +518,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*   * Initialise access to PCI configuration space   */
 end_comment
@@ -512,6 +534,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|XEN
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 specifier|static
 name|int
 name|opened
@@ -713,6 +745,8 @@ operator|(
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1396,6 +1430,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XEN
+end_ifndef
 
 begin_comment
 comment|/* check whether the configuration mechanism has been correctly identified */
@@ -2125,6 +2165,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !XEN */
+end_comment
 
 begin_define
 define|#

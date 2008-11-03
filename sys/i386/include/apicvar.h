@@ -102,6 +102,82 @@ name|APIC_IPI_INTS
 value|(APIC_LOCAL_INTS + 2)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPI_RENDEZVOUS
+value|(2)
+end_define
+
+begin_comment
+comment|/* Inter-CPU rendezvous. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_INVLTLB
+value|(3)
+end_define
+
+begin_comment
+comment|/* TLB Shootdown IPIs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_INVLPG
+value|(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_INVLRNG
+value|(5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_INVLCACHE
+value|(6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_LAZYPMAP
+value|(7)
+end_define
+
+begin_comment
+comment|/* Lazy pmap release. */
+end_comment
+
+begin_comment
+comment|/* Vector to handle bitmap based IPIs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPI_BITMAP_VECTOR
+value|(8)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -166,6 +242,11 @@ directive|define
 name|IPI_BITMAP_VECTOR
 value|(APIC_IPI_INTS + 6)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* IPIs handled by IPI_BITMAPED_VECTOR  (XXX ups is there a better place?) */

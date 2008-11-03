@@ -299,6 +299,33 @@ directive|ifndef
 name|KERNLOAD
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XEN
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|XEN_PRIVILEGED_GUEST
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KERNLOAD
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -311,9 +338,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(KERNLOAD) */
+end_comment
+
 begin_comment
 comment|/*  * Virtual addresses of things.  Derived from the page directory and  * page table indexes from pmap.h for precision.  * Because of the page that is both a PD and PT, it looks a little  * messy at times, but hey, we'll do anything to save a page :-)  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_KERNEL_ADDRESS
+value|HYPERVISOR_VIRT_START
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -321,6 +375,11 @@ directive|define
 name|VM_MAX_KERNEL_ADDRESS
 value|VADDR(KPTDI+NKPDE-1, NPTEPG-1)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

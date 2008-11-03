@@ -954,6 +954,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|size_t
+name|strcspn
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|__restrict
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|__restrict
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|char
 modifier|*

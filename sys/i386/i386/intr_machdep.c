@@ -2419,6 +2419,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XEN
+comment|/* 	 * Doesn't work yet 	 */
+return|return;
+endif|#
+directive|endif
 comment|/* Don't bother on UP. */
 if|if
 condition|(
