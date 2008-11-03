@@ -584,8 +584,6 @@ operator|(
 name|curthread
 operator|->
 name|td_tid
-operator|+
-literal|1
 operator|)
 return|;
 block|}
