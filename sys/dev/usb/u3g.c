@@ -2431,12 +2431,89 @@ modifier|*
 name|uaa
 parameter_list|)
 block|{
+comment|/* See definition of umass_bbb_cbw_t in sys/dev/usb/umass.c and struct 	 * scsi_start_stop_unit in sys/cam/scsi/scsi_all.h .          */
 name|unsigned
 name|char
 name|cmd
 index|[
 literal|31
 index|]
+init|=
+block|{
+literal|0x55
+block|,
+literal|0x53
+block|,
+literal|0x42
+block|,
+literal|0x43
+block|,
+comment|/* 0..3: Command Block Wrapper (CBW) signature */
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 4..7: CBW Tag, unique 32-bit number */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 8..11: CBW Transfer Length, no data here */
+literal|0x00
+block|,
+comment|/* 12: CBW Flag: output, so 0 */
+literal|0x00
+block|,
+comment|/* 13: CBW Lun */
+literal|0x06
+block|,
+comment|/* 14: CBW Length */
+literal|0x1b
+block|,
+comment|/* 15+0: opcode: SCSI START/STOP */
+literal|0x00
+block|,
+comment|/* 15+1: byte2: Not immediate */
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 15+2..3: reserved */
+literal|0x02
+block|,
+comment|/* 15+4: Load/Eject command */
+literal|0x00
+block|,
+comment|/* 15+5: control */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 15+6..15: unused */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
 decl_stmt|;
 name|usb_interface_descriptor_t
 modifier|*
@@ -2451,86 +2528,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|memset
-argument_list|(
-name|cmd
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cmd
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cmd
-index|[
-literal|0
-index|]
-operator|=
-literal|0x55
-expr_stmt|;
-comment|/* Byte 0..3: Command Block Wrapper (CBW) signature */
-name|cmd
-index|[
-literal|1
-index|]
-operator|=
-literal|0x53
-expr_stmt|;
-name|cmd
-index|[
-literal|2
-index|]
-operator|=
-literal|0x42
-expr_stmt|;
-name|cmd
-index|[
-literal|3
-index|]
-operator|=
-literal|0x43
-expr_stmt|;
-name|cmd
-index|[
-literal|4
-index|]
-operator|=
-literal|0x01
-expr_stmt|;
-comment|/* 4..7: CBW Tag, has to unique, but only a single transfer used. */
-comment|/* 8..11: CBW Transfer Length, no data here */
-comment|/* 12: CBW Flag: output, so 0 */
-comment|/* 13: CBW Lun: 0 */
-comment|/* 14: CBW Length */
-name|cmd
-index|[
-literal|14
-index|]
-operator|=
-literal|0x06
-expr_stmt|;
-name|cmd
-index|[
-literal|15
-index|]
-operator|=
-literal|0x1b
-expr_stmt|;
-comment|/* 0: SCSI START/STOP opcode */
-comment|/* 1..3 unused */
-name|cmd
-index|[
-literal|15
-operator|+
-literal|4
-index|]
-operator|=
-literal|0x02
-expr_stmt|;
-comment|/* 4 Load/Eject command */
-comment|/* 5: unused */
 comment|/* Find the bulk-out endpoints */
 name|id
 operator|=
@@ -2580,7 +2577,7 @@ name|ed
 operator|->
 name|bEndpointAddress
 argument_list|)
-operator|!=
+operator|==
 name|UE_DIR_OUT
 operator|&&
 operator|(
