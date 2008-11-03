@@ -200,7 +200,7 @@ name|uid_t
 name|c_cached_uid
 decl_stmt|;
 comment|/* cached uid */
-name|mode_t
+name|accmode_t
 name|c_cached_mode
 decl_stmt|;
 comment|/* cached access mode */
