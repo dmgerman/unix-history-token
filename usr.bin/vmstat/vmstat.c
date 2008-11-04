@@ -2883,7 +2883,7 @@ argument_list|,
 name|needhdr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If our standard output is a tty, then install a SIGWINCH handler 	 * and set wresized so that our first iteration through the main 	 * iostat loop will peek at the terminal's current rows to find out 	 * how many lines can fit in a screenful of output. 	 */
+comment|/* 	 * If our standard output is a tty, then install a SIGWINCH handler 	 * and set wresized so that our first iteration through the main 	 * vmstat loop will peek at the terminal's current rows to find out 	 * how many lines can fit in a screenful of output. 	 */
 if|if
 condition|(
 name|isatty
