@@ -377,6 +377,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|mtx
+modifier|*
+name|mixer_get_lock
+parameter_list|(
+name|struct
+name|snd_mixer
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
