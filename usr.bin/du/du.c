@@ -214,6 +214,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|prthumanval
 parameter_list|(
@@ -223,6 +224,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ignoreadd
 parameter_list|(
@@ -234,6 +236,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ignoreclean
 parameter_list|(
@@ -243,6 +246,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ignorep
 parameter_list|(
@@ -253,6 +257,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nodumpflag
 init|=
@@ -1864,6 +1869,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|prthumanval
 parameter_list|(
@@ -1944,6 +1950,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ignoreadd
 parameter_list|(
@@ -2022,6 +2029,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ignoreclean
 parameter_list|(
@@ -2076,6 +2084,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ignorep
 parameter_list|(
