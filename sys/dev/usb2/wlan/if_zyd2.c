@@ -2948,7 +2948,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|htole16
+name|le16toh
 argument_list|(
 name|cmd
 operator|->
