@@ -3280,45 +3280,5 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|int
-name|timer_spkr_acquire
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|timer_spkr_release
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|timer_spkr_setfreq
-parameter_list|(
-name|int
-name|freq
-parameter_list|)
-block|{  }
-end_function
-
 end_unit
 
