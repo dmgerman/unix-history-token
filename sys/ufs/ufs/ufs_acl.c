@@ -129,6 +129,12 @@ directive|include
 file|<ufs/ufs/ufs_extern.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -726,9 +732,19 @@ comment|/* 				 * A short (or long) read, meaning that for 				 * some reason th
 name|printf
 argument_list|(
 literal|"ufs_getacl(): Loaded invalid ACL ("
-literal|"%d bytes)\n"
+literal|"%d bytes), inumber %d on %s\n"
 argument_list|,
 name|len
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|ip
+operator|->
+name|i_fs
+operator|->
+name|fs_fsmnt
 argument_list|)
 expr_stmt|;
 return|return
@@ -859,9 +875,19 @@ comment|/* 				 * A short (or long) read, meaning that for 				 * some reason th
 name|printf
 argument_list|(
 literal|"ufs_getacl(): Loaded invalid ACL ("
-literal|"%d bytes)\n"
+literal|"%d bytes), inumber %d on %s\n"
 argument_list|,
 name|len
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|ip
+operator|->
+name|i_fs
+operator|->
+name|fs_fsmnt
 argument_list|)
 expr_stmt|;
 return|return
