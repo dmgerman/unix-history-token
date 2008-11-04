@@ -283,8 +283,6 @@ name|p
 decl_stmt|;
 name|off_t
 name|savednumber
-init|=
-literal|0
 decl_stmt|;
 name|long
 name|blocksize
@@ -368,6 +366,10 @@ operator|=
 name|argv
 expr_stmt|;
 name|ftsoptions
+operator|=
+literal|0
+expr_stmt|;
+name|savednumber
 operator|=
 literal|0
 expr_stmt|;
@@ -633,6 +635,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|argc
 operator|-=
@@ -889,9 +892,6 @@ condition|(
 name|hflag
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|prthumanval
 argument_list|(
 name|howmany
@@ -1027,9 +1027,6 @@ condition|(
 name|hflag
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|prthumanval
 argument_list|(
 name|howmany
@@ -1130,9 +1127,6 @@ condition|(
 name|hflag
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|prthumanval
 argument_list|(
 name|howmany
