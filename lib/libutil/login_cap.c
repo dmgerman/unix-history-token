@@ -154,6 +154,16 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|path_login_conf
+index|[]
+init|=
+name|_PATH_LOGIN_CONF
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|char
@@ -775,13 +785,6 @@ operator|<
 name|MAXPATHLEN
 condition|)
 block|{
-name|login_dbarray
-index|[
-name|i
-index|]
-operator|=
-name|userpath
-expr_stmt|;
 if|if
 condition|(
 name|_secure_path
@@ -800,17 +803,21 @@ operator|!=
 operator|-
 literal|1
 condition|)
+name|login_dbarray
+index|[
 name|i
 operator|++
+index|]
+operator|=
+name|userpath
 expr_stmt|;
-comment|/* only use 'secure' data */
 block|}
 comment|/* 	 * XXX: Why to add the system database if the class is `me'? 	 */
 if|if
 condition|(
 name|_secure_path
 argument_list|(
-name|_PATH_LOGIN_CONF
+name|path_login_conf
 argument_list|,
 literal|0
 argument_list|,
@@ -826,7 +833,7 @@ name|i
 operator|++
 index|]
 operator|=
-name|_PATH_LOGIN_CONF
+name|path_login_conf
 expr_stmt|;
 name|login_dbarray
 index|[
