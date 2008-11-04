@@ -768,7 +768,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|sx_init
+comment|/* 			 * The DUPOK is to prevent warnings from the 			 * sx_slock() a few lines down which is safe 			 * since the duplicate lock in that case is 			 * the one for this dirhash we are creating 			 * now which has no external references until 			 * after this function returns. 			 */
+name|sx_init_flags
 argument_list|(
 operator|&
 name|ndh
@@ -776,6 +777,8 @@ operator|->
 name|dh_lock
 argument_list|,
 literal|"dirhash"
+argument_list|,
+name|SX_DUPOK
 argument_list|)
 expr_stmt|;
 name|sx_xlock
