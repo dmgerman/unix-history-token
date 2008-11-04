@@ -1,44 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * by Manuel Bouyer (bouyer@ensta.fr)  *   * There is no copyright, you can use it as you want.  */
+comment|/*  * by Manuel Bouyer (bouyer@ensta.fr)  *  * There is no copyright, you can use it as you want.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -68,7 +50,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<ufs/ufs/quota.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/rquota.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -104,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -122,43 +134,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/quota.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/rpc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpcsvc/rquota.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
+file|<unistd.h>
 end_include
 
 begin_function_decl
@@ -301,6 +283,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -308,6 +291,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|sig
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -332,13 +320,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|SVCXPRT
@@ -538,14 +520,11 @@ name|LOG_ERR
 argument_list|,
 literal|"unable to register (RQUOTAPROG, RQUOTAVERS, %s)"
 argument_list|,
-operator|(
-operator|!
 name|from_inetd
-operator|)
 condition|?
-literal|"udp"
-else|:
 literal|"(inetd)"
+else|:
+literal|"udp"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -557,7 +536,6 @@ block|}
 name|initfs
 argument_list|()
 expr_stmt|;
-comment|/* init the fs_stat list */
 name|svc_run
 argument_list|()
 expr_stmt|;
@@ -1582,6 +1560,7 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|qfextension
