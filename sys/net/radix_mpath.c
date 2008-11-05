@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -1233,6 +1239,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 name|int
 name|rn4_mpath_inithead
@@ -1294,6 +1306,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
