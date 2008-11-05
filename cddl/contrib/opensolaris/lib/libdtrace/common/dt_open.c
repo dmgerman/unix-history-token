@@ -329,15 +329,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_6_2
+value|DT_VERSION_NUMBER(1, 6, 2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_6_1
+value|DT_VERS_1_6_2
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.6.1"
+value|"Sun D 1.6.2"
 end_define
 
 begin_decl_stmt
@@ -380,6 +387,9 @@ comment|/* D API 1.6 */
 name|DT_VERS_1_6_1
 block|,
 comment|/* D API 1.6.1 */
+name|DT_VERS_1_6_2
+block|,
+comment|/* D API 1.6.2 */
 literal|0
 block|}
 decl_stmt|;

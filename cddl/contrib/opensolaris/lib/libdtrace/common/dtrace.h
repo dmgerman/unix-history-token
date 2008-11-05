@@ -50,6 +50,12 @@ directive|include
 file|<gelf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libproc.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1742,6 +1748,12 @@ parameter_list|,
 name|char
 modifier|*
 specifier|const
+modifier|*
+parameter_list|,
+name|proc_child_func
+modifier|*
+parameter_list|,
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
