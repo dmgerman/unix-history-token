@@ -2838,6 +2838,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 			 * unsuspend all threads, to not let a thread run, 			 * you should use PT_SUSPEND to suspend it before 			 * continuing process. 			 */
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
@@ -2852,6 +2857,11 @@ name|P_WAITED
 operator|)
 expr_stmt|;
 name|thread_unsuspend
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|PROC_SUNLOCK
 argument_list|(
 name|p
 argument_list|)
