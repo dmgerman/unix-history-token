@@ -2605,6 +2605,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 specifier|const
@@ -2630,6 +2636,11 @@ name|opt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2813,6 +2824,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -2828,6 +2845,11 @@ name|src
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -3447,22 +3469,27 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
-name|u_char
-modifier|*
-name|iphdr
-decl_stmt|;
 name|int
-name|hlen
-decl_stmt|,
-name|vjlen
+name|debug
 decl_stmt|,
 name|do_account
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|int
-name|debug
+name|hlen
+decl_stmt|,
+name|vjlen
 decl_stmt|;
+name|u_char
+modifier|*
+name|iphdr
+decl_stmt|;
+endif|#
+directive|endif
 name|SPPP_LOCK
 argument_list|(
 name|sp
@@ -4625,11 +4652,16 @@ name|rv
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|int
 name|ipproto
 init|=
 name|PPP_IP
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|debug
 init|=
@@ -14918,6 +14950,12 @@ begin_comment
 comment|/*  *--------------------------------------------------------------------------*  *                                                                          *  *                        The IPCP implementation.                          *  *                                                                          *  *--------------------------------------------------------------------------*  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -17251,6 +17289,231 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !INET */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_init
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_up
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_down
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_open
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_close
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_TO
+parameter_list|(
+name|void
+modifier|*
+name|cookie
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|int
+name|sppp_ipcp_RCR
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|,
+name|struct
+name|lcp_header
+modifier|*
+name|h
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_RCN_rej
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|,
+name|struct
+name|lcp_header
+modifier|*
+name|h
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_RCN_nak
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|,
+name|struct
+name|lcp_header
+modifier|*
+name|h
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_tlu
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_tld
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_tls
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_tlf
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sppp_ipcp_scr
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *--------------------------------------------------------------------------*  *                                                                          *  *                      The IPv6CP implementation.                          *  *                                                                          *  *--------------------------------------------------------------------------*  */
@@ -24409,6 +24672,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Set my IP address.  Must be called at splimp.  */
 end_comment
@@ -24623,6 +24892,11 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -26498,6 +26772,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 specifier|const
@@ -26559,6 +26839,11 @@ name|buf
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -26938,6 +27223,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 specifier|const
@@ -27016,6 +27307,11 @@ name|s
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
