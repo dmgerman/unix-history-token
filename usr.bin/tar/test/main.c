@@ -2562,14 +2562,14 @@ block|{
 name|s
 operator|=
 operator|(
+operator|(
+name|off_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buff
 argument_list|)
 operator|<
-operator|(
-name|size_t
-operator|)
 name|st
 operator|.
 name|st_size
