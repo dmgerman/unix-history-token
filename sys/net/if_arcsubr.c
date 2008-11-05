@@ -3162,11 +3162,16 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
