@@ -346,6 +346,14 @@ specifier|const
 modifier|*
 name|argv
 parameter_list|,
+name|proc_child_func
+modifier|*
+name|pcf
+parameter_list|,
+name|void
+modifier|*
+name|child_arg
+parameter_list|,
 name|struct
 name|proc_handle
 modifier|*
@@ -402,7 +410,7 @@ condition|(
 operator|(
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 operator|)
 operator|==
@@ -440,6 +448,20 @@ condition|)
 name|_exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pcf
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|pcf
+call|)
+argument_list|(
+name|child_arg
 argument_list|)
 expr_stmt|;
 comment|/* Execute the specified file: */
