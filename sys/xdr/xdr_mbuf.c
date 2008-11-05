@@ -496,6 +496,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|m
+condition|)
 name|m_adj
 argument_list|(
 name|m
@@ -503,6 +507,16 @@ argument_list|,
 name|xdrs
 operator|->
 name|x_handy
+argument_list|)
+expr_stmt|;
+else|else
+name|MGET
+argument_list|(
+name|m
+argument_list|,
+name|M_WAITOK
+argument_list|,
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 return|return
