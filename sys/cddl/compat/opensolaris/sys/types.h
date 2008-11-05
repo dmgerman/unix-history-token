@@ -195,6 +195,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_SOLARIS_BOOLEAN
+end_ifdef
+
 begin_if
 if|#
 directive|if
@@ -241,6 +247,11 @@ end_endif
 begin_comment
 comment|/* defined(__XOPEN_OR_POSIX) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

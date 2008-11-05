@@ -18,6 +18,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800039
 comment|/* 	 * Check if there is still an event handler callback 	 * registered. 	 */
 if|if
 condition|(
@@ -46,6 +51,15 @@ name|dtrace_clones
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|destroy_dev
+argument_list|(
+name|dtrace_dev
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mutex_enter
 argument_list|(
 operator|&

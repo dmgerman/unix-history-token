@@ -83,6 +83,12 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|KMEM_DEBUG
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -376,6 +382,22 @@ block|{
 ifdef|#
 directive|ifdef
 name|KMEM_DEBUG
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: attempt to free NULL\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|struct
 name|kmem_item
 modifier|*
@@ -1046,8 +1068,17 @@ directive|ifdef
 name|KMEM_DEBUG
 end_ifdef
 
+begin_function_decl
+name|void
+name|kmem_show
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
-specifier|static
 name|void
 name|kmem_show
 parameter_list|(
@@ -1104,19 +1135,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|stack_print
-argument_list|(
-operator|&
-name|i
-operator|->
-name|stack
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 name|mtx_unlock
@@ -1133,7 +1151,7 @@ name|SYSUNINIT
 argument_list|(
 name|sol_kmem
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_CPU
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
