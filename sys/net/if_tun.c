@@ -2520,6 +2520,9 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|tun_softc
 modifier|*
@@ -2534,6 +2537,8 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 init|=
