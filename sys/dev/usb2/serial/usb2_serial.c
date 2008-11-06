@@ -522,7 +522,7 @@ end_decl_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|ucom
+name|usb2_serial
 argument_list|,
 name|usb2_core
 argument_list|,
@@ -531,16 +531,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_VERSION
-argument_list|(
-name|ucom
-argument_list|,
-name|UCOM_MODVER
 argument_list|)
 expr_stmt|;
 end_expr_stmt

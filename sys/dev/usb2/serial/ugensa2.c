@@ -737,22 +737,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|ugensa
-argument_list|,
-name|ucom
-argument_list|,
-name|UCOM_MINVER
-argument_list|,
-name|UCOM_PREFVER
-argument_list|,
-name|UCOM_MAXVER
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 specifier|const
