@@ -420,11 +420,28 @@ operator|>=
 literal|701000
 end_if
 
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|LRO_SUPPORTED
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
