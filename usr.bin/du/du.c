@@ -1010,6 +1010,9 @@ name|printf
 argument_list|(
 literal|"%jd\t%s\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|howmany
 argument_list|(
 name|p
@@ -1163,6 +1166,9 @@ name|printf
 argument_list|(
 literal|"%jd\t%s\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|howmany
 argument_list|(
 name|curblocks
