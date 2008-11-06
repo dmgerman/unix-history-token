@@ -7134,7 +7134,38 @@ name|ACE_ADD_SUBDIRECTORY
 else|:
 name|ACE_ADD_FILE
 expr_stmt|;
-comment|/* 	 * Rename permissions are combination of delete permission + 	 * add file/subdir permission. 	 */
+comment|/* 	 * Rename permissions are combination of delete permission + 	 * add file/subdir permission. 	 * 	 * BSD operating systems also require write permission 	 * on the directory being moved. 	 */
+if|if
+condition|(
+name|ZTOV
+argument_list|(
+name|szp
+argument_list|)
+operator|->
+name|v_type
+operator|==
+name|VDIR
+condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|=
+name|zfs_zaccess
+argument_list|(
+name|szp
+argument_list|,
+name|ACE_WRITE_DATA
+argument_list|,
+name|cr
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* 	 * first make sure we do the delete portion. 	 * 	 * If that succeeds then check for add_file/add_subdir permissions 	 */
 if|if
 condition|(
