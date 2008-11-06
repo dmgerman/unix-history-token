@@ -10100,6 +10100,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ifaddr
 modifier|*
@@ -10112,6 +10115,8 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|ifreq
 modifier|*
@@ -10162,6 +10167,9 @@ break|break;
 case|case
 name|SIOCSIFADDR
 case|:
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|ifa
@@ -10216,6 +10224,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 name|error
 operator|=
 name|ether_ioctl
