@@ -942,11 +942,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* XXX MRT */
-comment|/* Guess only */
 name|error
 operator|=
-name|rt_check_fib
+name|rt_check
 argument_list|(
 operator|&
 name|rt
@@ -955,10 +953,6 @@ operator|&
 name|rt0
 argument_list|,
 name|dst
-argument_list|,
-name|rt0
-operator|->
-name|rt_fibnum
 argument_list|)
 expr_stmt|;
 if|if
