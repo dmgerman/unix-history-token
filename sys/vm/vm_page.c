@@ -891,6 +891,11 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 comment|/* 	 * Allocate a bitmap to indicate that a random physical page 	 * needs to be included in a minidump. 	 * 	 * The amd64 port needs this to indicate which direct map pages 	 * need to be dumped, via calls to dump_add_page()/dump_drop_page(). 	 * 	 * However, i386 still needs this workspace internally within the 	 * minidump code.  In theory, they are not needed on i386, but are 	 * included should the sf_buf code decide to use them. 	 */
 name|page_range
 operator|=
