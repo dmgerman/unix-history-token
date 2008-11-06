@@ -11063,6 +11063,10 @@ name|struct
 name|hc_metrics_lite
 modifier|*
 name|metricptr
+parameter_list|,
+name|int
+modifier|*
+name|mtuflags
 parameter_list|)
 block|{
 name|INIT_VNET_INET
@@ -11097,11 +11101,6 @@ name|int
 name|origoffer
 init|=
 name|offer
-decl_stmt|;
-name|int
-name|mtuflags
-init|=
-literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -11187,7 +11186,6 @@ name|inp
 operator|->
 name|inp_inc
 argument_list|,
-operator|&
 name|mtuflags
 argument_list|)
 expr_stmt|;
@@ -11215,7 +11213,6 @@ name|inp
 operator|->
 name|inp_inc
 argument_list|,
-operator|&
 name|mtuflags
 argument_list|)
 expr_stmt|;
@@ -11258,19 +11255,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Check the interface for TSO capabilities. */
-if|if
-condition|(
-name|mtuflags
-operator|&
-name|CSUM_TSO
-condition|)
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|TF_TSO
-expr_stmt|;
 comment|/* What have we got? */
 switch|switch
 condition|(
@@ -11587,6 +11571,11 @@ name|struct
 name|hc_metrics_lite
 name|metrics
 decl_stmt|;
+name|int
+name|mtuflags
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -11616,6 +11605,9 @@ name|offer
 argument_list|,
 operator|&
 name|metrics
+argument_list|,
+operator|&
+name|mtuflags
 argument_list|)
 expr_stmt|;
 name|mss
@@ -12153,6 +12145,19 @@ operator|=
 name|mss
 operator|*
 name|V_ss_fltsz
+expr_stmt|;
+comment|/* Check the interface for TSO capabilities. */
+if|if
+condition|(
+name|mtuflags
+operator|&
+name|CSUM_TSO
+condition|)
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_TSO
 expr_stmt|;
 block|}
 end_function
