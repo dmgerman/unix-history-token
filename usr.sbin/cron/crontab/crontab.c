@@ -573,6 +573,20 @@ argument_list|,
 literal|"your UID isn't in the passwd file, bailing out"
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|pw
+operator|->
+name|pw_passwd
+argument_list|,
+name|strlen
+argument_list|(
+name|pw
+operator|->
+name|pw_passwd
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -699,6 +713,20 @@ argument_list|,
 literal|"user `%s' unknown"
 argument_list|,
 name|optarg
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|pw
+operator|->
+name|pw_passwd
+argument_list|,
+name|strlen
+argument_list|(
+name|pw
+operator|->
+name|pw_passwd
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
