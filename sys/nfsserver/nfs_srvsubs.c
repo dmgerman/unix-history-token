@@ -1745,6 +1745,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|nfsserver
+argument_list|,
+name|krpc
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Set up nameidata for a lookup() call and do it.  *  * If pubflag is set, this call is done for a lookup operation on the  * public filehandle. In that case we allow crossing mountpoints and  * absolute pathnames. However, the caller is expected to check that  * the lookup result is within the public fs, and deny access if  * it is not.  *  * nfs_namei() clears out garbage fields that namei() might leave garbage.  * This is mainly ni_vp and ni_dvp when an error occurs, and ni_dvp when no  * error occurs but the parent was not requested.  *  * dirp may be set whether an error is returned or not, and must be  * released by the caller.  */
 end_comment
