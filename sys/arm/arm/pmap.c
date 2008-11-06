@@ -14747,7 +14747,7 @@ operator|&
 name|cmtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hook in the page, zero it, invalidate the TLB as needed. 	 * 	 * Note the temporary zero-page mapping must be a non-cached page in 	 * ordert to work without corruption when write-allocate is enabled. 	 */
+comment|/* 	 * Hook in the page, zero it, invalidate the TLB as needed. 	 * 	 * Note the temporary zero-page mapping must be a non-cached page in 	 * order to work without corruption when write-allocate is enabled. 	 */
 operator|*
 name|cdst_pte
 operator|=
