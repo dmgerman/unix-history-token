@@ -19,6 +19,12 @@ directive|include
 file|"opt_device_polling.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -5490,6 +5496,9 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ifaddr
 modifier|*
@@ -5502,6 +5511,8 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 init|=
@@ -5526,6 +5537,9 @@ block|{
 case|case
 name|SIOCSIFADDR
 case|:
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|ifa
@@ -5581,6 +5595,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 name|error
 operator|=
 name|ether_ioctl
