@@ -492,7 +492,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|AF_INET
+name|INET
 case|case
 name|AF_INET
 case|:
