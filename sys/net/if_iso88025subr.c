@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_arp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -101,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -2934,11 +2946,16 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
