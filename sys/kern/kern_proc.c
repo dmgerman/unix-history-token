@@ -7583,6 +7583,8 @@ operator|&
 name|va
 argument_list|,
 name|cred
+argument_list|,
+name|curthread
 argument_list|)
 operator|==
 literal|0
