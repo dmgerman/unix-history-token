@@ -183,13 +183,6 @@ name|sc_p
 typedef|;
 end_typedef
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ngt_unit
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Flags */
 end_comment
@@ -456,17 +449,6 @@ block|{
 name|sc_p
 name|sc
 decl_stmt|;
-name|char
-name|name
-index|[
-sizeof|sizeof
-argument_list|(
-name|NG_TTY_NODE_TYPE
-argument_list|)
-operator|+
-literal|8
-index|]
-decl_stmt|;
 comment|/* Allocate private structure */
 name|sc
 operator|=
@@ -535,54 +517,6 @@ argument_list|,
 name|IFQ_MAXLEN
 argument_list|)
 expr_stmt|;
-name|atomic_add_int
-argument_list|(
-operator|&
-name|ngt_unit
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|typestruct
-operator|.
-name|name
-argument_list|,
-name|ngt_unit
-argument_list|)
-expr_stmt|;
-comment|/* Assign node its name */
-if|if
-condition|(
-name|ng_name_node
-argument_list|(
-name|node
-argument_list|,
-name|name
-argument_list|)
-condition|)
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"%s: can't name node %s\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-comment|/* Done */
 return|return
 operator|(
 literal|0
