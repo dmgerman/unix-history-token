@@ -639,7 +639,7 @@ name|locktype
 operator|=
 name|LK_EXCLUSIVE
 expr_stmt|;
-comment|/* 	 * Extract the procnum and convert to v3 form if necessary. 	 */
+comment|/* 	 * Extract the procnum and convert to v3 form if necessary, 	 * taking care to deal with out-of-range procnums. Caller will 	 * ensure that rq_vers is either 2 or 3. 	 */
 name|procnum
 operator|=
 name|req
@@ -651,6 +651,16 @@ condition|(
 operator|!
 name|v3
 condition|)
+block|{
+if|if
+condition|(
+name|procnum
+operator|>
+name|NFSV2PROC_STATFS
+condition|)
+goto|goto
+name|out
+goto|;
 name|procnum
 operator|=
 name|nfsrv_nfsv3_procid
@@ -658,6 +668,7 @@ index|[
 name|procnum
 index|]
 expr_stmt|;
+block|}
 comment|/*  	 * We do affinity for most. However, we divide a realm of affinity  	 * by file offset so as to allow for concurrent random access. We  	 * only do this for reads today, but this may change when IFS supports  	 * efficient concurrent writes. 	 */
 if|if
 condition|(
