@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|NGM_TTY_COOKIE
-value|886279262
+value|1226109660
 end_define
 
 begin_comment
