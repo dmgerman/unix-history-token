@@ -3319,7 +3319,7 @@ name|t
 operator|->
 name|c_ospeed
 operator|=
-name|TTYDEF_SPEED_PSEUDO
+name|TTYDEF_SPEED
 expr_stmt|;
 return|return
 operator|(

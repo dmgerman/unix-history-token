@@ -574,7 +574,7 @@ name|t
 operator|->
 name|c_ispeed
 operator|=
-name|TTYDEF_SPEED_PSEUDO
+name|TTYDEF_SPEED
 expr_stmt|;
 name|t
 operator|->

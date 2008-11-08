@@ -72,13 +72,6 @@ name|TTYDEF_SPEED
 value|(B9600)
 end_define
 
-begin_define
-define|#
-directive|define
-name|TTYDEF_SPEED_PSEUDO
-value|(B38400)
-end_define
-
 begin_comment
 comment|/*  * Control Character Defaults  */
 end_comment
