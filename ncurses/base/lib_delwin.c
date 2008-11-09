@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_delwin.c,v 1.16 2008/05/03 14:13:51 tom Exp $"
+literal|"$Id: lib_delwin.c,v 1.17 2008/06/07 14:10:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -142,17 +142,12 @@ if|if
 condition|(
 name|_nc_try_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 operator|==
 literal|0
 condition|)
 block|{
-name|_nc_lock_window
-argument_list|(
-name|win
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|win
@@ -168,11 +163,6 @@ block|{
 name|result
 operator|=
 name|ERR
-expr_stmt|;
-name|_nc_unlock_window
-argument_list|(
-name|win
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -204,11 +194,6 @@ argument_list|(
 name|curscr
 argument_list|)
 expr_stmt|;
-name|_nc_unlock_window
-argument_list|(
-name|win
-argument_list|)
-expr_stmt|;
 name|result
 operator|=
 name|_nc_freewin
@@ -219,7 +204,7 @@ expr_stmt|;
 block|}
 name|_nc_unlock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 block|}

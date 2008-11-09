@@ -17,6 +17,27 @@ directive|include
 file|<curses.priv.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__HAIKU__
+operator|&&
+name|defined
+name|__BEOS__
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|__BEOS__
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -116,10 +137,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|CUR
+end_undef
+
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_twait.c,v 1.57 2008/05/03 21:35:57 tom Exp $"
+literal|"$Id: lib_twait.c,v 1.59 2008/08/30 20:08:19 tom Exp $"
 argument_list|)
 end_macro
 

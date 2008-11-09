@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_key_name.c,v 1.2 2007/06/12 21:01:13 tom Exp $"
+literal|"$Id: lib_key_name.c,v 1.3 2008/10/11 20:15:14 tom Exp $"
 argument_list|)
 end_macro
 
@@ -127,7 +127,7 @@ operator|)
 condition|)
 block|{
 return|return
-literal|"UNKNOWN KEY"
+literal|0
 return|;
 block|}
 name|result

@@ -42,13 +42,30 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: init_keytry.c,v 1.11 2008/05/03 23:09:15 tom Exp $"
+literal|"$Id: init_keytry.c,v 1.12 2008/05/24 21:44:51 tom Exp $"
 argument_list|)
 end_macro
 
 begin_comment
 comment|/* **      _nc_init_keytry() ** **      Construct the try for the current terminal's keypad keys. ** */
 end_comment
+
+begin_comment
+comment|/*  * Internal entrypoints use SCREEN* parameter to obtain capabilities rather  * than cur_term.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CUR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CUR
+value|(sp->_term)->type.
+end_define
 
 begin_if
 if|#

@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: use_screen.c,v 1.4 2008/03/29 21:19:58 tom Exp $"
+literal|"$Id: use_screen.c,v 1.6 2008/06/07 19:16:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -68,7 +68,7 @@ expr_stmt|;
 comment|/*      * FIXME - add a flag so a given thread can check if _it_ has already      * recurred through this point, return an error if so.      */
 name|_nc_lock_global
 argument_list|(
-name|use_screen
+name|curses
 argument_list|)
 expr_stmt|;
 name|save_SP
@@ -96,7 +96,7 @@ argument_list|)
 expr_stmt|;
 name|_nc_unlock_global
 argument_list|(
-name|use_screen
+name|curses
 argument_list|)
 expr_stmt|;
 name|returnCode
@@ -104,9 +104,6 @@ argument_list|(
 name|code
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_block
 

@@ -26,7 +26,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_ttyflags.c,v 1.16 2008/05/03 22:39:03 tom Exp $"
+literal|"$Id: lib_ttyflags.c,v 1.18 2008/08/03 22:10:44 tom Exp $"
 argument_list|)
 end_macro
 
@@ -141,8 +141,13 @@ operator|(
 literal|"_nc_get_tty_mode(%d): %s"
 operator|,
 name|cur_term
+condition|?
+name|cur_term
 operator|->
 name|Filedes
+else|:
+operator|-
+literal|1
 operator|,
 name|_nc_trace_ttymode
 argument_list|(
@@ -272,8 +277,13 @@ operator|(
 literal|"_nc_set_tty_mode(%d): %s"
 operator|,
 name|cur_term
+condition|?
+name|cur_term
 operator|->
 name|Filedes
+else|:
+operator|-
+literal|1
 operator|,
 name|_nc_trace_ttymode
 argument_list|(
@@ -307,6 +317,11 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|rc
+init|=
+name|ERR
+decl_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -317,7 +332,14 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * If XTABS was on, remove the tab and backtab capabilities.      */
+if|if
+condition|(
+name|cur_term
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 	 * If XTABS was on, remove the tab and backtab capabilities. 	 */
 if|if
 condition|(
 name|_nc_get_tty_mode
@@ -327,14 +349,10 @@ name|cur_term
 operator|->
 name|Ottyb
 argument_list|)
-operator|!=
+operator|==
 name|OK
 condition|)
-name|returnCode
-argument_list|(
-name|ERR
-argument_list|)
-expr_stmt|;
+block|{
 ifdef|#
 directive|ifdef
 name|TERMIOS
@@ -374,9 +392,15 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+name|rc
+operator|=
+name|OK
+expr_stmt|;
+block|}
+block|}
 name|returnCode
 argument_list|(
-name|OK
+name|rc
 argument_list|)
 expr_stmt|;
 block|}
@@ -398,6 +422,11 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|rc
+init|=
+name|ERR
+decl_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -408,7 +437,14 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Turn off the XTABS bit in the tty structure if it was on.      */
+if|if
+condition|(
+name|cur_term
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 	 * Turn off the XTABS bit in the tty structure if it was on. 	 */
 if|if
 condition|(
 name|_nc_get_tty_mode
@@ -418,14 +454,10 @@ name|cur_term
 operator|->
 name|Nttyb
 argument_list|)
-operator|!=
+operator|==
 name|OK
 condition|)
-name|returnCode
-argument_list|(
-name|ERR
-argument_list|)
-expr_stmt|;
+block|{
 ifdef|#
 directive|ifdef
 name|TERMIOS
@@ -451,9 +483,15 @@ name|XTABS
 expr_stmt|;
 endif|#
 directive|endif
+name|rc
+operator|=
+name|OK
+expr_stmt|;
+block|}
+block|}
 name|returnCode
 argument_list|(
-name|OK
+name|rc
 argument_list|)
 expr_stmt|;
 block|}
