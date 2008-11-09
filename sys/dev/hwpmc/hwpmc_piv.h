@@ -28,12 +28,8 @@ begin_define
 define|#
 directive|define
 name|P4_NPMCS
-value|19
+value|18
 end_define
-
-begin_comment
-comment|/* 1 TSC + 18 PMCS */
-end_comment
 
 begin_define
 define|#
@@ -446,18 +442,30 @@ end_comment
 
 begin_function_decl
 name|int
-name|pmc_initialize_p4
+name|pmc_p4_initialize
 parameter_list|(
 name|struct
 name|pmc_mdep
 modifier|*
+name|_md
+parameter_list|,
+name|int
+name|_ncpus
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Pentium IV PMCs */
-end_comment
+begin_function_decl
+name|void
+name|pmc_p4_finalize
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|md
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -474,7 +482,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_PMC_MDEP_H */
+comment|/* _DEV_HWPMC_PIV_H_ */
 end_comment
 
 end_unit
