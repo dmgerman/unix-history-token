@@ -4300,9 +4300,9 @@ name|pmclog_buffer_size
 argument_list|,
 name|M_PMC
 argument_list|,
-name|M_ZERO
-operator||
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|PMCLOG_INIT_BUFFER_DESCRIPTOR
