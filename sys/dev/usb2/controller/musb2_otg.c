@@ -5834,11 +5834,13 @@ name|usb2_error_t
 name|error
 parameter_list|)
 block|{
-name|mtx_assert
+name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|usb2_mtx
+name|udev
+operator|->
+name|bus
 argument_list|,
 name|MA_OWNED
 argument_list|)
