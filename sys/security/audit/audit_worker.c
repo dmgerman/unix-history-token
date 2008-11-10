@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2005 Apple Inc.  * Copyright (c) 2006-2008 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999-2008 Apple Inc.  * Copyright (c) 2006-2008 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -241,21 +241,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * audit_cred and audit_vp are the stored credential and vnode to use for  * active audit trail.  They are protected by audit_worker_sx, which will be  * held across all I/O and all rotation to prevent them from being replaced  * (rotated) while in use.  The audit_file_rotate_wait flag is set when the  * kernel has delivered a trigger to auditd to rotate the trail, and is  * cleared when the next rotation takes place.  It is also protected by  * audit_worker_sx.  */
+comment|/*  * audit_cred and audit_vp are the stored credential and vnode to use for  * active audit trail.  They are protected by the audit worker lock, which  * will be held across all I/O and all rotation to prevent them from being  * replaced (rotated) while in use.  The audit_file_rotate_wait flag is set  * when the kernel has delivered a trigger to auditd to rotate the trail, and  * is cleared when the next rotation takes place.  It is also protected by  * the audit worker lock.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|audit_file_rotate_wait
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|sx
-name|audit_worker_sx
 decl_stmt|;
 end_decl_stmt
 
@@ -276,6 +268,46 @@ modifier|*
 name|audit_vp
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|audit_worker_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|AUDIT_WORKER_LOCK_INIT
+parameter_list|()
+value|sx_init(&audit_worker_lock, \ 					    "audit_worker_lock");
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_WORKER_LOCK_ASSERT
+parameter_list|()
+value|sx_assert(&audit_worker_lock, \ 					    SA_XLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_WORKER_LOCK
+parameter_list|()
+value|sx_xlock(&audit_worker_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_WORKER_UNLOCK
+parameter_list|()
+value|sx_xunlock(&audit_worker_lock)
+end_define
 
 begin_comment
 comment|/*  * Write an audit record to a file, performed as the last stage after both  * preselection and BSM conversion.  Both space management and write failures  * are handled in this function.  *  * No attempt is made to deal with possible failure to deliver a trigger to  * the audit daemon, since the message is asynchronous anyway.  */
@@ -339,15 +371,9 @@ decl_stmt|;
 name|long
 name|temp
 decl_stmt|;
-name|sx_assert
-argument_list|(
-operator|&
-name|audit_worker_sx
-argument_list|,
-name|SA_LOCKED
-argument_list|)
+name|AUDIT_WORKER_LOCK_ASSERT
+argument_list|()
 expr_stmt|;
-comment|/* audit_file_rotate_wait. */
 if|if
 condition|(
 name|vp
@@ -551,13 +577,8 @@ name|af_filesz
 operator|)
 condition|)
 block|{
-name|sx_assert
-argument_list|(
-operator|&
-name|audit_worker_sx
-argument_list|,
-name|SA_XLOCKED
-argument_list|)
+name|AUDIT_WORKER_LOCK_ASSERT
+argument_list|()
 expr_stmt|;
 name|audit_file_rotate_wait
 operator|=
@@ -915,9 +936,9 @@ decl_stmt|,
 name|sorf
 decl_stmt|;
 name|int
-name|trail_locked
+name|locked
 decl_stmt|;
-comment|/* 	 * We hold the audit_worker_sx lock over both writes, if there are 	 * two, so that the two records won't be split across a rotation and 	 * end up in two different trail files. 	 */
+comment|/* 	 * We hold the audit worker lock over both writes, if there are two, 	 * so that the two records won't be split across a rotation and end 	 * up in two different trail files. 	 */
 if|if
 condition|(
 operator|(
@@ -947,19 +968,16 @@ name|AR_PRESELECT_TRAIL
 operator|)
 condition|)
 block|{
-name|sx_xlock
-argument_list|(
-operator|&
-name|audit_worker_sx
-argument_list|)
+name|AUDIT_WORKER_LOCK
+argument_list|()
 expr_stmt|;
-name|trail_locked
+name|locked
 operator|=
 literal|1
 expr_stmt|;
 block|}
 else|else
-name|trail_locked
+name|locked
 operator|=
 literal|0
 expr_stmt|;
@@ -983,13 +1001,8 @@ name|AR_PRESELECT_USER_TRAIL
 operator|)
 condition|)
 block|{
-name|sx_assert
-argument_list|(
-operator|&
-name|audit_worker_sx
-argument_list|,
-name|SA_XLOCKED
-argument_list|)
+name|AUDIT_WORKER_LOCK_ASSERT
+argument_list|()
 expr_stmt|;
 name|audit_record_write
 argument_list|(
@@ -1168,13 +1181,8 @@ operator|&
 name|AR_PRESELECT_TRAIL
 condition|)
 block|{
-name|sx_assert
-argument_list|(
-operator|&
-name|audit_worker_sx
-argument_list|,
-name|SA_XLOCKED
-argument_list|)
+name|AUDIT_WORKER_LOCK_ASSERT
+argument_list|()
 expr_stmt|;
 name|audit_record_write
 argument_list|(
@@ -1234,13 +1242,10 @@ name|out
 label|:
 if|if
 condition|(
-name|trail_locked
+name|locked
 condition|)
-name|sx_xunlock
-argument_list|(
-operator|&
-name|audit_worker_sx
-argument_list|)
+name|AUDIT_WORKER_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1491,11 +1496,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Rotate the vnode/cred, and clear the rotate flag so that we will 	 * send a rotate trigger if the new file fills. 	 */
-name|sx_xlock
-argument_list|(
-operator|&
-name|audit_worker_sx
-argument_list|)
+name|AUDIT_WORKER_LOCK
+argument_list|()
 expr_stmt|;
 name|old_audit_cred
 operator|=
@@ -1525,11 +1527,8 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
-name|sx_xunlock
-argument_list|(
-operator|&
-name|audit_worker_sx
-argument_list|)
+name|AUDIT_WORKER_UNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * If there was an old vnode/credential, close and free. 	 */
 if|if
@@ -1583,13 +1582,8 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|sx_init
-argument_list|(
-operator|&
-name|audit_worker_sx
-argument_list|,
-literal|"audit_worker_sx"
-argument_list|)
+name|AUDIT_WORKER_LOCK_INIT
+argument_list|()
 expr_stmt|;
 name|error
 operator|=
