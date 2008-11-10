@@ -14759,6 +14759,9 @@ name|dst
 operator|->
 name|si_addr
 operator|=
+operator|(
+name|uintptr_t
+operator|)
 name|src
 operator|->
 name|si_addr
