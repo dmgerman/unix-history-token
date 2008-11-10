@@ -94,7 +94,7 @@ index|]
 decl_stmt|;
 name|struct
 name|mtx
-name|mtx
+name|bus_mtx
 decl_stmt|;
 comment|/* This mutex protects the USB 					 * hardware */
 name|struct

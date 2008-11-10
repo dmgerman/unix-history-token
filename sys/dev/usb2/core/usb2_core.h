@@ -607,6 +607,70 @@ parameter_list|)
 value|callout_pending(&(c)->co)
 end_define
 
+begin_define
+define|#
+directive|define
+name|USB_BUS_LOCK
+parameter_list|(
+name|_b
+parameter_list|)
+value|mtx_lock(&(_b)->bus_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_BUS_UNLOCK
+parameter_list|(
+name|_b
+parameter_list|)
+value|mtx_unlock(&(_b)->bus_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_BUS_LOCK_ASSERT
+parameter_list|(
+name|_b
+parameter_list|,
+name|_t
+parameter_list|)
+value|mtx_assert(&(_b)->bus_mtx, _t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_XFER_LOCK
+parameter_list|(
+name|_x
+parameter_list|)
+value|mtx_lock((_x)->xfer_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_XFER_UNLOCK
+parameter_list|(
+name|_x
+parameter_list|)
+value|mtx_unlock((_x)->xfer_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_XFER_LOCK_ASSERT
+parameter_list|(
+name|_x
+parameter_list|,
+name|_t
+parameter_list|)
+value|mtx_assert((_x)->xfer_mtx, _t)
+end_define
+
 begin_comment
 comment|/* structure prototypes */
 end_comment
@@ -1095,15 +1159,9 @@ decl_stmt|;
 name|struct
 name|mtx
 modifier|*
-name|priv_mtx
+name|xfer_mtx
 decl_stmt|;
 comment|/* cannot be changed during operation */
-name|struct
-name|mtx
-modifier|*
-name|usb2_mtx
-decl_stmt|;
-comment|/* used by HC driver */
 name|struct
 name|usb2_xfer_root
 modifier|*

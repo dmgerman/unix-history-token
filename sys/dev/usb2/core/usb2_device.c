@@ -1181,14 +1181,11 @@ operator|->
 name|clear_stall
 condition|)
 block|{
-name|mtx_lock
+name|USB_BUS_LOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 call|(
@@ -1206,14 +1203,11 @@ argument_list|,
 name|pipe
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -2758,14 +2752,11 @@ literal|0
 operator|)
 return|;
 block|}
-name|mtx_lock
+name|USB_BUS_LOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* store current stall state */
@@ -2784,14 +2775,11 @@ name|do_stall
 condition|)
 block|{
 comment|/* if the pipe is already stalled do nothing */
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -2915,14 +2903,11 @@ name|curr
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -4388,14 +4373,11 @@ argument_list|,
 name|SA_LOCKED
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_BUS_LOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* filter the suspend events */
@@ -4410,14 +4392,11 @@ operator|==
 name|do_suspend
 condition|)
 block|{
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* nothing to do */
@@ -4435,14 +4414,11 @@ name|suspended
 operator|=
 name|do_suspend
 expr_stmt|;
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* do the suspend or resume */
@@ -4535,14 +4511,11 @@ operator|->
 name|udev
 decl_stmt|;
 comment|/* Change lock */
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -4571,14 +4544,11 @@ operator|->
 name|default_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_BUS_LOCK
 argument_list|(
-operator|&
 name|udev
 operator|->
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 return|return;

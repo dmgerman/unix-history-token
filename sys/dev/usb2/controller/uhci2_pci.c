@@ -1099,7 +1099,7 @@ name|sc
 operator|->
 name|sc_bus
 operator|.
-name|mtx
+name|bus_mtx
 argument_list|,
 name|NULL
 argument_list|,
@@ -1406,14 +1406,12 @@ operator|->
 name|sc_io_res
 condition|)
 block|{
-name|mtx_lock
+name|USB_BUS_LOCK
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_bus
-operator|.
-name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* stop the controller */
@@ -1422,14 +1420,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_bus
-operator|.
-name|mtx
 argument_list|)
 expr_stmt|;
 block|}

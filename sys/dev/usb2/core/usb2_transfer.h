@@ -85,11 +85,6 @@ modifier|*
 name|priv_mtx
 decl_stmt|;
 name|struct
-name|mtx
-modifier|*
-name|usb2_mtx
-decl_stmt|;
-name|struct
 name|usb2_page_cache
 modifier|*
 name|dma_page_cache_start

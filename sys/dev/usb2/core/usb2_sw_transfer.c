@@ -25,6 +25,12 @@ directive|include
 file|<dev/usb2/include/usb2_error.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb2/include/usb2_defs.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -65,7 +71,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb2/core/usb2_device.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb2/core/usb2_debug.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb2/controller/usb2_controller.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb2/controller/usb2_bus.h>
 end_include
 
 begin_comment
@@ -120,11 +144,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mtx_assert
+name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|usb2_mtx
+name|udev
+operator|->
+name|bus
 argument_list|,
 name|MA_OWNED
 argument_list|)

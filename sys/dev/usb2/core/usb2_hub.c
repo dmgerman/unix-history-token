@@ -2874,7 +2874,7 @@ literal|"bus"
 argument_list|)
 expr_stmt|;
 comment|/* start the interrupt endpoint */
-name|mtx_lock
+name|USB_XFER_LOCK
 argument_list|(
 name|sc
 operator|->
@@ -2882,8 +2882,6 @@ name|sc_xfer
 index|[
 literal|0
 index|]
-operator|->
-name|priv_mtx
 argument_list|)
 expr_stmt|;
 name|usb2_transfer_start
@@ -2896,7 +2894,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_XFER_UNLOCK
 argument_list|(
 name|sc
 operator|->
@@ -2904,8 +2902,6 @@ name|sc_xfer
 index|[
 literal|0
 index|]
-operator|->
-name|priv_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -3778,12 +3774,9 @@ name|usb2_hub
 modifier|*
 name|hub
 decl_stmt|;
-name|mtx_assert
+name|USB_BUS_LOCK_ASSERT
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -4014,12 +4007,9 @@ block|{
 name|uint16_t
 name|rem
 decl_stmt|;
-name|mtx_assert
+name|USB_BUS_LOCK_ASSERT
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -4627,12 +4617,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mtx_lock
+name|USB_BUS_LOCK
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -4676,12 +4663,9 @@ condition|)
 block|{
 comment|/* ignore */
 block|}
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 return|return;

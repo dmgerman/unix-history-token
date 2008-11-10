@@ -3615,11 +3615,9 @@ name|ata_request
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_unlock
+name|USB_XFER_UNLOCK
 argument_list|(
 name|xfer
-operator|->
-name|priv_mtx
 argument_list|)
 expr_stmt|;
 name|ata_interrupt
@@ -3632,11 +3630,9 @@ name|parent
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_XFER_LOCK
 argument_list|(
 name|xfer
-operator|->
-name|priv_mtx
 argument_list|)
 expr_stmt|;
 return|return;

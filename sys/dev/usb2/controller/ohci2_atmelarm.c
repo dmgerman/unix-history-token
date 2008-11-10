@@ -485,7 +485,7 @@ name|sc_ohci
 operator|.
 name|sc_bus
 operator|.
-name|mtx
+name|bus_mtx
 argument_list|,
 name|NULL
 argument_list|,

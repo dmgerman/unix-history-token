@@ -667,12 +667,9 @@ operator|)
 return|;
 block|}
 comment|/* Let the USB explore process detach all devices. */
-name|mtx_lock
+name|USB_BUS_LOCK
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -729,12 +726,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* Get rid of USB explore process */
@@ -846,12 +840,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -878,12 +869,9 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_BUS_LOCK
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -955,12 +943,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_BUS_UNLOCK
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -996,12 +981,9 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_BUS_LOCK
 argument_list|(
-operator|&
 name|bus
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 comment|/* clear bdev variable last */
@@ -1349,7 +1331,7 @@ argument_list|,
 operator|&
 name|bus
 operator|->
-name|mtx
+name|bus_mtx
 argument_list|,
 name|USB_PRI_MED
 argument_list|)
@@ -1742,9 +1724,9 @@ argument_list|(
 operator|&
 name|bus
 operator|->
-name|mtx
+name|bus_mtx
 argument_list|,
-literal|"USB lock"
+literal|"USB bus lock"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1778,7 +1760,7 @@ argument_list|,
 operator|&
 name|bus
 operator|->
-name|mtx
+name|bus_mtx
 argument_list|,
 name|NULL
 argument_list|,
@@ -1912,7 +1894,7 @@ argument_list|(
 operator|&
 name|bus
 operator|->
-name|mtx
+name|bus_mtx
 argument_list|)
 expr_stmt|;
 return|return;
