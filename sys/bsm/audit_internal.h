@@ -118,8 +118,25 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AUDIT_HEADER_EX_SIZE
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)->ai_termid.at_type+18+sizeof(u_int32_t))
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUDIT_HEADER_SIZE
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_AUDIT_HEADER_SIZE
+value|(5*sizeof(u_int32_t)+18)
 end_define
 
 begin_define

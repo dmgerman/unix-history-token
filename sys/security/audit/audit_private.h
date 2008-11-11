@@ -351,6 +351,9 @@ decl_stmt|;
 name|au_fstat_t
 name|au_fstat
 decl_stmt|;
+name|auditinfo_addr_t
+name|au_kau_info
+decl_stmt|;
 block|}
 union|;
 end_union
