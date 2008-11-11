@@ -487,7 +487,7 @@ define|#
 directive|define
 name|KINFO_LOCK_INIT
 parameter_list|()
-value|rw_init(&audit_kinfo_lock, "kernel audit info lock")
+value|rw_init(&audit_kinfo_lock, \ 				    "audit_kinfo_lock")
 end_define
 
 begin_define
