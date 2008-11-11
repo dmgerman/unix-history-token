@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdbool.h>
 end_include
 
@@ -57,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libutil.h>
 end_include
 
 begin_decl_stmt
@@ -97,17 +97,17 @@ modifier|*
 name|gr2
 parameter_list|)
 block|{
-name|bool
-name|found
-decl_stmt|;
-name|bool
-name|equal
-decl_stmt|;
 name|int
 name|gr1Ndx
 decl_stmt|;
 name|int
 name|gr2Ndx
+decl_stmt|;
+name|bool
+name|equal
+decl_stmt|;
+name|bool
+name|found
 decl_stmt|;
 comment|/* Check that the non-member information is the same. */
 name|equal
@@ -279,11 +279,11 @@ name|char
 modifier|*
 name|line
 decl_stmt|;
-name|int
-name|ndx
-decl_stmt|;
 name|size_t
 name|lineSize
+decl_stmt|;
+name|int
+name|ndx
 decl_stmt|;
 comment|/* Calculate the length of the group line. */
 name|lineSize
@@ -477,12 +477,6 @@ modifier|*
 name|gr
 parameter_list|)
 block|{
-name|int
-name|ndx
-decl_stmt|;
-name|int
-name|numMem
-decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
@@ -490,6 +484,12 @@ name|struct
 name|group
 modifier|*
 name|ngr
+decl_stmt|;
+name|int
+name|ndx
+decl_stmt|;
+name|int
+name|numMem
 decl_stmt|;
 comment|/* Calculate size of group. */
 name|len
@@ -591,11 +591,9 @@ operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
-operator|(
 name|gr
 operator|->
 name|gr_mem
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -753,11 +751,9 @@ operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
-operator|(
 name|ngr
 operator|->
 name|gr_mem
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -905,20 +901,16 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-operator|(
 name|gr
 operator|->
 name|gr_passwd
-operator|)
 operator|==
 literal|':'
 condition|)
 operator|*
-operator|(
 name|gr
 operator|->
 name|gr_passwd
-operator|)
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -963,11 +955,9 @@ argument_list|,
 literal|"%u"
 argument_list|,
 operator|&
-operator|(
 name|gr
 operator|->
 name|gr_gid
-operator|)
 argument_list|)
 operator|!=
 literal|1
@@ -1042,11 +1032,9 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-operator|(
 name|gr
 operator|->
 name|gr_mem
-operator|)
 argument_list|)
 operator|*
 operator|(
@@ -1118,6 +1106,10 @@ modifier|*
 name|line
 parameter_list|)
 block|{
+name|struct
+name|group
+name|gr
+decl_stmt|;
 name|char
 modifier|*
 name|lineCopy
@@ -1126,10 +1118,6 @@ name|struct
 name|group
 modifier|*
 name|newGr
-decl_stmt|;
-name|struct
-name|group
-name|gr
 decl_stmt|;
 if|if
 condition|(
