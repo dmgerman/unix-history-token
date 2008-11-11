@@ -1458,6 +1458,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_pipe
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fildes
+index|[
+literal|2
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_preadv
 parameter_list|(
 name|struct
