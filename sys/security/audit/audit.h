@@ -1124,28 +1124,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|audit_set_kinfo
-parameter_list|(
-name|struct
-name|auditinfo_addr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|audit_get_kinfo
-parameter_list|(
-name|struct
-name|auditinfo_addr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Define a macro to wrap the audit_arg_* calls by checking the global  * audit_enabled flag before performing the actual call.  */
 end_comment

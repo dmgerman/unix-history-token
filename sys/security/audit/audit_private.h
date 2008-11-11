@@ -1096,6 +1096,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Accessor functions to manage global audit state.  */
+end_comment
+
+begin_function_decl
+name|void
+name|audit_set_kinfo
+parameter_list|(
+name|struct
+name|auditinfo_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|audit_get_kinfo
+parameter_list|(
+name|struct
+name|auditinfo_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * General audit related functions.  */
 end_comment
 
