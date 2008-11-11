@@ -3566,7 +3566,12 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If inp is non-NULL, we call tcp_dropwithreset() holding both inpcb 	 * and global locks.  However, if NULL, we must hold neither as 	 * firewalls may acquire the global lock in order to look for a 	 * matching inpcb. 	 */
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|inp
@@ -3593,18 +3598,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
+else|else
 name|tcp_dropwithreset
 argument_list|(
 name|m
@@ -9377,7 +9371,12 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If tp is non-NULL, we call tcp_dropwithreset() holding both inpcb 	 * and global locks.  However, if NULL, we must hold neither as 	 * firewalls may acquire the global lock in order to look for a 	 * matching inpcb. 	 */
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -9406,18 +9405,7 @@ name|t_inpcb
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|==
-name|NULL
-condition|)
+else|else
 name|tcp_dropwithreset
 argument_list|(
 name|m
