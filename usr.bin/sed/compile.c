@@ -1217,10 +1217,7 @@ name|cmd
 operator|->
 name|nonsel
 operator|=
-operator|!
-name|cmd
-operator|->
-name|nonsel
+literal|1
 expr_stmt|;
 goto|goto
 name|nonsel
