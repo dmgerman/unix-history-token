@@ -105,7 +105,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|hashjitter
 decl_stmt|;
 end_decl_stmt
@@ -1042,7 +1042,7 @@ name|ro_dst
 argument_list|,
 literal|1
 argument_list|,
-literal|0UL
+name|RTF_CLONING
 argument_list|,
 name|fibnum
 argument_list|)
@@ -1165,7 +1165,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|ro
 operator|->
