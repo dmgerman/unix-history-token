@@ -4382,6 +4382,12 @@ operator|->
 name|nd_procnum
 operator|==
 name|NFSPROC_FSINFO
+operator|||
+name|nfsd
+operator|->
+name|nd_procnum
+operator|==
+name|NFSPROC_GETATTR
 condition|)
 name|mountreq
 operator|=
@@ -4419,7 +4425,7 @@ name|error
 operator|=
 name|NFSERR_AUTHERR
 operator||
-name|AUTH_REJECTCRED
+name|AUTH_TOOWEAK
 expr_stmt|;
 goto|goto
 name|out
