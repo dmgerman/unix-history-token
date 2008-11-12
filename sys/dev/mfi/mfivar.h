@@ -318,6 +318,10 @@ define|#
 directive|define
 name|MFI_FLAGS_1078
 value|(1<<5)
+define|#
+directive|define
+name|MFI_FLAGS_GEN2
+value|(1<<6)
 name|struct
 name|mfi_hwcomms
 modifier|*
