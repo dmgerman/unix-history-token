@@ -16384,9 +16384,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|DPRINTF
 argument_list|(
-literal|"not offloading\n"
+literal|"no DDP\n"
 argument_list|)
 expr_stmt|;
 return|return;
