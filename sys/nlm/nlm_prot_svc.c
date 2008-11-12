@@ -382,11 +382,6 @@ name|rqstp
 argument_list|)
 expr_stmt|;
 block|}
-name|svc_freereq
-argument_list|(
-name|rqstp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -415,6 +410,11 @@ argument_list|)
 expr_stmt|;
 comment|//exit(1);
 block|}
+name|svc_freereq
+argument_list|(
+name|rqstp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
