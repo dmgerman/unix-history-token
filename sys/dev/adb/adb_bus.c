@@ -535,7 +535,7 @@ operator|=
 literal|1
 init|;
 name|i
-operator|<
+operator|<=
 literal|7
 condition|;
 name|i
