@@ -428,21 +428,21 @@ begin_define
 define|#
 directive|define
 name|txmitl
-value|(txmith+(1*LPIPTBLSIZE))
+value|(txmith + (1 * LPIPTBLSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|trecvh
-value|(txmith+(2*LPIPTBLSIZE))
+value|(txmith + (2 * LPIPTBLSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|trecvl
-value|(txmith+(3*LPIPTBLSIZE))
+value|(txmith + (3 * LPIPTBLSIZE))
 end_define
 
 begin_decl_stmt
@@ -457,21 +457,21 @@ begin_define
 define|#
 directive|define
 name|ctxmitl
-value|(ctxmith+(1*LPIPTBLSIZE))
+value|(ctxmith + (1 * LPIPTBLSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctrecvh
-value|(ctxmith+(2*LPIPTBLSIZE))
+value|(ctxmith + (2 * LPIPTBLSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctrecvl
-value|(ctxmith+(3*LPIPTBLSIZE))
+value|(ctxmith + (3 * LPIPTBLSIZE))
 end_define
 
 begin_comment
@@ -604,10 +604,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * lpprobe()  */
-end_comment
 
 begin_function
 specifier|static
@@ -844,8 +840,9 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|txmith
+operator|==
+name|NULL
 condition|)
 name|txmith
 operator|=
@@ -862,16 +859,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|txmith
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
-operator|!
 name|ctxmith
+operator|==
+name|NULL
 condition|)
 name|ctxmith
 operator|=
@@ -888,11 +889,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ctxmith
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -1077,7 +1081,9 @@ operator|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1187,7 +1193,9 @@ operator|!=
 name|AF_INET
 condition|)
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 name|ifp
 operator|->
@@ -1269,7 +1277,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* XXX 	     * Should the request be interruptible? 	     */
+comment|/* XXX 			 * Should the request be interruptible? 			 */
 if|if
 condition|(
 operator|(
@@ -1314,7 +1322,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|sc
@@ -1338,10 +1348,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|sc_ifbuf
+operator|==
+name|NULL
 condition|)
 block|{
 name|ppb_release_bus
@@ -1352,10 +1363,12 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
-comment|/* attach our interrupt handler, later detached when the bus is released */
+comment|/* 			 * Attach our interrupt handler.  It is 			 * detached later when the bus is released. 			 */
 if|if
 condition|(
 operator|(
@@ -1439,10 +1452,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|sc_ifbuf
+operator|==
+name|NULL
 condition|)
 block|{
 name|sc
@@ -1452,7 +1466,9 @@ operator|=
 name|ptr
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 if|if
@@ -1505,7 +1521,9 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 comment|/* XXX */
 block|}
@@ -1524,16 +1542,20 @@ case|:
 break|break;
 default|default:
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 block|}
 break|break;
 case|case
 name|SIOCGIFMEDIA
 case|:
-comment|/* 	 * No ifmedia support at this stage; maybe use it 	 * in future for eg. protocol selection. 	 */
+comment|/* 		 * No ifmedia support at this stage; maybe use it 		 * in future for eg. protocol selection. 		 */
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 default|default:
 name|lprintf
@@ -1544,11 +1566,15 @@ name|cmd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1597,7 +1623,9 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 name|ppb_wdtr
@@ -1631,11 +1659,15 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1677,8 +1709,10 @@ name|spin
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|cl
@@ -1715,8 +1749,10 @@ name|spin
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|c
@@ -2089,6 +2125,7 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 name|netisr_queue
 argument_list|(
 name|NETISR_IP
@@ -2096,7 +2133,6 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-comment|/* mbuf is free'd on failure. */
 block|}
 goto|goto
 name|done
@@ -2356,6 +2392,7 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 name|netisr_queue
 argument_list|(
 name|NETISR_IP
@@ -2363,7 +2400,6 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-comment|/* mbuf is free'd on failure. */
 block|}
 block|}
 goto|goto
@@ -2444,7 +2480,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2494,7 +2529,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 name|ppb_wdtr
 argument_list|(
@@ -2523,10 +2560,14 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3030,7 +3071,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -3246,7 +3289,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
