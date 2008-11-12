@@ -6248,6 +6248,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|bus_dmamap_unload
+argument_list|(
+name|sc
+operator|->
+name|sc_mbuf_dtag
+argument_list|,
+name|rb
+operator|->
+name|rb_dmap
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|rb
