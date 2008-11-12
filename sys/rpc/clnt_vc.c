@@ -1382,6 +1382,14 @@ condition|(
 name|ct
 condition|)
 block|{
+name|mtx_destroy
+argument_list|(
+operator|&
+name|ct
+operator|->
+name|ct_lock
+argument_list|)
+expr_stmt|;
 name|mem_free
 argument_list|(
 name|ct
