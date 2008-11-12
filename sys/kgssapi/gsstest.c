@@ -3964,6 +3964,11 @@ goto|;
 block|}
 name|out
 label|:
+name|svc_freereq
+argument_list|(
+name|rqstp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
