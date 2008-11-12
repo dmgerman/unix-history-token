@@ -4550,13 +4550,6 @@ begin_define
 define|#
 directive|define
 name|SCTP_STACK_VTAG_HASH_SIZE
-value|31
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_STACK_VTAG_HASH_SIZE_A
 value|32
 end_define
 
@@ -4572,17 +4565,6 @@ begin_define
 define|#
 directive|define
 name|SCTP_TIME_WAIT
-value|60
-end_define
-
-begin_comment
-comment|/* This time wait is the same as the default cookie life  * since we now enter a tag in every time we send a cookie.  * We want this shorter to avoid vtag depletion.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_TIME_WAIT_SHORT
 value|60
 end_define
 

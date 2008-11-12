@@ -21392,8 +21392,6 @@ argument_list|,
 literal|"Bad size on sack chunk, too small\n"
 argument_list|)
 expr_stmt|;
-name|ignore_sack
-label|:
 operator|*
 name|offset
 operator|=
@@ -21430,9 +21428,7 @@ name|SCTP_STATE_SHUTDOWN_ACK_SENT
 condition|)
 block|{
 comment|/*- 					 * If we have sent a shutdown-ack, we will pay no 					 * attention to a sack sent in to us since 					 * we don't care anymore. 					 */
-goto|goto
-name|ignore_sack
-goto|;
+break|break;
 block|}
 name|sack
 operator|=

@@ -19296,6 +19296,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|SCTP_INP_INFO_WLOCK
+argument_list|()
+expr_stmt|;
 name|chain
 operator|=
 operator|&
@@ -19371,6 +19374,9 @@ condition|)
 break|break;
 block|}
 block|}
+name|SCTP_INP_INFO_WUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|found
@@ -19588,7 +19594,7 @@ name|twait_block
 operator|->
 name|vtag_block
 index|[
-literal|0
+name|i
 index|]
 operator|.
 name|tv_sec_at_expire
@@ -19603,7 +19609,7 @@ name|twait_block
 operator|->
 name|vtag_block
 index|[
-literal|0
+name|i
 index|]
 operator|.
 name|v_tag
@@ -19658,6 +19664,16 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|panic
+argument_list|(
+literal|"Can not alloc tagblock"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 name|memset
@@ -24490,7 +24506,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SCTP_STACK_VTAG_HASH_SIZE_A
+name|SCTP_STACK_VTAG_HASH_SIZE
 condition|;
 name|i
 operator|++
@@ -24787,7 +24803,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SCTP_STACK_VTAG_HASH_SIZE_A
+name|SCTP_STACK_VTAG_HASH_SIZE
 condition|;
 name|i
 operator|++
