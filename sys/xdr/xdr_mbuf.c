@@ -217,6 +217,17 @@ name|xdr_op
 name|op
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|m
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"xdrmbuf_create with NULL mbuf chain"
+operator|)
+argument_list|)
+expr_stmt|;
 name|xdrs
 operator|->
 name|x_op
