@@ -14409,7 +14409,10 @@ name|dst
 operator|->
 name|si_addr
 operator|=
-name|dst
+operator|(
+name|uintptr_t
+operator|)
+name|src
 operator|->
 name|si_addr
 expr_stmt|;
