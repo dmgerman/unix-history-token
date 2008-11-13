@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005 Apple Computer, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/bsm/audit_kevents.h#52 $  */
+comment|/*-  * Copyright (c) 2005 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/sys/bsm/audit_kevents.h#3 $  */
 end_comment
 
 begin_ifndef
@@ -2273,6 +2273,17 @@ begin_comment
 comment|/* Solaris-specific. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AUE_PORTFS
+value|301
+end_define
+
+begin_comment
+comment|/* Solaris-specific. */
+end_comment
+
 begin_comment
 comment|/*  * Events added for Apple Darwin that potentially collide with future Solaris  * BSM events.  These are assigned AUE_DARWIN prefixes, and are deprecated in  * new trails.  Systems generating these events should switch to the new  * identifiers that avoid colliding with the Solaris identifier space.  */
 end_comment
@@ -3978,7 +3989,7 @@ value|43121
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -3989,7 +4000,7 @@ value|43122
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -4000,7 +4011,7 @@ value|43123
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -4011,7 +4022,7 @@ value|43124
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -4022,7 +4033,7 @@ value|43125
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -4033,7 +4044,7 @@ value|43126
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -4055,7 +4066,7 @@ value|43128
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -4066,7 +4077,7 @@ value|43129
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -4077,7 +4088,7 @@ value|43130
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -4088,7 +4099,7 @@ value|43131
 end_define
 
 begin_comment
-comment|/* FreeBSD. */
+comment|/* FreeBSD/Darwin. */
 end_comment
 
 begin_define
@@ -4320,6 +4331,413 @@ end_define
 
 begin_comment
 comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_GETFSSTAT
+value|43153
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_GET_MOUNT
+value|43154
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_GET_LCID
+value|43155
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_GET_LCTX
+value|43156
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_SET_LCTX
+value|43157
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MAC_MOUNT
+value|43158
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_GETLCID
+value|43159
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SETLCID
+value|43160
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_TASKNAMEFORPID
+value|43161
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_ACCESS_EXTENDED
+value|43162
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CHMOD_EXTENDED
+value|43163
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_FCHMOD_EXTENDED
+value|43164
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_FSTAT_EXTENDED
+value|43165
+end_define
+
+begin_comment
+comment|/* Dariwn. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_LSTAT_EXTENDED
+value|43166
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MKDIR_EXTENDED
+value|43167
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_MKFIFO_EXTENDED
+value|43168
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED
+value|43169
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_R
+value|43170
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_RC
+value|43171
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_RT
+value|43172
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_RTC
+value|43173
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_W
+value|43174
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_WC
+value|43175
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_WT
+value|43176
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_WTC
+value|43177
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_RW
+value|43178
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_RWC
+value|43179
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_RWT
+value|43180
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPEN_EXTENDED_RWTC
+value|43181
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_STAT_EXTENDED
+value|43182
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_UMASK_EXTENDED
+value|43183
+end_define
+
+begin_comment
+comment|/* Darwin. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_OPENAT
+value|43184
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_POSIX_OPENPT
+value|43185
+end_define
+
+begin_comment
+comment|/* FreeBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_NEW
+value|43186
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_GETRIGHTS
+value|43187
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_ENTER
+value|43188
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_CAP_GETMODE
+value|43189
+end_define
+
+begin_comment
+comment|/* TrustedBSD. */
 end_comment
 
 begin_comment
