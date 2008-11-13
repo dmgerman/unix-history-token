@@ -2933,9 +2933,26 @@ name|bInterfaceClass
 operator|==
 name|UICLASS_MASS
 condition|)
+block|{
+ifndef|#
+directive|ifndef
+name|U3G_DEBUG
+if|if
+condition|(
+operator|!
+name|bootverbose
+condition|)
+name|device_quiet
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|UMATCH_VENDOR_PRODUCT
 return|;
+block|}
 block|}
 return|return
 name|UMATCH_NONE
@@ -2989,7 +3006,6 @@ condition|(
 operator|!
 name|bootverbose
 condition|)
-comment|// hide the stub attachment
 name|device_quiet
 argument_list|(
 name|self
@@ -3058,8 +3074,16 @@ operator|&
 name|U3GFL_HUAWEI_INIT
 condition|)
 block|{
-name|DPRINTF
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
 literal|"changing Huawei modem to modem mode\n"
 argument_list|)
 expr_stmt|;
@@ -3087,9 +3111,18 @@ operator|&
 name|U3GFL_SCSI_EJECT
 condition|)
 block|{
-name|DPRINTF
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
-literal|"sending CD eject command to change to modem mode\n"
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"sending CD eject command to "
+literal|"change to modem mode\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3116,8 +3149,16 @@ operator|&
 name|U3GFL_SIERRA_INIT
 condition|)
 block|{
-name|DPRINTF
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
 literal|"changing Sierra modem to modem mode\n"
 argument_list|)
 expr_stmt|;
@@ -3145,6 +3186,20 @@ operator|&
 name|U3GFL_STUB_WAIT
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"waiting for modem to change "
+literal|"to modem mode\n"
+argument_list|)
+expr_stmt|;
 comment|/* nop  */
 block|}
 return|return
@@ -3257,7 +3312,7 @@ name|driver_t
 name|u3gstub_driver
 init|=
 block|{
-literal|"u3gstub"
+literal|"u3g"
 block|,
 name|u3gstub_methods
 block|,
