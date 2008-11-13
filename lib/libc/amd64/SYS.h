@@ -28,7 +28,7 @@ name|RSYSCALL
 parameter_list|(
 name|x
 parameter_list|)
-value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret; \ 			2: movq PIC_GOT(HIDENAME(cerror)),%rcx; jmp *%rcx
+value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret; \ 			2: movq PIC_GOT(HIDENAME(cerror)),%rcx; jmp *%rcx; \ 			END(__CONCAT(__sys_,x))
 end_define
 
 begin_define
@@ -38,7 +38,7 @@ name|PSEUDO
 parameter_list|(
 name|x
 parameter_list|)
-value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret ; \ 			2: movq PIC_GOT(HIDENAME(cerror)),%rcx; jmp *%rcx
+value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret ; \ 			2: movq PIC_GOT(HIDENAME(cerror)),%rcx; jmp *%rcx; \ 			END(__CONCAT(__sys_,x))
 end_define
 
 begin_else
@@ -53,7 +53,7 @@ name|RSYSCALL
 parameter_list|(
 name|x
 parameter_list|)
-value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret; \ 			2: jmp HIDENAME(cerror)
+value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret; \ 			2: jmp HIDENAME(cerror);			\ 			END(__CONCAT(__sys_,x))
 end_define
 
 begin_define
@@ -63,7 +63,7 @@ name|PSEUDO
 parameter_list|(
 name|x
 parameter_list|)
-value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret; \ 			2: jmp HIDENAME(cerror)
+value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret; \ 			2: jmp HIDENAME(cerror);			\ 			END(__CONCAT(__sys_,x))
 end_define
 
 begin_endif
