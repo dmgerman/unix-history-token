@@ -32,6 +32,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NFS_NEWRPC
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NFS_LEGACYRPC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NFS_LEGACYRPC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Tunable constants for nfs  */
 end_comment
