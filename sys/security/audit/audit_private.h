@@ -866,14 +866,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|audit_q_len
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|audit_pre_q_len
 decl_stmt|;
 end_decl_stmt
