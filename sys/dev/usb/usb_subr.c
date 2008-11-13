@@ -3401,19 +3401,16 @@ if|if
 condition|(
 name|msg
 condition|)
-name|printf
-argument_list|(
-literal|"%s: device addr %d (config %d) exceeds power "
-literal|"budget, %d mA> %d mA\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|dev
 operator|->
 name|bus
 operator|->
 name|bdev
-argument_list|)
+argument_list|,
+literal|"device addr %d (config %d) exceeds "
+literal|"power budget, %d mA> %d mA\n"
 argument_list|,
 name|dev
 operator|->
@@ -5212,16 +5209,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: No free USB addresses, new device ignored.\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|bus
 operator|->
 name|bdev
-argument_list|)
+argument_list|,
+literal|"No free USB addresses\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7033,11 +7027,10 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: at %s"
-argument_list|,
-name|device_get_nameunit
+if|if
+condition|(
+operator|!
+name|device_is_quiet
 argument_list|(
 name|dev
 operator|->
@@ -7046,6 +7039,18 @@ index|[
 name|i
 index|]
 argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+argument_list|,
+literal|"at %s"
 argument_list|,
 name|hubname
 argument_list|)
@@ -7076,6 +7081,7 @@ operator|->
 name|address
 argument_list|)
 expr_stmt|;
+block|}
 name|struct
 name|usb_attach_arg
 modifier|*
