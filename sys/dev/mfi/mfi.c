@@ -11121,6 +11121,8 @@ block|{
 comment|/* 				 * not 64bit native so zero out any address 				 * over 32bit */
 name|sense_ptr
 operator|.
+name|addr
+operator|.
 name|high
 operator|=
 literal|0
@@ -12343,6 +12345,8 @@ directive|ifdef
 name|__amd64__
 comment|/* 			 * only 32bit Linux support so zero out any 			 * address over 32bit 			 */
 name|sense_ptr
+operator|.
+name|addr
 operator|.
 name|high
 operator|=
