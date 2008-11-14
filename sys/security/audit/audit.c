@@ -650,6 +650,11 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
 name|KASSERT
 argument_list|(
 sizeof|sizeof
@@ -703,11 +708,15 @@ name|ar_starttime
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Export the subject credential. 	 */
-name|cru2x
-argument_list|(
+name|cred
+operator|=
 name|td
 operator|->
 name|td_ucred
+expr_stmt|;
+name|cru2x
+argument_list|(
+name|cred
 argument_list|,
 operator|&
 name|ar
@@ -723,9 +732,7 @@ name|k_ar
 operator|.
 name|ar_subj_ruid
 operator|=
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_ruid
 expr_stmt|;
@@ -735,9 +742,7 @@ name|k_ar
 operator|.
 name|ar_subj_rgid
 operator|=
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_rgid
 expr_stmt|;
@@ -747,9 +752,7 @@ name|k_ar
 operator|.
 name|ar_subj_egid
 operator|=
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_groups
 index|[
@@ -762,9 +765,7 @@ name|k_ar
 operator|.
 name|ar_subj_auid
 operator|=
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_audit
 operator|.
@@ -776,9 +777,7 @@ name|k_ar
 operator|.
 name|ar_subj_asid
 operator|=
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_audit
 operator|.
@@ -802,9 +801,7 @@ name|k_ar
 operator|.
 name|ar_subj_amask
 operator|=
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_audit
 operator|.
@@ -816,9 +813,7 @@ name|k_ar
 operator|.
 name|ar_subj_term_addr
 operator|=
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_audit
 operator|.
@@ -2269,6 +2264,11 @@ name|au_mask
 modifier|*
 name|aumask
 decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
 name|au_class_t
 name|class
 decl_stmt|;
@@ -2290,11 +2290,15 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Make sure we are using the correct preselection mask. 	 */
-name|auid
+name|cred
 operator|=
 name|td
 operator|->
 name|td_ucred
+expr_stmt|;
+name|auid
+operator|=
+name|cred
 operator|->
 name|cr_audit
 operator|.
@@ -2315,9 +2319,7 @@ else|else
 name|aumask
 operator|=
 operator|&
-name|td
-operator|->
-name|td_ucred
+name|cred
 operator|->
 name|cr_audit
 operator|.
