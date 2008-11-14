@@ -240,6 +240,17 @@ begin_comment
 comment|/* Can call sethostid. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_PRIV_SETDOMAINNAME
+value|20
+end_define
+
+begin_comment
+comment|/* Removed. */
+end_comment
+
 begin_comment
 comment|/*  * Audit subsystem privileges.  */
 end_comment
