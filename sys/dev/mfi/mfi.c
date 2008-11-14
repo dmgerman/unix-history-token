@@ -11108,6 +11108,26 @@ name|sense_ptr_data
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__amd64__
+if|if
+condition|(
+name|cmd
+operator|!=
+name|MFI_CMD
+condition|)
+block|{
+comment|/* 				 * not 64bit native so zero out any address 				 * over 32bit */
+name|sense_ptr
+operator|.
+name|high
+operator|=
+literal|0
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|error
 operator|=
 name|copyout
@@ -12318,6 +12338,18 @@ name|sense_ptr_data
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__amd64__
+comment|/* 			 * only 32bit Linux support so zero out any 			 * address over 32bit 			 */
+name|sense_ptr
+operator|.
+name|high
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|copyout
