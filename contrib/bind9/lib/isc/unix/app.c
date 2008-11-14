@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: app.c,v 1.50.18.2 2005/04/29 00:17:06 marka Exp $ */
+comment|/* $Id: app.c,v 1.50.18.2.50.1 2008/07/29 04:47:31 each Exp $ */
 end_comment
 
 begin_comment
@@ -1142,8 +1142,10 @@ modifier|*
 name|tvp
 decl_stmt|;
 name|fd_set
+modifier|*
 name|readfds
 decl_stmt|,
+modifier|*
 name|writefds
 decl_stmt|;
 name|int
@@ -1282,10 +1284,8 @@ name|select
 argument_list|(
 name|maxfd
 argument_list|,
-operator|&
 name|readfds
 argument_list|,
-operator|&
 name|writefds
 argument_list|,
 name|NULL
@@ -1318,10 +1318,8 @@ name|void
 operator|)
 name|isc__socketmgr_dispatch
 argument_list|(
-operator|&
 name|readfds
 argument_list|,
-operator|&
 name|writefds
 argument_list|,
 name|maxfd

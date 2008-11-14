@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.c,v 1.116.18.19.12.1 2008/05/22 21:28:06 each Exp $ */
+comment|/* $Id: dispatch.c,v 1.116.18.19.12.5 2008/07/23 23:16:43 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1352,7 +1352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ARC4 random number generator obtained from OpenBSD  */
+comment|/*  * ARC4 random number generator derived from OpenBSD.  * Only dispatch_arc4random() and dispatch_arc4uniformrandom() are expected  * to be called from general dispatch routines; the rest of them are subroutines  * for these two.  *  * The original copyright follows:  * Copyright (c) 1996, David Mazieres<dm@uun.org>  * Copyright (c) 2008, Damien Miller<djm@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_function
@@ -5329,6 +5329,10 @@ name|isc_sockaddr_t
 modifier|*
 name|local
 parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
 name|isc_socket_t
 modifier|*
 modifier|*
@@ -5393,6 +5397,8 @@ argument_list|(
 name|sock
 argument_list|,
 name|local
+argument_list|,
+name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -8789,6 +8795,8 @@ argument_list|,
 operator|&
 name|localaddr_bound
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|sock
 argument_list|)
@@ -8829,6 +8837,8 @@ argument_list|(
 name|sockmgr
 argument_list|,
 name|localaddr
+argument_list|,
+name|ISC_SOCKET_REUSEADDRESS
 argument_list|,
 operator|&
 name|sock
