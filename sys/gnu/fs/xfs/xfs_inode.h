@@ -2096,7 +2096,7 @@ parameter_list|(
 name|xfs_inode_t
 modifier|*
 parameter_list|,
-name|mode_t
+name|accmode_t
 parameter_list|,
 name|cred_t
 modifier|*

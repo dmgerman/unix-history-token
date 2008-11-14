@@ -14523,8 +14523,8 @@ name|xfs_inode_t
 modifier|*
 name|ip
 parameter_list|,
-name|mode_t
-name|mode
+name|accmode_t
+name|accmode
 parameter_list|,
 name|cred_t
 modifier|*
@@ -14580,7 +14580,7 @@ name|_MAC_XFS_IACCESS
 argument_list|(
 name|ip
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|cr
 argument_list|)
@@ -14594,9 +14594,9 @@ argument_list|)
 return|;
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
-name|S_IWUSR
+name|VWRITE
 condition|)
 block|{
 name|xfs_mount_t
@@ -14675,7 +14675,7 @@ name|_ACL_XFS_IACCESS
 argument_list|(
 name|ip
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|cr
 argument_list|)
@@ -14719,7 +14719,7 @@ name|i_d
 operator|.
 name|di_gid
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|cr
 argument_list|,

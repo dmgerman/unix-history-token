@@ -3882,8 +3882,8 @@ name|bhv_desc_t
 modifier|*
 name|bdp
 parameter_list|,
-name|int
-name|mode
+name|accmode_t
+name|accmode
 parameter_list|,
 name|cred_t
 modifier|*
@@ -3933,7 +3933,7 @@ name|xfs_iaccess
 argument_list|(
 name|ip
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|credp
 argument_list|)
@@ -17906,7 +17906,7 @@ name|xfs_iaccess
 argument_list|(
 name|ip
 argument_list|,
-name|S_IWUSR
+name|VWRITE
 argument_list|,
 name|credp
 argument_list|)
