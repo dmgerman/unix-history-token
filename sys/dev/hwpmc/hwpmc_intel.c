@@ -552,7 +552,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|md
+name|pmc_mdep
 operator|->
 name|pmd_npmc
 operator|==
@@ -561,12 +561,11 @@ operator|+
 name|P4_NPMCS
 argument_list|,
 operator|(
-literal|"[intel,%d] "
-literal|"incorrect npmc count %d"
+literal|"[intel,%d] incorrect npmc count %d"
 operator|,
 name|__LINE__
 operator|,
-name|md
+name|pmc_mdep
 operator|->
 name|pmd_npmc
 operator|)
@@ -608,7 +607,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|md
+name|pmc_mdep
 operator|->
 name|pmd_npmc
 operator|==
@@ -617,12 +616,11 @@ operator|+
 name|P6_NPMCS
 argument_list|,
 operator|(
-literal|"[intel,%d] "
-literal|"incorrect npmc count %d"
+literal|"[intel,%d] incorrect npmc count %d"
 operator|,
 name|__LINE__
 operator|,
-name|md
+name|pmc_mdep
 operator|->
 name|pmd_npmc
 operator|)
@@ -644,7 +642,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|md
+name|pmc_mdep
 operator|->
 name|pmd_npmc
 operator|==
@@ -653,8 +651,7 @@ operator|+
 name|PENTIUM_NPMCS
 argument_list|,
 operator|(
-literal|"[intel,%d] "
-literal|"incorrect npmc count %d"
+literal|"[intel,%d] incorrect npmc count %d"
 operator|,
 name|__LINE__
 operator|,
