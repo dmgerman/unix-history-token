@@ -23,10 +23,6 @@ name|uint8_t
 name|mbelow1mb
 decl_stmt|;
 comment|/* bit mask of BARs which require below 1Mb */
-name|uint8_t
-name|ibelow1mb
-decl_stmt|;
-comment|/* bit mask of BARs which require below 1Mb */
 name|uint16_t
 name|mfrid
 decl_stmt|;
@@ -87,10 +83,10 @@ begin_struct
 struct|struct
 name|cardbus_softc
 block|{
-comment|/* XXX need mutex XXX */
 name|device_t
 name|sc_dev
 decl_stmt|;
+comment|/* The following fields should in be in struct cardbus_devinfo */
 name|struct
 name|cdev
 modifier|*
@@ -98,7 +94,6 @@ name|sc_cisdev
 decl_stmt|;
 name|struct
 name|cis_buffer
-modifier|*
 name|sc_cis
 decl_stmt|;
 name|int
