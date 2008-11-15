@@ -17799,6 +17799,11 @@ name|cpu
 argument_list|)
 expr_stmt|;
 block|}
+name|pmc_md_finalize
+argument_list|(
+name|md
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|md
