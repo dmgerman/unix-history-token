@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: resizeterm.c,v 1.32 2008/05/03 14:28:55 tom Exp $"
+literal|"$Id: resizeterm.c,v 1.34 2008/06/07 13:58:40 tom Exp $"
 argument_list|)
 end_macro
 
@@ -142,7 +142,7 @@ name|wp
 decl_stmt|;
 name|_nc_lock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 name|_tracef
@@ -223,7 +223,7 @@ expr_stmt|;
 block|}
 name|_nc_unlock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 block|}
@@ -1227,7 +1227,7 @@ expr_stmt|;
 block|}
 name|_nc_lock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 name|was_stolen
@@ -1461,7 +1461,7 @@ argument_list|)
 expr_stmt|;
 name|_nc_unlock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 name|returnCode
@@ -1598,8 +1598,10 @@ expr_stmt|;
 if|#
 directive|if
 name|USE_SIGWINCH
-name|ungetch
+name|_nc_ungetch
 argument_list|(
+name|SP
+argument_list|,
 name|KEY_RESIZE
 argument_list|)
 expr_stmt|;

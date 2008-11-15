@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2006,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: alloc_entry.c,v 1.47 2006/12/16 19:06:58 tom Exp $"
+literal|"$Id: alloc_entry.c,v 1.48 2008/08/16 16:25:31 tom Exp $"
 argument_list|)
 end_macro
 
@@ -537,9 +537,13 @@ name|offsets
 index|[
 name|MAX_ENTRY_SIZE
 operator|/
-literal|2
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
 index|]
-decl_stmt|,
+decl_stmt|;
+name|int
 name|useoffsets
 index|[
 name|MAX_USES
@@ -696,13 +700,27 @@ name|str_table
 argument_list|)
 expr_stmt|;
 block|}
+name|assert
+argument_list|(
+name|tp
+operator|->
+name|term_names
+operator|>=
+name|stringbuf
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|tp
 operator|->
 name|term_names
 operator|-
 name|stringbuf
+argument_list|)
 expr_stmt|;
 name|for_each_string
 argument_list|(
@@ -710,6 +728,16 @@ argument|i
 argument_list|,
 argument|&(ep->tterm)
 argument_list|)
+block|{
+if|if
+condition|(
+name|i
+operator|<
+name|SIZEOF
+argument_list|(
+name|offsets
+argument_list|)
+condition|)
 block|{
 if|if
 condition|(
@@ -722,6 +750,7 @@ index|]
 operator|==
 name|ABSENT_STRING
 condition|)
+block|{
 name|offsets
 index|[
 name|i
@@ -729,6 +758,7 @@ index|]
 operator|=
 name|ABSENT_OFFSET
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -741,6 +771,7 @@ index|]
 operator|==
 name|CANCELLED_STRING
 condition|)
+block|{
 name|offsets
 index|[
 name|i
@@ -748,7 +779,9 @@ index|]
 operator|=
 name|CANCELLED_OFFSET
 expr_stmt|;
+block|}
 else|else
+block|{
 name|offsets
 index|[
 name|i
@@ -763,6 +796,8 @@ index|]
 operator|-
 name|stringbuf
 expr_stmt|;
+block|}
+block|}
 block|}
 for|for
 control|(
@@ -875,6 +910,16 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|i
+operator|<
+name|SIZEOF
+argument_list|(
+name|offsets
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 name|offsets
 index|[
 name|i
@@ -882,6 +927,7 @@ index|]
 operator|==
 name|ABSENT_OFFSET
 condition|)
+block|{
 name|tp
 operator|->
 name|Strings
@@ -891,6 +937,7 @@ index|]
 operator|=
 name|ABSENT_STRING
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -901,6 +948,7 @@ index|]
 operator|==
 name|CANCELLED_OFFSET
 condition|)
+block|{
 name|tp
 operator|->
 name|Strings
@@ -910,7 +958,9 @@ index|]
 operator|=
 name|CANCELLED_STRING
 expr_stmt|;
+block|}
 else|else
+block|{
 name|tp
 operator|->
 name|Strings
@@ -928,6 +978,8 @@ name|i
 index|]
 expr_stmt|;
 block|}
+block|}
+block|}
 if|#
 directive|if
 name|NCURSES_XNAMES
@@ -942,6 +994,9 @@ condition|(
 operator|(
 name|n
 operator|=
+operator|(
+name|unsigned
+operator|)
 name|NUM_EXT_NAMES
 argument_list|(
 name|tp
@@ -949,6 +1004,16 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|n
+operator|<
+name|SIZEOF
+argument_list|(
+name|offsets
+argument_list|)
 condition|)
 block|{
 name|unsigned
@@ -1083,6 +1148,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1245,6 +1311,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|mergebool
 expr_stmt|;
 block|}
@@ -1268,7 +1337,7 @@ operator|!=
 name|CANCELLED_NUMERIC
 condition|)
 block|{
-name|int
+name|short
 name|mergenum
 init|=
 name|from

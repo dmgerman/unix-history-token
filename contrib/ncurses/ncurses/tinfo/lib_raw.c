@@ -8,10 +8,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  *	raw.c  *  *	Routines:  *		raw()  *		cbreak()  *		noraw()  *		nocbreak()  *		qiflush()  *		noqiflush()  *		intrflush()  *  */
 end_comment
 

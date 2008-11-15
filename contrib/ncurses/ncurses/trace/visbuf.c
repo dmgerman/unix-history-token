@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2001-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2001-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: visbuf.c,v 1.26 2007/06/09 17:21:53 tom Exp $"
+literal|"$Id: visbuf.c,v 1.32 2008/08/04 23:07:39 tom Exp $"
 argument_list|)
 end_macro
 
@@ -49,7 +49,7 @@ name|NormalLen
 parameter_list|(
 name|len
 parameter_list|)
-value|(unsigned) ((len + 1) * 4)
+value|(size_t) (((size_t)(len) + 1) * 4)
 end_define
 
 begin_define
@@ -59,7 +59,7 @@ name|WideLen
 parameter_list|(
 name|len
 parameter_list|)
-value|(unsigned) ((len + 1) * 4 * MB_CUR_MAX)
+value|(size_t) (((size_t)(len) + 1) * 4 * MB_CUR_MAX)
 end_define
 
 begin_ifdef
@@ -150,6 +150,9 @@ operator|*
 name|tp
 operator|++
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 block|}
@@ -177,6 +180,9 @@ operator|*
 name|tp
 operator|++
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 block|}
@@ -327,9 +333,14 @@ operator|*
 name|tp
 operator|++
 operator|=
+call|(
+name|char
+call|)
+argument_list|(
 literal|'@'
 operator|+
 name|c
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -388,6 +399,7 @@ name|int
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|vbuf
@@ -429,6 +441,9 @@ literal|0
 condition|)
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|buf
@@ -437,9 +452,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TRACE
-name|tp
-operator|=
 name|vbuf
+operator|=
+name|tp
 operator|=
 name|_nc_trace_buf
 argument_list|(
@@ -482,9 +497,9 @@ name|bufnum
 index|]
 argument_list|)
 expr_stmt|;
-name|tp
-operator|=
 name|vbuf
+operator|=
+name|tp
 operator|=
 name|mybuf
 index|[
@@ -494,6 +509,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|tp
+operator|!=
+literal|0
+condition|)
+block|{
 operator|*
 name|tp
 operator|++
@@ -545,6 +567,16 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
+else|else
+block|{
+name|vbuf
+operator|=
+operator|(
+literal|"(_nc_visbuf2n failed)"
+operator|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|vbuf
@@ -735,6 +767,7 @@ name|int
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|vbuf
@@ -765,6 +798,9 @@ literal|0
 condition|)
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 name|wcslen
 argument_list|(
 name|buf
@@ -773,9 +809,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TRACE
-name|tp
-operator|=
 name|vbuf
+operator|=
+name|tp
 operator|=
 name|_nc_trace_buf
 argument_list|(
@@ -818,9 +854,9 @@ name|bufnum
 index|]
 argument_list|)
 expr_stmt|;
-name|tp
-operator|=
 name|vbuf
+operator|=
+name|tp
 operator|=
 name|mybuf
 index|[
@@ -830,6 +866,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|tp
+operator|!=
+literal|0
+condition|)
+block|{
 operator|*
 name|tp
 operator|++
@@ -890,13 +933,16 @@ argument_list|,
 literal|"\\u%08X"
 argument_list|,
 operator|(
-name|wint_t
+name|unsigned
 operator|)
 name|c
 argument_list|)
 expr_stmt|;
 name|j
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|temp
@@ -946,6 +992,16 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
+else|else
+block|{
+name|vbuf
+operator|=
+operator|(
+literal|"(_nc_viswbuf2n failed)"
+operator|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|vbuf
@@ -1227,6 +1283,13 @@ name|char
 modifier|*
 name|found
 decl_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+block|{
 if|#
 directive|if
 name|USE_WIDEC_SUPPORT
@@ -1246,7 +1309,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_WIDEC_SUPPORT */
-comment|/*      * Display one or more strings followed by attributes.      */
+comment|/* 	 * Display one or more strings followed by attributes. 	 */
 name|first
 operator|=
 literal|0
@@ -1452,6 +1515,9 @@ condition|)
 break|break;
 name|PUTC_n
 operator|=
+operator|(
+name|int
+operator|)
 name|wcrtomb
 argument_list|(
 name|PUTC_buf
@@ -1615,6 +1681,7 @@ name|last
 operator|+
 literal|1
 expr_stmt|;
+block|}
 block|}
 return|return
 name|result

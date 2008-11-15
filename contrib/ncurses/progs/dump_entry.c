@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey 1996 on                                        *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996 on                 *  ****************************************************************************/
 end_comment
 
 begin_define
@@ -48,7 +48,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: dump_entry.c,v 1.82 2008/04/19 22:27:04 tom Exp $"
+literal|"$Id: dump_entry.c,v 1.88 2008/08/04 12:36:12 tom Exp $"
 argument_list|)
 end_macro
 
@@ -74,6 +74,18 @@ define|#
 directive|define
 name|PRINTF
 value|(void) printf
+end_define
+
+begin_define
+define|#
+directive|define
+name|OkIndex
+parameter_list|(
+name|index
+parameter_list|,
+name|array
+parameter_list|)
+value|((int)(index)>= 0&& (int)(index)< (int) SIZEOF(array))
 end_define
 
 begin_typedef
@@ -681,6 +693,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|NameTrans
+parameter_list|(
+name|check
+parameter_list|,
+name|result
+parameter_list|)
+define|\
+value|if (OkIndex(np->nte_index, check) \&& check[np->nte_index]) \ 		return (result[np->nte_index])
+end_define
+
 begin_function
 name|NCURSES_CONST
 name|char
@@ -728,71 +753,35 @@ block|{
 case|case
 name|BOOLEAN
 case|:
-if|if
-condition|(
+name|NameTrans
+argument_list|(
 name|bool_from_termcap
-index|[
-name|np
-operator|->
-name|nte_index
-index|]
-condition|)
-return|return
-operator|(
+argument_list|,
 name|boolcodes
-index|[
-name|np
-operator|->
-name|nte_index
-index|]
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|NUMBER
 case|:
-if|if
-condition|(
+name|NameTrans
+argument_list|(
 name|num_from_termcap
-index|[
-name|np
-operator|->
-name|nte_index
-index|]
-condition|)
-return|return
-operator|(
+argument_list|,
 name|numcodes
-index|[
-name|np
-operator|->
-name|nte_index
-index|]
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|STRING
 case|:
-if|if
-condition|(
+name|NameTrans
+argument_list|(
 name|str_from_termcap
-index|[
-name|np
-operator|->
-name|nte_index
-index|]
-condition|)
-return|return
-operator|(
+argument_list|,
 name|strcodes
-index|[
-name|np
-operator|->
-name|nte_index
-index|]
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 return|return
@@ -1317,7 +1306,7 @@ name|BOOL_IDX
 parameter_list|(
 name|name
 parameter_list|)
-value|(&(name) -&(CUR Booleans[0]))
+value|(PredType) (&(name) -&(CUR Booleans[0]))
 end_define
 
 begin_define
@@ -1327,7 +1316,7 @@ name|NUM_IDX
 parameter_list|(
 name|name
 parameter_list|)
-value|(&(name) -&(CUR Numbers[0]))
+value|(PredType) (&(name) -&(CUR Numbers[0]))
 end_define
 
 begin_define
@@ -1337,7 +1326,7 @@ name|STR_IDX
 parameter_list|(
 name|name
 parameter_list|)
-value|(&(name) -&(CUR Strings[0]))
+value|(PredType) (&(name) -&(CUR Strings[0]))
 end_define
 
 begin_function
@@ -1642,7 +1631,7 @@ name|is_termcap
 parameter_list|(
 name|type
 parameter_list|)
-value|(idx< (int) sizeof(type##_from_termcap)&& \ 			  type##_from_termcap[idx])
+value|(OkIndex(idx, type##_from_termcap)&& \ 			  type##_from_termcap[idx])
 case|case
 name|V_BSD
 case|:
@@ -1776,7 +1765,7 @@ modifier|*
 name|src
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|need
 init|=
 name|strlen
@@ -1784,7 +1773,7 @@ argument_list|(
 name|src
 argument_list|)
 decl_stmt|;
-name|int
+name|unsigned
 name|want
 init|=
 name|strlen
@@ -1802,6 +1791,9 @@ name|INDENT
 operator|&&
 name|column
 operator|+
+operator|(
+name|int
+operator|)
 name|want
 operator|>
 name|width
@@ -1829,6 +1821,9 @@ argument_list|)
 expr_stmt|;
 name|column
 operator|+=
+operator|(
+name|int
+operator|)
 name|need
 expr_stmt|;
 block|}
@@ -1846,7 +1841,7 @@ parameter_list|,
 name|sep_trail
 parameter_list|)
 define|\
-value|if ((size_t)(last - first)> sizeof(sep_trail)-1 \&& !strncmp(first, sep_trail, sizeof(sep_trail)-1)) \ 	 	first += sizeof(sep_trail)-2
+value|if ((size_t)(last - first)> sizeof(sep_trail)-1 \&& !strncmp(first, sep_trail, sizeof(sep_trail)-1)) \ 		first += sizeof(sep_trail)-2
 end_define
 
 begin_comment
@@ -2006,6 +2001,9 @@ decl_stmt|;
 name|int
 name|len
 init|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|src
@@ -2587,6 +2585,13 @@ parameter_list|)
 value|(&tterm->Strings[n] ==&cap)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXTRA_CAP
+value|20
+end_define
+
 begin_function
 name|int
 name|fmt_entry
@@ -2620,6 +2625,8 @@ name|char
 name|buffer
 index|[
 name|MAX_TERMINFO_LENGTH
+operator|+
+name|EXTRA_CAP
 index|]
 decl_stmt|;
 name|char
@@ -2723,6 +2730,9 @@ argument_list|)
 expr_stmt|;
 name|column
 operator|=
+operator|(
+name|int
+operator|)
 name|outbuf
 operator|.
 name|used
@@ -2754,6 +2764,21 @@ argument_list|,
 name|i
 argument_list|,
 name|bool_names
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+operator|-
+name|EXTRA_CAP
 argument_list|)
 expr_stmt|;
 if|if
@@ -2873,6 +2898,21 @@ argument_list|,
 name|num_names
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+operator|-
+name|EXTRA_CAP
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2981,6 +3021,10 @@ argument_list|()
 expr_stmt|;
 name|len
 operator|+=
+call|(
+name|int
+call|)
+argument_list|(
 name|num_bools
 operator|+
 name|num_values
@@ -2995,6 +3039,7 @@ name|term_names
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3089,6 +3134,21 @@ argument_list|,
 name|i
 argument_list|,
 name|str_names
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+operator|-
+name|EXTRA_CAP
 argument_list|)
 expr_stmt|;
 name|capability
@@ -3543,6 +3603,9 @@ expr_stmt|;
 block|}
 name|len
 operator|+=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|capability
@@ -3630,6 +3693,9 @@ expr_stmt|;
 block|}
 name|len
 operator|+=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|capability
@@ -3670,9 +3736,14 @@ expr_stmt|;
 block|}
 name|len
 operator|+=
+call|(
+name|int
+call|)
+argument_list|(
 name|num_strings
 operator|*
 literal|2
+argument_list|)
 expr_stmt|;
 comment|/*      * This piece of code should be an effective inverse of the functions      * postprocess_terminfo() and postprocess_terminfo() in parse_entry.c.      * Much more work should be done on this to support dumping termcaps.      */
 if|if
@@ -4060,7 +4131,7 @@ modifier|*
 name|cap
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|n
 decl_stmt|;
 for|for
@@ -4283,14 +4354,17 @@ condition|)
 block|{
 name|target
 operator|-=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|cap
 argument_list|)
 operator|+
 literal|5
-operator|)
+argument_list|)
 expr_stmt|;
 operator|++
 name|result
@@ -4393,14 +4467,17 @@ condition|)
 block|{
 name|target
 operator|-=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|cap
 argument_list|)
 operator|+
 literal|5
-operator|)
+argument_list|)
 expr_stmt|;
 operator|++
 name|result
@@ -4736,7 +4813,7 @@ if|#
 directive|if
 name|NCURSES_XNAMES
 comment|/* 	     * Extended names are most likely function-key definitions.  Drop 	     * those first. 	     */
-name|int
+name|unsigned
 name|n
 decl_stmt|;
 for|for
@@ -5172,6 +5249,9 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|int
+operator|)
 name|outbuf
 operator|.
 name|used
@@ -5638,6 +5718,9 @@ index|[
 name|source
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|target
 expr_stmt|;
 name|n
@@ -5648,6 +5731,9 @@ else|else
 block|{
 name|extra
 operator|=
+operator|(
+name|char
+operator|)
 name|source
 expr_stmt|;
 block|}
@@ -5685,6 +5771,9 @@ name|m
 operator|++
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|n
 expr_stmt|;
 name|acs_chars

@@ -59,7 +59,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newterm.c,v 1.69 2008/04/12 18:15:04 tom Exp $"
+literal|"$Id: lib_newterm.c,v 1.73 2008/08/16 21:20:48 Werner.Fink Exp $"
 argument_list|)
 end_macro
 
@@ -351,6 +351,10 @@ name|result
 init|=
 literal|0
 decl_stmt|;
+name|TERMINAL
+modifier|*
+name|its_term
+decl_stmt|;
 name|START_TRACE
 argument_list|()
 expr_stmt|;
@@ -370,10 +374,29 @@ name|ifp
 operator|)
 argument_list|)
 expr_stmt|;
+name|_nc_init_pthreads
+argument_list|()
+expr_stmt|;
 name|_nc_lock_global
 argument_list|(
-name|set_SP
+name|curses
 argument_list|)
+expr_stmt|;
+name|current
+operator|=
+name|SP
+expr_stmt|;
+name|its_term
+operator|=
+operator|(
+name|SP
+condition|?
+name|SP
+operator|->
+name|_term
+else|:
+literal|0
+operator|)
 expr_stmt|;
 comment|/* this loads the capability entry, then sets LINES and COLS */
 if|if
@@ -402,10 +425,6 @@ operator|.
 name|slk_format
 decl_stmt|;
 comment|/* 	 * This actually allocates the screen structure, and saves the original 	 * terminal settings. 	 */
-name|current
-operator|=
-name|SP
-expr_stmt|;
 name|_nc_set_screen
 argument_list|(
 literal|0
@@ -464,6 +483,24 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|assert
+argument_list|(
+name|SP
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	     * In setupterm() we did a set_curterm(), but it was before we set 	     * SP.  So the "current" screen's terminal pointer was overwritten 	     * with a different terminal.  Later, in _nc_setupscreen(), we set 	     * SP and the terminal pointer in the new screen. 	     * 	     * Restore the terminal-pointer for the pre-existing screen, if 	     * any. 	     */
+if|if
+condition|(
+name|current
+condition|)
+name|current
+operator|->
+name|_term
+operator|=
+name|its_term
+expr_stmt|;
 comment|/* if the terminal type has real soft labels, set those up */
 if|if
 condition|(
@@ -642,7 +679,7 @@ block|}
 block|}
 name|_nc_unlock_global
 argument_list|(
-name|set_SP
+name|curses
 argument_list|)
 expr_stmt|;
 name|returnSP

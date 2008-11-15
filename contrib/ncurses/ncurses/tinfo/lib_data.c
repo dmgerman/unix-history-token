@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_data.c,v 1.43 2008/03/29 21:16:49 tom Exp $"
+literal|"$Id: lib_data.c,v 1.52 2008/08/23 22:16:15 tom Exp $"
 argument_list|)
 end_macro
 
@@ -456,9 +456,6 @@ comment|/* tracedmp_buf */
 literal|0
 block|,
 comment|/* tracedmp_used */
-name|CHARS_0s
-block|,
-comment|/* tracemse_buf */
 name|NULL
 block|,
 comment|/* tracetry_buf */
@@ -487,16 +484,7 @@ directive|ifdef
 name|USE_PTHREADS
 name|PTHREAD_MUTEX_INITIALIZER
 block|,
-comment|/* mutex_set_SP */
-name|PTHREAD_MUTEX_INITIALIZER
-block|,
-comment|/* mutex_use_screen */
-name|PTHREAD_MUTEX_INITIALIZER
-block|,
-comment|/* mutex_use_window */
-name|PTHREAD_MUTEX_INITIALIZER
-block|,
-comment|/* mutex_windowlist */
+comment|/* mutex_curses */
 name|PTHREAD_MUTEX_INITIALIZER
 block|,
 comment|/* mutex_tst_tracef */
@@ -506,6 +494,9 @@ comment|/* mutex_tracef */
 literal|0
 block|,
 comment|/* nested_tracef */
+literal|0
+block|,
+comment|/* use_pthreads */
 endif|#
 directive|endif
 block|}
@@ -620,6 +611,14 @@ block|,
 comment|/* saved_tty */
 if|#
 directive|if
+name|NCURSES_NO_PADDING
+name|FALSE
+block|,
+comment|/* flag to set if padding disabled  */
+endif|#
+directive|endif
+if|#
+directive|if
 name|BROKEN_LINKER
 operator|||
 name|USE_REENTRANT
@@ -632,6 +631,9 @@ comment|/* LINES */
 literal|0
 block|,
 comment|/* COLS */
+literal|0
+block|,
+comment|/* cur_term */
 ifdef|#
 directive|ifdef
 name|TRACE
@@ -692,31 +694,7 @@ argument_list|(
 operator|&
 name|_nc_globals
 operator|.
-name|mutex_set_SP
-argument_list|)
-expr_stmt|;
-name|_nc_mutex_init
-argument_list|(
-operator|&
-name|_nc_globals
-operator|.
-name|mutex_use_screen
-argument_list|)
-expr_stmt|;
-name|_nc_mutex_init
-argument_list|(
-operator|&
-name|_nc_globals
-operator|.
-name|mutex_use_window
-argument_list|)
-expr_stmt|;
-name|_nc_mutex_init
-argument_list|(
-operator|&
-name|_nc_globals
-operator|.
-name|mutex_windowlist
+name|mutex_curses
 argument_list|)
 expr_stmt|;
 name|_nc_mutex_init
@@ -738,6 +716,87 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_init_pthreads
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|_nc_use_pthreads
+condition|)
+return|return;
+if|#
+directive|if
+name|USE_WEAK_SYMBOLS
+if|if
+condition|(
+operator|(
+name|pthread_mutex_init
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|pthread_mutex_lock
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|pthread_mutex_unlock
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|pthread_mutex_trylock
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|pthread_mutexattr_settype
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+endif|#
+directive|endif
+name|_nc_use_pthreads
+operator|=
+literal|1
+expr_stmt|;
+name|init_global_mutexes
+argument_list|()
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * Use recursive mutexes if we have them - they're part of Unix98.  * For the cases where we do not, _nc_mutex_trylock() is used to avoid a  * deadlock, at the expense of memory leaks and unexpected failures that  * may not be handled by typical clients.  *  * FIXME - need configure check for PTHREAD_MUTEX_RECURSIVE, define it to  * PTHREAD_MUTEX_NORMAL if not supported.  */
@@ -762,17 +821,15 @@ block|{
 name|pthread_mutexattr_t
 name|recattr
 decl_stmt|;
-name|memset
+if|if
+condition|(
+name|_nc_use_pthreads
+condition|)
+block|{
+name|pthread_mutexattr_init
 argument_list|(
 operator|&
 name|recattr
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|recattr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|pthread_mutexattr_settype
@@ -792,6 +849,7 @@ name|recattr
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_block
 
 begin_macro
@@ -810,9 +868,15 @@ end_macro
 
 begin_block
 block|{
-name|init_global_mutexes
-argument_list|()
-expr_stmt|;
+if|if
+condition|(
+name|_nc_use_pthreads
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|pthread_mutex_lock
 argument_list|(
@@ -838,9 +902,15 @@ end_macro
 
 begin_block
 block|{
-name|init_global_mutexes
-argument_list|()
-expr_stmt|;
+if|if
+condition|(
+name|_nc_use_pthreads
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|pthread_mutex_trylock
 argument_list|(
@@ -866,9 +936,15 @@ end_macro
 
 begin_block
 block|{
-name|init_global_mutexes
-argument_list|()
-expr_stmt|;
+if|if
+condition|(
+name|_nc_use_pthreads
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|pthread_mutex_unlock
 argument_list|(
@@ -877,6 +953,71 @@ argument_list|)
 return|;
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|USE_WEAK_SYMBOLS
+end_if
+
+begin_comment
+comment|/*  * NB: sigprocmask(2) is global but pthread_sigmask(3p)  * only for the calling thread.  */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_sigprocmask
+argument_list|(
+argument|int how
+argument_list|,
+argument|const sigset_t * newmask
+argument_list|,
+argument|sigset_t * oldmask
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+operator|(
+name|pthread_sigmask
+operator|)
+condition|)
+return|return
+name|pthread_sigmask
+argument_list|(
+name|how
+argument_list|,
+name|newmask
+argument_list|,
+name|oldmask
+argument_list|)
+return|;
+else|else
+return|return
+name|sigprocmask
+argument_list|(
+name|how
+argument_list|,
+name|newmask
+argument_list|,
+name|oldmask
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

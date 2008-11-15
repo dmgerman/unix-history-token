@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_window.c,v 1.24 2008/04/12 22:40:21 tom Exp $"
+literal|"$Id: lib_window.c,v 1.25 2008/06/07 14:12:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -895,9 +895,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_nc_lock_window
+name|_nc_lock_global
 argument_list|(
-name|win
+name|curses
 argument_list|)
 expr_stmt|;
 if|if
@@ -1275,9 +1275,9 @@ name|lastchar
 expr_stmt|;
 block|}
 block|}
-name|_nc_unlock_window
+name|_nc_unlock_global
 argument_list|(
-name|win
+name|curses
 argument_list|)
 expr_stmt|;
 block|}

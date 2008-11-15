@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Terminfo-only terminal setup routines:  *  *		int restartterm(const char *, int, int *)  *		TERMINAL *set_curterm(TERMINAL *)  *		int del_curterm(TERMINAL *)  */
+comment|/*  * Terminfo-only terminal setup routines:  *  *		int restartterm(const char *, int, int *)  */
 end_comment
 
 begin_include
@@ -53,7 +53,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_restart.c,v 1.9 2008/05/03 22:43:52 tom Exp $"
+literal|"$Id: lib_restart.c,v 1.10 2008/06/21 17:31:22 tom Exp $"
 argument_list|)
 end_macro
 

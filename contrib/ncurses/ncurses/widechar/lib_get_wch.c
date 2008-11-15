@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 2002-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 2002-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_get_wch.c,v 1.14 2007/05/12 19:03:16 tom Exp $"
+literal|"$Id: lib_get_wch.c,v 1.17 2008/08/16 19:22:55 tom Exp $"
 argument_list|)
 end_macro
 
@@ -160,6 +160,10 @@ modifier|*
 name|result
 parameter_list|)
 block|{
+name|SCREEN
+modifier|*
+name|sp
+decl_stmt|;
 name|int
 name|code
 decl_stmt|;
@@ -212,6 +216,25 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * We can get a stream of single-byte characters and KEY_xxx codes from      * _nc_wgetch(), while we want to return a wide character or KEY_xxx code.      */
+name|_nc_lock_global
+argument_list|(
+name|curses
+argument_list|)
+expr_stmt|;
+name|sp
+operator|=
+name|_nc_screen_of
+argument_list|(
+name|win
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|!=
+literal|0
+condition|)
+block|{
 for|for
 control|(
 init|;
@@ -248,7 +271,7 @@ argument|win
 argument_list|,
 argument|&value
 argument_list|,
-argument|TRUE EVENTLIST_2nd((_nc_eventlist *)
+argument|TRUE EVENTLIST_2nd((_nc_eventlist 							       *)
 literal|0
 argument|)
 argument_list|)
@@ -270,7 +293,7 @@ operator|==
 name|KEY_CODE_YES
 condition|)
 block|{
-comment|/* 	     * If we were processing an incomplete multibyte character, return 	     * an error since we have a KEY_xxx code which interrupts it.  For 	     * some cases, we could improve this by writing a new version of 	     * lib_getch.c(!), but it is not clear whether the improvement 	     * would be worth the effort. 	     */
+comment|/* 		 * If we were processing an incomplete multibyte character, 		 * return an error since we have a KEY_xxx code which 		 * interrupts it.  For some cases, we could improve this by 		 * writing a new version of lib_getch.c(!), but it is not clear 		 * whether the improvement would be worth the effort. 		 */
 if|if
 condition|(
 name|count
@@ -278,8 +301,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ungetch
+name|_nc_ungetch
 argument_list|(
+name|sp
+argument_list|,
 operator|(
 name|int
 operator|)
@@ -306,8 +331,10 @@ name|buffer
 argument_list|)
 condition|)
 block|{
-name|ungetch
+name|_nc_ungetch
 argument_list|(
+name|sp
+argument_list|,
 operator|(
 name|int
 operator|)
@@ -328,6 +355,9 @@ name|count
 operator|++
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|UChar
 argument_list|(
 name|value
@@ -382,8 +412,10 @@ operator|=
 name|ERR
 expr_stmt|;
 comment|/* the two calls should match */
-name|ungetch
+name|_nc_ungetch
 argument_list|(
+name|sp
+argument_list|,
 operator|(
 name|int
 operator|)
@@ -399,10 +431,23 @@ break|break;
 block|}
 block|}
 block|}
+block|}
+else|else
+block|{
+name|code
+operator|=
+name|ERR
+expr_stmt|;
+block|}
 operator|*
 name|result
 operator|=
 name|value
+expr_stmt|;
+name|_nc_unlock_global
+argument_list|(
+name|curses
+argument_list|)
 expr_stmt|;
 name|T
 argument_list|(
