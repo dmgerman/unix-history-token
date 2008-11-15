@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081030_0115"
+value|"20081115_0116"
 end_define
 
 begin_expr_stmt
@@ -21636,7 +21636,7 @@ name|first
 decl_stmt|,
 name|hpredir
 decl_stmt|;
-comment|/* XXX This is redundant */
+comment|/* Count present associations */
 name|max
 operator|=
 literal|0
@@ -21645,7 +21645,7 @@ for|for
 control|(
 name|j
 operator|=
-literal|0
+literal|1
 init|;
 name|j
 operator|<
@@ -25700,7 +25700,10 @@ operator|->
 name|type
 operator|==
 name|HDA_PARAM_AUDIO_WIDGET_CAP_TYPE_PIN_COMPLEX
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|w
 operator|->
@@ -25727,9 +25730,43 @@ argument_list|(
 argument|device_printf(devinfo->codec->sc->dev,
 literal|" Disabling pin nid %d due"
 literal|" to None connectivity.\n"
-argument|, 				    w->nid);
+argument|, 					    w->nid);
 argument_list|)
 empty_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|w
+operator|->
+name|wclass
+operator|.
+name|pin
+operator|.
+name|config
+operator|&
+name|HDA_CONFIG_DEFAULTCONF_ASSOCIATION_MASK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|w
+operator|->
+name|enable
+operator|=
+literal|0
+expr_stmt|;
+name|HDA_BOOTHVERBOSE
+argument_list|(
+argument|device_printf(devinfo->codec->sc->dev,
+literal|" Disabling unassociated"
+literal|" pin nid %d.\n"
+argument|, 					    w->nid);
+argument_list|)
+empty_stmt|;
+block|}
 block|}
 block|}
 do|do
