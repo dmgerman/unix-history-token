@@ -8735,6 +8735,12 @@ comment|/* block sckbdevent and scrn_timer while we poll */
 name|int
 name|c
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* assert(sc_console != NULL) */
 comment|/*       * Stop the screen saver and update the screen if necessary.      * What if we have been running in the screen saver code... XXX      */
 name|sc_touch_scrn_saver
@@ -8763,6 +8769,12 @@ operator|.
 name|len
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -8789,6 +8801,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -8908,6 +8926,12 @@ operator|->
 name|sc
 operator|->
 name|kbd
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|splx
