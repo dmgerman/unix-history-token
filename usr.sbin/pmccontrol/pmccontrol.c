@@ -1129,6 +1129,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENXIO
+condition|)
+continue|continue;
 name|err
 argument_list|(
 name|EX_OSERR
@@ -1138,6 +1146,7 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"#CPU %d:\n"
