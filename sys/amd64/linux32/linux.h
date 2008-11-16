@@ -3827,7 +3827,7 @@ name|struct
 name|linux_robust_list
 name|list
 decl_stmt|;
-name|l_ulong
+name|l_long
 name|futex_offset
 decl_stmt|;
 name|l_uintptr_t
