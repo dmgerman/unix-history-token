@@ -38,7 +38,7 @@ comment|/* Set this to 1 for normal debug, or 2 for per-target tracing. */
 end_comment
 
 begin_comment
-comment|/* #define NCR53C9X_DEBUG		2 */
+comment|/* #define	NCR53C9X_DEBUG		2 */
 end_comment
 
 begin_comment
@@ -357,7 +357,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	const char *f = "[" msg "]"; \ 	int n = strlen((ecb)->trace); \ 	if (n< (sizeof((ecb)->trace)-100)) \ 		sprintf((ecb)->trace + n, f,  a, b); \ } while(0)
+value|do { \ 	const char *f = "[" msg "]"; \ 	int n = strlen((ecb)->trace); \ 	if (n< (sizeof((ecb)->trace)-100)) \ 		sprintf((ecb)->trace + n, f, a, b); \ } while(0)
 end_define
 
 begin_else
@@ -1135,7 +1135,7 @@ comment|/* Message stuff */
 name|u_short
 name|sc_msgify
 decl_stmt|;
-comment|/* IDENTIFY message associated with this nexus */
+comment|/* IDENTIFY message associated with nexus */
 name|u_short
 name|sc_msgout
 decl_stmt|;
@@ -1273,7 +1273,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* SCSI command is arbiting  */
+comment|/* SCSI command is arbiting */
 end_comment
 
 begin_define
@@ -1475,7 +1475,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/*      can do dmaselect */
+comment|/* can do dmaselect */
 end_comment
 
 begin_define
@@ -1625,28 +1625,28 @@ begin_define
 define|#
 directive|define
 name|STATUS_PHASE
-value|(CDI|IOI)
+value|(CDI | IOI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MESSAGE_OUT_PHASE
-value|(MSGI|CDI)
+value|(MSGI | CDI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MESSAGE_IN_PHASE
-value|(MSGI|CDI|IOI)
+value|(MSGI | CDI | IOI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PHASE_MASK
-value|(MSGI|CDI|IOI)
+value|(MSGI | CDI | IOI)
 end_define
 
 begin_comment
@@ -1855,6 +1855,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1866,6 +1867,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1877,10 +1879,12 @@ parameter_list|(
 name|struct
 name|cam_sim
 modifier|*
+name|sim
 parameter_list|,
 name|union
 name|ccb
 modifier|*
+name|ccb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1892,6 +1896,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1902,6 +1907,7 @@ name|ncr53c9x_intr
 parameter_list|(
 name|void
 modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1913,8 +1919,10 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|,
 name|int
+name|doreset
 parameter_list|)
 function_decl|;
 end_function_decl
