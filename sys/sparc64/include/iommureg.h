@@ -94,7 +94,7 @@ comment|/* streaming buffer flush sync */
 end_comment
 
 begin_comment
-comment|/* streaming buffer diagnostics registers. */
+comment|/* streaming buffer diagnostics registers */
 end_comment
 
 begin_define
@@ -157,6 +157,13 @@ define|#
 directive|define
 name|STRBUF_D
 value|0x0000000000000002UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRBUF_RR_DIS
+value|0x0000000000000004UL
 end_define
 
 begin_define
@@ -296,7 +303,7 @@ value|0x0000000000000001UL
 end_define
 
 begin_comment
-comment|/*  * Diagnostic register definitions.  */
+comment|/*  * Diagnostic register definitions  */
 end_comment
 
 begin_define
@@ -466,7 +473,7 @@ value|0x0000000000000002UL
 end_define
 
 begin_comment
-comment|/* log2 of the IOMMU TTE size. */
+comment|/* log2 of the IOMMU TTE size */
 end_comment
 
 begin_define
@@ -477,7 +484,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Streaming buffer line size. */
+comment|/* Streaming buffer line size */
 end_comment
 
 begin_define

@@ -71,7 +71,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Per-IOMMU state. The parenthesized comments indicate the locking strategy:  *	i - protected by is_mtx.  *	r - read-only after initialization.  *	* - comment refers to pointer target / target hardware registers  *	    (for bus_addr_t).  * is_maplruq is also locked by is_mtx. Elements of is_tsb may only be  * accessed from functions operating on the map owning the corresponding  * resource, so the locking the user is required to do to protect the  * map is sufficient.  * dm_reslist of all maps are locked by is_mtx as well.  * is_dvma_rman has its own internal lock.  */
+comment|/*  * Per-IOMMU state; the parenthesized comments indicate the locking strategy:  *	i - protected by is_mtx.  *	r - read-only after initialization.  *	* - comment refers to pointer target / target hardware registers  *	    (for bus_addr_t).  * is_maplruq is also locked by is_mtx.  Elements of is_tsb may only be  * accessed from functions operating on the map owning the corresponding  * resource, so the locking the user is required to do to protect the  * map is sufficient.  * dm_reslist of all maps are locked by is_mtx as well.  * is_dvma_rman has its own internal lock.  */
 end_comment
 
 begin_struct
@@ -145,7 +145,7 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
-comment|/* copies of our parents state, to allow us to be self contained */
+comment|/* copies of our parent's state, to allow us to be self contained */
 name|bus_space_tag_t
 name|is_bustag
 decl_stmt|;
@@ -190,6 +190,15 @@ name|bus_addr_t
 name|is_dtcmp
 decl_stmt|;
 comment|/* (r, *r) */
+comment|/* behavior flags */
+name|u_int
+name|is_flags
+decl_stmt|;
+comment|/* (r) */
+define|#
+directive|define
+name|IOMMU_RERUN_DISABLE
+value|(1<< 0)
 block|}
 struct|;
 end_struct
