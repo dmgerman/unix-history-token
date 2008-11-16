@@ -17260,7 +17260,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %s/%d/0x%b"
+literal|" %s/%d/%d/0x%b"
 argument_list|,
 name|pmc_name_of_pmcclass
 index|[
@@ -17272,6 +17272,10 @@ argument_list|,
 name|pcd
 operator|->
 name|pcd_num
+argument_list|,
+name|pcd
+operator|->
+name|pcd_width
 argument_list|,
 name|pcd
 operator|->
