@@ -425,8 +425,10 @@ name|mode
 argument_list|)
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* XXX yet device mode = ppbus mode = chipset mode */
 name|ppb

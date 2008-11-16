@@ -1241,7 +1241,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 if|if
@@ -1690,7 +1692,7 @@ operator|&
 name|ret
 argument_list|)
 expr_stmt|;
-comment|/* ensure we are disconnected or daisy chained peripheral  	 * may cause serious problem to the disk */
+comment|/* ensure we are disconnected or daisy chained peripheral 	 * may cause serious problem to the disk */
 if|if
 condition|(
 name|vpoio_in_disk_mode
@@ -2839,7 +2841,7 @@ name|error
 goto|;
 block|}
 block|}
-comment|/*  	 * Completion ...  	 */
+comment|/* 	 * Completion ... 	 */
 operator|*
 name|count
 operator|=

@@ -273,7 +273,9 @@ operator|!
 name|ppbdev
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 comment|/* initialize the ivars */
 name|ppbdev
@@ -304,7 +306,9 @@ name|ppbdev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|child
+operator|)
 return|;
 block|}
 end_function
@@ -378,7 +382,7 @@ parameter_list|,
 name|int
 name|index
 parameter_list|,
-name|u_long
+name|uintptr_t
 name|val
 parameter_list|)
 block|{
@@ -1175,7 +1179,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* try all IEEE1284 modes, for one device only 	 *  	 * XXX We should implement the IEEE1284.3 standard to detect 	 * daisy chained devices 	 */
+comment|/* try all IEEE1284 modes, for one device only 	 * 	 * XXX We should implement the IEEE1284.3 standard to detect 	 * daisy chained devices 	 */
 name|error
 operator|=
 name|ppb_1284_negociate
@@ -1575,7 +1579,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !DONTPROBE_1284 */
-comment|/* launch attachement of the added children */
+comment|/* launch attachment of the added children */
 name|bus_generic_attach
 argument_list|(
 name|dev
@@ -2072,7 +2076,7 @@ name|ppb_owner
 operator|=
 name|dev
 expr_stmt|;
-comment|/* restore the context of the device 			 * The first time, ctx.valid is certainly false 			 * then do not change anything. This is usefull for 			 * drivers that do not set there operating mode  			 * during attachement 			 */
+comment|/* restore the context of the device 			 * The first time, ctx.valid is certainly false 			 * then do not change anything. This is usefull for 			 * drivers that do not set there operating mode 			 * during attachement 			 */
 if|if
 condition|(
 name|ppbdev

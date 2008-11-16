@@ -754,7 +754,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%s: param = %d, ins = %d, arg = %d, type = %d\n",  			__func__, param, ins, arg, type);
+block|printf("%s: param = %d, ins = %d, arg = %d, type = %d\n", 			__func__, param, ins, arg, type);
 endif|#
 directive|endif
 comment|/* properly cast the parameter */
@@ -1214,7 +1214,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 default|default:
 comment|/* executing microinstructions at ppc level is 			 * faster. This is the default if the microinstr 			 * is unknown here 			 */
 if|if

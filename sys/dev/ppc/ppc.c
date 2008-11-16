@@ -6937,11 +6937,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"parallel port found at 0x%x\n"
+literal|"parallel port found at 0x%lx\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|port
 argument_list|)
 expr_stmt|;
@@ -6986,11 +6983,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"parallel port found at 0x%x\n"
+literal|"parallel port found at 0x%lx\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|port
 argument_list|)
 expr_stmt|;
@@ -7005,7 +6999,9 @@ literal|"parallel port not found.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 endif|#

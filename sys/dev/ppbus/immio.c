@@ -1407,7 +1407,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* ensure we are disconnected or daisy chained peripheral  	 * may cause serious problem to the disk */
+comment|/* ensure we are disconnected or daisy chained peripheral 	 * may cause serious problem to the disk */
 if|if
 condition|(
 name|error
@@ -2605,7 +2605,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/*  	 * Complete transfer ...  	 */
+comment|/* 	 * Complete transfer ... 	 */
 operator|*
 name|count
 operator|=

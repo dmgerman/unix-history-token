@@ -1947,8 +1947,7 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-comment|/* The ZIP is actually always polled throw vpo_action() */
-return|return;
+comment|/* The ZIP is actually always polled throw vpo_action(). */
 block|}
 end_function
 

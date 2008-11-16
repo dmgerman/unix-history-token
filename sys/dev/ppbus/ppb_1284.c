@@ -2542,7 +2542,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PERIPH_1284
-comment|/* ignore the PError line, wait a bit more, remote host's  	 * interrupts don't respond fast enough */
+comment|/* ignore the PError line, wait a bit more, remote host's 	 * interrupts don't respond fast enough */
 if|if
 condition|(
 name|ppb_poll_bus
