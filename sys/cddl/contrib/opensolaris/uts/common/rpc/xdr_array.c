@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2004 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -18,13 +18,6 @@ end_comment
 begin_comment
 comment|/*  * Portions of this source code were derived from Berkeley 4.3 BSD  * under license from the Regents of the University of California.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * xdr_array.c, Generic XDR routines impelmentation.  * These are the "non-trivial" xdr primitives used to serialize and de-serialize  * arrays.  See xdr.h for more info on the interface to xdr.  */
@@ -139,16 +132,6 @@ name|sizep
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"xdr_array: size FAILED\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|FALSE
@@ -181,16 +164,6 @@ operator|!=
 name|XDR_FREE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"xdr_array: bad size FAILED\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|FALSE

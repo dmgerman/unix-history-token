@@ -475,18 +475,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vdestroy
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|vgonel
 parameter_list|(
 name|struct
@@ -1916,13 +1904,6 @@ decl_stmt|;
 comment|/* 	 * If the thread is jailed, but this is not a jail-friendly file 	 * system, deny immediately. 	 */
 if|if
 condition|(
-name|jailed
-argument_list|(
-name|td
-operator|->
-name|td_ucred
-argument_list|)
-operator|&&
 operator|!
 operator|(
 name|mp
@@ -1933,6 +1914,13 @@ name|vfc_flags
 operator|&
 name|VFCF_JAIL
 operator|)
+operator|&&
+name|jailed
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1998,18 +1986,20 @@ name|EPERM
 operator|)
 return|;
 block|}
+comment|/* 	 * If file system supports delegated administration, we don't check 	 * for the PRIV_VFS_MOUNT_OWNER privilege - it will be better verified 	 * by the file system itself. 	 * If this is not the user that did original mount, we check for 	 * the PRIV_VFS_MOUNT_OWNER privilege. 	 */
 if|if
 condition|(
+operator|!
 operator|(
 name|mp
 operator|->
-name|mnt_flag
+name|mnt_vfc
+operator|->
+name|vfc_flags
 operator|&
-name|MNT_USER
+name|VFCF_DELEGADMIN
 operator|)
-operator|==
-literal|0
-operator|||
+operator|&&
 name|mp
 operator|->
 name|mnt_cred
@@ -3447,7 +3437,6 @@ comment|/*  * Routines having to do with the management of the vnode table.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vdestroy
 parameter_list|(

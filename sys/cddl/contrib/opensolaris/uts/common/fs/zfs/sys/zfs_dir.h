@@ -29,6 +29,12 @@ end_pragma
 begin_include
 include|#
 directive|include
+file|<sys/pathname.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dmu.h>
 end_include
 
@@ -76,6 +82,16 @@ directive|define
 name|ZRENAMING
 value|0x0010
 comment|/* znode is being renamed */
+define|#
+directive|define
+name|ZCILOOK
+value|0x0020
+comment|/* case-insensitive lookup requested */
+define|#
+directive|define
+name|ZCIEXACT
+value|0x0040
+comment|/* c-i requires c-s match (rename) */
 comment|/* mknode flags */
 define|#
 directive|define
@@ -111,6 +127,12 @@ modifier|*
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|pathname_t
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -169,6 +191,14 @@ parameter_list|,
 name|vnode_t
 modifier|*
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|pathname_t
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -179,9 +209,6 @@ name|znode_t
 modifier|*
 parameter_list|,
 name|vattr_t
-modifier|*
-parameter_list|,
-name|uint64_t
 modifier|*
 parameter_list|,
 name|dmu_tx_t
@@ -197,6 +224,13 @@ modifier|*
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|zfs_acl_t
+modifier|*
+parameter_list|,
+name|zfs_fuid_info_t
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -205,6 +239,24 @@ name|zfs_rmnode
 parameter_list|(
 name|znode_t
 modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zfs_dl_name_switch
+parameter_list|(
+name|zfs_dirlock_t
+modifier|*
+name|dl
+parameter_list|,
+name|char
+modifier|*
+name|new
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|old
 parameter_list|)
 function_decl|;
 specifier|extern

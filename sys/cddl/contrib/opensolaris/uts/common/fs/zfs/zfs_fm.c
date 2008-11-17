@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -106,7 +99,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This general routine is responsible for generating all the different ZFS  * ereports.  The payload is dependent on the class, and which arguments are  * supplied to the function:  *  * 	EREPORT			POOL	VDEV	IO  * 	block			X	X	X  * 	data			X		X  * 	device			X	X  * 	pool			X  *  * If we are in a loading state, all errors are chained together by the same  * SPA-wide ENA.  *  * For isolated I/O requests, we get the ENA from the zio_t. The propagation  * gets very complicated due to RAID-Z, gang blocks, and vdev caching.  We want  * to chain together all ereports associated with a logical piece of data.  For  * read I/Os, there  are basically three 'types' of I/O, which form a roughly  * layered diagram:  *  *      +---------------+  * 	| Aggregate I/O |	No associated logical data or device  * 	+---------------+  *              |  *              V  * 	+---------------+	Reads associated with a piece of logical data.  * 	|   Read I/O    |	This includes reads on behalf of RAID-Z,  * 	+---------------+       mirrors, gang blocks, retries, etc.  *              |  *              V  * 	+---------------+	Reads associated with a particular device, but  * 	| Physical I/O  |	no logical data.  Issued as part of vdev caching  * 	+---------------+	and I/O aggregation.  *  * Note that 'physical I/O' here is not the same terminology as used in the rest  * of ZIO.  Typically, 'physical I/O' simply means that there is no attached  * blockpointer.  But I/O with no associated block pointer can still be related  * to a logical piece of data (i.e. RAID-Z requests).  *  * Purely physical I/O always have unique ENAs.  They are not related to a  * particular piece of logical data, and therefore cannot be chained together.  * We still generate an ereport, but the DE doesn't correlate it with any  * logical piece of data.  When such an I/O fails, the delegated I/O requests  * will issue a retry, which will trigger the 'real' ereport with the correct  * ENA.  *  * We keep track of the ENA for a ZIO chain through the 'io_logical' member.  * When a new logical I/O is issued, we set this to point to itself.  Child I/Os  * then inherit this pointer, so that when it is first set subsequent failures  * will use the same ENA.  If a physical I/O is issued (by passing the  * ZIO_FLAG_NOBOOKMARK flag), then this pointer is reset, guaranteeing that a  * unique ENA will be generated.  For an aggregate I/O, this pointer is set to  * NULL, and no ereport will be generated (since it doesn't actually correspond  * to any particular device or piece of data).  */
+comment|/*  * This general routine is responsible for generating all the different ZFS  * ereports.  The payload is dependent on the class, and which arguments are  * supplied to the function:  *  * 	EREPORT			POOL	VDEV	IO  * 	block			X	X	X  * 	data			X		X  * 	device			X	X  * 	pool			X  *  * If we are in a loading state, all errors are chained together by the same  * SPA-wide ENA (Error Numeric Association).  *  * For isolated I/O requests, we get the ENA from the zio_t. The propagation  * gets very complicated due to RAID-Z, gang blocks, and vdev caching.  We want  * to chain together all ereports associated with a logical piece of data.  For  * read I/Os, there  are basically three 'types' of I/O, which form a roughly  * layered diagram:  *  *      +---------------+  * 	| Aggregate I/O |	No associated logical data or device  * 	+---------------+  *              |  *              V  * 	+---------------+	Reads associated with a piece of logical data.  * 	|   Read I/O    |	This includes reads on behalf of RAID-Z,  * 	+---------------+       mirrors, gang blocks, retries, etc.  *              |  *              V  * 	+---------------+	Reads associated with a particular device, but  * 	| Physical I/O  |	no logical data.  Issued as part of vdev caching  * 	+---------------+	and I/O aggregation.  *  * Note that 'physical I/O' here is not the same terminology as used in the rest  * of ZIO.  Typically, 'physical I/O' simply means that there is no attached  * blockpointer.  But I/O with no associated block pointer can still be related  * to a logical piece of data (i.e. RAID-Z requests).  *  * Purely physical I/O always have unique ENAs.  They are not related to a  * particular piece of logical data, and therefore cannot be chained together.  * We still generate an ereport, but the DE doesn't correlate it with any  * logical piece of data.  When such an I/O fails, the delegated I/O requests  * will issue a retry, which will trigger the 'real' ereport with the correct  * ENA.  *  * We keep track of the ENA for a ZIO chain through the 'io_logical' member.  * When a new logical I/O is issued, we set this to point to itself.  Child I/Os  * then inherit this pointer, so that when it is first set subsequent failures  * will use the same ENA.  For vdev cache fill and queue aggregation I/O,  * this pointer is set to NULL, and no ereport will be generated (since it  * doesn't actually correspond to any particular device or piece of data,  * and the caller will always retry without caching or queueing anyway).  */
 end_comment
 
 begin_function
@@ -154,6 +147,9 @@ name|struct
 name|timespec
 name|ts
 decl_stmt|;
+name|int
+name|state
+decl_stmt|;
 comment|/* 	 * If we are doing a spa_tryimport(), ignore errors. 	 */
 if|if
 condition|(
@@ -178,22 +174,16 @@ operator|->
 name|spa_last_open_failed
 condition|)
 return|return;
-comment|/* 	 * Ignore any errors from I/Os that we are going to retry anyway - we 	 * only generate errors from the final failure. 	 */
 if|if
 condition|(
 name|zio
-operator|&&
-name|zio_should_retry
-argument_list|(
-name|zio
-argument_list|)
+operator|!=
+name|NULL
 condition|)
-return|return;
-comment|/* 	 * If this is not a read or write zio, ignore the error.  This can occur 	 * if the DKIOCFLUSHWRITECACHE ioctl fails. 	 */
+block|{
+comment|/* 		 * If this is not a read or write zio, ignore the error.  This 		 * can occur if the DKIOCFLUSHWRITECACHE ioctl fails. 		 */
 if|if
 condition|(
-name|zio
-operator|&&
 name|zio
 operator|->
 name|io_type
@@ -207,6 +197,48 @@ operator|!=
 name|ZIO_TYPE_WRITE
 condition|)
 return|return;
+comment|/* 		 * Ignore any errors from speculative I/Os, as failure is an 		 * expected result. 		 */
+if|if
+condition|(
+name|zio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_SPECULATIVE
+condition|)
+return|return;
+comment|/* 		 * If the vdev has already been marked as failing due to a 		 * failed probe, then ignore any subsequent I/O errors, as the 		 * DE will automatically fault the vdev on the first such 		 * failure. 		 */
+if|if
+condition|(
+name|vd
+operator|!=
+name|NULL
+operator|&&
+operator|(
+operator|!
+name|vdev_readable
+argument_list|(
+name|vd
+argument_list|)
+operator|||
+operator|!
+name|vdev_writeable
+argument_list|(
+name|vd
+argument_list|)
+operator|)
+operator|&&
+name|strcmp
+argument_list|(
+name|subclass
+argument_list|,
+name|FM_EREPORT_ZFS_PROBE_FAILURE
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return;
+block|}
 name|nanotime
 argument_list|(
 operator|&
@@ -321,7 +353,20 @@ name|FM_ZFS_SCHEME_VERSION
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Construct the per-ereport payload, depending on which parameters are 	 * passed in. 	 */
-comment|/* 	 * Generic payload members common to all ereports. 	 * 	 * The direct reference to spa_name is used rather than spa_name() 	 * because of the asynchronous nature of the zio pipeline.  spa_name() 	 * asserts that the config lock is held in some form.  This is always 	 * the case in I/O context, but because the check for RW_WRITER compares 	 * against 'curthread', we may be in an asynchronous context and blow 	 * this assert.  Rather than loosen this assert, we acknowledge that all 	 * contexts in which this function is called (pool open, I/O) are safe, 	 * and dereference the name directly. 	 */
+comment|/* 	 * If we are importing a faulted pool, then we treat it like an open, 	 * not an import.  Otherwise, the DE will ignore all faults during 	 * import, since the default behavior is to mark the devices as 	 * persistently unavailable, not leave them in the faulted state. 	 */
+name|state
+operator|=
+name|spa
+operator|->
+name|spa_import_faulted
+condition|?
+name|SPA_LOAD_OPEN
+else|:
+name|spa
+operator|->
+name|spa_load_state
+expr_stmt|;
+comment|/* 	 * Generic payload members common to all ereports. 	 */
 name|sbuf_printf
 argument_list|(
 operator|&
@@ -331,9 +376,10 @@ literal|" %s=%s"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_POOL
 argument_list|,
-name|spa
-operator|->
 name|spa_name
+argument_list|(
+name|spa
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -356,15 +402,51 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s=%u"
+literal|" %s=%d"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_POOL_CONTEXT
 argument_list|,
-name|spa
-operator|->
-name|spa_load_state
+name|state
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|spa
+operator|!=
+name|NULL
+condition|)
+block|{
+name|sbuf_printf
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+literal|" %s=%s"
+argument_list|,
+name|FM_EREPORT_PAYLOAD_ZFS_POOL_FAILMODE
+argument_list|,
+name|spa_get_failmode
+argument_list|(
+name|spa
+argument_list|)
+operator|==
+name|ZIO_FAILURE_MODE_WAIT
+condition|?
+name|FM_EREPORT_FAILMODE_WAIT
+else|:
+name|spa_get_failmode
+argument_list|(
+name|spa
+argument_list|)
+operator|==
+name|ZIO_FAILURE_MODE_CONTINUE
+condition|?
+name|FM_EREPORT_FAILMODE_CONTINUE
+else|:
+name|FM_EREPORT_FAILMODE_PANIC
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|vd
@@ -723,19 +805,6 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-name|ZFS_LOG
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
-name|sbuf_data
-argument_list|(
-operator|&
-name|sb
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|devctl_notify
 argument_list|(
 literal|"ZFS"
@@ -777,13 +846,10 @@ directive|endif
 block|}
 end_function
 
-begin_comment
-comment|/*  * The 'resource.fs.zfs.ok' event is an internal signal that the associated  * resource (pool or disk) has been identified by ZFS as healthy.  This will  * then trigger the DE to close the associated case, if any.  */
-end_comment
-
 begin_function
+specifier|static
 name|void
-name|zfs_post_ok
+name|zfs_post_common
 parameter_list|(
 name|spa_t
 modifier|*
@@ -792,6 +858,11 @@ parameter_list|,
 name|vdev_t
 modifier|*
 name|vd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 block|{
 ifdef|#
@@ -872,7 +943,7 @@ name|FM_RSRC_RESOURCE
 argument_list|,
 name|ZFS_ERROR_CLASS
 argument_list|,
-name|FM_RESOURCE_OK
+name|name
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -938,6 +1009,19 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+name|ZFS_LOG
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|sbuf_data
+argument_list|(
+operator|&
+name|sb
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|devctl_notify
 argument_list|(
 literal|"ZFS"
@@ -976,6 +1060,64 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/*  * The 'resource.fs.zfs.removed' event is an internal signal that the given vdev  * has been removed from the system.  This will cause the DE to ignore any  * recent I/O errors, inferring that they are due to the asynchronous device  * removal.  */
+end_comment
+
+begin_function
+name|void
+name|zfs_post_remove
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+block|{
+name|zfs_post_common
+argument_list|(
+name|spa
+argument_list|,
+name|vd
+argument_list|,
+name|FM_RESOURCE_REMOVED
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The 'resource.fs.zfs.autoreplace' event is an internal signal that the pool  * has the 'autoreplace' property set, and therefore any broken vdevs will be  * handled by higher level logic, and no vdev fault should be generated.  */
+end_comment
+
+begin_function
+name|void
+name|zfs_post_autoreplace
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+block|{
+name|zfs_post_common
+argument_list|(
+name|spa
+argument_list|,
+name|vd
+argument_list|,
+name|FM_RESOURCE_AUTOREPLACE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

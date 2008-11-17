@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -153,7 +153,7 @@ name|osi
 operator|->
 name|os_meta_dnode
 argument_list|,
-name|B_TRUE
+name|DNODE_FIND_HOLE
 argument_list|,
 operator|&
 name|offset
@@ -590,6 +590,17 @@ operator|!=
 name|DMU_OT_NONE
 argument_list|)
 expr_stmt|;
+name|dnode_free_range
+argument_list|(
+name|dn
+argument_list|,
+literal|0
+argument_list|,
+name|DMU_OBJECT_END
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
 name|dnode_free
 argument_list|(
 name|dn
@@ -656,7 +667,13 @@ name|os
 operator|->
 name|os_meta_dnode
 argument_list|,
+operator|(
 name|hole
+condition|?
+name|DNODE_FIND_HOLE
+else|:
+literal|0
+operator|)
 argument_list|,
 operator|&
 name|offset

@@ -163,6 +163,29 @@ operator|&
 name|atomic_mtx
 argument_list|)
 block|; }
+name|void
+name|atomic_dec_64
+argument_list|(
+argument|volatile uint64_t *target
+argument_list|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|atomic_mtx
+argument_list|)
+block|;
+operator|*
+name|target
+operator|-=
+literal|1
+block|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|atomic_mtx
+argument_list|)
+block|; }
 endif|#
 directive|endif
 name|uint64_t

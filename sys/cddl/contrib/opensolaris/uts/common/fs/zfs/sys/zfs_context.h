@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -74,6 +74,9 @@ file|<sys/kmem.h>
 include|#
 directive|include
 file|<sys/taskq.h>
+include|#
+directive|include
+file|<sys/taskqueue.h>
 include|#
 directive|include
 file|<sys/systm.h>
@@ -160,7 +163,13 @@ directive|include
 file|<sys/lockf.h>
 include|#
 directive|include
+file|<sys/pathname.h>
+include|#
+directive|include
 file|<sys/policy.h>
+include|#
+directive|include
+file|<sys/refstr.h>
 include|#
 directive|include
 file|<sys/zone.h>
@@ -169,10 +178,28 @@ directive|include
 file|<sys/eventhandler.h>
 include|#
 directive|include
+file|<sys/extattr.h>
+include|#
+directive|include
 file|<sys/misc.h>
 include|#
 directive|include
+file|<sys/sig.h>
+include|#
+directive|include
+file|<sys/osd.h>
+include|#
+directive|include
 file|<sys/zfs_debug.h>
+include|#
+directive|include
+file|<sys/sysevent/eventdefs.h>
+include|#
+directive|include
+file|<sys/u8_textprep.h>
+include|#
+directive|include
+file|<sys/fm/util.h>
 include|#
 directive|include
 file|<machine/stdarg.h>
@@ -221,6 +248,38 @@ define|#
 directive|define
 name|CPU_SEQID
 value|(curcpu)
+define|#
+directive|define
+name|tsd_create
+parameter_list|(
+name|keyp
+parameter_list|,
+name|destructor
+parameter_list|)
+value|do {				\ 	*(keyp) = osd_thread_register((destructor));			\ 	KASSERT(*(keyp)> 0, ("cannot register OSD"));			\ } while (0)
+define|#
+directive|define
+name|tsd_destroy
+parameter_list|(
+name|keyp
+parameter_list|)
+value|osd_thread_deregister(*(keyp))
+define|#
+directive|define
+name|tsd_get
+parameter_list|(
+name|key
+parameter_list|)
+value|osd_thread_get(curthread, (key))
+define|#
+directive|define
+name|tsd_set
+parameter_list|(
+name|key
+parameter_list|,
+name|value
+parameter_list|)
+value|osd_thread_set(curthread, (key), (value))
 ifdef|#
 directive|ifdef
 name|__cplusplus

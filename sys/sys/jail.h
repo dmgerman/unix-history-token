@@ -167,10 +167,6 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_comment
-comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (a) allprison_lock  *   (p) locked by pr_mtx  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  *   (d) set only during destruction of jail, no mutex needed  */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -184,6 +180,16 @@ argument_list|(
 name|_WANT_PRISON
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/osd.h>
+end_include
+
+begin_comment
+comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (a) allprison_lock  *   (p) locked by pr_mtx  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  *   (d) set only during destruction of jail, no mutex needed  */
+end_comment
 
 begin_struct
 struct|struct
@@ -246,10 +252,9 @@ name|struct
 name|mtx
 name|pr_mtx
 decl_stmt|;
-name|void
-modifier|*
-modifier|*
-name|pr_slots
+name|struct
+name|osd
+name|pr_osd
 decl_stmt|;
 comment|/* (p) additional data */
 block|}
@@ -481,6 +486,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|prison_free_locked
+parameter_list|(
+name|struct
+name|prison
+modifier|*
+name|pr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int32_t
 name|prison_getip
 parameter_list|(
@@ -495,6 +512,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|prison_hold
+parameter_list|(
+name|struct
+name|prison
+modifier|*
+name|pr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|prison_hold_locked
 parameter_list|(
 name|struct
 name|prison

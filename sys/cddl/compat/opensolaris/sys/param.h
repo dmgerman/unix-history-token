@@ -26,6 +26,27 @@ name|PAGESIZE
 value|PAGE_SIZE
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ptob
+parameter_list|(
+name|x
+parameter_list|)
+value|((uint64_t)(x)<< PAGE_SHIFT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

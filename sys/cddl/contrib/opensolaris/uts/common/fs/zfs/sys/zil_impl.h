@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -97,26 +97,21 @@ comment|/* zilog->zl_lwb_list linkage */
 block|}
 name|lwb_t
 typedef|;
-comment|/*  * Vdev flushing: We use a bit map of size ZIL_VDEV_BMAP bytes.  * Any vdev numbers beyond that use a linked list of zil_vdev_t structures.  */
-define|#
-directive|define
-name|ZIL_VDEV_BMSZ
-value|16
-comment|/* 16 * 8 = 128 vdevs */
+comment|/*  * Vdev flushing: during a zil_commit(), we build up an AVL tree of the vdevs  * we've touched so we know which ones need a write cache flush at the end.  */
 typedef|typedef
 struct|struct
-name|zil_vdev
+name|zil_vdev_node
 block|{
 name|uint64_t
-name|vdev
+name|zv_vdev
 decl_stmt|;
-comment|/* device written */
-name|list_node_t
-name|vdev_seq_node
+comment|/* vdev to be flushed */
+name|avl_node_t
+name|zv_node
 decl_stmt|;
-comment|/* zilog->zl_vdev_list linkage */
+comment|/* AVL tree linkage */
 block|}
-name|zil_vdev_t
+name|zil_vdev_node_t
 typedef|;
 comment|/*  * Stable storage intent log management structure.  One per dataset.  */
 struct|struct
@@ -237,17 +232,14 @@ name|list_t
 name|zl_lwb_list
 decl_stmt|;
 comment|/* in-flight log write list */
-name|list_t
-name|zl_vdev_list
+name|kmutex_t
+name|zl_vdev_lock
 decl_stmt|;
-comment|/* list of [vdev, seq] pairs */
-name|uint8_t
-name|zl_vdev_bmap
-index|[
-name|ZIL_VDEV_BMSZ
-index|]
+comment|/* protects zl_vdev_tree */
+name|avl_tree_t
+name|zl_vdev_tree
 decl_stmt|;
-comment|/* bitmap of vdevs */
+comment|/* vdevs to flush in zil_commit() */
 name|taskq_t
 modifier|*
 name|zl_clean_taskq

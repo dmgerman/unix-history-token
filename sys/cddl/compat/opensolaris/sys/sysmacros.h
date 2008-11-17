@@ -45,6 +45,18 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|ABS
+define|#
+directive|define
+name|ABS
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)< 0 ? -(a) : (a))
+endif|#
+directive|endif
 comment|/*  * Macro for checking power of 2 address alignment.  */
 define|#
 directive|define

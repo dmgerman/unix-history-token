@@ -131,6 +131,20 @@ name|ctid_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|mode_t
+name|o_mode_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|pgcnt_t
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -178,15 +192,15 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|void
-name|pathname_t
+name|int64_t
+name|rlim64_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|int64_t
-name|rlim64_t
+name|int
+name|major_t
 typedef|;
 end_typedef
 
@@ -309,17 +323,6 @@ name|u_longlong_t
 name|diskaddr_t
 typedef|;
 end_typedef
-
-begin_typedef
-typedef|typedef
-name|ushort_t
-name|o_mode_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* old file attribute type */
-end_comment
 
 begin_endif
 endif|#

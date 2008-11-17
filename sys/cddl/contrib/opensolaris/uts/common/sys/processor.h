@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  *	Copyright (c) 1984, 1986, 1987, 1988, 1989 AT&T  *	  All Rights Re
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2004 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -140,7 +140,7 @@ define|#
 directive|define
 name|PS_SPARE
 value|"spare"
-comment|/*  * Structure filled in by processor_info(2).  *  * The string fields are guaranteed to contain a NULL.  *  * The pi_fputypes field contains a (possibly empty) comma-separated  * list of floating point identifier strings.  */
+comment|/*  * Structure filled in by processor_info(2). This structure  * SHOULD NOT BE MODIFIED. Changes to the structure would  * negate ABI compatibility.  *  * The string fields are guaranteed to contain a NULL.  *  * The pi_fputypes field contains a (possibly empty) comma-separated  * list of floating point identifier strings.  */
 define|#
 directive|define
 name|PI_TYPELEN
@@ -190,6 +190,21 @@ directive|define
 name|PBIND_QUERY
 value|-2
 comment|/* don't set, just return the binding */
+define|#
+directive|define
+name|PBIND_HARD
+value|-3
+comment|/* prevents offlining CPU (default) */
+define|#
+directive|define
+name|PBIND_SOFT
+value|-4
+comment|/* allows offlining CPU */
+define|#
+directive|define
+name|PBIND_QUERY_TYPE
+value|-5
+comment|/* Return binding type */
 comment|/*  * User-level system call interface prototypes  */
 ifndef|#
 directive|ifndef

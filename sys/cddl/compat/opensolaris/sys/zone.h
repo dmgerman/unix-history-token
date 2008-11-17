@@ -32,7 +32,7 @@ comment|/*  * Macros to help with zone visibility restrictions.  */
 end_comment
 
 begin_comment
-comment|/*  * Is process in the global zone?  */
+comment|/*  * Is thread in the global zone?  */
 end_comment
 
 begin_define
@@ -40,9 +40,9 @@ define|#
 directive|define
 name|INGLOBALZONE
 parameter_list|(
-name|p
+name|thread
 parameter_list|)
-value|(!jailed((p)->p_ucred))
+value|(!jailed((thread)->td_ucred))
 end_define
 
 begin_comment
@@ -123,16 +123,6 @@ directive|define
 name|GLOBAL_ZONEID
 value|0
 end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|getzoneid
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

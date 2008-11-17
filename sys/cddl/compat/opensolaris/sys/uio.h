@@ -180,6 +180,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* BUILDING_ZFS */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

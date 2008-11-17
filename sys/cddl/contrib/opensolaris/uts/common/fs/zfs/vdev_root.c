@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -52,10 +45,6 @@ begin_comment
 comment|/*  * We should be able to tolerate one failure with absolutely no damage  * to our metadata.  Two failures will take out space maps, a bunch of  * indirect block trees, meta dnodes, dnodes, etc.  Probably not a happy  * place to live.  When we get smarter, we can liberalize this policy.  * e.g. If we haven't lost two consecutive top-level vdevs, then we are  * probably fine.  Adding bean counters during alloc/free can make this  * future guesswork more accurate.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -69,6 +58,17 @@ name|int
 name|numerrors
 parameter_list|)
 block|{
+name|ASSERT3U
+argument_list|(
+name|numerrors
+argument_list|,
+operator|<=
+argument_list|,
+name|vd
+operator|->
+name|vdev_children
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|numerrors
@@ -97,14 +97,8 @@ modifier|*
 name|ashift
 parameter_list|)
 block|{
-name|vdev_t
-modifier|*
-name|cvd
-decl_stmt|;
 name|int
 name|c
-decl_stmt|,
-name|error
 decl_stmt|;
 name|int
 name|lasterror
@@ -155,15 +149,20 @@ name|c
 operator|++
 control|)
 block|{
+name|vdev_t
+modifier|*
 name|cvd
-operator|=
+init|=
 name|vd
 operator|->
 name|vdev_child
 index|[
 name|c
 index|]
-expr_stmt|;
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -176,6 +175,11 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+operator|&&
+operator|!
+name|cvd
+operator|->
+name|vdev_islog
 condition|)
 block|{
 name|lasterror
@@ -296,6 +300,7 @@ argument_list|,
 name|faulted
 argument_list|)
 condition|)
+block|{
 name|vdev_set_state
 argument_list|(
 name|vd
@@ -307,13 +312,13 @@ argument_list|,
 name|VDEV_AUX_NO_REPLICAS
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
 name|degraded
-operator|!=
-literal|0
 condition|)
+block|{
 name|vdev_set_state
 argument_list|(
 name|vd
@@ -325,7 +330,9 @@ argument_list|,
 name|VDEV_AUX_NONE
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|vdev_set_state
 argument_list|(
 name|vd
@@ -337,6 +344,7 @@ argument_list|,
 name|VDEV_AUX_NONE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

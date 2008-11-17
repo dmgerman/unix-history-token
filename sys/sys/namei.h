@@ -571,14 +571,60 @@ parameter_list|,
 name|td
 parameter_list|)
 define|\
-value|NDINIT_AT(ndp, op, flags, segflg, namep, AT_FDCWD, td)
+value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD, NULL, td)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDINIT_AT
+parameter_list|(
+name|ndp
+parameter_list|,
+name|op
+parameter_list|,
+name|flags
+parameter_list|,
+name|segflg
+parameter_list|,
+name|namep
+parameter_list|,
+name|dirfd
+parameter_list|,
+name|td
+parameter_list|)
+define|\
+value|NDINIT_ALL(ndp, op, flags, segflg, namep, dirfd, NULL, td)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDINIT_ATVP
+parameter_list|(
+name|ndp
+parameter_list|,
+name|op
+parameter_list|,
+name|flags
+parameter_list|,
+name|segflg
+parameter_list|,
+name|namep
+parameter_list|,
+name|vp
+parameter_list|,
+name|td
+parameter_list|)
+define|\
+value|NDINIT_ALL(ndp, op, flags, segflg, namep, AT_FDCWD, vp, td)
 end_define
 
 begin_function
 specifier|static
 name|__inline
 name|void
-name|NDINIT_AT
+name|NDINIT_ALL
 parameter_list|(
 name|struct
 name|nameidata
@@ -602,6 +648,11 @@ name|namep
 parameter_list|,
 name|int
 name|dirfd
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|startdir
 parameter_list|,
 name|struct
 name|thread
@@ -642,6 +693,12 @@ operator|->
 name|ni_dirfd
 operator|=
 name|dirfd
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_startdir
+operator|=
+name|startdir
 expr_stmt|;
 name|ndp
 operator|->

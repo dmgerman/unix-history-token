@@ -1441,6 +1441,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Free all OSD associated to this thread. */
+name|osd_thread_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* Dispose of an alternate kstack, if it exists. 		 * XXX What if there are more than one thread in the proc? 		 *     The first thread in the proc is special and not 		 *     freed, so you gotta do this here. 		 */
 if|if
 condition|(

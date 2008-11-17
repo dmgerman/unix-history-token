@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cred.h>
 end_include
 
 begin_ifdef
@@ -186,9 +192,9 @@ comment|/* zpl: */
 name|DMU_OT_ZNODE
 block|,
 comment|/* ZNODE */
-name|DMU_OT_ACL
+name|DMU_OT_OLDACL
 block|,
-comment|/* ACL */
+comment|/* Old ACL */
 name|DMU_OT_PLAIN_FILE_CONTENTS
 block|,
 comment|/* UINT8 */
@@ -229,6 +235,27 @@ name|DMU_OT_SPA_HISTORY_OFFSETS
 block|,
 comment|/* spa_his_phys_t */
 name|DMU_OT_POOL_PROPS
+block|,
+comment|/* ZAP */
+name|DMU_OT_DSL_PERMS
+block|,
+comment|/* ZAP */
+name|DMU_OT_ACL
+block|,
+comment|/* ACL */
+name|DMU_OT_SYSACL
+block|,
+comment|/* SYSACL */
+name|DMU_OT_FUID
+block|,
+comment|/* FUID table (Packed NVLIST UINT8) */
+name|DMU_OT_FUID_SIZE
+block|,
+comment|/* FUID table size UINT64 */
+name|DMU_OT_NEXT_CLONES
+block|,
+comment|/* ZAP */
+name|DMU_OT_SCRUB_QUEUE
 block|,
 comment|/* ZAP */
 name|DMU_OT_NUMTYPES
@@ -313,6 +340,17 @@ name|size
 parameter_list|)
 function_decl|;
 name|void
+name|zfs_oldacl_byteswap
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+name|void
 name|zfs_acl_byteswap
 parameter_list|(
 name|void
@@ -336,35 +374,30 @@ parameter_list|)
 function_decl|;
 define|#
 directive|define
-name|DS_MODE_NONE
+name|DS_MODE_NOHOLD
 value|0
-comment|/* invalid, to aid debugging */
+comment|/* internal use only */
 define|#
 directive|define
-name|DS_MODE_STANDARD
+name|DS_MODE_USER
 value|1
-comment|/* normal access, no special needs */
+comment|/* simple access, no special needs */
 define|#
 directive|define
-name|DS_MODE_PRIMARY
+name|DS_MODE_OWNER
 value|2
 comment|/* the "main" access, e.g. a mount */
 define|#
 directive|define
-name|DS_MODE_EXCLUSIVE
-value|3
-comment|/* exclusive access, e.g. to destroy */
+name|DS_MODE_TYPE_MASK
+value|0x3
 define|#
 directive|define
-name|DS_MODE_LEVELS
-value|4
-define|#
-directive|define
-name|DS_MODE_LEVEL
+name|DS_MODE_TYPE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& (DS_MODE_LEVELS - 1))
+value|((x)& DS_MODE_TYPE_MASK)
 define|#
 directive|define
 name|DS_MODE_READONLY
@@ -401,6 +434,11 @@ directive|define
 name|DMU_MAX_ACCESS
 value|(10<<20)
 comment|/* 10MB */
+define|#
+directive|define
+name|DMU_MAX_DELETEBLKCNT
+value|(20480)
+comment|/* ~5MB of indirect blocks */
 comment|/*  * Public routines to create, destroy, open, and close objsets.  */
 name|int
 name|dmu_objset_open
@@ -422,6 +460,23 @@ modifier|*
 name|osp
 parameter_list|)
 function_decl|;
+name|int
+name|dmu_objset_open_ds
+parameter_list|(
+name|struct
+name|dsl_dataset
+modifier|*
+name|ds
+parameter_list|,
+name|dmu_objset_type_t
+name|type
+parameter_list|,
+name|objset_t
+modifier|*
+modifier|*
+name|osp
+parameter_list|)
+function_decl|;
 name|void
 name|dmu_objset_close
 parameter_list|(
@@ -436,9 +491,6 @@ parameter_list|(
 name|objset_t
 modifier|*
 name|os
-parameter_list|,
-name|int
-name|try
 parameter_list|)
 function_decl|;
 name|int
@@ -456,6 +508,9 @@ name|objset_t
 modifier|*
 name|clone_parent
 parameter_list|,
+name|uint64_t
+name|flags
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -469,6 +524,10 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|cred_t
+modifier|*
+name|cr
 parameter_list|,
 name|dmu_tx_t
 modifier|*
@@ -504,10 +563,9 @@ function_decl|;
 name|int
 name|dmu_objset_rollback
 parameter_list|(
-specifier|const
-name|char
+name|objset_t
 modifier|*
-name|name
+name|os
 parameter_list|)
 function_decl|;
 name|int
@@ -616,19 +674,6 @@ modifier|*
 name|user_ptr
 parameter_list|)
 function_decl|;
-comment|/*  * Callback function to perform byte swapping on a block.  */
-typedef|typedef
-name|void
-name|dmu_byteswap_func_t
-parameter_list|(
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
 comment|/*  * The names of zap entries in the DIRECTORY_OBJECT of the MOS.  */
 define|#
 directive|define
@@ -670,6 +715,40 @@ define|#
 directive|define
 name|DMU_POOL_PROPS
 value|"pool_props"
+define|#
+directive|define
+name|DMU_POOL_L2CACHE
+value|"l2cache"
+comment|/* 4x8 zbookmark_t */
+define|#
+directive|define
+name|DMU_POOL_SCRUB_BOOKMARK
+value|"scrub_bookmark"
+comment|/* 1x8 zap obj DMU_OT_SCRUB_QUEUE */
+define|#
+directive|define
+name|DMU_POOL_SCRUB_QUEUE
+value|"scrub_queue"
+comment|/* 1x8 txg */
+define|#
+directive|define
+name|DMU_POOL_SCRUB_MIN_TXG
+value|"scrub_min_txg"
+comment|/* 1x8 txg */
+define|#
+directive|define
+name|DMU_POOL_SCRUB_MAX_TXG
+value|"scrub_max_txg"
+comment|/* 1x4 enum scrub_func */
+define|#
+directive|define
+name|DMU_POOL_SCRUB_FUNC
+value|"scrub_func"
+comment|/* 1x8 count */
+define|#
+directive|define
+name|DMU_POOL_SCRUB_ERRORS
+value|"scrub_errors"
 comment|/*  * Allocate an object from this objset.  The range of object numbers  * available is (0, DN_MAX_OBJECT).  Object 0 is the meta-dnode.  *  * The transaction must be assigned to a txg.  The newly allocated  * object will be "held" in the transaction (ie. you can modify the  * newly allocated object in this transaction).  *  * dmu_object_alloc() chooses an object and returns it in *objectp.  *  * dmu_object_claim() allocates a specific object number.  If that  * number is already allocated, it fails and returns EEXIST.  *  * Return 0 on success, or ENOSPC or EEXIST as specified above.  */
 name|uint64_t
 name|dmu_object_alloc
@@ -885,6 +964,18 @@ name|int
 name|dmu_bonus_max
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+name|int
+name|dmu_set_bonus
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|dmu_tx_t
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/*  * Obtain the DMU buffer from the specified object which contains the  * specified offset.  dmu_buf_hold() puts a "hold" on the buffer, so  * that it will remain in memory.  You must release the hold with  * dmu_buf_rele().  You musn't access the dmu_buf_t after releasing your  * hold.  You must have a hold on any dmu_buf_t* you pass to the DMU.  *  * You must call dmu_buf_read, dmu_buf_will_dirty, or dmu_buf_will_fill  * on the returned buffer before reading or writing the buffer's  * db_data.  The comments for those routines describe what particular  * operations are valid after calling them.  *  * The object number must be a valid, allocated object number.  */
@@ -1231,6 +1322,34 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|int
+name|dmu_free_long_range
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|object
+parameter_list|,
+name|uint64_t
+name|offset
+parameter_list|,
+name|uint64_t
+name|size
+parameter_list|)
+function_decl|;
+name|int
+name|dmu_free_object
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|object
+parameter_list|)
+function_decl|;
 comment|/*  * Convenience functions.  *  * Canfail routines will return 0 on success, or an errno if there is a  * nonrecoverable I/O error.  */
 name|int
 name|dmu_read
@@ -1417,10 +1536,22 @@ block|}
 name|dmu_object_info_t
 typedef|;
 typedef|typedef
+name|void
+name|arc_byteswap_func_t
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+typedef|typedef
 struct|struct
 name|dmu_object_type_info
 block|{
-name|dmu_byteswap_func_t
+name|arc_byteswap_func_t
 modifier|*
 name|ot_byteswap
 decl_stmt|;
@@ -1510,6 +1641,9 @@ comment|/* number of clones of this */
 name|uint64_t
 name|dds_creation_txg
 decl_stmt|;
+name|uint64_t
+name|dds_guid
+decl_stmt|;
 name|dmu_objset_type_t
 name|dds_type
 decl_stmt|;
@@ -1520,7 +1654,7 @@ name|uint8_t
 name|dds_inconsistent
 decl_stmt|;
 name|char
-name|dds_clone_of
+name|dds_origin
 index|[
 name|MAXNAMELEN
 index|]
@@ -1694,6 +1828,34 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|offp
+parameter_list|,
+name|boolean_t
+modifier|*
+name|case_conflict
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|dmu_snapshot_realname
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|real
+parameter_list|,
+name|int
+name|maxlen
+parameter_list|,
+name|boolean_t
+modifier|*
+name|conflict
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1720,6 +1882,29 @@ modifier|*
 name|offp
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|dmu_objset_set_user
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|void
+modifier|*
+name|user_ptr
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+modifier|*
+name|dmu_objset_get_user
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|)
+function_decl|;
 comment|/*  * Return the txg number for the given assigned transaction.  */
 name|uint64_t
 name|dmu_tx_get_txg
@@ -1729,7 +1914,7 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
-comment|/*  * Synchronous write.  * If a parent zio is provided this function initiates a write on the  * provided buffer as a child of the parent zio.  * In the absense of a parent zio, the write is completed synchronously.  * At write completion, blk is filled with the bp of the written block.  * Note that while the data covered by this function will be on stable  * storage when the write completes this new data does not become a  * permanent part of the file until the associated transaction commits.  */
+comment|/*  * Synchronous write.  * If a parent zio is provided this function initiates a write on the  * provided buffer as a child of the parent zio.  * In the absence of a parent zio, the write is completed synchronously.  * At write completion, blk is filled with the bp of the written block.  * Note that while the data covered by this function will be on stable  * storage when the write completes this new data does not become a  * permanent part of the file until the associated transaction commits.  */
 typedef|typedef
 name|void
 name|dmu_sync_cb_t
@@ -1865,15 +2050,59 @@ name|objset_t
 modifier|*
 name|fromsnap
 parameter_list|,
+name|boolean_t
+name|fromorigin
+parameter_list|,
 name|struct
 name|file
 modifier|*
 name|fp
+parameter_list|,
+name|offset_t
+modifier|*
+name|off
 parameter_list|)
 function_decl|;
+typedef|typedef
+struct|struct
+name|dmu_recv_cookie
+block|{
+comment|/* 	 * This structure is opaque! 	 * 	 * If logical and real are different, we are recving the stream 	 * into the "real" temporary clone, and then switching it with 	 * the "logical" target. 	 */
+name|struct
+name|dsl_dataset
+modifier|*
+name|drc_logical_ds
+decl_stmt|;
+name|struct
+name|dsl_dataset
+modifier|*
+name|drc_real_ds
+decl_stmt|;
+name|struct
+name|drr_begin
+modifier|*
+name|drc_drrb
+decl_stmt|;
+name|char
+modifier|*
+name|drc_tosnap
+decl_stmt|;
+name|boolean_t
+name|drc_newfs
+decl_stmt|;
+name|boolean_t
+name|drc_force
+decl_stmt|;
+block|}
+name|dmu_recv_cookie_t
+typedef|;
 name|int
-name|dmu_recvbackup
+name|dmu_recv_begin
 parameter_list|(
+name|char
+modifier|*
+name|tofs
+parameter_list|,
 name|char
 modifier|*
 name|tosnap
@@ -1881,22 +2110,52 @@ parameter_list|,
 name|struct
 name|drr_begin
 modifier|*
-name|drrb
-parameter_list|,
-name|uint64_t
-modifier|*
-name|sizep
 parameter_list|,
 name|boolean_t
 name|force
+parameter_list|,
+name|objset_t
+modifier|*
+name|origin
+parameter_list|,
+name|boolean_t
+name|online
+parameter_list|,
+name|dmu_recv_cookie_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|dmu_recv_stream
+parameter_list|(
+name|dmu_recv_cookie_t
+modifier|*
+name|drc
 parameter_list|,
 name|struct
 name|file
 modifier|*
 name|fp
 parameter_list|,
-name|uint64_t
-name|voffset
+name|offset_t
+modifier|*
+name|voffp
+parameter_list|)
+function_decl|;
+name|int
+name|dmu_recv_end
+parameter_list|(
+name|dmu_recv_cookie_t
+modifier|*
+name|drc
+parameter_list|)
+function_decl|;
+name|void
+name|dmu_recv_abort_cleanup
+parameter_list|(
+name|dmu_recv_cookie_t
+modifier|*
+name|drc
 parameter_list|)
 function_decl|;
 comment|/* CRC64 table */

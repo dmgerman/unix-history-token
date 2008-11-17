@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_METASLAB_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -134,6 +127,18 @@ name|uint64_t
 name|txg
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|METASLAB_HINTBP_FAVOR
+value|0x0
+define|#
+directive|define
+name|METASLAB_HINTBP_AVOID
+value|0x1
+define|#
+directive|define
+name|METASLAB_GANG_HEADER
+value|0x2
 specifier|extern
 name|int
 name|metaslab_alloc
@@ -141,6 +146,10 @@ parameter_list|(
 name|spa_t
 modifier|*
 name|spa
+parameter_list|,
+name|metaslab_class_t
+modifier|*
+name|mc
 parameter_list|,
 name|uint64_t
 name|psize
@@ -159,8 +168,8 @@ name|blkptr_t
 modifier|*
 name|hintbp
 parameter_list|,
-name|boolean_t
-name|hintbp_avoid
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 specifier|extern

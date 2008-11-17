@@ -61,6 +61,17 @@ name|LBOLT
 value|((gethrtime() * hz) / NANOSEC)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TIMESPEC_OVERFLOW
+parameter_list|(
+name|ts
+parameter_list|)
+define|\
+value|((ts)->tv_sec< INT32_MIN || (ts)->tv_sec> INT32_MAX)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

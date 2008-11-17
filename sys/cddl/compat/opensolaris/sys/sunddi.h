@@ -18,6 +18,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ddi_driver_major
+parameter_list|(
+name|zfs_dip
+parameter_list|)
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ddi_copyin
 parameter_list|(
 name|from
@@ -46,6 +56,30 @@ name|flag
 parameter_list|)
 value|(bcopy((from), (to), (size)), 0)
 end_define
+
+begin_function_decl
+name|int
+name|ddi_strtol
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|nptr
+parameter_list|,
+name|int
+name|base
+parameter_list|,
+name|long
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

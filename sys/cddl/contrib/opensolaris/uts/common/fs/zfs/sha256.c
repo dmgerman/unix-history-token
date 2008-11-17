@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -33,11 +33,11 @@ file|<sys/zio_checksum.h>
 end_include
 
 begin_comment
-comment|/*  * SHA-256 checksum, as specified in FIPS 180-2, available at:  * http://csrc.nist.gov/cryptval  *  * This is a very compact implementation of SHA-256.  * It is designed to be simple and portable, not to be fast.  */
+comment|/*  * SHA-256 checksum, as specified in FIPS 180-3, available at:  * http://csrc.nist.gov/publications/PubsFIPS.html  *  * This is a very compact implementation of SHA-256.  * It is designed to be simple and portable, not to be fast.  */
 end_comment
 
 begin_comment
-comment|/*  * The literal definitions according to FIPS180-2 would be:  *  * 	Ch(x, y, z)     (((x)& (y)) ^ ((~(x))& (z)))  * 	Maj(x, y, z)    (((x)& (y)) | ((x)& (z)) | ((y)& (z)))  *  * We use logical equivalents which require one less op.  */
+comment|/*  * The literal definitions of Ch() and Maj() according to FIPS 180-3 are:  *  * 	Ch(x, y, z)     (x& y) ^ (~x& z)  * 	Maj(x, y, z)    (x& y) ^ (x& z) ^ (y& z)  *  * We use equivalent logical reductions here that require one less op.  */
 end_comment
 
 begin_define
@@ -668,14 +668,9 @@ literal|128
 index|]
 decl_stmt|;
 name|int
-name|padsize
-init|=
-name|size
-operator|&
-literal|63
-decl_stmt|;
-name|int
 name|i
+decl_stmt|,
+name|padsize
 decl_stmt|;
 for|for
 control|(
@@ -685,9 +680,12 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
 name|size
-operator|-
-name|padsize
+operator|&
+operator|~
+literal|63ULL
+operator|)
 condition|;
 name|i
 operator|+=
@@ -708,32 +706,33 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|padsize
 operator|=
 literal|0
 init|;
 name|i
 operator|<
-name|padsize
+name|size
 condition|;
 name|i
 operator|++
 control|)
 name|pad
 index|[
-name|i
+name|padsize
+operator|++
 index|]
 operator|=
+operator|*
 operator|(
 operator|(
 name|uint8_t
 operator|*
 operator|)
 name|buf
-operator|)
-index|[
+operator|+
 name|i
-index|]
+operator|)
 expr_stmt|;
 for|for
 control|(
@@ -767,14 +766,15 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|56
 init|;
 name|i
-operator|<
-literal|8
+operator|>=
+literal|0
 condition|;
 name|i
-operator|++
+operator|-=
+literal|8
 control|)
 name|pad
 index|[
@@ -788,13 +788,7 @@ operator|<<
 literal|3
 operator|)
 operator|>>
-operator|(
-literal|56
-operator|-
-literal|8
-operator|*
 name|i
-operator|)
 expr_stmt|;
 for|for
 control|(

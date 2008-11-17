@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 1990-2002 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_DKLABEL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -132,15 +125,55 @@ directive|define
 name|DK_ACYL
 value|2
 comment|/*  * Format of a Sun disk label.  * Resides in cylinder 0, head 0, sector 0.  *  * sizeof (struct dk_label) should be 512 (the current sector size),  * but should the sector size increase, this structure should remain  * at the beginning of the sector.  */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BLKADDR_TYPE
+argument_list|)
+define|#
+directive|define
+name|BLKADDR_TYPE
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_EXTVTOC
+argument_list|)
+typedef|typedef
+name|unsigned
+name|long
+name|blkaddr_t
+typedef|;
+typedef|typedef
+name|unsigned
+name|int
+name|blkaddr32_t
+typedef|;
+else|#
+directive|else
+typedef|typedef
+name|daddr_t
+name|blkaddr_t
+typedef|;
+typedef|typedef
+name|daddr32_t
+name|blkaddr32_t
+typedef|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/*  * partition headers:  section 1  * Returned in struct dk_allmap by ioctl DKIOC[SG]APART (dkio(7I))  */
 struct|struct
 name|dk_map
 block|{
-name|daddr_t
+name|blkaddr_t
 name|dkl_cylno
 decl_stmt|;
 comment|/* starting cylinder */
-name|daddr_t
+name|blkaddr_t
 name|dkl_nblk
 decl_stmt|;
 comment|/* number of blocks;  if == 0, */
@@ -151,11 +184,11 @@ comment|/*  * partition headers:  section 1  * Fixed size for on-disk dk_label  
 struct|struct
 name|dk_map32
 block|{
-name|daddr32_t
+name|blkaddr32_t
 name|dkl_cylno
 decl_stmt|;
 comment|/* starting cylinder */
-name|daddr32_t
+name|blkaddr32_t
 name|dkl_nblk
 decl_stmt|;
 comment|/* number of blocks;  if == 0, */
@@ -187,11 +220,11 @@ name|uint16_t
 name|p_flag
 decl_stmt|;
 comment|/* permision flags */
-name|daddr32_t
+name|blkaddr32_t
 name|p_start
 decl_stmt|;
 comment|/* start sector no of partition */
-name|int32_t
+name|blkaddr32_t
 name|p_size
 decl_stmt|;
 comment|/* # of blocks in partition */

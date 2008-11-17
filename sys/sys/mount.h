@@ -1830,6 +1830,17 @@ begin_comment
 comment|/* can be mounted from within a jail */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VFCF_DELEGADMIN
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* supports delegated administration */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|uint32_t
