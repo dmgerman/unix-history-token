@@ -56,6 +56,7 @@ begin_struct
 struct|struct
 name|tuple_info
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -382,11 +383,14 @@ value|((*((tp) + 1)<< 8)  | *(tp))
 end_define
 
 begin_function_decl
-name|void
-modifier|*
-name|xmalloc
+name|int
+name|dumpcisfile_main
 parameter_list|(
 name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -438,6 +442,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|tuple_name

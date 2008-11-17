@@ -94,12 +94,10 @@ specifier|static
 name|void
 name|scanfile
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd

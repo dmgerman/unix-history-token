@@ -140,6 +140,7 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|type
@@ -1121,12 +1122,14 @@ decl_stmt|;
 name|u_char
 name|mask
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|expp
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|pname
@@ -1151,6 +1154,7 @@ literal|"Reserved"
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|vexp
@@ -1175,6 +1179,7 @@ literal|"100V"
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|cexp
@@ -1199,6 +1204,7 @@ literal|"1A"
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|mant
@@ -1377,6 +1383,7 @@ name|scale
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|mant
@@ -1417,6 +1424,7 @@ literal|"8.0"
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|exp
@@ -1441,6 +1449,7 @@ literal|"10 ms"
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|scale_name
@@ -1518,6 +1527,7 @@ parameter_list|(
 name|int
 name|sz
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3425,12 +3435,14 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|type
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|un_name
@@ -3455,6 +3467,7 @@ literal|"reserved"
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|speed
@@ -3477,6 +3490,7 @@ literal|"Reserved"
 block|}
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|dev
@@ -3888,6 +3902,7 @@ name|p
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|id
@@ -3982,6 +3997,7 @@ name|len
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|type
@@ -4075,7 +4091,7 @@ block|{
 default|default:
 name|printf
 argument_list|(
-literal|"\t\tUnkn device"
+literal|"\t\tUnknown device"
 argument_list|)
 expr_stmt|;
 break|break;
