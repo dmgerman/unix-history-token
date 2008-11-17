@@ -905,13 +905,9 @@ argument_list|(
 literal|"Could not create test file?!"
 argument_list|)
 expr_stmt|;
-name|n
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 if|if
 condition|(
+operator|!
 name|assert
 argument_list|(
 name|fd
@@ -919,7 +915,7 @@ operator|>=
 literal|0
 argument_list|)
 condition|)
-block|{
+return|return;
 name|n
 operator|=
 name|acl_set_fd
@@ -929,6 +925,29 @@ argument_list|,
 name|acl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|!=
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EOPNOTSUPP
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|skipping
+argument_list|(
+literal|"ACL tests require that ACL support be enabled on the filesystem"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|failure
 argument_list|(
 literal|"acl_set_fd(): errno = %d (%s)"
@@ -953,25 +972,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|fd
-operator|<
-literal|0
-operator|||
-name|n
-operator|!=
-literal|0
-condition|)
-block|{
-name|skipping
-argument_list|(
-literal|"ACL tests require that ACL support be enabled on the filesystem"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* Create a write-to-disk object. */
 name|assert
 argument_list|(
