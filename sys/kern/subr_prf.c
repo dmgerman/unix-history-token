@@ -3763,7 +3763,7 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|size_t
+name|ssize_t
 argument_list|)
 expr_stmt|;
 elseif|else
