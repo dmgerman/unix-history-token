@@ -60,14 +60,13 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|wwend
-argument_list|(
-argument|exit
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|exit
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -126,7 +125,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_function
 name|void
