@@ -2155,6 +2155,8 @@ name|freq
 decl_stmt|,
 name|curfreq
 decl_stmt|,
+name|initfreq
+decl_stmt|,
 modifier|*
 name|freqs
 decl_stmt|,
@@ -2632,6 +2634,8 @@ name|handle_sigs
 argument_list|)
 expr_stmt|;
 name|freq
+operator|=
+name|initfreq
 operator|=
 name|get_freq
 argument_list|()
@@ -3327,6 +3331,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|set_freq
+argument_list|(
+name|initfreq
+argument_list|)
+condition|)
+name|warn
+argument_list|(
+literal|"error setting CPU frequency %d"
+argument_list|,
+name|initfreq
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|freqs
