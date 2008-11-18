@@ -4408,8 +4408,10 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|cpri
+name|struct
+name|thread
+modifier|*
+name|ctd
 decl_stmt|;
 name|int
 name|pri
@@ -4438,7 +4440,7 @@ name|td
 operator|->
 name|td_priority
 expr_stmt|;
-name|cpri
+name|ctd
 operator|=
 name|pcpu_find
 argument_list|(
@@ -4446,8 +4448,6 @@ name|cpu
 argument_list|)
 operator|->
 name|pc_curthread
-operator|->
-name|td_priority
 expr_stmt|;
 if|if
 condition|(
@@ -4456,7 +4456,9 @@ name|sched_shouldpreempt
 argument_list|(
 name|pri
 argument_list|,
-name|cpri
+name|ctd
+operator|->
+name|td_priority
 argument_list|,
 literal|1
 argument_list|)
@@ -4466,7 +4468,7 @@ if|if
 condition|(
 name|TD_IS_IDLETHREAD
 argument_list|(
-name|td
+name|ctd
 argument_list|)
 condition|)
 block|{
