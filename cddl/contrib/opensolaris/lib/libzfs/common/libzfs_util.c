@@ -3514,7 +3514,8 @@ name|libzfs_handle_t
 modifier|*
 name|hdl
 parameter_list|,
-name|int
+name|unsigned
+name|long
 name|request
 parameter_list|,
 name|zfs_cmd_t

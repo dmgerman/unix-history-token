@@ -1196,7 +1196,8 @@ parameter_list|(
 name|libzfs_handle_t
 modifier|*
 parameter_list|,
-name|int
+name|unsigned
+name|long
 parameter_list|,
 name|struct
 name|zfs_cmd
