@@ -101,6 +101,9 @@ name|int
 name|id_pnp_ldn
 decl_stmt|;
 comment|/* pnp Logical device on card */
+name|int
+name|id_order
+decl_stmt|;
 block|}
 struct|;
 end_struct
