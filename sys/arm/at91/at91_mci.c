@@ -798,7 +798,7 @@ literal|0
 argument_list|,
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-name|US_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR
 argument_list|,
 name|NULL
 argument_list|,

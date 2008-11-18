@@ -1302,7 +1302,9 @@ name|bus_dma_tag_create
 argument_list|(
 name|bus_get_dma_tag
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|sc_dev
 argument_list|)
 argument_list|,
 literal|1
