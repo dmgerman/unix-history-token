@@ -20,25 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<assert.h>
 end_include
 
 begin_include
@@ -50,19 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
 end_include
 
 begin_include
@@ -80,19 +62,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
