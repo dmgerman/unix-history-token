@@ -2501,7 +2501,7 @@ name|tn
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|n
+name|tn
 argument_list|)
 argument_list|,
 name|CRON_TAB
