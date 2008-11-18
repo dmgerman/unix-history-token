@@ -165,25 +165,6 @@ name|ERR
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|mkprint
-parameter_list|(
-specifier|register
-name|char
-modifier|*
-parameter_list|,
-specifier|register
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-specifier|register
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|strcmp_until
@@ -1921,6 +1902,7 @@ comment|/* warning:  *	heavily ascii-dependent.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mkprint
 parameter_list|(
