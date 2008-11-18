@@ -1207,12 +1207,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IN_ACCESS
-expr_stmt|;
 name|imp
 operator|=
 name|ip

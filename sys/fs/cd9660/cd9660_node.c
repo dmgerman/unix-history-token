@@ -173,12 +173,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|i_flag
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * If we are done with the inode, reclaim it 	 * so that it can be reused immediately. 	 */
 if|if
 condition|(
