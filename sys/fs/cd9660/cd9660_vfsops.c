@@ -2444,12 +2444,6 @@ name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|mntflushbuf(mp, 0); 	if (mntinvalbuf(mp)) 		return EBUSY;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
