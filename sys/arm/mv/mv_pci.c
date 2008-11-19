@@ -1839,6 +1839,7 @@ name|sc_res
 operator|==
 name|NULL
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|parent
@@ -1846,6 +1847,8 @@ argument_list|,
 literal|"Could not map pcib memory\n"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|sc
 operator|->
 name|sc_bst
