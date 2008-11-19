@@ -1115,6 +1115,15 @@ name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|so
+operator|->
+name|so_fibnum
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|control
