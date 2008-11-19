@@ -75,7 +75,7 @@ argument_list|(
 name|LOADER_CD9660_SUPPORT
 argument_list|)
 operator|&
-name|uboot_disk
+name|uboot_storage
 block|,
 endif|#
 directive|endif

@@ -1968,7 +1968,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|ub_stor_type
