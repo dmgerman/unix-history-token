@@ -1403,135 +1403,170 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_1
+name|SPA_VERSION_1
 value|1ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_2
+name|SPA_VERSION_2
 value|2ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_3
+name|SPA_VERSION_3
 value|3ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_4
+name|SPA_VERSION_4
 value|4ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_5
+name|SPA_VERSION_5
 value|5ULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_6
+name|SPA_VERSION_6
 value|6ULL
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_7
+value|7ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_8
+value|8ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_9
+value|9ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_10
+value|10ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_11
+value|11ULL
+end_define
+
 begin_comment
-comment|/*  * When bumping up ZFS_VERSION, make sure GRUB ZFS understand the on-disk  * format change. Go to usr/src/grub/grub-0.95/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  */
+comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understand the on-disk  * format change. Go to usr/src/grub/grub-0.95/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION
-value|ZFS_VERSION_6
+name|SPA_VERSION
+value|SPA_VERSION_11
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_STRING
-value|"6"
+name|SPA_VERSION_STRING
+value|"11"
 end_define
 
 begin_comment
-comment|/*  * Symbolic names for the changes that caused a ZFS_VERSION switch.  * Used in the code when checking for presence or absence of a feature.  * Feel free to define multiple symbolic names for each version if there  * were multiple changes to on-disk structures during that version.  *  * NOTE: When checking the current ZFS_VERSION in your code, be sure  *       to use spa_version() since it reports the version of the  *       last synced uberblock.  Checking the in-flight version can  *       be dangerous in some cases.  */
+comment|/*  * Symbolic names for the changes that caused a SPA_VERSION switch.  * Used in the code when checking for presence or absence of a feature.  * Feel free to define multiple symbolic names for each version if there  * were multiple changes to on-disk structures during that version.  *  * NOTE: When checking the current SPA_VERSION in your code, be sure  *       to use spa_version() since it reports the version of the  *       last synced uberblock.  Checking the in-flight version can  *       be dangerous in some cases.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_INITIAL
-value|ZFS_VERSION_1
+name|SPA_VERSION_INITIAL
+value|SPA_VERSION_1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_DITTO_BLOCKS
-value|ZFS_VERSION_2
+name|SPA_VERSION_DITTO_BLOCKS
+value|SPA_VERSION_2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_SPARES
-value|ZFS_VERSION_3
+name|SPA_VERSION_SPARES
+value|SPA_VERSION_3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_RAID6
-value|ZFS_VERSION_3
+name|SPA_VERSION_RAID6
+value|SPA_VERSION_3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_BPLIST_ACCOUNT
-value|ZFS_VERSION_3
+name|SPA_VERSION_BPLIST_ACCOUNT
+value|SPA_VERSION_3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_RAIDZ_DEFLATE
-value|ZFS_VERSION_3
+name|SPA_VERSION_RAIDZ_DEFLATE
+value|SPA_VERSION_3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_DNODE_BYTES
-value|ZFS_VERSION_3
+name|SPA_VERSION_DNODE_BYTES
+value|SPA_VERSION_3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_ZPOOL_HISTORY
-value|ZFS_VERSION_4
+name|SPA_VERSION_ZPOOL_HISTORY
+value|SPA_VERSION_4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_GZIP_COMPRESSION
-value|ZFS_VERSION_5
+name|SPA_VERSION_GZIP_COMPRESSION
+value|SPA_VERSION_5
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFS_VERSION_BOOTFS
-value|ZFS_VERSION_6
+name|SPA_VERSION_BOOTFS
+value|SPA_VERSION_6
 end_define
 
 begin_comment
@@ -2000,7 +2035,7 @@ comment|/* UBERBLOCK_MAGIC		*/
 name|uint64_t
 name|ub_version
 decl_stmt|;
-comment|/* ZFS_VERSION			*/
+comment|/* SPA_VERSION			*/
 name|uint64_t
 name|ub_txg
 decl_stmt|;

@@ -854,7 +854,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: unsupported compression algorithm %d\n"
+literal|"ZFS: unsupported compression algorithm %u\n"
 argument_list|,
 name|cpfunc
 argument_list|)

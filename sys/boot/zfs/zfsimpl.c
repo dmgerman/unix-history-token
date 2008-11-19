@@ -2942,18 +2942,23 @@ block|}
 if|if
 condition|(
 name|val
-operator|!=
-name|ZFS_VERSION
+operator|>
+name|SPA_VERSION
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS: unsupported ZFS version %d\n"
+literal|"ZFS: unsupported ZFS version %u (should be %u)\n"
 argument_list|,
 operator|(
-name|int
+name|unsigned
 operator|)
 name|val
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|SPA_VERSION
 argument_list|)
 expr_stmt|;
 return|return
