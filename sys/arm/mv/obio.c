@@ -432,6 +432,8 @@ operator|+
 name|od
 operator|->
 name|od_size
+operator|-
+literal|1
 argument_list|,
 name|od
 operator|->
