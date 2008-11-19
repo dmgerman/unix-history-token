@@ -280,6 +280,15 @@ argument_list|,
 name|HPET_CONFIG
 argument_list|)
 expr_stmt|;
+name|val
+operator|&=
+operator|~
+name|HPET_CNF_LEG_RT
+expr_stmt|;
+name|val
+operator||=
+name|HPET_CNF_ENABLE
+expr_stmt|;
 name|bus_write_4
 argument_list|(
 name|sc
@@ -289,8 +298,6 @@ argument_list|,
 name|HPET_CONFIG
 argument_list|,
 name|val
-operator||
-name|HPET_CNF_ENABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -321,6 +328,11 @@ argument_list|,
 name|HPET_CONFIG
 argument_list|)
 expr_stmt|;
+name|val
+operator|&=
+operator|~
+name|HPET_CNF_ENABLE
+expr_stmt|;
 name|bus_write_4
 argument_list|(
 name|sc
@@ -330,9 +342,6 @@ argument_list|,
 name|HPET_CONFIG
 argument_list|,
 name|val
-operator|&
-operator|~
-name|HPET_CNF_ENABLE
 argument_list|)
 expr_stmt|;
 block|}
