@@ -1644,7 +1644,7 @@ argument_list|(
 operator|&
 name|dcons_callout
 argument_list|,
-literal|0
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|polltime
