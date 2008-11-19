@@ -1447,128 +1447,41 @@ begin_comment
 comment|/*  * Internet configuration info  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPV6FORWARDING
-end_ifndef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GATEWAY6
+name|VIMAGE_GLOBALS
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPV6FORWARDING
-value|1
-end_define
-
-begin_comment
-comment|/* forward IP6 packets not for us */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IPV6FORWARDING
-value|0
-end_define
-
-begin_comment
-comment|/* don't forward IP6 packets not for us */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GATEWAY6 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !IPV6FORWARDING */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPV6_SENDREDIRECTS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IPV6_SENDREDIRECTS
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
 name|ip6_forwarding
-init|=
-name|IPV6FORWARDING
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* act as router? */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ip6_sendredirects
-init|=
-name|IPV6_SENDREDIRECTS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_defhlim
-init|=
-name|IPV6_DEFHLIM
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_defmcasthlim
-init|=
-name|IPV6_DEFAULT_MULTICAST_HOPS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_accept_rtadv
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* "IPV6FORWARDING ? 0 : 1" is dangerous */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -1576,142 +1489,81 @@ name|ip6_maxfragpackets
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* initialized in frag6.c:frag6_init() */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ip6_maxfrags
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* initialized in frag6.c:frag6_init() */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ip6_log_interval
-init|=
-literal|5
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_hdrnestlimit
-init|=
-literal|15
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* How many header options will we process? */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ip6_dad_count
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* DupAddrDetectionTransmits */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ip6_auto_flowlabel
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ip6_gif_hlim
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_use_deprecated
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* allow deprecated addr (RFC2462 5.5.4) */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ip6_rr_prune
-init|=
-literal|5
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* router renumbering prefix 				 * walk list every 5 sec. */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ip6_mcast_pmtu
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* enable pMTU discovery for multicast? */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ip6_v6only
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_keepfaith
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|time_t
 name|ip6_log_time
-init|=
-operator|(
-name|time_t
-operator|)
-literal|0L
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSTEALTH
-end_ifdef
 
 begin_decl_stmt
 name|int
 name|ip6stealth
-init|=
-literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nd6_onlink_ns_rfc4861
 decl_stmt|;
 end_decl_stmt
 
@@ -1720,17 +1572,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|int
-name|nd6_onlink_ns_rfc4861
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* allow 'on-link' nd6 NS (as in RFC 4861) */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_comment
 comment|/* icmp6 */
@@ -1743,20 +1589,12 @@ end_comment
 begin_decl_stmt
 name|int
 name|pmtu_expire
-init|=
-literal|60
-operator|*
-literal|10
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|pmtu_probe
-init|=
-literal|60
-operator|*
-literal|2
 decl_stmt|;
 end_decl_stmt
 
@@ -1768,33 +1606,15 @@ begin_comment
 comment|/*  * Nominal space allocated to a raw ip socket.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RIPV6SNDQ
-value|8192
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIPV6RCVQ
-value|8192
-end_define
-
 begin_decl_stmt
 name|u_long
 name|rip6_sendspace
-init|=
-name|RIPV6SNDQ
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_long
 name|rip6_recvspace
-init|=
-name|RIPV6RCVQ
 decl_stmt|;
 end_decl_stmt
 
@@ -1805,40 +1625,20 @@ end_comment
 begin_decl_stmt
 name|int
 name|icmp6_rediraccept
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* accept and process redirects */
-end_comment
 
 begin_decl_stmt
 name|int
 name|icmp6_redirtimeout
-init|=
-literal|10
-operator|*
-literal|60
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 10 minutes */
-end_comment
 
 begin_decl_stmt
 name|int
 name|icmp6errppslim
-init|=
-literal|100
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 100pps */
-end_comment
 
 begin_comment
 comment|/* control how to respond to NI queries */
@@ -1847,12 +1647,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|icmp6_nodeinfo
-init|=
-operator|(
-name|ICMP6_NODEINFO_FQDNOK
-operator||
-name|ICMP6_NODEINFO_NODEADDROK
-operator|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1863,35 +1657,22 @@ end_comment
 begin_decl_stmt
 name|int
 name|udp6_sendspace
-init|=
-literal|9216
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* really max datagram size */
-end_comment
 
 begin_decl_stmt
 name|int
 name|udp6_recvspace
-init|=
-literal|40
-operator|*
-operator|(
-literal|1024
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in6
-argument_list|)
-operator|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* 40 1K datagrams */
+comment|/* VIMAGE_GLOBALS */
 end_comment
 
 begin_comment

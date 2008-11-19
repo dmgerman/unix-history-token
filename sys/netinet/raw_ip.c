@@ -230,6 +230,12 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|inpcbhead
@@ -243,6 +249,11 @@ name|inpcbinfo
 name|ripcbinfo
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* control hooks for ipfw and dummynet */
@@ -274,6 +285,12 @@ begin_comment
 comment|/*  * The socket used to communicate with the multicast routing daemon.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|socket
@@ -281,6 +298,11 @@ modifier|*
 name|ip_mrouter
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The various mrouter and rsvp functions.  */

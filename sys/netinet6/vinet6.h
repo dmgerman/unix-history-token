@@ -272,6 +272,9 @@ name|time_t
 name|_ip6_log_time
 decl_stmt|;
 name|int
+name|_nd6_onlink_ns_rfc4861
+decl_stmt|;
+name|int
 name|_pmtu_expire
 decl_stmt|;
 name|int
@@ -890,6 +893,13 @@ define|#
 directive|define
 name|V_nd6_mmaxtries
 value|VNET_INET6(nd6_mmaxtries)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_nd6_onlink_ns_rfc4861
+value|VNET_INET6(nd6_onlink_ns_rfc4861)
 end_define
 
 begin_define

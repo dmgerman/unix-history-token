@@ -253,6 +253,12 @@ begin_comment
 comment|/*  * These fields all protected by ip6qlock.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|u_int
@@ -278,6 +284,11 @@ end_decl_stmt
 begin_comment
 comment|/* ip6 reassemble queue */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -242,12 +242,23 @@ directive|include
 file|<netinet6/ip6protosw.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|route_in6
 name|ip6_forward_rt
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Forward a packet.  If some error occurs return the sender  * an icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repertoire  * of codes and types.  *  * If not forwarding, just drop the packet.  This could be confusing  * if ipforwarding was zero but some routing protocol was advancing  * us as a gateway to somewhere.  However, we must let the routing  * protocol deal with that.  *  */

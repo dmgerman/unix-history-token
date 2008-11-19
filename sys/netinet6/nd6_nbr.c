@@ -351,31 +351,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
-specifier|static
 name|int
 name|dad_ignore_ns
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* ignore NS in DAD - specwise incorrect*/
-end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|dad_maxtry
-init|=
-literal|15
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* max # of *tries* to transmit DAD packet */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Input a Neighbor Solicitation Message.  *  * Based on RFC 2461  * Based on RFC 2462 (duplicate address detection)  */
@@ -4802,6 +4799,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -4811,13 +4814,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|dad_init
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

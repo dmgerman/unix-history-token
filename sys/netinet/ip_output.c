@@ -261,11 +261,22 @@ parameter_list|)
 value|printf("%s %d.%d.%d.%d%s",\ 				x, (ntohl(a.s_addr)>>24)&0xFF,\ 				  (ntohl(a.s_addr)>>16)&0xFF,\ 				  (ntohl(a.s_addr)>>8)&0xFF,\ 				  (ntohl(a.s_addr))&0xFF, y);
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|u_short
 name|ip_id
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

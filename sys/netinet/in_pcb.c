@@ -268,6 +268,12 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_comment
 comment|/*  * These configure the range of local port addresses assigned to  * "unspecified" outgoing connections/packets/whatever.  */
 end_comment
@@ -275,76 +281,38 @@ end_comment
 begin_decl_stmt
 name|int
 name|ipport_lowfirstauto
-init|=
-name|IPPORT_RESERVED
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 1023 */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_lowlastauto
-init|=
-name|IPPORT_RESERVEDSTART
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 600 */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_firstauto
-init|=
-name|IPPORT_EPHEMERALFIRST
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 10000 */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_lastauto
-init|=
-name|IPPORT_EPHEMERALLAST
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 65535 */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_hifirstauto
-init|=
-name|IPPORT_HIFIRSTAUTO
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 49152 */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_hilastauto
-init|=
-name|IPPORT_HILASTAUTO
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 65535 */
-end_comment
 
 begin_comment
 comment|/*  * Reserved ports accessible only to root. There are significant  * security considerations that must be accounted for when changing these,  * but the security benefits can be great. Please be careful.  */
@@ -353,22 +321,12 @@ end_comment
 begin_decl_stmt
 name|int
 name|ipport_reservedhigh
-init|=
-name|IPPORT_RESERVED
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 1023 */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_reservedlow
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -379,50 +337,26 @@ end_comment
 begin_decl_stmt
 name|int
 name|ipport_randomized
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* user controlled via sysctl */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_randomcps
-init|=
-literal|10
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* user controlled via sysctl */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_randomtime
-init|=
-literal|45
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* user controlled via sysctl */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_stoprandom
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* toggled by ipport_tick */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -435,6 +369,11 @@ name|int
 name|ipport_tcplastcount
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

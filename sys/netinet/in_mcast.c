@@ -240,6 +240,12 @@ begin_comment
 comment|/*  * The IPv4 multicast list (in_multihead and associated structures) are  * protected by the global in_multi_mtx.  See in_var.h for more details.  For  * now, in_multi_mtx is marked as recursible due to IGMP's calling back into  * ip_output() to send IGMP packets while holding the lock; this probably is  * not quite desirable.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|in_multihead
@@ -250,6 +256,11 @@ end_decl_stmt
 begin_comment
 comment|/* XXX BSS initialization */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct

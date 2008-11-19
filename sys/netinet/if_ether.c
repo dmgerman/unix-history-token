@@ -250,22 +250,52 @@ begin_comment
 comment|/* timer values */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|arpt_keep
-init|=
-operator|(
-literal|20
-operator|*
-literal|60
-operator|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* once resolved, good for 20 more minutes */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|arp_maxtries
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|useloopback
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use loopback interface for local traffic */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|arp_proxyall
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -331,37 +361,6 @@ specifier|static
 name|struct
 name|ifqueue
 name|arpintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|arp_maxtries
-init|=
-literal|5
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|useloopback
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* use loopback interface for local traffic */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|arp_proxyall
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -5118,6 +5117,33 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|V_arpt_keep
+operator|=
+operator|(
+literal|20
+operator|*
+literal|60
+operator|)
+expr_stmt|;
+comment|/* once resolved, good for 20 more minutes */
+name|V_arp_maxtries
+operator|=
+literal|5
+expr_stmt|;
+name|V_useloopback
+operator|=
+literal|1
+expr_stmt|;
+comment|/* use loopback interface for local traffic */
+name|V_arp_proxyall
+operator|=
+literal|0
+expr_stmt|;
 name|arpintrq
 operator|.
 name|ifq_maxlen

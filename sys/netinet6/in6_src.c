@@ -343,6 +343,12 @@ name|ADDR_LABEL_NOTAPP
 value|(-1)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|in6_addrpolicy
@@ -353,10 +359,13 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ip6_prefer_tempaddr
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3561,6 +3570,10 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
+name|V_ip6_prefer_tempaddr
+operator|=
+literal|0
+expr_stmt|;
 name|init_policy_queue
 argument_list|()
 expr_stmt|;
@@ -3947,12 +3960,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|addrsel_policyhead
 name|addrsel_policytab
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

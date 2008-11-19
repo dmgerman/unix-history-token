@@ -376,19 +376,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|ifnet
 modifier|*
 name|loif
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Used externally */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|IFC_SIMPLE_DECLARE
@@ -592,6 +601,10 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|V_loif
+operator|=
+name|NULL
+expr_stmt|;
 name|if_clone_attach
 argument_list|(
 operator|&

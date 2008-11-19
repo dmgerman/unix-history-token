@@ -214,29 +214,23 @@ define|\
 value|((sav->flags& SADB_X_EXT_OLD) ? 16 : AH_HMAC_HASHLEN)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|ah_enable
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* control flow of packets with AH */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ah_cleartos
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* clear ip_tos when doing AH calc */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -244,6 +238,11 @@ name|ahstat
 name|ahstat
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -5551,6 +5550,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|V_ah_enable
+operator|=
+literal|1
+expr_stmt|;
+comment|/* control flow of packets with AH */
+name|V_ah_cleartos
+operator|=
+literal|1
+expr_stmt|;
+comment|/* clear ip_tos when doing AH calc */
 name|xform_register
 argument_list|(
 operator|&

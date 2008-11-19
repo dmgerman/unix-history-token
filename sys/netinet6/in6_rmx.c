@@ -650,20 +650,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|rtq_reallyold6
-init|=
-literal|60
-operator|*
-literal|60
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* one hour is ``really old'' */
-end_comment
+begin_decl_stmt
+specifier|static
+name|int
+name|rtq_minreallyold6
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rtq_toomany6
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -686,19 +703,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|rtq_minreallyold6
-init|=
-literal|10
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* never automatically crank down to less */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -719,19 +723,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|rtq_toomany6
-init|=
-literal|128
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 128 cached routes is ``too many'' */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1122,12 +1113,16 @@ begin_comment
 comment|/* run no less than once every ten minutes */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|rtq_timeout6
-init|=
-name|RTQ_TIMEOUT
 decl_stmt|;
 end_decl_stmt
 
@@ -1138,6 +1133,11 @@ name|callout
 name|rtq_timer6
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1419,6 +1419,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1426,6 +1432,11 @@ name|callout
 name|rtq_mtutimer
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1773,6 +1784,27 @@ return|return
 literal|1
 return|;
 comment|/* only do the rest for the real thing */
+name|V_rtq_reallyold6
+operator|=
+literal|60
+operator|*
+literal|60
+expr_stmt|;
+comment|/* one hour is ``really old'' */
+name|V_rtq_minreallyold6
+operator|=
+literal|10
+expr_stmt|;
+comment|/* never automatically crank down to less */
+name|V_rtq_toomany6
+operator|=
+literal|128
+expr_stmt|;
+comment|/* 128 cached routes is ``too many'' */
+name|V_rtq_timeout6
+operator|=
+name|RTQ_TIMEOUT
+expr_stmt|;
 name|rnh
 operator|=
 operator|*

@@ -197,6 +197,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -204,6 +210,18 @@ name|key_cb
 name|key_cb
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pfkeystat
+name|pfkeystat
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -237,13 +255,6 @@ operator|,
 name|int
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pfkeystat
-name|pfkeystat
 decl_stmt|;
 end_decl_stmt
 
@@ -2352,6 +2363,9 @@ argument_list|(
 name|V_key_cb
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ipsec_init
+argument_list|()
 expr_stmt|;
 name|key_init
 argument_list|()

@@ -398,6 +398,12 @@ name|nd6_recalc_reachtm_interval
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -416,8 +422,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ip6_use_tempaddr
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -430,30 +434,25 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int32_t
 name|ip6_temp_preferred_lifetime
-init|=
-name|DEF_TEMP_PREFERRED_LIFETIME
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int32_t
 name|ip6_temp_valid_lifetime
-init|=
-name|DEF_TEMP_VALID_LIFETIME
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * shorter lifetimes for debugging purposes. int ip6_temp_preferred_lifetime = 800; static int ip6_temp_valid_lifetime = 1800; */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ip6_temp_regen_advance
-init|=
-name|TEMPADDR_REGEN_ADVANCE
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* RTPREF_MEDIUM has to be 0! */

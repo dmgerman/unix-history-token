@@ -241,14 +241,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|subnetsarelocal
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sameprefixcarponly
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inpcbinfo
+name|ripcbinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inpcbinfo
+name|udbinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -274,15 +306,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|sameprefixcarponly
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -306,22 +329,6 @@ literal|"Refuse to create same prefixes on different interfaces"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|inpcbinfo
-name|ripcbinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|inpcbinfo
-name|udbinfo
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection).  If subnetsarelocal  * is true, this includes other subnets of the local net.  * Otherwise, it includes only the directly-connected (sub)nets.  */

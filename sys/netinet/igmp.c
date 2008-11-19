@@ -198,6 +198,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -205,6 +211,11 @@ name|igmpstat
 name|igmpstat
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_STRUCT
@@ -234,13 +245,11 @@ begin_comment
 comment|/*  * igmp_mtx protects all mutable global variables in igmp.c, as well as the  * data fields in struct router_info.  In general, a router_info structure  * will be valid as long as the referencing struct in_multi is valid, so no  * reference counting is used.  We allow unlocked reads of router_info data  * when accessed via an in_multi read-only.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|igmp_mtx
-decl_stmt|;
-end_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_expr_stmt
 specifier|static
@@ -252,6 +261,19 @@ argument_list|)
 name|router_info_head
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|igmp_mtx
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

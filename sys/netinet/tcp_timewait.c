@@ -354,6 +354,12 @@ begin_comment
 comment|/*  * The timed wait queue contains references to each of the TCP sessions  * currently in the TIME_WAIT state.  The queue pointers, including the  * queue pointers in each tcptw structure, are protected using the global  * tcbinfo lock, which must be held over queue iteration and modification.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_expr_stmt
 specifier|static
 name|TAILQ_HEAD
@@ -364,6 +370,17 @@ argument_list|)
 name|twq_2msl
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|nolocaltimewait
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -562,15 +579,6 @@ literal|"Maximum number of compressed TCP TIME_WAIT entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nolocaltimewait
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

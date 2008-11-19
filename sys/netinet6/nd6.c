@@ -269,87 +269,47 @@ parameter_list|)
 value|((struct sockaddr_dl *)s)
 end_define
 
-begin_comment
-comment|/* timer values */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 name|int
 name|nd6_prune
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* walk list every 1 seconds */
-end_comment
 
 begin_decl_stmt
 name|int
 name|nd6_delay
-init|=
-literal|5
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* delay first probe time 5 second */
-end_comment
 
 begin_decl_stmt
 name|int
 name|nd6_umaxtries
-init|=
-literal|3
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* maximum unicast query */
-end_comment
 
 begin_decl_stmt
 name|int
 name|nd6_mmaxtries
-init|=
-literal|3
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* maximum multicast query */
-end_comment
 
 begin_decl_stmt
 name|int
 name|nd6_useloopback
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* use loopback interface for local traffic */
-end_comment
 
 begin_decl_stmt
 name|int
 name|nd6_gctimer
-init|=
-operator|(
-literal|60
-operator|*
-literal|60
-operator|*
-literal|24
-operator|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 1 day: garbage collection timer */
-end_comment
 
 begin_comment
 comment|/* preventing too many loops in ND option parsing */
@@ -358,70 +318,26 @@ end_comment
 begin_decl_stmt
 name|int
 name|nd6_maxndopt
-init|=
-literal|10
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* max # of ND options allowed */
-end_comment
 
 begin_decl_stmt
 name|int
 name|nd6_maxnudhint
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* max # of subsequent upper layer hints */
-end_comment
 
 begin_decl_stmt
 name|int
 name|nd6_maxqueuelen
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* max # of packets cached in unresolved ND entries */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ND6_DEBUG
-end_ifdef
 
 begin_decl_stmt
 name|int
 name|nd6_debug
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|nd6_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* for debugging? */
@@ -440,14 +356,6 @@ begin_decl_stmt
 name|struct
 name|llinfo_nd6
 name|llinfo_nd6
-init|=
-block|{
-operator|&
-name|llinfo_nd6
-block|,
-operator|&
-name|llinfo_nd6
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -462,20 +370,23 @@ begin_decl_stmt
 name|struct
 name|nd_prhead
 name|nd_prefix
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|nd6_recalc_reachtm_interval
-init|=
-name|ND6_RECALC_REACHTM_INTERVAL
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -582,6 +493,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|callout
@@ -603,6 +520,25 @@ name|callout
 name|in6_tmpaddrtimer_ch
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dad_ignore_ns
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dad_maxtry
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -639,6 +575,123 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|V_nd6_prune
+operator|=
+literal|1
+expr_stmt|;
+comment|/* walk list every 1 seconds */
+name|V_nd6_delay
+operator|=
+literal|5
+expr_stmt|;
+comment|/* delay first probe time 5 second */
+name|V_nd6_umaxtries
+operator|=
+literal|3
+expr_stmt|;
+comment|/* maximum unicast query */
+name|V_nd6_mmaxtries
+operator|=
+literal|3
+expr_stmt|;
+comment|/* maximum multicast query */
+name|V_nd6_useloopback
+operator|=
+literal|1
+expr_stmt|;
+comment|/* use loopback interface for local traffic */
+name|V_nd6_gctimer
+operator|=
+operator|(
+literal|60
+operator|*
+literal|60
+operator|*
+literal|24
+operator|)
+expr_stmt|;
+comment|/* 1 day: garbage collection timer */
+comment|/* preventing too many loops in ND option parsing */
+name|V_nd6_maxndopt
+operator|=
+literal|10
+expr_stmt|;
+comment|/* max # of ND options allowed */
+name|V_nd6_maxnudhint
+operator|=
+literal|0
+expr_stmt|;
+comment|/* max # of subsequent upper layer hints */
+name|V_nd6_maxqueuelen
+operator|=
+literal|1
+expr_stmt|;
+comment|/* max pkts cached in unresolved ND entries */
+ifdef|#
+directive|ifdef
+name|ND6_DEBUG
+name|V_nd6_debug
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+name|V_nd6_debug
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+name|V_nd6_recalc_reachtm_interval
+operator|=
+name|ND6_RECALC_REACHTM_INTERVAL
+expr_stmt|;
+name|V_dad_ignore_ns
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ignore NS in DAD - specwise incorrect*/
+name|V_dad_maxtry
+operator|=
+literal|15
+expr_stmt|;
+comment|/* max # of *tries* to transmit DAD packet */
+name|V_llinfo_nd6
+operator|.
+name|ln_next
+operator|=
+operator|&
+name|V_llinfo_nd6
+expr_stmt|;
+name|V_llinfo_nd6
+operator|.
+name|ln_prev
+operator|=
+operator|&
+name|V_llinfo_nd6
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|V_nd_prefix
+argument_list|)
+expr_stmt|;
+name|ip6_use_tempaddr
+operator|=
+literal|0
+expr_stmt|;
+name|ip6_temp_preferred_lifetime
+operator|=
+name|DEF_TEMP_PREFERRED_LIFETIME
+expr_stmt|;
+name|ip6_temp_valid_lifetime
+operator|=
+name|DEF_TEMP_VALID_LIFETIME
+expr_stmt|;
+name|ip6_temp_regen_advance
+operator|=
+name|TEMPADDR_REGEN_ADVANCE
+expr_stmt|;
 name|all1_sa
 operator|.
 name|sin6_family

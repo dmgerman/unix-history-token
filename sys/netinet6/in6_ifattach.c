@@ -167,50 +167,24 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|unsigned
 name|long
 name|in6_maxmtu
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IP6_AUTO_LINKLOCAL
-end_ifdef
 
 begin_decl_stmt
 name|int
 name|ip6_auto_linklocal
-init|=
-name|IP6_AUTO_LINKLOCAL
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|ip6_auto_linklocal
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* enable by default */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -218,6 +192,11 @@ name|callout
 name|in6_tmpaddrtimer_ch
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

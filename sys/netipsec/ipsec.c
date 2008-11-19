@@ -337,34 +337,8 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC_DEBUG
+name|VIMAGE_GLOBALS
 end_ifdef
-
-begin_decl_stmt
-name|int
-name|ipsec_debug
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|ipsec_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* NB: name changed so netstat doesn't use it */
@@ -378,62 +352,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|ip4_ah_offsetmask
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maybe IP_DF? */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ip4_ipsec_dfbit
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* DF bit on encap. 0: clear 1: set 2: copy */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ip4_esp_trans_deflev
-init|=
-name|IPSEC_LEVEL_USE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ip4_esp_net_deflev
-init|=
-name|IPSEC_LEVEL_USE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ip4_ah_trans_deflev
-init|=
-name|IPSEC_LEVEL_USE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ip4_ah_net_deflev
-init|=
-name|IPSEC_LEVEL_USE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|secpolicy
 name|ip4_def_policy
@@ -442,22 +360,55 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ip4_ipsec_ecn
-init|=
-literal|0
+name|ipsec_debug
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* ECN ignore(-1)/forbidden(0)/allowed(1) */
-end_comment
+begin_decl_stmt
+name|int
+name|ip4_ah_offsetmask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip4_ipsec_dfbit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip4_esp_trans_deflev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip4_esp_net_deflev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip4_ah_trans_deflev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip4_ah_net_deflev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip4_ipsec_ecn
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip4_esp_randpad
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -468,12 +419,17 @@ end_comment
 begin_decl_stmt
 name|int
 name|crypto_support
-init|=
-name|CRYPTOCAP_F_HARDWARE
-operator||
-name|CRYPTOCAP_F_SOFTWARE
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -783,17 +739,32 @@ directive|ifdef
 name|REGRESSION
 end_ifdef
 
-begin_comment
-comment|/*  * When set to 1, IPsec will send packets with the same sequence number.  * This allows to verify if the other side has proper replay attacks detection.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 name|int
 name|ipsec_replay
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ipsec_integrity
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * When set to 1, IPsec will send packets with the same sequence number.  * This allows to verify if the other side has proper replay attacks detection.  */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -822,14 +793,6 @@ end_expr_stmt
 begin_comment
 comment|/*  * When set 1, IPsec will send packets with corrupted HMAC.  * This allows to verify if the other side properly detects modified packets.  */
 end_comment
-
-begin_decl_stmt
-name|int
-name|ipsec_integrity
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -866,6 +829,12 @@ directive|ifdef
 name|INET6
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|ipsecstat
@@ -876,46 +845,37 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ip6_esp_trans_deflev
-init|=
-name|IPSEC_LEVEL_USE
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_esp_net_deflev
-init|=
-name|IPSEC_LEVEL_USE
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_ah_trans_deflev
-init|=
-name|IPSEC_LEVEL_USE
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_ah_net_deflev
-init|=
-name|IPSEC_LEVEL_USE
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ip6_ipsec_ecn
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* ECN ignore(-1)/forbidden(0)/allowed(1) */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -1467,6 +1427,112 @@ literal|"inpcb-resident ipsec policy"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|void
+name|ipsec_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC_DEBUG
+name|V_ipsec_debug
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+name|V_ipsec_debug
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+name|V_ip4_ah_offsetmask
+operator|=
+literal|0
+expr_stmt|;
+comment|/* maybe IP_DF? */
+name|V_ip4_ipsec_dfbit
+operator|=
+literal|0
+expr_stmt|;
+comment|/* DF bit on encap. 0: clear 1: set 2: copy */
+name|V_ip4_esp_trans_deflev
+operator|=
+name|IPSEC_LEVEL_USE
+expr_stmt|;
+name|V_ip4_esp_net_deflev
+operator|=
+name|IPSEC_LEVEL_USE
+expr_stmt|;
+name|V_ip4_ah_trans_deflev
+operator|=
+name|IPSEC_LEVEL_USE
+expr_stmt|;
+name|V_ip4_ah_net_deflev
+operator|=
+name|IPSEC_LEVEL_USE
+expr_stmt|;
+name|V_ip4_ipsec_ecn
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ECN ignore(-1)/forbidden(0)/allowed(1) */
+name|V_ip4_esp_randpad
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|V_crypto_support
+operator|=
+name|CRYPTOCAP_F_HARDWARE
+operator||
+name|CRYPTOCAP_F_SOFTWARE
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|REGRESSION
+name|V_ipsec_replay
+operator|=
+literal|0
+expr_stmt|;
+name|V_ipsec_integrity
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+name|V_ip6_esp_trans_deflev
+operator|=
+name|IPSEC_LEVEL_USE
+expr_stmt|;
+name|V_ip6_esp_net_deflev
+operator|=
+name|IPSEC_LEVEL_USE
+expr_stmt|;
+name|V_ip6_ah_trans_deflev
+operator|=
+name|IPSEC_LEVEL_USE
+expr_stmt|;
+name|V_ip6_ah_net_deflev
+operator|=
+name|IPSEC_LEVEL_USE
+expr_stmt|;
+name|V_ip6_ipsec_ecn
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ECN ignore(-1)/forbidden(0)/allowed(1) */
+block|}
+end_function
 
 begin_comment
 comment|/*  * Return a held reference to the default SP.  */

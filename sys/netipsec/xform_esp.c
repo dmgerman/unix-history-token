@@ -208,13 +208,11 @@ directive|include
 file|<opencrypto/xform.h>
 end_include
 
-begin_decl_stmt
-name|int
-name|esp_enable
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 name|struct
@@ -222,6 +220,28 @@ name|espstat
 name|espstat
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|esp_max_ivlen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max iv length over all algorithms */
+end_comment
+
+begin_decl_stmt
+name|int
+name|esp_enable
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -278,17 +298,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|esp_max_ivlen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max iv length over all algorithms */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -4788,7 +4797,11 @@ parameter_list|(
 name|xform
 parameter_list|)
 define|\
-value|if (xform.blocksize> V_esp_max_ivlen)		\ 		V_esp_max_ivlen = xform.blocksize		\  	V_esp_max_ivlen = 0;
+value|if (xform.blocksize> V_esp_max_ivlen)		\ 		V_esp_max_ivlen = xform.blocksize		\  	V_esp_enable = 1;
+name|V_esp_max_ivlen
+operator|=
+literal|0
+expr_stmt|;
 name|MAXIV
 argument_list|(
 name|enc_xform_des
