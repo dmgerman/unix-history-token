@@ -84,7 +84,7 @@ file|<arm/mv/mvvar.h>
 end_include
 
 begin_comment
-comment|/*  * Virtual address space layout:  * -----------------------------  * 0x0000_0000 - 0xbfff_ffff	: user process  *  * 0xc040_0000 - virtual_avail	: kernel reserved (text, data, page tables  *				: structures, ARM stacks etc.)  * virtual_avail - 0xefff_ffff	: KVA (virtual_avail is typically< 0xc0a0_0000)  * 0xf000_0000 - 0xf0ff_ffff	: no-cache allocation area (16MB)  * 0xf100_0000 - 0xf10f_ffff	: SoC integrated devices registers range (1MB)  * 0xf110_0000 - 0xfffe_ffff	: PCI, PCIE (MEM+IO) outbound windows (~238MB)  * 0xffff_0000 - 0xffff_0fff	: 'high' vectors page (4KB)  * 0xffff_1000 - 0xffff_1fff	: ARM_TP_ADDRESS/RAS page (4KB)  * 0xffff_2000 - 0xffff_ffff	: unused (~55KB)  */
+comment|/*  * Virtual address space layout:  * -----------------------------  * 0x0000_0000 - 0xbfff_ffff	: user process  *  * 0xc040_0000 - virtual_avail	: kernel reserved (text, data, page tables  *				: structures, ARM stacks etc.)  * virtual_avail - 0xefff_ffff	: KVA (virtual_avail is typically< 0xc0a0_0000)  * 0xf000_0000 - 0xf0ff_ffff	: no-cache allocation area (16MB)  * 0xf100_0000 - 0xf10f_ffff	: SoC integrated devices registers range (1MB)  * 0xf110_0000 - 0xf11f_ffff	: PCI-Express I/O space (1MB)  * 0xf120_0000 - 0xf12f_ffff	: PCI I/O space (1MB)  * 0xf130_0000 - 0xf52f_ffff	: PCI-Express memory space (64MB)  * 0xf530_0000 - 0xf92f_ffff	: PCI memory space (64MB)  * 0xf930_0000 - 0xfffe_ffff	: unused (~108MB)  * 0xffff_0000 - 0xffff_0fff	: 'high' vectors page (4KB)  * 0xffff_1000 - 0xffff_1fff	: ARM_TP_ADDRESS/RAS page (4KB)  * 0xffff_2000 - 0xffff_ffff	: unused (~55KB)  */
 end_comment
 
 begin_decl_stmt
@@ -101,6 +101,25 @@ name|vm_offset_t
 name|pmap_bootstrap_lastaddr
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|platform_pci_get_irq
+parameter_list|(
+name|u_int
+name|bus
+parameter_list|,
+name|u_int
+name|slot
+parameter_list|,
+name|u_int
+name|func
+parameter_list|,
+name|u_int
+name|pin
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Static device mappings. */
@@ -221,42 +240,98 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|int platform_pci_get_irq(u_int bus, u_int slot, u_int func, u_int pin) { 	int irq;  	switch (slot) { 	case 7: 		irq = GPIO2IRQ(12);
+begin_function
+name|int
+name|platform_pci_get_irq
+parameter_list|(
+name|u_int
+name|bus
+parameter_list|,
+name|u_int
+name|slot
+parameter_list|,
+name|u_int
+name|func
+parameter_list|,
+name|u_int
+name|pin
+parameter_list|)
+block|{
+name|int
+name|irq
+decl_stmt|;
+switch|switch
+condition|(
+name|slot
+condition|)
+block|{
+case|case
+literal|7
+case|:
+name|irq
+operator|=
+name|GPIO2IRQ
+argument_list|(
+literal|12
+argument_list|)
+expr_stmt|;
 comment|/* GPIO 0 for DB-88F5182  */
-end_comment
-
-begin_comment
-unit|break;
+break|break;
 comment|/* GPIO 12 for DB-88F5281 */
-end_comment
-
-begin_comment
-unit|case 8: 	case 9: 		irq = GPIO2IRQ(13);
+case|case
+literal|8
+case|:
+case|case
+literal|9
+case|:
+name|irq
+operator|=
+name|GPIO2IRQ
+argument_list|(
+literal|13
+argument_list|)
+expr_stmt|;
 comment|/* GPIO 1 for DB-88F5182  */
-end_comment
-
-begin_comment
-unit|break;
+break|break;
 comment|/* GPIO 13 for DB-88F5281 */
-end_comment
-
-begin_comment
-unit|default: 		irq = -1; 		break; 	};
+default|default:
+name|irq
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
 comment|/* 	 * XXX This isn't the right place to setup GPIO, but it makes sure 	 * that PCI works on 5XXX targets where U-Boot doesn't set up the GPIO 	 * correctly to handle PCI IRQs (e.g., on 5182). This code will go 	 * away once we set up GPIO in a generic way in a proper place (TBD). 	 */
-end_comment
-
-begin_endif
-unit|if (irq>= 0) 		mv_gpio_configure(IRQ2GPIO(irq), MV_GPIO_POLARITY | 		    MV_GPIO_LEVEL, ~0u);  	return(irq); }
-endif|#
-directive|endif
-end_endif
+if|if
+condition|(
+name|irq
+operator|>=
+literal|0
+condition|)
+name|mv_gpio_configure
+argument_list|(
+name|IRQ2GPIO
+argument_list|(
+name|irq
+argument_list|)
+argument_list|,
+name|MV_GPIO_POLARITY
+operator||
+name|MV_GPIO_LEVEL
+argument_list|,
+operator|~
+literal|0u
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|irq
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int
