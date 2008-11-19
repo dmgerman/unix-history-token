@@ -718,7 +718,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* Racy check for i_dirhash to prefetch an dirhash structure. */
+comment|/* Racy check for i_dirhash to prefetch a dirhash structure. */
 if|if
 condition|(
 name|ip
