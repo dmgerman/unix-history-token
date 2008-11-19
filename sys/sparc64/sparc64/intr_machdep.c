@@ -183,6 +183,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|pil_names
 index|[]
 init|=
@@ -217,8 +218,9 @@ literal|"stray"
 block|,
 literal|"stray"
 block|,
-literal|"stray"
+literal|"filter"
 block|,
+comment|/* PIL_FILTER */
 literal|"fast"
 block|,
 comment|/* PIL_FAST */
@@ -1423,7 +1425,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|fast
+name|filter
 decl_stmt|;
 if|if
 condition|(
@@ -1434,6 +1436,30 @@ operator|||
 name|vec
 operator|>=
 name|IV_MAX
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|/* 	 * INTR_FAST filters/handlers are special purpose only, allowing 	 * them to be shared just would complicate things unnecessarily. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|INTR_FAST
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|flags
+operator|&
+name|INTR_EXCL
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1551,11 +1577,21 @@ literal|1
 condition|)
 name|intr_setup
 argument_list|(
+operator|(
+name|flags
+operator|&
+name|INTR_FAST
+operator|)
+operator|!=
+literal|0
+condition|?
+name|PIL_FAST
+else|:
 name|filt
 operator|!=
 name|NULL
 condition|?
-name|PIL_FAST
+name|PIL_FILTER
 else|:
 name|PIL_ITHREAD
 argument_list|,
@@ -1576,8 +1612,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Check if we need to upgrade from PIL_ITHREAD to PIL_FAST. 		 * Given that apart from the on-board SCCs and UARTs shared 		 * interrupts are rather uncommon on sparc64 this sould be 		 * pretty rare in practice. 		 */
-name|fast
+comment|/* 		 * Check if we need to upgrade from PIL_ITHREAD to PIL_FILTER. 		 * Given that apart from the on-board SCCs and UARTs shared 		 * interrupts are rather uncommon on sparc64 this sould be 		 * pretty rare in practice. 		 */
+name|filter
 operator|=
 literal|0
 expr_stmt|;
@@ -1605,7 +1641,7 @@ operator|!=
 name|filt
 condition|)
 block|{
-name|fast
+name|filter
 operator|=
 literal|1
 expr_stmt|;
@@ -1614,13 +1650,13 @@ block|}
 block|}
 if|if
 condition|(
-name|fast
+name|filter
 operator|==
 literal|0
 condition|)
 name|intr_setup
 argument_list|(
-name|PIL_FAST
+name|PIL_FILTER
 argument_list|,
 name|intr_fast
 argument_list|,
