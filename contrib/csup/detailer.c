@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"globtree.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"misc.h"
 end_include
 
@@ -2103,6 +2109,12 @@ name|rsyncfile
 modifier|*
 name|rf
 decl_stmt|;
+name|wr
+operator|=
+name|d
+operator|->
+name|wr
+expr_stmt|;
 name|rf
 operator|=
 name|rsync_open
@@ -2137,12 +2149,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|wr
-operator|=
-name|d
-operator|->
-name|wr
-expr_stmt|;
 name|proto_printf
 argument_list|(
 name|wr
@@ -2172,7 +2178,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|proto_printf
 argument_list|(
 name|wr
@@ -2190,25 +2195,6 @@ name|rf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|lprintf
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"%s %s\n"
-argument_list|,
-name|rsync_rsum
-argument_list|(
-name|rf
-argument_list|)
-argument_list|,
-name|rsync_blockmd5
-argument_list|(
-name|rf
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 name|proto_printf
 argument_list|(
 name|wr
@@ -2221,6 +2207,11 @@ argument_list|(
 name|rf
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -3203,7 +3194,7 @@ name|co_options
 operator|&
 name|CO_NORSYNC
 operator|)
-operator|||
+operator|&&
 operator|!
 name|globtree_test
 argument_list|(

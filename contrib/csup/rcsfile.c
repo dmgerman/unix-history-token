@@ -3400,11 +3400,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"branches: "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -3692,6 +3687,13 @@ operator|&
 name|rf
 operator|->
 name|deltatable
+argument_list|)
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|d
+argument_list|,
+name|delta_next
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE

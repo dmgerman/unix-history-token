@@ -3645,12 +3645,6 @@ operator|(
 name|UPDATER_ERR_PROTO
 operator|)
 return|;
-name|sr
-operator|->
-name|sr_type
-operator|=
-name|SR_FILELIVE
-expr_stmt|;
 name|fup
 operator|->
 name|wantmd5
@@ -3695,6 +3689,12 @@ name|fattr_decode
 argument_list|(
 name|attr
 argument_list|)
+expr_stmt|;
+name|sr
+operator|->
+name|sr_type
+operator|=
+name|SR_FILELIVE
 expr_stmt|;
 if|if
 condition|(
@@ -10443,8 +10443,10 @@ name|d
 operator|==
 name|NULL
 condition|)
-name|err
+block|{
+name|lprintf
 argument_list|(
+operator|-
 literal|1
 argument_list|,
 literal|"Error adding delta %s\n"
@@ -10452,6 +10454,12 @@ argument_list|,
 name|revnum
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|UPDATER_ERR_READ
+operator|)
+return|;
+block|}
 while|while
 condition|(
 operator|(
@@ -11800,10 +11808,6 @@ operator|*
 name|blockstart
 operator|)
 argument_list|)
-expr_stmt|;
-name|blocknum
-operator|=
-literal|0
 expr_stmt|;
 name|error
 operator|=

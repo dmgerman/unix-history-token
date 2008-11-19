@@ -239,7 +239,7 @@ name|error
 decl_stmt|;
 name|rf
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -248,17 +248,6 @@ name|rf
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rf
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 name|error
 operator|=
 name|stat
