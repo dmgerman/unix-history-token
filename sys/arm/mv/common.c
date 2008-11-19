@@ -4056,8 +4056,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"IDMA window#%d: DDR target window is not supposed "
-literal|"to be reprogrammed!\n"
+literal|"IDMA window#%d: DDR target window is not "
+literal|"supposed to be reprogrammed!\n"
 argument_list|,
 name|i
 argument_list|)
@@ -4133,7 +4133,7 @@ literal|1
 operator|)
 condition|)
 block|{
-comment|/* XXX this boundary check should accont for 64bit and 			 * remapping.. */
+comment|/* XXX this boundary check should account for 64bit and 			 * remapping.. */
 name|printf
 argument_list|(
 literal|"IDMA window#%d: no space for size 0x%08x at "
@@ -4176,7 +4176,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"IDMA window#%d: (0x%08x - 0x%08x) overlaps with "
+literal|"IDMA window#%d: (0x%08x - 0x%08x) overlaps "
+literal|"with "
 literal|"#%d (0x%08x - 0x%08x)\n"
 argument_list|,
 name|i
