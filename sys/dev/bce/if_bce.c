@@ -11267,7 +11267,7 @@ condition|(
 name|sc
 operator|->
 name|bce_phy_flags
-operator|&&
+operator|&
 name|BCE_PHY_SERDES_FLAG
 condition|)
 block|{
