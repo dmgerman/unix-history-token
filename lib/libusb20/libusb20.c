@@ -2192,6 +2192,13 @@ operator|&
 name|dummy_callback
 expr_stmt|;
 block|}
+comment|/* set "nTransfer" early */
+name|pdev
+operator|->
+name|nTransfer
+operator|=
+name|nTransferMax
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -2263,12 +2270,6 @@ operator|->
 name|is_opened
 operator|=
 literal|1
-expr_stmt|;
-name|pdev
-operator|->
-name|nTransfer
-operator|=
-name|nTransferMax
 expr_stmt|;
 block|}
 return|return
@@ -2651,7 +2652,7 @@ modifier|*
 name|pdev
 parameter_list|,
 name|uint8_t
-name|index
+name|str_index
 parameter_list|,
 name|uint16_t
 name|langid
@@ -2720,7 +2721,7 @@ operator|<<
 literal|8
 operator|)
 operator||
-name|index
+name|str_index
 expr_stmt|;
 name|req
 operator|.
@@ -2863,7 +2864,7 @@ modifier|*
 name|pdev
 parameter_list|,
 name|uint8_t
-name|index
+name|str_index
 parameter_list|,
 name|void
 modifier|*
@@ -2924,16 +2925,6 @@ name|LIBUSB20_ERROR_INVALID_PARAM
 operator|)
 return|;
 block|}
-comment|/* 	 * Make sure that there is sensible contents in the buffer in case 	 * of an error: 	 */
-operator|*
-operator|(
-name|uint8_t
-operator|*
-operator|)
-name|ptr
-operator|=
-literal|0
-expr_stmt|;
 name|error
 operator|=
 name|libusb20_dev_req_string_sync
@@ -2958,11 +2949,23 @@ name|error
 operator|<
 literal|0
 condition|)
+block|{
+operator|*
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|ptr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* zero terminate */
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|langid
 operator|=
 name|temp
@@ -2985,7 +2988,7 @@ name|libusb20_dev_req_string_sync
 argument_list|(
 name|pdev
 argument_list|,
-name|index
+name|str_index
 argument_list|,
 name|langid
 argument_list|,
@@ -3003,11 +3006,23 @@ name|error
 operator|<
 literal|0
 condition|)
+block|{
+operator|*
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|ptr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* zero terminate */
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|temp
@@ -3019,6 +3034,16 @@ literal|2
 condition|)
 block|{
 comment|/* string length is too short */
+operator|*
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|ptr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* zero terminate */
 return|return
 operator|(
 name|LIBUSB20_ERROR_OTHER
@@ -3176,11 +3201,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
-name|buf
-operator|=
-literal|'.'
-expr_stmt|;
+comment|/* skip invalid character */
+continue|continue;
 block|}
 comment|/* 		 * Filter by default - we don't allow greater and less than 		 * signs because they might confuse the dmesg printouts! 		 */
 if|if
@@ -3209,11 +3231,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|*
-name|buf
-operator|=
-literal|'.'
-expr_stmt|;
+comment|/* skip invalid character */
+continue|continue;
 block|}
 name|buf
 operator|++
@@ -3469,7 +3488,7 @@ name|int
 name|error
 decl_stmt|;
 name|uint8_t
-name|index
+name|cfg_index
 decl_stmt|;
 name|uint8_t
 name|do_close
@@ -3531,7 +3550,7 @@ argument_list|(
 name|pdev
 argument_list|,
 operator|&
-name|index
+name|cfg_index
 argument_list|)
 expr_stmt|;
 if|if
@@ -3539,7 +3558,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|index
+name|cfg_index
 operator|=
 literal|0
 operator|-
@@ -3565,7 +3584,7 @@ block|}
 block|}
 return|return
 operator|(
-name|index
+name|cfg_index
 operator|)
 return|;
 block|}
@@ -3666,7 +3685,7 @@ name|struct
 name|pollfd
 name|pfd
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -3716,45 +3735,13 @@ name|revents
 operator|=
 literal|0
 expr_stmt|;
-name|pfd
-index|[
-literal|1
-index|]
-operator|.
-name|fd
-operator|=
-literal|0
-expr_stmt|;
-comment|/* standard input */
-name|pfd
-index|[
-literal|1
-index|]
-operator|.
-name|events
-operator|=
-operator|(
-name|POLLIN
-operator||
-name|POLLRDNORM
-operator|)
-expr_stmt|;
-name|pfd
-index|[
-literal|1
-index|]
-operator|.
-name|revents
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|poll
 argument_list|(
 name|pfd
 argument_list|,
-literal|2
+literal|1
 argument_list|,
 name|timeout
 argument_list|)
@@ -4552,7 +4539,7 @@ modifier|*
 name|pbe
 parameter_list|,
 name|uint16_t
-name|index
+name|quirk_index
 parameter_list|,
 name|struct
 name|libusb20_quirk
@@ -4572,7 +4559,7 @@ call|)
 argument_list|(
 name|pbe
 argument_list|,
-name|index
+name|quirk_index
 argument_list|,
 name|pq
 argument_list|)
@@ -4591,7 +4578,7 @@ modifier|*
 name|pbe
 parameter_list|,
 name|uint16_t
-name|index
+name|quirk_index
 parameter_list|,
 name|struct
 name|libusb20_quirk
@@ -4611,7 +4598,7 @@ call|)
 argument_list|(
 name|pbe
 argument_list|,
-name|index
+name|quirk_index
 argument_list|,
 name|pq
 argument_list|)

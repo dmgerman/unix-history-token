@@ -156,7 +156,7 @@ name|_hw_usb2_uscanner
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|uscanner
+name|debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,

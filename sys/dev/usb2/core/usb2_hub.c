@@ -231,6 +231,10 @@ name|sc_flags
 decl_stmt|;
 define|#
 directive|define
+name|UHUB_FLAG_DID_EXPLORE
+value|0x01
+define|#
+directive|define
 name|UHUB_FLAG_INTR_STALL
 value|0x02
 name|char
@@ -1927,6 +1931,28 @@ break|break;
 block|}
 if|if
 condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|UHUB_FLAG_DID_EXPLORE
+operator|)
+condition|)
+block|{
+comment|/* 			 * Fake a connect status change so that the 			 * status gets checked initially! 			 */
+name|sc
+operator|->
+name|sc_st
+operator|.
+name|port_change
+operator||=
+name|UPS_C_CONNECT_STATUS
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|sc
 operator|->
 name|sc_st
@@ -2118,6 +2144,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* initial status checked */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|UHUB_FLAG_DID_EXPLORE
+expr_stmt|;
+comment|/* return success */
 return|return
 operator|(
 name|USB_ERR_NORMAL_COMPLETION

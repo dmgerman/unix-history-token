@@ -137,6 +137,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb2/core/usb2_generic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb2/quirk/usb2_quirk.h>
 end_include
 
@@ -366,7 +372,7 @@ name|uint8_t
 name|iface_index
 parameter_list|,
 name|uint8_t
-name|free_all
+name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2587,7 +2593,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* free all FIFOs for this interface */
+comment|/* 	 * Free all generic FIFOs for this interface, except control 	 * endpoint FIFOs: 	 */
 name|usb2_fifo_free_wrap
 argument_list|(
 name|udev
@@ -7863,7 +7869,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_fifo_free_wrap  *  * The function will free the FIFOs.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_fifo_free_wrap  *  * This function will free the FIFOs.  *  * Flag values, if "iface_index" is equal to "USB_IFACE_INDEX_ANY".  * 0: Free all FIFOs except generic control endpoints.  * 1: Free all FIFOs.  *  * Flag values, if "iface_index" is not equal to "USB_IFACE_INDEX_ANY".  * Not used.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7880,18 +7886,13 @@ name|uint8_t
 name|iface_index
 parameter_list|,
 name|uint8_t
-name|free_all
+name|flag
 parameter_list|)
 block|{
 name|struct
 name|usb2_fifo
 modifier|*
 name|f
-decl_stmt|;
-name|struct
-name|usb2_pipe
-modifier|*
-name|pipe
 decl_stmt|;
 name|uint16_t
 name|i
@@ -7929,57 +7930,130 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|pipe
-operator|=
+comment|/* Check if the interface index matches */
+if|if
+condition|(
+name|iface_index
+operator|==
 name|f
 operator|->
-name|priv_sc0
+name|iface_index
+condition|)
+block|{
+if|if
+condition|(
+name|f
+operator|->
+name|methods
+operator|!=
+operator|&
+name|usb2_ugen_methods
+condition|)
+block|{
+comment|/* 				 * Don't free any non-generic FIFOs in 				 * this case. 				 */
+continue|continue;
+block|}
+if|if
+condition|(
+name|f
+operator|->
+name|dev_ep_index
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 				 * Don't free the generic control endpoint 				 * yet and make sure that any USB-FS 				 * activity is stopped! 				 */
+if|if
+condition|(
+name|ugen_fs_uninit
+argument_list|(
+name|f
+argument_list|)
+condition|)
+block|{
+comment|/* ignore any failures */
+name|DPRINTFN
+argument_list|(
+literal|10
+argument_list|,
+literal|"udev=%p ugen_fs_uninit() "
+literal|"failed! (ignored)\n"
+argument_list|,
+name|udev
+argument_list|)
 expr_stmt|;
+block|}
+continue|continue;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|iface_index
+operator|==
+name|USB_IFACE_INDEX_ANY
+condition|)
+block|{
 if|if
 condition|(
 operator|(
-name|pipe
+name|f
+operator|->
+name|methods
 operator|==
 operator|&
-name|udev
-operator|->
-name|default_pipe
+name|usb2_ugen_methods
 operator|)
 operator|&&
 operator|(
-name|free_all
+name|f
+operator|->
+name|dev_ep_index
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|flag
 operator|==
 literal|0
 operator|)
 condition|)
 block|{
-comment|/* don't free UGEN control endpoint yet */
-continue|continue;
-block|}
-comment|/* Check if the interface index matches */
+comment|/* 				 * Don't free the generic control endpoint 				 * yet, but make sure that any USB-FS 				 * activity is stopped! 				 */
 if|if
 condition|(
-operator|(
-name|iface_index
-operator|==
+name|ugen_fs_uninit
+argument_list|(
 name|f
-operator|->
-name|iface_index
-operator|)
-operator|||
-operator|(
-name|iface_index
-operator|==
-name|USB_IFACE_INDEX_ANY
-operator|)
+argument_list|)
 condition|)
 block|{
+comment|/* ignore any failures */
+name|DPRINTFN
+argument_list|(
+literal|10
+argument_list|,
+literal|"udev=%p ugen_fs_uninit() "
+literal|"failed! (ignored)\n"
+argument_list|,
+name|udev
+argument_list|)
+expr_stmt|;
+block|}
+continue|continue;
+block|}
+block|}
+else|else
+block|{
+continue|continue;
+block|}
+comment|/* free the FIFO */
 name|usb2_fifo_free
 argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return;
 block|}

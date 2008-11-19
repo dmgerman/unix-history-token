@@ -1465,24 +1465,35 @@ comment|/* original devloc */
 name|uint16_t
 name|bus_index
 decl_stmt|;
+comment|/* bus index */
 name|uint8_t
 name|dev_index
 decl_stmt|;
+comment|/* device index */
 name|uint8_t
 name|iface_index
 decl_stmt|;
+comment|/* interface index */
 name|uint8_t
-name|ep_index
+name|fifo_index
 decl_stmt|;
+comment|/* FIFO index */
 name|uint8_t
 name|is_read
 decl_stmt|;
+comment|/* set if location has read access */
 name|uint8_t
 name|is_write
 decl_stmt|;
+comment|/* set if location has write access */
 name|uint8_t
 name|is_uref
 decl_stmt|;
+comment|/* set if USB refcount decr. needed */
+name|uint8_t
+name|is_usbfs
+decl_stmt|;
+comment|/* set if USB-FS is active */
 block|}
 struct|;
 end_struct

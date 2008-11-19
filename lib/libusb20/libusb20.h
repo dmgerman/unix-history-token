@@ -352,10 +352,10 @@ modifier|*
 name|xfer
 parameter_list|,
 name|uint32_t
-name|pMaxBufSize
+name|max_buf_size
 parameter_list|,
 name|uint32_t
-name|MaxFrameCount
+name|max_frame_count
 parameter_list|,
 name|uint8_t
 name|ep_no
@@ -1409,6 +1409,14 @@ name|struct
 name|libusb20_backend
 modifier|*
 name|libusb20_be_alloc_linux
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|struct
+name|libusb20_backend
+modifier|*
+name|libusb20_be_alloc_ugen20
 parameter_list|(
 name|void
 parameter_list|)

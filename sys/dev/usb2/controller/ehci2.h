@@ -2580,6 +2580,25 @@ name|uint16_t
 name|sc_id_vendor
 decl_stmt|;
 comment|/* vendor ID for root hub */
+name|uint16_t
+name|sc_flags
+decl_stmt|;
+comment|/* chip specific flags */
+define|#
+directive|define
+name|EHCI_SCFLG_SETMODE
+value|0x0001
+comment|/* set bridge mode again after init 					 * (Marvell) */
+define|#
+directive|define
+name|EHCI_SCFLG_FORCESPEED
+value|0x0002
+comment|/* force speed (Marvell) */
+define|#
+directive|define
+name|EHCI_SCFLG_NORESTERM
+value|0x0004
+comment|/* don't terminate reset sequence 					 * (Marvell) */
 name|uint8_t
 name|sc_offs
 decl_stmt|;

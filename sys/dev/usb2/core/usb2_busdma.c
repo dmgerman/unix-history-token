@@ -2246,6 +2246,18 @@ name|pc
 operator|->
 name|tag_parent
 expr_stmt|;
+comment|/* 			 * We have to unload the previous loaded DMA 			 * pages before trying to load a new one! 			 */
+name|bus_dmamap_unload
+argument_list|(
+name|pc
+operator|->
+name|tag
+argument_list|,
+name|pc
+operator|->
+name|map
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Try to load memory into DMA. 			 */
 name|err
 operator|=
@@ -2314,6 +2326,18 @@ block|}
 block|}
 else|else
 block|{
+comment|/* 			 * We have to unload the previous loaded DMA 			 * pages before trying to load a new one! 			 */
+name|bus_dmamap_unload
+argument_list|(
+name|pc
+operator|->
+name|tag
+argument_list|,
+name|pc
+operator|->
+name|map
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Try to load memory into DMA. The callback 			 * will be called in all cases: 			 */
 if|if
 condition|(
@@ -2398,6 +2422,20 @@ modifier|*
 name|pc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|pc
+operator|->
+name|page_offset_end
+operator|==
+name|pc
+operator|->
+name|page_offset_buf
+condition|)
+block|{
+comment|/* nothing has been loaded into this page cache! */
+return|return;
+block|}
 name|bus_dmamap_sync
 argument_list|(
 name|pc
@@ -2431,6 +2469,20 @@ modifier|*
 name|pc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|pc
+operator|->
+name|page_offset_end
+operator|==
+name|pc
+operator|->
+name|page_offset_buf
+condition|)
+block|{
+comment|/* nothing has been loaded into this page cache! */
+return|return;
+block|}
 name|bus_dmamap_sync
 argument_list|(
 name|pc
@@ -3674,6 +3726,18 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* 		 * We have to unload the previous loaded DMA 		 * pages before trying to load a new one! 		 */
+name|bus_dmamap_unload
+argument_list|(
+name|pc
+operator|->
+name|tag
+argument_list|,
+name|pc
+operator|->
+name|map
+argument_list|)
+expr_stmt|;
 comment|/* try to load memory into DMA using using no wait option */
 if|if
 condition|(
@@ -3812,6 +3876,16 @@ name|pc
 operator|->
 name|page_offset_buf
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* nothing has been loaded into this page cache */
+return|return;
+block|}
 name|bus_dmamap_sync
 argument_list|(
 name|pc
@@ -3862,6 +3936,16 @@ name|pc
 operator|->
 name|page_offset_buf
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* nothing has been loaded into this page cache */
+return|return;
+block|}
 name|bus_dmamap_sync
 argument_list|(
 name|pc
@@ -5108,17 +5192,6 @@ if|if
 condition|(
 name|pc
 operator|->
-name|page_offset_buf
-operator|!=
-name|pc
-operator|->
-name|page_offset_end
-condition|)
-block|{
-if|if
-condition|(
-name|pc
-operator|->
 name|isread
 condition|)
 block|{
@@ -5135,7 +5208,6 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|pc
 operator|++
@@ -5208,17 +5280,6 @@ if|if
 condition|(
 name|pc
 operator|->
-name|page_offset_buf
-operator|!=
-name|pc
-operator|->
-name|page_offset_end
-condition|)
-block|{
-if|if
-condition|(
-name|pc
-operator|->
 name|isread
 condition|)
 block|{
@@ -5227,7 +5288,6 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|pc
 operator|++

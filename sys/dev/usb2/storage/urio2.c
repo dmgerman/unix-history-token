@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/include/urio2_ioctl.h>
+file|<dev/usb/rio500_usb.h>
 end_include
 
 begin_define

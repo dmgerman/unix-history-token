@@ -2258,13 +2258,6 @@ name|USB_ERR_NORMAL_COMPLETION
 operator|)
 return|;
 block|}
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|string_index
@@ -2273,6 +2266,13 @@ literal|0
 condition|)
 block|{
 comment|/* this is the language table */
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|USB_ERR_INVAL
@@ -2288,6 +2288,13 @@ operator|.
 name|no_strings
 condition|)
 block|{
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|USB_ERR_STALLED
@@ -2318,6 +2325,13 @@ condition|(
 name|err
 condition|)
 block|{
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|err
@@ -2343,6 +2357,13 @@ literal|2
 condition|)
 block|{
 comment|/* string length is too short */
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|USB_ERR_INVAL
@@ -2489,11 +2510,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
-name|s
-operator|=
-literal|'.'
-expr_stmt|;
+comment|/* silently skip bad character */
+continue|continue;
 block|}
 comment|/* 		 * Filter by default - we don't allow greater and less than 		 * signs because they might confuse the dmesg printouts! 		 */
 if|if
@@ -2522,11 +2540,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|*
-name|s
-operator|=
-literal|'.'
-expr_stmt|;
+comment|/* silently skip bad character */
+continue|continue;
 block|}
 name|s
 operator|++
@@ -2537,6 +2552,7 @@ name|s
 operator|=
 literal|0
 expr_stmt|;
+comment|/* zero terminate resulting string */
 return|return
 operator|(
 name|USB_ERR_NORMAL_COMPLETION
@@ -5045,7 +5061,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_req_re_enumerate  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_req_re_enumerate  *  * NOTE: After this function returns the hardware is in the  * unconfigured state! The application is responsible for setting a  * new configuration.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5231,36 +5247,6 @@ name|address
 operator|=
 name|old_addr
 expr_stmt|;
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* restore configuration */
-name|err
-operator|=
-name|usb2_req_set_config
-argument_list|(
-name|udev
-argument_list|,
-name|mtx
-argument_list|,
-name|udev
-operator|->
-name|curr_config_no
-argument_list|)
-expr_stmt|;
-comment|/* wait a little bit, just in case */
-name|usb2_pause_mtx
-argument_list|(
-name|mtx
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|err

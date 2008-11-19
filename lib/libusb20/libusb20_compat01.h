@@ -1213,6 +1213,7 @@ modifier|*
 name|dev
 parameter_list|)
 function_decl|;
+specifier|const
 name|char
 modifier|*
 name|usb_strerror

@@ -81,6 +81,12 @@ name|usb2_fifo
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|usb2_mbuf
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -172,6 +178,26 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|usb2_fifo_filter_t
+function_decl|)
+parameter_list|(
+name|struct
+name|usb2_fifo
+modifier|*
+name|fifo
+parameter_list|,
+name|struct
+name|usb2_mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|usb2_symlink
@@ -209,7 +235,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Locking note for the following functions.  All the  * "usb2_fifo_cmd_t" functions are called locked. The others are  * called unlocked.  */
+comment|/*  * Locking note for the following functions.  All the  * "usb2_fifo_cmd_t" and "usb2_fifo_filter_t" functions are called  * locked. The others are called unlocked.  */
 end_comment
 
 begin_struct
@@ -228,6 +254,11 @@ name|usb2_fifo_ioctl_t
 modifier|*
 name|f_ioctl
 decl_stmt|;
+comment|/* 	 * NOTE: The post-ioctl callback is called after the USB reference 	 * gets locked in the IOCTL handler: 	 */
+name|usb2_fifo_ioctl_t
+modifier|*
+name|f_ioctl_post
+decl_stmt|;
 name|usb2_fifo_cmd_t
 modifier|*
 name|f_start_read
@@ -243,6 +274,14 @@ decl_stmt|;
 name|usb2_fifo_cmd_t
 modifier|*
 name|f_stop_write
+decl_stmt|;
+name|usb2_fifo_filter_t
+modifier|*
+name|f_filter_read
+decl_stmt|;
+name|usb2_fifo_filter_t
+modifier|*
+name|f_filter_write
 decl_stmt|;
 specifier|const
 name|char
@@ -378,10 +417,6 @@ name|uint16_t
 name|dev_ep_index
 decl_stmt|;
 comment|/* our device endpoint index */
-name|uint8_t
-name|flag_no_uref
-decl_stmt|;
-comment|/* set if FIFO is not control endpoint */
 name|uint8_t
 name|flag_sleeping
 decl_stmt|;
@@ -722,18 +757,6 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|plen
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usb2_fifo_get_data_next
-parameter_list|(
-name|struct
-name|usb2_fifo
-modifier|*
-name|f
 parameter_list|)
 function_decl|;
 end_function_decl

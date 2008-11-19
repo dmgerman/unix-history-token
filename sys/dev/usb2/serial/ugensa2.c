@@ -790,17 +790,7 @@ literal|0
 argument_list|)
 block|}
 block|,
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_HUAWEI
-argument_list|,
-argument|USB_PRODUCT_HUAWEI_E270
-argument_list|,
-literal|0
-argument_list|)
-block|}
-block|,
+comment|/*	{USB_VPI(USB_VENDOR_HUAWEI, USB_PRODUCT_HUAWEI_E270, 0)}, */
 block|{
 name|USB_VPI
 argument_list|(
@@ -889,17 +879,7 @@ literal|0
 argument_list|)
 block|}
 block|,
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_NOVATEL
-argument_list|,
-argument|USB_PRODUCT_NOVATEL_U950D
-argument_list|,
-literal|0
-argument_list|)
-block|}
-block|,
+comment|/*	{USB_VPI(USB_VENDOR_NOVATEL, USB_PRODUCT_NOVATEL_U950D, 0)}, */
 block|{
 name|USB_VPI
 argument_list|(

@@ -108,7 +108,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|((void *)(((const uint8_t *)(ptr)) + (off)))
+value|((void *)(((const uint8_t *)(ptr)) + (off) - ((const uint8_t *)0)))
 comment|/* basic message elements */
 enum|enum
 block|{

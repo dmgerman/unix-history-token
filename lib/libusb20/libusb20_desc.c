@@ -242,6 +242,7 @@ name|len
 operator|=
 operator|(
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -254,6 +255,7 @@ operator||
 operator|(
 operator|(
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -1013,6 +1015,7 @@ modifier|*
 name|psubdesc
 parameter_list|)
 block|{
+specifier|const
 name|void
 modifier|*
 name|end
@@ -1083,6 +1086,7 @@ operator|(
 operator|(
 operator|(
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -1105,6 +1109,7 @@ operator|&&
 operator|(
 operator|(
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -1343,6 +1348,7 @@ operator|(
 expr|struct
 name|libusb20_me_format
 operator|*
+specifier|const
 operator|*
 operator|)
 name|pd

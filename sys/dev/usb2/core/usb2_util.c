@@ -270,7 +270,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* can happend if called at the wrong time */
+comment|/* can happen if called at the wrong time */
 return|return;
 block|}
 name|udev

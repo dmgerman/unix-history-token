@@ -25,6 +25,22 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
+begin_comment
+comment|/* Building "kdump" depends on these includes */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<dev/usb2/include/usb2_endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb2/include/usb2_standard.h>
+end_include
+
 begin_define
 define|#
 directive|define
