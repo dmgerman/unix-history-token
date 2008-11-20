@@ -11800,13 +11800,13 @@ name|lseek
 argument_list|(
 name|orig
 argument_list|,
-name|SEEK_SET
-argument_list|,
 operator|(
 name|blocksize
 operator|*
 name|blockstart
 operator|)
+argument_list|,
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|error

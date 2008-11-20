@@ -588,6 +588,8 @@ name|bs
 operator|<=
 name|hisearch
 condition|;
+name|bs
+operator|++
 control|)
 block|{
 name|rem
