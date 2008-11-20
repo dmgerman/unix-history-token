@@ -12,6 +12,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -30,19 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"diff.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"keyword.h"
 end_include
 
 begin_include
@@ -54,7 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"keyword.h"
+file|"proto.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"queue.h"
 end_include
 
 begin_include
@@ -75,17 +87,12 @@ directive|include
 file|"stream.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"proto.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"queue.h"
-end_include
+begin_define
+define|#
+directive|define
+name|BUF_SIZE_DEFAULT
+value|128
+end_define
 
 begin_comment
 comment|/*  * RCS parser library. This is the part of the library that handles the  * importing, editing and exporting of RCS files. It currently supports only the  * part of the RCS file specification that is needed for csup (for instance,  * newphrases are not supported), and assumes that you can store the whole RCS  * file in memory.  */
@@ -477,6 +484,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|rcsdelta_writestring
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|struct
+name|stream
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Space formatting of RCS file. */
 end_comment
@@ -616,9 +640,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|lprintf
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -635,9 +660,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
+name|lprintf
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -672,22 +698,14 @@ modifier|*
 name|colltag
 parameter_list|)
 block|{
-name|FILE
-modifier|*
-name|infp
-decl_stmt|;
 name|struct
 name|rcsfile
 modifier|*
 name|rf
 decl_stmt|;
-name|char
-name|one
-index|[
-literal|10
-index|]
-init|=
-literal|"1"
+name|FILE
+modifier|*
+name|infp
 decl_stmt|;
 name|int
 name|error
@@ -753,7 +771,6 @@ argument_list|(
 name|colltag
 argument_list|)
 expr_stmt|;
-comment|/*fprintf(stderr, "Doing file %s\n", rf->name);*/
 comment|/* Initialize head branch. */
 name|rf
 operator|->
@@ -776,7 +793,7 @@ name|revnum
 operator|=
 name|xstrdup
 argument_list|(
-name|one
+literal|"1"
 argument_list|)
 expr_stmt|;
 name|LIST_INIT
@@ -1485,7 +1502,7 @@ argument_list|,
 literal|"\n\n"
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Write out deltas. We use a stack where we push the appropriate deltas 	 * that is to be written out during the loop. 	 */
+comment|/* 	 * Write out deltas. We use a stack where we push the appropriate deltas 	 * that is to be written out during the loop. 	 */
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -1847,11 +1864,6 @@ argument_list|)
 name|branchlist_datesorted
 expr_stmt|;
 name|struct
-name|stream
-modifier|*
-name|in
-decl_stmt|;
-name|struct
 name|delta
 modifier|*
 name|d
@@ -1869,16 +1881,21 @@ modifier|*
 name|d_tmp3
 decl_stmt|;
 name|struct
+name|stream
+modifier|*
+name|in
+decl_stmt|;
+name|struct
 name|branch
 modifier|*
 name|b
 decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 name|char
 modifier|*
 name|line
-decl_stmt|;
-name|size_t
-name|size
 decl_stmt|;
 name|int
 name|error
@@ -2256,7 +2273,7 @@ name|branch_next_date
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  		 * Invert the deltalist of a branch, since we're writing them 		 * the opposite way.  		 */
+comment|/* 		 * Invert the deltalist of a branch, since we're writing them 		 * the opposite way.  		 */
 name|LIST_FOREACH
 argument_list|(
 argument|d_tmp
@@ -2350,15 +2367,15 @@ name|buf
 modifier|*
 name|b
 decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 name|char
 modifier|*
 name|line
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|size_t
-name|size
 decl_stmt|;
 name|di
 operator|=
@@ -2516,7 +2533,7 @@ argument_list|(
 name|orig
 argument_list|)
 expr_stmt|;
-comment|/*  	 * A new head was probably added, and now the previous HEAD must be 	 * changed to include the diff instead. 	 */
+comment|/* 	 * A new head was probably added, and now the previous HEAD must be 	 * changed to include the diff instead. 	 */
 block|}
 elseif|else
 if|if
@@ -2664,9 +2681,10 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|lprintf
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
 literal|"Error applying reverse diff: %d\n"
 argument_list|,
@@ -2781,7 +2799,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If diffbase is NULL or we are head (the old head), we have a normal complete deltatext. */
+comment|/* 	 * If diffbase is NULL or we are head (the old head), we have a normal 	 * complete deltatext. 	 */
 if|if
 condition|(
 name|d
@@ -2855,7 +2873,7 @@ name|buf_dest
 operator|=
 name|buf_new
 argument_list|(
-literal|128
+name|BUF_SIZE_DEFAULT
 argument_list|)
 expr_stmt|;
 name|dest
@@ -3064,17 +3082,19 @@ name|string
 modifier|*
 name|s
 decl_stmt|;
-name|char
-modifier|*
-name|line
-decl_stmt|;
 name|struct
 name|stream
 modifier|*
 name|in
 decl_stmt|;
-name|printf
+name|char
+modifier|*
+name|line
+decl_stmt|;
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -3086,8 +3106,10 @@ name|name
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"name: '%s'\n"
 argument_list|,
 name|rf
@@ -3103,8 +3125,10 @@ name|head
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"head: '%s'\n"
 argument_list|,
 name|rf
@@ -3120,8 +3144,10 @@ name|branch
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"branch: '%s'\n"
 argument_list|,
 name|rf
@@ -3129,8 +3155,10 @@ operator|->
 name|branch
 argument_list|)
 expr_stmt|;
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"Access: "
 argument_list|)
 expr_stmt|;
@@ -3142,9 +3170,10 @@ argument|&rf->accesslist
 argument_list|,
 argument|string_next
 argument_list|)
-block|{
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"'%s' "
 argument_list|,
 name|s
@@ -3152,9 +3181,10 @@ operator|->
 name|str
 argument_list|)
 expr_stmt|;
-block|}
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -3168,8 +3198,10 @@ argument_list|,
 argument|tag_next
 argument_list|)
 block|{
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"Tag: "
 argument_list|)
 expr_stmt|;
@@ -3181,8 +3213,10 @@ name|tag
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"name: %s "
 argument_list|,
 name|t
@@ -3198,8 +3232,10 @@ name|revnum
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"rev: %s"
 argument_list|,
 name|t
@@ -3207,8 +3243,10 @@ operator|->
 name|revnum
 argument_list|)
 expr_stmt|;
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -3219,8 +3257,10 @@ name|rf
 operator|->
 name|strictlock
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"Strict!\n"
 argument_list|)
 expr_stmt|;
@@ -3232,8 +3272,10 @@ name|comment
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"comment: '%s'\n"
 argument_list|,
 name|rf
@@ -3249,8 +3291,10 @@ name|expand
 operator|>=
 literal|0
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"expand: '%s'\n"
 argument_list|,
 name|keyword_encode_expand
@@ -3271,8 +3315,10 @@ argument_list|,
 argument|table_next
 argument_list|)
 block|{
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"Delta: "
 argument_list|)
 expr_stmt|;
@@ -3284,8 +3330,10 @@ name|revdate
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"date: %s "
 argument_list|,
 name|d
@@ -3301,8 +3349,10 @@ name|revnum
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"rev: %s"
 argument_list|,
 name|d
@@ -3318,8 +3368,10 @@ name|author
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"author: %s"
 argument_list|,
 name|d
@@ -3335,8 +3387,10 @@ name|state
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"state: %s"
 argument_list|,
 name|d
@@ -3344,8 +3398,10 @@ operator|->
 name|state
 argument_list|)
 expr_stmt|;
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"Text:\n"
 argument_list|)
 expr_stmt|;
@@ -3398,8 +3454,10 @@ argument_list|(
 name|in
 argument_list|)
 expr_stmt|;
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -3412,8 +3470,10 @@ name|desc
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|lprintf
 argument_list|(
+literal|1
+argument_list|,
 literal|"desc: '%s'\n"
 argument_list|,
 name|rf
@@ -4595,14 +4655,13 @@ name|author
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX: default. */
 name|d
 operator|->
 name|log
 operator|=
 name|buf_new
 argument_list|(
-literal|128
+name|BUF_SIZE_DEFAULT
 argument_list|)
 expr_stmt|;
 name|d
@@ -4611,7 +4670,7 @@ name|text
 operator|=
 name|buf_new
 argument_list|(
-literal|128
+name|BUF_SIZE_DEFAULT
 argument_list|)
 expr_stmt|;
 name|d
@@ -5241,7 +5300,6 @@ operator|->
 name|placeholder
 condition|)
 block|{
-comment|/*fprintf(stderr, "Insert %s\n", d->revnum);*/
 comment|/* Insert both into the tree, and into the lookup list. */
 if|if
 condition|(
@@ -5425,8 +5483,7 @@ decl_stmt|;
 name|char
 modifier|*
 name|branchrev
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|bprev
 decl_stmt|;
@@ -5505,51 +5562,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Add a new branch to a delta. */
-end_comment
-
-begin_comment
-unit|void rcsfile_addbranch(struct rcsfile *rf, char *branch) { 	struct delta *d; 	struct branch *b; 	char *branchrev, *deltarev; 	int trunk;
-comment|/*  	 * Branchrev is our branches revision, the delta actual delta will be 	 * taken care of later. 	 */
-end_comment
-
-begin_comment
-unit|branchrev = rcsrev_prefix(branch); 	deltarev = rcsrev_prefix(branchrev);
-comment|/* XXX: Could we refer to a delta that is not added yet? If we're 	 * refferring to branches without having been added before, this could 	 * happen in the head branch. 	 */
-end_comment
-
-begin_comment
-comment|/*fprintf(stderr, "Add branch %s to delta %s\n", branchrev, deltarev);*/
-end_comment
-
-begin_comment
-unit|d = rcsfile_getdelta(rf, deltarev); 	if (d == NULL) {
-comment|/* We must create a placeholder for the delta holding the 		 * branch. */
-end_comment
-
-begin_comment
-unit|d = rcsfile_createdelta(deltarev); 		d->placeholder = 1;
-comment|/* XXX: Can we assume this branch exists? */
-end_comment
-
-begin_comment
-unit|trunk = rcsrev_istrunk(d->revnum); 		b = trunk ? rf->trunk : rcsfile_getbranch(rf, d->revnum); 		rcsfile_insertdelta(b, d, trunk); 		rcsfile_insertsorteddelta(rf, d); 	} 	b = xmalloc(sizeof(struct branch)); 	b->revnum = branchrev; 	LIST_INIT(&b->deltalist); 	STAILQ_INSERT_HEAD(&d->branchlist, b, branch_next);
-comment|/* Free only deltarev, branchrev is used by branch. */
-end_comment
-
-begin_endif
-unit|free(deltarev); }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Insert a delta into the correct place in the table of the rcsfile. Sorted by  * date.  */
@@ -5734,7 +5746,6 @@ condition|(
 name|trunk
 condition|)
 block|{
-comment|/*fprintf(stderr, "Comparing %s and %s\n", d->revnum, 			 * d2->revnum);*/
 if|if
 condition|(
 name|rcsnum_cmp
@@ -6004,18 +6015,6 @@ name|stream
 modifier|*
 name|dest
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
 name|assert
 argument_list|(
 name|d
@@ -6032,81 +6031,15 @@ operator|->
 name|log
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|size
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-name|logline
-index|[
-name|i
-index|]
-expr_stmt|;
-name|buf
-index|[
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|count
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Expand @'s */
-if|if
-condition|(
-name|buf
-index|[
-literal|0
-index|]
-operator|==
-literal|'@'
-condition|)
-block|{
-name|buf
-index|[
-literal|1
-index|]
-operator|=
-literal|'@'
-expr_stmt|;
-name|buf
-index|[
-literal|2
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|count
-operator|=
-literal|2
-expr_stmt|;
-block|}
-name|stream_write
+name|rcsdelta_writestring
 argument_list|(
+name|logline
+argument_list|,
+name|size
+argument_list|,
 name|dest
-argument_list|,
-name|buf
-argument_list|,
-name|count
 argument_list|)
 expr_stmt|;
-block|}
 name|stream_close
 argument_list|(
 name|dest
@@ -6141,18 +6074,6 @@ name|stream
 modifier|*
 name|dest
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
 name|assert
 argument_list|(
 name|d
@@ -6169,7 +6090,53 @@ operator|->
 name|text
 argument_list|)
 expr_stmt|;
-comment|/* XXX: code reuse. */
+name|rcsdelta_writestring
+argument_list|(
+name|textline
+argument_list|,
+name|size
+argument_list|,
+name|dest
+argument_list|)
+expr_stmt|;
+name|stream_close
+argument_list|(
+name|dest
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|rcsdelta_writestring
+parameter_list|(
+name|char
+modifier|*
+name|textline
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|struct
+name|stream
+modifier|*
+name|dest
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|size_t
+name|i
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -6245,11 +6212,6 @@ name|count
 argument_list|)
 expr_stmt|;
 block|}
-name|stream_close
-argument_list|(
-name|dest
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -6313,10 +6275,6 @@ end_function
 
 begin_comment
 comment|/* Truncate the deltalog with a certain offset. */
-end_comment
-
-begin_comment
-comment|/* XXX: error values for these. */
 end_comment
 
 begin_function

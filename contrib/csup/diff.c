@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -37,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -262,7 +262,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|diff_free
 parameter_list|(
 name|struct
@@ -312,12 +312,12 @@ decl_stmt|;
 name|lineno_t
 name|i
 decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 name|char
 modifier|*
 name|line
-decl_stmt|;
-name|size_t
-name|size
 decl_stmt|;
 name|int
 name|empty
@@ -757,6 +757,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Reverse a diff using the same algorithm as in cvsup.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -773,22 +777,6 @@ modifier|*
 name|ds
 parameter_list|)
 block|{
-name|long
-name|firstoutputlinedeleted
-decl_stmt|,
-name|endline
-decl_stmt|,
-name|startline
-decl_stmt|,
-name|editline
-decl_stmt|,
-name|num_deleted
-decl_stmt|,
-name|num_added
-decl_stmt|;
-name|int
-name|num
-decl_stmt|;
 name|struct
 name|editcmd
 modifier|*
@@ -796,6 +784,23 @@ name|ec
 decl_stmt|,
 modifier|*
 name|nextec
+decl_stmt|;
+name|long
+name|editline
+decl_stmt|,
+name|endline
+decl_stmt|,
+name|firstoutputlinedeleted
+decl_stmt|;
+name|long
+name|num_added
+decl_stmt|,
+name|num_deleted
+decl_stmt|,
+name|startline
+decl_stmt|;
+name|int
+name|num
 decl_stmt|;
 name|nextec
 operator|=
@@ -1056,7 +1061,6 @@ operator|)
 return|;
 block|}
 comment|/* Insertion sort based on key. */
-comment|/* XXX: check if this gets too slow. */
 name|LIST_FOREACH
 argument_list|(
 argument|curec
@@ -1125,7 +1129,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|diff_free
 parameter_list|(
 name|struct
@@ -1138,11 +1142,6 @@ name|struct
 name|editcmd
 modifier|*
 name|ec
-decl_stmt|;
-name|int
-name|freecount
-init|=
-literal|0
 decl_stmt|;
 while|while
 condition|(
@@ -1178,13 +1177,7 @@ argument_list|(
 name|ec
 argument_list|)
 expr_stmt|;
-name|freecount
-operator|++
-expr_stmt|;
 block|}
-return|return
-name|freecount
-return|;
 block|}
 end_function
 
@@ -1247,15 +1240,6 @@ name|int
 name|error
 decl_stmt|,
 name|offset
-decl_stmt|;
-name|int
-name|malloccount
-init|=
-literal|0
-decl_stmt|,
-name|freecount
-init|=
-literal|0
 decl_stmt|;
 name|memset
 argument_list|(
@@ -1348,7 +1332,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-comment|/*fprintf(stderr, "Diff line '%s'\n", line);*/
 if|if
 condition|(
 name|error
@@ -1373,9 +1356,6 @@ expr|struct
 name|editcmd
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|malloccount
-operator|++
 expr_stmt|;
 operator|*
 name|addec
@@ -1414,7 +1394,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*fprintf(stderr, "Diff line '%s'\n", line);*/
 if|if
 condition|(
 name|line
@@ -1498,9 +1477,6 @@ name|free
 argument_list|(
 name|addec
 argument_list|)
-expr_stmt|;
-name|freecount
-operator|++
 expr_stmt|;
 name|delec
 operator|=
@@ -1601,9 +1577,6 @@ name|editcmd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|malloccount
-operator|++
-expr_stmt|;
 operator|*
 name|delec
 operator|=
@@ -1663,8 +1636,6 @@ name|line
 operator|!=
 name|NULL
 condition|)
-block|{
-comment|/*fprintf(stderr, "Diff line '%s'\n", line);*/
 name|line
 operator|=
 name|stream_getln
@@ -1674,8 +1645,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*fprintf(stderr, "Done with diff\n");*/
 if|if
 condition|(
 name|delec
@@ -1706,9 +1675,6 @@ expr|struct
 name|editcmd
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|malloccount
-operator|++
 expr_stmt|;
 comment|/* Should be filesize, but we set it to max value. */
 name|addec
@@ -1747,7 +1713,6 @@ name|addec
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*fprintf(stderr, "Done with last diff\n");*/
 name|diff_write_reverse
 argument_list|(
 name|dest
@@ -1756,15 +1721,12 @@ operator|&
 name|ds
 argument_list|)
 expr_stmt|;
-name|freecount
-operator|+=
 name|diff_free
 argument_list|(
 operator|&
 name|ds
 argument_list|)
 expr_stmt|;
-comment|/*fprintf(stderr, "Diff did a total of %d mallocs\n", malloccount); 	fprintf(stderr, "Diff did a total of %d frees\n", freecount);*/
 name|stream_flush
 argument_list|(
 name|dest
@@ -2034,12 +1996,12 @@ name|lineno_t
 name|to
 parameter_list|)
 block|{
+name|size_t
+name|size
+decl_stmt|;
 name|char
 modifier|*
 name|line
-decl_stmt|;
-name|size_t
-name|size
 decl_stmt|;
 while|while
 condition|(
@@ -2115,12 +2077,12 @@ name|lineno_t
 name|to
 parameter_list|)
 block|{
+name|size_t
+name|size
+decl_stmt|;
 name|char
 modifier|*
 name|line
-decl_stmt|;
-name|size_t
-name|size
 decl_stmt|;
 while|while
 condition|(
@@ -2191,15 +2153,15 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+name|size_t
+name|newsize
+decl_stmt|;
 name|char
 modifier|*
 name|line
 decl_stmt|,
 modifier|*
 name|newline
-decl_stmt|;
-name|size_t
-name|newsize
 decl_stmt|;
 name|int
 name|ret

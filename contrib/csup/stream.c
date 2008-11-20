@@ -5690,17 +5690,17 @@ name|fdata
 expr_stmt|;
 name|space
 index|[
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|space
-index|[
 literal|0
 index|]
 operator|=
 literal|' '
+expr_stmt|;
+name|space
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|ptr
 operator|=

@@ -494,10 +494,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*XXX*/
-end_comment
-
 begin_function_decl
 name|int
 name|isrcs

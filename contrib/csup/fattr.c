@@ -76,7 +76,7 @@ file|"misc.h"
 end_include
 
 begin_comment
-comment|/*  * Include the appropriate definition for the file attributes we support.  * There are two different files: fattr_bsd.h for BSD-like systems that  * support the extended file flags ? la chflags() and fattr_posix.h for  * bare POSIX systems that don't.  */
+comment|/*  * Include the appropriate definition for the file attributes we support.  * There are two different files: fattr_bsd.h for BSD-like systems that  * support the extended file flags a la chflags() and fattr_posix.h for  * bare POSIX systems that don't.  */
 end_comment
 
 begin_ifdef
@@ -4501,11 +4501,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 block|}
 block|}
 comment|/* Change those attributes that we can before moving the file 	 * into place.  That makes installation atomic in most cases. */
@@ -4558,11 +4556,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 block|}
 if|if
 condition|(

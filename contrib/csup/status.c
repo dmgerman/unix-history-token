@@ -871,11 +871,6 @@ name|error
 operator|=
 name|STATUS_ERR_PARSE
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ERROR HERE\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL

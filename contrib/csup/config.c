@@ -2355,7 +2355,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*	if (!(cur_coll->co_options& CO_CHECKOUTMODE)) { 		lprintf(-1, "Client only supports checkout mode\n"); 		exit(1); 	}*/
 if|if
 condition|(
 operator|!
