@@ -1136,6 +1136,16 @@ name|flags
 operator|&
 name|MDF_ATTR
 expr_stmt|;
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|PIOCRWFLAG
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+expr_stmt|;
 name|lseek
 argument_list|(
 name|fd
