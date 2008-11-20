@@ -746,12 +746,6 @@ operator|->
 name|next
 control|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("tuple code = 0x%02x, data is\n", tp->code); 			dump(tp->data, tp->length);
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|tp
