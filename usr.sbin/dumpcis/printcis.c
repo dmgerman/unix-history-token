@@ -300,9 +300,9 @@ name|void
 name|dumpcis
 parameter_list|(
 name|struct
-name|cis
+name|tuple_list
 modifier|*
-name|cp
+name|tlist
 parameter_list|)
 block|{
 name|struct
@@ -339,8 +339,6 @@ for|for
 control|(
 name|tl
 operator|=
-name|cp
-operator|->
 name|tlist
 init|;
 name|tl
