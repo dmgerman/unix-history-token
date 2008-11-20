@@ -471,11 +471,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|int
-name|isdumpcisfile
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 
