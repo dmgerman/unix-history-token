@@ -4598,7 +4598,7 @@ name|stream_printf
 argument_list|(
 name|wr
 argument_list|,
-literal|"%lu"
+literal|"%llu"
 argument_list|,
 name|off
 argument_list|)

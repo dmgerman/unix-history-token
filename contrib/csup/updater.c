@@ -11269,8 +11269,6 @@ name|ssize_t
 name|nbytes
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|first
 decl_stmt|;
 name|first
@@ -11516,11 +11514,6 @@ modifier|*
 name|sr
 decl_stmt|;
 name|struct
-name|coll
-modifier|*
-name|coll
-decl_stmt|;
-name|struct
 name|stream
 modifier|*
 name|to
@@ -11544,8 +11537,6 @@ decl_stmt|,
 name|orig
 decl_stmt|;
 name|size_t
-name|size
-decl_stmt|,
 name|blocknum
 decl_stmt|,
 name|blockstart

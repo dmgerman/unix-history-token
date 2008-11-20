@@ -196,7 +196,7 @@ specifier|static
 name|uint32_t
 name|rsync_rollsum
 parameter_list|(
-name|uint8_t
+name|char
 modifier|*
 parameter_list|,
 name|size_t
@@ -222,7 +222,7 @@ name|size_t
 name|blocksize
 parameter_list|,
 name|int
-name|read
+name|rdonly
 parameter_list|)
 block|{
 name|struct
@@ -300,7 +300,7 @@ name|open
 argument_list|(
 name|path
 argument_list|,
-name|read
+name|rdonly
 condition|?
 name|O_RDONLY
 else|:
@@ -482,6 +482,11 @@ argument_list|(
 name|rf
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -637,20 +642,11 @@ modifier|*
 name|rf
 parameter_list|)
 block|{
-name|uint32_t
-name|rolling
-decl_stmt|;
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
 name|MD5_CTX
 name|ctx
 decl_stmt|;
 name|size_t
 name|blocksize
-decl_stmt|,
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -671,7 +667,10 @@ name|blocksize
 operator|=
 name|min
 argument_list|(
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|rf
 operator|->
 name|end
@@ -679,7 +678,7 @@ operator|-
 name|rf
 operator|->
 name|blockptr
-operator|)
+argument_list|)
 argument_list|,
 name|rf
 operator|->
@@ -771,7 +770,7 @@ specifier|static
 name|uint32_t
 name|rsync_rollsum
 parameter_list|(
-name|uint8_t
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -784,7 +783,7 @@ name|a
 decl_stmt|,
 name|b
 decl_stmt|;
-name|uint8_t
+name|char
 modifier|*
 name|ptr
 decl_stmt|,
