@@ -164,7 +164,7 @@ block|{
 block|{
 literal|"Null tuple"
 block|,
-literal|0x00
+name|CIS_NULL
 block|,
 literal|0
 block|}
@@ -172,7 +172,7 @@ block|,
 block|{
 literal|"Common memory descriptor"
 block|,
-literal|0x01
+name|CIS_MEM_COMMON
 block|,
 literal|255
 block|}
@@ -180,7 +180,7 @@ block|,
 block|{
 literal|"Long link to next chain for CardBus"
 block|,
-literal|0x02
+name|CIS_LONGLINK_CB
 block|,
 literal|255
 block|}
@@ -188,7 +188,7 @@ block|,
 block|{
 literal|"Indirect access"
 block|,
-literal|0x03
+name|CIS_INDIRECT
 block|,
 literal|255
 block|}
@@ -196,7 +196,7 @@ block|,
 block|{
 literal|"Configuration map for CardBus"
 block|,
-literal|0x04
+name|CIS_CONF_MAP_CB
 block|,
 literal|255
 block|}
@@ -204,7 +204,7 @@ block|,
 block|{
 literal|"Configuration entry for CardBus"
 block|,
-literal|0x05
+name|CIS_CONFIG_CB
 block|,
 literal|255
 block|}
@@ -212,7 +212,7 @@ block|,
 block|{
 literal|"Long link to next chain for MFC"
 block|,
-literal|0x06
+name|CIS_LONGLINK_MFC
 block|,
 literal|255
 block|}
@@ -220,7 +220,7 @@ block|,
 block|{
 literal|"Base address register for CardBus"
 block|,
-literal|0x07
+name|CIS_BAR
 block|,
 literal|6
 block|}
@@ -228,7 +228,7 @@ block|,
 block|{
 literal|"Checksum"
 block|,
-literal|0x10
+name|CIS_CHECKSUM
 block|,
 literal|5
 block|}
@@ -236,7 +236,7 @@ block|,
 block|{
 literal|"Long link to attribute memory"
 block|,
-literal|0x11
+name|CIS_LONGLINK_A
 block|,
 literal|4
 block|}
@@ -244,7 +244,7 @@ block|,
 block|{
 literal|"Long link to common memory"
 block|,
-literal|0x12
+name|CIS_LONGLINK_C
 block|,
 literal|4
 block|}
@@ -252,7 +252,7 @@ block|,
 block|{
 literal|"Link target"
 block|,
-literal|0x13
+name|CIS_LINKTARGET
 block|,
 literal|3
 block|}
@@ -260,7 +260,7 @@ block|,
 block|{
 literal|"No link"
 block|,
-literal|0x14
+name|CIS_NOLINK
 block|,
 literal|0
 block|}
@@ -268,7 +268,7 @@ block|,
 block|{
 literal|"Version 1 info"
 block|,
-literal|0x15
+name|CIS_INFO_V1
 block|,
 literal|255
 block|}
@@ -276,7 +276,7 @@ block|,
 block|{
 literal|"Alternate language string"
 block|,
-literal|0x16
+name|CIS_ALTSTR
 block|,
 literal|255
 block|}
@@ -284,7 +284,7 @@ block|,
 block|{
 literal|"Attribute memory descriptor"
 block|,
-literal|0x17
+name|CIS_MEM_ATTR
 block|,
 literal|255
 block|}
@@ -292,7 +292,7 @@ block|,
 block|{
 literal|"JEDEC descr for common memory"
 block|,
-literal|0x18
+name|CIS_JEDEC_C
 block|,
 literal|255
 block|}
@@ -300,7 +300,7 @@ block|,
 block|{
 literal|"JEDEC descr for attribute memory"
 block|,
-literal|0x19
+name|CIS_JEDEC_A
 block|,
 literal|255
 block|}
@@ -308,7 +308,7 @@ block|,
 block|{
 literal|"Configuration map"
 block|,
-literal|0x1A
+name|CIS_CONF_MAP
 block|,
 literal|255
 block|}
@@ -316,7 +316,7 @@ block|,
 block|{
 literal|"Configuration entry"
 block|,
-literal|0x1B
+name|CIS_CONFIG
 block|,
 literal|255
 block|}
@@ -324,7 +324,7 @@ block|,
 block|{
 literal|"Other conditions for common memory"
 block|,
-literal|0x1C
+name|CIS_DEVICE_OC
 block|,
 literal|255
 block|}
@@ -332,7 +332,7 @@ block|,
 block|{
 literal|"Other conditions for attribute memory"
 block|,
-literal|0x1D
+name|CIS_DEVICE_OA
 block|,
 literal|255
 block|}
@@ -340,7 +340,7 @@ block|,
 block|{
 literal|"Geometry info for common memory"
 block|,
-literal|0x1E
+name|CIS_DEVICEGEO
 block|,
 literal|255
 block|}
@@ -348,7 +348,7 @@ block|,
 block|{
 literal|"Geometry info for attribute memory"
 block|,
-literal|0x1F
+name|CIS_DEVICEGEO_A
 block|,
 literal|255
 block|}
@@ -356,7 +356,7 @@ block|,
 block|{
 literal|"Manufacturer ID"
 block|,
-literal|0x20
+name|CIS_MANUF_ID
 block|,
 literal|4
 block|}
@@ -364,7 +364,7 @@ block|,
 block|{
 literal|"Functional ID"
 block|,
-literal|0x21
+name|CIS_FUNC_ID
 block|,
 literal|2
 block|}
@@ -372,7 +372,7 @@ block|,
 block|{
 literal|"Functional EXT"
 block|,
-literal|0x22
+name|CIS_FUNC_EXT
 block|,
 literal|255
 block|}
@@ -380,7 +380,7 @@ block|,
 block|{
 literal|"Software interleave"
 block|,
-literal|0x23
+name|CIS_SW_INTERLV
 block|,
 literal|2
 block|}
@@ -388,7 +388,7 @@ block|,
 block|{
 literal|"Version 2 Info"
 block|,
-literal|0x40
+name|CIS_VERS_2
 block|,
 literal|255
 block|}
@@ -396,7 +396,7 @@ block|,
 block|{
 literal|"Data format"
 block|,
-literal|0x41
+name|CIS_FORMAT
 block|,
 literal|255
 block|}
@@ -404,7 +404,7 @@ block|,
 block|{
 literal|"Geometry"
 block|,
-literal|0x42
+name|CIS_GEOMETRY
 block|,
 literal|4
 block|}
@@ -412,7 +412,7 @@ block|,
 block|{
 literal|"Byte order"
 block|,
-literal|0x43
+name|CIS_BYTEORDER
 block|,
 literal|2
 block|}
@@ -420,7 +420,7 @@ block|,
 block|{
 literal|"Card init date"
 block|,
-literal|0x44
+name|CIS_DATE
 block|,
 literal|4
 block|}
@@ -428,7 +428,7 @@ block|,
 block|{
 literal|"Battery replacement"
 block|,
-literal|0x45
+name|CIS_BATTERY
 block|,
 literal|4
 block|}
@@ -436,7 +436,7 @@ block|,
 block|{
 literal|"Organization"
 block|,
-literal|0x46
+name|CIS_ORG
 block|,
 literal|255
 block|}
@@ -444,7 +444,7 @@ block|,
 block|{
 literal|"Terminator"
 block|,
-literal|0xFF
+name|CIS_END
 block|,
 literal|0
 block|}
@@ -958,9 +958,12 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
+name|find_tuple_in_list
+argument_list|(
 name|tlist
-operator|->
-name|next
+argument_list|,
+name|CIS_LINKTARGET
+argument_list|)
 operator|==
 literal|0
 operator|&&
@@ -1490,7 +1493,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|0x13
+name|CIS_LINKTARGET
 operator|&&
 name|blk
 index|[
