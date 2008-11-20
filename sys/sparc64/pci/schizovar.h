@@ -36,15 +36,40 @@ decl_stmt|;
 define|#
 directive|define
 name|SCHIZO_MODE_SCZ
-value|1
+value|0
 define|#
 directive|define
 name|SCHIZO_MODE_TOM
-value|2
+value|1
 define|#
 directive|define
 name|SCHIZO_MODE_XMS
-value|3
+value|2
+name|u_int
+name|sc_flags
+decl_stmt|;
+define|#
+directive|define
+name|SCHIZO_FLAGS_BSWAR
+value|(1<< 0)
+define|#
+directive|define
+name|SCHIZO_FLAGS_CDMA
+value|(1<< 1)
+name|bus_addr_t
+name|sc_cdma_clr
+decl_stmt|;
+name|uint32_t
+name|sc_cdma_state
+decl_stmt|;
+define|#
+directive|define
+name|SCHIZO_CDMA_STATE_DONE
+value|(1<< 0)
+define|#
+directive|define
+name|SCHIZO_CDMA_STATE_PENDING
+value|(1<< 1)
 name|u_int
 name|sc_half
 decl_stmt|;

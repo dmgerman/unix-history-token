@@ -19,8 +19,12 @@ begin_define
 define|#
 directive|define
 name|STX_NINTR
-value|4
+value|5
 end_define
+
+begin_comment
+comment|/* 4 via OFW + 1 CDMA */
+end_comment
 
 begin_define
 define|#
@@ -1565,6 +1569,28 @@ end_define
 
 begin_comment
 comment|/* Safari/JBus error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STX_CDMA_A_INO
+value|0x35
+end_define
+
+begin_comment
+comment|/* PCI bus A CDMA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STX_CDMA_B_INO
+value|0x36
+end_define
+
+begin_comment
+comment|/* PCI bus B CDMA */
 end_comment
 
 begin_define
