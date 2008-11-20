@@ -55,9 +55,9 @@ name|int
 name|fd
 decl_stmt|;
 name|struct
-name|cis
+name|tuple_list
 modifier|*
-name|cp
+name|tl
 decl_stmt|;
 name|fd
 operator|=
@@ -75,7 +75,7 @@ operator|<
 literal|0
 condition|)
 return|return;
-name|cp
+name|tl
 operator|=
 name|readcis
 argument_list|(
@@ -84,7 +84,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cp
+name|tl
 condition|)
 block|{
 name|printf
@@ -96,12 +96,12 @@ argument_list|)
 expr_stmt|;
 name|dumpcis
 argument_list|(
-name|cp
+name|tl
 argument_list|)
 expr_stmt|;
 name|freecis
 argument_list|(
-name|cp
+name|tl
 argument_list|)
 expr_stmt|;
 block|}
