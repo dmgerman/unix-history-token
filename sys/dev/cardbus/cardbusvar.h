@@ -89,6 +89,11 @@ modifier|*
 name|sc_cisdev
 decl_stmt|;
 name|struct
+name|cdev
+modifier|*
+name|sc_cisdev_compat
+decl_stmt|;
+name|struct
 name|cis_buffer
 name|sc_cis
 decl_stmt|;
