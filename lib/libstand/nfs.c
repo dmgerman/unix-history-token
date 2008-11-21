@@ -1805,7 +1805,7 @@ name|printf
 argument_list|(
 literal|"nfs_open: %s (rootpath=%s)\n"
 argument_list|,
-name|path
+name|upath
 argument_list|,
 name|rootpath
 argument_list|)
