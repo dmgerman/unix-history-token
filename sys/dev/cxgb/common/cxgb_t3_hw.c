@@ -2401,7 +2401,7 @@ name|VPD_ENTRY
 argument_list|(
 name|ec
 argument_list|,
-literal|16
+name|ECNUM_LEN
 argument_list|)
 expr_stmt|;
 comment|/* EC level */
@@ -3129,6 +3129,19 @@ operator|.
 name|sn_data
 argument_list|,
 name|SERNUM_LEN
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|p
+operator|->
+name|ec
+argument_list|,
+name|vpd
+operator|.
+name|ec_data
+argument_list|,
+name|ECNUM_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Old eeproms didn't have port information */

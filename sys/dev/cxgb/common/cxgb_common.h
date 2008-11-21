@@ -39,6 +39,11 @@ init|=
 literal|16
 block|,
 comment|/* Serial # length */
+name|ECNUM_LEN
+init|=
+literal|16
+block|,
+comment|/* EC # length */
 name|RSS_TABLE_SIZE
 init|=
 literal|64
@@ -1194,6 +1199,14 @@ name|u8
 name|sn
 index|[
 name|SERNUM_LEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|u8
+name|ec
+index|[
+name|ECNUM_LEN
 operator|+
 literal|1
 index|]
