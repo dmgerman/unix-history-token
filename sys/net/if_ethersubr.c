@@ -2012,9 +2012,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -2095,18 +2092,18 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * Queue message on interface, update output statistics if 	 * successful, and start output if interface not yet active. 	 */
-name|IFQ_HANDOFF
+return|return
+operator|(
+call|(
+name|ifp
+operator|->
+name|if_transmit
+call|)
 argument_list|(
 name|ifp
 argument_list|,
 name|m
-argument_list|,
-name|error
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}

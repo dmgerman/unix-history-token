@@ -918,13 +918,17 @@ operator|)
 name|ni
 expr_stmt|;
 comment|/* XXX defer if_start calls? */
-name|IFQ_HANDOFF
+name|error
+operator|=
+call|(
+name|parent
+operator|->
+name|if_transmit
+call|)
 argument_list|(
 name|parent
 argument_list|,
 name|m
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 if|if
