@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081115_0116"
+value|"20081122_0117"
 end_define
 
 begin_expr_stmt
@@ -23995,6 +23995,10 @@ name|i
 operator|=
 name|seq
 init|;
+name|i
+operator|<
+literal|16
+operator|&&
 name|ases
 index|[
 name|as
@@ -24006,10 +24010,6 @@ name|i
 index|]
 operator|==
 literal|0
-operator|&&
-name|i
-operator|<
-literal|16
 condition|;
 name|i
 operator|++
