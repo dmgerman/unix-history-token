@@ -1485,12 +1485,6 @@ define|\
 value|(u_long)atomic_fetchadd_32((volatile u_int *)(p), (u_int)(v))
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|__ATOMIC_BARRIER
-end_undef
-
 begin_endif
 endif|#
 directive|endif
