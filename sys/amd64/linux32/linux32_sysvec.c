@@ -5360,7 +5360,16 @@ name|sv_maxssiz
 operator|=
 operator|&
 name|linux32_maxssiz
-block|, }
+block|,
+operator|.
+name|sv_flags
+operator|=
+name|SV_ABI_LINUX
+operator||
+name|SV_ILP32
+operator||
+name|SV_IA32
+block|}
 decl_stmt|;
 end_decl_stmt
 

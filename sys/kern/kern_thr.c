@@ -173,14 +173,6 @@ directive|ifdef
 name|COMPAT_IA32
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|ia32_freebsd_sysvec
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -200,12 +192,10 @@ name|error
 decl_stmt|;
 if|if
 condition|(
-name|curproc
-operator|->
-name|p_sysent
-operator|!=
-operator|&
-name|ia32_freebsd_sysvec
+name|SV_CURPROC_FLAG
+argument_list|(
+name|SV_LP64
+argument_list|)
 condition|)
 name|error
 operator|=

@@ -738,6 +738,15 @@ name|sv_maxssiz
 operator|=
 operator|&
 name|ia32_maxssiz
+block|,
+operator|.
+name|sv_flags
+operator|=
+name|SV_ABI_FREEBSD
+operator||
+name|SV_IA32
+operator||
+name|SV_ILP32
 block|}
 decl_stmt|;
 end_decl_stmt
