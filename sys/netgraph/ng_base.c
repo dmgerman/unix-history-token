@@ -10982,10 +10982,6 @@ argument_list|,
 name|resp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|msg
-condition|)
 name|NG_FREE_MSG
 argument_list|(
 name|msg
