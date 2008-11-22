@@ -1046,25 +1046,25 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The driver uses an auto-queue algorithm by default.  * To disable it and force a single queue-set per port, use singleq = 1.  */
+comment|/*  * The driver uses an auto-queue algorithm by default.  * To disable it and force a single queue-set per port, use multiq = 0  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|singleq
+name|multiq
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.cxgb.singleq"
+literal|"hw.cxgb.multiq"
 argument_list|,
 operator|&
-name|singleq
+name|multiq
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1076,22 +1076,22 @@ name|_hw_cxgb
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|singleq
+name|multiq
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
-name|singleq
+name|multiq
 argument_list|,
 literal|0
 argument_list|,
-literal|"use a single queue-set per port"
+literal|"use min(ncpus/ports, 8) queue-sets per port"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The driver uses an auto-queue algorithm by default.  * To disable it and force a single queue-set per port, use singleq = 1.  */
+comment|/*  * By default the driver will not update the firmware unless  * it was compiled against a newer version  *   */
 end_comment
 
 begin_decl_stmt
@@ -1171,50 +1171,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"use 16kB clusters for the jumbo queue "
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Tune the size of the output queue.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|cxgb_snd_queue_len
-init|=
-name|IFQ_MAXLEN
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.snd_queue_len"
-argument_list|,
-operator|&
-name|cxgb_snd_queue_len
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_hw_cxgb
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|snd_queue_len
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|cxgb_snd_queue_len
-argument_list|,
-literal|0
-argument_list|,
-literal|"send queue size "
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2067,12 +2023,6 @@ name|must_load
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|80
-index|]
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -2785,8 +2735,7 @@ operator|&
 name|USING_MSIX
 operator|)
 operator|&&
-operator|!
-name|singleq
+name|multiq
 condition|)
 name|port_qsets
 operator|=
@@ -3307,45 +3256,6 @@ name|G_FW_VERSION_MICRO
 argument_list|(
 name|vers
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-literal|"%s\t E/C: %s S/N: %s"
-argument_list|,
-name|ai
-operator|->
-name|desc
-argument_list|,
-name|sc
-operator|->
-name|params
-operator|.
-name|vpd
-operator|.
-name|ec
-argument_list|,
-name|sc
-operator|->
-name|params
-operator|.
-name|vpd
-operator|.
-name|sn
-argument_list|)
-expr_stmt|;
-name|device_set_desc_copy
-argument_list|(
-name|dev
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -4513,58 +4423,15 @@ name|EINVAL
 operator|)
 return|;
 block|}
+if|#
+directive|if
+literal|0
 ifdef|#
 directive|ifdef
 name|IFNET_MULTIQUEUE
-if|if
-condition|(
-name|singleq
-operator|==
-literal|0
-condition|)
-block|{
-name|int
-name|vector
-init|=
-name|rman_get_start
-argument_list|(
-name|sc
-operator|->
-name|msix_irq_res
-index|[
-name|k
-index|]
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"binding vector=%d to cpu=%d\n"
-argument_list|,
-name|vector
-argument_list|,
-name|k
-operator|%
-name|mp_ncpus
-argument_list|)
-expr_stmt|;
-name|intr_bind
-argument_list|(
-name|vector
-argument_list|,
-name|k
-operator|%
-name|mp_ncpus
-argument_list|)
-expr_stmt|;
-block|}
+block|if (multiq) { 				int vector = rman_get_start(sc->msix_irq_res[k]); 				if (bootverbose) 					device_printf(sc->dev, "binding vector=%d to cpu=%d\n", vector, k % mp_ncpus); 				intr_bind(vector, k % mp_ncpus); 			}
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -4987,17 +4854,6 @@ name|if_start
 operator|=
 name|cxgb_start
 expr_stmt|;
-if|#
-directive|if
-literal|0
-ifdef|#
-directive|ifdef
-name|IFNET_MULTIQUEUE
-block|ifp->if_flags |= IFF_MULTIQ; 	ifp->if_mq_start = cxgb_pcpu_start;
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_timer
@@ -5017,7 +4873,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|cxgb_snd_queue_len
+name|IFQ_MAXLEN
 expr_stmt|;
 name|IFQ_SET_MAXLEN
 argument_list|(
@@ -5133,6 +4989,12 @@ name|p
 operator|->
 name|hw_addr
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_transmit
+operator|=
+name|cxgb_pcpu_transmit
 expr_stmt|;
 comment|/* 	 * Only default to jumbo frames on 10GigE 	 */
 if|if

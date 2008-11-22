@@ -863,6 +863,11 @@ modifier|*
 name|txq_mr
 decl_stmt|;
 name|struct
+name|ifaltq
+modifier|*
+name|txq_ifq
+decl_stmt|;
+name|struct
 name|mbuf
 modifier|*
 name|immpkt
@@ -2674,7 +2679,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cxgb_pcpu_start
+name|cxgb_pcpu_transmit
 parameter_list|(
 name|struct
 name|ifnet
