@@ -15,6 +15,27 @@ directive|define
 name|_MACHINE_ATOMIC_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+end_define
+
 begin_comment
 comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and SMP safe.  */
 end_comment

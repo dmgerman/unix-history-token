@@ -982,6 +982,14 @@ end_comment
 begin_if
 if|#
 directive|if
+name|__FreeBSD_version
+operator|<
+literal|800053
+end_if
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__GNUC__
@@ -1103,6 +1111,11 @@ error|#
 directive|error
 literal|"unknown compiler"
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

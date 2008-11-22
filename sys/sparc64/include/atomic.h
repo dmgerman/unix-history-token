@@ -55,6 +55,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+value|__asm__ __volatile__ ("membar #MemIssue": : :"memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|mb()
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|mb()
+end_define
+
 begin_comment
 comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  See atomic(9) for details.  * Note that efficient hardware support exists only for the 32 and 64  * bit variants; the 8 and 16 bit versions are not provided and should  * not be used in MI code.  *  * This implementation takes advantage of the fact that the sparc64  * cas instruction is both a load and a store.  The loop is often coded  * as follows:  *  *	do {  *		expect = *p;  *		new = expect + 1;  *	} while (cas(p, expect, new) != expect);  *  * which performs an unnnecessary load on each iteration that the cas  * operation fails.  Modified as follows:  *  *	expect = *p;  *	for (;;) {  *		new = expect + 1;  *		result = cas(p, expect, new);  *		if (result == expect)  *			break;  *		expect = result;  *	}  *  * the return value of cas is used to avoid the extra reload.  *  * The memory barriers provided by the acq and rel variants are intended  * to be sufficient for use of relaxed memory ordering.  Due to the  * suggested assembly syntax of the membar operands containing a #  * character, they cannot be used in macros.  The cmask and mmask bits  * are hard coded in machine/cpufunc.h and used here through macros.  * Hopefully sun will choose not to change the bit numbers.  */
 end_comment

@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/buf_ring.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -853,6 +859,7 @@ name|cleanq
 decl_stmt|;
 name|struct
 name|buf_ring
+modifier|*
 name|txq_mr
 decl_stmt|;
 name|struct
