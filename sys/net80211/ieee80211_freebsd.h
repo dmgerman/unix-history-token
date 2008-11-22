@@ -762,7 +762,7 @@ begin_define
 define|#
 directive|define
 name|M_FF
-value|0x20000
+value|M_PROTO6
 end_define
 
 begin_comment
@@ -773,7 +773,7 @@ begin_define
 define|#
 directive|define
 name|M_TXCB
-value|0x40000
+value|M_PROTO7
 end_define
 
 begin_comment
@@ -784,7 +784,8 @@ begin_define
 define|#
 directive|define
 name|M_80211_TX
-value|(0x60000|M_PROTO1|M_WME_AC_MASK|M_PROTO4|M_PROTO5)
+define|\
+value|(M_LINK0|M_WME_AC_MASK|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB)
 end_define
 
 begin_comment
