@@ -820,6 +820,9 @@ decl_stmt|;
 name|u_char
 name|fakeredir
 decl_stmt|;
+name|u_char
+name|digital
+decl_stmt|;
 name|nid_t
 name|hpredir
 decl_stmt|;
@@ -882,6 +885,9 @@ name|chan_size
 decl_stmt|;
 name|int
 name|chan_blkcnt
+decl_stmt|;
+name|u_char
+name|digital
 decl_stmt|;
 block|}
 struct|;
@@ -955,11 +961,6 @@ name|quirks
 decl_stmt|;
 name|uint32_t
 name|gpio
-decl_stmt|;
-name|int
-name|playcnt
-decl_stmt|,
-name|reccnt
 decl_stmt|;
 name|struct
 name|hdac_pcm_devinfo
