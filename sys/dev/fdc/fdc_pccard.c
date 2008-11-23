@@ -337,17 +337,8 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-specifier|const
-name|struct
-name|pccard_product
-modifier|*
-name|pp
-decl_stmt|;
 if|if
 condition|(
-operator|(
-name|pp
-operator|=
 name|pccard_product_lookup
 argument_list|(
 name|dev
@@ -364,7 +355,6 @@ argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)
