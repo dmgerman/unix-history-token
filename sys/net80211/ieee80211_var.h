@@ -2409,17 +2409,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_DFS
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* CONF: DFS enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_FEXT_NONERP_PR
 value|0x00000200
 end_define
@@ -2437,6 +2426,17 @@ end_define
 
 begin_comment
 comment|/* CONF: do bmiss in s/w */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_DFS
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* CONF: DFS enabled */
 end_comment
 
 begin_define
