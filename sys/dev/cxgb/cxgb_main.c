@@ -292,23 +292,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IFNET_MULTIQUEUE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/intr_machdep.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int
