@@ -30374,11 +30374,6 @@ name|cad
 argument_list|)
 expr_stmt|;
 block|}
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
