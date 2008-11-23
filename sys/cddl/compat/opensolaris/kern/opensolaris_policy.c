@@ -81,14 +81,13 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-comment|/* TODO: Change PRIV_ROOT! */
 return|return
 operator|(
 name|priv_check_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRIV_ROOT
+name|PRIV_NFS_DAEMON
 argument_list|,
 literal|0
 argument_list|)
