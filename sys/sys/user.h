@@ -1356,10 +1356,22 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
+name|off_t
+name|kve_offset
+decl_stmt|;
+comment|/* Mapping offset in object */
+name|uint64_t
+name|kve_fileid
+decl_stmt|;
+comment|/* inode number of vnode */
+name|dev_t
+name|kve_fsid
+decl_stmt|;
+comment|/* dev_t of vnode location */
 name|int
 name|_kve_ispare
 index|[
-literal|8
+literal|3
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */

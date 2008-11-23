@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: timer.c,v 1.73.18.7 2007/10/24 23:46:26 tbox Exp $ */
+comment|/* $Id: timer.c,v 1.73.18.7.10.3 2008/07/29 18:35:53 jinmei Exp $ */
 end_comment
 
 begin_comment
@@ -2315,7 +2315,7 @@ name|post_event
 decl_stmt|,
 name|need_schedule
 decl_stmt|;
-name|isc_event_t
+name|isc_timerevent_t
 modifier|*
 name|event
 decl_stmt|;
@@ -2625,6 +2625,10 @@ expr_stmt|;
 comment|/* 				 * XXX We could preallocate this event. 				 */
 name|event
 operator|=
+operator|(
+name|isc_timerevent_t
+operator|*
+operator|)
 name|isc_event_allocate
 argument_list|(
 name|manager
@@ -2656,16 +2660,29 @@ name|event
 operator|!=
 name|NULL
 condition|)
+block|{
+name|event
+operator|->
+name|due
+operator|=
+name|timer
+operator|->
+name|due
+expr_stmt|;
 name|isc_task_send
 argument_list|(
 name|timer
 operator|->
 name|task
 argument_list|,
+name|ISC_EVENT_PTR
+argument_list|(
 operator|&
 name|event
 argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|UNEXPECTED_ERROR
 argument_list|(

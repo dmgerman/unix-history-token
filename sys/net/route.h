@@ -1367,9 +1367,9 @@ name|RTFREE_LOCKED
 parameter_list|(
 name|_rt
 parameter_list|)
-value|do {					\ 		if ((_rt)->rt_refcnt<= 1)			\ 			rtfree(_rt);				\ 		else {						\ 			RT_REMREF(_rt);				\ 			RT_UNLOCK(_rt);				\ 		}						\
+value|do {					\ 	if ((_rt)->rt_refcnt<= 1)				\ 		rtfree(_rt);					\ 	else {							\ 		RT_REMREF(_rt);					\ 		RT_UNLOCK(_rt);					\ 	}							\
 comment|/* guard against invalid refs */
-value|\ 		_rt = 0;					\ 	} while (0)
+value|\ 	_rt = 0;						\ } while (0)
 end_define
 
 begin_define
@@ -1379,7 +1379,31 @@ name|RTFREE
 parameter_list|(
 name|_rt
 parameter_list|)
-value|do {					\ 		RT_LOCK(_rt);					\ 		RTFREE_LOCKED(_rt);				\ 	} while (0)
+value|do {					\ 	RT_LOCK(_rt);						\ 	RTFREE_LOCKED(_rt);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_TEMP_UNLOCK
+parameter_list|(
+name|_rt
+parameter_list|)
+value|do {				\ 	RT_ADDREF(_rt);						\ 	RT_UNLOCK(_rt);						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_RELOCK
+parameter_list|(
+name|_rt
+parameter_list|)
+value|do {					\ 	RT_LOCK(_rt);						\ 	if ((_rt)->rt_refcnt<= 1) {				\ 		rtfree(_rt);					\ 		_rt = 0;
+comment|/*  signal that it went away */
+value|\ 	} else {						\ 		RT_REMREF(_rt);					\
+comment|/* note that _rt is still valid */
+value|\ 	}							\ } while (0)
 end_define
 
 begin_decl_stmt
@@ -1534,6 +1558,27 @@ name|rtfree
 parameter_list|(
 name|struct
 name|rtentry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|rt_check
+parameter_list|(
+name|struct
+name|rtentry
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1698,27 +1743,6 @@ parameter_list|,
 name|struct
 name|rtentry
 modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|rt_check
-parameter_list|(
-name|struct
-name|rtentry
-modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1896,29 +1920,6 @@ parameter_list|,
 name|struct
 name|rtentry
 modifier|*
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|rt_check_fib
-parameter_list|(
-name|struct
-name|rtentry
-modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
 modifier|*
 parameter_list|,
 name|u_int

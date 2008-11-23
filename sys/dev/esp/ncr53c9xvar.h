@@ -38,7 +38,7 @@ comment|/* Set this to 1 for normal debug, or 2 for per-target tracing. */
 end_comment
 
 begin_comment
-comment|/* #define NCR53C9X_DEBUG		2 */
+comment|/* #define	NCR53C9X_DEBUG		2 */
 end_comment
 
 begin_comment
@@ -198,7 +198,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * ECB. Holds additional information for each SCSI command Comments: We  * need a separate scsi command block because we may need to overwrite it  * with a request sense command.  Basicly, we refrain from fiddling with  * the scsipi_xfer struct (except do the expected updating of return values).  * We'll generally update: xs->{flags,resid,error,sense,status} and  * occasionally xs->retries.  */
+comment|/*  * ECB. Holds additional information for each SCSI command Comments: We  * need a separate scsi command block because we may need to overwrite it  * with a request sense command.  Basicly, we refrain from fiddling with  * the ccb union (except do the expected updating of return values).  * We'll generally update: ccb->ccb_h.status and ccb->csio.{resid,  * scsi_status,sense_data}.  */
 end_comment
 
 begin_struct
@@ -261,6 +261,10 @@ name|ECB_TENTATIVE_DONE
 value|0x100
 name|int
 name|timeout
+decl_stmt|;
+name|struct
+name|callout
+name|ch
 decl_stmt|;
 struct|struct
 block|{
@@ -357,7 +361,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	const char *f = "[" msg "]"; \ 	int n = strlen((ecb)->trace); \ 	if (n< (sizeof((ecb)->trace)-100)) \ 		sprintf((ecb)->trace + n, f,  a, b); \ } while(0)
+value|do { \ 	const char *f = "[" msg "]"; \ 	int n = strlen((ecb)->trace); \ 	if (n< (sizeof((ecb)->trace)-100)) \ 		sprintf((ecb)->trace + n, f, a, b); \ } while(0)
 end_define
 
 begin_else
@@ -435,6 +439,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|ncr53c9x_xinfo
+block|{
+name|u_char
+name|period
+decl_stmt|;
+name|u_char
+name|offset
+decl_stmt|;
+name|u_char
+name|width
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ncr53c9x_tinfo
 block|{
 name|int
@@ -462,59 +483,37 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|T_NEGOTIATE
-value|0x02
-comment|/* (Re)Negotiate synchronous options */
-define|#
-directive|define
-name|T_SYNCMODE
-value|0x08
-comment|/* SYNC mode has been negotiated */
-define|#
-directive|define
 name|T_SYNCHOFF
-value|0x10
-comment|/* SYNC mode for is permanently off */
+value|0x01
+comment|/* SYNC mode is permanently off */
 define|#
 directive|define
 name|T_RSELECTOFF
-value|0x20
+value|0x02
 comment|/* RE-SELECT mode is off */
 define|#
 directive|define
 name|T_TAG
-value|0x40
+value|0x04
 comment|/* Turn on TAG QUEUEs */
 define|#
 directive|define
-name|T_WIDE
-value|0x80
-comment|/* Negotiate wide options */
+name|T_SDTRSENT
+value|0x08
+comment|/* SDTR message has been sent to */
 define|#
 directive|define
 name|T_WDTRSENT
-value|0x04
+value|0x10
 comment|/* WDTR message has been sent to */
-name|u_char
-name|period
+name|struct
+name|ncr53c9x_xinfo
+name|curr
 decl_stmt|;
-comment|/* Period suggestion */
-name|u_char
-name|offset
+name|struct
+name|ncr53c9x_xinfo
+name|goal
 decl_stmt|;
-comment|/* Offset suggestion */
-name|u_char
-name|cfg3
-decl_stmt|;
-comment|/* per target config 3  */
-name|u_char
-name|nextag
-decl_stmt|;
-comment|/* Next available tag */
-name|u_char
-name|width
-decl_stmt|;
-comment|/* width suggesion */
 name|LIST_HEAD
 argument_list|(
 argument|lun_list
@@ -1135,7 +1134,7 @@ comment|/* Message stuff */
 name|u_short
 name|sc_msgify
 decl_stmt|;
-comment|/* IDENTIFY message associated with this nexus */
+comment|/* IDENTIFY message associated with nexus */
 name|u_short
 name|sc_msgout
 decl_stmt|;
@@ -1214,10 +1213,6 @@ name|sc_maxxfer
 decl_stmt|;
 comment|/* Maximum transfer size */
 name|int
-name|sc_maxsync
-decl_stmt|;
-comment|/* Maximum sync period */
-name|int
 name|sc_maxoffset
 decl_stmt|;
 comment|/* Maximum offset */
@@ -1273,7 +1268,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* SCSI command is arbiting  */
+comment|/* SCSI command is arbiting */
 end_comment
 
 begin_define
@@ -1378,30 +1373,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NCR_DOINGDMA
-value|0x04
-end_define
-
-begin_comment
-comment|/* The FIFO data path is active! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NCR_SYNCHNEGO
-value|0x08
-end_define
-
-begin_comment
-comment|/* Synch negotiation in progress. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NCR_ICCS
-value|0x10
+value|0x04
 end_define
 
 begin_comment
@@ -1412,7 +1385,7 @@ begin_define
 define|#
 directive|define
 name|NCR_WAITI
-value|0x20
+value|0x08
 end_define
 
 begin_comment
@@ -1423,7 +1396,7 @@ begin_define
 define|#
 directive|define
 name|NCR_ATN
-value|0x40
+value|0x10
 end_define
 
 begin_comment
@@ -1434,7 +1407,7 @@ begin_define
 define|#
 directive|define
 name|NCR_EXPECT_ILLCMD
-value|0x80
+value|0x20
 end_define
 
 begin_comment
@@ -1475,7 +1448,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/*      can do dmaselect */
+comment|/* can do dmaselect */
 end_comment
 
 begin_define
@@ -1538,21 +1511,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|SEND_WDTR
+name|SEND_TAG
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|SEND_SDTR
+name|SEND_WDTR
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|SEND_TAG
+name|SEND_SDTR
 value|0x0100
 end_define
 
@@ -1625,28 +1598,28 @@ begin_define
 define|#
 directive|define
 name|STATUS_PHASE
-value|(CDI|IOI)
+value|(CDI | IOI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MESSAGE_OUT_PHASE
-value|(MSGI|CDI)
+value|(MSGI | CDI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MESSAGE_IN_PHASE
-value|(MSGI|CDI|IOI)
+value|(MSGI | CDI | IOI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PHASE_MASK
-value|(MSGI|CDI|IOI)
+value|(MSGI | CDI | IOI)
 end_define
 
 begin_comment
@@ -1759,6 +1732,73 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Macros for locking  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCR_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_init(&(_sc)->sc_lock, "ncr", "ncr53c9x lock", MTX_DEF);
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_LOCK_INITIALIZED
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_initialized(&(_sc)->sc_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_what
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_lock, (_what))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_lock)
+end_define
+
+begin_comment
 comment|/*  * DMA macros for NCR53c9x  */
 end_comment
 
@@ -1824,6 +1864,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|NCRDMA_STOP
+parameter_list|(
+name|sc
+parameter_list|)
+value|(*(sc)->sc_glue->gl_dma_stop)((sc))
+end_define
+
+begin_define
+define|#
+directive|define
 name|NCRDMA_ISACTIVE
 parameter_list|(
 name|sc
@@ -1855,6 +1905,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1866,32 +1917,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ncr53c9x_action
-parameter_list|(
-name|struct
-name|cam_sim
-modifier|*
-parameter_list|,
-name|union
-name|ccb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ncr53c9x_reset
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1902,19 +1928,7 @@ name|ncr53c9x_intr
 parameter_list|(
 name|void
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ncr53c9x_init
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
-parameter_list|,
-name|int
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

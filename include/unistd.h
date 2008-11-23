@@ -373,7 +373,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_THREAD_CPUTIME
-value|-1
+value|200112L
 end_define
 
 begin_define

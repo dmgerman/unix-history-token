@@ -506,23 +506,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NCR_BUSID_HME
-value|0x10
+name|NCR_BUSID_HMEXC32
+value|0x40
 end_define
 
 begin_comment
-comment|/* XXX HME reselect ID 		*/
+comment|/*	HME xfer counter is 32bit */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NCR_BUSID_HME32
-value|0x40
+name|NCR_BUSID_HMEENCID
+value|0x10
 end_define
 
 begin_comment
-comment|/* XXX HME to select more than 16 */
+comment|/*	HME encode reselection ID */
 end_comment
 
 begin_define

@@ -240,6 +240,8 @@ name|int
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4396,6 +4398,10 @@ name|unsigned
 name|int
 operator|)
 name|element
+argument_list|,
+name|CHET_VT
+operator|==
+name|type
 argument_list|)
 expr_stmt|;
 if|if
@@ -4555,6 +4561,9 @@ parameter_list|,
 name|unsigned
 name|int
 name|element
+parameter_list|,
+name|int
+name|use_voltags
 parameter_list|)
 block|{
 name|struct
@@ -4641,6 +4650,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Only this one element */
+if|if
+condition|(
+name|use_voltags
+condition|)
 name|cesr
 operator|.
 name|cesr_flags

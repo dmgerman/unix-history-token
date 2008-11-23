@@ -898,6 +898,10 @@ argument_list|,
 name|bmcr
 operator||
 name|BMCR_RESET
+operator||
+name|BMCR_AUTOEN
+operator||
+name|BMCR_STARTNEG
 argument_list|)
 expr_stmt|;
 name|done

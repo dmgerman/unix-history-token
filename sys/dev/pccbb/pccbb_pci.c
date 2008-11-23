@@ -925,6 +925,9 @@ name|uint32_t
 name|progif
 decl_stmt|;
 name|uint32_t
+name|baseclass
+decl_stmt|;
+name|uint32_t
 name|subclass
 decl_stmt|;
 comment|/* 	 * Do we know that we support the chipset?  If so, then we 	 * accept the device. 	 */
@@ -958,6 +961,13 @@ operator|)
 return|;
 block|}
 comment|/* 	 * We do support generic CardBus bridges.  All that we've seen 	 * to date have progif 0 (the Yenta spec, and successors mandate 	 * this). 	 */
+name|baseclass
+operator|=
+name|pci_get_class
+argument_list|(
+name|brdev
+argument_list|)
+expr_stmt|;
 name|subclass
 operator|=
 name|pci_get_subclass
@@ -974,6 +984,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|baseclass
+operator|==
+name|PCIC_BRIDGE
+operator|&&
 name|subclass
 operator|==
 name|PCIS_BRIDGE_CARDBUS
@@ -992,7 +1006,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
