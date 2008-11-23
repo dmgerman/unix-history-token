@@ -7420,8 +7420,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|issymlink
-decl_stmt|,
 name|rv
 decl_stmt|;
 name|sr
@@ -7468,10 +7466,6 @@ name|fa
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|issymlink
-operator|=
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -7483,10 +7477,6 @@ literal|" Mknod %s\n"
 argument_list|,
 name|name
 argument_list|)
-expr_stmt|;
-name|issymlink
-operator|=
-literal|0
 expr_stmt|;
 block|}
 comment|/* Create directory. */
@@ -7512,7 +7502,7 @@ operator|(
 name|UPDATER_ERR_PROTO
 operator|)
 return|;
-comment|/* If it exists, update attributes. */
+comment|/* If it does not exist, create it. */
 if|if
 condition|(
 name|access
@@ -7535,7 +7525,7 @@ operator|->
 name|destpath
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Coming from attic? I don't think this is a problem since we have 	 * determined attic before we call this function (Look at UpdateNode in 	 * cvsup). 	 */
+comment|/* 	 * Coming from attic? I don't think this is a problem since we have 	 * determined attic before we call this function (Look at UpdateNode in 	 * cvsup). 	 */
 name|fattr_umask
 argument_list|(
 name|fa
