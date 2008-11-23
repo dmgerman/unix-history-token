@@ -3358,16 +3358,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|KASSERT
-argument_list|(
 name|mp
-operator|==
+operator|=
 name|NULL
-argument_list|,
-operator|(
-literal|"vm_pageout_scan: mp != NULL"
-operator|)
-argument_list|)
 expr_stmt|;
 operator|++
 name|pageout_lock_miss
