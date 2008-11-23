@@ -21,11 +21,24 @@ directive|define
 name|CONFIG_CHELSIO_T3_CORE
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|800053
+end_if
+
 begin_define
 define|#
 directive|define
 name|IFNET_MULTIQUEUE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

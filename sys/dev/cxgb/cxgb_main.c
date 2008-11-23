@@ -4973,12 +4973,17 @@ operator|->
 name|hw_addr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IFNET_MULTIQUEUE
 name|ifp
 operator|->
 name|if_transmit
 operator|=
 name|cxgb_pcpu_transmit
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Only default to jumbo frames on 10GigE 	 */
 if|if
 condition|(
