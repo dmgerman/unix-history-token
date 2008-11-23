@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081122_0117"
+value|"20081123_0118"
 end_define
 
 begin_expr_stmt
@@ -18003,7 +18003,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Declare soft PCM and master volume if needed. */
+comment|/* Declare soft PCM volume if needed. */
 if|if
 condition|(
 name|pdevinfo
@@ -18011,6 +18011,11 @@ operator|->
 name|play
 operator|>=
 literal|0
+operator|&&
+operator|!
+name|pdevinfo
+operator|->
+name|digital
 condition|)
 block|{
 name|ctl
@@ -18186,15 +18191,30 @@ argument|);
 argument_list|)
 empty_stmt|;
 block|}
+block|}
+comment|/* Declare master volume if needed. */
+if|if
+condition|(
+name|pdevinfo
+operator|->
+name|play
+operator|>=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 operator|(
 name|mask
 operator|&
+operator|(
 name|SOUND_MASK_VOLUME
+operator||
+name|SOUND_MASK_PCM
+operator|)
 operator|)
 operator|==
-literal|0
+name|SOUND_MASK_PCM
 condition|)
 block|{
 name|mask
