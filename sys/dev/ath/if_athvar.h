@@ -1247,11 +1247,6 @@ name|task
 name|sc_rxtask
 decl_stmt|;
 comment|/* rx int processing */
-name|struct
-name|task
-name|sc_rxorntask
-decl_stmt|;
-comment|/* rxorn int processing */
 name|u_int8_t
 name|sc_defant
 decl_stmt|;
