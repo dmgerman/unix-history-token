@@ -1027,7 +1027,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|mb
+name|wmb
 parameter_list|()
 value|__asm__ __volatile__ ("sfence;": : :"memory")
 end_define
@@ -1051,7 +1051,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|mb
+name|wmb
 parameter_list|()
 value|__asm__ __volatile__ ("membar #MemIssue": : :"memory")
 end_define
@@ -1075,7 +1075,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|mb
+name|wmb
 parameter_list|()
 value|__asm__ __volatile__ ("stbar;": : :"memory")
 end_define
@@ -1088,7 +1088,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|mb
+name|wmb
 parameter_list|()
 end_define
 
