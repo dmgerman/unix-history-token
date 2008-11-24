@@ -215,6 +215,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|random_yarrow_flush_reseed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|random_systat
@@ -259,7 +269,7 @@ block|,
 operator|.
 name|reseed
 operator|=
-name|random_yarrow_reseed
+name|random_yarrow_flush_reseed
 block|,
 operator|.
 name|seeded
@@ -350,7 +360,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*<0 to end the kthread, 0 to let it run */
+comment|/*<0 to end the kthread, 0 to let it run, 1 to flush the harvest queues */
 end_comment
 
 begin_decl_stmt
@@ -1112,7 +1122,7 @@ for|for
 control|(
 init|;
 name|random_kthread_control
-operator|==
+operator|>=
 literal|0
 condition|;
 control|)
@@ -1252,6 +1262,17 @@ operator|,
 name|local_count
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* 		 * If a queue flush was commanded, it has now happened, 		 * and we can mark this by resetting the command. 		 */
+if|if
+condition|(
+name|random_kthread_control
+operator|==
+literal|1
+condition|)
+name|random_kthread_control
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Found nothing, so don't belabour the issue */
 if|if
@@ -1768,6 +1789,47 @@ expr_stmt|;
 return|return
 name|error
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Helper routine to perform explicit reseeds */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|random_yarrow_flush_reseed
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Command a entropy queue flush and wait for it to finish */
+name|random_kthread_control
+operator|=
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|random_kthread_control
+condition|)
+name|tsleep
+argument_list|(
+operator|&
+name|harvestfifo
+argument_list|,
+literal|0
+argument_list|,
+literal|"-"
+argument_list|,
+name|hz
+operator|/
+literal|10
+argument_list|)
+expr_stmt|;
+name|random_yarrow_reseed
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
