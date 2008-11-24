@@ -3488,9 +3488,10 @@ name|rnh
 decl_stmt|;
 name|int
 name|s
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|struct
 name|domain
@@ -3726,9 +3727,6 @@ name|i
 operator|++
 control|)
 block|{
-name|int
-name|j
-decl_stmt|;
 for|for
 control|(
 name|j
