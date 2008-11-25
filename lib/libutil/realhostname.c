@@ -363,10 +363,15 @@ index|[
 name|NI_MAXHOST
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in
 name|lsin
 decl_stmt|;
+endif|#
+directive|endif
 name|result
 operator|=
 name|HOSTNAME_INVALIDADDR
