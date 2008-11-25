@@ -1510,6 +1510,9 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 name|V_ip6_esp_trans_deflev
 operator|=
 name|IPSEC_LEVEL_USE
@@ -1531,6 +1534,8 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* ECN ignore(-1)/forbidden(0)/allowed(1) */
+endif|#
+directive|endif
 block|}
 end_function
 
