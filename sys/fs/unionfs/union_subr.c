@@ -364,16 +364,10 @@ operator|->
 name|v_type
 operator|==
 name|VDIR
-operator|||
-name|uvp
-operator|->
-name|v_type
-operator|==
-name|VSOCK
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_get_cached_vnode: v_type != VDIR/VSOCK"
+literal|"unionfs_get_cached_vnode: v_type != VDIR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -389,16 +383,10 @@ operator|->
 name|v_type
 operator|==
 name|VDIR
-operator|||
-name|lvp
-operator|->
-name|v_type
-operator|==
-name|VSOCK
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_get_cached_vnode: v_type != VDIR/VSOCK"
+literal|"unionfs_get_cached_vnode: v_type != VDIR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -574,18 +562,10 @@ operator|->
 name|v_type
 operator|==
 name|VDIR
-operator|||
-name|uncp
-operator|->
-name|un_uppervp
-operator|->
-name|v_type
-operator|==
-name|VSOCK
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_ins_cached_vnode: v_type != VDIR/VSOCK"
+literal|"unionfs_ins_cached_vnode: v_type != VDIR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -605,18 +585,10 @@ operator|->
 name|v_type
 operator|==
 name|VDIR
-operator|||
-name|uncp
-operator|->
-name|un_lowervp
-operator|->
-name|v_type
-operator|==
-name|VSOCK
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_ins_cached_vnode: v_type != VDIR/VSOCK"
+literal|"unionfs_ins_cached_vnode: v_type != VDIR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1022,15 +994,9 @@ name|dvp
 operator|!=
 name|NULLVP
 operator|&&
-operator|(
 name|vt
 operator|==
 name|VDIR
-operator|||
-name|vt
-operator|==
-name|VSOCK
-operator|)
 condition|)
 block|{
 name|vp
@@ -1224,14 +1190,12 @@ argument_list|(
 name|lowervp
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|vt
-condition|)
-block|{
-case|case
+operator|==
 name|VDIR
-case|:
+condition|)
 name|unp
 operator|->
 name|un_hashtbl
@@ -1250,37 +1214,6 @@ name|un_hashmask
 operator|)
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|VSOCK
-case|:
-if|if
-condition|(
-name|uppervp
-operator|!=
-name|NULLVP
-condition|)
-name|vp
-operator|->
-name|v_socket
-operator|=
-name|uppervp
-operator|->
-name|v_socket
-expr_stmt|;
-else|else
-name|vp
-operator|->
-name|v_socket
-operator|=
-name|lowervp
-operator|->
-name|v_socket
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
 name|unp
 operator|->
 name|un_vnode
@@ -1439,15 +1372,9 @@ name|dvp
 operator|!=
 name|NULLVP
 operator|&&
-operator|(
 name|vt
 operator|==
 name|VDIR
-operator|||
-name|vt
-operator|==
-name|VSOCK
-operator|)
 condition|)
 operator|*
 name|vpp
@@ -2542,7 +2469,6 @@ comment|/*  * relookup  *   * dvp should be locked on entry and will be locked o
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|unionfs_relookup
 parameter_list|(
@@ -3471,19 +3397,11 @@ name|dvp
 operator|!=
 name|NULLVP
 operator|&&
-operator|(
 name|vp
 operator|->
 name|v_type
 operator|==
 name|VDIR
-operator|||
-name|vp
-operator|->
-name|v_type
-operator|==
-name|VSOCK
-operator|)
 condition|)
 block|{
 specifier|static
