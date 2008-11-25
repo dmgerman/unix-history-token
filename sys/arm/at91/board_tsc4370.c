@@ -103,6 +103,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* We're using TC0's A1 and A2 input */
+name|at91_pio_use_periph_b
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PA19_TIOA1
+operator||
+name|AT91C_PA21_TIOA2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* PIOB's A periph: Turn USART 1's TX/RX pins */
 name|at91_pio_use_periph_a
 argument_list|(
@@ -120,6 +132,44 @@ argument_list|,
 name|AT91C_PB20_TXD1
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Pin assignment */
+comment|/* Assert PA24 low -- talk to rubidium */
+name|at91_pio_use_gpio
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA24
+argument_list|)
+expr_stmt|;
+name|at91_pio_gpio_output
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA24
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|at91_pio_gpio_clear
+argument_list|(
+name|AT91RM92_PIOA_BASE
+argument_list|,
+name|AT91C_PIO_PA24
+argument_list|)
+expr_stmt|;
+name|at91_pio_use_gpio
+argument_list|(
+name|AT91RM92_PIOB_BASE
+argument_list|,
+name|AT91C_PIO_PB16
+operator||
+name|AT91C_PIO_PB17
+operator||
+name|AT91C_PIO_PB18
+operator||
+name|AT91C_PIO_PB19
 argument_list|)
 expr_stmt|;
 return|return

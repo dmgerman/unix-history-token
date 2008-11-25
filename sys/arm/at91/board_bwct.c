@@ -122,6 +122,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Pin assignment */
 return|return
 operator|(
 name|at91_ramsize
