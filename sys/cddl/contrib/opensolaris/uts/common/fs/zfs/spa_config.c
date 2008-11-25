@@ -467,17 +467,6 @@ modifier|*
 name|nvl
 parameter_list|)
 block|{
-name|size_t
-name|buflen
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|vnode_t
-modifier|*
-name|vp
-decl_stmt|;
 name|int
 name|oflags
 init|=
@@ -491,7 +480,17 @@ name|FOFFMAX
 decl_stmt|;
 name|char
 modifier|*
+name|buf
+decl_stmt|,
+modifier|*
 name|temp
+decl_stmt|;
+name|size_t
+name|buflen
+decl_stmt|;
+name|vnode_t
+modifier|*
+name|vp
 decl_stmt|;
 comment|/* 	 * If the nvlist is empty (NULL), then remove the old cachefile. 	 */
 if|if
@@ -683,11 +682,6 @@ argument_list|,
 name|kcred
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-name|VN_RELE
-argument_list|(
-name|vp
 argument_list|)
 expr_stmt|;
 block|}
