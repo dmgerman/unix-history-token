@@ -3138,6 +3138,7 @@ operator|!
 name|tsc_is_invariant
 operator|&&
 operator|(
+operator|(
 name|strcmp
 argument_list|(
 name|cpu_vendor
@@ -3146,6 +3147,18 @@ literal|"AuthenticAMD"
 argument_list|)
 operator|==
 literal|0
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"GenuineIntel"
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|)
 operator|&&
 operator|(
 operator|(
