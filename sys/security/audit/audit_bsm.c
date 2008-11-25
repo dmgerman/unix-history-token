@@ -2358,7 +2358,7 @@ name|tok
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* fall thru */
+comment|/* FALLTHROUGH */
 case|case
 name|AUE_AUDITON_GETCAR
 case|:
@@ -2585,7 +2585,7 @@ name|tok
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|AUE_ACCESS
 case|:
@@ -3442,7 +3442,7 @@ name|tok
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|AUE_FORK
 case|:
@@ -4148,7 +4148,7 @@ name|tok
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|AUE_UMOUNT
 case|:
@@ -4361,7 +4361,7 @@ name|tok
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|AUE_OPEN_R
 case|:
@@ -5866,6 +5866,7 @@ name|tok
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|AUE_SHMUNLINK
 case|:
@@ -6085,7 +6086,7 @@ name|tok
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|AUE_SEMUNLINK
 case|:
