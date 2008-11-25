@@ -53,23 +53,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/endian.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|<sys/kernel.h>
 end_include
-
-begin_comment
-comment|/* #include<sys/mutex.h> */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/mbuf.h>
 end_include
 
 begin_include
@@ -81,7 +83,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sockio.h>
 end_include
 
 begin_include
@@ -93,7 +107,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
 end_include
 
 begin_include
@@ -111,19 +143,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
+file|<net/if_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sockio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
+file|<net/if_vlan_var.h>
 end_include
 
 begin_include
@@ -135,37 +161,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_vlan_var.h>
 end_include
 
 begin_ifdef
