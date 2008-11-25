@@ -1134,6 +1134,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_M88SX6121
+value|0x612111ab
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_M88SX6145
 value|0x614511ab
 end_define
