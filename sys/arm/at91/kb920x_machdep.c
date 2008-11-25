@@ -503,6 +503,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+modifier|*
+name|boot_arg1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|boot_arg2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|trapframe
 name|proc0_tf
@@ -866,6 +882,14 @@ decl_stmt|;
 name|vm_offset_t
 name|lastaddr
 decl_stmt|;
+name|boot_arg1
+operator|=
+name|arg
+expr_stmt|;
+name|boot_arg2
+operator|=
+name|arg2
+expr_stmt|;
 name|set_cpufuncs
 argument_list|()
 expr_stmt|;
