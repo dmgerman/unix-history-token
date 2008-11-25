@@ -1136,7 +1136,7 @@ name|KERNBASE
 operator|+
 name|i
 operator|*
-literal|0x100000
+name|L1_S_SIZE
 argument_list|,
 operator|&
 name|kernel_pt_table
@@ -1222,7 +1222,7 @@ name|afterkern
 operator|+
 name|i
 operator|*
-literal|0x00100000
+name|L1_S_SIZE
 argument_list|,
 operator|&
 name|kernel_pt_table
@@ -1634,7 +1634,7 @@ name|pmap_curmaxkvaddr
 operator|=
 name|afterkern
 operator|+
-literal|0x100000
+name|L1_S_SIZE
 operator|*
 operator|(
 name|KERNEL_PT_KERN_NUM
