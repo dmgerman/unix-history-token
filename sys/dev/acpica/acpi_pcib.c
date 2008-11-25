@@ -448,9 +448,6 @@ name|int
 name|busno
 parameter_list|)
 block|{
-name|device_t
-name|child
-decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
@@ -537,9 +534,6 @@ expr_stmt|;
 comment|/*      * Attach the PCI bus proper.      */
 if|if
 condition|(
-operator|(
-name|child
-operator|=
 name|device_add_child
 argument_list|(
 name|dev
@@ -548,7 +542,6 @@ literal|"pci"
 argument_list|,
 name|busno
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
