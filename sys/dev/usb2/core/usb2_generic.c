@@ -457,6 +457,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|ugen_fs_uninit
+parameter_list|(
+name|struct
+name|usb2_fifo
+modifier|*
+name|f
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* structures */
 end_comment
@@ -1002,6 +1015,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* ignore any errors - we are closing */
+name|DPRINTFN
+argument_list|(
+literal|6
+argument_list|,
+literal|"no FIFOs\n"
+argument_list|)
+expr_stmt|;
 block|}
 return|return;
 block|}
@@ -3011,6 +3031,25 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* make sure all FIFO's are gone */
+comment|/* else there can be a deadlock */
+if|if
+condition|(
+name|ugen_fs_uninit
+argument_list|(
+name|f
+argument_list|)
+condition|)
+block|{
+comment|/* ignore any errors */
+name|DPRINTFN
+argument_list|(
+literal|6
+argument_list|,
+literal|"no FIFOs\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* change setting - will free generic FIFOs, if any */
 if|if
 condition|(
@@ -3104,6 +3143,25 @@ operator|(
 name|ENOTTY
 operator|)
 return|;
+block|}
+comment|/* make sure all FIFO's are gone */
+comment|/* else there can be a deadlock */
+if|if
+condition|(
+name|ugen_fs_uninit
+argument_list|(
+name|f
+argument_list|)
+condition|)
+block|{
+comment|/* ignore any errors */
+name|DPRINTFN
+argument_list|(
+literal|6
+argument_list|,
+literal|"no FIFOs\n"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* change setting - will free generic FIFOs, if any */
 if|if

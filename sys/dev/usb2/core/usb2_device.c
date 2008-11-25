@@ -6021,6 +6021,8 @@ argument_list|(
 name|udev
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -6046,25 +6048,12 @@ block|}
 elseif|else
 if|if
 condition|(
-name|UGETW
-argument_list|(
-name|udev
-operator|->
-name|ddesc
-operator|.
-name|idVendor
-argument_list|)
-operator|==
-name|USB_VENDOR_HUAWEI
-condition|)
-block|{
-if|if
-condition|(
 name|usb2_test_huawei
 argument_list|(
 name|udev
 argument_list|,
-literal|0
+operator|&
+name|uaa
 argument_list|)
 operator|==
 literal|0
@@ -6082,7 +6071,6 @@ operator|=
 name|USB_ERR_STALLED
 expr_stmt|;
 comment|/* fake an error */
-block|}
 block|}
 block|}
 else|else
@@ -7955,34 +7943,24 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|(
 name|f
 operator|->
 name|dev_ep_index
 operator|==
 literal|0
-condition|)
-block|{
-comment|/* 				 * Don't free the generic control endpoint 				 * yet and make sure that any USB-FS 				 * activity is stopped! 				 */
-if|if
-condition|(
-name|ugen_fs_uninit
-argument_list|(
+operator|)
+operator|&&
+operator|(
 name|f
-argument_list|)
+operator|->
+name|fs_xfer
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
-comment|/* ignore any failures */
-name|DPRINTFN
-argument_list|(
-literal|10
-argument_list|,
-literal|"udev=%p ugen_fs_uninit() "
-literal|"failed! (ignored)\n"
-argument_list|,
-name|udev
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* no need to free this FIFO */
 continue|continue;
 block|}
 block|}
@@ -8018,37 +7996,26 @@ name|flag
 operator|==
 literal|0
 operator|)
-condition|)
-block|{
-comment|/* 				 * Don't free the generic control endpoint 				 * yet, but make sure that any USB-FS 				 * activity is stopped! 				 */
-if|if
-condition|(
-name|ugen_fs_uninit
-argument_list|(
+operator|&&
+operator|(
 name|f
-argument_list|)
+operator|->
+name|fs_xfer
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
-comment|/* ignore any failures */
-name|DPRINTFN
-argument_list|(
-literal|10
-argument_list|,
-literal|"udev=%p ugen_fs_uninit() "
-literal|"failed! (ignored)\n"
-argument_list|,
-name|udev
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* no need to free this FIFO */
 continue|continue;
 block|}
 block|}
 else|else
 block|{
+comment|/* no need to free this FIFO */
 continue|continue;
 block|}
-comment|/* free the FIFO */
+comment|/* free this FIFO */
 name|usb2_fifo_free
 argument_list|(
 name|f
