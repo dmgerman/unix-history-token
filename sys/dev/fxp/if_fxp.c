@@ -6178,7 +6178,7 @@ name|ip
 operator|=
 name|mtod
 argument_list|(
-name|mb_head
+name|m_head
 argument_list|,
 expr|struct
 name|ip
@@ -6191,7 +6191,7 @@ name|ip_sum
 operator|=
 name|in_cksum
 argument_list|(
-name|mb_head
+name|m_head
 argument_list|,
 name|ip
 operator|->
