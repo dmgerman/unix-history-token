@@ -797,14 +797,12 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-comment|/* XXX Cleanup needed... */
-name|panic
+name|vput
 argument_list|(
-literal|"null_nodeget failed"
+name|lvp
 argument_list|)
 expr_stmt|;
-block|}
+else|else
 operator|*
 name|ap
 operator|->
