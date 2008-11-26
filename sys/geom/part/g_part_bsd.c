@@ -1330,7 +1330,7 @@ name|g_part_bsd_entry
 modifier|*
 name|entry
 decl_stmt|;
-comment|/* Allow dumping to a swap partition only. */
+comment|/* Allow dumping to a swap partition or an unused partition. */
 name|entry
 operator|=
 operator|(
@@ -1343,6 +1343,14 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
+name|entry
+operator|->
+name|part
+operator|.
+name|p_fstype
+operator|==
+name|FS_UNUSED
+operator|||
 name|entry
 operator|->
 name|part
