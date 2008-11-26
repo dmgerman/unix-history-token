@@ -961,15 +961,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTEL_VENDOR_ID
-value|"GenuineIntel"
+name|AMD_VENDOR_ID
+value|"AuthenticAMD"
 end_define
 
 begin_define
 define|#
 directive|define
-name|AMD_VENDOR_ID
-value|"AuthenticAMD"
+name|INTEL_VENDOR_ID
+value|"GenuineIntel"
 end_define
 
 begin_comment

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cputypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -6270,14 +6276,9 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|strcmp
-argument_list|(
-name|cpu_vendor
-argument_list|,
-literal|"GenuineIntel"
-argument_list|)
+name|cpu_vendor_id
 operator|==
-literal|0
+name|CPU_VENDOR_INTEL
 argument_list|,
 operator|(
 literal|"[p4,%d] Initializing non-intel processor"

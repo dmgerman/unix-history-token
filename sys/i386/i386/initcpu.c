@@ -476,6 +476,18 @@ begin_comment
 comment|/* CPU Origin code */
 end_comment
 
+begin_decl_stmt
+name|u_int
+name|cpu_vendor_id
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* CPU vendor ID */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
