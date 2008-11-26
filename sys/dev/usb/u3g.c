@@ -287,9 +287,11 @@ block|{
 name|u_int32_t
 name|ispeed
 decl_stmt|;
+comment|// Speed in bits per second
 name|u_int32_t
 name|ospeed
 decl_stmt|;
+comment|// Speed in bits per second
 block|}
 struct|;
 end_struct
@@ -1070,7 +1072,20 @@ block|,
 name|USB_PRODUCT_SIERRA_MC8775_2
 block|}
 block|,
-name|U3GSP_UMTS
+name|U3GSP_HSDPA
+block|,
+name|U3GFL_NONE
+block|}
+block|,
+comment|// XXX
+block|{
+block|{
+name|USB_VENDOR_HP
+block|,
+name|USB_PRODUCT_HP_HS2300
+block|}
+block|,
+name|U3GSP_HSDPA
 block|,
 name|U3GFL_NONE
 block|}
@@ -1545,6 +1560,10 @@ operator|<
 name|id
 operator|->
 name|bNumEndpoints
+operator|&&
+name|portno
+operator|<
+name|U3G_MAXPORTS
 condition|;
 name|n
 operator|++
@@ -1700,6 +1719,8 @@ index|]
 operator|.
 name|ispeed
 operator|/
+literal|10
+operator|/
 name|USB_FRAMES_PER_SECOND
 operator|*
 literal|10
@@ -1724,6 +1745,8 @@ name|sc_speed
 index|]
 operator|.
 name|ospeed
+operator|/
+literal|10
 operator|/
 name|USB_FRAMES_PER_SECOND
 operator|*
