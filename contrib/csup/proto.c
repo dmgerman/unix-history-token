@@ -2138,6 +2138,15 @@ argument_list|,
 argument|co_next
 argument_list|)
 block|{
+if|if
+condition|(
+name|coll
+operator|->
+name|co_options
+operator|&
+name|CO_SKIP
+condition|)
+continue|continue;
 name|proto_printf
 argument_list|(
 name|s
