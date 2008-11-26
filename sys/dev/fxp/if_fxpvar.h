@@ -26,6 +26,17 @@ value|((FXP_NTXCB * 7) / 10)
 end_define
 
 begin_comment
+comment|/*  * Maximum size of a DMA segment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_TSO_SEGSIZE
+value|4096
+end_define
+
+begin_comment
 comment|/*  * Size of the TxCB list.  */
 end_comment
 
@@ -369,6 +380,10 @@ name|int
 name|maxtxseg
 decl_stmt|;
 comment|/* maximum # of TX segments */
+name|int
+name|maxsegsize
+decl_stmt|;
+comment|/* maximum size of a TX segment */
 name|int
 name|tx_queued
 decl_stmt|;
