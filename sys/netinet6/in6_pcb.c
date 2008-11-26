@@ -1924,6 +1924,13 @@ name|inp_vflag
 operator|=
 literal|0
 expr_stmt|;
+name|crfree
+argument_list|(
+name|inp
+operator|->
+name|inp_cred
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
