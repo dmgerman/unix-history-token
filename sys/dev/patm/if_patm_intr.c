@@ -1174,9 +1174,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|v0
-decl_stmt|,
-modifier|*
-name|v1
 decl_stmt|;
 name|uint32_t
 name|h0
@@ -1223,9 +1220,6 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|(
-name|v1
-operator|=
 name|mbp_alloc
 argument_list|(
 name|sc
@@ -1238,7 +1232,6 @@ argument_list|,
 operator|&
 name|h1
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
@@ -1315,9 +1308,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|v0
-decl_stmt|,
-modifier|*
-name|v1
 decl_stmt|;
 name|uint32_t
 name|h0
@@ -1364,9 +1354,6 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|(
-name|v1
-operator|=
 name|mbp_alloc
 argument_list|(
 name|sc
@@ -1379,7 +1366,6 @@ argument_list|,
 operator|&
 name|h1
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
