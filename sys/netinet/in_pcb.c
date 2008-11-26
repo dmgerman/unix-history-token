@@ -4051,7 +4051,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"in_pcbdetach: inp_socket == NULL"
+literal|"%s: inp_socket == NULL"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4104,7 +4106,9 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"in_pcbfree: inp_socket != NULL"
+literal|"%s: inp_socket != NULL"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4128,7 +4132,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*IPSEC*/
+comment|/* IPSEC */
 name|inp
 operator|->
 name|inp_gencnt
