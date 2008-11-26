@@ -613,7 +613,19 @@ case|:
 case|case
 literal|0x13
 case|:
-comment|/* 		 * These CPU models hang when set to 12.5% or 25%. 		 * See Errata N44 and P18l. 		 */
+case|case
+literal|0x62
+case|:
+comment|/* Pentium D B1: errata AA21 */
+case|case
+literal|0x64
+case|:
+comment|/* Pentium D C1: errata AA21 */
+case|case
+literal|0x65
+case|:
+comment|/* Pentium D D0: errata AA21 */
+comment|/* 		 * These CPU models hang when set to 12.5% or 25%. 		 * See Errata N44, P18l and AA21. 		 */
 name|sc
 operator|->
 name|set_count
