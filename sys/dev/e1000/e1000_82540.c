@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/* e1000_82540  * e1000_82545  * e1000_82546  * e1000_82545_rev_3  * e1000_82546_rev_3  */
+comment|/*  * 82540EM Gigabit Ethernet Controller  * 82540EP Gigabit Ethernet Controller  * 82545EM Gigabit Ethernet Controller (Copper)  * 82545EM Gigabit Ethernet Controller (Fiber)  * 82545GM Gigabit Ethernet Controller  * 82546EB Gigabit Ethernet Controller (Copper)  * 82546EB Gigabit Ethernet Controller (Fiber)  * 82546GB Gigabit Ethernet Controller  */
 end_comment
 
 begin_include
@@ -174,7 +174,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * e1000_init_phy_params_82540 - Init PHY func ptrs.  * @hw: pointer to the HW structure  *  * This is a function pointer entry point called by the api module.  **/
+comment|/**  * e1000_init_phy_params_82540 - Init PHY func ptrs.  * @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -385,7 +385,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * e1000_init_nvm_params_82540 - Init NVM func ptrs.  * @hw: pointer to the HW structure  *  * This is a function pointer entry point called by the api module.  **/
+comment|/**  * e1000_init_nvm_params_82540 - Init NVM func ptrs.  * @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -572,7 +572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * e1000_init_mac_params_82540 - Init MAC func ptrs.  * @hw: pointer to the HW structure  *  * This is a function pointer entry point called by the api module.  **/
+comment|/**  * e1000_init_mac_params_82540 - Init MAC func ptrs.  * @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -684,6 +684,15 @@ operator|.
 name|get_bus_info
 operator|=
 name|e1000_get_bus_info_pci_generic
+expr_stmt|;
+comment|/* function id */
+name|mac
+operator|->
+name|ops
+operator|.
+name|set_lan_id
+operator|=
+name|e1000_set_lan_id_multi_port_pci
 expr_stmt|;
 comment|/* reset */
 name|mac
@@ -900,7 +909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * e1000_init_function_pointers_82540 - Init func ptrs.  * @hw: pointer to the HW structure  *  * The only function explicitly called by the api module to initialize  * all function pointers and parameters.  **/
+comment|/**  * e1000_init_function_pointers_82540 - Init func ptrs.  * @hw: pointer to the HW structure  *  * Called to initialize all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -952,7 +961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82540 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82540 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  **/
 end_comment
 
 begin_function
@@ -1137,7 +1146,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_82540 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_hw_82540 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  **/
 end_comment
 
 begin_function
@@ -1397,7 +1406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_copper_link_82540 - Configure copper link settings  *  @hw: pointer to the HW structure  *  *  Calls the appropriate function to configure the link for auto-neg or forced  *  speed and duplex.  Then we check for link, once link is established calls  *  to configure collision distance and flow control are called.  If link is  *  not established, we return -E1000_ERR_PHY (-2).  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_setup_copper_link_82540 - Configure copper link settings  *  @hw: pointer to the HW structure  *  *  Calls the appropriate function to configure the link for auto-neg or forced  *  speed and duplex.  Then we check for link, once link is established calls  *  to configure collision distance and flow control are called.  If link is  *  not established, we return -E1000_ERR_PHY (-2).  **/
 end_comment
 
 begin_function
@@ -1575,7 +1584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_fiber_serdes_link_82540 - Setup link for fiber/serdes  *  @hw: pointer to the HW structure  *  *  Set the output amplitude to the value in the EEPROM and adjust the VCO  *  speed to improve Bit Error Rate (BER) performance.  Configures collision  *  distance and flow control for fiber and serdes links.  Upon successful  *  setup, poll for link.  This is a function pointer entry point called by  *  the api module.  **/
+comment|/**  *  e1000_setup_fiber_serdes_link_82540 - Setup link for fiber/serdes  *  @hw: pointer to the HW structure  *  *  Set the output amplitude to the value in the EEPROM and adjust the VCO  *  speed to improve Bit Error Rate (BER) performance.  Configures collision  *  distance and flow control for fiber and serdes links.  Upon successful  *  setup, poll for link.  **/
 end_comment
 
 begin_function
@@ -2253,10 +2262,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-specifier|volatile
-name|u32
-name|temp
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_clear_hw_cntrs_82540"
@@ -2267,8 +2272,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2276,8 +2279,6 @@ argument_list|,
 name|E1000_PRC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2285,8 +2286,6 @@ argument_list|,
 name|E1000_PRC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2294,8 +2293,6 @@ argument_list|,
 name|E1000_PRC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2303,8 +2300,6 @@ argument_list|,
 name|E1000_PRC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2312,8 +2307,6 @@ argument_list|,
 name|E1000_PRC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2321,8 +2314,6 @@ argument_list|,
 name|E1000_PRC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2330,8 +2321,6 @@ argument_list|,
 name|E1000_PTC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2339,8 +2328,6 @@ argument_list|,
 name|E1000_PTC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2348,8 +2335,6 @@ argument_list|,
 name|E1000_PTC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2357,8 +2342,6 @@ argument_list|,
 name|E1000_PTC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2366,8 +2349,6 @@ argument_list|,
 name|E1000_PTC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2375,8 +2356,6 @@ argument_list|,
 name|E1000_PTC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2384,8 +2363,6 @@ argument_list|,
 name|E1000_ALGNERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2393,8 +2370,6 @@ argument_list|,
 name|E1000_RXERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2402,8 +2377,6 @@ argument_list|,
 name|E1000_TNCRS
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2411,8 +2384,6 @@ argument_list|,
 name|E1000_CEXTERR
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2420,8 +2391,6 @@ argument_list|,
 name|E1000_TSCTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2429,8 +2398,6 @@ argument_list|,
 name|E1000_TSCTFC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2438,8 +2405,6 @@ argument_list|,
 name|E1000_MGTPRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -2447,8 +2412,6 @@ argument_list|,
 name|E1000_MGTPDC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw

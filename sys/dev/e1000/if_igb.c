@@ -314,7 +314,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 1.4.0"
+literal|"version - 1.4.1"
 decl_stmt|;
 end_decl_stmt
 
@@ -11139,7 +11139,7 @@ name|hw
 operator|.
 name|fc
 operator|.
-name|type
+name|requested_mode
 operator|=
 name|igb_fc_setting
 expr_stmt|;
@@ -11150,7 +11150,7 @@ name|hw
 operator|.
 name|fc
 operator|.
-name|type
+name|requested_mode
 operator|=
 name|e1000_fc_none
 expr_stmt|;
@@ -16038,10 +16038,8 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|device_printf
+name|INIT_DEBUGOUT
 argument_list|(
-name|dev
-argument_list|,
 literal|"RX LRO Initialized\n"
 argument_list|)
 expr_stmt|;

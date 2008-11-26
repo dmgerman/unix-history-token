@@ -228,7 +228,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_IGNORE_TCO_BM
+name|E1000_WUFC_IGNORE_TCO_PHY
 value|0x00000800
 end_define
 
@@ -239,7 +239,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_FLX0_BM
+name|E1000_WUFC_FLX0_PHY
 value|0x00001000
 end_define
 
@@ -250,7 +250,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_FLX1_BM
+name|E1000_WUFC_FLX1_PHY
 value|0x00002000
 end_define
 
@@ -261,7 +261,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_FLX2_BM
+name|E1000_WUFC_FLX2_PHY
 value|0x00004000
 end_define
 
@@ -272,7 +272,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_FLX3_BM
+name|E1000_WUFC_FLX3_PHY
 value|0x00008000
 end_define
 
@@ -360,18 +360,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_ALL_FILTERS_BM
+name|E1000_WUFC_ALL_FILTERS_PHY_4
 value|0x0000F0FF
 end_define
 
 begin_comment
-comment|/* Mask for all wakeup filters */
+comment|/*Mask for all wakeup filters*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_FLX_OFFSET_BM
+name|E1000_WUFC_FLX_OFFSET_PHY
 value|12
 end_define
 
@@ -382,12 +382,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_WUFC_FLX_FILTERS_BM
+name|E1000_WUFC_FLX_FILTERS_PHY_4
 value|0x0000F000
 end_define
 
 begin_comment
-comment|/* Mask for the 4 flexible filters */
+comment|/*Mask for 4 flexible filters*/
 end_comment
 
 begin_define
@@ -420,7 +420,7 @@ value|0x000F0000
 end_define
 
 begin_comment
-comment|/* Mask for the 4 flexible filters */
+comment|/*Mask for the 4 flexible filters */
 end_comment
 
 begin_comment
@@ -501,36 +501,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_WUS_FLX0_BM
-value|E1000_WUFC_FLX0_BM
+name|E1000_WUS_FLX0_PHY
+value|E1000_WUFC_FLX0_PHY
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_WUS_FLX1_BM
-value|E1000_WUFC_FLX1_BM
+name|E1000_WUS_FLX1_PHY
+value|E1000_WUFC_FLX1_PHY
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_WUS_FLX2_BM
-value|E1000_WUFC_FLX2_BM
+name|E1000_WUS_FLX2_PHY
+value|E1000_WUFC_FLX2_PHY
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_WUS_FLX3_BM
-value|E1000_WUFC_FLX3_BM
+name|E1000_WUS_FLX3_PHY
+value|E1000_WUFC_FLX3_PHY
 end_define
 
 begin_define
 define|#
 directive|define
-name|E1000_WUS_FLX_FILTERS_BM
-value|E1000_WUFC_FLX_FILTERS_BM
+name|E1000_WUS_FLX_FILTERS_PHY_4
+value|E1000_WUFC_FLX_FILTERS_PHY_4
 end_define
 
 begin_define
@@ -989,7 +989,7 @@ value|0x04000000
 end_define
 
 begin_comment
-comment|/* Interrupt delay cancellation */
+comment|/* Int delay cancellation */
 end_comment
 
 begin_define
@@ -1015,7 +1015,7 @@ value|0x08000000
 end_define
 
 begin_comment
-comment|/* Interrupt acknowledge Auto-mask */
+comment|/* Int acknowledge Auto-mask */
 end_comment
 
 begin_define
@@ -1026,7 +1026,7 @@ value|0x20000000
 end_define
 
 begin_comment
-comment|/* Clear Interrupt timers after IMS clear */
+comment|/* Clear Interrupt timers                                                   * after IMS clear */
 end_comment
 
 begin_define
@@ -1037,7 +1037,7 @@ value|0x01000000
 end_define
 
 begin_comment
-comment|/* packet buffer parity error detection enabled */
+comment|/* packet buffer parity error                                                   * detection enabled */
 end_comment
 
 begin_define
@@ -1048,7 +1048,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* descriptor FIFO parity error detection enable */
+comment|/* descriptor FIFO parity                                                   * error detection enable */
 end_comment
 
 begin_define
@@ -2749,7 +2749,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* Defined polarity of Dock/Undock indication in SDP[0] */
+comment|/* Defined polarity of Dock/Undock                                              * indication in SDP[0] */
 end_comment
 
 begin_define
@@ -2760,7 +2760,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* Reset both PHY ports, through PHYRST_N pin */
+comment|/* Reset both PHY ports, through                                                * PHYRST_N pin */
 end_comment
 
 begin_define
@@ -2771,7 +2771,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* enable link status from external LINK_0 and LINK_1 pins */
+comment|/* enable link status from external                                            * LINK_0 and LINK_1 pins */
 end_comment
 
 begin_define
@@ -2936,7 +2936,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* Initiate an interrupt to manageability engine */
+comment|/* Initiate an interrupt to ME */
 end_comment
 
 begin_define
@@ -2951,7 +2951,7 @@ comment|/* I2C enable */
 end_comment
 
 begin_comment
-comment|/* Bit definitions for the Management Data IO (MDIO) and Management Data  * Clock (MDC) pins in the Device Control Register.  */
+comment|/*  * Bit definitions for the Management Data IO (MDIO) and Management Data  * Clock (MDC) pins in the Device Control Register.  */
 end_comment
 
 begin_define
@@ -3385,7 +3385,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* Change in Dock/Undock state. Clear on write '0'. */
+comment|/* Change in Dock/Undock state.                                                  * Clear on write '0'. */
 end_comment
 
 begin_define
@@ -3396,7 +3396,7 @@ value|0x00080000
 end_define
 
 begin_comment
-comment|/* Status of Master requests. */
+comment|/* Master request status */
 end_comment
 
 begin_define
@@ -3506,7 +3506,7 @@ value|0x01000000
 end_define
 
 begin_comment
-comment|/* BMC external code execution disabled */
+comment|/* BMC external code execution                                             * disabled */
 end_comment
 
 begin_define
@@ -3689,14 +3689,14 @@ begin_define
 define|#
 directive|define
 name|E1000_ALL_SPEED_DUPLEX
-value|( ADVERTISE_10_HALF |   ADVERTISE_10_FULL | \                                 ADVERTISE_100_HALF |  ADVERTISE_100_FULL | \                                                      ADVERTISE_1000_FULL)
+value|(ADVERTISE_10_HALF |   ADVERTISE_10_FULL | \                                 ADVERTISE_100_HALF |  ADVERTISE_100_FULL | \                                                      ADVERTISE_1000_FULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|E1000_ALL_NOT_GIG
-value|( ADVERTISE_10_HALF |   ADVERTISE_10_FULL | \                                 ADVERTISE_100_HALF |  ADVERTISE_100_FULL)
+value|(ADVERTISE_10_HALF |   ADVERTISE_10_FULL | \                                 ADVERTISE_100_HALF |  ADVERTISE_100_FULL)
 end_define
 
 begin_define
@@ -5286,7 +5286,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* If this bit asserted, the driver should claim the interrupt */
+comment|/* If this bit asserted, the driver                                             * should claim the interrupt */
 end_comment
 
 begin_define
@@ -5297,7 +5297,7 @@ value|0x00100000
 end_define
 
 begin_comment
-comment|/* queue 0 Rx descriptor FIFO parity error */
+comment|/* Q0 Rx desc FIFO parity error */
 end_comment
 
 begin_define
@@ -5308,7 +5308,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* queue 0 Tx descriptor FIFO parity error */
+comment|/* Q0 Tx desc FIFO parity error */
 end_comment
 
 begin_define
@@ -5319,7 +5319,7 @@ value|0x00400000
 end_define
 
 begin_comment
-comment|/* host arb read buffer parity error */
+comment|/* host arb read buffer parity err */
 end_comment
 
 begin_define
@@ -5341,7 +5341,7 @@ value|0x01000000
 end_define
 
 begin_comment
-comment|/* queue 1 Rx descriptor FIFO parity error */
+comment|/* Q1 Rx desc FIFO parity error */
 end_comment
 
 begin_define
@@ -5352,7 +5352,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* queue 1 Tx descriptor FIFO parity error */
+comment|/* Q1 Tx desc FIFO parity error */
 end_comment
 
 begin_define
@@ -5374,7 +5374,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* FW changed the status of DISSW bit in the FWSM */
+comment|/* FW changed the status of DISSW                                             * bit in the FWSM */
 end_comment
 
 begin_define
@@ -5385,7 +5385,18 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* LAN connected device generates an interrupt */
+comment|/* LAN connected device generates                                             * an interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_DOUTSYNC
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* NIC DMA out of sync */
 end_comment
 
 begin_define
@@ -5851,7 +5862,7 @@ value|E1000_ICR_RXD_FIFO_PAR0
 end_define
 
 begin_comment
-comment|/* queue 0 Rx descriptor FIFO parity error */
+comment|/* Q0 Rx desc FIFO                                                          * parity error */
 end_comment
 
 begin_define
@@ -5862,7 +5873,7 @@ value|E1000_ICR_TXD_FIFO_PAR0
 end_define
 
 begin_comment
-comment|/* queue 0 Tx descriptor FIFO parity error */
+comment|/* Q0 Tx desc FIFO                                                          * parity error */
 end_comment
 
 begin_define
@@ -5873,7 +5884,7 @@ value|E1000_ICR_HOST_ARB_PAR
 end_define
 
 begin_comment
-comment|/* host arb read buffer parity error */
+comment|/* host arb read buffer                                                          * parity error */
 end_comment
 
 begin_define
@@ -5884,7 +5895,7 @@ value|E1000_ICR_PB_PAR
 end_define
 
 begin_comment
-comment|/* packet buffer parity error */
+comment|/* packet buffer parity                                                          * error */
 end_comment
 
 begin_define
@@ -5895,7 +5906,7 @@ value|E1000_ICR_RXD_FIFO_PAR1
 end_define
 
 begin_comment
-comment|/* queue 1 Rx descriptor FIFO parity error */
+comment|/* Q1 Rx desc FIFO                                                          * parity error */
 end_comment
 
 begin_define
@@ -5906,7 +5917,7 @@ value|E1000_ICR_TXD_FIFO_PAR1
 end_define
 
 begin_comment
-comment|/* queue 1 Tx descriptor FIFO parity error */
+comment|/* Q1 Tx desc FIFO                                                          * parity error */
 end_comment
 
 begin_define
@@ -5922,6 +5933,17 @@ directive|define
 name|E1000_IMS_PHYINT
 value|E1000_ICR_PHYINT
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_DOUTSYNC
+value|E1000_ICR_DOUTSYNC
+end_define
+
+begin_comment
+comment|/* NIC DMA out of sync */
+end_comment
 
 begin_define
 define|#
@@ -6301,7 +6323,7 @@ value|E1000_ICR_RXD_FIFO_PAR0
 end_define
 
 begin_comment
-comment|/* queue 0 Rx descriptor FIFO parity error */
+comment|/* Q0 Rx desc FIFO                                                          * parity error */
 end_comment
 
 begin_define
@@ -6312,7 +6334,7 @@ value|E1000_ICR_TXD_FIFO_PAR0
 end_define
 
 begin_comment
-comment|/* queue 0 Tx descriptor FIFO parity error */
+comment|/* Q0 Tx desc FIFO                                                          * parity error */
 end_comment
 
 begin_define
@@ -6323,7 +6345,7 @@ value|E1000_ICR_HOST_ARB_PAR
 end_define
 
 begin_comment
-comment|/* host arb read buffer parity error */
+comment|/* host arb read buffer                                                          * parity error */
 end_comment
 
 begin_define
@@ -6334,7 +6356,7 @@ value|E1000_ICR_PB_PAR
 end_define
 
 begin_comment
-comment|/* packet buffer parity error */
+comment|/* packet buffer parity                                                          * error */
 end_comment
 
 begin_define
@@ -6345,7 +6367,7 @@ value|E1000_ICR_RXD_FIFO_PAR1
 end_define
 
 begin_comment
-comment|/* queue 1 Rx descriptor FIFO parity error */
+comment|/* Q1 Rx desc FIFO                                                          * parity error */
 end_comment
 
 begin_define
@@ -6356,7 +6378,7 @@ value|E1000_ICR_TXD_FIFO_PAR1
 end_define
 
 begin_comment
-comment|/* queue 1 Tx descriptor FIFO parity error */
+comment|/* Q1 Tx desc FIFO                                                          * parity error */
 end_comment
 
 begin_define
@@ -6365,6 +6387,17 @@ directive|define
 name|E1000_ICS_DSW
 value|E1000_ICR_DSW
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_DOUTSYNC
+value|E1000_ICR_DOUTSYNC
+end_define
+
+begin_comment
+comment|/* NIC DMA out of sync */
+end_comment
 
 begin_define
 define|#
@@ -8423,7 +8456,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Offset to data in NVM read/write registers */
+comment|/* Offset to data in NVM read/write regs */
 end_comment
 
 begin_define
@@ -8521,7 +8554,7 @@ value|0x0006
 end_define
 
 begin_comment
-comment|/* For SERDES output amplitude adjustment. */
+comment|/* SERDES output amplitude */
 end_comment
 
 begin_define
@@ -10607,6 +10640,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _E1000_DEFINES_H_ */
+end_comment
 
 end_unit
 
