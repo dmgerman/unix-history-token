@@ -133,20 +133,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|in6_pcbdetach
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|inpcb
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|in6_pcbdisconnect
 name|__P
 argument_list|(
