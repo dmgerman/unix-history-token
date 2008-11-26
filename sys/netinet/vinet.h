@@ -248,6 +248,15 @@ name|struct
 name|tcp_syncache
 name|_tcp_syncache
 decl_stmt|;
+name|int
+name|_tcp_syncookies
+decl_stmt|;
+name|int
+name|_tcp_syncookiesonly
+decl_stmt|;
+name|int
+name|_tcp_sc_rst_sock_fail
+decl_stmt|;
 name|struct
 name|inpcbhead
 name|_divcb
@@ -263,9 +272,6 @@ argument|tcptw
 argument_list|)
 name|_twq_2msl
 expr_stmt|;
-name|int
-name|_tcp_sc_rst_sock_fail
-decl_stmt|;
 name|int
 name|_tcp_mssdflt
 decl_stmt|;
@@ -603,13 +609,6 @@ define|#
 directive|define
 name|V_arpt_keep
 value|VNET_INET(arpt_keep)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_arpt_prune
-value|VNET_INET(arpt_prune)
 end_define
 
 begin_define

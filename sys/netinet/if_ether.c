@@ -298,8 +298,12 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_link_ether_inet
 argument_list|,
 name|OID_AUTO
@@ -308,7 +312,6 @@ name|max_age
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|arpt_keep
 argument_list|,
 literal|0

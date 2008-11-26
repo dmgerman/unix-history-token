@@ -843,6 +843,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int
 name|saorder_state_alive
 index|[]
@@ -860,6 +861,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int
 name|saorder_state_any
 index|[]
@@ -13196,7 +13198,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_any
+name|saorder_state_any
 argument_list|)
 condition|;
 name|stateidx
@@ -13206,7 +13208,7 @@ block|{
 name|u_int
 name|state
 init|=
-name|V_saorder_state_any
+name|saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -14462,7 +14464,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_alive
+name|saorder_state_alive
 argument_list|)
 condition|;
 name|stateidx
@@ -14471,7 +14473,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_alive
+name|saorder_state_alive
 index|[
 name|stateidx
 index|]
@@ -20338,6 +20340,9 @@ name|now
 init|=
 name|time_second
 decl_stmt|;
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
 name|VNET_FOREACH
 argument_list|(
 argument|vnet_iter
@@ -20372,6 +20377,9 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|IPSEC_DEBUG2
@@ -25403,7 +25411,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_alive
+name|saorder_state_alive
 argument_list|)
 condition|;
 name|stateidx
@@ -25412,7 +25420,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_alive
+name|saorder_state_alive
 index|[
 name|stateidx
 index|]
@@ -30815,7 +30823,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_alive
+name|saorder_state_alive
 argument_list|)
 condition|;
 name|stateidx
@@ -30824,7 +30832,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_any
+name|saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -31220,7 +31228,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_any
+name|saorder_state_any
 argument_list|)
 condition|;
 name|stateidx
@@ -31229,7 +31237,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_any
+name|saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -31358,7 +31366,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_any
+name|saorder_state_any
 argument_list|)
 condition|;
 name|stateidx
@@ -31367,7 +31375,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_any
+name|saorder_state_any
 index|[
 name|stateidx
 index|]

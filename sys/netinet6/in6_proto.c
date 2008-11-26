@@ -2983,8 +2983,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet6
+argument_list|,
 name|_net_inet6_icmp6
 argument_list|,
 name|ICMPV6CTL_ND6_ONLINKNSRFC4861
@@ -2993,7 +2997,6 @@ name|nd6_onlink_ns_rfc4861
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|nd6_onlink_ns_rfc4861
 argument_list|,
 literal|0

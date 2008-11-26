@@ -420,6 +420,18 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|INIT_VNET_NET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* XXX: destroying lo0 will lead to panics. */
 name|KASSERT
 argument_list|(
@@ -593,6 +605,11 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type

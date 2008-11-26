@@ -1085,11 +1085,6 @@ name|u_short
 name|idx
 parameter_list|)
 block|{
-name|INIT_VNET_NET
-argument_list|(
-name|curvnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|ifaddr
 modifier|*

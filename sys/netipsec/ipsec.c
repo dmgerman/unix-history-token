@@ -9473,7 +9473,7 @@ operator|&
 name|V_ip4_def_policy
 argument_list|)
 expr_stmt|;
-name|ip4_def_policy
+name|V_ip4_def_policy
 operator|.
 name|refcnt
 operator|=

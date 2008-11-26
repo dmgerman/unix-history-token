@@ -233,7 +233,7 @@ block|{
 literal|2
 block|,
 name|PF_KEY
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -688,7 +688,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|V_key_src
+name|key_src
 argument_list|,
 name|m
 argument_list|,

@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vimage.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -6441,6 +6447,14 @@ expr_stmt|;
 name|SYSCTL_LOCK
 argument_list|()
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|req
@@ -6501,6 +6515,9 @@ name|req
 operator|.
 name|validlen
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 name|SYSCTL_UNLOCK
 argument_list|()

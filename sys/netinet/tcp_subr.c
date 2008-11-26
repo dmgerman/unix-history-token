@@ -544,10 +544,7 @@ parameter_list|)
 block|{
 name|INIT_VNET_INET
 argument_list|(
-name|TD_TO_VNET
-argument_list|(
-name|curthread
-argument_list|)
+name|curvnet
 argument_list|)
 expr_stmt|;
 name|int
@@ -609,8 +606,12 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_V_PROC
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|TCPCTL_MSSDFLT
@@ -621,7 +622,6 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_mssdflt
 argument_list|,
 literal|0
@@ -652,10 +652,7 @@ parameter_list|)
 block|{
 name|INIT_VNET_INET6
 argument_list|(
-name|TD_TO_VNET
-argument_list|(
-name|curthread
-argument_list|)
+name|curvnet
 argument_list|)
 expr_stmt|;
 name|int
@@ -717,8 +714,12 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_V_PROC
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|TCPCTL_V6MSSDFLT
@@ -729,7 +730,6 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_v6mssdflt
 argument_list|,
 literal|0
@@ -1042,8 +1042,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_V_PROC
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp_inflight
 argument_list|,
 name|OID_AUTO
@@ -1054,7 +1058,6 @@ name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_inflight_rttthresh
 argument_list|,
 literal|0
@@ -4413,6 +4416,19 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|INIT_VNET_INET
+argument_list|(
+name|inp
+operator|->
+name|inp_vnet
+argument_list|)
+expr_stmt|;
+comment|/* V_tcbinfo WLOCK ASSERT */
+endif|#
+directive|endif
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
@@ -8916,6 +8932,11 @@ name|u_int
 name|direction
 parameter_list|)
 block|{
+name|INIT_VNET_IPSEC
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|union
 name|sockaddr_union
 name|dst

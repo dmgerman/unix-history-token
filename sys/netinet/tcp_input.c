@@ -11588,6 +11588,13 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|tp
+operator|->
+name|t_vnet
+argument_list|)
+expr_stmt|;
 name|tcp_mss_update
 argument_list|(
 name|tp

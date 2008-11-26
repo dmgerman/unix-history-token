@@ -683,8 +683,12 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet6
+argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_RTEXPIRE
@@ -693,7 +697,6 @@ name|rtexpire
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|rtq_reallyold6
 argument_list|,
 literal|0
@@ -704,8 +707,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet6
+argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_RTMINEXPIRE
@@ -714,7 +721,6 @@ name|rtminexpire
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|rtq_minreallyold6
 argument_list|,
 literal|0
@@ -725,8 +731,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet6
+argument_list|,
 name|_net_inet6_ip6
 argument_list|,
 name|IPV6CTL_RTMAXCACHE
@@ -735,7 +745,6 @@ name|rtmaxcache
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|rtq_toomany6
 argument_list|,
 literal|0

@@ -403,8 +403,12 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -413,7 +417,6 @@ name|syncookies
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_syncookies
 argument_list|,
 literal|0
@@ -424,8 +427,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -434,7 +441,6 @@ name|syncookies_only
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_syncookiesonly
 argument_list|,
 literal|0
@@ -1683,13 +1689,6 @@ operator|*
 operator|)
 name|xsch
 decl_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|sch
-operator|->
-name|sch_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|syncache
 modifier|*
@@ -1707,6 +1706,20 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|sch
+operator|->
+name|sch_vnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|sch
+operator|->
+name|sch_vnet
+argument_list|)
+expr_stmt|;
 comment|/* NB: syncache_head has already been locked by the callout. */
 name|SCH_LOCK_ASSERT
 argument_list|(
@@ -1943,6 +1956,9 @@ operator|(
 name|sch
 operator|)
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -3773,7 +3789,7 @@ comment|/* 		 * There is no syncache entry, so see if this ACK is 		 * a returni
 if|if
 condition|(
 operator|!
-name|tcp_syncookies
+name|V_tcp_syncookies
 condition|)
 block|{
 name|SCH_UNLOCK
@@ -4306,6 +4322,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|rc
 decl_stmt|;
@@ -4994,7 +5015,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|tcp_syncookies
+name|V_tcp_syncookies
 condition|)
 block|{
 name|bzero
@@ -5365,7 +5386,7 @@ name|SCF_ECN
 expr_stmt|;
 if|if
 condition|(
-name|tcp_syncookies
+name|V_tcp_syncookies
 condition|)
 block|{
 name|syncookie_generate
@@ -5443,9 +5464,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|tcp_syncookies
+name|V_tcp_syncookies
 operator|&&
-name|tcp_syncookiesonly
+name|V_tcp_syncookiesonly
 operator|&&
 name|sc
 operator|!=

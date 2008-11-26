@@ -398,6 +398,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -6432,7 +6437,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|inp
 argument_list|,
-argument|tcbinfo.ipi_listhead
+argument|V_tcbinfo.ipi_listhead
 argument_list|,
 argument|inp_list
 argument_list|)

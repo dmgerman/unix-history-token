@@ -730,7 +730,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|nd6_onlink_ns_rfc4861
+name|V_nd6_onlink_ns_rfc4861
 condition|)
 block|{
 name|struct

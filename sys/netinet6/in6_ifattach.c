@@ -193,11 +193,6 @@ name|in6_tmpaddrtimer_ch
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -213,6 +208,11 @@ name|inpcbinfo
 name|ripcbinfo
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static

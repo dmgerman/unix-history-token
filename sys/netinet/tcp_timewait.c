@@ -581,8 +581,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -591,7 +595,6 @@ name|nolocaltimewait
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|nolocaltimewait
 argument_list|,
 literal|0

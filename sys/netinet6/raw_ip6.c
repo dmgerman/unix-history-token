@@ -270,6 +270,12 @@ begin_comment
 comment|/*  * Raw interface to IP6 protocol.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -287,6 +293,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|rip6stat
+name|rip6stat
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
 specifier|extern
 name|u_long
 name|rip_sendspace
@@ -299,24 +317,6 @@ name|u_long
 name|rip_recvspace
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|rip6stat
-name|rip6stat
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Hooks for multicast forwarding.  */
@@ -3523,13 +3523,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|INIT_VNET_INET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|inpcb
 modifier|*
