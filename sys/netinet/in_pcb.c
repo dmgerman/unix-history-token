@@ -5614,14 +5614,11 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
-name|INP_CHECK_SOCKAF
-argument_list|(
 name|inp
 operator|->
-name|inp_socket
-argument_list|,
-name|AF_INET6
-argument_list|)
+name|inp_vflag
+operator|&
+name|INP_IPV6PROTO
 condition|)
 name|local_wild_mapped
 operator|=
