@@ -5247,11 +5247,6 @@ modifier|*
 name|cookiep
 parameter_list|)
 block|{
-name|struct
-name|lockf_entry
-modifier|*
-name|block
-decl_stmt|;
 specifier|static
 name|char
 name|lockstr
@@ -5318,16 +5313,12 @@ expr_stmt|;
 comment|/* 	 * Scan lock list for this file looking for locks that would block us. 	 */
 while|while
 condition|(
-operator|(
-name|block
-operator|=
 name|lf_getblock
 argument_list|(
 name|state
 argument_list|,
 name|lock
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* 		 * Free the structure and return if nonblocking. 		 */
