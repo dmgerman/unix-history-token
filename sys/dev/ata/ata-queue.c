@@ -1884,6 +1884,10 @@ operator|&
 name|ATA_R_DMA
 operator|)
 operator|&&
+name|request
+operator|->
+name|dma
+operator|&&
 operator|(
 name|request
 operator|->
