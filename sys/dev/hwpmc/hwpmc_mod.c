@@ -394,6 +394,7 @@ comment|/* Machine/processor dependent operations */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pmc_mdep
 modifier|*
@@ -10418,6 +10419,8 @@ name|error
 operator|=
 name|pmclog_configure_log
 argument_list|(
+name|md
+argument_list|,
 name|po
 argument_list|,
 name|cl
@@ -14847,8 +14850,6 @@ name|int
 name|adjri
 decl_stmt|,
 name|n
-decl_stmt|,
-name|ri
 decl_stmt|;
 name|struct
 name|thread
@@ -15275,13 +15276,6 @@ operator|->
 name|pm_stalled
 operator|=
 literal|0
-expr_stmt|;
-name|ri
-operator|=
-name|PMC_TO_ROWINDEX
-argument_list|(
-name|pm
-argument_list|)
 expr_stmt|;
 call|(
 modifier|*
@@ -16825,6 +16819,8 @@ name|md
 operator|->
 name|pmd_pcpu_init
 argument_list|(
+name|md
+argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
@@ -17799,6 +17795,8 @@ name|md
 operator|->
 name|pmd_pcpu_fini
 argument_list|(
+name|md
+argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;

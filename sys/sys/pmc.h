@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|PMC_VERSION_MINOR
-value|0x00
+value|0x01
 end_define
 
 begin_define
@@ -104,7 +104,7 @@ directive|define
 name|__PMC_CPUS
 parameter_list|()
 define|\
-value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom")
+value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_CORE2EXTREME,	0x89,	"Intel Core2 Extreme")	\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom")
 end_define
 
 begin_enum
@@ -2285,22 +2285,30 @@ modifier|*
 name|pmd_pcpu_init
 function_decl|)
 parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|,
 name|int
 name|_cpu
 parameter_list|)
 function_decl|;
-comment|/* initialization */
 name|int
 function_decl|(
 modifier|*
 name|pmd_pcpu_fini
 function_decl|)
 parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|,
 name|int
 name|_cpu
 parameter_list|)
 function_decl|;
-comment|/* finalization */
 comment|/* thread context switch in/out */
 name|int
 function_decl|(
@@ -2373,15 +2381,6 @@ name|pmc_cpu
 modifier|*
 modifier|*
 name|pmc_pcpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pmc_mdep
-modifier|*
-name|md
 decl_stmt|;
 end_decl_stmt
 

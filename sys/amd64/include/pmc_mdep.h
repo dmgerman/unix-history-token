@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hwpmc/hwpmc_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hwpmc/hwpmc_piv.h>
 end_include
 
@@ -83,14 +89,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|PMC_MDEP_CLASS_INDEX_IAF
+name|PMC_MDEP_CLASS_INDEX_IAP
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PMC_MDEP_CLASS_INDEX_IAP
+name|PMC_MDEP_CLASS_INDEX_IAF
 value|2
 end_define
 
@@ -105,6 +111,14 @@ block|{
 name|struct
 name|pmc_md_amd_op_pmcallocate
 name|pm_amd
+decl_stmt|;
+name|struct
+name|pmc_md_iaf_op_pmcallocate
+name|pm_iaf
+decl_stmt|;
+name|struct
+name|pmc_md_iap_op_pmcallocate
+name|pm_iap
 decl_stmt|;
 name|struct
 name|pmc_md_p4_op_pmcallocate
@@ -151,6 +165,14 @@ block|{
 name|struct
 name|pmc_md_amd_pmc
 name|pm_amd
+decl_stmt|;
+name|struct
+name|pmc_md_iaf_pmc
+name|pm_iaf
+decl_stmt|;
+name|struct
+name|pmc_md_iap_pmc
+name|pm_iap
 decl_stmt|;
 name|struct
 name|pmc_md_p4_pmc

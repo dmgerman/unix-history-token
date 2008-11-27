@@ -546,6 +546,11 @@ name|int
 name|pmclog_configure_log
 parameter_list|(
 name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|,
+name|struct
 name|pmc_owner
 modifier|*
 name|_po
