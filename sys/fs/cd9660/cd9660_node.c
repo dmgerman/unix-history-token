@@ -1141,11 +1141,19 @@ name|ISO_FTYPE_HIGH_SIERRA
 condition|)
 name|tz
 operator|=
+operator|(
+operator|(
+name|signed
+name|char
+operator|*
+operator|)
 name|pi
+operator|)
 index|[
 literal|6
 index|]
 expr_stmt|;
+comment|/* Timezone value is signed. */
 else|else
 comment|/* original high sierra misses timezone data */
 name|tz
