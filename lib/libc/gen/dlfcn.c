@@ -465,5 +465,41 @@ return|;
 block|}
 end_function
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_rtld_atfork_pre
+end_pragma
+
+begin_function
+name|void
+name|_rtld_atfork_pre
+parameter_list|(
+name|int
+modifier|*
+name|locks
+parameter_list|)
+block|{ }
+end_function
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_rtld_atfork_post
+end_pragma
+
+begin_function
+name|void
+name|_rtld_atfork_post
+parameter_list|(
+name|int
+modifier|*
+name|locks
+parameter_list|)
+block|{ }
+end_function
+
 end_unit
 

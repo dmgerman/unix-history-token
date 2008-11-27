@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"rtld_lock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
 
@@ -246,6 +252,12 @@ decl_stmt|;
 name|int
 name|unlock_malloc
 decl_stmt|;
+name|int
+name|rtld_locks
+index|[
+literal|16
+index|]
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -312,6 +324,11 @@ literal|1
 expr_stmt|;
 name|_malloc_prefork
 argument_list|()
+expr_stmt|;
+name|_rtld_atfork_pre
+argument_list|(
+name|rtld_locks
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -420,6 +437,17 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|unlock_malloc
+condition|)
+block|{
+name|_rtld_atfork_post
+argument_list|(
+name|rtld_locks
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Run down atfork child handlers. */
 name|TAILQ_FOREACH
 argument_list|(
@@ -462,9 +490,16 @@ if|if
 condition|(
 name|unlock_malloc
 condition|)
+block|{
+name|_rtld_atfork_post
+argument_list|(
+name|rtld_locks
+argument_list|)
+expr_stmt|;
 name|_malloc_postfork
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* Run down atfork parent handlers. */
 name|TAILQ_FOREACH
 argument_list|(
