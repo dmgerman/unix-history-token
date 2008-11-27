@@ -1494,7 +1494,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsec4_delete_pcbpolicy
+name|ipsec_delete_pcbpolicy
 name|__P
 argument_list|(
 operator|(

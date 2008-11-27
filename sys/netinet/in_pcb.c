@@ -4130,7 +4130,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
-name|ipsec4_delete_pcbpolicy
+name|ipsec_delete_pcbpolicy
 argument_list|(
 name|inp
 argument_list|)
