@@ -141,6 +141,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FXP_CSR_PMDR
+value|0x1B
+end_define
+
+begin_comment
+comment|/* power management driver (1 byte) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FXP_CSR_GENCONTROL
 value|0x1C
 end_define

@@ -622,6 +622,28 @@ begin_comment
 comment|/* 82559 compatible RX checksum */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_WOLCAP
+value|0x2000
+end_define
+
+begin_comment
+comment|/* WOL capability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_WOL
+value|0x4000
+end_define
+
+begin_comment
+comment|/* WOL active */
+end_comment
+
 begin_comment
 comment|/* Macros to ease CSR access. */
 end_comment
