@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2007 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003-2008 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -351,7 +351,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/*  * Retrieve fields from an archive_entry.  */
+comment|/*  * Retrieve fields from an archive_entry.  *  * There are a number of implicit conversions among these fields.  For  * example, if a regular string field is set and you read the _w wide  * character field, the entry will implicitly convert narrow-to-wide  * using the current locale.  Similarly, dev values are automatically  * updated when you write devmajor or devminor and vice versa.  *  * In addition, fields can be "set" or "unset."  Unset string fields  * return NULL, non-string fields have _is_set() functions to test  * whether they've been set.  You can "unset" a string field by  * assigning NULL; non-string fields have _unset() functions to  * unset them.  *  * Note: There is one ambiguity in the above; string fields will  * also return NULL when implicit character set conversions fail.  * This is usually what you want.  */
 name|__LA_DECL
 name|time_t
 name|archive_entry_atime
@@ -371,6 +371,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
+name|int
+name|archive_entry_atime_is_set
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|time_t
 name|archive_entry_ctime
 parameter_list|(
@@ -382,6 +391,15 @@ function_decl|;
 name|__LA_DECL
 name|long
 name|archive_entry_ctime_nsec
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_ctime_is_set
 parameter_list|(
 name|struct
 name|archive_entry
@@ -544,6 +562,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
+name|int
+name|archive_entry_mtime_is_set
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|unsigned
 name|int
 name|archive_entry_nlink
@@ -623,6 +650,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
+name|int
+name|archive_entry_size_is_set
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 specifier|const
 name|char
 modifier|*
@@ -686,7 +722,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * Set fields in an archive_entry.  *  * Note that string 'set' functions do not copy the string, only the pointer.  * In contrast, 'copy' functions do copy the object pointed to.  */
+comment|/*  * Set fields in an archive_entry.  *  * Note that string 'set' functions do not copy the string, only the pointer.  * In contrast, 'copy' functions do copy the object pointed to.  *  * Note: As of libarchive 2.4, 'set' functions do copy the string and  * are therefore exact synonyms for the 'copy' versions.  The 'copy'  * names will be retired in libarchive 3.0.  */
 name|__LA_DECL
 name|void
 name|archive_entry_set_atime
@@ -702,6 +738,15 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|void
+name|archive_entry_unset_atime
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|void
 name|archive_entry_set_ctime
 parameter_list|(
 name|struct
@@ -711,6 +756,15 @@ parameter_list|,
 name|time_t
 parameter_list|,
 name|long
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|void
+name|archive_entry_unset_ctime
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
@@ -999,6 +1053,15 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|void
+name|archive_entry_unset_mtime
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|void
 name|archive_entry_set_nlink
 parameter_list|(
 name|struct
@@ -1114,6 +1177,15 @@ name|archive_entry
 modifier|*
 parameter_list|,
 name|int64_t
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|void
+name|archive_entry_unset_size
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL

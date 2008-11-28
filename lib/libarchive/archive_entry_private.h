@@ -205,6 +205,34 @@ decl_stmt|;
 block|}
 name|ae_stat
 struct|;
+name|int
+name|ae_set
+decl_stmt|;
+comment|/* bitmap of fields that are currently set */
+define|#
+directive|define
+name|AE_SET_HARDLINK
+value|1
+define|#
+directive|define
+name|AE_SET_SYMLINK
+value|2
+define|#
+directive|define
+name|AE_SET_ATIME
+value|4
+define|#
+directive|define
+name|AE_SET_CTIME
+value|8
+define|#
+directive|define
+name|AE_SET_MTIME
+value|16
+define|#
+directive|define
+name|AE_SET_SIZE
+value|64
 comment|/* 	 * Use aes here so that we get transparent mbs<->wcs conversions. 	 */
 name|struct
 name|aes
@@ -245,14 +273,6 @@ name|aes
 name|ae_uname
 decl_stmt|;
 comment|/* Name of owner */
-name|unsigned
-name|char
-name|ae_hardlinkset
-decl_stmt|;
-name|unsigned
-name|char
-name|ae_symlinkset
-decl_stmt|;
 comment|/* Not used within libarchive; useful for some clients. */
 name|struct
 name|aes
