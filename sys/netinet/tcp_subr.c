@@ -906,7 +906,7 @@ name|pcbcount
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|tcbinfo
+name|V_tcbinfo
 operator|.
 name|ipi_count
 argument_list|,
