@@ -1000,7 +1000,7 @@ operator|!
 name|synch_test_and_set_bit
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|arg
 argument_list|,
@@ -1014,7 +1014,7 @@ condition|)
 name|unmask_evtchn
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|arg
 argument_list|)
@@ -1033,7 +1033,7 @@ condition|(
 name|synch_test_and_clear_bit
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|arg
 argument_list|,
@@ -1047,7 +1047,7 @@ condition|)
 name|mask_evtchn
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|arg
 argument_list|)
