@@ -592,18 +592,6 @@ name|i
 decl_stmt|,
 name|err
 decl_stmt|;
-name|enum
-name|xsd_sockmsg_type
-name|itype
-init|=
-operator|*
-name|type
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"read_reply "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|xenbus_running
@@ -779,19 +767,6 @@ operator|.
 name|reply_lock
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"itype=%d htype=%d "
-argument_list|,
-name|itype
-argument_list|,
-name|msg
-operator|->
-name|hdr
-operator|.
-name|type
-argument_list|)
-expr_stmt|;
 operator|*
 name|type
 operator|=
@@ -827,24 +802,6 @@ expr_stmt|;
 name|kfree
 argument_list|(
 name|msg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-condition|)
-name|printf
-argument_list|(
-literal|"len=%d\n"
-argument_list|,
-operator|*
-name|len
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"len=NULL\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1130,11 +1087,6 @@ index|]
 operator|.
 name|iov_len
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"xs_talkv "
-argument_list|)
-expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -1356,21 +1308,6 @@ argument_list|,
 name|wmsg
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"handling %p ..."
-argument_list|,
-name|wmsg
-operator|->
-name|u
-operator|.
-name|watch
-operator|.
-name|handle
-operator|->
-name|callback
-argument_list|)
-expr_stmt|;
 name|wmsg
 operator|->
 name|u
@@ -1410,21 +1347,6 @@ operator|.
 name|watch
 operator|.
 name|vec_size
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"... %p done\n"
-argument_list|,
-name|wmsg
-operator|->
-name|u
-operator|.
-name|watch
-operator|.
-name|handle
-operator|->
-name|callback
 argument_list|)
 expr_stmt|;
 name|kfree
@@ -1497,13 +1419,6 @@ name|struct
 name|kvec
 name|iovec
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"xs_single %s "
-argument_list|,
-name|string
-argument_list|)
-expr_stmt|;
 name|iovec
 operator|.
 name|iov_base
@@ -2159,11 +2074,6 @@ operator|*
 operator|)
 name|path
 return|;
-name|printf
-argument_list|(
-literal|"xs_read "
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|xs_single
@@ -2301,15 +2211,6 @@ name|iov_len
 operator|=
 name|strlen
 argument_list|(
-name|string
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"xenbus_write dir=%s val=%s "
-argument_list|,
-name|dir
-argument_list|,
 name|string
 argument_list|)
 expr_stmt|;
@@ -2665,11 +2566,6 @@ argument_list|,
 literal|"T"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"xenbus_transaction_end "
-argument_list|)
-expr_stmt|;
 name|err
 operator|=
 name|xs_error
@@ -3007,11 +2903,6 @@ control|)
 name|HYPERVISOR_yield
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"gather "
-argument_list|)
-expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -3099,13 +2990,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
-argument_list|(
-literal|" %s "
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fmt
@@ -3150,11 +3034,6 @@ block|}
 name|va_end
 argument_list|(
 name|ap
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4396,14 +4275,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"event=%d "
-argument_list|,
-operator|*
-name|type
-argument_list|)
-expr_stmt|;
 name|msg
 operator|->
 name|u
@@ -4451,18 +4322,6 @@ name|reply_lock
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|*
-name|type
-operator|==
-name|XS_WATCH_EVENT
-condition|)
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
