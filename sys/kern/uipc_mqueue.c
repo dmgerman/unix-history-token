@@ -3819,6 +3819,15 @@ name|len
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|pn
+operator|->
+name|mn_name
+index|[
+name|len
+index|]
+operator|==
+literal|'\0'
 condition|)
 return|return
 operator|(
