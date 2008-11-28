@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ah.h,v 1.13 2008/11/10 04:08:00 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ah.h,v 1.15 2008/11/15 03:43:50 sam Exp $  */
 end_comment
 
 begin_ifndef
@@ -306,16 +306,8 @@ init|=
 literal|22
 block|,
 comment|/* hardware can support TKIP MIC when WMM is turned on */
-name|HAL_CAP_CHAN_HALFRATE
-init|=
-literal|23
-block|,
-comment|/* hardware can support half rate channels */
-name|HAL_CAP_CHAN_QUARTERRATE
-init|=
-literal|24
-block|,
-comment|/* hardware can support quarter rate channels */
+comment|/* 23 was HAL_CAP_CHAN_HALFRATE */
+comment|/* 24 was HAL_CAP_CHAN_QUARTERRATE */
 name|HAL_CAP_RFSILENT
 init|=
 literal|25
@@ -1534,12 +1526,22 @@ name|HAL_MODE_11A_HALF_RATE
 init|=
 literal|0x200
 block|,
-comment|/* 11A half rate channels */
+comment|/* 11a half width channels */
 name|HAL_MODE_11A_QUARTER_RATE
 init|=
 literal|0x400
 block|,
-comment|/* 11A quarter rate channels */
+comment|/* 11a quarter width channels */
+name|HAL_MODE_11G_HALF_RATE
+init|=
+literal|0x800
+block|,
+comment|/* 11g half width channels */
+name|HAL_MODE_11G_QUARTER_RATE
+init|=
+literal|0x1000
+block|,
+comment|/* 11g quarter width channels */
 name|HAL_MODE_11NG_HT20
 init|=
 literal|0x008000
@@ -2136,7 +2138,7 @@ comment|/* HAL ABI version */
 define|#
 directive|define
 name|HAL_ABI_VERSION
-value|0x08110600
+value|0x08111400
 comment|/* YYMMDDnn */
 name|uint16_t
 name|ah_devid
@@ -2286,6 +2288,46 @@ name|HAL_CHANNEL
 modifier|*
 parameter_list|,
 name|HAL_BOOL
+modifier|*
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_perCalibrationN
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_CHANNEL
+modifier|*
+parameter_list|,
+name|u_int
+name|chainMask
+parameter_list|,
+name|HAL_BOOL
+name|longCal
+parameter_list|,
+name|HAL_BOOL
+modifier|*
+name|isCalDone
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_resetCalValid
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_CHANNEL
 modifier|*
 parameter_list|)
 function_decl|;

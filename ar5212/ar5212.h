@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212.h,v 1.9 2008/11/10 04:08:03 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212.h,v 1.16 2008/11/22 07:42:00 sam Exp $  */
 end_comment
 
 begin_ifndef
@@ -1024,6 +1024,10 @@ index|[
 name|HAL_NUM_TX_QUEUES
 index|]
 decl_stmt|;
+name|uint32_t
+name|ah_intrTxqs
+decl_stmt|;
+comment|/* tx q interrupt state */
 comment|/* decomp mask array */
 name|uint8_t
 name|ah_decompMask
@@ -1035,9 +1039,13 @@ name|HAL_POWER_MODE
 name|ah_powerMode
 decl_stmt|;
 name|HAL_ANT_SETTING
-name|ah_diversityControl
+name|ah_antControl
 decl_stmt|;
 comment|/* antenna setting */
+name|HAL_BOOL
+name|ah_diversity
+decl_stmt|;
+comment|/* fast diversity setting */
 enum|enum
 block|{
 name|IQ_CAL_INACTIVE
@@ -1077,6 +1085,14 @@ name|HAL_BOOL
 name|ah_tpcEnabled
 decl_stmt|;
 comment|/* per-packet tpc enabled */
+name|HAL_BOOL
+name|ah_phyPowerOn
+decl_stmt|;
+comment|/* PHY power state */
+name|HAL_BOOL
+name|ah_isHb63
+decl_stmt|;
+comment|/* cached HB63 check */
 name|uint32_t
 name|ah_macTPC
 decl_stmt|;
@@ -1127,11 +1143,6 @@ name|u_int
 name|ah_sifstime
 decl_stmt|;
 comment|/* user-specified sifs time */
-comment|/* 	 * XXX 	 * 11g-specific stuff; belongs in the driver. 	 */
-name|uint8_t
-name|ah_gBeaconRate
-decl_stmt|;
-comment|/* fixed rate for G beacons */
 comment|/* 	 * RF Silent handling; setup according to the EEPROM. 	 */
 name|uint32_t
 name|ah_gpioSelect
@@ -1145,10 +1156,6 @@ name|uint32_t
 name|ah_gpioBit
 decl_stmt|;
 comment|/* after init, prev value */
-name|HAL_BOOL
-name|ah_eepEnabled
-decl_stmt|;
-comment|/* EEPROM bit for capability */
 comment|/* 	 * ANI support. 	 */
 name|uint32_t
 name|ah_procPhyErr
@@ -1196,14 +1203,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* 	 * Tx queue interrupt state. 	 */
-name|uint32_t
-name|ah_intrTxqs
-decl_stmt|;
-name|HAL_BOOL
-name|ah_isHb63
-decl_stmt|;
-comment|/* cached HB63 check */
 block|}
 struct|;
 end_struct
@@ -1218,49 +1217,9 @@ parameter_list|)
 value|((struct ath_hal_5212 *)(_ah))
 end_define
 
-begin_define
-define|#
-directive|define
-name|IS_5112
-parameter_list|(
-name|ah
-parameter_list|)
-define|\
-value|((AH_PRIVATE(ah)->ah_analog5GhzRev&0xf0)>= AR_RAD5112_SREV_MAJOR \&& (AH_PRIVATE(ah)->ah_analog5GhzRev&0xf0)< AR_RAD2316_SREV_MAJOR )
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_RAD5112_REV1
-parameter_list|(
-name|ah
-parameter_list|)
-define|\
-value|((AH_PRIVATE(ah)->ah_analog5GhzRev&0x0f)< (AR_RAD5112_SREV_2_0&0x0f))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_RADX112_REV2
-parameter_list|(
-name|ah
-parameter_list|)
-define|\
-value|(IS_5112(ah)&& \ 	  ((AH_PRIVATE(ah)->ah_analog5GhzRev == AR_RAD5112_SREV_2_0) || \ 	   (AH_PRIVATE(ah)->ah_analog5GhzRev == AR_RAD2112_SREV_2_0) || \ 	   (AH_PRIVATE(ah)->ah_analog5GhzRev == AR_RAD2112_SREV_2_1) || \ 	   (AH_PRIVATE(ah)->ah_analog5GhzRev == AR_RAD5112_SREV_2_1)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_5312_2_X
-parameter_list|(
-name|ah
-parameter_list|)
-define|\
-value|(((AH_PRIVATE(ah)->ah_macVersion) == AR_SREV_VERSION_VENICE)&& \ 	 (((AH_PRIVATE(ah)->ah_macRev) == 2) || ((AH_PRIVATE(ah)->ah_macRev) == 7)))
-end_define
+begin_comment
+comment|/*  * IS_XXXX macros test the MAC version  * IS_RADXXX macros test the radio/RF version (matching both 2G-only and 2/5G)  *  * Some single chip radios have equivalent radio/RF (e.g. 5112)  * for those use IS_RADXXX_ANY macros.  */
+end_comment
 
 begin_define
 define|#
@@ -1357,6 +1316,87 @@ parameter_list|(
 name|ah
 parameter_list|)
 value|(IS_5424(ah) || IS_2425(ah))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_RADIO_MAJOR
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE(ah)->ah_analog5GhzRev& AR_RADIO_SREV_MAJOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_RADIO_MINOR
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE(ah)->ah_analog5GhzRev& AR_RADIO_SREV_MINOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_RAD5111
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|(AH_RADIO_MAJOR(ah) == AR_RAD5111_SREV_MAJOR || \ 	 AH_RADIO_MAJOR(ah) == AR_RAD2111_SREV_MAJOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_RAD5112
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|(AH_RADIO_MAJOR(ah) == AR_RAD5112_SREV_MAJOR || \ 	 AH_RADIO_MAJOR(ah) == AR_RAD2112_SREV_MAJOR)
+end_define
+
+begin_comment
+comment|/* NB: does not include 5413 as Atheros' IS_5112 macro does */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_RAD5112_ANY
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|(AR_RAD5112_SREV_MAJOR<= AH_RADIO_MAJOR(ah)&& \ 	 AH_RADIO_MAJOR(ah)<= AR_RAD2413_SREV_MAJOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_RAD5112_REV1
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|(IS_RAD5112(ah)&& \ 	 AH_RADIO_MINOR(ah)< (AR_RAD5112_SREV_2_0& AR_RADIO_SREV_MINOR))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_RADX112_REV2
+parameter_list|(
+name|ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE(ah)->ah_analog5GhzRev == AR_RAD5112_SREV_2_0 || \ 	 AH_PRIVATE(ah)->ah_analog5GhzRev == AR_RAD2112_SREV_2_0 || \ 	 AH_PRIVATE(ah)->ah_analog5GhzRev == AR_RAD2112_SREV_2_1 || \ 	 AH_PRIVATE(ah)->ah_analog5GhzRev == AR_RAD5112_SREV_2_1)
 end_define
 
 begin_define
@@ -3056,6 +3096,50 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|HAL_BOOL
+name|ar5212PerCalibrationN
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_CHANNEL
+modifier|*
+name|chan
+parameter_list|,
+name|u_int
+name|chainMask
+parameter_list|,
+name|HAL_BOOL
+name|longCal
+parameter_list|,
+name|HAL_BOOL
+modifier|*
+name|isCalDone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ar5212ResetCalValid
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_CHANNEL
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int16_t
 name|ar5212GetNoiseFloor
 parameter_list|(
@@ -3185,6 +3269,18 @@ name|struct
 name|ath_hal
 modifier|*
 name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ar5212RequestRfgain
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

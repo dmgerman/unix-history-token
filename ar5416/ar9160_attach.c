@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2008 Sam Leffler, Errno Consulting  * Copyright (c) 2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar9160_attach.c,v 1.10 2008/11/10 04:08:05 sam Exp $  */
+comment|/*  * Copyright (c) 2008 Sam Leffler, Errno Consulting  * Copyright (c) 2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar9160_attach.c,v 1.14 2008/11/27 22:30:08 sam Exp $  */
 end_comment
 
 begin_include
@@ -661,7 +661,9 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_iqCalData
+name|ah_cal
+operator|.
+name|iqCalData
 operator|.
 name|calData
 operator|=
@@ -673,7 +675,9 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_adcGainCalData
+name|ah_cal
+operator|.
+name|adcGainCalData
 operator|.
 name|calData
 operator|=
@@ -685,7 +689,9 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_adcDcCalData
+name|ah_cal
+operator|.
+name|adcDcCalData
 operator|.
 name|calData
 operator|=
@@ -697,7 +703,9 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_adcDcCalInitData
+name|ah_cal
+operator|.
+name|adcDcCalInitData
 operator|.
 name|calData
 operator|=
@@ -709,7 +717,9 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_suppCals
+name|ah_cal
+operator|.
+name|suppCals
 operator|=
 name|ADC_GAIN_CAL
 operator||
@@ -1335,7 +1345,7 @@ argument_list|,
 name|AH_NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ah_miscMode is populated by ar5416FillCapabilityInfo() 	 * starting from griffin. Set here to make sure that 	 * AR_MISC_MODE_MIC_NEW_LOC_ENABLE is set before a GTK is 	 * placed into hardware 	 */
+comment|/* 	 * ah_miscMode is populated by ar5416FillCapabilityInfo() 	 * starting from griffin. Set here to make sure that 	 * AR_MISC_MODE_MIC_NEW_LOC_ENABLE is set before a GTK is 	 * placed into hardware. 	 */
 if|if
 condition|(
 name|ahp
@@ -1355,12 +1365,6 @@ operator|->
 name|ah_miscMode
 argument_list|)
 expr_stmt|;
-name|ar5212InitializeGainValues
-argument_list|(
-name|ah
-argument_list|)
-expr_stmt|;
-comment|/* gain ladder */
 name|ar9160AniSetup
 argument_list|(
 name|ah
@@ -1374,7 +1378,9 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_nfCalHist
+name|ah_cal
+operator|.
+name|nfCalHist
 argument_list|)
 expr_stmt|;
 name|HALDEBUG

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212_attach.c,v 1.12 2008/11/10 04:08:03 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212_attach.c,v 1.18 2008/11/19 22:10:42 sam Exp $  */
 end_comment
 
 begin_include
@@ -188,6 +188,16 @@ operator|.
 name|ah_perCalibration
 operator|=
 name|ar5212PerCalibration
+block|,
+operator|.
+name|ah_perCalibrationN
+operator|=
+name|ar5212PerCalibrationN
+block|,
+operator|.
+name|ah_resetCalValid
+operator|=
+name|ar5212ResetCalValid
 block|,
 operator|.
 name|ah_setTxPowerLimit
@@ -396,6 +406,11 @@ operator|.
 name|ah_setBssIdMask
 operator|=
 name|ar5212SetBssIdMask
+block|,
+operator|.
+name|ah_setRegulatoryDomain
+operator|=
+name|ar5212SetRegulatoryDomain
 block|,
 operator|.
 name|ah_setLedState
@@ -1305,9 +1320,15 @@ expr_stmt|;
 comment|/* no scaling */
 name|ahp
 operator|->
-name|ah_diversityControl
+name|ah_antControl
 operator|=
 name|HAL_ANT_VARIABLE
+expr_stmt|;
+name|ahp
+operator|->
+name|ah_diversity
+operator|=
+name|AH_TRUE
 expr_stmt|;
 name|ahp
 operator|->
@@ -1335,6 +1356,12 @@ operator|=
 name|AH_FALSE
 expr_stmt|;
 comment|/* disabled by default */
+name|ahp
+operator|->
+name|ah_phyPowerOn
+operator|=
+name|AH_FALSE
+expr_stmt|;
 name|ahp
 operator|->
 name|ah_macTPC
@@ -1426,14 +1453,6 @@ argument_list|,
 name|IEEE80211_ADDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* 	 * 11g-specific stuff 	 */
-name|ahp
-operator|->
-name|ah_gBeaconRate
-operator|=
-literal|0
-expr_stmt|;
-comment|/* adhoc beacon fixed rate */
 undef|#
 directive|undef
 name|N
@@ -2120,7 +2139,9 @@ argument_list|)
 operator|->
 name|ah_analog5GhzRev
 operator|=
-literal|0x51
+name|AR_RAD2413_SREV_MAJOR
+operator||
+literal|0x1
 expr_stmt|;
 break|break;
 block|}
@@ -2140,7 +2161,9 @@ argument_list|)
 operator|->
 name|ah_analog5GhzRev
 operator|=
-literal|0x62
+name|AR_RAD5413_SREV_MAJOR
+operator||
+literal|0x2
 expr_stmt|;
 break|break;
 block|}
@@ -2165,7 +2188,9 @@ argument_list|)
 operator|->
 name|ah_analog5GhzRev
 operator|=
-literal|0xA2
+name|AR_RAD5424_SREV_MAJOR
+operator||
+literal|0x2
 expr_stmt|;
 break|break;
 block|}
@@ -2204,17 +2229,6 @@ directive|endif
 block|}
 if|if
 condition|(
-operator|!
-name|IS_5413
-argument_list|(
-name|ah
-argument_list|)
-operator|&&
-name|IS_5112
-argument_list|(
-name|ah
-argument_list|)
-operator|&&
 name|IS_RAD5112_REV1
 argument_list|(
 name|ah
@@ -2657,7 +2671,7 @@ directive|endif
 elseif|else
 if|if
 condition|(
-name|IS_5112
+name|IS_RAD5112
 argument_list|(
 name|ah
 argument_list|)
@@ -2717,7 +2731,14 @@ name|HAL_ENOTSUPP
 expr_stmt|;
 endif|#
 directive|endif
-else|else
+elseif|else
+if|if
+condition|(
+name|IS_RAD5111
+argument_list|(
+name|ah
+argument_list|)
+condition|)
 ifdef|#
 directive|ifdef
 name|AH_SUPPORT_5111
@@ -3724,14 +3745,10 @@ name|halLow2GhzChan
 operator|=
 literal|2312
 expr_stmt|;
+comment|/* XXX 2417 too? */
 if|if
 condition|(
-name|IS_5112
-argument_list|(
-name|ah
-argument_list|)
-operator|||
-name|IS_2413
+name|IS_RAD5112_ANY
 argument_list|(
 name|ah
 argument_list|)
@@ -3742,6 +3759,11 @@ name|ah
 argument_list|)
 operator|||
 name|IS_2425
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+name|IS_2417
 argument_list|(
 name|ah
 argument_list|)
@@ -4098,14 +4120,6 @@ name|halKeyCacheSize
 operator|=
 name|AR_KEYTABLE_SIZE
 expr_stmt|;
-if|if
-condition|(
-name|IS_5112
-argument_list|(
-name|ah
-argument_list|)
-condition|)
-block|{
 name|pCap
 operator|->
 name|halChanHalfRate
@@ -4118,23 +4132,6 @@ name|halChanQuarterRate
 operator|=
 name|AH_TRUE
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* XXX not needed */
-name|pCap
-operator|->
-name|halChanHalfRate
-operator|=
-name|AH_FALSE
-expr_stmt|;
-name|pCap
-operator|->
-name|halChanQuarterRate
-operator|=
-name|AH_FALSE
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ath_hal_eepromGetFlag

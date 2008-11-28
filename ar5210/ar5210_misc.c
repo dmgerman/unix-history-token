@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2004 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5210_misc.c,v 1.4 2008/11/10 04:08:02 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2004 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5210_misc.c,v 1.6 2008/11/27 22:29:37 sam Exp $  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"ar5210/ar5210phy.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ah_eeprom_v1.h"
 end_include
 
 begin_define
@@ -302,6 +308,132 @@ literal|0xffff
 expr_stmt|;
 return|return
 name|AH_TRUE
+return|;
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_WRITE_EEPROM
+end_ifdef
+
+begin_comment
+comment|/*  * Write 16 bits of data to the specified EEPROM offset.  */
+end_comment
+
+begin_function
+name|HAL_BOOL
+name|ar5210EepromWrite
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int
+name|off
+parameter_list|,
+name|uint16_t
+name|data
+parameter_list|)
+block|{
+return|return
+name|AH_FALSE
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_WRITE_EEPROM */
+end_comment
+
+begin_comment
+comment|/*  * Attempt to change the cards operating regulatory domain to the given value  */
+end_comment
+
+begin_function
+name|HAL_BOOL
+name|ar5210SetRegulatoryDomain
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint16_t
+name|regDomain
+parameter_list|,
+name|HAL_STATUS
+modifier|*
+name|status
+parameter_list|)
+block|{
+name|HAL_STATUS
+name|ecode
+decl_stmt|;
+if|if
+condition|(
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_currentRD
+operator|==
+name|regDomain
+condition|)
+block|{
+name|ecode
+operator|=
+name|HAL_EINVAL
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+comment|/* 	 * Check if EEPROM is configured to allow this; must 	 * be a proper version and the protection bits must 	 * permit re-writing that segment of the EEPROM. 	 */
+if|if
+condition|(
+name|ath_hal_eepromGetFlag
+argument_list|(
+name|ah
+argument_list|,
+name|AR_EEP_WRITEPROTECT
+argument_list|)
+condition|)
+block|{
+name|ecode
+operator|=
+name|HAL_EEWRITE
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+name|ecode
+operator|=
+name|HAL_EIO
+expr_stmt|;
+comment|/* disallow all writes */
+name|bad
+label|:
+if|if
+condition|(
+name|status
+condition|)
+operator|*
+name|status
+operator|=
+name|ecode
+expr_stmt|;
+return|return
+name|AH_FALSE
 return|;
 block|}
 end_function
@@ -1122,7 +1254,7 @@ name|low1
 condition|)
 block|{
 comment|/* roll over */
-comment|/* 		 * If we are not preempted this will work.  If we are 		 * then we re-reading AR_TSF_U32 does no good as the 		 * low bits will be meaningless.  Likewise reading 		 * L32, U32, U32, then comparing the last two reads 		 * to check for rollover 		 * doesn't help if preempted--so we take this approach 		 * as it costs one less PCI read which can be noticeable 		 * when doing things like timestamping packets in 		 * monitor mode. 		 */
+comment|/* 		 * If we are not preempted this will work.  If we are 		 * then we re-reading AR_TSF_U32 does no good as the 		 * low bits will be meaningless.  Likewise reading 		 * L32, U32, U32, then comparing the last two reads 		 * to check for rollover doesn't help if preempted--so 		 * we take this approach as it costs one less PCI 		 * read which can be noticeable when doing things 		 * like timestamping packets in monitor mode. 		 */
 name|u32
 operator|++
 expr_stmt|;

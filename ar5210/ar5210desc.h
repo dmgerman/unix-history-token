@@ -355,7 +355,7 @@ value|0x0007e000
 end_define
 
 begin_comment
-comment|/* encrypt key table index */
+comment|/* ecnrypt key table index */
 end_comment
 
 begin_define

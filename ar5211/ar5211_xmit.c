@@ -1590,7 +1590,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|AH_DISABLE_WME
-comment|/* 	 * This is a really not the right way to do it, but 	 * it does get the lockout bits and backoff set for the 	 * high-pri WME queues for testing.  We need to either extend 	 * the meaning of queueInfo->mode, or create something like 	 * queueInfo->dcumode. 	 */
+comment|/* 	 * Yes, this is a hack and not the right way to do it, but 	 * it does get the lockout bits and backoff set for the 	 * high-pri WME queues for testing.  We need to either extend 	 * the meaning of queueInfo->mode, or create something like 	 * queueInfo->dcumode. 	 */
 if|if
 condition|(
 name|qi

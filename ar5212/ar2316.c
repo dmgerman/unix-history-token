@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar2316.c,v 1.8 2008/11/10 04:08:03 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar2316.c,v 1.9 2008/11/15 22:15:46 sam Exp $  */
 end_comment
 
 begin_include
@@ -2847,17 +2847,23 @@ literal|4
 index|]
 decl_stmt|;
 name|uint32_t
-name|i
-decl_stmt|,
 name|reg32
 decl_stmt|,
 name|regoffset
-decl_stmt|,
-name|tpcrg1
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|numPdGainsUsed
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|AH_USE_INIPDGAIN
+name|uint32_t
+name|tpcrg1
+decl_stmt|;
+endif|#
+directive|endif
 name|HALDEBUG
 argument_list|(
 name|ah
@@ -2986,12 +2992,34 @@ operator|<=
 literal|3
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
+name|AH_USE_INIPDGAIN
+comment|/* 	 * Use pd_gains curve from eeprom; Atheros always uses 	 * the default curve from the ini file but some vendors 	 * (e.g. Zcomax) want to override this curve and not 	 * honoring their settings results in tx power 5dBm low. 	 */
+name|OS_REG_RMW_FIELD
+argument_list|(
+name|ah
+argument_list|,
+name|AR_PHY_TPCRG1
+argument_list|,
+name|AR_PHY_TPCRG1_NUM_PD_GAIN
+argument_list|,
+operator|(
+name|pRawDataset
+operator|->
+name|pDataPerChannel
+index|[
 literal|0
-block|OS_REG_RMW_FIELD(ah, AR_PHY_TPCRG1, AR_PHY_TPCRG1_NUM_PD_GAIN,  			 (pRawDataset->pDataPerChannel[0].numPdGains - 1));
-endif|#
-directive|endif
+index|]
+operator|.
+name|numPdGains
+operator|-
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|tpcrg1
 operator|=
 name|OS_REG_READ
@@ -3134,6 +3162,8 @@ argument_list|,
 name|tpcrg1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Note the pdadc table may not start at 0 dBm power, could be 	 * negative or greater than 0.  Need to offset the power 	 * values by the amount of minPower for griffin 	 */
 if|if
 condition|(

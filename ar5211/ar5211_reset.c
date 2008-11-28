@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2006 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5211_reset.c,v 1.6 2008/11/10 04:08:03 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2006 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5211_reset.c,v 1.9 2008/11/27 22:29:52 sam Exp $  */
 end_comment
 
 begin_include
@@ -1273,7 +1273,7 @@ condition|(
 name|bChannelChange
 condition|)
 block|{
-comment|/* 		 * Need to save/restore the TSF because of an issue 		 * that accelerates the TSF during a chip reset. 		 * 		 * We could use system timer routines to more 		 * accurately restore the TSF, but 		 * 1. Timer routines on certain platforms are 		 *	not accurate enough (e.g. 1 ms resolution). 		 * 2. It would still not be accurate. 		 * 		 * The most important aspect of this solution, 		 * is that, after reset, the TSF is behind 		 * other STAs TSFs.  This will allow the STA to 		 * properly resynchronize its TSF in adhoc mode. 		 */
+comment|/* 		 * Need to save/restore the TSF because of an issue 		 * that accelerates the TSF during a chip reset. 		 * 		 * We could use system timer routines to more 		 * accurately restore the TSF, but 		 * 1. Timer routines on certain platforms are 		 *	not accurate enough (e.g. 1 ms resolution). 		 * 2. It would still not be accurate. 		 * 		 * The most important aspect of this workaround, 		 * is that, after reset, the TSF is behind 		 * other STAs TSFs.  This will allow the STA to 		 * properly resynchronize its TSF in adhoc mode. 		 */
 name|saveTsfLow
 operator|=
 name|OS_REG_READ
@@ -2279,7 +2279,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* cleared on write */
-comment|/* 	 * for pre-Production Oahu only. 	 * Disable clock gating in all DMA blocks. Helps when using 	 * 11B and AES. This will result in higher power consumption. 	 */
+comment|/* 	 * for pre-Production Oahu only. 	 * Disable clock gating in all DMA blocks. Helps when using 	 * 11B and AES but results in higher power consumption. 	 */
 if|if
 condition|(
 name|AH_PRIVATE
@@ -3365,7 +3365,7 @@ end_comment
 
 begin_function
 name|HAL_BOOL
-name|ar5211PerCalibration
+name|ar5211PerCalibrationN
 parameter_list|(
 name|struct
 name|ath_hal
@@ -3376,9 +3376,15 @@ name|HAL_CHANNEL
 modifier|*
 name|chan
 parameter_list|,
+name|u_int
+name|chainMask
+parameter_list|,
+name|HAL_BOOL
+name|longCal
+parameter_list|,
 name|HAL_BOOL
 modifier|*
-name|isIQdone
+name|isCalDone
 parameter_list|)
 block|{
 name|struct
@@ -3675,6 +3681,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|isCalDone
+operator|=
+operator|!
+name|ahp
+operator|->
+name|ah_bIQCalibration
+expr_stmt|;
+if|if
+condition|(
+name|longCal
+condition|)
+block|{
 comment|/* Perform noise floor and set status */
 if|if
 condition|(
@@ -3716,7 +3735,7 @@ name|ichan
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Delay 5ms before retrying the noise floor 		 * just to make sure, as we are in an error 		 * condition here. 		 */
+comment|/* 			 * Delay 5ms before retrying the noise floor 			 * just to make sure, as we are in an error 			 * condition here. 			 */
 name|OS_DELAY
 argument_list|(
 literal|5000
@@ -3757,14 +3776,63 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
-operator|*
+block|}
+return|return
+name|AH_TRUE
+return|;
+block|}
+end_function
+
+begin_function
+name|HAL_BOOL
+name|ar5211PerCalibration
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_CHANNEL
+modifier|*
+name|chan
+parameter_list|,
+name|HAL_BOOL
+modifier|*
 name|isIQdone
-operator|=
-operator|!
-name|ahp
-operator|->
-name|ah_bIQCalibration
-expr_stmt|;
+parameter_list|)
+block|{
+return|return
+name|ar5211PerCalibrationN
+argument_list|(
+name|ah
+argument_list|,
+name|chan
+argument_list|,
+literal|0x1
+argument_list|,
+name|AH_TRUE
+argument_list|,
+name|isIQdone
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|HAL_BOOL
+name|ar5211ResetCalValid
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_CHANNEL
+modifier|*
+name|chan
+parameter_list|)
+block|{
+comment|/* XXX */
 return|return
 name|AH_TRUE
 return|;

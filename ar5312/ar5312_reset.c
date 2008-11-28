@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5312_reset.c,v 1.9 2008/11/10 04:08:04 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5312_reset.c,v 1.10 2008/11/22 07:41:37 sam Exp $  */
 end_comment
 
 begin_include
@@ -708,7 +708,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * Channel change can only be used when: 		 *  -channel change requested - so it's not the initial reset. 		 *  -it's not a change to the current channel - often called when switching modes 		 *   on a channel 		 *  -the modes of the previous and requested channel are the same 		 */
+comment|/* 		 * Channel change can only be used when: 		 *  -channel change requested - so it's not the initial reset. 		 *  -it's not a change to the current channel - often called when switching modes 		 *   on a channel 		 *  -the modes of the previous and requested channel are the same - some ugly code for XR 		 */
 if|if
 condition|(
 name|bChannelChange
@@ -1815,7 +1815,7 @@ expr_stmt|;
 comment|/* Set Tx frame start to tx data start delay */
 if|if
 condition|(
-name|IS_5112
+name|IS_RAD5112_ANY
 argument_list|(
 name|ah
 argument_list|)
@@ -2865,12 +2865,7 @@ name|turbo
 decl_stmt|;
 if|if
 condition|(
-name|IS_5112
-argument_list|(
-name|ah
-argument_list|)
-operator|||
-name|IS_2413
+name|IS_RAD5112_ANY
 argument_list|(
 name|ah
 argument_list|)
@@ -2959,14 +2954,15 @@ argument_list|(
 name|chan
 argument_list|)
 condition|)
-block|{
 name|phyPLL
 operator|=
 name|AR_PHY_PLL_CTL_44_5112
 expr_stmt|;
-block|}
 else|else
-block|{
+name|phyPLL
+operator|=
+name|AR_PHY_PLL_CTL_40_5112
+expr_stmt|;
 if|if
 condition|(
 name|IS_CHAN_HALF_RATE
@@ -2974,12 +2970,10 @@ argument_list|(
 name|chan
 argument_list|)
 condition|)
-block|{
 name|phyPLL
-operator|=
-name|AR_PHY_PLL_CTL_40_5112_HALF
+operator||=
+name|AR_PHY_PLL_CTL_HALF
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2988,20 +2982,10 @@ argument_list|(
 name|chan
 argument_list|)
 condition|)
-block|{
 name|phyPLL
-operator|=
-name|AR_PHY_PLL_CTL_40_5112_QUARTER
+operator||=
+name|AR_PHY_PLL_CTL_QUARTER
 expr_stmt|;
-block|}
-else|else
-block|{
-name|phyPLL
-operator|=
-name|AR_PHY_PLL_CTL_40_5112
-expr_stmt|;
-block|}
-block|}
 block|}
 block|}
 else|else
@@ -3022,14 +3006,15 @@ argument_list|(
 name|chan
 argument_list|)
 condition|)
-block|{
 name|phyPLL
 operator|=
 name|AR_PHY_PLL_CTL_44
 expr_stmt|;
-block|}
 else|else
-block|{
+name|phyPLL
+operator|=
+name|AR_PHY_PLL_CTL_40
+expr_stmt|;
 if|if
 condition|(
 name|IS_CHAN_HALF_RATE
@@ -3037,12 +3022,10 @@ argument_list|(
 name|chan
 argument_list|)
 condition|)
-block|{
 name|phyPLL
 operator|=
-name|AR_PHY_PLL_CTL_40_HALF
+name|AR_PHY_PLL_CTL_HALF
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -3051,20 +3034,10 @@ argument_list|(
 name|chan
 argument_list|)
 condition|)
-block|{
 name|phyPLL
 operator|=
-name|AR_PHY_PLL_CTL_40_QUARTER
+name|AR_PHY_PLL_CTL_QUARTER
 expr_stmt|;
-block|}
-else|else
-block|{
-name|phyPLL
-operator|=
-name|AR_PHY_PLL_CTL_40
-expr_stmt|;
-block|}
-block|}
 block|}
 if|if
 condition|(

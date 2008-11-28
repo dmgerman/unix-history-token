@@ -27,7 +27,7 @@ comment|/* Atheros PCI vendor ID */
 end_comment
 
 begin_comment
-comment|/*  * NB: all Atheros-based devices should have a PCI vendor ID  *     of 0x168c, but some vendors do not follow this so we  *     must handle them specially.  */
+comment|/*  * NB: all Atheros-based devices should have a PCI vendor ID  *     of 0x168c, but some vendors, in their infinite wisdom  *     do not follow this so we must handle them specially.  */
 end_comment
 
 begin_define

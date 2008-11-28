@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212phy.h,v 1.5 2008/11/04 01:08:40 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212phy.h,v 1.7 2008/11/19 21:23:01 sam Exp $  */
 end_comment
 
 begin_ifndef
@@ -657,6 +657,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_PHY_AGC_CONTROL_FLTR_CAL
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Allow Filter calibration */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_PHY_AGC_CONTROL_NO_UPDATE_NF
 value|0x00020000
 end_define
@@ -827,28 +838,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AR_PHY_PLL_CTL_40_HALF
-value|0x1aa
-end_define
-
-begin_comment
-comment|/* 40 MHz for 11a, turbos (Half)*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AR_PHY_PLL_CTL_40_QUARTER
-value|0x2aa
-end_define
-
-begin_comment
-comment|/* 40 MHz for 11a, turbos (Quarter)*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|AR_PHY_PLL_CTL_44_5112
 value|0xeb
 end_define
@@ -871,34 +860,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AR_PHY_PLL_CTL_40_5112_HALF
-value|0x1ea
-end_define
-
-begin_comment
-comment|/* 40 MHz for 11a, turbos (Half)*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AR_PHY_PLL_CTL_40_5112_QUARTER
-value|0x2ea
-end_define
-
-begin_comment
-comment|/* 40 MHz for 11a, turbos (Quarter)*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|AR_PHY_PLL_CTL_40_5413
 value|0x04
 end_define
 
 begin_comment
 comment|/* 40 MHz for 11a, turbos with 5413 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_PLL_CTL_HALF
+value|0x100
+end_define
+
+begin_comment
+comment|/* Half clock for 1/2 chan width */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_PLL_CTL_QUARTER
+value|0x200
+end_define
+
+begin_comment
+comment|/* Quarter clock for 1/4 chan width */
 end_comment
 
 begin_define

@@ -118,6 +118,17 @@ begin_comment
 comment|/* seq num local or global */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AR5311_DIAG_USE_ECO
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* "super secret" enable ECO */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

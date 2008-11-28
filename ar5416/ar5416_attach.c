@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5416_attach.c,v 1.19 2008/11/10 04:08:04 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5416_attach.c,v 1.27 2008/11/27 22:30:07 sam Exp $  */
 end_comment
 
 begin_include
@@ -385,6 +385,18 @@ name|ar5416PerCalibration
 expr_stmt|;
 name|ah
 operator|->
+name|ah_perCalibrationN
+operator|=
+name|ar5416PerCalibrationN
+operator|,
+name|ah
+operator|->
+name|ah_resetCalValid
+operator|=
+name|ar5416ResetCalValid
+operator|,
+name|ah
+operator|->
 name|ah_setTxPowerLimit
 operator|=
 name|ar5416SetTxPowerLimit
@@ -445,6 +457,18 @@ name|ah_procRxDesc
 operator|=
 name|ar5416ProcRxDesc
 expr_stmt|;
+name|ah
+operator|->
+name|ah_rxMonitor
+operator|=
+name|ar5416AniPoll
+operator|,
+name|ah
+operator|->
+name|ah_procMibEvent
+operator|=
+name|ar5416ProcessMibIntr
+operator|,
 comment|/* Misc Functions */
 name|ah
 operator|->
@@ -665,7 +689,7 @@ name|ah_getChipPowerLimits
 operator|=
 name|ar5416GetChipPowerLimits
 expr_stmt|;
-comment|/* 	 * XXX - Do we need a board specific chain mask? 	 * Start by setting all Owl devices to 2x2 	 */
+comment|/* 	 * Start by setting all Owl devices to 2x2 	 */
 name|AH5416
 argument_list|(
 name|ah
@@ -684,23 +708,6 @@ name|ah_tx_chainmask
 operator|=
 name|AR5416_DEFAULT_TXCHAINMASK
 expr_stmt|;
-name|AH5416
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_clksel
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX */
-comment|/* NB: ah_keytype is initialized to zero which is ok */
-if|#
-directive|if
-literal|0
-block|ah->ah_descinfo.rxctl_numwords = RXCTL_NUMWORDS(ah); 	ah->ah_descinfo.rxctl_offset = RXCTL_OFFSET(ah); 	ah->ah_descinfo.rxstatus_numwords = RXSTATUS_NUMWORDS(ah); 	ah->ah_descinfo.rxstatus_offset = RXSTATUS_OFFSET(ah);  	ah->ah_descinfo.txctl_numwords = TXCTL_NUMWORDS(ah); 	ah->ah_descinfo.txctl_offset = TXCTL_OFFSET(ah); 	ah->ah_descinfo.txstatus_numwords = TXSTATUS_NUMWORDS(ah); 	ah->ah_descinfo.txstatus_offset = TXSTATUS_OFFSET(ah);
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1461,7 +1468,7 @@ argument_list|,
 name|AH_NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * ah_miscMode is populated by ar5416FillCapabilityInfo() 	 * starting from griffin. Set here to make sure that 	 * AR_MISC_MODE_MIC_NEW_LOC_ENABLE is set before a GTK is 	 * placed into hardware 	 */
+comment|/* 	 * ah_miscMode is populated by ar5416FillCapabilityInfo() 	 * starting from griffin. Set here to make sure that 	 * AR_MISC_MODE_MIC_NEW_LOC_ENABLE is set before a GTK is 	 * placed into hardware. 	 */
 if|if
 condition|(
 name|ahp
@@ -1525,12 +1532,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ar5212InitializeGainValues
-argument_list|(
-name|ah
-argument_list|)
-expr_stmt|;
-comment|/* gain ladder */
 name|ar5416AniSetup
 argument_list|(
 name|ah
@@ -1544,7 +1545,9 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_nfCalHist
+name|ah_cal
+operator|.
+name|nfCalHist
 argument_list|)
 expr_stmt|;
 name|HALDEBUG
@@ -1629,7 +1632,7 @@ operator|==
 name|AR5416_MAGIC
 argument_list|)
 expr_stmt|;
-name|ar5212AniDetach
+name|ar5416AniDetach
 argument_list|(
 name|ah
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212_phy.c,v 1.4 2008/11/10 01:19:38 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212_phy.c,v 1.5 2008/11/15 03:43:53 sam Exp $  */
 end_comment
 
 begin_include
@@ -227,7 +227,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|HAL_RATE_TABLE
-name|ar5212_11a_half_table
+name|ar5212_half_table
 init|=
 block|{
 literal|8
@@ -394,7 +394,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|HAL_RATE_TABLE
-name|ar5212_11a_quarter_table
+name|ar5212_quarter_table
 init|=
 block|{
 literal|8
@@ -1330,19 +1330,25 @@ break|break;
 case|case
 name|HAL_MODE_11A_HALF_RATE
 case|:
+case|case
+name|HAL_MODE_11G_HALF_RATE
+case|:
 name|rt
 operator|=
 operator|&
-name|ar5212_11a_half_table
+name|ar5212_half_table
 expr_stmt|;
 break|break;
 case|case
 name|HAL_MODE_11A_QUARTER_RATE
 case|:
+case|case
+name|HAL_MODE_11G_QUARTER_RATE
+case|:
 name|rt
 operator|=
 operator|&
-name|ar5212_11a_quarter_table
+name|ar5212_quarter_table
 expr_stmt|;
 break|break;
 default|default:

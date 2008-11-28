@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ah_internal.h,v 1.17 2008/11/10 04:08:00 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ah_internal.h,v 1.21 2008/11/27 22:29:27 sam Exp $  */
 end_comment
 
 begin_ifndef
@@ -236,7 +236,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Transmit power scale factor.  */
+comment|/*  * Transmit power scale factor.  *  * NB: This is not public because we want to discourage the use of  *     scaling; folks should use the tx power limit interface.  */
 end_comment
 
 begin_typedef
@@ -577,7 +577,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The ``private area'' follows immediately after the ``public area''  * in the data structure returned by ath_hal_attach.  */
+comment|/*  * The ``private area'' follows immediately after the ``public area''  * in the data structure returned by ath_hal_attach.  Private data are  * used by device-independent code such as the regulatory domain support.  * In general, code within the HAL should never depend on data in the  * public area.  Instead any public data needed internally should be  * shadowed here.  *  * When declaring a device-specific ath_hal data structure this structure  * is assumed to at the front; e.g.  *  *	struct ath_hal_5212 {  *		struct ath_hal_private	ah_priv;  *		...  *	};  *  * It might be better to manage the method pointers in this structure  * using an indirect pointer to a read-only data structure but this would  * disallow class-style method overriding.  */
 end_comment
 
 begin_struct
@@ -761,6 +761,21 @@ parameter_list|,
 specifier|const
 name|HAL_CHANNEL_INTERNAL
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ah_getNoiseFloor
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|int16_t
+name|nfarray
+index|[]
 parameter_list|)
 function_decl|;
 name|void
@@ -1138,6 +1153,19 @@ name|_c
 parameter_list|)
 define|\
 value|AH_PRIVATE(_ah)->ah_getNfAdjust(_ah, _c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getNoiseFloor
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_nfArray
+parameter_list|)
+define|\
+value|AH_PRIVATE(_ah)->ah_getNoiseFloor(_ah, _nfArray)
 end_define
 
 begin_define

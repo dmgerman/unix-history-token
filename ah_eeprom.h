@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ah_eeprom.h,v 1.6 2008/11/10 04:08:00 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ah_eeprom.h,v 1.11 2008/11/27 22:32:48 sam Exp $  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,17 @@ define|#
 directive|define
 name|_ATH_AH_EEPROM_H_
 end_define
+
+begin_define
+define|#
+directive|define
+name|AR_EEPROM_VER1
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Version 1.0; 5210 only */
+end_comment
 
 begin_comment
 comment|/*  * Version 3 EEPROMs are all 16K.  * 3.1 adds turbo limit, antenna gain, 16 CTL's, 11g info,  *	and 2.4Ghz ob/db for B& G  * 3.2 has more accurate pcdac intercepts and analog chip  *	calibration.  * 3.3 adds ctl in-band limit, 32 ctl's, and frequency  *	expansion  * 3.4 adds xr power, gainI, and 2.4 turbo params  */
@@ -72,6 +83,17 @@ end_define
 
 begin_comment
 comment|/* Version 3.4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_EEPROM_VER4
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Version 4.x */
 end_comment
 
 begin_define
@@ -154,6 +176,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_EEPROM_VER5
+value|0x5000
+end_define
+
+begin_comment
+comment|/* Version 5.x */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_EEPROM_VER5_0
 value|0x5000
 end_define
@@ -198,12 +231,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_EEPROM_VER14
+value|0xE000
+end_define
+
+begin_comment
+comment|/* Version 14.x */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_EEPROM_VER14_1
 value|0xE001
 end_define
 
 begin_comment
-comment|/* 11n support */
+comment|/* Adds 11n support */
 end_comment
 
 begin_define
@@ -305,10 +349,10 @@ block|,
 comment|/* uint16_t* */
 name|AR_EEP_NFTHRESH_5
 block|,
-comment|/* uint8_t* */
+comment|/* int16_t* */
 name|AR_EEP_NFTHRESH_2
 block|,
-comment|/* uint8_t* */
+comment|/* int16_t* */
 name|AR_EEP_REGDMN_0
 block|,
 comment|/* uint16_t* */
@@ -493,6 +537,18 @@ end_define
 
 begin_function_decl
 name|HAL_STATUS
+name|ath_hal_v1EepromAttach
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|HAL_STATUS
 name|ath_hal_legacyEepromAttach
 parameter_list|(
 name|struct
@@ -506,6 +562,18 @@ end_function_decl
 begin_function_decl
 name|HAL_STATUS
 name|ath_hal_v14EepromAttach
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|HAL_STATUS
+name|ath_hal_v4kEepromAttach
 parameter_list|(
 name|struct
 name|ath_hal
