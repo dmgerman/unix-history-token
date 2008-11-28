@@ -246,6 +246,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/xen/xenvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/gnttab.h>
 end_include
 
@@ -1540,6 +1546,12 @@ define|\
 value|printf("[XEN] " fmt, ##args)
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1553,6 +1565,28 @@ parameter_list|)
 define|\
 value|printf("[XEN] " fmt, ##args)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTK
+parameter_list|(
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 specifier|static
@@ -1880,11 +1914,6 @@ name|netfront_info
 modifier|*
 name|info
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"netfront_probe() \n"
-argument_list|)
-expr_stmt|;
 name|err
 operator|=
 name|create_netdev
@@ -5500,7 +5529,7 @@ expr_stmt|;
 name|pfn
 operator|=
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|)
 name|m
 operator|->
@@ -6898,11 +6927,6 @@ name|feature_rx_copy
 decl_stmt|,
 name|feature_rx_flip
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"network_connect\n"
-argument_list|)
-expr_stmt|;
 name|np
 operator|=
 name|ifp
@@ -7636,6 +7660,8 @@ operator|=
 name|IFF_BROADCAST
 operator||
 name|IFF_SIMPLEX
+operator||
+name|IFF_MULTICAST
 expr_stmt|;
 name|ifp
 operator|->
@@ -8069,7 +8095,7 @@ name|is_initial_xendomain
 argument_list|()
 condition|)
 return|return;
-name|IPRINTK
+name|DPRINTK
 argument_list|(
 literal|"Initialising virtual ethernet driver.\n"
 argument_list|)
