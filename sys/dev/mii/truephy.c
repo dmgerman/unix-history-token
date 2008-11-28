@@ -108,10 +108,11 @@ end_include
 begin_define
 define|#
 directive|define
-name|FRAMELEN
+name|TRUEPHY_FRAMELEN
 parameter_list|(
 name|mtu
 parameter_list|)
+define|\
 value|(ETHER_HDR_LEN + ETHER_VLAN_ENCAP_LEN + (mtu) + ETHER_CRC_LEN)
 end_define
 
@@ -1266,7 +1267,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|FRAMELEN
+name|TRUEPHY_FRAMELEN
 argument_list|(
 name|sc
 operator|->
