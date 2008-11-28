@@ -4562,7 +4562,7 @@ end_function
 begin_expr_stmt
 name|AH_RF
 argument_list|(
-name|ar5413
+name|RF5413
 argument_list|,
 name|ar5413Probe
 argument_list|,

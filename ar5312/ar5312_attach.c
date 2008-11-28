@@ -1596,7 +1596,7 @@ end_function
 begin_expr_stmt
 name|AH_CHIP
 argument_list|(
-name|ar5312
+name|AR5312
 argument_list|,
 name|ar5312Probe
 argument_list|,

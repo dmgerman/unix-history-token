@@ -303,6 +303,11 @@ block|{
 specifier|const
 name|char
 modifier|*
+name|name
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 function_decl|(
 modifier|*
 name|probe
@@ -352,14 +357,14 @@ define|#
 directive|define
 name|AH_CHIP
 parameter_list|(
-name|name
+name|_name
 parameter_list|,
 name|_probe
 parameter_list|,
 name|_attach
 parameter_list|)
 define|\
-value|static struct ath_hal_chip name##_chip = {			\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_chips, name##_chip)
+value|static struct ath_hal_chip name##_chip = {			\ 	.name		= #_name,				\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_chips, name##_chip)
 end_define
 
 begin_endif
@@ -375,6 +380,11 @@ begin_struct
 struct|struct
 name|ath_hal_rf
 block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
 name|HAL_BOOL
 function_decl|(
 modifier|*
@@ -418,14 +428,14 @@ define|#
 directive|define
 name|AH_RF
 parameter_list|(
-name|name
+name|_name
 parameter_list|,
 name|_probe
 parameter_list|,
 name|_attach
 parameter_list|)
 define|\
-value|static struct ath_hal_rf name##_rf = {				\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_rfs, name##_rf)
+value|static struct ath_hal_rf name##_rf = {				\ 	.name		= #_name,				\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_rfs, name##_rf)
 end_define
 
 begin_endif

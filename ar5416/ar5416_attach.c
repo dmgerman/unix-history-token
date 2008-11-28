@@ -2183,7 +2183,7 @@ end_function
 begin_expr_stmt
 name|AH_CHIP
 argument_list|(
-name|ar5416
+name|AR5416
 argument_list|,
 name|ar5416Probe
 argument_list|,

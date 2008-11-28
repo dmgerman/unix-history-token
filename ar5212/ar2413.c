@@ -4322,7 +4322,7 @@ end_function
 begin_expr_stmt
 name|AH_RF
 argument_list|(
-name|ar2413
+name|RF2413
 argument_list|,
 name|ar2413Probe
 argument_list|,
