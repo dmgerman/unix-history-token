@@ -2138,7 +2138,7 @@ comment|/* HAL ABI version */
 define|#
 directive|define
 name|HAL_ABI_VERSION
-value|0x08111400
+value|0x08112800
 comment|/* YYMMDDnn */
 name|uint16_t
 name|ah_devid
@@ -3968,32 +3968,6 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Return a version string for the HAL release.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|ath_hal_version
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Return a NULL-terminated array of build/configuration options.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ath_hal_buildopts
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
