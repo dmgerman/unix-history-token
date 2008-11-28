@@ -150,14 +150,6 @@ name|xb_wait
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xen_store
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -573,9 +565,7 @@ expr_stmt|;
 comment|/* This implies mb() before other side sees interrupt. */
 name|notify_remote_via_evtchn
 argument_list|(
-name|xen_start_info
-operator|->
-name|store_evtchn
+name|xen_store_evtchn
 argument_list|)
 expr_stmt|;
 block|}
@@ -823,9 +813,7 @@ expr_stmt|;
 comment|/* Implies mb(): they will see new header. */
 name|notify_remote_via_evtchn
 argument_list|(
-name|xen_start_info
-operator|->
-name|store_evtchn
+name|xen_store_evtchn
 argument_list|)
 expr_stmt|;
 block|}
@@ -909,9 +897,7 @@ name|err
 operator|=
 name|bind_caller_port_to_irqhandler
 argument_list|(
-name|xen_start_info
-operator|->
-name|store_evtchn
+name|xen_store_evtchn
 argument_list|,
 literal|"xenbus"
 argument_list|,
