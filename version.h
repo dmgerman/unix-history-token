@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|ATH_HAL_VERSION
-value|"0.11.3.8"
+value|"0.11.3.9"
 end_define
 
 end_unit

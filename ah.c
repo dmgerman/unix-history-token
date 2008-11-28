@@ -245,13 +245,6 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|AH_DISABLE_WME
-literal|"DISABLE_WME"
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|AH_SUPPORT_11D
 literal|"11D"
 block|,

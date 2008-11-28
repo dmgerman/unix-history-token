@@ -1824,33 +1824,6 @@ default|default:
 comment|/* NB: silence compiler */
 break|break;
 block|}
-ifndef|#
-directive|ifndef
-name|AH_DISABLE_WME
-comment|/* 	 * Yes, this is a hack and not the right way to do it, but 	 * it does get the lockout bits and backoff set for the 	 * high-pri WME queues for testing.  We need to either extend 	 * the meaning of queueInfo->mode, or create something like 	 * queueInfo->dcumode. 	 */
-if|if
-condition|(
-name|qi
-operator|->
-name|tqi_intFlags
-operator|&
-name|HAL_TXQ_USE_LOCKOUT_BKOFF_DIS
-condition|)
-block|{
-name|dmisc
-operator||=
-name|SM
-argument_list|(
-name|AR_D_MISC_ARB_LOCKOUT_CNTRL_GLOBAL
-argument_list|,
-name|AR_D_MISC_ARB_LOCKOUT_CNTRL
-argument_list|)
-operator||
-name|AR_D_MISC_POST_FR_BKOFF_DIS
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|OS_REG_WRITE
 argument_list|(
 name|ah
