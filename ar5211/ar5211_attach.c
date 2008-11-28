@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5211
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -2395,14 +2389,71 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ar5211Probe
+parameter_list|(
+name|uint16_t
+name|vendorid
+parameter_list|,
+name|uint16_t
+name|devid
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vendorid
+operator|==
+name|ATHEROS_VENDOR_ID
+condition|)
+block|{
+if|if
+condition|(
+name|devid
+operator|==
+name|AR5211_DEVID
+operator|||
+name|devid
+operator|==
+name|AR5311_DEVID
+operator|||
+name|devid
+operator|==
+name|AR5211_DEFAULT
+condition|)
+return|return
+literal|"Atheros 5211"
+return|;
+if|if
+condition|(
+name|devid
+operator|==
+name|AR5211_FPGA11B
+condition|)
+return|return
+literal|"Atheros 5211 (FPGA)"
+return|;
+block|}
+return|return
+name|AH_NULL
+return|;
+block|}
+end_function
 
-begin_comment
-comment|/* AH_SUPPORT_AR5211 */
-end_comment
+begin_expr_stmt
+name|AH_CHIP
+argument_list|(
+name|ar5211
+argument_list|,
+name|ar5211Probe
+argument_list|,
+name|ar5211Attach
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_2317
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -3981,6 +3975,7 @@ comment|/*  * Allocate memory for analog bank scratch buffers  * Scratch Buffer 
 end_comment
 
 begin_function
+specifier|static
 name|HAL_BOOL
 name|ar2317RfAttach
 parameter_list|(
@@ -4164,14 +4159,37 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+name|HAL_BOOL
+name|ar2317Probe
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+name|IS_2317
+argument_list|(
+name|ah
+argument_list|)
+return|;
+block|}
+end_function
 
-begin_comment
-comment|/* AH_SUPPORT_2317 */
-end_comment
+begin_expr_stmt
+name|AH_RF
+argument_list|(
+name|ar2317
+argument_list|,
+name|ar2317Probe
+argument_list|,
+name|ar2317RfAttach
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5212
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -548,15 +542,6 @@ unit|HAL_BOOL ar5212GetPowerStatus(struct ath_hal *ah) { 	return (OS_REG_READ(ah
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR5212 */
-end_comment
 
 end_unit
 

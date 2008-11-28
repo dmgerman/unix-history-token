@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5211
-end_ifdef
-
 begin_comment
 comment|/*  * Chips specific device attachment and device info collection  * Connects Init Reg Vectors, EEPROM Data, and device Functions.  */
 end_comment
@@ -11101,15 +11095,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR5211 */
-end_comment
 
 end_unit
 

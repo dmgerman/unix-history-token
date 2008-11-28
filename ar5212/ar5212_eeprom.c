@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5212
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -71,23 +65,6 @@ include|#
 directive|include
 file|"ar5212/ar5212phy.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5311
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ar5212/ar5311reg.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Read 16 bits of data from offset into *data  */
@@ -179,15 +156,6 @@ name|AH_TRUE
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR5212 */
-end_comment
 
 end_unit
 

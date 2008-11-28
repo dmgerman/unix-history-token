@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5210
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -25,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"ah_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ah_devid.h"
 end_include
 
 begin_include
@@ -678,6 +678,7 @@ comment|/*  * Attach for an AR5210 part.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ath_hal
 modifier|*
@@ -1652,14 +1653,56 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ar5210Probe
+parameter_list|(
+name|uint16_t
+name|vendorid
+parameter_list|,
+name|uint16_t
+name|devid
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vendorid
+operator|==
+name|ATHEROS_VENDOR_ID
+operator|&&
+operator|(
+name|devid
+operator|==
+name|AR5210_PROD
+operator|||
+name|devid
+operator|==
+name|AR5210_DEFAULT
+operator|)
+condition|)
+return|return
+literal|"Atheros 5210"
+return|;
+return|return
+name|AH_NULL
+return|;
+block|}
+end_function
 
-begin_comment
-comment|/* AH_SUPPORT_AR5210 */
-end_comment
+begin_expr_stmt
+name|AH_CHIP
+argument_list|(
+name|ar5210
+argument_list|,
+name|ar5210Probe
+argument_list|,
+name|ar5210Attach
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

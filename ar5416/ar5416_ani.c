@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR5416
-end_ifdef
-
 begin_comment
 comment|/*  * XXX this is virtually the same code as for 5212; we reuse  * storage in the 5212 state block; need to refactor.  */
 end_comment
@@ -3786,15 +3780,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR5416 */
-end_comment
 
 end_unit
 
