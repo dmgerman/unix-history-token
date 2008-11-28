@@ -15,6 +15,21 @@ directive|define
 name|_XENBUS_COMMS_H
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|xen_store_evtchn
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|xen_store
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|xs_init
