@@ -784,6 +784,12 @@ name|__FreeBSD_version
 operator|>
 literal|460000
 operator|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|800055
+operator|)
 end_if
 
 begin_decl_stmt

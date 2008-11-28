@@ -431,20 +431,16 @@ name|rsvp_on
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|TAILQ_HEAD
-argument_list|(
-argument|ipqhead
-argument_list|,
-argument|ipq
-argument_list|)
+name|struct
+name|ipqhead
 name|ipq
 index|[
 name|IPREASS_NHASH
 index|]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

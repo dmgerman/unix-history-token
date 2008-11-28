@@ -119,6 +119,20 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|key_cb
+block|{
+name|int
+name|key_count
+decl_stmt|;
+name|int
+name|any_count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define

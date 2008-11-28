@@ -15,12 +15,6 @@ directive|define
 name|_NETINET6_VINET6_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -395,11 +389,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

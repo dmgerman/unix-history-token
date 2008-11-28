@@ -1574,13 +1574,6 @@ decl_stmt|;
 name|int
 name|buflen
 decl_stmt|;
-define|#
-directive|define
-name|SA_SIZE
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->sa_len<sizeof(*(s))? sizeof(*(s)):(s)->sa_len)
 comment|/* Determine size of response and allocate it */
 name|buflen
 operator|=
@@ -1695,9 +1688,6 @@ name|len
 expr_stmt|;
 block|}
 break|break;
-undef|#
-directive|undef
-name|SA_SIZE
 block|}
 default|default:
 name|error

@@ -15,12 +15,6 @@ directive|define
 name|_NETIPSEC_VIPSEC_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -296,11 +290,6 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Symbol translation macros  */

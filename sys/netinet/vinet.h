@@ -15,12 +15,6 @@ directive|define
 name|_NETINET_VINET_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/md5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -559,11 +559,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Symbol translation macros  */
@@ -1464,6 +1459,51 @@ directive|define
 name|V_useloopback
 value|VNET_INET(useloopback)
 end_define
+
+begin_function_decl
+specifier|static
+name|__inline
+name|uint16_t
+name|ip_newid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip_do_randomid
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|uint16_t
+name|ip_newid
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|V_ip_do_randomid
+condition|)
+return|return
+name|ip_randomid
+argument_list|()
+return|;
+return|return
+name|htons
+argument_list|(
+name|V_ip_id
+operator|++
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

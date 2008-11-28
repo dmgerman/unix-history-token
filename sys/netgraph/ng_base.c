@@ -579,17 +579,6 @@ define|\
 value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(node,&V_ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|NG_NAME_HASH_SIZE
-value|128
-end_define
-
-begin_comment
-comment|/* most systems wont need even this many */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD

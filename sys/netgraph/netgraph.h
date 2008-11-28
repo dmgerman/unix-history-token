@@ -6279,6 +6279,17 @@ begin_comment
 comment|/* most systems wont need even this many */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NG_NAME_HASH_SIZE
+value|128
+end_define
+
+begin_comment
+comment|/* most systems wont need even this many */
+end_comment
+
 begin_comment
 comment|/* Virtualization macros */
 end_comment
@@ -6303,6 +6314,59 @@ name|sym
 parameter_list|)
 value|VSYM(vnet_netgraph, sym)
 end_define
+
+begin_struct
+struct|struct
+name|vnet_netgraph
+block|{
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ng_node
+argument_list|)
+name|_ng_ID_hash
+index|[
+name|NG_ID_HASH_SIZE
+index|]
+expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ng_node
+argument_list|)
+name|_ng_name_hash
+index|[
+name|NG_NAME_HASH_SIZE
+index|]
+expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ng_node
+argument_list|)
+name|_ng_nodelist
+expr_stmt|;
+name|ng_ID_t
+name|_nextID
+decl_stmt|;
+name|struct
+name|unrhdr
+modifier|*
+name|_ng_iface_unit
+decl_stmt|;
+name|struct
+name|unrhdr
+modifier|*
+name|_ng_eiface_unit
+decl_stmt|;
+name|struct
+name|unrhdr
+modifier|*
+name|_ng_wormhole_unit
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Symbol translation macros */

@@ -210,6 +210,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800055
+end_if
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -217,6 +225,11 @@ name|_net_inet
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
