@@ -65,7 +65,7 @@ modifier|*
 modifier|*
 name|pchip
 decl_stmt|;
-name|SET_FOREACH
+name|OS_SET_FOREACH
 argument_list|(
 argument|pchip
 argument_list|,
@@ -138,7 +138,7 @@ modifier|*
 modifier|*
 name|pchip
 decl_stmt|;
-name|SET_FOREACH
+name|OS_SET_FOREACH
 argument_list|(
 argument|pchip
 argument_list|,
@@ -327,7 +327,7 @@ modifier|*
 modifier|*
 name|prf
 decl_stmt|;
-name|SET_FOREACH
+name|OS_SET_FOREACH
 argument_list|(
 argument|prf
 argument_list|,
