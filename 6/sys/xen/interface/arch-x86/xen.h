@@ -168,7 +168,7 @@ end_elif
 begin_include
 include|#
 directive|include
-file|"xen-x86_64.h"
+file|<xen/interface/arch-x86/xen-x86_64.h>
 end_include
 
 begin_endif
