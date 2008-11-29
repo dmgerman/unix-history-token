@@ -1102,6 +1102,17 @@ argument_list|(
 literal|"smbios.system.product"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|model
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 for|for
 control|(
 name|i
