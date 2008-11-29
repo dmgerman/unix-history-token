@@ -10059,6 +10059,7 @@ operator|->
 name|td_ucred
 argument_list|)
 operator|&&
+operator|!
 name|prison_if
 argument_list|(
 name|curthread

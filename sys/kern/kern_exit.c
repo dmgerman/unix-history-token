@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -1548,6 +1554,25 @@ operator|->
 name|p_xthread
 operator|=
 name|td
+expr_stmt|;
+comment|/* In case we are jailed tell the prison that we are gone. */
+if|if
+condition|(
+name|jailed
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+argument_list|)
+condition|)
+name|prison_proc_free
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_prison
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

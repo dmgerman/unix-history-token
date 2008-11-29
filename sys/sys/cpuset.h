@@ -348,6 +348,17 @@ begin_comment
 comment|/* Specifies an irq #. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CPU_WHICH_JAIL
+value|5
+end_define
+
+begin_comment
+comment|/* Specifies a jail id. */
+end_comment
+
 begin_comment
 comment|/*  * Reserved cpuset identifiers.  */
 end_comment
@@ -466,6 +477,18 @@ name|cpuset_root
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|struct
 name|cpuset
@@ -509,6 +532,37 @@ name|lwpid_t
 name|id
 parameter_list|,
 name|cpuset_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cpuset_create_root
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|cpuset
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cpuset_setproc_update_set
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|struct
+name|cpuset
 modifier|*
 parameter_list|)
 function_decl|;
