@@ -2526,6 +2526,17 @@ name|allprison_lock
 argument_list|)
 expr_stmt|;
 comment|/* Make sure we cannot run into problems with ambiguous bind()ings. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|error
 operator|=
 name|prison_check_conflicting_ips
@@ -2548,6 +2559,8 @@ goto|goto
 name|e_dropcpuset
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/* Determine next pr_id and add prison to allprison list. */
 name|tryprid
 operator|=
