@@ -124,6 +124,99 @@ name|LINUX_MSG_NOSIGNAL
 value|0x4000
 end_define
 
+begin_comment
+comment|/* Socket-level control message types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SCM_RIGHTS
+value|0x01
+end_define
+
+begin_comment
+comment|/* Ancilliary data object information macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_CMSG_ALIGN
+parameter_list|(
+name|len
+parameter_list|)
+value|roundup2(len, sizeof(l_ulong))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_CMSG_DATA
+parameter_list|(
+name|cmsg
+parameter_list|)
+value|((void *)((char *)(cmsg) + \ 				    LINUX_CMSG_ALIGN(sizeof(struct l_cmsghdr))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_CMSG_SPACE
+parameter_list|(
+name|len
+parameter_list|)
+value|(LINUX_CMSG_ALIGN(sizeof(struct l_cmsghdr)) + \ 				    LINUX_CMSG_ALIGN(len))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_CMSG_LEN
+parameter_list|(
+name|len
+parameter_list|)
+value|(LINUX_CMSG_ALIGN(sizeof(struct l_cmsghdr)) + \ 				    (len))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_CMSG_FIRSTHDR
+parameter_list|(
+name|msg
+parameter_list|)
+define|\
+value|((msg)->msg_controllen>= \ 				    sizeof(struct l_cmsghdr) ? \ 				    (struct l_cmsghdr *)((msg)->msg_control) : \ 				    (struct l_cmsghdr *)(NULL))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_CMSG_NXTHDR
+parameter_list|(
+name|msg
+parameter_list|,
+name|cmsg
+parameter_list|)
+define|\
+value|((((char *)(cmsg) + \ 				    LINUX_CMSG_ALIGN((cmsg)->cmsg_len) + \ 				    sizeof(*(cmsg)))> \ 				    (((char *)(msg)->msg_control) + \ 				    (msg)->msg_controllen)) ? \ 				    (struct l_cmsghdr *) NULL : \ 				    (struct l_cmsghdr *)((char *)(cmsg) + \ 				    LINUX_CMSG_ALIGN((cmsg)->cmsg_len)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMSG_HDRSZ
+value|CMSG_LEN(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L_CMSG_HDRSZ
+value|LINUX_CMSG_LEN(0)
+end_define
+
 begin_endif
 endif|#
 directive|endif
