@@ -4027,9 +4027,11 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"LK_RETRY set with incompatible flags %d\n"
+literal|"LK_RETRY set with incompatible flags (0x%x) or an error occured (%d)"
 operator|,
 name|flags
+operator|,
+name|error
 operator|)
 argument_list|)
 expr_stmt|;
