@@ -1628,7 +1628,7 @@ parameter_list|,
 name|vm_offset_t
 name|offset
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 modifier|*
 name|paddr
 parameter_list|,
