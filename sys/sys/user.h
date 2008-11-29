@@ -928,6 +928,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* When exporting paths via sysctl, give a short version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KPROC_PATH_MAX
+value|256
+end_define
+
+begin_comment
 comment|/*  * The KERN_PROC_FILE sysctl allows a process to dump the file descriptor  * array of another process.  */
 end_comment
 
@@ -1174,6 +1185,32 @@ name|KF_FLAG_HASLOCK
 value|0x00000080
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_FILE_SIZE
+value|560
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|kinfo_file
@@ -1198,7 +1235,11 @@ name|int
 name|kf_flags
 decl_stmt|;
 comment|/* Flags. */
-name|off_t
+name|int
+name|_kf_pad0
+decl_stmt|;
+comment|/* Alignment */
+name|uint64_t
 name|kf_offset
 decl_stmt|;
 comment|/* Seek location. */
@@ -1218,13 +1259,6 @@ name|int
 name|kf_sock_protocol
 decl_stmt|;
 comment|/* Socket protocol. */
-name|char
-name|kf_path
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-comment|/* Path to file, if any. */
 name|struct
 name|sockaddr_storage
 name|kf_sa_local
@@ -1235,6 +1269,13 @@ name|sockaddr_storage
 name|kf_sa_peer
 decl_stmt|;
 comment|/* Peer address. */
+name|char
+name|kf_path
+index|[
+name|KPROC_PATH_MAX
+index|]
+decl_stmt|;
+comment|/* Path to file, if any. */
 block|}
 struct|;
 end_struct
@@ -1334,6 +1375,32 @@ name|KVME_FLAG_NEEDS_COPY
 value|0x00000002
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_VMENTRY_SIZE
+value|384
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|kinfo_vmentry
@@ -1346,16 +1413,26 @@ name|int
 name|kve_type
 decl_stmt|;
 comment|/* Type of map entry. */
-name|void
-modifier|*
+name|uint64_t
 name|kve_start
 decl_stmt|;
-comment|/* Starting pointer. */
-name|void
-modifier|*
+comment|/* Starting address. */
+name|uint64_t
 name|kve_end
 decl_stmt|;
-comment|/* Finishing pointer. */
+comment|/* Finishing address. */
+name|uint64_t
+name|kve_offset
+decl_stmt|;
+comment|/* Mapping offset in object */
+name|uint64_t
+name|kve_fileid
+decl_stmt|;
+comment|/* inode number if vnode */
+name|uint32_t
+name|kve_fsid
+decl_stmt|;
+comment|/* dev_t of vnode location */
 name|int
 name|kve_flags
 decl_stmt|;
@@ -1380,40 +1457,20 @@ name|int
 name|kve_shadow_count
 decl_stmt|;
 comment|/* VM obj shadow count. */
-name|char
-name|kve_path
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-comment|/* Path to VM obj, if any. */
-name|void
-modifier|*
-name|_kve_pspare
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* Space for more stuff. */
-name|off_t
-name|kve_offset
-decl_stmt|;
-comment|/* Mapping offset in object */
-name|uint64_t
-name|kve_fileid
-decl_stmt|;
-comment|/* inode number of vnode */
-name|dev_t
-name|kve_fsid
-decl_stmt|;
-comment|/* dev_t of vnode location */
 name|int
 name|_kve_ispare
 index|[
-literal|3
+literal|15
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
+name|char
+name|kve_path
+index|[
+name|KPROC_PATH_MAX
+index|]
+decl_stmt|;
+comment|/* Path to VM obj, if any. */
 block|}
 struct|;
 end_struct
@@ -1462,6 +1519,32 @@ begin_comment
 comment|/* Stack ephemeral. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_KSTACK_SIZE
+value|1096
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|kinfo_kstack
@@ -1481,18 +1564,10 @@ name|KKST_MAXLEN
 index|]
 decl_stmt|;
 comment|/* String representing stack. */
-name|void
-modifier|*
-name|_kkst_pspare
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* Space for more stuff. */
 name|int
 name|_kkst_ispare
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
