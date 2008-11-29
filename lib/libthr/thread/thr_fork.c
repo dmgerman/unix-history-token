@@ -447,6 +447,9 @@ argument_list|(
 name|rtld_locks
 argument_list|)
 expr_stmt|;
+name|_malloc_postfork
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* Run down atfork child handlers. */
 name|TAILQ_FOREACH
