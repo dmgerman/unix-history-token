@@ -3541,6 +3541,18 @@ comment|/* return vfs given fsid */
 end_comment
 
 begin_function_decl
+name|struct
+name|mount
+modifier|*
+name|vfs_busyfs
+parameter_list|(
+name|fsid_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vfs_modevent
 parameter_list|(
