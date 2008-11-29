@@ -515,6 +515,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_WCTYPE_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ZLIB_H
 value|1
 end_define
