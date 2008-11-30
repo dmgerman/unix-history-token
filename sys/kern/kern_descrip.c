@@ -11578,6 +11578,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD7
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -12810,6 +12816,15 @@ literal|"Process ofiledesc entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_FREEBSD7 */
+end_comment
 
 begin_ifdef
 ifdef|#
