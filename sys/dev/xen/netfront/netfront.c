@@ -3929,7 +3929,11 @@ decl_stmt|,
 name|pages_flipped
 init|=
 literal|0
+decl_stmt|,
+name|work_to_do
 decl_stmt|;
+do|do
+block|{
 name|XN_RX_LOCK_ASSERT
 argument_list|(
 name|np
@@ -4105,7 +4109,7 @@ name|NETRXF_data_validated
 condition|)
 block|{
 comment|/* Tell the stack the checksums are okay */
-comment|/* 			 * XXX this isn't necessarily the case - need to add 			 * check 			 */
+comment|/* 				 * XXX this isn't necessarily the case - need to add 				 * check 				 */
 name|m
 operator|->
 name|m_pkthdr
@@ -4185,7 +4189,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Do all the remapping work, and M->P updates, in one big 		 * hypercall. 		 */
+comment|/* Do all the remapping work, and M->P updates, in one big 			 * hypercall. 			 */
 if|if
 condition|(
 operator|!
@@ -4284,7 +4288,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Process all the mbufs after the remapping is complete. 	 * Break the mbuf chain first though. 	 */
+comment|/*  		 * Process all the mbufs after the remapping is complete. 		 * Break the mbuf chain first though. 		 */
 while|while
 condition|(
 operator|(
@@ -4305,7 +4309,7 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-comment|/* 		 * Do we really need to drop the rx lock? 		 */
+comment|/* 			 * Do we really need to drop the rx lock? 			 */
 name|XN_RX_UNLOCK
 argument_list|(
 name|np
@@ -4343,7 +4347,7 @@ directive|if
 literal|0
 comment|/* If we get a callback with very few responses, reduce fill target. */
 comment|/* NB. Note exponential increase, linear decrease. */
-block|if (((np->rx.req_prod_pvt - np->rx.sring->rsp_prod)>  	    ((3*np->rx_target) / 4))&& (--np->rx_target< np->rx_min_target)) 		np->rx_target = np->rx_min_target;
+block|if (((np->rx.req_prod_pvt - np->rx.sring->rsp_prod)>  			((3*np->rx_target) / 4))&& (--np->rx_target< np->rx_min_target)) 			np->rx_target = np->rx_min_target;
 endif|#
 directive|endif
 name|network_alloc_rx_buffers
@@ -4351,18 +4355,22 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
+name|RING_FINAL_CHECK_FOR_RESPONSES
+argument_list|(
+operator|&
 name|np
 operator|->
 name|rx
-operator|.
-name|sring
-operator|->
-name|rsp_event
-operator|=
-name|i
-operator|+
-literal|1
+argument_list|,
+name|work_to_do
+argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|work_to_do
+condition|)
+do|;
 block|}
 end_function
 
@@ -6473,8 +6481,19 @@ argument_list|,
 name|ifa
 argument_list|)
 expr_stmt|;
+name|XN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 else|else
+block|{
+name|XN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ether_ioctl
@@ -6486,11 +6505,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|XN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+block|}
 break|break;
 case|case
 name|SIOCSIFMTU
