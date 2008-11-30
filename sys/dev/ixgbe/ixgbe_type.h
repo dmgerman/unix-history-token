@@ -43,6 +43,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_DEV_ID_82598
+value|0x10B6
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_DEV_ID_82598AF_DUAL_PORT
 value|0x10C6
 end_define
@@ -64,8 +71,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_DEV_ID_82598AT_DUAL_PORT
-value|0x10D7
+name|IXGBE_DEV_ID_82598EB_SFP_LOM
+value|0x10DB
 end_define
 
 begin_define
@@ -80,6 +87,20 @@ define|#
 directive|define
 name|IXGBE_DEV_ID_82598_CX4_DUAL_PORT
 value|0x10EC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DEV_ID_82598_DA_DUAL_PORT
+value|0x10F1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DEV_ID_82598_SR_DUAL_PORT_EM
+value|0x10E1
 end_define
 
 begin_define
@@ -276,7 +297,14 @@ name|IXGBE_EITR
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)<= 23) ? (0x00820 + ((_i) * 4)) : (0x012300 + ((_i) * 4)))
+value|(((_i)<= 23) ? (0x00820 + ((_i) * 4)) : \                          (0x012300 + ((_i) * 4)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EITR_ITR_INT_MASK
+value|0x00000FFF
 end_define
 
 begin_define
@@ -410,7 +438,7 @@ name|IXGBE_RDBAL
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)< 64) ? (0x01000 + ((_i) * 0x40)) : (0x0D000 + ((_i - 64) * 0x40)))
+value|(((_i)< 64) ? (0x01000 + ((_i) * 0x40)) : \                          (0x0D000 + ((_i - 64) * 0x40)))
 end_define
 
 begin_define
@@ -420,7 +448,7 @@ name|IXGBE_RDBAH
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)< 64) ? (0x01004 + ((_i) * 0x40)) : (0x0D004 + ((_i - 64) * 0x40)))
+value|(((_i)< 64) ? (0x01004 + ((_i) * 0x40)) : \                          (0x0D004 + ((_i - 64) * 0x40)))
 end_define
 
 begin_define
@@ -430,7 +458,7 @@ name|IXGBE_RDLEN
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)< 64) ? (0x01008 + ((_i) * 0x40)) : (0x0D008 + ((_i - 64) * 0x40)))
+value|(((_i)< 64) ? (0x01008 + ((_i) * 0x40)) : \                          (0x0D008 + ((_i - 64) * 0x40)))
 end_define
 
 begin_define
@@ -440,7 +468,7 @@ name|IXGBE_RDH
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)< 64) ? (0x01010 + ((_i) * 0x40)) : (0x0D010 + ((_i - 64) * 0x40)))
+value|(((_i)< 64) ? (0x01010 + ((_i) * 0x40)) : \                          (0x0D010 + ((_i - 64) * 0x40)))
 end_define
 
 begin_define
@@ -450,7 +478,7 @@ name|IXGBE_RDT
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)< 64) ? (0x01018 + ((_i) * 0x40)) : (0x0D018 + ((_i - 64) * 0x40)))
+value|(((_i)< 64) ? (0x01018 + ((_i) * 0x40)) : \                          (0x0D018 + ((_i - 64) * 0x40)))
 end_define
 
 begin_define
@@ -460,7 +488,7 @@ name|IXGBE_RXDCTL
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)< 64) ? (0x01028 + ((_i) * 0x40)) : (0x0D028 + ((_i - 64) * 0x40)))
+value|(((_i)< 64) ? (0x01028 + ((_i) * 0x40)) : \                           (0x0D028 + ((_i - 64) * 0x40)))
 end_define
 
 begin_comment
@@ -496,13 +524,6 @@ define|#
 directive|define
 name|IXGBE_RDRXCTL
 value|0x02F00
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_RDRXCTRL_RSC_PUSH
-value|0x80
 end_define
 
 begin_define
@@ -558,6 +579,20 @@ name|IXGBE_RFCTL
 value|0x05008
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_DRECCCTL
+value|0x02F08
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DRECCCTL_DISABLE
+value|0
+end_define
+
 begin_comment
 comment|/* Multicast Table Array - 128 entries */
 end_comment
@@ -579,7 +614,7 @@ name|IXGBE_RAL
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)<= 15) ? (0x05400 + ((_i) * 8)) : (0x0A200 + ((_i) * 8)))
+value|(((_i)<= 15) ? (0x05400 + ((_i) * 8)) : \                          (0x0A200 + ((_i) * 8)))
 end_define
 
 begin_define
@@ -589,7 +624,7 @@ name|IXGBE_RAH
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)<= 15) ? (0x05404 + ((_i) * 8)) : (0x0A204 + ((_i) * 8)))
+value|(((_i)<= 15) ? (0x05404 + ((_i) * 8)) : \                          (0x0A204 + ((_i) * 8)))
 end_define
 
 begin_comment
@@ -603,7 +638,7 @@ name|IXGBE_PSRTYPE
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)<= 15) ? (0x05480 + ((_i) * 4)) : (0x0EA00 + ((_i) * 4)))
+value|(((_i)<= 15) ? (0x05480 + ((_i) * 4)) : \                               (0x0EA00 + ((_i) * 4)))
 end_define
 
 begin_comment
@@ -857,7 +892,7 @@ name|IXGBE_TXPBSIZE
 parameter_list|(
 name|_i
 parameter_list|)
-value|(0x0CC00 + ((_i) *0x04))
+value|(0x0CC00 + ((_i) * 4))
 end_define
 
 begin_comment
@@ -961,15 +996,471 @@ begin_define
 define|#
 directive|define
 name|IXGBE_FHFT
-value|0x09000
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x09000 + (_n * 0x100))
 end_define
 
 begin_comment
-comment|/* Flex host filter table 9000-93FC */
+comment|/* Flex host filter table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FHFT_EXT
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x09800 + (_n * 0x100))
+end_define
+
+begin_comment
+comment|/* Ext Flexible Host                                                      * Filter Table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FLEXIBLE_FILTER_COUNT_MAX
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EXT_FLEXIBLE_FILTER_COUNT_MAX
+value|2
+end_define
+
+begin_comment
+comment|/* Each Flexible Filter is at most 128 (0x80) bytes in length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FLEXIBLE_FILTER_SIZE_MAX
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FHFT_LENGTH_OFFSET
+value|0xFC
+end_define
+
+begin_comment
+comment|/* Length byte in FHFT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FHFT_LENGTH_MASK
+value|0x0FF
+end_define
+
+begin_comment
+comment|/* Length in lower byte */
 end_comment
 
 begin_comment
-comment|/* Music registers */
+comment|/* Definitions for power management and wakeup registers */
+end_comment
+
+begin_comment
+comment|/* Wake Up Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUC_PME_EN
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* PME Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUC_PME_STATUS
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* PME Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUC_ADVD3WUC
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* D3Cold wake up cap. enable*/
+end_comment
+
+begin_comment
+comment|/* Wake Up Filter Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_LNKC
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Link Status Change Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_MAG
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Magic Packet Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_EX
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Directed Exact Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_MC
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Directed Multicast Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_BC
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Broadcast Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_ARP
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* ARP Request Packet Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_IPV4
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Directed IPv4 Packet Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_IPV6
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Directed IPv6 Packet Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_MNG
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Directed Mgmt Packet Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_IGNORE_TCO
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Ignore WakeOn TCO packets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_FLX0
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 0 Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_FLX1
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 1 Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_FLX2
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 2 Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_FLX3
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 3 Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_FLX4
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 4 Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_FLX5
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 5 Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_FLX_FILTERS
+value|0x000F0000
+end_define
+
+begin_comment
+comment|/* Mask for 4 flex filters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_EXT_FLX_FILTERS
+value|0x00300000
+end_define
+
+begin_comment
+comment|/* Mask for Ext. flex filters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_ALL_FILTERS
+value|0x003F00FF
+end_define
+
+begin_comment
+comment|/* Mask for all 6 wakeup filters*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUFC_FLX_OFFSET
+value|16
+end_define
+
+begin_comment
+comment|/* Offset to the Flexible Filters bits */
+end_comment
+
+begin_comment
+comment|/* Wake Up Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_LNKC
+value|IXGBE_WUFC_LNKC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_MAG
+value|IXGBE_WUFC_MAG
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_EX
+value|IXGBE_WUFC_EX
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_MC
+value|IXGBE_WUFC_MC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_BC
+value|IXGBE_WUFC_BC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_ARP
+value|IXGBE_WUFC_ARP
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_IPV4
+value|IXGBE_WUFC_IPV4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_IPV6
+value|IXGBE_WUFC_IPV6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_MNG
+value|IXGBE_WUFC_MNG
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_FLX0
+value|IXGBE_WUFC_FLX0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_FLX1
+value|IXGBE_WUFC_FLX1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_FLX2
+value|IXGBE_WUFC_FLX2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_FLX3
+value|IXGBE_WUFC_FLX3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_FLX4
+value|IXGBE_WUFC_FLX4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_FLX5
+value|IXGBE_WUFC_FLX5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUS_FLX_FILTERS
+value|IXGBE_WUFC_FLX_FILTERS
+end_define
+
+begin_comment
+comment|/* Wake Up Packet Length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_WUPL_LENGTH_MASK
+value|0xFFFF
+end_define
+
+begin_comment
+comment|/* DCB registers */
 end_comment
 
 begin_define
@@ -1083,244 +1574,6 @@ end_define
 begin_comment
 comment|/* 8 of these (0-7) */
 end_comment
-
-begin_comment
-comment|/* LinkSec (MacSec) Registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECTXCTRL
-value|0x08A04
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECTXSCL
-value|0x08A08
-end_define
-
-begin_comment
-comment|/* SCI Low */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECTXSCH
-value|0x08A0C
-end_define
-
-begin_comment
-comment|/* SCI High */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECTXSA
-value|0x08A10
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECTXPN0
-value|0x08A14
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECTXPN1
-value|0x08A18
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECTXKEY0
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x08A1C + (4 * (_n)))
-end_define
-
-begin_comment
-comment|/* 4 of these (0-3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECTXKEY1
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x08A2C + (4 * (_n)))
-end_define
-
-begin_comment
-comment|/* 4 of these (0-3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECRXCTRL
-value|0x08F04
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECRXSCL
-value|0x08F08
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECRXSCH
-value|0x08F0C
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECRXSA
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x08F10 + (4 * (_i)))
-end_define
-
-begin_comment
-comment|/* 2 of these (0-1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECRXPN
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x08F18 + (4 * (_i)))
-end_define
-
-begin_comment
-comment|/* 2 of these (0-1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LSECRXKEY
-parameter_list|(
-name|_n
-parameter_list|,
-name|_m
-parameter_list|)
-value|(0x08F20 + ((0x10 * (_n)) + (4 * (_m))))
-end_define
-
-begin_comment
-comment|/* IpSec Registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSTXIDX
-value|0x08900
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSTXSALT
-value|0x08904
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSTXKEY
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x08908 + (4 * (_i)))
-end_define
-
-begin_comment
-comment|/* 4 of these (0-3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSRXIDX
-value|0x08E00
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSRXIPADDR
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x08E04 + (4 * (_i)))
-end_define
-
-begin_comment
-comment|/* 4 of these (0-3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSRXSPI
-value|0x08E14
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSRXIPIDX
-value|0x08E18
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSRXKEY
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x08E1C + (4 * (_i)))
-end_define
-
-begin_comment
-comment|/* 4 of these (0-3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSRXSALT
-value|0x08E2C
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IPSRXMOD
-value|0x08E30
-end_define
 
 begin_comment
 comment|/* Stats registers */
@@ -1735,10 +1988,6 @@ parameter_list|)
 value|(0x02300 + ((_i) * 4))
 end_define
 
-begin_comment
-comment|/* 16 of these */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1746,7 +1995,7 @@ name|IXGBE_TQSMR
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)<= 7) ? (0x07300 + ((_i) * 4)) : (0x08600 + ((_i) * 4)))
+value|(((_i)<= 7) ? (0x07300 + ((_i) * 4)) : \                          (0x08600 + ((_i) * 4)))
 end_define
 
 begin_define
@@ -2824,6 +3073,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_CTRL_EXT_PFRSTD
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Physical Function Reset Done */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_CTRL_EXT_NS_DIS
 value|0x00010000
 end_define
@@ -3337,6 +3597,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_TWINAX_DEV
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_MDIO_COMMAND_TIMEOUT
 value|100
 end_define
@@ -3502,6 +3769,39 @@ begin_comment
 comment|/* 1G capable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_PMA_PMD_SDA_SCL_ADDR
+value|0xC30A
+end_define
+
+begin_comment
+comment|/* PHY_XS SDA/SCL Addr Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_PMA_PMD_SDA_SCL_DATA
+value|0xC30B
+end_define
+
+begin_comment
+comment|/* PHY_XS SDA/SCL Data Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_PMA_PMD_SDA_SCL_STAT
+value|0xC30C
+end_define
+
+begin_comment
+comment|/* PHY_XS SDA/SCL Status Reg */
+end_comment
+
 begin_comment
 comment|/* MII clause 22/28 definitions */
 end_comment
@@ -3580,6 +3880,13 @@ name|QT2022_PHY_ID
 value|0x0043A400
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATH_PHY_ID
+value|0x03429050
+end_define
+
 begin_comment
 comment|/* PHY Types */
 end_comment
@@ -3589,6 +3896,80 @@ define|#
 directive|define
 name|IXGBE_M88E1145_E_PHY_ID
 value|0x01410CD0
+end_define
+
+begin_comment
+comment|/* Special PHY Init Routine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHY_INIT_OFFSET_NL
+value|0x002B
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHY_INIT_END_NL
+value|0xFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CONTROL_MASK_NL
+value|0xF000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DATA_MASK_NL
+value|0x0FFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CONTROL_SHIFT_NL
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DELAY_NL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DATA_NL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CONTROL_NL
+value|0x000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CONTROL_EOL_NL
+value|0x0FFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CONTROL_SOL_NL
+value|0x0000
 end_define
 
 begin_comment
@@ -4041,7 +4422,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* bit 31, XON enable */
+comment|/* XON enable */
 end_comment
 
 begin_define
@@ -4052,7 +4433,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* Rx Flow control enable */
+comment|/* Packet buffer fc enable */
 end_comment
 
 begin_comment
@@ -4115,7 +4496,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* Tx Priority flow control ena */
+comment|/* Tx Priority FC ena */
 end_comment
 
 begin_define
@@ -4126,7 +4507,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* Tx Priority flow control ena */
+comment|/* Tx Priority FC ena */
 end_comment
 
 begin_define
@@ -4871,6 +5252,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_STATUS_LAN_ID_SHIFT
+value|2
+end_define
+
+begin_comment
+comment|/* LAN ID Shift*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_STATUS_GIO
 value|0x00080000
 end_define
@@ -4908,8 +5300,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_ESDP_SDP4
+name|IXGBE_ESDP_SDP1
 value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP4
+value|0x00000010
 end_define
 
 begin_comment
@@ -4920,11 +5319,22 @@ begin_define
 define|#
 directive|define
 name|IXGBE_ESDP_SDP5
-value|0x00000002
+value|0x00000020
 end_define
 
 begin_comment
 comment|/* SDP5 Data Value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ESDP_SDP6
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* SDP6 Data Value */
 end_comment
 
 begin_define
@@ -4942,7 +5352,7 @@ begin_define
 define|#
 directive|define
 name|IXGBE_ESDP_SDP5_DIR
-value|0x00000008
+value|0x00002000
 end_define
 
 begin_comment
@@ -5089,6 +5499,13 @@ end_define
 begin_comment
 comment|/* AUTOC Bit Masks */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_AUTOC_KX4_KX_SUPP
+value|0xC0000000
+end_define
 
 begin_define
 define|#
@@ -7576,13 +7993,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__le8
-value|u8
-end_define
-
-begin_define
-define|#
-directive|define
 name|__le16
 value|u16
 end_define
@@ -7598,6 +8008,42 @@ begin_define
 define|#
 directive|define
 name|__le64
+value|u64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__be16
+end_ifndef
+
+begin_comment
+comment|/* Big Endian defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__be16
+value|u16
+end_define
+
+begin_define
+define|#
+directive|define
+name|__be32
+value|u32
+end_define
+
+begin_define
+define|#
+directive|define
+name|__be64
 value|u64
 end_define
 
@@ -7629,11 +8075,11 @@ name|__le16
 name|length
 decl_stmt|;
 comment|/* Data buffer length */
-name|__le8
+name|u8
 name|cso
 decl_stmt|;
 comment|/* Checksum offset */
-name|__le8
+name|u8
 name|cmd
 decl_stmt|;
 comment|/* Descriptor control */
@@ -7650,11 +8096,11 @@ name|data
 decl_stmt|;
 struct|struct
 block|{
-name|__le8
+name|u8
 name|status
 decl_stmt|;
 comment|/* Descriptor status */
-name|__le8
+name|u8
 name|css
 decl_stmt|;
 comment|/* Checksum start */
@@ -7733,11 +8179,11 @@ name|__le16
 name|csum
 decl_stmt|;
 comment|/* Packet checksum */
-name|__le8
+name|u8
 name|status
 decl_stmt|;
 comment|/* Descriptor status */
-name|__le8
+name|u8
 name|errors
 decl_stmt|;
 comment|/* Descriptor Errors */
@@ -8224,7 +8670,7 @@ value|0x00002000
 end_define
 
 begin_comment
-comment|/* Req requires Markers and CRC */
+comment|/*Req requires Markers and CRC*/
 end_comment
 
 begin_define
@@ -8306,6 +8752,101 @@ name|IXGBE_LINK_SPEED_82598_AUTONEG
 value|(IXGBE_LINK_SPEED_1GB_FULL | \                                         IXGBE_LINK_SPEED_10GB_FULL)
 end_define
 
+begin_comment
+comment|/* Physical layer type */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u32
+name|ixgbe_physical_layer
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_10GBASE_T
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_1000BASE_T
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_100BASE_T
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_SFP_PLUS_CU
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_10GBASE_LR
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_10GBASE_LRM
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_10GBASE_SR
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_10GBASE_KX4
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_10GBASE_CX4
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_1000BASE_KX
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_1000BASE_BX
+value|0x0400
+end_define
+
 begin_enum
 enum|enum
 name|ixgbe_eeprom_type
@@ -8351,7 +8892,50 @@ name|ixgbe_phy_qt
 block|,
 name|ixgbe_phy_xaui
 block|,
+name|ixgbe_phy_nl
+block|,
+name|ixgbe_phy_tw_tyco
+block|,
+name|ixgbe_phy_tw_unknown
+block|,
+name|ixgbe_phy_sfp_avago
+block|,
+name|ixgbe_phy_sfp_ftl
+block|,
+name|ixgbe_phy_sfp_unknown
+block|,
 name|ixgbe_phy_generic
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * SFP+ module type IDs:  *  * ID	Module Type  * =============  * 0	SFP_DA_CU  * 1	SFP_SR  * 2	SFP_LR  */
+end_comment
+
+begin_enum
+enum|enum
+name|ixgbe_sfp_type
+block|{
+name|ixgbe_sfp_type_da_cu
+init|=
+literal|0
+block|,
+name|ixgbe_sfp_type_sr
+init|=
+literal|1
+block|,
+name|ixgbe_sfp_type_lr
+init|=
+literal|2
+block|,
+name|ixgbe_sfp_type_not_present
+init|=
+literal|0xFFFE
+block|,
+name|ixgbe_sfp_type_unknown
+init|=
+literal|0xFFFF
 block|}
 enum|;
 end_enum
@@ -8381,7 +8965,7 @@ end_comment
 
 begin_enum
 enum|enum
-name|ixgbe_fc_type
+name|ixgbe_fc_mode
 block|{
 name|ixgbe_fc_none
 init|=
@@ -8531,6 +9115,9 @@ name|enum
 name|ixgbe_bus_type
 name|type
 decl_stmt|;
+name|u16
+name|func
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -8564,14 +9151,15 @@ name|strict_ieee
 decl_stmt|;
 comment|/* Strict IEEE mode */
 name|enum
-name|ixgbe_fc_type
-name|type
+name|ixgbe_fc_mode
+name|current_mode
 decl_stmt|;
-comment|/* Type of flow control */
+comment|/* FC mode in effect */
 name|enum
-name|ixgbe_fc_type
-name|original_type
+name|ixgbe_fc_mode
+name|requested_mode
 decl_stmt|;
+comment|/* FC mode requested by caller */
 block|}
 struct|;
 end_struct
@@ -8968,6 +9556,17 @@ name|ixgbe_hw
 modifier|*
 parameter_list|)
 function_decl|;
+name|u32
+function_decl|(
+modifier|*
+name|get_supported_physical_layer
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|)
+function_decl|;
 name|s32
 function_decl|(
 modifier|*
@@ -8997,6 +9596,17 @@ name|s32
 function_decl|(
 modifier|*
 name|get_bus_info
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|set_lan_id
 function_decl|)
 parameter_list|(
 name|struct
@@ -9361,6 +9971,17 @@ function_decl|;
 name|s32
 function_decl|(
 modifier|*
+name|identify_sfp
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
 name|reset
 function_decl|)
 parameter_list|(
@@ -9463,6 +10084,72 @@ name|u16
 modifier|*
 parameter_list|)
 function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|read_i2c_byte
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u8
+parameter_list|,
+name|u8
+parameter_list|,
+name|u8
+modifier|*
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|write_i2c_byte
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u8
+parameter_list|,
+name|u8
+parameter_list|,
+name|u8
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|read_i2c_eeprom
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u8
+parameter_list|,
+name|u8
+modifier|*
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|write_i2c_eeprom
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u8
+parameter_list|,
+name|u8
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -9540,6 +10227,9 @@ decl_stmt|;
 name|u32
 name|link_mode_select
 decl_stmt|;
+name|u32
+name|link_kx4_kx_supp
+decl_stmt|;
 name|bool
 name|link_settings_loaded
 decl_stmt|;
@@ -9547,7 +10237,7 @@ name|bool
 name|autoneg
 decl_stmt|;
 name|bool
-name|autoneg_failed
+name|autoneg_succeeded
 decl_stmt|;
 block|}
 struct|;
@@ -9571,6 +10261,10 @@ decl_stmt|;
 name|u32
 name|id
 decl_stmt|;
+name|enum
+name|ixgbe_sfp_type
+name|sfp_type
+decl_stmt|;
 name|u32
 name|revision
 decl_stmt|;
@@ -9586,6 +10280,9 @@ name|autoneg_advertised
 decl_stmt|;
 name|bool
 name|autoneg_wait_to_complete
+decl_stmt|;
+name|bool
+name|multispeed_fiber
 decl_stmt|;
 block|}
 struct|;
@@ -9663,7 +10360,7 @@ parameter_list|,
 name|error
 parameter_list|)
 define|\
-value|(func != NULL) ? func params: error
+value|(func != NULL) ? func params : error
 end_define
 
 begin_comment
@@ -9794,6 +10491,27 @@ define|#
 directive|define
 name|IXGBE_ERR_PHY_ADDR_INVALID
 value|-17
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ERR_I2C
+value|-18
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ERR_SFP_NOT_SUPPORTED
+value|-19
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ERR_SFP_NOT_PRESENT
+value|-20
 end_define
 
 begin_define
