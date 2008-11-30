@@ -4571,6 +4571,10 @@ name|BLOCK_COST_2POW
 operator|)
 operator|!=
 literal|0
+operator|||
+name|ncpus
+operator|==
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
