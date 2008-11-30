@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/* e1000_82542 (rev 1& 2)  */
+comment|/*  * 82542 Gigabit Ethernet Controller  */
 end_comment
 
 begin_include
@@ -167,19 +167,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct
-struct|struct
-name|e1000_dev_spec_82542
-block|{
-name|bool
-name|dma_fairness
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
-comment|/**  *  e1000_init_phy_params_82542 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_82542 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -226,7 +215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_82542 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_82542 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -333,7 +322,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_82542 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_82542 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -356,11 +345,6 @@ operator|&
 name|hw
 operator|->
 name|mac
-decl_stmt|;
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -399,6 +383,15 @@ operator|.
 name|get_bus_info
 operator|=
 name|e1000_get_bus_info_82542
+expr_stmt|;
+comment|/* function id */
+name|mac
+operator|->
+name|ops
+operator|.
+name|set_lan_id
+operator|=
+name|e1000_set_lan_id_multi_port_pci
 expr_stmt|;
 comment|/* reset */
 name|mac
@@ -507,15 +500,6 @@ name|led_off
 operator|=
 name|e1000_led_off_82542
 expr_stmt|;
-comment|/* remove device */
-name|mac
-operator|->
-name|ops
-operator|.
-name|remove_device
-operator|=
-name|e1000_remove_device_generic
-expr_stmt|;
 comment|/* clear hardware counters */
 name|mac
 operator|->
@@ -534,36 +518,14 @@ name|get_link_up_info
 operator|=
 name|e1000_get_speed_and_duplex_fiber_serdes_generic
 expr_stmt|;
-name|hw
-operator|->
-name|dev_spec_size
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|e1000_dev_spec_82542
-argument_list|)
-expr_stmt|;
-comment|/* Device-specific structure allocation */
-name|ret_val
-operator|=
-name|e1000_alloc_zeroed_dev_spec_struct
-argument_list|(
-name|hw
-argument_list|,
-name|hw
-operator|->
-name|dev_spec_size
-argument_list|)
-expr_stmt|;
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_82542 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_82542 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  Called to initialize all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -615,7 +577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_bus_info_82542 - Obtain bus information for adapter  *  @hw: pointer to the HW structure  *  *  This will obtain information about the HW bus for which the  *  adapter is attached and stores it in the hw structure.  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_get_bus_info_82542 - Obtain bus information for adapter  *  @hw: pointer to the HW structure  *  *  This will obtain information about the HW bus for which the  *  adapter is attached and stores it in the hw structure.  **/
 end_comment
 
 begin_function
@@ -665,7 +627,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82542 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82542 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  **/
 end_comment
 
 begin_function
@@ -856,7 +818,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_82542 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_hw_82542 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  **/
 end_comment
 
 begin_function
@@ -884,6 +846,13 @@ name|struct
 name|e1000_dev_spec_82542
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82542
 decl_stmt|;
 name|s32
 name|ret_val
@@ -900,17 +869,6 @@ name|DEBUGFUNC
 argument_list|(
 literal|"e1000_init_hw_82542"
 argument_list|)
-expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82542
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
 expr_stmt|;
 comment|/* Disabling VLAN filtering */
 name|E1000_WRITE_REG
@@ -1108,7 +1066,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_link_82542 - Setup flow control and link settings  *  @hw: pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_setup_link_82542 - Setup flow control and link settings  *  @hw: pointer to the HW structure  *  *  Determines which flow control settings to use, then configures flow  *  control.  Calls the appropriate media-specific link configuration  *  function.  Assuming the adapter has a valid link partner, a valid link  *  should be established.  Assumes the hardware has previously been reset  *  and the transmitter and receiver are not enabled.  **/
 end_comment
 
 begin_function
@@ -1160,7 +1118,7 @@ name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|requested_mode
 operator|&=
 operator|~
 name|e1000_fc_tx_pause
@@ -1177,23 +1135,23 @@ name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|requested_mode
 operator|&=
 operator|~
 name|e1000_fc_rx_pause
 expr_stmt|;
-comment|/* 	 * We want to save off the original Flow Control configuration just in 	 * case we get disconnected and then reconnected into a different hub 	 * or switch with different Flow Control capabilities. 	 */
+comment|/* 	 * Save off the requested flow control mode for use later.  Depending 	 * on the link partner's capabilities, we may or may not use this mode. 	 */
 name|hw
 operator|->
 name|fc
 operator|.
-name|original_type
+name|current_mode
 operator|=
 name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|requested_mode
 expr_stmt|;
 name|DEBUGOUT1
 argument_list|(
@@ -1203,7 +1161,7 @@ name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|current_mode
 argument_list|)
 expr_stmt|;
 comment|/* Call the necessary subroutine to configure the link. */
@@ -1287,7 +1245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_on_82542 - Turn on SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED on.  This is a function pointer entry point  *  called by the api module.  **/
+comment|/**  *  e1000_led_on_82542 - Turn on SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED on.  **/
 end_comment
 
 begin_function
@@ -1340,7 +1298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_off_82542 - Turn off SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED off.  This is a function pointer entry point  *  called by the api module.  **/
+comment|/**  *  e1000_led_off_82542 - Turn off SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED off.  **/
 end_comment
 
 begin_function
@@ -1505,21 +1463,10 @@ name|rar_low
 operator|||
 name|rar_high
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|hw
-operator|->
-name|mac
-operator|.
-name|disable_av
-condition|)
 name|rar_high
 operator||=
 name|E1000_RAH_AV
 expr_stmt|;
-block|}
 name|E1000_WRITE_REG_ARRAY
 argument_list|(
 name|hw
@@ -1836,10 +1783,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-specifier|volatile
-name|u32
-name|temp
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_clear_hw_cntrs_82542"
@@ -1850,8 +1793,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1859,8 +1800,6 @@ argument_list|,
 name|E1000_PRC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1868,8 +1807,6 @@ argument_list|,
 name|E1000_PRC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1877,8 +1814,6 @@ argument_list|,
 name|E1000_PRC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1886,8 +1821,6 @@ argument_list|,
 name|E1000_PRC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1895,8 +1828,6 @@ argument_list|,
 name|E1000_PRC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1904,8 +1835,6 @@ argument_list|,
 name|E1000_PRC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1913,8 +1842,6 @@ argument_list|,
 name|E1000_PTC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1922,8 +1849,6 @@ argument_list|,
 name|E1000_PTC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1931,8 +1856,6 @@ argument_list|,
 name|E1000_PTC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1940,8 +1863,6 @@ argument_list|,
 name|E1000_PTC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -1949,8 +1870,6 @@ argument_list|,
 name|E1000_PTC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw

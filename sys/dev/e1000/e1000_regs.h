@@ -143,6 +143,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_FEXT
+value|0x0002C
+end_define
+
+begin_comment
+comment|/* Future Extended - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_FEXTNVM
 value|0x00028
 end_define
@@ -945,6 +956,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_RXCTL
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x0C014 + (0x40 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RQDPC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x0C030 + (0x40 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_RDTR
 value|0x02820
 end_define
@@ -975,7 +1006,7 @@ name|E1000_RDBAL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02800 + ((_n) * 0x100)) : (0x0C000 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02800 + ((_n) * 0x100)) : \                                          (0x0C000 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -985,7 +1016,7 @@ name|E1000_RDBAH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02804 + ((_n) * 0x100)) : (0x0C004 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02804 + ((_n) * 0x100)) : \                                          (0x0C004 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -995,7 +1026,7 @@ name|E1000_RDLEN
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02808 + ((_n) * 0x100)) : (0x0C008 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02808 + ((_n) * 0x100)) : \                                          (0x0C008 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1005,7 +1036,7 @@ name|E1000_SRRCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x0280C + ((_n) * 0x100)) : (0x0C00C + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x0280C + ((_n) * 0x100)) : \                                          (0x0C00C + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1015,7 +1046,7 @@ name|E1000_RDH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02810 + ((_n) * 0x100)) : (0x0C010 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02810 + ((_n) * 0x100)) : \                                          (0x0C010 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1025,7 +1056,7 @@ name|E1000_RDT
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02818 + ((_n) * 0x100)) : (0x0C018 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02818 + ((_n) * 0x100)) : \                                          (0x0C018 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1035,7 +1066,7 @@ name|E1000_RXDCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02828 + ((_n) * 0x100)) : (0x0C028 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02828 + ((_n) * 0x100)) : \                                          (0x0C028 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1045,7 +1076,7 @@ name|E1000_TDBAL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03800 + ((_n) * 0x100)) : (0x0E000 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03800 + ((_n) * 0x100)) : \                                          (0x0E000 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1055,7 +1086,7 @@ name|E1000_TDBAH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03804 + ((_n) * 0x100)) : (0x0E004 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03804 + ((_n) * 0x100)) : \                                          (0x0E004 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1065,7 +1096,7 @@ name|E1000_TDLEN
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03808 + ((_n) * 0x100)) : (0x0E008 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03808 + ((_n) * 0x100)) : \                                          (0x0E008 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1075,7 +1106,7 @@ name|E1000_TDH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03810 + ((_n) * 0x100)) : (0x0E010 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03810 + ((_n) * 0x100)) : \                                          (0x0E010 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1085,7 +1116,7 @@ name|E1000_TDT
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03818 + ((_n) * 0x100)) : (0x0E018 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03818 + ((_n) * 0x100)) : \                                          (0x0E018 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1095,7 +1126,7 @@ name|E1000_TXDCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03828 + ((_n) * 0x100)) : (0x0E028 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03828 + ((_n) * 0x100)) : \                                          (0x0E028 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1135,7 +1166,7 @@ name|E1000_TDWBAL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03838 + ((_n) * 0x100)) : (0x0E038 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03838 + ((_n) * 0x100)) : \                                          (0x0E038 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1145,7 +1176,7 @@ name|E1000_TDWBAH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x0383C + ((_n) * 0x100)) : (0x0E03C + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x0383C + ((_n) * 0x100)) : \                                          (0x0E03C + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1209,7 +1240,7 @@ name|E1000_RAL
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)<= 15) ? (0x05400 + ((_i) * 8)) : (0x054E0 + ((_i - 16) * 8)))
+value|(((_i)<= 15) ? (0x05400 + ((_i) * 8)) : \                                        (0x054E0 + ((_i - 16) * 8)))
 end_define
 
 begin_define
@@ -1219,7 +1250,7 @@ name|E1000_RAH
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)<= 15) ? (0x05404 + ((_i) * 8)) : (0x054E4 + ((_i - 16) * 8)))
+value|(((_i)<= 15) ? (0x05404 + ((_i) * 8)) : \                                        (0x054E4 + ((_i - 16) * 8)))
 end_define
 
 begin_define
@@ -2162,7 +2193,7 @@ value|0x04104
 end_define
 
 begin_comment
-comment|/* Interrupt Cause Rx Packet Timer Expire Count */
+comment|/* Interrupt Cause Rx Pkt Timer Expire Count */
 end_comment
 
 begin_define
@@ -2173,7 +2204,7 @@ value|0x04108
 end_define
 
 begin_comment
-comment|/* Interrupt Cause Rx Absolute Timer Expire Count */
+comment|/* Interrupt Cause Rx Abs Timer Expire Count */
 end_comment
 
 begin_define
@@ -2184,7 +2215,7 @@ value|0x0410C
 end_define
 
 begin_comment
-comment|/* Interrupt Cause Tx Packet Timer Expire Count */
+comment|/* Interrupt Cause Tx Pkt Timer Expire Count */
 end_comment
 
 begin_define
@@ -2195,7 +2226,7 @@ value|0x04110
 end_define
 
 begin_comment
-comment|/* Interrupt Cause Tx Absolute Timer Expire Count */
+comment|/* Interrupt Cause Tx Abs Timer Expire Count */
 end_comment
 
 begin_define
@@ -2217,7 +2248,7 @@ value|0x0411C
 end_define
 
 begin_comment
-comment|/* Interrupt Cause Tx Queue Minimum Threshold Count */
+comment|/* Interrupt Cause Tx Queue Min Thresh Count */
 end_comment
 
 begin_define
@@ -2228,7 +2259,7 @@ value|0x04120
 end_define
 
 begin_comment
-comment|/* Interrupt Cause Rx Descriptor Minimum Threshold Count */
+comment|/* Interrupt Cause Rx Desc Min Thresh Count */
 end_comment
 
 begin_define
@@ -2241,6 +2272,69 @@ end_define
 begin_comment
 comment|/* Interrupt Cause Receiver Overrun Count */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGPRC
+value|0x00F10
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGORC
+value|0x00F18
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFMPRC
+value|0x00F3C
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGPTC
+value|0x00F14
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGOTC
+value|0x00F34
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGOTLBC
+value|0x00F50
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGPTLBC
+value|0x00F44
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGORLBC
+value|0x00F48
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGPRLBC
+value|0x00F40
+end_define
 
 begin_define
 define|#
@@ -3602,7 +3696,7 @@ value|(0x01600 + ((_i) * 4))
 end_define
 
 begin_comment
-comment|/* MSI-X Allocation Register (_i) - RW */
+comment|/* MSI-X Allocation Register                                                     * (_i) - RW */
 end_comment
 
 begin_define
@@ -3616,7 +3710,7 @@ value|(0x0C000 + ((_i) * 0x10))
 end_define
 
 begin_comment
-comment|/* MSI-X Table entry addr low reg 0 - RW */
+comment|/* MSI-X Table entry addr                                                        * low reg - RW */
 end_comment
 
 begin_define
@@ -3630,7 +3724,7 @@ value|(0x0C004 + ((_i) * 0x10))
 end_define
 
 begin_comment
-comment|/* MSI-X Table entry addr upper reg 0 - RW */
+comment|/* MSI-X Table entry addr                                                        * upper reg - RW */
 end_comment
 
 begin_define
@@ -3644,7 +3738,7 @@ value|(0x0C008 + ((_i) * 0x10))
 end_define
 
 begin_comment
-comment|/* MSI-X Table entry message reg 0 - RW */
+comment|/* MSI-X Table entry                                                        * message reg - RW */
 end_comment
 
 begin_define
@@ -3658,7 +3752,7 @@ value|(0x0C00C + ((_i) * 0x10))
 end_define
 
 begin_comment
-comment|/* MSI-X Table entry vector ctrl reg 0 - RW */
+comment|/* MSI-X Table entry                                                        * vector ctrl reg - RW */
 end_comment
 
 begin_define
@@ -3683,7 +3777,7 @@ value|(0x05C00 + ((_i) * 4))
 end_define
 
 begin_comment
-comment|/* Redirection Table - RW Array */
+comment|/* Redirection Table - RW */
 end_comment
 
 begin_define
@@ -3697,7 +3791,7 @@ value|(0x05C80 + ((_i) * 4))
 end_define
 
 begin_comment
-comment|/* RSS Random Key - RW Array */
+comment|/* RSS Random Key - RW */
 end_comment
 
 begin_define
@@ -4067,7 +4161,7 @@ value|0x0B634
 end_define
 
 begin_comment
-comment|/* Time sync Rx EtherType and Message Type - RW */
+comment|/* Time sync Rx EtherType and Msg Type - RW */
 end_comment
 
 begin_define
