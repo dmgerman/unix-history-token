@@ -928,17 +928,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* When exporting paths via sysctl, give a short version */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KPROC_PATH_MAX
-value|256
-end_define
-
-begin_comment
 comment|/*  * The KERN_PROC_FILE sysctl allows a process to dump the file descriptor  * array of another process.  */
 end_comment
 
@@ -1185,6 +1174,118 @@ name|KF_FLAG_HASLOCK
 value|0x00000080
 end_define
 
+begin_comment
+comment|/*  * Old format.  Has variable hidden padding due to alignment.  * This is a compatability hack for pre-build 7.1 packages.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_OFILE_SIZE
+value|1328
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_OFILE_SIZE
+value|1324
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|kinfo_ofile
+block|{
+name|int
+name|kf_structsize
+decl_stmt|;
+comment|/* Size of kinfo_file. */
+name|int
+name|kf_type
+decl_stmt|;
+comment|/* Descriptor type. */
+name|int
+name|kf_fd
+decl_stmt|;
+comment|/* Array index. */
+name|int
+name|kf_ref_count
+decl_stmt|;
+comment|/* Reference count. */
+name|int
+name|kf_flags
+decl_stmt|;
+comment|/* Flags. */
+comment|/* XXX Hidden alignment padding here on amd64 */
+name|off_t
+name|kf_offset
+decl_stmt|;
+comment|/* Seek location. */
+name|int
+name|kf_vnode_type
+decl_stmt|;
+comment|/* Vnode type. */
+name|int
+name|kf_sock_domain
+decl_stmt|;
+comment|/* Socket domain. */
+name|int
+name|kf_sock_type
+decl_stmt|;
+comment|/* Socket type. */
+name|int
+name|kf_sock_protocol
+decl_stmt|;
+comment|/* Socket protocol. */
+name|char
+name|kf_path
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+comment|/* Path to file, if any. */
+name|struct
+name|sockaddr_storage
+name|kf_sa_local
+decl_stmt|;
+comment|/* Socket address. */
+name|struct
+name|sockaddr_storage
+name|kf_sa_peer
+decl_stmt|;
+comment|/* Peer address. */
+block|}
+struct|;
+end_struct
+
 begin_if
 if|#
 directive|if
@@ -1203,7 +1304,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_FILE_SIZE
-value|560
+value|1392
 end_define
 
 begin_endif
@@ -1238,7 +1339,7 @@ comment|/* Flags. */
 name|int
 name|_kf_pad0
 decl_stmt|;
-comment|/* Alignment */
+comment|/* Round to 64 bit alignment */
 name|uint64_t
 name|kf_offset
 decl_stmt|;
@@ -1269,10 +1370,18 @@ name|sockaddr_storage
 name|kf_sa_peer
 decl_stmt|;
 comment|/* Peer address. */
+name|int
+name|_kf_ispare
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Space for more stuff. */
+comment|/* Truncated before copyout in sysctl */
 name|char
 name|kf_path
 index|[
-name|KPROC_PATH_MAX
+name|PATH_MAX
 index|]
 decl_stmt|;
 comment|/* Path to file, if any. */
@@ -1393,7 +1502,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_VMENTRY_SIZE
-value|384
+value|1160
 end_define
 
 begin_endif
@@ -1458,16 +1567,21 @@ name|kve_shadow_count
 decl_stmt|;
 comment|/* VM obj shadow count. */
 name|int
+name|_kve_pad0
+decl_stmt|;
+comment|/* 64bit align next field */
+name|int
 name|_kve_ispare
 index|[
-literal|15
+literal|16
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
+comment|/* Truncated before copyout in sysctl */
 name|char
 name|kve_path
 index|[
-name|KPROC_PATH_MAX
+name|PATH_MAX
 index|]
 decl_stmt|;
 comment|/* Path to VM obj, if any. */

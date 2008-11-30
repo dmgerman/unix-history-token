@@ -2709,12 +2709,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_PROC_FILEDESC
+name|KERN_PROC_OFILEDESC
 value|14
 end_define
 
 begin_comment
-comment|/* File descriptors for process */
+comment|/* Old file descriptors for process */
 end_comment
 
 begin_define
@@ -2737,6 +2737,17 @@ end_define
 
 begin_comment
 comment|/* 					 * modifier for pid, pgrp, tty, 					 * uid, ruid, gid, rgid and proc 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_FILEDESC
+value|32
+end_define
+
+begin_comment
+comment|/* File descriptors for process */
 end_comment
 
 begin_comment
