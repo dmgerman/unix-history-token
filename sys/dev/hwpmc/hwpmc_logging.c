@@ -1266,7 +1266,7 @@ operator|->
 name|po_mtx
 argument_list|)
 expr_stmt|;
-comment|/* wakeup any processes waiting for a FLUSH */
+comment|/* 				 * Wakeup the thread waiting for the 				 * PMC_OP_FLUSHLOG request to 				 * complete. 				 */
 if|if
 condition|(
 name|po
