@@ -2418,7 +2418,7 @@ comment|/* arbitrarily return 1 */
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|AH_DEBUG
 if|if
 condition|(
 name|npend
@@ -2456,8 +2456,10 @@ name|q
 operator|)
 condition|)
 block|{
-name|isrPrintf
+name|ath_hal_printf
 argument_list|(
+name|ah
+argument_list|,
 literal|"RTSD on CAB queue\n"
 argument_list|)
 expr_stmt|;
