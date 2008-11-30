@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_at91.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdefs.h>
 end_include
 
