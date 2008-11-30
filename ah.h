@@ -19,46 +19,6 @@ begin_comment
 comment|/*  * Atheros Hardware Access Layer  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an ath_hal  * structure for use with the device.  Hardware-related operations that  * follow must call back into the HAL through interface, supplying the  * reference as the first parameter.  */
 end_comment
 
-begin_comment
-comment|/*  * Bus i/o type definitions.  We define a platform-independent  * set of types that are mapped to platform-dependent data for  * register read/write operations.  We use types that are large  * enough to hold a pointer; smaller data should fit and only  * require type coercion to work.  Larger data can be stored  * elsewhere and a reference passed for the bus tag and/or handle.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|HAL_SOFTC
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* pointer to driver/OS state */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|HAL_BUS_TAG
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* opaque bus i/o id tag */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|HAL_BUS_HANDLE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* opaque bus i/o handle */
-end_comment
-
 begin_include
 include|#
 directive|include
