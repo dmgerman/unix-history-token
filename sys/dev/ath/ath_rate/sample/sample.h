@@ -31,15 +31,29 @@ name|struct
 name|ath_ratectrl
 name|arc
 decl_stmt|;
-comment|/* base state */
+comment|/* base class */
 name|int
-name|ath_smoothing_rate
+name|smoothing_rate
 decl_stmt|;
-comment|/* ewma percentage (out of 100) */
+comment|/* ewma percentage [0..99] */
 name|int
-name|ath_sample_rate
+name|smoothing_minpackets
 decl_stmt|;
-comment|/* send a different bit-rate 1/X packets */
+name|int
+name|sample_rate
+decl_stmt|;
+comment|/* %time to try different tx rates */
+name|int
+name|max_successive_failures
+decl_stmt|;
+name|int
+name|stale_failure_timeout
+decl_stmt|;
+comment|/* how long to honor max_successive_failures */
+name|int
+name|min_switch
+decl_stmt|;
+comment|/* min time between rate changes */
 block|}
 struct|;
 end_struct
@@ -53,26 +67,6 @@ name|sc
 parameter_list|)
 value|((struct sample_softc *)sc->sc_rc)
 end_define
-
-begin_struct
-struct|struct
-name|rate_info
-block|{
-name|int
-name|rate
-decl_stmt|;
-name|int
-name|rix
-decl_stmt|;
-name|int
-name|rateCode
-decl_stmt|;
-name|int
-name|shortPreambleRateCode
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -104,6 +98,38 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|txschedule
+block|{
+name|uint8_t
+name|t0
+decl_stmt|,
+name|r0
+decl_stmt|;
+comment|/* series 0: tries, rate code */
+name|uint8_t
+name|t1
+decl_stmt|,
+name|r1
+decl_stmt|;
+comment|/* series 1: tries, rate code */
+name|uint8_t
+name|t2
+decl_stmt|,
+name|r2
+decl_stmt|;
+comment|/* series 2: tries, rate code */
+name|uint8_t
+name|t3
+decl_stmt|,
+name|r3
+decl_stmt|;
+comment|/* series 3: tries, rate code */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * for now, we track performance for three different packet  * size buckets  */
 end_comment
@@ -112,26 +138,8 @@ begin_define
 define|#
 directive|define
 name|NUM_PACKET_SIZE_BINS
-value|3
+value|2
 end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|packet_size_bins
-index|[
-name|NUM_PACKET_SIZE_BINS
-index|]
-init|=
-block|{
-literal|250
-block|,
-literal|1600
-block|,
-literal|3000
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* per-node state */
@@ -142,18 +150,25 @@ struct|struct
 name|sample_node
 block|{
 name|int
-name|static_rate_ndx
+name|static_rix
 decl_stmt|;
-name|int
-name|num_rates
+comment|/* rate index of fixed tx rate */
+define|#
+directive|define
+name|SAMPLE_MAXRATES
+value|32
+comment|/* NB: corresponds to hal info[32] */
+name|uint32_t
+name|ratemask
 decl_stmt|;
+comment|/* bit mask of valid rate indices */
+specifier|const
 name|struct
-name|rate_info
-name|rates
-index|[
-name|IEEE80211_RATE_MAXSIZE
-index|]
+name|txschedule
+modifier|*
+name|sched
 decl_stmt|;
+comment|/* tx schedule table */
 name|struct
 name|rate_stats
 name|stats
@@ -161,17 +176,17 @@ index|[
 name|NUM_PACKET_SIZE_BINS
 index|]
 index|[
-name|IEEE80211_RATE_MAXSIZE
+name|SAMPLE_MAXRATES
 index|]
 decl_stmt|;
 name|int
-name|last_sample_ndx
+name|last_sample_rix
 index|[
 name|NUM_PACKET_SIZE_BINS
 index|]
 decl_stmt|;
 name|int
-name|current_sample_ndx
+name|current_sample_rix
 index|[
 name|NUM_PACKET_SIZE_BINS
 index|]
@@ -183,7 +198,7 @@ name|NUM_PACKET_SIZE_BINS
 index|]
 decl_stmt|;
 name|int
-name|current_rate
+name|current_rix
 index|[
 name|NUM_PACKET_SIZE_BINS
 index|]
@@ -223,7 +238,19 @@ name|ATH_NODE_SAMPLE
 parameter_list|(
 name|an
 parameter_list|)
-value|((struct sample_node *)&an[1])
+value|((struct sample_node *)&(an)[1])
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_RATE_DEFINED
+parameter_list|(
+name|sn
+parameter_list|,
+name|rix
+parameter_list|)
+value|(((sn)->ratemask& (1<<(rix))) != 0)
 end_define
 
 begin_ifndef
