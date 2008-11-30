@@ -1245,6 +1245,20 @@ argument_list|(
 name|dest
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+name|fchmod
+argument_list|(
+name|fd
+argument_list|,
+literal|0644
+argument_list|)
+expr_stmt|;
+comment|/* nothing secret in the file */
 return|return
 operator|(
 operator|(
