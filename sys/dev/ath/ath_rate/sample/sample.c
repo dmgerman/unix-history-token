@@ -2543,6 +2543,27 @@ directive|undef
 name|H
 end_undef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|Q
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|Q
+end_undef
+
+begin_comment
+comment|/* sun4v bogosity */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
