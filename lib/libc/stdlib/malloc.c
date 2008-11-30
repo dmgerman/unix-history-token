@@ -4487,6 +4487,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* Exponentially back off if there are multiple CPUs. */
+if|if
+condition|(
+name|ncpus
+operator|>
+literal|1
+condition|)
+block|{
 name|unsigned
 name|i
 decl_stmt|;
@@ -4494,7 +4502,6 @@ specifier|volatile
 name|unsigned
 name|j
 decl_stmt|;
-comment|/* Exponentially back off. */
 for|for
 control|(
 name|i
@@ -4547,6 +4554,7 @@ operator|(
 name|ret
 operator|)
 return|;
+block|}
 block|}
 comment|/* 			 * Spinning failed.  Block until the lock becomes 			 * available, in order to avoid indefinite priority 			 * inversion. 			 */
 name|_pthread_mutex_lock
