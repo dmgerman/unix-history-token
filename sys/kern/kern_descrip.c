@@ -13030,6 +13030,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+comment|/* Pack record size down */
 name|kif
 operator|->
 name|kf_structsize
@@ -14034,6 +14035,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Pack record size down */
 name|kif
 operator|->
 name|kf_structsize

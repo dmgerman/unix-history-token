@@ -1491,6 +1491,132 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_OVMENTRY_SIZE
+value|1168
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_OVMENTRY_SIZE
+value|1128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|kinfo_ovmentry
+block|{
+name|int
+name|kve_structsize
+decl_stmt|;
+comment|/* Size of kinfo_vmmapentry. */
+name|int
+name|kve_type
+decl_stmt|;
+comment|/* Type of map entry. */
+name|void
+modifier|*
+name|kve_start
+decl_stmt|;
+comment|/* Starting address. */
+name|void
+modifier|*
+name|kve_end
+decl_stmt|;
+comment|/* Finishing address. */
+name|int
+name|kve_flags
+decl_stmt|;
+comment|/* Flags on map entry. */
+name|int
+name|kve_resident
+decl_stmt|;
+comment|/* Number of resident pages. */
+name|int
+name|kve_private_resident
+decl_stmt|;
+comment|/* Number of private pages. */
+name|int
+name|kve_protection
+decl_stmt|;
+comment|/* Protection bitmask. */
+name|int
+name|kve_ref_count
+decl_stmt|;
+comment|/* VM obj ref count. */
+name|int
+name|kve_shadow_count
+decl_stmt|;
+comment|/* VM obj shadow count. */
+name|char
+name|kve_path
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+comment|/* Path to VM obj, if any. */
+name|void
+modifier|*
+name|_kve_pspare
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Space for more stuff. */
+name|off_t
+name|kve_offset
+decl_stmt|;
+comment|/* Mapping offset in object */
+name|uint64_t
+name|kve_fileid
+decl_stmt|;
+comment|/* inode number if vnode */
+name|dev_t
+name|kve_fsid
+decl_stmt|;
+comment|/* dev_t of vnode location */
+name|int
+name|_kve_ispare
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Space for more stuff. */
+block|}
+struct|;
+end_struct
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 operator|||
 name|defined
 argument_list|(
