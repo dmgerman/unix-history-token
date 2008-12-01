@@ -108,6 +108,12 @@ directive|include
 file|<sys/taskqueue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -290,7 +296,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"6.9.5"
+literal|"6.9.6"
 decl_stmt|;
 end_decl_stmt
 
@@ -1913,17 +1919,50 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EM_HW_VLAN_SUPPORT
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
-name|em_enable_hw_vlans
+name|em_register_vlan
 parameter_list|(
-name|struct
-name|adapter
+name|void
 modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|u16
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|em_unregister_vlan
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|u16
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -4559,6 +4598,42 @@ name|pcix_82544
 operator|=
 name|FALSE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EM_HW_VLAN_SUPPORT
+comment|/* Register for VLAN events */
+name|adapter
+operator|->
+name|vlan_attach
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|vlan_config
+argument_list|,
+name|em_register_vlan
+argument_list|,
+literal|0
+argument_list|,
+name|EVENTHANDLER_PRI_FIRST
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|vlan_detach
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|vlan_unconfig
+argument_list|,
+name|em_unregister_vlan
+argument_list|,
+literal|0
+argument_list|,
+name|EVENTHANDLER_PRI_FIRST
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Tell the stack that the interface is not active */
 name|adapter
 operator|->
@@ -4597,14 +4672,6 @@ label|:
 name|em_release_hw_control
 argument_list|(
 name|adapter
-argument_list|)
-expr_stmt|;
-name|e1000_remove_device
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
 argument_list|)
 expr_stmt|;
 name|em_dma_free
@@ -4909,6 +4976,46 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EM_HW_VLAN_SUPPORT
+comment|/* Unregister VLAN events */
+if|if
+condition|(
+name|adapter
+operator|->
+name|vlan_attach
+operator|!=
+name|NULL
+condition|)
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|vlan_config
+argument_list|,
+name|adapter
+operator|->
+name|vlan_attach
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|vlan_detach
+operator|!=
+name|NULL
+condition|)
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|vlan_unconfig
+argument_list|,
+name|adapter
+operator|->
+name|vlan_detach
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ether_ifdetach
 argument_list|(
 name|adapter
@@ -4945,14 +5052,6 @@ expr_stmt|;
 name|if_free
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-name|e1000_remove_device
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
 argument_list|)
 expr_stmt|;
 name|em_free_transmit_structures
@@ -7113,6 +7212,9 @@ argument_list|,
 name|ETHERTYPE_VLAN
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|EM_HW_VLAN_SUPPORT
 if|if
 condition|(
 name|ifp
@@ -7121,11 +7223,41 @@ name|if_capenable
 operator|&
 name|IFCAP_VLAN_HWTAGGING
 condition|)
-name|em_enable_hw_vlans
+block|{
+name|u32
+name|ctrl
+decl_stmt|;
+name|ctrl
+operator|=
+name|E1000_READ_REG
 argument_list|(
+operator|&
 name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_CTRL
 argument_list|)
 expr_stmt|;
+name|ctrl
+operator||=
+name|E1000_CTRL_VME
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_CTRL
+argument_list|,
+name|ctrl
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Set hardware offload abilities */
 name|ifp
 operator|->
@@ -11719,6 +11851,16 @@ name|mac
 operator|.
 name|get_link_status
 expr_stmt|;
+if|if
+condition|(
+name|link_check
+condition|)
+comment|/* ESB2 fix */
+name|e1000_cfg_on_link_up
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|link_check
@@ -13180,7 +13322,7 @@ argument|); 	adapter->hw.fc.low_water = adapter->hw.fc.high_water -
 literal|1500
 argument|;  	if (adapter->hw.mac.type == e1000_80003es2lan) 		adapter->hw.fc.pause_time =
 literal|0xFFFF
-argument|; 	else 		adapter->hw.fc.pause_time = EM_FC_PAUSE_TIME; 	adapter->hw.fc.send_xon = TRUE; 	adapter->hw.fc.type = e1000_fc_full;  	if (e1000_init_hw(&adapter->hw)<
+argument|; 	else 		adapter->hw.fc.pause_time = EM_FC_PAUSE_TIME; 	adapter->hw.fc.send_xon = TRUE; 	adapter->hw.fc.requested_mode = e1000_fc_full;  	if (e1000_init_hw(&adapter->hw)<
 literal|0
 argument|) { 		device_printf(dev,
 literal|"Hardware Initialization Failed\n"
@@ -13968,8 +14110,47 @@ comment|/* Did it pass? */
 argument|if (!(rx_desc->errors& E1000_RXD_ERR_TCPE)) { 			mp->m_pkthdr.csum_flags |= 			(CSUM_DATA_VALID | CSUM_PSEUDO_HDR); 			mp->m_pkthdr.csum_data = htons(
 literal|0xffff
 argument|); 		} 	} }
-comment|/*  * This turns on the hardware offload of the VLAN  * tag insertion and strip  */
-argument|static void em_enable_hw_vlans(struct adapter *adapter) { 	u32 ctrl;  	ctrl = E1000_READ_REG(&adapter->hw, E1000_CTRL); 	ctrl |= E1000_CTRL_VME; 	E1000_WRITE_REG(&adapter->hw, E1000_CTRL, ctrl); }  static void em_enable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw; 	u32 ims_mask = IMS_ENABLE_MASK;  	if (adapter->msix) { 		E1000_WRITE_REG(hw, EM_EIAC, EM_MSIX_MASK); 		ims_mask |= EM_MSIX_MASK; 	}  	E1000_WRITE_REG(hw, E1000_IMS, ims_mask); }  static void em_disable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw;  	if (adapter->msix) 		E1000_WRITE_REG(hw, EM_EIAC,
+ifdef|#
+directive|ifdef
+name|EM_HW_VLAN_SUPPORT
+comment|/*  * This routine is run via an vlan  * config EVENT  */
+argument|static void em_register_vlan(void *unused, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		ctrl, rctl, index, vfta;  	ctrl = E1000_READ_REG(&adapter->hw, E1000_CTRL); 	ctrl |= E1000_CTRL_VME; 	E1000_WRITE_REG(&adapter->hw, E1000_CTRL, ctrl);
+comment|/* Setup for Hardware Filter */
+argument|rctl = E1000_READ_REG(&adapter->hw, E1000_RCTL); 	rctl |= E1000_RCTL_VFE; 	rctl&= ~E1000_RCTL_CFIEN; 	E1000_WRITE_REG(&adapter->hw, E1000_RCTL, rctl);
+comment|/* Make entry in the hardware filter table */
+argument|index = ((vtag>>
+literal|5
+argument|)&
+literal|0x7F
+argument|); 	vfta = E1000_READ_REG_ARRAY(&adapter->hw, E1000_VFTA, index); 	vfta |= (
+literal|1
+argument|<< (vtag&
+literal|0x1F
+argument|)); 	E1000_WRITE_REG_ARRAY(&adapter->hw, E1000_VFTA, index, vfta);
+comment|/* Update the frame size */
+argument|E1000_WRITE_REG(&adapter->hw, E1000_RLPML, 	    adapter->max_frame_size + VLAN_TAG_SIZE);  }
+comment|/*  * This routine is run via an vlan  * unconfig EVENT  */
+argument|static void em_unregister_vlan(void *unused, struct ifnet *ifp, u16 vtag) { 	struct adapter	*adapter = ifp->if_softc; 	u32		index, vfta;
+comment|/* Remove entry in the hardware filter table */
+argument|index = ((vtag>>
+literal|5
+argument|)&
+literal|0x7F
+argument|); 	vfta = E1000_READ_REG_ARRAY(&adapter->hw, E1000_VFTA, index); 	vfta&= ~(
+literal|1
+argument|<< (vtag&
+literal|0x1F
+argument|)); 	E1000_WRITE_REG_ARRAY(&adapter->hw, E1000_VFTA, index, vfta);
+comment|/* Have all vlans unregistered? */
+argument|if (adapter->ifp->if_vlantrunk == NULL) { 		u32 rctl;
+comment|/* Turn off the filter table */
+argument|rctl = E1000_READ_REG(&adapter->hw, E1000_RCTL); 		rctl&= ~E1000_RCTL_VFE; 		rctl |= E1000_RCTL_CFIEN; 		E1000_WRITE_REG(&adapter->hw, E1000_RCTL, rctl);
+comment|/* Reset the frame size */
+argument|E1000_WRITE_REG(&adapter->hw, E1000_RLPML, 		    adapter->max_frame_size); 	} }
+endif|#
+directive|endif
+comment|/* EM_HW_VLAN_SUPPORT */
+argument|static void em_enable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw; 	u32 ims_mask = IMS_ENABLE_MASK;  	if (adapter->msix) { 		E1000_WRITE_REG(hw, EM_EIAC, EM_MSIX_MASK); 		ims_mask |= EM_MSIX_MASK; 	}  	E1000_WRITE_REG(hw, E1000_IMS, ims_mask); }  static void em_disable_intr(struct adapter *adapter) { 	struct e1000_hw *hw =&adapter->hw;  	if (adapter->msix) 		E1000_WRITE_REG(hw, EM_EIAC,
 literal|0
 argument|); 	E1000_WRITE_REG(&adapter->hw, E1000_IMC,
 literal|0xffffffff

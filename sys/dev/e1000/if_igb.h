@@ -387,7 +387,7 @@ begin_define
 define|#
 directive|define
 name|IGB_MSIX_VEC
-value|5
+value|6
 end_define
 
 begin_comment
@@ -576,6 +576,38 @@ end_define
 begin_comment
 comment|/* Offload bits in mbuf flag */
 end_comment
+
+begin_comment
+comment|/*  * Interrupt Moderation parameters  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_LOW_LATENCY
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_AVE_LATENCY
+value|450
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_BULK_LATENCY
+value|1200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_LINK_ITR
+value|2000
+end_define
 
 begin_ifdef
 ifdef|#
@@ -777,6 +809,12 @@ name|struct
 name|mtx
 name|tx_mtx
 decl_stmt|;
+name|char
+name|mtx_name
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|struct
 name|igb_dma_alloc
 name|txdma
@@ -874,6 +912,12 @@ name|struct
 name|mtx
 name|rx_mtx
 decl_stmt|;
+name|char
+name|mtx_name
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|u32
 name|last_cleaned
 decl_stmt|;
@@ -902,6 +946,12 @@ name|struct
 name|mbuf
 modifier|*
 name|lmp
+decl_stmt|;
+name|u32
+name|bytes
+decl_stmt|;
+name|u32
+name|eitr_setting
 decl_stmt|;
 comment|/* Soft stats */
 name|u64
@@ -1055,22 +1105,6 @@ name|link_duplex
 decl_stmt|;
 name|u32
 name|smartspeed
-decl_stmt|;
-name|struct
-name|igb_int_delay_info
-name|tx_int_delay
-decl_stmt|;
-name|struct
-name|igb_int_delay_info
-name|tx_abs_int_delay
-decl_stmt|;
-name|struct
-name|igb_int_delay_info
-name|rx_int_delay
-decl_stmt|;
-name|struct
-name|igb_int_delay_info
-name|rx_abs_int_delay
 decl_stmt|;
 comment|/* 	 * Transmit rings 	 */
 name|struct

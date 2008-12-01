@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/* e1000_82541  * e1000_82547  * e1000_82541_rev_2  * e1000_82547_rev_2  */
+comment|/*  * 82541EI Gigabit Ethernet Controller  * 82541ER Gigabit Ethernet Controller  * 82541GI Gigabit Ethernet Controller  * 82541PI Gigabit Ethernet Controller  * 82547EI Gigabit Ethernet Controller  * 82547GI Gigabit Ethernet Controller  */
 end_comment
 
 begin_include
@@ -527,30 +527,8 @@ define|\
 value|(sizeof(e1000_igp_cable_length_table) / \                  sizeof(e1000_igp_cable_length_table[0]))
 end_define
 
-begin_struct
-struct|struct
-name|e1000_dev_spec_82541
-block|{
-name|enum
-name|e1000_dsp_config
-name|dsp_config
-decl_stmt|;
-name|enum
-name|e1000_ffe_config
-name|ffe_config
-decl_stmt|;
-name|u16
-name|spd_default
-decl_stmt|;
-name|bool
-name|phy_init_script
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
-comment|/**  *  e1000_init_phy_params_82541 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_82541 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -739,7 +717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_82541 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_82541 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -1143,7 +1121,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_82541 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_82541 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -1166,9 +1144,6 @@ operator|&
 name|hw
 operator|->
 name|mac
-decl_stmt|;
-name|s32
-name|ret_val
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -1214,6 +1189,15 @@ operator|.
 name|get_bus_info
 operator|=
 name|e1000_get_bus_info_pci_generic
+expr_stmt|;
+comment|/* function id */
+name|mac
+operator|->
+name|ops
+operator|.
+name|set_lan_id
+operator|=
+name|e1000_set_lan_id_single_port
 expr_stmt|;
 comment|/* reset */
 name|mac
@@ -1340,15 +1324,6 @@ name|led_off
 operator|=
 name|e1000_led_off_generic
 expr_stmt|;
-comment|/* remove device */
-name|mac
-operator|->
-name|ops
-operator|.
-name|remove_device
-operator|=
-name|e1000_remove_device_generic
-expr_stmt|;
 comment|/* clear hardware counters */
 name|mac
 operator|->
@@ -1358,36 +1333,14 @@ name|clear_hw_cntrs
 operator|=
 name|e1000_clear_hw_cntrs_82541
 expr_stmt|;
-name|hw
-operator|->
-name|dev_spec_size
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|e1000_dev_spec_82541
-argument_list|)
-expr_stmt|;
-comment|/* Device-specific structure allocation */
-name|ret_val
-operator|=
-name|e1000_alloc_zeroed_dev_spec_struct
-argument_list|(
-name|hw
-argument_list|,
-name|hw
-operator|->
-name|dev_spec_size
-argument_list|)
-expr_stmt|;
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_82541 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_82541 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  Called to initialize all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -1439,7 +1392,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82541 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82541 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  **/
 end_comment
 
 begin_function
@@ -1731,7 +1684,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_82541 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_hw_82541 - Initialize hardware  *  @hw: pointer to the HW structure  *  *  This inits the hardware readying it for operation.  **/
 end_comment
 
 begin_function
@@ -1913,7 +1866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * e1000_get_link_up_info_82541 - Report speed and duplex  * @hw: pointer to the HW structure  * @speed: pointer to speed buffer  * @duplex: pointer to duplex buffer  *  * Retrieve the current speed and duplex configuration.  * This is a function pointer entry point called by the api module.  **/
+comment|/**  * e1000_get_link_up_info_82541 - Report speed and duplex  * @hw: pointer to the HW structure  * @speed: pointer to speed buffer  * @duplex: pointer to duplex buffer  *  * Retrieve the current speed and duplex configuration.  **/
 end_comment
 
 begin_function
@@ -2106,7 +2059,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_hw_reset_82541 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Verify the reset block is not blocking us from resetting.  Acquire  *  semaphore (if necessary) and read/set/write the device control reset  *  bit in the PHY.  Wait the appropriate delay time for the device to  *  reset and release the semaphore (if necessary).  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_phy_hw_reset_82541 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Verify the reset block is not blocking us from resetting.  Acquire  *  semaphore (if necessary) and read/set/write the device control reset  *  bit in the PHY.  Wait the appropriate delay time for the device to  *  reset and release the semaphore (if necessary).  **/
 end_comment
 
 begin_function
@@ -2214,7 +2167,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_copper_link_82541 - Configure copper link settings  *  @hw: pointer to the HW structure  *  *  Calls the appropriate function to configure the link for auto-neg or forced  *  speed and duplex.  Then we check for link, once link is established calls  *  to configure collision distance and flow control are called.  If link is  *  not established, we return -E1000_ERR_PHY (-2).  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_setup_copper_link_82541 - Configure copper link settings  *  @hw: pointer to the HW structure  *  *  Calls the appropriate function to configure the link for auto-neg or forced  *  speed and duplex.  Then we check for link, once link is established calls  *  to configure collision distance and flow control are called.  If link is  *  not established, we return -E1000_ERR_PHY (-2).  **/
 end_comment
 
 begin_function
@@ -2242,6 +2195,13 @@ name|struct
 name|e1000_dev_spec_82541
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82541
 decl_stmt|;
 name|s32
 name|ret_val
@@ -2294,17 +2254,6 @@ operator|.
 name|reset_disable
 operator|=
 name|FALSE
-expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82541
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
 expr_stmt|;
 comment|/* Earlier revs of the IGP phy require us to force MDI. */
 if|if
@@ -2433,7 +2382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_link_82541 - Check/Store link connection  *  @hw: pointer to the HW structure  *  *  This checks the link condition of the adapter and stores the  *  results in the hw->mac structure. This is a function pointer entry  *  point called by the api module.  **/
+comment|/**  *  e1000_check_for_link_82541 - Check/Store link connection  *  @hw: pointer to the HW structure  *  *  This checks the link condition of the adapter and stores the  *  results in the hw->mac structure.  **/
 end_comment
 
 begin_function
@@ -2600,7 +2549,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_config_dsp_after_link_change_82541 - Config DSP after link  *  @hw: pointer to the HW structure  *  @link_up: boolean flag for link up status  *  *  Return E1000_ERR_PHY when failing to read/write the PHY, else E1000_SUCCESS  *  at any other case.  *  *  82541_rev_2& 82547_rev_2 have the capability to configure the DSP when a  *  gigabit link is achieved to improve link quality.  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_config_dsp_after_link_change_82541 - Config DSP after link  *  @hw: pointer to the HW structure  *  @link_up: boolean flag for link up status  *  *  Return E1000_ERR_PHY when failing to read/write the PHY, else E1000_SUCCESS  *  at any other case.  *  *  82541_rev_2& 82547_rev_2 have the capability to configure the DSP when a  *  gigabit link is achieved to improve link quality.  **/
 end_comment
 
 begin_function
@@ -2631,6 +2580,13 @@ name|struct
 name|e1000_dev_spec_82541
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82541
 decl_stmt|;
 name|s32
 name|ret_val
@@ -2676,17 +2632,6 @@ name|DEBUGFUNC
 argument_list|(
 literal|"e1000_config_dsp_after_link_change_82541"
 argument_list|)
-expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82541
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
 expr_stmt|;
 if|if
 condition|(
@@ -3398,7 +3343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_cable_length_igp_82541 - Determine cable length for igp PHY  *  @hw: pointer to the HW structure  *  *  The automatic gain control (agc) normalizes the amplitude of the  *  received signal, adjusting for the attenuation produced by the  *  cable.  By reading the AGC registers, which represent the  *  combination of coarse and fine gain value, the value can be put  *  into a lookup table to obtain the approximate cable length  *  for each channel.  This is a function pointer entry point called by the  *  api module.  **/
+comment|/**  *  e1000_get_cable_length_igp_82541 - Determine cable length for igp PHY  *  @hw: pointer to the HW structure  *  *  The automatic gain control (agc) normalizes the amplitude of the  *  received signal, adjusting for the attenuation produced by the  *  cable.  By reading the AGC registers, which represent the  *  combination of coarse and fine gain value, the value can be put  *  into a lookup table to obtain the approximate cable length  *  for each channel.  **/
 end_comment
 
 begin_function
@@ -3646,7 +3591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_set_d3_lplu_state_82541 - Sets low power link up state for D3  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is TRUE, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  This is a function pointer entry point called by the  *  api module.  **/
+comment|/**  *  e1000_set_d3_lplu_state_82541 - Sets low power link up state for D3  *  @hw: pointer to the HW structure  *  @active: boolean used to enable/disable lplu  *  *  Success returns 0, Failure returns 1  *  *  The low power link up (lplu) state is set to the power management level D3  *  and SmartSpeed is disabled when active is TRUE, else clear lplu for D3  *  and enable Smartspeed.  LPLU and Smartspeed are mutually exclusive.  LPLU  *  is used during Dx states where the power conservation is most important.  *  During driver activity, SmartSpeed should be enabled so performance is  *  maintained.  **/
 end_comment
 
 begin_function
@@ -4001,7 +3946,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_setup_led_82541 - Configures SW controllable LED  *  @hw: pointer to the HW structure  *  *  This prepares the SW controllable LED for use and saves the current state  *  of the LED so it can be later restored.  This is a function pointer entry  *  point called by the api module.  **/
+comment|/**  *  e1000_setup_led_82541 - Configures SW controllable LED  *  @hw: pointer to the HW structure  *  *  This prepares the SW controllable LED for use and saves the current state  *  of the LED so it can be later restored.  **/
 end_comment
 
 begin_function
@@ -4019,6 +3964,13 @@ name|struct
 name|e1000_dev_spec_82541
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82541
 decl_stmt|;
 name|s32
 name|ret_val
@@ -4027,17 +3979,6 @@ name|DEBUGFUNC
 argument_list|(
 literal|"e1000_setup_led_82541"
 argument_list|)
-expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82541
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
 expr_stmt|;
 name|ret_val
 operator|=
@@ -4122,7 +4063,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_cleanup_led_82541 - Set LED config to default operation  *  @hw: pointer to the HW structure  *  *  Remove the current LED configuration and set the LED configuration  *  to the default value, saved from the EEPROM.  This is a function pointer  *  entry point called by the api module.  **/
+comment|/**  *  e1000_cleanup_led_82541 - Set LED config to default operation  *  @hw: pointer to the HW structure  *  *  Remove the current LED configuration and set the LED configuration  *  to the default value, saved from the EEPROM.  **/
 end_comment
 
 begin_function
@@ -4140,6 +4081,13 @@ name|struct
 name|e1000_dev_spec_82541
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82541
 decl_stmt|;
 name|s32
 name|ret_val
@@ -4148,17 +4096,6 @@ name|DEBUGFUNC
 argument_list|(
 literal|"e1000_cleanup_led_82541"
 argument_list|)
-expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82541
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
 expr_stmt|;
 name|ret_val
 operator|=
@@ -4226,6 +4163,13 @@ name|struct
 name|e1000_dev_spec_82541
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82541
 decl_stmt|;
 name|u32
 name|ret_val
@@ -4237,17 +4181,6 @@ name|DEBUGFUNC
 argument_list|(
 literal|"e1000_phy_init_script_82541"
 argument_list|)
-expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82541
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
 expr_stmt|;
 if|if
 condition|(
@@ -4704,7 +4637,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_script_state_82541 - Enable/Disable PHY init script  *  @hw: pointer to the HW structure  *  @state: boolean value used to enable/disable PHY init script  *  *  Allows the driver to enable/disable the PHY init script, if the PHY is an  *  IGP PHY.  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_script_state_82541 - Enable/Disable PHY init script  *  @hw: pointer to the HW structure  *  @state: boolean value used to enable/disable PHY init script  *  *  Allows the driver to enable/disable the PHY init script, if the PHY is an  *  IGP PHY.  **/
 end_comment
 
 begin_function
@@ -4724,6 +4657,13 @@ name|struct
 name|e1000_dev_spec_82541
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82541
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -4744,32 +4684,6 @@ block|{
 name|DEBUGOUT
 argument_list|(
 literal|"Initialization script not necessary.\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82541
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4842,10 +4756,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-specifier|volatile
-name|u32
-name|temp
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_clear_hw_cntrs_82541"
@@ -4856,8 +4766,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4865,8 +4773,6 @@ argument_list|,
 name|E1000_PRC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4874,8 +4780,6 @@ argument_list|,
 name|E1000_PRC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4883,8 +4787,6 @@ argument_list|,
 name|E1000_PRC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4892,8 +4794,6 @@ argument_list|,
 name|E1000_PRC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4901,8 +4801,6 @@ argument_list|,
 name|E1000_PRC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4910,8 +4808,6 @@ argument_list|,
 name|E1000_PRC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4919,8 +4815,6 @@ argument_list|,
 name|E1000_PTC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4928,8 +4822,6 @@ argument_list|,
 name|E1000_PTC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4937,8 +4829,6 @@ argument_list|,
 name|E1000_PTC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4946,8 +4836,6 @@ argument_list|,
 name|E1000_PTC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4955,8 +4843,6 @@ argument_list|,
 name|E1000_PTC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4964,8 +4850,6 @@ argument_list|,
 name|E1000_PTC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4973,8 +4857,6 @@ argument_list|,
 name|E1000_ALGNERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4982,8 +4864,6 @@ argument_list|,
 name|E1000_RXERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4991,8 +4871,6 @@ argument_list|,
 name|E1000_TNCRS
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5000,8 +4878,6 @@ argument_list|,
 name|E1000_CEXTERR
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5009,8 +4885,6 @@ argument_list|,
 name|E1000_TSCTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5018,8 +4892,6 @@ argument_list|,
 name|E1000_TSCTFC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5027,8 +4899,6 @@ argument_list|,
 name|E1000_MGTPRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5036,8 +4906,6 @@ argument_list|,
 name|E1000_MGTPDC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
