@@ -112,7 +112,7 @@ name|__restrict
 name|fp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|ret
 decl_stmt|;
 name|FLOCKFILE
