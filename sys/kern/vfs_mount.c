@@ -6105,9 +6105,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
 name|MNT_FORCE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|mp
