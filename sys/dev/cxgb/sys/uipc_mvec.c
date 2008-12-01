@@ -1451,11 +1451,21 @@ continue|continue;
 name|skip
 label|:
 comment|/* 		 * is an immediate mbuf or is from the packet zone 		 */
-name|n
+name|mhead
 operator|=
 name|n
 operator|->
 name|m_next
+expr_stmt|;
+name|n
+operator|->
+name|m_next
+operator|=
+name|NULL
+expr_stmt|;
+name|n
+operator|=
+name|mhead
 expr_stmt|;
 block|}
 operator|*
