@@ -2817,9 +2817,12 @@ name|foff
 operator|+
 name|objsize
 operator|>
+name|round_page
+argument_list|(
 name|shmfd
 operator|->
 name|shm_size
+argument_list|)
 condition|)
 return|return
 operator|(
