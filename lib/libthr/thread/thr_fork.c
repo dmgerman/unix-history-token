@@ -411,6 +411,15 @@ operator|&
 name|_thr_atfork_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|unlock_malloc
+condition|)
+name|_rtld_atfork_post
+argument_list|(
+name|rtld_locks
+argument_list|)
+expr_stmt|;
 name|_thr_setthreaded
 argument_list|(
 literal|0
@@ -441,16 +450,9 @@ if|if
 condition|(
 name|unlock_malloc
 condition|)
-block|{
-name|_rtld_atfork_post
-argument_list|(
-name|rtld_locks
-argument_list|)
-expr_stmt|;
 name|_malloc_postfork
 argument_list|()
 expr_stmt|;
-block|}
 comment|/* Run down atfork child handlers. */
 name|TAILQ_FOREACH
 argument_list|(
