@@ -183,7 +183,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/ath/ah_desc.h>
+file|<dev/ath/ath_hal/ah_desc.h>
 end_include
 
 begin_comment
@@ -6434,26 +6434,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|ath_rate
-argument_list|,
-name|ath_hal
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Atheros HAL */
-end_comment
 
 begin_expr_stmt
 name|MODULE_DEPEND

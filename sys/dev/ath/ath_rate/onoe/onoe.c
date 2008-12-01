@@ -183,7 +183,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/ath/ah_desc.h>
+file|<dev/ath/ath_hal/ah_desc.h>
 end_include
 
 begin_comment
