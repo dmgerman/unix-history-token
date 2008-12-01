@@ -1740,6 +1740,26 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
+name|sleepq_switch
+argument_list|(
+name|wchan
+argument_list|,
+name|pri
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 	 * There were pending signals and this thread is still 	 * on the sleep queue, remove it from the sleep queue. 	 */
 if|if
 condition|(
