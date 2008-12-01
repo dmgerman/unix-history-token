@@ -1252,12 +1252,6 @@ name|USB_PRODUCT_INTERSIL_PRISM_GT
 block|}
 block|,
 block|{
-name|USB_VENDOR_NETGEAR
-block|,
-name|USB_PRODUCT_NETGEAR_WG111V2_2
-block|}
-block|,
-block|{
 name|USB_VENDOR_SMC
 block|,
 name|USB_PRODUCT_SMC_2862WG
