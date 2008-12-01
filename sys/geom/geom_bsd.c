@@ -450,7 +450,11 @@ name|mbroffset
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: Expected rawoffset %jd, found %jd\n"
+literal|"WARNING: %s expected rawoffset %jd, found %jd\n"
+argument_list|,
+name|gp
+operator|->
+name|name
 argument_list|,
 operator|(
 name|intmax_t
