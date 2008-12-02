@@ -4537,11 +4537,18 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Clear wakeup events. */
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_PMDR
+argument_list|,
 name|CSR_READ_1
 argument_list|(
 name|sc
 argument_list|,
 name|FXP_CSR_PMDR
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fxp_init_body
@@ -5458,16 +5465,20 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* Clear wakeup events. */
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_PMDR
+argument_list|,
 name|CSR_READ_1
 argument_list|(
 name|sc
 argument_list|,
 name|FXP_CSR_PMDR
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|CSR_WRITE_4
 argument_list|(
