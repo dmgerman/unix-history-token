@@ -471,7 +471,7 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|rss_hash
+name|flowid
 expr_stmt|;
 endif|#
 directive|endif
