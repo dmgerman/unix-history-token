@@ -5789,7 +5789,7 @@ name|d2
 operator|->
 name|revdate
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
