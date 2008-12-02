@@ -9073,7 +9073,7 @@ name|cvsroot
 parameter_list|,
 name|tag
 parameter_list|)
-value|do {		\ 	if ((rf) == NULL) {						\ 		(rf) = rcsfile_frompath((path), (name), (cvsroot),	\ 		    (tag));						\ 		if ((rf) == NULL) {					\ 			xasprintf(&(up)->errmsg,			\ 			    "Error reading rcsfile %s\n", (name));	\ 			return (UPDATER_ERR_MSG);			\ 		}							\ 	}								\ } while (0)
+value|do {		\ 	if ((rf) == NULL) {						\ 		lprintf(1, " Edit %s", fup->coname);			\ 		if (fup->attic)						\ 			lprintf(1, " -> Attic");			\ 		lprintf(1, "\n");					\ 		(rf) = rcsfile_frompath((path), (name), (cvsroot),	\ 		    (tag));						\ 		if ((rf) == NULL) {					\ 			xasprintf(&(up)->errmsg,			\ 			    "Error reading rcsfile %s\n", (name));	\ 			return (UPDATER_ERR_MSG);			\ 		}							\ 	}								\ } while (0)
 while|while
 condition|(
 operator|(
@@ -9596,37 +9596,6 @@ goto|goto
 name|finish
 goto|;
 block|}
-name|lprintf
-argument_list|(
-literal|1
-argument_list|,
-literal|" Edit %s"
-argument_list|,
-name|fup
-operator|->
-name|coname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fup
-operator|->
-name|attic
-condition|)
-name|lprintf
-argument_list|(
-literal|1
-argument_list|,
-literal|" -> Attic"
-argument_list|)
-expr_stmt|;
-name|lprintf
-argument_list|(
-literal|1
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 comment|/* Write and rename temp file. */
 name|dest
 operator|=
