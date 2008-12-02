@@ -213,6 +213,12 @@ directive|include
 file|<net/route.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -281,6 +287,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_endif

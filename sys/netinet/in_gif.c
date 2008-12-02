@@ -165,6 +165,12 @@ directive|include
 file|<netinet/ip_ecn.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

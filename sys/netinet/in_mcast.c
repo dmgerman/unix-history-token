@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -133,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/igmp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_ifndef

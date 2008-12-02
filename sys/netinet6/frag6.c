@@ -160,6 +160,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<netinet6/vinet6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 

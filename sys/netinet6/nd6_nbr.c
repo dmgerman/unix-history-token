@@ -226,6 +226,12 @@ directive|include
 file|<netinet/icmp6.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

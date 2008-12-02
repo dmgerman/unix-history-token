@@ -168,6 +168,18 @@ directive|include
 file|<netinet/tcp_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_hostcache.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

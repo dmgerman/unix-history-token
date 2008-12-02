@@ -18,37 +18,37 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<net/pfkeyv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netipsec/ipsec.h>
+file|<net/raw_cb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netipsec/esp_var.h>
+file|<netinet/ipprotosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<netipsec/ah_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netipsec/esp_var.h>
 end_include
 
 begin_include
@@ -66,25 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/raw_cb.h>
+file|<netipsec/ipsec.h>
 end_include
 
 begin_include

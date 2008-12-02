@@ -221,6 +221,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/vinet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/in6_var.h>
 end_include
 
@@ -252,6 +258,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/nd6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_decl_stmt

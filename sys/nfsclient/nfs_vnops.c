@@ -249,6 +249,12 @@ directive|include
 file|<netinet/in_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_comment
 comment|/* Defs */
 end_comment

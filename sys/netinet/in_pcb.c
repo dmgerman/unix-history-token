@@ -208,6 +208,12 @@ directive|include
 file|<netinet/udp_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -224,6 +230,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_endif

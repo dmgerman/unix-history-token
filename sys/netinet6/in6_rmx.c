@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -143,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/nd6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_include

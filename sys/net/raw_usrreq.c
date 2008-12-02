@@ -99,6 +99,12 @@ directive|include
 file|<net/raw_cb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_expr_stmt
 name|MTX_SYSINIT
 argument_list|(

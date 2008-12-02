@@ -309,6 +309,12 @@ directive|include
 file|<netinet/tcp_offload.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_comment
 comment|/*  * TCP protocol interface to socket abstraction.  */
 end_comment

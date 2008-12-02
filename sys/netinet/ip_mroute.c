@@ -250,6 +250,12 @@ directive|include
 file|<netinet/udp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

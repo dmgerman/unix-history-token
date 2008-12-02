@@ -307,6 +307,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

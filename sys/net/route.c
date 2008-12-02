@@ -129,6 +129,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -136,6 +142,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_mroute.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_include

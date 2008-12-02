@@ -242,6 +242,12 @@ begin_comment
 comment|/* TCPDEBUG */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -239,6 +239,12 @@ directive|include
 file|<netinet6/ip6_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|struct

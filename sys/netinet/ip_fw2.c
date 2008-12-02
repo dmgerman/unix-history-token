@@ -256,6 +256,12 @@ directive|include
 file|<net/pf_mtag.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -378,6 +384,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/sctp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_include

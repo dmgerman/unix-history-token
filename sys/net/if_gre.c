@@ -183,6 +183,12 @@ directive|include
 file|<netinet/ip_encap.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_else
 else|#
 directive|else

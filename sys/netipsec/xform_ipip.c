@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -147,6 +153,29 @@ directive|include
 file|<netinet/ip_encap.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MROUTING
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_mroute.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -164,23 +193,6 @@ include|#
 directive|include
 file|<netipsec/ipip_var.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MROUTING
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_mroute.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

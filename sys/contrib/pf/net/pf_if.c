@@ -129,11 +129,22 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/vimage.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -146,6 +157,23 @@ include|#
 directive|include
 file|<net/if_types.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

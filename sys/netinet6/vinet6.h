@@ -18,31 +18,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/callout.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip6.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/raw_ip6.h>
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -54,19 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/scope6_var.h>
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/in6_ifattach.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/in6_var.h>
+file|<netinet6/ip6_var.h>
 end_include
 
 begin_include
@@ -78,7 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
+file|<netinet6/raw_ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/scope6_var.h>
 end_include
 
 begin_struct

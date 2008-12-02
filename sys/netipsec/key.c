@@ -234,6 +234,12 @@ directive|include
 file|<netinet/in_pcb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -249,6 +255,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
