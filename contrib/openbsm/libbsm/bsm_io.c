@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * Copyright (c) 2006 Robert N. M. Watson  * Copyright (c) 2006 Martin Voros  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_io.c#50 $  */
+comment|/*-  * Copyright (c) 2004 Apple Inc.  * Copyright (c) 2005 SPARTA, Inc.  * Copyright (c) 2006 Robert N. M. Watson  * Copyright (c) 2006 Martin Voros  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_io.c#55 $  */
 end_comment
 
 begin_include
@@ -254,7 +254,7 @@ name|bytesread
 parameter_list|,
 name|err
 parameter_list|)
-value|do {	\ 	if (bytesread + size> len) {					\ 		err = 1;						\ 	} else {							\ 		memcpy(dest, buf + bytesread, size);			\ 		bytesread += size;					\ 	}								\ } while (0)
+value|do {	\ 	if ((bytesread) + (size)> (u_int32_t)(len)) {			\ 		(err) = 1;						\ 	} else {							\ 		memcpy((dest), (buf) + (bytesread), (size));		\ 		bytesread += size;					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -272,7 +272,7 @@ name|bytesread
 parameter_list|,
 name|err
 parameter_list|)
-value|do {		\ 	if (bytesread + sizeof(u_char)<= len) {			\ 		dest = buf[bytesread];					\ 		bytesread += sizeof(u_char);				\ 	} else								\ 		err = 1;						\ } while (0)
+value|do {		\ 	if ((bytesread) + sizeof(u_char)<= (u_int32_t)(len)) {		\ 		(dest) = buf[(bytesread)];				\ 		(bytesread) += sizeof(u_char);				\ 	} else								\ 		(err) = 1;						\ } while (0)
 end_define
 
 begin_define
@@ -290,7 +290,7 @@ name|bytesread
 parameter_list|,
 name|err
 parameter_list|)
-value|do {		\ 	if (bytesread + sizeof(u_int16_t)<= len) {			\ 		dest = be16dec(buf + bytesread);			\ 		bytesread += sizeof(u_int16_t);				\ 	} else								\ 		err = 1;						\ } while (0)
+value|do {		\ 	if ((bytesread) + sizeof(u_int16_t)<= (u_int32_t)(len)) {	\ 		(dest) = be16dec((buf) + (bytesread));			\ 		(bytesread) += sizeof(u_int16_t);			\ 	} else								\ 		(err) = 1;						\ } while (0)
 end_define
 
 begin_define
@@ -308,7 +308,7 @@ name|bytesread
 parameter_list|,
 name|err
 parameter_list|)
-value|do {		\ 	if (bytesread + sizeof(u_int32_t)<= len) {			\ 		dest = be32dec(buf + bytesread);			\ 		bytesread += sizeof(u_int32_t);				\ 	} else								\ 		err = 1; 						\ } while (0)
+value|do {		\ 	if ((bytesread) + sizeof(u_int32_t)<= (u_int32_t)(len)) {	\ 		(dest) = be32dec((buf) + (bytesread));			\ 		(bytesread) += sizeof(u_int32_t);			\ 	} else								\ 		(err) = 1; 						\ } while (0)
 end_define
 
 begin_define
@@ -326,7 +326,7 @@ name|bytesread
 parameter_list|,
 name|err
 parameter_list|)
-value|do {		\ 	if (bytesread + sizeof(u_int64_t)<= len) {			\ 		dest = be64dec(buf + bytesread);			\ 		bytesread += sizeof(u_int64_t);				\ 	} else								\ 		err = 1; 						\ } while (0)
+value|do {		\ 	if ((bytesread) + sizeof(u_int64_t)<= (u_int32_t)(len)) {	\ 		dest = be64dec((buf) + (bytesread));			\ 		(bytesread) += sizeof(u_int64_t);			\ 	} else								\ 		(err) = 1; 						\ } while (0)
 end_define
 
 begin_define
@@ -346,7 +346,7 @@ name|bytesread
 parameter_list|,
 name|err
 parameter_list|)
-value|do {		\ 	if ((bytesread) + (size)> (len))				\ 		(err) = 1;						\ 	else {								\ 		(ptr) = (buf) + (bytesread);				\ 		(bytesread) += (size);					\ 	}								\ } while (0)
+value|do {		\ 	if ((bytesread) + (size)> (u_int32_t)(len))			\ 		(err) = 1;						\ 	else {								\ 		(ptr) = (buf) + (bytesread);				\ 		(bytesread) += (size);					\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -555,7 +555,7 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|int
+name|u_int32_t
 name|i
 decl_stmt|;
 if|if
@@ -623,7 +623,7 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|int
+name|u_int32_t
 name|i
 decl_stmt|;
 if|if
@@ -3778,7 +3778,39 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * No attribute for additional types. 		 * 		print_ip_ex_address(fp, tok->tt.hdr32_ex.ad_type, 		    tok->tt.hdr32_ex.addr); 		 */
+name|open_attr
+argument_list|(
+name|fp
+argument_list|,
+literal|"host"
+argument_list|)
+expr_stmt|;
+name|print_ip_ex_address
+argument_list|(
+name|fp
+argument_list|,
+name|tok
+operator|->
+name|tt
+operator|.
+name|hdr32_ex
+operator|.
+name|ad_type
+argument_list|,
+name|tok
+operator|->
+name|tt
+operator|.
+name|hdr32_ex
+operator|.
+name|addr
+argument_list|)
+expr_stmt|;
+name|close_attr
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|open_attr
 argument_list|(
 name|fp
@@ -5069,7 +5101,39 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * No attribute for additional types. 		 * 		print_ip_ex_address(fp, tok->tt.hdr64_ex.ad_type, 		    tok->tt.hdr64_ex.addr); 		 */
+name|open_attr
+argument_list|(
+name|fp
+argument_list|,
+literal|"host"
+argument_list|)
+expr_stmt|;
+name|print_ip_ex_address
+argument_list|(
+name|fp
+argument_list|,
+name|tok
+operator|->
+name|tt
+operator|.
+name|hdr64_ex
+operator|.
+name|ad_type
+argument_list|,
+name|tok
+operator|->
+name|tt
+operator|.
+name|hdr64_ex
+operator|.
+name|addr
+argument_list|)
+expr_stmt|;
+name|close_attr
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|open_attr
 argument_list|(
 name|fp
@@ -6711,7 +6775,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%u"
+literal|"%zu"
 argument_list|,
 name|size
 argument_list|)
@@ -6923,7 +6987,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%u"
+literal|"%zu"
 argument_list|,
 name|size
 argument_list|)
@@ -7148,7 +7212,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%u"
+literal|"%zu"
 argument_list|,
 name|size
 argument_list|)
@@ -7372,7 +7436,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%u"
+literal|"%zu"
 argument_list|,
 name|size
 argument_list|)
@@ -9011,7 +9075,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|u_int32_t
 name|i
 decl_stmt|;
 name|u_char
@@ -9120,6 +9184,9 @@ name|tok
 operator|->
 name|len
 operator|>=
+operator|(
+name|u_int32_t
+operator|)
 name|len
 condition|)
 return|return
@@ -9213,7 +9280,7 @@ name|int
 name|xml
 parameter_list|)
 block|{
-name|int
+name|u_int32_t
 name|i
 decl_stmt|;
 name|print_tok_type
@@ -9384,7 +9451,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|u_int32_t
 name|i
 decl_stmt|;
 name|u_char
@@ -9493,6 +9560,9 @@ name|tok
 operator|->
 name|len
 operator|>=
+operator|(
+name|u_int32_t
+operator|)
 name|len
 condition|)
 return|return
@@ -9586,7 +9656,7 @@ name|int
 name|xml
 parameter_list|)
 block|{
-name|int
+name|u_int32_t
 name|i
 decl_stmt|;
 name|print_tok_type
@@ -23222,13 +23292,16 @@ name|print_2_bytes
 argument_list|(
 name|fp
 argument_list|,
+name|ntohs
+argument_list|(
 name|tok
 operator|->
 name|tt
 operator|.
 name|socket_ex32
 operator|.
-name|type
+name|r_port
+argument_list|)
 argument_list|,
 literal|"%#x"
 argument_list|)

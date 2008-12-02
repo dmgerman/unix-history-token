@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Apple Computer, Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_token.c#63 $  */
+comment|/*-  * Copyright (c) 2004-2008 Apple Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_token.c#72 $  */
 end_comment
 
 begin_include
@@ -248,7 +248,7 @@ name|dptr
 parameter_list|,
 name|length
 parameter_list|)
-value|do {				\ 	(t) = malloc(sizeof(token_t));					\ 	if ((t) != NULL) {						\ 		(t)->len = (length);					\ 		(dptr) = (t->t_data) = malloc((length) * sizeof(u_char)); \ 		if ((dptr) == NULL) {					\ 			free(t);					\ 			(t) = NULL;					\ 		} else							\ 			memset((dptr), 0, (length));			\ 	} else								\ 		(dptr) = NULL;						\ 	assert(t == NULL || dptr != NULL);				\ } while (0)
+value|do {				\ 	(t) = malloc(sizeof(token_t));					\ 	if ((t) != NULL) {						\ 		(t)->len = (length);					\ 		(dptr) = (t->t_data) = malloc((length) * sizeof(u_char)); \ 		if ((dptr) == NULL) {					\ 			free(t);					\ 			(t) = NULL;					\ 		} else							\ 			memset((dptr), 0, (length));			\ 	} else								\ 		(dptr) = NULL;						\ 	assert((t) == NULL || (dptr) != NULL);				\ } while (0)
 end_define
 
 begin_comment
@@ -263,6 +263,7 @@ parameter_list|(
 name|char
 name|n
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|text
@@ -385,6 +386,7 @@ parameter_list|(
 name|char
 name|n
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|text
@@ -507,6 +509,7 @@ parameter_list|(
 name|char
 name|n
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|text
@@ -633,7 +636,7 @@ argument_list|,
 name|AUT_ATTR32
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Darwin defines the size for the file mode 	 * as 2 bytes; BSM defines 4 so pad with 0 	 */
+comment|/* 	 * Darwin defines the size for the file mode as 2 bytes; BSM defines 	 * 4 so pad with 0. 	 */
 name|ADD_U_INT16
 argument_list|(
 name|dptr
@@ -677,7 +680,7 @@ operator|->
 name|vn_fsid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some systems use 32-bit file ID's, other's use 64-bit file IDs. 	 * Attempt to handle both, and let the compiler sort it out.  If we 	 * could pick this out at compile-time, it would be better, so as to 	 * avoid the else case below. 	 */
+comment|/* 	 * Some systems use 32-bit file ID's, others use 64-bit file IDs. 	 * Attempt to handle both, and let the compiler sort it out.  If we 	 * could pick this out at compile-time, it would be better, so as to 	 * avoid the else case below. 	 */
 if|if
 condition|(
 sizeof|sizeof
@@ -841,7 +844,7 @@ argument_list|,
 name|AUT_ATTR64
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Darwin defines the size for the file mode 	 * as 2 bytes; BSM defines 4 so pad with 0 	 */
+comment|/* 	 * Darwin defines the size for the file mode as 2 bytes; BSM defines 	 * 4 so pad with 0. 	 */
 name|ADD_U_INT16
 argument_list|(
 name|dptr
@@ -1016,6 +1019,7 @@ parameter_list|,
 name|char
 name|unit_count
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1475,7 +1479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * token ID                1 byte  * address type/length     4 bytes  * Address                16 bytes  */
+comment|/*  * token ID                1 byte  * address type/length     4 bytes  * address                16 bytes  */
 end_comment
 
 begin_function
@@ -1804,7 +1808,7 @@ argument_list|,
 name|AUT_IPC_PERM
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Darwin defines the sizes for ipc_perm members 	 * as 2 bytes; BSM defines 4 so pad with 0 	 */
+comment|/* 	 * Darwin defines the sizes for ipc_perm members as 2 bytes; BSM 	 * defines 4 so pad with 0. 	 */
 name|ADD_U_INT16
 argument_list|(
 name|dptr
@@ -1906,6 +1910,22 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* HAVE_IPC_PERM___SEQ */
+ifdef|#
+directive|ifdef
+name|HAVE_IPC_PERM__SEQ
+name|ADD_U_INT16
+argument_list|(
+name|dptr
+argument_list|,
+name|perm
+operator|->
+name|_seq
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* HAVE_IPC_PERM__SEQ */
 name|ADD_U_INT16
 argument_list|(
 name|dptr
@@ -1917,6 +1937,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* HAVE_IPC_PERM__SEQ */
+endif|#
+directive|endif
+comment|/* HAVE_IPC_PERM___SEQ */
 ifdef|#
 directive|ifdef
 name|HAVE_IPC_PERM___KEY
@@ -1931,6 +1955,22 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* HAVE_IPC_PERM___KEY */
+ifdef|#
+directive|ifdef
+name|HAVE_IPC_PERM__KEY
+name|ADD_U_INT32
+argument_list|(
+name|dptr
+argument_list|,
+name|perm
+operator|->
+name|_key
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* HAVE_IPC_PERM__KEY */
 name|ADD_U_INT32
 argument_list|(
 name|dptr
@@ -1942,6 +1982,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* HAVE_IPC_PERM__KEY */
+endif|#
+directive|endif
+comment|/* HAVE_IPC_PERM___KEY */
 return|return
 operator|(
 name|t
@@ -2032,6 +2076,7 @@ name|token_t
 modifier|*
 name|au_to_opaque
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|data
@@ -2120,6 +2165,7 @@ name|token_t
 modifier|*
 name|au_to_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -2258,6 +2304,7 @@ name|token_t
 modifier|*
 name|au_to_text
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|text
@@ -2357,6 +2404,7 @@ name|token_t
 modifier|*
 name|au_to_path
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|text
@@ -3805,7 +3853,7 @@ name|ADD_U_CHAR
 argument_list|(
 name|dptr
 argument_list|,
-name|AU_SOCK_UNIX_TOKEN
+name|AUT_SOCKUNIX
 argument_list|)
 expr_stmt|;
 comment|/* BSM token has two bytes for family */
@@ -3921,7 +3969,7 @@ argument_list|,
 name|AUT_SOCKINET32
 argument_list|)
 expr_stmt|;
-comment|/* 	 * BSM defines the family field as 16 bits, but many operating 	 * systems have an 8-bit sin_family field.  Extend to 16 bits before 	 * writing into the token.  Assume that both the port and the address 	 * in the sockaddr_in are already in network byte order, but family 	 * is in local byte order. 	 * 	 * XXXRW: Should a name space conversion be taking place on the value 	 * of sin_family?  	 */
+comment|/* 	 * BSM defines the family field as 16 bits, but many operating 	 * systems have an 8-bit sin_family field.  Extend to 16 bits before 	 * writing into the token.  Assume that both the port and the address 	 * in the sockaddr_in are already in network byte order, but family 	 * is in local byte order. 	 * 	 * XXXRW: Should a name space conversion be taking place on the value 	 * of sin_family? 	 */
 name|family
 operator|=
 name|so
@@ -4040,7 +4088,7 @@ argument_list|,
 name|AUT_SOCKINET128
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In Darwin, sin6_family is one octet, but BSM defines the token  	 * to store two. So we copy in a 0 first.  	 */
+comment|/* 	 * In Darwin, sin6_family is one octet, but BSM defines the token 	 * to store two. So we copy in a 0 first. 	 */
 name|ADD_U_CHAR
 argument_list|(
 name|dptr
@@ -5103,7 +5151,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Collects audit information for the current process  * and creates a subject token from it  */
+comment|/*  * Collects audit information for the current process and creates a subject  * token from it.  */
 end_comment
 
 begin_function
@@ -5366,6 +5414,7 @@ name|token_t
 modifier|*
 name|au_to_zonename
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|zonename
@@ -5779,6 +5828,253 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * token ID                1 byte  * record byte count       4 bytes  * version #               1 byte    [2]  * event type              2 bytes  * event modifier          2 bytes  * address type/length     4 bytes  * machine address         4 bytes/16 bytes (IPv4/IPv6 address)  * seconds of time         4 bytes/8 bytes (32-bit/64-bit value)  * milliseconds of time    4 bytes/8 bytes (32-bit/64-bit value)  */
+end_comment
+
+begin_function
+name|token_t
+modifier|*
+name|au_to_header32_ex_tm
+parameter_list|(
+name|int
+name|rec_size
+parameter_list|,
+name|au_event_t
+name|e_type
+parameter_list|,
+name|au_emod_t
+name|e_mod
+parameter_list|,
+name|struct
+name|timeval
+name|tm
+parameter_list|,
+name|struct
+name|auditinfo_addr
+modifier|*
+name|aia
+parameter_list|)
+block|{
+name|token_t
+modifier|*
+name|t
+decl_stmt|;
+name|u_char
+modifier|*
+name|dptr
+init|=
+name|NULL
+decl_stmt|;
+name|u_int32_t
+name|timems
+decl_stmt|,
+name|hostid
+decl_stmt|;
+name|au_tid_addr_t
+modifier|*
+name|tid
+init|=
+operator|&
+name|aia
+operator|->
+name|ai_termid
+decl_stmt|;
+if|if
+condition|(
+name|tid
+operator|->
+name|at_type
+operator|!=
+name|AU_IPv4
+operator|&&
+name|tid
+operator|->
+name|at_type
+operator|!=
+name|AU_IPv6
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+name|GET_TOKEN_AREA
+argument_list|(
+name|t
+argument_list|,
+name|dptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_char
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|u_char
+argument_list|)
+operator|+
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int16_t
+argument_list|)
+operator|+
+literal|3
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+operator|+
+name|tid
+operator|->
+name|at_type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+name|ADD_U_CHAR
+argument_list|(
+name|dptr
+argument_list|,
+name|AUT_HEADER32_EX
+argument_list|)
+expr_stmt|;
+name|ADD_U_INT32
+argument_list|(
+name|dptr
+argument_list|,
+name|rec_size
+argument_list|)
+expr_stmt|;
+name|ADD_U_CHAR
+argument_list|(
+name|dptr
+argument_list|,
+name|AUDIT_HEADER_VERSION_OPENBSM
+argument_list|)
+expr_stmt|;
+name|ADD_U_INT16
+argument_list|(
+name|dptr
+argument_list|,
+name|e_type
+argument_list|)
+expr_stmt|;
+name|ADD_U_INT16
+argument_list|(
+name|dptr
+argument_list|,
+name|e_mod
+argument_list|)
+expr_stmt|;
+name|ADD_U_INT32
+argument_list|(
+name|dptr
+argument_list|,
+name|tid
+operator|->
+name|at_type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tid
+operator|->
+name|at_type
+operator|==
+name|AU_IPv6
+condition|)
+name|ADD_MEM
+argument_list|(
+name|dptr
+argument_list|,
+operator|&
+name|tid
+operator|->
+name|at_addr
+index|[
+literal|0
+index|]
+argument_list|,
+literal|4
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|ADD_MEM
+argument_list|(
+name|dptr
+argument_list|,
+operator|&
+name|tid
+operator|->
+name|at_addr
+index|[
+literal|0
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|timems
+operator|=
+name|tm
+operator|.
+name|tv_usec
+operator|/
+literal|1000
+expr_stmt|;
+comment|/* Add the timestamp */
+name|ADD_U_INT32
+argument_list|(
+name|dptr
+argument_list|,
+name|tm
+operator|.
+name|tv_sec
+argument_list|)
+expr_stmt|;
+name|ADD_U_INT32
+argument_list|(
+name|dptr
+argument_list|,
+name|timems
+argument_list|)
+expr_stmt|;
+comment|/* We need time in ms. */
+return|return
+operator|(
+name|t
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|token_t
 modifier|*
@@ -5943,6 +6239,126 @@ name|_KERNEL
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_AUDIT_SYSCALLS
+end_ifdef
+
+begin_function
+name|token_t
+modifier|*
+name|au_to_header32_ex
+parameter_list|(
+name|int
+name|rec_size
+parameter_list|,
+name|au_event_t
+name|e_type
+parameter_list|,
+name|au_emod_t
+name|e_mod
+parameter_list|)
+block|{
+name|struct
+name|timeval
+name|tm
+decl_stmt|;
+name|struct
+name|auditinfo_addr
+name|aia
+decl_stmt|;
+if|if
+condition|(
+name|gettimeofday
+argument_list|(
+operator|&
+name|tm
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
+name|auditon
+argument_list|(
+name|A_GETKAUDIT
+argument_list|,
+operator|&
+name|aia
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|aia
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+return|return
+operator|(
+name|au_to_header32_tm
+argument_list|(
+name|rec_size
+argument_list|,
+name|e_type
+argument_list|,
+name|e_mod
+argument_list|,
+name|tm
+argument_list|)
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|au_to_header32_ex_tm
+argument_list|(
+name|rec_size
+argument_list|,
+name|e_type
+argument_list|,
+name|e_mod
+argument_list|,
+name|tm
+argument_list|,
+operator|&
+name|aia
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_AUDIT_SYSCALLS */
+end_comment
+
 begin_function
 name|token_t
 modifier|*
@@ -6084,10 +6500,59 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_AUDIT_SYSCALLS
+end_ifdef
+
+begin_function
+name|token_t
+modifier|*
+name|au_to_header_ex
+parameter_list|(
+name|int
+name|rec_size
+parameter_list|,
+name|au_event_t
+name|e_type
+parameter_list|,
+name|au_emod_t
+name|e_mod
+parameter_list|)
+block|{
+return|return
+operator|(
+name|au_to_header32_ex
+argument_list|(
+name|rec_size
+argument_list|,
+name|e_type
+argument_list|,
+name|e_mod
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* HAVE_AUDIT_SYSCALLS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(KERNEL)&& !defined(_KERNEL) */
+end_comment
 
 begin_comment
 comment|/*  * token ID                1 byte  * trailer magic number    2 bytes  * record byte count       4 bytes  */
