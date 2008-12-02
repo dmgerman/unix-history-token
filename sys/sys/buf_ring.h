@@ -270,7 +270,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|ENOSPC
+name|ENOBUFS
 operator|)
 return|;
 block|}
