@@ -11549,10 +11549,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Sadly, the libgtop port has already been compiled for 7.1, but the code  * does not do enough error checking and bad things might happen.  Even  * though we've not made a release with this stuff in it, the packages have  * apparently been built.  *  * This should be deleted shortly after 7.1 is released and we go back to  * 7-stable again.  If the libgtop port can be rebuilt, then this can get  * deleted before release.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
