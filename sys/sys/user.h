@@ -1340,7 +1340,7 @@ name|int
 name|_kf_pad0
 decl_stmt|;
 comment|/* Round to 64 bit alignment */
-name|uint64_t
+name|int64_t
 name|kf_offset
 decl_stmt|;
 comment|/* Seek location. */
