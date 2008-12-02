@@ -247,6 +247,9 @@ expr|struct
 name|kinfo_file
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|bp
 expr_stmt|;
 name|bp
@@ -318,6 +321,9 @@ operator|(
 expr|struct
 name|kinfo_file
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|bp
 expr_stmt|;
