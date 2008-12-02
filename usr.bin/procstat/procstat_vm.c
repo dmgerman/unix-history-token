@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libutil.h>
 end_include
 
@@ -181,10 +187,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%*p "
+literal|"%#*jx "
 argument_list|,
 name|ptrwidth
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|kve
 operator|->
 name|kve_start
@@ -192,10 +201,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%*p "
+literal|"%#*jx "
 argument_list|,
 name|ptrwidth
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|kve
 operator|->
 name|kve_end
