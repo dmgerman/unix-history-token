@@ -22,6 +22,13 @@ name|RTLI_VERSION
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_RTLD_LOCKS
+value|8
+end_define
+
 begin_struct
 struct|struct
 name|RtldLockInfo

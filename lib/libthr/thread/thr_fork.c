@@ -255,7 +255,7 @@ decl_stmt|;
 name|int
 name|rtld_locks
 index|[
-literal|16
+name|MAX_RTLD_LOCKS
 index|]
 decl_stmt|;
 if|if
