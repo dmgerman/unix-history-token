@@ -462,7 +462,7 @@ name|tso_segsz
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IFNET_MULTIQ
+name|IFNET_MULTIQUEUE
 name|mi
 operator|->
 name|mi_rss_hash
@@ -473,6 +473,8 @@ name|m_pkthdr
 operator|.
 name|rss_hash
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -493,8 +495,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_expr_stmt
 
