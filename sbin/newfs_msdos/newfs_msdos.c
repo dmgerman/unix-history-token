@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -2212,8 +2218,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"failed to initialize %lld bytes"
+literal|"failed to initialize %jd bytes"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|opt_create
 argument_list|)
 expr_stmt|;
@@ -2317,8 +2326,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"cannot seek to %lld"
+literal|"cannot seek to %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|opt_ofs
 argument_list|)
 expr_stmt|;
