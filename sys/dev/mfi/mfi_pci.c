@@ -422,7 +422,7 @@ literal|0x1f15
 block|,
 name|MFI_FLAGS_GEN2
 block|,
-literal|"Dell PERC 607E Adapter"
+literal|"Dell PERC H800 Adapter"
 block|}
 block|,
 block|{
@@ -436,7 +436,7 @@ literal|0x1f16
 block|,
 name|MFI_FLAGS_GEN2
 block|,
-literal|"Dell PERC 607I Adapter"
+literal|"Dell PERC H700 Adapter"
 block|}
 block|,
 block|{
@@ -450,7 +450,7 @@ literal|0x1f17
 block|,
 name|MFI_FLAGS_GEN2
 block|,
-literal|"Dell PERC 607I Integrated"
+literal|"Dell PERC H700 Integrated"
 block|}
 block|,
 block|{
@@ -464,7 +464,7 @@ literal|0x1f18
 block|,
 name|MFI_FLAGS_GEN2
 block|,
-literal|"Dell PERC 607I Modular"
+literal|"Dell PERC H700 Modular"
 block|}
 block|,
 block|{
