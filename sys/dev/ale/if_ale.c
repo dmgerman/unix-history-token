@@ -14856,22 +14856,6 @@ block|}
 comment|/* Configure TxQ. */
 name|reg
 operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|ale_flags
-operator|&
-name|ALE_FLAG_JUMBO
-operator|)
-operator|!=
-literal|0
-condition|)
-name|reg
-operator|=
 operator|(
 literal|128
 operator|<<
