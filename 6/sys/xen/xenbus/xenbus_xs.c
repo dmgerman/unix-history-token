@@ -140,13 +140,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenbus.h>
+file|<machine/stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
+file|<xen/xenbus/xenbusvar.h>
 end_include
 
 begin_include
@@ -3777,10 +3777,6 @@ name|xs_stored_msg
 modifier|*
 name|msg
 decl_stmt|;
-name|xenwatch_running
-operator|=
-literal|1
-expr_stmt|;
 name|DELAY
 argument_list|(
 literal|100000
@@ -4646,6 +4642,10 @@ condition|)
 return|return
 name|err
 return|;
+name|xenwatch_running
+operator|=
+literal|1
+expr_stmt|;
 name|err
 operator|=
 name|kthread_create

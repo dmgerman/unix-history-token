@@ -50,13 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenbus.h>
+file|<xen/xenbus/xenbusvar.h>
 end_include
 
 begin_function

@@ -92,13 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenbus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/xenbus/xenbusvar.h>
 end_include
 
 begin_include

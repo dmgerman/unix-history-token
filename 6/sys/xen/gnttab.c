@@ -2507,14 +2507,9 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|gnttab_init
-parameter_list|(
-name|void
-modifier|*
-name|unused
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|i
@@ -2759,21 +2754,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|gnttab
-argument_list|,
-name|SI_SUB_PSEUDO
-argument_list|,
-name|SI_ORDER_FIRST
-argument_list|,
-name|gnttab_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|//SYSINIT(gnttab, SI_SUB_PSEUDO, SI_ORDER_FIRST, gnttab_init, NULL);
+end_comment
 
 end_unit
 

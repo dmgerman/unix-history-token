@@ -20,13 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenbus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/xen/xen_intr.h>
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<xen/xenbus/xenbus_comms.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/interface/io/xs_wire.h>
 end_include
 
 begin_decl_stmt

@@ -352,6 +352,14 @@ argument_list|,
 name|xenpci_pci_resume
 argument_list|)
 block|,
+comment|/* Bus interface */
+name|DEVMETHOD
+argument_list|(
+name|bus_add_child
+argument_list|,
+name|bus_generic_add_child
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -419,7 +427,7 @@ block|{
 block|{
 literal|0x00015853
 block|,
-literal|"XenSource, Inc. Xen Platform Device"
+literal|"Xen Platform Device"
 block|}
 block|,
 block|{
@@ -488,7 +496,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|bus_generic_probe
+argument_list|(
+name|device
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1164,15 +1175,6 @@ expr_stmt|;
 name|xenpci_set_callback
 argument_list|(
 name|device
-argument_list|)
-expr_stmt|;
-name|device_add_child
-argument_list|(
-name|device
-argument_list|,
-literal|"xenbus"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
