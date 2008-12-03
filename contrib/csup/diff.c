@@ -650,6 +650,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|comode
+operator|&&
 name|line
 operator|==
 name|NULL
@@ -663,6 +665,8 @@ return|;
 comment|/* If we got ".+", there's no ending newline. */
 if|if
 condition|(
+name|comode
+operator|&&
 name|strcmp
 argument_list|(
 name|line

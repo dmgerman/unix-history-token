@@ -9905,9 +9905,6 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|int
-name|stop
-decl_stmt|;
 name|char
 modifier|*
 name|author
@@ -10224,10 +10221,6 @@ case|case
 literal|'T'
 case|:
 comment|/* Do the same as in 'C' command. */
-name|stop
-operator|=
-literal|0
-expr_stmt|;
 name|textline
 operator|=
 name|stream_getln
@@ -10256,10 +10249,7 @@ name|textline
 operator|==
 literal|'.'
 condition|)
-name|stop
-operator|=
-literal|1
-expr_stmt|;
+break|break;
 if|if
 condition|(
 name|size
@@ -10279,10 +10269,15 @@ literal|0
 condition|)
 block|{
 comment|/* Truncate newline. */
-name|stop
-operator|=
+name|rcsdelta_truncatetext
+argument_list|(
+name|d
+argument_list|,
+operator|-
 literal|1
+argument_list|)
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -10318,11 +10313,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|stop
-condition|)
-break|break;
 name|textline
 operator|=
 name|stream_getln

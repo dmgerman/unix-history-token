@@ -125,6 +125,9 @@ name|duptext
 parameter_list|(
 name|yyscan_t
 modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -194,6 +197,10 @@ parameter_list|(
 name|yyscan_t
 modifier|*
 name|sp
+parameter_list|,
+name|int
+modifier|*
+name|arglen
 parameter_list|)
 block|{
 name|char
@@ -228,19 +235,35 @@ name|xmalloc
 argument_list|(
 name|len
 operator|+
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|memcpy
 argument_list|(
 name|val
 argument_list|,
 name|tmp
 argument_list|,
 name|len
-operator|+
-literal|1
 argument_list|)
+expr_stmt|;
+name|val
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|arglen
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|arglen
+operator|=
+name|len
 expr_stmt|;
 return|return
 operator|(
@@ -340,6 +363,8 @@ name|duptext
 argument_list|(
 operator|&
 name|scanner
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rcsfile_setval
@@ -474,6 +499,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rcsfile_setval
@@ -525,6 +552,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rcsfile_setval
@@ -585,6 +614,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rcsfile_addaccess
@@ -643,6 +674,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|asserttoken
@@ -664,6 +697,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rcsfile_importtag
@@ -840,6 +875,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rcsfile_setval
@@ -898,6 +935,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rcsfile_setval
@@ -1081,6 +1120,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* date num; */
@@ -1103,6 +1144,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|asserttoken
@@ -1132,6 +1175,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|asserttoken
@@ -1169,6 +1214,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|token
@@ -1258,6 +1305,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|token
@@ -1452,6 +1501,8 @@ name|text
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|len
 decl_stmt|;
 name|error
 operator|=
@@ -1484,6 +1535,8 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Get delta we're adding text to. */
@@ -1521,6 +1574,9 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+operator|&
+name|len
 argument_list|)
 expr_stmt|;
 name|error
@@ -1530,6 +1586,8 @@ argument_list|(
 name|d
 argument_list|,
 name|log
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 name|free
@@ -1636,6 +1694,9 @@ operator|=
 name|duptext
 argument_list|(
 name|sp
+argument_list|,
+operator|&
+name|len
 argument_list|)
 expr_stmt|;
 name|error
@@ -1645,6 +1706,8 @@ argument_list|(
 name|d
 argument_list|,
 name|text
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If this happens, something is wrong with the RCS file, and it 		 * should be resent. 		 */
