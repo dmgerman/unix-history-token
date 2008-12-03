@@ -182,6 +182,15 @@ name|PMC_EV_IAF_LAST
 value|PMC_EV_IAF_CPU_CLK_UNHALTED_REF
 end_define
 
+begin_define
+define|#
+directive|define
+name|__PMC_EV_ALIAS_IAF
+parameter_list|()
+define|\
+value|__PMC_EV_ALIAS("instruction-retired",	IAF_INSTR_RETIRED_ANY)		\ __PMC_EV_ALIAS("unhalted-core-cycles",	IAF_CPU_CLK_UNHALTED_CORE)	\ __PMC_EV_ALIAS("unhalted-reference-cycles", IAF_CPU_CLK_UNHALTED_REF)
+end_define
+
 begin_comment
 comment|/*  * Events supported by programmable function counters present in  * Intel Atom, Core and Core2 CPUs, from the "Intel 64 and IA-32  * Architectures Software Developer's Manual Volume 3B: System Programming  * Guide, Part 2", July 2008.  *  * These PMCs select events with a combination of an event code and  * unit mask.  Quirks that need to be taken care of include:  * - The set of (event code, umask) combinations supported by a processor  *   varies according to the processor model.  * - A given (event code, umask) combination need not measure the same  *   hardware event in all processor models.  * - Event names in vendor documentation for an (event code, umask) pair  *   may vary according to the CPU model.  * - Identically named events can map to different (event code, umask)  *   pairs on different CPUs.  * - New (event code, umask) combinations continue to be added as CPUs  *   evolve.  The interface between hwpmc(4) and libpmc(3) needs to be  *   robust with respect to ABI changes.  *  * The IAP_EVENT_* symbols below define the ABI between userland and kernel.  * New (event code, * umask) combinations used in new CPUs would be added  * to the end of the list.  Vendor names for events are mapped to IAP_EVENT_*  * symbols using aliases.  The final disambiguation of semantics based on  * the CPU model happens inside hwpmc(4).  */
 end_comment
