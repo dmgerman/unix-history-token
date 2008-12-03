@@ -3237,6 +3237,12 @@ operator|.
 name|pm_cputype
 operator|==
 name|PMC_CPU_INTEL_CORE2
+operator|||
+name|cpu_info
+operator|.
+name|pm_cputype
+operator|==
+name|PMC_CPU_INTEL_CORE2EXTREME
 condition|)
 block|{
 if|if
@@ -11238,6 +11244,9 @@ break|break;
 case|case
 name|PMC_CPU_INTEL_CORE2
 case|:
+case|case
+name|PMC_CPU_INTEL_CORE2EXTREME
+case|:
 name|ev
 operator|=
 name|core2_event_table
@@ -12044,6 +12053,9 @@ break|break;
 case|case
 name|PMC_CPU_INTEL_CORE2
 case|:
+case|case
+name|PMC_CPU_INTEL_CORE2EXTREME
+case|:
 name|PMC_MDEP_INIT
 argument_list|(
 name|core2
@@ -12434,6 +12446,9 @@ expr_stmt|;
 break|break;
 case|case
 name|PMC_CPU_INTEL_CORE2
+case|:
+case|case
+name|PMC_CPU_INTEL_CORE2EXTREME
 case|:
 name|ev
 operator|=

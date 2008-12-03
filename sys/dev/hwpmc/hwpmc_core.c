@@ -2581,7 +2581,7 @@ value|(1<< 1)
 end_define
 
 begin_comment
-comment|/* CPU: Core2 */
+comment|/* CPU: Core2 family */
 end_comment
 
 begin_define
@@ -2592,7 +2592,7 @@ value|(1<< 2)
 end_define
 
 begin_comment
-comment|/* CPU: Core2 Extreme */
+comment|/* CPU: Core2 Extreme only */
 end_comment
 
 begin_define
@@ -7318,6 +7318,8 @@ name|PMC_CPU_INTEL_CORE2EXTREME
 case|:
 name|cpuflag
 operator|=
+name|IAP_F_CC2
+operator||
 name|IAP_F_CC2E
 expr_stmt|;
 break|break;

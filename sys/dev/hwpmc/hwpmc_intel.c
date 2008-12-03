@@ -597,6 +597,9 @@ case|:
 case|case
 name|PMC_CPU_INTEL_CORE2
 case|:
+case|case
+name|PMC_CPU_INTEL_CORE2EXTREME
+case|:
 name|error
 operator|=
 name|pmc_core_initialize
@@ -815,6 +818,9 @@ name|PMC_CPU_INTEL_CORE
 case|:
 case|case
 name|PMC_CPU_INTEL_CORE2
+case|:
+case|case
+name|PMC_CPU_INTEL_CORE2EXTREME
 case|:
 name|pmc_core_finalize
 argument_list|(
