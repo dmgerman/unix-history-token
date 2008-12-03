@@ -16317,7 +16317,7 @@ return|;
 block|}
 name|error
 operator|=
-name|syscall_deregister
+name|syscall32_deregister
 argument_list|(
 name|data
 operator|->
