@@ -388,6 +388,27 @@ name|bool
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|__le16
+value|u16
+end_define
+
+begin_define
+define|#
+directive|define
+name|__le32
+value|u32
+end_define
+
+begin_define
+define|#
+directive|define
+name|__le64
+value|u64
+end_define
+
 begin_struct
 struct|struct
 name|e1000_osdep

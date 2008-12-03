@@ -2161,6 +2161,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Set the size only if it's meaningful. */
+if|if
+condition|(
+literal|0
+operator|==
+operator|(
+name|zip
+operator|->
+name|flags
+operator|&
+name|ZIP_LENGTH_AT_END
+operator|)
+condition|)
 name|archive_entry_set_size
 argument_list|(
 name|entry
@@ -2840,17 +2853,23 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* Update checksum */
 if|if
 condition|(
 name|r
-operator|==
+operator|!=
 name|ARCHIVE_OK
-operator|&&
+condition|)
+return|return
+operator|(
+name|r
+operator|)
+return|;
+comment|/* Update checksum */
+if|if
+condition|(
 operator|*
 name|size
 condition|)
-block|{
 name|zip
 operator|->
 name|entry_crc32
@@ -2868,10 +2887,27 @@ operator|*
 name|size
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* Return EOF immediately if this is a non-regular file. */
+if|if
+condition|(
+name|AE_IFREG
+operator|!=
+operator|(
+name|zip
+operator|->
+name|mode
+operator|&
+name|AE_IFMT
+operator|)
+condition|)
 return|return
 operator|(
-name|r
+name|ARCHIVE_EOF
+operator|)
+return|;
+return|return
+operator|(
+name|ARCHIVE_OK
 operator|)
 return|;
 block|}

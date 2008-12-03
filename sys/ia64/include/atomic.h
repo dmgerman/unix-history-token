@@ -41,7 +41,7 @@ parameter_list|,
 name|ret
 parameter_list|)
 define|\
-value|__asm __volatile (						\ 		"mov ar.ccv=%2;;\n\t"					\ 		"cmpxchg" #sz "." #sem " %0=%4,%3,ar.ccv\n\t"		\ 		: "=r" (ret), "=m" (*p)					\ 		: "r" (cmpval), "r" (newval), "m" (*p)			\ 		: "memory")
+value|__asm __volatile (						\ 		"mov ar.ccv=%2;;\n\t"					\ 		"cmpxchg" #sz "." #sem " %0=%4,%3,ar.ccv\n\t"		\ 		: "=r" (ret), "=m" (*p)					\ 		: "r" ((uint64_t)cmpval), "r" (newval), "m" (*p)	\ 		: "memory")
 end_define
 
 begin_comment

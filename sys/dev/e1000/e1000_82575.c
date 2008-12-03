@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/* e1000_82575  * e1000_82576  */
+comment|/*  * 82575EB Gigabit Network Connection  * 82575EB Gigabit Backplane Connection  * 82575GB Gigabit Network Connection  * 82576 Gigabit Network Connection  */
 end_comment
 
 begin_include
@@ -480,18 +480,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|e1000_remove_device_82575
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|e1000_shutdown_fiber_serdes_link_82575
 parameter_list|(
 name|struct
@@ -502,19 +490,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct
-struct|struct
-name|e1000_dev_spec_82575
-block|{
-name|bool
-name|sgmii_active
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
-comment|/**  *  e1000_init_phy_params_82575 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_82575 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -838,7 +815,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_82575 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_82575 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -1067,7 +1044,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_82575 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_82575 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -1095,61 +1072,23 @@ name|struct
 name|e1000_dev_spec_82575
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82575
 decl_stmt|;
 name|u32
 name|ctrl_ext
 init|=
 literal|0
 decl_stmt|;
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_init_mac_params_82575"
 argument_list|)
-expr_stmt|;
-name|hw
-operator|->
-name|dev_spec_size
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|e1000_dev_spec_82575
-argument_list|)
-expr_stmt|;
-comment|/* Device-specific structure allocation */
-name|ret_val
-operator|=
-name|e1000_alloc_zeroed_dev_spec_struct
-argument_list|(
-name|hw
-argument_list|,
-name|hw
-operator|->
-name|dev_spec_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-goto|goto
-name|out
-goto|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82575
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
 expr_stmt|;
 comment|/* Set media type */
 comment|/* 	 * The 82575 uses bits 22:23 for link mode. The mode can be changed          * based on the EEPROM. We cannot rely upon device ID. There          * is no distinguishable difference between fiber and internal          * SerDes mode on the 82575. There can be an external PHY attached          * on the SGMII interface. For this, we'll set sgmii_active to TRUE.          */
@@ -1465,15 +1404,6 @@ name|led_off
 operator|=
 name|e1000_led_off_generic
 expr_stmt|;
-comment|/* remove device */
-name|mac
-operator|->
-name|ops
-operator|.
-name|remove_device
-operator|=
-name|e1000_remove_device_82575
-expr_stmt|;
 comment|/* clear hardware counters */
 name|mac
 operator|->
@@ -1492,16 +1422,14 @@ name|get_link_up_info
 operator|=
 name|e1000_get_link_up_info_82575
 expr_stmt|;
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_82575 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_82575 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  Called to initialize all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -1553,7 +1481,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_acquire_phy_82575 - Acquire rights to access PHY  *  @hw: pointer to the HW structure  *  *  Acquire access rights to the correct PHY.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_acquire_phy_82575 - Acquire rights to access PHY  *  @hw: pointer to the HW structure  *  *  Acquire access rights to the correct PHY.  **/
 end_comment
 
 begin_function
@@ -1599,7 +1527,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_release_phy_82575 - Release rights to access PHY  *  @hw: pointer to the HW structure  *  *  A wrapper to release access rights to the correct PHY.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_release_phy_82575 - Release rights to access PHY  *  @hw: pointer to the HW structure  *  *  A wrapper to release access rights to the correct PHY.  **/
 end_comment
 
 begin_function
@@ -3670,7 +3598,7 @@ control|)
 block|{
 name|hash_value
 operator|=
-name|e1000_hash_mc_addr_generic
+name|e1000_hash_mc_addr
 argument_list|(
 name|hw
 argument_list|,
@@ -3722,6 +3650,11 @@ block|{
 name|u32
 name|reg
 decl_stmt|;
+name|u16
+name|eeprom_data
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|hw
@@ -3751,9 +3684,44 @@ name|e1000_media_type_internal_serdes
 operator|)
 condition|)
 return|return;
-comment|/* if the management interface is not enabled, then power down */
 if|if
 condition|(
+name|hw
+operator|->
+name|bus
+operator|.
+name|func
+operator|==
+literal|0
+condition|)
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
+argument_list|(
+name|hw
+argument_list|,
+name|NVM_INIT_CONTROL3_PORT_A
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|eeprom_data
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If APM is not enabled in the EEPROM and management interface is 	 * not enabled, then power down. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|eeprom_data
+operator|&
+name|E1000_NVM_APME_82575
+operator|)
+operator|&&
 operator|!
 name|e1000_enable_mng_pass_thru
 argument_list|(
@@ -3825,7 +3793,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82575 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82575 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  **/
 end_comment
 
 begin_function
@@ -4976,9 +4944,13 @@ name|struct
 name|e1000_dev_spec_82575
 modifier|*
 name|dev_spec
-decl_stmt|;
-name|bool
-name|ret_val
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82575
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -5003,206 +4975,13 @@ name|type
 operator|!=
 name|e1000_82576
 condition|)
-block|{
-name|ret_val
-operator|=
+return|return
 name|FALSE
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82575
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-name|ret_val
-operator|=
+return|;
+return|return
 name|dev_spec
 operator|->
 name|sgmii_active
-expr_stmt|;
-name|out
-label|:
-return|return
-name|ret_val
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**  *  e1000_translate_register_82576 - Translate the proper register offset  *  @reg: e1000 register to be read  *  *  Registers in 82576 are located in different offsets than other adapters  *  even though they function in the same manner.  This function takes in  *  the name of the register to read and returns the correct offset for  *  82576 silicon.  **/
-end_comment
-
-begin_function
-name|u32
-name|e1000_translate_register_82576
-parameter_list|(
-name|u32
-name|reg
-parameter_list|)
-block|{
-comment|/* 	 * Some of the 82576 registers are located at different 	 * offsets than they are in older adapters. 	 * Despite the difference in location, the registers 	 * function in the same manner. 	 */
-switch|switch
-condition|(
-name|reg
-condition|)
-block|{
-case|case
-name|E1000_TDBAL
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0E000
-expr_stmt|;
-break|break;
-case|case
-name|E1000_TDBAH
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0E004
-expr_stmt|;
-break|break;
-case|case
-name|E1000_TDLEN
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0E008
-expr_stmt|;
-break|break;
-case|case
-name|E1000_TDH
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0E010
-expr_stmt|;
-break|break;
-case|case
-name|E1000_TDT
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0E018
-expr_stmt|;
-break|break;
-case|case
-name|E1000_TXDCTL
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0E028
-expr_stmt|;
-break|break;
-case|case
-name|E1000_RDBAL
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0C000
-expr_stmt|;
-break|break;
-case|case
-name|E1000_RDBAH
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0C004
-expr_stmt|;
-break|break;
-case|case
-name|E1000_RDLEN
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0C008
-expr_stmt|;
-break|break;
-case|case
-name|E1000_RDH
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0C010
-expr_stmt|;
-break|break;
-case|case
-name|E1000_RDT
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0C018
-expr_stmt|;
-break|break;
-case|case
-name|E1000_RXDCTL
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0C028
-expr_stmt|;
-break|break;
-case|case
-name|E1000_SRRCTL
-argument_list|(
-literal|0
-argument_list|)
-case|:
-name|reg
-operator|=
-literal|0x0C00C
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-return|return
-name|reg
 return|;
 block|}
 end_function
@@ -5523,76 +5302,6 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_remove_device_82575 - Free device specific structure  *  @hw: pointer to the HW structure  *  *  If a device specific structure was allocated, this function will  *  free it after shutting down the serdes interface if available.  **/
-end_comment
-
-begin_function
-name|void
-name|e1000_remove_device_82575
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-block|{
-name|u16
-name|eeprom_data
-init|=
-literal|0
-decl_stmt|;
-comment|/* 	 * If APM is enabled in the EEPROM then leave the port on for fiber 	 * serdes adapters. 	 */
-if|if
-condition|(
-name|hw
-operator|->
-name|bus
-operator|.
-name|func
-operator|==
-literal|0
-condition|)
-name|hw
-operator|->
-name|nvm
-operator|.
-name|ops
-operator|.
-name|read
-argument_list|(
-name|hw
-argument_list|,
-name|NVM_INIT_CONTROL3_PORT_A
-argument_list|,
-literal|1
-argument_list|,
-operator|&
-name|eeprom_data
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|eeprom_data
-operator|&
-name|E1000_NVM_APME_82575
-operator|)
-condition|)
-name|e1000_shutdown_fiber_serdes_link_82575
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-name|e1000_remove_device_generic
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/**  *  e1000_clear_hw_cntrs_82575 - Clear device specific hardware counters  *  @hw: pointer to the HW structure  *  *  Clears the hardware counters by reading the counter registers.  **/
 end_comment
 
@@ -5607,10 +5316,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-specifier|volatile
-name|u32
-name|temp
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_clear_hw_cntrs_82575"
@@ -5621,8 +5326,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5630,8 +5333,6 @@ argument_list|,
 name|E1000_PRC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5639,8 +5340,6 @@ argument_list|,
 name|E1000_PRC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5648,8 +5347,6 @@ argument_list|,
 name|E1000_PRC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5657,8 +5354,6 @@ argument_list|,
 name|E1000_PRC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5666,8 +5361,6 @@ argument_list|,
 name|E1000_PRC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5675,8 +5368,6 @@ argument_list|,
 name|E1000_PRC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5684,8 +5375,6 @@ argument_list|,
 name|E1000_PTC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5693,8 +5382,6 @@ argument_list|,
 name|E1000_PTC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5702,8 +5389,6 @@ argument_list|,
 name|E1000_PTC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5711,8 +5396,6 @@ argument_list|,
 name|E1000_PTC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5720,8 +5403,6 @@ argument_list|,
 name|E1000_PTC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5729,8 +5410,6 @@ argument_list|,
 name|E1000_PTC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5738,8 +5417,6 @@ argument_list|,
 name|E1000_ALGNERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5747,8 +5424,6 @@ argument_list|,
 name|E1000_RXERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5756,8 +5431,6 @@ argument_list|,
 name|E1000_TNCRS
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5765,8 +5438,6 @@ argument_list|,
 name|E1000_CEXTERR
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5774,8 +5445,6 @@ argument_list|,
 name|E1000_TSCTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5783,8 +5452,6 @@ argument_list|,
 name|E1000_TSCTFC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5792,8 +5459,6 @@ argument_list|,
 name|E1000_MGTPRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5801,8 +5466,6 @@ argument_list|,
 name|E1000_MGTPDC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5810,8 +5473,6 @@ argument_list|,
 name|E1000_MGTPTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5819,8 +5480,6 @@ argument_list|,
 name|E1000_IAC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5828,8 +5487,6 @@ argument_list|,
 name|E1000_ICRXOC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5837,8 +5494,6 @@ argument_list|,
 name|E1000_ICRXPTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5846,8 +5501,6 @@ argument_list|,
 name|E1000_ICRXATC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5855,8 +5508,6 @@ argument_list|,
 name|E1000_ICTXPTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5864,8 +5515,6 @@ argument_list|,
 name|E1000_ICTXATC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5873,8 +5522,6 @@ argument_list|,
 name|E1000_ICTXQEC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5882,8 +5529,6 @@ argument_list|,
 name|E1000_ICTXQMTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5891,8 +5536,6 @@ argument_list|,
 name|E1000_ICRXDMTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5900,8 +5543,6 @@ argument_list|,
 name|E1000_CBTMPC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5909,8 +5550,6 @@ argument_list|,
 name|E1000_HTDPMC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5918,8 +5557,6 @@ argument_list|,
 name|E1000_CBRMPC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5927,8 +5564,6 @@ argument_list|,
 name|E1000_RPTHC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5936,8 +5571,6 @@ argument_list|,
 name|E1000_HGPTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5945,8 +5578,6 @@ argument_list|,
 name|E1000_HTCBDPC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5954,8 +5585,6 @@ argument_list|,
 name|E1000_HGORCL
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5963,8 +5592,6 @@ argument_list|,
 name|E1000_HGORCH
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5972,8 +5599,6 @@ argument_list|,
 name|E1000_HGOTCL
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5981,8 +5606,6 @@ argument_list|,
 name|E1000_HGOTCH
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -6001,8 +5624,6 @@ name|media_type
 operator|==
 name|e1000_media_type_internal_serdes
 condition|)
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw

@@ -2090,7 +2090,7 @@ name|AU_IPv6
 condition|)
 return|return
 operator|(
-name|ERANGE
+name|E2BIG
 operator|)
 return|;
 name|bzero

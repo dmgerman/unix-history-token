@@ -664,6 +664,8 @@ operator|&&
 name|i
 operator|<
 name|NB_NAMELEN
+operator|-
+literal|1
 condition|;
 name|i
 operator|++

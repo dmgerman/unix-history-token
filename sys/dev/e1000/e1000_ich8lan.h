@@ -127,13 +127,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_SHADOW_RAM_WORDS
-value|2048
-end_define
-
-begin_define
-define|#
-directive|define
 name|ICH_FLASH_SEG_SIZE_256
 value|256
 end_define

@@ -948,8 +948,12 @@ begin_define
 define|#
 directive|define
 name|AGP_I855_GCC1_GMS
-value|0x70
+value|0xf0
 end_define
+
+begin_comment
+comment|/* Top bit reserved pre-G33 */
+end_comment
 
 begin_define
 define|#
@@ -1180,9 +1184,51 @@ name|AGP_I965_MSAC_GMASIZE_512
 value|0x06
 end_define
 
+begin_define
+define|#
+directive|define
+name|AGP_I965_PGTBL_SIZE_1MB
+value|(3<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I965_PGTBL_SIZE_2MB
+value|(4<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_I965_PGTBL_SIZE_1_5MB
+value|(5<< 1)
+end_define
+
 begin_comment
 comment|/*  * G33 registers  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_MGGC_GGMS_MASK
+value|(3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_MGGC_GGMS_SIZE_1M
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G33_MGGC_GGMS_SIZE_2M
+value|(2<< 8)
+end_define
 
 begin_define
 define|#
@@ -1196,6 +1242,38 @@ define|#
 directive|define
 name|AGP_G33_GCC1_GMS_STOLEN_256M
 value|0x90
+end_define
+
+begin_comment
+comment|/*  * G4X registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_G4X_GCC1_GMS_STOLEN_96M
+value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4X_GCC1_GMS_STOLEN_160M
+value|0xb0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4X_GCC1_GMS_STOLEN_224M
+value|0xc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_G4X_GCC1_GMS_STOLEN_352M
+value|0xd0
 end_define
 
 begin_comment

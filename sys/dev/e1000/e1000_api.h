@@ -232,18 +232,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|e1000_remove_device
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|s32
 name|e1000_get_bus_info
 parameter_list|(
@@ -669,6 +657,18 @@ end_function_decl
 begin_function_decl
 name|s32
 name|e1000_acquire_phy
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_cfg_on_link_up
 parameter_list|(
 name|struct
 name|e1000_hw

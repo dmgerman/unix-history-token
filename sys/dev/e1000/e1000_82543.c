@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/* e1000_82543  * e1000_82544  */
+comment|/*  * 82543GC Gigabit Ethernet Controller (Fiber)  * 82543GC Gigabit Ethernet Controller (Copper)  * 82544EI Gigabit Ethernet Controller (Copper)  * 82544EI Gigabit Ethernet Controller (Fiber)  * 82544GC Gigabit Ethernet Controller (Copper)  * 82544GC Gigabit Ethernet Controller (LOM)  */
 end_comment
 
 begin_include
@@ -420,25 +420,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct
-struct|struct
-name|e1000_dev_spec_82543
-block|{
-name|u32
-name|tbi_compatibility
-decl_stmt|;
-name|bool
-name|dma_fairness
-decl_stmt|;
-name|bool
-name|init_phy_disabled
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
-comment|/**  *  e1000_init_phy_params_82543 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_82543 - Init PHY func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -774,7 +757,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_82543 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_82543 - Init NVM func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -881,7 +864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_82543 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_82543 - Init MAC func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -904,9 +887,6 @@ operator|&
 name|hw
 operator|->
 name|mac
-decl_stmt|;
-name|s32
-name|ret_val
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -970,6 +950,15 @@ operator|.
 name|get_bus_info
 operator|=
 name|e1000_get_bus_info_pci_generic
+expr_stmt|;
+comment|/* function id */
+name|mac
+operator|->
+name|ops
+operator|.
+name|set_lan_id
+operator|=
+name|e1000_set_lan_id_multi_port_pci
 expr_stmt|;
 comment|/* reset */
 name|mac
@@ -1114,15 +1103,6 @@ name|led_off
 operator|=
 name|e1000_led_off_82543
 expr_stmt|;
-comment|/* remove device */
-name|mac
-operator|->
-name|ops
-operator|.
-name|remove_device
-operator|=
-name|e1000_remove_device_generic
-expr_stmt|;
 comment|/* clear hardware counters */
 name|mac
 operator|->
@@ -1132,35 +1112,6 @@ name|clear_hw_cntrs
 operator|=
 name|e1000_clear_hw_cntrs_82543
 expr_stmt|;
-name|hw
-operator|->
-name|dev_spec_size
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|e1000_dev_spec_82543
-argument_list|)
-expr_stmt|;
-comment|/* Device-specific structure allocation */
-name|ret_val
-operator|=
-name|e1000_alloc_zeroed_dev_spec_struct
-argument_list|(
-name|hw
-argument_list|,
-name|hw
-operator|->
-name|dev_spec_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-goto|goto
-name|out
-goto|;
 comment|/* Set tbi compatibility */
 if|if
 condition|(
@@ -1191,16 +1142,14 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_82543 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_82543 - Init func ptrs.  *  @hw: pointer to the HW structure  *  *  Called to initialize all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -1270,6 +1219,13 @@ name|struct
 name|e1000_dev_spec_82543
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82543
 decl_stmt|;
 name|bool
 name|state
@@ -1295,32 +1251,6 @@ block|{
 name|DEBUGOUT
 argument_list|(
 literal|"TBI compatibility workaround for 82543 only.\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82543
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1370,6 +1300,13 @@ name|struct
 name|e1000_dev_spec_82543
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82543
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -1390,32 +1327,6 @@ block|{
 name|DEBUGOUT
 argument_list|(
 literal|"TBI compatibility workaround for 82543 only.\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82543
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1464,6 +1375,13 @@ name|struct
 name|e1000_dev_spec_82543
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82543
 decl_stmt|;
 name|bool
 name|state
@@ -1489,32 +1407,6 @@ block|{
 name|DEBUGOUT
 argument_list|(
 literal|"TBI compatibility workaround for 82543 only.\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82543
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1565,22 +1457,18 @@ name|struct
 name|e1000_dev_spec_82543
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82543
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_set_tbi_sbp_82543"
 argument_list|)
-expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82543
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
 expr_stmt|;
 if|if
 condition|(
@@ -1628,6 +1516,13 @@ name|struct
 name|e1000_dev_spec_82543
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82543
 decl_stmt|;
 name|bool
 name|ret_val
@@ -1648,36 +1543,6 @@ operator|!=
 name|e1000_82543
 condition|)
 block|{
-name|ret_val
-operator|=
-name|FALSE
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82543
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
-argument_list|)
-expr_stmt|;
 name|ret_val
 operator|=
 name|FALSE
@@ -3022,7 +2887,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_hw_reset_82543 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Sets the PHY_RESET_DIR bit in the extended device control register  *  to put the PHY into a reset and waits for completion.  Once the reset  *  has been accomplished, clear the PHY_RESET_DIR bit to take the PHY out  *  of reset.  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_phy_hw_reset_82543 - PHY hardware reset  *  @hw: pointer to the HW structure  *  *  Sets the PHY_RESET_DIR bit in the extended device control register  *  to put the PHY into a reset and waits for completion.  Once the reset  *  has been accomplished, clear the PHY_RESET_DIR bit to take the PHY out  *  of reset.  **/
 end_comment
 
 begin_function
@@ -3145,7 +3010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_82543 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_82543 - Reset hardware  *  @hw: pointer to the HW structure  *  *  This resets the hardware into a known state.  **/
 end_comment
 
 begin_function
@@ -3347,6 +3212,13 @@ name|struct
 name|e1000_dev_spec_82543
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_82543
 decl_stmt|;
 name|u32
 name|ctrl
@@ -3362,37 +3234,6 @@ argument_list|(
 literal|"e1000_init_hw_82543"
 argument_list|)
 expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_82543
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
-argument_list|)
-expr_stmt|;
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_CONFIG
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* Disabling VLAN filtering */
 name|E1000_WRITE_REG
 argument_list|(
@@ -3521,8 +3362,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -5123,7 +4962,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_on_82543 - Turn on SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED on.  This is a function pointer entry point  *  called by the api module.  **/
+comment|/**  *  e1000_led_on_82543 - Turn on SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED on.  **/
 end_comment
 
 begin_function
@@ -5210,7 +5049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_led_off_82543 - Turn off SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED off.  This is a function pointer entry point  *  called by the api module.  **/
+comment|/**  *  e1000_led_off_82543 - Turn off SW controllable LED  *  @hw: pointer to the HW structure  *  *  Turns the SW defined LED off.  **/
 end_comment
 
 begin_function
@@ -5310,10 +5149,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-specifier|volatile
-name|u32
-name|temp
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_clear_hw_cntrs_82543"
@@ -5324,8 +5159,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5333,8 +5166,6 @@ argument_list|,
 name|E1000_PRC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5342,8 +5173,6 @@ argument_list|,
 name|E1000_PRC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5351,8 +5180,6 @@ argument_list|,
 name|E1000_PRC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5360,8 +5187,6 @@ argument_list|,
 name|E1000_PRC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5369,8 +5194,6 @@ argument_list|,
 name|E1000_PRC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5378,8 +5201,6 @@ argument_list|,
 name|E1000_PRC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5387,8 +5208,6 @@ argument_list|,
 name|E1000_PTC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5396,8 +5215,6 @@ argument_list|,
 name|E1000_PTC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5405,8 +5222,6 @@ argument_list|,
 name|E1000_PTC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5414,8 +5229,6 @@ argument_list|,
 name|E1000_PTC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5423,8 +5236,6 @@ argument_list|,
 name|E1000_PTC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5432,8 +5243,6 @@ argument_list|,
 name|E1000_PTC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5441,8 +5250,6 @@ argument_list|,
 name|E1000_ALGNERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5450,8 +5257,6 @@ argument_list|,
 name|E1000_RXERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5459,8 +5264,6 @@ argument_list|,
 name|E1000_TNCRS
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5468,8 +5271,6 @@ argument_list|,
 name|E1000_CEXTERR
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5477,8 +5278,6 @@ argument_list|,
 name|E1000_TSCTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw

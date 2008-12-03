@@ -166,12 +166,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp_lro.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/udp.h>
 end_include
 
@@ -271,6 +265,12 @@ directive|include
 file|"ixgbe_api.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tcp_lro.h"
+end_include
+
 begin_comment
 comment|/* Tunables */
 end_comment
@@ -357,7 +357,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_INTR
+name|MAX_LOOP
 value|10
 end_define
 
@@ -576,8 +576,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_MSIX_BAR
+name|MSIX_82598_BAR
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSIX_82599_BAR
+value|4
 end_define
 
 begin_define
@@ -597,8 +604,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_RX_HDR_SIZE
-value|((u32) 256)
+name|IXGBE_RX_HDR
+value|128
 end_define
 
 begin_define
@@ -674,28 +681,60 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Interrupt Moderation parameters   * 	for now we hardcode, later  *	it would be nice to do dynamic  */
+comment|/*  * Interrupt Moderation parameters   */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAX_IRQ_SEC
-value|8000
+name|IXGBE_LOW_LATENCY
+value|128
 end_define
 
 begin_define
 define|#
 directive|define
-name|DEFAULT_ITR
-value|1000000000/(MAX_IRQ_SEC * 256)
+name|IXGBE_AVE_LATENCY
+value|400
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINK_ITR
-value|1000000000/(1950 * 256)
+name|IXGBE_BULK_LATENCY
+value|1200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_LINK_ITR
+value|2000
+end_define
+
+begin_comment
+comment|/* Header split args for get_bug */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CLEAN_HDR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CLEAN_PKT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CLEAN_ALL
+value|3
 end_define
 
 begin_comment
@@ -710,7 +749,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * ******************************************************************************  * vendor_info_array  *   * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *  *****************************************************************************  */
+comment|/*  *****************************************************************************  * vendor_info_array  *   * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *   *****************************************************************************  */
 end_comment
 
 begin_typedef
@@ -768,15 +807,13 @@ name|mbuf
 modifier|*
 name|m_head
 decl_stmt|;
-name|boolean_t
-name|bigbuf
+name|struct
+name|mbuf
+modifier|*
+name|m_pack
 decl_stmt|;
-comment|/* one small and one large map */
 name|bus_dmamap_t
 name|map
-index|[
-literal|2
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -887,6 +924,12 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
+name|char
+name|mtx_name
+index|[
+literal|16
+index|]
+decl_stmt|;
 comment|/* Soft Stats */
 name|u32
 name|no_tx_desc_avail
@@ -898,7 +941,7 @@ name|u64
 name|tx_irq
 decl_stmt|;
 name|u64
-name|tx_packets
+name|total_packets
 decl_stmt|;
 block|}
 struct|;
@@ -970,15 +1013,9 @@ name|rx_buffers
 decl_stmt|;
 name|bus_dma_tag_t
 name|rxtag
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|bus_dmamap_t
 name|spare_map
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|struct
 name|mbuf
@@ -990,15 +1027,34 @@ name|mbuf
 modifier|*
 name|lmp
 decl_stmt|;
+name|char
+name|mtx_name
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|u32
+name|bytes
+decl_stmt|;
+comment|/* Used for AIM calc */
+name|u32
+name|eitr_setting
+decl_stmt|;
+name|bool
+name|enable_lro
+decl_stmt|;
 comment|/* Soft stats */
 name|u64
 name|rx_irq
 decl_stmt|;
 name|u64
-name|packet_count
+name|rx_split_packets
 decl_stmt|;
 name|u64
-name|byte_count
+name|rx_packets
+decl_stmt|;
+name|u64
+name|rx_bytes
 decl_stmt|;
 block|}
 struct|;
@@ -1021,7 +1077,6 @@ name|struct
 name|ixgbe_hw
 name|hw
 decl_stmt|;
-comment|/* FreeBSD operating-system-specific structures */
 name|struct
 name|ixgbe_osdep
 name|osdep
@@ -1063,9 +1118,6 @@ index|[
 name|IXGBE_MSGS
 index|]
 decl_stmt|;
-name|u32
-name|eims_mask
-decl_stmt|;
 name|struct
 name|ifmedia
 name|media
@@ -1084,14 +1136,12 @@ name|struct
 name|mtx
 name|core_mtx
 decl_stmt|;
-comment|/* Legacy Fast Intr handling */
-name|struct
-name|task
-name|link_task
-decl_stmt|;
 comment|/* Info about the board itself */
 name|u32
 name|part_num
+decl_stmt|;
+name|u32
+name|optics
 decl_stmt|;
 name|bool
 name|link_active
@@ -1101,6 +1151,9 @@ name|max_frame_size
 decl_stmt|;
 name|u32
 name|link_speed
+decl_stmt|;
+name|u32
+name|linkvec
 decl_stmt|;
 name|u32
 name|tx_int_delay
@@ -1114,9 +1167,24 @@ decl_stmt|;
 name|u32
 name|rx_abs_int_delay
 decl_stmt|;
-comment|/* Indicates the cluster size to use */
+ifdef|#
+directive|ifdef
+name|IXGBE_HW_VLAN_SUPPORT
+name|eventhandler_tag
+name|vlan_attach
+decl_stmt|;
+name|eventhandler_tag
+name|vlan_detach
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* Mbuf cluster size */
+name|u32
+name|rx_mbuf_sz
+decl_stmt|;
+comment|/* Check for missing optics */
 name|bool
-name|bigbufs
+name|sfp_probe
 decl_stmt|;
 comment|/* 	 * Transmit rings: 	 *	Allocated at run time, an array of rings. 	 */
 name|struct
@@ -1143,13 +1211,10 @@ name|int
 name|num_rx_queues
 decl_stmt|;
 name|u32
+name|rx_mask
+decl_stmt|;
+name|u32
 name|rx_process_limit
-decl_stmt|;
-name|eventhandler_tag
-name|vlan_attach
-decl_stmt|;
-name|eventhandler_tag
-name|vlan_detach
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
@@ -1158,11 +1223,15 @@ name|dropped_pkts
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_alloc_failed
+name|mbuf_defrag_failed
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_cluster_failed
+name|mbuf_header_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_packet_failed
 decl_stmt|;
 name|unsigned
 name|long
@@ -1179,10 +1248,6 @@ decl_stmt|;
 name|unsigned
 name|long
 name|tso_tx
-decl_stmt|;
-name|unsigned
-name|long
-name|linkvec
 decl_stmt|;
 name|unsigned
 name|long

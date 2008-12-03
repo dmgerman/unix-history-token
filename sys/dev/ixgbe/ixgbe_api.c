@@ -33,7 +33,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  *  ixgbe_init_shared_code - Initialize the shared code  *  @hw: pointer to hardware structure  *  *  This will assign function pointers and assign the MAC type and PHY code.  *  Does not touch the hardware. This function must be called prior to any  *  other function in the shared code. The ixgbe_hw structure should be  *  memset to 0 prior to calling this function.  The following fields in  *  hw structure should be filled in prior to calling this function:  *  hw_addr, back, device_id, vendor_id, subsystem_device_id,  *   subsystem_vendor_id, and revision_id  **/
+comment|/**  *  ixgbe_init_shared_code - Initialize the shared code  *  @hw: pointer to hardware structure  *  *  This will assign function pointers and assign the MAC type and PHY code.  *  Does not touch the hardware. This function must be called prior to any  *  other function in the shared code. The ixgbe_hw structure should be  *  memset to 0 prior to calling this function.  The following fields in  *  hw structure should be filled in prior to calling this function:  *  hw_addr, back, device_id, vendor_id, subsystem_device_id,  *  subsystem_vendor_id, and revision_id  **/
 end_comment
 
 begin_function
@@ -129,6 +129,9 @@ name|device_id
 condition|)
 block|{
 case|case
+name|IXGBE_DEV_ID_82598
+case|:
+case|case
 name|IXGBE_DEV_ID_82598AF_SINGLE_PORT
 case|:
 case|case
@@ -138,16 +141,22 @@ case|case
 name|IXGBE_DEV_ID_82598AT
 case|:
 case|case
-name|IXGBE_DEV_ID_82598AT_DUAL_PORT
-case|:
-case|case
 name|IXGBE_DEV_ID_82598EB_CX4
 case|:
 case|case
 name|IXGBE_DEV_ID_82598_CX4_DUAL_PORT
 case|:
 case|case
+name|IXGBE_DEV_ID_82598_DA_DUAL_PORT
+case|:
+case|case
+name|IXGBE_DEV_ID_82598_SR_DUAL_PORT_EM
+case|:
+case|case
 name|IXGBE_DEV_ID_82598EB_XF_LR
+case|:
+case|case
+name|IXGBE_DEV_ID_82598EB_SFP_LOM
 case|:
 name|hw
 operator|->
@@ -669,12 +678,10 @@ argument_list|)
 operator|!=
 name|IXGBE_SUCCESS
 condition|)
-block|{
 name|status
 operator|=
 name|IXGBE_ERR_PHY
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2240,7 +2247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_init_uta_tables - Initializes Unicast Table Arrays.  *  @hw: pointer to hardware structure  *  * Initializes the Unicast Table Arrays to zero on device load.  This  * is part of the Rx init addr execution path.  **/
+comment|/**  *  ixgbe_init_uta_tables - Initializes Unicast Table Arrays.  *  @hw: pointer to hardware structure  *  *  Initializes the Unicast Table Arrays to zero on device load.  This  *  is part of the Rx init addr execution path.  **/
 end_comment
 
 begin_function
@@ -2271,6 +2278,91 @@ name|hw
 operator|)
 argument_list|,
 name|IXGBE_NOT_IMPLEMENTED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_read_i2c_eeprom - Reads 8 bit EEPROM word over I2C interface  *  @hw: pointer to hardware structure  *  @byte_offset: EEPROM byte offset to read  *  @eeprom_data: value read  *  *  Performs byte read operation to SFP module's EEPROM over I2C interface.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_read_i2c_eeprom
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+modifier|*
+name|eeprom_data
+parameter_list|)
+block|{
+return|return
+name|ixgbe_call_func
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|read_i2c_eeprom
+argument_list|,
+operator|(
+name|hw
+operator|,
+name|byte_offset
+operator|,
+name|eeprom_data
+operator|)
+argument_list|,
+name|IXGBE_NOT_IMPLEMENTED
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_get_supported_physical_layer - Returns physical layer type  *  @hw: pointer to hardware structure  *  *  Determines physical layer capabilities of the current configuration.  **/
+end_comment
+
+begin_function
+name|u32
+name|ixgbe_get_supported_physical_layer
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+return|return
+name|ixgbe_call_func
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|get_supported_physical_layer
+argument_list|,
+operator|(
+name|hw
+operator|)
+argument_list|,
+name|IXGBE_PHYSICAL_LAYER_UNKNOWN
 argument_list|)
 return|;
 block|}

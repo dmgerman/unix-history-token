@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/* e1000_80003es2lan  */
+comment|/*  * 80003ES2LAN Gigabit Ethernet Controller (Copper)  * 80003ES2LAN Gigabit Ethernet Controller (Serdes)  */
 end_comment
 
 begin_include
@@ -71,8 +71,34 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|s32
+name|e1000_acquire_mac_csr_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|e1000_release_phy_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|e1000_release_mac_csr_80003es2lan
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -330,6 +356,58 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|s32
+name|e1000_cfg_on_link_up_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|s32
+name|e1000_read_kmrn_reg_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u16
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|s32
+name|e1000_write_kmrn_reg_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u16
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|s32
 name|e1000_copper_link_setup_gg82563_80003es2lan
 parameter_list|(
 name|struct
@@ -441,7 +519,7 @@ value|(sizeof(e1000_gg82563_cable_length_table) / \                  sizeof(e100
 end_define
 
 begin_comment
-comment|/**  *  e1000_init_phy_params_80003es2lan - Init ESB2 PHY func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_phy_params_80003es2lan - Init ESB2 PHY func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -643,6 +721,14 @@ name|write_reg
 operator|=
 name|e1000_write_phy_reg_gg82563_80003es2lan
 expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|cfg_on_link_up
+operator|=
+name|e1000_cfg_on_link_up_80003es2lan
+expr_stmt|;
 comment|/* This can only be done after all function pointers are setup. */
 name|ret_val
 operator|=
@@ -679,7 +765,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_nvm_params_80003es2lan - Init ESB2 NVM func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_nvm_params_80003es2lan - Init ESB2 NVM func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -908,7 +994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_mac_params_80003es2lan - Init ESB2 MAC func ptrs.  *  @hw: pointer to the HW structure  *  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_mac_params_80003es2lan - Init ESB2 MAC func ptrs.  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
@@ -1227,15 +1313,6 @@ name|led_off
 operator|=
 name|e1000_led_off_generic
 expr_stmt|;
-comment|/* remove device */
-name|mac
-operator|->
-name|ops
-operator|.
-name|remove_device
-operator|=
-name|e1000_remove_device_generic
-expr_stmt|;
 comment|/* clear hardware counters */
 name|mac
 operator|->
@@ -1263,7 +1340,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_function_pointers_80003es2lan - Init ESB2 func ptrs.  *  @hw: pointer to the HW structure  *  *  The only function explicitly called by the api module to initialize  *  all function pointers and parameters.  **/
+comment|/**  *  e1000_init_function_pointers_80003es2lan - Init ESB2 func ptrs.  *  @hw: pointer to the HW structure  *  *  Called to initialize all function pointers and parameters.  **/
 end_comment
 
 begin_function
@@ -1311,11 +1388,16 @@ name|init_params
 operator|=
 name|e1000_init_phy_params_80003es2lan
 expr_stmt|;
+name|e1000_get_bus_info_pcie_generic
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_acquire_phy_80003es2lan - Acquire rights to access PHY  *  @hw: pointer to the HW structure  *  *  A wrapper to acquire access rights to the correct PHY.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_acquire_phy_80003es2lan - Acquire rights to access PHY  *  @hw: pointer to the HW structure  *  *  A wrapper to acquire access rights to the correct PHY.  **/
 end_comment
 
 begin_function
@@ -1349,10 +1431,6 @@ name|E1000_SWFW_PHY1_SM
 else|:
 name|E1000_SWFW_PHY0_SM
 expr_stmt|;
-name|mask
-operator||=
-name|E1000_SWFW_CSR_SM
-expr_stmt|;
 return|return
 name|e1000_acquire_swfw_sync_80003es2lan
 argument_list|(
@@ -1365,7 +1443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_release_phy_80003es2lan - Release rights to access PHY  *  @hw: pointer to the HW structure  *  *  A wrapper to release access rights to the correct PHY.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_release_phy_80003es2lan - Release rights to access PHY  *  @hw: pointer to the HW structure  *  *  A wrapper to release access rights to the correct PHY.  **/
 end_comment
 
 begin_function
@@ -1399,8 +1477,79 @@ name|E1000_SWFW_PHY1_SM
 else|:
 name|E1000_SWFW_PHY0_SM
 expr_stmt|;
+name|e1000_release_swfw_sync_80003es2lan
+argument_list|(
+name|hw
+argument_list|,
 name|mask
-operator||=
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_acquire_mac_csr_80003es2lan - Acquire rights to access Kumeran register  *  @hw: pointer to the HW structure  *  *  Acquire the semaphore to access the Kumeran interface.  *  **/
+end_comment
+
+begin_function
+specifier|static
+name|s32
+name|e1000_acquire_mac_csr_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|u16
+name|mask
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_acquire_mac_csr_80003es2lan"
+argument_list|)
+expr_stmt|;
+name|mask
+operator|=
+name|E1000_SWFW_CSR_SM
+expr_stmt|;
+return|return
+name|e1000_acquire_swfw_sync_80003es2lan
+argument_list|(
+name|hw
+argument_list|,
+name|mask
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_release_mac_csr_80003es2lan - Release rights to access Kumeran Register  *  @hw: pointer to the HW structure  *  *  Release the semaphore used to access the Kumeran interface  **/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|e1000_release_mac_csr_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|u16
+name|mask
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_release_mac_csr_80003es2lan"
+argument_list|)
+expr_stmt|;
+name|mask
+operator|=
 name|E1000_SWFW_CSR_SM
 expr_stmt|;
 name|e1000_release_swfw_sync_80003es2lan
@@ -1414,7 +1563,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_acquire_nvm_80003es2lan - Acquire rights to access NVM  *  @hw: pointer to the HW structure  *  *  Acquire the semaphore to access the EEPROM.  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_acquire_nvm_80003es2lan - Acquire rights to access NVM  *  @hw: pointer to the HW structure  *  *  Acquire the semaphore to access the EEPROM.  **/
 end_comment
 
 begin_function
@@ -1479,7 +1628,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_release_nvm_80003es2lan - Relinquish rights to access NVM  *  @hw: pointer to the HW structure  *  *  Release the semaphore used to access the EEPROM.  This is a  *  function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_release_nvm_80003es2lan - Relinquish rights to access NVM  *  @hw: pointer to the HW structure  *  *  Release the semaphore used to access the EEPROM.  **/
 end_comment
 
 begin_function
@@ -1558,7 +1707,7 @@ literal|0
 decl_stmt|,
 name|timeout
 init|=
-literal|200
+literal|50
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -1743,7 +1892,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_read_phy_reg_gg82563_80003es2lan - Read GG82563 PHY register  *  @hw: pointer to the HW structure  *  @offset: offset of the register to read  *  @data: pointer to the data returned from the operation  *  *  Read the GG82563 PHY register.  This is a function pointer entry  *  point called by the api module.  **/
+comment|/**  *  e1000_read_phy_reg_gg82563_80003es2lan - Read GG82563 PHY register  *  @hw: pointer to the HW structure  *  @offset: offset of the register to read  *  @data: pointer to the data returned from the operation  *  *  Read the GG82563 PHY register.  **/
 end_comment
 
 begin_function
@@ -1940,7 +2089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_phy_reg_gg82563_80003es2lan - Write GG82563 PHY register  *  @hw: pointer to the HW structure  *  @offset: offset of the register to read  *  @data: value to write to the register  *  *  Write to the GG82563 PHY register.  This is a function pointer entry  *  point called by the api module.  **/
+comment|/**  *  e1000_write_phy_reg_gg82563_80003es2lan - Write GG82563 PHY register  *  @hw: pointer to the HW structure  *  @offset: offset of the register to read  *  @data: value to write to the register  *  *  Write to the GG82563 PHY register.  **/
 end_comment
 
 begin_function
@@ -2136,7 +2285,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_write_nvm_80003es2lan - Write to ESB2 NVM  *  @hw: pointer to the HW structure  *  @offset: offset of the register to read  *  @words: number of words to write  *  @data: buffer of data to write to the NVM  *  *  Write "words" of data to the ESB2 NVM.  This is a function  *  pointer entry point called by the api module.  **/
+comment|/**  *  e1000_write_nvm_80003es2lan - Write to ESB2 NVM  *  @hw: pointer to the HW structure  *  @offset: offset of the register to read  *  @words: number of words to write  *  @data: buffer of data to write to the NVM  *  *  Write "words" of data to the ESB2 NVM.  **/
 end_comment
 
 begin_function
@@ -2707,6 +2856,15 @@ name|phy_data
 operator|&
 name|GG82563_DSPD_CABLE_LENGTH
 expr_stmt|;
+if|if
+condition|(
+name|index
+operator|<
+name|GG82563_CABLE_LENGTH_TABLE_SIZE
+operator|+
+literal|5
+condition|)
+block|{
 name|phy
 operator|->
 name|min_cable_length
@@ -2743,6 +2901,14 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ret_val
+operator|=
+name|E1000_ERR_PHY
+expr_stmt|;
+block|}
 name|out
 label|:
 return|return
@@ -2752,7 +2918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_link_up_info_80003es2lan - Report speed and duplex  *  @hw: pointer to the HW structure  *  @speed: pointer to speed buffer  *  @duplex: pointer to duplex buffer  *  *  Retrieve the current speed and duplex configuration.  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_get_link_up_info_80003es2lan - Report speed and duplex  *  @hw: pointer to the HW structure  *  @speed: pointer to speed buffer  *  @duplex: pointer to duplex buffer  *  *  Retrieve the current speed and duplex configuration.  **/
 end_comment
 
 begin_function
@@ -2804,36 +2970,15 @@ argument_list|,
 name|duplex
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
-operator|*
-name|speed
-operator|==
-name|SPEED_1000
-condition|)
-name|ret_val
-operator|=
-name|e1000_cfg_kmrn_1000_80003es2lan
+name|hw
+operator|->
+name|phy
+operator|.
+name|ops
+operator|.
+name|cfg_on_link_up
 argument_list|(
 name|hw
-argument_list|)
-expr_stmt|;
-else|else
-name|ret_val
-operator|=
-name|e1000_cfg_kmrn_10_100_80003es2lan
-argument_list|(
-name|hw
-argument_list|,
-operator|*
-name|duplex
 argument_list|)
 expr_stmt|;
 block|}
@@ -2851,8 +2996,6 @@ name|duplex
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -2860,7 +3003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_reset_hw_80003es2lan - Reset the ESB2 controller  *  @hw: pointer to the HW structure  *  *  Perform a global reset to the ESB2 controller.  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_reset_hw_80003es2lan - Reset the ESB2 controller  *  @hw: pointer to the HW structure  *  *  Perform a global reset to the ESB2 controller.  **/
 end_comment
 
 begin_function
@@ -2899,13 +3042,11 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"PCI-E Master disable polling has failed.\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|DEBUGOUT
 argument_list|(
 literal|"Masking off all interrupts\n"
@@ -2957,6 +3098,13 @@ argument_list|,
 name|E1000_CTRL
 argument_list|)
 expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_acquire_phy_80003es2lan
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 name|DEBUGOUT
 argument_list|(
 literal|"Issuing a global reset to MAC\n"
@@ -2971,6 +3119,11 @@ argument_list|,
 name|ctrl
 operator||
 name|E1000_CTRL_RST
+argument_list|)
+expr_stmt|;
+name|e1000_release_phy_80003es2lan
+argument_list|(
+name|hw
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -3021,7 +3174,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_hw_80003es2lan - Initialize the ESB2 controller  *  @hw: pointer to the HW structure  *  *  Initialize the hw bits, LED, VFTA, MTA, link and hw counters.  *  This is a function pointer entry point called by the api module.  **/
+comment|/**  *  e1000_init_hw_80003es2lan - Initialize the ESB2 controller  *  @hw: pointer to the HW structure  *  *  Initialize the hw bits, LED, VFTA, MTA, link and hw counters.  **/
 end_comment
 
 begin_function
@@ -3370,17 +3523,6 @@ argument_list|(
 literal|"e1000_initialize_hw_bits_80003es2lan"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|disable_hw_init_bits
-condition|)
-goto|goto
-name|out
-goto|;
 comment|/* Transmit Descriptor Control 0 */
 name|reg
 operator|=
@@ -3555,8 +3697,6 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return;
 block|}
 end_function
@@ -3592,15 +3732,8 @@ decl_stmt|;
 name|u32
 name|ctrl_ext
 decl_stmt|;
-name|u32
-name|i
-init|=
-literal|0
-decl_stmt|;
 name|u16
 name|data
-decl_stmt|,
-name|data2
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -3809,7 +3942,7 @@ block|}
 comment|/* Bypass Rx and Tx FIFO's */
 name|ret_val
 operator|=
-name|e1000_write_kmrn_reg_generic
+name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -3829,7 +3962,7 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_read_kmrn_reg_generic
+name|e1000_read_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -3852,7 +3985,7 @@ name|E1000_KMRNCTRLSTA_OPMODE_E_IDLE
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_kmrn_reg_generic
+name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -4019,8 +4152,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-do|do
-block|{
 name|ret_val
 operator|=
 name|hw
@@ -4046,50 +4177,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|ret_val
-operator|=
-name|hw
-operator|->
-name|phy
-operator|.
-name|ops
-operator|.
-name|read_reg
-argument_list|(
-name|hw
-argument_list|,
-name|GG82563_PHY_KMRN_MODE_CTRL
-argument_list|,
-operator|&
-name|data2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-goto|goto
-name|out
-goto|;
-name|i
-operator|++
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|(
-name|data
-operator|!=
-name|data2
-operator|)
-operator|&&
-operator|(
-name|i
-operator|<
-name|GG82563_MAX_KMRN_RETRY
-operator|)
-condition|)
-do|;
 name|data
 operator|&=
 operator|~
@@ -4245,7 +4332,7 @@ expr_stmt|;
 comment|/* 	 * Set the mac to wait the maximum time between each 	 * iteration and increase the max iterations when 	 * polling the phy; this fixes erroneous timeouts at 10Mbps. 	 */
 name|ret_val
 operator|=
-name|e1000_write_kmrn_reg_generic
+name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -4268,7 +4355,7 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_read_kmrn_reg_generic
+name|e1000_read_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -4296,7 +4383,7 @@ literal|0x3F
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_kmrn_reg_generic
+name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -4319,7 +4406,7 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|e1000_read_kmrn_reg_generic
+name|e1000_read_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -4342,7 +4429,7 @@ name|E1000_KMRNCTRLSTA_INB_CTRL_DIS_PADDING
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_kmrn_reg_generic
+name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -4379,6 +4466,100 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+name|out
+label|:
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_cfg_on_link_up_80003es2lan - es2 link configuration after link-up  *  @hw: pointer to the HW structure  *  @duplex: current duplex setting  *  *  Configure the KMRN interface by applying last minute quirks for  *  10/100 operation.  **/
+end_comment
+
+begin_function
+specifier|static
+name|s32
+name|e1000_cfg_on_link_up_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|u16
+name|speed
+decl_stmt|;
+name|u16
+name|duplex
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_configure_on_link_up"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|media_type
+operator|==
+name|e1000_media_type_copper
+condition|)
+block|{
+name|ret_val
+operator|=
+name|e1000_get_speed_and_duplex_copper_generic
+argument_list|(
+name|hw
+argument_list|,
+operator|&
+name|speed
+argument_list|,
+operator|&
+name|duplex
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+if|if
+condition|(
+name|speed
+operator|==
+name|SPEED_1000
+condition|)
+name|ret_val
+operator|=
+name|e1000_cfg_kmrn_1000_80003es2lan
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+else|else
+name|ret_val
+operator|=
+name|e1000_cfg_kmrn_10_100_80003es2lan
+argument_list|(
+name|hw
+argument_list|,
+name|duplex
+argument_list|)
+expr_stmt|;
+block|}
 name|out
 label|:
 return|return
@@ -4434,7 +4615,7 @@ name|E1000_KMRNCTRLSTA_HD_CTRL_10_100_DEFAULT
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_kmrn_reg_generic
+name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -4634,7 +4815,7 @@ name|E1000_KMRNCTRLSTA_HD_CTRL_1000_DEFAULT
 expr_stmt|;
 name|ret_val
 operator|=
-name|e1000_write_kmrn_reg_generic
+name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
@@ -4780,6 +4961,200 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *  e1000_read_kmrn_reg_80003es2lan - Read kumeran register  *  @hw: pointer to the HW structure  *  @offset: register offset to be read  *  @data: pointer to the read data  *  *  Acquire semaphore, then read the PHY register at offset  *  using the kumeran interface.  The information retrieved is stored in data.  *  Release the semaphore before exiting.  **/
+end_comment
+
+begin_function
+name|s32
+name|e1000_read_kmrn_reg_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u16
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|u32
+name|kmrnctrlsta
+decl_stmt|;
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_read_kmrn_reg_80003es2lan"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_acquire_mac_csr_80003es2lan
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+name|kmrnctrlsta
+operator|=
+operator|(
+operator|(
+name|offset
+operator|<<
+name|E1000_KMRNCTRLSTA_OFFSET_SHIFT
+operator|)
+operator|&
+name|E1000_KMRNCTRLSTA_OFFSET
+operator|)
+operator||
+name|E1000_KMRNCTRLSTA_REN
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA
+argument_list|,
+name|kmrnctrlsta
+argument_list|)
+expr_stmt|;
+name|usec_delay
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|kmrnctrlsta
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA
+argument_list|)
+expr_stmt|;
+operator|*
+name|data
+operator|=
+operator|(
+name|u16
+operator|)
+name|kmrnctrlsta
+expr_stmt|;
+name|e1000_release_mac_csr_80003es2lan
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  e1000_write_kmrn_reg_80003es2lan - Write kumeran register  *  @hw: pointer to the HW structure  *  @offset: register offset to write to  *  @data: data to write at register offset  *  *  Acquire semaphore, then write the data to PHY register  *  at the offset using the kumeran interface.  Release semaphore  *  before exiting.  **/
+end_comment
+
+begin_function
+name|s32
+name|e1000_write_kmrn_reg_80003es2lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u16
+name|data
+parameter_list|)
+block|{
+name|u32
+name|kmrnctrlsta
+decl_stmt|;
+name|s32
+name|ret_val
+init|=
+name|E1000_SUCCESS
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"e1000_write_kmrn_reg_80003es2lan"
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_acquire_mac_csr_80003es2lan
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+goto|goto
+name|out
+goto|;
+name|kmrnctrlsta
+operator|=
+operator|(
+operator|(
+name|offset
+operator|<<
+name|E1000_KMRNCTRLSTA_OFFSET_SHIFT
+operator|)
+operator|&
+name|E1000_KMRNCTRLSTA_OFFSET
+operator|)
+operator||
+name|data
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA
+argument_list|,
+name|kmrnctrlsta
+argument_list|)
+expr_stmt|;
+name|usec_delay
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|e1000_release_mac_csr_80003es2lan
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  *  e1000_read_mac_addr_80003es2lan - Read device MAC address  *  @hw: pointer to the HW structure  **/
 end_comment
 
@@ -4891,10 +5266,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-specifier|volatile
-name|u32
-name|temp
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_clear_hw_cntrs_80003es2lan"
@@ -4905,8 +5276,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4914,8 +5283,6 @@ argument_list|,
 name|E1000_PRC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4923,8 +5290,6 @@ argument_list|,
 name|E1000_PRC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4932,8 +5297,6 @@ argument_list|,
 name|E1000_PRC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4941,8 +5304,6 @@ argument_list|,
 name|E1000_PRC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4950,8 +5311,6 @@ argument_list|,
 name|E1000_PRC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4959,8 +5318,6 @@ argument_list|,
 name|E1000_PRC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4968,8 +5325,6 @@ argument_list|,
 name|E1000_PTC64
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4977,8 +5332,6 @@ argument_list|,
 name|E1000_PTC127
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4986,8 +5339,6 @@ argument_list|,
 name|E1000_PTC255
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -4995,8 +5346,6 @@ argument_list|,
 name|E1000_PTC511
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5004,8 +5353,6 @@ argument_list|,
 name|E1000_PTC1023
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5013,8 +5360,6 @@ argument_list|,
 name|E1000_PTC1522
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5022,8 +5367,6 @@ argument_list|,
 name|E1000_ALGNERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5031,8 +5374,6 @@ argument_list|,
 name|E1000_RXERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5040,8 +5381,6 @@ argument_list|,
 name|E1000_TNCRS
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5049,8 +5388,6 @@ argument_list|,
 name|E1000_CEXTERR
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5058,8 +5395,6 @@ argument_list|,
 name|E1000_TSCTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5067,8 +5402,6 @@ argument_list|,
 name|E1000_TSCTFC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5076,8 +5409,6 @@ argument_list|,
 name|E1000_MGTPRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5085,8 +5416,6 @@ argument_list|,
 name|E1000_MGTPDC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5094,8 +5423,6 @@ argument_list|,
 name|E1000_MGTPTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5103,8 +5430,6 @@ argument_list|,
 name|E1000_IAC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5112,8 +5437,6 @@ argument_list|,
 name|E1000_ICRXOC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5121,8 +5444,6 @@ argument_list|,
 name|E1000_ICRXPTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5130,8 +5451,6 @@ argument_list|,
 name|E1000_ICRXATC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5139,8 +5458,6 @@ argument_list|,
 name|E1000_ICTXPTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5148,8 +5465,6 @@ argument_list|,
 name|E1000_ICTXATC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5157,8 +5472,6 @@ argument_list|,
 name|E1000_ICTXQEC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -5166,8 +5479,6 @@ argument_list|,
 name|E1000_ICTXQMTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw

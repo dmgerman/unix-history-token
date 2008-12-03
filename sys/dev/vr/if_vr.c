@@ -2375,7 +2375,7 @@ name|VR_RXCFG
 argument_list|)
 expr_stmt|;
 name|rxfilt
-operator|=
+operator|&=
 operator|~
 operator|(
 name|VR_RXCFG_RX_PROMISC
