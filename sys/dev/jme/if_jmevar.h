@@ -547,6 +547,14 @@ name|JME_FLAG_NOJUMBO
 value|0x0080
 define|#
 directive|define
+name|JME_FLAG_TXCLK
+value|0x0100
+define|#
+directive|define
+name|JME_FLAG_DMA32BIT
+value|0x0200
+define|#
+directive|define
 name|JME_FLAG_DETACH
 value|0x4000
 define|#
