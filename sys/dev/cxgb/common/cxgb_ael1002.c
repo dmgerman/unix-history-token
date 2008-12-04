@@ -900,6 +900,46 @@ argument_list|,
 name|wait
 argument_list|)
 expr_stmt|;
+comment|/* Phy loopback work around for ael1006 */
+comment|/* Soft reset phy by toggling loopback  */
+name|msleep
+argument_list|(
+literal|125
+argument_list|)
+expr_stmt|;
+comment|/* Put phy into local loopback */
+name|t3_mdio_change_bits
+argument_list|(
+name|phy
+argument_list|,
+name|MDIO_DEV_PMA_PMD
+argument_list|,
+name|MII_BMCR
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|msleep
+argument_list|(
+literal|125
+argument_list|)
+expr_stmt|;
+comment|/* Take phy out of local loopback */
+name|t3_mdio_change_bits
+argument_list|(
+name|phy
+argument_list|,
+name|MDIO_DEV_PMA_PMD
+argument_list|,
+name|MII_BMCR
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
