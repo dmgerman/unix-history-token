@@ -426,6 +426,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"ale"
+argument_list|,
+literal|"Atheros AR8121/AR8113/AR8114 PCIe Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"an"
 argument_list|,
 literal|"Aironet 4500/4800 802.11 wireless adapter"

@@ -649,7 +649,7 @@ argument_list|,
 argument|myprintf((
 literal|"acccache "
 literal|"purge fid %s uid %d mode 0x%x\n"
-argument|, 				    coda_f2s(&cp->c_fid), cp->c_cached_uid, 				    cp->c_cached_mode));
+argument|, 				    coda_f2s(&cp->c_fid), cp->c_cached_uid, 				    (int)cp->c_cached_mode));
 argument_list|)
 empty_stmt|;
 name|cp
@@ -758,7 +758,7 @@ argument_list|,
 argument|myprintf((
 literal|"acccache purgeuser fid %s uid %d mode "
 literal|"0x%x\n"
-argument|, coda_f2s(&cp->c_fid), 				    cp->c_cached_uid, cp->c_cached_mode));
+argument|, coda_f2s(&cp->c_fid), 				    cp->c_cached_uid, (int)cp->c_cached_mode));
 argument_list|)
 empty_stmt|;
 name|cp

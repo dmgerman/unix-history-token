@@ -168,6 +168,18 @@ directive|include
 file|<netinet/tcp_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_hostcache.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -190,112 +202,6 @@ include|#
 directive|include
 file|<vm/uma.h>
 end_include
-
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|hc_qhead
-argument_list|,
-name|hc_metrics
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_struct
-struct|struct
-name|hc_head
-block|{
-name|struct
-name|hc_qhead
-name|hch_bucket
-decl_stmt|;
-name|u_int
-name|hch_length
-decl_stmt|;
-name|struct
-name|mtx
-name|hch_mtx
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|hc_metrics
-block|{
-comment|/* housekeeping */
-name|TAILQ_ENTRY
-argument_list|(
-argument|hc_metrics
-argument_list|)
-name|rmx_q
-expr_stmt|;
-name|struct
-name|hc_head
-modifier|*
-name|rmx_head
-decl_stmt|;
-comment|/* head of bucket tail queue */
-name|struct
-name|in_addr
-name|ip4
-decl_stmt|;
-comment|/* IP address */
-name|struct
-name|in6_addr
-name|ip6
-decl_stmt|;
-comment|/* IP6 address */
-comment|/* endpoint specific values for TCP */
-name|u_long
-name|rmx_mtu
-decl_stmt|;
-comment|/* MTU for this path */
-name|u_long
-name|rmx_ssthresh
-decl_stmt|;
-comment|/* outbound gateway buffer limit */
-name|u_long
-name|rmx_rtt
-decl_stmt|;
-comment|/* estimated round trip time */
-name|u_long
-name|rmx_rttvar
-decl_stmt|;
-comment|/* estimated rtt variance */
-name|u_long
-name|rmx_bandwidth
-decl_stmt|;
-comment|/* estimated bandwidth */
-name|u_long
-name|rmx_cwnd
-decl_stmt|;
-comment|/* congestion window */
-name|u_long
-name|rmx_sendpipe
-decl_stmt|;
-comment|/* outbound delay-bandwidth product */
-name|u_long
-name|rmx_recvpipe
-decl_stmt|;
-comment|/* inbound delay-bandwidth product */
-comment|/* TCP hostcache internal data */
-name|int
-name|rmx_expire
-decl_stmt|;
-comment|/* lifetime for object */
-name|u_long
-name|rmx_hits
-decl_stmt|;
-comment|/* number of hits */
-name|u_long
-name|rmx_updates
-decl_stmt|;
-comment|/* number of updates */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* Arbitrary values */
@@ -337,45 +243,11 @@ begin_comment
 comment|/* every 5 minutes */
 end_comment
 
-begin_struct
-struct|struct
-name|tcp_hostcache
-block|{
-name|struct
-name|hc_head
-modifier|*
-name|hashbase
-decl_stmt|;
-name|uma_zone_t
-name|zone
-decl_stmt|;
-name|u_int
-name|hashsize
-decl_stmt|;
-name|u_int
-name|hashmask
-decl_stmt|;
-name|u_int
-name|bucket_limit
-decl_stmt|;
-name|u_int
-name|cache_count
-decl_stmt|;
-name|u_int
-name|cache_limit
-decl_stmt|;
-name|int
-name|expire
-decl_stmt|;
-name|int
-name|prune
-decl_stmt|;
-name|int
-name|purgeall
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -392,6 +264,11 @@ name|callout
 name|tcp_hc_callout
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static

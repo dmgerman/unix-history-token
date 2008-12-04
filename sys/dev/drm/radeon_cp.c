@@ -3207,18 +3207,6 @@ operator|&
 name|RADEON_FAMILY_MASK
 operator|)
 operator|==
-name|CHIP_RS400
-operator|)
-operator|||
-operator|(
-operator|(
-name|dev_priv
-operator|->
-name|flags
-operator|&
-name|RADEON_FAMILY_MASK
-operator|)
-operator|==
 name|CHIP_RS690
 operator|)
 operator|||
@@ -3235,7 +3223,7 @@ name|CHIP_RS740
 operator|)
 condition|)
 block|{
-comment|/* rs400, rs690/rs740 */
+comment|/* rs600/rs690/rs740 */
 name|tmp
 operator|=
 name|RADEON_READ
@@ -3244,7 +3232,7 @@ name|RADEON_BUS_CNTL
 argument_list|)
 operator|&
 operator|~
-name|RS400_BUS_MASTER_DIS
+name|RS600_BUS_MASTER_DIS
 expr_stmt|;
 name|RADEON_WRITE
 argument_list|(
@@ -3257,8 +3245,6 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-operator|(
 operator|(
 operator|(
 name|dev_priv
@@ -3267,8 +3253,8 @@ name|flags
 operator|&
 name|RADEON_FAMILY_MASK
 operator|)
-operator|==
-name|CHIP_RV380
+operator|<=
+name|CHIP_RV350
 operator|)
 operator|||
 operator|(
@@ -3279,13 +3265,36 @@ name|flags
 operator|&
 name|RADEON_FAMILY_MASK
 operator|)
-operator|>=
-name|CHIP_R423
+operator|==
+name|CHIP_R420
 operator|)
+operator|||
+operator|(
+operator|(
+name|dev_priv
+operator|->
+name|flags
+operator|&
+name|RADEON_FAMILY_MASK
+operator|)
+operator|==
+name|CHIP_RS400
+operator|)
+operator|||
+operator|(
+operator|(
+name|dev_priv
+operator|->
+name|flags
+operator|&
+name|RADEON_FAMILY_MASK
+operator|)
+operator|==
+name|CHIP_RS480
 operator|)
 condition|)
 block|{
-comment|/* r1xx, r2xx, r300, r(v)350, r420/r481, rs480 */
+comment|/* r1xx, r2xx, r300, r(v)350, r420/r481, rs400/rs480 */
 name|tmp
 operator|=
 name|RADEON_READ

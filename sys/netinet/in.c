@@ -119,6 +119,12 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -241,14 +247,38 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|subnetsarelocal
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sameprefixcarponly
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inpcbinfo
+name|ripcbinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -274,15 +304,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|sameprefixcarponly
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -306,22 +327,6 @@ literal|"Refuse to create same prefixes on different interfaces"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|inpcbinfo
-name|ripcbinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|inpcbinfo
-name|udbinfo
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection).  If subnetsarelocal  * is true, this includes other subnets of the local net.  * Otherwise, it includes only the directly-connected (sub)nets.  */
@@ -477,11 +482,15 @@ operator|.
 name|s_addr
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -776,11 +785,13 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 name|x
 operator|*
 literal|8
 operator|+
 name|y
+operator|)
 return|;
 block|}
 end_function
@@ -931,8 +942,6 @@ name|struct
 name|in_ifaddr
 modifier|*
 name|ia
-init|=
-literal|0
 decl_stmt|,
 modifier|*
 name|iap
@@ -986,6 +995,10 @@ decl_stmt|;
 name|int
 name|iaIsFirst
 decl_stmt|;
+name|ia
+operator|=
+name|NULL
+expr_stmt|;
 name|iaIsFirst
 operator|=
 literal|0
@@ -1039,11 +1052,14 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
 name|ifp
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
 name|in_lifaddr_ioctl
@@ -1090,11 +1106,14 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
 name|ifp
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
 name|in_lifaddr_ioctl
@@ -1115,11 +1134,14 @@ name|SIOCGLIFADDR
 case|:
 if|if
 condition|(
-operator|!
 name|ifp
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
 name|in_lifaddr_ioctl
@@ -1140,6 +1162,8 @@ comment|/* 	 * Find address for this interface, if it exists. 	 * 	 * If an alia
 if|if
 condition|(
 name|ifp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|dst
@@ -1259,7 +1283,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1351,7 +1375,9 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 name|EDESTADDRREQ
+operator|)
 return|;
 block|}
 block|}
@@ -1363,7 +1389,7 @@ name|SIOCDIFADDR
 operator|&&
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1418,7 +1444,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1429,12 +1455,7 @@ if|if
 condition|(
 name|ia
 operator|==
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|ia
@@ -1461,11 +1482,6 @@ if|if
 condition|(
 name|ia
 operator|==
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
@@ -1671,12 +1687,7 @@ if|if
 condition|(
 name|ia
 operator|==
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1870,6 +1881,8 @@ condition|(
 name|ifp
 operator|->
 name|if_ioctl
+operator|!=
+name|NULL
 condition|)
 block|{
 name|IFF_LOCKGIANT
@@ -2468,13 +2481,13 @@ if|if
 condition|(
 name|ifp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|ifp
 operator|->
 name|if_ioctl
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2696,11 +2709,13 @@ decl_stmt|;
 comment|/* sanity checks */
 if|if
 condition|(
-operator|!
 name|data
+operator|==
+name|NULL
 operator|||
-operator|!
 name|ifp
+operator|==
+name|NULL
 condition|)
 block|{
 name|panic
@@ -2751,7 +2766,9 @@ operator|!=
 name|AF_INET
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2768,7 +2785,9 @@ name|sockaddr_in
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* XXX need improvement */
 if|if
@@ -2788,7 +2807,9 @@ operator|!=
 name|AF_INET
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2811,13 +2832,17 @@ name|sockaddr_in
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 break|break;
 default|default:
 comment|/*shouldn't happen*/
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 block|}
 if|if
@@ -2835,7 +2860,9 @@ operator|->
 name|prefixlen
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 switch|switch
 condition|(
@@ -2859,7 +2886,9 @@ operator|&
 name|IFLR_PREFIX
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* copy args to in_aliasreq, perform ioctl(SIOCAIFADDR_IN6). */
 name|bzero
@@ -2975,6 +3004,7 @@ name|prefixlen
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|in_control
 argument_list|(
 name|so
@@ -2991,6 +3021,7 @@ name|ifp
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 case|case
@@ -3104,7 +3135,9 @@ operator|.
 name|s_addr
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 else|else
@@ -3221,11 +3254,14 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
 name|ifa
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 name|ia
 operator|=
@@ -3334,7 +3370,9 @@ literal|0
 expr_stmt|;
 comment|/*XXX*/
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 else|else
@@ -3445,6 +3483,7 @@ name|sin_len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|in_control
 argument_list|(
 name|so
@@ -3461,12 +3500,15 @@ name|ifp
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 block|}
 block|}
 block|}
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 comment|/*just for safety*/
 block|}
@@ -3627,6 +3669,8 @@ condition|(
 name|ifp
 operator|->
 name|if_ioctl
+operator|!=
+name|NULL
 condition|)
 block|{
 name|IFF_LOCKGIANT
@@ -4292,7 +4336,9 @@ operator||=
 name|IFA_ROUTE
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -4346,7 +4392,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -4539,7 +4587,9 @@ operator||=
 name|IFA_ROUTE
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -4572,7 +4622,9 @@ operator|~
 name|IFA_ROUTE
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4625,7 +4677,9 @@ operator|==
 name|INADDR_ANY
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -4640,7 +4694,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|t
 operator|=
@@ -4722,7 +4778,9 @@ operator|)
 literal|0xffffffff
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 return|return
 operator|(

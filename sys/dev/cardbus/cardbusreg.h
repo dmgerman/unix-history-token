@@ -135,34 +135,5 @@ begin_comment
 comment|/* Indicator */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CARDBUS_MAPREG_MEM_ADDR_MASK
-value|0x0ffffff0
-end_define
-
-begin_define
-define|#
-directive|define
-name|CARDBUS_MAPREG_MEM_ADDR
-parameter_list|(
-name|mr
-parameter_list|)
-define|\
-value|((mr)& CARDBUS_MAPREG_MEM_ADDR_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CARDBUS_MAPREG_MEM_SIZE
-parameter_list|(
-name|mr
-parameter_list|)
-define|\
-value|(CARDBUS_MAPREG_MEM_ADDR(mr)& (~CARDBUS_MAPREG_MEM_ADDR(mr) + 1))
-end_define
-
 end_unit
 

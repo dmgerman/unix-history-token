@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cputypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -329,12 +335,9 @@ name|cpu_high
 operator|<
 literal|6
 operator|||
-name|strcmp
-argument_list|(
-name|cpu_vendor
-argument_list|,
-literal|"GenuineIntel"
-argument_list|)
+name|cpu_vendor_id
+operator|!=
+name|CPU_VENDOR_INTEL
 condition|)
 return|return;
 comment|/* 	 * CPUID 0x06 returns 1 if the processor has on-die thermal 	 * sensors. EBX[0:3] contains the number of sensors. 	 */

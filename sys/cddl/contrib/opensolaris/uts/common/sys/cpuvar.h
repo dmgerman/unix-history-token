@@ -19,13 +19,6 @@ directive|define
 name|_SYS_CPUVAR_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
@@ -1452,6 +1445,11 @@ name|boot_max_ncpus
 decl_stmt|;
 comment|/* like max_ncpus but for real */
 specifier|extern
+name|int
+name|boot_ncpus
+decl_stmt|;
+comment|/* # cpus present @ boot */
+specifier|extern
 name|processorid_t
 name|max_cpuid
 decl_stmt|;
@@ -2295,6 +2293,15 @@ value|100
 specifier|extern
 name|void
 name|init_cpu_info
+parameter_list|(
+name|struct
+name|cpu
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|populate_idstr
 parameter_list|(
 name|struct
 name|cpu

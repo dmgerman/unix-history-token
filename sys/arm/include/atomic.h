@@ -48,6 +48,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

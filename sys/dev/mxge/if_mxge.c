@@ -3315,7 +3315,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|dummy
@@ -3325,7 +3325,7 @@ name|sc
 operator|->
 name|sram
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 block|}
@@ -3452,7 +3452,7 @@ name|confirm
 operator|=
 literal|0
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 comment|/* send an rdma command to the PCIe engine, and wait for the 	   response in the confirmation address.  The firmware should 	   write a -1 there to indicate it is alive and well 	*/
@@ -3590,7 +3590,7 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|DELAY
@@ -3598,7 +3598,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|i
@@ -3848,7 +3848,7 @@ name|result
 operator|=
 literal|0xffffffff
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|mxge_pio_copy
@@ -3905,7 +3905,7 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -4463,7 +4463,7 @@ name|confirm
 operator|=
 literal|0
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 comment|/* send a reload command to the bootstrap MCP, and wait for the 	   response in the confirmation address.  The firmware should 	   write a -1 there to indicate it is alive and well 	*/
@@ -4595,7 +4595,7 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|DELAY
@@ -4603,7 +4603,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|i
@@ -7689,7 +7689,7 @@ name|src
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 block|}
@@ -7769,7 +7769,7 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|dst
@@ -7835,7 +7835,7 @@ name|src
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 comment|/* force write every 32 bytes */
@@ -7887,7 +7887,7 @@ name|src
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 comment|/* barrier before setting valid flag */
@@ -7936,7 +7936,7 @@ name|req
 operator|+=
 name|cnt
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 block|}
@@ -10011,7 +10011,7 @@ name|src
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|mxge_pio_copy
@@ -10033,7 +10033,7 @@ name|src
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|src
@@ -10048,7 +10048,7 @@ name|addr_low
 operator|=
 name|low
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 block|}
@@ -12912,7 +12912,7 @@ name|legacy_irq
 operator|&&
 name|mxge_deassert_wait
 condition|)
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 block|}
@@ -16568,7 +16568,7 @@ name|sc
 operator|->
 name|down_cnt
 expr_stmt|;
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 name|err
@@ -16618,7 +16618,7 @@ name|intr_coal_delay
 argument_list|)
 expr_stmt|;
 block|}
-name|mb
+name|wmb
 argument_list|()
 expr_stmt|;
 if|if

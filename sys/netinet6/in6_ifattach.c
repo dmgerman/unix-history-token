@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_include
@@ -167,50 +179,30 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
-begin_decl_stmt
-name|unsigned
-name|long
-name|in6_maxmtu
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
+end_include
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IP6_AUTO_LINKLOCAL
+name|VIMAGE_GLOBALS
 end_ifdef
 
 begin_decl_stmt
-name|int
-name|ip6_auto_linklocal
-init|=
-name|IP6_AUTO_LINKLOCAL
+name|unsigned
+name|long
+name|in6_maxmtu
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_decl_stmt
 name|int
 name|ip6_auto_linklocal
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* enable by default */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -223,17 +215,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|inpcbinfo
-name|udbinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|inpcbinfo
 name|ripcbinfo
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static

@@ -266,7 +266,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
 name|fwsm
 operator|&
 name|E1000_FWSM_MODE_MASK
@@ -276,7 +275,6 @@ operator|(
 name|E1000_MNG_IAMT_MODE
 operator|<<
 name|E1000_FWSM_MODE_SHIFT
-operator|)
 operator|)
 return|;
 block|}

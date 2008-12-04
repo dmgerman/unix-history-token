@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -25,6 +25,18 @@ directive|pragma
 name|ident
 literal|"%Z%%M%	%I%	%E% SMI"
 end_pragma
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_empty
 empty|#include_next<sys/refcount.h>
@@ -114,7 +126,7 @@ decl_stmt|;
 block|}
 name|refcount_t
 typedef|;
-comment|/* Note: refcount_t should be initialized to zero before use. */
+comment|/* Note: refcount_t must be initialized with refcount_create() */
 name|void
 name|refcount_create
 parameter_list|(

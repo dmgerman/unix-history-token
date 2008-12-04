@@ -2707,6 +2707,8 @@ argument_list|(
 operator|&
 name|disk
 argument_list|,
+name|part_ofs
+operator|+
 name|SBLOCK_UFS1
 operator|/
 name|disk
@@ -5438,6 +5440,8 @@ argument_list|(
 operator|&
 name|disk
 argument_list|,
+name|part_ofs
+operator|+
 name|fsbtodb
 argument_list|(
 operator|&
@@ -5830,6 +5834,8 @@ argument_list|(
 operator|&
 name|disk
 argument_list|,
+name|part_ofs
+operator|+
 name|fsbtodb
 argument_list|(
 operator|&
@@ -5988,6 +5994,8 @@ argument_list|(
 operator|&
 name|disk
 argument_list|,
+name|part_ofs
+operator|+
 name|d
 argument_list|,
 operator|(

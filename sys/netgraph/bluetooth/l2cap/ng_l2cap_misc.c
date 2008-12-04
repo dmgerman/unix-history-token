@@ -348,12 +348,10 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* Create new connection descriptor */
-name|MALLOC
-argument_list|(
 name|con
-argument_list|,
-name|ng_l2cap_con_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1062,7 +1060,7 @@ name|con
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|con
 argument_list|,
@@ -1210,12 +1208,10 @@ name|ch
 init|=
 name|NULL
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|ch
-argument_list|,
-name|ng_l2cap_chan_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1369,7 +1365,7 @@ name|ch
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ch
 argument_list|,
@@ -1554,7 +1550,7 @@ name|ch
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ch
 argument_list|,
@@ -1627,12 +1623,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|cmd
-argument_list|,
-name|ng_l2cap_cmd_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*

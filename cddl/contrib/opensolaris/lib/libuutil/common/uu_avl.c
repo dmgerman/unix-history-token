@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -493,6 +493,9 @@ argument_list|(
 literal|"uu_avl_pool_destroy: Pool \"%.*s\" (%p) has "
 literal|"outstanding avls, or is corrupt.\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|pp
@@ -504,6 +507,10 @@ name|pp
 operator|->
 name|uap_name
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|)
 expr_stmt|;
@@ -636,16 +643,30 @@ literal|"offset %ld doesn't fit in object (size %ld)\n"
 argument_list|,
 name|base
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|np
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|pp
 operator|->
 name|uap_name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|offset
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pp
 operator|->
 name|uap_objsize
@@ -668,16 +689,30 @@ literal|"offset %ld doesn't match pool's offset (%ld)\n"
 argument_list|,
 name|base
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|np
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|pp
 operator|->
 name|uap_name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|offset
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pp
 operator|->
 name|uap_objsize
@@ -763,8 +798,16 @@ literal|"node already finied\n"
 argument_list|,
 name|base
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|np
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|pp
@@ -800,8 +843,16 @@ literal|"node corrupt, in tree, or in different pool\n"
 argument_list|,
 name|base
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|np
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|pp
@@ -1242,6 +1293,10 @@ name|uu_panic
 argument_list|(
 literal|"uu_avl_destroy(%p): tree not empty\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|)
 expr_stmt|;
@@ -1275,6 +1330,10 @@ name|uu_panic
 argument_list|(
 literal|"uu_avl_destroy(%p):  outstanding walkers\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|)
 expr_stmt|;
@@ -2185,6 +2244,10 @@ argument_list|(
 literal|"uu_avl_remove(%p, %p): active non-robust "
 literal|"walker\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|,
 name|elem
@@ -2474,10 +2537,18 @@ argument_list|(
 literal|"uu_avl_insert(%p, %p, %p): node already "
 literal|"in tree, or corrupt\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|,
 name|elem
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|)
 expr_stmt|;
@@ -2495,10 +2566,18 @@ argument_list|(
 literal|"uu_avl_insert(%p, %p, %p): node not "
 literal|"initialized\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|,
 name|elem
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|)
 expr_stmt|;
@@ -2519,10 +2598,18 @@ argument_list|(
 literal|"uu_avl_insert(%p, %p, %p): node from "
 literal|"other pool, or corrupt\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|,
 name|elem
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|)
 expr_stmt|;
@@ -2540,10 +2627,18 @@ name|uu_panic
 argument_list|(
 literal|"uu_avl_insert(%p, %p, %p): %s\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|,
 name|elem
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|,
 name|INDEX_CHECK
@@ -2618,8 +2713,16 @@ name|uu_panic
 argument_list|(
 literal|"uu_avl_nearest_next(%p, %p): %s\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|,
 name|INDEX_CHECK
@@ -2684,8 +2787,16 @@ name|uu_panic
 argument_list|(
 literal|"uu_avl_nearest_prev(%p, %p): %s\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|,
 name|INDEX_CHECK

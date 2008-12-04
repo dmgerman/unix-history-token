@@ -6697,14 +6697,10 @@ name|error
 operator|)
 return|;
 block|}
-name|MALLOC
-argument_list|(
 name|cb
-argument_list|,
-expr|struct
-name|spxpcb
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|cb
@@ -6743,7 +6739,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|cb
 argument_list|,
@@ -6784,7 +6780,7 @@ argument_list|(
 name|mm
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|cb
 argument_list|,
@@ -7094,7 +7090,7 @@ name|s_ipx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|cb
 argument_list|,

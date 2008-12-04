@@ -27,11 +27,11 @@ begin_define
 define|#
 directive|define
 name|P6_NPMCS
-value|3
+value|2
 end_define
 
 begin_comment
-comment|/* 1 TSC + 2 PMCs */
+comment|/* 2 PMCs */
 end_comment
 
 begin_define
@@ -252,18 +252,30 @@ end_comment
 
 begin_function_decl
 name|int
-name|pmc_initialize_p6
+name|pmc_p6_initialize
 parameter_list|(
 name|struct
 name|pmc_mdep
 modifier|*
+name|_md
+parameter_list|,
+name|int
+name|_ncpus
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Pentium Pro PMCs */
-end_comment
+begin_function_decl
+name|void
+name|pmc_p6_finalize
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -958,7 +958,8 @@ name|pt
 argument_list|,
 name|ptlim
 argument_list|,
-name|warnp
+operator|&
+name|warn2
 argument_list|)
 expr_stmt|;
 if|if

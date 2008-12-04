@@ -1460,13 +1460,17 @@ name|dst
 operator|->
 name|sa_family
 expr_stmt|;
-name|IFQ_HANDOFF
+name|error
+operator|=
+call|(
+name|ifp
+operator|->
+name|if_transmit
+call|)
 argument_list|(
 name|ifp
 argument_list|,
 name|m
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -1944,12 +1948,10 @@ name|priv_p
 name|priv
 decl_stmt|;
 comment|/* Allocate node and interface private structures */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1988,7 +1990,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -3082,7 +3084,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

@@ -718,7 +718,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* Racy check for i_dirhash to prefetch an dirhash structure. */
+comment|/* Racy check for i_dirhash to prefetch a dirhash structure. */
 if|if
 condition|(
 name|ip
@@ -732,14 +732,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|ndh
-argument_list|,
-expr|struct
-name|dirhash
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|dh
@@ -772,7 +768,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|sx_init
+comment|/* 			 * The DUPOK is to prevent warnings from the 			 * sx_slock() a few lines down which is safe 			 * since the duplicate lock in that case is 			 * the one for this dirhash we are creating 			 * now which has no external references until 			 * after this function returns. 			 */
+name|sx_init_flags
 argument_list|(
 operator|&
 name|ndh
@@ -780,6 +777,8 @@ operator|->
 name|dh_lock
 argument_list|,
 literal|"dirhash"
+argument_list|,
+name|SX_DUPOK
 argument_list|)
 expr_stmt|;
 name|sx_xlock
@@ -1588,16 +1587,12 @@ operator|=
 name|DH_SCOREINIT
 expr_stmt|;
 comment|/* 	 * Use non-blocking mallocs so that we will revert to a linear 	 * lookup on failure rather than potentially blocking forever. 	 */
-name|MALLOC
-argument_list|(
 name|dh
 operator|->
 name|dh_hash
-argument_list|,
-name|doff_t
-operator|*
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|narrays
 operator|*
 sizeof|sizeof
@@ -1628,15 +1623,12 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|MALLOC
-argument_list|(
 name|dh
 operator|->
 name|dh_blkfree
-argument_list|,
-name|u_int8_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|nblocks
 operator|*
 sizeof|sizeof
@@ -2177,7 +2169,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|dh
 operator|->
@@ -2194,7 +2186,7 @@ name|dh_blkfree
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|dh
 operator|->
@@ -5334,14 +5326,14 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hash
 argument_list|,
 name|M_DIRHASH
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|blkfree
 argument_list|,

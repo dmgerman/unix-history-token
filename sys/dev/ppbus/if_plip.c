@@ -393,6 +393,9 @@ name|ifnet
 modifier|*
 name|sc_ifp
 decl_stmt|;
+name|device_t
+name|sc_dev
+decl_stmt|;
 name|u_char
 modifier|*
 name|sc_ifbuf
@@ -425,21 +428,21 @@ begin_define
 define|#
 directive|define
 name|txmitl
-value|(txmith+(1*LPIPTBLSIZE))
+value|(txmith + (1 * LPIPTBLSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|trecvh
-value|(txmith+(2*LPIPTBLSIZE))
+value|(txmith + (2 * LPIPTBLSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|trecvl
-value|(txmith+(3*LPIPTBLSIZE))
+value|(txmith + (3 * LPIPTBLSIZE))
 end_define
 
 begin_decl_stmt
@@ -454,21 +457,21 @@ begin_define
 define|#
 directive|define
 name|ctxmitl
-value|(ctxmith+(1*LPIPTBLSIZE))
+value|(ctxmith + (1 * LPIPTBLSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctrecvh
-value|(ctxmith+(2*LPIPTBLSIZE))
+value|(ctxmith + (2 * LPIPTBLSIZE))
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctrecvl
-value|(ctxmith+(3*LPIPTBLSIZE))
+value|(ctxmith + (3 * LPIPTBLSIZE))
 end_define
 
 begin_comment
@@ -547,17 +550,6 @@ define|\
 value|((struct lp_data *)device_get_softc(dev))
 end_define
 
-begin_define
-define|#
-directive|define
-name|UNITODEVICE
-parameter_list|(
-name|unit
-parameter_list|)
-define|\
-value|(devclass_get_device(lp_devclass, (unit)))
-end_define
-
 begin_decl_stmt
 specifier|static
 name|devclass_t
@@ -613,10 +605,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * lpprobe()  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -670,6 +658,12 @@ name|rid
 init|=
 literal|0
 decl_stmt|;
+name|lp
+operator|->
+name|sc_dev
+operator|=
+name|dev
+expr_stmt|;
 comment|/* 	 * Reserve the interrupt resource.  If we don't have one, the 	 * attach fails. 	 */
 name|lp
 operator|->
@@ -846,8 +840,9 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|txmith
+operator|==
+name|NULL
 condition|)
 name|txmith
 operator|=
@@ -864,16 +859,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|txmith
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
-operator|!
 name|ctxmith
+operator|==
+name|NULL
 condition|)
 name|ctxmith
 operator|=
@@ -890,11 +889,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ctxmith
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -1079,7 +1081,9 @@ operator|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1105,30 +1109,26 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
-name|device_t
-name|dev
-init|=
-name|UNITODEVICE
-argument_list|(
-name|ifp
-operator|->
-name|if_dunit
-argument_list|)
-decl_stmt|;
-name|device_t
-name|ppbus
-init|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|lp_data
 modifier|*
 name|sc
 init|=
-name|DEVTOSOFTC
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|device_t
+name|dev
+init|=
+name|sc
+operator|->
+name|sc_dev
+decl_stmt|;
+name|device_t
+name|ppbus
+init|=
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
@@ -1193,7 +1193,9 @@ operator|!=
 name|AF_INET
 condition|)
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 name|ifp
 operator|->
@@ -1275,7 +1277,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* XXX 	     * Should the request be interruptible? 	     */
+comment|/* XXX 			 * Should the request be interruptible? 			 */
 if|if
 condition|(
 operator|(
@@ -1320,7 +1322,9 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|sc
@@ -1344,10 +1348,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|sc_ifbuf
+operator|==
+name|NULL
 condition|)
 block|{
 name|ppb_release_bus
@@ -1358,10 +1363,12 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
-comment|/* attach our interrupt handler, later detached when the bus is released */
+comment|/* 			 * Attach our interrupt handler.  It is 			 * detached later when the bus is released. 			 */
 if|if
 condition|(
 operator|(
@@ -1445,10 +1452,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|sc_ifbuf
+operator|==
+name|NULL
 condition|)
 block|{
 name|sc
@@ -1458,7 +1466,9 @@ operator|=
 name|ptr
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 if|if
@@ -1511,7 +1521,9 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 comment|/* XXX */
 block|}
@@ -1530,16 +1542,20 @@ case|:
 break|break;
 default|default:
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 block|}
 break|break;
 case|case
 name|SIOCGIFMEDIA
 case|:
-comment|/* 	 * No ifmedia support at this stage; maybe use it 	 * in future for eg. protocol selection. 	 */
+comment|/* 		 * No ifmedia support at this stage; maybe use it 		 * in future for eg. protocol selection. 		 */
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 default|default:
 name|lprintf
@@ -1550,11 +1566,15 @@ name|cmd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1603,7 +1623,9 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 name|ppb_wdtr
@@ -1637,11 +1659,15 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1683,8 +1709,10 @@ name|spin
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|cl
@@ -1721,8 +1749,10 @@ name|spin
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|c
@@ -2095,6 +2125,7 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 name|netisr_queue
 argument_list|(
 name|NETISR_IP
@@ -2102,7 +2133,6 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-comment|/* mbuf is free'd on failure. */
 block|}
 goto|goto
 name|done
@@ -2362,6 +2392,7 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 name|netisr_queue
 argument_list|(
 name|NETISR_IP
@@ -2369,7 +2400,6 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-comment|/* mbuf is free'd on failure. */
 block|}
 block|}
 goto|goto
@@ -2411,14 +2441,13 @@ operator|>
 name|LPMAXERRS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"lp%d: Too many errors, Going off-line.\n"
+name|sc
+operator|->
+name|sc_ifp
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
+literal|"Too many errors, Going off-line.\n"
 argument_list|)
 expr_stmt|;
 name|ppb_wctr
@@ -2451,7 +2480,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2501,7 +2529,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 name|ppb_wdtr
 argument_list|(
@@ -2530,10 +2560,14 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2564,15 +2598,21 @@ modifier|*
 name|rt
 parameter_list|)
 block|{
+name|struct
+name|lp_data
+modifier|*
+name|sc
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
 name|device_t
 name|dev
 init|=
-name|UNITODEVICE
-argument_list|(
-name|ifp
+name|sc
 operator|->
-name|if_dunit
-argument_list|)
+name|sc_dev
 decl_stmt|;
 name|device_t
 name|ppbus
@@ -3031,7 +3071,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -3247,7 +3289,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

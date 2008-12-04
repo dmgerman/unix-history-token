@@ -256,6 +256,12 @@ directive|include
 file|<net/pf_mtag.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -378,6 +384,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/sctp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_include
@@ -8481,8 +8493,7 @@ name|s_addr
 expr_stmt|;
 name|IPFW_WLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|ch
 argument_list|)
 expr_stmt|;
 if|if
@@ -8515,8 +8526,7 @@ condition|)
 block|{
 name|IPFW_WUNLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|ch
 argument_list|)
 expr_stmt|;
 name|free
@@ -8534,8 +8544,7 @@ return|;
 block|}
 name|IPFW_WUNLOCK
 argument_list|(
-operator|&
-name|V_layer3_chain
+name|ch
 argument_list|)
 expr_stmt|;
 return|return

@@ -269,6 +269,12 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -308,6 +314,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/nd6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -2295,14 +2307,10 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|sc
-argument_list|,
-expr|struct
-name|carp_softc
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2335,7 +2343,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|sc
 argument_list|,
@@ -2898,7 +2906,7 @@ argument_list|(
 name|cif
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|cif
 argument_list|,
@@ -8146,14 +8154,10 @@ operator|->
 name|if_carp
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|cif
-argument_list|,
-expr|struct
-name|carp_if
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -8195,7 +8199,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|cif
 argument_list|,
@@ -8646,7 +8650,7 @@ argument_list|(
 name|cif
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|cif
 argument_list|,
@@ -9258,14 +9262,10 @@ operator|->
 name|if_carp
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|cif
-argument_list|,
-expr|struct
-name|carp_if
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -9307,7 +9307,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|cif
 argument_list|,
@@ -9814,7 +9814,7 @@ name|if_carp
 operator|=
 name|NULL
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|cif
 argument_list|,

@@ -8765,16 +8765,12 @@ comment|/* a reasonable default */
 name|retry
 label|:
 comment|/* allocate nmappings+1 entries */
-name|MALLOC
-argument_list|(
 name|hc
 operator|.
 name|kobase
-argument_list|,
-expr|struct
-name|pmckern_map_in
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 operator|(
 name|hc
 operator|.
@@ -8823,7 +8819,7 @@ name|hc
 operator|.
 name|nobjects
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hc
 operator|.

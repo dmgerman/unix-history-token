@@ -1313,7 +1313,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		accmode_t a_accmode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1337,12 +1337,12 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|mode_t
-name|mode
+name|accmode_t
+name|accmode
 init|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 decl_stmt|;
 name|int
 name|error
@@ -1368,7 +1368,7 @@ directive|endif
 comment|/* 	 * Disallow write attempts on read-only filesystems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the filesystem. 	 */
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1407,6 +1407,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|QUOTA
+comment|/* 			 * Inode is accounted in the quotas only if struct 			 * dquot is attached to it. VOP_ACCESS() is called 			 * from vn_open_cred() and provides a convenient 			 * point to call getinoquota(). 			 */
 if|if
 condition|(
 name|VOP_ISLOCKED
@@ -1417,6 +1418,7 @@ operator|!=
 name|LK_EXCLUSIVE
 condition|)
 block|{
+comment|/* 				 * Upgrade vnode lock, since getinoquota() 				 * requires exclusive lock to modify inode. 				 */
 name|relocked
 operator|=
 literal|1
@@ -1517,7 +1519,7 @@ comment|/* If immutable bit set, nobody gets to write it. */
 if|if
 condition|(
 operator|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 operator|)
@@ -1615,7 +1617,7 @@ name|i_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->
@@ -1648,7 +1650,7 @@ name|acl
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->
@@ -1689,7 +1691,7 @@ name|i_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->
@@ -1733,7 +1735,7 @@ name|i_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->
@@ -8848,12 +8850,10 @@ name|iov_len
 operator|=
 name|count
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|dirbuf
-argument_list|,
-name|caddr_t
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|count
 argument_list|,
 name|M_TEMP
@@ -9006,7 +9006,7 @@ name|uio
 argument_list|)
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|dirbuf
 argument_list|,
@@ -9167,13 +9167,10 @@ control|)
 name|ncookies
 operator|++
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|cookies
-argument_list|,
-name|u_long
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|ncookies
 operator|*
 sizeof|sizeof

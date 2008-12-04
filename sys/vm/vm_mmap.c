@@ -627,7 +627,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * Memory Map (mmap) system call.  Note that the file offset  * and address are allowed to be NOT page aligned, though if  * the MAP_FIXED flag it set, both must have the same remainder  * modulo the PAGE_SIZE (POSIX 1003.1b).  If the address is not  * page-aligned, the actual mapping starts at trunc_page(addr)  * and the return value is adjusted up by the page offset.  *  * Generally speaking, only character devices which are themselves  * memory-based, such as a video framebuffer, can be mmap'd.  Otherwise  * there would be no cache coherency between a descriptor and a VM mapping  * both to the same character device.  *  * Block devices can be mmap'd no matter what they represent.  Cache coherency  * is maintained as long as you do not write directly to the underlying  * character device.  */
+comment|/*  * Memory Map (mmap) system call.  Note that the file offset  * and address are allowed to be NOT page aligned, though if  * the MAP_FIXED flag it set, both must have the same remainder  * modulo the PAGE_SIZE (POSIX 1003.1b).  If the address is not  * page-aligned, the actual mapping starts at trunc_page(addr)  * and the return value is adjusted up by the page offset.  *  * Generally speaking, only character devices which are themselves  * memory-based, such as a video framebuffer, can be mmap'd.  Otherwise  * there would be no cache coherency between a descriptor and a VM mapping  * both to the same character device.  */
 end_comment
 
 begin_ifndef

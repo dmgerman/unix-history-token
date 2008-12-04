@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newwin.c,v 1.50 2008/05/03 16:36:39 tom Exp $"
+literal|"$Id: lib_newwin.c,v 1.52 2008/06/07 13:58:09 tom Exp $"
 argument_list|)
 end_macro
 
@@ -205,7 +205,7 @@ if|if
 condition|(
 name|_nc_try_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 operator|==
 literal|0
@@ -335,7 +335,7 @@ expr_stmt|;
 block|}
 name|_nc_unlock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 block|}
@@ -1084,16 +1084,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|_nc_mutex_init
-argument_list|(
-operator|&
-operator|(
-name|wp
-operator|->
-name|mutex_use_window
-operator|)
-argument_list|)
-expr_stmt|;
 name|win
 operator|=
 operator|&
@@ -1140,7 +1130,7 @@ expr_stmt|;
 block|}
 name|_nc_lock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 name|win
@@ -1485,6 +1475,12 @@ name|next
 operator|=
 name|_nc_windows
 expr_stmt|;
+name|wp
+operator|->
+name|screen
+operator|=
+name|SP
+expr_stmt|;
 name|_nc_windows
 operator|=
 name|wp
@@ -1503,7 +1499,7 @@ argument_list|)
 expr_stmt|;
 name|_nc_unlock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 name|returnWin
@@ -1511,6 +1507,64 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * wgetch() and other functions with a WINDOW* parameter may use a SCREEN*  * internally, and it is useful to allow those to be invoked without switching  * SCREEN's, e.g., for multi-threaded applications.  */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|SCREEN *
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_screen_of
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|SCREEN
+modifier|*
+name|sp
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|win
+operator|!=
+literal|0
+condition|)
+block|{
+name|WINDOWLIST
+modifier|*
+name|wp
+init|=
+operator|(
+name|WINDOWLIST
+operator|*
+operator|)
+name|win
+decl_stmt|;
+name|sp
+operator|=
+name|wp
+operator|->
+name|screen
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|sp
+operator|)
+return|;
 block|}
 end_block
 

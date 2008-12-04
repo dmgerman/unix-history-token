@@ -408,11 +408,12 @@ operator|&
 name|vat
 decl_stmt|;
 name|int
-name|mode
-decl_stmt|,
 name|fmode
 decl_stmt|,
 name|error
+decl_stmt|;
+name|accmode_t
+name|accmode
 decl_stmt|;
 name|int
 name|vfslocked
@@ -936,7 +937,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|mode
+name|accmode
 operator|=
 literal|0
 expr_stmt|;
@@ -968,7 +969,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|mode
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -979,7 +980,7 @@ name|fmode
 operator|&
 name|FREAD
 condition|)
-name|mode
+name|accmode
 operator||=
 name|VREAD
 expr_stmt|;
@@ -989,7 +990,7 @@ name|fmode
 operator|&
 name|FEXEC
 condition|)
-name|mode
+name|accmode
 operator||=
 name|VEXEC
 expr_stmt|;
@@ -999,7 +1000,7 @@ name|fmode
 operator|&
 name|O_APPEND
 condition|)
-name|mode
+name|accmode
 operator||=
 name|VAPPEND
 expr_stmt|;
@@ -1014,7 +1015,7 @@ name|cred
 argument_list|,
 name|vp
 argument_list|,
-name|mode
+name|accmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -1039,7 +1040,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -1061,7 +1062,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|mode
+name|accmode
 condition|)
 block|{
 name|error
@@ -1070,7 +1071,7 @@ name|VOP_ACCESS
 argument_list|(
 name|vp
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|cred
 argument_list|,
@@ -3141,7 +3142,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -4026,9 +4027,11 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"LK_RETRY set with incompatible flags %d\n"
+literal|"LK_RETRY set with incompatible flags (0x%x) or an error occured (%d)"
 operator|,
 name|flags
+operator|,
+name|error
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4339,6 +4342,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * VOP_GETWRITEMOUNT() returns with the mp refcount held through 	 * a vfs_ref(). 	 * As long as a vnode is not provided we need to acquire a 	 * refcount for the provided mountpoint too, in order to 	 * emulate a vfs_ref(). 	 */
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -4399,17 +4403,6 @@ name|error
 operator|=
 name|EWOULDBLOCK
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|mpp
-operator|=
-name|NULL
-expr_stmt|;
 goto|goto
 name|unlock
 goto|;
@@ -4449,22 +4442,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-if|if
-condition|(
-name|vp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|mpp
-operator|=
-name|NULL
-expr_stmt|;
 goto|goto
 name|unlock
 goto|;
-block|}
 block|}
 block|}
 if|if
@@ -4603,6 +4583,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * VOP_GETWRITEMOUNT() returns with the mp refcount held through 	 * a vfs_ref(). 	 * As long as a vnode is not provided we need to acquire a 	 * refcount for the provided mountpoint too, in order to 	 * emulate a vfs_ref(). 	 */
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -4679,17 +4660,6 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|mpp
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
@@ -4744,17 +4714,6 @@ condition|)
 goto|goto
 name|retry
 goto|;
-if|if
-condition|(
-name|vp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|mpp
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 name|error

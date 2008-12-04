@@ -226,6 +226,12 @@ directive|include
 file|<netinet/icmp6.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -351,31 +357,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
-specifier|static
 name|int
 name|dad_ignore_ns
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* ignore NS in DAD - specwise incorrect*/
-end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|dad_maxtry
-init|=
-literal|15
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* max # of *tries* to transmit DAD packet */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Input a Neighbor Solicitation Message.  *  * Based on RFC 2461  * Based on RFC 2462 (duplicate address detection)  */
@@ -733,7 +736,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|nd6_onlink_ns_rfc4861
+name|V_nd6_onlink_ns_rfc4861
 condition|)
 block|{
 name|struct
@@ -4802,6 +4805,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -4811,13 +4820,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|dad_init
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

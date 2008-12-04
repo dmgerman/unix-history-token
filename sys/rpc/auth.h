@@ -324,6 +324,7 @@ comment|/* bogus response verifier */
 name|AUTH_FAILED
 init|=
 literal|7
+block|,
 comment|/* some unknown reason */
 ifdef|#
 directive|ifdef
@@ -353,10 +354,23 @@ comment|/* can't decode authenticator */
 name|AUTH_NET_ADDR
 init|=
 literal|12
+block|,
 comment|/* wrong net address in ticket */
 endif|#
 directive|endif
 comment|/* KERBEROS */
+comment|/* 	 * RPCSEC_GSS errors 	 */
+name|RPCSEC_GSS_CREDPROBLEM
+init|=
+literal|13
+block|,
+name|RPCSEC_GSS_CTXPROBLEM
+init|=
+literal|14
+block|,
+name|RPCSEC_GSS_NODISPATCH
+init|=
+literal|0x8000000
 block|}
 enum|;
 end_enum
@@ -441,6 +455,12 @@ begin_comment
 comment|/*  * Auth handle, interface to client side authenticators.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|rpc_err
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -483,7 +503,13 @@ name|struct
 name|__auth
 modifier|*
 parameter_list|,
+name|uint32_t
+parameter_list|,
 name|XDR
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -498,8 +524,15 @@ name|struct
 name|__auth
 modifier|*
 parameter_list|,
+name|uint32_t
+parameter_list|,
 name|struct
 name|opaque_auth
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -561,38 +594,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|auth_nextverf
-parameter_list|(
-name|auth
-parameter_list|)
-define|\
-value|((*((auth)->ah_ops->ah_nextverf))(auth))
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUTH_MARSHALL
 parameter_list|(
 name|auth
 parameter_list|,
-name|xdrs
-parameter_list|)
-define|\
-value|((*((auth)->ah_ops->ah_marshal))(auth, xdrs))
-end_define
-
-begin_define
-define|#
-directive|define
-name|auth_marshall
-parameter_list|(
-name|auth
+name|xid
 parameter_list|,
 name|xdrs
+parameter_list|,
+name|args
 parameter_list|)
 define|\
-value|((*((auth)->ah_ops->ah_marshal))(auth, xdrs))
+value|((*((auth)->ah_ops->ah_marshal))(auth, xid, xdrs, args))
 end_define
 
 begin_define
@@ -602,23 +615,14 @@ name|AUTH_VALIDATE
 parameter_list|(
 name|auth
 parameter_list|,
-name|verfp
-parameter_list|)
-define|\
-value|((*((auth)->ah_ops->ah_validate))((auth), verfp))
-end_define
-
-begin_define
-define|#
-directive|define
-name|auth_validate
-parameter_list|(
-name|auth
+name|xid
 parameter_list|,
 name|verfp
+parameter_list|,
+name|resultsp
 parameter_list|)
 define|\
-value|((*((auth)->ah_ops->ah_validate))((auth), verfp))
+value|((*((auth)->ah_ops->ah_validate))((auth), xid, verfp, resultsp))
 end_define
 
 begin_define
@@ -637,31 +641,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|auth_refresh
-parameter_list|(
-name|auth
-parameter_list|,
-name|msg
-parameter_list|)
-define|\
-value|((*((auth)->ah_ops->ah_refresh))(auth, msg))
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUTH_DESTROY
-parameter_list|(
-name|auth
-parameter_list|)
-define|\
-value|((*((auth)->ah_ops->ah_destroy))(auth))
-end_define
-
-begin_define
-define|#
-directive|define
-name|auth_destroy
 parameter_list|(
 name|auth
 parameter_list|)
@@ -1273,6 +1253,42 @@ end_define
 begin_comment
 comment|/* kerberos style */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RPCSEC_GSS
+value|6
+end_define
+
+begin_comment
+comment|/* RPCSEC_GSS */
+end_comment
+
+begin_comment
+comment|/*  * Pseudo auth flavors for RPCSEC_GSS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RPCSEC_GSS_KRB5
+value|390003
+end_define
+
+begin_define
+define|#
+directive|define
+name|RPCSEC_GSS_KRB5I
+value|390004
+end_define
+
+begin_define
+define|#
+directive|define
+name|RPCSEC_GSS_KRB5P
+value|390005
+end_define
 
 begin_endif
 endif|#

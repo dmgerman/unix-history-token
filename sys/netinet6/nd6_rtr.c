@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -177,6 +183,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/scope6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_define
@@ -391,6 +403,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -416,8 +434,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ip6_use_tempaddr
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -430,30 +446,25 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int32_t
 name|ip6_temp_preferred_lifetime
-init|=
-name|DEF_TEMP_PREFERRED_LIFETIME
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int32_t
 name|ip6_temp_valid_lifetime
-init|=
-name|DEF_TEMP_VALID_LIFETIME
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * shorter lifetimes for debugging purposes. int ip6_temp_preferred_lifetime = 800; static int ip6_temp_valid_lifetime = 1800; */
-end_comment
 
 begin_decl_stmt
 name|int
 name|ip6_temp_regen_advance
-init|=
-name|TEMPADDR_REGEN_ADVANCE
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* RTPREF_MEDIUM has to be 0! */

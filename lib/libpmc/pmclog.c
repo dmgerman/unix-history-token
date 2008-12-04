@@ -95,6 +95,12 @@ directive|include
 file|<machine/pmc_mdep.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libpmcinternal.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1311,7 +1317,7 @@ name|pl_a
 operator|.
 name|pl_evname
 operator|=
-name|pmc_name_of_event
+name|_pmc_name_of_event
 argument_list|(
 name|ev
 operator|->
@@ -1320,6 +1326,10 @@ operator|.
 name|pl_a
 operator|.
 name|pl_event
+argument_list|,
+name|ps
+operator|->
+name|ps_arch
 argument_list|)
 operator|)
 operator|==

@@ -255,6 +255,32 @@ comment|/* outbound doorbell change interrupt */
 end_comment
 
 begin_comment
+comment|/*  * GEN2 specific changes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFI_GEN2_EIM
+value|0x00000005
+end_define
+
+begin_comment
+comment|/* GEN2 enable interrupt mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFI_GEN2_RM
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* reply GEN2 message interrupt */
+end_comment
+
+begin_comment
 comment|/* Bits for MFI_OSTS */
 end_comment
 
@@ -511,6 +537,10 @@ block|,
 name|MFI_DCMD_CFG_CLEAR
 init|=
 literal|0x04030000
+block|,
+name|MFI_DCMD_CFG_FOREIGN_IMPORT
+init|=
+literal|0x04060400
 block|,
 name|MFI_DCMD_CLUSTER
 init|=

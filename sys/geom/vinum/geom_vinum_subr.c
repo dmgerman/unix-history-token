@@ -341,9 +341,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"geom_vinum: failed volume\n"
+literal|0
+argument_list|,
+literal|"failed volume"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -437,9 +439,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"geom_vinum: failed plex\n"
+literal|0
+argument_list|,
+literal|"failed plex"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -533,9 +537,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"geom_vinum: failed subdisk\n"
+literal|0
+argument_list|,
+literal|"failed subdisk"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1088,10 +1094,12 @@ name|size
 operator|)
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: need equal sized subdisks for "
-literal|"this plex organisation - %s (%jd)<-> %s (%jd)\n"
+literal|0
+argument_list|,
+literal|"need equal sized subdisks for "
+literal|"this plex organisation - %s (%jd)<-> %s (%jd)"
 argument_list|,
 name|s2
 operator|->
@@ -1778,10 +1786,12 @@ operator|->
 name|size
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"geom_vinum: subdisk size mismatch "
-literal|"%s (%jd)<> %s (%jd)\n"
+literal|0
+argument_list|,
+literal|"subdisk size mismatch %s"
+literal|"(%jd)<> %s (%jd)"
 argument_list|,
 name|s
 operator|->
@@ -1831,11 +1841,13 @@ condition|(
 name|remainder
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"gvinum: size of sd %s is not a "
+literal|1
+argument_list|,
+literal|"size of sd %s is not a "
 literal|"multiple of plex stripesize, taking off "
-literal|"%jd bytes\n"
+literal|"%jd bytes"
 argument_list|,
 name|s
 operator|->
@@ -2285,7 +2297,7 @@ name|errstr
 argument_list|,
 name|errlen
 argument_list|,
-literal|"couldn't autosize '%s' on "
+literal|"could not autosize '%s' on "
 literal|"'%s'"
 argument_list|,
 name|s

@@ -77,6 +77,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|breakpoint
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

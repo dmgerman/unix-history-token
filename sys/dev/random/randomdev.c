@@ -338,6 +338,16 @@ name|seeded
 operator|=
 literal|1
 expr_stmt|;
+name|arc4rand
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Reseed arc4random as well. */
 block|}
 return|return
 operator|(

@@ -1794,10 +1794,6 @@ begin_comment
 comment|/* Tx Desc writeback RO bit */
 end_comment
 
-begin_comment
-comment|/* Additional DCA related definitions, note change in position of CPUID */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1823,23 +1819,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_DCA_TXCTRL_CPUID_SHIFT
+name|E1000_DCA_TXCTRL_CPUID_SHIFT_82576
 value|24
 end_define
 
 begin_comment
-comment|/* Tx CPUID now in the last byte */
+comment|/* Tx CPUID */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E1000_DCA_RXCTRL_CPUID_SHIFT
+name|E1000_DCA_RXCTRL_CPUID_SHIFT_82576
 value|24
 end_define
 
 begin_comment
-comment|/* Rx CPUID now in the last byte */
+comment|/* Rx CPUID */
 end_comment
 
 begin_comment
@@ -1895,6 +1891,20 @@ define|#
 directive|define
 name|E1000_ETQF_IMM_INT
 value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ETQF_1588
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ETQF_QUEUE_ENABLE
+value|(1<< 31)
 end_define
 
 begin_comment
@@ -2240,6 +2250,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_VT_MSGINFO_SHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* bits 23:16 are used for exra info for certain messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_VT_MSGINFO_MASK
+value|(0xFF<< E1000_VT_MSGINFO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_VF_MSGTYPE_REQ_MAC
 value|1
 end_define
@@ -2262,23 +2290,71 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_PF_MSGTYPE_RESET
+name|E1000_VF_SET_MULTICAST
 value|3
+end_define
+
+begin_comment
+comment|/* VF requests PF to set MC addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_VF_SET_VLAN
+value|4
+end_define
+
+begin_comment
+comment|/* VF requests PF to set VLAN */
+end_comment
+
+begin_comment
+comment|/* Add 100h to all PF msgs, leaves room for up to 255 discrete message types  * from VF to PF - way more than we'll ever need */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PF_MSGTYPE_RESET
+value|(1 + 0x100)
 end_define
 
 begin_comment
 comment|/* PF notifies global reset                                                * imminent to VF */
 end_comment
 
-begin_function_decl
-name|u32
-name|e1000_translate_register_82576
-parameter_list|(
-name|u32
-name|reg
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|E1000_PF_MSGTYPE_LSC
+value|(2 + 0x100)
+end_define
+
+begin_comment
+comment|/* PF notifies VF of LSC... VF                                                * will see extra msg info for                                                * status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PF_MSG_LSCDOWN
+value|(1<< E1000_VT_MSGINFO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PF_MSG_LSCUP
+value|(2<< E1000_VT_MSGINFO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALL_QUEUES
+value|0xFFFF
+end_define
 
 begin_function_decl
 name|s32
@@ -2415,7 +2491,19 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|e1000_init_vfnumber_index_vf
+name|e1000_vmdq_enable_replication_mode_vf
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_vmdq_broadcast_replication_enable_vf
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -2423,7 +2511,52 @@ modifier|*
 name|hw
 parameter_list|,
 name|u32
-name|vf_number
+name|enables
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_vmdq_multicast_replication_enable_vf
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|enables
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_vmdq_broadcast_replication_disable_vf
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|disables
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_vmdq_multicast_replication_disable_vf
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|disables
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2448,6 +2581,9 @@ name|struct
 name|e1000_hw
 modifier|*
 name|hw
+parameter_list|,
+name|u32
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

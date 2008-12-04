@@ -307,6 +307,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -363,18 +369,52 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|tcp_syncache
+name|tcp_syncache
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
 name|tcp_syncookies
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|tcp_syncookiesonly
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_sc_rst_sock_fail
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -383,7 +423,6 @@ name|syncookies
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_syncookies
 argument_list|,
 literal|0
@@ -393,18 +432,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|tcp_syncookiesonly
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -413,7 +447,6 @@ name|syncookies_only
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|tcp_syncookiesonly
 argument_list|,
 literal|0
@@ -670,14 +703,6 @@ name|TCP_SYNCACHE_BUCKETLIMIT
 value|30
 end_define
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|tcp_syncache
-name|tcp_syncache
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -825,14 +850,6 @@ literal|"Limit on SYN/ACK retransmissions"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_sc_rst_sock_fail
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -1040,6 +1057,18 @@ expr_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|V_tcp_syncookies
+operator|=
+literal|1
+expr_stmt|;
+name|V_tcp_syncookiesonly
+operator|=
+literal|0
+expr_stmt|;
+name|V_tcp_sc_rst_sock_fail
+operator|=
+literal|1
+expr_stmt|;
 name|V_tcp_syncache
 operator|.
 name|cache_count
@@ -1154,16 +1183,12 @@ name|cache_limit
 argument_list|)
 expr_stmt|;
 comment|/* Allocate the hash table. */
-name|MALLOC
-argument_list|(
 name|V_tcp_syncache
 operator|.
 name|hashbase
-argument_list|,
-expr|struct
-name|syncache_head
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|V_tcp_syncache
 operator|.
 name|hashsize
@@ -1670,13 +1695,6 @@ operator|*
 operator|)
 name|xsch
 decl_stmt|;
-name|INIT_VNET_INET
-argument_list|(
-name|sch
-operator|->
-name|sch_vnet
-argument_list|)
-expr_stmt|;
 name|struct
 name|syncache
 modifier|*
@@ -1694,6 +1712,20 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|sch
+operator|->
+name|sch_vnet
+argument_list|)
+expr_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|sch
+operator|->
+name|sch_vnet
+argument_list|)
+expr_stmt|;
 comment|/* NB: syncache_head has already been locked by the callout. */
 name|SCH_LOCK_ASSERT
 argument_list|(
@@ -1930,6 +1962,9 @@ operator|(
 name|sch
 operator|)
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -3760,7 +3795,7 @@ comment|/* 		 * There is no syncache entry, so see if this ACK is 		 * a returni
 if|if
 condition|(
 operator|!
-name|tcp_syncookies
+name|V_tcp_syncookies
 condition|)
 block|{
 name|SCH_UNLOCK
@@ -4293,6 +4328,11 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|rc
 decl_stmt|;
@@ -4981,7 +5021,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|tcp_syncookies
+name|V_tcp_syncookies
 condition|)
 block|{
 name|bzero
@@ -5352,7 +5392,7 @@ name|SCF_ECN
 expr_stmt|;
 if|if
 condition|(
-name|tcp_syncookies
+name|V_tcp_syncookies
 condition|)
 block|{
 name|syncookie_generate
@@ -5430,9 +5470,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|tcp_syncookies
+name|V_tcp_syncookies
 operator|&&
-name|tcp_syncookiesonly
+name|V_tcp_syncookiesonly
 operator|&&
 name|sc
 operator|!=
@@ -5538,7 +5578,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7123,7 +7162,6 @@ operator|.
 name|tcps_sc_sendcookie
 operator|++
 expr_stmt|;
-return|return;
 block|}
 end_function
 

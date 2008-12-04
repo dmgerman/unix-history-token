@@ -2805,6 +2805,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_WEXIT
+operator|)
+operator|==
+literal|0
+condition|)
 name|callout_reset
 argument_list|(
 operator|&
@@ -5575,7 +5587,7 @@ operator|->
 name|ui_proccnt
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|uip
 argument_list|,

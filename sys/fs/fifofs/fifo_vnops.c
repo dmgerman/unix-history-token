@@ -691,7 +691,7 @@ operator|->
 name|fi_writesock
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|fip
 argument_list|,
@@ -807,14 +807,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|fip
-argument_list|,
-expr|struct
-name|fifoinfo
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*

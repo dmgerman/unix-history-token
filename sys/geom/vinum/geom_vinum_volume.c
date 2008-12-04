@@ -1827,10 +1827,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: failed g_access %s -> %s; "
-literal|"errno %d\n"
+literal|0
+argument_list|,
+literal|"failed g_access %s -> %s; "
+literal|"errno %d"
 argument_list|,
 name|v
 operator|->

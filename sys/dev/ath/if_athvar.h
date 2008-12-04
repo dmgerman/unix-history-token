@@ -22,13 +22,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<contrib/dev/ath/ah.h>
+file|<dev/ath/ath_hal/ah.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/ath/ah_desc.h>
+file|<dev/ath/ath_hal/ah_desc.h>
 end_include
 
 begin_include
@@ -278,12 +278,6 @@ name|ieee80211_node
 name|an_node
 decl_stmt|;
 comment|/* base class */
-specifier|const
-name|struct
-name|ieee80211_txparam
-modifier|*
-name|an_tp
-decl_stmt|;
 name|u_int8_t
 name|an_mgmtrix
 decl_stmt|;
@@ -389,6 +383,29 @@ parameter_list|)
 value|do {						\     if ((y)>= -20)							\     	x = ATH_LPF_RSSI((x), ATH_RSSI_IN((y)), ATH_RSSI_LPF_LEN);	\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATH_EP_RND
+parameter_list|(
+name|x
+parameter_list|,
+name|mul
+parameter_list|)
+define|\
+value|((((x)%(mul))>= ((mul)/2)) ? ((x) + ((mul) - 1)) / (mul) : (x)/(mul))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RSSI
+parameter_list|(
+name|x
+parameter_list|)
+value|ATH_EP_RND(x, HAL_RSSI_EP_MULTIPLIER)
+end_define
+
 begin_struct
 struct|struct
 name|ath_buf
@@ -414,7 +431,7 @@ name|int
 name|bf_nseg
 decl_stmt|;
 name|int
-name|bf_flags
+name|bf_txflags
 decl_stmt|;
 comment|/* tx descriptor flags */
 name|struct
@@ -1167,11 +1184,7 @@ name|sc_ledevent
 decl_stmt|;
 comment|/* time of last LED event */
 name|u_int8_t
-name|sc_rxrate
-decl_stmt|;
-comment|/* current rx rate for LED */
-name|u_int8_t
-name|sc_txrate
+name|sc_txrix
 decl_stmt|;
 comment|/* current tx rate for LED */
 name|u_int16_t
@@ -1234,11 +1247,6 @@ name|task
 name|sc_rxtask
 decl_stmt|;
 comment|/* rx int processing */
-name|struct
-name|task
-name|sc_rxorntask
-decl_stmt|;
-comment|/* rxorn int processing */
 name|u_int8_t
 name|sc_defant
 decl_stmt|;
@@ -2459,6 +2467,18 @@ end_define
 begin_if
 if|#
 directive|if
+name|HAL_ABI_VERSION
+operator|<
+literal|0x08090100
+end_if
+
+begin_comment
+comment|/* XXX wrong for anything but amd64 and i386 */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__LP64__
@@ -2494,6 +2514,29 @@ name|_rd
 parameter_list|)
 define|\
 value|(*(uint16_t *)(((uint8_t *)&(_ah)[1]) + 128) = (_rd))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setregdomain
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rd
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_REG_DMN, 0, _rd, NULL)
 end_define
 
 begin_endif
@@ -3042,6 +3085,41 @@ name|_tpcts
 parameter_list|)
 define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_TPC_CTS, 0, _tpcts, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasintmit
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getintmit
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, 1, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setintmit
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, 1, _v, NULL)
 end_define
 
 begin_define

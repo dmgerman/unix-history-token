@@ -221,7 +221,7 @@ comment|/* flag for distruct. */
 block|}
 else|else
 block|{
-name|FREE
+name|free
 argument_list|(
 name|npcb
 argument_list|,

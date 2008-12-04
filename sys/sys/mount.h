@@ -441,18 +441,13 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *	l - mnt_lock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
 end_comment
 
 begin_struct
 struct|struct
 name|mount
 block|{
-name|struct
-name|lock
-name|mnt_lock
-decl_stmt|;
-comment|/* mount structure lock */
 name|struct
 name|mtx
 name|mnt_mtx
@@ -583,17 +578,9 @@ name|mnt_hashseed
 decl_stmt|;
 comment|/* Random seed for vfs_hash */
 name|int
-name|mnt_markercnt
+name|mnt_lockref
 decl_stmt|;
-comment|/* marker vnodes in use */
-name|int
-name|mnt_holdcnt
-decl_stmt|;
-comment|/* hold count */
-name|int
-name|mnt_holdcntwaiters
-decl_stmt|;
-comment|/* waits on hold count */
+comment|/* (i) Lock reference count */
 name|int
 name|mnt_secondary_writes
 decl_stmt|;
@@ -1253,6 +1240,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_DRAINING
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* lock draining is happening */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_UNMOUNT
 value|0x01000000
 end_define
@@ -1468,8 +1466,65 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Old export arguments without security flavor list  */
+end_comment
+
+begin_struct
+struct|struct
+name|oexport_args
+block|{
+name|int
+name|ex_flags
+decl_stmt|;
+comment|/* export related flags */
+name|uid_t
+name|ex_root
+decl_stmt|;
+comment|/* mapping for root uid */
+name|struct
+name|xucred
+name|ex_anon
+decl_stmt|;
+comment|/* mapping for anonymous user */
+name|struct
+name|sockaddr
+modifier|*
+name|ex_addr
+decl_stmt|;
+comment|/* net address to which exported */
+name|u_char
+name|ex_addrlen
+decl_stmt|;
+comment|/* and the net address length */
+name|struct
+name|sockaddr
+modifier|*
+name|ex_mask
+decl_stmt|;
+comment|/* mask of valid bits in saddr */
+name|u_char
+name|ex_masklen
+decl_stmt|;
+comment|/* and the smask length */
+name|char
+modifier|*
+name|ex_indexfile
+decl_stmt|;
+comment|/* index file for WebNFS URLs */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Export arguments for local filesystem mount calls.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXSECFLAVORS
+value|5
+end_define
 
 begin_struct
 struct|struct
@@ -1513,6 +1568,17 @@ modifier|*
 name|ex_indexfile
 decl_stmt|;
 comment|/* index file for WebNFS URLs */
+name|int
+name|ex_numsecflavors
+decl_stmt|;
+comment|/* security flavor count */
+name|int
+name|ex_secflavors
+index|[
+name|MAXSECFLAVORS
+index|]
+decl_stmt|;
+comment|/* list of security flavors */
 block|}
 struct|;
 end_struct
@@ -1762,6 +1828,17 @@ end_define
 
 begin_comment
 comment|/* can be mounted from within a jail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFCF_DELEGADMIN
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* supports delegated administration */
 end_comment
 
 begin_typedef
@@ -2105,6 +2182,31 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * vfs_busy specific flags and mask.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBF_NOWAIT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBF_MNTLSTLOCK
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBF_MASK
+value|(MBF_NOWAIT | MBF_MNTLSTLOCK)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2410,6 +2512,15 @@ name|ucred
 modifier|*
 modifier|*
 name|credanonp
+parameter_list|,
+name|int
+modifier|*
+name|numsecflavors
+parameter_list|,
+name|int
+modifier|*
+modifier|*
+name|secflavors
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2731,9 +2842,13 @@ parameter_list|,
 name|EXFLG
 parameter_list|,
 name|CRED
+parameter_list|,
+name|NUMSEC
+parameter_list|,
+name|SEC
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_checkexp)(MP, NAM, EXFLG, CRED)
+value|(*(MP)->mnt_op->vfs_checkexp)(MP, NAM, EXFLG, CRED, NUMSEC, SEC)
 end_define
 
 begin_define
@@ -3334,10 +3449,6 @@ name|mount
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3428,6 +3539,18 @@ end_function_decl
 begin_comment
 comment|/* return vfs given fsid */
 end_comment
+
+begin_function_decl
+name|struct
+name|mount
+modifier|*
+name|vfs_busyfs
+parameter_list|(
+name|fsid_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

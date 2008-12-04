@@ -133,6 +133,12 @@ directive|include
 file|<net/if_vlan_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -3981,13 +3987,17 @@ continue|continue;
 block|}
 block|}
 comment|/* 		 * Send it, precisely as ether_output() would have. 		 * We are already running at splimp. 		 */
-name|IFQ_HANDOFF
+name|error
+operator|=
+call|(
+name|p
+operator|->
+name|if_transmit
+call|)
 argument_list|(
 name|p
 argument_list|,
 name|m
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 if|if

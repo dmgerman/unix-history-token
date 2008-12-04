@@ -333,6 +333,44 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * IP datagram reassembly.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPREASS_NHASH_LOG2
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPREASS_NHASH
+value|(1<< IPREASS_NHASH_LOG2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPREASS_HMASK
+value|(IPREASS_NHASH - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPREASS_HASH
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|(((((x)& 0xF) | ((((x)>> 8)& 0xF)<< 4)) ^ (y))& IPREASS_HMASK)
+end_define
+
+begin_comment
 comment|/*  * This information should be part of the ifnet structure but we don't wish  * to change that - as it might break a number of things  */
 end_comment
 

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2003-2007 Tim Kientzle  * All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*-  * A set of routines for traversing directory trees.  * Similar in concept to the fts library, but with a few  * important differences:  *    * Uses less memory.  In particular, fts stores an entire directory  *      in memory at a time.  This package only keeps enough subdirectory  *      information in memory to track the traversal.  Information  *      about non-directories is discarded as soon as possible.  *    * Supports very deep logical traversals.  The fts package  *      uses "non-chdir" approach for logical traversals.  This  *      package does use a chdir approach for logical traversals  *      and can therefore handle pathnames much longer than  *      PATH_MAX.  *    * Supports deep physical traversals "out of the box."  *      Due to the memory optimizations above, there's no need to  *      limit dir names to 32k.  */
+comment|/*-  * A set of routines for traversing directory trees.  * Similar in concept to the fts library, but with a few  * important differences:  *    * Uses less memory.  In particular, fts stores an entire directory  *      in memory at a time.  This package only keeps enough subdirectory  *      information in memory to track the traversal.  Information  *      about non-directories is discarded as soon as possible.  *    * Supports very deep logical traversals.  The fts package  *      uses "non-chdir" approach for logical traversals.  This  *      package does use a chdir approach for logical traversals  *      and can therefore handle pathnames much longer than PATH_MAX.  *    * Supports deep physical traversals "out of the box."  *      Due to the memory optimizations above, there's no need to  *      limit dir names to 32k.  */
 end_comment
 
 begin_include
@@ -55,7 +55,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * tree_next() returns Zero if there is no next entry, non-zero if there is.  * Note that directories are potentially visited three times.  The first  * time as "regular" file.  If tree_descend() is invoked at that time,  * the directory is added to a work list and will be visited two more  * times:  once just after descending into the directory and again  * just after ascending back to the parent.  *  * TREE_ERROR is returned if the descent failed (because the  * directory couldn't be opened, for instance).  This is returned  * instead of TREE_PREVISIT/TREE_POSTVISIT.  */
+comment|/*  * tree_next() returns Zero if there is no next entry, non-zero if  * there is.  Note that directories are potentially visited three  * times.  Directories are always visited first as part of enumerating  * their parent.  If tree_descend() is invoked at that time, the  * directory is added to a work list and will subsequently be visited  * two more times: once just after descending into the directory and  * again just after ascending back to the parent.  *  * TREE_ERROR_DIR is returned if the descent failed (because the  * directory couldn't be opened, for instance).  This is returned  * instead of TREE_PREVISIT/TREE_POSTVISIT.  TREE_ERROR_DIR is not a  * fatal error, but it does imply that the relevant subtree won't be  * visited.  TREE_ERROR_FATAL is returned for an error that left the  * traversal completely hosed.  Right now, this is only returned for  * chdir() failures during ascent.  */
 end_comment
 
 begin_define
@@ -86,6 +86,13 @@ name|TREE_ERROR_DIR
 value|-1
 end_define
 
+begin_define
+define|#
+directive|define
+name|TREE_ERROR_FATAL
+value|-2
+end_define
+
 begin_function_decl
 name|int
 name|tree_next
@@ -96,6 +103,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Errno value associated with the last traversal error. */
+end_comment
 
 begin_function_decl
 name|int
@@ -125,6 +136,10 @@ end_function_decl
 
 begin_comment
 comment|/*  * Return information about the current entry.  */
+end_comment
+
+begin_comment
+comment|/* Current depth in the traversal. */
 end_comment
 
 begin_function_decl
@@ -212,7 +227,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* The following tests may use mechanisms much faster than stat()/lstat(). */
+comment|/* The following functions use tricks to avoid a certain number of  * stat()/lstat() calls. */
 end_comment
 
 begin_comment

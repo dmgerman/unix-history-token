@@ -1502,11 +1502,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|pcpu
-modifier|*
-name|cp
-decl_stmt|;
 comment|/* The current CPU is the reference one. */
 name|tsc_skew
 index|[
@@ -1538,14 +1533,10 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|(
-name|cp
-operator|=
 name|pcpu_find
 argument_list|(
 name|i
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)

@@ -140,13 +140,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenbus.h>
+file|<machine/stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
+file|<xen/xenbus/xenbusvar.h>
 end_include
 
 begin_include
@@ -364,7 +364,7 @@ name|request_mutex
 decl_stmt|;
 comment|/* Protect transactions against save/restore. */
 name|struct
-name|rw_semaphore
+name|sx
 name|suspend_mutex
 decl_stmt|;
 block|}
@@ -890,7 +890,7 @@ name|type
 operator|==
 name|XS_TRANSACTION_START
 condition|)
-name|down_read
+name|sx_slock
 argument_list|(
 operator|&
 name|xs_state
@@ -996,7 +996,7 @@ name|XS_ERROR
 operator|)
 operator|)
 condition|)
-name|up_read
+name|sx_sunlock
 argument_list|(
 operator|&
 name|xs_state
@@ -1009,6 +1009,13 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|int
+name|xenwatch_inline
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Send message to xs, get kmalloc'ed reply.  ERR_PTR() on error. */
@@ -1287,11 +1294,23 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|xenwatch_running
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|xenwatch_inline
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
+name|xenwatch_inline
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -1300,6 +1319,10 @@ argument_list|(
 operator|&
 name|watch_events
 argument_list|)
+operator|&&
+name|xenwatch_running
+operator|==
+literal|0
 condition|)
 block|{
 name|struct
@@ -1319,6 +1342,21 @@ operator|&
 name|watch_events
 argument_list|,
 name|wmsg
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"handling %p ..."
+argument_list|,
+name|wmsg
+operator|->
+name|u
+operator|.
+name|watch
+operator|.
+name|handle
+operator|->
+name|callback
 argument_list|)
 expr_stmt|;
 name|wmsg
@@ -1362,6 +1400,21 @@ operator|.
 name|vec_size
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"... %p done\n"
+argument_list|,
+name|wmsg
+operator|->
+name|u
+operator|.
+name|watch
+operator|.
+name|handle
+operator|->
+name|callback
+argument_list|)
+expr_stmt|;
 name|kfree
 argument_list|(
 name|wmsg
@@ -1379,6 +1432,10 @@ name|wmsg
 argument_list|)
 expr_stmt|;
 block|}
+name|xenwatch_inline
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|BUG_ON
 argument_list|(
@@ -2476,7 +2533,7 @@ name|char
 modifier|*
 name|id_str
 decl_stmt|;
-name|down_read
+name|sx_slock
 argument_list|(
 operator|&
 name|xs_state
@@ -2505,7 +2562,7 @@ name|id_str
 argument_list|)
 condition|)
 block|{
-name|up_read
+name|sx_sunlock
 argument_list|(
 operator|&
 name|xs_state
@@ -2617,7 +2674,7 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|up_read
+name|sx_sunlock
 argument_list|(
 operator|&
 name|xs_state
@@ -3388,7 +3445,7 @@ operator|)
 name|watch
 argument_list|)
 expr_stmt|;
-name|down_read
+name|sx_slock
 argument_list|(
 operator|&
 name|xs_state
@@ -3476,7 +3533,7 @@ name|watches_lock
 argument_list|)
 expr_stmt|;
 block|}
-name|up_read
+name|sx_sunlock
 argument_list|(
 operator|&
 name|xs_state
@@ -3544,7 +3601,7 @@ operator|)
 name|watch
 argument_list|)
 expr_stmt|;
-name|down_read
+name|sx_slock
 argument_list|(
 operator|&
 name|xs_state
@@ -3608,7 +3665,7 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-name|up_read
+name|sx_sunlock
 argument_list|(
 operator|&
 name|xs_state
@@ -3719,7 +3776,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|down_write
+name|sx_xlock
 argument_list|(
 operator|&
 name|xs_state
@@ -3803,7 +3860,7 @@ name|token
 argument_list|)
 expr_stmt|;
 block|}
-name|up_write
+name|sx_xunlock
 argument_list|(
 operator|&
 name|xs_state
@@ -3831,13 +3888,25 @@ name|msg
 decl_stmt|;
 name|DELAY
 argument_list|(
-literal|10000
+literal|100000
 argument_list|)
 expr_stmt|;
-name|xenwatch_running
-operator|=
-literal|1
+while|while
+condition|(
+name|xenwatch_inline
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"xenwatch inline still running\n"
+argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -3913,11 +3982,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"handling watch\n"
-argument_list|)
-expr_stmt|;
 name|msg
 operator|->
 name|u
@@ -4515,14 +4579,12 @@ argument_list|,
 literal|"xenstore request"
 argument_list|)
 expr_stmt|;
-name|sema_init
+name|sx_init
 argument_list|(
 operator|&
 name|xs_state
 operator|.
 name|suspend_mutex
-argument_list|,
-literal|1
 argument_list|,
 literal|"xenstore suspend"
 argument_list|)

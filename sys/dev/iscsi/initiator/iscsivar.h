@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2007 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2008 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -139,7 +139,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s: " fmt "\n", __func__ , ##args)
+value|printf(">>> %s: " fmt "\n", __func__ , ##args)
 end_define
 
 begin_define
@@ -221,7 +221,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISC_SM_HOLD
+name|ISC_LINK_UP
 value|BIT(2)
 end_define
 
@@ -249,13 +249,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISC_IWAITING
+name|ISC_OQNOTEMPTY
 value|BIT(6)
 end_define
 
-begin_comment
-comment|//#define ISC_OWAITING	BIT(7)
-end_comment
+begin_define
+define|#
+directive|define
+name|ISC_OWAITING
+value|BIT(7)
+end_define
 
 begin_define
 define|#
@@ -297,6 +300,20 @@ define|#
 directive|define
 name|ISC_STALLED
 value|BIT(13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISC_HOLD
+value|BIT(14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISC_HOLDED
+value|BIT(15)
 end_define
 
 begin_define
@@ -371,6 +388,17 @@ end_struct
 begin_comment
 comment|/*  | one per 'session'  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pduq
+argument_list|)
+name|queue_t
+expr_stmt|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -490,48 +518,24 @@ name|struct
 name|mtx
 name|io_mtx
 decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pduq
-argument_list|)
+name|queue_t
 name|rsp
-expr_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pduq
-argument_list|)
+decl_stmt|;
+name|queue_t
 name|rsv
-expr_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pduq
-argument_list|)
+decl_stmt|;
+name|queue_t
 name|csnd
-expr_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pduq
-argument_list|)
+decl_stmt|;
+name|queue_t
 name|isnd
-expr_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pduq
-argument_list|)
+decl_stmt|;
+name|queue_t
 name|wsnd
-expr_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pduq
-argument_list|)
+decl_stmt|;
+name|queue_t
 name|hld
-expr_stmt|;
+decl_stmt|;
 comment|/*       | negotiable values       */
 name|isc_opt_t
 name|opt
@@ -566,6 +570,10 @@ name|sysctl_oid
 modifier|*
 name|oid
 decl_stmt|;
+name|int
+name|douio
+decl_stmt|;
+comment|//XXX: turn on/off uio on read
 block|}
 name|isc_session_t
 typedef|;
@@ -617,6 +625,10 @@ decl_stmt|;
 name|struct
 name|bintime
 name|ts
+decl_stmt|;
+name|queue_t
+modifier|*
+name|pduq
 decl_stmt|;
 block|}
 name|pduq_t
@@ -682,12 +694,19 @@ directive|endif
 define|#
 directive|define
 name|MAX_PDUS
-value|256
+value|(MAX_SESSIONS*256)
 comment|// XXX: at the moment this is arbitrary
 name|uma_zone_t
 name|pdu_zone
 decl_stmt|;
 comment|// pool of free pdu's
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pduq
+argument_list|)
+name|freepdu
+expr_stmt|;
 comment|/*       | cam stuff       */
 name|struct
 name|cam_sim
@@ -1345,6 +1364,39 @@ name|pduq_t
 modifier|*
 name|pq
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|isc
+operator|->
+name|pdu_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pq
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|isc
+operator|->
+name|freepdu
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|isc
+operator|->
+name|pdu_mtx
+argument_list|)
+expr_stmt|;
 name|pq
 operator|=
 operator|(
@@ -1358,20 +1410,24 @@ operator|->
 name|pdu_zone
 argument_list|,
 name|wait
-condition|?
-name|M_WAITOK
-else|:
-name|M_NOWAIT
+comment|/* M_WAITOK or M_NOWAIT*/
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pq
-operator|==
-name|NULL
-condition|)
+block|}
+else|else
 block|{
-comment|// will not happend if M_WAITOK ...
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|isc
+operator|->
+name|freepdu
+argument_list|,
+name|pq
+argument_list|,
+name|pq_link
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1380,9 +1436,17 @@ operator|->
 name|pdu_mtx
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|pq
+operator|==
+name|NULL
+condition|)
+block|{
 name|debug
 argument_list|(
-literal|1
+literal|7
 argument_list|,
 literal|"out of mem"
 argument_list|)
@@ -1482,6 +1546,9 @@ operator|->
 name|mp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NO_USE_MBUF
 if|if
 condition|(
 name|pq
@@ -1499,6 +1566,8 @@ argument_list|,
 name|M_ISCSI
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1507,13 +1576,16 @@ operator|->
 name|pdu_mtx
 argument_list|)
 expr_stmt|;
-name|uma_zfree
+name|TAILQ_INSERT_TAIL
 argument_list|(
+operator|&
 name|isc
 operator|->
-name|pdu_zone
+name|freepdu
 argument_list|,
 name|pq
+argument_list|,
+name|pq_link
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2353,6 +2425,16 @@ argument_list|,
 name|pq_link
 argument_list|)
 expr_stmt|;
+name|pq
+operator|->
+name|pduq
+operator|=
+operator|&
+name|sp
+operator|->
+name|isnd
+expr_stmt|;
+comment|// remember where you came from
 block|}
 elseif|else
 if|if
@@ -2400,6 +2482,16 @@ argument_list|,
 name|pq_link
 argument_list|)
 expr_stmt|;
+name|pq
+operator|->
+name|pduq
+operator|=
+operator|&
+name|sp
+operator|->
+name|wsnd
+expr_stmt|;
+comment|// remember where you came from
 block|}
 elseif|else
 if|if
@@ -2447,6 +2539,16 @@ argument_list|,
 name|pq_link
 argument_list|)
 expr_stmt|;
+name|pq
+operator|->
+name|pduq
+operator|=
+operator|&
+name|sp
+operator|->
+name|csnd
+expr_stmt|;
+comment|// remember where you came from
 block|}
 name|mtx_unlock
 argument_list|(
@@ -2459,6 +2561,64 @@ expr_stmt|;
 return|return
 name|pq
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|i_rqueue_pdu
+parameter_list|(
+name|isc_session_t
+modifier|*
+name|sp
+parameter_list|,
+name|pduq_t
+modifier|*
+name|pq
+parameter_list|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|snd_mtx
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pq
+operator|->
+name|pduq
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"pq->pduq is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+name|pq
+operator|->
+name|pduq
+argument_list|,
+name|pq
+argument_list|,
+name|pq_link
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|snd_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -3785,6 +3785,10 @@ expr_stmt|;
 name|funcnest
 operator|++
 expr_stmt|;
+name|exitstatus
+operator|=
+name|oexitstatus
+expr_stmt|;
 if|if
 condition|(
 name|flags

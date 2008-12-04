@@ -945,8 +945,6 @@ argument_list|(
 name|ssp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|mp
@@ -974,14 +972,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|MALLOC
-argument_list|(
 name|smp
-argument_list|,
-expr|struct
-name|smbmount
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1733,8 +1727,6 @@ operator|->
 name|sm_share
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if

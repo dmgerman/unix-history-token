@@ -92,6 +92,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -2130,6 +2136,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|ifnet
 modifier|*

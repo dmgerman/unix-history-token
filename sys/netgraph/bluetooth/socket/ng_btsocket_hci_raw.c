@@ -3105,19 +3105,11 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Security filter 	 * XXX never FREE()ed 	 */
+comment|/*  	 * Security filter 	 * XXX never free()ed 	 */
 name|ng_btsocket_hci_raw_sec_filter
 operator|=
-name|NULL
-expr_stmt|;
-name|MALLOC
+name|malloc
 argument_list|(
-name|ng_btsocket_hci_raw_sec_filter
-argument_list|,
-expr|struct
-name|ng_btsocket_hci_raw_sec_filter
-operator|*
-argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3788,12 +3780,10 @@ operator|(
 name|error
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|pcb
-argument_list|,
-name|ng_btsocket_hci_raw_pcb_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -6419,7 +6409,7 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pcb
 argument_list|,

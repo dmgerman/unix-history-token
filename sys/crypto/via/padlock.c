@@ -1386,12 +1386,20 @@ name|maccrd
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Sanity check. */
 if|if
 condition|(
 name|crp
 operator|==
 name|NULL
-operator|||
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
 name|crp
 operator|->
 name|crp_callback

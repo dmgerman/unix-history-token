@@ -1266,7 +1266,7 @@ operator|->
 name|po_mtx
 argument_list|)
 expr_stmt|;
-comment|/* wakeup any processes waiting for a FLUSH */
+comment|/* 				 * Wakeup the thread waiting for the 				 * PMC_OP_FLUSHLOG request to 				 * complete. 				 */
 if|if
 condition|(
 name|po
@@ -2383,6 +2383,11 @@ begin_function
 name|int
 name|pmclog_configure_log
 parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|md
+parameter_list|,
 name|struct
 name|pmc_owner
 modifier|*
@@ -4290,23 +4295,19 @@ name|n
 operator|++
 control|)
 block|{
-name|MALLOC
-argument_list|(
 name|plb
-argument_list|,
-expr|struct
-name|pmclog_buffer
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 literal|1024
 operator|*
 name|pmclog_buffer_size
 argument_list|,
 name|M_PMC
 argument_list|,
-name|M_ZERO
-operator||
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|PMCLOG_INIT_BUFFER_DESCRIPTOR
@@ -4403,7 +4404,7 @@ argument_list|,
 name|plb_next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|plb
 argument_list|,

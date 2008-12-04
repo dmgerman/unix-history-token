@@ -1711,7 +1711,7 @@ value|0x0030
 end_define
 
 begin_comment
-comment|/* r1xx, r2xx, r300, r(v)350, r420/r481, rs480 */
+comment|/* r1xx, r2xx, r300, r(v)350, r420/r481, rs400/rs480 */
 end_comment
 
 begin_define
@@ -1722,20 +1722,20 @@ value|(1<< 6)
 end_define
 
 begin_comment
-comment|/* rs400, rs690/rs740 */
+comment|/* rs600/rs690/rs740 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RS400_BUS_MASTER_DIS
+name|RS600_BUS_MASTER_DIS
 value|(1<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RS400_MSI_REARM
+name|RS600_MSI_REARM
 value|(1<< 20)
 end_define
 
@@ -4782,7 +4782,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RS480_MSI_REARM
+name|RS400_MSI_REARM
 value|(1<< 3)
 end_define
 

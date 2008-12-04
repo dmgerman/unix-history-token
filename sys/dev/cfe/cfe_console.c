@@ -687,7 +687,7 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-name|sprintf
+name|strcpy
 argument_list|(
 name|cp
 operator|->
@@ -695,12 +695,6 @@ name|cn_name
 argument_list|,
 literal|"cfecons"
 argument_list|)
-expr_stmt|;
-name|cp
-operator|->
-name|cn_tp
-operator|=
-name|cfe_tp
 expr_stmt|;
 block|}
 end_function

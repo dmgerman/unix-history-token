@@ -833,13 +833,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"imm%d: (disconnect) s1=0x%x s2=0x%x, s3=0x%x\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"(disconnect) s1=0x%x s2=0x%x, s3=0x%x\n"
 argument_list|,
 name|s1
 operator|&
@@ -1135,13 +1135,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"imm%d: (connect) s1=0x%x s2=0x%x, s3=0x%x\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"(connect) s1=0x%x s2=0x%x, s3=0x%x\n"
 argument_list|,
 name|s1
 operator|&
@@ -1349,13 +1349,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"imm%d: NIBBLE mode unavailable!\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"NIBBLE mode unavailable!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1407,7 +1407,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* ensure we are disconnected or daisy chained peripheral  	 * may cause serious problem to the disk */
+comment|/* ensure we are disconnected or daisy chained peripheral 	 * may cause serious problem to the disk */
 if|if
 condition|(
 name|error
@@ -1417,13 +1417,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"imm%d: can't disconnect from the drive\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"can't disconnect from the drive\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2141,13 +2141,13 @@ argument_list|,
 name|epp17_outstr
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"imm%d: EPP mode\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"EPP mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2176,13 +2176,13 @@ argument_list|,
 name|spp_outbyte_submicroseq
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"imm%d: PS2 mode\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"PS2 mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2213,13 +2213,13 @@ argument_list|,
 name|spp_outbyte_submicroseq
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"imm%d: NIBBLE mode\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"NIBBLE mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2605,7 +2605,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/*  	 * Complete transfer ...  	 */
+comment|/* 	 * Complete transfer ... 	 */
 operator|*
 name|count
 operator|=

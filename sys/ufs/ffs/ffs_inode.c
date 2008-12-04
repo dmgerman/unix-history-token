@@ -3149,12 +3149,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|copy
-argument_list|,
-name|caddr_t
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|fs
 operator|->
 name|fs_bsize
@@ -3495,7 +3493,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|copy
 argument_list|,

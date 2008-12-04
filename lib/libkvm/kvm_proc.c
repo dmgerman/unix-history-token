@@ -103,6 +103,24 @@ directive|include
 file|<sys/_task.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -117,18 +135,6 @@ begin_include
 include|#
 directive|include
 file|<sys/jail.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include

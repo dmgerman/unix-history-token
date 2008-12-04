@@ -168,14 +168,30 @@ begin_comment
 comment|/* nothing */
 end_comment
 
-begin_expr_stmt
-unit|void
-name|cpu_halt
-argument_list|(
+begin_decl_stmt
+unit|extern
+name|char
+name|btext
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|etext
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+name|cpu_halt
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

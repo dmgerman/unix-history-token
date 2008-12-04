@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pioctl.h>
 end_include
 
@@ -1931,6 +1937,25 @@ argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|)
+expr_stmt|;
+comment|/* In case we are jailed tell the prison that we exist. */
+if|if
+condition|(
+name|jailed
+argument_list|(
+name|p2
+operator|->
+name|p_ucred
+argument_list|)
+condition|)
+name|prison_proc_hold
+argument_list|(
+name|p2
+operator|->
+name|p_ucred
+operator|->
+name|cr_prison
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK

@@ -610,12 +610,10 @@ name|error
 operator|)
 return|;
 comment|/* Initialize private struct */
-name|MALLOC
-argument_list|(
 name|sc
-argument_list|,
-name|ng_h4_info_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -763,7 +761,7 @@ name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sc
 argument_list|,
@@ -856,7 +854,7 @@ name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sc
 argument_list|,
@@ -3023,7 +3021,7 @@ name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sc
 argument_list|,

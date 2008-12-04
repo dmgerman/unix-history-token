@@ -329,6 +329,12 @@ name|char
 modifier|*
 specifier|const
 modifier|*
+parameter_list|,
+name|proc_child_func
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern

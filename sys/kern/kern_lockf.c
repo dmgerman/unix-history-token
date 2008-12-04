@@ -2165,6 +2165,11 @@ name|oadd
 expr_stmt|;
 block|}
 comment|/* 	 * Avoid the common case of unlocking when inode has no locks. 	 */
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2173,17 +2178,6 @@ name|statep
 operator|)
 operator|==
 name|NULL
-operator|||
-name|LIST_EMPTY
-argument_list|(
-operator|&
-operator|(
-operator|*
-name|statep
-operator|)
-operator|->
-name|ls_active
-argument_list|)
 condition|)
 block|{
 if|if
@@ -2201,6 +2195,11 @@ name|l_type
 operator|=
 name|F_UNLCK
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2208,6 +2207,11 @@ operator|)
 return|;
 block|}
 block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Map our arguments to an existing lock owner or create one 	 * if this is the first time we have seen this owner. 	 */
 name|hash
 operator|=
@@ -5243,11 +5247,6 @@ modifier|*
 name|cookiep
 parameter_list|)
 block|{
-name|struct
-name|lockf_entry
-modifier|*
-name|block
-decl_stmt|;
 specifier|static
 name|char
 name|lockstr
@@ -5314,16 +5313,12 @@ expr_stmt|;
 comment|/* 	 * Scan lock list for this file looking for locks that would block us. 	 */
 while|while
 condition|(
-operator|(
-name|block
-operator|=
 name|lf_getblock
 argument_list|(
 name|state
 argument_list|,
 name|lock
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* 		 * Free the structure and return if nonblocking. 		 */

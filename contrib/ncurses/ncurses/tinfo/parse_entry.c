@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: parse_entry.c,v 1.65 2007/08/11 16:19:02 tom Exp $"
+literal|"$Id: parse_entry.c,v 1.69 2008/08/16 21:52:03 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1004,6 +1004,21 @@ argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|entryp
+operator|->
+name|tterm
+operator|.
+name|str_table
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ERR
+operator|)
+return|;
 name|DEBUG
 argument_list|(
 literal|1
@@ -1590,7 +1605,6 @@ name|token_type
 condition|)
 block|{
 comment|/* 		 * Nasty special cases here handle situations in which type 		 * information can resolve name clashes.  Normal lookup 		 * finds the last instance in the capability table of a 		 * given name, regardless of type.  find_type_entry looks 		 * for a first matching instance with given type.  So as 		 * long as all ambiguous names occur in pairs of distinct 		 * type, this will do the job. 		 */
-comment|/* tell max_attributes from arrow_key_map */
 if|if
 condition|(
 name|token_type
@@ -1608,6 +1622,7 @@ name|tk_name
 argument_list|)
 condition|)
 block|{
+comment|/* tell max_attributes from arrow_key_map */
 name|entry_ptr
 operator|=
 name|_nc_find_type_entry
@@ -1624,7 +1639,13 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* map terminfo's string MT to MT */
+name|assert
+argument_list|(
+name|entry_ptr
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1644,6 +1665,7 @@ name|tk_name
 argument_list|)
 condition|)
 block|{
+comment|/* map terminfo's string MT to MT */
 name|entry_ptr
 operator|=
 name|_nc_find_type_entry
@@ -1660,7 +1682,13 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* treat strings without following "=" as empty strings */
+name|assert
+argument_list|(
+name|entry_ptr
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1676,14 +1704,15 @@ operator|==
 name|STRING
 condition|)
 block|{
+comment|/* treat strings without following "=" as empty strings */
 name|token_type
 operator|=
 name|STRING
 expr_stmt|;
-comment|/* we couldn't recover; skip this token */
 block|}
 else|else
 block|{
+comment|/* we couldn't recover; skip this token */
 if|if
 condition|(
 operator|!
@@ -1916,6 +1945,10 @@ argument_list|)
 expr_stmt|;
 name|_nc_panic_mode
 argument_list|(
+call|(
+name|char
+call|)
+argument_list|(
 operator|(
 name|_nc_syntax
 operator|==
@@ -1925,6 +1958,7 @@ condition|?
 literal|':'
 else|:
 literal|','
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1973,7 +2007,7 @@ name|has_base_entry
 init|=
 name|FALSE
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 comment|/* 	     * Don't insert defaults if this is a `+' entry meant only 	     * for inclusion in other entries (not sure termcap ever 	     * had these, actually). 	     */
@@ -2333,6 +2367,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|code
 expr_stmt|;
 name|temp
@@ -2340,6 +2377,9 @@ index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|src
 expr_stmt|;
 name|temp
@@ -3425,6 +3465,7 @@ condition|;
 name|ap
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|len
@@ -3450,12 +3491,19 @@ operator|==
 literal|0
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 operator|!
+operator|(
+name|ap
+operator|->
+name|from
+operator|&&
 name|ap
 operator|->
 name|to
+operator|)
 condition|)
 block|{
 name|_nc_warning

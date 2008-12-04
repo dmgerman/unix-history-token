@@ -1433,7 +1433,7 @@ name|val
 parameter_list|,
 name|c
 parameter_list|)
-value|((c) != _POSIX_VDISABLE&& (c) == (val))
+value|((c) == (val)&& (val) != _POSIX_VDISABLE)
 end_define
 
 begin_endif

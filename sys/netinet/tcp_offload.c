@@ -137,6 +137,12 @@ directive|include
 file|<netinet/toedev.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_decl_stmt
 name|uint32_t
 name|toedev_registration_count

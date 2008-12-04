@@ -715,6 +715,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -748,6 +753,9 @@ name|int
 name|cheap
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DDB
 specifier|const
 name|char
 modifier|*
@@ -759,6 +767,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|st
@@ -954,6 +964,9 @@ literal|17
 index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 block|}
 else|else
 block|{
@@ -1037,14 +1050,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

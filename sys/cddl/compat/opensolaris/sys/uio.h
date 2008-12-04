@@ -104,6 +104,12 @@ name|uio_loffset
 value|uio_offset
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUILDING_ZFS
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -168,6 +174,15 @@ name|uio
 parameter_list|)
 value|zfs_uiomove((cp), (n), (dir), (uio))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BUILDING_ZFS */
+end_comment
 
 begin_endif
 endif|#

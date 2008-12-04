@@ -27,6 +27,20 @@ name|proc_handle
 struct_decl|;
 end_struct_decl
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|proc_child_func
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/* Values returned by proc_state(). */
 end_comment
@@ -218,6 +232,12 @@ parameter_list|,
 name|char
 modifier|*
 specifier|const
+modifier|*
+parameter_list|,
+name|proc_child_func
+modifier|*
+parameter_list|,
+name|void
 modifier|*
 parameter_list|,
 name|struct

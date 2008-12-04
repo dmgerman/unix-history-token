@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -249,6 +255,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -303,13 +315,64 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|path_mtu_discovery
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ss_fltsz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ss_fltsz_local
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_do_newreno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_do_tso
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_do_autosndbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_autosndbuf_inc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_autosndbuf_max
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -335,14 +398,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|ss_fltsz
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -366,14 +421,6 @@ literal|"Slow start flight size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|ss_fltsz_local
-init|=
-literal|4
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -399,14 +446,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|tcp_do_newreno
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -430,14 +469,6 @@ literal|"Enable NewReno Algorithms"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_do_tso
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -463,14 +494,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|tcp_do_autosndbuf
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -495,16 +518,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|tcp_autosndbuf_inc
-init|=
-literal|8
-operator|*
-literal|1024
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -528,16 +541,6 @@ literal|"Incrementor step size of automatic send buffer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_autosndbuf_max
-init|=
-literal|256
-operator|*
-literal|1024
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -4547,12 +4550,13 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
-name|INP_CHECK_SOCKAF
-argument_list|(
-name|so
-argument_list|,
-name|AF_INET6
-argument_list|)
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_vflag
+operator|&
+name|INP_IPV6PROTO
 condition|)
 name|ip
 operator|->

@@ -1931,7 +1931,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_proc_create_swapper
+name|mac_cred_create_swapper
 argument_list|(
 name|p
 operator|->
@@ -3260,7 +3260,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_proc_create_init
+name|mac_cred_create_init
 argument_list|(
 name|newcred
 argument_list|)

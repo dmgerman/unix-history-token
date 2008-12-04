@@ -209,6 +209,12 @@ directive|include
 file|<net/if_types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -14033,14 +14039,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|he
-argument_list|,
-expr|struct
-name|handler_element
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -14244,7 +14246,7 @@ operator|&
 name|linux_ioctl_sx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|he
 argument_list|,

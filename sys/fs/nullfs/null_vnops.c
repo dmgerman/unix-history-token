@@ -797,14 +797,12 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-comment|/* XXX Cleanup needed... */
-name|panic
+name|vput
 argument_list|(
-literal|"null_nodeget failed"
+name|lvp
 argument_list|)
 expr_stmt|;
-block|}
+else|else
 operator|*
 name|ap
 operator|->
@@ -1179,17 +1177,17 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-name|mode_t
-name|mode
+name|accmode_t
+name|accmode
 init|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 decl_stmt|;
 comment|/* 	 * Disallow write attempts on read-only layers; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the filesystem. 	 */
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -2008,7 +2006,7 @@ argument_list|(
 literal|"null_reclaim: reclaiming a node with no lowervp"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|xp
 argument_list|,

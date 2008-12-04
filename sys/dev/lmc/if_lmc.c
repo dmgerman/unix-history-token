@@ -25685,14 +25685,14 @@ name|resp
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|resp
 argument_list|,
 name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|msg
 argument_list|,

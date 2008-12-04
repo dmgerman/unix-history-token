@@ -407,14 +407,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if MALLOC should block. 	 */
-name|MALLOC
-argument_list|(
 name|pt
-argument_list|,
-expr|struct
-name|portalnode
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -448,7 +444,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|pt
 argument_list|,
@@ -2132,7 +2128,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|ap
 operator|->

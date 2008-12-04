@@ -330,12 +330,10 @@ name|hinfo_p
 name|hip
 decl_stmt|;
 comment|/* Create hook private structure. */
-name|MALLOC
-argument_list|(
 name|hip
-argument_list|,
-name|hinfo_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -709,7 +707,7 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|NG_HOOK_PRIVATE
 argument_list|(

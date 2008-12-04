@@ -234,6 +234,12 @@ directive|include
 file|<netinet/in_pcb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -249,6 +255,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -362,11 +374,15 @@ begin_comment
 comment|/*  * Note on SA reference counting:  * - SAs that are not in DEAD state will have (total external reference + 1)  *   following value in reference count field.  they cannot be freed and are  *   referenced from SA header.  * - SAs that are in DEAD state will have (total external reference)  *   in reference count field.  they are ready to be freed.  reference from  *   SA header will be removed in key_delsav(), when the reference count  *   field hits 0 (= no external reference other than from SA header.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|u_int32_t
 name|key_debug_level
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -374,8 +390,6 @@ begin_decl_stmt
 specifier|static
 name|u_int
 name|key_spi_trycnt
-init|=
-literal|1000
 decl_stmt|;
 end_decl_stmt
 
@@ -383,8 +397,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|key_spi_minval
-init|=
-literal|0x100
 decl_stmt|;
 end_decl_stmt
 
@@ -392,21 +404,13 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|key_spi_maxval
-init|=
-literal|0x0fffffff
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|policy_id
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -414,73 +418,62 @@ begin_decl_stmt
 specifier|static
 name|u_int
 name|key_int_random
-init|=
-literal|60
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*interval to initialize randseed,1(m)*/
-end_comment
 
 begin_decl_stmt
 specifier|static
 name|u_int
 name|key_larval_lifetime
-init|=
-literal|30
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* interval to expire acquiring, 30(s)*/
-end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|key_blockacq_count
-init|=
-literal|10
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* counter for blocking SADB_ACQUIRE.*/
-end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|key_blockacq_lifetime
-init|=
-literal|20
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* lifetime for blocking SADB_ACQUIRE.*/
-end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|key_preferred_oldsa
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* preferred old sa rather than new sa.*/
-end_comment
 
 begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|acq_seq
-init|=
-literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ipsec_esp_keymin
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ipsec_esp_auth
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ipsec_ah_keymin
 decl_stmt|;
 end_decl_stmt
 
@@ -501,6 +494,80 @@ end_expr_stmt
 
 begin_comment
 comment|/* SPD */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|LIST_HEAD
+argument_list|(
+argument|_sahtree
+argument_list|,
+argument|secashead
+argument_list|)
+name|sahtree
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* SAD */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|LIST_HEAD
+argument_list|(
+argument|_regtree
+argument_list|,
+argument|secreg
+argument_list|)
+name|regtree
+index|[
+name|SADB_SATYPE_MAX
+operator|+
+literal|1
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|LIST_HEAD
+argument_list|(
+argument|_acqtree
+argument_list|,
+argument|secacq
+argument_list|)
+name|acqtree
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* acquiring list */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|LIST_HEAD
+argument_list|(
+argument|_spacqtree
+argument_list|,
+argument|secspacq
+argument_list|)
+name|spacqtree
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* SP acquiring list */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
 end_comment
 
 begin_decl_stmt
@@ -551,22 +618,6 @@ name|SPTREE_LOCK_ASSERT
 parameter_list|()
 value|mtx_assert(&sptree_lock, MA_OWNED)
 end_define
-
-begin_expr_stmt
-specifier|static
-name|LIST_HEAD
-argument_list|(
-argument|_sahtree
-argument_list|,
-argument|secashead
-argument_list|)
-name|sahtree
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* SAD */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -621,23 +672,6 @@ begin_comment
 comment|/* registed list */
 end_comment
 
-begin_expr_stmt
-specifier|static
-name|LIST_HEAD
-argument_list|(
-argument|_regtree
-argument_list|,
-argument|secreg
-argument_list|)
-name|regtree
-index|[
-name|SADB_SATYPE_MAX
-operator|+
-literal|1
-index|]
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -687,22 +721,6 @@ parameter_list|()
 value|mtx_assert(&regtree_lock, MA_OWNED)
 end_define
 
-begin_expr_stmt
-specifier|static
-name|LIST_HEAD
-argument_list|(
-argument|_acqtree
-argument_list|,
-argument|secacq
-argument_list|)
-name|acqtree
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* acquiring list */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -751,22 +769,6 @@ name|ACQ_LOCK_ASSERT
 parameter_list|()
 value|mtx_assert(&acq_lock, MA_OWNED)
 end_define
-
-begin_expr_stmt
-specifier|static
-name|LIST_HEAD
-argument_list|(
-argument|_spacqtree
-argument_list|,
-argument|secspacq
-argument_list|)
-name|spacqtree
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* SP acquiring list */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -853,6 +855,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int
 name|saorder_state_alive
 index|[]
@@ -870,6 +873,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int
 name|saorder_state_any
 index|[]
@@ -1131,33 +1135,6 @@ argument_list|)
 block|,
 comment|/* SADB_X_SA2 */
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ipsec_esp_keymin
-init|=
-literal|256
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ipsec_esp_auth
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ipsec_ah_keymin
-init|=
-literal|128
 decl_stmt|;
 end_decl_stmt
 
@@ -13233,7 +13210,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_any
+name|saorder_state_any
 argument_list|)
 condition|;
 name|stateidx
@@ -13243,7 +13220,7 @@ block|{
 name|u_int
 name|state
 init|=
-name|V_saorder_state_any
+name|saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -14499,7 +14476,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_alive
+name|saorder_state_alive
 argument_list|)
 condition|;
 name|stateidx
@@ -14508,7 +14485,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_alive
+name|saorder_state_alive
 index|[
 name|stateidx
 index|]
@@ -20375,6 +20352,9 @@ name|now
 init|=
 name|time_second
 decl_stmt|;
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
 name|VNET_FOREACH
 argument_list|(
 argument|vnet_iter
@@ -20409,6 +20389,9 @@ name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|IPSEC_DEBUG2
@@ -25440,7 +25423,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_alive
+name|saorder_state_alive
 argument_list|)
 condition|;
 name|stateidx
@@ -25449,7 +25432,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_alive
+name|saorder_state_alive
 index|[
 name|stateidx
 index|]
@@ -30852,7 +30835,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_alive
+name|saorder_state_alive
 argument_list|)
 condition|;
 name|stateidx
@@ -30861,7 +30844,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_any
+name|saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -31257,7 +31240,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_any
+name|saorder_state_any
 argument_list|)
 condition|;
 name|stateidx
@@ -31266,7 +31249,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_any
+name|saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -31395,7 +31378,7 @@ name|stateidx
 operator|<
 name|_ARRAYLEN
 argument_list|(
-name|V_saorder_state_any
+name|saorder_state_any
 argument_list|)
 condition|;
 name|stateidx
@@ -31404,7 +31387,7 @@ control|)
 block|{
 name|state
 operator|=
-name|V_saorder_state_any
+name|saorder_state_any
 index|[
 name|stateidx
 index|]
@@ -33867,6 +33850,68 @@ expr_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|V_key_debug_level
+operator|=
+literal|0
+expr_stmt|;
+name|V_key_spi_trycnt
+operator|=
+literal|1000
+expr_stmt|;
+name|V_key_spi_minval
+operator|=
+literal|0x100
+expr_stmt|;
+name|V_key_spi_maxval
+operator|=
+literal|0x0fffffff
+expr_stmt|;
+comment|/* XXX */
+name|V_policy_id
+operator|=
+literal|0
+expr_stmt|;
+name|V_key_int_random
+operator|=
+literal|60
+expr_stmt|;
+comment|/*interval to initialize randseed,1(m)*/
+name|V_key_larval_lifetime
+operator|=
+literal|30
+expr_stmt|;
+comment|/* interval to expire acquiring, 30(s)*/
+name|V_key_blockacq_count
+operator|=
+literal|10
+expr_stmt|;
+comment|/* counter for blocking SADB_ACQUIRE.*/
+name|V_key_blockacq_lifetime
+operator|=
+literal|20
+expr_stmt|;
+comment|/* lifetime for blocking SADB_ACQUIRE.*/
+name|V_key_preferred_oldsa
+operator|=
+literal|1
+expr_stmt|;
+comment|/* preferred old sa rather than new sa*/
+name|V_acq_seq
+operator|=
+literal|0
+expr_stmt|;
+name|V_ipsec_esp_keymin
+operator|=
+literal|256
+expr_stmt|;
+name|V_ipsec_esp_auth
+operator|=
+literal|0
+expr_stmt|;
+name|V_ipsec_ah_keymin
+operator|=
+literal|128
+expr_stmt|;
 name|SPTREE_LOCK_INIT
 argument_list|()
 expr_stmt|;

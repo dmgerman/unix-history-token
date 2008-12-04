@@ -2340,8 +2340,6 @@ condition|)
 block|{
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 name|device_printf
@@ -2367,8 +2365,6 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-literal|1
-operator|||
 name|bootverbose
 operator|)
 condition|)
@@ -2386,8 +2382,6 @@ else|else
 block|{
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 name|device_printf
@@ -2938,8 +2932,6 @@ name|MASTER_CHIP_REV_SHIFT
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 block|{
@@ -3034,8 +3026,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 block|{
@@ -3299,8 +3289,6 @@ name|DMA_CFG_WR_BURST_SHIFT
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 block|{
@@ -13830,8 +13818,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 name|device_printf

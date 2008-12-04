@@ -446,22 +446,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|interrupt_vector_base
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|interrupt_vector_top
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|powerpc_exception

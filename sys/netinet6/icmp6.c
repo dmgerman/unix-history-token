@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -187,6 +193,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_include
@@ -231,6 +243,12 @@ directive|include
 file|<netinet6/nd6.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -262,12 +280,11 @@ name|inet6domain
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|icmp6stat
-name|icmp6stat
-decl_stmt|;
-end_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -293,11 +310,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|icmp6_nodeinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|icmp6stat
+name|icmp6stat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|icmp6errpps_count
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -309,12 +338,10 @@ name|icmp6errppslim_last
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|icmp6_nodeinfo
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -528,6 +555,10 @@ name|INIT_VNET_INET6
 argument_list|(
 name|curvnet
 argument_list|)
+expr_stmt|;
+name|V_icmp6errpps_count
+operator|=
+literal|0
 expr_stmt|;
 name|mld6_init
 argument_list|()

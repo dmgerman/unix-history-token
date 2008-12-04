@@ -327,6 +327,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/vinet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/in_cksum.h>
 end_include
 
@@ -354,6 +360,12 @@ begin_comment
 comment|/*  * The timed wait queue contains references to each of the TCP sessions  * currently in the TIME_WAIT state.  The queue pointers, including the  * queue pointers in each tcptw structure, are protected using the global  * tcbinfo lock, which must be held over queue iteration and modification.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_expr_stmt
 specifier|static
 name|TAILQ_HEAD
@@ -364,6 +376,17 @@ argument_list|)
 name|twq_2msl
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|nolocaltimewait
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -563,18 +586,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|nolocaltimewait
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
@@ -583,7 +601,6 @@ name|nolocaltimewait
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|nolocaltimewait
 argument_list|,
 literal|0
@@ -1850,32 +1867,11 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
-ifdef|#
-directive|ifdef
-name|INET6
-if|if
-condition|(
-name|inp
-operator|->
-name|inp_vflag
-operator|&
-name|INP_IPV6PROTO
-condition|)
-name|in6_pcbfree
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-else|else
-endif|#
-directive|endif
 name|in_pcbfree
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-block|}
 name|V_tcpstat
 operator|.
 name|tcps_closed

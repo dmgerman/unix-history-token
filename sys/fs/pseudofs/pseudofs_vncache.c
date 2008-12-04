@@ -542,14 +542,10 @@ operator|++
 name|pfs_vncache_misses
 expr_stmt|;
 comment|/* nope, get a new one */
-name|MALLOC
-argument_list|(
 name|pvd
-argument_list|,
-expr|struct
-name|pfs_vdata
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|pvd
@@ -616,7 +612,7 @@ operator|&
 name|pfs_vncache_mutex
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pvd
 argument_list|,
@@ -828,7 +824,7 @@ operator|&
 name|pfs_vncache_mutex
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pvd
 argument_list|,
@@ -991,7 +987,7 @@ operator|&
 name|pfs_vncache_mutex
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pvd
 argument_list|,

@@ -986,6 +986,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|icmp_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ip_next_mtu
 parameter_list|(

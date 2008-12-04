@@ -1848,8 +1848,8 @@ name|posix_spawnattr_setschedparam
 parameter_list|(
 name|posix_spawnattr_t
 modifier|*
-name|sa
 name|__restrict
+name|sa
 parameter_list|,
 specifier|const
 name|struct

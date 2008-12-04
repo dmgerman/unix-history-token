@@ -915,6 +915,34 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_ACCMODE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__accmode_t
+name|accmode_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* access permissions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACCMODE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_NLINK_T_DECLARED
 end_ifndef
 

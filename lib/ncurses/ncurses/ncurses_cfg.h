@@ -653,14 +653,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_WORKING_POLL
+name|HAVE_WRESIZE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HAVE_WRESIZE
+name|IOSTREAM_NAMESPACE
 value|1
 end_define
 
@@ -696,7 +696,7 @@ begin_define
 define|#
 directive|define
 name|NCURSES_VERSION_STRING
-value|"5.6.20080503"
+value|"5.7.20081102"
 end_define
 
 begin_define
@@ -862,6 +862,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_MBSRTOWCS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_MBSTOWCS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_MBTOWC
 value|1
 end_define
@@ -870,6 +884,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_PUTWC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCSRTOMBS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCSTOMBS
 value|1
 end_define
 

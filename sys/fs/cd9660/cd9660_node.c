@@ -173,12 +173,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|i_flag
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * If we are done with the inode, reclaim it 	 * so that it can be reused immediately. 	 */
 if|if
 condition|(
@@ -287,7 +281,7 @@ operator|->
 name|im_devvp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|vp
 operator|->
@@ -1147,11 +1141,19 @@ name|ISO_FTYPE_HIGH_SIERRA
 condition|)
 name|tz
 operator|=
+operator|(
+operator|(
+name|signed
+name|char
+operator|*
+operator|)
 name|pi
+operator|)
 index|[
 literal|6
 index|]
 expr_stmt|;
+comment|/* Timezone value is signed. */
 else|else
 comment|/* original high sierra misses timezone data */
 name|tz

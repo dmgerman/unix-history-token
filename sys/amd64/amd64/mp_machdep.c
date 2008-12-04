@@ -181,6 +181,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cputypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -1472,16 +1478,9 @@ operator|&
 name|CPUID_HTT
 operator|)
 operator|&&
-operator|(
-name|strcmp
-argument_list|(
-name|cpu_vendor
-argument_list|,
-literal|"GenuineIntel"
-argument_list|)
+name|cpu_vendor_id
 operator|==
-literal|0
-operator|)
+name|CPU_VENDOR_INTEL
 condition|)
 block|{
 comment|/* 		 * If the "deterministic cache parameters" cpuid calls 		 * are available, use them. 		 */

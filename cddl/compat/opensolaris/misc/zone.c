@@ -34,7 +34,7 @@ file|<sys/zone.h>
 end_include
 
 begin_function
-name|int
+name|zoneid_t
 name|getzoneid
 parameter_list|(
 name|void
@@ -82,6 +82,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|zoneid_t
+operator|)
 name|jailid
 operator|)
 return|;

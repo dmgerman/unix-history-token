@@ -366,12 +366,10 @@ name|unit
 init|=
 name|NULL
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|unit
-argument_list|,
-name|ng_hci_unit_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -595,7 +593,7 @@ name|unit
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|unit
 argument_list|,

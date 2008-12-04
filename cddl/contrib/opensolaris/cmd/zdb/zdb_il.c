@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -1276,79 +1276,121 @@ block|{
 block|{
 name|NULL
 block|,
-literal|"Total      "
+literal|"Total              "
 block|}
 block|,
 block|{
 name|zil_prt_rec_create
 block|,
-literal|"TX_CREATE  "
+literal|"TX_CREATE          "
 block|}
 block|,
 block|{
 name|zil_prt_rec_create
 block|,
-literal|"TX_MKDIR   "
+literal|"TX_MKDIR           "
 block|}
 block|,
 block|{
 name|zil_prt_rec_create
 block|,
-literal|"TX_MKXATTR "
+literal|"TX_MKXATTR         "
 block|}
 block|,
 block|{
 name|zil_prt_rec_create
 block|,
-literal|"TX_SYMLINK "
+literal|"TX_SYMLINK         "
 block|}
 block|,
 block|{
 name|zil_prt_rec_remove
 block|,
-literal|"TX_REMOVE  "
+literal|"TX_REMOVE          "
 block|}
 block|,
 block|{
 name|zil_prt_rec_remove
 block|,
-literal|"TX_RMDIR   "
+literal|"TX_RMDIR           "
 block|}
 block|,
 block|{
 name|zil_prt_rec_link
 block|,
-literal|"TX_LINK    "
+literal|"TX_LINK            "
 block|}
 block|,
 block|{
 name|zil_prt_rec_rename
 block|,
-literal|"TX_RENAME  "
+literal|"TX_RENAME          "
 block|}
 block|,
 block|{
 name|zil_prt_rec_write
 block|,
-literal|"TX_WRITE   "
+literal|"TX_WRITE           "
 block|}
 block|,
 block|{
 name|zil_prt_rec_truncate
 block|,
-literal|"TX_TRUNCATE"
+literal|"TX_TRUNCATE        "
 block|}
 block|,
 block|{
 name|zil_prt_rec_setattr
 block|,
-literal|"TX_SETATTR "
+literal|"TX_SETATTR         "
 block|}
 block|,
 block|{
 name|zil_prt_rec_acl
 block|,
-literal|"TX_ACL     "
+literal|"TX_ACL_V0          "
+block|}
+block|,
+block|{
+name|zil_prt_rec_acl
+block|,
+literal|"TX_ACL_ACL         "
+block|}
+block|,
+block|{
+name|zil_prt_rec_create
+block|,
+literal|"TX_CREATE_ACL      "
+block|}
+block|,
+block|{
+name|zil_prt_rec_create
+block|,
+literal|"TX_CREATE_ATTR     "
+block|}
+block|,
+block|{
+name|zil_prt_rec_create
+block|,
+literal|"TX_CREATE_ACL_ATTR "
+block|}
+block|,
+block|{
+name|zil_prt_rec_create
+block|,
+literal|"TX_MKDIR_ACL       "
+block|}
+block|,
+block|{
+name|zil_prt_rec_create
+block|,
+literal|"TX_MKDIR_ATTR      "
+block|}
+block|,
+block|{
+name|zil_prt_rec_create
+block|,
+literal|"TX_MKDIR_ACL_ATTR  "
 block|}
 block|, }
 decl_stmt|;
@@ -1398,6 +1440,7 @@ literal|'i'
 index|]
 argument_list|)
 decl_stmt|;
+comment|/* reduce size of txtype to strip off TX_CI bit */
 name|txtype
 operator|=
 name|lr
@@ -1430,7 +1473,19 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t\t%s len %6llu, txg %llu, seq %llu\n"
+literal|"\t\t%s%s len %6llu, txg %llu, seq %llu\n"
+argument_list|,
+operator|(
+name|lr
+operator|->
+name|lrc_txtype
+operator|&
+name|TX_CI
+operator|)
+condition|?
+literal|"CI-"
+else|:
+literal|""
 argument_list|,
 name|zil_rec_info
 index|[

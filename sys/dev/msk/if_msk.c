@@ -20709,6 +20709,8 @@ argument_list|,
 name|BMU_STOP
 argument_list|)
 expr_stmt|;
+name|val
+operator|=
 name|CSR_READ_4
 argument_list|(
 name|sc

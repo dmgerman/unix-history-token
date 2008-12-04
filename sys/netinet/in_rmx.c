@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_function_decl
@@ -513,20 +525,37 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|rtq_reallyold
-init|=
-literal|60
-operator|*
-literal|60
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* one hour is "really old" */
-end_comment
+begin_decl_stmt
+specifier|static
+name|int
+name|rtq_minreallyold
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rtq_toomany
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -552,19 +581,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|rtq_minreallyold
-init|=
-literal|10
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* never automatically crank down to less */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -588,19 +604,6 @@ literal|"Minimum time to attempt to hold onto dynamically learned routes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|rtq_toomany
-init|=
-literal|128
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 128 cached routes is "too many" */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -1003,12 +1006,16 @@ begin_comment
 comment|/* run no less than once every ten minutes */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|rtq_timeout
-init|=
-name|RTQ_TIMEOUT
 decl_stmt|;
 end_decl_stmt
 
@@ -1019,6 +1026,11 @@ name|callout
 name|rtq_timer
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1153,6 +1165,11 @@ modifier|*
 name|rock
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|struct
 name|radix_node_head
 modifier|*
@@ -1526,6 +1543,27 @@ return|return
 literal|1
 return|;
 comment|/* only do the rest for a real routing table */
+name|V_rtq_reallyold
+operator|=
+literal|60
+operator|*
+literal|60
+expr_stmt|;
+comment|/* one hour is "really old" */
+name|V_rtq_minreallyold
+operator|=
+literal|10
+expr_stmt|;
+comment|/* never automatically crank down to less */
+name|V_rtq_toomany
+operator|=
+literal|128
+expr_stmt|;
+comment|/* 128 cached routes is "too many" */
+name|V_rtq_timeout
+operator|=
+name|RTQ_TIMEOUT
+expr_stmt|;
 name|rnh
 operator|=
 operator|*

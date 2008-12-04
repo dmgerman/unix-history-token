@@ -993,18 +993,9 @@ name|intr_event
 modifier|*
 name|ie
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|int
 name|vector
 decl_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 comment|/* 	 * We count software interrupts when we process them.  The 	 * code here follows previous practice, but there's an 	 * argument for counting hardware interrupts when they're 	 * processed too. 	 */
 operator|(
 operator|*

@@ -19,6 +19,12 @@ directive|include
 file|"opt_device_polling.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -308,7 +314,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 1.4.0"
+literal|"version - 1.4.1"
 decl_stmt|;
 end_decl_stmt
 
@@ -3776,6 +3782,9 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ifaddr
 modifier|*
@@ -3788,6 +3797,8 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 init|=
@@ -3812,6 +3823,9 @@ block|{
 case|case
 name|SIOCSIFADDR
 case|:
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|ifa
@@ -3867,6 +3881,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 name|error
 operator|=
 name|ether_ioctl
@@ -11123,7 +11139,7 @@ name|hw
 operator|.
 name|fc
 operator|.
-name|type
+name|requested_mode
 operator|=
 name|igb_fc_setting
 expr_stmt|;
@@ -11134,7 +11150,7 @@ name|hw
 operator|.
 name|fc
 operator|.
-name|type
+name|requested_mode
 operator|=
 name|e1000_fc_none
 expr_stmt|;
@@ -16022,10 +16038,8 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|device_printf
+name|INIT_DEBUGOUT
 argument_list|(
-name|dev
-argument_list|,
 literal|"RX LRO Initialized\n"
 argument_list|)
 expr_stmt|;
@@ -16045,18 +16059,20 @@ operator|)
 return|;
 name|fail
 label|:
-comment|/* 	 * We need to clean up any buffers allocated so far 	 * 'j' is the failing index, decrement it to get the 	 * last success. 	 */
+comment|/* 	 * We need to clean up any buffers allocated 	 * so far, 'j' is the failing index. 	 */
 for|for
 control|(
-operator|--
-name|j
-init|;
-name|j
-operator|<
+name|int
+name|i
+init|=
 literal|0
-condition|;
+init|;
+name|i
+operator|<
 name|j
-operator|--
+condition|;
+name|i
+operator|++
 control|)
 block|{
 name|rxbuf
@@ -16066,7 +16082,7 @@ name|rxr
 operator|->
 name|rx_buffers
 index|[
-name|j
+name|i
 index|]
 expr_stmt|;
 if|if
@@ -16150,23 +16166,21 @@ operator|->
 name|rx_rings
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|;
 for|for
 control|(
-name|i
+name|j
 operator|=
 literal|0
 init|;
-name|i
+name|j
 operator|<
 name|adapter
 operator|->
 name|num_rx_queues
 condition|;
-name|i
+name|j
 operator|++
 operator|,
 name|rxr
@@ -16189,42 +16203,46 @@ operator|)
 return|;
 name|fail
 label|:
-comment|/* 	 * Free RX buffers allocated so far, we will only handle 	 * the rings that completed, the failing case will have 	 * cleaned up for itself. The value of 'i' will be the 	 * failed ring so we must pre-decrement it. 	 */
-name|rxr
-operator|=
-name|adapter
-operator|->
-name|rx_rings
-expr_stmt|;
+comment|/* 	 * Free RX buffers allocated so far, we will only handle 	 * the rings that completed, the failing case will have 	 * cleaned up for itself. Clean up til 'j', the failure. 	 */
 for|for
 control|(
-operator|--
+name|int
 name|i
+init|=
+literal|0
 init|;
 name|i
-operator|>
-literal|0
+operator|<
+name|j
 condition|;
 name|i
-operator|--
-operator|,
-name|rxr
 operator|++
 control|)
 block|{
+name|rxr
+operator|=
+operator|&
+name|adapter
+operator|->
+name|rx_rings
+index|[
+name|i
+index|]
+expr_stmt|;
 for|for
 control|(
-name|j
-operator|=
+name|int
+name|n
+init|=
 literal|0
 init|;
-name|j
+name|n
 operator|<
 name|adapter
 operator|->
 name|num_rx_desc
 condition|;
-name|j
+name|n
 operator|++
 control|)
 block|{
@@ -16240,7 +16258,7 @@ name|rxr
 operator|->
 name|rx_buffers
 index|[
-name|j
+name|n
 index|]
 expr_stmt|;
 if|if

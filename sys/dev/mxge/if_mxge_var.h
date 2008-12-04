@@ -982,6 +982,14 @@ end_comment
 begin_if
 if|#
 directive|if
+name|__FreeBSD_version
+operator|<
+literal|800053
+end_if
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__GNUC__
@@ -1019,7 +1027,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|mb
+name|wmb
 parameter_list|()
 value|__asm__ __volatile__ ("sfence;": : :"memory")
 end_define
@@ -1043,7 +1051,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|mb
+name|wmb
 parameter_list|()
 value|__asm__ __volatile__ ("membar #MemIssue": : :"memory")
 end_define
@@ -1067,7 +1075,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|mb
+name|wmb
 parameter_list|()
 value|__asm__ __volatile__ ("stbar;": : :"memory")
 end_define
@@ -1080,7 +1088,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|mb
+name|wmb
 parameter_list|()
 end_define
 
@@ -1103,6 +1111,11 @@ error|#
 directive|error
 literal|"unknown compiler"
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

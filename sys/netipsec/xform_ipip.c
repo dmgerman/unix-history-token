@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -147,6 +153,29 @@ directive|include
 file|<netinet/ip_encap.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MROUTING
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_mroute.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -164,23 +193,6 @@ include|#
 directive|include
 file|<netipsec/ipip_var.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MROUTING
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_mroute.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -245,11 +257,15 @@ begin_comment
 comment|/*  * We can control the acceptance of IP4 packets by altering the sysctl  * net.inet.ipip.allow value.  Zero means drop them, all else is acceptance.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|ipip_allow
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -259,6 +275,11 @@ name|ipipstat
 name|ipipstat
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -2887,6 +2908,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|V_ipip_allow
+operator|=
+literal|0
+expr_stmt|;
 name|xform_register
 argument_list|(
 operator|&

@@ -965,6 +965,12 @@ modifier|*
 name|tq
 decl_stmt|;
 comment|/* private task queue */
+name|eventhandler_tag
+name|vlan_attach
+decl_stmt|;
+name|eventhandler_tag
+name|vlan_detach
+decl_stmt|;
 comment|/* Management and WOL features */
 name|int
 name|wol

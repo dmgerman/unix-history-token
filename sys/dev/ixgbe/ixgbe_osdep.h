@@ -380,7 +380,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|false
+value|0
+end_define
+
+begin_comment
+comment|/* shared code requires this */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TRUE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|true
 value|1
 end_define
 
@@ -402,10 +420,24 @@ name|PCI_COMMAND_REGISTER
 value|PCIR_COMMAND
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_HTONL
+value|htonl
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint8_t
 name|u8
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int8_t
+name|s8
 typedef|;
 end_typedef
 

@@ -2717,13 +2717,13 @@ condition|(
 name|gpp
 operator|->
 name|gpp_codesize
-operator|!=
+operator|>
 name|sz
 condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|EFBIG
 expr_stmt|;
 goto|goto
 name|fail

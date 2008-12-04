@@ -1046,6 +1046,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|quicc_read4
 argument_list|(
 name|bas
@@ -2188,6 +2191,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|quicc_read4
 argument_list|(
 name|bas
@@ -2426,6 +2432,9 @@ operator|=
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|quicc_read4
 argument_list|(

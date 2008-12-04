@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -492,6 +492,9 @@ argument_list|(
 literal|"uu_list_pool_destroy: Pool \"%.*s\" (%p) has "
 literal|"outstanding lists, or is corrupt.\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|pp
@@ -503,6 +506,10 @@ name|pp
 operator|->
 name|ulp_name
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|)
 expr_stmt|;
@@ -635,16 +642,30 @@ literal|"offset %ld doesn't fit in object (size %ld)\n"
 argument_list|,
 name|base
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|np
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|pp
 operator|->
 name|ulp_name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|offset
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pp
 operator|->
 name|ulp_objsize
@@ -667,16 +688,30 @@ literal|"offset %ld doesn't match pool's offset (%ld)\n"
 argument_list|,
 name|base
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|np
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|pp
 operator|->
 name|ulp_name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|offset
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pp
 operator|->
 name|ulp_objsize
@@ -758,8 +793,16 @@ literal|"node already finied\n"
 argument_list|,
 name|base
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|np_arg
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|pp
@@ -793,8 +836,16 @@ literal|"node corrupt or on list\n"
 argument_list|,
 name|base
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|np_arg
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|,
 name|pp
@@ -895,6 +946,10 @@ argument_list|(
 literal|"uu_list_create(%p, ...): requested "
 literal|"UU_LIST_SORTED, but pool has no comparison func\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pp
 argument_list|)
 expr_stmt|;
@@ -1187,6 +1242,10 @@ name|uu_panic
 argument_list|(
 literal|"uu_list_destroy(%p):  list not empty\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|)
 expr_stmt|;
@@ -1205,6 +1264,10 @@ argument_list|(
 literal|"uu_list_destroy(%p):  numnodes is nonzero, "
 literal|"but list is empty\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|)
 expr_stmt|;
@@ -1238,6 +1301,10 @@ name|uu_panic
 argument_list|(
 literal|"uu_list_destroy(%p):  outstanding walkers\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|)
 expr_stmt|;
@@ -1371,10 +1438,22 @@ argument_list|(
 literal|"insert(%p): internal error: %p and %p not "
 literal|"neighbors\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|next
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|prev
 argument_list|)
 expr_stmt|;
@@ -1403,6 +1482,10 @@ argument_list|(
 literal|"insert(%p): elem %p node %p corrupt, "
 literal|"not initialized, or already in a list.\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
 name|NODE_TO_ELEM
@@ -1412,6 +1495,10 @@ argument_list|,
 name|np
 argument_list|)
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|np
 argument_list|)
 expr_stmt|;
@@ -1522,10 +1609,18 @@ name|uu_panic
 argument_list|(
 literal|"uu_list_insert(%p, %p, %p): %s\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
 name|elem
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|,
 name|INDEX_CHECK
@@ -1551,10 +1646,18 @@ argument_list|(
 literal|"uu_list_insert(%p, %p, %p): out-of-date "
 literal|"index\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
 name|elem
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|)
 expr_stmt|;
@@ -1840,8 +1943,16 @@ name|uu_panic
 argument_list|(
 literal|"uu_list_nearest_next(%p, %p): %s\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|,
 name|INDEX_CHECK
@@ -1867,8 +1978,16 @@ argument_list|(
 literal|"uu_list_nearest_next(%p, %p): out-of-date "
 literal|"index\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|)
 expr_stmt|;
@@ -1957,8 +2076,16 @@ name|uu_panic
 argument_list|(
 literal|"uu_list_nearest_prev(%p, %p): %s\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|,
 name|INDEX_CHECK
@@ -1984,8 +2111,16 @@ argument_list|(
 literal|"uu_list_nearest_prev(%p, %p): out-of-date "
 literal|"index\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|idx
 argument_list|)
 expr_stmt|;
@@ -2141,6 +2276,7 @@ operator|||
 name|robust
 condition|)
 block|{
+comment|/* 		 * Add this walker to the list's list of walkers so 		 * uu_list_remove() can advance us if somebody tries to 		 * remove ulw_next_result. 		 */
 name|wp
 operator|->
 name|ulw_next
@@ -2791,6 +2927,10 @@ name|uu_panic
 argument_list|(
 literal|"uu_list_remove(%p, %p): elem not on list\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
 name|elem
@@ -2875,6 +3015,10 @@ argument_list|(
 literal|"uu_list_remove(%p, %p): active non-robust "
 literal|"walker\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
 name|elem
@@ -2962,8 +3106,16 @@ name|uu_panic
 argument_list|(
 literal|"uu_list_teardown(%p, %p): unexpected cookie\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cookie
 argument_list|)
 expr_stmt|;
@@ -3054,6 +3206,10 @@ argument_list|(
 literal|"uu_list_insert_before(%p, %p, %p): %p is "
 literal|"not currently on a list\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
 name|target
@@ -3082,6 +3238,10 @@ argument_list|(
 literal|"uu_list_insert_before(%p, ...): list is "
 literal|"UU_LIST_SORTED\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|)
 expr_stmt|;
@@ -3184,6 +3344,10 @@ argument_list|(
 literal|"uu_list_insert_after(%p, %p, %p): %p is "
 literal|"not currently on a list\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|,
 name|target
@@ -3212,6 +3376,10 @@ argument_list|(
 literal|"uu_list_insert_after(%p, ...): list is "
 literal|"UU_LIST_SORTED\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lp
 argument_list|)
 expr_stmt|;

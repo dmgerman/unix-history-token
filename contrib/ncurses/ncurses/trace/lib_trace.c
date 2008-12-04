@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_trace.c,v 1.66 2008/03/22 16:56:48 tom Exp $"
+literal|"$Id: lib_trace.c,v 1.71 2008/08/23 18:04:29 tom Exp $"
 argument_list|)
 end_macro
 
@@ -304,18 +304,23 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-if|if
-condition|(
-name|getcwd
-argument_list|(
-name|TracePath
-argument_list|,
+name|int
+name|size
+init|=
 sizeof|sizeof
 argument_list|(
 name|TracePath
 argument_list|)
 operator|-
 literal|12
+decl_stmt|;
+if|if
+condition|(
+name|getcwd
+argument_list|(
+name|TracePath
+argument_list|,
+name|size
 argument_list|)
 operator|==
 literal|0
@@ -332,6 +337,23 @@ name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
+name|TracePath
+index|[
+name|size
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|assert
+argument_list|(
+name|strlen
+argument_list|(
+name|TracePath
+argument_list|)
+operator|<=
+name|size
+argument_list|)
+expr_stmt|;
 name|strcat
 argument_list|(
 name|TracePath
@@ -690,6 +712,17 @@ ifdef|#
 directive|ifdef
 name|USE_PTHREADS
 comment|/* 	 * TRACE_ICALLS is "really" needed to show normal use with threaded 	 * applications, since anything can be running during a napms(), 	 * making it appear in the hierarchical trace as it other functions 	 * are being called. 	 * 	 * Rather than add the complication of a per-thread stack, just 	 * show the thread-id in each line of the trace. 	 */
+if|#
+directive|if
+name|USE_WEAK_SYMBOLS
+if|if
+condition|(
+operator|(
+name|pthread_self
+operator|)
+condition|)
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|TraceFP
@@ -698,6 +731,10 @@ literal|"%#lx:"
 argument_list|,
 operator|(
 name|long
+operator|)
+operator|(
+name|void
+operator|*
 operator|)
 name|pthread_self
 argument_list|()
@@ -1229,14 +1266,16 @@ operator|)
 operator|)
 operator|!=
 literal|0
-condition|)
-block|{
-comment|/* we will call _nc_locked_tracef(), no nesting so far */
-name|_nc_lock_global
+operator|&&
+name|_nc_try_global
 argument_list|(
 name|tracef
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* we will call _nc_locked_tracef(), no nesting so far */
 block|}
 else|else
 block|{

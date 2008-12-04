@@ -642,6 +642,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|pmap_kenter_temp
+parameter_list|(
+name|vm_paddr_t
+name|pa
+parameter_list|,
+name|int
+name|i
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_kenter_user
 parameter_list|(
 name|vm_offset_t

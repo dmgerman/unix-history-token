@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: wresize.c,v 1.28 2008/05/03 14:13:51 tom Exp $"
+literal|"$Id: wresize.c,v 1.29 2008/06/07 13:59:01 tom Exp $"
 argument_list|)
 end_macro
 
@@ -94,7 +94,7 @@ name|row
 decl_stmt|;
 name|_nc_lock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 for|for
@@ -265,7 +265,7 @@ block|}
 block|}
 name|_nc_unlock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 block|}

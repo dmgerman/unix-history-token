@@ -147,6 +147,12 @@ directive|include
 file|<netinet6/mld6_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
+end_include
+
 begin_comment
 comment|/*  * Protocol constants  */
 end_comment
@@ -173,6 +179,12 @@ name|MLD_UNSOLICITED_REPORT_INTERVAL
 value|10
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -180,6 +192,11 @@ name|ip6_pktopts
 name|ip6_opts
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static

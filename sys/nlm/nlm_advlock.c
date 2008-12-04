@@ -1390,6 +1390,12 @@ operator|=
 operator|&
 name|nf
 expr_stmt|;
+name|ext
+operator|.
+name|rc_timers
+operator|=
+name|NULL
+expr_stmt|;
 name|ns
 operator|=
 name|NULL
@@ -3768,6 +3774,8 @@ operator|=
 name|nlm_host_get_rpc
 argument_list|(
 name|host
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4113,6 +4121,8 @@ operator|=
 name|nlm_host_get_rpc
 argument_list|(
 name|host
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4441,6 +4451,8 @@ operator|=
 name|nlm_host_get_rpc
 argument_list|(
 name|host
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4821,6 +4833,8 @@ operator|=
 name|nlm_host_get_rpc
 argument_list|(
 name|host
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if

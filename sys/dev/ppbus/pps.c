@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  *  * This driver implements a draft-mogul-pps-api-02.txt PPS source.  *  * The input pin is pin#10   * The echo output pin is pin#14  *  */
+comment|/*-  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  *  * This driver implements a draft-mogul-pps-api-02.txt PPS source.  *  * The input pin is pin#10  * The echo output pin is pin#14  *  */
 end_comment
 
 begin_include
@@ -299,7 +299,8 @@ name|parent
 argument_list|,
 name|PPS_NAME
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

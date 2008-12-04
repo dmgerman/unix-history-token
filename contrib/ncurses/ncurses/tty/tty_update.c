@@ -17,6 +17,27 @@ directive|include
 file|<curses.priv.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__HAIKU__
+operator|&&
+name|defined
+name|__BEOS__
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|__BEOS__
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -168,7 +189,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tty_update.c,v 1.245 2008/05/03 22:43:04 tom Exp $"
+literal|"$Id: tty_update.c,v 1.246 2008/08/30 20:08:19 tom Exp $"
 argument_list|)
 end_macro
 

@@ -15347,6 +15347,30 @@ literal|"RAID"
 block|}
 block|,
 block|{
+name|PCIC_STORAGE
+block|,
+name|PCIS_STORAGE_ATA_ADMA
+block|,
+literal|"ATA (ADMA)"
+block|}
+block|,
+block|{
+name|PCIC_STORAGE
+block|,
+name|PCIS_STORAGE_SATA
+block|,
+literal|"SATA"
+block|}
+block|,
+block|{
+name|PCIC_STORAGE
+block|,
+name|PCIS_STORAGE_SAS
+block|,
+literal|"SAS"
+block|}
+block|,
+block|{
 name|PCIC_NETWORK
 block|,
 operator|-
@@ -15459,6 +15483,14 @@ block|,
 name|PCIS_MULTIMEDIA_TELE
 block|,
 literal|"telephony"
+block|}
+block|,
+block|{
+name|PCIC_MULTIMEDIA
+block|,
+name|PCIS_MULTIMEDIA_HDA
+block|,
+literal|"HDA"
 block|}
 block|,
 block|{
@@ -15656,6 +15688,14 @@ block|,
 name|PCIS_BASEPERIPH_PCIHOT
 block|,
 literal|"PCI hot-plug controller"
+block|}
+block|,
+block|{
+name|PCIC_BASEPERIPH
+block|,
+name|PCIS_BASEPERIPH_SDHC
+block|,
+literal|"SD host controller"
 block|}
 block|,
 block|{

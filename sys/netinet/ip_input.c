@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -225,6 +231,12 @@ begin_include
 include|#
 directive|include
 file|<machine/in_cksum.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_ifdef
@@ -318,21 +330,169 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ipsendredirects
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_checkinterface
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_keepfaith
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_sendsourcequench
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|int
-name|rsvp_on
-init|=
-literal|0
+name|ip_defttl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip_do_randomid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|ipforwarding
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|in_ifaddrhead
+name|in_ifaddrhead
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* first inet address */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|in_ifaddrhashhead
+modifier|*
+name|in_ifaddrhashtbl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* inet addr hash table  */
+end_comment
+
+begin_decl_stmt
+name|u_long
+name|in_ifaddrhmask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mask for hash table */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ipstat
+name|ipstat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_rsvp_on
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|socket
+modifier|*
+name|ip_rsvpd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rsvp_on
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ipqhead
+name|ipq
+index|[
+name|IPREASS_NHASH
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|maxnipq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Administrative limit on # reass queues. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|maxfragsperpacket
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ipstealth
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nipq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Total # of reass queues */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -358,19 +518,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ipsendredirects
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -394,14 +541,6 @@ literal|"Enable sending IP redirects"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|ip_defttl
-init|=
-name|IPDEFTTL
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -427,15 +566,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ip_keepfaith
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -460,15 +590,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ip_sendsourcequench
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -492,14 +613,6 @@ literal|"Enable the transmission of source quench packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|ip_do_randomid
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -528,15 +641,6 @@ end_expr_stmt
 begin_comment
 comment|/*  * XXX - Setting ip_checkinterface mostly implements the receive side of  * the Strong ES model described in RFC 1122, but since the routing table  * and transmit implementation do not implement the Strong ES model,  * setting this to 1 results in an odd hybrid.  *  * XXX - ip_checkinterface currently must be disabled if you use ipnat  * to translate the destination address to another local interface.  *  * XXX - ip_checkinterface must be disabled if you add IP aliases  * to the loopback interface instead of the interface where the  * packets for those addresses are received.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ip_checkinterface
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -616,39 +720,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|in_ifaddrhead
-name|in_ifaddrhead
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* first inet address */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|in_ifaddrhashhead
-modifier|*
-name|in_ifaddrhashtbl
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* inet addr hash table  */
-end_comment
-
-begin_decl_stmt
-name|u_long
-name|in_ifaddrhmask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mask for hash table */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -695,13 +766,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|ipstat
-name|ipstat
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_STRUCT
 argument_list|(
@@ -726,65 +790,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * IP datagram reassembly.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPREASS_NHASH_LOG2
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPREASS_NHASH
-value|(1<< IPREASS_NHASH_LOG2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPREASS_HMASK
-value|(IPREASS_NHASH - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPREASS_HASH
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|(((((x)& 0xF) | ((((x)>> 8)& 0xF)<< 4)) ^ (y))& IPREASS_HMASK)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
 name|ipq_zone
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-specifier|static
-name|TAILQ_HEAD
-argument_list|(
-argument|ipqhead
-argument_list|,
-argument|ipq
-argument_list|)
-name|ipq
-index|[
-name|IPREASS_NHASH
-index|]
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -847,30 +858,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|int
-name|maxnipq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Administrative limit on # reass queues. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nipq
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Total # of reass queues */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -894,13 +881,6 @@ literal|"Current number of IPv4 fragment reassembly queue entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|maxfragsperpacket
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -970,14 +950,6 @@ ifdef|#
 directive|ifdef
 name|IPSTEALTH
 end_ifdef
-
-begin_decl_stmt
-name|int
-name|ipstealth
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -1078,6 +1050,129 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|V_ipsendredirects
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX */
+name|V_ip_checkinterface
+operator|=
+literal|0
+expr_stmt|;
+name|V_ip_keepfaith
+operator|=
+literal|0
+expr_stmt|;
+name|V_ip_sendsourcequench
+operator|=
+literal|0
+expr_stmt|;
+name|V_rsvp_on
+operator|=
+literal|0
+expr_stmt|;
+name|V_ip_defttl
+operator|=
+name|IPDEFTTL
+expr_stmt|;
+name|V_ip_do_randomid
+operator|=
+literal|0
+expr_stmt|;
+name|V_ipforwarding
+operator|=
+literal|0
+expr_stmt|;
+name|V_ipstealth
+operator|=
+literal|0
+expr_stmt|;
+name|V_nipq
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Total # of reass queues */
+name|V_ipport_lowfirstauto
+operator|=
+name|IPPORT_RESERVED
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 1023 */
+name|V_ipport_lowlastauto
+operator|=
+name|IPPORT_RESERVEDSTART
+expr_stmt|;
+comment|/* 600 */
+name|V_ipport_firstauto
+operator|=
+name|IPPORT_EPHEMERALFIRST
+expr_stmt|;
+comment|/* 10000 */
+name|V_ipport_lastauto
+operator|=
+name|IPPORT_EPHEMERALLAST
+expr_stmt|;
+comment|/* 65535 */
+name|V_ipport_hifirstauto
+operator|=
+name|IPPORT_HIFIRSTAUTO
+expr_stmt|;
+comment|/* 49152 */
+name|V_ipport_hilastauto
+operator|=
+name|IPPORT_HILASTAUTO
+expr_stmt|;
+comment|/* 65535 */
+name|V_ipport_reservedhigh
+operator|=
+name|IPPORT_RESERVED
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 1023 */
+name|V_ipport_reservedlow
+operator|=
+literal|0
+expr_stmt|;
+name|V_ipport_randomized
+operator|=
+literal|1
+expr_stmt|;
+comment|/* user controlled via sysctl */
+name|V_ipport_randomcps
+operator|=
+literal|10
+expr_stmt|;
+comment|/* user controlled via sysctl */
+name|V_ipport_randomtime
+operator|=
+literal|45
+expr_stmt|;
+comment|/* user controlled via sysctl */
+name|V_ipport_stoprandom
+operator|=
+literal|0
+expr_stmt|;
+comment|/* toggled by ipport_tick */
+ifdef|#
+directive|ifdef
+name|NOTYET
+comment|/* XXX global static but not instantiated in this file */
+name|V_ipfastforward_active
+operator|=
+literal|0
+expr_stmt|;
+name|V_subnetsarelocal
+operator|=
+literal|0
+expr_stmt|;
+name|V_sameprefixcarponly
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -6648,21 +6743,6 @@ end_function
 begin_comment
 comment|/*  * XXXRW: Multicast routing code in ip_mroute.c is generally MPSAFE, but the  * ip_rsvp and ip_rsvp_on variables need to be interlocked with rsvp_on  * locking.  This code remains in ip_input.c as ip_mroute.c is optionally  * compiled.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ip_rsvp_on
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|socket
-modifier|*
-name|ip_rsvpd
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int

@@ -679,14 +679,10 @@ operator|&
 name|fdesc_hashmtx
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|fd
-argument_list|,
-expr|struct
-name|fdescnode
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -718,7 +714,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|fd
 argument_list|,
@@ -2623,7 +2619,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|vp
 operator|->

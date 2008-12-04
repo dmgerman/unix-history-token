@@ -15,40 +15,28 @@ directive|define
 name|_NETINET6_VINET6_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/callout.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip6.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/raw_ip6.h>
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -60,19 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/scope6_var.h>
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/in6_ifattach.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/in6_var.h>
+file|<netinet6/ip6_var.h>
 end_include
 
 begin_include
@@ -84,7 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
+file|<netinet6/raw_ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/scope6_var.h>
 end_include
 
 begin_struct
@@ -272,6 +260,9 @@ name|time_t
 name|_ip6_log_time
 decl_stmt|;
 name|int
+name|_nd6_onlink_ns_rfc4861
+decl_stmt|;
+name|int
 name|_pmtu_expire
 decl_stmt|;
 name|int
@@ -392,11 +383,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -890,6 +876,13 @@ define|#
 directive|define
 name|V_nd6_mmaxtries
 value|VNET_INET6(nd6_mmaxtries)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_nd6_onlink_ns_rfc4861
+value|VNET_INET6(nd6_onlink_ns_rfc4861)
 end_define
 
 begin_define

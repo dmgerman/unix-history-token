@@ -2115,6 +2115,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VNET_IPFW
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|enable
 init|=

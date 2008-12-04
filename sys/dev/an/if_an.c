@@ -13709,6 +13709,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ANCACHE
 if|if
 condition|(
 name|sc
@@ -13723,6 +13726,8 @@ name|an_rxmode
 operator||=
 name|AN_RXMODE_NORMALIZED_RSSI
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Set the ssid list */
 name|sc
 operator|->

@@ -761,14 +761,10 @@ name|NULL
 operator|)
 return|;
 block|}
-name|MALLOC
-argument_list|(
 name|sc
-argument_list|,
-expr|struct
-name|ssc_s
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*

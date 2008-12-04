@@ -118,7 +118,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ppbus_print_child
 parameter_list|(
 name|device_t
@@ -133,6 +133,11 @@ name|ppb_device
 modifier|*
 name|ppbdev
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
+name|retval
+operator|=
 name|bus_print_child_header
 argument_list|(
 name|bus
@@ -160,6 +165,8 @@ name|flags
 operator|!=
 literal|0
 condition|)
+name|retval
+operator|+=
 name|printf
 argument_list|(
 literal|" flags 0x%x"
@@ -169,22 +176,20 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" on %s%d\n"
-argument_list|,
-name|device_get_name
+name|retval
+operator|+=
+name|bus_print_child_footer
 argument_list|(
 name|bus
-argument_list|)
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|bus
-argument_list|)
+name|dev
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_function
 
@@ -268,7 +273,9 @@ operator|!
 name|ppbdev
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 comment|/* initialize the ivars */
 name|ppbdev
@@ -299,7 +306,9 @@ name|ppbdev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|child
+operator|)
 return|;
 block|}
 end_function
@@ -323,21 +332,6 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|struct
-name|ppb_device
-modifier|*
-name|ppbdev
-init|=
-operator|(
-expr|struct
-name|ppb_device
-operator|*
-operator|)
-name|device_get_ivars
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 switch|switch
 condition|(
 name|index
@@ -357,30 +351,6 @@ name|ppb_get_mode
 argument_list|(
 name|bus
 argument_list|)
-expr_stmt|;
-name|ppbdev
-operator|->
-name|mode
-operator|=
-operator|(
-name|u_short
-operator|)
-operator|*
-name|val
-expr_stmt|;
-break|break;
-case|case
-name|PPBUS_IVAR_AVM
-case|:
-operator|*
-name|val
-operator|=
-operator|(
-name|u_long
-operator|)
-name|ppbdev
-operator|->
-name|avm
 expr_stmt|;
 break|break;
 default|default:
@@ -412,25 +382,10 @@ parameter_list|,
 name|int
 name|index
 parameter_list|,
-name|u_long
+name|uintptr_t
 name|val
 parameter_list|)
 block|{
-name|struct
-name|ppb_device
-modifier|*
-name|ppbdev
-init|=
-operator|(
-expr|struct
-name|ppb_device
-operator|*
-operator|)
-name|device_get_ivars
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 switch|switch
 condition|(
 name|index
@@ -445,15 +400,6 @@ argument_list|(
 name|bus
 argument_list|,
 name|val
-argument_list|)
-expr_stmt|;
-name|ppbdev
-operator|->
-name|mode
-operator|=
-name|ppb_get_mode
-argument_list|(
-name|bus
 argument_list|)
 expr_stmt|;
 break|break;
@@ -751,19 +697,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|int
-name|unit
-init|=
-name|device_get_unit
+name|device_printf
 argument_list|(
 name|bus
-argument_list|)
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"Probing for PnP devices on ppbus%d:\n"
 argument_list|,
-name|unit
+literal|"Probing for PnP devices:\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -792,9 +730,11 @@ goto|;
 ifdef|#
 directive|ifdef
 name|DEBUG_1284
-name|printf
+name|device_printf
 argument_list|(
-literal|"ppb:<PnP> %d characters: "
+name|bus
+argument_list|,
+literal|"<PnP> %d characters: "
 argument_list|,
 name|len
 argument_list|)
@@ -901,11 +841,11 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ppbus%d:<%s"
+name|bus
 argument_list|,
-name|unit
+literal|"<%s"
 argument_list|,
 name|search_token
 argument_list|(
@@ -920,11 +860,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|device_printf
 argument_list|(
-literal|"ppbus%d:<unknown"
+name|bus
 argument_list|,
-name|unit
+literal|"<unknown"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1239,15 +1179,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|unit
-init|=
-name|device_get_unit
-argument_list|(
-name|bus
-argument_list|)
-decl_stmt|;
-comment|/* try all IEEE1284 modes, for one device only 	 *  	 * XXX We should implement the IEEE1284.3 standard to detect 	 * daisy chained devices 	 */
+comment|/* try all IEEE1284 modes, for one device only 	 * 	 * XXX We should implement the IEEE1284.3 standard to detect 	 * daisy chained devices 	 */
 name|error
 operator|=
 name|ppb_1284_negociate
@@ -1285,11 +1217,11 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ppbus%d: IEEE1284 device found "
+name|bus
 argument_list|,
-name|unit
+literal|"IEEE1284 device found "
 argument_list|)
 expr_stmt|;
 if|if
@@ -1647,14 +1579,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !DONTPROBE_1284 */
-comment|/* launch attachement of the added children */
+comment|/* launch attachment of the added children */
 name|bus_generic_attach
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1673,10 +1607,28 @@ modifier|*
 name|children
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|nchildren
 decl_stmt|,
 name|i
 decl_stmt|;
+name|error
+operator|=
+name|bus_generic_detach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* detach& delete all children */
 if|if
 condition|(
@@ -2124,7 +2076,7 @@ name|ppb_owner
 operator|=
 name|dev
 expr_stmt|;
-comment|/* restore the context of the device 			 * The first time, ctx.valid is certainly false 			 * then do not change anything. This is usefull for 			 * drivers that do not set there operating mode  			 * during attachement 			 */
+comment|/* restore the context of the device 			 * The first time, ctx.valid is certainly false 			 * then do not change anything. This is usefull for 			 * drivers that do not set there operating mode 			 * during attachement 			 */
 if|if
 condition|(
 name|ppbdev

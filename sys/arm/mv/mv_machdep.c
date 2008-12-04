@@ -332,24 +332,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|KERNEL_PT_SYS
-value|0
-end_define
-
-begin_comment
-comment|/* Page table for mapping proc0 zero page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERNEL_PT_KERN
-value|1
-end_define
-
 begin_comment
 comment|/*  * This is the number of L2 page tables required for covering max  * (hypothetical) memsize of 4GB and all kernel mappings (vectors, msgbuf,  * stacks etc.), uprounded to be divisible by 4.  */
 end_comment
@@ -1676,6 +1658,10 @@ name|int
 name|i
 init|=
 literal|0
+decl_stmt|,
+name|j
+init|=
+literal|0
 decl_stmt|;
 name|kmdp
 operator|=
@@ -2067,6 +2053,10 @@ operator|/
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+name|j
+operator|=
+name|i
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2077,19 +2067,20 @@ index|]
 operator|.
 name|pv_va
 operator|=
-name|freemempos
-operator|-
+name|kernel_pt_table
+index|[
+name|j
+index|]
+operator|.
+name|pv_va
+operator|+
+name|L2_TABLE_SIZE_REAL
+operator|*
 operator|(
 name|i
-operator|%
-operator|(
-name|PAGE_SIZE
-operator|/
-name|L2_TABLE_SIZE_REAL
+operator|-
+name|j
 operator|)
-operator|)
-operator|*
-name|L2_TABLE_SIZE_REAL
 expr_stmt|;
 name|kernel_pt_table
 index|[
@@ -2205,8 +2196,6 @@ argument_list|,
 operator|&
 name|kernel_pt_table
 index|[
-name|KERNEL_PT_KERN
-operator|+
 name|i
 index|]
 argument_list|)
@@ -2344,7 +2333,9 @@ argument_list|,
 operator|&
 name|kernel_pt_table
 index|[
-name|KERNEL_PT_SYS
+name|l2size
+operator|-
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -2509,7 +2500,7 @@ operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross reloations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
+comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
@@ -2617,15 +2608,13 @@ index|[
 literal|0
 index|]
 operator|=
-name|KERNPHYSADDR
+literal|0
 expr_stmt|;
 name|dump_avail
 index|[
 literal|1
 index|]
 operator|=
-name|KERNPHYSADDR
-operator|+
 name|memsize
 expr_stmt|;
 name|dump_avail

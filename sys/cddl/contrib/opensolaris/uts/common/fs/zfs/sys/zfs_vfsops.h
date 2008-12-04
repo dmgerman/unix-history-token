@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -42,6 +42,18 @@ begin_include
 include|#
 directive|include
 file|<sys/zil.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rrwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zfs_ioctl.h>
 end_include
 
 begin_ifdef
@@ -95,6 +107,36 @@ name|uint64_t
 name|z_assign
 decl_stmt|;
 comment|/* TXG_NOWAIT or set by zil_replay() */
+name|uint64_t
+name|z_fuid_obj
+decl_stmt|;
+comment|/* fuid table object number */
+name|uint64_t
+name|z_fuid_size
+decl_stmt|;
+comment|/* fuid table size */
+name|avl_tree_t
+name|z_fuid_idx
+decl_stmt|;
+comment|/* fuid tree keyed by index */
+name|avl_tree_t
+name|z_fuid_domain
+decl_stmt|;
+comment|/* fuid tree keyed by domain */
+name|krwlock_t
+name|z_fuid_lock
+decl_stmt|;
+comment|/* fuid lock */
+name|boolean_t
+name|z_fuid_loaded
+decl_stmt|;
+comment|/* fuid tables are loaded */
+name|struct
+name|zfs_fuid_info
+modifier|*
+name|z_fuid_replay
+decl_stmt|;
+comment|/* fuid info for replay */
 name|zilog_t
 modifier|*
 name|z_log
@@ -108,26 +150,32 @@ name|uint_t
 name|z_acl_inherit
 decl_stmt|;
 comment|/* acl inheritance behavior */
+name|zfs_case_t
+name|z_case
+decl_stmt|;
+comment|/* case-sense */
+name|boolean_t
+name|z_utf8
+decl_stmt|;
+comment|/* utf8-only */
+name|int
+name|z_norm
+decl_stmt|;
+comment|/* normalization flags */
 name|boolean_t
 name|z_atime
 decl_stmt|;
 comment|/* enable atimes mount option */
 name|boolean_t
-name|z_unmounted1
+name|z_unmounted
 decl_stmt|;
-comment|/* unmounted phase 1 */
-name|boolean_t
-name|z_unmounted2
+comment|/* unmounted */
+name|rrwlock_t
+name|z_teardown_lock
 decl_stmt|;
-comment|/* unmounted phase 2 */
-name|uint32_t
-name|z_op_cnt
-decl_stmt|;
-comment|/* vnode/vfs operations ref count */
 name|krwlock_t
-name|z_um_lock
+name|z_teardown_inactive_lock
 decl_stmt|;
-comment|/* rw lock for umount phase 2 */
 name|list_t
 name|z_all_znodes
 decl_stmt|;
@@ -149,6 +197,22 @@ name|boolean_t
 name|z_issnap
 decl_stmt|;
 comment|/* true if this is a snapshot */
+name|boolean_t
+name|z_vscan
+decl_stmt|;
+comment|/* virus scan on/off */
+name|boolean_t
+name|z_use_fuids
+decl_stmt|;
+comment|/* version allows fuids */
+name|kmutex_t
+name|z_online_recv_lock
+decl_stmt|;
+comment|/* recv in prog grabs as WRITER */
+name|uint64_t
+name|z_version
+decl_stmt|;
+comment|/* ZPL version */
 define|#
 directive|define
 name|ZFS_OBJ_MTX_SZ
@@ -162,7 +226,7 @@ decl_stmt|;
 comment|/* znode hold locks */
 block|}
 struct|;
-comment|/*  * The total file ID size is limited to 12 bytes (including the length  * field) in the NFSv2 protocol.  For historical reasons, this same limit  * is currently being imposed by the Solaris NFSv3 implementation...  * although the protocol actually permits a maximum of 64 bytes.  It will  * not be possible to expand beyond 12 bytes without abandoning support  * of NFSv2 and making some changes to the Solaris NFSv3 implementation.  *  * For the time being, we will partition up the available space as follows:  *	2 bytes		fid length (required)  *	6 bytes		object number (48 bits)  *	4 bytes		generation number (32 bits)  * We reserve only 48 bits for the object number, as this is the limit  * currently defined and imposed by the DMU.  */
+comment|/*  * Normal filesystems (those not under .zfs/snapshot) have a total  * file ID size limited to 12 bytes (including the length field) due to  * NFSv2 protocol's limitation of 32 bytes for a filehandle.  For historical  * reasons, this same limit is being imposed by the Solaris NFSv3 implementation  * (although the NFSv3 protocol actually permits a maximum of 64 bytes).  It  * is not possible to expand beyond 12 bytes without abandoning support  * of NFSv2.  *  * For normal filesystems, we partition up the available space as follows:  *	2 bytes		fid length (required)  *	6 bytes		object number (48 bits)  *	4 bytes		generation number (32 bits)  *  * We reserve only 48 bits for the object number, as this is the limit  * currently defined and imposed by the DMU.  */
 typedef|typedef
 struct|struct
 name|zfid_short
@@ -187,6 +251,7 @@ comment|/* gen[i] = gen>> (8 * i) */
 block|}
 name|zfid_short_t
 typedef|;
+comment|/*  * Filesystems under .zfs/snapshot have a total file ID size of 22 bytes  * (including the length field).  This makes files under .zfs/snapshot  * accessible by NFSv3 and NFSv4, but not NFSv2.  *  * For files under .zfs/snapshot, we partition up the available space  * as follows:  *	2 bytes		fid length (required)  *	6 bytes		object number (48 bits)  *	4 bytes		generation number (32 bits)  *	6 bytes		objset id (48 bits)  *	4 bytes		currently just zero (32 bits)  *  * We reserve only 48 bits for the object number and objset id, as these are  * the limits currently defined and imposed by the DMU.  */
 typedef|typedef
 struct|struct
 name|zfid_long
@@ -219,6 +284,48 @@ define|#
 directive|define
 name|LONG_FID_LEN
 value|(sizeof (zfid_long_t) - sizeof (uint16_t))
+specifier|extern
+name|uint_t
+name|zfs_fsyncer_key
+decl_stmt|;
+specifier|extern
+name|int
+name|zfs_super_owner
+decl_stmt|;
+specifier|extern
+name|int
+name|zfs_suspend_fs
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|char
+modifier|*
+name|osname
+parameter_list|,
+name|int
+modifier|*
+name|mode
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_resume_fs
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|osname
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

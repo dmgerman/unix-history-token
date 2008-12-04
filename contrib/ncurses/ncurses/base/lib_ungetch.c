@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_ungetch.c,v 1.10 2008/05/03 20:20:58 tom Exp $"
+literal|"$Id: lib_ungetch.c,v 1.11 2008/05/31 16:44:54 tom Exp $"
 argument_list|)
 end_macro
 
@@ -88,8 +88,10 @@ literal|"char %d = %s"
 operator|,
 name|i
 operator|,
-name|_tracechar
+name|_nc_tracechar
 argument_list|(
+name|sp
+argument_list|,
 name|sp
 operator|->
 name|_fifo
@@ -182,8 +184,10 @@ argument_list|(
 operator|(
 literal|"ungetch %s ok"
 operator|,
-name|_tracechar
+name|_nc_tracechar
 argument_list|(
+name|sp
+argument_list|,
 name|ch
 argument_list|)
 operator|)
@@ -248,8 +252,10 @@ argument_list|(
 literal|"ungetch(%s)"
 argument_list|)
 operator|,
-name|_tracechar
+name|_nc_tracechar
 argument_list|(
+name|SP
+argument_list|,
 name|ch
 argument_list|)
 operator|)

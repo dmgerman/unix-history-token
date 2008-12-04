@@ -213,21 +213,6 @@ name|argc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|flags
-operator|=
-name|gctl_get_paraml
-argument_list|(
-name|req
-argument_list|,
-literal|"flags"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|flags
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -245,6 +230,37 @@ argument_list|(
 name|req
 argument_list|,
 literal|"no arguments given"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|flags
+operator|=
+name|gctl_get_paraml
+argument_list|(
+name|req
+argument_list|,
+literal|"flags"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|flags
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"no flags given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1687,10 +1703,14 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: gv_rm_drive: couldn't access '%s', errno: "
-literal|"%d\n"
+literal|0
+argument_list|,
+literal|"%s: unable to access '%s', errno: "
+literal|"%d"
+argument_list|,
+name|__func__
 argument_list|,
 name|cp
 operator|->
@@ -1735,10 +1755,14 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: gv_rm_drive: couldn't write header to '%s'"
-literal|", errno: %d\n"
+literal|0
+argument_list|,
+literal|"%s: unable to write header to '%s'"
+literal|", errno: %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|cp
 operator|->

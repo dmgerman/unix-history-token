@@ -631,8 +631,8 @@ name|mntorflags
 decl_stmt|,
 name|mntandnotflags
 decl_stmt|;
-name|mode_t
-name|accessmode
+name|accmode_t
+name|accmode
 decl_stmt|;
 name|struct
 name|nameidata
@@ -1824,7 +1824,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If mount by non-root, then verify that user has necessary 	 * permissions on the device. 	 */
-name|accessmode
+name|accmode
 operator|=
 name|VREAD
 expr_stmt|;
@@ -1840,7 +1840,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|accessmode
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -1850,7 +1850,7 @@ name|VOP_ACCESS
 argument_list|(
 name|devvp
 argument_list|,
-name|accessmode
+name|accmode
 argument_list|,
 name|td
 operator|->
@@ -7075,7 +7075,7 @@ name|ump
 operator|->
 name|um_fs
 expr_stmt|;
-comment|/* 	 * If this MALLOC() is performed after the getnewvnode() 	 * it might block, leaving a vnode with a NULL v_data to be 	 * found by ffs_sync() if a sync happens to fire right then, 	 * which will cause a panic because ffs_sync() blindly 	 * dereferences vp->v_data (as well it should). 	 */
+comment|/* 	 * If this malloc() is performed after the getnewvnode() 	 * it might block, leaving a vnode with a NULL v_data to be 	 * found by ffs_sync() if a sync happens to fire right then, 	 * which will cause a panic because ffs_sync() blindly 	 * dereferences vp->v_data (as well it should). 	 */
 name|ip
 operator|=
 name|uma_zalloc

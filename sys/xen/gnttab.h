@@ -71,6 +71,15 @@ end_struct
 
 begin_function_decl
 name|int
+name|gnttab_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|gnttab_grant_foreign_access
 parameter_list|(
 name|domid_t

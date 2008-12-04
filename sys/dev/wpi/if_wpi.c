@@ -13314,24 +13314,6 @@ return|return
 name|error
 return|;
 block|}
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_STA
-condition|)
-block|{
-comment|/* fake a join to init the tx rate */
-name|wpi_newassoc
-argument_list|(
-name|ni
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* link LED always on while associated */
 name|wpi_set_led
 argument_list|(

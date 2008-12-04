@@ -618,13 +618,10 @@ decl_stmt|;
 name|int
 name|npkts_per_sec
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|rp
-argument_list|,
-name|rio_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|rio_t
@@ -1067,7 +1064,7 @@ operator|->
 name|rio_wtab
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rp
 argument_list|,
@@ -2384,13 +2381,10 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* allocate and initialize rio_queue_t */
-name|MALLOC
-argument_list|(
 name|rqp
-argument_list|,
-name|rio_queue_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|rio_queue_t
@@ -2424,15 +2418,12 @@ name|rio_queue_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|rqp
 operator|->
 name|rq_q
-argument_list|,
-name|class_queue_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|class_queue_t
@@ -2452,7 +2443,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|rqp
 argument_list|,
@@ -2501,7 +2492,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|rqp
 operator|->
@@ -2510,7 +2501,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 argument_list|,
@@ -2604,7 +2595,7 @@ operator|->
 name|rq_rio
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 operator|->
@@ -2613,7 +2604,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 argument_list|,
@@ -3361,7 +3352,7 @@ operator|->
 name|rq_rio
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 operator|->
@@ -3370,7 +3361,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|rqp
 argument_list|,

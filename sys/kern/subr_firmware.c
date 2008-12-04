@@ -1023,6 +1023,12 @@ name|NULL
 return|;
 block|}
 comment|/*  	 * Defer load to a thread with known context.  linker_reference_module 	 * may do filesystem i/o which requires root& current dirs, etc. 	 * Also we must not hold any mtx's over this call which is problematic. 	 */
+if|if
+condition|(
+operator|!
+name|cold
+condition|)
+block|{
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -1069,6 +1075,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * After attempting to load the module, see if the image is registered. 	 */
 name|fp
 operator|=

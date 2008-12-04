@@ -1640,7 +1640,7 @@ if|#
 directive|if
 literal|0
 comment|/* probably done in udbp_detach() */
-block|if (sc->sc_bulkout_buffer) { 			FREE(sc->sc_bulkout_buffer, M_USBDEV); 		} 		if (sc->sc_bulkin_buffer) { 			FREE(sc->sc_bulkin_buffer, M_USBDEV); 		} 		if (sc->sc_bulkout_xfer) { 			usbd_free_xfer(sc->sc_bulkout_xfer); 		} 		if (sc->sc_bulkin_xfer) { 			usbd_free_xfer(sc->sc_bulkin_xfer); 		}
+block|if (sc->sc_bulkout_buffer) { 			free(sc->sc_bulkout_buffer, M_USBDEV); 		} 		if (sc->sc_bulkin_buffer) { 			free(sc->sc_bulkin_buffer, M_USBDEV); 		} 		if (sc->sc_bulkout_xfer) { 			usbd_free_xfer(sc->sc_bulkout_xfer); 		} 		if (sc->sc_bulkin_xfer) { 			usbd_free_xfer(sc->sc_bulkin_xfer); 		}
 endif|#
 directive|endif
 name|udbp_detach

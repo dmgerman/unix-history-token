@@ -15,6 +15,13 @@ directive|define
 name|_SYS_VIMAGE_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIMAGE_GLOBALS
+value|1
+end_define
+
 begin_comment
 comment|/* Non-VIMAGE null-macros */
 end_comment

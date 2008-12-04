@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/buf_ring.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -853,7 +859,13 @@ name|cleanq
 decl_stmt|;
 name|struct
 name|buf_ring
+modifier|*
 name|txq_mr
+decl_stmt|;
+name|struct
+name|ifaltq
+modifier|*
+name|txq_ifq
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2667,7 +2679,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cxgb_pcpu_start
+name|cxgb_pcpu_transmit
 parameter_list|(
 name|struct
 name|ifnet

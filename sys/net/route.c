@@ -129,6 +129,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -136,6 +142,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_mroute.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_include
@@ -232,6 +244,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -274,6 +292,11 @@ end_decl_stmt
 begin_comment
 comment|/* routes not in table but not freed */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -435,6 +458,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|table
 decl_stmt|;

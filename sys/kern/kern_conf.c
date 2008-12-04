@@ -4013,6 +4013,17 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+name|WITNESS_WARN
+argument_list|(
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"destroy_dev"
+argument_list|)
+expr_stmt|;
 name|dev_lock
 argument_list|()
 expr_stmt|;

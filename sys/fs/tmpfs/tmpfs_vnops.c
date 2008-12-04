@@ -1149,12 +1149,12 @@ name|v
 operator|->
 name|a_vp
 decl_stmt|;
-name|int
-name|mode
+name|accmode_t
+name|accmode
 init|=
 name|v
 operator|->
-name|a_mode
+name|a_accmode
 decl_stmt|;
 name|struct
 name|ucred
@@ -1208,7 +1208,7 @@ name|VREG
 case|:
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 operator|&&
@@ -1257,7 +1257,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 operator|&&
@@ -1296,7 +1296,7 @@ name|node
 operator|->
 name|tn_gid
 argument_list|,
-name|mode
+name|accmode
 argument_list|,
 name|cred
 argument_list|,

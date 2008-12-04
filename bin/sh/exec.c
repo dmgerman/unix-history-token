@@ -3141,20 +3141,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|cmd
-operator|!=
-name|TYPECMD_SMALLV
-condition|)
-name|out1str
-argument_list|(
-name|argv
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* First look at the keywords */
 for|for
 control|(
@@ -3220,9 +3206,14 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|out1str
+name|out1fmt
 argument_list|(
-literal|" is a shell keyword\n"
+literal|"%s is a shell keyword\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3270,7 +3261,12 @@ expr_stmt|;
 else|else
 name|out1fmt
 argument_list|(
-literal|" is an alias for %s\n"
+literal|"%s is an alias for %s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
 argument_list|,
 name|ap
 operator|->
@@ -3426,7 +3422,12 @@ expr_stmt|;
 else|else
 name|out1fmt
 argument_list|(
-literal|" is%s %s\n"
+literal|"%s is%s %s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
 argument_list|,
 operator|(
 name|cmdp
@@ -3480,7 +3481,12 @@ expr_stmt|;
 else|else
 name|out1fmt
 argument_list|(
-literal|" is %s\n"
+literal|"%s is %s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
 argument_list|,
 name|argv
 index|[
@@ -3497,9 +3503,16 @@ name|cmd
 operator|!=
 name|TYPECMD_SMALLV
 condition|)
-name|out1fmt
+name|outfmt
 argument_list|(
-literal|": %s\n"
+name|out2
+argument_list|,
+literal|"%s: %s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
 argument_list|,
 name|strerror
 argument_list|(
@@ -3535,9 +3548,14 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|out1str
+name|out1fmt
 argument_list|(
-literal|" is a shell function\n"
+literal|"%s is a shell function\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3561,9 +3579,14 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|out1str
+name|out1fmt
 argument_list|(
-literal|" is a shell builtin\n"
+literal|"%s is a shell builtin\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3574,9 +3597,16 @@ name|cmd
 operator|!=
 name|TYPECMD_SMALLV
 condition|)
-name|out1str
+name|outfmt
 argument_list|(
-literal|": not found\n"
+name|out2
+argument_list|,
+literal|"%s: not found\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|error

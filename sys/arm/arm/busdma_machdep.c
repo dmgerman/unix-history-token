@@ -3049,24 +3049,15 @@ literal|0
 operator|)
 condition|)
 block|{
-name|CTR4
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"lowaddr= %d Maxmem= %d, boundary= %d, "
-literal|"alignment= %d"
+literal|"lowaddr= %d, boundary= %d, alignment= %d"
 argument_list|,
 name|dmat
 operator|->
 name|lowaddr
-argument_list|,
-name|ptoa
-argument_list|(
-operator|(
-name|vm_paddr_t
-operator|)
-name|Maxmem
-argument_list|)
 argument_list|,
 name|dmat
 operator|->

@@ -506,8 +506,8 @@ name|flags
 decl_stmt|,
 name|len
 decl_stmt|;
-name|mode_t
-name|accessmode
+name|accmode_t
+name|accmode
 decl_stmt|;
 name|struct
 name|nameidata
@@ -705,9 +705,7 @@ name|vfs_busy
 argument_list|(
 name|mp
 argument_list|,
-name|LK_NOWAIT
-argument_list|,
-literal|0
+name|MBF_NOWAIT
 argument_list|)
 condition|)
 return|return
@@ -1189,7 +1187,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If mount by non-root, then verify that user has necessary 	 * permissions on the device. 	 * 	 * XXXRW: VOP_ACCESS() enough? 	 */
-name|accessmode
+name|accmode
 operator|=
 name|VREAD
 expr_stmt|;
@@ -1205,7 +1203,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|accessmode
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -1215,7 +1213,7 @@ name|VOP_ACCESS
 argument_list|(
 name|devvp
 argument_list|,
-name|accessmode
+name|accmode
 argument_list|,
 name|td
 operator|->
@@ -4700,7 +4698,7 @@ name|ump
 operator|->
 name|um_dev
 expr_stmt|;
-comment|/* 	 * If this MALLOC() is performed after the getnewvnode() 	 * it might block, leaving a vnode with a NULL v_data to be 	 * found by ext2_sync() if a sync happens to fire right then, 	 * which will cause a panic because ext2_sync() blindly 	 * dereferences vp->v_data (as well it should). 	 */
+comment|/* 	 * If this malloc() is performed after the getnewvnode() 	 * it might block, leaving a vnode with a NULL v_data to be 	 * found by ext2_sync() if a sync happens to fire right then, 	 * which will cause a panic because ext2_sync() blindly 	 * dereferences vp->v_data (as well it should). 	 */
 name|ip
 operator|=
 name|malloc

@@ -40,7 +40,7 @@ comment|/* For M_* */
 end_comment
 
 begin_comment
-comment|/* User visable parameters */
+comment|/* User visible parameters */
 end_comment
 
 begin_define
@@ -142,7 +142,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*   * Item initializer  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	size  The size of the item being initialized.  *	flags See zalloc flags  *   * Returns:  *	0      on success  *      errno  on failure  *  * Discussion:  *	The initializer is called when the memory is cached in the uma zone.   *	this should be the same state that the destructor leaves the object in.  */
+comment|/*   * Item initializer  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	size  The size of the item being initialized.  *	flags See zalloc flags  *   * Returns:  *	0      on success  *      errno  on failure  *  * Discussion:  *	The initializer is called when the memory is cached in the uma zone.   *	The initializer and the destructor should leave the object in the same  *	state.  */
 end_comment
 
 begin_typedef
@@ -167,7 +167,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Item discard function  *  * Arguments:  * 	item  A pointer to memory which has been 'freed' but has not left the   *	      zone's cache.  *	size  The size of the item being discarded.  *  * Returns:  *	Nothing  *  * Discussion:  *	This routine is called when memory leaves a zone and is returned to the  *	system for other uses.  It is the counter part to the init function.  */
+comment|/*  * Item discard function  *  * Arguments:  * 	item  A pointer to memory which has been 'freed' but has not left the   *	      zone's cache.  *	size  The size of the item being discarded.  *  * Returns:  *	Nothing  *  * Discussion:  *	This routine is called when memory leaves a zone and is returned to the  *	system for other uses.  It is the counter-part to the init function.  */
 end_comment
 
 begin_typedef
@@ -189,7 +189,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * What's the difference between initializing and constructing?  *  * The item is initialized when it is cached, and this is the state that the   * object should be in when returned to the allocator. The purpose of this is  * to remove some code which would otherwise be called on each allocation by  * utilizing a known, stable state.  This differs from the constructor which  * will be called on EVERY allocation.  *  * For example, in the initializer you may want to initialize embeded locks,  * NULL list pointers, set up initial states, magic numbers, etc.  This way if  * the object is held in the allocator and re-used it won't be necessary to  * re-initialize it.  *  * The constructor may be used to lock a data structure, link it on to lists,  * bump reference counts or total counts of outstanding structures, etc.  *  */
+comment|/*  * What's the difference between initializing and constructing?  *  * The item is initialized when it is cached, and this is the state that the   * object should be in when returned to the allocator. The purpose of this is  * to remove some code which would otherwise be called on each allocation by  * utilizing a known, stable state.  This differs from the constructor which  * will be called on EVERY allocation.  *  * For example, in the initializer you may want to initialize embedded locks,  * NULL list pointers, set up initial states, magic numbers, etc.  This way if  * the object is held in the allocator and re-used it won't be necessary to  * re-initialize it.  *  * The constructor may be used to lock a data structure, link it on to lists,  * bump reference counts or total counts of outstanding structures, etc.  *  */
 end_comment
 
 begin_comment
@@ -197,7 +197,7 @@ comment|/* Function proto types */
 end_comment
 
 begin_comment
-comment|/*  * Create a new uma zone  *  * Arguments:  *	name  The text name of the zone for debugging and stats, this memory  *		should not be freed until the zone has been deallocated.  *	size  The size of the object that is being created.  *	ctor  The constructor that is called when the object is allocated  *	dtor  The destructor that is called when the object is freed.  *	init  An initializer that sets up the initial state of the memory.  *	fini  A discard function that undoes initialization done by init.  *		ctor/dtor/init/fini may all be null, see notes above.  *	align A bitmask that corisponds to the requested alignment  *		eg 4 would be 0x3  *	flags A set of parameters that control the behavior of the zone  *  * Returns:  *	A pointer to a structure which is intended to be opaque to users of  *	the interface.  The value may be null if the wait flag is not set.  */
+comment|/*  * Create a new uma zone  *  * Arguments:  *	name  The text name of the zone for debugging and stats. This memory  *		should not be freed until the zone has been deallocated.  *	size  The size of the object that is being created.  *	ctor  The constructor that is called when the object is allocated.  *	dtor  The destructor that is called when the object is freed.  *	init  An initializer that sets up the initial state of the memory.  *	fini  A discard function that undoes initialization done by init.  *		ctor/dtor/init/fini may all be null, see notes above.  *	align A bitmask that corresponds to the requested alignment  *		eg 4 would be 0x3  *	flags A set of parameters that control the behavior of the zone.  *  * Returns:  *	A pointer to a structure which is intended to be opaque to users of  *	the interface.  The value may be null if the wait flag is not set.  */
 end_comment
 
 begin_function_decl
@@ -233,7 +233,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create a secondary uma zone  *  * Arguments:  *	name  The text name of the zone for debugging and stats, this memory  *		should not be freed until the zone has been deallocated.  *	ctor  The constructor that is called when the object is allocated  *	dtor  The destructor that is called when the object is freed.  *	zinit  An initializer that sets up the initial state of the memory  *		as the object passes from the Keg's slab to the Zone's cache.  *	zfini  A discard function that undoes initialization done by init  *		as the object passes from the Zone's cache to the Keg's slab.  *  *		ctor/dtor/zinit/zfini may all be null, see notes above.  *		Note that the zinit and zfini specified here are NOT  *		exactly the same as the init/fini specified to uma_zcreate()  *		when creating a master zone.  These zinit/zfini are called  *		on the TRANSITION from keg to zone (and vice-versa). Once  *		these are set, the primary zone may alter its init/fini  *		(which are called when the object passes from VM to keg)  *		using uma_zone_set_init/fini()) as well as its own  *		zinit/zfini (unset by default for master zone) with  *		uma_zone_set_zinit/zfini() (note subtle 'z' prefix).  *  *	master  A reference to this zone's Master Zone (Primary Zone),  *		which contains the backing Keg for the Secondary Zone  *		being added.  *  * Returns:  *	A pointer to a structure which is intended to be opaque to users of  *	the interface.  The value may be null if the wait flag is not set.  */
+comment|/*  * Create a secondary uma zone  *  * Arguments:  *	name  The text name of the zone for debugging and stats. This memory  *		should not be freed until the zone has been deallocated.  *	ctor  The constructor that is called when the object is allocated.  *	dtor  The destructor that is called when the object is freed.  *	zinit  An initializer that sets up the initial state of the memory  *		as the object passes from the Keg's slab to the Zone's cache.  *	zfini  A discard function that undoes initialization done by init  *		as the object passes from the Zone's cache to the Keg's slab.  *  *		ctor/dtor/zinit/zfini may all be null, see notes above.  *		Note that the zinit and zfini specified here are NOT  *		exactly the same as the init/fini specified to uma_zcreate()  *		when creating a master zone.  These zinit/zfini are called  *		on the TRANSITION from keg to zone (and vice-versa). Once  *		these are set, the primary zone may alter its init/fini  *		(which are called when the object passes from VM to keg)  *		using uma_zone_set_init/fini()) as well as its own  *		zinit/zfini (unset by default for master zone) with  *		uma_zone_set_zinit/zfini() (note subtle 'z' prefix).  *  *	master  A reference to this zone's Master Zone (Primary Zone),  *		which contains the backing Keg for the Secondary Zone  *		being added.  *  * Returns:  *	A pointer to a structure which is intended to be opaque to users of  *	the interface.  The value may be null if the wait flag is not set.  */
 end_comment
 
 begin_function_decl
@@ -296,7 +296,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* Staticly sized zone */
+comment|/* Statically sized zone */
 end_comment
 
 begin_define
@@ -483,7 +483,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocates an item out of a zone  *  * Arguments:  *	zone  The zone we are allocating from  *	arg   This data is passed to the ctor function  *	flags See sys/malloc.h for available flags.  *  * Returns:  *	A non null pointer to an initialized element from the zone is  *	garanteed if the wait flag is M_WAITOK, otherwise a null pointer may be  *	returned if the zone is empty or the ctor failed.  */
+comment|/*  * Allocates an item out of a zone  *  * Arguments:  *	zone  The zone we are allocating from  *	arg   This data is passed to the ctor function  *	flags See sys/malloc.h for available flags.  *  * Returns:  *	A non-null pointer to an initialized element from the zone is  *	guaranteed if the wait flag is M_WAITOK.  Otherwise a null pointer  *	may be returned if the zone is empty or the ctor failed.  */
 end_comment
 
 begin_function_decl
@@ -624,7 +624,7 @@ comment|/*  * XXX The rest of the prototypes in this header are h0h0 magic for t
 end_comment
 
 begin_comment
-comment|/*  * Backend page supplier routines  *  * Arguments:  *	zone  The zone that is requesting pages  *	size  The number of bytes being requested  *	pflag Flags for these memory pages, see below.  *	wait  Indicates our willingness to block.  *  * Returns:  *	A pointer to the alloced memory or NULL on failure.  */
+comment|/*  * Backend page supplier routines  *  * Arguments:  *	zone  The zone that is requesting pages.  *	size  The number of bytes being requested.  *	pflag Flags for these memory pages, see below.  *	wait  Indicates our willingness to block.  *  * Returns:  *	A pointer to the allocated memory or NULL on failure.  */
 end_comment
 
 begin_typedef
@@ -653,7 +653,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Backend page free routines  *  * Arguments:  *	item  A pointer to the previously allocated pages  *	size  The original size of the allocation  *	pflag The flags for the slab.  See UMA_SLAB_* below  *  * Returns:  *	None  */
+comment|/*  * Backend page free routines  *  * Arguments:  *	item  A pointer to the previously allocated pages.  *	size  The original size of the allocation.  *	pflag The flags for the slab.  See UMA_SLAB_* below.  *  * Returns:  *	None  */
 end_comment
 
 begin_typedef
@@ -736,7 +736,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Switches the backing object of a zone  *  * Arguments:  *	zone  The zone to update  *	obj   The obj to use for future allocations  *	size  The size of the object to allocate  *  * Returns:  *	0  if kva space can not be allocated  *	1  if successful  *  * Discussion:  *	A NULL object can be used and uma will allocate one for you.  Setting  *	the size will limit the amount of memory allocated to this zone.  *  */
+comment|/*  * Switches the backing object of a zone  *  * Arguments:  *	zone  The zone to update.  *	obj   The VM object to use for future allocations.  *	size  The size of the object to allocate.  *  * Returns:  *	0  if kva space can not be allocated  *	1  if successful  *  * Discussion:  *	A NULL object can be used and uma will allocate one for you.  Setting  *	the size will limit the amount of memory allocated to this zone.  *  */
 end_comment
 
 begin_struct_decl
@@ -781,7 +781,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The following two routines (uma_zone_set_init/fini)  * are used to set the backend init/fini pair which acts on an  * object as it becomes allocated and is placed in a slab within  * the specified zone's backing keg.  These should probably not  * be changed once allocations have already begun and only  * immediately upon zone creation.  */
+comment|/*  * The following two routines (uma_zone_set_init/fini)  * are used to set the backend init/fini pair which acts on an  * object as it becomes allocated and is placed in a slab within  * the specified zone's backing keg.  These should probably not  * be changed once allocations have already begun, but only be set  * immediately upon zone creation.  */
 end_comment
 
 begin_function_decl
@@ -811,7 +811,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The following two routines (uma_zone_set_zinit/zfini) are  * used to set the zinit/zfini pair which acts on an object as  * it passes from the backing Keg's slab cache to the  * specified Zone's bucket cache.  These should probably not  * be changed once allocations have already begun and  * only immediately upon zone creation.  */
+comment|/*  * The following two routines (uma_zone_set_zinit/zfini) are  * used to set the zinit/zfini pair which acts on an object as  * it passes from the backing Keg's slab cache to the  * specified Zone's bucket cache.  These should probably not  * be changed once allocations have already begun, but only be set  * immediately upon zone creation.  */
 end_comment
 
 begin_function_decl
@@ -841,7 +841,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Replaces the standard page_alloc or obj_alloc functions for this zone  *  * Arguments:  *	zone   The zone whos back end allocator is being changed.  *	allocf A pointer to the allocation function  *  * Returns:  *	Nothing  *  * Discussion:  *	This could be used to implement pageable allocation, or perhaps  *	even DMA allocators if used in conjunction with the OFFPAGE  *	zone flag.  */
+comment|/*  * Replaces the standard page_alloc or obj_alloc functions for this zone  *  * Arguments:  *	zone   The zone whose backend allocator is being changed.  *	allocf A pointer to the allocation function  *  * Returns:  *	Nothing  *  * Discussion:  *	This could be used to implement pageable allocation, or perhaps  *	even DMA allocators if used in conjunction with the OFFPAGE  *	zone flag.  */
 end_comment
 
 begin_function_decl
@@ -875,7 +875,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * These flags are setable in the allocf and visable in the freef.  */
+comment|/*  * These flags are setable in the allocf and visible in the freef.  */
 end_comment
 
 begin_define
@@ -1009,7 +1009,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Exported statistics structures to be used by user space monitoring tools.  * Statistics stream consusts of a uma_stream_header, followed by a series of  * alternative uma_type_header and uma_type_stat structures.  Statistics  * structures  */
+comment|/*  * Exported statistics structures to be used by user space monitoring tools.  * Statistics stream consists of a uma_stream_header, followed by a series of  * alternative uma_type_header and uma_type_stat structures.  */
 end_comment
 
 begin_define
@@ -1139,7 +1139,7 @@ block|{
 name|u_int64_t
 name|ups_allocs
 decl_stmt|;
-comment|/* Cache: number of alloctions. */
+comment|/* Cache: number of allocations. */
 name|u_int64_t
 name|ups_frees
 decl_stmt|;

@@ -171,6 +171,13 @@ begin_comment
 comment|/* Channel control is the write channel to channel status, the upper 16 bits    are a mask of which bytes to change */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DBDMA_REG_MASK_SHIFT
+value|16
+end_define
+
 begin_comment
 comment|/* Status bits 0-7 are device dependent status bits */
 end_comment

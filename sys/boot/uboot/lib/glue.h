@@ -341,6 +341,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|ub_stor_type
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

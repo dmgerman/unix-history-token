@@ -140,6 +140,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PIL_FILTER
+value|12
+end_define
+
+begin_comment
+comment|/* filter interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PIL_FAST
 value|13
 end_define
@@ -154,6 +165,10 @@ directive|define
 name|PIL_TICK
 value|14
 end_define
+
+begin_comment
+comment|/* tick interrupts */
+end_comment
 
 begin_ifndef
 ifndef|#

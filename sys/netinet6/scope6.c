@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -101,37 +107,11 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENABLE_DEFAULT_SCOPE
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|ip6_use_defzone
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|ip6_use_defzone
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
+end_include
 
 begin_comment
 comment|/*  * The scope6_lock protects the global sid default stored in  * sid_default below.  */
@@ -177,6 +157,12 @@ parameter_list|()
 value|mtx_assert(&scope6_lock, MA_OWNED)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -184,6 +170,17 @@ name|scope6_id
 name|sid_default
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip6_use_defzone
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -208,6 +205,21 @@ argument_list|(
 name|curvnet
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_DEFAULT_SCOPE
+name|V_ip6_use_defzone
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+name|V_ip6_use_defzone
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|SCOPE6_LOCK_INIT
 argument_list|()
 expr_stmt|;

@@ -320,6 +320,10 @@ name|int
 name|len
 decl_stmt|;
 comment|/* total packet length */
+name|uint32_t
+name|flowid
+decl_stmt|;
+comment|/* packet's 4-tuple system  					 * flow identifier 					 */
 comment|/* variables for hardware checksum */
 name|int
 name|csum_flags

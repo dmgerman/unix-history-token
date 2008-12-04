@@ -2562,6 +2562,22 @@ name|unit
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|unit
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"unit parameter not given"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|ileave
 operator|=
 name|gctl_get_paraml
@@ -2577,6 +2593,22 @@ name|ileave
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ileave
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"ileave parameter not given"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|nprovider
 operator|=
 name|gctl_get_paraml
@@ -2592,6 +2624,22 @@ name|nprovider
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nprovider
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"nprovider parameter not given"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Check for duplicate unit */
 name|LIST_FOREACH
 argument_list|(
@@ -3404,10 +3452,27 @@ literal|"unit"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+operator|*
+name|up
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|up
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"unit parameter not given"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|unit
 operator|=
 operator|*

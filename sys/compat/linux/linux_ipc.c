@@ -3408,6 +3408,12 @@ name|error
 operator|)
 return|;
 block|}
+comment|/*   * TODO: implement this   * case LINUX_MSG_STAT:  */
+case|case
+name|LINUX_IPC_STAT
+case|:
+comment|/* NOTHING */
+break|break;
 case|case
 name|LINUX_IPC_SET
 case|:
@@ -3450,6 +3456,18 @@ operator|&
 name|bsd_msqid
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|LINUX_IPC_RMID
+case|:
+comment|/* NOTHING */
+break|break;
+default|default:
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 break|break;
 block|}
 name|error

@@ -765,9 +765,11 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: sd %s is initializing\n"
+literal|1
+argument_list|,
+literal|"sd %s is initializing"
 argument_list|,
 name|s
 operator|->
@@ -2473,19 +2475,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|G_VINUM_LOGREQ
 argument_list|(
-literal|"GEOM_VINUM: plex request failed for "
-argument_list|)
-expr_stmt|;
-name|g_print_bio
-argument_list|(
+literal|0
+argument_list|,
 name|bp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
+argument_list|,
+literal|"plex request failed."
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH_SAFE
@@ -2777,19 +2773,13 @@ condition|(
 name|err
 condition|)
 block|{
-name|printf
+name|G_VINUM_LOGREQ
 argument_list|(
-literal|"GEOM_VINUM: plex request failed for "
-argument_list|)
-expr_stmt|;
-name|g_print_bio
-argument_list|(
+literal|0
+argument_list|,
 name|bp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
+argument_list|,
+literal|"plex request failed."
 argument_list|)
 expr_stmt|;
 name|cbp
@@ -3238,9 +3228,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"gv_plex_taste: NULL p for '%s'\n"
+literal|0
+argument_list|,
+literal|"%s: NULL p for '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|s
 operator|->
@@ -3310,9 +3304,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"geom_vinum: couldn't attach consumer to %s\n"
+literal|0
+argument_list|,
+literal|"unable to attach consumer to %s"
 argument_list|,
 name|pp
 operator|->
@@ -3378,10 +3374,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"geom_vinum: couldn't set access counts"
-literal|" for consumer on %s\n"
+literal|0
+argument_list|,
+literal|"unable to set access counts"
+literal|" for consumer on %s"
 argument_list|,
 name|pp
 operator|->

@@ -1092,7 +1092,7 @@ comment|/* seq heuristic in upper 16 bits */
 end_comment
 
 begin_comment
-comment|/*  *  Modes.  Some values same as Ixxx entries from inode.h for now.  */
+comment|/*  *  Flags for accmode_t.  */
 end_comment
 
 begin_define
@@ -2722,8 +2722,8 @@ parameter_list|,
 name|gid_t
 name|file_gid
 parameter_list|,
-name|mode_t
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|,
 name|struct
 name|ucred
@@ -2756,8 +2756,8 @@ name|acl
 modifier|*
 name|acl
 parameter_list|,
-name|mode_t
-name|acc_mode
+name|accmode_t
+name|accmode
 parameter_list|,
 name|struct
 name|ucred
@@ -2809,6 +2809,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|vdropl
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vdestroy
 parameter_list|(
 name|struct
 name|vnode

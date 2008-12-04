@@ -146,9 +146,7 @@ begin_struct
 struct|struct
 name|blkfront_info
 block|{
-name|struct
-name|xenbus_device
-modifier|*
+name|device_t
 name|xbdev
 decl_stmt|;
 name|dev_t
@@ -231,6 +229,8 @@ begin_function_decl
 name|int
 name|xlvbd_add
 parameter_list|(
+name|device_t
+parameter_list|,
 name|blkif_sector_t
 name|capacity
 parameter_list|,

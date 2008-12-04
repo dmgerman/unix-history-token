@@ -281,6 +281,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<netinet/vinet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/in_cksum.h>
 end_include
 
@@ -292,6 +298,41 @@ modifier|*
 name|sack_hole_zone
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|tcp_do_sack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_sack_maxholes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_sack_globalmaxholes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_sack_globalholes
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -310,14 +351,6 @@ literal|"TCP SACK"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_do_sack
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -354,15 +387,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|tcp_sack_maxholes
-init|=
-literal|128
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -387,15 +411,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|tcp_sack_globalmaxholes
-init|=
-literal|65536
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -419,15 +434,6 @@ literal|"Global maximum number of TCP SACK holes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tcp_sack_globalholes
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -2584,7 +2590,6 @@ name|tp
 operator|->
 name|snd_fack
 expr_stmt|;
-return|return;
 block|}
 end_function
 

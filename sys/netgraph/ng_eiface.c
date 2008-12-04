@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -1121,12 +1127,10 @@ literal|0
 block|}
 decl_stmt|;
 comment|/* Allocate node and interface private structures */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1576,13 +1580,6 @@ decl_stmt|;
 name|int
 name|buflen
 decl_stmt|;
-define|#
-directive|define
-name|SA_SIZE
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->sa_len<sizeof(*(s))? sizeof(*(s)):(s)->sa_len)
 comment|/* Determine size of response and allocate it */
 name|buflen
 operator|=
@@ -1697,9 +1694,6 @@ name|len
 expr_stmt|;
 block|}
 break|break;
-undef|#
-directive|undef
-name|SA_SIZE
 block|}
 default|default:
 name|error
@@ -2000,7 +1994,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

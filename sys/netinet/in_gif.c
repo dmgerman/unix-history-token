@@ -165,6 +165,12 @@ directive|include
 file|<netinet/ip_ecn.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -296,14 +302,23 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|int
 name|ip_gif_ttl
-init|=
-name|GIF_TTL
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_INT

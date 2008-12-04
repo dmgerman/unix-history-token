@@ -133,6 +133,12 @@ directive|include
 file|<net/bpf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -376,19 +382,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|ifnet
 modifier|*
 name|loif
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Used externally */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|IFC_SIMPLE_DECLARE
@@ -411,6 +426,18 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|INIT_VNET_NET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* XXX: destroying lo0 will lead to panics. */
 name|KASSERT
 argument_list|(
@@ -584,6 +611,11 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|INIT_VNET_NET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -592,6 +624,10 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|V_loif
+operator|=
+name|NULL
+expr_stmt|;
 name|if_clone_attach
 argument_list|(
 operator|&

@@ -2698,23 +2698,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_PROC_VMMAP
+name|KERN_PROC_OVMMAP
 value|13
 end_define
 
 begin_comment
-comment|/* VM map entries for process */
+comment|/* Old VM map entries for process */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|KERN_PROC_FILEDESC
+name|KERN_PROC_OFILEDESC
 value|14
 end_define
 
 begin_comment
-comment|/* File descriptors for process */
+comment|/* Old file descriptors for process */
 end_comment
 
 begin_define
@@ -2736,7 +2736,29 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* 					 * modifier for pid, pgrp, tty, 					 * uid, ruid, gid, rgid and proc 					 */
+comment|/* 					 * modifier for pid, pgrp, tty, 					 * uid, ruid, gid, rgid and proc 					 * This effectively uses 16-31 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_VMMAP
+value|32
+end_define
+
+begin_comment
+comment|/* VM map entries for process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_FILEDESC
+value|33
+end_define
+
+begin_comment
+comment|/* File descriptors for process */
 end_comment
 
 begin_comment

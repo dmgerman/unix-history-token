@@ -21,6 +21,30 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+value|__asm__ __volatile__ ("membar #MemIssue": : :"memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|mb()
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|mb()
+end_define
+
 begin_comment
 comment|/* Userland needs different ASI's. */
 end_comment

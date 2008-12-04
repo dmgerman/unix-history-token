@@ -173,11 +173,6 @@ begin_struct
 struct|struct
 name|vpoio_data
 block|{
-name|unsigned
-name|short
-name|int
-name|vpo_unit
-decl_stmt|;
 name|int
 name|vpo_mode_found
 decl_stmt|;
@@ -198,18 +193,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|vpoio_set_unit
-parameter_list|(
-name|vpo
-parameter_list|,
-name|unit
-parameter_list|)
-value|((vpo)->vpo_unit = unit)
-end_define
 
 begin_function_decl
 name|int

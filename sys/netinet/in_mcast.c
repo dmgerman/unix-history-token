@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -133,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/igmp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_ifndef
@@ -240,6 +252,12 @@ begin_comment
 comment|/*  * The IPv4 multicast list (in_multihead and associated structures) are  * protected by the global in_multi_mtx.  See in_var.h for more details.  For  * now, in_multi_mtx is marked as recursible due to IGMP's calling back into  * ip_output() to send IGMP packets while holding the lock; this probably is  * not quite desirable.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|in_multihead
@@ -250,6 +268,11 @@ end_decl_stmt
 begin_comment
 comment|/* XXX BSS initialization */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -821,14 +844,10 @@ name|EADDRNOTAVAIL
 operator|)
 return|;
 comment|/* Do not sleep with inp lock held. */
-name|MALLOC
-argument_list|(
 name|nims
-argument_list|,
-expr|struct
-name|in_msource
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1006,7 +1025,7 @@ argument_list|,
 name|ims_next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ims
 argument_list|,
@@ -3199,7 +3218,7 @@ argument_list|,
 name|ims_next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ims
 argument_list|,
@@ -3536,14 +3555,10 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Make a copy of the source vector so that we do not 		 * thrash the inpcb lock whilst copying it out. 		 * We only copy out the number of entries which userland 		 * has asked for, but we always tell userland how big the 		 * buffer really needs to be. 		 */
-name|MALLOC
-argument_list|(
 name|tss
-argument_list|,
-expr|struct
-name|sockaddr_storage
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3639,7 +3654,7 @@ operator|.
 name|msfr_nsrcs
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|tss
 argument_list|,
@@ -5984,7 +5999,7 @@ argument_list|,
 name|ims_next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ims
 argument_list|,
@@ -6709,7 +6724,7 @@ argument_list|,
 name|ims_next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ims
 argument_list|,
@@ -6810,14 +6825,10 @@ block|}
 endif|#
 directive|endif
 comment|/* 		 * Make a copy of the user-space source vector so 		 * that we may copy them with a single copyin. This 		 * allows us to deal with page faults up-front. 		 */
-name|MALLOC
-argument_list|(
 name|kss
-argument_list|,
-expr|struct
-name|sockaddr_storage
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6859,7 +6870,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|kss
 argument_list|,
@@ -7010,7 +7021,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|kss
 argument_list|,
@@ -7024,15 +7035,10 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Allocate a block to track all the in_msource 		 * entries we are about to allocate, in case we 		 * abruptly need to free them. 		 */
-name|MALLOC
-argument_list|(
 name|pnims
-argument_list|,
-expr|struct
-name|in_msource
-operator|*
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7079,14 +7085,10 @@ name|pkss
 operator|++
 control|)
 block|{
-name|MALLOC
-argument_list|(
 name|nims
-argument_list|,
-expr|struct
-name|in_msource
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7144,7 +7146,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|pnims
 index|[
@@ -7155,14 +7157,14 @@ name|M_IPMSOURCE
 argument_list|)
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|pnims
 argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|kss
 argument_list|,
@@ -7251,14 +7253,14 @@ name|imf_nsources
 operator|++
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|pnims
 argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|kss
 argument_list|,

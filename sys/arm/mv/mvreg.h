@@ -412,6 +412,62 @@ end_define
 begin_define
 define|#
 directive|define
+name|MV_PCIE00_BASE
+value|(MV_PCIE_BASE + 0x00000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE01_BASE
+value|(MV_PCIE_BASE + 0x04000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE02_BASE
+value|(MV_PCIE_BASE + 0x08000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE03_BASE
+value|(MV_PCIE_BASE + 0x0C000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE10_BASE
+value|(MV_PCIE_BASE + 0x40000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE11_BASE
+value|(MV_PCIE_BASE + 0x44000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE12_BASE
+value|(MV_PCIE_BASE + 0x48000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_PCIE13_BASE
+value|(MV_PCIE_BASE + 0x4C000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MV_USB0_BASE
 value|(MV_BASE + 0x50000)
 end_define

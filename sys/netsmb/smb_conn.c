@@ -182,11 +182,6 @@ parameter_list|,
 name|char
 modifier|*
 name|lockname
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -213,11 +208,6 @@ name|struct
 name|smb_connobj
 modifier|*
 name|cp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -333,8 +323,6 @@ argument_list|,
 literal|"smbsm ilock"
 argument_list|,
 literal|"smbsm"
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 name|smb_co_unlock
@@ -343,8 +331,6 @@ operator|&
 name|smb_vclist
 argument_list|,
 literal|0
-argument_list|,
-name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -394,7 +380,7 @@ name|co_lock
 argument_list|,
 name|LK_DRAIN
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|smb_co_done
@@ -416,11 +402,6 @@ name|smb_sm_lockvclist
 parameter_list|(
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 return|return
@@ -432,8 +413,6 @@ argument_list|,
 name|flags
 operator||
 name|LK_CANRECURSE
-argument_list|,
-name|td
 argument_list|)
 return|;
 block|}
@@ -444,10 +423,7 @@ specifier|static
 name|void
 name|smb_sm_unlockvclist
 parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
+name|void
 parameter_list|)
 block|{
 name|smb_co_unlock
@@ -456,8 +432,6 @@ operator|&
 name|smb_vclist
 argument_list|,
 name|LK_RELEASE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -490,15 +464,6 @@ modifier|*
 name|vcpp
 parameter_list|)
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|scred
-operator|->
-name|scr_td
-decl_stmt|;
 name|struct
 name|smb_connobj
 modifier|*
@@ -554,8 +519,6 @@ argument_list|(
 name|vcp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -763,8 +726,6 @@ argument_list|(
 name|vcp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -819,15 +780,6 @@ name|vcpp
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|scred
-operator|->
-name|scr_td
-decl_stmt|;
-name|struct
 name|smb_vc
 modifier|*
 name|vcp
@@ -854,8 +806,6 @@ operator|=
 name|smb_sm_lockvclist
 argument_list|(
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -896,9 +846,7 @@ literal|0
 condition|)
 block|{
 name|smb_sm_unlockvclist
-argument_list|(
-name|td
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 name|error
@@ -1021,9 +969,7 @@ expr_stmt|;
 name|out
 label|:
 name|smb_sm_unlockvclist
-argument_list|(
-name|td
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1041,6 +987,14 @@ if|if
 condition|(
 name|vcp
 condition|)
+block|{
+name|smb_vc_lock
+argument_list|(
+name|vcp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 name|smb_vc_put
 argument_list|(
 name|vcp
@@ -1048,6 +1002,7 @@ argument_list|,
 name|scred
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|error
 return|;
@@ -1078,11 +1033,6 @@ parameter_list|,
 name|char
 modifier|*
 name|lockname
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|SLIST_INIT
@@ -1138,8 +1088,6 @@ argument_list|(
 name|cp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 operator|!=
 literal|0
@@ -1180,7 +1128,7 @@ name|co_lock
 argument_list|,
 name|LK_RELEASE
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|lockdestroy
@@ -1246,10 +1194,6 @@ argument_list|(
 name|parent
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|scred
-operator|->
-name|scr_td
 argument_list|)
 expr_stmt|;
 name|SLIST_REMOVE
@@ -1472,10 +1416,6 @@ argument_list|,
 name|flags
 operator||
 name|LK_INTERLOCK
-argument_list|,
-name|scred
-operator|->
-name|scr_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1633,11 +1573,6 @@ name|struct
 name|smb_connobj
 modifier|*
 name|cp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 return|return
@@ -1663,11 +1598,6 @@ name|cp
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 if|if
@@ -1700,8 +1630,6 @@ condition|(
 name|smb_co_lockstatus
 argument_list|(
 name|cp
-argument_list|,
-name|td
 argument_list|)
 operator|==
 name|LK_EXCLUSIVE
@@ -1758,11 +1686,6 @@ name|cp
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 operator|(
@@ -1809,8 +1732,6 @@ argument_list|(
 name|smb_co_lockstatus
 argument_list|(
 name|parent
-argument_list|,
-name|curthread
 argument_list|)
 operator|==
 name|LK_EXCLUSIVE
@@ -1825,8 +1746,6 @@ argument_list|(
 name|smb_co_lockstatus
 argument_list|(
 name|child
-argument_list|,
-name|curthread
 argument_list|)
 operator|==
 name|LK_EXCLUSIVE
@@ -1891,15 +1810,6 @@ name|struct
 name|smb_vc
 modifier|*
 name|vcp
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|scred
-operator|->
-name|scr_td
 decl_stmt|;
 name|struct
 name|ucred
@@ -2017,8 +1927,6 @@ argument_list|,
 literal|"smb_vc ilock"
 argument_list|,
 literal|"smb_vc"
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|vcp
@@ -2822,11 +2730,6 @@ name|vcp
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 return|return
@@ -2838,8 +2741,6 @@ name|vcp
 argument_list|)
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 return|;
 block|}
@@ -2856,11 +2757,6 @@ name|vcp
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|smb_co_unlock
@@ -2871,8 +2767,6 @@ name|vcp
 argument_list|)
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3150,15 +3044,6 @@ name|sspp
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|scred
-operator|->
-name|scr_td
-decl_stmt|;
-name|struct
 name|smb_connobj
 modifier|*
 name|scp
@@ -3209,8 +3094,6 @@ argument_list|(
 name|ssp
 argument_list|,
 name|LK_EXCLUSIVE
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3235,8 +3118,6 @@ argument_list|(
 name|ssp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3617,15 +3498,6 @@ modifier|*
 name|ssp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|scred
-operator|->
-name|scr_td
-decl_stmt|;
-name|struct
 name|ucred
 modifier|*
 name|cred
@@ -3789,8 +3661,6 @@ argument_list|,
 literal|"smbss ilock"
 argument_list|,
 literal|"smbss"
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|ssp
@@ -4133,11 +4003,6 @@ name|ssp
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 return|return
@@ -4149,8 +4014,6 @@ name|ssp
 argument_list|)
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 return|;
 block|}
@@ -4167,11 +4030,6 @@ name|ssp
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
 name|smb_co_unlock
@@ -4182,8 +4040,6 @@ name|ssp
 argument_list|)
 argument_list|,
 name|flags
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4586,8 +4442,6 @@ operator|=
 name|smb_sm_lockvclist
 argument_list|(
 name|LK_SHARED
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4620,8 +4474,6 @@ argument_list|(
 name|vcp
 argument_list|,
 name|LK_SHARED
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4663,8 +4515,6 @@ argument_list|(
 name|vcp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4692,8 +4542,6 @@ argument_list|(
 name|ssp
 argument_list|,
 name|LK_SHARED
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4720,8 +4568,6 @@ argument_list|(
 name|ssp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -4751,8 +4597,6 @@ argument_list|(
 name|vcp
 argument_list|,
 literal|0
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4788,9 +4632,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|smb_sm_unlockvclist
-argument_list|(
-name|td
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 name|error

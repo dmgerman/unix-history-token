@@ -394,7 +394,7 @@ name|ns_part1
 operator|.
 name|np_callout
 argument_list|,
-literal|0
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|ns
@@ -444,7 +444,7 @@ name|ns_part2
 operator|.
 name|np_callout
 argument_list|,
-literal|0
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 comment|/* Create device nodes. */

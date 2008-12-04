@@ -700,11 +700,16 @@ name|md_start
 expr_stmt|;
 name|maxdumppgs
 operator|=
+name|min
+argument_list|(
 name|di
 operator|->
 name|maxiosize
 operator|/
 name|PAGE_SIZE
+argument_list|,
+name|MAXDUMPPGS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

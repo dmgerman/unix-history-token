@@ -686,7 +686,7 @@ begin_define
 define|#
 directive|define
 name|PCIM_CIS_ASI_MASK
-value|0x7
+value|0x00000007
 end_define
 
 begin_define
@@ -1385,6 +1385,13 @@ define|#
 directive|define
 name|PCIS_MULTIMEDIA_TELE
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIS_MULTIMEDIA_HDA
+value|0x03
 end_define
 
 begin_define

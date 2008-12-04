@@ -200,6 +200,30 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * Timers used for the pseudo-transport protocol when using datagrams  */
+end_comment
+
+begin_struct
+struct|struct
+name|rpc_timers
+block|{
+name|u_short
+name|rt_srtt
+decl_stmt|;
+comment|/* smoothed round-trip time */
+name|u_short
+name|rt_deviate
+decl_stmt|;
+comment|/* estimated deviation */
+name|u_long
+name|rt_rtxcur
+decl_stmt|;
+comment|/* current (backed-off) rto */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * A structure used with CLNT_CALL_EXT to pass extra information used  * while processing an RPC call.  */
 end_comment
 
@@ -222,6 +246,17 @@ modifier|*
 name|rc_feedback_arg
 decl_stmt|;
 comment|/* argument for callback */
+name|struct
+name|rpc_timers
+modifier|*
+name|rc_timers
+decl_stmt|;
+comment|/* optional RTT timers */
+name|struct
+name|rpc_err
+name|rc_err
+decl_stmt|;
+comment|/* detailed call status */
 block|}
 struct|;
 end_struct
@@ -274,14 +309,13 @@ modifier|*
 parameter_list|,
 name|rpcproc_t
 parameter_list|,
-name|xdrproc_t
-parameter_list|,
-name|void
+name|struct
+name|mbuf
 modifier|*
 parameter_list|,
-name|xdrproc_t
-parameter_list|,
-name|void
+name|struct
+name|mbuf
+modifier|*
 modifier|*
 parameter_list|,
 name|struct
@@ -330,6 +364,18 @@ parameter_list|,
 name|xdrproc_t
 parameter_list|,
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* close the connection and terminate pending RPCs */
+name|void
+function_decl|(
+modifier|*
+name|cl_close
+function_decl|)
+parameter_list|(
+name|struct
+name|__rpc_client
 modifier|*
 parameter_list|)
 function_decl|;
@@ -505,30 +551,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Timers used for the pseudo-transport protocol when using datagrams  */
-end_comment
-
-begin_struct
-struct|struct
-name|rpc_timers
-block|{
-name|u_short
-name|rt_srtt
-decl_stmt|;
-comment|/* smoothed round-trip time */
-name|u_short
-name|rt_deviate
-decl_stmt|;
-comment|/* estimated deviation */
-name|u_long
-name|rt_rtxcur
-decl_stmt|;
-comment|/* current (backed-off) rto */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*        * Feedback values used for possible congestion and rate control  */
 end_comment
 
@@ -638,6 +660,75 @@ value|if (refcount_release(&(rh)->cl_refs))	\ 		CLNT_DESTROY(rh)
 end_define
 
 begin_comment
+comment|/*  * void  * CLNT_CLOSE(rh);  * 	CLIENT *rh;  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLNT_CLOSE
+parameter_list|(
+name|rh
+parameter_list|)
+value|((*(rh)->cl_ops->cl_close)(rh))
+end_define
+
+begin_function_decl
+name|enum
+name|clnt_stat
+name|clnt_call_private
+parameter_list|(
+name|CLIENT
+modifier|*
+parameter_list|,
+name|struct
+name|rpc_callextra
+modifier|*
+parameter_list|,
+name|rpcproc_t
+parameter_list|,
+name|xdrproc_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|xdrproc_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|timeval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * enum clnt_stat  * CLNT_CALL_MBUF(rh, ext, proc, mreq, mrepp, timeout)  * 	CLIENT *rh;  *	struct rpc_callextra *ext;  *	rpcproc_t proc;  *	struct mbuf *mreq;  *	struct mbuf **mrepp;  *	struct timeval timeout;  *  * Call arguments in mreq which is consumed by the call (even if there  * is an error). Results returned in *mrepp.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLNT_CALL_MBUF
+parameter_list|(
+name|rh
+parameter_list|,
+name|ext
+parameter_list|,
+name|proc
+parameter_list|,
+name|mreq
+parameter_list|,
+name|mrepp
+parameter_list|,
+name|secs
+parameter_list|)
+define|\
+value|((*(rh)->cl_ops->cl_call)(rh, ext, proc, mreq, mrepp, secs))
+end_define
+
+begin_comment
 comment|/*  * enum clnt_stat  * CLNT_CALL_EXT(rh, ext, proc, xargs, argsp, xres, resp, timeout)  * 	CLIENT *rh;  *	struct rpc_callextra *ext;  *	rpcproc_t proc;  *	xdrproc_t xargs;  *	void *argsp;  *	xdrproc_t xres;  *	void *resp;  *	struct timeval timeout;  */
 end_comment
 
@@ -663,7 +754,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, ext, proc, xargs,		\ 		argsp, xres, resp, secs))
+value|clnt_call_private(rh, ext, proc, xargs,				\ 		argsp, xres, resp, secs)
 end_define
 
 begin_endif
@@ -701,7 +792,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, NULL, proc, xargs,	\ 		argsp, xres, resp, secs))
+value|clnt_call_private(rh, NULL, proc, xargs,		\ 		argsp, xres, resp, secs)
 end_define
 
 begin_define
@@ -724,7 +815,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, NULL, proc, xargs,	\ 		argsp, xres, resp, secs))
+value|clnt_call_private(rh, NULL, proc, xargs,		\ 		argsp, xres, resp, secs)
 end_define
 
 begin_else
@@ -1197,6 +1288,28 @@ end_define
 
 begin_comment
 comment|/* get retry count for reconnect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_PRIVPORT
+value|27
+end_define
+
+begin_comment
+comment|/* set privileged source port flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_PRIVPORT
+value|28
+end_define
+
+begin_comment
+comment|/* get privileged source port flag */
 end_comment
 
 begin_endif

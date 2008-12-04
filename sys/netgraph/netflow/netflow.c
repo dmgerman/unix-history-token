@@ -1414,16 +1414,12 @@ name|CACHESIZE
 argument_list|)
 expr_stmt|;
 comment|/* Allocate hash. */
-name|MALLOC
-argument_list|(
 name|priv
 operator|->
 name|hash
-argument_list|,
-expr|struct
-name|flow_hash_entry
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|NBUCKETS
 operator|*
 sizeof|sizeof
@@ -1682,7 +1678,7 @@ name|priv
 operator|->
 name|hash
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|priv
 operator|->

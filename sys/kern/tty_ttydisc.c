@@ -1926,11 +1926,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Step 1: read data. */
-name|tty_unlock
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|obstart
 operator|=
 name|ob
@@ -1947,6 +1942,11 @@ sizeof|sizeof
 name|ob
 argument_list|)
 expr_stmt|;
+name|tty_unlock
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|uiomove
@@ -1956,6 +1956,11 @@ argument_list|,
 name|nlen
 argument_list|,
 name|uio
+argument_list|)
+expr_stmt|;
+name|tty_lock
+argument_list|(
+name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1968,11 +1973,6 @@ break|break;
 name|oblen
 operator|=
 name|nlen
-expr_stmt|;
-name|tty_lock
-argument_list|(
-name|tp
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

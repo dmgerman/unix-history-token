@@ -275,6 +275,25 @@ directive|include
 file|<netinet/tcp_timer.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800056
+end_if
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -543,34 +562,6 @@ directive|define
 name|TCP_DROP
 value|3
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tcp_do_autorcvbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tcp_do_autosndbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tcp_autorcvbuf_max
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tcp_autosndbuf_max
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -16384,9 +16375,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|DPRINTF
 argument_list|(
-literal|"not offloading\n"
+literal|"no DDP\n"
 argument_list|)
 expr_stmt|;
 return|return;

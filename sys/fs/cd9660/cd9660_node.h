@@ -68,10 +68,6 @@ modifier|*
 name|i_vnode
 decl_stmt|;
 comment|/* vnode associated with this inode */
-name|u_long
-name|i_flag
-decl_stmt|;
-comment|/* see below */
 name|ino_t
 name|i_number
 decl_stmt|;
@@ -138,21 +134,6 @@ directive|define
 name|i_back
 value|i_chain[1]
 end_define
-
-begin_comment
-comment|/* flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_ACCESS
-value|0x0020
-end_define
-
-begin_comment
-comment|/* inode access time to be updated */
-end_comment
 
 begin_define
 define|#

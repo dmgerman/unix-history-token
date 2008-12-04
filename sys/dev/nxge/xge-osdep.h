@@ -877,6 +877,14 @@ parameter_list|)
 value|{                                 \ 	flags = MTX_QUIET;                                                     \ 	mtx_unlock_flags(lockp, flags);                                        \ }
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|800053
+end_if
+
 begin_comment
 comment|/* Write memory barrier */
 end_comment
@@ -886,7 +894,25 @@ define|#
 directive|define
 name|xge_os_wmb
 parameter_list|()
+value|wmb()
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|xge_os_wmb
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Delay (in micro seconds) */

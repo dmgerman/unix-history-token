@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracebits.c,v 1.15 2007/06/30 16:14:20 tom Exp $"
+literal|"$Id: lib_tracebits.c,v 1.17 2008/08/03 16:09:26 tom Exp $"
 argument_list|)
 end_macro
 
@@ -723,6 +723,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|buf
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|tty
 operator|->
 name|c_iflag
@@ -799,53 +806,56 @@ block|{
 specifier|static
 struct|struct
 block|{
+name|int
+name|value
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
-name|int
-name|value
 decl_stmt|;
 block|}
 name|csizes
 index|[]
 init|=
 block|{
-block|{
-literal|"CS5 "
-block|,
+define|#
+directive|define
+name|CS_DATA
+parameter_list|(
+name|name
+parameter_list|)
+value|{ name, #name " " }
+name|CS_DATA
+argument_list|(
 name|CS5
-block|}
+argument_list|)
 block|,
 ifdef|#
 directive|ifdef
 name|CS6
-block|{
-literal|"CS6 "
-block|,
+name|CS_DATA
+argument_list|(
 name|CS6
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|CS7
-block|{
-literal|"CS7 "
-block|,
+name|CS_DATA
+argument_list|(
 name|CS7
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
-block|{
-literal|"CS8 "
-block|,
+name|CS_DATA
+argument_list|(
 name|CS8
-block|}
-block|, 	}
+argument_list|)
+block|, 	    }
 struct|;
 specifier|const
 name|char
@@ -948,6 +958,7 @@ operator|->
 name|c_lflag
 argument_list|)
 expr_stmt|;
+block|}
 else|#
 directive|else
 comment|/* reference: ttcompat(4M) on SunOS 4.1 */
@@ -1090,6 +1101,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|buf
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|tty
 operator|->
 name|sg_flags
@@ -1110,6 +1128,7 @@ operator|->
 name|sg_flags
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -1157,7 +1176,7 @@ directive|else
 end_else
 
 begin_macro
-name|empty_module
+name|EMPTY_MODULE
 argument_list|(
 argument|_nc_tracebits
 argument_list|)

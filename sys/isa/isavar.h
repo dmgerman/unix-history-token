@@ -110,7 +110,7 @@ value|40
 end_define
 
 begin_comment
-comment|/* plug-and-play hardware */
+comment|/* plug-and-play flexible hardware */
 end_comment
 
 begin_comment
@@ -349,6 +349,12 @@ block|,
 name|ISA_IVAR_COMPATID
 block|,
 name|ISA_IVAR_CONFIGATTR
+block|,
+name|ISA_IVAR_PNP_CSN
+block|,
+name|ISA_IVAR_PNP_LDN
+block|,
+name|ISA_IVAR_PNPBIOS_HANDLE
 block|}
 enum|;
 end_enum
@@ -530,6 +536,39 @@ argument|int
 argument_list|)
 end_macro
 
+begin_macro
+name|ISA_ACCESSOR
+argument_list|(
+argument|pnp_csn
+argument_list|,
+argument|PNP_CSN
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|ISA_ACCESSOR
+argument_list|(
+argument|pnp_ldn
+argument_list|,
+argument|PNP_LDN
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|ISA_ACCESSOR
+argument_list|(
+argument|pnpbios_handle
+argument_list|,
+argument|PNPBIOS_HANDLE
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
 begin_comment
 comment|/* Device class for ISA bridges. */
 end_comment
@@ -687,6 +726,46 @@ name|size
 parameter_list|)
 value|do { \ 	if (isa_dma_init(chan, size, M_NOWAIT)) \ 		printf("WARNING: isa_dma_init(%d, %ju) failed\n", \ 		    (int)(chan), (uintmax_t)(size)); \ 	} while (0)
 end_define
+
+begin_function_decl
+name|void
+name|isa_hinted_child
+parameter_list|(
+name|device_t
+name|parent
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isa_hint_device_unit
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+modifier|*
+name|unitp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

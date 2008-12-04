@@ -79,6 +79,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/osd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priority.h>
 end_include
 
@@ -693,6 +699,11 @@ name|int
 name|td_dbgflags
 decl_stmt|;
 comment|/* (c) Userland debugger flags */
+name|struct
+name|osd
+name|td_osd
+decl_stmt|;
+comment|/* (k) Object specific data. */
 define|#
 directive|define
 name|td_endzero

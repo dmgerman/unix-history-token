@@ -367,7 +367,7 @@ name|nfs_async
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Tell client that writes were synced even though they were not"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -388,7 +388,7 @@ name|nfs_commit_blks
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of completed commits"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -451,7 +451,7 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|int
+name|accmode_t
 parameter_list|,
 name|struct
 name|ucred
@@ -463,6 +463,12 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -479,6 +485,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Clear nameidata fields that are tested in nsfmout cleanup code prior  * to using first nfsm macro (that might jump to the cleanup code).  */
@@ -793,7 +804,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -1200,7 +1211,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -1838,7 +1849,7 @@ argument_list|,
 operator|&
 name|tvfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -2452,6 +2463,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|nd
+argument_list|,
+name|nfsd
 argument_list|,
 name|fhp
 argument_list|,
@@ -3450,7 +3463,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -3975,7 +3988,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -4656,14 +4669,10 @@ name|m
 expr_stmt|;
 block|}
 block|}
-name|MALLOC
-argument_list|(
 name|iv
-argument_list|,
-expr|struct
-name|iovec
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|i
 operator|*
 sizeof|sizeof
@@ -4836,7 +4845,7 @@ name|nh_nextr
 operator|=
 name|off
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -5653,7 +5662,7 @@ argument_list|,
 operator|&
 name|tvfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -5836,14 +5845,10 @@ operator|>
 literal|0
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|ivp
-argument_list|,
-expr|struct
-name|iovec
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|cnt
 operator|*
 sizeof|sizeof
@@ -6005,7 +6010,7 @@ operator|.
 name|srvvop_writes
 operator|++
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -6243,6 +6248,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
+begin_comment
+comment|/*  * XXX dfr - write gathering isn't supported by the new RPC code since  * its really only useful for NFSv2. If there is a real need, we could  * attempt to fit it into the filehandle affinity system, e.g. by  * looking to see if there are queued write requests that overlap this  * one.  */
+end_comment
 
 begin_comment
 comment|/*  * For the purposes of write gathering, we must decide if the credential  * associated with two pending requests have equivilent privileges.  Since  * NFS only uses a subset of the BSD ucred -- the effective uid and group  * IDs -- we have a compare routine that checks only the relevant fields.  */
@@ -7372,7 +7387,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -7593,14 +7608,10 @@ name|uio_iovcnt
 operator|=
 name|i
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|iov
-argument_list|,
-expr|struct
-name|iovec
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|i
 operator|*
 sizeof|sizeof
@@ -7768,7 +7779,7 @@ argument_list|(
 name|mvfslocked
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -8455,6 +8466,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * nfs create service  * now does a truncate to 0 length via. setattr if it already exists  */
 end_comment
@@ -8594,9 +8610,6 @@ name|exclusive_flag
 init|=
 literal|0
 decl_stmt|;
-name|caddr_t
-name|cp
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -8622,11 +8635,9 @@ decl_stmt|;
 name|u_quad_t
 name|tempsize
 decl_stmt|;
-name|u_char
+name|struct
+name|timespec
 name|cverf
-index|[
-name|NFSX_V3CREATEVERF
-index|]
 decl_stmt|;
 name|struct
 name|mount
@@ -8776,6 +8787,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|nd
+argument_list|,
+name|nfsd
 argument_list|,
 name|fhp
 argument_list|,
@@ -8936,23 +8949,34 @@ break|break;
 case|case
 name|NFSV3CREATE_EXCLUSIVE
 case|:
-name|cp
+name|tl
 operator|=
 name|nfsm_dissect_nonblock
 argument_list|(
-name|caddr_t
+name|u_int32_t
+operator|*
 argument_list|,
 name|NFSX_V3CREATEVERF
 argument_list|)
 expr_stmt|;
-name|bcopy
-argument_list|(
-name|cp
-argument_list|,
+comment|/* Unique bytes, endianness is not important. */
 name|cverf
-argument_list|,
-name|NFSX_V3CREATEVERF
-argument_list|)
+operator|.
+name|tv_sec
+operator|=
+name|tl
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|cverf
+operator|.
+name|tv_nsec
+operator|=
+name|tl
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|exclusive_flag
 operator|=
@@ -9177,20 +9201,11 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
-name|bcopy
-argument_list|(
-name|cverf
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|vap
 operator|->
 name|va_atime
-argument_list|,
-name|NFSX_V3CREATEVERF
-argument_list|)
+operator|=
+name|cverf
 expr_stmt|;
 name|error
 operator|=
@@ -9629,17 +9644,18 @@ name|error
 operator|&&
 name|bcmp
 argument_list|(
+operator|&
 name|cverf
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vap
 operator|->
 name|va_atime
 argument_list|,
-name|NFSX_V3CREATEVERF
+sizeof|sizeof
+argument_list|(
+name|cverf
+argument_list|)
 argument_list|)
 condition|)
 name|error
@@ -10266,6 +10282,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|nd
+argument_list|,
+name|nfsd
 argument_list|,
 name|fhp
 argument_list|,
@@ -11367,6 +11385,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
+name|nfsd
+argument_list|,
 name|fhp
 argument_list|,
 name|len
@@ -12072,6 +12092,8 @@ argument_list|(
 operator|&
 name|fromnd
 argument_list|,
+name|nfsd
+argument_list|,
 name|ffhp
 argument_list|,
 name|len
@@ -12243,6 +12265,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|tond
+argument_list|,
+name|nfsd
 argument_list|,
 name|tfhp
 argument_list|,
@@ -13261,7 +13285,7 @@ argument_list|,
 operator|&
 name|tvfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -13414,6 +13438,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|nd
+argument_list|,
+name|nfsd
 argument_list|,
 name|dfhp
 argument_list|,
@@ -14157,6 +14183,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
+name|nfsd
+argument_list|,
 name|fhp
 argument_list|,
 name|len
@@ -14247,12 +14275,10 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|MALLOC
-argument_list|(
 name|pathcp
-argument_list|,
-name|caddr_t
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|len2
 operator|+
 literal|1
@@ -14667,7 +14693,7 @@ condition|(
 name|pathcp
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|pathcp
 argument_list|,
@@ -14877,7 +14903,7 @@ if|if
 condition|(
 name|pathcp
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|pathcp
 argument_list|,
@@ -15184,6 +15210,8 @@ name|nfs_namei
 argument_list|(
 operator|&
 name|nd
+argument_list|,
+name|nfsd
 argument_list|,
 name|fhp
 argument_list|,
@@ -16083,6 +16111,8 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
+name|nfsd
+argument_list|,
 name|fhp
 argument_list|,
 name|len
@@ -16914,7 +16944,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -17080,12 +17110,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * end section.  Allocate rbuf and continue 	 */
-name|MALLOC
-argument_list|(
 name|rbuf
-argument_list|,
-name|caddr_t
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|siz
 argument_list|,
 name|M_TEMP
@@ -17438,7 +17466,7 @@ name|tl
 operator|=
 name|nfsrv_nfs_true
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -17448,7 +17476,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -18006,7 +18034,7 @@ name|bp
 operator|-
 name|bpos
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -18016,7 +18044,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -18441,7 +18469,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -18588,12 +18616,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|rbuf
-argument_list|,
-name|caddr_t
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|siz
 argument_list|,
 name|M_TEMP
@@ -18908,7 +18934,7 @@ name|tl
 operator|=
 name|nfsrv_nfs_true
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -18918,7 +18944,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -19785,7 +19811,7 @@ name|bp
 operator|-
 name|bpos
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -19795,7 +19821,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -20110,7 +20136,7 @@ argument_list|,
 operator|&
 name|tvfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -20828,7 +20854,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -21432,7 +21458,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -21544,24 +21570,12 @@ name|NFSX_V3FSINFO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX 	 * There should be filesystem VFS OP(s) to get this information. 	 * For now, assume ufs. 	 */
-if|if
-condition|(
-name|slp
-operator|->
-name|ns_so
-operator|->
-name|so_type
-operator|==
-name|SOCK_DGRAM
-condition|)
 name|pref
 operator|=
-name|NFS_MAXDGRAMDATA
-expr_stmt|;
-else|else
-name|pref
-operator|=
-name|NFS_MAXDATA
+name|NFS_SRVMAXDATA
+argument_list|(
+name|nfsd
+argument_list|)
 expr_stmt|;
 name|sip
 operator|->
@@ -21879,7 +21893,7 @@ argument_list|,
 operator|&
 name|vfslocked
 argument_list|,
-name|cred
+name|nfsd
 argument_list|,
 name|slp
 argument_list|,
@@ -22306,8 +22320,8 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|int
-name|flags
+name|accmode_t
+name|accmode
 parameter_list|,
 name|struct
 name|ucred
@@ -22348,7 +22362,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -22437,7 +22451,7 @@ name|VOP_ACCESS
 argument_list|(
 name|vp
 argument_list|,
-name|flags
+name|accmode
 argument_list|,
 name|cred
 argument_list|,

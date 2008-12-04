@@ -54,7 +54,7 @@ file|<fs/cd9660/cd9660_node.h>
 end_include
 
 begin_comment
-comment|/*  * Bmap converts a the logical block number of a file to its physical block  * number on the disk. The conversion is done by using the logical block  * number to index into the data block (extent) for the file.  */
+comment|/*  * Bmap converts the logical block number of a file to its physical  * block number on the disk. The conversion is done by using the  * logical block number to index into the data block (extent) for the  * file.  */
 end_comment
 
 begin_function

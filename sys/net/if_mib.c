@@ -51,6 +51,12 @@ directive|include
 file|<net/if_mib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_comment
 comment|/*  * A sysctl(3) MIB for generic interface information.  This information  * is exported in the net.link.generic branch, which has the following  * structure:  *  * net.link.generic	.system			- system-wide control variables  *						  and statistics (node)  *			.ifdata.<ifindex>.general  *						- what's in `struct ifdata'  *						  plus some other info  *			.ifdata.<ifindex>.linkspecific  *						- a link-type-specific data  *						  structure (as might be used  *						  by an SNMP agent  *  * Perhaps someday we will make addresses accessible via this interface  * as well (then there will be four such...).  The reason that the  * index comes before the last element in the name is because it  * seems more orthogonal that way, particularly with the possibility  * of other per-interface data living down here as well (e.g., integrated  * services stuff).  */
 end_comment

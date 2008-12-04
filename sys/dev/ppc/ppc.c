@@ -546,15 +546,11 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"ppc%d: ECP sync failed as data still "
-expr|\
-literal|"present in FIFO.\n"
+name|dev
 argument_list|,
-name|ppc
-operator|->
-name|ppc_unit
+literal|"ECP sync failed as data still present in FIFO.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3053,13 +3049,13 @@ argument_list|,
 literal|0x1
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ppc%d: SMC registers CR1=0x%x"
-argument_list|,
 name|ppc
 operator|->
-name|ppc_unit
+name|ppc_dev
+argument_list|,
+literal|"SMC registers CR1=0x%x"
 argument_list|,
 name|inb
 argument_list|(
@@ -4290,13 +4286,13 @@ name|bootverbose
 condition|)
 block|{
 comment|/* dump of registers */
-name|printf
+name|device_printf
 argument_list|(
-literal|"ppc%d: 0x%x - "
-argument_list|,
 name|ppc
 operator|->
-name|ppc_unit
+name|ppc_dev
+argument_list|,
+literal|"0x%x - "
 argument_list|,
 name|w83877f_keys
 index|[
@@ -4422,15 +4418,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ppc%d:"
-argument_list|,
-name|ppc
-operator|->
-name|ppc_unit
-argument_list|)
-expr_stmt|;
 block|}
 name|ppc
 operator|->
@@ -4497,13 +4484,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ppc%d: W83757 compatible mode\n"
-argument_list|,
 name|ppc
 operator|->
-name|ppc_unit
+name|ppc_dev
+argument_list|,
+literal|"W83757 compatible mode\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4529,9 +4516,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|" not in parallel port mode\n"
+name|ppc
+operator|->
+name|ppc_dev
+argument_list|,
+literal|"not in parallel port mode\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4559,9 +4550,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|" EPP SPP"
+name|ppc
+operator|->
+name|ppc_dev
+argument_list|,
+literal|"EPP SPP\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4584,9 +4579,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|" ECP SPP"
+name|ppc
+operator|->
+name|ppc_dev
+argument_list|,
+literal|"ECP SPP\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4617,9 +4616,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|" ECP+EPP SPP"
+name|ppc
+operator|->
+name|ppc_dev
+argument_list|,
+literal|"ECP+EPP SPP\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4714,9 +4717,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|" ECP+EPP"
+name|ppc
+operator|->
+name|ppc_dev
+argument_list|,
+literal|"ECP+EPP\n"
 argument_list|)
 expr_stmt|;
 name|ppc
@@ -4744,9 +4751,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|" ECP"
+name|ppc
+operator|->
+name|ppc_dev
+argument_list|,
+literal|"ECP\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4770,9 +4781,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|" EPP SPP"
+name|ppc
+operator|->
+name|ppc_dev
+argument_list|,
+literal|"EPP SPP\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4783,15 +4798,6 @@ operator|=
 name|chipset_mode
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 comment|/* exit configuration mode */
 name|outb
 argument_list|(
@@ -4870,13 +4876,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ppc%d:"
-argument_list|,
 name|ppc
 operator|->
-name|ppc_unit
+name|ppc_dev
+argument_list|,
+literal|"SPP"
 argument_list|)
 expr_stmt|;
 comment|/* first, check for ECP */
@@ -4915,7 +4921,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|" ECP SPP"
+literal|" ECP "
 argument_list|)
 expr_stmt|;
 comment|/* search for SMC style ECP+EPP mode */
@@ -5004,15 +5010,6 @@ operator|->
 name|ppc_dtm
 operator||=
 name|PPB_NIBBLE
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|" SPP"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6940,11 +6937,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"parallel port found at 0x%x\n"
+literal|"parallel port found at 0x%lx\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|port
 argument_list|)
 expr_stmt|;
@@ -6989,11 +6983,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"parallel port found at 0x%x\n"
+literal|"parallel port found at 0x%lx\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|port
 argument_list|)
 expr_stmt|;
@@ -7008,7 +6999,9 @@ literal|"parallel port not found.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 endif|#
@@ -7246,12 +7239,9 @@ argument_list|)
 expr_stmt|;
 name|ppc
 operator|->
-name|ppc_unit
+name|ppc_dev
 operator|=
-name|device_get_unit
-argument_list|(
 name|dev
-argument_list|)
 expr_stmt|;
 name|ppc
 operator|->

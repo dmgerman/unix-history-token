@@ -428,12 +428,10 @@ block|{
 name|hpriv_p
 name|priv
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|hpriv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1309,7 +1307,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|NG_HOOK_PRIVATE
 argument_list|(

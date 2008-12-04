@@ -602,28 +602,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Flag set by arm_fix_call_dummy that tells whether the target    function is a Thumb function.  This flag is checked by    arm_push_arguments.  FIXME: Change the PUSH_ARGUMENTS macro (and    its use in valops.c) to pass the function address as an additional    parameter.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|target_is_thumb
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Flag set by arm_fix_call_dummy that tells whether the calling    function is a Thumb function.  This flag is checked by    arm_pc_is_thumb and arm_call_dummy_breakpoint_offset.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|caller_is_thumb
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Determine if the program counter specified in MEMADDR is in a Thumb    function.  */
 end_comment
 
@@ -679,48 +657,6 @@ return|return
 literal|0
 return|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/* Determine if the program counter specified in MEMADDR is in a call    dummy being called from a Thumb function.  */
-end_comment
-
-begin_function
-name|int
-name|arm_pc_is_thumb_dummy
-parameter_list|(
-name|CORE_ADDR
-name|memaddr
-parameter_list|)
-block|{
-name|CORE_ADDR
-name|sp
-init|=
-name|read_sp
-argument_list|()
-decl_stmt|;
-comment|/* FIXME: Until we switch for the new call dummy macros, this heuristic      is the best we can do.  We are trying to determine if the pc is on      the stack, which (hopefully) will only happen in a call dummy.      We hope the current stack pointer is not so far alway from the dummy      frame location (true if we have not pushed large data structures or      gone too many levels deep) and that our 1024 is not enough to consider      code regions as part of the stack (true for most practical purposes).  */
-if|if
-condition|(
-name|DEPRECATED_PC_IN_CALL_DUMMY
-argument_list|(
-name|memaddr
-argument_list|,
-name|sp
-argument_list|,
-name|sp
-operator|+
-literal|1024
-argument_list|)
-condition|)
-return|return
-name|caller_is_thumb
-return|;
-else|else
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -7400,12 +7336,6 @@ decl_stmt|;
 if|if
 condition|(
 name|arm_pc_is_thumb
-argument_list|(
-operator|*
-name|pcptr
-argument_list|)
-operator|||
-name|arm_pc_is_thumb_dummy
 argument_list|(
 operator|*
 name|pcptr

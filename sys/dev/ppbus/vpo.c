@@ -167,9 +167,8 @@ begin_struct
 struct|struct
 name|vpo_data
 block|{
-name|unsigned
-name|short
-name|vpo_unit
+name|device_t
+name|vpo_dev
 decl_stmt|;
 name|int
 name|vpo_stat
@@ -302,7 +301,8 @@ name|parent
 argument_list|,
 literal|"vpo"
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -353,28 +353,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* vpo dependent initialisation */
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
 operator|=
-name|device_get_unit
-argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-comment|/* low level probe */
-name|vpoio_set_unit
-argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_io
-argument_list|,
-name|vpo
-operator|->
-name|vpo_unit
-argument_list|)
 expr_stmt|;
 comment|/* check ZIP before ZIP+ or imm_probe() will send controls to 	 * the printer or whatelse connected to the port */
 if|if
@@ -1074,13 +1057,13 @@ name|vpo_error
 operator|!=
 name|VP0_ESELECT_TIMEOUT
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: VP0 error/timeout (%d)\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"VP0 error/timeout (%d)\n"
 argument_list|,
 name|vpo
 operator|->
@@ -1554,13 +1537,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VP0_DEBUG
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: XPT_SCSI_IO (0x%x) request\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"XPT_SCSI_IO (0x%x) request\n"
 argument_list|,
 name|csio
 operator|->
@@ -1607,13 +1590,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VP0_DEBUG
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: XPT_CALC_GEOMETRY (bs=%d,vs=%jd,c=%d,h=%d,spt=%d) request\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"XPT_CALC_GEOMETRY (bs=%d,vs=%jd,c=%d,h=%d,spt=%d) request\n"
 argument_list|,
 name|ccg
 operator|->
@@ -1694,13 +1677,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|VP0_DEBUG
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: XPT_RESET_BUS request\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"XPT_RESET_BUS request\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1801,13 +1784,13 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|VP0_DEBUG
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: XPT_PATH_INQ request\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"XPT_PATH_INQ request\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1964,8 +1947,7 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-comment|/* The ZIP is actually always polled throw vpo_action() */
-return|return;
+comment|/* The ZIP is actually always polled throw vpo_action(). */
 block|}
 end_function
 

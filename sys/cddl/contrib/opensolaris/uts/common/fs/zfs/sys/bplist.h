@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_BPLIST_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -233,6 +226,7 @@ name|bplist_t
 modifier|*
 name|bpl
 parameter_list|,
+specifier|const
 name|blkptr_t
 modifier|*
 name|bp
@@ -250,6 +244,7 @@ name|bplist_t
 modifier|*
 name|bpl
 parameter_list|,
+specifier|const
 name|blkptr_t
 modifier|*
 name|bp
@@ -300,6 +295,25 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|uncompp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|bplist_space_birthrange
+parameter_list|(
+name|bplist_t
+modifier|*
+name|bpl
+parameter_list|,
+name|uint64_t
+name|mintxg
+parameter_list|,
+name|uint64_t
+name|maxtxg
+parameter_list|,
+name|uint64_t
+modifier|*
+name|dasizep
 parameter_list|)
 function_decl|;
 ifdef|#

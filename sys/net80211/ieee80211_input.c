@@ -2844,6 +2844,9 @@ case|:
 case|case
 name|IEEE80211_ELEMID_CFPARMS
 case|:
+case|case
+name|IEEE80211_ELEMID_PWRCNSTR
+case|:
 comment|/* NB: avoid debugging complaints */
 break|break;
 case|case

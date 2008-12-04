@@ -2401,7 +2401,7 @@ name|VPD_ENTRY
 argument_list|(
 name|ec
 argument_list|,
-literal|16
+name|ECNUM_LEN
 argument_list|)
 expr_stmt|;
 comment|/* EC level */
@@ -3131,6 +3131,19 @@ argument_list|,
 name|SERNUM_LEN
 argument_list|)
 expr_stmt|;
+name|memcpy
+argument_list|(
+name|p
+operator|->
+name|ec
+argument_list|,
+name|vpd
+operator|.
+name|ec_data
+argument_list|,
+name|ECNUM_LEN
+argument_list|)
+expr_stmt|;
 comment|/* Old eeproms didn't have port information */
 if|if
 condition|(
@@ -3465,9 +3478,14 @@ init|=
 literal|0x70000
 block|,
 comment|/* start address of FW in flash */
-name|FW_VERS_ADDR
+name|OLD_FW_VERS_ADDR
 init|=
 literal|0x77ffc
+block|,
+comment|/* flash address holding FW version */
+name|FW_VERS_ADDR
+init|=
+literal|0x7fffc
 block|,
 comment|/* flash address holding FW version */
 name|FW_MIN_SIZE
@@ -4613,12 +4631,42 @@ modifier|*
 name|vers
 parameter_list|)
 block|{
-return|return
+name|int
+name|ret
+init|=
 name|t3_read_flash
 argument_list|(
 name|adapter
 argument_list|,
 name|FW_VERS_ADDR
+argument_list|,
+literal|1
+argument_list|,
+name|vers
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ret
+operator|&&
+operator|*
+name|vers
+operator|!=
+literal|0xffffffff
+condition|)
+return|return
+literal|0
+return|;
+else|else
+return|return
+name|t3_read_flash
+argument_list|(
+name|adapter
+argument_list|,
+name|OLD_FW_VERS_ADDR
 argument_list|,
 literal|1
 argument_list|,

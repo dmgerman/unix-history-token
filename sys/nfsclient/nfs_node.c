@@ -569,15 +569,12 @@ operator|>
 name|NFS_SMALLFH
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|np
 operator|->
 name|n_fhp
-argument_list|,
-name|nfsfh_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|fhsize
 argument_list|,
 name|M_NFSBIGFH
@@ -660,7 +657,7 @@ operator|>
 name|NFS_SMALLFH
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -892,7 +889,7 @@ operator|->
 name|s_dvp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -1035,7 +1032,7 @@ argument_list|,
 name|ndm_list
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -1056,7 +1053,7 @@ operator|>
 name|NFS_SMALLFH
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t

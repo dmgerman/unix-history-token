@@ -376,14 +376,10 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if MALLOC should block. 	 */
-name|MALLOC
-argument_list|(
 name|ldep
-argument_list|,
-expr|struct
-name|denode
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -422,7 +418,7 @@ name|depp
 operator|=
 name|NULL
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ldep
 argument_list|,
@@ -516,7 +512,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|ldep
 argument_list|,
@@ -2073,7 +2069,7 @@ comment|/* XXX */
 block|dep->de_flag = 0;
 endif|#
 directive|endif
-name|FREE
+name|free
 argument_list|(
 name|dep
 argument_list|,

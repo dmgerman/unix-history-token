@@ -1174,8 +1174,8 @@ name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
-name|int
-name|mode
+name|accmode_t
+name|accmode
 parameter_list|,
 name|struct
 name|ucred
@@ -1222,12 +1222,15 @@ operator|=
 operator|*
 name|fid
 expr_stmt|;
-comment|/* 	 * NOTE: FreeBSD and Venus internals use the "data" in the low 3 	 * bits.  Hence, the conversion. 	 */
+comment|/* 	 * NOTE: FreeBSD and Venus internals use the "data" in the low 3 	 * bits.  Hence, the conversion. 	 * 	 * XXX: We cast accmode_t variable into an int. 	 */
 name|inp
 operator|->
 name|flags
 operator|=
-name|mode
+operator|(
+name|int
+operator|)
+name|accmode
 operator|>>
 literal|6
 expr_stmt|;

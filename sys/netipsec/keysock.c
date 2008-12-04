@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -183,19 +189,11 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_struct
-struct|struct
-name|key_cb
-block|{
-name|int
-name|key_count
-decl_stmt|;
-name|int
-name|any_count
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -204,6 +202,18 @@ name|key_cb
 name|key_cb
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pfkeystat
+name|pfkeystat
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -215,7 +225,7 @@ block|{
 literal|2
 block|,
 name|PF_KEY
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -237,13 +247,6 @@ operator|,
 name|int
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pfkeystat
-name|pfkeystat
 decl_stmt|;
 end_decl_stmt
 
@@ -677,7 +680,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|V_key_src
+name|key_src
 argument_list|,
 name|m
 argument_list|,
@@ -1683,14 +1686,10 @@ name|error
 return|;
 block|}
 comment|/* XXX */
-name|MALLOC
-argument_list|(
 name|kp
-argument_list|,
-expr|struct
-name|keycb
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|kp
@@ -2356,6 +2355,9 @@ argument_list|(
 name|V_key_cb
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ipsec_init
+argument_list|()
 expr_stmt|;
 name|key_init
 argument_list|()

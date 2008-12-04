@@ -45,6 +45,8 @@ name|MMC_IVAR_BUS_WIDTH
 block|,
 name|MMC_IVAR_ERASE_SECTOR
 block|,
+name|MMC_IVAR_MAX_DATA
+block|,
 comment|//    MMC_IVAR_,
 block|}
 enum|;
@@ -174,6 +176,17 @@ argument_list|(
 argument|erase_sector
 argument_list|,
 argument|ERASE_SECTOR
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|MMC_ACCESSOR
+argument_list|(
+argument|max_data
+argument_list|,
+argument|MAX_DATA
 argument_list|,
 argument|int
 argument_list|)

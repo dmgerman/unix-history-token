@@ -84,12 +84,8 @@ begin_define
 define|#
 directive|define
 name|AMD_NPMCS
-value|5
+value|4
 end_define
-
-begin_comment
-comment|/* 1 TSC + 4 PMCs */
-end_comment
 
 begin_define
 define|#
@@ -318,25 +314,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Prototypes  */
-end_comment
-
-begin_function_decl
-name|struct
-name|pmc_mdep
-modifier|*
-name|pmc_amd_initialize
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* AMD K7/K8 PMCs */
-end_comment
 
 begin_endif
 endif|#

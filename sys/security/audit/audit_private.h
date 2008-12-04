@@ -351,6 +351,9 @@ decl_stmt|;
 name|au_fstat_t
 name|au_fstat
 decl_stmt|;
+name|auditinfo_addr_t
+name|au_kau_info
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -863,14 +866,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|audit_q_len
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|audit_pre_q_len
 decl_stmt|;
 end_decl_stmt
@@ -1088,6 +1091,32 @@ parameter_list|(
 name|unsigned
 name|int
 name|trigger
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Accessor functions to manage global audit state.  */
+end_comment
+
+begin_function_decl
+name|void
+name|audit_set_kinfo
+parameter_list|(
+name|struct
+name|auditinfo_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|audit_get_kinfo
+parameter_list|(
+name|struct
+name|auditinfo_addr
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

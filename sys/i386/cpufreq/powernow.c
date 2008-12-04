@@ -4430,9 +4430,6 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
-name|device_t
-name|child
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -4486,9 +4483,6 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|(
-name|child
-operator|=
 name|BUS_ADD_CHILD
 argument_list|(
 name|parent
@@ -4500,7 +4494,6 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)

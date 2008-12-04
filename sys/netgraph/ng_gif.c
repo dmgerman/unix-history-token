@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -815,12 +821,10 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Allocate private data */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1759,7 +1763,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

@@ -32,6 +32,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+value|__asm__ __volatile__ ("mfence;": : :"memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|__asm__ __volatile__ ("sfence;": : :"memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|__asm__ __volatile__ ("lfence;": : :"memory")
+end_define
+
 begin_comment
 comment|/*  * Various simple operations on memory, each of which is atomic in the  * presence of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char *)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char *)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char *)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char *)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short *)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short *)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short *)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short *)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int *)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int *)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int *)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int *)(P) -= (V))  * atomic_readandclear_int(P)	(return (*(u_int *)(P)); *(u_int *)(P) = 0;)  *  * atomic_set_long(P, V)	(*(u_long *)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long *)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long *)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long *)(P) -= (V))  * atomic_readandclear_long(P)	(return (*(u_long *)(P)); *(u_long *)(P) = 0;)  */
 end_comment

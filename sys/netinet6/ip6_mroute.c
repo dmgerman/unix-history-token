@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -185,6 +191,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/icmp6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_include
@@ -233,6 +245,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/pim6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_expr_stmt
@@ -298,6 +316,16 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pim6_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -418,6 +446,11 @@ operator|=
 name|rip6_ctloutput
 block|,
 operator|.
+name|pr_init
+operator|=
+name|pim6_init
+block|,
+operator|.
 name|pr_usrreqs
 operator|=
 operator|&
@@ -426,14 +459,23 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|ip6_mrouter_ver
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -604,6 +646,12 @@ directive|ifdef
 name|MRT6DEBUG
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|u_int
@@ -616,6 +664,11 @@ end_decl_stmt
 begin_comment
 comment|/* debug level */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -803,12 +856,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|pim6
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Hash function for a source, group entry  */
@@ -1098,6 +1162,36 @@ name|data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|void
+name|pim6_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|INIT_VNET_INET6
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
+name|V_ip6_mrouter_ver
+operator|=
+literal|0
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MRT6DEBUG
+name|V_mrt6debug
+operator|=
+literal|0
+expr_stmt|;
+comment|/* debug level */
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_comment
 comment|/*  * Handle MRT setsockopt commands to modify the multicast routing tables.  */

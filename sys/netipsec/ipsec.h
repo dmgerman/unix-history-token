@@ -1246,6 +1246,16 @@ name|tdb_ident
 struct_decl|;
 end_struct_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|ipsec_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1484,7 +1494,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsec4_delete_pcbpolicy
+name|ipsec_delete_pcbpolicy
 name|__P
 argument_list|(
 operator|(

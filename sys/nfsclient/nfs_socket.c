@@ -195,6 +195,12 @@ directive|include
 file|<nfs4client/nfs4.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -288,7 +294,7 @@ name|nfs_realign_test
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of realign tests done"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -309,7 +315,7 @@ name|nfs_realign_count
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of mbuf realignments done"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -330,7 +336,7 @@ name|nfs_bufpackets
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Buffer reservation size 2< x< 64"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -351,7 +357,7 @@ name|nfs_reconnects
 argument_list|,
 literal|0
 argument_list|,
-literal|"number of times the nfs client has had to reconnect"
+literal|"Number of times the nfs client has had to reconnect"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -372,7 +378,7 @@ name|nfs3_jukebox_delay
 argument_list|,
 literal|0
 argument_list|,
-literal|"number of seconds to delay a retry after receiving EJUKEBOX"
+literal|"Number of seconds to delay a retry after receiving EJUKEBOX"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -393,7 +399,7 @@ name|nfs_skip_wcc_data_onerr
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Disable weak cache consistency checking when server returns an error"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5394,14 +5400,10 @@ argument_list|,
 name|dposp
 argument_list|)
 return|;
-name|MALLOC
-argument_list|(
 name|rep
-argument_list|,
-expr|struct
-name|nfsreq
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6631,7 +6633,7 @@ operator|->
 name|r_mtx
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -6796,7 +6798,7 @@ continue|continue;
 block|}
 else|else
 block|{
-comment|/* 			 * Terminate request if force-unmount in progress. 			 * Note that NFS could have vfs_busy'ed the mount, 			 * causing the unmount to wait for the mnt_lock, making 			 * this bit of logic necessary. 			 */
+comment|/* 			 * Terminate request if force-unmount in progress. 			 * Note that NFS could have vfs_busy'ed the mount, 			 * causing the unmount to wait and making this bit 			 * of logic necessary. 			 */
 if|if
 condition|(
 name|rep
@@ -9560,6 +9562,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_LEGACYRPC */
+end_comment
 
 end_unit
 

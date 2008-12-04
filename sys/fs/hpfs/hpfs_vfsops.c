@@ -1635,7 +1635,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hpmp
 argument_list|,
@@ -2066,14 +2066,10 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * We have to lock node creation for a while, 	 * but then we have to call getnewvnode(),  	 * this may cause hpfs_reclaim() to be called, 	 * this may need to VOP_VGET() parent dir for 	 * update reasons, and if parent is not in 	 * hash, we have to lock node creation... 	 * To solve this, we MALLOC, getnewvnode and init while 	 * not locked (probability of node appearence 	 * at that time is little, and anyway - we'll 	 * check for it). 	 */
-name|MALLOC
-argument_list|(
 name|hp
-argument_list|,
-expr|struct
-name|hpfsnode
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2110,7 +2106,7 @@ argument_list|(
 literal|"hpfs_vget: can't get new vnode\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hp
 argument_list|,

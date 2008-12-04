@@ -361,7 +361,7 @@ name|dma
 operator|.
 name|segsize
 operator|=
-literal|63536
+literal|65536
 expr_stmt|;
 name|ch
 operator|->

@@ -1485,14 +1485,9 @@ block|}
 comment|/* XXX: Error and thermal LVTs */
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|cpu_vendor
-argument_list|,
-literal|"AuthenticAMD"
-argument_list|)
+name|cpu_vendor_id
 operator|==
-literal|0
+name|CPU_VENDOR_AMD
 condition|)
 block|{
 comment|/* 		 * Detect the presence of C1E capability mostly on latest 		 * dual-cores (or future) k8 family.  This feature renders 		 * the local APIC timer dead, so we disable it by reading 		 * the Interrupt Pending Message register and clearing both 		 * C1eOnCmpHalt (bit 28) and SmiOnCmpHalt (bit 27). 		 *  		 * Reference: 		 *   "BIOS and Kernel Developer's Guide for AMD NPT 		 *    Family 0Fh Processors" 		 *   #32559 revision 3.00 		 */
@@ -1686,6 +1681,17 @@ name|hz
 operator|*
 literal|4
 expr_stmt|;
+if|if
+condition|(
+name|lapic_timer_hz
+operator|<
+literal|128
+condition|)
+name|stathz
+operator|=
+name|lapic_timer_hz
+expr_stmt|;
+else|else
 name|stathz
 operator|=
 name|lapic_timer_hz
@@ -4615,14 +4621,9 @@ name|cpu
 operator|==
 name|CPU_686
 operator|&&
-name|strcmp
-argument_list|(
-name|cpu_vendor
-argument_list|,
-literal|"GenuineIntel"
-argument_list|)
+name|cpu_vendor_id
 operator|==
-literal|0
+name|CPU_VENDOR_INTEL
 operator|&&
 operator|(
 name|cpu_id

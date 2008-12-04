@@ -112,13 +112,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<net80211/ieee80211_node.h>
+file|<net80211/ieee80211_power.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net80211/ieee80211_power.h>
+file|<net80211/ieee80211_node.h>
 end_include
 
 begin_include
@@ -1164,6 +1164,25 @@ parameter_list|,
 name|struct
 name|ieee80211_tx_ampdu
 modifier|*
+parameter_list|)
+function_decl|;
+comment|/* BAR response received */
+name|void
+function_decl|(
+modifier|*
+name|ic_bar_response
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+parameter_list|,
+name|int
+name|status
 parameter_list|)
 function_decl|;
 block|}
@@ -2390,17 +2409,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_FEXT_DFS
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* CONF: DFS enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_FEXT_NONERP_PR
 value|0x00000200
 end_define
@@ -2418,6 +2426,17 @@ end_define
 
 begin_comment
 comment|/* CONF: do bmiss in s/w */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_DFS
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* CONF: DFS enabled */
 end_comment
 
 begin_define

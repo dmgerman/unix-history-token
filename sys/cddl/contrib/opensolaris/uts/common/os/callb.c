@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2004 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -400,6 +400,9 @@ name|callb_t
 modifier|*
 name|cp
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -408,6 +411,20 @@ operator|->
 name|ct_lock
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+block|{
 while|while
 condition|(
 operator|(
@@ -445,13 +462,63 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|ct
 operator|->
 name|ct_ncallb
 operator|==
 literal|0
+condition|)
+break|break;
+comment|/* Not all callbacks finished, waiting for the rest. */
+name|mutex_exit
+argument_list|(
+operator|&
+name|ct
+operator|->
+name|ct_lock
+argument_list|)
+expr_stmt|;
+name|tsleep
+argument_list|(
+name|ct
+argument_list|,
+literal|0
+argument_list|,
+literal|"callb"
+argument_list|,
+name|hz
+operator|/
+literal|4
+argument_list|)
+expr_stmt|;
+name|mutex_enter
+argument_list|(
+operator|&
+name|ct
+operator|->
+name|ct_lock
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ct
+operator|->
+name|ct_ncallb
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Leaked %d callbacks!\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ct
+operator|->
+name|ct_ncallb
 argument_list|)
 expr_stmt|;
 name|mutex_exit
@@ -1278,6 +1345,9 @@ name|cc_events
 operator||=
 name|CALLB_CPR_START
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPR_NOT_THREAD_SAFE
 while|while
 condition|(
 operator|!
@@ -1316,6 +1386,8 @@ operator|-
 literal|1
 condition|)
 break|break;
+endif|#
+directive|endif
 break|break;
 case|case
 name|CB_CODE_CPR_RESUME

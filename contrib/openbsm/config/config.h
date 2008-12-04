@@ -150,6 +150,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if ipc_perm._key instead of key */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_IPC_PERM__KEY */
+end_comment
+
+begin_comment
+comment|/* Define if ipc_perm._seq instead of seq */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_IPC_PERM__SEQ */
+end_comment
+
+begin_comment
 comment|/* Define if ipc_perm.__key instead of key */
 end_comment
 
@@ -310,6 +326,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRLCAT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strlcpy' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRLCPY
 value|1
 end_define
 
@@ -524,7 +551,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"OpenBSM 1.0"
+value|"OpenBSM 1.1alpha2"
 end_define
 
 begin_comment
@@ -546,7 +573,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.0"
+value|"1.1alpha2"
 end_define
 
 begin_comment
@@ -591,6 +618,24 @@ comment|/* #undef TM_IN_SYS_TIME */
 end_comment
 
 begin_comment
+comment|/* Define if uses Mach IPC for Triggers messages */
+end_comment
+
+begin_comment
+comment|/* #undef USE_MACH_IPC */
+end_comment
+
+begin_comment
+comment|/* Define to use native include files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_NATIVE_INCLUDES
+end_define
+
+begin_comment
 comment|/* Version number of package */
 end_comment
 
@@ -598,7 +643,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.0"
+value|"1.1alpha2"
 end_define
 
 begin_comment

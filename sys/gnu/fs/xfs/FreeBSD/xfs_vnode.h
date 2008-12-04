@@ -1634,14 +1634,14 @@ name|XVOP_ACCESS
 parameter_list|(
 name|vp
 parameter_list|,
-name|mode
+name|accmode
 parameter_list|,
 name|cr
 parameter_list|,
 name|rv
 parameter_list|)
 define|\
-value|rv = _VOP_(vop_access, vp)((vp)->v_fbhv, mode, cr)
+value|rv = _VOP_(vop_access, vp)((vp)->v_fbhv, accmode, cr)
 end_define
 
 begin_define

@@ -2026,7 +2026,7 @@ name|IPMICTL_RECEIVE_MSG_32
 operator|||
 name|cmd
 operator|==
-name|IPMICTL_RECEIVE_MSG
+name|IPMICTL_RECEIVE_MSG_32
 endif|#
 directive|endif
 operator|)

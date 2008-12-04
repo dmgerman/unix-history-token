@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_FM_PROTOCOL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -96,6 +89,14 @@ define|#
 directive|define
 name|FM_LIST_REPAIRED_CLASS
 value|FM_LIST_EVENT ".repaired"
+define|#
+directive|define
+name|FM_LIST_UPDATED_CLASS
+value|FM_LIST_EVENT ".updated"
+define|#
+directive|define
+name|FM_LIST_RESOLVED_CLASS
+value|FM_LIST_EVENT ".resolved"
 comment|/* ereport class subcategory values */
 define|#
 directive|define
@@ -128,7 +129,7 @@ define|#
 directive|define
 name|FM_LIST_EVENT_SIZE
 value|"list-sz"
-comment|/* list.suspect, isolated, and repaired versions and payload member names */
+comment|/*  * list.suspect, isolated, updated, repaired and resolved  * versions/payload member names.  */
 define|#
 directive|define
 name|FM_SUSPECT_UUID
@@ -163,12 +164,48 @@ name|FM_SUSPECT_MESSAGE
 value|"message"
 define|#
 directive|define
+name|FM_SUSPECT_RETIRE
+value|"retire"
+define|#
+directive|define
+name|FM_SUSPECT_RESPONSE
+value|"response"
+define|#
+directive|define
 name|FM_SUSPECT_VERS0
 value|0
 define|#
 directive|define
 name|FM_SUSPECT_VERSION
 value|FM_SUSPECT_VERS0
+define|#
+directive|define
+name|FM_SUSPECT_FAULTY
+value|0x1
+define|#
+directive|define
+name|FM_SUSPECT_UNUSABLE
+value|0x2
+define|#
+directive|define
+name|FM_SUSPECT_NOT_PRESENT
+value|0x4
+define|#
+directive|define
+name|FM_SUSPECT_DEGRADED
+value|0x8
+define|#
+directive|define
+name|FM_SUSPECT_REPAIRED
+value|0x10
+define|#
+directive|define
+name|FM_SUSPECT_REPLACED
+value|0x20
+define|#
+directive|define
+name|FM_SUSPECT_ACQUITTED
+value|0x40
 comment|/* fault event versions and payload member names */
 define|#
 directive|define
@@ -228,6 +265,18 @@ define|#
 directive|define
 name|FM_RSRC_ASRU_FAULTY
 value|"faulty"
+define|#
+directive|define
+name|FM_RSRC_ASRU_REPAIRED
+value|"repaired"
+define|#
+directive|define
+name|FM_RSRC_ASRU_REPLACED
+value|"replaced"
+define|#
+directive|define
+name|FM_RSRC_ASRU_ACQUITTED
+value|"acquitted"
 define|#
 directive|define
 name|FM_RSRC_ASRU_UNUSABLE
@@ -349,6 +398,10 @@ define|#
 directive|define
 name|FM_FMRI_SVC_AUTHORITY
 value|"svc-authority"
+define|#
+directive|define
+name|FM_FMRI_FACILITY
+value|"facility"
 comment|/* FMRI authority-type member names */
 define|#
 directive|define
@@ -525,6 +578,15 @@ define|#
 directive|define
 name|FM_FMRI_HC_SPECIFIC
 value|"hc-specific"
+comment|/* facility member names */
+define|#
+directive|define
+name|FM_FMRI_FACILITY_NAME
+value|"facility-name"
+define|#
+directive|define
+name|FM_FMRI_FACILITY_TYPE
+value|"facility-type"
 comment|/* hc-list version and member names */
 define|#
 directive|define
@@ -547,6 +609,10 @@ define|#
 directive|define
 name|FM_FMRI_HC_SPECIFIC_OFFSET
 value|"offset"
+define|#
+directive|define
+name|FM_FMRI_HC_SPECIFIC_PHYSADDR
+value|"physaddr"
 comment|/* fmd module scheme member names */
 define|#
 directive|define
@@ -625,6 +691,30 @@ define|#
 directive|define
 name|FM_FMRI_CPU_CPUFRU
 value|"cpufru"
+define|#
+directive|define
+name|FM_FMRI_CPU_CACHE_INDEX
+value|"cacheindex"
+define|#
+directive|define
+name|FM_FMRI_CPU_CACHE_WAY
+value|"cacheway"
+define|#
+directive|define
+name|FM_FMRI_CPU_CACHE_BIT
+value|"cachebit"
+define|#
+directive|define
+name|FM_FMRI_CPU_CACHE_TYPE
+value|"cachetype"
+define|#
+directive|define
+name|FM_FMRI_CPU_CACHE_TYPE_L2
+value|0
+define|#
+directive|define
+name|FM_FMRI_CPU_CACHE_TYPE_L3
+value|1
 comment|/* legacy-hc scheme member names */
 define|#
 directive|define

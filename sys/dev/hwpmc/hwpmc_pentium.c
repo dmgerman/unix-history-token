@@ -83,7 +83,39 @@ end_comment
 
 begin_function
 name|int
-name|pmc_initialize_p5
+name|pmc_p5_initialize
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|pmc_mdep
+parameter_list|,
+name|int
+name|ncpus
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|pmc_mdep
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ncpus
+expr_stmt|;
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+comment|/* nothing here yet */
+block|}
+end_function
+
+begin_function
+name|void
+name|pmc_p5_finalize
 parameter_list|(
 name|struct
 name|pmc_mdep
@@ -96,10 +128,6 @@ name|void
 operator|)
 name|pmc_mdep
 expr_stmt|;
-return|return
-name|ENOSYS
-return|;
-comment|/* nothing here yet */
 block|}
 end_function
 

@@ -36,6 +36,10 @@ name|_PATH_LASTLOG
 value|"/var/log/lastlog"
 end_define
 
+begin_comment
+comment|/*  * XXX: These values are too low, but cannot be changed without breaking  * the file format.  Right now pts(4) is limited to 1000 instances,  * because /dev/pts/1000 would require UT_LINESIZE to be bigger.  * UT_HOSTSIZE is also too small to hold most common hostnames or IPv6  * addresses.  */
+end_comment
+
 begin_define
 define|#
 directive|define

@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_addch.c,v 1.111 2008/03/29 18:48:02 tom Exp $"
+literal|"$Id: lib_addch.c,v 1.113 2008/08/16 19:20:04 tom Exp $"
 argument_list|)
 end_macro
 
@@ -790,6 +790,9 @@ name|addch_used
 argument_list|)
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|CharOf
 argument_list|(
 name|CHDEREF
@@ -1042,7 +1045,7 @@ empty_stmt|;
 comment|/*      * Non-spacing characters are added to the current cell.      *      * Spacing characters that are wider than one column require some display      * adjustments.      */
 name|if_WIDEC
 argument_list|(
-argument|{ 	int len = wcwidth(CharOf(ch)); 	int i; 	int j;  	if (len ==
+argument|{ 	int len = wcwidth(CharOf(ch)); 	int i; 	int j; 	wchar_t *chars;  	if (len ==
 literal|0
 argument|) {
 comment|/* non-spacing */
@@ -1050,15 +1053,19 @@ argument|if ((x>
 literal|0
 argument|&& y>=
 literal|0
-argument|) 		|| ((y = win->_cury -
-literal|1
-argument|)>=
+argument|) 		|| (win->_maxx>=
 literal|0
-argument|&& 		    (x = win->_maxx)>
-literal|0
-argument|)) { 		wchar_t *chars = (win->_line[y].text[x -
+argument|&& win->_cury>=
 literal|1
-argument|].chars); 		for (i =
+argument|)) { 		if (x>
+literal|0
+argument|&& y>=
+literal|0
+argument|) 		    chars = (win->_line[y].text[x -
+literal|1
+argument|].chars); 		else 		    chars = (win->_line[y -
+literal|1
+argument|].text[win->_maxx].chars); 		for (i =
 literal|0
 argument|; i< CCHARW_MAX; ++i) { 		    if (chars[i] ==
 literal|0

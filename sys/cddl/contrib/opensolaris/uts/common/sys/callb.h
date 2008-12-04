@@ -23,19 +23,13 @@ begin_pragma
 pragma|#
 directive|pragma
 name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
+literal|"@(#)callb.h	1.29	05/06/23 SMI"
 end_pragma
 
 begin_include
 include|#
 directive|include
-file|<sys/t_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/thread.h>
+file|<sys/kcondvar.h>
 end_include
 
 begin_ifdef
@@ -218,7 +212,7 @@ name|func
 parameter_list|,
 name|name
 parameter_list|)
-value|{			\ 		bzero((caddr_t)(cp), sizeof (callb_cpr_t));		\ 		(cp)->cc_lockp = lockp;					\ 		(cp)->cc_id = callb_add(func, (void *)(cp),		\ 			CB_CL_CPR_DAEMON, name);			\ 	}
+value|{			\ 		strlcpy(curthread->td_name, (name),			\ 		    sizeof(curthread->td_name));			\ 		strlcpy(curthread->td_proc->p_comm, (name),		\ 		    sizeof(curthread->td_proc->p_comm));		\ 		bzero((caddr_t)(cp), sizeof (callb_cpr_t));		\ 		(cp)->cc_lockp = lockp;					\ 		(cp)->cc_id = callb_add(func, (void *)(cp),		\ 			CB_CL_CPR_DAEMON, name);			\ 		cv_init(&(cp)->cc_callb_cv, NULL, CV_DEFAULT, NULL);	\ 		cv_init(&(cp)->cc_stop_cv, NULL, CV_DEFAULT, NULL);	\ 	}
 ifndef|#
 directive|ifndef
 name|__lock_lint

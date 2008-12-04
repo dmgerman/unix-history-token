@@ -243,12 +243,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_SETDOMAINNAME
+name|_PRIV_SETDOMAINNAME
 value|20
 end_define
 
 begin_comment
-comment|/* Can call setdomainname. */
+comment|/* Removed. */
 end_comment
 
 begin_comment
@@ -1370,7 +1370,7 @@ value|334
 end_define
 
 begin_comment
-comment|/* Override owner on user mounts. */
+comment|/* Can manage other users' file systems. */
 end_comment
 
 begin_define

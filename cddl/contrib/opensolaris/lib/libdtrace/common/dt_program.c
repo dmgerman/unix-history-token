@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -2036,8 +2036,17 @@ name|infop
 operator|->
 name|dthi_out
 argument_list|,
-literal|"extern int "
-literal|"__dtraceenabled_%s___%s(void);\n"
+literal|"#ifndef\t__sparc\n"
+literal|"extern int __dtraceenabled_%s___%s(void);\n"
+literal|"#else\n"
+literal|"extern int __dtraceenabled_%s___%s(long);\n"
+literal|"#endif\n"
+argument_list|,
+name|infop
+operator|->
+name|dthi_pfname
+argument_list|,
+name|fname
 argument_list|,
 name|infop
 operator|->
@@ -2479,36 +2488,31 @@ name|infop
 operator|->
 name|dthi_out
 argument_list|,
+literal|"#ifndef\t__sparc\n"
 literal|"#define\t%s_%s_ENABLED() \\\n"
+literal|"\t__dtraceenabled_%s___%s()\n"
+literal|"#else\n"
+literal|"#define\t%s_%s_ENABLED() \\\n"
+literal|"\t__dtraceenabled_%s___%s(0)\n"
+literal|"#endif\n"
 argument_list|,
 name|infop
 operator|->
 name|dthi_pmname
 argument_list|,
 name|mname
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|dt_set_errno
-argument_list|(
-name|dtp
 argument_list|,
-name|errno
-argument_list|)
-operator|)
-return|;
-if|if
-condition|(
-name|fprintf
-argument_list|(
 name|infop
 operator|->
-name|dthi_out
+name|dthi_pfname
 argument_list|,
-literal|"\t__dtraceenabled_%s___%s()\n"
+name|fname
+argument_list|,
+name|infop
+operator|->
+name|dthi_pmname
+argument_list|,
+name|mname
 argument_list|,
 name|infop
 operator|->

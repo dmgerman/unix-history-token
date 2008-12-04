@@ -294,6 +294,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
 name|char
 name|input
 index|[
@@ -648,14 +649,22 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Header prepended to each line. The text immediately follows the header.  * We try to make this short in order to save memory -- the loader has  * limited memory available, and some of the forth files are very long.  */
+end_comment
+
 begin_struct
 struct|struct
 name|includeline
 block|{
-name|char
+name|struct
+name|includeline
 modifier|*
-name|text
+name|next
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BOOT_FORTH
 name|int
 name|flags
 decl_stmt|;
@@ -670,10 +679,13 @@ define|#
 directive|define
 name|SL_IGNOREERR
 value|(1<<1)
-name|struct
-name|includeline
-modifier|*
-name|next
+endif|#
+directive|endif
+name|char
+name|text
+index|[
+literal|0
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -898,6 +910,15 @@ block|}
 endif|#
 directive|endif
 comment|/* Allocate script line structure and copy line, flags */
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
+comment|/* ignore empty line, save memory */
 name|sp
 operator|=
 name|malloc
@@ -914,22 +935,6 @@ name|cp
 argument_list|)
 operator|+
 literal|1
-argument_list|)
-expr_stmt|;
-name|sp
-operator|->
-name|text
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|sp
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|includeline
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -950,14 +955,14 @@ name|flags
 operator|=
 name|flags
 expr_stmt|;
-endif|#
-directive|endif
 name|sp
 operator|->
 name|line
 operator|=
 name|line
 expr_stmt|;
+endif|#
+directive|endif
 name|sp
 operator|->
 name|next

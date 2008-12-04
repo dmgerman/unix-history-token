@@ -220,13 +220,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|devs_no
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|netif_stats
 name|net_stats

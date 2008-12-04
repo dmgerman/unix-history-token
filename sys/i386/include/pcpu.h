@@ -54,6 +54,74 @@ directive|ifdef
 name|XEN
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NR_VIRQS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NR_VIRQS
+value|24
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NR_IPIS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NR_IPIS
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* These are peridically updated in shared_info, and then copied here. */
+end_comment
+
+begin_struct
+struct|struct
+name|shadow_time_info
+block|{
+name|uint64_t
+name|tsc_timestamp
+decl_stmt|;
+comment|/* TSC at last update of time vals.  */
+name|uint64_t
+name|system_timestamp
+decl_stmt|;
+comment|/* Time, in nanosecs, since boot.    */
+name|uint32_t
+name|tsc_to_nsec_mul
+decl_stmt|;
+name|uint32_t
+name|tsc_to_usec_mul
+decl_stmt|;
+name|int
+name|tsc_shift
+decl_stmt|;
+name|uint32_t
+name|version
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -69,7 +137,7 @@ value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
 comment|/* Flag indicating private tss*/
 value|\         u_int     pc_cr3;
 comment|/* track cr3 for R1/R3*/
-value|\         u_int     pc_pdir;                                              \         u_int     pc_lazypmap;                                          \         u_int     pc_rendezvous;                                        \         u_int     pc_cpuast
+value|\         u_int     pc_pdir;                                              \         u_int     pc_lazypmap;                                          \         u_int     pc_rendezvous;                                        \         u_int     pc_cpuast;						\ 	uint64_t  pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	int	pc_resched_irq;						\ 	int	pc_callfunc_irq;					\         int	pc_virq_to_irq[NR_VIRQS];				\ 	int	pc_ipi_to_irq[NR_IPIS]
 end_define
 
 begin_else
@@ -140,7 +208,7 @@ name|member
 parameter_list|,
 name|val
 parameter_list|)
-value|(pcpu->pc_ ## member += (val))
+value|(pcpup->pc_ ## member += (val))
 end_define
 
 begin_define

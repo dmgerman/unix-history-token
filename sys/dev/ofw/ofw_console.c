@@ -187,17 +187,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|tty
-modifier|*
-name|ofw_tp
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|polltime
 decl_stmt|;
@@ -759,7 +748,7 @@ name|cp
 parameter_list|)
 block|{
 comment|/* XXX: This is the alias, but that should be good enough */
-name|sprintf
+name|strcpy
 argument_list|(
 name|cp
 operator|->
@@ -767,12 +756,6 @@ name|cn_name
 argument_list|,
 literal|"ofwcons"
 argument_list|)
-expr_stmt|;
-name|cp
-operator|->
-name|cn_tp
-operator|=
-name|ofw_tp
 expr_stmt|;
 block|}
 end_function

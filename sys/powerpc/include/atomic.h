@@ -40,6 +40,30 @@ define|\
 value|__asm __volatile("sync" : : : "memory")
 end_define
 
+begin_define
+define|#
+directive|define
+name|mb
+parameter_list|()
+value|__ATOMIC_BARRIER
+end_define
+
+begin_define
+define|#
+directive|define
+name|wmb
+parameter_list|()
+value|mb()
+end_define
+
+begin_define
+define|#
+directive|define
+name|rmb
+parameter_list|()
+value|mb()
+end_define
+
 begin_comment
 comment|/*  * atomic_add(p, v)  * { *p += v; }  */
 end_comment
@@ -1460,12 +1484,6 @@ parameter_list|)
 define|\
 value|(u_long)atomic_fetchadd_32((volatile u_int *)(p), (u_int)(v))
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|__ATOMIC_BARRIER
-end_undef
 
 begin_endif
 endif|#

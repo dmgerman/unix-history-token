@@ -1823,7 +1823,7 @@ name|de_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->

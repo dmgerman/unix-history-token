@@ -602,10 +602,38 @@ name|void
 modifier|*
 name|if_pspare
 index|[
-literal|10
+literal|8
 index|]
 decl_stmt|;
 comment|/* multiq/TOE 3; vimage 3; general use 4 */
+name|void
+function_decl|(
+modifier|*
+name|if_qflush
+function_decl|)
+comment|/* flush any queues */
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|if_transmit
+function_decl|)
+comment|/* initiate output routine */
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|if_ispare
 index|[
@@ -2514,6 +2542,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ifq_attach
+parameter_list|(
+name|struct
+name|ifaltq
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ifq_detach
+parameter_list|(
+name|struct
+name|ifaltq
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|ifaddr
 modifier|*
@@ -2789,12 +2844,6 @@ end_endif
 begin_comment
 comment|/* DEVICE_POLLING */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<net/vnet.h>
-end_include
 
 begin_endif
 endif|#

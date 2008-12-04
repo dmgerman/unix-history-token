@@ -140,8 +140,8 @@ begin_struct
 struct|struct
 name|ppc_data
 block|{
-name|int
-name|ppc_unit
+name|device_t
+name|ppc_dev
 decl_stmt|;
 name|int
 name|ppc_model

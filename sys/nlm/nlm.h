@@ -207,6 +207,9 @@ name|struct
 name|nlm_host
 modifier|*
 name|host
+parameter_list|,
+name|bool_t
+name|isserver
 parameter_list|)
 function_decl|;
 end_function_decl

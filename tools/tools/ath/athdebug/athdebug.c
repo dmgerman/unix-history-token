@@ -49,6 +49,12 @@ directive|include
 file|<getopt.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -175,6 +181,11 @@ init|=
 literal|0x00800000
 block|,
 comment|/* TDMA processing */
+name|ATH_DEBUG_REGDOMAIN
+init|=
+literal|0x02000000
+block|,
+comment|/* regulatory processing */
 name|ATH_DEBUG_FATAL
 init|=
 literal|0x80000000
@@ -328,6 +339,12 @@ block|{
 literal|"tdma"
 block|,
 name|ATH_DEBUG_TDMA
+block|}
+block|,
+block|{
+literal|"regdomain"
+block|,
+name|ATH_DEBUG_REGDOMAIN
 block|}
 block|,
 block|{

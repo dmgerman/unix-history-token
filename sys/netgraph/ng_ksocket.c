@@ -1204,7 +1204,7 @@ operator|>
 name|SOCK_MAXADDRLEN
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|path
 argument_list|,
@@ -1227,7 +1227,7 @@ operator|+
 name|pathlen
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|path
 argument_list|,
@@ -1264,7 +1264,7 @@ name|pathoff
 operator|+
 name|pathlen
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|path
 argument_list|,
@@ -1712,7 +1712,7 @@ argument_list|,
 name|pathtoken
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|pathtoken
 argument_list|,
@@ -2395,12 +2395,10 @@ name|priv_p
 name|priv
 decl_stmt|;
 comment|/* Allocate private structure */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3645,7 +3643,7 @@ name|sa
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|sa
 argument_list|,
@@ -4354,7 +4352,7 @@ name|priv
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -4924,7 +4922,7 @@ name|sa
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|sa
 argument_list|,
@@ -5029,7 +5027,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|sa
 argument_list|,
@@ -5054,7 +5052,7 @@ operator|->
 name|sa_len
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sa
 argument_list|,
@@ -5488,7 +5486,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|resp
 argument_list|,
@@ -5519,7 +5517,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|resp
 argument_list|,
@@ -5696,7 +5694,7 @@ name|sa
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|sa
 argument_list|,

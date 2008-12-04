@@ -1426,6 +1426,28 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Fake association when joining an existing bss. 		 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_newassoc
+operator|!=
+name|NULL
+condition|)
+name|ic
+operator|->
+name|ic_newassoc
+argument_list|(
+name|vap
+operator|->
+name|iv_bss
+argument_list|,
+name|ostate
+operator|!=
+name|IEEE80211_S_RUN
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|IEEE80211_S_SLEEP
@@ -1445,9 +1467,9 @@ name|IEEE80211_DPRINTF
 argument_list|(
 name|vap
 argument_list|,
-name|IEEE80211_MSG_ANY
+name|IEEE80211_MSG_STATE
 argument_list|,
-literal|"%s: invalid state transition %s -> %s\n"
+literal|"%s: unexpected state transition %s -> %s\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3114,13 +3136,14 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
+name|IEEE80211_ATH_CAP
+argument_list|(
+name|vap
+argument_list|,
 name|ni
-operator|->
-name|ni_ath_flags
-operator|&
+argument_list|,
 name|IEEE80211_NODE_FF
-operator|)
+argument_list|)
 operator|&&
 define|#
 directive|define

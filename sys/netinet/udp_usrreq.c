@@ -273,6 +273,12 @@ directive|include
 file|<netinet/udp_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -305,6 +311,23 @@ end_include
 begin_comment
 comment|/*  * UDP protocol implementation.  * Per RFC 768, August, 1980.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|udp_blackhole
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * BSD 4.2 defaulted the udp checksum to be off.  Turning off udp checksums  * removes the only data integrity mechanism for packets and malformed  * packets that would otherwise be discarded due to bad checksums, and may  * cause problems (especially for NFS data blocks).  */
@@ -369,17 +392,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|udp_blackhole
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_inet
+argument_list|,
 name|_net_inet_udp
 argument_list|,
 name|OID_AUTO
@@ -388,7 +407,6 @@ name|blackhole
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|udp_blackhole
 argument_list|,
 literal|0
@@ -486,6 +504,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|inpcbhead
@@ -504,6 +528,22 @@ name|udbinfo
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|udpstat
+name|udpstat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* from udp_var.h */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -521,17 +561,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|struct
-name|udpstat
-name|udpstat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from udp_var.h */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_V_STRUCT
@@ -673,6 +702,10 @@ name|INIT_VNET_INET
 argument_list|(
 name|curvnet
 argument_list|)
+expr_stmt|;
+name|V_udp_blackhole
+operator|=
+literal|0
 expr_stmt|;
 name|INP_INFO_LOCK_INIT
 argument_list|(
@@ -4200,29 +4233,29 @@ block|}
 comment|/* 		 * Jail may rewrite the destination address, so let it do 		 * that before we use it. 		 */
 if|if
 condition|(
-name|jailed
+name|prison_remote_ip4
 argument_list|(
 name|td
 operator|->
 name|td_ucred
-argument_list|)
-condition|)
-name|prison_remote_ip
-argument_list|(
-name|td
-operator|->
-name|td_ucred
-argument_list|,
-literal|0
 argument_list|,
 operator|&
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
 expr_stmt|;
+goto|goto
+name|release
+goto|;
+block|}
 comment|/* 		 * If a local address or port hasn't yet been selected, or if 		 * the destination address needs to be rewritten due to using 		 * a special INADDR_ constant, invoke in_pcbconnect_setup() 		 * to do the heavy lifting.  Once a port is selected, we 		 * commit the binding back to the socket; we also commit the 		 * binding of the address if in jail. 		 * 		 * If we already have a valid binding and we're not 		 * requesting a destination address rewrite, use a fast path. 		 */
 if|if
 condition|(
@@ -5466,29 +5499,38 @@ name|nam
 expr_stmt|;
 if|if
 condition|(
-name|jailed
+name|prison_remote_ip4
 argument_list|(
 name|td
 operator|->
 name|td_ucred
-argument_list|)
-condition|)
-name|prison_remote_ip
-argument_list|(
-name|td
-operator|->
-name|td_ucred
-argument_list|,
-literal|0
 argument_list|,
 operator|&
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|INP_WUNLOCK
+argument_list|(
+name|inp
 argument_list|)
 expr_stmt|;
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|udbinfo
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EAFNOSUPPORT
+operator|)
+return|;
+block|}
 name|error
 operator|=
 name|in_pcbconnect

@@ -2164,7 +2164,7 @@ if|if
 condition|(
 name|sa
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|sa
 argument_list|,
@@ -3440,7 +3440,7 @@ if|if
 condition|(
 name|to
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|to
 argument_list|,
@@ -5252,7 +5252,7 @@ if|if
 condition|(
 name|fromsa
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|fromsa
 argument_list|,
@@ -8052,14 +8052,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|sa
-argument_list|,
-expr|struct
-name|sockaddr
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|len
 argument_list|,
 name|M_SONAME
@@ -8083,7 +8079,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|sa
 argument_list|,

@@ -351,7 +351,11 @@ name|buf_ring_alloc
 argument_list|(
 name|nr
 argument_list|,
+name|M_DEVBUF
+argument_list|,
 name|M_NOWAIT
+argument_list|,
+name|fifo_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -553,7 +557,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|for (i = 0; i< skip_low + skip_high; i++) 		buf_ring_dequeue(*fifo);
+block|for (i = 0; i< skip_low + skip_high; i++) 		buf_ring_dequeue_sc(*fifo);
 endif|#
 directive|endif
 return|return
@@ -696,7 +700,16 @@ name|buf_ring_alloc
 argument_list|(
 name|T3_MAX_NUM_QP
 argument_list|,
+name|M_DEVBUF
+argument_list|,
 name|M_NOWAIT
+argument_list|,
+operator|&
+name|rdev_p
+operator|->
+name|rscp
+operator|->
+name|qpid_fifo_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -806,6 +819,8 @@ block|{
 name|buf_ring_free
 argument_list|(
 name|rhdl_fifo
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
@@ -1000,6 +1015,8 @@ argument_list|(
 name|rscp
 operator|->
 name|cqid_fifo
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|cqid_err
@@ -1009,6 +1026,8 @@ argument_list|(
 name|rscp
 operator|->
 name|qpid_fifo
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|qpid_err
@@ -1018,6 +1037,8 @@ argument_list|(
 name|rscp
 operator|->
 name|tpt_fifo
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|tpt_err
@@ -1067,7 +1088,7 @@ operator|)
 operator|(
 name|uintptr_t
 operator|)
-name|buf_ring_dequeue
+name|buf_ring_dequeue_sc
 argument_list|(
 name|fifo
 argument_list|)
@@ -1395,6 +1416,8 @@ argument_list|(
 name|rscp
 operator|->
 name|tpt_fifo
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|buf_ring_free
@@ -1402,6 +1425,8 @@ argument_list|(
 name|rscp
 operator|->
 name|cqid_fifo
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|buf_ring_free
@@ -1409,6 +1434,8 @@ argument_list|(
 name|rscp
 operator|->
 name|qpid_fifo
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|buf_ring_free
@@ -1416,6 +1443,8 @@ argument_list|(
 name|rscp
 operator|->
 name|pdid_fifo
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|free

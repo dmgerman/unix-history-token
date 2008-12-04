@@ -261,6 +261,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/vinet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -294,6 +300,12 @@ begin_comment
 comment|/* Internal variables. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -309,6 +321,11 @@ name|inpcbinfo
 name|divcbinfo
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1103,6 +1120,15 @@ operator|->
 name|m_nextpkt
 operator|=
 name|NULL
+expr_stmt|;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|so
+operator|->
+name|so_fibnum
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2291,6 +2317,11 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|INIT_VNET_INET
+argument_list|(
+name|curvnet
+argument_list|)
+expr_stmt|;
 name|int
 name|error
 decl_stmt|,

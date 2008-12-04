@@ -773,12 +773,10 @@ name|priv_p
 name|priv
 decl_stmt|;
 comment|/* Allocate private structure */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1192,7 +1190,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|d
 operator|->
@@ -1221,15 +1219,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|d
 operator|->
 name|history
-argument_list|,
-name|u_char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|isComp
 condition|?
 name|MPPC_SizeOfCompressionHistory
@@ -1808,7 +1803,7 @@ name|history
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|priv
 operator|->
@@ -1829,7 +1824,7 @@ name|history
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|priv
 operator|->
@@ -1853,7 +1848,7 @@ name|priv
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

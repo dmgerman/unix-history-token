@@ -161,7 +161,7 @@ parameter_list|(
 name|PTR
 parameter_list|)
 define|\
-value|FREE(PTR, M_NG_SSCFU_INS)
+value|free(PTR, M_NG_SSCFU_INS)
 end_define
 
 begin_define
@@ -183,7 +183,7 @@ parameter_list|(
 name|PTR
 parameter_list|)
 define|\
-value|FREE(PTR, M_NG_SSCFU_SIG)
+value|free(PTR, M_NG_SSCFU_SIG)
 end_define
 
 begin_endif

@@ -194,6 +194,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FLAG_WANTS_MAPPINGS
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* -m */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_SAMPLE_COUNT
 value|65536
 end_define

@@ -1523,14 +1523,10 @@ name|NULL
 operator|)
 return|;
 block|}
-name|MALLOC
-argument_list|(
 name|cb
-argument_list|,
-expr|struct
-name|cdnr_block
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|size
 argument_list|,
 name|M_DEVBUF
@@ -1728,7 +1724,7 @@ argument_list|,
 name|cb_next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|cb
 argument_list|,

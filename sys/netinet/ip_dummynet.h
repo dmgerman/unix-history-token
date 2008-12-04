@@ -313,7 +313,7 @@ name|int
 name|random
 decl_stmt|;
 comment|/* random value (scaled) */
-name|u_int32_t
+name|dn_key
 name|q_time
 decl_stmt|;
 comment|/* start of queue idle time */

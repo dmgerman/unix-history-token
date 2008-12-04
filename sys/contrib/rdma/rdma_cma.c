@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/vinet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/rdma/rdma_cm.h>
 end_include
 

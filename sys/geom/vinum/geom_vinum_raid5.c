@@ -911,9 +911,11 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|printf
+name|G_VINUM_DEBUG
 argument_list|(
-literal|"GEOM_VINUM: sd %s is reviving\n"
+literal|1
+argument_list|,
+literal|"sd %s is reviving"
 argument_list|,
 name|broken
 operator|->

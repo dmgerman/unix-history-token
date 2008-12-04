@@ -230,6 +230,16 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|cpu_vendor_id
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* CPU vendor ID */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|cpu_fxsr
 decl_stmt|;
 end_decl_stmt

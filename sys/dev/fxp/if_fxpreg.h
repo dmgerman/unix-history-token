@@ -141,6 +141,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FXP_CSR_PMDR
+value|0x1B
+end_define
+
+begin_comment
+comment|/* power management driver (1 byte) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FXP_CSR_GENCONTROL
 value|0x1C
 end_define
@@ -1215,7 +1226,7 @@ name|gamla_rx
 operator|:
 literal|1
 argument_list|,
-name|vlan_drop_en
+name|vlan_strip_en
 operator|:
 literal|1
 argument_list|, 			    :
@@ -1375,7 +1386,7 @@ decl_stmt|;
 name|uint8_t
 name|tbd_number
 decl_stmt|;
-comment|/* 	 * The following structure isn't actually part of the TxCB, 	 * unless the extended TxCB feature is being used.  In this 	 * case, the first two elements of the structure below are  	 * fetched along with the TxCB. 	 */
+comment|/* 	 * The following structure isn't actually part of the TxCB, 	 * unless the extended TxCB feature is being used.  In this 	 * case, the first two elements of the structure below are 	 * fetched along with the TxCB. 	 */
 union|union
 block|{
 name|struct
@@ -1387,6 +1398,8 @@ name|fxp_tbd
 name|tbd
 index|[
 name|FXP_NTXSEG
+operator|+
+literal|1
 index|]
 decl_stmt|;
 block|}
@@ -1817,6 +1830,17 @@ end_define
 
 begin_comment
 comment|/* CRC error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_RFA_STATUS_VLAN
+value|0x1000
+end_define
+
+begin_comment
+comment|/* VLAN tagged frame */
 end_comment
 
 begin_define

@@ -2877,7 +2877,7 @@ name|linux_emuldata
 modifier|*
 name|em
 decl_stmt|;
-name|l_ulong
+name|l_long
 name|futex_offset
 decl_stmt|;
 name|int
@@ -2941,7 +2941,7 @@ name|futex_offset
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|l_ulong
+name|futex_offset
 argument_list|)
 argument_list|)
 condition|)

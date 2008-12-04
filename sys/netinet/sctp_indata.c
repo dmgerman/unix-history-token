@@ -14065,10 +14065,12 @@ name|tp1
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|unsigned
 name|int
-name|j
+name|theTSN
 decl_stmt|;
 name|int
 name|num_frs
@@ -14310,28 +14312,21 @@ control|(
 name|j
 operator|=
 name|frag_strt
-operator|+
-name|last_tsn
 init|;
-operator|(
-name|compare_with_wrap
-argument_list|(
-operator|(
-name|frag_end
-operator|+
-name|last_tsn
-operator|)
-argument_list|,
 name|j
-argument_list|,
-name|MAX_TSN
-argument_list|)
-operator|)
+operator|<=
+name|frag_end
 condition|;
 name|j
 operator|++
 control|)
 block|{
+name|theTSN
+operator|=
+name|j
+operator|+
+name|last_tsn
+expr_stmt|;
 while|while
 condition|(
 name|tp1
@@ -14465,7 +14460,7 @@ name|data
 operator|.
 name|TSN_seq
 operator|==
-name|j
+name|theTSN
 condition|)
 block|{
 if|if
@@ -15057,7 +15052,7 @@ block|}
 block|}
 break|break;
 block|}
-comment|/* if (tp1->TSN_seq == j) */
+comment|/* if (tp1->TSN_seq == theTSN) */
 if|if
 condition|(
 name|compare_with_wrap
@@ -15070,7 +15065,7 @@ name|data
 operator|.
 name|TSN_seq
 argument_list|,
-name|j
+name|theTSN
 argument_list|,
 name|MAX_TSN
 argument_list|)

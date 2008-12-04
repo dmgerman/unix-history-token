@@ -1241,7 +1241,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 if|if
@@ -1632,13 +1634,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: can't connect to the drive\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"can't connect to the drive\n"
 argument_list|)
 expr_stmt|;
 comment|/* disconnect and release the bus */
@@ -1690,7 +1692,7 @@ operator|&
 name|ret
 argument_list|)
 expr_stmt|;
-comment|/* ensure we are disconnected or daisy chained peripheral  	 * may cause serious problem to the disk */
+comment|/* ensure we are disconnected or daisy chained peripheral 	 * may cause serious problem to the disk */
 if|if
 condition|(
 name|vpoio_in_disk_mode
@@ -1703,13 +1705,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: can't disconnect from the drive\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"can't disconnect from the drive\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2436,13 +2438,13 @@ argument_list|,
 name|epp17_outstr_body
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: EPP mode\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"EPP mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2471,13 +2473,13 @@ argument_list|,
 name|spp_outbyte_submicroseq
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: PS2 mode\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"PS2 mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2508,13 +2510,13 @@ argument_list|,
 name|spp_outbyte_submicroseq
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"vpo%d: NIBBLE mode\n"
-argument_list|,
 name|vpo
 operator|->
-name|vpo_unit
+name|vpo_dev
+argument_list|,
+literal|"NIBBLE mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2839,7 +2841,7 @@ name|error
 goto|;
 block|}
 block|}
-comment|/*  	 * Completion ...  	 */
+comment|/* 	 * Completion ... 	 */
 operator|*
 name|count
 operator|=

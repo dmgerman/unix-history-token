@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracechr.c,v 1.13 2007/04/21 23:16:37 tom Exp $"
+literal|"$Id: lib_tracechr.c,v 1.19 2008/08/03 15:39:29 tom Exp $"
 argument_list|)
 end_macro
 
@@ -36,13 +36,6 @@ directive|ifdef
 name|TRACE
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|MyBuffer
-value|_nc_globals.tracechr_buf
-end_define
-
 begin_macro
 name|NCURSES_EXPORT
 argument_list|(
@@ -51,8 +44,10 @@ argument_list|)
 end_macro
 
 begin_macro
-name|_tracechar
+name|_nc_tracechar
 argument_list|(
+argument|SCREEN *sp
+argument_list|,
 argument|int ch
 argument_list|)
 end_macro
@@ -63,6 +58,26 @@ name|NCURSES_CONST
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|char
+modifier|*
+name|MyBuffer
+init|=
+operator|(
+operator|(
+name|sp
+operator|!=
+literal|0
+operator|)
+condition|?
+name|sp
+operator|->
+name|tracechr_buf
+else|:
+name|_nc_globals
+operator|.
+name|tracechr_buf
+operator|)
 decl_stmt|;
 if|if
 condition|(
@@ -77,8 +92,10 @@ condition|)
 block|{
 name|name
 operator|=
-name|keyname
+name|_nc_keyname
 argument_list|(
+name|sp
+argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
@@ -149,8 +166,10 @@ else|else
 block|{
 name|name
 operator|=
-name|unctrl
+name|_nc_unctrl
 argument_list|(
+name|sp
+argument_list|,
 operator|(
 name|chtype
 operator|)
@@ -196,13 +215,40 @@ return|;
 block|}
 end_block
 
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
+name|_tracechar
+argument_list|(
+argument|int ch
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|_nc_tracechar
+argument_list|(
+name|SP
+argument_list|,
+name|ch
+argument_list|)
+return|;
+block|}
+end_block
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_macro
-name|empty_module
+name|EMPTY_MODULE
 argument_list|(
 argument|_nc_lib_tracechr
 argument_list|)

@@ -131,6 +131,10 @@ decl_stmt|;
 name|int
 name|gid_override
 decl_stmt|;
+name|int
+name|day_first
+decl_stmt|;
+comment|/* true if locale prefers day/mon */
 comment|/* If>= 0, then close this when done. */
 name|int
 name|fd
@@ -157,6 +161,16 @@ name|struct
 name|archive_entry_linkresolver
 modifier|*
 name|linkresolver
+decl_stmt|;
+name|struct
+name|name_cache
+modifier|*
+name|uname_cache
+decl_stmt|;
+name|struct
+name|name_cache
+modifier|*
+name|gname_cache
 decl_stmt|;
 comment|/* Work data. */
 name|struct

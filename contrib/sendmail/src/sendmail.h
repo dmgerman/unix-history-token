@@ -19507,9 +19507,9 @@ operator|(
 name|ENVELOPE
 operator|*
 operator|,
-name|bool
+name|int
 operator|,
-name|bool
+name|int
 operator|,
 name|char
 operator|*

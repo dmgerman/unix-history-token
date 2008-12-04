@@ -329,119 +329,58 @@ value|do {		\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ifq)->ifq_tail != NULL) { 		
 end_define
 
 begin_comment
-comment|/*  * Per-node power-save queue definitions.   */
+comment|/*  * Power-save queue definitions.   */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mtx
+name|ieee80211_psq_lock_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_NODE_SAVEQ_INIT
+name|IEEE80211_PSQ_INIT
 parameter_list|(
-name|_ni
+name|_psq
 parameter_list|,
 name|_name
 parameter_list|)
-value|do {		\ 	mtx_init(&(_ni)->ni_savedq.ifq_mtx, _name, "802.11 ps queue", MTX_DEF);\ 	(_ni)->ni_savedq.ifq_maxlen = IEEE80211_PS_MAX_QUEUE;	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_NODE_SAVEQ_DESTROY
-parameter_list|(
-name|_ni
-parameter_list|)
 define|\
-value|mtx_destroy(&(_ni)->ni_savedq.ifq_mtx)
+value|mtx_init(&(_psq)->psq_lock, _name, "802.11 ps q", MTX_DEF);
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_NODE_SAVEQ_QLEN
+name|IEEE80211_PSQ_DESTROY
 parameter_list|(
-name|_ni
+name|_psq
 parameter_list|)
-define|\
-value|_IF_QLEN(&(_ni)->ni_savedq)
+value|mtx_destroy(&(_psq)->psq_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_NODE_SAVEQ_LOCK
+name|IEEE80211_PSQ_LOCK
 parameter_list|(
-name|_ni
+name|_psq
 parameter_list|)
-value|do {	\ 	IF_LOCK(&(_ni)->ni_savedq);				\ } while (0)
+value|mtx_lock(&(_psq)->psq_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IEEE80211_NODE_SAVEQ_UNLOCK
+name|IEEE80211_PSQ_UNLOCK
 parameter_list|(
-name|_ni
+name|_psq
 parameter_list|)
-value|do {	\ 	IF_UNLOCK(&(_ni)->ni_savedq);				\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_NODE_SAVEQ_DEQUEUE
-parameter_list|(
-name|_ni
-parameter_list|,
-name|_m
-parameter_list|,
-name|_qlen
-parameter_list|)
-value|do {	\ 	IEEE80211_NODE_SAVEQ_LOCK(_ni);				\ 	_IF_DEQUEUE(&(_ni)->ni_savedq, _m);			\ 	(_qlen) = IEEE80211_NODE_SAVEQ_QLEN(_ni);		\ 	IEEE80211_NODE_SAVEQ_UNLOCK(_ni);			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_NODE_SAVEQ_DRAIN
-parameter_list|(
-name|_ni
-parameter_list|,
-name|_qlen
-parameter_list|)
-value|do {		\ 	IEEE80211_NODE_SAVEQ_LOCK(_ni);				\ 	(_qlen) = IEEE80211_NODE_SAVEQ_QLEN(_ni);		\ 	_IF_DRAIN(&(_ni)->ni_savedq);				\ 	IEEE80211_NODE_SAVEQ_UNLOCK(_ni);			\ } while (0)
-end_define
-
-begin_comment
-comment|/* XXX could be optimized */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_IEEE80211_NODE_SAVEQ_DEQUEUE_HEAD
-parameter_list|(
-name|_ni
-parameter_list|,
-name|_m
-parameter_list|)
-value|do {	\ 	_IF_DEQUEUE(&(_ni)->ni_savedq, m);			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_IEEE80211_NODE_SAVEQ_ENQUEUE
-parameter_list|(
-name|_ni
-parameter_list|,
-name|_m
-parameter_list|,
-name|_qlen
-parameter_list|,
-name|_age
-parameter_list|)
-value|do {\ 	_AGEQ_ENQUEUE(&ni->ni_savedq, _m, _qlen, _age);		\ } while (0)
+value|mtx_unlock(&(_psq)->psq_lock)
 end_define
 
 begin_ifndef
@@ -891,12 +830,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LINK0
+name|M_ENCAP
 value|M_PROTO1
 end_define
 
 begin_comment
-comment|/* WEP requested */
+comment|/* 802.11 encap done */
 end_comment
 
 begin_define
@@ -981,7 +920,7 @@ define|#
 directive|define
 name|M_80211_TX
 define|\
-value|(M_LINK0|M_WDS|M_EAPOL|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
+value|(M_ENCAP|M_WDS|M_EAPOL|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
 end_define
 
 begin_comment

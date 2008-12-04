@@ -987,13 +987,10 @@ operator|)
 operator|+
 literal|4
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|newarray
-argument_list|,
-name|int
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|newlen
 operator|*
 sizeof|sizeof
@@ -1068,7 +1065,7 @@ name|ng_fec_units
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|ng_fec_units
 argument_list|,
@@ -1265,7 +1262,7 @@ literal|0
 condition|)
 block|{
 comment|/* XXX make SMP safe */
-name|FREE
+name|free
 argument_list|(
 name|ng_fec_units
 argument_list|,
@@ -1521,14 +1518,10 @@ return|;
 block|}
 block|}
 comment|/* Allocate new list entry. */
-name|MALLOC
-argument_list|(
 name|new
-argument_list|,
-expr|struct
-name|ng_fec_portlist
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1971,7 +1964,7 @@ argument_list|,
 name|fec_list
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|p
 argument_list|,
@@ -4648,12 +4641,10 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Allocate node and interface private structures */
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -4696,7 +4687,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -4746,7 +4737,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -5326,7 +5317,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,

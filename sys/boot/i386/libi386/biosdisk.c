@@ -5060,6 +5060,7 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 name|free
 argument_list|(
 name|od
@@ -5067,6 +5068,14 @@ operator|->
 name|od_partitions
 argument_list|)
 expr_stmt|;
+name|od
+operator|->
+name|od_flags
+operator|&=
+operator|~
+name|BD_GPTOK
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -5547,7 +5556,7 @@ name|F_READ
 case|:
 name|DEBUG
 argument_list|(
-literal|"read %d from %d to %p"
+literal|"read %d from %lld to %p"
 argument_list|,
 name|blks
 argument_list|,

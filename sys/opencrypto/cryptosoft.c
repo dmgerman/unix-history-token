@@ -1504,6 +1504,23 @@ operator|-=
 name|blks
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|k
+operator|==
+name|iov
+operator|->
+name|iov_len
+condition|)
+block|{
+name|iov
+operator|++
+expr_stmt|;
+name|k
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 return|return
 literal|0
@@ -2397,13 +2414,10 @@ operator|->
 name|sw_cxf
 expr_stmt|;
 comment|/* We must handle the whole buffer of data in one time 	 * then if there is not all the data in the mbuf, we must 	 * copy in a buffer. 	 */
-name|MALLOC
-argument_list|(
 name|data
-argument_list|,
-name|u_int8_t
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|crd
 operator|->
 name|crd_len
@@ -2482,7 +2496,7 @@ operator|&
 name|out
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|data
 argument_list|,
@@ -2525,7 +2539,7 @@ name|crd_len
 condition|)
 block|{
 comment|/* Compression was useless, we lost time */
-name|FREE
+name|free
 argument_list|(
 name|out
 argument_list|,
@@ -2707,7 +2721,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|FREE
+name|free
 argument_list|(
 name|out
 argument_list|,
@@ -2956,15 +2970,11 @@ condition|(
 name|cri
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 operator|*
 name|swd
-argument_list|,
-expr|struct
-name|swcr_data
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4026,7 +4036,7 @@ name|sw_cxf
 expr_stmt|;
 break|break;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|swd
 argument_list|,
@@ -4674,7 +4684,7 @@ name|swcr_sessions
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|swcr_sessions
 argument_list|,

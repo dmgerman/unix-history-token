@@ -7505,6 +7505,10 @@ literal|0
 index|]
 argument_list|,
 name|v
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

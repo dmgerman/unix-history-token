@@ -53,7 +53,7 @@ begin_struct
 struct|struct
 name|RioCommand
 block|{
-name|u_int16_t
+name|uint16_t
 name|length
 decl_stmt|;
 name|int

@@ -132,6 +132,8 @@ name|int
 name|index
 decl_stmt|,
 name|epp
+decl_stmt|,
+name|mode
 decl_stmt|;
 name|struct
 name|ppb_xfer
@@ -175,12 +177,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* retrieve the device operating mode */
-switch|switch
-condition|(
+name|mode
+operator|=
 name|ppb_get_mode
 argument_list|(
 name|bus
 argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|mode
 condition|)
 block|{
 case|case
@@ -265,8 +271,6 @@ literal|"%s: unknown mode (%d)"
 argument_list|,
 name|__func__
 argument_list|,
-name|ppbdev
-operator|->
 name|mode
 argument_list|)
 expr_stmt|;
@@ -750,7 +754,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%s: param = %d, ins = %d, arg = %d, type = %d\n",  			__func__, param, ins, arg, type);
+block|printf("%s: param = %d, ins = %d, arg = %d, type = %d\n", 			__func__, param, ins, arg, type);
 endif|#
 directive|endif
 comment|/* properly cast the parameter */
@@ -1210,7 +1214,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 default|default:
 comment|/* executing microinstructions at ppc level is 			 * faster. This is the default if the microinstr 			 * is unknown here 			 */
 if|if

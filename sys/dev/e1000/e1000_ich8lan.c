@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/* e1000_ich8lan  * e1000_ich9lan  */
+comment|/*  * 82562G 10/100 Network Connection  * 82562G-2 10/100 Network Connection  * 82562GT 10/100 Network Connection  * 82562GT-2 10/100 Network Connection  * 82562V 10/100 Network Connection  * 82562V-2 10/100 Network Connection  * 82566DC-2 Gigabit Network Connection  * 82566DC Gigabit Network Connection  * 82566DM-2 Gigabit Network Connection  * 82566DM Gigabit Network Connection  * 82566MC Gigabit Network Connection  * 82566MM Gigabit Network Connection  * 82567LM Gigabit Network Connection  * 82567LF Gigabit Network Connection  * 82567V Gigabit Network Connection  * 82567LM-2 Gigabit Network Connection  * 82567LF-2 Gigabit Network Connection  * 82567V-2 Gigabit Network Connection  * 82567LF-3 Gigabit Network Connection  * 82567LM-3 Gigabit Network Connection  * 82567LM-4 Gigabit Network Connection  */
 end_comment
 
 begin_include
@@ -831,38 +831,6 @@ block|}
 union|;
 end_union
 
-begin_struct
-struct|struct
-name|e1000_shadow_ram
-block|{
-name|u16
-name|value
-decl_stmt|;
-name|bool
-name|modified
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|e1000_dev_spec_ich8lan
-block|{
-name|bool
-name|kmrn_lock_loss_workaround_enabled
-decl_stmt|;
-name|struct
-name|e1000_shadow_ram
-name|shadow_ram
-index|[
-name|E1000_SHADOW_RAM_WORDS
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/**  *  e1000_init_phy_params_ich8lan - Initialize PHY function pointers  *  @hw: pointer to the HW structure  *  *  Initialize family-specific PHY parameters and function pointers.  **/
 end_comment
@@ -1266,6 +1234,13 @@ name|struct
 name|e1000_dev_spec_ich8lan
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|ich8lan
 decl_stmt|;
 name|u32
 name|gfpreg
@@ -1390,37 +1365,6 @@ name|word_size
 operator|=
 name|E1000_SHADOW_RAM_WORDS
 expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_ich8lan
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
-argument_list|)
-expr_stmt|;
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_CONFIG
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* Clear shadow ram */
 for|for
 control|(
@@ -1551,11 +1495,6 @@ name|hw
 operator|->
 name|mac
 decl_stmt|;
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_init_mac_params_ich8lan"
@@ -1620,6 +1559,15 @@ operator|.
 name|get_bus_info
 operator|=
 name|e1000_get_bus_info_ich8lan
+expr_stmt|;
+comment|/* function id */
+name|mac
+operator|->
+name|ops
+operator|.
+name|set_lan_id
+operator|=
+name|e1000_set_lan_id_single_port
 expr_stmt|;
 comment|/* reset */
 name|mac
@@ -1746,15 +1694,6 @@ name|led_off
 operator|=
 name|e1000_led_off_ich8lan
 expr_stmt|;
-comment|/* remove device */
-name|mac
-operator|->
-name|ops
-operator|.
-name|remove_device
-operator|=
-name|e1000_remove_device_generic
-expr_stmt|;
 comment|/* clear hardware counters */
 name|mac
 operator|->
@@ -1764,35 +1703,6 @@ name|clear_hw_cntrs
 operator|=
 name|e1000_clear_hw_cntrs_ich8lan
 expr_stmt|;
-name|hw
-operator|->
-name|dev_spec_size
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|e1000_dev_spec_ich8lan
-argument_list|)
-expr_stmt|;
-comment|/* Device-specific structure allocation */
-name|ret_val
-operator|=
-name|e1000_alloc_zeroed_dev_spec_struct
-argument_list|(
-name|hw
-argument_list|,
-name|hw
-operator|->
-name|dev_spec_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-goto|goto
-name|out
-goto|;
 comment|/* Enable PCS Lock-loss workaround for ICH8 */
 if|if
 condition|(
@@ -1809,10 +1719,8 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -2079,7 +1987,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
 name|fwsm
 operator|&
 name|E1000_FWSM_MODE_MASK
@@ -2089,7 +1996,6 @@ operator|(
 name|E1000_ICH_MNG_IAMT_MODE
 operator|<<
 name|E1000_FWSM_MODE_SHIFT
-operator|)
 operator|)
 return|;
 block|}
@@ -2359,13 +2265,11 @@ condition|(
 operator|!
 name|link
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"Link taking longer than expected.\n"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Try once more */
 name|ret_val
 operator|=
@@ -2421,16 +2325,6 @@ operator|&
 name|hw
 operator|->
 name|phy
-decl_stmt|;
-name|struct
-name|e1000_nvm_info
-modifier|*
-name|nvm
-init|=
-operator|&
-name|hw
-operator|->
-name|nvm
 decl_stmt|;
 name|u32
 name|i
@@ -2588,13 +2482,11 @@ name|loop
 operator|==
 literal|0
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"LAN_INIT_DONE not set, increase timeout\n"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Clear the Init Done bit for the next init event */
 name|data
 operator|=
@@ -2673,7 +2565,7 @@ name|cnf_base_addr
 operator|>>=
 name|E1000_EXTCNF_CTRL_EXT_CNF_POINTER_SHIFT
 expr_stmt|;
-comment|/* 		 * Configure LCD from extended configuration 		 * region. 		 */
+comment|/* Configure LCD from extended configuration region. */
 comment|/* cnf_base_addr is in DWORD */
 name|word_addr
 operator|=
@@ -2702,8 +2594,10 @@ control|)
 block|{
 name|ret_val
 operator|=
-name|nvm
+name|hw
 operator|->
+name|nvm
+operator|.
 name|ops
 operator|.
 name|read
@@ -2733,8 +2627,10 @@ name|out
 goto|;
 name|ret_val
 operator|=
-name|nvm
+name|hw
 operator|->
+name|nvm
+operator|.
 name|ops
 operator|.
 name|read
@@ -2818,7 +2714,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_get_phy_info_ich8lan - Calls appropriate PHY type get_phy_info  *  @hw: pointer to the HW structure  *  *  Wrapper for calling the get_phy_info routines for the appropriate phy type.  *  This is a function pointer entry point called by drivers  *  or other shared routines.  **/
+comment|/**  *  e1000_get_phy_info_ich8lan - Calls appropriate PHY type get_phy_info  *  @hw: pointer to the HW structure  *  *  Wrapper for calling the get_phy_info routines for the appropriate phy type.  **/
 end_comment
 
 begin_function
@@ -3147,7 +3043,7 @@ argument_list|(
 literal|"e1000_check_polarity_ife_ich8lan"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Polarity is determined based on the reversal feature 	 * being enabled. 	 */
+comment|/* 	 * Polarity is determined based on the reversal feature being enabled. 	 */
 if|if
 condition|(
 name|phy
@@ -3929,15 +3825,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|hw
-operator|->
-name|dev_spec
-operator|!=
-name|NULL
-condition|)
+else|else
 block|{
 comment|/* 		 * Make sure the signature for bank 0 is valid, 		 * if not check for bank1 		 */
 name|e1000_read_flash_byte_ich8lan
@@ -4015,19 +3903,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-else|else
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"DEV SPEC is NULL\n"
-argument_list|)
-expr_stmt|;
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_NVM
-expr_stmt|;
-block|}
 return|return
 name|ret_val
 return|;
@@ -4073,6 +3948,13 @@ name|struct
 name|e1000_dev_spec_ich8lan
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|ich8lan
 decl_stmt|;
 name|u32
 name|act_offset
@@ -4097,37 +3979,6 @@ argument_list|(
 literal|"e1000_read_nvm_ich8lan"
 argument_list|)
 expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_ich8lan
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
-argument_list|)
-expr_stmt|;
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_CONFIG
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -5023,7 +4874,6 @@ name|size
 operator|==
 literal|1
 condition|)
-block|{
 operator|*
 name|data
 operator|=
@@ -5036,7 +4886,6 @@ operator|&
 literal|0x000000FF
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -5044,7 +4893,6 @@ name|size
 operator|==
 literal|2
 condition|)
-block|{
 operator|*
 name|data
 operator|=
@@ -5057,7 +4905,6 @@ operator|&
 literal|0x0000FFFF
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 else|else
@@ -5165,6 +5012,13 @@ name|struct
 name|e1000_dev_spec_ich8lan
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|ich8lan
 decl_stmt|;
 name|s32
 name|ret_val
@@ -5179,37 +5033,6 @@ argument_list|(
 literal|"e1000_write_nvm_ich8lan"
 argument_list|)
 expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_ich8lan
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
-argument_list|)
-expr_stmt|;
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_CONFIG
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -5359,6 +5182,13 @@ name|struct
 name|e1000_dev_spec_ich8lan
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|ich8lan
 decl_stmt|;
 name|u32
 name|i
@@ -5381,17 +5211,6 @@ name|DEBUGFUNC
 argument_list|(
 literal|"e1000_update_nvm_checksum_ich8lan"
 argument_list|)
-expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_ich8lan
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
 expr_stmt|;
 name|ret_val
 operator|=
@@ -5831,7 +5650,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_validate_nvm_checksum_ich8lan - Validate EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Check to see if checksum needs to be fixed by reading bit 6 in word 0x19.  *  If the bit is 0, that the EEPROM had been modified, but the checksum was  *  not calculated, in which case we need to calculate the checksum and set  *  bit 6.  **/
+comment|/**  *  e1000_validate_nvm_checksum_ich8lan - Validate EEPROM checksum  *  @hw: pointer to the HW structure  *  *  Check to see if checksum needs to be fixed by reading bit 6 in word 0x19.  *  If the bit is 0, that the EEPROM had been modified, but the checksum was not  *  calculated, in which case we need to calculate the checksum and set bit 6.  **/
 end_comment
 
 begin_function
@@ -6177,12 +5996,8 @@ name|ret_val
 operator|==
 name|E1000_SUCCESS
 condition|)
-block|{
 break|break;
-block|}
-else|else
-block|{
-comment|/* 			 * If we're here, then things are most likely 			 * completely hosed, but if the error condition 			 * is detected, it won't hurt to give it another 			 * try...ICH_FLASH_CYCLE_REPEAT_COUNT times. 			 */
+comment|/* 		 * If we're here, then things are most likely 		 * completely hosed, but if the error condition 		 * is detected, it won't hurt to give it another 		 * try...ICH_FLASH_CYCLE_REPEAT_COUNT times. 		 */
 name|hsfsts
 operator|.
 name|regval
@@ -6227,7 +6042,6 @@ literal|"did not complete."
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 do|while
@@ -6718,12 +6532,8 @@ name|ret_val
 operator|==
 name|E1000_SUCCESS
 condition|)
-block|{
 break|break;
-block|}
-else|else
-block|{
-comment|/* 				 * Check if FCERR is set to 1.  If 1, 				 * clear it and try the whole sequence 				 * a few more times else Done 				 */
+comment|/* 			 * Check if FCERR is set to 1.  If 1, 			 * clear it and try the whole sequence 			 * a few more times else Done 			 */
 name|hsfsts
 operator|.
 name|regval
@@ -6745,10 +6555,8 @@ name|flcerr
 operator|==
 literal|1
 condition|)
-block|{
-comment|/* 					 * repeat for some time before 					 * giving up 					 */
+comment|/* repeat for some time before giving up */
 continue|continue;
-block|}
 elseif|else
 if|if
 condition|(
@@ -6763,7 +6571,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-block|}
 block|}
 do|while
 condition|(
@@ -6970,13 +6777,11 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"PCI-E Master disable polling has failed.\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|DEBUGOUT
 argument_list|(
 literal|"Masking off all interrupts\n"
@@ -7099,7 +6904,7 @@ argument_list|)
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"Issuing a global reset to ich8lan"
+literal|"Issuing a global reset to ich8lan\n"
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
@@ -7488,17 +7293,6 @@ argument_list|(
 literal|"e1000_initialize_hw_bits_ich8lan"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|disable_hw_init_bits
-condition|)
-goto|goto
-name|out
-goto|;
 comment|/* Extended Device Control */
 name|reg
 operator|=
@@ -7781,8 +7575,6 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 return|return;
 block|}
 end_function
@@ -7835,7 +7627,7 @@ name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|requested_mode
 operator|==
 name|e1000_fc_default
 condition|)
@@ -7843,21 +7635,22 @@ name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|requested_mode
 operator|=
 name|e1000_fc_full
 expr_stmt|;
+comment|/* 	 * Save off the requested flow control mode for use later.  Depending 	 * on the link partner's capabilities, we may or may not use this mode. 	 */
 name|hw
 operator|->
 name|fc
 operator|.
-name|original_type
+name|current_mode
 operator|=
 name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|requested_mode
 expr_stmt|;
 name|DEBUGOUT1
 argument_list|(
@@ -7867,7 +7660,7 @@ name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|current_mode
 argument_list|)
 expr_stmt|;
 comment|/* Continue to configure the copper link. */
@@ -8338,6 +8131,13 @@ name|struct
 name|e1000_dev_spec_ich8lan
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|ich8lan
 decl_stmt|;
 name|u32
 name|phy_ctrl
@@ -8360,37 +8160,6 @@ argument_list|(
 literal|"e1000_kmrn_lock_loss_workaround_ich8lan"
 argument_list|)
 expr_stmt|;
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_ich8lan
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
-argument_list|)
-expr_stmt|;
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_CONFIG
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 operator|!
@@ -8603,6 +8372,13 @@ name|struct
 name|e1000_dev_spec_ich8lan
 modifier|*
 name|dev_spec
+init|=
+operator|&
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|ich8lan
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -8625,35 +8401,7 @@ argument_list|(
 literal|"Workaround applies to ICH8 only.\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|dev_spec
-operator|=
-operator|(
-expr|struct
-name|e1000_dev_spec_ich8lan
-operator|*
-operator|)
-name|hw
-operator|->
-name|dev_spec
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_spec
-condition|)
-block|{
-name|DEBUGOUT
-argument_list|(
-literal|"dev_spec pointer is set to NULL.\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 name|dev_spec
 operator|->
@@ -8661,8 +8409,6 @@ name|kmrn_lock_loss_workaround_enabled
 operator|=
 name|state
 expr_stmt|;
-name|out
-label|:
 return|return;
 block|}
 end_function
@@ -9361,7 +9107,7 @@ name|bank
 argument_list|)
 condition|)
 block|{
-comment|/* Maybe we should do a basic Boazman config */
+comment|/* Maybe we should do a basic PHY config */
 name|DEBUGOUT
 argument_list|(
 literal|"EEPROM not present\n"
@@ -9395,33 +9141,15 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-name|struct
-name|e1000_phy_info
-modifier|*
-name|phy
-init|=
-operator|&
-name|hw
-operator|->
-name|phy
-decl_stmt|;
-name|struct
-name|e1000_mac_info
-modifier|*
-name|mac
-init|=
-operator|&
-name|hw
-operator|->
-name|mac
-decl_stmt|;
 comment|/* If the management interface is not enabled, then power down */
 if|if
 condition|(
 operator|!
 operator|(
-name|mac
+name|hw
 operator|->
+name|mac
+operator|.
 name|ops
 operator|.
 name|check_mng_mode
@@ -9429,8 +9157,10 @@ argument_list|(
 name|hw
 argument_list|)
 operator|||
-name|phy
+name|hw
 operator|->
+name|phy
+operator|.
 name|ops
 operator|.
 name|check_reset_block
@@ -9463,10 +9193,6 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
-specifier|volatile
-name|u32
-name|temp
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_clear_hw_cntrs_ich8lan"
@@ -9477,8 +9203,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9486,8 +9210,6 @@ argument_list|,
 name|E1000_ALGNERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9495,8 +9217,6 @@ argument_list|,
 name|E1000_RXERRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9504,8 +9224,6 @@ argument_list|,
 name|E1000_TNCRS
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9513,8 +9231,6 @@ argument_list|,
 name|E1000_CEXTERR
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9522,8 +9238,6 @@ argument_list|,
 name|E1000_TSCTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9531,8 +9245,6 @@ argument_list|,
 name|E1000_TSCTFC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9540,8 +9252,6 @@ argument_list|,
 name|E1000_MGTPRC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9549,8 +9259,6 @@ argument_list|,
 name|E1000_MGTPDC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9558,8 +9266,6 @@ argument_list|,
 name|E1000_MGTPTC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -9567,8 +9273,6 @@ argument_list|,
 name|E1000_IAC
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw

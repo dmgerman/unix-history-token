@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -1098,14 +1098,6 @@ operator|&
 name|spa
 operator|->
 name|spa_errlist_lock
-argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
-operator|!
-name|spa
-operator|->
-name|spa_scrub_finished
 argument_list|)
 expr_stmt|;
 name|spa

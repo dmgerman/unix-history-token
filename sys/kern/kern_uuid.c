@@ -101,6 +101,12 @@ directive|include
 file|<net/if_types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_comment
 comment|/*  * See also:  *	http://www.opengroup.org/dce/info/draft-leach-uuids-guids-01.txt  *	http://www.opengroup.org/onlinepubs/009629399/apdxa.htm  *  * Note that the generator state is itself an UUID, but the time and clock  * sequence fields are written in the native byte order.  */
 end_comment

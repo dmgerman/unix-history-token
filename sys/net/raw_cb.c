@@ -87,6 +87,12 @@ directive|include
 file|<net/raw_cb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_comment
 comment|/*  * Routines to manage the raw protocol control blocks.  *  * TODO:  *	hash lookups by protocol family/protocol + address family  *	take care of unique address problems per AF?  *	redo address binding to allow wildcards  */
 end_comment
@@ -98,12 +104,23 @@ name|rawcb_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|rawcb_list_head
 name|rawcb_list
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_NODE

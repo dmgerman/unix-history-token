@@ -1620,10 +1620,10 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|int
-name|acc_mode
+name|accmode_t
+name|accmode
 decl_stmt|;
-name|acc_mode
+name|accmode
 operator|=
 literal|0
 expr_stmt|;
@@ -1633,7 +1633,7 @@ name|flags
 operator|&
 name|FREAD
 condition|)
-name|acc_mode
+name|accmode
 operator||=
 name|VREAD
 expr_stmt|;
@@ -1643,7 +1643,7 @@ name|flags
 operator|&
 name|FWRITE
 condition|)
-name|acc_mode
+name|accmode
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -1665,7 +1665,7 @@ name|shmfd
 operator|->
 name|shm_gid
 argument_list|,
-name|acc_mode
+name|accmode
 argument_list|,
 name|ucred
 argument_list|,
@@ -2817,9 +2817,12 @@ name|foff
 operator|+
 name|objsize
 operator|>
+name|round_page
+argument_list|(
 name|shmfd
 operator|->
 name|shm_size
+argument_list|)
 condition|)
 return|return
 operator|(

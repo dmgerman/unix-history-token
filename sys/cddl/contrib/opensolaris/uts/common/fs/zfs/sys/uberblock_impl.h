@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -65,7 +65,7 @@ comment|/* UBERBLOCK_MAGIC		*/
 name|uint64_t
 name|ub_version
 decl_stmt|;
-comment|/* ZFS_VERSION			*/
+comment|/* SPA_VERSION			*/
 name|uint64_t
 name|ub_txg
 decl_stmt|;

@@ -702,13 +702,6 @@ name|PPBUS_IVAR_MODE
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|PPBUS_IVAR_AVM
-value|1
-end_define
-
 begin_comment
 comment|/* other fields are reserved to the ppbus internals */
 end_comment
@@ -723,14 +716,6 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* name of the device */
-name|u_short
-name|mode
-decl_stmt|;
-comment|/* current mode of the device */
-name|u_short
-name|avm
-decl_stmt|;
-comment|/* available IEEE1284 modes of  					 * the device */
 name|u_int
 name|flags
 decl_stmt|;
@@ -765,14 +750,6 @@ name|void
 modifier|*
 name|intr_cookie
 decl_stmt|;
-name|void
-modifier|*
-name|drv1
-decl_stmt|,
-modifier|*
-name|drv2
-decl_stmt|;
-comment|/* drivers private data */
 block|}
 struct|;
 end_struct
@@ -1071,7 +1048,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * These are defined as macros for speedup. #define ppb_get_base_addr(dev) ((dev)->ppb->ppb_link->base) #define ppb_get_epp_protocol(dev) ((dev)->ppb->ppb_link->epp_protocol) #define ppb_get_irq(dev) ((dev)->ppb->ppb_link->id_irq)  */
+comment|/*  * These are defined as macros for speedup. #define ppb_get_base_addr(dev) ((dev)->ppb->ppb_link->base) #define ppb_get_epp_protocol(dev) ((dev)->ppb->ppb_link->epp_protocol)  */
 end_comment
 
 begin_endif

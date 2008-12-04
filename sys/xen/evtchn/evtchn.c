@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -105,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<machine/xen/hypervisor.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
 end_include
 
 begin_comment
@@ -340,28 +352,80 @@ block|,
 name|IRQT_LOCAL_PORT
 block|,
 name|IRQT_CALLER_PORT
+block|,
+name|_IRQT_COUNT
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|_IRQT_BITS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|_EVTCHN_BITS
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|_INDEX_BITS
+value|(32 - _IRQT_BITS - _EVTCHN_BITS)
+end_define
 
 begin_comment
 comment|/* Constructor for packed IRQ information. */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
 name|mk_irq_info
 parameter_list|(
+name|uint32_t
 name|type
 parameter_list|,
+name|uint32_t
 name|index
 parameter_list|,
+name|uint32_t
 name|evtchn
 parameter_list|)
-define|\
-value|(((uint32_t)(type)<< 24) | ((uint32_t)(index)<< 16) | (uint32_t)(evtchn))
-end_define
+block|{
+return|return
+operator|(
+operator|(
+name|type
+operator|<<
+operator|(
+literal|32
+operator|-
+name|_IRQT_BITS
+operator|)
+operator|)
+operator||
+operator|(
+name|index
+operator|<<
+name|_EVTCHN_BITS
+operator|)
+operator||
+name|evtchn
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Constructor for packed IRQ information. */
+end_comment
 
 begin_comment
 comment|/* Convenient shorthand for packed representation of an unbound IRQ. */
@@ -375,68 +439,102 @@ value|mk_irq_info(IRQT_UNBOUND, 0, 0)
 end_define
 
 begin_comment
-comment|/* Accessor macros for packed IRQ information. */
+comment|/*  * Accessors for packed IRQ information.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|int
 name|evtchn_from_irq
 parameter_list|(
+name|int
 name|irq
 parameter_list|)
-value|((uint16_t)(irq_info[irq]))
-end_define
+block|{
+return|return
+name|irq_info
+index|[
+name|irq
+index|]
+operator|&
+operator|(
+operator|(
+literal|1U
+operator|<<
+name|_EVTCHN_BITS
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|int
 name|index_from_irq
 parameter_list|(
+name|int
 name|irq
 parameter_list|)
-value|((uint8_t)(irq_info[irq]>> 16))
-end_define
+block|{
+return|return
+operator|(
+name|irq_info
+index|[
+name|irq
+index|]
+operator|>>
+name|_EVTCHN_BITS
+operator|)
+operator|&
+operator|(
+operator|(
+literal|1U
+operator|<<
+name|_INDEX_BITS
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|unsigned
+name|int
 name|type_from_irq
 parameter_list|(
+name|int
 name|irq
 parameter_list|)
-value|((uint8_t)(irq_info[irq]>> 24))
-end_define
+block|{
+return|return
+name|irq_info
+index|[
+name|irq
+index|]
+operator|>>
+operator|(
+literal|32
+operator|-
+name|_IRQT_BITS
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* IRQ<-> VIRQ mapping. */
 end_comment
-
-begin_expr_stmt
-name|DEFINE_PER_CPU
-argument_list|(
-name|int
-argument_list|,
-name|virq_to_irq
-index|[
-name|NR_VIRQS
-index|]
-argument_list|)
-operator|=
-block|{
-index|[
-literal|0
-operator|...
-name|NR_VIRQS
-operator|-
-literal|1
-index|]
-operator|=
-operator|-
-literal|1
-block|}
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* IRQ<-> IPI mapping. */
@@ -447,6 +545,23 @@ ifndef|#
 directive|ifndef
 name|NR_IPIS
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"NR_IPIS not defined"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -459,32 +574,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|DEFINE_PER_CPU
-argument_list|(
-name|int
-argument_list|,
-name|ipi_to_irq
-index|[
-name|NR_IPIS
-index|]
-argument_list|)
-operator|=
-block|{
-index|[
-literal|0
-operator|...
-name|NR_IPIS
-operator|-
-literal|1
-index|]
-operator|=
-operator|-
-literal|1
-block|}
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Bitmap indicating which PIRQs require Xen to be notified on unmask. */
@@ -534,12 +623,12 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CONFIG_SMP
+name|SMP
 end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|u8
+name|uint8_t
 name|cpu_evtchn
 index|[
 name|NR_EVENT_CHANNELS
@@ -971,7 +1060,9 @@ parameter_list|)
 block|{
 name|int
 name|irq
-init|=
+decl_stmt|;
+name|irq
+operator|=
 name|per_cpu
 argument_list|(
 name|ipi_to_irq
@@ -981,7 +1072,7 @@ argument_list|)
 index|[
 name|vector
 index|]
-decl_stmt|;
+expr_stmt|;
 name|notify_remote_via_irq
 argument_list|(
 name|irq
@@ -1412,6 +1503,20 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|irq
+operator|=
+name|find_unbound_irq
+argument_list|()
+operator|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 name|bind_virq
 operator|.
 name|virq
@@ -1442,11 +1547,6 @@ operator|=
 name|bind_virq
 operator|.
 name|port
-expr_stmt|;
-name|irq
-operator|=
-name|find_unbound_irq
-argument_list|()
 expr_stmt|;
 name|evtchn_to_irq
 index|[
@@ -1495,6 +1595,8 @@ name|irq
 index|]
 operator|++
 expr_stmt|;
+name|out
+label|:
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1507,8 +1609,23 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+specifier|extern
+name|int
+name|bind_ipi_to_irq
+parameter_list|(
+name|unsigned
+name|int
+name|ipi
+parameter_list|,
+name|unsigned
+name|int
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
-specifier|static
 name|int
 name|bind_ipi_to_irq
 parameter_list|(
@@ -1594,11 +1711,6 @@ operator|=
 name|bind_ipi
 operator|.
 name|port
-expr_stmt|;
-name|irq
-operator|=
-name|find_unbound_irq
-argument_list|()
 expr_stmt|;
 name|evtchn_to_irq
 index|[
@@ -2227,19 +2339,17 @@ name|char
 modifier|*
 name|devname
 parameter_list|,
-name|driver_intr_t
-name|handler
+name|driver_filter_t
+name|filter
 parameter_list|,
 name|unsigned
 name|long
 name|irqflags
 parameter_list|)
 block|{
-name|unsigned
 name|int
 name|irq
-decl_stmt|;
-name|int
+decl_stmt|,
 name|retval
 decl_stmt|;
 name|irq
@@ -2272,9 +2382,9 @@ name|devname
 argument_list|,
 name|irq
 argument_list|,
-name|NULL
+name|filter
 argument_list|,
-name|handler
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3195,6 +3305,12 @@ argument_list|(
 name|evtchn
 argument_list|)
 expr_stmt|;
+else|else
+name|panic
+argument_list|(
+literal|"invalid evtchn"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3418,6 +3534,16 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|XEN_PRIVILEGED_GUEST
+name|panic
+argument_list|(
+literal|"unexpected pirq call"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -4465,6 +4591,9 @@ decl_stmt|,
 modifier|*
 name|tpin
 decl_stmt|;
+name|init_evtchn_cpu_bindings
+argument_list|()
+expr_stmt|;
 comment|/* No VIRQ or IPI bindings. */
 for|for
 control|(
@@ -4474,7 +4603,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|NR_CPUS
+name|mp_ncpus
 condition|;
 name|cpu
 operator|++
@@ -4829,7 +4958,7 @@ name|evtchn_init
 argument_list|,
 name|SI_SUB_INTR
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|evtchn_init
 argument_list|,

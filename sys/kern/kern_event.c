@@ -2461,14 +2461,10 @@ operator|~
 name|KN_DETACHED
 expr_stmt|;
 comment|/* knlist_add usually sets it */
-name|MALLOC
-argument_list|(
 name|calloutp
-argument_list|,
-expr|struct
-name|callout
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2553,7 +2549,7 @@ argument_list|(
 name|calloutp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|calloutp
 argument_list|,
@@ -5353,14 +5349,10 @@ name|size
 operator|+=
 name|KQEXTENT
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|list
-argument_list|,
-expr|struct
-name|klist
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|size
 operator|*
 sizeof|sizeof
@@ -5394,7 +5386,7 @@ operator|>
 name|fd
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|list
 argument_list|,
@@ -5433,7 +5425,7 @@ sizeof|sizeof
 name|list
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|kq
 operator|->

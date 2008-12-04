@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -30,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"zlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"zutil.h"
 end_include
 
 begin_comment
@@ -103,15 +102,20 @@ operator|=
 operator|*
 name|dstlen
 expr_stmt|;
+comment|/* 	 * Call inflateInit2() specifying a window size of DEF_WBITS 	 * with the 6th bit set to indicate that the compression format 	 * type (zlib or gzip) should be automatically detected. 	 */
 if|if
 condition|(
 operator|(
 name|err
 operator|=
-name|inflateInit
+name|inflateInit2
 argument_list|(
 operator|&
 name|zs
+argument_list|,
+name|DEF_WBITS
+operator||
+literal|0x20
 argument_list|)
 operator|)
 operator|!=

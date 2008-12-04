@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|800050
+value|800057
 end_define
 
 begin_comment
@@ -249,6 +249,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FALSE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -256,12 +262,28 @@ name|FALSE
 value|0
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TRUE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|TRUE
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

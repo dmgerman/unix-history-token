@@ -32,7 +32,7 @@ name|RSYSCALL
 parameter_list|(
 name|x
 parameter_list|)
-value|SYSCALL(x); ret
+value|SYSCALL(x); ret; END(__CONCAT(__sys_,x))
 end_define
 
 begin_define
@@ -42,7 +42,7 @@ name|PSEUDO
 parameter_list|(
 name|x
 parameter_list|)
-value|2: PIC_PROLOGUE; jmp PIC_PLT(HIDENAME(cerror)); \ 			ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%eax; KERNCALL; jb 2b; ret
+value|2: PIC_PROLOGUE; jmp PIC_PLT(HIDENAME(cerror)); \ 			ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%eax; KERNCALL; jb 2b; ret; \ 			END(__CONCAT(__sys_,x))
 end_define
 
 begin_comment

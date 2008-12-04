@@ -226,6 +226,12 @@ directive|include
 file|<nfsserver/nfsrvcache.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -335,7 +341,7 @@ name|nfs_privport
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Only allow clients using a privileged port"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -356,7 +362,7 @@ name|nfsrvw_procrastinate
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Delay value for write gathering"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -377,7 +383,7 @@ name|nfsrvw_procrastinate_v3
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Delay in seconds for NFSv3 write gathering"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -487,7 +493,7 @@ modifier|*
 name|nam
 decl_stmt|;
 name|struct
-name|nfsd_args
+name|nfsd_addsock_args
 name|nfsdarg
 decl_stmt|;
 name|int
@@ -727,7 +733,7 @@ name|uap
 operator|->
 name|flag
 operator|&
-name|NFSSVC_NFSD
+name|NFSSVC_OLDNFSD
 condition|)
 block|{
 name|error
@@ -813,7 +819,7 @@ literal|0
 comment|/* 	 * XXXRW: If this code is ever enabled, there's a race when running 	 * MPSAFE. 	 */
 block|tslp = NULL;
 comment|/* 	 * Add it to the list, as required. 	 */
-block|if (so->so_proto->pr_protocol == IPPROTO_UDP) { 		tslp = nfs_udpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				FREE(mynam, M_SONAME); 			return (EPERM); 		} 	}
+block|if (so->so_proto->pr_protocol == IPPROTO_UDP) { 		tslp = nfs_udpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				free(mynam, M_SONAME); 			return (EPERM); 		} 	}
 endif|#
 directive|endif
 name|siz
@@ -842,7 +848,7 @@ name|mynam
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|mynam
 argument_list|,
@@ -2059,7 +2065,7 @@ name|nd
 operator|->
 name|nd_nam2
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|nd
 operator|->
@@ -2263,7 +2269,7 @@ name|nd
 operator|->
 name|nd_nam2
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|nd
 operator|->
@@ -2380,7 +2386,7 @@ name|nd
 operator|->
 name|nd_nam2
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|nd
 operator|->
@@ -2412,7 +2418,7 @@ operator|->
 name|nd_cr
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -2729,7 +2735,7 @@ name|slp
 operator|->
 name|ns_nam
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|slp
 operator|->
@@ -2778,7 +2784,7 @@ name|rec
 operator|->
 name|nr_address
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|rec
 operator|->
@@ -3261,6 +3267,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_LEGACYRPC */
+end_comment
 
 end_unit
 

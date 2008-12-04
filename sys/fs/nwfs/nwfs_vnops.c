@@ -442,7 +442,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *td; 	} */
+comment|/* { 		struct vnode *a_vp; 		accmode_t a_accmode; 		struct ucred *a_cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -479,7 +479,7 @@ condition|(
 operator|(
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 operator|&
 name|VWRITE
 operator|)
@@ -564,7 +564,7 @@ name|gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->

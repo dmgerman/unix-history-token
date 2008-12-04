@@ -82,6 +82,11 @@ name|int
 name|ip6q_nfrag
 decl_stmt|;
 comment|/* # of fragments */
+name|struct
+name|label
+modifier|*
+name|ip6q_label
+decl_stmt|;
 block|}
 struct|;
 end_struct

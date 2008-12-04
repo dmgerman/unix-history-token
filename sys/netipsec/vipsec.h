@@ -15,18 +15,6 @@ directive|define
 name|_NETIPSEC_VIPSEC_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -36,25 +24,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<net/pfkeyv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netipsec/ipsec.h>
+file|<net/raw_cb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netipsec/esp_var.h>
+file|<netinet/ipprotosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<netipsec/ah_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netipsec/esp_var.h>
 end_include
 
 begin_include
@@ -72,25 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/raw_cb.h>
+file|<netipsec/ipsec.h>
 end_include
 
 begin_include
@@ -180,18 +156,6 @@ decl_stmt|;
 name|u_int32_t
 name|_acq_seq
 decl_stmt|;
-name|u_int
-name|_saorder_state_alive
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|u_int
-name|_saorder_state_any
-index|[
-literal|4
-index|]
-decl_stmt|;
 name|int
 name|_esp_enable
 decl_stmt|;
@@ -238,9 +202,6 @@ name|int
 name|_ip6_ipsec_ecn
 decl_stmt|;
 name|int
-name|_ip6_esp_randpad
-decl_stmt|;
-name|int
 name|_ah_enable
 decl_stmt|;
 name|int
@@ -264,14 +225,6 @@ decl_stmt|;
 name|struct
 name|key_cb
 name|_key_cb
-decl_stmt|;
-name|struct
-name|sockaddr
-name|_key_dst
-decl_stmt|;
-name|struct
-name|sockaddr
-name|_key_src
 decl_stmt|;
 name|LIST_HEAD
 argument_list|(
@@ -319,11 +272,6 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Symbol translation macros  */
@@ -633,13 +581,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_key_dst
-value|VNET_IPSEC(key_dst)
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_key_int_random
 value|VNET_IPSEC(key_int_random)
 end_define
@@ -682,13 +623,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_key_src
-value|VNET_IPSEC(key_src)
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_pfkeystat
 value|VNET_IPSEC(pfkeystat)
 end_define
@@ -712,20 +646,6 @@ define|#
 directive|define
 name|V_sahtree
 value|VNET_IPSEC(sahtree)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_saorder_state_alive
-value|VNET_IPSEC(saorder_state_alive)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_saorder_state_any
-value|VNET_IPSEC(saorder_state_any)
 end_define
 
 begin_define

@@ -1541,6 +1541,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UID_NOBODY
+value|65534
+end_define
+
+begin_define
+define|#
+directive|define
 name|GID_WHEEL
 value|0
 end_define
@@ -1585,6 +1592,13 @@ define|#
 directive|define
 name|GID_DIALER
 value|68
+end_define
+
+begin_define
+define|#
+directive|define
+name|GID_NOBODY
+value|65534
 end_define
 
 begin_typedef

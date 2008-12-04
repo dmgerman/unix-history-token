@@ -338,6 +338,29 @@ begin_comment
 comment|/* TCPDEBUG */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -387,12 +410,89 @@ literal|3
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|tcpstat
 name|tcpstat
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|blackhole
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_delack_enabled
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|drop_synfin
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_do_rfc3042
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_do_rfc3390
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_do_ecn
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_ecn_maxretries
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_insecure_rst
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_do_autorcvbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_autorcvbuf_inc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_autorcvbuf_max
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_V_STRUCT
@@ -447,15 +547,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|blackhole
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -479,14 +570,6 @@ literal|"Do not send RST on segments to closed ports"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_delack_enabled
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -512,15 +595,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|drop_synfin
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -544,15 +618,6 @@ literal|"Drop TCP packets with SYN+FIN set"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tcp_do_rfc3042
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -578,15 +643,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|tcp_do_rfc3390
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -610,22 +666,6 @@ literal|"Enable RFC 3390 (Increasing TCP's Initial Congestion Window)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_do_ecn
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_ecn_maxretries
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -693,15 +733,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|tcp_insecure_rst
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -725,14 +756,6 @@ literal|"Follow the old (insecure) criteria for accepting RST packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_do_autorcvbuf
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -758,16 +781,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|tcp_autorcvbuf_inc
-init|=
-literal|16
-operator|*
-literal|1024
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_V_INT
 argument_list|(
@@ -791,16 +804,6 @@ literal|"Incrementor step size of automatic receive buffer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_autorcvbuf_max
-init|=
-literal|256
-operator|*
-literal|1024
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -826,12 +829,30 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|inpcbhead
 name|tcb
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|inpcbinfo
+name|tcbinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -843,13 +864,6 @@ end_define
 begin_comment
 comment|/* for KAME src sync over BSD*'s */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|inpcbinfo
-name|tcbinfo
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -3849,7 +3863,12 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If inp is non-NULL, we call tcp_dropwithreset() holding both inpcb 	 * and global locks.  However, if NULL, we must hold neither as 	 * firewalls may acquire the global lock in order to look for a 	 * matching inpcb. 	 */
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|inp
@@ -3876,18 +3895,7 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
+else|else
 name|tcp_dropwithreset
 argument_list|(
 name|m
@@ -3966,7 +3974,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6051,7 +6058,7 @@ case|:
 break|break;
 comment|/* continue normal processing */
 block|}
-comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check the RST flag and sequence number since reset segments 	 * are exempt from the timestamp and connection count tests.  This 	 * fixes a bug introduced by the Stevens, vol. 2, p. 960 bugfix 	 * below which allowed reset segments in half the sequence space 	 * to fall though and be processed (which gives forged reset 	 * segments with a random sequence number a 50 percent chance of 	 * killing a connection). 	 * Then check timestamp, if present. 	 * Then check the connection count, if present. 	 * Then check that at least some bytes of segment are within 	 * receive window.  If segment begins before rcv_nxt, 	 * drop leading data (and SYN); if nothing left, just ack. 	 * 	 * 	 * If the RST bit is set, check the sequence number to see 	 * if this is a valid reset segment. 	 * RFC 793 page 37: 	 *   In all states except SYN-SENT, all reset (RST) segments 	 *   are validated by checking their SEQ-fields.  A reset is 	 *   valid if its sequence number is in the window. 	 * Note: this does not take into account delayed ACKs, so 	 *   we should test against last_ack_sent instead of rcv_nxt. 	 *   The sequence number in the reset segment is normally an 	 *   echo of our outgoing acknowlegement numbers, but some hosts 	 *   send a reset with the sequence number at the rightmost edge 	 *   of our receive window, and we have to handle this case. 	 * Note 2: Paul Watson's paper "Slipping in the Window" has shown 	 *   that brute force RST attacks are possible.  To combat this, 	 *   we use a much stricter check while in the ESTABLISHED state, 	 *   only accepting RSTs where the sequence number is equal to 	 *   last_ack_sent.  In all other states (the states in which a 	 *   RST is more likely), the more permissive check is used. 	 * If we have multiple segments in flight, the intial reset 	 * segment sequence numbers will be to the left of last_ack_sent, 	 * but they will eventually catch up. 	 * In any case, it never made sense to trim reset segments to 	 * fit the receive window since RFC 1122 says: 	 *   4.2.2.12  RST Segment: RFC-793 Section 3.4 	 * 	 *    A TCP SHOULD allow a received RST segment to include data. 	 * 	 *    DISCUSSION 	 *         It has been suggested that a RST segment could contain 	 *         ASCII text that encoded and explained the cause of the 	 *         RST.  No standard has yet been established for such 	 *         data. 	 * 	 * If the reset segment passes the sequence number test examine 	 * the state: 	 *    SYN_RECEIVED STATE: 	 *	If passive open, return to LISTEN state. 	 *	If active open, inform user that connection was refused. 	 *    ESTABLISHED, FIN_WAIT_1, FIN_WAIT_2, CLOSE_WAIT STATES: 	 *	Inform user that connection was reset, and close tcb. 	 *    CLOSING, LAST_ACK STATES: 	 *	Close the tcb. 	 *    TIME_WAIT STATE: 	 *	Drop the segment - see Stevens, vol. 2, p. 964 and 	 *      RFC 1337. 	 */
+comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check the RST flag and sequence number since reset segments 	 * are exempt from the timestamp and connection count tests.  This 	 * fixes a bug introduced by the Stevens, vol. 2, p. 960 bugfix 	 * below which allowed reset segments in half the sequence space 	 * to fall though and be processed (which gives forged reset 	 * segments with a random sequence number a 50 percent chance of 	 * killing a connection). 	 * Then check timestamp, if present. 	 * Then check the connection count, if present. 	 * Then check that at least some bytes of segment are within 	 * receive window.  If segment begins before rcv_nxt, 	 * drop leading data (and SYN); if nothing left, just ack. 	 * 	 * 	 * If the RST bit is set, check the sequence number to see 	 * if this is a valid reset segment. 	 * RFC 793 page 37: 	 *   In all states except SYN-SENT, all reset (RST) segments 	 *   are validated by checking their SEQ-fields.  A reset is 	 *   valid if its sequence number is in the window. 	 * Note: this does not take into account delayed ACKs, so 	 *   we should test against last_ack_sent instead of rcv_nxt. 	 *   The sequence number in the reset segment is normally an 	 *   echo of our outgoing acknowlegement numbers, but some hosts 	 *   send a reset with the sequence number at the rightmost edge 	 *   of our receive window, and we have to handle this case. 	 * Note 2: Paul Watson's paper "Slipping in the Window" has shown 	 *   that brute force RST attacks are possible.  To combat this, 	 *   we use a much stricter check while in the ESTABLISHED state, 	 *   only accepting RSTs where the sequence number is equal to 	 *   last_ack_sent.  In all other states (the states in which a 	 *   RST is more likely), the more permissive check is used. 	 * If we have multiple segments in flight, the initial reset 	 * segment sequence numbers will be to the left of last_ack_sent, 	 * but they will eventually catch up. 	 * In any case, it never made sense to trim reset segments to 	 * fit the receive window since RFC 1122 says: 	 *   4.2.2.12  RST Segment: RFC-793 Section 3.4 	 * 	 *    A TCP SHOULD allow a received RST segment to include data. 	 * 	 *    DISCUSSION 	 *         It has been suggested that a RST segment could contain 	 *         ASCII text that encoded and explained the cause of the 	 *         RST.  No standard has yet been established for such 	 *         data. 	 * 	 * If the reset segment passes the sequence number test examine 	 * the state: 	 *    SYN_RECEIVED STATE: 	 *	If passive open, return to LISTEN state. 	 *	If active open, inform user that connection was refused. 	 *    ESTABLISHED, FIN_WAIT_1, FIN_WAIT_2, CLOSE_WAIT STATES: 	 *	Inform user that connection was reset, and close tcb. 	 *    CLOSING, LAST_ACK STATES: 	 *	Close the tcb. 	 *    TIME_WAIT STATE: 	 *	Drop the segment - see Stevens, vol. 2, p. 964 and 	 *      RFC 1337. 	 */
 if|if
 condition|(
 name|thflags
@@ -9743,7 +9750,12 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If tp is non-NULL, we call tcp_dropwithreset() holding both inpcb 	 * and global locks.  However, if NULL, we must hold neither as 	 * firewalls may acquire the global lock in order to look for a 	 * matching inpcb. 	 */
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -9772,18 +9784,7 @@ name|t_inpcb
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|==
-name|NULL
-condition|)
+else|else
 name|tcp_dropwithreset
 argument_list|(
 name|m
@@ -9872,7 +9873,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10189,7 +10189,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11078,6 +11077,10 @@ name|struct
 name|hc_metrics_lite
 modifier|*
 name|metricptr
+parameter_list|,
+name|int
+modifier|*
+name|mtuflags
 parameter_list|)
 block|{
 name|INIT_VNET_INET
@@ -11112,11 +11115,6 @@ name|int
 name|origoffer
 init|=
 name|offer
-decl_stmt|;
-name|int
-name|mtuflags
-init|=
-literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -11202,7 +11200,6 @@ name|inp
 operator|->
 name|inp_inc
 argument_list|,
-operator|&
 name|mtuflags
 argument_list|)
 expr_stmt|;
@@ -11230,7 +11227,6 @@ name|inp
 operator|->
 name|inp_inc
 argument_list|,
-operator|&
 name|mtuflags
 argument_list|)
 expr_stmt|;
@@ -11252,20 +11248,27 @@ name|maxmtu
 operator|==
 literal|0
 condition|)
-return|return;
-comment|/* Check the interface for TSO capabilities. */
+block|{
+comment|/* 		 * In case we return early we need to initialize metrics 		 * to a defined state as tcp_hc_get() would do for us 		 * if there was no cache hit. 		 */
 if|if
 condition|(
-name|mtuflags
-operator|&
-name|CSUM_TSO
+name|metricptr
+operator|!=
+name|NULL
 condition|)
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|TF_TSO
+name|bzero
+argument_list|(
+name|metricptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hc_metrics_lite
+argument_list|)
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* What have we got? */
 switch|switch
 condition|(
@@ -11582,6 +11585,11 @@ name|struct
 name|hc_metrics_lite
 name|metrics
 decl_stmt|;
+name|int
+name|mtuflags
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -11603,6 +11611,13 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+name|INIT_VNET_INET
+argument_list|(
+name|tp
+operator|->
+name|t_vnet
+argument_list|)
+expr_stmt|;
 name|tcp_mss_update
 argument_list|(
 name|tp
@@ -11611,6 +11626,9 @@ name|offer
 argument_list|,
 operator|&
 name|metrics
+argument_list|,
+operator|&
+name|mtuflags
 argument_list|)
 expr_stmt|;
 name|mss
@@ -12148,6 +12166,19 @@ operator|=
 name|mss
 operator|*
 name|V_ss_fltsz
+expr_stmt|;
+comment|/* Check the interface for TSO capabilities. */
+if|if
+condition|(
+name|mtuflags
+operator|&
+name|CSUM_TSO
+condition|)
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_TSO
 expr_stmt|;
 block|}
 end_function

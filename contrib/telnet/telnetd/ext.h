@@ -319,7 +319,7 @@ specifier|extern
 name|char
 name|line
 index|[
-literal|16
+literal|32
 index|]
 decl_stmt|;
 end_decl_stmt

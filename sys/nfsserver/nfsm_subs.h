@@ -151,10 +151,8 @@ name|fhandle_t
 modifier|*
 name|f
 parameter_list|,
-name|struct
-name|nfsrv_descript
-modifier|*
-name|nfsd
+name|int
+name|v3
 parameter_list|,
 name|struct
 name|mbuf
@@ -234,7 +232,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_srvmtofh_xx((f), nfsd,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_srvmtofh_xx((f), nfsd->nd_flag& ND_NFSV3,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
 end_define
 
 begin_comment

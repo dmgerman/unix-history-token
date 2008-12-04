@@ -177,6 +177,12 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_LEGACYRPC
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1522,7 +1528,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_proc_associate_nfsd
+name|mac_cred_associate_nfsd
 argument_list|(
 name|nd
 operator|->
@@ -1711,6 +1717,12 @@ argument_list|(
 name|len
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|nd
+operator|->
+name|nd_credflavor
+operator|=
+name|RPCAUTH_UNIX
 expr_stmt|;
 block|}
 else|else
@@ -2157,7 +2169,7 @@ if|if
 condition|(
 name|nam
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|nam
 argument_list|,
@@ -3176,14 +3188,10 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|nd
-argument_list|,
-expr|struct
-name|nfsrv_descript
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3253,7 +3261,7 @@ condition|(
 name|nam
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|nam
 argument_list|,
@@ -3669,6 +3677,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_LEGACYRPC */
+end_comment
 
 end_unit
 

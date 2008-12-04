@@ -241,6 +241,22 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"no flags given"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|sc
 operator|=
 name|gp
@@ -272,6 +288,22 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"no command given"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* List specific objects or everything. */
 if|if
 condition|(

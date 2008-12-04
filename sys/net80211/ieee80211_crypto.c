@@ -913,6 +913,25 @@ decl_stmt|;
 name|int
 name|oflags
 decl_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_CRYPTO
+argument_list|,
+literal|"%s: cipher %u flags 0x%x keyix %u\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|cipher
+argument_list|,
+name|flags
+argument_list|,
+name|key
+operator|->
+name|wk_keyix
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Validate cipher and set reference to cipher routines. 	 */
 if|if
 condition|(

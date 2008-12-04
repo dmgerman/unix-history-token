@@ -194,11 +194,15 @@ directive|include
 file|<opencrypto/xform.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|ipcomp_enable
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +212,11 @@ name|ipcompstat
 name|ipcompstat
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -2879,6 +2888,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|V_ipcomp_enable
+operator|=
+literal|0
+expr_stmt|;
 name|xform_register
 argument_list|(
 operator|&

@@ -2344,9 +2344,7 @@ block|}
 block|}
 name|msec_delay
 argument_list|(
-name|nvm
-operator|->
-name|semaphore_delay
+literal|10
 argument_list|)
 expr_stmt|;
 name|release
@@ -3263,13 +3261,11 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"NVM Write Error while updating checksum.\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|out
 label|:
 return|return

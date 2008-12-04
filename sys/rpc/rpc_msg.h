@@ -446,7 +446,8 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|enum
+name|clnt_stat
 name|_seterr_reply
 parameter_list|(
 name|struct

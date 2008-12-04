@@ -301,6 +301,21 @@ begin_comment
 comment|/* libufs disk structure */
 end_comment
 
+begin_comment
+comment|/*  * To override a limitation in libufs, export the offset (in sectors) of the  * partition on the underlying media (file or disk). The value is used as  * an offset for all accesses to the media through bread(), which is only  * invoked directly in this program.  * For bwrite() we need a different approach, namely override the library  * version with one defined here. This is because bwrite() is called also  * by the library function sbwrite() which we cannot intercept nor want to  * rewrite. As a consequence, the internal version of bwrite() adds the  * partition offset itself when calling the underlying function, pwrite().  *  * XXX This info really ought to go into the struct uufsd, at which point  * we can remove the above hack.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|ufs2_daddr_t
+name|part_ofs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* partition offset in blocks */
+end_comment
+
 begin_function_decl
 name|void
 name|mkfs

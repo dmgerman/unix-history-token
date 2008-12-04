@@ -49,6 +49,24 @@ block|}
 end_function
 
 begin_function
+name|void
+name|pmc_md_finalize
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|md
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|md
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|pmc_save_kernel_callchain
 parameter_list|(

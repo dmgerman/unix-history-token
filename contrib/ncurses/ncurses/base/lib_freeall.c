@@ -56,7 +56,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_freeall.c,v 1.46 2008/05/03 14:13:51 tom Exp $"
+literal|"$Id: lib_freeall.c,v 1.54 2008/09/27 13:09:57 tom Exp $"
 argument_list|)
 end_macro
 
@@ -128,6 +128,31 @@ name|_oldnum_list
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|SP
+operator|->
+name|_panelHook
+operator|.
+name|destroy
+operator|!=
+literal|0
+condition|)
+block|{
+name|SP
+operator|->
+name|_panelHook
+operator|.
+name|destroy
+argument_list|(
+name|SP
+operator|->
+name|_panelHook
+operator|.
+name|stdscr_pseudo_panel
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -140,7 +165,7 @@ condition|)
 block|{
 name|_nc_lock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 while|while
@@ -260,7 +285,7 @@ argument_list|)
 expr_stmt|;
 name|_nc_unlock_global
 argument_list|(
-name|windowlist
+name|curses
 argument_list|)
 expr_stmt|;
 block|}
@@ -275,16 +300,6 @@ argument_list|(
 name|cur_term
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|USE_WIDEC_SUPPORT
-name|FreeIfNeeded
-argument_list|(
-name|_nc_wacs
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -313,14 +328,10 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|BROKEN_LINKER
-operator|||
-name|USE_REENTRANT
+name|USE_WIDEC_SUPPORT
 name|FreeIfNeeded
 argument_list|(
-name|_nc_prescreen
-operator|.
-name|real_acs_map
+name|_nc_wacs
 argument_list|)
 expr_stmt|;
 endif|#
@@ -402,16 +413,22 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* close trace file, freeing its setbuf */
+block|{
+specifier|static
+name|va_list
+name|fake
+decl_stmt|;
 name|free
 argument_list|(
 name|_nc_varargs
 argument_list|(
 literal|"?"
 argument_list|,
-literal|0
+name|fake
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|fclose
@@ -453,6 +470,50 @@ end_macro
 
 begin_block
 block|{ }
+end_block
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_free_and_exit
+argument_list|(
+argument|int code
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|SP
+condition|)
+name|delscreen
+argument_list|(
+name|SP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cur_term
+operator|!=
+literal|0
+condition|)
+name|del_curterm
+argument_list|(
+name|cur_term
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|code
+argument_list|)
+expr_stmt|;
+block|}
 end_block
 
 begin_endif

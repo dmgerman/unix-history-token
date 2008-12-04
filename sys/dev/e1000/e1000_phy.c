@@ -27,6 +27,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|s32
+name|e1000_access_phy_wakeup_reg_bm
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u16
+modifier|*
+name|data
+parameter_list|,
+name|bool
+name|read
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Cable length tables */
 end_comment
@@ -474,6 +497,14 @@ operator|.
 name|power_down
 operator|=
 name|e1000_null_phy_generic
+expr_stmt|;
+name|phy
+operator|->
+name|ops
+operator|.
+name|cfg_on_link_up
+operator|=
+name|e1000_null_ops_generic
 expr_stmt|;
 block|}
 end_function
@@ -3307,13 +3338,11 @@ name|autoneg_advertised
 operator|&
 name|ADVERTISE_1000_HALF
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"Advertise 1000mb Half duplex request denied!\n"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Do we want to advertise 1000 Mb Full Duplex? */
 if|if
 condition|(
@@ -3341,7 +3370,7 @@ name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|current_mode
 condition|)
 block|{
 case|case
@@ -3826,13 +3855,11 @@ condition|(
 operator|!
 name|link
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"Link taking longer than expected.\n"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Try once more */
 name|ret_val
 operator|=
@@ -4276,7 +4303,7 @@ name|hw
 operator|->
 name|fc
 operator|.
-name|type
+name|current_mode
 operator|=
 name|e1000_fc_none
 expr_stmt|;
@@ -5498,6 +5525,15 @@ operator|)
 operator|>>
 name|M88E1000_PSSR_CABLE_LENGTH_SHIFT
 expr_stmt|;
+if|if
+condition|(
+name|index
+operator|<
+name|M88E1000_CABLE_LENGTH_TABLE_SIZE
+operator|+
+literal|1
+condition|)
+block|{
 name|phy
 operator|->
 name|min_cable_length
@@ -5534,6 +5570,14 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ret_val
+operator|=
+name|E1000_ERR_PHY
+expr_stmt|;
+block|}
 name|out
 label|:
 return|return
@@ -7380,7 +7424,7 @@ operator|.
 name|id
 argument_list|)
 expr_stmt|;
-comment|/*  		 	 * If phy_type is valid, break - we found our 		 	 * PHY address 		 	 */
+comment|/* 			 * If phy_type is valid, break - we found our 			 * PHY address 			 */
 if|if
 condition|(
 name|phy_type
@@ -8237,6 +8281,7 @@ comment|/**  *  e1000_access_phy_wakeup_reg_bm - Read BM PHY wakeup register  * 
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_access_phy_wakeup_reg_bm
 parameter_list|(

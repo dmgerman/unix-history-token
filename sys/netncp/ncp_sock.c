@@ -492,7 +492,7 @@ if|if
 condition|(
 name|sa
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|sa
 argument_list|,
@@ -2013,7 +2013,7 @@ if|if
 condition|(
 name|sa
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|sa
 argument_list|,

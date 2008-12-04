@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|ZFS_ITER_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -65,6 +58,18 @@ decl_stmt|;
 block|}
 name|zfs_sort_column_t
 typedef|;
+define|#
+directive|define
+name|ZFS_ITER_RECURSE
+value|(1<< 0)
+define|#
+directive|define
+name|ZFS_ITER_ARGS_CAN_BE_PATHS
+value|(1<< 1)
+define|#
+directive|define
+name|ZFS_ITER_PROP_LISTSNAPS
+value|(1<< 2)
 name|int
 name|zfs_for_each
 parameter_list|(
@@ -74,14 +79,15 @@ name|char
 modifier|*
 modifier|*
 parameter_list|,
-name|boolean_t
+name|int
+name|options
 parameter_list|,
 name|zfs_type_t
 parameter_list|,
 name|zfs_sort_column_t
 modifier|*
 parameter_list|,
-name|zfs_proplist_t
+name|zprop_list_t
 modifier|*
 modifier|*
 parameter_list|,
@@ -89,8 +95,6 @@ name|zfs_iter_f
 parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|boolean_t
 parameter_list|)
 function_decl|;
 name|int

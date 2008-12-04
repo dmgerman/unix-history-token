@@ -241,6 +241,22 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"no flags given"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|newname
 operator|=
 name|gctl_get_param

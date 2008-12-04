@@ -2709,7 +2709,6 @@ operator|&=
 operator|~
 name|TDF_SINTR
 expr_stmt|;
-comment|/* 	 * Note that thread td might not be sleeping if it is running 	 * sleepq_catch_signals() on another CPU or is blocked on 	 * its proc lock to check signals.  It doesn't hurt to clear 	 * the sleeping flag if it isn't set though, so we just always 	 * do it.  However, we can't assert that it is set. 	 */
 name|CTR3
 argument_list|(
 name|KTR_PROC
@@ -2734,11 +2733,6 @@ argument_list|,
 name|td
 operator|->
 name|td_name
-argument_list|)
-expr_stmt|;
-name|TD_CLR_SLEEPING
-argument_list|(
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* Adjust priority if requested. */
@@ -2778,12 +2772,32 @@ argument_list|,
 name|pri
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note that thread td might not be sleeping if it is running 	 * sleepq_catch_signals() on another CPU or is blocked on its 	 * proc lock to check signals.  There's no need to mark the 	 * thread runnable in that case. 	 */
+if|if
+condition|(
+name|TD_IS_SLEEPING
+argument_list|(
+name|td
+argument_list|)
+condition|)
+block|{
+name|TD_CLR_SLEEPING
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|setrunnable
 argument_list|(
 name|td
 argument_list|)
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

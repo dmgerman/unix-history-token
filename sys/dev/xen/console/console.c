@@ -610,12 +610,6 @@ name|cn_pri
 operator|=
 name|CN_REMOTE
 expr_stmt|;
-name|cp
-operator|->
-name|cn_tp
-operator|=
-name|xccons
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|cp

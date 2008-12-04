@@ -931,12 +931,10 @@ block|{
 name|priv_p
 name|priv
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|priv
-argument_list|,
-name|priv_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2053,7 +2051,7 @@ operator|->
 name|ber_p
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|hinfo
 operator|->
@@ -2112,15 +2110,12 @@ name|ber_p
 operator|==
 name|NULL
 condition|)
-name|MALLOC
-argument_list|(
 name|hinfo
 operator|->
 name|ber_p
-argument_list|,
-name|uint64_t
-operator|*
-argument_list|, \
+operator|=
+name|malloc
+argument_list|(\
 operator|(
 name|MAX_FSIZE
 operator|+
@@ -4760,7 +4755,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|priv
 argument_list|,
@@ -5025,7 +5020,7 @@ name|hinfo
 operator|->
 name|ber_p
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|hinfo
 operator|->

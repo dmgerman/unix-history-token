@@ -1110,6 +1110,16 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|CHN_LOCK_OWNED
+parameter_list|(
+name|c
+parameter_list|)
+value|mtx_owned((struct mtx *)((c)->lock))
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHN_LOCK
 parameter_list|(
 name|c
@@ -1151,6 +1161,16 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|CHN_LOCK_OWNED
+parameter_list|(
+name|c
+parameter_list|)
+value|0
+end_define
 
 begin_define
 define|#

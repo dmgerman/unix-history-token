@@ -2032,7 +2032,6 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
-comment|/* The huawei Exxx devices support none of these tricks */
 name|req
 operator|.
 name|bmRequestType

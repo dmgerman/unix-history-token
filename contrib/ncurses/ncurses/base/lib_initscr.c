@@ -41,7 +41,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_initscr.c,v 1.36 2008/04/12 18:11:36 tom Exp $"
+literal|"$Id: lib_initscr.c,v 1.38 2008/08/16 21:20:48 Werner.Fink Exp $"
 argument_list|)
 end_macro
 
@@ -83,9 +83,12 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|_nc_init_pthreads
+argument_list|()
+expr_stmt|;
 name|_nc_lock_global
 argument_list|(
-name|set_SP
+name|curses
 argument_list|)
 expr_stmt|;
 comment|/* Portable applications must not call initscr() more than once */
@@ -234,7 +237,7 @@ name|stdscr
 expr_stmt|;
 name|_nc_unlock_global
 argument_list|(
-name|set_SP
+name|curses
 argument_list|)
 expr_stmt|;
 name|returnWin

@@ -22,6 +22,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -40,8 +46,80 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
+
+begin_comment
+comment|/*  * Bus i/o type definitions.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|HAL_SOFTC
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|bus_space_tag_t
+name|HAL_BUS_TAG
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|bus_space_handle_t
+name|HAL_BUS_HANDLE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Linker set writearounds for chip and RF backend registration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_DATA_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|item
+parameter_list|)
+value|DATA_SET(set, item)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_SET_DECLARE
+parameter_list|(
+name|set
+parameter_list|,
+name|ptype
+parameter_list|)
+value|SET_DECLARE(set, ptype)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_SET_FOREACH
+parameter_list|(
+name|pvar
+parameter_list|,
+name|set
+parameter_list|)
+value|SET_FOREACH(pvar, set)
+end_define
 
 begin_comment
 comment|/*  * Delay n microseconds.  */

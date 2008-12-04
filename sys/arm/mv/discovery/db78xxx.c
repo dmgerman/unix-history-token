@@ -84,7 +84,7 @@ file|<arm/mv/mvvar.h>
 end_include
 
 begin_comment
-comment|/*  * Virtual address space layout:  * -----------------------------  * 0x0000_0000 - 0xbfff_ffff	: user process  *  * 0xc040_0000 - virtual_avail	: kernel reserved (text, data, page tables  *				: structures, ARM stacks etc.)  * virtual_avail - 0xefff_ffff	: KVA (virtual_avail is typically< 0xc0a0_0000)  * 0xf000_0000 - 0xf0ff_ffff	: no-cache allocation area (16MB)  * 0xf100_0000 - 0xf10f_ffff	: SoC integrated devices registers range (1MB)  * 0xf110_0000 - 0xfffe_ffff	: PCIE (MEM+IO) outbound windows (~238MB)  * 0xffff_0000 - 0xffff_0fff	: 'high' vectors page (4KB)  * 0xffff_1000 - 0xffff_1fff	: ARM_TP_ADDRESS/RAS page (4KB)  * 0xffff_2000 - 0xffff_ffff	: unused (~55KB)  */
+comment|/*  * Virtual address space layout:  * -----------------------------  * 0x0000_0000 - 0xbfff_ffff	: user process  *  * 0xc040_0000 - virtual_avail	: kernel reserved (text, data, page tables  *				: structures, ARM stacks etc.)  * virtual_avail - 0xefff_ffff	: KVA (virtual_avail is typically< 0xc0a0_0000)  * 0xf000_0000 - 0xf0ff_ffff	: no-cache allocation area (16MB)  * 0xf100_0000 - 0xf10f_ffff	: SoC integrated devices registers range (1MB)  * 0xf110_0000 - 0xf11f_ffff	: PCI-Express I/O space (1MB)  * 0xf120_0000 - 0xf12f_ffff	: unused (1MB)  * 0xf130_0000 - 0xf52f_ffff	: PCI-Express memory space (64MB)  * 0xf930_0000 - 0xfffe_ffff	: unused (~172MB)  * 0xffff_0000 - 0xffff_0fff	: 'high' vectors page (4KB)  * 0xffff_1000 - 0xffff_1fff	: ARM_TP_ADDRESS/RAS page (4KB)  * 0xffff_2000 - 0xffff_ffff	: unused (~55KB)  */
 end_comment
 
 begin_decl_stmt
@@ -123,6 +123,36 @@ block|,
 name|MV_PHYS_BASE
 block|,
 name|MV_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
+comment|/* PCIE I/O */
+name|MV_PCIE_IO_BASE
+block|,
+name|MV_PCIE_IO_PHYS_BASE
+block|,
+name|MV_PCIE_IO_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, 	}
+block|,
+block|{
+comment|/* PCIE Memory */
+name|MV_PCIE_MEM_BASE
+block|,
+name|MV_PCIE_MEM_PHYS_BASE
+block|,
+name|MV_PCIE_MEM_SIZE
 block|,
 name|VM_PROT_READ
 operator||

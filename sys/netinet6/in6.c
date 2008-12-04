@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -217,6 +223,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_expr_stmt
@@ -9817,14 +9829,10 @@ name|sockaddr_in6
 modifier|*
 name|sin6_p
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|sin6_p
-argument_list|,
-expr|struct
-name|sockaddr_in6
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|sin6_p
@@ -9851,7 +9859,7 @@ argument_list|,
 name|sin6_p
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 operator|*
 name|nam

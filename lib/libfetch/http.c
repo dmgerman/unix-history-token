@@ -5241,6 +5241,11 @@ name|url
 operator|->
 name|offset
 expr_stmt|;
+name|clength
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|conn
 operator|->
 name|err

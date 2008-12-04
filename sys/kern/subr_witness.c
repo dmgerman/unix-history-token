@@ -3184,14 +3184,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|w_data
-argument_list|,
-expr|struct
-name|witness
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct

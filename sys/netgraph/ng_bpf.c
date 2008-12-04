@@ -924,12 +924,10 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Create hook private structure */
-name|MALLOC
-argument_list|(
 name|hip
-argument_list|,
-name|hinfo_p
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -997,7 +995,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|hip
 argument_list|,
@@ -1694,13 +1692,10 @@ condition|(
 name|usejit
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|data
-argument_list|,
-name|u_char
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|totlen
 argument_list|,
 name|M_NETGRAPH_BPF
@@ -1879,7 +1874,7 @@ if|if
 condition|(
 name|needfree
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|data
 argument_list|,
@@ -2096,7 +2091,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hip
 operator|->
@@ -2125,7 +2120,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|FREE
+name|free
 argument_list|(
 name|hip
 argument_list|,
@@ -2250,14 +2245,10 @@ operator|->
 name|bpf_prog_len
 argument_list|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|hp
-argument_list|,
-expr|struct
-name|ng_bpf_hookprog
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|size
 argument_list|,
 name|M_NETGRAPH_BPF
@@ -2312,7 +2303,7 @@ name|prog
 operator|!=
 name|NULL
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|hip
 operator|->

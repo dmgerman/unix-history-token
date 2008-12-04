@@ -803,7 +803,7 @@ name|xfs_iaccess
 argument_list|(
 name|ip
 argument_list|,
-name|S_IWUSR
+name|VWRITE
 argument_list|,
 name|NULL
 argument_list|)
@@ -821,7 +821,7 @@ name|xfs_iaccess
 argument_list|(
 name|tip
 argument_list|,
-name|S_IWUSR
+name|VWRITE
 argument_list|,
 name|NULL
 argument_list|)

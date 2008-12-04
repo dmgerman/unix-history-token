@@ -462,6 +462,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|stripath
@@ -1469,10 +1470,6 @@ condition|(
 operator|!
 name|MD5File
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|dname
 argument_list|,
 name|chk
@@ -2359,6 +2356,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|stripath
@@ -2375,10 +2373,6 @@ modifier|*
 name|s
 decl_stmt|;
 return|return
-operator|(
-name|char
-operator|*
-operator|)
 operator|(
 operator|(
 name|s

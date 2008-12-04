@@ -2905,7 +2905,7 @@ name|v_data
 operator|=
 name|NULL
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|hp
 argument_list|,
@@ -3215,7 +3215,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		accmode_t a_accmode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3239,12 +3239,12 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|mode_t
-name|mode
+name|accmode_t
+name|accmode
 init|=
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -3260,7 +3260,7 @@ expr_stmt|;
 comment|/* 	 * Disallow write attempts on read-only filesystems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the filesystem. 	 */
 if|if
 condition|(
-name|mode
+name|accmode
 operator|&
 name|VWRITE
 condition|)
@@ -3324,7 +3324,7 @@ name|h_gid
 argument_list|,
 name|ap
 operator|->
-name|a_mode
+name|a_accmode
 argument_list|,
 name|ap
 operator|->
@@ -4710,13 +4710,10 @@ name|off
 operator|)
 operator|)
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|cookies
-argument_list|,
-name|u_long
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|ncookies
 operator|*
 sizeof|sizeof

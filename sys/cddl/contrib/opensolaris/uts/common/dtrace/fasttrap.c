@@ -7994,18 +7994,6 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* 			 * The count of active providers can only be 			 * decremented (i.e. to zero) during exec, exit, and 			 * removal of a meta provider so it should be 			 * impossible to drop the count during this operation(). 			 */
-name|ASSERT
-argument_list|(
-name|tp
-operator|->
-name|ftt_proc
-operator|->
-name|ftpc_acount
-operator|!=
-literal|0
-argument_list|)
-expr_stmt|;
 name|tp
 operator|=
 name|tp

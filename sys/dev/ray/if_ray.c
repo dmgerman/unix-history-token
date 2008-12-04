@@ -13848,14 +13848,10 @@ name|ray_comq_entry
 modifier|*
 name|com
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|com
-argument_list|,
-expr|struct
-name|ray_comq_entry
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct

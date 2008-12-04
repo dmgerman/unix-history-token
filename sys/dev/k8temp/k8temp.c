@@ -698,6 +698,8 @@ name|ich_arg
 operator|=
 name|dev
 expr_stmt|;
+if|if
+condition|(
 name|config_intrhook_establish
 argument_list|(
 operator|&
@@ -705,7 +707,24 @@ name|sc
 operator|->
 name|sc_ich
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"config_intrhook_establish "
+literal|"failed!\n"
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 comment|/* 	 * dev.k8temp.N tree. 	 */
 name|sysctlctx
 operator|=

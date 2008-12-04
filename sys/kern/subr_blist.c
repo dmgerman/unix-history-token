@@ -1852,7 +1852,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("FREE (%llx,%lld) FROM (%llx,%lld)\n", 	    (long long)freeBlk, (long long)count, 	    (long long)blk, (long long)radix 	);
+block|printf("free (%llx,%lld) FROM (%llx,%lld)\n", 	    (long long)freeBlk, (long long)count, 	    (long long)blk, (long long)radix 	);
 endif|#
 directive|endif
 if|if

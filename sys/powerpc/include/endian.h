@@ -46,8 +46,14 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Definitions for byte order, according to byte significance from low  * address to high.  */
+comment|/*  * GCC defines _BIG_ENDIAN and _LITTLE_ENDIAN equal to __BIG_ENDIAN__  * and __LITTLE_ENDIAN__ (resp).  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BIG_ENDIAN
+end_ifdef
 
 begin_undef
 undef|#
@@ -55,8 +61,30 @@ directive|undef
 name|_BIG_ENDIAN
 end_undef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LITTLE_ENDIAN
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_LITTLE_ENDIAN
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* GCC annoyingly defines this for PowerPC */
+comment|/*  * Definitions for byte order, according to byte significance from low  * address to high.  */
 end_comment
 
 begin_define
@@ -92,12 +120,35 @@ begin_comment
 comment|/* LSB first in word, MSW first in long */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LITTLE_ENDIAN__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_BYTE_ORDER
+value|_LITTLE_ENDIAN
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|_BYTE_ORDER
 value|_BIG_ENDIAN
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Deprecated variants that don't have enough underscores to be useful in more  * strict namespaces.  */
