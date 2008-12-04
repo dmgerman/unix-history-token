@@ -653,6 +653,15 @@ operator|+=
 name|size
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|XEN
+name|low_water
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|end
 operator|=
 name|phys_avail
