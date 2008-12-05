@@ -3729,7 +3729,7 @@ name|delay
 decl_stmt|,
 name|count
 decl_stmt|;
-comment|/* 	 * Asserting reset for 20ms is necessary for most bridges.  For some 	 * reason, the Ricoh RF5C47x bridges need it asserted for 400ms. 	 */
+comment|/* 	 * Asserting reset for 20ms is necessary for most bridges.  For some 	 * reason, the Ricoh RF5C47x bridges need it asserted for 400ms.  The 	 * root cause of this is unknown, and NetBSD does the same thing. 	 */
 name|delay
 operator|=
 name|sc
@@ -3765,7 +3765,7 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  If a card exists and we're turning it on, take it out of reset. 	 */
+comment|/* 	 * If a card exists and we're turning it on, take it out of reset. 	 * After clearing reset, wait up to 1.1s for the first configuration 	 * register (vendor/product) configuration register of device 0.0 to 	 * become != 0xffffffff.  The PCMCIA PC Card Host System Specification 	 * says that when powering up the card, the PCI Spec v2.1 must be 	 * followed.  In PCI spec v2.2 Table 4-6, Trhfa (Reset High to first 	 * Config Access) is at most 2^25 clocks, or just over 1s.  Section 	 * 2.2.1 states any card not ready to participate in bus transactions 	 * must tristate its outputs.  Therefore, any access to its 	 * configuration registers must be ignored.  In that state, the config 	 * reg will read 0xffffffff.  Section 6.2.1 states a vendor id of 	 * 0xffff is invalid, so this can never match a real card.  Print a 	 * warning if it never returns a real id.  The PCMCIA PC Card 	 * Electrical Spec Section 5.2.7.1 implies only device 0 is present on 	 * a cardbus bus, so that's the only register we check here. 	 */
 if|if
 condition|(
 name|on
@@ -3781,7 +3781,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * After clearing reset, wait up to 1.1s for the first 		 * configuration register (vendor/product) configuration 		 * register of device 0.0 to become != 0xffffffff.  The PCMCIA 		 * PC Card Host System Specification says that when powering 		 * up the card, the PCI Spec v2.1 must be followed.  In PCI 		 * spec v2.2 Table 4-6, Trhfa (Reset High to first Config 		 * Access) is at most 2^25 clocks, or just over 1s.  Section 		 * 2.2.1 states any card not ready to participate in bus 		 * transactions must tristate its outputs.  Therefore, any 		 * access to its configuration registers must be ignored.  In 		 * that state, the config reg will read 0xffffffff.  Section 		 * 6.2.1 states a vendor id of 0xffff is invalid, so this can 		 * never match a real card.  Print a warning if it never 		 * returns a real id.  The PCMCIA PC Card Electrical Spec 		 * Section 5.2.7.1 implies only device 0. 		 */
+comment|/* 		 */
 name|PCI_MASK_CONFIG
 argument_list|(
 name|brdev
