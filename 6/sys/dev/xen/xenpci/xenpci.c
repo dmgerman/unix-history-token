@@ -140,6 +140,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/pmap.h>
 end_include
 
@@ -1071,7 +1083,10 @@ name|struct
 name|xen_add_to_physmap
 name|xatp
 decl_stmt|;
-name|u_long
+name|vm_offset_t
+name|shared_va
+decl_stmt|;
+name|vm_paddr_t
 name|shared_pa
 decl_stmt|;
 if|if
@@ -1161,14 +1176,29 @@ argument_list|(
 literal|"HYPERVISOR_memory_op failed"
 argument_list|)
 expr_stmt|;
-name|HYPERVISOR_shared_info
+name|shared_va
 operator|=
-name|pmap_mapdev
+name|kmem_alloc_nofault
 argument_list|(
-name|shared_pa
+name|kernel_map
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
+expr_stmt|;
+name|pmap_kenter
+argument_list|(
+name|shared_va
+argument_list|,
+name|shared_pa
+argument_list|)
+expr_stmt|;
+name|HYPERVISOR_shared_info
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|shared_va
 expr_stmt|;
 comment|/* 	 * Hook the irq up to evtchn 	 */
 name|xenpci_irq_init
@@ -1639,7 +1669,7 @@ parameter_list|,
 name|size_t
 name|sz
 parameter_list|,
-name|u_long
+name|vm_paddr_t
 modifier|*
 name|pa
 parameter_list|)
@@ -1694,7 +1724,7 @@ parameter_list|(
 name|size_t
 name|sz
 parameter_list|,
-name|u_long
+name|vm_paddr_t
 modifier|*
 name|pa
 parameter_list|)

@@ -42,7 +42,7 @@ name|void
 modifier|*
 name|intr_cookie
 decl_stmt|;
-name|u_long
+name|vm_paddr_t
 name|phys_next
 decl_stmt|;
 comment|/* next page from mem range */
@@ -74,7 +74,7 @@ parameter_list|(
 name|size_t
 name|sz
 parameter_list|,
-name|u_long
+name|vm_paddr_t
 modifier|*
 name|pa
 parameter_list|)
