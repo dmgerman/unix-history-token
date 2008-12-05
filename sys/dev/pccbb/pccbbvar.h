@@ -133,14 +133,6 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
-name|struct
-name|cv
-name|cv
-decl_stmt|;
-name|struct
-name|cv
-name|powercv
-decl_stmt|;
 name|int
 name|cardok
 decl_stmt|;
@@ -239,7 +231,6 @@ name|cbb_softc
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|volatile
 name|int
 name|powerintr
 decl_stmt|;
