@@ -426,6 +426,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|module_quiesce
+parameter_list|(
+name|module_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|module_reference
 parameter_list|(
@@ -448,9 +457,6 @@ name|int
 name|module_unload
 parameter_list|(
 name|module_t
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -467,6 +473,17 @@ end_function_decl
 begin_function_decl
 name|module_t
 name|module_getfnext
+parameter_list|(
+name|module_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|module_getname
 parameter_list|(
 name|module_t
 parameter_list|)
