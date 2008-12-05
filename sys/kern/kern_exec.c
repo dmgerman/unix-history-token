@@ -2679,11 +2679,12 @@ operator|&=
 operator|~
 name|P_PPWAIT
 expr_stmt|;
-name|wakeup
+name|cv_broadcast
 argument_list|(
+operator|&
 name|p
 operator|->
-name|p_pptr
+name|p_pwait
 argument_list|)
 expr_stmt|;
 block|}
