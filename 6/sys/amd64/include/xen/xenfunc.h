@@ -15,18 +15,6 @@ directive|define
 name|_XEN_XENFUNC_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/hypervisor.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -60,12 +48,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/pcpu.h>
-end_include
 
 begin_define
 define|#

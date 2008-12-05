@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__HYPERCALL_H__
+name|__MACHINE_XEN_HYPERCALL_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__HYPERCALL_H__
+name|__MACHINE_XEN_HYPERCALL_H__
 end_define
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__HYPERVISOR_H__
+name|__XEN_HYPERVISOR_H__
 end_ifndef
 
 begin_error
@@ -1487,7 +1487,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __HYPERCALL_H__ */
+comment|/* __MACHINE_XEN_HYPERCALL_H__ */
 end_comment
 
 end_unit

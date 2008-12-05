@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -100,37 +106,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen_intr.h>
+file|<xen/xen_intr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/cons.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/xen/console/xencons_ring.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/evtchn.h>
+file|<xen/evtchn.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<xen/interface/io/console.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/xen/console/xencons_ring.h>
 end_include
 
 begin_define
@@ -251,20 +251,24 @@ expr_stmt|;
 name|mb
 argument_list|()
 expr_stmt|;
-name|PANIC_IF
+name|KASSERT
 argument_list|(
 operator|(
 name|prod
 operator|-
 name|cons
 operator|)
-operator|>
+operator|<=
 sizeof|sizeof
 argument_list|(
 name|intf
 operator|->
 name|out
 argument_list|)
+argument_list|,
+operator|(
+literal|"console send ring inconsistent"
+operator|)
 argument_list|)
 expr_stmt|;
 while|while

@@ -16,7 +16,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -28,13 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/features.h>
+file|<xen/features.h>
 end_include
 
 begin_decl_stmt

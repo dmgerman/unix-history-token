@@ -98,61 +98,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/xen/xen-os.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen_intr.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/synch_bitops.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/hypervisor.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/evtchn.h>
+file|<xen/evtchn.h>
 end_include
 
 begin_typedef
@@ -1506,7 +1464,11 @@ comment|/* (DEVFS) automatically destroy the symlink with its destination. */
 block|devfs_auto_unregister(evtchn_miscdev.devfs_handle, symlink_handle);
 endif|#
 directive|endif
-name|printk
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
 argument_list|(
 literal|"Event-channel device installed.\n"
 argument_list|)

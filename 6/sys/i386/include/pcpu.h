@@ -141,7 +141,7 @@ value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
 comment|/* Flag indicating private tss*/
 value|\         u_int     pc_cr3;
 comment|/* track cr3 for R1/R3*/
-value|\         u_int     pc_pdir;                                              \         u_int     pc_lazypmap;                                          \         u_int     pc_rendezvous;                                        \         u_int     pc_cpuast;						\ 	uint64_t  pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	int	pc_resched_irq;						\ 	int	pc_callfunc_irq;					\         int	pc_virq_to_irq[NR_VIRQS];				\ 	int	pc_ipi_to_irq[NR_IPIS]
+value|\         u_int     pc_pdir;                                              \         u_int     pc_lazypmap;                                          \         u_int     pc_rendezvous;                                        \         u_int     pc_cpuast;						\ 	uint64_t  pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	u_int	pc_resched_irq;						\ 	u_int	pc_callfunc_irq;					\         u_int	pc_virq_to_irq[NR_VIRQS];				\ 	u_int	pc_ipi_to_irq[NR_IPIS]
 end_define
 
 begin_else

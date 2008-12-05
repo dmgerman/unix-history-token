@@ -114,25 +114,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/xen/xen-os.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen_intr.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/evtchn.h>
+file|<machine/xen/xenfunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/xen_intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/evtchn.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/gnttab.h>
 end_include
 
 begin_include
@@ -157,18 +169,6 @@ begin_include
 include|#
 directive|include
 file|<geom/geom_disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenfunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<xen/gnttab.h>
 end_include
 
 begin_include
@@ -524,7 +524,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("[XEN] %s:%d" fmt ".\n", __FUNCTION__, __LINE__,##args)
+value|printf("[XEN] %s:%d: " fmt ".\n", __func__, __LINE__, ##args)
 end_define
 
 begin_else
@@ -1700,7 +1700,7 @@ name|dev
 parameter_list|)
 block|{
 name|int
-name|err
+name|error
 decl_stmt|,
 name|vdevice
 decl_stmt|,
@@ -1719,7 +1719,7 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* FIXME: Use dynamic device id if this is not set. */
-name|err
+name|error
 operator|=
 name|xenbus_scanf
 argument_list|(
@@ -1732,6 +1732,8 @@ argument_list|)
 argument_list|,
 literal|"virtual-device"
 argument_list|,
+name|NULL
+argument_list|,
 literal|"%i"
 argument_list|,
 operator|&
@@ -1740,16 +1742,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
-operator|!=
-literal|1
+name|error
 condition|)
 block|{
 name|xenbus_dev_fatal
 argument_list|(
 name|dev
 argument_list|,
-name|err
+name|error
 argument_list|,
 literal|"reading virtual-device"
 argument_list|)
@@ -1761,7 +1761,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|err
+name|error
 operator|)
 return|;
 block|}
@@ -1930,7 +1930,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|err
+name|error
 operator|=
 name|talk_to_backend
 argument_list|(
@@ -1941,13 +1941,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
 condition|)
-block|{
 return|return
-name|err
+operator|(
+name|error
+operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|0
@@ -1982,9 +1982,10 @@ name|DPRINTK
 argument_list|(
 literal|"blkfront_resume: %s\n"
 argument_list|,
+name|xenbus_get_node
+argument_list|(
 name|dev
-operator|->
-name|nodename
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|blkif_free
@@ -2303,7 +2304,7 @@ modifier|*
 name|sring
 decl_stmt|;
 name|int
-name|err
+name|error
 decl_stmt|;
 name|info
 operator|->
@@ -2365,7 +2366,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|err
+name|error
 operator|=
 name|xenbus_grant_ring
 argument_list|(
@@ -2383,13 +2384,16 @@ argument_list|)
 operator|>>
 name|PAGE_SHIFT
 operator|)
+argument_list|,
+operator|&
+name|info
+operator|->
+name|ring_ref
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
-operator|<
-literal|0
+name|error
 condition|)
 block|{
 name|free
@@ -2411,13 +2415,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|info
-operator|->
-name|ring_ref
-operator|=
-name|err
-expr_stmt|;
-name|err
+name|error
 operator|=
 name|bind_listening_port_to_irqhandler
 argument_list|(
@@ -2440,21 +2438,22 @@ name|INTR_TYPE_BIO
 operator||
 name|INTR_MPSAFE
 argument_list|,
-name|NULL
+operator|&
+name|info
+operator|->
+name|irq
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
-operator|<=
-literal|0
+name|error
 condition|)
 block|{
 name|xenbus_dev_fatal
 argument_list|(
 name|dev
 argument_list|,
-name|err
+name|error
 argument_list|,
 literal|"bind_evtchn_to_irqhandler failed"
 argument_list|)
@@ -2463,14 +2462,10 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|info
-operator|->
-name|irq
-operator|=
-name|err
-expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|fail
 label|:
@@ -2482,7 +2477,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-name|err
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2515,7 +2512,9 @@ argument_list|)
 decl_stmt|;
 name|DPRINTK
 argument_list|(
-literal|"blkfront:backend_changed.\n"
+literal|"backend_state=%d\n"
+argument_list|,
+name|backend_state
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3305,7 +3304,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"xb%d: not found"
 argument_list|,
@@ -4571,8 +4570,6 @@ argument_list|(
 name|info
 operator|->
 name|irq
-argument_list|,
-name|info
 argument_list|)
 expr_stmt|;
 name|info
@@ -4681,13 +4678,6 @@ argument_list|,
 name|M_NOWAIT
 operator||
 name|M_ZERO
-argument_list|)
-expr_stmt|;
-name|PANIC_IF
-argument_list|(
-name|copy
-operator|==
-name|NULL
 argument_list|)
 expr_stmt|;
 name|memcpy

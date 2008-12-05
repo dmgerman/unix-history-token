@@ -165,7 +165,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
@@ -177,13 +177,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/evtchn.h>
+file|<machine/stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
+file|<xen/evtchn.h>
 end_include
 
 begin_include

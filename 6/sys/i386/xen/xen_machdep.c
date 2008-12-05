@@ -146,7 +146,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
@@ -182,7 +182,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/features.h>
+file|<xen/features.h>
 end_include
 
 begin_ifdef
@@ -379,6 +379,21 @@ name|int
 name|avail_space
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|printk
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -648,6 +663,7 @@ value|1024
 end_define
 
 begin_function
+specifier|static
 name|void
 name|printk
 parameter_list|(
@@ -819,7 +835,7 @@ define|#
 directive|define
 name|SET_VCPU
 parameter_list|()
-value|int vcpu = smp_processor_id()
+value|int vcpu = gdtset ? PCPU_GET(cpuid) : 0
 end_define
 
 begin_define
@@ -1140,6 +1156,9 @@ name|struct
 name|mmuext_op
 name|op
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 name|op
 operator|.
 name|cmd
@@ -1157,8 +1176,8 @@ operator|&
 operator|~
 name|PAGE_MASK
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_mmuext_op
 argument_list|(
 operator|&
@@ -1170,8 +1189,16 @@ name|NULL
 argument_list|,
 name|DOMID_SELF
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"mmuext_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1188,6 +1215,9 @@ block|{
 name|struct
 name|mmuext_op
 name|op
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1229,8 +1259,8 @@ argument_list|)
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_mmuext_op
 argument_list|(
 operator|&
@@ -1242,8 +1272,16 @@ name|NULL
 argument_list|,
 name|DOMID_SELF
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"mmuext_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1590,6 +1628,9 @@ name|struct
 name|mmuext_op
 name|op
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 name|op
 operator|.
 name|cmd
@@ -1609,8 +1650,8 @@ expr_stmt|;
 name|xen_flush_queue
 argument_list|()
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_mmuext_op
 argument_list|(
 operator|&
@@ -1622,8 +1663,16 @@ name|NULL
 argument_list|,
 name|DOMID_SELF
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"mmuext_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1640,6 +1689,9 @@ block|{
 name|struct
 name|mmuext_op
 name|op
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 name|op
 operator|.
@@ -1660,8 +1712,8 @@ expr_stmt|;
 name|xen_flush_queue
 argument_list|()
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_mmuext_op
 argument_list|(
 operator|&
@@ -1673,8 +1725,16 @@ name|NULL
 argument_list|,
 name|DOMID_SELF
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"mmuext_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1691,6 +1751,9 @@ block|{
 name|struct
 name|mmuext_op
 name|op
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 name|op
 operator|.
@@ -1711,8 +1774,8 @@ expr_stmt|;
 name|xen_flush_queue
 argument_list|()
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_mmuext_op
 argument_list|(
 operator|&
@@ -1724,8 +1787,16 @@ name|NULL
 argument_list|,
 name|DOMID_SELF
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"mmuext_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1742,6 +1813,9 @@ block|{
 name|struct
 name|mmuext_op
 name|op
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 name|op
 operator|.
@@ -1773,8 +1847,8 @@ expr_stmt|;
 name|xen_flush_queue
 argument_list|()
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_mmuext_op
 argument_list|(
 operator|&
@@ -1786,8 +1860,16 @@ name|NULL
 argument_list|,
 name|DOMID_SELF
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"mmuext_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1804,6 +1886,9 @@ block|{
 name|struct
 name|mmuext_op
 name|op
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 name|op
 operator|.
@@ -1824,8 +1909,8 @@ expr_stmt|;
 name|xen_flush_queue
 argument_list|()
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_mmuext_op
 argument_list|(
 operator|&
@@ -1837,8 +1922,16 @@ name|NULL
 argument_list|,
 name|DOMID_SELF
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"mmuext_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1859,6 +1952,9 @@ block|{
 name|struct
 name|mmuext_op
 name|op
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 name|op
 operator|.
@@ -1885,8 +1981,8 @@ expr_stmt|;
 name|xen_flush_queue
 argument_list|()
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_mmuext_op
 argument_list|(
 operator|&
@@ -1898,8 +1994,16 @@ name|NULL
 argument_list|,
 name|DOMID_SELF
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"mmuext_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1916,6 +2020,9 @@ name|struct
 name|mmuext_op
 name|op
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 name|op
 operator|.
 name|cmd
@@ -1925,8 +2032,8 @@ expr_stmt|;
 name|xen_flush_queue
 argument_list|()
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_mmuext_op
 argument_list|(
 operator|&
@@ -1938,8 +2045,16 @@ name|NULL
 argument_list|,
 name|DOMID_SELF
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"mmuext_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2058,6 +2173,8 @@ name|flags
 decl_stmt|;
 name|int
 name|order
+decl_stmt|,
+name|err
 decl_stmt|;
 name|struct
 name|xen_memory_reservation
@@ -2096,17 +2213,21 @@ name|flags
 argument_list|)
 expr_stmt|;
 comment|/* can currently only handle power of two allocation */
-name|PANIC_IF
+name|KASSERT
 argument_list|(
 name|ffs
 argument_list|(
 name|npages
 argument_list|)
-operator|!=
+operator|==
 name|fls
 argument_list|(
 name|npages
 argument_list|)
+argument_list|,
+operator|(
+literal|"unexpected page count"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 0. determine order */
@@ -2185,8 +2306,8 @@ argument_list|)
 operator|=
 name|INVALID_P2M_ENTRY
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_memory_op
 argument_list|(
 name|XENMEM_decrease_reservation
@@ -2194,8 +2315,16 @@ argument_list|,
 operator|&
 name|reservation
 argument_list|)
-operator|!=
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|==
 literal|1
+argument_list|,
+operator|(
+literal|"memory_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2347,8 +2476,8 @@ argument_list|)
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_memory_op
 argument_list|(
 name|XENMEM_increase_reservation
@@ -2356,8 +2485,16 @@ argument_list|,
 operator|&
 name|reservation
 argument_list|)
-operator|!=
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|==
 literal|1
+argument_list|,
+operator|(
+literal|"memory_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 name|xen_machphys_update
@@ -2413,6 +2550,9 @@ name|order
 decl_stmt|,
 name|pfn0
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 name|struct
 name|xen_memory_reservation
 name|reservation
@@ -2460,17 +2600,21 @@ block|scrub_pages(vstart, 1<< order);
 endif|#
 directive|endif
 comment|/* can currently only handle power of two allocation */
-name|PANIC_IF
+name|KASSERT
 argument_list|(
 name|ffs
 argument_list|(
 name|npages
 argument_list|)
-operator|!=
+operator|==
 name|fls
 argument_list|(
 name|npages
 argument_list|)
+argument_list|,
+operator|(
+literal|"non-power of 2 page count"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 0. determine order */
@@ -2555,8 +2699,8 @@ argument_list|)
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_update_va_mapping
 argument_list|(
 call|(
@@ -2580,6 +2724,16 @@ name|new_val
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"update_va_mapping failed"
+operator|)
 argument_list|)
 expr_stmt|;
 name|PFNTOMFN
@@ -2589,8 +2743,8 @@ argument_list|)
 operator|=
 name|INVALID_P2M_ENTRY
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_memory_op
 argument_list|(
 name|XENMEM_decrease_reservation
@@ -2598,8 +2752,16 @@ argument_list|,
 operator|&
 name|reservation
 argument_list|)
-operator|!=
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|==
 literal|1
+argument_list|,
+operator|(
+literal|"memory_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2634,8 +2796,8 @@ name|pfn0
 operator|+
 name|i
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_memory_op
 argument_list|(
 name|XENMEM_increase_reservation
@@ -2643,8 +2805,16 @@ argument_list|,
 operator|&
 name|reservation
 argument_list|)
-operator|!=
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|==
 literal|1
+argument_list|,
+operator|(
+literal|"memory_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 name|new_val
@@ -2653,8 +2823,8 @@ name|mfn
 operator|<<
 name|PAGE_SHIFT
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_update_va_mapping
 argument_list|(
 operator|(
@@ -2672,6 +2842,16 @@ name|new_val
 argument_list|,
 name|PG_KERNEL
 argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"update_va_mapping failed"
+operator|)
 argument_list|)
 expr_stmt|;
 name|xen_machphys_update
@@ -2810,13 +2990,17 @@ name|retptr
 operator|=
 name|bootmem_current
 expr_stmt|;
-name|PANIC_IF
+name|KASSERT
 argument_list|(
 name|retptr
 operator|+
 name|size
-operator|>
+operator|<=
 name|bootmem_end
+argument_list|,
+operator|(
+literal|"bootmem_alloc failed"
+operator|)
 argument_list|)
 expr_stmt|;
 name|bootmem_current
@@ -2850,19 +3034,23 @@ name|tptr
 operator|=
 name|ptr
 expr_stmt|;
-name|PANIC_IF
+name|KASSERT
 argument_list|(
 name|tptr
-operator|!=
+operator|==
 name|bootmem_current
 operator|-
 name|size
-operator|||
+operator|&&
 name|bootmem_current
 operator|-
 name|size
-operator|<
+operator|>=
 name|bootmem_start
+argument_list|,
+operator|(
+literal|"bootmem_free failed"
+operator|)
 argument_list|)
 expr_stmt|;
 name|bootmem_current
@@ -3193,6 +3381,8 @@ name|i
 decl_stmt|;
 name|int
 name|ncpus
+decl_stmt|,
+name|err
 decl_stmt|;
 name|nkpt
 operator|=
@@ -4314,8 +4504,8 @@ name|iopl
 operator|=
 literal|1
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|err
+operator|=
 name|HYPERVISOR_physdev_op
 argument_list|(
 name|PHYSDEVOP_SET_IOPL
@@ -4323,6 +4513,16 @@ argument_list|,
 operator|&
 name|set_iopl
 argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|err
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"physdev_op failed"
+operator|)
 argument_list|)
 expr_stmt|;
 name|printk

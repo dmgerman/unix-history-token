@@ -6,14 +6,33 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__HYPERVISOR_H__
+name|__XEN_HYPERVISOR_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__HYPERVISOR_H__
+name|__XEN_HYPERVISOR_H__
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XENHVM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|is_running_on_xen
+parameter_list|()
+value|(HYPERVISOR_shared_info != NULL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -22,6 +41,11 @@ name|is_running_on_xen
 parameter_list|()
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -54,30 +78,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<xen/interface/xen.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<xen/interface/platform.h>
 end_include
 
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<xen/interface/callback.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/interface/memory.h>
 end_include
 
 begin_include
@@ -190,6 +196,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XENHVM
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|start_info_t
@@ -197,6 +209,11 @@ modifier|*
 name|xen_start_info
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -569,8 +586,6 @@ literal|1
 index|]
 operator|=
 name|new_val
-operator|.
-name|pte
 expr_stmt|;
 elif|#
 directive|elif
@@ -650,7 +665,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __HYPERVISOR_H__ */
+comment|/* __XEN_HYPERVISOR_H__ */
 end_comment
 
 end_unit

@@ -15,6 +15,12 @@ directive|define
 name|_XEN_XENPMAP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<xen/features.h>
+end_include
+
 begin_function_decl
 name|void
 name|_xen_queue_pt_update
@@ -166,18 +172,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pcpu.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -705,7 +699,7 @@ parameter_list|,
 name|_ma
 parameter_list|)
 define|\
-value|do { 								\    PANIC_IF(HYPERVISOR_update_va_mapping(((unsigned long)(_va)),\ 	   (_ma),						\ 	   UVMF_INVLPG| UVMF_ALL)< 0);			\ } while (
+value|do {									\ 	int err;							\ 	err = HYPERVISOR_update_va_mapping(((unsigned long)(_va)),	\ 	    (_ma), UVMF_INVLPG| UVMF_ALL);				\ 	KASSERT(err>= 0, ("unexpected result from update_va_mapping")); \ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define

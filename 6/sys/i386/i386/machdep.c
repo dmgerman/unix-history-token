@@ -574,7 +574,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
@@ -598,7 +598,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen_intr.h>
+file|<xen/xen_intr.h>
 end_include
 
 begin_function_decl
@@ -10141,24 +10141,32 @@ operator|.
 name|sd
 argument_list|)
 expr_stmt|;
-name|printk
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|printf
 argument_list|(
 literal|"gdt=%p\n"
 argument_list|,
 name|gdt
 argument_list|)
 expr_stmt|;
-name|printk
+name|printf
 argument_list|(
 literal|"PTmap=%p\n"
 argument_list|,
 name|PTmap
 argument_list|)
 expr_stmt|;
-name|printk
+name|printf
 argument_list|(
-literal|"addr=%p\n"
+literal|"addr=%#jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 operator|*
 name|vtopte
 argument_list|(
@@ -10173,6 +10181,7 @@ operator|~
 name|PG_RW
 argument_list|)
 expr_stmt|;
+block|}
 name|gdtmachpfn
 operator|=
 name|vtomach
@@ -10206,8 +10215,8 @@ name|PG_A
 operator|)
 argument_list|)
 expr_stmt|;
-name|PANIC_IF
-argument_list|(
+name|error
+operator|=
 name|HYPERVISOR_set_gdt
 argument_list|(
 operator|&
@@ -10215,8 +10224,16 @@ name|gdtmachpfn
 argument_list|,
 literal|512
 argument_list|)
-operator|!=
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|error
+operator|==
 literal|0
+argument_list|,
+operator|(
+literal|"unexpected result from set_gdt"
+operator|)
 argument_list|)
 expr_stmt|;
 name|lgdt

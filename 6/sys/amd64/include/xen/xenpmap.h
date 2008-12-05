@@ -15,6 +15,12 @@ directive|define
 name|_XEN_XENPMAP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/xen/features.h>
+end_include
+
 begin_function_decl
 name|void
 name|_xen_queue_pt_update
@@ -166,18 +172,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pcpu.h>
-end_include
 
 begin_ifdef
 ifdef|#

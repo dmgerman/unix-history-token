@@ -92,13 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/features.h>
+file|<machine/xen/xen-os.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/features.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/hypervisor.h>
 end_include
 
 begin_include

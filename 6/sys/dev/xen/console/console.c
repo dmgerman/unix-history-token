@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen_intr.h>
+file|<xen/xen_intr.h>
 end_include
 
 begin_include
@@ -1163,6 +1163,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|xen_start_info
@@ -1288,8 +1291,8 @@ operator|&
 name|SIF_INITDOMAIN
 condition|)
 block|{
-name|PANIC_IF
-argument_list|(
+name|error
+operator|=
 name|bind_virq_to_irqhandler
 argument_list|(
 name|VIRQ_CONSOLE
@@ -1301,9 +1304,19 @@ argument_list|,
 name|xencons_priv_interrupt
 argument_list|,
 name|INTR_TYPE_TTY
+argument_list|,
+name|NULL
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|error
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"can't register console interrupt"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
