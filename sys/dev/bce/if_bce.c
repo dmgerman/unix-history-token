@@ -29823,6 +29823,7 @@ operator|&
 name|STATUS_ATTN_BITS_LINK_STATE
 operator|)
 condition|)
+block|{
 name|bce_phy_intr
 argument_list|(
 name|sc
@@ -29849,6 +29850,7 @@ argument_list|,
 name|BCE_HC_COMMAND
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* If any other attention is asserted then the chip is toast. */
 if|if
 condition|(
