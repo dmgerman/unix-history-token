@@ -196,7 +196,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint8_t
+name|size_t
 name|adb_read_register
 parameter_list|(
 name|device_t
@@ -204,10 +204,6 @@ name|dev
 parameter_list|,
 name|u_char
 name|reg
-parameter_list|,
-name|size_t
-modifier|*
-name|len
 parameter_list|,
 name|void
 modifier|*

@@ -710,14 +710,13 @@ break|break;
 case|case
 literal|4
 case|:
+name|r1_len
+operator|=
 name|adb_read_register
 argument_list|(
 name|dev
 argument_list|,
 literal|1
-argument_list|,
-operator|&
-name|r1_len
 argument_list|,
 name|r1
 argument_list|)
