@@ -59,6 +59,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|HAVE_LZMADEC_H
+comment|/* LZMA bidding is subject to false positives because 	 * the LZMA file format has a very weak signature.  It 	 * may not be feasible to include LZMA detection here. */
+comment|/* archive_read_support_compression_lzma(a); */
+endif|#
+directive|endif
 return|return
 operator|(
 name|ARCHIVE_OK
