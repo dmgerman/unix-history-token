@@ -266,6 +266,12 @@ name|struct
 name|sctp_inpcb
 modifier|*
 parameter_list|,
+name|uint16_t
+name|lport
+parameter_list|,
+name|uint16_t
+name|rport
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -721,6 +727,23 @@ end_function_decl
 begin_function_decl
 name|int
 name|sctp_expand_mapping_array
+parameter_list|(
+name|struct
+name|sctp_association
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* EY nr_sack version of the above method, expands nr_mapping_array */
+end_comment
+
+begin_function_decl
+name|int
+name|sctp_expand_nr_mapping_array
 parameter_list|(
 name|struct
 name|sctp_association

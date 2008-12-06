@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -385,6 +385,13 @@ begin_comment
 comment|/* rw */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTP_AUTH_DEACTIVATE_KEY
+value|0x0000001d
+end_define
+
 begin_comment
 comment|/*  * read-only options  */
 end_comment
@@ -500,6 +507,17 @@ define|#
 directive|define
 name|SCTP_CMT_USE_DAC
 value|0x00001201
+end_define
+
+begin_comment
+comment|/* EY - NR_SACK on/off socket option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_NR_SACK_ON_OFF
+value|0x00001300
 end_define
 
 begin_comment
@@ -987,35 +1005,53 @@ begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_DELETING_LAST_ADDR
-value|0xa0
+value|0x00a0
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_RESOURCE_SHORTAGE
-value|0xa1
+value|0x00a1
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_DELETING_SRC_ADDR
-value|0xa2
+value|0x00a2
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_ILLEGAL_ASCONF_ACK
-value|0xa3
+value|0x00a3
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTP_CAUSE_REQUEST_REFUSED
-value|0xa4
+value|0x00a4
+end_define
+
+begin_comment
+comment|/* Error causes from nat-draft */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_CAUSE_NAT_COLLIDING_STATE
+value|0x00b0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CAUSE_NAT_MISSING_STATE
+value|0x00b1
 end_define
 
 begin_comment
@@ -1279,6 +1315,17 @@ value|0x0f
 end_define
 
 begin_comment
+comment|/* EY nr_sack chunk id*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_NR_SELECTIVE_ACK
+value|0x10
+end_define
+
+begin_comment
 comment|/************0x40 series ***********/
 end_comment
 
@@ -1476,6 +1523,21 @@ define|#
 directive|define
 name|SCTP_SACK_NONCE_SUM
 value|0x01
+end_define
+
+begin_comment
+comment|/* EY nr_sack all bit - All bit is the 2nd LSB of nr_sack chunk flags*/
+end_comment
+
+begin_comment
+comment|/* if All bit is set in an nr-sack chunk, then all nr gap acks gap acks*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_NR_SACK_ALL_BIT
+value|0x02
 end_define
 
 begin_comment
@@ -1801,6 +1863,13 @@ define|#
 directive|define
 name|SCTP_PCB_FLAGS_PORTREUSE
 value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_DRYEVNT
+value|0x04000000
 end_define
 
 begin_comment

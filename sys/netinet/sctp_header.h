@@ -325,6 +325,27 @@ end_struct
 
 begin_struct
 struct|struct
+name|sctp_asconf_tag_param
+block|{
+comment|/* an ASCONF NAT-Vtag parameter */
+name|struct
+name|sctp_asconf_paramhdr
+name|aph
+decl_stmt|;
+comment|/* asconf "parameter" */
+name|uint32_t
+name|local_vtag
+decl_stmt|;
+name|uint32_t
+name|remote_vtag
+decl_stmt|;
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_asconf_addrv4_param
 block|{
 comment|/* an ASCONF address (v4) parameter */
@@ -602,6 +623,31 @@ name|SCTP_PACKED
 struct|;
 end_struct
 
+begin_comment
+comment|/* Used for NAT state error cause */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_missing_nat_state
+block|{
+name|uint16_t
+name|cause
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|data
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|sctp_inv_mandatory_param
@@ -788,6 +834,80 @@ decl_stmt|;
 name|struct
 name|sctp_sack
 name|sack
+decl_stmt|;
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_comment
+comment|/* EY Following 3 structs define NR Selective Ack (NR_SACK) chunk */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_nr_gap_ack_block
+block|{
+name|uint16_t
+name|start
+decl_stmt|;
+comment|/* NR Gap Ack block start */
+name|uint16_t
+name|end
+decl_stmt|;
+comment|/* NR Gap Ack block end */
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_nr_sack
+block|{
+name|uint32_t
+name|cum_tsn_ack
+decl_stmt|;
+comment|/* cumulative TSN Ack */
+name|uint32_t
+name|a_rwnd
+decl_stmt|;
+comment|/* updated a_rwnd of sender */
+name|uint16_t
+name|num_gap_ack_blks
+decl_stmt|;
+comment|/* number of Gap Ack blocks */
+name|uint16_t
+name|num_nr_gap_ack_blks
+decl_stmt|;
+comment|/* number of NR Gap Ack blocks */
+name|uint16_t
+name|num_dup_tsns
+decl_stmt|;
+comment|/* number of duplicate TSNs */
+name|uint16_t
+name|reserved
+decl_stmt|;
+comment|/* not currently used */
+comment|/* struct sctp_gap_ack_block's follow */
+comment|/* struct sctp_nr_gap_ack_block's follow */
+comment|/* uint32_t duplicate_tsn's follow */
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_nr_sack_chunk
+block|{
+name|struct
+name|sctp_chunkhdr
+name|ch
+decl_stmt|;
+name|struct
+name|sctp_nr_sack
+name|nr_sack
 decl_stmt|;
 block|}
 name|SCTP_PACKED

@@ -453,6 +453,14 @@ name|uint32_t
 name|v_tag
 decl_stmt|;
 comment|/* the vtag that can not be reused */
+name|uint16_t
+name|lport
+decl_stmt|;
+comment|/* the local port used in vtag */
+name|uint16_t
+name|rport
+decl_stmt|;
+comment|/* the remote port used in vtag */
 block|}
 struct|;
 end_struct
@@ -497,14 +505,6 @@ name|sctp_ephash
 decl_stmt|;
 name|u_long
 name|hashmark
-decl_stmt|;
-name|struct
-name|sctpasochead
-modifier|*
-name|sctp_restarthash
-decl_stmt|;
-name|u_long
-name|hashrestartmark
 decl_stmt|;
 comment|/*- 	 * The TCP model represents a substantial overhead in that we get an 	 * additional hash table to keep explicit connections in. The 	 * listening TCP endpoint will exist in the usual ephash above and 	 * accept only INIT's. It will be incapable of sending off an INIT. 	 * When a dg arrives we must look in the normal ephash. If we find a 	 * TCP endpoint that will tell us to go to the specific endpoint 	 * hash and re-hash to find the right assoc/socket. If we find a UDP 	 * model socket we then must complete the lookup. If this fails, 	 * i.e. no association can be found then we must continue to see if 	 * a sctp_peeloff()'d socket is in the tcpephash (a spun off socket 	 * acts like a TCP model connected socket). 	 */
 name|struct
@@ -1126,6 +1126,17 @@ decl_stmt|;
 name|uint32_t
 name|total_nospaces
 decl_stmt|;
+name|struct
+name|sctpasochead
+modifier|*
+name|sctp_asocidhash
+decl_stmt|;
+name|u_long
+name|hashasocidmark
+decl_stmt|;
+name|uint32_t
+name|sctp_associd_counter
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SCTP_ASOCLOG_OF_TSNS
@@ -1179,9 +1190,9 @@ name|LIST_ENTRY
 argument_list|(
 argument|sctp_tcb
 argument_list|)
-name|sctp_tcbrestarhash
+name|sctp_tcbasocidhash
 expr_stmt|;
-comment|/* next link in restart 								 * hash table */
+comment|/* next link in asocid 								 * hash table */
 name|LIST_ENTRY
 argument_list|(
 argument|sctp_tcb
@@ -1696,6 +1707,26 @@ begin_function_decl
 name|struct
 name|sctp_tcb
 modifier|*
+name|sctp_findasoc_ep_asocid_locked
+parameter_list|(
+name|struct
+name|sctp_inpcb
+modifier|*
+name|inp
+parameter_list|,
+name|sctp_assoc_t
+name|asoc_id
+parameter_list|,
+name|int
+name|want_lock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|sctp_tcb
+modifier|*
 name|sctp_findassociation_ep_asocid
 parameter_list|(
 name|struct
@@ -1736,6 +1767,9 @@ name|struct
 name|sctp_nets
 modifier|*
 modifier|*
+parameter_list|,
+name|uint32_t
+name|vrf_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1839,6 +1873,10 @@ name|void
 name|sctp_delete_from_timewait
 parameter_list|(
 name|uint32_t
+parameter_list|,
+name|uint16_t
+parameter_list|,
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1849,6 +1887,12 @@ name|sctp_is_in_timewait
 parameter_list|(
 name|uint32_t
 name|tag
+parameter_list|,
+name|uint16_t
+name|lport
+parameter_list|,
+name|uint16_t
+name|rport
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1858,8 +1902,16 @@ name|void
 name|sctp_add_vtag_to_timewait
 parameter_list|(
 name|uint32_t
+name|tag
 parameter_list|,
 name|uint32_t
+name|time
+parameter_list|,
+name|uint16_t
+name|lport
+parameter_list|,
+name|uint16_t
+name|rport
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2078,6 +2130,12 @@ name|sctp_inpcb
 modifier|*
 parameter_list|,
 name|uint32_t
+parameter_list|,
+name|uint16_t
+name|lport
+parameter_list|,
+name|uint16_t
+name|rport
 parameter_list|,
 name|struct
 name|timeval

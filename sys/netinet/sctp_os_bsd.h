@@ -2281,5 +2281,60 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SCTP_DECREMENT_AND_CHECK_REFCOUNT
+parameter_list|(
+name|addr
+parameter_list|)
+value|(atomic_fetchadd_int(addr, -1) == 1)
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SCTP_SAVE_ATOMIC_DECREMENT
+parameter_list|(
+name|addr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|{ \ 	int32_t oldval; \ 	oldval = atomic_fetchadd_int(addr, -val); \ 	if (oldval< val) { \ 		panic("Counter goes negative"); \ 	} \ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCTP_SAVE_ATOMIC_DECREMENT
+parameter_list|(
+name|addr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|{ \ 	int32_t oldval; \ 	oldval = atomic_fetchadd_int(addr, -val); \ 	if (oldval< val) { \ 		*addr = 0; \ 	} \ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 
