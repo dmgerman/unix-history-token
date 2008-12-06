@@ -1486,12 +1486,20 @@ name|mask
 operator|&
 name|SDHCI_RESET_ALL
 condition|)
+block|{
 name|slot
 operator|->
 name|clock
 operator|=
 literal|0
 expr_stmt|;
+name|slot
+operator|->
+name|power
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* Wait max 100 ms */
 name|timeout
 operator|=
@@ -4603,7 +4611,7 @@ argument_list|,
 name|SDHCI_PRESENT_STATE
 argument_list|)
 expr_stmt|;
-comment|/* Do not issue command if there is no card. */
+comment|/* Do not issue command if there is no card, clock or power. 	 * Controller will not detect timeout without clock active. */
 if|if
 condition|(
 operator|(
@@ -4611,6 +4619,18 @@ name|state
 operator|&
 name|SDHCI_CARD_PRESENT
 operator|)
+operator|==
+literal|0
+operator|||
+name|slot
+operator|->
+name|power
+operator|==
+literal|0
+operator|||
+name|slot
+operator|->
+name|clock
 operator|==
 literal|0
 condition|)
