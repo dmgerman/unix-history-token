@@ -1135,9 +1135,55 @@ name|KF_FLAG_HASLOCK
 value|0x00000080
 end_define
 
+begin_comment
+comment|/*  * Old format.  Has variable hidden padding due to alignment.  * This is a compatability hack for pre-build 7.1 packages.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_OFILE_SIZE
+value|1328
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_OFILE_SIZE
+value|1324
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
-name|kinfo_file
+name|kinfo_ofile
 block|{
 name|int
 name|kf_structsize
@@ -1159,6 +1205,7 @@ name|int
 name|kf_flags
 decl_stmt|;
 comment|/* Flags. */
+comment|/* XXX Hidden alignment padding here on amd64 */
 name|off_t
 name|kf_offset
 decl_stmt|;
@@ -1196,6 +1243,109 @@ name|sockaddr_storage
 name|kf_sa_peer
 decl_stmt|;
 comment|/* Peer address. */
+block|}
+struct|;
+end_struct
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_FILE_SIZE
+value|1392
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|kinfo_file
+block|{
+name|int
+name|kf_structsize
+decl_stmt|;
+comment|/* Variable size of record. */
+name|int
+name|kf_type
+decl_stmt|;
+comment|/* Descriptor type. */
+name|int
+name|kf_fd
+decl_stmt|;
+comment|/* Array index. */
+name|int
+name|kf_ref_count
+decl_stmt|;
+comment|/* Reference count. */
+name|int
+name|kf_flags
+decl_stmt|;
+comment|/* Flags. */
+name|int
+name|_kf_pad0
+decl_stmt|;
+comment|/* Round to 64 bit alignment */
+name|int64_t
+name|kf_offset
+decl_stmt|;
+comment|/* Seek location. */
+name|int
+name|kf_vnode_type
+decl_stmt|;
+comment|/* Vnode type. */
+name|int
+name|kf_sock_domain
+decl_stmt|;
+comment|/* Socket domain. */
+name|int
+name|kf_sock_type
+decl_stmt|;
+comment|/* Socket type. */
+name|int
+name|kf_sock_protocol
+decl_stmt|;
+comment|/* Socket protocol. */
+name|struct
+name|sockaddr_storage
+name|kf_sa_local
+decl_stmt|;
+comment|/* Socket address. */
+name|struct
+name|sockaddr_storage
+name|kf_sa_peer
+decl_stmt|;
+comment|/* Peer address. */
+name|int
+name|_kf_ispare
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Space for more stuff. */
+comment|/* Truncated before copyout in sysctl */
+name|char
+name|kf_path
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+comment|/* Path to file, if any. */
 block|}
 struct|;
 end_struct
@@ -1295,9 +1445,51 @@ name|KVME_FLAG_NEEDS_COPY
 value|0x00000002
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_OVMENTRY_SIZE
+value|1168
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_OVMENTRY_SIZE
+value|1128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
-name|kinfo_vmentry
+name|kinfo_ovmentry
 block|{
 name|int
 name|kve_structsize
@@ -1311,12 +1503,12 @@ name|void
 modifier|*
 name|kve_start
 decl_stmt|;
-comment|/* Starting pointer. */
+comment|/* Starting address. */
 name|void
 modifier|*
 name|kve_end
 decl_stmt|;
-comment|/* Finishing pointer. */
+comment|/* Finishing address. */
 name|int
 name|kve_flags
 decl_stmt|;
@@ -1363,7 +1555,7 @@ comment|/* Mapping offset in object */
 name|uint64_t
 name|kve_fileid
 decl_stmt|;
-comment|/* inode number of vnode */
+comment|/* inode number if vnode */
 name|dev_t
 name|kve_fsid
 decl_stmt|;
@@ -1375,6 +1567,111 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
+block|}
+struct|;
+end_struct
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_VMENTRY_SIZE
+value|1160
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|kinfo_vmentry
+block|{
+name|int
+name|kve_structsize
+decl_stmt|;
+comment|/* Variable size of record. */
+name|int
+name|kve_type
+decl_stmt|;
+comment|/* Type of map entry. */
+name|uint64_t
+name|kve_start
+decl_stmt|;
+comment|/* Starting address. */
+name|uint64_t
+name|kve_end
+decl_stmt|;
+comment|/* Finishing address. */
+name|uint64_t
+name|kve_offset
+decl_stmt|;
+comment|/* Mapping offset in object */
+name|uint64_t
+name|kve_fileid
+decl_stmt|;
+comment|/* inode number if vnode */
+name|uint32_t
+name|kve_fsid
+decl_stmt|;
+comment|/* dev_t of vnode location */
+name|int
+name|kve_flags
+decl_stmt|;
+comment|/* Flags on map entry. */
+name|int
+name|kve_resident
+decl_stmt|;
+comment|/* Number of resident pages. */
+name|int
+name|kve_private_resident
+decl_stmt|;
+comment|/* Number of private pages. */
+name|int
+name|kve_protection
+decl_stmt|;
+comment|/* Protection bitmask. */
+name|int
+name|kve_ref_count
+decl_stmt|;
+comment|/* VM obj ref count. */
+name|int
+name|kve_shadow_count
+decl_stmt|;
+comment|/* VM obj shadow count. */
+name|int
+name|_kve_pad0
+decl_stmt|;
+comment|/* 64bit align next field */
+name|int
+name|_kve_ispare
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Space for more stuff. */
+comment|/* Truncated before copyout in sysctl */
+name|char
+name|kve_path
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+comment|/* Path to VM obj, if any. */
 block|}
 struct|;
 end_struct
@@ -1423,6 +1720,32 @@ begin_comment
 comment|/* Stack ephemeral. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KINFO_KSTACK_SIZE
+value|1096
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|kinfo_kstack
@@ -1442,18 +1765,10 @@ name|KKST_MAXLEN
 index|]
 decl_stmt|;
 comment|/* String representing stack. */
-name|void
-modifier|*
-name|_kkst_pspare
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* Space for more stuff. */
 name|int
 name|_kkst_ispare
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
 comment|/* Space for more stuff. */
