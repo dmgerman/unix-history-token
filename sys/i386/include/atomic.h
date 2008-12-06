@@ -37,7 +37,7 @@ define|#
 directive|define
 name|mb
 parameter_list|()
-value|__asm __volatile("lock;addl	$0,(%esp)")
+value|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory")
 end_define
 
 begin_define
@@ -45,7 +45,7 @@ define|#
 directive|define
 name|wmb
 parameter_list|()
-value|__asm __volatile("lock;addl	$0,(%esp)")
+value|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory")
 end_define
 
 begin_define
@@ -53,7 +53,7 @@ define|#
 directive|define
 name|rmb
 parameter_list|()
-value|__asm __volatile("lock;addl	$0,(%esp)")
+value|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory")
 end_define
 
 begin_comment
