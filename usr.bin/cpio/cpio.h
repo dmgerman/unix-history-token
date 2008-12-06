@@ -218,7 +218,7 @@ name|fmt
 argument_list|,
 operator|...
 argument_list|)
-name|__dead2
+name|__LA_DEAD
 decl_stmt|;
 end_decl_stmt
 
