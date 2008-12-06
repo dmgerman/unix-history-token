@@ -2344,9 +2344,6 @@ literal|0
 decl_stmt|,
 name|bytes_to_write
 decl_stmt|;
-name|int
-name|r
-decl_stmt|;
 if|if
 condition|(
 name|a
@@ -2392,6 +2389,9 @@ block|{
 if|#
 directive|if
 name|HAVE_STRUCT_STAT_ST_BLKSIZE
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -7742,7 +7742,7 @@ name|mtime
 expr_stmt|;
 if|if
 condition|(
-name|S_ISLINK
+name|S_ISLNK
 argument_list|(
 name|mode
 argument_list|)
