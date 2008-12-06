@@ -110,7 +110,7 @@ parameter_list|)
 block|{
 name|write
 argument_list|(
-name|STDERR_FILENO
+literal|2
 argument_list|,
 name|m
 argument_list|,
