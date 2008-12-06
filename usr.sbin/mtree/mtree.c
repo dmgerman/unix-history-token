@@ -620,9 +620,14 @@ name|sflag
 operator|)
 operator|&&
 operator|!
-name|getwd
+name|getcwd
 argument_list|(
 name|fullpath
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fullpath
+argument_list|)
 argument_list|)
 condition|)
 name|errx
