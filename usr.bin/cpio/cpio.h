@@ -42,7 +42,14 @@ begin_struct
 struct|struct
 name|cpio
 block|{
+comment|/* Option parsing */
+specifier|const
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
 comment|/* Options */
+specifier|const
 name|char
 modifier|*
 name|filename

@@ -832,6 +832,8 @@ name|bytes_per_block
 operator|=
 name|atoi
 argument_list|(
+name|cpio
+operator|->
 name|optarg
 argument_list|)
 expr_stmt|;
@@ -851,6 +853,8 @@ literal|0
 argument_list|,
 literal|"Invalid blocksize %s"
 argument_list|,
+name|cpio
+operator|->
 name|optarg
 argument_list|)
 expr_stmt|;
@@ -886,6 +890,8 @@ name|include_from_file
 argument_list|(
 name|cpio
 argument_list|,
+name|cpio
+operator|->
 name|optarg
 argument_list|)
 expr_stmt|;
@@ -898,6 +904,8 @@ name|cpio
 operator|->
 name|filename
 operator|=
+name|cpio
+operator|->
 name|optarg
 expr_stmt|;
 break|break;
@@ -909,6 +917,8 @@ name|exclude
 argument_list|(
 name|cpio
 argument_list|,
+name|cpio
+operator|->
 name|optarg
 argument_list|)
 expr_stmt|;
@@ -921,6 +931,8 @@ name|cpio
 operator|->
 name|format
 operator|=
+name|cpio
+operator|->
 name|optarg
 expr_stmt|;
 break|break;
@@ -939,6 +951,8 @@ name|cpio
 operator|->
 name|filename
 operator|=
+name|cpio
+operator|->
 name|optarg
 expr_stmt|;
 break|break;
@@ -1024,6 +1038,8 @@ name|cpio
 operator|->
 name|filename
 operator|=
+name|cpio
+operator|->
 name|optarg
 expr_stmt|;
 break|break;
@@ -1075,6 +1091,8 @@ if|if
 condition|(
 name|owner_parse
 argument_list|(
+name|cpio
+operator|->
 name|optarg
 argument_list|,
 operator|&
@@ -1215,18 +1233,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* TODO: Sanity-check args, error out on nonsensical combinations. */
-name|cpio
-operator|->
-name|argc
-operator|-=
-name|optind
-expr_stmt|;
-name|cpio
-operator|->
-name|argv
-operator|+=
-name|optind
-expr_stmt|;
 switch|switch
 condition|(
 name|cpio
@@ -1418,9 +1424,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_GETOPT_LONG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1430,19 +1433,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  Help:    %s -h\n"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|1
