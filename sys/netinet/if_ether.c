@@ -4287,7 +4287,7 @@ operator|==
 name|ifp
 condition|)
 block|{
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -4333,7 +4333,7 @@ operator|->
 name|ar_hln
 argument_list|)
 expr_stmt|;
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -4405,7 +4405,7 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -4414,7 +4414,7 @@ goto|goto
 name|drop
 goto|;
 block|}
-name|rtfree
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
