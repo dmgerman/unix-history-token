@@ -982,6 +982,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -998,6 +1004,11 @@ name|isodirrec
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2867,6 +2878,9 @@ name|rr_end
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 comment|/* DEBUGGING: Warn about attributes I don't yet fully support. */
 if|if
 condition|(
@@ -3044,6 +3058,8 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|file
@@ -4247,6 +4263,9 @@ block|}
 comment|/* FALLTHROUGH */
 default|default:
 comment|/* The FALLTHROUGHs above leave us here for 			 * any unsupported extension. */
+ifdef|#
+directive|ifdef
+name|DEBUG
 block|{
 specifier|const
 name|unsigned
@@ -4323,6 +4342,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+break|break;
 block|}
 name|p
 operator|+=
@@ -4495,13 +4517,7 @@ operator|->
 name|offset
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" *** Discarding CE data.\n"
-argument_list|)
-expr_stmt|;
+comment|/* fprintf(stderr, " *** Discarding CE data.\n"); */
 name|file
 operator|->
 name|ce_offset
@@ -5627,6 +5643,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -5809,6 +5831,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
