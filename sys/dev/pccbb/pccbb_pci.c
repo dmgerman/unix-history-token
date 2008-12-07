@@ -3125,10 +3125,15 @@ argument_list|,
 name|CBB_SOCKET_EVENT_POWER
 argument_list|)
 expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|powerintr
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
