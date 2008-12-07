@@ -752,6 +752,17 @@ begin_comment
 comment|/* 0x1000000 and up unassigned */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTF_RNH_LOCKED
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* radix node head locked by caller */
+end_comment
+
 begin_comment
 comment|/* Mask of RTF flags that are allowed to be modified by RTM_CHANGE. */
 end_comment

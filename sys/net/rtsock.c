@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -2775,7 +2781,7 @@ argument_list|(
 name|EAFNOSUPPORT
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_LOCK
+name|RADIX_NODE_HEAD_RLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -2816,7 +2822,7 @@ name|NULL
 condition|)
 block|{
 comment|/* XXX looks bogus */
-name|RADIX_NODE_HEAD_UNLOCK
+name|RADIX_NODE_HEAD_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -2874,7 +2880,7 @@ operator|!
 name|rt
 condition|)
 block|{
-name|RADIX_NODE_HEAD_UNLOCK
+name|RADIX_NODE_HEAD_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)
@@ -2898,7 +2904,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
+name|RADIX_NODE_HEAD_RUNLOCK
 argument_list|(
 name|rnh
 argument_list|)

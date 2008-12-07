@@ -2330,7 +2330,7 @@ block|{
 literal|"radix node head"
 block|,
 operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 block|{
