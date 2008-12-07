@@ -1030,8 +1030,13 @@ comment|/* can do WME+TKIP MIC */
 name|sc_resume_up
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* on resume, start all vaps */
+name|sc_resetcal
+range|:
+literal|1
+decl_stmt|;
+comment|/* reset cal state next trip */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -1385,13 +1390,13 @@ name|sc_cal_ch
 decl_stmt|;
 comment|/* callout handle for cals */
 name|int
-name|sc_calinterval
+name|sc_lastlongcal
 decl_stmt|;
-comment|/* current polling interval */
+comment|/* last long cal completed */
 name|int
-name|sc_caltries
+name|sc_lastcalreset
 decl_stmt|;
-comment|/* cals at current interval */
+comment|/* last cal reset done */
 name|HAL_NODE_STATS
 name|sc_halstats
 decl_stmt|;
@@ -2024,6 +2029,83 @@ parameter_list|)
 define|\
 value|((*(_ah)->ah_perCalibration)((_ah), (_chan), (_iqcal)))
 end_define
+
+begin_if
+if|#
+directive|if
+name|HAL_ABI_VERSION
+operator|>=
+literal|0x08111000
+end_if
+
+begin_define
+define|#
+directive|define
+name|ath_hal_calibrateN
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|,
+name|_lcal
+parameter_list|,
+name|_isdone
+parameter_list|)
+define|\
+value|((*(_ah)->ah_perCalibrationN)((_ah), (_chan), 0x1, (_lcal), (_isdone)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_calreset
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|)
+define|\
+value|((*(_ah)->ah_resetCalValid)((_ah), (_chan)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ath_hal_calibrateN
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|,
+name|_lcal
+parameter_list|,
+name|_isdone
+parameter_list|)
+define|\
+value|ath_hal_calibrate(_ah, _chan, _isdone)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_calreset
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|)
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
