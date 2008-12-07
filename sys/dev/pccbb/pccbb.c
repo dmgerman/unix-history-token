@@ -2118,7 +2118,7 @@ name|sc
 operator|->
 name|mtx
 argument_list|,
-name|PZERO
+literal|0
 argument_list|,
 literal|"-"
 argument_list|,
@@ -2159,7 +2159,7 @@ name|sc
 operator|->
 name|mtx
 argument_list|,
-name|PZERO
+literal|0
 argument_list|,
 literal|"-"
 argument_list|,
@@ -3141,7 +3141,7 @@ name|sc
 operator|->
 name|mtx
 argument_list|,
-name|PZERO
+literal|0
 argument_list|,
 literal|"-"
 argument_list|,
