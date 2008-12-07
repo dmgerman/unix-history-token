@@ -3031,7 +3031,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have to mask the card change detect interrupt while 	 * we're messing with the power.  It is allowed to bounce 	 * while we're messing with power as things settle down.  In 	 * addition, we mask off the card's function interrupt by 	 * routing it via the ISA bus.  This bit generally only 	 * affects 16-bit cards.  Some bridges allow one to set 	 * another bit to have it also affect 32-bit cards.  Since 	 * 32-bit cards are required to be better behaved, we don't 	 * bother to get into those bridge specific features. 	 */
+comment|/* 	 * We have to mask the card change detect interrupt while we're 	 * messing with the power.  It is allowed to bounce while we're 	 * messing with power as things settle down.  In addition, we mask off 	 * the card's function interrupt by routing it via the ISA bus.  This 	 * bit generally only affects 16-bit cards.  Some bridges allow one to 	 * set another bit to have it also affect 32-bit cards.  Since 32-bit 	 * cards are required to be better behaved, we don't bother to get 	 * into those bridge specific features. 	 * 	 * XXX I wonder if we need to enable the READY bit interrupt in the 	 * EXCA CSC register for 16-bit cards, and disable the CD bit? 	 */
 name|mask
 operator|=
 name|cbb_get
@@ -3099,7 +3099,7 @@ name|sc
 operator|->
 name|powerintr
 expr_stmt|;
-comment|/* 		 * We have a shortish timeout of 500ms here.  Some 		 * bridges do not generate a POWER_CYCLE event for 		 * 16-bit cards.  In those cases, we have to cope the 		 * best we can, and having only a short delay is 		 * better than the alternatives. 		 */
+comment|/* 		 * We have a shortish timeout of 500ms here.  Some bridges do 		 * not generate a POWER_CYCLE event for 16-bit cards.  In 		 * those cases, we have to cope the best we can, and having 		 * only a short delay is better than the alternatives. 		 */
 name|sane
 operator|=
 literal|10
@@ -3158,7 +3158,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The TOPIC95B requires a little bit extra time to get 		 * its act together, so delay for an additional 100ms.  Also 		 * as documented below, it doesn't seem to set the POWER_CYCLE 		 * bit, so don't whine if it never came on. 		 */
+comment|/* 		 * The TOPIC95B requires a little bit extra time to get its 		 * act together, so delay for an additional 100ms.  Also as 		 * documented below, it doesn't seem to set the POWER_CYCLE 		 * bit, so don't whine if it never came on. 		 */
 if|if
 condition|(
 name|sc
