@@ -3885,6 +3885,12 @@ argument_list|(
 name|rnh
 argument_list|)
 expr_stmt|;
+else|else
+name|RADIX_NODE_HEAD_LOCK_ASSERT
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we are adding a host route then we don't want to put 	 * a netmask in the tree, nor do we want to clone it. 	 */
 if|if
 condition|(
@@ -5159,6 +5165,8 @@ argument_list|,
 name|rt
 operator|->
 name|rt_flags
+operator||
+name|RTF_RNH_LOCKED
 argument_list|,
 name|NULL
 argument_list|,
