@@ -1702,7 +1702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is called (repeatedly) until the has withered away.  */
+comment|/*  * This function is called (repeatedly) until the geom has withered away.  */
 end_comment
 
 begin_function
