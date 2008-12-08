@@ -11847,6 +11847,9 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|sc
 operator|=
 name|ifp
@@ -11867,6 +11870,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|mii_mediachg
 argument_list|(
 name|mii
@@ -11879,7 +11884,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
