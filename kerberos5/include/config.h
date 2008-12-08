@@ -2655,9 +2655,12 @@ begin_comment
 comment|/* Define if you have the function `strndup'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRNDUP */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRNDUP
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the function `strnlen'. */
