@@ -400,6 +400,10 @@ name|uint32_t
 name|inp_ispare1
 decl_stmt|;
 comment|/* (x) connection id / queue id */
+name|u_int
+name|inp_refcount
+decl_stmt|;
+comment|/* (i) refcount */
 name|void
 modifier|*
 name|inp_pspare
@@ -2047,7 +2051,29 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|in_pcbref
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|in_pcbrehash
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_pcbrele
 parameter_list|(
 name|struct
 name|inpcb
