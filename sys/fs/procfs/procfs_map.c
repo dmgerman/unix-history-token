@@ -172,11 +172,6 @@ parameter_list|(
 name|PFS_FILL_ARGS
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|,
-name|vfslocked
-decl_stmt|;
 name|vm_map_t
 name|map
 init|=
@@ -203,6 +198,11 @@ name|fullpath
 decl_stmt|,
 modifier|*
 name|freepath
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|vfslocked
 decl_stmt|;
 name|unsigned
 name|int
