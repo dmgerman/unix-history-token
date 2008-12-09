@@ -2117,7 +2117,9 @@ literal|"cpu=%d irq=%d vector=%d\n"
 argument_list|,
 name|cpu
 argument_list|,
-name|rc
+name|pc
+operator|->
+name|pc_resched_irq
 argument_list|,
 name|RESCHEDULE_VECTOR
 argument_list|)
@@ -2176,7 +2178,9 @@ literal|"cpu=%d irq=%d vector=%d\n"
 argument_list|,
 name|cpu
 argument_list|,
-name|rc
+name|pc
+operator|->
+name|pc_callfunc_irq
 argument_list|,
 name|CALL_FUNCTION_VECTOR
 argument_list|)

@@ -81,5 +81,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|xenpci_resume
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|xen_suspend
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

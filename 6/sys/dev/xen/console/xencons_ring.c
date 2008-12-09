@@ -141,6 +141,14 @@ value|console.domU.evtchn
 end_define
 
 begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|console_irq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -487,7 +495,8 @@ name|INTR_TYPE_MISC
 operator||
 name|INTR_MPSAFE
 argument_list|,
-name|NULL
+operator|&
+name|console_irq
 argument_list|)
 expr_stmt|;
 if|if
@@ -505,11 +514,25 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
+begin_function_decl
+specifier|extern
+name|void
+name|xencons_suspend
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|xencons_resume
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -526,13 +549,9 @@ operator|->
 name|console_evtchn
 condition|)
 return|return;
-name|unbind_evtchn_from_irqhandler
+name|unbind_from_irqhandler
 argument_list|(
-name|xen_start_info
-operator|->
-name|console_evtchn
-argument_list|,
-name|NULL
+name|console_irq
 argument_list|)
 expr_stmt|;
 block|}
@@ -553,11 +572,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Local variables:  * mode: C  * c-set-style: "BSD"  * c-basic-offset: 8  * tab-width: 4  * indent-tabs-mode: t  * End:  */

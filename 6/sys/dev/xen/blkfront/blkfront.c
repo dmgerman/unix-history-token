@@ -1992,7 +1992,11 @@ name|blkif_free
 argument_list|(
 name|info
 argument_list|,
-literal|1
+name|info
+operator|->
+name|connected
+operator|==
+name|BLKIF_STATE_CONNECTED
 argument_list|)
 expr_stmt|;
 name|err
@@ -2006,6 +2010,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|info
+operator|->
+name|connected
+operator|==
+name|BLKIF_STATE_SUSPENDED
+operator|&&
 operator|!
 name|err
 condition|)
@@ -2015,7 +2025,9 @@ name|info
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
@@ -2215,7 +2227,6 @@ if|if
 condition|(
 name|err
 operator|==
-operator|-
 name|EAGAIN
 condition|)
 goto|goto

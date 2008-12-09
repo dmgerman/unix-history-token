@@ -509,6 +509,14 @@ begin_comment
 comment|/* stime (ns) at last processing. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|time_irq
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3046,9 +3054,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|time_irq
-decl_stmt|;
 name|xen_set_periodic_tick
 operator|.
 name|period_ns
@@ -3067,9 +3072,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|time_irq
+condition|)
+name|unbind_from_irqhandler
+argument_list|(
+name|time_irq
+argument_list|)
+expr_stmt|;
 name|time_irq
 operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|bind_virq_to_irqhandler
 argument_list|(
 name|VIRQ_TIMER
@@ -3088,11 +3103,9 @@ name|INTR_TYPE_CLK
 operator||
 name|INTR_FAST
 argument_list|,
-name|NULL
+operator|&
+name|time_irq
 argument_list|)
-operator|)
-operator|<
-literal|0
 condition|)
 block|{
 name|panic

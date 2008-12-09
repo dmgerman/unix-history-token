@@ -74,6 +74,25 @@ name|xen_phys_machine
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|xen_pfn_t
+modifier|*
+name|xen_pfn_to_mfn_frame_list
+index|[
+literal|16
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|xen_pfn_t
+modifier|*
+name|xen_pfn_to_mfn_frame_list_list
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
