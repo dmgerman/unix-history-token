@@ -989,6 +989,11 @@ name|tag
 modifier|*
 name|t
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|keyword
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1145,6 +1150,22 @@ operator|!=
 name|EXPAND_DEFAULT
 condition|)
 block|{
+name|keyword
+operator|=
+name|keyword_encode_expand
+argument_list|(
+name|rf
+operator|->
+name|expand
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|keyword
+operator|!=
+name|NULL
+condition|)
+block|{
 name|error
 operator|=
 name|proto_printf
@@ -1170,6 +1191,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 comment|/* Write tags to server. */
 name|error
