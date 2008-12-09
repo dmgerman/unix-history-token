@@ -2247,7 +2247,54 @@ name|mi1_mdio_ops
 block|,
 literal|"Chelsio T304"
 block|}
-block|, }
+block|,
+block|{
+literal|0
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|F_GPIO1_OEN
+operator||
+name|F_GPIO2_OEN
+operator||
+name|F_GPIO4_OEN
+operator||
+name|F_GPIO6_OEN
+operator||
+name|F_GPIO7_OEN
+operator||
+name|F_GPIO10_OEN
+operator||
+name|F_GPIO1_OUT_VAL
+operator||
+name|F_GPIO6_OUT_VAL
+operator||
+name|F_GPIO10_OUT_VAL
+block|,
+block|{
+name|S_GPIO9
+block|}
+block|,
+name|SUPPORTED_10000baseT_Full
+operator||
+name|SUPPORTED_AUI
+block|,
+operator|&
+name|mi1_mdio_ext_ops
+block|,
+literal|"Chelsio N310"
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
