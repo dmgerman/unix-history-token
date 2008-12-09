@@ -1952,9 +1952,7 @@ name|rnh
 init|=
 name|V_rt_tables
 index|[
-name|rt
-operator|->
-name|rt_fibnum
+name|fibnum
 index|]
 index|[
 name|dst
