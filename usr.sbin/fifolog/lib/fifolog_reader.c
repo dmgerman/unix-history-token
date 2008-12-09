@@ -322,7 +322,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Read error while looking for SYNC"
+literal|"Read error (%d) while looking for SYNC"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|seq
@@ -424,7 +426,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Read error while looking for SYNC"
+literal|"Read error (%d) while looking for SYNC"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|seqs
@@ -756,13 +760,17 @@ if|if
 condition|(
 name|e
 condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"Read error, duing binary search"
-argument_list|)
+block|{
+name|s
+operator|=
+name|st
+operator|=
+name|s
+operator|/
+literal|2
 expr_stmt|;
+continue|continue;
+block|}
 comment|/* If not in same part, sequence won't match */
 name|seqs
 operator|=
@@ -1187,7 +1195,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Read error"
+literal|"Read error (%d)"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if

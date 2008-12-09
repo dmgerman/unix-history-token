@@ -941,7 +941,7 @@ condition|)
 return|return
 operator|(
 operator|-
-literal|1
+literal|2
 operator|)
 return|;
 if|if
@@ -958,7 +958,7 @@ condition|)
 return|return
 operator|(
 operator|-
-literal|1
+literal|3
 operator|)
 return|;
 return|return
