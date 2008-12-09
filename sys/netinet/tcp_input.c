@@ -2380,7 +2380,7 @@ name|off0
 operator|+
 name|off
 expr_stmt|;
-comment|/* 	 * Locate pcb for segment, which requires a lock on tcbinfo. 	 * Optimisticaly acquire a global read lock unless header flags 	 * necessarily imply a state change.  There are two cases where we 	 * might discover later we need a write lock despite the flags: ACKs 	 * moving a connection out of the syncache, and ACK relating to a 	 * connection in TIMEWAIT. 	 */
+comment|/* 	 * Locate pcb for segment, which requires a lock on tcbinfo. 	 * Optimisticaly acquire a global read lock rather than a write lock 	 * unless header flags necessarily imply a state change.  There are 	 * two cases where we might discover later we need a write lock 	 * despite the flags: ACKs moving a connection out of the syncache, 	 * and ACKs for a connection in TIMEWAIT. 	 */
 if|if
 condition|(
 operator|(
@@ -4641,7 +4641,7 @@ name|th
 operator|->
 name|th_flags
 expr_stmt|;
-comment|/* 	 * If this is either a state-changing packet or current state isn't 	 * established, we require a write lock on tcbinfo.  Otherwise, we 	 * allow either a read lock or a write lock, as we may have acquired 	 * a write lock due to a race. 	 * 	 * Require a global write lock for SYN/SIN/RST segments or 	 * non-established connections; otherwise accept either a read or 	 * write lock, as we may have conservatively acquired a write lock in 	 * certain cases in tcp_input() (is this still true?).  Currently we 	 * will never enter with no lock, so we try to drop it quickly in the 	 * common pure ack/pure data cases. 	 */
+comment|/* 	 * If this is either a state-changing packet or current state isn't 	 * established, we require a write lock on tcbinfo.  Otherwise, we 	 * allow either a read lock or a write lock, as we may have acquired 	 * a write lock due to a race. 	 * 	 * Require a global write lock for SYN/FIN/RST segments or 	 * non-established connections; otherwise accept either a read or 	 * write lock, as we may have conservatively acquired a write lock in 	 * certain cases in tcp_input() (is this still true?).  Currently we 	 * will never enter with no lock, so we try to drop it quickly in the 	 * common pure ack/pure data cases. 	 */
 if|if
 condition|(
 operator|(
