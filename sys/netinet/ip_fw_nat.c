@@ -429,7 +429,7 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_LOCK
+name|IF_ADDR_UNLOCK
 argument_list|(
 name|ifp
 argument_list|)
