@@ -294,6 +294,40 @@ value|__archive_string_copy(dest, src)
 end_define
 
 begin_comment
+comment|/* Concatenate one archive_string to another */
+end_comment
+
+begin_function_decl
+name|void
+name|__archive_string_concat
+parameter_list|(
+name|struct
+name|archive_string
+modifier|*
+name|dest
+parameter_list|,
+name|struct
+name|archive_string
+modifier|*
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|archive_string_concat
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+define|\
+value|__archive_string_concat(dest, src)
+end_define
+
+begin_comment
 comment|/* Ensure that the underlying buffer is at least as large as the request. */
 end_comment
 

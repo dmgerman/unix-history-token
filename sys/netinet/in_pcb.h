@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.h	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.h	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -188,25 +188,37 @@ decl_stmt|;
 block|}
 name|ie_dependladdr
 union|;
+block|}
+struct|;
+end_struct
+
+begin_define
 define|#
 directive|define
 name|ie_faddr
 value|ie_dependfaddr.ie46_foreign.ia46_addr4
+end_define
+
+begin_define
 define|#
 directive|define
 name|ie_laddr
 value|ie_dependladdr.ie46_local.ia46_addr4
+end_define
+
+begin_define
 define|#
 directive|define
 name|ie6_faddr
 value|ie_dependfaddr.ie6_foreign
+end_define
+
+begin_define
 define|#
 directive|define
 name|ie6_laddr
 value|ie_dependladdr.ie6_local
-block|}
-struct|;
-end_struct
+end_define
 
 begin_comment
 comment|/*  * XXX The defines for inc_* are hacks and should be changed to direct  * references.  */
@@ -332,7 +344,7 @@ name|socket
 modifier|*
 name|inp_socket
 decl_stmt|;
-comment|/* (i)  back pointer to socket */
+comment|/* (i) back pointer to socket */
 name|u_int32_t
 name|inp_flow
 decl_stmt|;
@@ -345,39 +357,6 @@ name|u_char
 name|inp_vflag
 decl_stmt|;
 comment|/* (i) IP version flag (v4/v6) */
-define|#
-directive|define
-name|INP_IPV4
-value|0x1
-define|#
-directive|define
-name|INP_IPV6
-value|0x2
-define|#
-directive|define
-name|INP_IPV6PROTO
-value|0x4
-comment|/* opened under IPv6 protocol */
-define|#
-directive|define
-name|INP_TIMEWAIT
-value|0x8
-comment|/* .. probably doesn't go here */
-define|#
-directive|define
-name|INP_ONESBCAST
-value|0x10
-comment|/* send all-ones broadcast */
-define|#
-directive|define
-name|INP_DROPPED
-value|0x20
-comment|/* protocol drop flag */
-define|#
-directive|define
-name|INP_SOCKREF
-value|0x40
-comment|/* strong socket reference */
 name|u_char
 name|inp_ip_ttl
 decl_stmt|;
@@ -411,6 +390,7 @@ name|in_conninfo
 name|inp_inc
 decl_stmt|;
 comment|/* (i/p) list for PCB's local port */
+comment|/* MAC and IPSEC policy information. */
 name|struct
 name|label
 modifier|*
@@ -441,38 +421,10 @@ name|ip_moptions
 modifier|*
 name|inp4_moptions
 decl_stmt|;
-comment|/* (i) IP multicast options */
+comment|/* (i) IP mcast options */
 block|}
 name|inp_depend4
 struct|;
-define|#
-directive|define
-name|inp_fport
-value|inp_inc.inc_fport
-define|#
-directive|define
-name|inp_lport
-value|inp_inc.inc_lport
-define|#
-directive|define
-name|inp_faddr
-value|inp_inc.inc_faddr
-define|#
-directive|define
-name|inp_laddr
-value|inp_inc.inc_laddr
-define|#
-directive|define
-name|inp_ip_tos
-value|inp_depend4.inp4_ip_tos
-define|#
-directive|define
-name|inp_options
-value|inp_depend4.inp4_options
-define|#
-directive|define
-name|inp_moptions
-value|inp_depend4.inp4_moptions
 struct|struct
 block|{
 comment|/* (i) IP options */
@@ -529,84 +481,199 @@ value|offsetof(struct inpcb, inp_gencnt)
 name|inp_gen_t
 name|inp_gencnt
 decl_stmt|;
-comment|/* (c) generation count of this instance */
+comment|/* (c) generation count */
 name|struct
 name|rwlock
 name|inp_lock
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|inp_fport
+value|inp_inc.inc_fport
+end_define
+
+begin_define
+define|#
+directive|define
+name|inp_lport
+value|inp_inc.inc_lport
+end_define
+
+begin_define
+define|#
+directive|define
+name|inp_faddr
+value|inp_inc.inc_faddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|inp_laddr
+value|inp_inc.inc_laddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|inp_ip_tos
+value|inp_depend4.inp4_ip_tos
+end_define
+
+begin_define
+define|#
+directive|define
+name|inp_options
+value|inp_depend4.inp4_options
+end_define
+
+begin_define
+define|#
+directive|define
+name|inp_moptions
+value|inp_depend4.inp4_moptions
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_faddr
 value|inp_inc.inc6_faddr
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_laddr
 value|inp_inc.inc6_laddr
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_hops
 value|inp_depend6.inp6_hops
+end_define
+
+begin_comment
 comment|/* default hop limit */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|in6p_ip6_nxt
 value|inp_ip_p
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_flowinfo
 value|inp_flow
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_vflag
 value|inp_vflag
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_options
 value|inp_depend6.inp6_options
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_outputopts
 value|inp_depend6.inp6_outputopts
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_moptions
 value|inp_depend6.inp6_moptions
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_icmp6filt
 value|inp_depend6.inp6_icmp6filt
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_cksum
 value|inp_depend6.inp6_cksum
+end_define
+
+begin_define
 define|#
 directive|define
 name|in6p_flags
 value|inp_flags
+end_define
+
+begin_comment
 comment|/* for KAME src sync over BSD*'s */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|in6p_socket
 value|inp_socket
+end_define
+
+begin_comment
 comment|/* for KAME src sync over BSD*'s */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|in6p_lport
 value|inp_lport
+end_define
+
+begin_comment
 comment|/* for KAME src sync over BSD*'s */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|in6p_fport
 value|inp_fport
+end_define
+
+begin_comment
 comment|/* for KAME src sync over BSD*'s */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|in6p_ppcb
 value|inp_ppcb
+end_define
+
+begin_comment
 comment|/* for KAME src sync over BSD*'s */
-block|}
-struct|;
-end_struct
+end_comment
 
 begin_comment
 comment|/*  * The range of the generation count, as used in this implementation, is 9e19.  * We would have to create 300 billion connections per second for this number  * to roll over in a year.  This seems sufficiently unlikely that we simply  * don't concern ourselves with that possibility.  */
@@ -1393,7 +1460,80 @@ value|(ntohs((lport))& (mask))
 end_define
 
 begin_comment
-comment|/* flags in inp_flags: */
+comment|/*  * Flags for inp_vflags -- historically version flags only, but now quite a  * bit more due to an overflow of inp_flag, leading to some locking ambiguity  * as some bits are stable from initial allocation, and others may change.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_IPV4
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_IPV6
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_IPV6PROTO
+value|0x4
+end_define
+
+begin_comment
+comment|/* opened under IPv6 protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_TIMEWAIT
+value|0x8
+end_define
+
+begin_comment
+comment|/* .. probably doesn't go here */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_ONESBCAST
+value|0x10
+end_define
+
+begin_comment
+comment|/* send all-ones broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_DROPPED
+value|0x20
+end_define
+
+begin_comment
+comment|/* protocol drop flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_SOCKREF
+value|0x40
+end_define
+
+begin_comment
+comment|/* strong socket reference */
+end_comment
+
+begin_comment
+comment|/*  * Flags for inp_flag.  */
 end_comment
 
 begin_define
