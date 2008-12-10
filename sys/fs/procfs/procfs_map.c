@@ -809,6 +809,11 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|vm_map_lock_read
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -823,11 +828,6 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-name|vm_map_lock_read
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|last_timestamp
