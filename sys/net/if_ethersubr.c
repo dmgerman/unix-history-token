@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -237,6 +249,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_dummynet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/vinet.h>
 end_include
 
 begin_endif
@@ -2158,7 +2176,7 @@ name|int
 name|shared
 parameter_list|)
 block|{
-name|INIT_VNET_IPFW
+name|INIT_VNET_INET
 argument_list|(
 name|dst
 operator|->

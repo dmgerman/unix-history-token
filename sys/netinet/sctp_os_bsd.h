@@ -228,6 +228,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -375,6 +381,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/scope6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/vinet6.h>
 end_include
 
 begin_endif
@@ -703,46 +715,8 @@ argument_list|)
 operator|&&
 name|__FreeBSD_version
 operator|>=
-literal|800044
-operator|&&
-name|defined
-argument_list|(
-name|VIMAGE
-argument_list|)
+literal|800056
 end_if
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|VSYMNAME
-parameter_list|(
-name|__MODULE
-parameter_list|)
-value|vnet_ ## __MODULE
-end_define
-
-begin_define
-define|#
-directive|define
-name|MODULE_GLOBAL
-parameter_list|(
-name|__MODULE
-parameter_list|,
-name|__SYMBOL
-parameter_list|)
-value|VSYM(VSYMNAME(__MODULE), __SYMBOL)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -755,11 +729,6 @@ name|__SYMBOL
 parameter_list|)
 value|V_ ## __SYMBOL
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#

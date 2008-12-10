@@ -958,6 +958,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -988,6 +994,47 @@ parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, kind,&a1, a2, handler, fmt, descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_OID
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|kind
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,	\
+name|handler
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, kind,& mod ## _0._ ## a1, a2,	\ 	    handler, fmt, descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1136,6 +1183,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1162,6 +1215,43 @@ parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_STRING|(access), \&sym, len, sysctl_handle_string, "A", descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_STRING
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|sym
+parameter_list|,
+name|len
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_STRING|(access), \& mod ## _0._ ## sym, len, sysctl_handle_string, "A", descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1258,6 +1348,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1284,6 +1380,43 @@ parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|(access), \&sym, val, sysctl_handle_int, "I", descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_INT
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|sym
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|(access), \& mod ## _0._ ## sym, val, sysctl_handle_int, "I", descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1380,6 +1513,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1406,6 +1545,43 @@ parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \&sym, val, sysctl_handle_int, "IU", descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_UINT
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|sym
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \& mod ## _0._ ## sym, val, sysctl_handle_int, "IU", descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1802,6 +1978,12 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1828,6 +2010,43 @@ parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|(access), \&sym, sizeof(struct type), sysctl_handle_opaque, \ 		"S," #type, descr)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_V_STRUCT
+parameter_list|(
+name|subs
+parameter_list|,
+name|mod
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|sym
+parameter_list|, \
+name|type
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|(access), \& mod ## _0._ ## sym, sizeof(struct type), \ 		sysctl_handle_opaque, "S," #type, descr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

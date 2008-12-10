@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vimage.h>
 end_include
 
@@ -13323,7 +13329,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INIT_VNET_IPFW
+name|INIT_VNET_INET
 argument_list|(
 name|curvnet
 argument_list|)

@@ -5522,7 +5522,7 @@ expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
-name|udbinfo
+name|V_udbinfo
 argument_list|)
 expr_stmt|;
 return|return

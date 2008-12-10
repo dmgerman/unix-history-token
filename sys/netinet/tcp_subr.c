@@ -918,7 +918,7 @@ name|pcbcount
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|V_tcbinfo
+name|tcbinfo
 operator|.
 name|ipi_count
 argument_list|,
@@ -1579,6 +1579,14 @@ expr_stmt|;
 name|tcp_finwait2_timeout
 operator|=
 name|TCPTV_FINWAIT2_TIMEOUT
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"net.inet.tcp.sack.enable"
+argument_list|,
+operator|&
+name|V_tcp_do_sack
+argument_list|)
 expr_stmt|;
 name|INP_INFO_LOCK_INIT
 argument_list|(

@@ -291,6 +291,11 @@ init|=
 literal|0x21D0000
 block|,
 comment|/* TrustedBSD MAC subsystem */
+name|SI_SUB_VIMAGE
+init|=
+literal|0x21E0000
+block|,
+comment|/* vimage infrastructure */
 name|SI_SUB_INTRINSIC
 init|=
 literal|0x2200000

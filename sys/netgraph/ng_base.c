@@ -147,6 +147,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+name|struct
+name|vnet_netgraph
+name|vnet_netgraph_0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Mutex to protect topology events. */
 end_comment
@@ -530,6 +559,12 @@ begin_comment
 comment|/* XXX Don't need to initialise them because it's a LIST */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
@@ -543,6 +578,11 @@ name|NG_ID_HASH_SIZE
 index|]
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -579,6 +619,12 @@ define|\
 value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(node,&V_ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
@@ -592,6 +638,11 @@ name|NG_NAME_HASH_SIZE
 index|]
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1562,14 +1613,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|ng_ID_t
 name|nextID
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -11880,6 +11940,10 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* Initialize everything. */
+name|V_nextID
+operator|=
+literal|1
+expr_stmt|;
 name|NG_WORKLIST_LOCK_INIT
 argument_list|()
 expr_stmt|;

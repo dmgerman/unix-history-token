@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -542,7 +548,7 @@ argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
 argument_list|(
-name|divcbinfo
+name|V_divcbinfo
 operator|.
 name|ipi_zone
 argument_list|,

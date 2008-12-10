@@ -459,9 +459,44 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE_GLOBALS
+end_ifndef
+
+begin_decl_stmt
+name|struct
+name|vnet_ipfw
+name|vnet_ipfw_0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * set_disable contains one bit per set value (0..31).  * If the bit is set, all rules with the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted explicitly.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -479,16 +514,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|verbose_limit
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|callout
 name|ipfw_timeout
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|verbose_limit
 decl_stmt|;
 end_decl_stmt
 
@@ -629,12 +669,16 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|fw_debug
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -642,14 +686,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|autoinc_step
-init|=
-literal|100
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* bounded to 1..1000 in add_rule() */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -746,7 +789,7 @@ name|SYSCTL_V_INT
 argument_list|(
 name|V_NET
 argument_list|,
-name|vnet_ipfw
+name|vnet_inet
 argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
@@ -882,14 +925,18 @@ begin_comment
 comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is stored in dyn_count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. XXX we should make them survive.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|ipfw_dyn_rule
 modifier|*
 modifier|*
 name|ipfw_dyn_v
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -897,27 +944,20 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_buckets
-init|=
-literal|256
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* must be power of 2 */
-end_comment
 
 begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|curr_dyn_buckets
-init|=
-literal|256
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* must be power of 2 */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -976,12 +1016,16 @@ begin_comment
 comment|/*  * Timeouts for various events in handing dynamic rules.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_ack_lifetime
-init|=
-literal|300
 decl_stmt|;
 end_decl_stmt
 
@@ -989,8 +1033,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_syn_lifetime
-init|=
-literal|20
 decl_stmt|;
 end_decl_stmt
 
@@ -998,8 +1040,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_fin_lifetime
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1007,8 +1047,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_rst_lifetime
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1016,8 +1054,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_udp_lifetime
-init|=
-literal|10
 decl_stmt|;
 end_decl_stmt
 
@@ -1025,8 +1061,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_short_lifetime
-init|=
-literal|5
 decl_stmt|;
 end_decl_stmt
 
@@ -1038,8 +1072,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_keepalive_interval
-init|=
-literal|20
 decl_stmt|;
 end_decl_stmt
 
@@ -1047,8 +1079,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_keepalive_period
-init|=
-literal|5
 decl_stmt|;
 end_decl_stmt
 
@@ -1056,14 +1086,8 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_keepalive
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* do send keepalives */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1102,13 +1126,20 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|dyn_max
-init|=
-literal|4096
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* max # of dynamic rules */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
 end_comment
 
 begin_expr_stmt
@@ -1452,14 +1483,23 @@ begin_comment
 comment|/* SYSCTL_NODE */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|fw_deny_unknown_exthdrs
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * L3HDR maps an ipv4 pointer into a layer3 header pointer of type T  * Other macros just cast void * into the appropriate type  */
@@ -3380,6 +3420,12 @@ begin_comment
 comment|/* INET6 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|u_int64_t
@@ -3390,6 +3436,11 @@ end_decl_stmt
 begin_comment
 comment|/* counter for ipfw_log(NULL...) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -19652,6 +19703,75 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|V_fw_debug
+operator|=
+literal|1
+expr_stmt|;
+name|V_autoinc_step
+operator|=
+literal|100
+expr_stmt|;
+comment|/* bounded to 1..1000 in add_rule() */
+name|V_ipfw_dyn_v
+operator|=
+name|NULL
+expr_stmt|;
+name|V_dyn_buckets
+operator|=
+literal|256
+expr_stmt|;
+comment|/* must be power of 2 */
+name|V_curr_dyn_buckets
+operator|=
+literal|256
+expr_stmt|;
+comment|/* must be power of 2 */
+name|V_dyn_ack_lifetime
+operator|=
+literal|300
+expr_stmt|;
+name|V_dyn_syn_lifetime
+operator|=
+literal|20
+expr_stmt|;
+name|V_dyn_fin_lifetime
+operator|=
+literal|1
+expr_stmt|;
+name|V_dyn_rst_lifetime
+operator|=
+literal|1
+expr_stmt|;
+name|V_dyn_udp_lifetime
+operator|=
+literal|10
+expr_stmt|;
+name|V_dyn_short_lifetime
+operator|=
+literal|5
+expr_stmt|;
+name|V_dyn_keepalive_interval
+operator|=
+literal|20
+expr_stmt|;
+name|V_dyn_keepalive_period
+operator|=
+literal|5
+expr_stmt|;
+name|V_dyn_keepalive
+operator|=
+literal|1
+expr_stmt|;
+comment|/* do send keepalives */
+name|V_dyn_max
+operator|=
+literal|4096
+expr_stmt|;
+comment|/* max # of dynamic rules */
+name|V_fw_deny_unknown_exthdrs
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
