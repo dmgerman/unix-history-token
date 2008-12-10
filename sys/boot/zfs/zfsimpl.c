@@ -2756,6 +2756,8 @@ name|vdevs
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|rc
 decl_stmt|;
 name|char
 name|upbuf
@@ -3177,6 +3179,8 @@ name|EIO
 operator|)
 return|;
 block|}
+name|rc
+operator|=
 name|vdev_init_from_nvlist
 argument_list|(
 name|vdevs
@@ -3185,6 +3189,15 @@ operator|&
 name|top_vdev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rc
+condition|)
+return|return
+operator|(
+name|rc
+operator|)
+return|;
 comment|/* 	 * Add the toplevel vdev to the pool if its not already there. 	 */
 name|STAILQ_FOREACH
 argument_list|(
