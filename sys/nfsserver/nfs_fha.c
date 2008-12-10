@@ -579,7 +579,7 @@ name|req
 operator|->
 name|rq_args
 decl_stmt|;
-name|fhandle_t
+name|nfsfh_t
 name|fh
 decl_stmt|;
 name|caddr_t
@@ -702,6 +702,8 @@ name|nfsm_srvmtofh_xx
 argument_list|(
 operator|&
 name|fh
+operator|.
+name|fh_generic
 argument_list|,
 name|v3
 argument_list|,
@@ -731,6 +733,8 @@ operator|*
 operator|)
 operator|(
 name|fh
+operator|.
+name|fh_generic
 operator|.
 name|fh_fid
 operator|.
