@@ -261,136 +261,6 @@ comment|/* state of this connection */
 name|u_int
 name|t_flags
 decl_stmt|;
-define|#
-directive|define
-name|TF_ACKNOW
-value|0x000001
-comment|/* ack peer immediately */
-define|#
-directive|define
-name|TF_DELACK
-value|0x000002
-comment|/* ack, but try to delay it */
-define|#
-directive|define
-name|TF_NODELAY
-value|0x000004
-comment|/* don't delay packets to coalesce */
-define|#
-directive|define
-name|TF_NOOPT
-value|0x000008
-comment|/* don't use tcp options */
-define|#
-directive|define
-name|TF_SENTFIN
-value|0x000010
-comment|/* have sent FIN */
-define|#
-directive|define
-name|TF_REQ_SCALE
-value|0x000020
-comment|/* have/will request window scaling */
-define|#
-directive|define
-name|TF_RCVD_SCALE
-value|0x000040
-comment|/* other side has requested scaling */
-define|#
-directive|define
-name|TF_REQ_TSTMP
-value|0x000080
-comment|/* have/will request timestamps */
-define|#
-directive|define
-name|TF_RCVD_TSTMP
-value|0x000100
-comment|/* a timestamp was received in SYN */
-define|#
-directive|define
-name|TF_SACK_PERMIT
-value|0x000200
-comment|/* other side said I could SACK */
-define|#
-directive|define
-name|TF_NEEDSYN
-value|0x000400
-comment|/* send SYN (implicit state) */
-define|#
-directive|define
-name|TF_NEEDFIN
-value|0x000800
-comment|/* send FIN (implicit state) */
-define|#
-directive|define
-name|TF_NOPUSH
-value|0x001000
-comment|/* don't push */
-define|#
-directive|define
-name|TF_MORETOCOME
-value|0x010000
-comment|/* More data to be appended to sock */
-define|#
-directive|define
-name|TF_LQ_OVERFLOW
-value|0x020000
-comment|/* listen queue overflow */
-define|#
-directive|define
-name|TF_LASTIDLE
-value|0x040000
-comment|/* connection was previously idle */
-define|#
-directive|define
-name|TF_RXWIN0SENT
-value|0x080000
-comment|/* sent a receiver win 0 in response */
-define|#
-directive|define
-name|TF_FASTRECOVERY
-value|0x100000
-comment|/* in NewReno Fast Recovery */
-define|#
-directive|define
-name|TF_WASFRECOVERY
-value|0x200000
-comment|/* was in NewReno Fast Recovery */
-define|#
-directive|define
-name|TF_SIGNATURE
-value|0x400000
-comment|/* require MD5 digests (RFC2385) */
-define|#
-directive|define
-name|TF_FORCEDATA
-value|0x800000
-comment|/* force out a byte */
-define|#
-directive|define
-name|TF_TSO
-value|0x1000000
-comment|/* TSO enabled on this connection */
-define|#
-directive|define
-name|TF_TOE
-value|0x2000000
-comment|/* this connection is offloaded */
-define|#
-directive|define
-name|TF_ECN_PERMIT
-value|0x4000000
-comment|/* connection ECN-ready */
-define|#
-directive|define
-name|TF_ECN_SND_CWR
-value|0x8000000
-comment|/* ECN CWR in queue */
-define|#
-directive|define
-name|TF_ECN_SND_ECE
-value|0x10000000
-comment|/* ECN ECE in queue */
 name|tcp_seq
 name|snd_una
 decl_stmt|;
@@ -540,14 +410,6 @@ name|char
 name|t_iobc
 decl_stmt|;
 comment|/* input character */
-define|#
-directive|define
-name|TCPOOB_HAVEDATA
-value|0x01
-define|#
-directive|define
-name|TCPOOB_HADDATA
-value|0x02
 comment|/* RFC 1323 variables */
 name|u_char
 name|snd_scale
@@ -671,6 +533,296 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Flags and utility macros for the t_flags field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_ACKNOW
+value|0x000001
+end_define
+
+begin_comment
+comment|/* ack peer immediately */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_DELACK
+value|0x000002
+end_define
+
+begin_comment
+comment|/* ack, but try to delay it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_NODELAY
+value|0x000004
+end_define
+
+begin_comment
+comment|/* don't delay packets to coalesce */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_NOOPT
+value|0x000008
+end_define
+
+begin_comment
+comment|/* don't use tcp options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_SENTFIN
+value|0x000010
+end_define
+
+begin_comment
+comment|/* have sent FIN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_REQ_SCALE
+value|0x000020
+end_define
+
+begin_comment
+comment|/* have/will request window scaling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_RCVD_SCALE
+value|0x000040
+end_define
+
+begin_comment
+comment|/* other side has requested scaling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_REQ_TSTMP
+value|0x000080
+end_define
+
+begin_comment
+comment|/* have/will request timestamps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_RCVD_TSTMP
+value|0x000100
+end_define
+
+begin_comment
+comment|/* a timestamp was received in SYN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_SACK_PERMIT
+value|0x000200
+end_define
+
+begin_comment
+comment|/* other side said I could SACK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_NEEDSYN
+value|0x000400
+end_define
+
+begin_comment
+comment|/* send SYN (implicit state) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_NEEDFIN
+value|0x000800
+end_define
+
+begin_comment
+comment|/* send FIN (implicit state) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_NOPUSH
+value|0x001000
+end_define
+
+begin_comment
+comment|/* don't push */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_MORETOCOME
+value|0x010000
+end_define
+
+begin_comment
+comment|/* More data to be appended to sock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_LQ_OVERFLOW
+value|0x020000
+end_define
+
+begin_comment
+comment|/* listen queue overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_LASTIDLE
+value|0x040000
+end_define
+
+begin_comment
+comment|/* connection was previously idle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_RXWIN0SENT
+value|0x080000
+end_define
+
+begin_comment
+comment|/* sent a receiver win 0 in response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_FASTRECOVERY
+value|0x100000
+end_define
+
+begin_comment
+comment|/* in NewReno Fast Recovery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_WASFRECOVERY
+value|0x200000
+end_define
+
+begin_comment
+comment|/* was in NewReno Fast Recovery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_SIGNATURE
+value|0x400000
+end_define
+
+begin_comment
+comment|/* require MD5 digests (RFC2385) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_FORCEDATA
+value|0x800000
+end_define
+
+begin_comment
+comment|/* force out a byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_TSO
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* TSO enabled on this connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_TOE
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* this connection is offloaded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_ECN_PERMIT
+value|0x4000000
+end_define
+
+begin_comment
+comment|/* connection ECN-ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_ECN_SND_CWR
+value|0x8000000
+end_define
+
+begin_comment
+comment|/* ECN CWR in queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_ECN_SND_ECE
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* ECN ECE in queue */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -699,6 +851,24 @@ parameter_list|(
 name|tp
 parameter_list|)
 value|tp->t_flags&= ~TF_FASTRECOVERY
+end_define
+
+begin_comment
+comment|/*  * Flags for the t_oobflags field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOOB_HAVEDATA
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOOB_HADDATA
+value|0x02
 end_define
 
 begin_ifdef
