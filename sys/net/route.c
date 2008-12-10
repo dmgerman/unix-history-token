@@ -2682,7 +2682,7 @@ name|gateway
 argument_list|,
 literal|0
 argument_list|,
-literal|0UL
+name|RTF_RNH_LOCKED
 argument_list|,
 name|fibnum
 argument_list|)
@@ -4732,7 +4732,7 @@ name|dst
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|RTF_RNH_LOCKED
 argument_list|,
 name|fibnum
 argument_list|)
