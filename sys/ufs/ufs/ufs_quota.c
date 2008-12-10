@@ -5798,7 +5798,9 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"dqget: free dquot isn't"
+literal|"dqget: free dquot isn't %p"
+argument_list|,
+name|dq
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
