@@ -4940,6 +4940,15 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+name|lprintf
+argument_list|(
+literal|1
+argument_list|,
+literal|" Append to %s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|updater_append_file
