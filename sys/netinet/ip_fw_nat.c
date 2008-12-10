@@ -364,12 +364,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_lock
+name|IF_ADDR_LOCK
 argument_list|(
-operator|&
 name|ifp
-operator|->
-name|if_addr_mtx
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -432,12 +429,9 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|IF_ADDR_LOCK
 argument_list|(
-operator|&
 name|ifp
-operator|->
-name|if_addr_mtx
 argument_list|)
 expr_stmt|;
 block|}
