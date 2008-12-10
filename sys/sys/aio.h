@@ -179,24 +179,16 @@ name|size_t
 name|aio_nbytes
 decl_stmt|;
 comment|/* Number of bytes for I/O */
-name|char
+name|int
 name|__spare__
 index|[
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|*
 literal|2
-operator|+
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
 index|]
 decl_stmt|;
-comment|/* osigevent. */
+name|void
+modifier|*
+name|__spare2__
+decl_stmt|;
 name|int
 name|aio_lio_opcode
 decl_stmt|;
