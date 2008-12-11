@@ -520,37 +520,6 @@ decl_stmt|;
 name|u_int8_t
 name|sc_flags
 decl_stmt|;
-define|#
-directive|define
-name|SCF_NOOPT
-value|0x01
-comment|/* no TCP options */
-define|#
-directive|define
-name|SCF_WINSCALE
-value|0x02
-comment|/* negotiated window scaling */
-define|#
-directive|define
-name|SCF_TIMESTAMP
-value|0x04
-comment|/* negotiated timestamps */
-comment|/* MSS is implicit */
-define|#
-directive|define
-name|SCF_UNREACH
-value|0x10
-comment|/* icmp unreachable received */
-define|#
-directive|define
-name|SCF_SIGNATURE
-value|0x20
-comment|/* send MD5 digests */
-define|#
-directive|define
-name|SCF_SACK
-value|0x80
-comment|/* send SACK option */
 ifndef|#
 directive|ifndef
 name|TCP_OFFLOAD_DISABLE
@@ -587,6 +556,80 @@ comment|/* cred cache for jail checks */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Flags for the sc_flags field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCF_NOOPT
+value|0x01
+end_define
+
+begin_comment
+comment|/* no TCP options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCF_WINSCALE
+value|0x02
+end_define
+
+begin_comment
+comment|/* negotiated window scaling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCF_TIMESTAMP
+value|0x04
+end_define
+
+begin_comment
+comment|/* negotiated timestamps */
+end_comment
+
+begin_comment
+comment|/* MSS is implicit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCF_UNREACH
+value|0x10
+end_define
+
+begin_comment
+comment|/* icmp unreachable received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCF_SIGNATURE
+value|0x20
+end_define
+
+begin_comment
+comment|/* send MD5 digests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCF_SACK
+value|0x80
+end_define
+
+begin_comment
+comment|/* send SACK option */
+end_comment
 
 begin_ifdef
 ifdef|#
