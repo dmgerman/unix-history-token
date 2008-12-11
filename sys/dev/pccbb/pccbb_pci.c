@@ -2995,13 +2995,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|DELTA
-value|(CBB_SOCKET_MASK_CD)
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -3022,12 +3015,75 @@ decl_stmt|;
 name|uint32_t
 name|sockevent
 decl_stmt|;
+name|uint8_t
+name|csc
+decl_stmt|;
 name|int
 name|retval
 init|=
 name|FILTER_STRAY
 decl_stmt|;
-comment|/* 	 * Read the socket event.  Sometimes, the theory goes, the PCI 	 * bus is so loaded that it cannot satisfy the read request, so 	 * we get garbage back from the following read.  We have to filter 	 * out the garbage so that we don't spontaneously reset the card 	 * under high load.  PCI isn't supposed to act like this.  No doubt 	 * this is a bug in the PCI bridge chipset (or cbb brige) that's being 	 * used in certain amd64 laptops today.  Work around the issue by 	 * assuming that any bits we don't know about being set means that 	 * we got garbage. 	 */
+comment|/* 	 * Some chips also require us to read the old ExCA registe for card 	 * status change when we route CSC vis PCI.  This isn't supposed to be 	 * required, but it clears the interrupt state on some chipsets. 	 * Maybe there's a setting that would obviate its need.  Maybe we 	 * should test the status bits and deal with them, but so far we've 	 * not found any machines that don't also give us the socket status 	 * indication above. 	 * 	 * This call used to be unconditional.  However, further research 	 * suggests that we hit this condition when the card READY interrupt 	 * fired.  So now we only read it for 16-bit cards, and we only claim 	 * the interrupt if READY is set.  If this still causes problems, then 	 * the next step would be to read this if we have a 16-bit card *OR* 	 * we have no card.  We treat the READY signal as if it were the power 	 * completion signal.  Some bridges may double signal things here, bit 	 * signalling twice should be OK since we only sleep on the powerintr 	 * in one place and a double wakeup would be benign there. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|CBB_16BIT_CARD
+condition|)
+block|{
+name|csc
+operator|=
+name|exca_getb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|exca
+index|[
+literal|0
+index|]
+argument_list|,
+name|EXCA_CSC
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|csc
+operator|&
+name|EXCA_CSC_READY
+condition|)
+block|{
+name|atomic_add_int
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|powerintr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|sc
+operator|->
+name|powerintr
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+name|FILTER_HANDLED
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * Read the socket event.  Sometimes, the theory goes, the PCI bus is 	 * so loaded that it cannot satisfy the read request, so we get 	 * garbage back from the following read.  We have to filter out the 	 * garbage so that we don't spontaneously reset the card under high 	 * load.  PCI isn't supposed to act like this.  No doubt this is a bug 	 * in the PCI bridge chipset (or cbb brige) that's being used in 	 * certain amd64 laptops today.  Work around the issue by assuming 	 * that any bits we don't know about being set means that we got 	 * garbage. 	 */
 name|sockevent
 operator|=
 name|cbb_get
@@ -3053,7 +3109,11 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * If anything has happened to the socket, we assume that 		 * the card is no longer OK, and we shouldn't call its 		 * ISR.  We set cardok as soon as we've attached the 		 * card.  This helps in a noisy eject, which happens 		 * all too often when users are ejecting their PC Cards. 		 * 		 * We use this method in preference to checking to see if 		 * the card is still there because the check suffers from 		 * a race condition in the bouncing case.  Prior versions 		 * of the pccard software used a similar trick and achieved 		 * excellent results. 		 */
+comment|/* 		 * If anything has happened to the socket, we assume that the 		 * card is no longer OK, and we shouldn't call its ISR.  We 		 * set cardok as soon as we've attached the card.  This helps 		 * in a noisy eject, which happens all too often when users 		 * are ejecting their PC Cards. 		 * 		 * We use this method in preference to checking to see if the 		 * card is still there because the check suffers from a race 		 * condition in the bouncing case. 		 */
+define|#
+directive|define
+name|DELTA
+value|(CBB_SOCKET_MASK_CD)
 if|if
 condition|(
 name|sockevent
@@ -3099,7 +3159,10 @@ name|intrhand
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If we get a power interrupt, wakeup anybody that might 		 * be waiting for one. 		 */
+undef|#
+directive|undef
+name|DELTA
+comment|/* 		 * Wakeup anybody waiting for a power interrupt.  We have to 		 * use atomic_add_int for wakups on other cores. 		 */
 if|if
 condition|(
 name|sockevent
@@ -3148,25 +3211,27 @@ name|powerintr
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Status change interrupts aren't presently used in the 		 * rest of the driver.  For now, just ACK them. 		 */
+if|if
+condition|(
+name|sockevent
+operator|&
+name|CBB_SOCKET_EVENT_CSTS
+condition|)
+name|cbb_set
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_EVENT
+argument_list|,
+name|CBB_SOCKET_EVENT_CSTS
+argument_list|)
+expr_stmt|;
 name|retval
 operator|=
 name|FILTER_HANDLED
 expr_stmt|;
 block|}
-comment|/* 	 * Some chips also require us to read the old ExCA registe for 	 * card status change when we route CSC vis PCI.  This isn't supposed 	 * to be required, but it clears the interrupt state on some chipsets. 	 * Maybe there's a setting that would obviate its need.  Maybe we 	 * should test the status bits and deal with them, but so far we've 	 * not found any machines that don't also give us the socket status 	 * indication above. 	 * 	 * We have to call this unconditionally because some bridges deliver 	 * the event independent of the CBB_SOCKET_EVENT_CD above. 	 */
-name|exca_getb
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|exca
-index|[
-literal|0
-index|]
-argument_list|,
-name|EXCA_CSC
-argument_list|)
-expr_stmt|;
 return|return
 name|retval
 return|;
