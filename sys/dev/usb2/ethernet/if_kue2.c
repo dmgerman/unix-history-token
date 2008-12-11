@@ -1386,7 +1386,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -1460,7 +1459,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1561,7 +1559,6 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1669,7 +1666,6 @@ name|kue_trig_seg
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1726,7 +1722,6 @@ operator|->
 name|if_rxfilt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1797,7 +1792,6 @@ name|if_nhash
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1919,7 +1913,6 @@ operator||=
 name|KUE_RXFILT_MULTICAST
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1999,7 +1992,6 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2811,7 +2803,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3210,7 +3201,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3582,7 +3572,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3638,7 +3627,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3693,7 +3681,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3747,7 +3734,6 @@ name|sc_flags
 operator||=
 name|KUE_FLAG_HL_READY
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3832,7 +3818,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4091,7 +4076,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4156,7 +4140,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4271,7 +4254,6 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

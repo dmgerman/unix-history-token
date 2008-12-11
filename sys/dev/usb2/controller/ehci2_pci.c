@@ -1801,7 +1801,6 @@ expr_stmt|;
 comment|/* wait 10ms */
 block|}
 block|}
-return|return;
 block|}
 end_function
 

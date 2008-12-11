@@ -1918,7 +1918,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1985,7 +1984,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2019,7 +2017,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2063,7 +2060,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2196,7 +2192,6 @@ name|cad
 operator|->
 name|bmCapabilities
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2247,7 +2242,6 @@ name|sc
 operator|->
 name|sc_msr
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2520,7 +2514,6 @@ operator|&
 name|ls
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2744,7 +2737,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2862,7 +2854,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2981,7 +2972,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3423,7 +3413,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3616,7 +3605,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3814,7 +3802,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4164,7 +4151,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 

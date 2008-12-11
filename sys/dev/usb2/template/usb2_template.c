@@ -622,7 +622,6 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1002,7 +1001,6 @@ operator|->
 name|bNumEndpoints
 operator|++
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1256,7 +1254,6 @@ operator|->
 name|iInterface
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1489,7 +1486,6 @@ name|UC_SELF_POWERED
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -1936,7 +1932,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -4658,7 +4653,6 @@ name|pLength
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5038,7 +5032,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5147,7 +5140,6 @@ operator|=
 operator|&
 name|usb2_temp_unsetup
 expr_stmt|;
-return|return;
 block|}
 end_function
 

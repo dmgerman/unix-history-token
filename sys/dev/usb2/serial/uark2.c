@@ -1392,7 +1392,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1581,7 +1580,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1615,7 +1613,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1659,7 +1656,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1693,7 +1689,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1737,7 +1732,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2000,7 +1994,6 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2046,7 +2039,6 @@ name|sc
 operator|->
 name|sc_msr
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2093,7 +2085,6 @@ else|:
 literal|0x00
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2215,7 +2206,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

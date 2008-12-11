@@ -6811,7 +6811,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6880,7 +6879,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6924,7 +6922,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7009,7 +7006,6 @@ name|STATUS_WIRE_FAILED
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7065,7 +7061,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7253,7 +7248,6 @@ argument_list|,
 name|UMASS_T_BBB_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7277,7 +7271,6 @@ argument_list|,
 name|UMASS_T_BBB_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7997,7 +7990,6 @@ argument_list|,
 name|UMASS_T_BBB_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8270,7 +8262,6 @@ argument_list|,
 name|UMASS_T_BBB_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9045,7 +9036,6 @@ name|ccb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -9264,7 +9254,6 @@ name|STATUS_CMD_UNKNOWN
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -9524,7 +9513,6 @@ argument_list|,
 name|UMASS_T_CBI_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9575,7 +9563,6 @@ argument_list|,
 name|UMASS_T_CBI_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9599,7 +9586,6 @@ argument_list|,
 name|UMASS_T_CBI_STATUS
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10248,7 +10234,6 @@ argument_list|,
 name|UMASS_T_CBI_DATA_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10532,7 +10517,6 @@ argument_list|,
 name|UMASS_T_CBI_DATA_WRITE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11286,7 +11270,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11488,7 +11471,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* The scan is in progress now. */
-return|return;
 block|}
 end_function
 
@@ -11555,7 +11537,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -11634,7 +11615,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13120,7 +13100,6 @@ argument_list|,
 name|UMASS_T_MAX
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13738,7 +13717,6 @@ name|ccb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13803,7 +13781,6 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15099,7 +15076,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15211,7 +15187,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15333,7 +15308,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15515,7 +15489,6 @@ argument_list|,
 name|s3
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

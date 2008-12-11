@@ -2026,7 +2026,6 @@ operator|=
 operator|&
 name|usb2_quirk_ioctl
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2052,7 +2051,6 @@ operator|&
 name|usb2_quirk_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

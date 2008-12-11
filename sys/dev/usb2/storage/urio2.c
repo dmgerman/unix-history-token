@@ -1387,7 +1387,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1599,7 +1598,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1633,7 +1631,6 @@ name|URIO_T_RD
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1677,7 +1674,6 @@ name|URIO_T_RD
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1711,7 +1707,6 @@ name|URIO_T_WR
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1755,7 +1750,6 @@ name|URIO_T_WR
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1953,7 +1947,6 @@ name|fifo
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

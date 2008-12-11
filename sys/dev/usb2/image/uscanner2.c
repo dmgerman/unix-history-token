@@ -2613,7 +2613,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2681,7 +2680,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2836,7 +2834,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2904,7 +2901,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3093,7 +3089,6 @@ name|fifo
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

@@ -739,7 +739,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -814,7 +813,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -884,7 +882,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -936,7 +933,6 @@ name|sc_pull_arg
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -981,7 +977,6 @@ name|sc_pull_arg
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1043,7 +1038,6 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1132,7 +1126,6 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1170,7 +1163,6 @@ operator||
 name|AT91_UDP_FADDR_EN
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2866,7 +2858,6 @@ name|repeat
 goto|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -3021,7 +3012,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3318,7 +3308,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3427,7 +3416,6 @@ name|temp
 operator|->
 name|setup_alt_next
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4023,7 +4011,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4086,7 +4073,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4196,7 +4182,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -4667,7 +4652,6 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4778,7 +4762,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4900,7 +4883,6 @@ argument_list|,
 name|csr_val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5242,7 +5224,6 @@ argument_list|,
 name|csr_val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5356,7 +5337,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5668,7 +5648,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5747,7 +5726,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5788,7 +5766,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5829,7 +5806,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5909,7 +5885,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5950,7 +5925,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6030,7 +6004,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6071,7 +6044,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6151,7 +6123,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6336,7 +6307,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6357,7 +6327,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6466,7 +6435,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6956,7 +6924,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6984,7 +6951,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8396,7 +8362,6 @@ operator|&
 name|at91dci_root_ctrl_done
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8505,7 +8470,6 @@ argument_list|,
 name|USB_ERR_CANCELLED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8552,7 +8516,6 @@ name|xfer
 operator|=
 name|xfer
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9008,7 +8971,6 @@ index|]
 operator|=
 name|last_obj
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9234,7 +9196,6 @@ comment|/* do nothing */
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 

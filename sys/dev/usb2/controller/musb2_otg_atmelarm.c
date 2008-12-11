@@ -166,7 +166,6 @@ argument_list|,
 name|vbus_val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -186,7 +185,6 @@ literal|0
 block|struct musbotg_super_softc *sc = arg;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -206,7 +204,6 @@ literal|0
 block|struct musbotg_super_softc *sc = arg;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 

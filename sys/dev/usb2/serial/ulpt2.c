@@ -769,7 +769,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -938,7 +937,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1002,7 +1000,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1239,7 +1236,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1303,7 +1299,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1582,7 +1577,6 @@ comment|/* wait for next watchdog timeout */
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1914,7 +1908,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1958,7 +1951,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1992,7 +1984,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2036,7 +2027,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2354,7 +2344,6 @@ name|fifo
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3205,7 +3194,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

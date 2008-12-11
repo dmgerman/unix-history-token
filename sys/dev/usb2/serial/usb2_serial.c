@@ -797,7 +797,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1136,7 +1135,6 @@ operator|->
 name|sc_config_td
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1495,7 +1493,6 @@ operator|->
 name|sc_cv
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1594,7 +1591,6 @@ operator|)
 operator|%
 literal|2
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1667,7 +1663,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1727,7 +1722,6 @@ name|SER_DTR
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1912,7 +1906,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2007,7 +2000,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2092,7 +2084,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -2356,7 +2347,6 @@ else|else
 block|{
 comment|/* already closed */
 block|}
-return|return;
 block|}
 end_function
 
@@ -2488,7 +2478,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2988,7 +2977,6 @@ name|cc_flag0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3046,7 +3034,6 @@ argument_list|,
 name|onoff
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3123,7 +3110,6 @@ name|cc_flag0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3181,7 +3167,6 @@ argument_list|,
 name|onoff
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3258,7 +3243,6 @@ name|cc_flag0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3316,7 +3300,6 @@ argument_list|,
 name|onoff
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3502,7 +3485,6 @@ name|onoff
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3554,7 +3536,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3644,7 +3625,6 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4007,7 +3987,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4472,7 +4451,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

@@ -1000,7 +1000,6 @@ literal|"no FIFOs\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1992,7 +1991,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2044,7 +2042,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2080,7 +2077,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2295,7 +2291,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2441,7 +2436,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2520,7 +2514,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2599,7 +2592,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2770,7 +2762,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2943,7 +2934,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4954,7 +4944,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10149,7 +10138,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 

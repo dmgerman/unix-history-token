@@ -2682,7 +2682,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -2746,7 +2745,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3260,7 +3258,6 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * We pause reading data from the interrupt endpoint until the 	 * data has been picked up! 	 */
-return|return;
 block|}
 end_function
 
@@ -3674,7 +3671,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3864,7 +3860,6 @@ name|sc_intr_cv
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4107,7 +4102,6 @@ name|olen
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4180,7 +4174,6 @@ operator|.
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4311,7 +4304,6 @@ operator|.
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4383,7 +4375,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4489,7 +4480,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4657,7 +4647,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4721,7 +4710,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5137,7 +5125,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5680,7 +5667,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6460,7 +6446,6 @@ argument_list|,
 name|bintval
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6647,7 +6632,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6695,7 +6679,6 @@ else|:
 literal|0x81
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6765,7 +6748,6 @@ operator|.
 name|r2
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6828,7 +6810,6 @@ else|:
 literal|0x2f
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6939,7 +6920,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7046,7 +7026,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7150,7 +7129,6 @@ argument_list|,
 literal|0x06
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7198,7 +7176,6 @@ else|:
 literal|0x2f
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7437,7 +7414,6 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7639,7 +7615,6 @@ argument_list|,
 literal|0x08
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7856,7 +7831,6 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7990,7 +7964,6 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8013,7 +7986,6 @@ name|on
 parameter_list|)
 block|{
 comment|/* vendor driver does nothing for this RF chip */
-return|return;
 block|}
 end_function
 
@@ -8120,7 +8092,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8177,7 +8148,6 @@ argument_list|,
 literal|0x1c0008
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8200,7 +8170,6 @@ name|on
 parameter_list|)
 block|{
 comment|/* vendor driver does nothing for this RF chip */
-return|return;
 block|}
 end_function
 
@@ -8361,7 +8330,6 @@ literal|4
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8581,7 +8549,6 @@ literal|4
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8604,7 +8571,6 @@ name|on
 parameter_list|)
 block|{
 comment|/* vendor driver does nothing for this RF chip */
-return|return;
 block|}
 end_function
 
@@ -8765,7 +8731,6 @@ literal|4
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8985,7 +8950,6 @@ literal|4
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10184,7 +10148,6 @@ operator|&
 literal|0xff
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -10275,7 +10238,6 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10320,7 +10282,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10414,7 +10375,6 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11519,7 +11479,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11609,7 +11568,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -11868,7 +11826,6 @@ argument_list|,
 name|high
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12071,7 +12028,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12094,7 +12050,6 @@ operator|&
 name|zyd_cfg_scan_start
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12117,7 +12072,6 @@ operator|&
 name|zyd_cfg_scan_end
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12140,7 +12094,6 @@ operator|&
 name|zyd_cfg_set_chan
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12176,7 +12129,6 @@ operator|->
 name|if_broadcastaddr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12210,7 +12162,6 @@ operator|.
 name|ni_bssid
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12492,7 +12443,6 @@ operator|->
 name|ic_flags
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12574,7 +12524,6 @@ name|ifp
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12885,7 +12834,6 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13009,7 +12957,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13064,7 +13011,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13122,7 +13068,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13180,7 +13125,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13253,7 +13197,6 @@ argument_list|,
 name|rxfilter
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13310,7 +13253,6 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13360,7 +13302,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13424,7 +13365,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -13989,7 +13929,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14276,7 +14215,6 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -14331,7 +14269,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14601,7 +14538,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14733,7 +14669,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -15120,7 +15055,6 @@ name|sc_flags
 operator||=
 name|ZYD_FLAG_WAIT_COMMAND
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15153,7 +15087,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15201,7 +15134,6 @@ argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15311,7 +15243,6 @@ comment|/* ignore */
 block|}
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -15396,7 +15327,6 @@ name|sc_amrr_timer
 operator|=
 literal|1
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15723,7 +15653,6 @@ argument_list|,
 name|M_80211_VAP
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15904,7 +15833,6 @@ name|ni
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -15954,7 +15882,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -16039,7 +15966,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -16354,7 +16280,6 @@ argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16703,7 +16628,6 @@ argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

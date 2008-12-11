@@ -159,7 +159,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -439,7 +438,6 @@ name|usb2_proc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -498,7 +496,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -789,7 +786,6 @@ name|pi_1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

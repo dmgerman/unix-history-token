@@ -1191,7 +1191,6 @@ name|bus
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1268,7 +1267,6 @@ name|pipe
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1823,7 +1821,6 @@ name|curr_config_index
 operator|=
 name|USB_UNCONFIG_INDEX
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3160,7 +3157,6 @@ argument_list|(
 literal|"An USB driver would not detach!\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3337,7 +3333,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3653,7 +3648,6 @@ operator|=
 name|parent_index
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3809,7 +3803,6 @@ name|udev
 operator|->
 name|curr_config_no
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4288,7 +4281,6 @@ literal|"Resume"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4531,7 +4523,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6464,7 +6455,6 @@ argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6901,7 +6891,6 @@ name|address
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7325,7 +7314,6 @@ name|product_id
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7826,7 +7814,6 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7996,7 +7983,6 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

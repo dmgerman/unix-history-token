@@ -1146,7 +1146,6 @@ name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3061,7 +3060,6 @@ operator|&
 name|usb2_ref_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4087,7 +4085,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4557,7 +4554,6 @@ block|{
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -4857,7 +4853,6 @@ argument_list|(
 literal|"closed\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6102,7 +6097,6 @@ name|dev
 operator|=
 name|usb2_dev
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6149,7 +6143,6 @@ operator|&
 name|usb2_ugen_methods
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6242,7 +6235,6 @@ literal|"Registering clone handler failed!\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6316,7 +6308,6 @@ operator|&
 name|usb2_sym_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8578,7 +8569,6 @@ name|cv_io
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8652,7 +8642,6 @@ name|async_p
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8852,7 +8841,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* not flushing */
-return|return;
 block|}
 end_function
 
@@ -8988,7 +8976,6 @@ operator|=
 operator|&
 name|usb2_fifo_dummy_cmd
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9768,7 +9755,6 @@ name|used_q
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9838,7 +9824,6 @@ argument_list|,
 name|f_sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10062,7 +10047,6 @@ block|{
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -10226,7 +10210,6 @@ block|{
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -10329,7 +10312,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10880,7 +10862,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11095,7 +11076,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

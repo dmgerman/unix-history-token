@@ -690,7 +690,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3157,7 +3156,6 @@ block|{
 name|usb2_needs_explore_all
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3341,7 +3339,6 @@ name|portno
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3974,7 +3971,6 @@ name|frame_slot
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4017,7 +4013,6 @@ name|fss
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4611,7 +4606,6 @@ argument_list|,
 name|udev
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4702,7 +4696,6 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4812,7 +4805,6 @@ name|max
 operator|--
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

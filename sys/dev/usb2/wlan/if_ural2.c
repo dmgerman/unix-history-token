@@ -3606,7 +3606,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -3674,7 +3673,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3752,7 +3750,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3915,7 +3912,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3989,7 +3985,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4067,7 +4062,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4218,7 +4212,6 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4458,7 +4451,6 @@ operator|&
 literal|0xfffff
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5052,7 +5044,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5176,7 +5167,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5460,7 +5450,6 @@ name|sc_flags
 operator||=
 name|URAL_FLAG_WAIT_COMMAND
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6201,7 +6190,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6992,7 +6980,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7330,7 +7317,6 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7394,7 +7380,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7473,7 +7458,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7532,7 +7516,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7770,7 +7753,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7956,7 +7938,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8220,7 +8201,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8243,7 +8223,6 @@ operator|&
 name|ural_cfg_scan_start
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8266,7 +8245,6 @@ operator|&
 name|ural_cfg_scan_end
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8289,7 +8267,6 @@ operator|&
 name|ural_cfg_set_chan
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8331,7 +8308,6 @@ operator|->
 name|if_broadcastaddr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8375,7 +8351,6 @@ operator|.
 name|ni_bssid
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9180,7 +9155,6 @@ condition|)
 block|{
 return|return;
 block|}
-return|return;
 block|}
 end_function
 
@@ -9383,7 +9357,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -9464,7 +9437,6 @@ argument_list|,
 literal|"disabling RF autotune\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9626,7 +9598,6 @@ argument_list|(
 literal|"enabling TSF synchronization\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9661,7 +9632,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9779,7 +9749,6 @@ argument_list|,
 name|eifs
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9845,7 +9814,6 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9910,7 +9878,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9975,7 +9942,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10058,7 +10024,6 @@ else|:
 literal|"leaving"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10217,7 +10182,6 @@ literal|0x7
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10311,7 +10275,6 @@ argument_list|,
 name|rx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10482,7 +10445,6 @@ name|sc_txpow
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10716,7 +10678,6 @@ name|ifp
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11197,7 +11158,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -11318,7 +11278,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11399,7 +11358,6 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11484,7 +11442,6 @@ name|sc_amrr_timer
 operator|=
 literal|1
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11688,7 +11645,6 @@ operator|+=
 name|fail
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -12016,7 +11972,6 @@ argument_list|,
 name|M_80211_VAP
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12131,7 +12086,6 @@ argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12245,7 +12199,6 @@ name|ni
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -12295,7 +12248,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -12380,7 +12332,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -12629,7 +12580,6 @@ operator|->
 name|mgmtrate
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12879,7 +12829,6 @@ operator|->
 name|mgmtrate
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13220,7 +13169,6 @@ argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13504,7 +13452,6 @@ argument_list|,
 name|protrate
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13660,7 +13607,6 @@ argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13782,7 +13728,6 @@ name|ifp
 parameter_list|)
 block|{
 comment|/* not supported */
-return|return;
 block|}
 end_function
 
@@ -13840,7 +13785,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

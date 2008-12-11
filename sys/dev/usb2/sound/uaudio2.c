@@ -4062,7 +4062,6 @@ name|bSynchAddress
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5363,7 +5362,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -5557,7 +5555,6 @@ name|sc_sndstat
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5913,7 +5910,6 @@ goto|goto
 name|tr_transferred
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7307,7 +7303,6 @@ literal|"out of memory\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7643,7 +7638,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -7726,7 +7720,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -7801,7 +7794,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -8280,7 +8272,6 @@ operator|+=
 name|chs
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8546,7 +8537,6 @@ operator|&
 name|mix
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9204,7 +9194,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -9486,7 +9475,6 @@ operator|&
 name|mix
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9723,7 +9711,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -9907,7 +9894,6 @@ name|mix
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -10622,7 +10608,6 @@ operator|>>=
 literal|1
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -12739,7 +12724,6 @@ operator|->
 name|recurse_level
 operator|--
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12881,7 +12865,6 @@ name|j
 operator|--
 condition|)
 do|;
-return|return;
 block|}
 end_function
 
@@ -14000,7 +13983,6 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -15018,7 +15000,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15160,7 +15141,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -15421,7 +15401,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -15703,7 +15682,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -16050,7 +16028,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -17319,7 +17296,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -17383,7 +17359,6 @@ literal|"(stopping read transfer)\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -17417,7 +17392,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -17500,7 +17474,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -17720,7 +17693,6 @@ name|fifo
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -17803,7 +17775,6 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

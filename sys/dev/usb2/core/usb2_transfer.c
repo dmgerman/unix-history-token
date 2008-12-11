@@ -815,7 +815,6 @@ operator|->
 name|max_packet_size
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2809,7 +2808,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4544,7 +4542,6 @@ argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4769,7 +4766,6 @@ block|}
 block|}
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -4852,7 +4848,6 @@ name|UE_DIR_IN
 else|:
 name|UE_DIR_OUT
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5861,7 +5856,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6000,7 +5994,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6091,7 +6084,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6311,7 +6303,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6550,7 +6541,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6587,7 +6577,6 @@ name|buffer
 operator|=
 name|ptr
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6645,7 +6634,6 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6729,7 +6717,6 @@ operator|->
 name|priv_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7222,7 +7209,6 @@ operator|.
 name|curr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7284,7 +7270,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7337,7 +7322,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7389,7 +7373,6 @@ name|wait_entry
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7586,7 +7569,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7703,7 +7685,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7765,7 +7746,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7827,7 +7807,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8198,7 +8177,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8259,7 +8237,6 @@ argument_list|,
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9128,7 +9105,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -9325,7 +9301,6 @@ goto|goto
 name|repeat
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -9379,7 +9354,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9777,7 +9751,6 @@ name|mtx
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -10085,7 +10058,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -10109,7 +10081,6 @@ name|max
 parameter_list|)
 block|{
 comment|/* polling not supported */
-return|return;
 block|}
 end_function
 

@@ -268,7 +268,6 @@ name|pLength
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -306,7 +305,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -339,7 +337,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -377,7 +374,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -404,7 +400,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

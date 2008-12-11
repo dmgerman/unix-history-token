@@ -1859,7 +1859,6 @@ name|xfer
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4619,7 +4618,6 @@ expr_stmt|;
 name|usb2_needs_explore_all
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4705,7 +4703,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4791,7 +4788,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4826,7 +4822,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4876,7 +4871,6 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4914,7 +4908,6 @@ name|urb
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4944,7 +4937,6 @@ condition|)
 block|{
 comment|/* ignore */
 block|}
-return|return;
 block|}
 end_function
 
@@ -4972,7 +4964,6 @@ name|bsd_priv_sc
 operator|=
 name|data
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5086,7 +5077,6 @@ name|uhi
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5130,7 +5120,6 @@ operator|&=
 operator|~
 name|URB_WAIT_WAKEUP
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5183,7 +5172,6 @@ name|urb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

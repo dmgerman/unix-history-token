@@ -2070,7 +2070,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -2345,7 +2344,6 @@ operator|&
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2427,7 +2425,6 @@ operator|&
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2565,7 +2562,6 @@ operator|>>
 literal|8
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2629,7 +2625,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3238,7 +3233,6 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3362,7 +3356,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3411,7 +3404,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3597,7 +3589,6 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4546,7 +4537,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4805,7 +4795,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5248,7 +5237,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5669,7 +5657,6 @@ literal|7
 operator|)
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5715,7 +5702,6 @@ argument_list|,
 name|cc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5845,7 +5831,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5890,7 +5875,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5945,7 +5929,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6011,7 +5994,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6065,7 +6047,6 @@ name|sc_flags
 operator||=
 name|AUE_FLAG_HL_READY
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6217,7 +6198,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6272,7 +6252,6 @@ name|AUE_CTL2_RX_PROMISC
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6436,7 +6415,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6501,7 +6479,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6835,7 +6812,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6980,7 +6956,6 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7026,7 +7001,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

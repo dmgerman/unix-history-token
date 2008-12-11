@@ -853,7 +853,6 @@ operator|->
 name|cv
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -887,7 +886,6 @@ name|xfer_index
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -965,7 +963,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -1214,7 +1211,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1412,7 +1408,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1436,7 +1431,6 @@ argument_list|,
 name|ST_DATA_RD
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1657,7 +1651,6 @@ argument_list|,
 name|ST_DATA_WR
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1846,7 +1839,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 

@@ -1574,7 +1574,6 @@ literal|"input buffer is full\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2409,7 +2408,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2473,7 +2471,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6445,7 +6442,6 @@ name|sc_otime
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6655,7 +6651,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

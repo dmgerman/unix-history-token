@@ -572,7 +572,6 @@ argument_list|,
 name|std
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

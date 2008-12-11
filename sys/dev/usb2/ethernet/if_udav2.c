@@ -2162,7 +2162,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -2173,7 +2172,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void udav_cfg_mem_read(struct udav_softc *sc, uint16_t offset, void *buf,     uint16_t len) { 	struct usb2_device_request req;  	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	udav_cfg_do_request(sc,&req, buf); 	return; }  static void udav_cfg_mem_write(struct udav_softc *sc, uint16_t offset, void *buf,     uint16_t len) { 	struct usb2_device_request req;  	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	udav_cfg_do_request(sc,&req, buf); 	return; }  static void udav_cfg_mem_write1(struct udav_softc *sc, uint16_t offset,     uint8_t ch) { 	struct usb2_device_request req;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	udav_cfg_do_request(sc,&req, NULL); 	return; }
+unit|static void udav_cfg_mem_read(struct udav_softc *sc, uint16_t offset, void *buf,     uint16_t len) { 	struct usb2_device_request req;  	len&= 0xff;  	req.bmRequestType = UT_READ_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_READ; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	udav_cfg_do_request(sc,&req, buf); }  static void udav_cfg_mem_write(struct udav_softc *sc, uint16_t offset, void *buf,     uint16_t len) { 	struct usb2_device_request req;  	len&= 0xff;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE; 	USETW(req.wValue, 0x0000); 	USETW(req.wIndex, offset); 	USETW(req.wLength, len);  	udav_cfg_do_request(sc,&req, buf); }  static void udav_cfg_mem_write1(struct udav_softc *sc, uint16_t offset,     uint8_t ch) { 	struct usb2_device_request req;  	req.bmRequestType = UT_WRITE_VENDOR_DEVICE; 	req.bRequest = UDAV_REQ_MEM_WRITE1; 	USETW(req.wValue, ch); 	USETW(req.wIndex, offset); 	USETW(req.wLength, 0x0000);  	udav_cfg_do_request(sc,&req, NULL); }
 endif|#
 directive|endif
 end_endif
@@ -2256,7 +2255,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2342,7 +2340,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2457,7 +2454,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2512,7 +2508,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2566,7 +2561,6 @@ name|sc_flags
 operator||=
 name|UDAV_FLAG_HL_READY
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2709,7 +2703,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2873,7 +2866,6 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2939,7 +2931,6 @@ operator|&
 literal|0x7
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2985,7 +2976,6 @@ argument_list|,
 name|cc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3084,7 +3074,6 @@ argument_list|,
 name|rxmode
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3129,7 +3118,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3195,7 +3183,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3259,7 +3246,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3679,7 +3665,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4153,7 +4138,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4595,7 +4579,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4740,7 +4723,6 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4772,7 +4754,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4932,7 +4913,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5020,7 +5000,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5150,7 +5129,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5531,7 +5509,6 @@ name|dev
 parameter_list|)
 block|{
 comment|/* nothing to do */
-return|return;
 block|}
 end_function
 

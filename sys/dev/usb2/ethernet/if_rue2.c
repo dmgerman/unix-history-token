@@ -1381,7 +1381,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -1489,7 +1488,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1567,7 +1565,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1680,7 +1677,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1726,7 +1722,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1772,7 +1767,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2220,7 +2214,6 @@ comment|/* avoid recursive locking */
 block|if (mtx_owned(&sc->sc_mtx)) { 		do_unlock = 0; 	} else { 		mtx_lock(&sc->sc_mtx); 		do_unlock = 1; 	}  	RUE_CFG_CLRBIT(sc, RUE_CR, (RUE_CR_RE | RUE_CR_TE));  	bmcr = rue_cfg_csr_read_2(sc, RUE_BMCR);  	if (IFM_SUBTYPE(mii->mii_media_active) == IFM_100_TX) 		bmcr |= RUE_BMCR_SPD_SET; 	else 		bmcr&= ~RUE_BMCR_SPD_SET;  	if ((mii->mii_media_active& IFM_GMASK) == IFM_FDX) 		bmcr |= RUE_BMCR_DUPLEX; 	else 		bmcr&= ~RUE_BMCR_DUPLEX;  	rue_cfg_csr_write_2(sc, RUE_BMCR, bmcr);  	RUE_CFG_SETBIT(sc, RUE_CR, (RUE_CR_RE | RUE_CR_TE));  	if (do_unlock) { 		mtx_unlock(&sc->sc_mtx); 	}
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -2277,7 +2270,6 @@ name|if_nhash
 operator|=
 literal|1
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2323,7 +2315,6 @@ argument_list|,
 name|cc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2504,7 +2495,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2619,7 +2609,6 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3489,7 +3478,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3740,7 +3728,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4154,7 +4141,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4561,7 +4547,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4606,7 +4591,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4672,7 +4656,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4727,7 +4710,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4781,7 +4763,6 @@ name|sc_flags
 operator||=
 name|RUE_FLAG_HL_READY
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4931,7 +4912,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5095,7 +5075,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5160,7 +5139,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5494,7 +5472,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5639,7 +5616,6 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5676,7 +5652,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

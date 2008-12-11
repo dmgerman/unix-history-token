@@ -434,7 +434,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -537,7 +536,6 @@ name|length
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -811,7 +809,6 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1024,7 +1021,6 @@ name|length
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1230,7 +1226,6 @@ operator|.
 name|length
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1258,7 +1253,6 @@ name|op
 parameter_list|)
 block|{
 comment|/* we use "mtx_owned()" instead of this function */
-return|return;
 block|}
 end_function
 
@@ -1388,7 +1382,6 @@ name|tag
 operator|=
 name|tag
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1414,7 +1407,6 @@ operator|->
 name|tag
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1455,7 +1447,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1496,7 +1487,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1720,7 +1710,6 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2136,7 +2125,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2421,7 +2409,6 @@ operator||
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2468,7 +2455,6 @@ operator||
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2646,7 +2632,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2764,7 +2749,6 @@ name|n_seg
 operator|=
 name|nseg
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2792,7 +2776,6 @@ argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3048,7 +3031,6 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3643,7 +3625,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3875,7 +3856,6 @@ operator||
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3935,7 +3915,6 @@ operator||
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4150,7 +4129,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4480,7 +4458,6 @@ name|udt
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4569,7 +4546,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-return|return;
 block|}
 end_function
 
@@ -5033,7 +5009,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5095,7 +5070,6 @@ operator|.
 name|curr
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5183,7 +5157,6 @@ name|pc
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5263,7 +5236,6 @@ name|pc
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

@@ -857,7 +857,6 @@ name|bus
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -975,7 +974,6 @@ name|bdev
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1333,7 +1331,6 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1491,7 +1488,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1563,7 +1559,6 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1599,7 +1594,6 @@ name|usb2_bus_mem_flush_all_cb
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1664,7 +1658,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1828,7 +1821,6 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1879,7 +1871,6 @@ operator|->
 name|bus_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

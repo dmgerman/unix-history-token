@@ -275,7 +275,6 @@ argument_list|,
 name|vbus_val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -310,7 +309,6 @@ operator|->
 name|sc_fclk
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -345,7 +343,6 @@ operator|->
 name|sc_iclk
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -366,7 +363,6 @@ argument_list|,
 name|PULLUP_MASK
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -387,7 +383,6 @@ argument_list|,
 name|PULLUP_MASK
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

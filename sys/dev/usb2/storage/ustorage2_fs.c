@@ -1926,7 +1926,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1981,7 +1980,6 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2759,7 +2757,6 @@ name|USTORAGE_FS_T_BBB_STATUS
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2975,7 +2972,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3214,7 +3210,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3492,7 +3487,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3677,7 +3671,6 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
 block|}
 end_function
 

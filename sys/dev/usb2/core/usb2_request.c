@@ -278,7 +278,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -610,7 +609,6 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

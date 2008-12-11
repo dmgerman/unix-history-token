@@ -472,7 +472,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -648,7 +647,6 @@ name|up_mtx
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1138,7 +1136,6 @@ name|up_mtx
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1312,7 +1309,6 @@ operator|->
 name|up_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1492,7 +1488,6 @@ name|up_cv
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

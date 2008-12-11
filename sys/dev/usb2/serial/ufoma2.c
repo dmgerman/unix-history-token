@@ -2353,7 +2353,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -2552,7 +2551,6 @@ literal|"NO response\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2658,7 +2656,6 @@ literal|"No response\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3156,7 +3153,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3827,7 +3823,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4016,7 +4011,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4090,7 +4084,6 @@ name|sc_modetoactivate
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4121,7 +4114,6 @@ argument_list|,
 name|UMCPC_ACM_MODE_DEACTIVATED
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4246,7 +4238,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4292,7 +4283,6 @@ name|sc
 operator|->
 name|sc_msr
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4385,7 +4375,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4444,7 +4433,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4503,7 +4491,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4789,7 +4776,6 @@ operator|&
 name|ls
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5204,7 +5190,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5291,7 +5276,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5346,7 +5330,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5411,7 +5394,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

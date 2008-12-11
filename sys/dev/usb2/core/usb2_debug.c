@@ -139,7 +139,6 @@ operator|->
 name|alt_index
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -214,7 +213,6 @@ operator|->
 name|langid
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -266,7 +264,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -351,7 +348,6 @@ literal|"usb2_dump_pipe: pipe=NULL\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -463,7 +459,6 @@ operator|->
 name|bmAttributes
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

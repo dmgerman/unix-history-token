@@ -1660,7 +1660,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1724,7 +1723,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1985,7 +1983,6 @@ name|xfer_other
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2323,7 +2320,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -2357,7 +2353,6 @@ name|msr
 operator|=
 name|SER_DCD
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2391,7 +2386,6 @@ name|UBSER_TR_DT_READ
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2435,7 +2429,6 @@ name|UBSER_TR_DT_READ
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2469,7 +2462,6 @@ name|UBSER_TR_DT_WRITE
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2513,7 +2505,6 @@ name|UBSER_TR_DT_WRITE
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
