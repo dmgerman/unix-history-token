@@ -2173,6 +2173,11 @@ name|f_devdata
 operator|=
 name|spa
 expr_stmt|;
+name|free
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
