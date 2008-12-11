@@ -1195,6 +1195,12 @@ begin_comment
 comment|/* nd6.c */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1282,18 +1288,6 @@ name|nd6_onlink_ns_rfc4861
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|nd6log
-parameter_list|(
-name|x
-parameter_list|)
-value|do { if (V_nd6_debug) log x; } while (
-comment|/*CONSTCOND*/
-value|0)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1356,6 +1350,27 @@ end_decl_stmt
 begin_comment
 comment|/* seconds */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nd6log
+parameter_list|(
+name|x
+parameter_list|)
+value|do { if (V_nd6_debug) log x; } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
 
 begin_union
 union|union

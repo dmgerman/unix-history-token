@@ -237,6 +237,12 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|fw_enable
@@ -258,6 +264,11 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

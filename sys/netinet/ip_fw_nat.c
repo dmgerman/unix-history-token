@@ -243,6 +243,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -250,12 +256,6 @@ name|ip_fw_chain
 name|layer3_chain
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
 
 begin_decl_stmt
 specifier|static

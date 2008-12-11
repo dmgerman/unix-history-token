@@ -165,6 +165,9 @@ decl_stmt|;
 name|int
 name|_nd6_allocated
 decl_stmt|;
+name|int
+name|_nd6_onlink_ns_rfc4861
+decl_stmt|;
 name|struct
 name|llinfo_nd6
 name|_llinfo_nd6
@@ -259,9 +262,6 @@ name|_ip6stealth
 decl_stmt|;
 name|time_t
 name|_ip6_log_time
-decl_stmt|;
-name|int
-name|_nd6_onlink_ns_rfc4861
 decl_stmt|;
 name|int
 name|_pmtu_expire

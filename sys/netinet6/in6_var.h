@@ -1492,6 +1492,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1508,6 +1514,15 @@ name|icmp6stat
 name|icmp6stat
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
 
 begin_define
 define|#

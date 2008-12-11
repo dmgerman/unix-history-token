@@ -261,6 +261,12 @@ name|udp_usrreqs
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -279,20 +285,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_long
-name|udp_sendspace
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|udp_recvspace
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|udpstat
 name|udpstat
@@ -303,6 +295,25 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|udp_blackhole
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|udp_sendspace
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|udp_recvspace
 decl_stmt|;
 end_decl_stmt
 

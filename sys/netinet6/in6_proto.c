@@ -1579,17 +1579,6 @@ name|nd6_onlink_ns_rfc4861
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
-
 begin_comment
 comment|/* icmp6 */
 end_comment

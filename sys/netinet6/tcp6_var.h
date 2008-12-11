@@ -44,6 +44,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -54,6 +60,11 @@ end_decl_stmt
 begin_comment
 comment|/* XXX */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct

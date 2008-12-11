@@ -1910,6 +1910,19 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|tcp_log_in_vain
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|inpcbhead
 name|tcb
@@ -1939,13 +1952,6 @@ end_decl_stmt
 begin_comment
 comment|/* tcp statistics */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tcp_log_in_vain
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -2151,6 +2157,15 @@ name|int
 name|tcp_ecn_maxretries
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
 
 begin_function_decl
 name|int

@@ -570,12 +570,23 @@ begin_comment
 comment|/*  * list of rules for layer 3  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|ip_fw_chain
 name|layer3_chain
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MALLOC_DEFINE

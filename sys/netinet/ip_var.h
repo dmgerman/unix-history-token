@@ -557,6 +557,12 @@ name|sockopt
 struct_decl|;
 end_struct_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -629,9 +635,8 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
-name|u_char
-name|ip_protox
-index|[]
+name|int
+name|rsvp_on
 decl_stmt|;
 end_decl_stmt
 
@@ -661,6 +666,19 @@ begin_comment
 comment|/* multicast routing daemon */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|ip_protox
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|int
@@ -686,13 +704,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|rsvp_on
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
