@@ -662,7 +662,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|INIT_VNET_INET6
+name|INIT_VNET_INET
 argument_list|(
 name|curvnet
 argument_list|)
