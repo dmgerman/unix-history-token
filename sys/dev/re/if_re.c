@@ -1862,11 +1862,6 @@ name|i
 operator|++
 control|)
 block|{
-name|DELAY
-argument_list|(
-literal|30
-argument_list|)
-expr_stmt|;
 name|rval
 operator|=
 name|CSR_READ_4
@@ -1883,6 +1878,11 @@ operator|&
 name|RL_PHYAR_BUSY
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1987,11 +1987,6 @@ name|i
 operator|++
 control|)
 block|{
-name|DELAY
-argument_list|(
-literal|30
-argument_list|)
-expr_stmt|;
 name|rval
 operator|=
 name|CSR_READ_4
@@ -2011,6 +2006,11 @@ name|RL_PHYAR_BUSY
 operator|)
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
