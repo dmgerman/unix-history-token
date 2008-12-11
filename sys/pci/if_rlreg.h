@@ -4569,6 +4569,10 @@ name|RL_FLAG_PHY8110S
 value|0x0800
 define|#
 directive|define
+name|RL_FLAG_WOLRXENB
+value|0x1000
+define|#
+directive|define
 name|RL_FLAG_LINK
 value|0x8000
 block|}
