@@ -883,6 +883,17 @@ value|(mips_abi == N64_ABI)
 end_define
 
 begin_comment
+comment|/* True if relocations are stored in-place.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_IN_PLACE_ADDENDS
+value|(!HAVE_NEWABI)
+end_define
+
+begin_comment
 comment|/* We can only have 64bit addresses if the object file format    supports it.  */
 end_comment
 
@@ -53096,6 +53107,44 @@ name|NULL
 condition|)
 return|return
 literal|1
+return|;
+comment|/* If symbol SYM is in a mergeable section, relocations of the form      SYM + 0 can usually be made section-relative.  The mergeable data      is then identified by the section offset rather than by the symbol.       However, if we're generating REL LO16 relocations, the offset is split      between the LO16 and parterning high part relocation.  The linker will      need to recalculate the complete offset in order to correctly identify      the merge data.       The linker has traditionally not looked for the parterning high part      relocation, and has thus allowed orphaned R_MIPS_LO16 relocations to be      placed anywhere.  Rather than break backwards compatibility by changing      this, it seems better not to force the issue, and instead keep the      original symbol.  This will work with either linker behavior.  */
+if|if
+condition|(
+operator|(
+name|fixp
+operator|->
+name|fx_r_type
+operator|==
+name|BFD_RELOC_LO16
+operator|||
+name|reloc_needs_lo_p
+argument_list|(
+name|fixp
+operator|->
+name|fx_r_type
+argument_list|)
+operator|)
+operator|&&
+name|HAVE_IN_PLACE_ADDENDS
+operator|&&
+operator|(
+name|S_GET_SEGMENT
+argument_list|(
+name|fixp
+operator|->
+name|fx_addsy
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|SEC_MERGE
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+literal|0
 return|;
 ifdef|#
 directive|ifdef
