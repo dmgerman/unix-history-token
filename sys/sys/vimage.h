@@ -104,6 +104,31 @@ define|\
 value|static const struct vnet_modinfo vnet_##m_name_lc##_modinfo = {	\ 		.vmi_name		= #m_name_lc,			\ 		.vmi_symmap		= m_symmap			\ };
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VIMAGE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|VIMAGE_GLOBALS
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"You cannot have both option VIMAGE and option VIMAGE_GLOBALS!"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
