@@ -2737,6 +2737,33 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Read the contents of the error status register.  We have to write  * to the register first before reading from it.  */
+end_comment
+
+begin_function
+name|u_int
+name|lapic_error
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|lapic
+operator|->
+name|esr
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|lapic
+operator|->
+name|esr
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|lapic_handle_intr
