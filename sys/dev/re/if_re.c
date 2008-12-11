@@ -3158,11 +3158,6 @@ name|rl_testmode
 operator|=
 literal|1
 expr_stmt|;
-name|re_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|re_init_locked
 argument_list|(
 name|sc
@@ -9488,18 +9483,11 @@ name|status
 operator|&
 name|RL_ISR_SYSTEM_ERR
 condition|)
-block|{
-name|re_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|re_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -9750,18 +9738,11 @@ name|status
 operator|&
 name|RL_ISR_SYSTEM_ERR
 condition|)
-block|{
-name|re_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|re_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -11196,6 +11177,12 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Cancel pending I/O and free all RX/TX buffers. 	 */
 name|re_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Put controller into known state. */
+name|re_reset
 argument_list|(
 name|sc
 argument_list|)
