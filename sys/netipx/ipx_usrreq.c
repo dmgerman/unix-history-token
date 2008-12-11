@@ -1704,6 +1704,9 @@ name|mask
 operator|=
 name|IPXP_CHECKSUM
 expr_stmt|;
+goto|goto
+name|set_head
+goto|;
 case|case
 name|SO_HEADERS_ON_OUTPUT
 case|:
