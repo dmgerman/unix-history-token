@@ -1816,6 +1816,13 @@ name|RL_CMD_RESET
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|RL_CMD_STOPREQ
+value|0x0080
+end_define
+
 begin_comment
 comment|/*  * Twister register values.  These are completely undocumented and derived  * from public sources.  */
 end_comment
@@ -4548,6 +4555,10 @@ define|#
 directive|define
 name|RL_FLAG_FASTETHER
 value|0x0100
+define|#
+directive|define
+name|RL_FLAG_CMDSTOP
+value|0x0200
 define|#
 directive|define
 name|RL_FLAG_LINK
