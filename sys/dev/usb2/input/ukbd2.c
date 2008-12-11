@@ -1313,7 +1313,6 @@ name|ukbd_timeout
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1326,10 +1325,8 @@ parameter_list|(
 name|struct
 name|ukbd_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
-name|leds
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1341,10 +1338,8 @@ name|ukbd_set_typematic
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|,
 name|int
-name|code
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1363,16 +1358,12 @@ parameter_list|(
 name|struct
 name|ukbd_softc
 modifier|*
-name|sc
 parameter_list|,
 name|int
-name|keycode
 parameter_list|,
 name|int
-name|shift
 parameter_list|,
 name|int
-name|up
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1389,10 +1380,8 @@ name|ukbd_read_char
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|,
 name|int
-name|wait
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1404,7 +1393,6 @@ name|ukbd_clear_state
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1416,13 +1404,10 @@ name|ukbd_ioctl
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|,
 name|u_long
-name|cmd
 parameter_list|,
 name|caddr_t
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1434,7 +1419,6 @@ name|ukbd_enable
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1446,7 +1430,6 @@ name|ukbd_disable
 parameter_list|(
 name|keyboard_t
 modifier|*
-name|kbd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1459,7 +1442,6 @@ parameter_list|(
 name|struct
 name|ukbd_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

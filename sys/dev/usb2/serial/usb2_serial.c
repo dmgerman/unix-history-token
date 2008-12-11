@@ -275,11 +275,9 @@ name|uint8_t
 name|usb2_com_units_alloc
 parameter_list|(
 name|uint32_t
-name|sub_units
 parameter_list|,
 name|uint32_t
 modifier|*
-name|p_root_unit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -290,10 +288,8 @@ name|void
 name|usb2_com_units_free
 parameter_list|(
 name|uint32_t
-name|root_unit
 parameter_list|,
 name|uint32_t
-name|sub_units
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -306,7 +302,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -319,7 +314,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -332,14 +326,11 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|sc
 parameter_list|,
 name|usb2_config_td_command_t
 modifier|*
-name|cmd
 parameter_list|,
 name|int
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -352,7 +343,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -365,7 +355,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -378,10 +367,8 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
-name|onoff
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -394,10 +381,8 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
-name|onoff
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -410,10 +395,8 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
-name|onoff
 parameter_list|)
 function_decl|;
 end_function_decl

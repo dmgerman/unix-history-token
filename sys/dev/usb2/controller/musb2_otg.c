@@ -329,10 +329,8 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|,
 name|usb2_error_t
-name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -345,7 +343,6 @@ parameter_list|(
 name|struct
 name|usb2_bus
 modifier|*
-name|bus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -358,7 +355,6 @@ parameter_list|(
 name|struct
 name|musbotg_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -371,7 +367,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -384,7 +379,6 @@ parameter_list|(
 name|struct
 name|musbotg_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

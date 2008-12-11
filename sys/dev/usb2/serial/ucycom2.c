@@ -326,7 +326,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -339,7 +338,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -352,7 +350,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -365,7 +362,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -378,7 +374,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -391,13 +386,10 @@ parameter_list|(
 name|struct
 name|ucycom_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint32_t
-name|baud
 parameter_list|,
 name|uint8_t
-name|cfg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -410,12 +402,10 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|,
 name|struct
 name|termios
 modifier|*
-name|t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -428,12 +418,10 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|,
 name|struct
 name|termios
 modifier|*
-name|t
 parameter_list|)
 function_decl|;
 end_function_decl

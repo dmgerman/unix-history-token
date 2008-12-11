@@ -317,10 +317,8 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|,
 name|usb2_error_t
-name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -333,7 +331,6 @@ parameter_list|(
 name|struct
 name|usb2_bus
 modifier|*
-name|bus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -346,7 +343,6 @@ parameter_list|(
 name|struct
 name|uss820dci_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -359,7 +355,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -372,10 +367,8 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|,
 name|uint8_t
-name|set
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -388,16 +381,12 @@ parameter_list|(
 name|struct
 name|uss820dci_softc
 modifier|*
-name|sc
 parameter_list|,
 name|uint8_t
-name|reg
 parameter_list|,
 name|uint8_t
-name|keep_mask
 parameter_list|,
 name|uint8_t
-name|set_mask
 parameter_list|)
 function_decl|;
 end_function_decl

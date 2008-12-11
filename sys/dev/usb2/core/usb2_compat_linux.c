@@ -217,7 +217,6 @@ parameter_list|(
 name|struct
 name|usb_device
 modifier|*
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -230,14 +229,11 @@ parameter_list|(
 name|struct
 name|urb
 modifier|*
-name|urb
 parameter_list|,
 name|uint32_t
-name|timeout
 parameter_list|,
 name|uint16_t
 modifier|*
-name|p_actlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -254,12 +250,10 @@ specifier|const
 name|struct
 name|usb_device_id
 modifier|*
-name|id
 parameter_list|,
 name|struct
 name|usb2_attach_arg
 modifier|*
-name|uaa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -274,7 +268,6 @@ parameter_list|(
 name|struct
 name|usb_linux_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -289,10 +282,8 @@ parameter_list|(
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -305,12 +296,10 @@ parameter_list|(
 name|struct
 name|usb_device
 modifier|*
-name|dev
 parameter_list|,
 name|struct
 name|usb_interface
 modifier|*
-name|iface
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -323,7 +312,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -336,10 +324,8 @@ parameter_list|(
 name|struct
 name|urb
 modifier|*
-name|urb
 parameter_list|,
 name|uint8_t
-name|drain
 parameter_list|)
 function_decl|;
 end_function_decl

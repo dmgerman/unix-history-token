@@ -623,7 +623,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -636,7 +635,6 @@ parameter_list|(
 name|struct
 name|usb2_bus
 modifier|*
-name|bus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -649,10 +647,8 @@ parameter_list|(
 name|struct
 name|usb2_xfer_root
 modifier|*
-name|info
 parameter_list|,
 name|uint8_t
-name|needs_delay
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -665,7 +661,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -678,7 +673,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -691,7 +685,6 @@ parameter_list|(
 name|struct
 name|usb2_proc_msg
 modifier|*
-name|_pm
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -704,7 +697,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -717,7 +709,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer_queue
 modifier|*
-name|pq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -729,7 +720,6 @@ name|usb2_dma_delay_done_cb
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -741,7 +731,6 @@ name|usb2_transfer_start_cb
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -754,7 +743,6 @@ parameter_list|(
 name|struct
 name|usb2_xfer
 modifier|*
-name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl

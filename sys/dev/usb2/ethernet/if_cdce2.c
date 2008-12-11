@@ -239,7 +239,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -252,7 +251,6 @@ parameter_list|(
 name|struct
 name|cdce_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -265,13 +263,10 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
 parameter_list|,
 name|uint32_t
-name|src_offset
 parameter_list|,
 name|uint32_t
-name|src_len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -284,7 +279,6 @@ parameter_list|(
 name|struct
 name|cdce_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -297,13 +291,10 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|,
 name|u_long
-name|command
 parameter_list|,
 name|caddr_t
-name|data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -315,7 +306,6 @@ name|cdce_init_cb
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -328,7 +318,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -341,13 +330,10 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-specifier|const
-name|ifp
 parameter_list|,
 name|struct
 name|ifmediareq
 modifier|*
-name|req
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -398,17 +398,13 @@ name|void
 name|udbp_bulk_read_complete
 parameter_list|(
 name|node_p
-name|node
 parameter_list|,
 name|hook_p
-name|hook
 parameter_list|,
 name|void
 modifier|*
-name|arg1
 parameter_list|,
 name|int
-name|arg2
 parameter_list|)
 function_decl|;
 end_function_decl

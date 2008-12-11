@@ -431,7 +431,6 @@ parameter_list|(
 name|struct
 name|ulpt_softc
 modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -443,7 +442,6 @@ name|ulpt_watchdog
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

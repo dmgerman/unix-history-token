@@ -530,17 +530,14 @@ parameter_list|(
 name|struct
 name|uvisor_softc
 modifier|*
-name|sc
 parameter_list|,
 name|struct
 name|usb2_device
 modifier|*
-name|udev
 parameter_list|,
 name|struct
 name|usb2_config
 modifier|*
-name|config
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -553,7 +550,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -566,7 +562,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -579,7 +574,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -592,7 +586,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -605,7 +598,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -618,7 +610,6 @@ parameter_list|(
 name|struct
 name|usb2_com_softc
 modifier|*
-name|ucom
 parameter_list|)
 function_decl|;
 end_function_decl
