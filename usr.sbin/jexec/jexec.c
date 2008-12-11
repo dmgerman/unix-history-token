@@ -284,7 +284,7 @@ operator|||
 name|xp
 operator|->
 name|pr_state
-operator|>
+operator|>=
 call|(
 name|int
 call|)
@@ -335,8 +335,11 @@ condition|(
 name|xp
 operator|->
 name|pr_name
+index|[
+literal|0
+index|]
 operator|==
-name|NULL
+literal|'\0'
 condition|)
 name|ok
 operator|=

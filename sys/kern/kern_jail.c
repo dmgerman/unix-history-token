@@ -6736,7 +6736,7 @@ operator|||
 name|pr
 operator|->
 name|pr_state
-operator|>
+operator|>=
 call|(
 name|int
 call|)
@@ -6781,8 +6781,11 @@ operator|(
 name|pr
 operator|->
 name|pr_name
+index|[
+literal|0
+index|]
 operator|!=
-name|NULL
+literal|'\0'
 operator|)
 condition|?
 name|pr
