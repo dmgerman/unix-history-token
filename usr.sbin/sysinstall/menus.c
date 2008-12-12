@@ -7060,26 +7060,6 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|WITH_LINUX
-block|{
-literal|" Linux"
-block|,
-literal|"This host wants to be able to run Linux binaries."
-block|,
-name|dmenuVarCheck
-block|,
-name|configLinux
-block|,
-name|NULL
-block|,
-name|VAR_LINUX_ENABLE
-literal|"=YES"
-block|}
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|__i386__
 block|{
 literal|" SCO"
