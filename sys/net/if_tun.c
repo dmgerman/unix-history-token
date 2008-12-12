@@ -2216,6 +2216,13 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|if_link_state_change
+argument_list|(
+name|ifp
+argument_list|,
+name|LINK_STATE_UP
+argument_list|)
+expr_stmt|;
 name|TUNDEBUG
 argument_list|(
 name|ifp
@@ -2459,6 +2466,13 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|if_link_state_change
+argument_list|(
+name|ifp
+argument_list|,
+name|LINK_STATE_DOWN
+argument_list|)
+expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
