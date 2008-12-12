@@ -3736,6 +3736,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vop_enoent
+parameter_list|(
+name|struct
+name|vop_generic_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_enotty
 parameter_list|(
 name|struct
@@ -4182,6 +4194,13 @@ define|#
 directive|define
 name|VOP_EINVAL
 value|((void*)(uintptr_t)vop_einval)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOP_ENOENT
+value|((void*)(uintptr_t)vop_enoent)
 end_define
 
 begin_define
