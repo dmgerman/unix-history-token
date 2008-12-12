@@ -1822,6 +1822,12 @@ name|ps_pid
 decl_stmt|;
 comment|/* process PID or -1 */
 name|struct
+name|thread
+modifier|*
+name|ps_td
+decl_stmt|;
+comment|/* which thread */
+name|struct
 name|pmc
 modifier|*
 name|ps_pmc
