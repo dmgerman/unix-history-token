@@ -367,8 +367,6 @@ block|,
 name|VIA_DEVICEID_RHINE_III_M
 block|,
 name|VR_Q_CSUM
-operator||
-name|VR_Q_CAM
 block|,
 literal|"VIA VT6105M Rhine III 10/100BaseTX"
 block|}
