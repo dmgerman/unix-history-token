@@ -3547,7 +3547,7 @@ operator|)
 operator|&
 name|sin6
 argument_list|,
-literal|0
+name|RTF_RNH_LOCKED
 argument_list|,
 literal|0UL
 argument_list|)
