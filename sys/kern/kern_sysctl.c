@@ -6500,13 +6500,7 @@ operator|!=
 name|EAGAIN
 condition|)
 break|break;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|uio_yield
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
