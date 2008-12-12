@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kstack_pages.h"
 end_include
 
@@ -64,6 +70,23 @@ include|#
 directive|include
 file|<sys/proc.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2092,6 +2115,27 @@ name|MSR_GSBASE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|PMC_FN_USER_CALLCHAIN
+argument_list|,
+name|PMC_FN_USER_CALLCHAIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
