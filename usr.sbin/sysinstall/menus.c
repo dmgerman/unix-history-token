@@ -7111,26 +7111,6 @@ block|}
 block|,
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__alpha__
-block|{
-literal|" OSF/1"
-block|,
-literal|"This host wants to be able to run DEC OSF/1 binaries."
-block|,
-name|dmenuVarCheck
-block|,
-name|configOSF1
-block|,
-name|NULL
-block|,
-name|VAR_OSF1_ENABLE
-literal|"=YES"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|" quotas"
 block|,
