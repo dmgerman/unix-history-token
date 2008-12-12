@@ -3,6 +3,15 @@ begin_comment
 comment|/*  * Copyright (C) 2002  * 	Hidetoshi Shimokawa. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  *	This product includes software developed by Hidetoshi Shimokawa.  *  * 4. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -16,6 +25,11 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -59,6 +73,15 @@ directive|include
 file|<sys/errno.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -88,6 +111,61 @@ include|#
 directive|include
 file|<dev/firewire/iec68113.h>
 end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"eui64.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ieee1394/firewire.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ieee1394/iec13213.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ieee1394/fwphyreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ieee1394/iec68113.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_warning
+warning|#
+directive|warning
+literal|"You need to add support for your OS"
+end_warning
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -181,7 +259,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fwcontrol [-u bus_num] [-prt] [-c node] [-d node] [-o node] [-s node]\n"
+literal|"%s [-u bus_num] [-prt] [-c node] [-d node] [-o node] [-s node]\n"
 literal|"\t  [-l file] [-g gap_count] [-f force_root ] [-b pri_req]\n"
 literal|"\t  [-M mode] [-R filename] [-S filename] [-m EUI64 | hostname]\n"
 literal|"\t-u: specify bus number\n"
@@ -193,18 +271,23 @@ literal|"\t-d: hex dump of configuration ROM\n"
 literal|"\t-o: send link-on packet to the node\n"
 literal|"\t-s: write RESET_START register on the node\n"
 literal|"\t-l: load and parse hex dump file of configuration ROM\n"
-literal|"\t-g: broadcast gap_count by phy_config packet\n"
-literal|"\t-f: broadcast force_root by phy_config packet\n"
+literal|"\t-g: set gap count\n"
+literal|"\t-f: force root node\n"
 literal|"\t-b: set PRIORITY_BUDGET register on all supported nodes\n"
 literal|"\t-M: specify dv or mpeg\n"
 literal|"\t-R: Receive DV or MPEG TS stream\n"
 literal|"\t-S: Send DV stream\n"
 literal|"\t-m: set fwmem target\n"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
-name|exit
+name|fprintf
 argument_list|(
-name|EX_USAGE
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2715,7 +2798,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"load_crom"
+literal|"load_crom %s"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 for|for
@@ -3990,7 +4075,7 @@ name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"%s: error reading from device\n"
+literal|"%s: error reading from device"
 argument_list|,
 name|__func__
 argument_list|)
@@ -4293,7 +4378,7 @@ argument_list|(
 name|devbase
 argument_list|)
 argument_list|,
-literal|"%s%d"
+literal|"%s%d.0"
 argument_list|,
 name|device_string
 argument_list|,
@@ -4322,6 +4407,19 @@ condition|)
 block|{
 name|usage
 argument_list|()
+expr_stmt|;
+name|err
+argument_list|(
+name|EX_IOERR
+argument_list|,
+literal|"%s: Error opening firewire controller #%d %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|current_board
+argument_list|,
+name|devbase
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -4400,7 +4498,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"%s: invalid number: %s"
+literal|"%s: priority_budget out of range: %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4476,7 +4574,7 @@ argument_list|)
 operator|>
 name|MAX_BOARDS
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
@@ -4595,7 +4693,7 @@ operator|>
 name|MAX_PHY_CONFIG
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
@@ -4645,7 +4743,7 @@ operator|>
 name|MAX_PHY_CONFIG
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
@@ -4731,7 +4829,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
@@ -4766,10 +4864,10 @@ operator|||
 operator|(
 name|send_link_on
 operator|>
-name|INT32_MAX
+name|MAX_PHY_CONFIG
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
@@ -4856,10 +4954,10 @@ operator|||
 operator|(
 name|send_reset_start
 operator|>
-name|INT32_MAX
+name|MAX_PHY_CONFIG
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
@@ -5078,9 +5176,21 @@ operator|=
 name|false
 expr_stmt|;
 break|break;
+case|case
+literal|'?'
+case|:
 default|default:
 name|usage
 argument_list|()
+expr_stmt|;
+name|warnc
+argument_list|(
+name|EINVAL
+argument_list|,
+literal|"%s: Unknown command line arguments"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -5088,6 +5198,32 @@ return|;
 block|}
 block|}
 comment|/* end while */
+comment|/* 	* Catch the error case when the user 	* executes the command with non ''-'' 	* delimited arguments. 	* Generate the usage() display and exit. 	*/
+if|if
+condition|(
+operator|!
+name|command_set
+operator|&&
+operator|!
+name|display_board_only
+condition|)
+block|{
+name|usage
+argument_list|()
+expr_stmt|;
+name|warnc
+argument_list|(
+name|EINVAL
+argument_list|,
+literal|"%s: Unknown command line arguments"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* 	* If -u<bus_number> is passed, execute  	* command for that card only. 	* 	* If -u<bus_number> is not passed, execute 	* command for card 0 only.  	* 	*/
 if|if
 condition|(
@@ -5103,7 +5239,7 @@ argument_list|(
 name|devbase
 argument_list|)
 argument_list|,
-literal|"%s%d"
+literal|"%s%d.0"
 argument_list|,
 name|device_string
 argument_list|,
@@ -5123,15 +5259,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|errx
+name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"%s: Error opening board #%d\n"
+literal|"%s: Error opening firewire controller #%d %s"
 argument_list|,
 name|__func__
 argument_list|,
 name|current_board
+argument_list|,
+name|devbase
 argument_list|)
 expr_stmt|;
 block|}
@@ -5180,9 +5318,11 @@ name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"%s: ioctl"
+literal|"%s: Ioctl of bus reset failed for %s"
 argument_list|,
 name|__func__
+argument_list|,
+name|devbase
 argument_list|)
 expr_stmt|;
 block|}
@@ -5368,6 +5508,12 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sysctl_set_int
 argument_list|(
 literal|"hw.firewire.fwmem.eui64_hi"
@@ -5386,6 +5532,37 @@ operator|.
 name|lo
 argument_list|)
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|sysctl_set_int
+argument_list|(
+literal|"hw.fwmem.eui64_hi"
+argument_list|,
+name|eui
+operator|.
+name|hi
+argument_list|)
+expr_stmt|;
+name|sysctl_set_int
+argument_list|(
+literal|"hw.fwmem.eui64_lo"
+argument_list|,
+name|eui
+operator|.
+name|lo
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+warning|#
+directive|warning
+literal|"You need to add support for your OS"
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Send a link on to this board/bus "-o" 	 */
 if|if
@@ -5475,7 +5652,7 @@ argument_list|(
 name|devbase
 argument_list|)
 argument_list|,
-literal|"%s%d"
+literal|"%s%d.0"
 argument_list|,
 name|device_string
 argument_list|,
@@ -5494,15 +5671,17 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"%s: Error opening board #%d in recv_data\n"
+literal|"%s: Error opening firewire controller #%d %s in recv_data\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|current_board
+argument_list|,
+name|devbase
 argument_list|)
 expr_stmt|;
 call|(
