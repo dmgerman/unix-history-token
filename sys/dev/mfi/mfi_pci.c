@@ -342,50 +342,6 @@ block|{
 block|{
 literal|0x1000
 block|,
-literal|0x0411
-block|,
-literal|0xffff
-block|,
-literal|0xffff
-block|,
-name|MFI_FLAGS_1064R
-block|,
-literal|"LSI MegaSAS 1064R"
-block|}
-block|,
-comment|/* Brocton IOP */
-block|{
-literal|0x1000
-block|,
-literal|0x0413
-block|,
-literal|0xffff
-block|,
-literal|0xffff
-block|,
-name|MFI_FLAGS_1064R
-block|,
-literal|"LSI MegaSAS 1064R"
-block|}
-block|,
-comment|/* Verde ZCR */
-block|{
-literal|0x1028
-block|,
-literal|0x0015
-block|,
-literal|0xffff
-block|,
-literal|0xffff
-block|,
-name|MFI_FLAGS_1064R
-block|,
-literal|"Dell PERC 5/i"
-block|}
-block|,
-block|{
-literal|0x1000
-block|,
 literal|0x0060
 block|,
 literal|0x1028
@@ -409,6 +365,20 @@ block|,
 name|MFI_FLAGS_1078
 block|,
 literal|"LSI MegaSAS 1078"
+block|}
+block|,
+block|{
+literal|0x1000
+block|,
+literal|0x0078
+block|,
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+name|MFI_FLAGS_GEN2
+block|,
+literal|"LSI MegaSAS Gen2"
 block|}
 block|,
 block|{
@@ -500,27 +470,13 @@ literal|0x1000
 block|,
 literal|0x0079
 block|,
-literal|0xffff
+literal|0x1028
 block|,
 literal|0xffff
 block|,
 name|MFI_FLAGS_GEN2
 block|,
-literal|"Dell PERC H700/800"
-block|}
-block|,
-block|{
-literal|0x1000
-block|,
-literal|0x0078
-block|,
-literal|0xffff
-block|,
-literal|0xffff
-block|,
-name|MFI_FLAGS_GEN2
-block|,
-literal|"LSI MegaSAS Gen2"
+literal|"Dell PERC H700/H800"
 block|}
 block|,
 block|{
@@ -549,6 +505,50 @@ block|,
 name|MFI_FLAGS_1078
 block|,
 literal|"LSI MegaSAS 1078"
+block|}
+block|,
+block|{
+literal|0x1000
+block|,
+literal|0x0411
+block|,
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+name|MFI_FLAGS_1064R
+block|,
+literal|"LSI MegaSAS 1064R"
+block|}
+block|,
+comment|/* Brocton IOP */
+block|{
+literal|0x1000
+block|,
+literal|0x0413
+block|,
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+name|MFI_FLAGS_1064R
+block|,
+literal|"LSI MegaSAS 1064R"
+block|}
+block|,
+comment|/* Verde ZCR */
+block|{
+literal|0x1028
+block|,
+literal|0x0015
+block|,
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+name|MFI_FLAGS_1064R
+block|,
+literal|"Dell PERC 5/i"
 block|}
 block|,
 block|{
