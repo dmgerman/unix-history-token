@@ -1496,7 +1496,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* .. probably doesn't go here */
+comment|/* inpcb in TIMEWAIT, ppcb is tcptw */
 end_comment
 
 begin_define
