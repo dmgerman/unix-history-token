@@ -8,7 +8,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: user/dfr/xenhvm/6/sys/xen/evtchn/evtchn.c 184235 2008-10-25 00:25:25Z kmacy $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
