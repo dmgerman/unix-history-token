@@ -5873,19 +5873,6 @@ end_comment
 
 begin_function_decl
 name|int
-name|ng_rmnode_flags
-parameter_list|(
-name|node_p
-name|here
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ng_rmnode_self
 parameter_list|(
 name|node_p
