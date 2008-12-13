@@ -243,7 +243,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|u_char
-name|isn_secret
+name|pf_isn_secret
 index|[
 literal|32
 index|]
@@ -253,21 +253,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|isn_last_reseed
+name|pf_isn_last_reseed
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|u_int32_t
-name|isn_offset
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|MD5_CTX
-name|isn_ctx
+name|pf_isn_offset
 decl_stmt|;
 end_decl_stmt
 
@@ -281,6 +274,9 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+name|MD5_CTX
+name|isn_ctx
+decl_stmt|;
 name|u_int32_t
 name|md5_buffer
 index|[
@@ -301,7 +297,7 @@ decl_stmt|;
 comment|/* Seed if this is the first use, reseed if requested. */
 if|if
 condition|(
-name|isn_last_reseed
+name|pf_isn_last_reseed
 operator|==
 literal|0
 condition|)
@@ -309,15 +305,15 @@ block|{
 name|read_random
 argument_list|(
 operator|&
-name|isn_secret
+name|pf_isn_secret
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|isn_secret
+name|pf_isn_secret
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|isn_last_reseed
+name|pf_isn_last_reseed
 operator|=
 name|ticks
 expr_stmt|;
@@ -522,11 +518,11 @@ name|u_char
 operator|*
 operator|)
 operator|&
-name|isn_secret
+name|pf_isn_secret
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|isn_secret
+name|pf_isn_secret
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -553,7 +549,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|isn_offset
+name|pf_isn_offset
 operator|+=
 name|ISN_STATIC_INCREMENT
 operator|+
@@ -566,7 +562,7 @@ operator|)
 expr_stmt|;
 name|new_isn
 operator|+=
-name|isn_offset
+name|pf_isn_offset
 expr_stmt|;
 return|return
 operator|(
