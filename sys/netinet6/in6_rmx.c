@@ -410,6 +410,8 @@ name|sin6
 argument_list|,
 literal|0
 argument_list|,
+name|RTF_RNH_LOCKED
+operator||
 name|RTF_CLONING
 argument_list|)
 expr_stmt|;
@@ -510,6 +512,8 @@ name|sin6
 argument_list|,
 literal|0
 argument_list|,
+name|RTF_RNH_LOCKED
+operator||
 name|RTF_CLONING
 argument_list|)
 expr_stmt|;
