@@ -279,6 +279,31 @@ directive|include
 file|<arm/xscale/ixp425/ixp425var.h>
 end_include
 
+begin_comment
+comment|/* kernel text starts where we were loaded at boot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNEL_TEXT_OFF
+value|(KERNPHYSADDR  - PHYSADDR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL_TEXT_BASE
+value|(KERNBASE + KERNEL_TEXT_OFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL_TEXT_PHYS
+value|(PHYSADDR + KERNEL_TEXT_OFF)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -541,7 +566,7 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|,     }
+block|, }
 block|,
 comment|/* Expansion Bus */
 block|{
@@ -556,7 +581,7 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|,     }
+block|, }
 block|,
 comment|/* IXP425 PCI Configuration */
 block|{
@@ -571,7 +596,7 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|,     }
+block|, }
 block|,
 comment|/* SDRAM Controller */
 block|{
@@ -586,7 +611,7 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|,     }
+block|, }
 block|,
 comment|/* PCI Memory Space */
 block|{
@@ -601,82 +626,7 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|,     }
-block|,
-comment|/* NPE-A Memory Space */
-block|{
-name|IXP425_NPE_A_VBASE
-block|,
-name|IXP425_NPE_A_HWBASE
-block|,
-name|IXP425_NPE_A_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|,     }
-block|,
-comment|/* NPE-B Memory Space */
-block|{
-name|IXP425_NPE_B_VBASE
-block|,
-name|IXP425_NPE_B_HWBASE
-block|,
-name|IXP425_NPE_B_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|,     }
-block|,
-comment|/* NPE-C Memory Space */
-block|{
-name|IXP425_NPE_C_VBASE
-block|,
-name|IXP425_NPE_C_HWBASE
-block|,
-name|IXP425_NPE_C_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|,     }
-block|,
-comment|/* MAC-A Memory Space */
-block|{
-name|IXP425_MAC_A_VBASE
-block|,
-name|IXP425_MAC_A_HWBASE
-block|,
-name|IXP425_MAC_A_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|,     }
-block|,
-comment|/* MAC-B Memory Space */
-block|{
-name|IXP425_MAC_B_VBASE
-block|,
-name|IXP425_MAC_B_HWBASE
-block|,
-name|IXP425_MAC_B_SIZE
-block|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-block|,
-name|PTE_NOCACHE
-block|,     }
+block|, }
 block|,
 comment|/* Q-Mgr Memory Space */
 block|{
@@ -691,29 +641,304 @@ operator||
 name|VM_PROT_WRITE
 block|,
 name|PTE_NOCACHE
-block|,     }
+block|, }
+block|,
+comment|/* NPE-A Memory Space */
+block|{
+name|IXP425_NPE_A_VBASE
+block|,
+name|IXP425_NPE_A_HWBASE
+block|,
+name|IXP425_NPE_A_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* NPE-B Memory Space */
+block|{
+name|IXP425_NPE_B_VBASE
+block|,
+name|IXP425_NPE_B_HWBASE
+block|,
+name|IXP425_NPE_B_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* NPE-C Memory Space */
+block|{
+name|IXP425_NPE_C_VBASE
+block|,
+name|IXP425_NPE_C_HWBASE
+block|,
+name|IXP425_NPE_C_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* MAC-B Memory Space */
+block|{
+name|IXP425_MAC_B_VBASE
+block|,
+name|IXP425_MAC_B_HWBASE
+block|,
+name|IXP425_MAC_B_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* MAC-C Memory Space */
+block|{
+name|IXP425_MAC_C_VBASE
+block|,
+name|IXP425_MAC_C_HWBASE
+block|,
+name|IXP425_MAC_C_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
 block|,
 block|{
 literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,     }
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|SDRAM_START
-value|0x10000000
-end_define
+begin_comment
+comment|/* Static device mappings. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|pmap_devmap
+name|ixp435_devmap
+index|[]
+init|=
+block|{
+comment|/* Physical/Virtual address for I/O space */
+block|{
+name|IXP425_IO_VBASE
+block|,
+name|IXP425_IO_HWBASE
+block|,
+name|IXP425_IO_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* Expansion Bus */
+block|{
+name|IXP425_EXP_VBASE
+block|,
+name|IXP425_EXP_HWBASE
+block|,
+name|IXP425_EXP_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* IXP425 PCI Configuration */
+block|{
+name|IXP425_PCI_VBASE
+block|,
+name|IXP425_PCI_HWBASE
+block|,
+name|IXP425_PCI_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* DDRII Controller NB: mapped same place as IXP425 */
+block|{
+name|IXP425_MCU_VBASE
+block|,
+name|IXP435_MCU_HWBASE
+block|,
+name|IXP425_MCU_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* PCI Memory Space */
+block|{
+name|IXP425_PCI_MEM_VBASE
+block|,
+name|IXP425_PCI_MEM_HWBASE
+block|,
+name|IXP425_PCI_MEM_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* Q-Mgr Memory Space */
+block|{
+name|IXP425_QMGR_VBASE
+block|,
+name|IXP425_QMGR_HWBASE
+block|,
+name|IXP425_QMGR_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* NPE-A Memory Space */
+block|{
+name|IXP425_NPE_A_VBASE
+block|,
+name|IXP425_NPE_A_HWBASE
+block|,
+name|IXP425_NPE_A_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* NPE-C Memory Space */
+block|{
+name|IXP425_NPE_C_VBASE
+block|,
+name|IXP425_NPE_C_HWBASE
+block|,
+name|IXP425_NPE_C_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* MAC-C Memory Space */
+block|{
+name|IXP425_MAC_C_VBASE
+block|,
+name|IXP425_MAC_C_HWBASE
+block|,
+name|IXP425_MAC_C_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* MAC-B Memory Space */
+block|{
+name|IXP425_MAC_B_VBASE
+block|,
+name|IXP425_MAC_B_HWBASE
+block|,
+name|IXP425_MAC_B_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* MAC-A Memory Space */
+block|{
+name|IXP435_MAC_A_VBASE
+block|,
+name|IXP435_MAC_A_HWBASE
+block|,
+name|IXP435_MAC_A_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* USB1 Memory Space */
+block|{
+name|IXP435_USB1_VBASE
+block|,
+name|IXP435_USB1_HWBASE
+block|,
+name|IXP435_USB1_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+comment|/* USB2 Memory Space */
+block|{
+name|IXP435_USB2_VBASE
+block|,
+name|IXP435_USB2_HWBASE
+block|,
+name|IXP435_USB2_SIZE
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|PTE_NOCACHE
+block|, }
+block|,
+block|{
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -736,6 +961,22 @@ modifier|*
 name|arg2
 parameter_list|)
 block|{
+define|#
+directive|define
+name|next_chunk2
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a) + (b))&~ ((b)-1))
+define|#
+directive|define
+name|next_page
+parameter_list|(
+name|a
+parameter_list|)
+value|next_chunk2(a,PAGE_SIZE)
 name|struct
 name|pv_addr
 name|kernel_l1pt
@@ -769,6 +1010,7 @@ decl_stmt|;
 name|set_cpufuncs
 argument_list|()
 expr_stmt|;
+comment|/* NB: sets cputype */
 name|lastaddr
 operator|=
 name|fake_preload_metadata
@@ -795,21 +1037,12 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We allocate memory downwards from where we were loaded 	 * by RedBoot; first the L1 page table, then NUM_KERNEL_PTS 	 * entries in the L2 page table.  Past that we re-align the 	 * allocation boundary so later data structures (stacks, etc) 	 * can be mapped with different attributes (write-back vs 	 * write-through).  Note this leaves a gap for expansion 	 * (or might be repurposed). 	 */
 name|freemempos
 operator|=
-literal|0x10200000
+name|KERNPHYSADDR
 expr_stmt|;
-comment|/* Define a macro to simplify memory allocation */
-define|#
-directive|define
-name|valloc_pages
-parameter_list|(
-name|var
-parameter_list|,
-name|np
-parameter_list|)
-define|\
-value|alloc_pages((var).pv_pa, (np));		\ 	(var).pv_va = (var).pv_pa + 0xb0000000;
+comment|/* macros to simplify initial memory allocation */
 define|#
 directive|define
 name|alloc_pages
@@ -818,8 +1051,19 @@ name|var
 parameter_list|,
 name|np
 parameter_list|)
-define|\
-value|freemempos -= (np * PAGE_SIZE);		\ 	(var) = freemempos;		\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
+value|do {					\ 	freemempos -= (np * PAGE_SIZE);					\ 	(var) = freemempos;						\
+comment|/* NB: this works because locore maps PA=VA */
+value|\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));			\ } while (0)
+define|#
+directive|define
+name|valloc_pages
+parameter_list|(
+name|var
+parameter_list|,
+name|np
+parameter_list|)
+value|do {					\ 	alloc_pages((var).pv_pa, (np));					\ 	(var).pv_va = (var).pv_pa + (KERNVIRTADDR - KERNPHYSADDR);	\ } while (0)
+comment|/* force L1 page table alignment */
 while|while
 condition|(
 operator|(
@@ -842,6 +1086,7 @@ name|freemempos
 operator|-=
 name|PAGE_SIZE
 expr_stmt|;
+comment|/* allocate contiguous L1 page table */
 name|valloc_pages
 argument_list|(
 name|kernel_l1pt
@@ -851,6 +1096,7 @@ operator|/
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+comment|/* now allocate L2 page tables; they are linked to L1 below */
 for|for
 control|(
 name|loop
@@ -929,7 +1175,11 @@ index|]
 operator|.
 name|pv_pa
 operator|+
-literal|0xb0000000
+operator|(
+name|KERNVIRTADDR
+operator|-
+name|KERNPHYSADDR
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -937,9 +1187,13 @@ name|freemem_pt
 operator|=
 name|freemempos
 expr_stmt|;
+comment|/* base of allocated pt's */
+comment|/* 	 * Re-align allocation boundary so we can map the area 	 * write-back instead of write-through for the stacks and 	 * related structures allocated below. 	 */
 name|freemempos
 operator|=
-literal|0x10100000
+name|PHYSADDR
+operator|+
+literal|0x100000
 expr_stmt|;
 comment|/* 	 * Allocate a page for the system page mapped to V0x00000000 	 * This page will just contain the system vectors and can be 	 * shared by all processes. 	 */
 name|valloc_pages
@@ -1002,6 +1256,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ARM_USE_SMALL_ALLOC
+error|#
+directive|error
+literal|"I am broken"
+comment|/* XXX save people grief */
 name|freemempos
 operator|-=
 name|PAGE_SIZE
@@ -1035,807 +1293,126 @@ argument_list|)
 expr_stmt|;
 name|arm_add_smallalloc_pages
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|freemem_after
-operator|+
-literal|0xb0000000
-operator|)
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
+argument|(void *)(freemem_after + (KERNVIRTADDR - KERNPHYSADDR) 	    , (void *)
 literal|0xc0100000
-argument_list|,
-name|freemem_pt
-operator|-
+argument|, freemem_pt -
 literal|0x10100000
-argument_list|,
+argument|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|freemem_after
-operator|-=
-operator|(
-operator|(
-name|freemem_after
-operator|-
+argument|); 	freemem_after -= ((freemem_after -
 literal|0x10001000
-operator|)
-operator|/
-name|PAGE_SIZE
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|arm_small_page
-argument_list|)
-expr_stmt|;
-name|arm_add_smallalloc_pages
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|freemem_after
-operator|+
-literal|0xb0000000
-operator|)
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
+argument|) / PAGE_SIZE) * 	    sizeof(struct arm_small_page); 	arm_add_smallalloc_pages((void *)(freemem_after + (KEYVIRTADDR - KERNPHYSADDR)) 	, (void *)
 literal|0xc0001000
-argument_list|,
-name|trunc_page
-argument_list|(
-name|freemem_after
-argument_list|)
-operator|-
+argument|, trunc_page(freemem_after) -
 literal|0x10001000
-argument_list|,
+argument|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|freemempos
-operator|=
-name|trunc_page
-argument_list|(
-name|freemem_after
-argument_list|)
-expr_stmt|;
-name|freemempos
-operator|-=
-name|PAGE_SIZE
-expr_stmt|;
+argument|); 	freemempos = trunc_page(freemem_after); 	freemempos -= PAGE_SIZE;
 endif|#
 directive|endif
-comment|/* 	 * Allocate memory for the l1 and l2 page tables. The scheme to avoid 	 * wasting memory by allocating the l1pt on the first 16k memory was 	 * taken from NetBSD rpc_machdep.c. NKPT should be greater than 12 for 	 * this to work (which is supposed to be the case). 	 */
-comment|/* 	 * Now we start construction of the L1 page table 	 * We start by mapping the L2 page tables into the L1. 	 * This means that we can replace L1 mappings later on if necessary 	 */
-name|l1pagetable
-operator|=
-name|kernel_l1pt
-operator|.
-name|pv_va
-expr_stmt|;
+comment|/* 	 * Now construct the L1 page table.  First map the L2 	 * page tables into the L1 so we can replace L1 mappings 	 * later on if necessary 	 */
+argument|l1pagetable = kernel_l1pt.pv_va;
 comment|/* Map the L2 pages tables in the L1 page table */
-name|pmap_link_l2pt
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|ARM_VECTORS_HIGH
-operator|&
-operator|~
-operator|(
+argument|pmap_link_l2pt(l1pagetable, ARM_VECTORS_HIGH& ~(
 literal|0x00100000
-operator|-
+argument|-
 literal|1
-operator|)
-argument_list|,
-operator|&
-name|kernel_pt_table
-index|[
-name|KERNEL_PT_SYS
-index|]
-argument_list|)
-expr_stmt|;
-name|pmap_link_l2pt
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|IXP425_IO_VBASE
-argument_list|,
-operator|&
-name|kernel_pt_table
-index|[
-name|KERNEL_PT_IO
-index|]
-argument_list|)
-expr_stmt|;
-name|pmap_link_l2pt
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|IXP425_MCU_VBASE
-argument_list|,
-operator|&
-name|kernel_pt_table
-index|[
-name|KERNEL_PT_IO
-operator|+
+argument|),&kernel_pt_table[KERNEL_PT_SYS]); 	pmap_link_l2pt(l1pagetable, IXP425_IO_VBASE,&kernel_pt_table[KERNEL_PT_IO]); 	pmap_link_l2pt(l1pagetable, IXP425_MCU_VBASE,&kernel_pt_table[KERNEL_PT_IO +
 literal|1
-index|]
-argument_list|)
-expr_stmt|;
-name|pmap_link_l2pt
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|IXP425_PCI_MEM_VBASE
-argument_list|,
-operator|&
-name|kernel_pt_table
-index|[
-name|KERNEL_PT_IO
-operator|+
+argument|]); 	pmap_link_l2pt(l1pagetable, IXP425_PCI_MEM_VBASE,&kernel_pt_table[KERNEL_PT_IO +
 literal|2
-index|]
-argument_list|)
-expr_stmt|;
-name|pmap_link_l2pt
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|KERNBASE
-argument_list|,
-operator|&
-name|kernel_pt_table
-index|[
-name|KERNEL_PT_BEFOREKERN
-index|]
-argument_list|)
-expr_stmt|;
-name|pmap_map_chunk
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|KERNBASE
-argument_list|,
-name|SDRAM_START
-argument_list|,
+argument|]); 	pmap_link_l2pt(l1pagetable, KERNBASE,&kernel_pt_table[KERNEL_PT_BEFOREKERN]); 	pmap_map_chunk(l1pagetable, KERNBASE, PHYSADDR,
 literal|0x100000
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_CACHE
-argument_list|)
-expr_stmt|;
-name|pmap_map_chunk
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|KERNBASE
-operator|+
+argument|, 	    VM_PROT_READ|VM_PROT_WRITE, PTE_CACHE); 	pmap_map_chunk(l1pagetable, KERNBASE +
 literal|0x100000
-argument_list|,
-name|SDRAM_START
-operator|+
+argument|, PHYSADDR +
 literal|0x100000
-argument_list|,
+argument|,
 literal|0x100000
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_PAGETABLE
-argument_list|)
-expr_stmt|;
-name|pmap_map_chunk
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|KERNBASE
-operator|+
-literal|0x200000
-argument_list|,
-name|SDRAM_START
-operator|+
-literal|0x200000
-argument_list|,
-operator|(
-operator|(
-call|(
-name|uint32_t
-call|)
-argument_list|(
-name|lastaddr
-argument_list|)
-operator|-
-name|KERNBASE
-operator|-
-literal|0x200000
-operator|)
-operator|+
-name|L1_S_SIZE
-operator|)
-operator|&
-operator|~
-operator|(
-name|L1_S_SIZE
-operator|-
-literal|1
-operator|)
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_CACHE
-argument_list|)
-expr_stmt|;
-name|freemem_after
-operator|=
-operator|(
-operator|(
-name|int
-operator|)
-name|lastaddr
-operator|+
-name|PAGE_SIZE
-operator|)
-operator|&
-operator|~
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
-expr_stmt|;
-name|afterkern
-operator|=
-name|round_page
-argument_list|(
-operator|(
-operator|(
-name|vm_offset_t
-operator|)
-name|lastaddr
-operator|+
-name|L1_S_SIZE
-operator|)
-operator|&
-operator|~
-operator|(
-name|L1_S_SIZE
-operator|-
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
+argument|, VM_PROT_READ|VM_PROT_WRITE, PTE_PAGETABLE); 	pmap_map_chunk(l1pagetable, KERNEL_TEXT_BASE, KERNEL_TEXT_PHYS, 	    next_chunk2(((uint32_t)lastaddr) - KERNEL_TEXT_BASE, L1_S_SIZE), 	    VM_PROT_READ|VM_PROT_WRITE, PTE_CACHE); 	freemem_after = next_page((int)lastaddr); 	afterkern = round_page(next_chunk2((vm_offset_t)lastaddr, L1_S_SIZE)); 	for (i =
 literal|0
-init|;
-name|i
-operator|<
-name|KERNEL_PT_AFKERNEL_NUM
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|pmap_link_l2pt
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|afterkern
-operator|+
-name|i
-operator|*
+argument|; i< KERNEL_PT_AFKERNEL_NUM; i++) { 		pmap_link_l2pt(l1pagetable, afterkern + i *
 literal|0x00100000
-argument_list|,
-operator|&
-name|kernel_pt_table
-index|[
-name|KERNEL_PT_AFKERNEL
-operator|+
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|pmap_map_entry
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|afterkern
-argument_list|,
-name|minidataclean
-operator|.
-name|pv_pa
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_CACHE
-argument_list|)
-expr_stmt|;
+argument|,&kernel_pt_table[KERNEL_PT_AFKERNEL + i]); 	} 	pmap_map_entry(l1pagetable, afterkern, minidataclean.pv_pa,  	    VM_PROT_READ|VM_PROT_WRITE, PTE_CACHE);
 ifdef|#
 directive|ifdef
 name|ARM_USE_SMALL_ALLOC
-if|if
-condition|(
-operator|(
-name|freemem_after
-operator|+
+argument|if ((freemem_after +
 literal|2
-operator|*
-name|PAGE_SIZE
-operator|)
-operator|<=
-name|afterkern
-condition|)
-block|{
-name|arm_add_smallalloc_pages
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|freemem_after
-operator|)
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|freemem_after
-operator|+
-name|PAGE_SIZE
-operator|)
-argument_list|,
-name|afterkern
-operator|-
-operator|(
-name|freemem_after
-operator|+
-name|PAGE_SIZE
-operator|)
-argument_list|,
+argument|* PAGE_SIZE)<= afterkern) { 		arm_add_smallalloc_pages((void *)(freemem_after), 		    (void*)(freemem_after + PAGE_SIZE), 		    afterkern - (freemem_after + PAGE_SIZE),
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
+argument|); 		     	}
 endif|#
 directive|endif
 comment|/* Map the Mini-Data cache clean area. */
-name|xscale_setup_minidata
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|afterkern
-argument_list|,
-name|minidataclean
-operator|.
-name|pv_pa
-argument_list|)
-expr_stmt|;
+argument|xscale_setup_minidata(l1pagetable, afterkern, 	    minidataclean.pv_pa);
 comment|/* Map the vector page. */
-name|pmap_map_entry
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|ARM_VECTORS_HIGH
-argument_list|,
-name|systempage
-operator|.
-name|pv_pa
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_CACHE
-argument_list|)
-expr_stmt|;
-name|pmap_devmap_bootstrap
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|ixp425_devmap
-argument_list|)
-expr_stmt|;
+argument|pmap_map_entry(l1pagetable, ARM_VECTORS_HIGH, systempage.pv_pa, 	    VM_PROT_READ|VM_PROT_WRITE, PTE_CACHE); 	if (cpu_is_ixp43x()) 		pmap_devmap_bootstrap(l1pagetable, ixp435_devmap); 	else 		pmap_devmap_bootstrap(l1pagetable, ixp425_devmap);
 comment|/* 	 * Give the XScale global cache clean code an appropriately 	 * sized chunk of unmapped VA space starting at 0xff000000 	 * (our device mappings end before this address). 	 */
-name|xscale_cache_clean_addr
-operator|=
+argument|xscale_cache_clean_addr =
 literal|0xff000000U
-expr_stmt|;
-name|cpu_domains
-argument_list|(
-operator|(
-name|DOMAIN_CLIENT
-operator|<<
-operator|(
-name|PMAP_DOMAIN_KERNEL
-operator|*
+argument|;  	cpu_domains((DOMAIN_CLIENT<< (PMAP_DOMAIN_KERNEL*
 literal|2
-operator|)
-operator|)
-operator||
-name|DOMAIN_CLIENT
-argument_list|)
-expr_stmt|;
-name|setttb
-argument_list|(
-name|kernel_l1pt
-operator|.
-name|pv_pa
-argument_list|)
-expr_stmt|;
-name|cpu_tlb_flushID
-argument_list|()
-expr_stmt|;
-name|cpu_domains
-argument_list|(
-name|DOMAIN_CLIENT
-operator|<<
-operator|(
-name|PMAP_DOMAIN_KERNEL
-operator|*
+argument|)) | DOMAIN_CLIENT); 	setttb(kernel_l1pt.pv_pa); 	cpu_tlb_flushID(); 	cpu_domains(DOMAIN_CLIENT<< (PMAP_DOMAIN_KERNEL*
 literal|2
-operator|)
-argument_list|)
-expr_stmt|;
+argument|));
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
-name|set_stackptr
-argument_list|(
-name|PSR_IRQ32_MODE
-argument_list|,
-name|irqstack
-operator|.
-name|pv_va
-operator|+
-name|IRQ_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_ABT32_MODE
-argument_list|,
-name|abtstack
-operator|.
-name|pv_va
-operator|+
-name|ABT_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|set_stackptr
-argument_list|(
-name|PSR_UND32_MODE
-argument_list|,
-name|undstack
-operator|.
-name|pv_va
-operator|+
-name|UND_STACK_SIZE
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
+argument|set_stackptr(PSR_IRQ32_MODE, irqstack.pv_va + IRQ_STACK_SIZE*PAGE_SIZE); 	set_stackptr(PSR_ABT32_MODE, abtstack.pv_va + ABT_STACK_SIZE*PAGE_SIZE); 	set_stackptr(PSR_UND32_MODE, undstack.pv_va + UND_STACK_SIZE*PAGE_SIZE);
 comment|/* 	 * We must now clean the cache again.... 	 * Cleaning may be done by reading new data to displace any 	 * dirty data in the cache. This will have happened in setttb() 	 * but since we are boot strapping the addresses used for the read 	 * may have just been remapped and thus the cache could be out 	 * of sync. A re-clean after the switch will cure this. 	 * After booting there are no gross relocations of the kernel thus 	 * this problem will not occur after initarm(). 	 */
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Fetch the SDRAM start/size from the ixp425 SDRAM configration 	 * registers. 	 */
-name|cninit
-argument_list|()
-expr_stmt|;
-name|memsize
-operator|=
-name|ixp425_sdram_size
-argument_list|()
-expr_stmt|;
-name|physmem
-operator|=
-name|memsize
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
+argument|cpu_idcache_wbinv_all();
+comment|/* ready to setup the console (XXX move earlier if possible) */
+argument|cninit();
+comment|/* 	 * Fetch the RAM size from the MCU registers.  The 	 * expansion bus was mapped above so we can now read 'em. 	 */
+argument|if (cpu_is_ixp43x()) 		memsize = ixp435_ddram_size(); 	else 		memsize = ixp425_sdram_size(); 	physmem = memsize / PAGE_SIZE;
 comment|/* Set stack for exception handlers */
-name|data_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|data_abort_handler
-expr_stmt|;
-name|prefetch_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|prefetch_abort_handler
-expr_stmt|;
-name|undefined_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|undefinedinstruction_bounce
-expr_stmt|;
-name|undefined_init
-argument_list|()
-expr_stmt|;
-name|proc_linkup0
-argument_list|(
-operator|&
-name|proc0
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
-name|thread0
-operator|.
-name|td_kstack
-operator|=
-name|kernelstack
-operator|.
-name|pv_va
-expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|=
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-operator|(
-name|thread0
-operator|.
-name|td_kstack
-operator|+
-name|KSTACK_PAGES
-operator|*
-name|PAGE_SIZE
-operator|)
-operator|-
+argument|data_abort_handler_address = (u_int)data_abort_handler; 	prefetch_abort_handler_address = (u_int)prefetch_abort_handler; 	undefined_handler_address = (u_int)undefinedinstruction_bounce; 	undefined_init();  	proc_linkup0(&proc0,&thread0); 	thread0.td_kstack = kernelstack.pv_va; 	thread0.td_pcb = (struct pcb *) 		(thread0.td_kstack + KSTACK_PAGES * PAGE_SIZE) -
 literal|1
-expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|->
-name|pcb_flags
-operator|=
+argument|; 	thread0.td_pcb->pcb_flags =
 literal|0
-expr_stmt|;
-name|thread0
-operator|.
-name|td_frame
-operator|=
-operator|&
-name|proc0_tf
-expr_stmt|;
-name|pcpup
-operator|->
-name|pc_curpcb
-operator|=
-name|thread0
-operator|.
-name|td_pcb
-expr_stmt|;
-comment|/* Enable MMU, I-cache, D-cache, write buffer. */
-name|arm_vector_init
-argument_list|(
-name|ARM_VECTORS_HIGH
-argument_list|,
-name|ARM_VEC_ALL
-argument_list|)
-expr_stmt|;
-name|pmap_curmaxkvaddr
-operator|=
-name|afterkern
-operator|+
-name|PAGE_SIZE
-expr_stmt|;
-name|dump_avail
-index|[
+argument|; 	thread0.td_frame =&proc0_tf; 	pcpup->pc_curpcb = thread0.td_pcb;  	arm_vector_init(ARM_VECTORS_HIGH, ARM_VEC_ALL);  	pmap_curmaxkvaddr = afterkern + PAGE_SIZE; 	dump_avail[
 literal|0
-index|]
-operator|=
-literal|0x10000000
-expr_stmt|;
-name|dump_avail
-index|[
+argument|] = PHYSADDR; 	dump_avail[
 literal|1
-index|]
-operator|=
-literal|0x10000000
-operator|+
-name|memsize
-expr_stmt|;
-name|dump_avail
-index|[
+argument|] = PHYSADDR + memsize; 	dump_avail[
 literal|2
-index|]
-operator|=
+argument|] =
 literal|0
-expr_stmt|;
-name|dump_avail
-index|[
+argument|; 	dump_avail[
 literal|3
-index|]
-operator|=
+argument|] =
 literal|0
-expr_stmt|;
-name|pmap_bootstrap
-argument_list|(
-name|pmap_curmaxkvaddr
-argument_list|,
+argument|;  	pmap_bootstrap(pmap_curmaxkvaddr,
 literal|0xd0000000
-argument_list|,
-operator|&
-name|kernel_l1pt
-argument_list|)
-expr_stmt|;
-name|msgbufp
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|msgbufpv
-operator|.
-name|pv_va
-expr_stmt|;
-name|msgbufinit
-argument_list|(
-name|msgbufp
-argument_list|,
-name|MSGBUF_SIZE
-argument_list|)
-expr_stmt|;
-name|mutex_init
-argument_list|()
-expr_stmt|;
-name|i
-operator|=
+argument|,&kernel_l1pt); 	msgbufp = (void*)msgbufpv.pv_va; 	msgbufinit(msgbufp, MSGBUF_SIZE); 	mutex_init();  	i =
 literal|0
-expr_stmt|;
+argument|;
 ifdef|#
 directive|ifdef
 name|ARM_USE_SMALL_ALLOC
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-literal|0x10000000
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-literal|0x10001000
-expr_stmt|;
+argument|phys_avail[i++] = PHYSADDR; 	phys_avail[i++] = PHYSADDR + PAGE_SIZE;
 comment|/* 					 *XXX: Gross hack to get our 					 * pages in the vm_page_array 					 . */
 endif|#
 directive|endif
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|round_page
-argument_list|(
-name|virtual_avail
-operator|-
-name|KERNBASE
-operator|+
-name|SDRAM_START
-argument_list|)
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|trunc_page
-argument_list|(
-literal|0x10000000
-operator|+
-name|memsize
-operator|-
+argument|phys_avail[i++] = round_page(virtual_avail - KERNBASE + PHYSADDR); 	phys_avail[i++] = trunc_page(PHYSADDR + memsize -
 literal|1
-argument_list|)
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
+argument|); 	phys_avail[i++] =
 literal|0
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-index|]
-operator|=
+argument|; 	phys_avail[i] =
 literal|0
-expr_stmt|;
+argument|;
 comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
-expr_stmt|;
-name|init_param2
-argument_list|(
-name|physmem
-argument_list|)
-expr_stmt|;
-name|kdb_init
-argument_list|()
-expr_stmt|;
+argument|init_param1(); 	init_param2(physmem); 	kdb_init();
 comment|/* use static kernel environment if so configured */
-if|if
-condition|(
-name|envmode
-operator|==
+argument|if (envmode ==
 literal|1
-condition|)
-name|kern_envp
-operator|=
-name|static_env
-expr_stmt|;
-return|return
-operator|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|kernelstack
-operator|.
-name|pv_va
-operator|+
-name|USPACE_SVC_STACK_TOP
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pcb
-argument_list|)
-operator|)
-operator|)
-return|;
-block|}
+argument|) 		kern_envp = static_env;  	return ((void *)(kernelstack.pv_va + USPACE_SVC_STACK_TOP - 	    sizeof(struct pcb)));
+undef|#
+directive|undef
+name|next_page
+undef|#
+directive|undef
+name|next_chunk2
+argument|}
 end_function
 
 end_unit

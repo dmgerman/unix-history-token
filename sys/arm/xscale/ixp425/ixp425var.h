@@ -49,6 +49,26 @@ directive|include
 file|<sys/rman.h>
 end_include
 
+begin_comment
+comment|/* NB: cputype is setup by set_cpufuncs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cpu_is_ixp43x
+parameter_list|()
+value|(cputype == CPU_ID_IXP435)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cpu_is_ixp46x
+parameter_list|()
+value|(cputype == CPU_ID_IXP465)
+end_define
+
 begin_struct
 struct|struct
 name|ixp425_softc
@@ -229,6 +249,15 @@ end_function_decl
 begin_function_decl
 name|uint32_t
 name|ixp425_sdram_size
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|ixp435_ddram_size
 parameter_list|(
 name|void
 parameter_list|)

@@ -3889,6 +3889,10 @@ operator|||
 name|cputype
 operator|==
 name|CPU_ID_IXP425_266
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_IXP435
 condition|)
 block|{
 name|cpufuncs

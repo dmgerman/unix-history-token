@@ -1308,6 +1308,17 @@ block|,
 name|ixp425_steppings
 block|}
 block|,
+comment|/* XXX ixp435 steppings? */
+block|{
+name|CPU_ID_IXP435
+block|,
+name|CPU_CLASS_XSCALE
+block|,
+literal|"IXP435"
+block|,
+name|ixp425_steppings
+block|}
+block|,
 block|{
 name|CPU_ID_ARM1136JS
 block|,

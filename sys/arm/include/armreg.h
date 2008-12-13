@@ -954,6 +954,13 @@ name|CPU_ID_IXP425_266
 value|0x690541f0
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_ID_IXP435
+value|0x69054040
+end_define
+
 begin_comment
 comment|/* ARM3-specific coprocessor 15 registers */
 end_comment

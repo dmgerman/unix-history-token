@@ -259,7 +259,7 @@ comment|/* counter_mask */
 name|COUNTS_PER_SEC
 block|,
 comment|/* frequency */
-literal|"IXP425 Timer"
+literal|"IXP4XX Timer"
 block|,
 comment|/* name */
 literal|1000
@@ -282,7 +282,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"IXP425 Timer"
+literal|"IXP4XX Timer"
 argument_list|)
 expr_stmt|;
 return|return

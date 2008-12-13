@@ -1080,6 +1080,94 @@ end_define
 begin_define
 define|#
 directive|define
+name|EHCI_USBMODE
+value|0x68
+end_define
+
+begin_comment
+comment|/* RW USB Device mode register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_CM
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* R/WO Controller Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_CM_IDLE
+value|0x0
+end_define
+
+begin_comment
+comment|/* Idle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_CM_HOST
+value|0x3
+end_define
+
+begin_comment
+comment|/* Host Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_ES
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* R/WO Endian Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_ES_LE
+value|0x0
+end_define
+
+begin_comment
+comment|/* Little-endian byte alignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_ES_BE
+value|0x4
+end_define
+
+begin_comment
+comment|/* Big-endian byte alignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_SDIS
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* R/WO Stream Disable Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EHCI_PORT_RESET_COMPLETE
 value|2
 end_define
@@ -1659,6 +1747,14 @@ define|#
 directive|define
 name|EHCI_QTD_ALIGN
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_QTD_STATUS_BITS
+define|\
+value|"\20\10ACTIVE\7HALTED\6BUFERR\5BABBLE\4XACTERR\3MISSED\2SPLIT\1PING"
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*-  * Copyright (c) 2006-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_comment
@@ -441,7 +441,7 @@ name|npe_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|"IXP425 NPE debug msgs"
+literal|"IXP4XX NPE debug msgs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1028,8 +1028,135 @@ name|ixpnpe_attach
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+name|npeid
 parameter_list|)
 block|{
+struct|struct
+name|npeconfig
+block|{
+name|uint32_t
+name|base
+decl_stmt|;
+name|uint32_t
+name|size
+decl_stmt|;
+name|int
+name|irq
+decl_stmt|;
+name|uint32_t
+name|ins_memsize
+decl_stmt|;
+name|uint32_t
+name|data_memsize
+decl_stmt|;
+block|}
+struct|;
+specifier|static
+specifier|const
+name|struct
+name|npeconfig
+name|npeconfigs
+index|[
+name|NPE_MAX
+index|]
+init|=
+block|{
+index|[
+name|NPE_A
+index|]
+operator|=
+block|{
+operator|.
+name|base
+operator|=
+name|IXP425_NPE_A_HWBASE
+block|,
+operator|.
+name|size
+operator|=
+name|IXP425_NPE_A_SIZE
+block|,
+operator|.
+name|irq
+operator|=
+name|IXP425_INT_NPE_A
+block|,
+operator|.
+name|ins_memsize
+operator|=
+name|IX_NPEDL_INS_MEMSIZE_WORDS_NPEA
+block|,
+operator|.
+name|data_memsize
+operator|=
+name|IX_NPEDL_DATA_MEMSIZE_WORDS_NPEA
+block|}
+block|,
+index|[
+name|NPE_B
+index|]
+operator|=
+block|{
+operator|.
+name|base
+operator|=
+name|IXP425_NPE_B_HWBASE
+block|,
+operator|.
+name|size
+operator|=
+name|IXP425_NPE_B_SIZE
+block|,
+operator|.
+name|irq
+operator|=
+name|IXP425_INT_NPE_B
+block|,
+operator|.
+name|ins_memsize
+operator|=
+name|IX_NPEDL_INS_MEMSIZE_WORDS_NPEB
+block|,
+operator|.
+name|data_memsize
+operator|=
+name|IX_NPEDL_DATA_MEMSIZE_WORDS_NPEB
+block|}
+block|,
+index|[
+name|NPE_C
+index|]
+operator|=
+block|{
+operator|.
+name|base
+operator|=
+name|IXP425_NPE_C_HWBASE
+block|,
+operator|.
+name|size
+operator|=
+name|IXP425_NPE_C_SIZE
+block|,
+operator|.
+name|irq
+operator|=
+name|IXP425_INT_NPE_C
+block|,
+operator|.
+name|ins_memsize
+operator|=
+name|IX_NPEDL_INS_MEMSIZE_WORDS_NPEC
+block|,
+operator|.
+name|data_memsize
+operator|=
+name|IX_NPEDL_DATA_MEMSIZE_WORDS_NPEC
+block|}
+block|, 	}
+decl_stmt|;
 name|struct
 name|ixp425_softc
 modifier|*
@@ -1048,14 +1175,45 @@ name|ixpnpe_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|bus_addr_t
-name|base
+specifier|const
+name|struct
+name|npeconfig
+modifier|*
+name|config
 decl_stmt|;
 name|int
 name|rid
-decl_stmt|,
-name|irq
 decl_stmt|;
+if|if
+condition|(
+name|npeid
+operator|>=
+name|NPE_MAX
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"%s: bad npeid %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|npeid
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|config
+operator|=
+operator|&
+name|npeconfigs
+index|[
+name|npeid
+index|]
+expr_stmt|;
 comment|/* XXX M_BUS */
 name|sc
 operator|=
@@ -1105,76 +1263,32 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|base
-operator|=
-name|IXP425_NPE_B_HWBASE
-expr_stmt|;
 name|sc
 operator|->
 name|sc_size
 operator|=
-name|IXP425_NPE_B_SIZE
+name|config
+operator|->
+name|size
 expr_stmt|;
-name|irq
-operator|=
-name|IXP425_INT_NPE_B
-expr_stmt|;
-comment|/* size of instruction memory */
 name|sc
 operator|->
 name|insMemSize
 operator|=
-name|IX_NPEDL_INS_MEMSIZE_WORDS_NPEB
-expr_stmt|;
-comment|/* size of data memory */
-name|sc
+name|config
 operator|->
-name|dataMemSize
-operator|=
-name|IX_NPEDL_DATA_MEMSIZE_WORDS_NPEB
-expr_stmt|;
-block|}
-else|else
-block|{
-name|base
-operator|=
-name|IXP425_NPE_C_HWBASE
-expr_stmt|;
-name|sc
-operator|->
-name|sc_size
-operator|=
-name|IXP425_NPE_C_SIZE
-expr_stmt|;
-name|irq
-operator|=
-name|IXP425_INT_NPE_C
+name|ins_memsize
 expr_stmt|;
 comment|/* size of instruction memory */
 name|sc
 operator|->
-name|insMemSize
-operator|=
-name|IX_NPEDL_INS_MEMSIZE_WORDS_NPEC
-expr_stmt|;
-comment|/* size of data memory */
-name|sc
-operator|->
 name|dataMemSize
 operator|=
-name|IX_NPEDL_DATA_MEMSIZE_WORDS_NPEC
+name|config
+operator|->
+name|data_memsize
 expr_stmt|;
-block|}
+comment|/* size of data memory */
 if|if
 condition|(
 name|bus_space_map
@@ -1183,6 +1297,8 @@ name|sc
 operator|->
 name|sc_iot
 argument_list|,
+name|config
+operator|->
 name|base
 argument_list|,
 name|sc
@@ -1207,7 +1323,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Setup IRQ and handler for NPE message support.      */
+comment|/* 	 * Setup IRQ and handler for NPE message support. 	 */
 name|rid
 operator|=
 literal|0
@@ -1225,8 +1341,12 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
+name|config
+operator|->
 name|irq
 argument_list|,
+name|config
+operator|->
 name|irq
 argument_list|,
 literal|1
@@ -1236,10 +1356,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|sc_irq
+operator|==
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -1250,6 +1371,8 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+name|config
+operator|->
 name|irq
 argument_list|)
 expr_stmt|;
@@ -1278,7 +1401,7 @@ operator|->
 name|sc_ih
 argument_list|)
 expr_stmt|;
-comment|/* enable output fifo interrupts (NB: must also set OFIFO Write Enable) */
+comment|/* 	 * Enable output fifo interrupts (NB: must also set OFIFO Write Enable) 	 */
 name|npe_reg_write
 argument_list|(
 name|sc
@@ -1820,7 +1943,8 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"imageId 0x%08x not found in image library header\n"
+literal|"imageId 0x%08x not found in "
+literal|"image library header\n"
 argument_list|,
 name|imageId
 argument_list|)
@@ -1861,6 +1985,25 @@ name|uint32_t
 name|imageId
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|devname
+index|[
+literal|4
+index|]
+init|=
+block|{
+literal|"IXP425"
+block|,
+literal|"IXP435/IXP465"
+block|,
+literal|"DeviceID#2"
+block|,
+literal|"DeviceID#3"
+block|}
+decl_stmt|;
 name|uint32_t
 name|imageSize
 decl_stmt|;
@@ -1895,8 +2038,8 @@ if|#
 directive|if
 literal|0
 block|IxFeatureCtrlDeviceId devid = IX_NPEDL_DEVICEID_FROM_IMAGEID_GET(imageId);
-comment|/*      * Checking if image being loaded is meant for device that is running.      * Image is forward compatible. i.e Image built for IXP42X should run      * on IXP46X but not vice versa.      */
-block|if (devid> (ixFeatureCtrlDeviceRead()& IX_FEATURE_CTRL_DEVICE_TYPE_MASK)) 	return EINVAL;
+comment|/* 	 * Checking if image being loaded is meant for device that is running. 	 * Image is forward compatible. i.e Image built for IXP42X should run 	 * on IXP46X but not vice versa. 	 */
+block|if (devid> (ixFeatureCtrlDeviceRead()& IX_FEATURE_CTRL_DEVICE_TYPE_MASK)) 	    return EINVAL;
 endif|#
 directive|endif
 name|error
@@ -1961,7 +2104,46 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/*      * If download was successful, store image Id in list of      * currently loaded images. If a critical error occured      * during download, record that the NPE has an invalid image      */
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"load fw image %s.NPE-%c Func 0x%x Rev %u.%u\n"
+argument_list|,
+name|devname
+index|[
+name|NPEIMAGE_DEVID
+argument_list|(
+name|imageId
+argument_list|)
+index|]
+argument_list|,
+literal|'A'
+operator|+
+name|NPEIMAGE_NPEID
+argument_list|(
+name|imageId
+argument_list|)
+argument_list|,
+name|NPEIMAGE_FUNCID
+argument_list|(
+name|imageId
+argument_list|)
+argument_list|,
+name|NPEIMAGE_MAJOR
+argument_list|(
+name|imageId
+argument_list|)
+argument_list|,
+name|NPEIMAGE_MINOR
+argument_list|(
+name|imageId
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If download was successful, store image Id in list of 	 * currently loaded images. If a critical error occured 	 * during download, record that the NPE has an invalid image 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2234,7 +2416,9 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"Block size too big for NPE memory\n"
+literal|"Block size %u too big for NPE memory\n"
+argument_list|,
+name|blockSize
 argument_list|)
 expr_stmt|;
 return|return
@@ -2357,7 +2541,9 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"Block size too big for NPE memory\n"
+literal|"Block size %u too big for NPE memory\n"
+argument_list|,
+name|blockSize
 argument_list|)
 expr_stmt|;
 return|return
@@ -2480,7 +2666,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* each state-info entry is 2 words (address, value) in length */
+comment|/* each state-info entry is 2 words (address, value) */
 name|uint32_t
 name|regVal
 init|=
@@ -2525,7 +2711,7 @@ operator|)
 operator|>>
 name|IX_NPEDL_OFFSET_STATE_ADDR_CTXT_NUM
 decl_stmt|;
-comment|/* error-check Context Register No. and Context Number values  */
+comment|/* error-check Context Register No. and Context Number values */
 if|if
 condition|(
 operator|!
@@ -2719,7 +2905,7 @@ return|return
 name|EIO
 return|;
 block|}
-comment|/*      * Read Download Map, checking each block type and calling      * appropriate function to perform download       */
+comment|/* 	 * Read Download Map, checking each block type and calling 	 * appropriate function to perform download  	 */
 name|error
 operator|=
 literal|0
@@ -3184,7 +3370,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*      * Clear the FIFOs.      */
+comment|/* 	 * Clear the FIFOs. 	 */
 while|while
 condition|(
 name|npe_checkbits
@@ -3245,7 +3431,7 @@ name|IX_NPEDL_MASK_STAT_IFNE
 argument_list|)
 condition|)
 block|{
-comment|/* 	 * Step execution of the NPE intruction to read inFIFO using 	 * the Debug Executing Context stack. 	 */
+comment|/* 		 * Step execution of the NPE intruction to read inFIFO using 		 * the Debug Executing Context stack. 		 */
 name|error
 operator|=
 name|npe_cpu_step
@@ -3289,7 +3475,7 @@ name|error
 return|;
 block|}
 block|}
-comment|/*      * Reset the mailbox reg      */
+comment|/* 	 * Reset the mailbox reg 	 */
 comment|/* ...from XScale side */
 name|npe_reg_write
 argument_list|(
@@ -3343,7 +3529,7 @@ return|return
 name|error
 return|;
 block|}
-comment|/*       * Reset the physical registers in the NPE register file:      * Note: no need to save/restore REGMAP for Context 0 here      * since all Context Store regs are reset in subsequent code.      */
+comment|/*  	 * Reset the physical registers in the NPE register file: 	 * Note: no need to save/restore REGMAP for Context 0 here 	 * since all Context Store regs are reset in subsequent code. 	 */
 for|for
 control|(
 name|regAddr
@@ -3389,7 +3575,8 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: cannot write phy reg, error %u\n"
+literal|"%s: cannot write phy reg,"
+literal|"error %u\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3407,7 +3594,7 @@ return|;
 comment|/* abort reset */
 block|}
 block|}
-comment|/*      * Reset the context store:      */
+comment|/* 	 * Reset the context store: 	 */
 for|for
 control|(
 name|i
@@ -3422,7 +3609,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* set each context's Context Store registers to reset values: */
+comment|/* set each context's Context Store registers to reset values */
 for|for
 control|(
 name|ctxtReg
@@ -3440,8 +3627,6 @@ block|{
 comment|/* NOTE that there is no STEVT register for Context 0 */
 if|if
 condition|(
-operator|!
-operator|(
 name|i
 operator|==
 literal|0
@@ -3449,9 +3634,8 @@ operator|&&
 name|ctxtReg
 operator|==
 name|IX_NPEDL_CTXT_REG_STEVT
-operator|)
 condition|)
-block|{
+continue|continue;
 name|regVal
 operator|=
 name|ixNpeDlCtxtRegResetValues
@@ -3487,7 +3671,8 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: cannot write ctx reg, error %u\n"
+literal|"%s: cannot write ctx reg,"
+literal|"error %u\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3503,7 +3688,6 @@ return|return
 name|error
 return|;
 comment|/* abort reset */
-block|}
 block|}
 block|}
 block|}
@@ -3593,8 +3777,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*      * WR IXA00055043 - Remove IMEM Parity Introduced by NPE Reset Operation      */
-comment|/*      * Reset the NPE and its coprocessor - to reset internal      * states and remove parity error.  Note this makes no      * sense based on the documentation.  The feature control      * register always reads back as 0 on the ixp425 and further      * the bit definition of NPEA/NPEB is off by 1 according to      * the Intel documention--so we're blindly following the      * Intel code w/o any real understanding.      */
+comment|/* 	 * WR IXA00055043 - Remove IMEM Parity Introduced by NPE Reset Operation 	 */
+comment|/* 	 * Reset the NPE and its coprocessor - to reset internal 	 * states and remove parity error.  Note this makes no 	 * sense based on the documentation.  The feature control 	 * register always reads back as 0 on the ixp425 and further 	 * the bit definition of NPEA/NPEB is off by 1 according to 	 * the Intel documention--so we're blindly following the 	 * Intel code w/o any real understanding. 	 */
 name|regVal
 operator|=
 name|EXP_BUS_READ_4
@@ -3692,7 +3876,7 @@ operator|~
 name|resetNpeParity
 argument_list|)
 expr_stmt|;
-comment|/*      * Call NpeMgr function to stop the NPE again after the Feature Control      * has unfused and Un-Reset the NPE and its associated Coprocessors.      */
+comment|/* 	 * Call NpeMgr function to stop the NPE again after the Feature Control 	 * has unfused and Un-Reset the NPE and its associated Coprocessors. 	 */
 name|error
 operator|=
 name|npe_cpu_stop
@@ -3757,7 +3941,7 @@ block|{
 name|uint32_t
 name|ecsRegVal
 decl_stmt|;
-comment|/*      * Ensure only Background Context Stack Level is Active by turning off      * the Active bit in each of the other Executing Context Stack levels.      */
+comment|/* 	 * Ensure only Background Context Stack Level is Active by turning off 	 * the Active bit in each of the other Executing Context Stack levels. 	 */
 name|ecsRegVal
 operator|=
 name|npe_ecs_reg_read
@@ -3835,7 +4019,7 @@ argument_list|,
 name|IX_NPEDL_EXCTL_CMD_NPE_CLR_PIPE
 argument_list|)
 expr_stmt|;
-comment|/* start NPE execution by issuing command through EXCTL register on NPE */
+comment|/* start NPE execution by issuing cmd through EXCTL register on NPE */
 name|npe_issue_cmd
 argument_list|(
 name|sc
@@ -3843,7 +4027,7 @@ argument_list|,
 name|IX_NPEDL_EXCTL_CMD_NPE_START
 argument_list|)
 expr_stmt|;
-comment|/*      * Check execution status of NPE to verify operation was successful.      */
+comment|/* 	 * Check execution status of NPE to verify operation was successful. 	 */
 return|return
 name|npe_checkbits
 argument_list|(
@@ -3872,7 +4056,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* stop NPE execution by issuing command through EXCTL register on NPE */
+comment|/* stop NPE execution by issuing cmd through EXCTL register on NPE */
 name|npe_issue_cmd
 argument_list|(
 name|sc
@@ -4116,7 +4300,7 @@ block|{
 name|uint32_t
 name|rdata
 decl_stmt|;
-comment|/* 	 * Write invalid data to this reg, so we can see if we're reading  	 * the EXDATA register too early. 	 */
+comment|/* 		 * Write invalid data to this reg, so we can see if we're 		 * reading the EXDATA register too early. 		 */
 name|npe_reg_write
 argument_list|(
 name|sc
@@ -4127,7 +4311,7 @@ operator|~
 name|data
 argument_list|)
 expr_stmt|;
-comment|/* Disabled since top 3 MSB are not used for Azusa hardware Refer WR:IXA00053900*/
+comment|/* 		 * Disabled since top 3 MSB are not used for Azusa 		 * hardware Refer WR:IXA00053900 		 */
 name|data
 operator|&=
 name|IX_NPEDL_MASK_UNUSED_IMEM_BITS
@@ -4216,7 +4400,7 @@ condition|(
 name|verify
 condition|)
 block|{
-comment|/* 	 * Write invalid data to this reg, so we can see if we're reading  	 * the EXDATA register too early. 	 */
+comment|/* 		 * Write invalid data to this reg, so we can see if we're 		 * reading the EXDATA register too early. 		 */
 name|npe_reg_write
 argument_list|(
 name|sc
@@ -4367,7 +4551,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* ensure that IF and IE are on (temporarily), so that we don't end up      * stepping forever */
+comment|/* ensure that IF and IE are on (temporarily), so that we don't end up 	 * stepping forever */
 name|sc
 operator|->
 name|savedEcsDbgCtxtReg2
@@ -4454,7 +4638,7 @@ argument_list|,
 name|ecsDbgRegVal
 argument_list|)
 expr_stmt|;
-comment|/*      * Set CCTXT at ECS DEBUG L3 to specify in which context to execute the      * instruction, and set SELCTXT at ECS DEBUG Level to specify which context      * store to access.      * Debug ECS Level Reg 1 has form  0x000n000n, where n = context number      */
+comment|/* 	 * Set CCTXT at ECS DEBUG L3 to specify in which context to execute the 	 * instruction, and set SELCTXT at ECS DEBUG Level to specify which 	 * context store to access. 	 * Debug ECS Level Reg 1 has form  0x000n000n, where n = context number 	 */
 name|ecsDbgRegVal
 operator|=
 operator|(
@@ -4496,7 +4680,7 @@ argument_list|,
 name|npeInstruction
 argument_list|)
 expr_stmt|;
-comment|/* we need this value later to wait for completion of NPE execution step */
+comment|/* need this value later to wait for completion of NPE execution step */
 name|oldWatchcount
 operator|=
 name|npe_reg_read
@@ -4514,7 +4698,7 @@ argument_list|,
 name|IX_NPEDL_EXCTL_CMD_NPE_STEP
 argument_list|)
 expr_stmt|;
-comment|/*      * Force the XScale to wait until the NPE has finished execution step      * NOTE that this delay will be very small, just long enough to allow a      * single NPE instruction to complete execution; if instruction execution      * is not completed before timeout retries, exit the while loop.      */
+comment|/* 	 * Force the XScale to wait until the NPE has finished execution step 	 * NOTE that this delay will be very small, just long enough to allow a 	 * single NPE instruction to complete execution; if instruction 	 * execution is not completed before timeout retries, exit the while 	 * loop. 	 */
 name|newWatchcount
 operator|=
 name|npe_reg_read
@@ -4542,7 +4726,7 @@ name|tries
 operator|++
 control|)
 block|{
-comment|/* Watch Count register increments when NPE completes an instruction */
+comment|/* Watch Count register incr's when NPE completes an inst */
 name|newWatchcount
 operator|=
 name|npe_reg_read
@@ -4719,7 +4903,7 @@ operator|<<
 name|IX_NPEDL_OFFSET_INSTR_DEST
 operator|)
 expr_stmt|;
-comment|/* step execution of NPE intruction using Debug Executing Context stack */
+comment|/* step execution of NPE inst using Debug Executing Context stack */
 name|error
 operator|=
 name|npe_cpu_step
@@ -4854,8 +5038,7 @@ operator|==
 name|IX_NPEDL_REG_SIZE_WORD
 condition|)
 block|{
-comment|/* NPE register addressing is left-to-right: e.g. |d0|d1|d2|d3| */
-comment|/* Write upper half-word (short) to |d0|d1| */
+comment|/* 		 * NPE register addressing is left-to-right: e.g. |d0|d1|d2|d3| 		 * Write upper half-word (short) to |d0|d1| 		 */
 name|error
 operator|=
 name|npe_logical_reg_write
@@ -4949,7 +5132,7 @@ return|return
 name|EINVAL
 return|;
 block|}
-comment|/* fill dest operand field of  instruction with destination reg addr */
+comment|/* fill dest operand field of inst with dest reg addr */
 name|npeInstruction
 operator||=
 operator|(
@@ -4958,7 +5141,7 @@ operator|<<
 name|IX_NPEDL_OFFSET_INSTR_DEST
 operator|)
 expr_stmt|;
-comment|/* fill src operand field of instruction with least-sig 5 bits of val*/
+comment|/* fill src operand field of inst with least-sig 5 bits of val*/
 name|npeInstruction
 operator||=
 operator|(
@@ -4971,7 +5154,7 @@ operator|<<
 name|IX_NPEDL_OFFSET_INSTR_SRC
 operator|)
 expr_stmt|;
-comment|/* fill coprocessor field of instruction with most-sig 11 bits of val*/
+comment|/* fill coprocessor field of inst with most-sig 11 bits of val*/
 name|npeInstruction
 operator||=
 operator|(
@@ -5012,7 +5195,8 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s(0x%x, 0x%x, %u, %u), error %u writing reg\n"
+literal|"%s(0x%x, 0x%x, %u, %u), error %u "
+literal|"writing reg\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5104,7 +5288,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/*      * Set REGMAP for context 0 to (regAddr>> 1) to choose which pair (0-16)      * of physical registers to write .      */
+comment|/* 	 * Set REGMAP for context 0 to (regAddr>> 1) to choose which pair 	 * (0-16) of physical registers to write . 	 */
 name|error
 operator|=
 name|npe_logical_reg_write
@@ -5213,7 +5397,7 @@ argument_list|,
 name|ctxtRegVal
 argument_list|)
 expr_stmt|;
-comment|/*      * Context 0 has no STARTPC. Instead, this value is used to set      * NextPC for Background ECS, to set where NPE starts executing code      */
+comment|/* 	 * Context 0 has no STARTPC. Instead, this value is used to set 	 * NextPC for Background ECS, to set where NPE starts executing code 	 */
 if|if
 condition|(
 name|ctxtNum
@@ -5225,7 +5409,7 @@ operator|==
 name|IX_NPEDL_CTXT_REG_STARTPC
 condition|)
 block|{
-comment|/* read BG_CTXT_REG_0, update NEXTPC bits, and write back to reg */
+comment|/* read BG_CTXT_REG_0, update NEXTPC bits,& write back to reg*/
 name|uint32_t
 name|v
 init|=
@@ -5352,7 +5536,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|ixpnpe_ofifo_wait
+name|ofifo_wait
 parameter_list|(
 name|struct
 name|ixpnpe_softc
@@ -5423,6 +5607,117 @@ end_function
 
 begin_function
 specifier|static
+name|int
+name|getmsg
+parameter_list|(
+name|struct
+name|ixpnpe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint32_t
+name|msg
+index|[
+literal|2
+index|]
+parameter_list|)
+block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ofifo_wait
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+name|EAGAIN
+return|;
+name|msg
+index|[
+literal|0
+index|]
+operator|=
+name|npe_reg_read
+argument_list|(
+name|sc
+argument_list|,
+name|IX_NPEFIFO
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: msg0 0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|msg
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ofifo_wait
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+name|EAGAIN
+return|;
+name|msg
+index|[
+literal|1
+index|]
+operator|=
+name|npe_reg_read
+argument_list|(
+name|sc
+argument_list|,
+name|IX_NPEFIFO
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: msg1 0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|msg
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|ixpnpe_intr
 parameter_list|(
@@ -5441,6 +5736,14 @@ decl_stmt|;
 name|uint32_t
 name|status
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|npe_reg_read
@@ -5448,6 +5751,19 @@ argument_list|(
 name|sc
 argument_list|,
 name|IX_NPESTAT
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: status 0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 if|if
@@ -5476,73 +5792,42 @@ name|status
 argument_list|)
 expr_stmt|;
 comment|/* XXX must silence interrupt? */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
-comment|/*      * A message is waiting in the output FIFO, copy it so      * the interrupt will be silenced; then signal anyone      * waiting to collect the result.      */
-name|sc
-operator|->
-name|sc_msgwaiting
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* NB: error indicator */
+comment|/* 	 * A message is waiting in the output FIFO, copy it so 	 * the interrupt will be silenced. 	 */
 if|if
 condition|(
-name|ixpnpe_ofifo_wait
+name|getmsg
 argument_list|(
 name|sc
-argument_list|)
-condition|)
-block|{
+argument_list|,
 name|sc
 operator|->
 name|sc_msg
-index|[
+argument_list|)
+operator|==
 literal|0
-index|]
-operator|=
-name|npe_reg_read
-argument_list|(
-name|sc
-argument_list|,
-name|IX_NPEFIFO
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ixpnpe_ofifo_wait
-argument_list|(
-name|sc
-argument_list|)
 condition|)
-block|{
-name|sc
-operator|->
-name|sc_msg
-index|[
-literal|1
-index|]
-operator|=
-name|npe_reg_read
-argument_list|(
-name|sc
-argument_list|,
-name|IX_NPEFIFO
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_msgwaiting
 operator|=
 literal|1
 expr_stmt|;
-comment|/* successful fetch */
-block|}
-block|}
-name|wakeup_one
+name|mtx_unlock
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -5551,7 +5836,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ixpnpe_ififo_wait
+name|ififo_wait
 parameter_list|(
 name|struct
 name|ixpnpe_softc
@@ -5596,6 +5881,24 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: timeout, last status 0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|npe_reg_read
+argument_list|(
+name|sc
+argument_list|,
+name|IX_NPESTAT
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -5605,7 +5908,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ixpnpe_sendmsg_locked
+name|putmsg
 parameter_list|(
 name|struct
 name|ixpnpe_softc
@@ -5620,11 +5923,6 @@ literal|2
 index|]
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -5635,73 +5933,15 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_msgwaiting
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|ixpnpe_ififo_wait
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-block|{
-name|npe_reg_write
-argument_list|(
-name|sc
-argument_list|,
-name|IX_NPEFIFO
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ixpnpe_ififo_wait
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-name|npe_reg_write
-argument_list|(
-name|sc
-argument_list|,
-name|IX_NPEFIFO
-argument_list|,
-name|msg
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-else|else
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-block|}
-else|else
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"input FIFO timeout, msg [0x%x,0x%x]\n"
+literal|"%s: msg 0x%x:0x%x\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|msg
 index|[
@@ -5712,102 +5952,67 @@ name|msg
 index|[
 literal|1
 index|]
-argument_list|)
-expr_stmt|;
-return|return
-name|error
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|ixpnpe_recvmsg_locked
-parameter_list|(
-name|struct
-name|ixpnpe_softc
-modifier|*
-name|sc
-parameter_list|,
-name|uint32_t
-name|msg
-index|[
-literal|2
-index|]
-parameter_list|)
-block|{
-name|mtx_assert
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|sc
-operator|->
-name|sc_msgwaiting
-condition|)
-name|msleep
+name|ififo_wait
 argument_list|(
 name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-literal|0
-argument_list|,
-literal|"npemh"
-argument_list|,
-literal|0
 argument_list|)
-expr_stmt|;
-name|bcopy
+condition|)
+return|return
+name|EIO
+return|;
+name|npe_reg_write
 argument_list|(
 name|sc
-operator|->
-name|sc_msg
+argument_list|,
+name|IX_NPEFIFO
 argument_list|,
 name|msg
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_msg
-argument_list|)
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
-comment|/* NB: sc_msgwaiting != 1 means the ack fetch failed */
-return|return
+if|if
+condition|(
+operator|!
+name|ififo_wait
+argument_list|(
 name|sc
-operator|->
-name|sc_msgwaiting
-operator|!=
-literal|1
-condition|?
+argument_list|)
+condition|)
+return|return
 name|EIO
-else|:
+return|;
+name|npe_reg_write
+argument_list|(
+name|sc
+argument_list|,
+name|IX_NPEFIFO
+argument_list|,
+name|msg
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+return|return
 literal|0
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Send a msg to the NPE and wait for a reply.  We use the  * private mutex and sleep until an interrupt is received  * signalling the availability of data in the output FIFO  * so the caller cannot be holding a mutex.  May be better  * piggyback on the caller's mutex instead but that would  * make other locking confusing.  */
+comment|/*  * Send a msg to the NPE and wait for a reply.  We spin as  * we may be called early with interrupts not properly setup.  */
 end_comment
 
 begin_function
 name|int
-name|ixpnpe_sendandrecvmsg
+name|ixpnpe_sendandrecvmsg_sync
 parameter_list|(
 name|struct
 name|ixpnpe_softc
@@ -5841,7 +6046,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ixpnpe_sendmsg_locked
+name|putmsg
 argument_list|(
 name|sc
 argument_list|,
@@ -5856,7 +6061,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|ixpnpe_recvmsg_locked
+name|getmsg
 argument_list|(
 name|sc
 argument_list|,
@@ -5878,12 +6083,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX temporary, not reliable */
+comment|/*  * Send a msg to the NPE w/o waiting for a reply.  */
 end_comment
 
 begin_function
 name|int
-name|ixpnpe_sendmsg
+name|ixpnpe_sendmsg_async
 parameter_list|(
 name|struct
 name|ixpnpe_softc
@@ -5911,7 +6116,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ixpnpe_sendmsg_locked
+name|putmsg
 argument_list|(
 name|sc
 argument_list|,
@@ -5933,8 +6138,101 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|ixpnpe_recvmsg
+name|recvmsg_locked
+parameter_list|(
+name|struct
+name|ixpnpe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint32_t
+name|msg
+index|[
+literal|2
+index|]
+parameter_list|)
+block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: msgwaiting %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sc
+operator|->
+name|sc_msgwaiting
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_msgwaiting
+condition|)
+block|{
+name|msg
+index|[
+literal|0
+index|]
+operator|=
+name|sc
+operator|->
+name|sc_msg
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|msg
+index|[
+literal|1
+index|]
+operator|=
+name|sc
+operator|->
+name|sc_msg
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|sc
+operator|->
+name|sc_msgwaiting
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+return|return
+name|EAGAIN
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Receive any msg previously received from the NPE. If nothing  * is available we return EAGAIN and the caller is required to  * do a synchronous receive or try again later.  */
+end_comment
+
+begin_function
+name|int
+name|ixpnpe_recvmsg_async
 parameter_list|(
 name|struct
 name|ixpnpe_softc
@@ -5959,40 +6257,83 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_msgwaiting
-condition|)
-name|bcopy
-argument_list|(
-name|sc
-operator|->
-name|sc_msg
-argument_list|,
-name|msg
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_msg
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* NB: sc_msgwaiting != 1 means the ack fetch failed */
 name|error
 operator|=
+name|recvmsg_locked
+argument_list|(
+name|sc
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|sc_msgwaiting
-operator|!=
-literal|1
-condition|?
-name|EIO
-else|:
-literal|0
+name|sc_mtx
+argument_list|)
+expr_stmt|;
+return|return
+name|error
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Receive a msg from the NPE.  If one was received asynchronously  * then it's returned; otherwise we poll synchronously.  */
+end_comment
+
+begin_function
+name|int
+name|ixpnpe_recvmsg_sync
+parameter_list|(
+name|struct
+name|ixpnpe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint32_t
+name|msg
+index|[
+literal|2
+index|]
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|recvmsg_locked
+argument_list|(
+name|sc
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EAGAIN
+condition|)
+name|error
+operator|=
+name|getmsg
+argument_list|(
+name|sc
+argument_list|,
+name|msg
+argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
