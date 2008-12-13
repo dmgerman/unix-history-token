@@ -300,13 +300,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|th_close_t
-name|ngt_close
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|ttyhook
 name|ngt_hook
@@ -336,11 +329,6 @@ operator|.
 name|th_rint_poll
 operator|=
 name|ngt_rint_poll
-block|,
-operator|.
-name|th_close
-operator|=
-name|ngt_close
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2103,38 +2091,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|ngt_close
-parameter_list|(
-name|struct
-name|tty
-modifier|*
-name|tp
-parameter_list|)
-block|{
-name|sc_p
-name|sc
-init|=
-name|ttyhook_softc
-argument_list|(
-name|tp
-argument_list|)
-decl_stmt|;
-comment|/* Must be queued to drop the tty lock */
-name|ng_rmnode_flags
-argument_list|(
-name|sc
-operator|->
-name|node
-argument_list|,
-name|NG_QUEUE
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
