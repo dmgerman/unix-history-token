@@ -3769,13 +3769,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: fetch [-146AFMPRUadlmnpqrsv] [-N netrc] [-o outputfile]"
+literal|"usage: fetch [-146AadFlMmnPpqRrsUv] [-B bytes] [-N file] [-o file] [-S bytes]"
 argument_list|,
-literal|"             [-S bytes] [-B bytes] [-T seconds] [-w seconds]"
+literal|"       [-T seconds] [-w seconds] URL ..."
 argument_list|,
-literal|"             [-h host -f file [-c dir] | URL ...]"
+literal|"       fetch [-146AadFlMmnPpqRrsUv] [-B bytes] [-N file] [-o file] [-S bytes]"
+argument_list|,
+literal|"       [-T seconds] [-w seconds] -h host -f file [-c dir]"
 argument_list|)
 expr_stmt|;
 block|}
