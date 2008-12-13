@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/snoop.h>
 end_include
 
@@ -982,6 +988,8 @@ operator|->
 name|snp_tty
 argument_list|,
 name|td
+operator|->
+name|td_proc
 argument_list|,
 operator|*
 operator|(

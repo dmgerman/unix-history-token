@@ -231,7 +231,7 @@ modifier|*
 modifier|*
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
 parameter_list|,
 name|int
