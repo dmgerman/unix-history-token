@@ -1458,7 +1458,7 @@ name|batt_sleep_ms
 condition|)
 name|AcpiOsSleep
 argument_list|(
-literal|1
+name|batt_sleep_ms
 argument_list|)
 expr_stmt|;
 block|}
