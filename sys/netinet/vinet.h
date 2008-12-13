@@ -398,9 +398,6 @@ decl_stmt|;
 name|u_int32_t
 name|_isn_offset_old
 decl_stmt|;
-name|MD5_CTX
-name|_isn_ctx
-decl_stmt|;
 name|struct
 name|inpcbhead
 name|_udb
@@ -981,13 +978,6 @@ define|#
 directive|define
 name|V_ipstealth
 value|VNET_INET(ipstealth)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_isn_ctx
-value|VNET_INET(isn_ctx)
 end_define
 
 begin_define

@@ -7112,13 +7112,6 @@ name|isn_offset_old
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|MD5_CTX
-name|isn_ctx
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -7141,6 +7134,9 @@ operator|->
 name|t_vnet
 argument_list|)
 expr_stmt|;
+name|MD5_CTX
+name|isn_ctx
+decl_stmt|;
 name|u_int32_t
 name|md5_buffer
 index|[
@@ -7219,13 +7215,13 @@ comment|/* Compute the md5 hash and return the ISN. */
 name|MD5Init
 argument_list|(
 operator|&
-name|V_isn_ctx
+name|isn_ctx
 argument_list|)
 expr_stmt|;
 name|MD5Update
 argument_list|(
 operator|&
-name|V_isn_ctx
+name|isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -7247,7 +7243,7 @@ expr_stmt|;
 name|MD5Update
 argument_list|(
 operator|&
-name|V_isn_ctx
+name|isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -7287,7 +7283,7 @@ block|{
 name|MD5Update
 argument_list|(
 operator|&
-name|V_isn_ctx
+name|isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -7310,7 +7306,7 @@ expr_stmt|;
 name|MD5Update
 argument_list|(
 operator|&
-name|V_isn_ctx
+name|isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -7338,7 +7334,7 @@ block|{
 name|MD5Update
 argument_list|(
 operator|&
-name|V_isn_ctx
+name|isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -7361,7 +7357,7 @@ expr_stmt|;
 name|MD5Update
 argument_list|(
 operator|&
-name|V_isn_ctx
+name|isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -7385,7 +7381,7 @@ block|}
 name|MD5Update
 argument_list|(
 operator|&
-name|V_isn_ctx
+name|isn_ctx
 argument_list|,
 operator|(
 name|u_char
@@ -7410,7 +7406,7 @@ operator|&
 name|md5_buffer
 argument_list|,
 operator|&
-name|V_isn_ctx
+name|isn_ctx
 argument_list|)
 expr_stmt|;
 name|new_isn
