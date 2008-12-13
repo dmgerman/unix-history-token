@@ -22,6 +22,13 @@ name|CUDA_DEVSTR
 value|"Apple CUDA I/O Controller"
 end_define
 
+begin_define
+define|#
+directive|define
+name|CUDA_MAXPACKETS
+value|10
+end_define
+
 begin_comment
 comment|/* Cuda addresses */
 end_comment
@@ -311,12 +318,23 @@ name|int
 name|sc_received
 decl_stmt|;
 name|struct
+name|cuda_packet
+name|sc_pkts
+index|[
+name|CUDA_MAXPACKETS
+index|]
+decl_stmt|;
+name|struct
 name|cuda_pktq
 name|sc_inq
 decl_stmt|;
 name|struct
 name|cuda_pktq
 name|sc_outq
+decl_stmt|;
+name|struct
+name|cuda_pktq
+name|sc_freeq
 decl_stmt|;
 block|}
 struct|;
