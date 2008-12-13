@@ -8561,6 +8561,11 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+name|RADIX_NODE_HEAD_LOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rnh
@@ -8586,8 +8591,13 @@ operator|)
 name|ent
 argument_list|)
 operator|==
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
+argument_list|)
+empty_stmt|;
 name|NULL
-condition|)
+block|)
 block|{
 name|IPFW_WUNLOCK
 argument_list|(
@@ -8607,21 +8617,26 @@ name|EEXIST
 operator|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|IPFW_WUNLOCK
 argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|int
 name|del_table_entry
 parameter_list|(
