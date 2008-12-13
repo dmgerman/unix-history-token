@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ah_internal.h,v 1.21 2008/11/27 22:29:27 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -138,79 +138,6 @@ parameter_list|,
 name|field
 parameter_list|)
 value|((size_t)(&((type *)0)->field))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Remove const in a way that keeps the compiler happy.  * This works for gcc but may require other magic for  * other compilers (not sure where this should reside).  * Note that uintptr_t is C99.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__DECONST
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_UINTPTR_T
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|AH_WORDSIZE
-operator|==
-literal|64
-end_if
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|int
-name|uintptr_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|uintptr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|__DECONST
-parameter_list|(
-name|type
-parameter_list|,
-name|var
-parameter_list|)
-value|((type)(uintptr_t)(const void *)(var))
 end_define
 
 begin_endif
@@ -435,7 +362,7 @@ parameter_list|,
 name|_attach
 parameter_list|)
 define|\
-value|static struct ath_hal_rf name##_rf = {				\ 	.name		= #_name,				\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_rfs, name##_rf)
+value|static struct ath_hal_rf _name##_rf = {				\ 	.name		= __STRING(_name),			\ 	.probe		= _probe,				\ 	.attach		= _attach				\ };								\ OS_DATA_SET(ah_rfs, _name##_rf)
 end_define
 
 begin_endif
