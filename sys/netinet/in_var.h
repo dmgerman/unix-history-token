@@ -193,30 +193,48 @@ begin_comment
 comment|/*  * Hash table for IP addresses.  */
 end_comment
 
-begin_extern
-extern|extern	LIST_HEAD(in_ifaddrhashhead
-operator|,
-extern|in_ifaddr
-end_extern
-
 begin_expr_stmt
-unit|)
-operator|*
-name|in_ifaddrhashtbl
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern	TAILQ_HEAD(in_ifaddrhead
-operator|,
-extern|in_ifaddr
-end_extern
-
-begin_expr_stmt
-unit|)
+name|TAILQ_HEAD
+argument_list|(
 name|in_ifaddrhead
+argument_list|,
+name|in_ifaddr
+argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|in_ifaddrhashhead
+argument_list|,
+name|in_ifaddr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|in_ifaddrhashhead
+modifier|*
+name|in_ifaddrhashtbl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|in_ifaddrhead
+name|in_ifaddrhead
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -228,6 +246,11 @@ end_decl_stmt
 begin_comment
 comment|/* mask for hash table */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -646,17 +669,34 @@ endif|#
 directive|endif
 end_endif
 
-begin_extern
-extern|extern LIST_HEAD(in_multihead
-operator|,
-extern|in_multi
-end_extern
-
 begin_expr_stmt
-unit|)
+name|LIST_HEAD
+argument_list|(
 name|in_multihead
+argument_list|,
+name|in_multi
+argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|in_multihead
+name|in_multihead
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Lock macros for IPv4 layer multicast address lists.  IPv4 lock goes  * before link layer multicast locks in the lock order.  In most cases,  * consumers of IN_*_MULTI() macros should acquire the locks before  * calling them; users of the in_{add,del}multi() functions should not.  */

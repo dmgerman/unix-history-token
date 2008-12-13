@@ -1515,6 +1515,14 @@ name|icmp6stat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|in6_maxmtu
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1552,14 +1560,6 @@ specifier|extern
 name|u_char
 name|inet6ctlerrmap
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|long
-name|in6_maxmtu
 decl_stmt|;
 end_decl_stmt
 

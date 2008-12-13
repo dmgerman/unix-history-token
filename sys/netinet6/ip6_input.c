@@ -385,11 +385,6 @@ name|ip6stat
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -461,11 +456,13 @@ name|udp6_recvspace
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE_GLOBALS
-end_ifdef
+begin_decl_stmt
+specifier|extern
+name|struct
+name|route_in6
+name|ip6_forward_rt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1176,14 +1173,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|route_in6
-name|ip6_forward_rt
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void

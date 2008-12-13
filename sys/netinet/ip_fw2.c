@@ -520,17 +520,17 @@ name|ipfw_timeout
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|int
 name|verbose_limit
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -872,8 +872,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_V_INT
 argument_list|(
+name|V_NET
+argument_list|,
+name|vnet_ipfw
+argument_list|,
 name|_net_inet_ip_fw
 argument_list|,
 name|OID_AUTO
@@ -882,7 +886,6 @@ name|verbose_limit
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|verbose_limit
 argument_list|,
 literal|0
