@@ -109,11 +109,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__ia64__
 argument_list|)
 operator|||
@@ -5270,42 +5265,6 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|__alpha__
-comment|/* 		 * SRM requires that the root partition is at the 		 * begining of the disk and cannot boot otherwise.  		 * Warn Alpha users if they are about to shoot themselves in 		 * the foot in this way. 		 * 		 * Since partitions may not start precisely at offset 0 we 		 * check for a "close to 0" instead. :-( 		 */
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|CHUNK_IS_ROOT
-operator|)
-operator|&&
-operator|(
-name|tmp
-operator|->
-name|offset
-operator|>
-literal|1024
-operator|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Your root partition `a' does not seem to be the first\n"
-literal|"partition.  The Alpha's firmware can only boot from the\n"
-literal|"first partition.  So it is unlikely that your current\n"
-literal|"disk layout will be bootable boot after installation.\n"
-literal|"\n"
-literal|"Please allocate the root partition before allocating\n"
-literal|"any others.\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* alpha */
 name|tmp
 operator|->
 name|private_data
