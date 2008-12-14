@@ -3013,6 +3013,15 @@ operator|*
 operator|)
 name|p
 decl_stmt|;
+name|struct
+name|tty
+modifier|*
+name|tp
+init|=
+name|sc
+operator|->
+name|sc_tty
+decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
@@ -3023,6 +3032,12 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|tp
+expr_stmt|;
+comment|/* Used for debugging */
 name|DPRINTF
 argument_list|(
 operator|(
