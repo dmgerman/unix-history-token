@@ -275,6 +275,7 @@ name|part
 index|[
 name|VTOC8_NPARTS
 index|]
+name|__packed
 struct|;
 name|uint16_t
 name|__alignment
