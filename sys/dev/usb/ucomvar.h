@@ -625,5 +625,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ucomrxchars
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+name|sc
+parameter_list|,
+name|u_char
+modifier|*
+name|cp
+parameter_list|,
+name|u_int32_t
+name|cc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
