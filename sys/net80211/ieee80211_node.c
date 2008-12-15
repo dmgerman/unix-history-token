@@ -7439,14 +7439,13 @@ expr_stmt|;
 comment|/* NB: success */
 if|if
 condition|(
-operator|!
-name|IEEE80211_KEY_UNDEFINED
-argument_list|(
-operator|&
 name|ni
 operator|->
 name|ni_ucastkey
-argument_list|)
+operator|.
+name|wk_keyix
+operator|!=
+name|IEEE80211_KEYIX_NONE
 condition|)
 block|{
 name|keyix
