@@ -51,6 +51,17 @@ name|phandle_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Other than in Open Firmware calls, the size of a bus cell seems to be  * always the same.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|pcell_t
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef

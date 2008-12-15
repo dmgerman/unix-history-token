@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/ofw_bus.h>
+file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_typedef
