@@ -6809,6 +6809,30 @@ operator||
 name|BGE_MODECTL_TX_NO_PHDR_CSUM
 argument_list|)
 expr_stmt|;
+comment|/* 	 * BCM5701 B5 have a bug causing data corruption when using 	 * 64-bit DMA reads, which can be terminated early and then 	 * completed later as 32-bit accesses, in combination with 	 * certain bridges. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5701
+operator|&&
+name|sc
+operator|->
+name|bge_chipid
+operator|==
+name|BGE_CHIPID_BCM5701_B5
+condition|)
+name|BGE_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MODE_CTL
+argument_list|,
+name|BGE_MODECTL_FORCE_PCI32
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Tell the firmware the driver is running 	 */
 if|if
 condition|(
@@ -12089,36 +12113,6 @@ name|bge_flags
 operator||=
 name|BGE_FLAG_PCIE
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|pci_find_extcap
-argument_list|(
-name|dev
-argument_list|,
-name|PCIY_PCIX
-argument_list|,
-operator|&
-name|reg
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|reg
-operator|!=
-literal|0
-condition|)
-name|sc
-operator|->
-name|bge_flags
-operator||=
-name|BGE_FLAG_PCIX
-expr_stmt|;
-block|}
 else|#
 directive|else
 if|if
@@ -12156,6 +12150,8 @@ name|bge_flags
 operator||=
 name|BGE_FLAG_PCIE
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -12165,9 +12161,7 @@ condition|(
 operator|(
 name|pci_read_config
 argument_list|(
-name|sc
-operator|->
-name|bge_dev
+name|dev
 argument_list|,
 name|BGE_PCI_PCISTATE
 argument_list|,
@@ -12186,8 +12180,6 @@ operator||=
 name|BGE_FLAG_PCIX
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|__FreeBSD_version
@@ -13283,9 +13275,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_detach
@@ -13414,9 +13403,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_release_resources
@@ -13564,9 +13550,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_reset
@@ -14462,13 +14445,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Frame reception handling. This is called if there's a frame  * on the receive return list.  *  * Note: we have to be able to handle two possibilities here:  * 1) the frame is from the jumbo receive ring  * 2) the frame is from the standard receive ring  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bge_rxeof
@@ -15327,9 +15304,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_txeof
@@ -15579,15 +15553,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
-end_ifdef
-
-begin_function
 specifier|static
 name|void
 name|bge_poll
@@ -15778,18 +15746,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* DEVICE_POLLING */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bge_intr
@@ -15982,9 +15941,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_asf_driver_up
@@ -16074,9 +16030,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_tick
@@ -16244,9 +16197,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_stats_update_regs
@@ -16299,9 +16249,6 @@ name|BGE_RXLP_LOCSTAT_IFIN_DROPS
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_stats_update
@@ -16458,13 +16405,7 @@ undef|#
 directive|undef
 name|READ_STAT
 block|}
-end_function
-
-begin_comment
 comment|/*  * Pad outbound frame to ETHER_MIN_NOPAD for an unusual reason.  * The bge hardware will pad out Tx runts to ETHER_MIN_NOPAD,  * but when such padded frames employ the bge IP/TCP checksum offload,  * the hardware checksum assist gives incorrect results (possibly  * from incorporating its own padding into the UDP/TCP checksum; who knows).  * If we pad such runts with zeros, the onboard checksum comes out correct.  */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|int
@@ -16646,13 +16587,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Encapsulate an mbuf chain in the tx ring  by coupling the mbuf data  * pointers to descriptors.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|bge_encap
@@ -17268,13 +17203,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Main transmit routine. To avoid having to do mbuf copies, we put pointers  * to the mbuf data regions directly in the transmit descriptors.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bge_start_locked
@@ -17538,13 +17467,7 @@ operator|=
 literal|5
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Main transmit routine. To avoid having to do mbuf copies, we put pointers  * to the mbuf data regions directly in the transmit descriptors.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bge_start
@@ -17582,9 +17505,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_init_locked
@@ -18033,9 +17953,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_init
@@ -18068,13 +17985,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Set media options.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|bge_ifmedia_upd
@@ -18120,9 +18031,6 @@ name|res
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_ifmedia_upd_locked
@@ -18406,13 +18314,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Report current media status.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bge_ifmedia_sts
@@ -18573,9 +18475,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_ioctl
@@ -19118,9 +19017,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_watchdog
@@ -19186,13 +19082,7 @@ name|if_oerrors
 operator|++
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Stop the adapter and free any mbufs allocated to the  * RX and TX lists.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bge_stop
@@ -19720,13 +19610,7 @@ name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get confused by errant DMAs when rebooting.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|bge_shutdown
@@ -19768,9 +19652,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_suspend
@@ -19812,9 +19693,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_resume
@@ -19890,9 +19768,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_link_upd
@@ -20397,9 +20272,6 @@ name|BGE_MACSTAT_LINK_CHANGED
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|bge_add_sysctls
@@ -20578,15 +20450,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|BGE_REGISTER_DEBUG
-end_ifdef
-
-begin_function
 specifier|static
 name|int
 name|bge_sysctl_debug_info
@@ -20927,9 +20793,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_sysctl_reg_read
@@ -21028,9 +20891,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_sysctl_mem_read
@@ -21129,14 +20989,8 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
 specifier|static
 name|int
 name|bge_get_eaddr_fw
@@ -21189,9 +21043,6 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_get_eaddr_mem
@@ -21326,9 +21177,6 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_get_eaddr_nvram
@@ -21377,9 +21225,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_get_eaddr_eeprom
@@ -21424,9 +21269,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|bge_get_eaddr
