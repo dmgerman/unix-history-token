@@ -3171,14 +3171,14 @@ block|}
 comment|/* Override flowlabel from in6_pcbconnect. */
 name|inp
 operator|->
-name|in6p_flowinfo
+name|inp_flow
 operator|&=
 operator|~
 name|IPV6_FLOWLABEL_MASK
 expr_stmt|;
 name|inp
 operator|->
-name|in6p_flowinfo
+name|inp_flow
 operator||=
 name|sc
 operator|->
@@ -4575,7 +4575,7 @@ operator|&&
 operator|(
 name|inp
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_AUTOFLOWLABEL
 operator|)
@@ -7551,7 +7551,7 @@ argument_list|(
 name|so
 argument_list|)
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_AUTOFLOWLABEL
 condition|)

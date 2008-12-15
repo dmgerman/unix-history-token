@@ -3045,7 +3045,7 @@ name|int
 name|in6_selecthlim
 parameter_list|(
 name|struct
-name|in6pcb
+name|inpcb
 modifier|*
 name|in6p
 parameter_list|,

@@ -446,7 +446,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_CONTROLOPTS
 operator|||
@@ -918,7 +918,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|in6p_lport
+name|inp_lport
 operator|!=
 name|uh
 operator|->
@@ -1003,7 +1003,7 @@ argument_list|)
 operator|||
 name|inp
 operator|->
-name|in6p_fport
+name|inp_fport
 operator|!=
 name|uh
 operator|->
@@ -2388,7 +2388,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_IPV6_V6ONLY
 operator|)
@@ -2532,7 +2532,7 @@ if|if
 condition|(
 name|inp
 operator|->
-name|in6p_lport
+name|inp_lport
 operator|==
 literal|0
 operator|&&
@@ -2594,7 +2594,7 @@ condition|(
 operator|(
 name|inp
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_IPV6_V6ONLY
 operator|)
@@ -2641,7 +2641,7 @@ name|fport
 operator|=
 name|inp
 operator|->
-name|in6p_fport
+name|inp_fport
 expr_stmt|;
 block|}
 if|if
@@ -2714,7 +2714,7 @@ name|uh_sport
 operator|=
 name|inp
 operator|->
-name|in6p_lport
+name|inp_lport
 expr_stmt|;
 comment|/* lport is always set in the PCB */
 name|udp6
@@ -2779,7 +2779,7 @@ name|ip6_flow
 operator|=
 name|inp
 operator|->
-name|in6p_flowinfo
+name|inp_flow
 operator|&
 name|IPV6_FLOWINFO_MASK
 expr_stmt|;
