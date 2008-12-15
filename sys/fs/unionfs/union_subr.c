@@ -307,7 +307,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the cached vnode. (only VDIR)  */
+comment|/*  * Get the cached vnode.  */
 end_comment
 
 begin_function
@@ -315,7 +315,7 @@ specifier|static
 name|struct
 name|vnode
 modifier|*
-name|unionfs_get_cached_vdir
+name|unionfs_get_cached_vnode
 parameter_list|(
 name|struct
 name|vnode
@@ -367,7 +367,7 @@ name|VDIR
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_get_cached_vdir: v_type != VDIR"
+literal|"unionfs_get_cached_vnode: v_type != VDIR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -386,7 +386,7 @@ name|VDIR
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_get_cached_vdir: v_type != VDIR"
+literal|"unionfs_get_cached_vnode: v_type != VDIR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -506,7 +506,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add the new vnode into cache. (only VDIR)  */
+comment|/*  * Add the new vnode into cache.  */
 end_comment
 
 begin_function
@@ -514,7 +514,7 @@ specifier|static
 name|struct
 name|vnode
 modifier|*
-name|unionfs_ins_cached_vdir
+name|unionfs_ins_cached_vnode
 parameter_list|(
 name|struct
 name|unionfs_node
@@ -565,7 +565,7 @@ name|VDIR
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_ins_cached_vdir: v_type != VDIR"
+literal|"unionfs_ins_cached_vnode: v_type != VDIR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -588,7 +588,7 @@ name|VDIR
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_ins_cached_vdir: v_type != VDIR"
+literal|"unionfs_ins_cached_vnode: v_type != VDIR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -726,13 +726,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove the vnode. (only VDIR)  */
+comment|/*  * Remove the vnode.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|unionfs_rem_cached_vdir
+name|unionfs_rem_cached_vnode
 parameter_list|(
 name|struct
 name|unionfs_node
@@ -754,7 +754,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_rem_cached_vdir: null node"
+literal|"unionfs_rem_cached_vnode: null node"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -767,7 +767,7 @@ name|NULLVP
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_rem_cached_vdir: null parent vnode"
+literal|"unionfs_rem_cached_vnode: null parent vnode"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -784,7 +784,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"unionfs_rem_cached_vdir: null hash"
+literal|"unionfs_rem_cached_vnode: null hash"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -983,7 +983,7 @@ name|path
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* check the vdir cache */
+comment|/* check the cache */
 if|if
 condition|(
 name|path
@@ -1001,7 +1001,7 @@ condition|)
 block|{
 name|vp
 operator|=
-name|unionfs_get_cached_vdir
+name|unionfs_get_cached_vnode
 argument_list|(
 name|uppervp
 argument_list|,
@@ -1075,14 +1075,10 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced elsewhere 	 * if MALLOC should block. 	 */
-name|MALLOC
-argument_list|(
 name|unp
-argument_list|,
-expr|struct
-name|unionfs_node
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1118,7 +1114,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|unp
 argument_list|,
@@ -1148,7 +1144,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|unp
 argument_list|,
@@ -1383,7 +1379,7 @@ condition|)
 operator|*
 name|vpp
 operator|=
-name|unionfs_ins_cached_vdir
+name|unionfs_ins_cached_vnode
 argument_list|(
 name|unp
 argument_list|,
@@ -1692,7 +1688,7 @@ name|le_prev
 operator|!=
 name|NULL
 condition|)
-name|unionfs_rem_cached_vdir
+name|unionfs_rem_cached_vnode
 argument_list|(
 name|unp
 argument_list|,
@@ -1920,7 +1916,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|unp
 argument_list|,
@@ -2017,14 +2013,10 @@ return|return;
 block|}
 block|}
 comment|/* create a new unionfs node status */
-name|MALLOC
-argument_list|(
 name|unsp
-argument_list|,
-expr|struct
-name|unionfs_node_status
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2487,7 +2479,6 @@ comment|/*  * relookup  *   * dvp should be locked on entry and will be locked o
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|unionfs_relookup
 parameter_list|(
@@ -3336,6 +3327,13 @@ operator|=
 name|unp
 operator|->
 name|un_lowervp
+expr_stmt|;
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|lvp
+argument_list|,
+literal|"unionfs_node_update"
+argument_list|)
 expr_stmt|;
 name|dvp
 operator|=
