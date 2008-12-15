@@ -1139,6 +1139,11 @@ name|irq
 index|]
 operator|++
 expr_stmt|;
+name|unmask_evtchn
+argument_list|(
+name|caller_port
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 name|mtx_unlock_spin
@@ -1248,6 +1253,11 @@ index|[
 name|irq
 index|]
 operator|++
+expr_stmt|;
+name|unmask_evtchn
+argument_list|(
+name|local_port
+argument_list|)
 expr_stmt|;
 name|out
 label|:
@@ -3212,7 +3222,9 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-literal|"invalid evtchn"
+literal|"invalid evtchn %d"
+argument_list|,
+name|irq
 argument_list|)
 expr_stmt|;
 block|}
