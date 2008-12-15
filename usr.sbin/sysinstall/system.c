@@ -966,9 +966,34 @@ name|status
 operator|>=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|mediaDevice
+operator|!=
+name|NULL
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_CDROM
+condition|)
+block|{
 name|mediaClose
 argument_list|()
 expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Be sure to remove the media from the drive."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|mediaClose
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* write out any changes to rc.conf .. */
 name|configRC_conf
 argument_list|()

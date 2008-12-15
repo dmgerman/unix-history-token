@@ -734,8 +734,7 @@ operator|||
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"Are you sure you wish to exit?  The system will reboot\n"
-literal|"(be sure to remove any floppies/CDs/DVDs from the drives)."
+literal|"Are you sure you wish to exit?  The system will reboot."
 argument_list|)
 endif|#
 directive|endif
