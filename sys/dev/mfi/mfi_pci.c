@@ -476,7 +476,7 @@ literal|0xffff
 block|,
 name|MFI_FLAGS_GEN2
 block|,
-literal|"Dell PERC H700/H800"
+literal|"Dell PERC Gen2"
 block|}
 block|,
 block|{
