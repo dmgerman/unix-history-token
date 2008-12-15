@@ -3037,7 +3037,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|struct ieee80211_channel ic_channels[IEEE80211_CHAN_MAX+1]; 	uint8_t			ic_chan_avail[IEEE80211_CHAN_BYTES]; 	uint8_t			ic_chan_active[IEEE80211_CHAN_BYTES]; 	uint8_t			ic_chan_scan[IEEE80211_CHAN_BYTES];
+block|struct ieee80211_channel ic_channels[IEEE80211_CHAN_MAX]; 	uint8_t			ic_chan_avail[IEEE80211_CHAN_BYTES]; 	uint8_t			ic_chan_active[IEEE80211_CHAN_BYTES]; 	uint8_t			ic_chan_scan[IEEE80211_CHAN_BYTES];
 endif|#
 directive|endif
 name|db_printf

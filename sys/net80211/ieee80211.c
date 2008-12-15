@@ -640,7 +640,7 @@ operator|&&
 name|ic
 operator|->
 name|ic_nchans
-operator|<
+operator|<=
 name|IEEE80211_CHAN_MAX
 argument_list|,
 operator|(
@@ -729,23 +729,6 @@ literal|0
 argument_list|,
 operator|(
 literal|"channel with no flags"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|c
-operator|->
-name|ic_ieee
-operator|<
-name|IEEE80211_CHAN_MAX
-argument_list|,
-operator|(
-literal|"channel with bogus ieee number %u"
-operator|,
-name|c
-operator|->
-name|ic_ieee
 operator|)
 argument_list|)
 expr_stmt|;

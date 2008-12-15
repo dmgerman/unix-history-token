@@ -319,7 +319,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_MAX
-value|255
+value|256
 end_define
 
 begin_define

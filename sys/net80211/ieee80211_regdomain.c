@@ -1582,7 +1582,7 @@ operator|->
 name|chaninfo
 operator|.
 name|ic_nchans
-operator|>=
+operator|>
 name|IEEE80211_CHAN_MAX
 condition|)
 block|{

@@ -537,8 +537,6 @@ name|ieee80211_channel
 name|ic_channels
 index|[
 name|IEEE80211_CHAN_MAX
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|uint8_t
