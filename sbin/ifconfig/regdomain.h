@@ -186,6 +186,10 @@ name|enum
 name|ISOCountryCode
 name|code
 decl_stmt|;
+define|#
+directive|define
+name|NO_COUNTRY
+value|0xffff
 specifier|const
 name|struct
 name|regdomain
