@@ -1978,7 +1978,7 @@ name|rd
 operator|->
 name|country
 operator|!=
-literal|0
+name|NO_COUNTRY
 condition|)
 block|{
 specifier|const
@@ -2080,7 +2080,7 @@ name|rp
 operator|->
 name|cc
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|rp
 operator|->
