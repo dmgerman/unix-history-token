@@ -638,7 +638,7 @@ name|ah_ini_common
 argument_list|,
 name|ar5212Common
 argument_list|,
-literal|6
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
