@@ -219,6 +219,27 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|i_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    -i: specify input file for mtime comparison */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|i_filename
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*        name of input file */
+end_comment
+
+begin_decl_stmt
+name|int
 name|l_flag
 decl_stmt|;
 end_decl_stmt
@@ -2107,6 +2128,49 @@ name|T_secs
 else|:
 name|http_timeout
 expr_stmt|;
+if|if
+condition|(
+name|i_flag
+condition|)
+block|{
+if|if
+condition|(
+name|stat
+argument_list|(
+name|i_filename
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s: stat()"
+argument_list|,
+name|i_filename
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
+name|url
+operator|->
+name|ims_time
+operator|=
+name|sb
+operator|.
+name|st_mtime
+expr_stmt|;
+name|strcat
+argument_list|(
+name|flags
+argument_list|,
+literal|"i"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* set the protocol timeout. */
 name|fetchTimeout
@@ -2363,6 +2427,45 @@ argument_list|,
 name|fetchLastErrString
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i_flag
+operator|&&
+name|strcmp
+argument_list|(
+name|url
+operator|->
+name|scheme
+argument_list|,
+name|SCHEME_HTTP
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|fetchLastErrCode
+operator|==
+name|FETCH_OK
+operator|&&
+name|strcmp
+argument_list|(
+name|fetchLastErrString
+argument_list|,
+literal|"Not Modified"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* HTTP Not Modified Response, return OK. */
+name|r
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+else|else
 goto|goto
 name|failure
 goto|;
@@ -3773,11 +3876,11 @@ literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: fetch [-146AadFlMmnPpqRrsUv] [-B bytes] [-N file] [-o file] [-S bytes]"
 argument_list|,
-literal|"       [-T seconds] [-w seconds] URL ..."
+literal|"       [-T seconds] [-w seconds] [-i file] URL ..."
 argument_list|,
 literal|"       fetch [-146AadFlMmnPpqRrsUv] [-B bytes] [-N file] [-o file] [-S bytes]"
 argument_list|,
-literal|"       [-T seconds] [-w seconds] -h host -f file [-c dir]"
+literal|"       [-T seconds] [-w seconds] [-i file] -h host -f file [-c dir]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3841,7 +3944,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"146AaB:bc:dFf:Hh:lMmN:nPpo:qRrS:sT:tUvw:"
+literal|"146AaB:bc:dFf:Hh:i:lMmN:nPpo:qRrS:sT:tUvw:"
 argument_list|)
 operator|)
 operator|!=
@@ -3992,6 +4095,18 @@ case|case
 literal|'h'
 case|:
 name|h_hostname
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|i_flag
+operator|=
+literal|1
+expr_stmt|;
+name|i_filename
 operator|=
 name|optarg
 expr_stmt|;
