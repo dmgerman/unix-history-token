@@ -2300,8 +2300,6 @@ name|ifp
 argument_list|,
 operator|&
 name|rt
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 operator|!=

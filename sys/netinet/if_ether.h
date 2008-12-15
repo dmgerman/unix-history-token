@@ -236,6 +236,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|llentry
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|arpresolve
@@ -263,6 +269,12 @@ parameter_list|,
 name|u_char
 modifier|*
 name|desten
+parameter_list|,
+name|struct
+name|llentry
+modifier|*
+modifier|*
+name|lle
 parameter_list|)
 function_decl|;
 end_function_decl

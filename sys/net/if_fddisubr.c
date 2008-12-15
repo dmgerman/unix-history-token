@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_llatbl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -456,6 +462,11 @@ name|fddi_header
 modifier|*
 name|fh
 decl_stmt|;
+name|struct
+name|llentry
+modifier|*
+name|lle
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -553,6 +564,9 @@ argument_list|,
 name|dst
 argument_list|,
 name|edst
+argument_list|,
+operator|&
+name|lle
 argument_list|)
 expr_stmt|;
 if|if
@@ -714,6 +728,9 @@ name|u_char
 operator|*
 operator|)
 name|edst
+argument_list|,
+operator|&
+name|lle
 argument_list|)
 expr_stmt|;
 if|if

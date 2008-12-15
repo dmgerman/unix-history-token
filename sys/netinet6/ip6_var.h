@@ -1947,8 +1947,6 @@ expr|struct
 name|rtentry
 operator|*
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -527,12 +527,6 @@ name|if_bridge
 decl_stmt|;
 comment|/* bridge glue */
 name|struct
-name|lltable
-modifier|*
-name|lltables
-decl_stmt|;
-comment|/* list of L3-L2 resolution tables */
-name|struct
 name|label
 modifier|*
 name|if_label
@@ -1390,6 +1384,26 @@ parameter_list|(
 name|ifp
 parameter_list|)
 value|mtx_destroy(&(ifp)->if_afdata_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_LOCK_ASSERT
+parameter_list|(
+name|ifp
+parameter_list|)
+value|mtx_assert(&(ifp)->if_afdata_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_UNLOCK_ASSERT
+parameter_list|(
+name|ifp
+parameter_list|)
+value|mtx_assert(&(ifp)->if_afdata_mtx, MA_NOTOWNED)
 end_define
 
 begin_define

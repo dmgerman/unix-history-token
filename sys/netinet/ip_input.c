@@ -5302,7 +5302,7 @@ argument_list|(
 operator|&
 name|sro
 argument_list|,
-name|RTF_CLONING
+literal|0
 argument_list|,
 name|fibnum
 argument_list|)
@@ -5788,7 +5788,7 @@ argument_list|(
 operator|&
 name|ro
 argument_list|,
-name|RTF_CLONING
+literal|0
 argument_list|,
 name|M_GETFIB
 argument_list|(

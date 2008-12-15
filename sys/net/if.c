@@ -180,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/uma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -6246,6 +6252,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_llatbl.h>
+end_include
 
 begin_comment
 comment|/*  * Default action when installing a route with a Link Level gateway.  * Lookup an appropriate real ifa to point to.  * This should be moved to /sys/net/link.c eventually.  */

@@ -439,6 +439,9 @@ index|]
 operator|=
 name|NET_RT_FLAGS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RTF_LLINFO
 name|mib
 index|[
 literal|5
@@ -446,6 +449,17 @@ index|]
 operator|=
 name|RTF_LLINFO
 expr_stmt|;
+else|#
+directive|else
+name|mib
+index|[
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sysctl

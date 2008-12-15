@@ -1014,16 +1014,6 @@ name|rtm
 operator|->
 name|rtm_flags
 operator|&
-name|RTF_LLINFO
-operator|)
-condition|?
-literal|3
-else|:
-operator|(
-name|rtm
-operator|->
-name|rtm_flags
-operator|&
 name|RTF_REJECT
 operator|)
 condition|?

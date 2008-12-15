@@ -758,6 +758,11 @@ index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
+name|struct
+name|llentry
+modifier|*
+name|lle
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -811,6 +816,9 @@ name|ro_rt
 argument_list|)
 argument_list|,
 name|dmac
+argument_list|,
+operator|&
+name|lle
 argument_list|)
 expr_stmt|;
 name|RTFREE
@@ -878,6 +886,11 @@ name|dmac
 index|[
 name|ETHER_ADDR_LEN
 index|]
+decl_stmt|;
+name|struct
+name|llentry
+modifier|*
+name|lle
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -972,6 +985,9 @@ name|ro_rt
 argument_list|)
 argument_list|,
 name|dmac
+argument_list|,
+operator|&
+name|lle
 argument_list|)
 expr_stmt|;
 if|if

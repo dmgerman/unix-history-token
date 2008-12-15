@@ -2350,7 +2350,7 @@ argument_list|(
 operator|&
 name|ro
 argument_list|,
-name|RTF_CLONING
+literal|0
 argument_list|,
 name|fib
 argument_list|)
@@ -2779,7 +2779,7 @@ operator|)
 operator|&
 name|ro
 argument_list|,
-name|RTF_CLONING
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

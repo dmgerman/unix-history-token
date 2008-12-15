@@ -7968,7 +7968,7 @@ argument_list|(
 operator|&
 name|sro
 argument_list|,
-name|RTF_CLONING
+literal|0
 argument_list|,
 name|inc
 operator|->
@@ -8181,7 +8181,7 @@ operator|)
 operator|&
 name|sro6
 argument_list|,
-name|RTF_CLONING
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

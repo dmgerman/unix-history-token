@@ -2718,7 +2718,7 @@ argument_list|(
 operator|&
 name|sro
 argument_list|,
-name|RTF_CLONING
+literal|0
 argument_list|,
 name|inp
 operator|->

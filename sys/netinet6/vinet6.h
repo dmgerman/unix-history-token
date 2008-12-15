@@ -169,10 +169,6 @@ name|int
 name|_nd6_onlink_ns_rfc4861
 decl_stmt|;
 name|struct
-name|llinfo_nd6
-name|_llinfo_nd6
-decl_stmt|;
-name|struct
 name|nd_drhead
 name|_nd_defrouter
 decl_stmt|;
