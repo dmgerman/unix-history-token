@@ -902,7 +902,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p current buffer still valid"
+literal|"[pmclog,%d] po=%p current buffer still valid"
 operator|,
 name|__LINE__
 operator|,
@@ -987,7 +987,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p buffer invariants: ptr=%p "
+literal|"[pmclog,%d] po=%p buffer invariants: ptr=%p "
 literal|"base=%p fence=%p"
 operator|,
 name|__LINE__
@@ -1044,11 +1044,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|plb
 condition|?
 literal|0
 else|:
 name|ENOMEM
+operator|)
 return|;
 block|}
 end_function
@@ -1178,7 +1180,7 @@ operator|->
 name|td_proc
 argument_list|,
 operator|(
-literal|"[pmc,%d] proc mismatch po=%p po/kt=%p curproc=%p"
+literal|"[pmclog,%d] proc mismatch po=%p po/kt=%p curproc=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -1641,7 +1643,7 @@ operator|->
 name|plb_base
 argument_list|,
 operator|(
-literal|"[pmc,%d] buffer invariants po=%p ptr=%p base=%p"
+literal|"[pmclog,%d] buffer invariants po=%p ptr=%p base=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -1676,7 +1678,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] buffer invariants po=%p ptr=%p fenc=%p"
+literal|"[pmclog,%d] buffer invariants po=%p ptr=%p fenc=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -1840,7 +1842,9 @@ name|po_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|KASSERT
@@ -1852,7 +1856,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p no current buffer"
+literal|"[pmclog,%d] po=%p no current buffer"
 operator|,
 name|__LINE__
 operator|,
@@ -1887,7 +1891,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p buffer invariants: ptr=%p base=%p fence=%p"
+literal|"[pmclog,%d] po=%p buffer invariants: ptr=%p base=%p fence=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -1940,7 +1944,7 @@ operator|)
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p Null log buffer pointer"
+literal|"[pmclog,%d] po=%p Null log buffer pointer"
 operator|,
 name|__LINE__
 operator|,
@@ -2004,7 +2008,9 @@ name|po_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|KASSERT
@@ -2016,7 +2022,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p no current buffer"
+literal|"[pmclog,%d] po=%p no current buffer"
 operator|,
 name|__LINE__
 operator|,
@@ -2035,7 +2041,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] null return from pmc_get_log_buffer"
+literal|"[pmclog,%d] null return from pmc_get_log_buffer"
 operator|,
 name|__LINE__
 operator|)
@@ -2068,7 +2074,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p buffer invariants: ptr=%p base=%p fence=%p"
+literal|"[pmclog,%d] po=%p buffer invariants: ptr=%p base=%p fence=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -2148,10 +2154,12 @@ literal|0xFFFFFFF
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|uint32_t
 operator|*
 operator|)
 name|oldptr
+operator|)
 return|;
 block|}
 end_function
@@ -2180,7 +2188,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] schedule_io with null buffer po=%p"
+literal|"[pmclog,%d] schedule_io with null buffer po=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -2203,7 +2211,7 @@ operator|->
 name|plb_base
 argument_list|,
 operator|(
-literal|"[pmc,%d] buffer invariants po=%p ptr=%p base=%p"
+literal|"[pmclog,%d] buffer invariants po=%p ptr=%p base=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -2238,7 +2246,7 @@ operator|->
 name|plb_fence
 argument_list|,
 operator|(
-literal|"[pmc,%d] buffer invariants po=%p ptr=%p fenc=%p"
+literal|"[pmclog,%d] buffer invariants po=%p ptr=%p fenc=%p"
 operator|,
 name|__LINE__
 operator|,
@@ -2436,7 +2444,9 @@ operator|&
 name|PMC_PO_OWNS_LOGFILE
 condition|)
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 name|KASSERT
 argument_list|(
@@ -2447,7 +2457,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p kthread (%p) already present"
+literal|"[pmclog,%d] po=%p kthread (%p) already present"
 operator|,
 name|__LINE__
 operator|,
@@ -2468,7 +2478,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p file (%p) already present"
+literal|"[pmclog,%d] po=%p file (%p) already present"
 operator|,
 name|__LINE__
 operator|,
@@ -2589,7 +2599,9 @@ name|po
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|error
 label|:
@@ -2626,7 +2638,8 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p kthread not stopped"
+literal|"[pmclog,%d] po=%p kthread not "
+literal|"stopped"
 operator|,
 name|__LINE__
 operator|,
@@ -2666,7 +2679,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2719,7 +2734,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|KASSERT
 argument_list|(
@@ -2730,7 +2747,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p still owning SS PMCs"
+literal|"[pmclog,%d] po=%p still owning SS PMCs"
 operator|,
 name|__LINE__
 operator|,
@@ -2747,7 +2764,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p no log file"
+literal|"[pmclog,%d] po=%p no log file"
 operator|,
 name|__LINE__
 operator|,
@@ -2788,7 +2805,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"[pmc,%d] po=%p kthread not stopped"
+literal|"[pmclog,%d] po=%p kthread not stopped"
 operator|,
 name|__LINE__
 operator|,
@@ -2921,7 +2938,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2966,9 +2985,11 @@ operator|->
 name|po_error
 condition|)
 return|return
+operator|(
 name|po
 operator|->
 name|po_error
+operator|)
 return|;
 name|error
 operator|=
@@ -3071,6 +3092,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|po
+operator|->
+name|po_error
+expr_stmt|;
 block|}
 name|error
 label|:
@@ -3081,7 +3114,9 @@ name|pmc_kthread_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -4212,7 +4247,9 @@ expr_stmt|;
 name|error
 label|:
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -4246,8 +4283,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"hwpmc: tunable logbuffersize=%d must be greater "
-literal|"than zero.\n"
+literal|"hwpmc: tunable logbuffersize=%d must be "
+literal|"greater than zero.\n"
 argument_list|,
 name|pmclog_buffer_size
 argument_list|)
