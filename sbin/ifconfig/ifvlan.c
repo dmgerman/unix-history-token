@@ -490,27 +490,24 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
-name|DECL_CMD_FUNC
-argument_list|(
-argument|setvlantag
-argument_list|,
-argument|val
-argument_list|,
-argument|d
-argument_list|)
-block|{ 	struct
-name|vlanreq
-name|vreq
-block|;
+name|void
+name|getvlantag
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|val
+parameter_list|)
+block|{
 name|u_long
 name|ul
-block|;
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|endp
-block|;
+decl_stmt|;
 name|ul
 operator|=
 name|strtoul
@@ -522,7 +519,7 @@ name|endp
 argument_list|,
 literal|0
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -543,13 +540,7 @@ name|vlr_tag
 operator|=
 name|ul
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* check if the value can be represented in vlr_tag */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|params
@@ -565,9 +556,48 @@ argument_list|,
 literal|"value for vlan out of range"
 argument_list|)
 expr_stmt|;
-end_if
+block|}
+end_function
 
-begin_if
+begin_expr_stmt
+specifier|static
+name|DECL_CMD_FUNC
+argument_list|(
+argument|setvlantag_clone
+argument_list|,
+argument|val
+argument_list|,
+argument|d
+argument_list|)
+block|{
+name|getvlantag
+argument_list|(
+name|val
+argument_list|)
+block|;
+name|clone_setcallback
+argument_list|(
+name|vlan_create
+argument_list|)
+block|; }
+specifier|static
+name|DECL_CMD_FUNC
+argument_list|(
+argument|setvlantag
+argument_list|,
+argument|val
+argument_list|,
+argument|d
+argument_list|)
+block|{ 	struct
+name|vlanreq
+name|vreq
+block|;
+name|getvlantag
+argument_list|(
+name|val
+argument_list|)
+block|;
 if|if
 condition|(
 name|getvlan
@@ -580,10 +610,17 @@ argument_list|,
 operator|&
 name|vreq
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"no existing vlan"
+argument_list|)
+expr_stmt|;
 name|vlan_set
 argument_list|(
 name|s
@@ -592,19 +629,13 @@ operator|&
 name|ifr
 argument_list|)
 expr_stmt|;
-else|else
-name|clone_setcallback
-argument_list|(
-name|vlan_create
-argument_list|)
-expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_macro
 unit|}  static
 name|DECL_CMD_FUNC
 argument_list|(
-argument|setvlandev
+argument|setvlandev_clone
 argument_list|,
 argument|val
 argument_list|,
@@ -614,10 +645,6 @@ end_macro
 
 begin_block
 block|{
-name|struct
-name|vlanreq
-name|vreq
-decl_stmt|;
 name|strlcpy
 argument_list|(
 name|params
@@ -634,6 +661,44 @@ name|vlr_parent
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|clone_setcallback
+argument_list|(
+name|vlan_create
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+specifier|static
+name|DECL_CMD_FUNC
+argument_list|(
+argument|setvlandev
+argument_list|,
+argument|val
+argument_list|,
+argument|d
+argument_list|)
+block|{ 	struct
+name|vlanreq
+name|vreq
+block|;
+name|strlcpy
+argument_list|(
+name|params
+operator|.
+name|vlr_parent
+argument_list|,
+name|val
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|params
+operator|.
+name|vlr_parent
+argument_list|)
+argument_list|)
+block|;
 if|if
 condition|(
 name|getvlan
@@ -650,6 +715,13 @@ operator|!=
 operator|-
 literal|1
 condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"no existing vlan"
+argument_list|)
+expr_stmt|;
 name|vlan_set
 argument_list|(
 name|s
@@ -658,17 +730,10 @@ operator|&
 name|ifr
 argument_list|)
 expr_stmt|;
-else|else
-name|clone_setcallback
-argument_list|(
-name|vlan_create
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
-begin_expr_stmt
-specifier|static
+begin_macro
+unit|}  static
 name|DECL_CMD_FUNC
 argument_list|(
 argument|unsetvlandev
@@ -677,10 +742,14 @@ argument|val
 argument_list|,
 argument|d
 argument_list|)
-block|{ 	struct
+end_macro
+
+begin_block
+block|{
+name|struct
 name|vlanreq
 name|vreq
-block|;
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -696,7 +765,7 @@ expr|struct
 name|vlanreq
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|ifr
 operator|.
 name|ifr_data
@@ -706,7 +775,7 @@ name|caddr_t
 operator|)
 operator|&
 name|vreq
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -751,18 +820,12 @@ name|vlr_parent
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|vreq
 operator|.
 name|vlr_tag
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ioctl
@@ -788,10 +851,11 @@ argument_list|,
 literal|"SIOCSETVLAN"
 argument_list|)
 expr_stmt|;
-end_if
+block|}
+end_block
 
 begin_decl_stmt
-unit|}  static
+specifier|static
 name|struct
 name|cmd
 name|vlan_cmds
@@ -802,14 +866,14 @@ name|DEF_CLONE_CMD_ARG
 argument_list|(
 literal|"vlan"
 argument_list|,
-name|setvlantag
+name|setvlantag_clone
 argument_list|)
 block|,
 name|DEF_CLONE_CMD_ARG
 argument_list|(
 literal|"vlandev"
 argument_list|,
-name|setvlandev
+name|setvlandev_clone
 argument_list|)
 block|,
 comment|/* NB: non-clone cmds */
