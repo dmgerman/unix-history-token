@@ -3493,6 +3493,62 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_VT1708B_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe720)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe721)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_2
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe722)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_3
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe723)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_4
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe724)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_5
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe725)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_6
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe726)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_7
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe727)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_VTXXXX
 value|HDA_CODEC_CONSTRUCT(VIA, 0xffff)
 end_define
@@ -4083,6 +4139,54 @@ block|{
 name|HDA_CODEC_VT1709_7
 block|,
 literal|"VIA VT1709_7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_0
+block|,
+literal|"VIA VT1708B_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_1
+block|,
+literal|"VIA VT1708B_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_2
+block|,
+literal|"VIA VT1708B_2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_3
+block|,
+literal|"VIA VT1708B_3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_4
+block|,
+literal|"VIA VT1708B_4"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_5
+block|,
+literal|"VIA VT1708B_5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_6
+block|,
+literal|"VIA VT1708B_6"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_7
+block|,
+literal|"VIA VT1708B_7"
 block|}
 block|,
 comment|/* Unknown codec */
