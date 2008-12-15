@@ -352,6 +352,11 @@ directive|define
 name|IEEE80211_NODE_SGI40
 value|0x010000
 comment|/* Short GI in HT40 enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_ASSOCID
+value|0x020000
+comment|/* xmit requires associd */
 name|uint16_t
 name|ni_associd
 decl_stmt|;

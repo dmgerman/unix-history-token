@@ -3438,6 +3438,12 @@ name|se
 operator|->
 name|se_noise
 expr_stmt|;
+name|ni
+operator|->
+name|ni_flags
+operator||=
+name|IEEE80211_NODE_ASSOCID
+expr_stmt|;
 if|if
 condition|(
 name|ieee80211_ies_init
@@ -4142,13 +4148,17 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear AREF flag that marks the authorization refcnt bump 	 * has happened.  This is probably not needed as the node 	 * should always be removed from the table so not found but 	 * do it just in case. 	 */
+comment|/* 	 * Clear AREF flag that marks the authorization refcnt bump 	 * has happened.  This is probably not needed as the node 	 * should always be removed from the table so not found but 	 * do it just in case. 	 * Likewise clear the ASSOCID flag as these flags are intended 	 * to be managed in tandem. 	 */
 name|ni
 operator|->
 name|ni_flags
 operator|&=
 operator|~
+operator|(
 name|IEEE80211_NODE_AREF
+operator||
+name|IEEE80211_NODE_ASSOCID
+operator|)
 expr_stmt|;
 comment|/* 	 * Drain power save queue and, if needed, clear TIM. 	 */
 if|if
@@ -6940,7 +6950,6 @@ name|iv_bss
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|ni
 operator|=
 name|ieee80211_find_node_locked
@@ -6950,37 +6959,6 @@ argument_list|,
 name|macaddr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_HOSTAP
-operator|&&
-operator|(
-name|ni
-operator|!=
-name|NULL
-operator|&&
-name|ni
-operator|->
-name|ni_associd
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-comment|/* 			 * Station is not associated; don't permit the 			 * data frame to be sent by returning NULL.  This 			 * is kinda a kludge but the least intrusive way 			 * to add this check into all drivers. 			 */
-name|ieee80211_unref_node
-argument_list|(
-operator|&
-name|ni
-argument_list|)
-expr_stmt|;
-comment|/* NB: null's ni */
-block|}
-block|}
 name|IEEE80211_NODE_UNLOCK
 argument_list|(
 name|nt
