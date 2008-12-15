@@ -932,7 +932,6 @@ operator|=
 operator|&
 name|ieee80211_cipher_none
 expr_stmt|;
-empty_stmt|;
 name|k
 operator|->
 name|wk_private
