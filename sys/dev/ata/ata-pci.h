@@ -82,6 +82,9 @@ modifier|*
 name|chip
 decl_stmt|;
 name|int
+name|legacy
+decl_stmt|;
+name|int
 name|channels
 decl_stmt|;
 name|int
