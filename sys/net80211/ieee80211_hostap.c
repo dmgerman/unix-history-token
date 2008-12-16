@@ -3905,7 +3905,7 @@ name|ni_flags
 operator||=
 name|IEEE80211_NODE_AREF
 expr_stmt|;
-comment|/* 	 * Mark the node as requiring a valid associatio id 	 * before outbound traffic is permitted. 	 */
+comment|/* 	 * Mark the node as requiring a valid association id 	 * before outbound traffic is permitted. 	 */
 name|ni
 operator|->
 name|ni_flags
