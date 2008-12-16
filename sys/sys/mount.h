@@ -1251,6 +1251,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNTK_REFEXPIRE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* refcount expiring is happening */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_UNMOUNT
 value|0x01000000
 end_define

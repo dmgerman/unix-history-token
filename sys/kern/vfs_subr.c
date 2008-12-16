@@ -1577,6 +1577,12 @@ condition|(
 name|flags
 operator|&
 name|MBF_NOWAIT
+operator|||
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_REFEXPIRE
 condition|)
 block|{
 name|MNT_REL
