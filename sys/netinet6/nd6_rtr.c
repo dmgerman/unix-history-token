@@ -5438,18 +5438,19 @@ name|ln
 argument_list|)
 condition|)
 block|{
-name|IF_AFDATA_UNLOCK
+name|LLE_RUNLOCK
 argument_list|(
-name|pfxrtr
-operator|->
-name|router
-operator|->
-name|ifp
+name|ln
 argument_list|)
 expr_stmt|;
 break|break;
 comment|/* found */
 block|}
+name|LLE_RUNLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 name|IF_AFDATA_UNLOCK
 argument_list|(
 name|pfxrtr
