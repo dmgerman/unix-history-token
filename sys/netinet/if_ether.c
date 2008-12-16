@@ -3891,6 +3891,7 @@ literal|"arp_ifinit: cannot create arp "
 literal|"entry for interface address\n"
 argument_list|)
 expr_stmt|;
+else|else
 name|LLE_RUNLOCK
 argument_list|(
 name|lle
