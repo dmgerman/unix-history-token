@@ -928,7 +928,11 @@ name|IPSEC
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
+operator|(
 name|last
+operator|!=
+name|NULL
+operator|)
 operator|&&
 name|ipsec6_in_reject
 argument_list|(
@@ -1574,6 +1578,8 @@ expr_stmt|;
 if|if
 condition|(
 name|control
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -2215,6 +2221,8 @@ label|:
 if|if
 condition|(
 name|control
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ip6_clearpktopts
