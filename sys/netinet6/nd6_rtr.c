@@ -5391,6 +5391,8 @@ name|ndpr_advrtrs
 argument_list|)
 init|;
 name|pfxrtr
+operator|!=
+name|NULL
 condition|;
 name|pfxrtr
 operator|=
@@ -5440,17 +5442,13 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-name|canreach
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ln
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+continue|continue;
 name|canreach
 operator|=
 name|ND6_IS_LLINFO_PROBREACH
@@ -5463,7 +5461,6 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|canreach
