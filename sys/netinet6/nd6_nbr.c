@@ -2097,7 +2097,11 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|ln
+operator|!=
+name|NULL
+operator|)
 operator|&&
 name|ln
 operator|->
@@ -3720,6 +3724,8 @@ label|:
 if|if
 condition|(
 name|ln
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3777,6 +3783,8 @@ label|:
 if|if
 condition|(
 name|ln
+operator|!=
+name|NULL
 condition|)
 name|LLE_WUNLOCK
 argument_list|(

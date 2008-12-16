@@ -5543,15 +5543,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ln
-condition|)
-name|IF_AFDATA_UNLOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ln
 operator|==
 name|NULL
 condition|)
@@ -5585,6 +5576,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* do nothing if static ndp is set */
 if|if
 condition|(
@@ -6033,6 +6029,8 @@ block|}
 if|if
 condition|(
 name|ln
+operator|!=
+name|NULL
 condition|)
 block|{
 name|static_route
@@ -7077,7 +7075,11 @@ block|}
 comment|/* 	 * ln is valid and the caller did not pass in  	 * an llentry 	 */
 if|if
 condition|(
+operator|(
 name|ln
+operator|!=
+name|NULL
+operator|)
 operator|&&
 operator|(
 name|lle
@@ -7229,7 +7231,11 @@ label|:
 comment|/* 	 * ln is valid and the caller did not pass in  	 * an llentry 	 */
 if|if
 condition|(
+operator|(
 name|ln
+operator|!=
+name|NULL
+operator|)
 operator|&&
 operator|(
 name|lle
