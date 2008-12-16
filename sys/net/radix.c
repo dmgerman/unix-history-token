@@ -1094,6 +1094,11 @@ name|b
 decl_stmt|,
 name|rn_bit
 decl_stmt|;
+name|RADIX_NODE_HEAD_LOCK_ASSERT
+argument_list|(
+name|head
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Open code rn_search(v, top) to avoid overhead of extra 	 * subroutine call. 	 */
 for|for
 control|(
@@ -2933,6 +2938,11 @@ modifier|*
 modifier|*
 name|mp
 decl_stmt|;
+name|RADIX_NODE_HEAD_WLOCK_ASSERT
+argument_list|(
+name|head
+argument_list|)
+expr_stmt|;
 comment|/* 	 * In dealing with non-contiguous masks, there may be 	 * many different routes which have the same mask. 	 * We will find it useful to have a unique pointer to 	 * the mask to speed avoiding duplicate references at 	 * nodes and possibly save time in calculating indices. 	 */
 if|if
 condition|(
@@ -3801,6 +3811,11 @@ name|head_off
 decl_stmt|,
 name|vlen
 decl_stmt|;
+name|RADIX_NODE_HEAD_WLOCK_ASSERT
+argument_list|(
+name|head
+argument_list|)
+expr_stmt|;
 name|v
 operator|=
 name|v_arg
@@ -4846,6 +4861,11 @@ decl_stmt|;
 name|int
 name|lastb
 decl_stmt|;
+name|RADIX_NODE_HEAD_LOCK_ASSERT
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
 comment|/* 	 * rn_search_m is sort-of-open-coded here. We cannot use the 	 * function because we need to keep track of the last node seen. 	 */
 comment|/* printf("about to search\n"); */
 for|for
@@ -5169,6 +5189,11 @@ operator|->
 name|rnh_treetop
 decl_stmt|;
 comment|/* 	 * This gets complicated because we may delete the node 	 * while applying the function f to it, so we need to calculate 	 * the successor node in advance. 	 */
+name|RADIX_NODE_HEAD_LOCK_ASSERT
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
 comment|/* First time through node, go left */
 while|while
 condition|(
