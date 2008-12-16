@@ -8566,11 +8566,6 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_LOCK
-argument_list|(
-name|rnh
-argument_list|)
-expr_stmt|;
 name|rn
 operator|=
 name|rnh
@@ -8594,11 +8589,6 @@ name|void
 operator|*
 operator|)
 name|ent
-argument_list|)
-expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
-argument_list|(
-name|rnh
 argument_list|)
 expr_stmt|;
 if|if
