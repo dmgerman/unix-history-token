@@ -1131,7 +1131,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-comment|/*  gratuious ARP */
+comment|/*  gratuitous ARP */
 if|if
 condition|(
 operator|(
