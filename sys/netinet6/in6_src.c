@@ -2326,6 +2326,8 @@ expr_stmt|;
 if|if
 condition|(
 name|la
+operator|!=
+name|NULL
 condition|)
 name|LLE_RUNLOCK
 argument_list|(

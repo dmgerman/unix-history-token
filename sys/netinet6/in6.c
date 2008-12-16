@@ -6675,6 +6675,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ln
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ln
