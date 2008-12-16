@@ -3348,6 +3348,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_SII1392
+value|HDA_CODEC_CONSTRUCT(SII, 0x1392)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_SIIXXXX
 value|HDA_CODEC_CONSTRUCT(SII, 0xffff)
 end_define
@@ -3556,6 +3563,34 @@ end_define
 begin_comment
 comment|/* ATI */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIRS600_1
+value|HDA_CODEC_CONSTRUCT(ATI, 0x793c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIRS600_2
+value|HDA_CODEC_CONSTRUCT(ATI, 0x7919)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIRS690
+value|HDA_CODEC_CONSTRUCT(ATI, 0x791a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIR6XX
+value|HDA_CODEC_CONSTRUCT(ATI, 0xaa01)
+end_define
 
 begin_define
 define|#
@@ -4187,6 +4222,36 @@ block|{
 name|HDA_CODEC_VT1708B_7
 block|,
 literal|"VIA VT1708B_7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIRS600_1
+block|,
+literal|"ATI RS600 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIRS600_2
+block|,
+literal|"ATI RS600 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIRS690
+block|,
+literal|"ATI RS690/780 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIR6XX
+block|,
+literal|"ATI R6xx HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_SII1392
+block|,
+literal|"Silicon Image SiI1392 HDMI"
 block|}
 block|,
 comment|/* Unknown codec */
