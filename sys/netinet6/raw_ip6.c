@@ -752,6 +752,8 @@ block|}
 if|if
 condition|(
 name|last
+operator|!=
+name|NULL
 condition|)
 block|{
 name|struct
@@ -965,6 +967,8 @@ comment|/* IPSEC */
 if|if
 condition|(
 name|last
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if

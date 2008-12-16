@@ -6121,6 +6121,8 @@ label|:
 if|if
 condition|(
 name|ln
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -6450,6 +6452,8 @@ name|INVARIANTS
 if|if
 condition|(
 name|lle
+operator|!=
+name|NULL
 condition|)
 block|{
 name|LLE_WLOCK_ASSERT

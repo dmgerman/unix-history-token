@@ -8287,6 +8287,8 @@ block|}
 if|if
 condition|(
 name|last
+operator|!=
+name|NULL
 condition|)
 block|{
 name|struct
@@ -8537,6 +8539,8 @@ expr_stmt|;
 if|if
 condition|(
 name|last
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
