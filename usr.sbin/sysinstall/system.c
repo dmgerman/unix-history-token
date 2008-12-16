@@ -773,7 +773,7 @@ name|setenv
 argument_list|(
 literal|"PATH"
 argument_list|,
-literal|"/stand:/bin:/sbin:/usr/sbin:/usr/bin:/mnt/bin:/mnt/sbin:/mnt/usr/sbin:/mnt/usr/bin:/usr/X11R6/bin"
+literal|"/stand:/bin:/sbin:/usr/sbin:/usr/bin:/mnt/bin:/mnt/sbin:/mnt/usr/sbin:/mnt/usr/bin"
 argument_list|,
 literal|1
 argument_list|)

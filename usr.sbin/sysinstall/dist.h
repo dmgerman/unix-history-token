@@ -78,13 +78,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XORG
-value|0x00100
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_CATPAGES
 value|0x00200
 end_define
@@ -291,17 +284,6 @@ define|#
 directive|define
 name|DIST_SRC_ALL
 value|0x3FFFFF
-end_define
-
-begin_comment
-comment|/* Subtypes for X.Org packages */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIST_XORG_ALL
-value|0xFFFFF
 end_define
 
 begin_comment

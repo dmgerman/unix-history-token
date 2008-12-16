@@ -367,13 +367,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_DIST_X11
-value|"distX11"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VAR_DIST_KERNEL
 value|"distKernel"
 end_define
@@ -985,13 +978,6 @@ define|#
 directive|define
 name|VAR_HOME_SIZE
 value|"homeSize"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_XORG_CONFIG
-value|"_xorgconfig"
 end_define
 
 begin_define
@@ -2107,18 +2093,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Which src distributions we want		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
-name|XOrgDists
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Which X.Org dists we want			*/
 end_comment
 
 begin_decl_stmt
@@ -3849,18 +3823,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|distSetXDeveloper
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|distSetKernDeveloper
 parameter_list|(
 name|dialogMenuItem
@@ -3873,31 +3835,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|distSetXKernDeveloper
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|distSetUser
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|distSetXUser
 parameter_list|(
 name|dialogMenuItem
 modifier|*

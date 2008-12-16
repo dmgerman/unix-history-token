@@ -226,12 +226,6 @@ name|distSetDeveloper
 block|}
 block|,
 block|{
-literal|"distSetXDeveloper"
-block|,
-name|distSetXDeveloper
-block|}
-block|,
-block|{
 literal|"distSetKernDeveloper"
 block|,
 name|distSetKernDeveloper
@@ -241,12 +235,6 @@ block|{
 literal|"distSetUser"
 block|,
 name|distSetUser
-block|}
-block|,
-block|{
-literal|"distSetXUser"
-block|,
-name|distSetXUser
 block|}
 block|,
 block|{
