@@ -19929,7 +19929,7 @@ name|squelch
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Just to be on the safe side */
+comment|/* 	 * Just to be on the safe side: this avoids troubles with 	 * following mouse_ext_command() when the previous command 	 * was PSMC_SET_RESOLUTION. Set Scaling has no effect on 	 * Synaptics Touchpad behaviour. 	 */
 name|set_mouse_scaling
 argument_list|(
 name|kbdc
@@ -19937,7 +19937,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Identify the Touchpad version */
+comment|/* Identify the Touchpad version. */
 if|if
 condition|(
 name|mouse_ext_command
@@ -20057,7 +20057,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* Get the Touchpad model information */
+comment|/* Get the Touchpad model information. */
 if|if
 condition|(
 name|mouse_ext_command
@@ -20348,7 +20348,7 @@ name|infoGeometry
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Read the extended capability bits */
+comment|/* Read the extended capability bits. */
 if|if
 condition|(
 name|mouse_ext_command
@@ -20406,7 +20406,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* Set the different capabilities when they exist */
+comment|/* Set the different capabilities when they exist. */
 if|if
 condition|(
 operator|(
@@ -20600,7 +20600,7 @@ name|capPalmDetect
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * if we have bits set in status[0]& 0x70 - then we can load 		 * more information about buttons using query 0x09 		 */
+comment|/* 		 * If we have bits set in status[0]& 0x70, then we can load 		 * more information about buttons using query 0x09. 		 */
 if|if
 condition|(
 name|status
@@ -20711,7 +20711,7 @@ literal|"  No extended capabilities\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Read the mode byte 	 * 	 * XXX: Note the Synaptics documentation also defines the first 	 * byte of the response to this query to be a constant 0x3b, this 	 * does not appear to be true for Touchpads with guest devices. 	 */
+comment|/* 	 * Read the mode byte. 	 * 	 * XXX: Note the Synaptics documentation also defines the first 	 * byte of the response to this query to be a constant 0x3b, this 	 * does not appear to be true for Touchpads with guest devices. 	 */
 if|if
 condition|(
 name|mouse_ext_command
@@ -20769,7 +20769,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* Set the mode byte -- request wmode where available */
+comment|/* Set the mode byte; request wmode where available. */
 if|if
 condition|(
 name|sc
@@ -20793,7 +20793,7 @@ argument_list|,
 literal|0xc0
 argument_list|)
 expr_stmt|;
-comment|/* Reset the sampling rate */
+comment|/* "Commit" the Set Mode Byte command sent above. */
 name|set_mouse_sampling_rate
 argument_list|(
 name|kbdc
