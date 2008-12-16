@@ -5411,6 +5411,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|ln
 operator|=
 name|nd6_lookup
@@ -5431,6 +5432,9 @@ operator|->
 name|ifp
 argument_list|)
 operator|)
+operator|!=
+name|NULL
+operator|)
 operator|&&
 name|ND6_IS_LLINFO_PROBREACH
 argument_list|(
@@ -5446,6 +5450,12 @@ expr_stmt|;
 break|break;
 comment|/* found */
 block|}
+if|if
+condition|(
+name|ln
+operator|!=
+name|NULL
+condition|)
 name|LLE_RUNLOCK
 argument_list|(
 name|ln
