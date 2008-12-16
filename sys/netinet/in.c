@@ -5130,6 +5130,16 @@ modifier|*
 name|lle
 parameter_list|)
 block|{
+name|LLE_WUNLOCK
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
+name|LLE_LOCK_DESTROY
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|lle
