@@ -1895,6 +1895,9 @@ condition|)
 return|return
 name|ENOENT
 return|;
+operator|(
+name|void
+operator|)
 name|pfil_add_hook
 argument_list|(
 name|ipfw_check_in
@@ -1908,6 +1911,9 @@ argument_list|,
 name|pfh_inet
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pfil_add_hook
 argument_list|(
 name|ipfw_check_out
@@ -1958,6 +1964,9 @@ condition|)
 return|return
 name|ENOENT
 return|;
+operator|(
+name|void
+operator|)
 name|pfil_remove_hook
 argument_list|(
 name|ipfw_check_in
@@ -1971,6 +1980,9 @@ argument_list|,
 name|pfh_inet
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pfil_remove_hook
 argument_list|(
 name|ipfw_check_out
@@ -2027,6 +2039,9 @@ condition|)
 return|return
 name|ENOENT
 return|;
+operator|(
+name|void
+operator|)
 name|pfil_add_hook
 argument_list|(
 name|ipfw_check_in
@@ -2040,6 +2055,9 @@ argument_list|,
 name|pfh_inet6
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pfil_add_hook
 argument_list|(
 name|ipfw_check_out
@@ -2090,6 +2108,9 @@ condition|)
 return|return
 name|ENOENT
 return|;
+operator|(
+name|void
+operator|)
 name|pfil_remove_hook
 argument_list|(
 name|ipfw_check_in
@@ -2103,6 +2124,9 @@ argument_list|,
 name|pfh_inet6
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pfil_remove_hook
 argument_list|(
 name|ipfw_check_out
