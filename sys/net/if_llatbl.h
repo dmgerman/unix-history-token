@@ -248,6 +248,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|LLE_LOCK_DESTROY
+parameter_list|(
+name|lle
+parameter_list|)
+value|rw_destroy(&(lle)->lle_lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LLE_WLOCK_ASSERT
 parameter_list|(
 name|lle
@@ -306,7 +316,7 @@ name|lle
 parameter_list|)
 value|do {					\ 	LLE_WLOCK(lle);						\ 	if ((lle)->lle_refcnt<= 1)				\ 		(lle)->lle_tbl->llt_free((lle)->lle_tbl, (lle));\ 	else {							\ 		(lle)->lle_refcnt--;				\ 		LLE_WUNLOCK(lle);				\ 	}							\
 comment|/* guard against invalid refs */
-value|\ 	lle = 0;						\ } while (0)
+value|\ 	lle = NULL;						\ } while (0)
 end_define
 
 begin_define
