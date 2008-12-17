@@ -1146,7 +1146,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_WLOCK
 argument_list|()
 expr_stmt|;
 name|ifp
@@ -1158,7 +1158,7 @@ index|]
 operator|.
 name|ife_ifnet
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1218,7 +1218,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IFNET_RLOCK
+name|IFNET_WLOCK
 argument_list|()
 expr_stmt|;
 name|ifa
@@ -1230,7 +1230,7 @@ argument_list|)
 operator|->
 name|if_addr
 expr_stmt|;
-name|IFNET_RUNLOCK
+name|IFNET_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
