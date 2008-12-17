@@ -18164,6 +18164,17 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|syninfo
+operator|.
+name|sysctl_tree
+operator|!=
+name|NULL
+condition|)
+return|return;
 comment|/* Attach extra synaptics sysctl nodes under hw.psm.synaptics */
 name|sysctl_ctx_init
 argument_list|(
@@ -19910,11 +19921,6 @@ literal|"synaptics: BEGIN init\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|disable_aux_dev
-argument_list|(
-name|kbdc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|hw
@@ -20846,6 +20852,15 @@ name|synaptics_sysctl_create_tree
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+comment|/* 	 * The touchpad will have to be reinitialized after 	 * suspend/resume. 	 */
+name|sc
+operator|->
+name|config
+operator||=
+name|PSM_CONFIG_HOOKRESUME
+operator||
+name|PSM_CONFIG_INITAFTERSUSPEND
 expr_stmt|;
 return|return
 operator|(
