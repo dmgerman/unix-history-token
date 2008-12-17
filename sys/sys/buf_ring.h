@@ -89,11 +89,14 @@ decl_stmt|;
 name|int
 name|br_prod_mask
 decl_stmt|;
+name|uint64_t
+name|br_drops
+decl_stmt|;
 comment|/* 	 * Pad out to next L2 cache line 	 */
 name|uint64_t
 name|_pad0
 index|[
-literal|14
+literal|13
 index|]
 decl_stmt|;
 specifier|volatile
