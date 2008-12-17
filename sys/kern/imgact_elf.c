@@ -4444,7 +4444,6 @@ operator|!=
 operator|-
 literal|1
 condition|)
-block|{
 name|AUXARGS_ENTRY
 argument_list|(
 name|pos
@@ -4456,7 +4455,6 @@ operator|->
 name|execfd
 argument_list|)
 expr_stmt|;
-block|}
 name|AUXARGS_ENTRY
 argument_list|(
 name|pos
