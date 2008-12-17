@@ -297,32 +297,6 @@ comment|/* Where interpreter should transfer control. */
 end_comment
 
 begin_comment
-comment|/*  * The following non-standard values are used for passing information  * from John Polstra's testbed program to the dynamic linker.  These  * are expected to go away soon.  *  * Unfortunately, these overlap the Linux non-standard values, so they  * must not be used in the same context.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_BRK
-value|10
-end_define
-
-begin_comment
-comment|/* Starting point for sbrk and brk. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AT_DEBUG
-value|11
-end_define
-
-begin_comment
-comment|/* Debugging level. */
-end_comment
-
-begin_comment
 comment|/*  * The following non-standard values are used in Linux ELF binaries.  */
 end_comment
 
