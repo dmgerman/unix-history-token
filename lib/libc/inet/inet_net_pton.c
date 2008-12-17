@@ -687,6 +687,15 @@ name|bits
 operator|+=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|bits
+operator|>
+literal|32
+condition|)
+goto|goto
+name|enoent
+goto|;
 block|}
 do|while
 condition|(
@@ -719,15 +728,6 @@ literal|'\0'
 condition|)
 goto|goto
 name|enoent
-goto|;
-if|if
-condition|(
-name|bits
-operator|>
-literal|32
-condition|)
-goto|goto
-name|emsgsize
 goto|;
 block|}
 comment|/* Firey death and destruction unless we prefetched EOS. */
