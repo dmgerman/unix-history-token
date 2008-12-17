@@ -806,6 +806,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_MACDBG
+value|0x006D
+end_define
+
+begin_comment
+comment|/* 8 bits, 8168C SPIN2 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_GPIO
+value|0x006E
+end_define
+
+begin_comment
+comment|/* 8 bits, 8168C SPIN2 only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_MAXRXPKTLEN
 value|0x00DA
 end_define
@@ -4571,6 +4593,10 @@ define|#
 directive|define
 name|RL_FLAG_WOLRXENB
 value|0x1000
+define|#
+directive|define
+name|RL_FLAG_MACSLEEP
+value|0x2000
 define|#
 directive|define
 name|RL_FLAG_LINK
