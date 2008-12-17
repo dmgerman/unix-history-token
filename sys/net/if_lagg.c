@@ -6207,8 +6207,6 @@ name|LINK_STATE_DOWN
 decl_stmt|;
 name|uint64_t
 name|speed
-init|=
-literal|0
 decl_stmt|;
 comment|/* Our link is considered up if at least one of our ports is active */
 name|SLIST_FOREACH
@@ -6265,10 +6263,18 @@ operator|=
 name|sc
 operator|->
 name|sc_primary
+operator|!=
+name|NULL
+condition|?
+name|sc
+operator|->
+name|sc_primary
 operator|->
 name|lp_ifp
 operator|->
 name|if_baudrate
+else|:
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -6280,6 +6286,10 @@ case|:
 case|case
 name|LAGG_PROTO_ETHERCHANNEL
 case|:
+name|speed
+operator|=
+literal|0
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|lp
