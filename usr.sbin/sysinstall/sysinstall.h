@@ -1360,8 +1360,6 @@ name|DEVICE_TYPE_NETWORK
 block|,
 name|DEVICE_TYPE_CDROM
 block|,
-name|DEVICE_TYPE_TAPE
-block|,
 name|DEVICE_TYPE_DOS
 block|,
 name|DEVICE_TYPE_UFS
@@ -2371,17 +2369,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* FTP media menu				*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuMediaTape
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Tape media menu				*/
 end_comment
 
 begin_decl_stmt
@@ -5148,18 +5135,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|mediaSetTape
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|mediaSetFTP
 parameter_list|(
 name|dialogMenuItem
@@ -6629,54 +6604,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|/* tape.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|Boolean
-name|mediaInitTape
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|FILE
-modifier|*
-name|mediaGetTape
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|,
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|Boolean
-name|probe
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mediaShutdownTape
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* tcpip.c */

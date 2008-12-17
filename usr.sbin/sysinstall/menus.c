@@ -831,16 +831,6 @@ name|MenuMedia
 block|}
 block|,
 block|{
-literal|" Media, Tape"
-block|,
-literal|"Select tape installation media."
-block|,
-name|NULL
-block|,
-name|mediaSetTape
-block|}
-block|,
-block|{
 literal|" Media, NFS"
 block|,
 literal|"Select NFS installation media."
@@ -4479,34 +4469,6 @@ block|}
 block|}
 block|;
 name|DMenu
-name|MenuMediaTape
-operator|=
-block|{
-name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Choose a tape drive type"
-block|,
-literal|"FreeBSD can be installed from tape drive, though this installation\n"
-literal|"method requires a certain amount of temporary storage in addition\n"
-literal|"to the space required by the distribution itself (tape drives make\n"
-literal|"poor random-access devices, so we extract _everything_ on the tape\n"
-literal|"in one pass).  If you have sufficient space for this, then you should\n"
-literal|"select one of the following tape devices detected on your system."
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-block|{
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-block|;
-name|DMenu
 name|MenuNetworkDevice
 operator|=
 block|{
@@ -4657,16 +4619,6 @@ block|,
 name|NULL
 block|,
 name|mediaSetFloppy
-block|}
-block|,
-block|{
-literal|"9 Tape"
-block|,
-literal|"Install from SCSI or QIC tape"
-block|,
-name|NULL
-block|,
-name|mediaSetTape
 block|}
 block|,
 block|{

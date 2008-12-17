@@ -376,12 +376,6 @@ name|mediaSetDOS
 block|}
 block|,
 block|{
-literal|"mediaSetTape"
-block|,
-name|mediaSetTape
-block|}
-block|,
-block|{
 literal|"mediaSetFTP"
 block|,
 name|mediaSetFTP
