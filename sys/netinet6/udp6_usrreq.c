@@ -448,7 +448,7 @@ name|inp
 operator|->
 name|inp_flags
 operator|&
-name|IN6P_CONTROLOPTS
+name|INP_CONTROLOPTS
 operator|||
 name|inp
 operator|->
