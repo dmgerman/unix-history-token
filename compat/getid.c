@@ -93,6 +93,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mtree.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
