@@ -7232,8 +7232,8 @@ condition|(
 name|inc
 operator|->
 name|inc_flags
-operator|==
-literal|1
+operator|&
+name|INC_ISIPV6
 condition|)
 block|{
 comment|/* IPv6. */

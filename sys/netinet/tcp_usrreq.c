@@ -2402,9 +2402,9 @@ name|inp
 operator|->
 name|inp_inc
 operator|.
-name|inc_isipv6
-operator|=
-literal|1
+name|inc_flags
+operator||=
+name|INC_ISIPV6
 expr_stmt|;
 if|if
 condition|(
