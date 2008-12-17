@@ -1727,6 +1727,10 @@ parameter_list|,
 name|struct
 name|iovec
 modifier|*
+parameter_list|,
+specifier|const
+name|int
+name|iovlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5670,6 +5674,13 @@ block|}
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|IOV_SIZE
+value|7
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -5693,7 +5704,7 @@ name|struct
 name|iovec
 name|iov
 index|[
-literal|7
+name|IOV_SIZE
 index|]
 decl_stmt|;
 name|struct
@@ -6685,7 +6696,7 @@ name|f_file
 argument_list|,
 name|iov
 argument_list|,
-literal|7
+name|IOV_SIZE
 argument_list|)
 operator|<
 literal|0
@@ -6867,7 +6878,7 @@ name|f_file
 argument_list|,
 name|iov
 argument_list|,
-literal|7
+name|IOV_SIZE
 argument_list|)
 operator|<
 literal|0
@@ -7006,7 +7017,7 @@ name|ttymsg
 argument_list|(
 name|iov
 argument_list|,
-literal|7
+name|IOV_SIZE
 argument_list|,
 name|f
 operator|->
@@ -7060,6 +7071,8 @@ argument_list|(
 name|f
 argument_list|,
 name|iov
+argument_list|,
+name|IOV_SIZE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7096,6 +7109,10 @@ name|struct
 name|iovec
 modifier|*
 name|iov
+parameter_list|,
+specifier|const
+name|int
+name|iovlen
 parameter_list|)
 block|{
 specifier|static
@@ -7249,7 +7266,7 @@ name|ttymsg
 argument_list|(
 name|iov
 argument_list|,
-literal|7
+name|iovlen
 argument_list|,
 name|line
 argument_list|,
@@ -7335,7 +7352,7 @@ name|ttymsg
 argument_list|(
 name|iov
 argument_list|,
-literal|7
+name|IOV_SIZE
 argument_list|,
 name|line
 argument_list|,
