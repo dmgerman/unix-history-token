@@ -142,6 +142,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/event.h>
 end_include
 
@@ -549,8 +559,8 @@ name|int
 name|if_afdata_initialized
 decl_stmt|;
 name|struct
-name|mtx
-name|if_afdata_mtx
+name|rwlock
+name|if_afdata_lock
 decl_stmt|;
 name|struct
 name|task
@@ -599,7 +609,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* multiq/TOE 3; vimage 3; general use 4 */
+comment|/* TOE 3; vimage 3; general use 4 */
 name|void
 function_decl|(
 modifier|*
@@ -1343,7 +1353,47 @@ parameter_list|(
 name|ifp
 parameter_list|)
 define|\
-value|mtx_init(&(ifp)->if_afdata_mtx, "if_afdata", NULL, MTX_DEF)
+value|rw_init(&(ifp)->if_afdata_lock, "if_afdata")
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_WLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_wlock(&(ifp)->if_afdata_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_RLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_rlock(&(ifp)->if_afdata_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_WUNLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_wunlock(&(ifp)->if_afdata_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_RUNLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_runlock(&(ifp)->if_afdata_lock)
 end_define
 
 begin_define
@@ -1353,17 +1403,7 @@ name|IF_AFDATA_LOCK
 parameter_list|(
 name|ifp
 parameter_list|)
-value|mtx_lock(&(ifp)->if_afdata_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IF_AFDATA_TRYLOCK
-parameter_list|(
-name|ifp
-parameter_list|)
-value|mtx_trylock(&(ifp)->if_afdata_mtx)
+value|IF_AFDATA_WLOCK(ifp)
 end_define
 
 begin_define
@@ -1373,7 +1413,17 @@ name|IF_AFDATA_UNLOCK
 parameter_list|(
 name|ifp
 parameter_list|)
-value|mtx_unlock(&(ifp)->if_afdata_mtx)
+value|IF_AFDATA_WUNLOCK(ifp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_TRYLOCK
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_try_wlock(&(ifp)->if_afdata_lock)
 end_define
 
 begin_define
@@ -1383,7 +1433,7 @@ name|IF_AFDATA_DESTROY
 parameter_list|(
 name|ifp
 parameter_list|)
-value|mtx_destroy(&(ifp)->if_afdata_mtx)
+value|rw_destroy(&(ifp)->if_afdata_lock)
 end_define
 
 begin_define
@@ -1393,7 +1443,7 @@ name|IF_AFDATA_LOCK_ASSERT
 parameter_list|(
 name|ifp
 parameter_list|)
-value|mtx_assert(&(ifp)->if_afdata_mtx, MA_OWNED)
+value|rw_assert(&(ifp)->if_afdata_lock, RA_LOCKED)
 end_define
 
 begin_define
@@ -1403,7 +1453,7 @@ name|IF_AFDATA_UNLOCK_ASSERT
 parameter_list|(
 name|ifp
 parameter_list|)
-value|mtx_assert(&(ifp)->if_afdata_mtx, MA_NOTOWNED)
+value|rw_assert(&(ifp)->if_afdata_lock, RA_UNLOCKED)
 end_define
 
 begin_define
@@ -2075,7 +2125,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mtx
+name|rwlock
 name|ifnet_lock
 decl_stmt|;
 end_decl_stmt
@@ -2086,7 +2136,7 @@ directive|define
 name|IFNET_LOCK_INIT
 parameter_list|()
 define|\
-value|mtx_init(&ifnet_lock, "ifnet", NULL, MTX_DEF | MTX_RECURSE)
+value|rw_init_flags(&ifnet_lock, "ifnet",  RW_RECURSE)
 end_define
 
 begin_define
@@ -2094,7 +2144,7 @@ define|#
 directive|define
 name|IFNET_WLOCK
 parameter_list|()
-value|mtx_lock(&ifnet_lock)
+value|rw_wlock(&ifnet_lock)
 end_define
 
 begin_define
@@ -2102,7 +2152,7 @@ define|#
 directive|define
 name|IFNET_WUNLOCK
 parameter_list|()
-value|mtx_unlock(&ifnet_lock)
+value|rw_wunlock(&ifnet_lock)
 end_define
 
 begin_define
@@ -2110,7 +2160,7 @@ define|#
 directive|define
 name|IFNET_WLOCK_ASSERT
 parameter_list|()
-value|mtx_assert(&ifnet_lock, MA_OWNED)
+value|rw_assert(&ifnet_lock, RA_LOCKED)
 end_define
 
 begin_define
@@ -2118,7 +2168,7 @@ define|#
 directive|define
 name|IFNET_RLOCK
 parameter_list|()
-value|IFNET_WLOCK()
+value|rw_rlock(&ifnet_lock)
 end_define
 
 begin_define
@@ -2126,7 +2176,7 @@ define|#
 directive|define
 name|IFNET_RUNLOCK
 parameter_list|()
-value|IFNET_WUNLOCK()
+value|rw_runlock(&ifnet_lock)
 end_define
 
 begin_struct

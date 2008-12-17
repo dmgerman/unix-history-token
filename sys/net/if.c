@@ -911,7 +911,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|mtx
+name|rwlock
 name|ifnet_lock
 decl_stmt|;
 end_decl_stmt
