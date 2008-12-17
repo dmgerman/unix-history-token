@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<termios.h>
 end_include
 
@@ -4377,7 +4371,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4414,7 +4408,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4489,7 +4483,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4746,7 +4740,7 @@ literal|1
 condition|)
 name|errx
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"%s is not a directory"
 argument_list|,
@@ -4758,7 +4752,7 @@ else|else
 block|{
 name|err
 argument_list|(
-name|EX_IOERR
+literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
