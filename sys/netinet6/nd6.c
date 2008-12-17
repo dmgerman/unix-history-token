@@ -6403,13 +6403,6 @@ init|=
 name|m0
 decl_stmt|;
 name|struct
-name|rtentry
-modifier|*
-name|rt
-init|=
-name|rt0
-decl_stmt|;
-name|struct
 name|llentry
 modifier|*
 name|ln
@@ -6513,9 +6506,7 @@ name|retry
 label|:
 name|IF_AFDATA_LOCK
 argument_list|(
-name|rt
-operator|->
-name|rt_ifp
+name|ifp
 argument_list|)
 expr_stmt|;
 name|ln
@@ -6539,9 +6530,7 @@ argument_list|)
 expr_stmt|;
 name|IF_AFDATA_UNLOCK
 argument_list|(
-name|rt
-operator|->
-name|rt_ifp
+name|ifp
 argument_list|)
 expr_stmt|;
 if|if
@@ -6575,9 +6564,7 @@ operator|)
 expr_stmt|;
 name|IF_AFDATA_LOCK
 argument_list|(
-name|rt
-operator|->
-name|rt_ifp
+name|ifp
 argument_list|)
 expr_stmt|;
 name|ln
@@ -6596,9 +6583,7 @@ argument_list|)
 expr_stmt|;
 name|IF_AFDATA_UNLOCK
 argument_list|(
-name|rt
-operator|->
-name|rt_ifp
+name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6646,7 +6631,7 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"nd6_output: can't allocate llinfo for %s "
-literal|"(ln=%p, rt=%p)\n"
+literal|"(ln=%p)\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -6659,8 +6644,6 @@ name|sin6_addr
 argument_list|)
 argument_list|,
 name|ln
-argument_list|,
-name|rt
 argument_list|)
 expr_stmt|;
 name|senderr
@@ -7193,7 +7176,7 @@ operator|*
 operator|)
 name|dst
 argument_list|,
-name|rt
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -7218,7 +7201,7 @@ operator|*
 operator|)
 name|dst
 argument_list|,
-name|rt
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -7503,11 +7486,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-name|rt0
 parameter_list|,
 name|struct
 name|mbuf

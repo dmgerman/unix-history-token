@@ -1897,10 +1897,6 @@ name|ifnet
 operator|*
 operator|,
 expr|struct
-name|rtentry
-operator|*
-operator|,
-expr|struct
 name|mbuf
 operator|*
 operator|,
