@@ -638,8 +638,6 @@ name|nd6_storelladdr
 argument_list|(
 name|ifp
 argument_list|,
-name|rt0
-argument_list|,
 name|m
 argument_list|,
 name|dst

@@ -618,8 +618,6 @@ name|fc
 operator|->
 name|fc_ifp
 argument_list|,
-name|rt0
-argument_list|,
 name|m
 argument_list|,
 name|dst
