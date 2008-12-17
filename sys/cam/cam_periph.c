@@ -1347,6 +1347,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+name|periph
+operator|->
+name|sim
+operator|->
+name|mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Increment the reference count on the peripheral 	 * while we wait for our lock attempt to succeed 	 * to ensure the peripheral doesn't disappear out 	 * from user us while we sleep. 	 */
 if|if
 condition|(
@@ -1369,13 +1380,6 @@ operator|->
 name|sim
 operator|->
 name|mtx
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-name|mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
