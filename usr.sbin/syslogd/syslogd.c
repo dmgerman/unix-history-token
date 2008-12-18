@@ -11543,8 +11543,6 @@ name|masklen
 init|=
 operator|-
 literal|1
-decl_stmt|,
-name|i
 decl_stmt|;
 name|struct
 name|addrinfo
@@ -11561,6 +11559,12 @@ decl_stmt|,
 modifier|*
 name|maskp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|int
+name|i
+decl_stmt|;
 name|u_int32_t
 modifier|*
 name|addr6p
@@ -11568,6 +11572,8 @@ decl_stmt|,
 modifier|*
 name|mask6p
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|ip
 index|[
@@ -12597,10 +12603,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|reject
 decl_stmt|;
 name|size_t
 name|l1
@@ -12646,6 +12648,14 @@ name|m4p
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|int
+name|j
+decl_stmt|,
+name|reject
+decl_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -12661,6 +12671,8 @@ name|m6p
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|addrinfo
 name|hints
