@@ -2237,6 +2237,12 @@ goto|goto
 name|hbhcheck
 goto|;
 block|}
+if|if
+condition|(
+name|lle
+operator|!=
+name|NULL
+condition|)
 name|LLE_RUNLOCK
 argument_list|(
 name|lle
