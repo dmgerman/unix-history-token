@@ -2169,11 +2169,19 @@ name|dma_addr_t
 modifier|*
 name|busaddr
 decl_stmt|;
-name|drm_dma_handle_t
+name|struct
+name|drm_dma_handle
+modifier|*
+name|sg_dmah
+decl_stmt|;
+comment|/* Handle for sg_pages   */
+name|struct
+name|drm_dma_handle
 modifier|*
 name|dmah
 decl_stmt|;
-comment|/* Handle to PCI memory for ATI PCIGART table */
+comment|/* Handle to PCI memory  */
+comment|/* for ATI PCIGART table */
 block|}
 name|drm_sg_mem_t
 typedef|;
