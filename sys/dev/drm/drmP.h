@@ -341,6 +341,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/selinfo.h>
 end_include
 
