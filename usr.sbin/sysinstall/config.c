@@ -3755,7 +3755,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"echo '#/usr/src and /usr/ports read-only to machines named after trouble makers'>> /etc/exports"
+literal|"echo '#/usr/src and /usr/obj read-only to machines named after trouble makers,'>> /etc/exports"
 argument_list|)
 expr_stmt|;
 name|vsystem
