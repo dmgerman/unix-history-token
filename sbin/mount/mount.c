@@ -205,6 +205,13 @@ name|MOUNT_META_OPTION_CURRENT
 value|"current"
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_ARGS
+value|100
+end_define
+
 begin_decl_stmt
 name|int
 name|debug
@@ -2507,7 +2514,7 @@ name|char
 modifier|*
 name|argv
 index|[
-literal|100
+name|MAX_ARGS
 index|]
 decl_stmt|;
 name|struct
@@ -2724,6 +2731,21 @@ name|argc
 index|]
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|MAX_ARGS
+operator|<=
+name|argc
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot process more than %d mount arguments"
+argument_list|,
+name|MAX_ARGS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
