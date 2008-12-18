@@ -7440,7 +7440,7 @@ name|tbd
 index|[
 name|i
 operator|+
-literal|2
+literal|1
 index|]
 operator|.
 name|tb_addr
@@ -7461,7 +7461,7 @@ name|tbd
 index|[
 name|i
 operator|+
-literal|2
+literal|1
 index|]
 operator|.
 name|tb_size
@@ -7540,8 +7540,6 @@ operator|->
 name|tbd
 index|[
 name|nseg
-operator|+
-literal|1
 index|]
 operator|.
 name|tb_size
@@ -7600,7 +7598,7 @@ literal|1
 index|]
 operator|.
 name|tb_size
-operator|=
+operator||=
 name|htole32
 argument_list|(
 name|tcp_payload
