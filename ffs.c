@@ -1788,9 +1788,19 @@ operator|->
 name|maxsize
 condition|)
 block|{
-name|warnx
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_FS_VALIDATE
+condition|)
+block|{
+name|printf
 argument_list|(
-literal|"`%s' size of %lld is larger than the maxsize of %lld; rounding down to %lld."
+literal|"%s: `%s' size of %lld is larger than the "
+literal|"maxsize of %lld; rounding down to %lld."
+argument_list|,
+name|__func__
 argument_list|,
 name|dir
 argument_list|,
@@ -1820,6 +1830,7 @@ name|bsize
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|size
 operator|=
 name|rounddown
