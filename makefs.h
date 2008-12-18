@@ -863,7 +863,8 @@ name|cgp
 parameter_list|,
 name|ns
 parameter_list|)
-value|cg_inosused(cgp)
+define|\
+value|((u_int8_t *)((u_int8_t *)(cgp) + ufs_rw32((cgp)->cg_iusedoff, (ns))))
 end_define
 
 begin_define
@@ -875,7 +876,8 @@ name|cgp
 parameter_list|,
 name|ns
 parameter_list|)
-value|cg_blksfree(cgp)
+define|\
+value|((u_int8_t *)((u_int8_t *)(cgp) + ufs_rw32((cgp)->cg_freeoff, (ns))))
 end_define
 
 begin_define
@@ -887,7 +889,8 @@ name|cgp
 parameter_list|,
 name|ns
 parameter_list|)
-value|cg_clustersfree(cgp)
+define|\
+value|((u_int8_t *)((u_int8_t *)(cgp) + ufs_rw32((cgp)->cg_clusteroff, (ns))))
 end_define
 
 begin_define
