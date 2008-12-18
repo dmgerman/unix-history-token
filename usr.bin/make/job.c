@@ -470,19 +470,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|errors
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of errors reported */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
 name|aborting
 init|=
 literal|0
@@ -2524,7 +2511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * JobFinish  --  *	Do final processing for the given job including updating  *	parents and starting new jobs as available/necessary. Note  *	that we pay no attention to the JOB_IGNERR flag here.  *	This is because when we're called because of a noexecute flag  *	or something, jstat.w_status is 0 and when called from  *	Job_CatchChildren, the status is zeroed if it s/b ignored.  *  * Side Effects:  *	Some nodes may be put on the toBeMade queue.  *	Final commands for the job are placed on postCommands.  *  *	If we got an error and are aborting (aborting == ABORT_ERROR) and  *	the job list is now empty, we are done for the day.  *	If we recognized an error (errors !=0), we set the aborting flag  *	to ABORT_ERROR so no more jobs will be started.  */
+comment|/**  * JobFinish  --  *	Do final processing for the given job including updating  *	parents and starting new jobs as available/necessary. Note  *	that we pay no attention to the JOB_IGNERR flag here.  *	This is because when we're called because of a noexecute flag  *	or something, jstat.w_status is 0 and when called from  *	Job_CatchChildren, the status is zeroed if it s/b ignored.  *  * Side Effects:  *	Some nodes may be put on the toBeMade queue.  *	Final commands for the job are placed on postCommands.  *  *	If we got an error and are aborting (aborting == ABORT_ERROR) and  *	the job list is now empty, we are done for the day.  *	If we recognized an error (makeErrors !=0), we set the aborting flag  *	to ABORT_ERROR so no more jobs will be started.  */
 end_comment
 
 begin_function
@@ -3532,9 +3519,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|errors
-operator|+=
-literal|1
+name|makeErrors
+operator|++
 expr_stmt|;
 name|free
 argument_list|(
@@ -3548,7 +3534,7 @@ expr_stmt|;
 comment|/* 	 * Set aborting if any error. 	 */
 if|if
 condition|(
-name|errors
+name|makeErrors
 operator|&&
 operator|!
 name|keepgoing
@@ -3577,7 +3563,7 @@ block|{
 comment|/* 		 * If we are aborting and the job table is now empty, we finish. 		 */
 name|Finish
 argument_list|(
-name|errors
+name|makeErrors
 argument_list|)
 expr_stmt|;
 block|}
@@ -7707,7 +7693,7 @@ name|aborting
 operator|=
 literal|0
 expr_stmt|;
-name|errors
+name|makeErrors
 operator|=
 literal|0
 expr_stmt|;
@@ -8395,11 +8381,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Job_Finish  *	Do final processing such as the running of the commands  *	attached to the .END target.  *  * Results:  *	Number of errors reported.  */
+comment|/**  * Job_Finish  *	Do final processing such as the running of the commands  *	attached to the .END target.  *  * Results:  *	None.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|Job_Finish
 parameter_list|(
 name|void
@@ -8423,7 +8409,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|errors
+name|makeErrors
 condition|)
 block|{
 name|Error
@@ -8491,11 +8477,6 @@ name|fifoName
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|errors
-operator|)
-return|;
 block|}
 end_function
 
@@ -10964,10 +10945,6 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* Current root target */
-name|int
-name|error_cnt
-decl_stmt|;
-comment|/* Number of targets not remade due to errors */
 name|LstNode
 modifier|*
 name|ln
@@ -11051,7 +11028,7 @@ block|}
 block|}
 block|}
 comment|/* 	 * For each entry in the list of targets to create, call Compat_Make on 	 * it to create the thing. Compat_Make will leave the 'made' field of gn 	 * in one of several states: 	 *	UPTODATE  gn was already up-to-date 	 *	MADE	  gn was recreated successfully 	 *	ERROR	  An error occurred while gn was being created 	 *	ABORTED	  gn was not remade because one of its inferiors 	 *		  could not be made due to errors. 	 */
-name|error_cnt
+name|makeErrors
 operator|=
 literal|0
 expr_stmt|;
@@ -11116,16 +11093,15 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|error_cnt
-operator|+=
-literal|1
+name|makeErrors
+operator|++
 expr_stmt|;
 block|}
 block|}
 comment|/* 	 * If the user has defined a .END target, run its commands. 	 */
 if|if
 condition|(
-name|error_cnt
+name|makeErrors
 operator|==
 literal|0
 condition|)

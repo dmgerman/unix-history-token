@@ -115,6 +115,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|makeErrors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of targets not remade due to errors */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|Boolean
 name|jobsRunning
 decl_stmt|;
