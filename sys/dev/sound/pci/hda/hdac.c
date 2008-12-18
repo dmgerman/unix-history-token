@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081123_0118"
+value|"20081219_0119"
 end_define
 
 begin_expr_stmt
@@ -522,6 +522,31 @@ define|#
 directive|define
 name|HDA_SIS_ALL
 value|HDA_MODEL_CONSTRUCT(SIS, 0xffff)
+end_define
+
+begin_comment
+comment|/* ULI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ULI_VENDORID
+value|0x10b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ULI_M5461
+value|HDA_MODEL_CONSTRUCT(ULI, 0x5461)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ULI_ALL
+value|HDA_MODEL_CONSTRUCT(ULI, 0xffff)
 end_define
 
 begin_comment
@@ -2107,6 +2132,12 @@ block|,
 literal|"SiS 966"
 block|}
 block|,
+block|{
+name|HDA_ULI_M5461
+block|,
+literal|"ULI M5461"
+block|}
+block|,
 comment|/* Unknown */
 block|{
 name|HDA_INTEL_ALL
@@ -2136,6 +2167,12 @@ block|{
 name|HDA_SIS_ALL
 block|,
 literal|"SiS (Unknown)"
+block|}
+block|,
+block|{
+name|HDA_ULI_ALL
+block|,
+literal|"ULI (Unknown)"
 block|}
 block|, }
 struct|;
