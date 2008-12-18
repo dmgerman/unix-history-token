@@ -5257,6 +5257,8 @@ argument_list|,
 name|rt
 operator|->
 name|rt_flags
+operator||
+name|RTF_RNH_LOCKED
 argument_list|,
 operator|(
 expr|struct
