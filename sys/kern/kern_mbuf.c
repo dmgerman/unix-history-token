@@ -250,10 +250,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* XXX: These should be tuneables. Can't change UMA limits on the fly. */
-end_comment
-
 begin_function
 specifier|static
 name|int
