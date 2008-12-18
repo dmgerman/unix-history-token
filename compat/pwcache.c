@@ -11,39 +11,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2002 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|HAVE_NBTOOL_CONFIG_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|"nbtool_config.h"
-end_include
-
-begin_comment
-comment|/*  * XXX Undefine the renames of these functions so that we don't  * XXX rename the versions found in the host's<pwd.h> by mistake!  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|group_from_gid
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|user_from_uid
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -102,12 +69,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -159,35 +120,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|HAVE_NBTOOL_CONFIG_H
-end_if
-
-begin_comment
-comment|/* XXX Now, re-apply the renaming that we undid above. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|group_from_gid
-value|__nbcompat_group_from_gid
-end_define
-
-begin_define
-define|#
-directive|define
-name|user_from_uid
-value|__nbcompat_user_from_uid
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -234,15 +166,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|HAVE_PWCACHE_USERDB
-operator|||
-name|HAVE_NBTOOL_CONFIG_H
-end_if
 
 begin_include
 include|#
@@ -590,13 +513,6 @@ name|key
 init|=
 literal|0
 decl_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|name
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|len
@@ -2752,15 +2668,6 @@ end_endif
 
 begin_comment
 comment|/* TEST_PWCACHE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_PWCACHE_USERDB */
 end_comment
 
 end_unit

@@ -42,7 +42,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/bswap.h>
+file|<sys/endian.h>
 end_include
 
 begin_comment

@@ -7,23 +7,6 @@ begin_comment
 comment|/*  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by Marshall  * Kirk McKusick and Network Associates Laboratories, the Security  * Research Division of Network Associates, Inc. under DARPA/SPAWAR  * contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA CHATS  * research program  *  * Copyright (c) 1980, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|HAVE_NBTOOL_CONFIG_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|"nbtool_config.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -144,13 +127,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/ufs_bswap.h>
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
+file|"ffs/ufs_bswap.h"
 end_include
 
 begin_include
@@ -439,17 +422,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|bbsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* boot block size */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
 name|sbsize
 decl_stmt|;
 end_decl_stmt
@@ -620,10 +592,6 @@ operator|=
 name|fsopts
 operator|->
 name|avgfpdir
-expr_stmt|;
-name|bbsize
-operator|=
-name|BBSIZE
 expr_stmt|;
 name|sbsize
 operator|=
@@ -4030,7 +3998,7 @@ control|)
 block|{
 name|setbit
 argument_list|(
-name|cg_inosused
+name|cg_inosused_swap
 argument_list|(
 operator|&
 name|acg
@@ -4078,7 +4046,7 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|,
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 operator|&
 name|acg
@@ -4099,7 +4067,7 @@ literal|0
 condition|)
 name|setbit
 argument_list|(
-name|cg_clustersfree
+name|cg_clustersfree_swap
 argument_list|(
 operator|&
 name|acg
@@ -4183,7 +4151,7 @@ control|)
 block|{
 name|setbit
 argument_list|(
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 operator|&
 name|acg
@@ -4234,7 +4202,7 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|,
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 operator|&
 name|acg
@@ -4255,7 +4223,7 @@ literal|0
 condition|)
 name|setbit
 argument_list|(
-name|cg_clustersfree
+name|cg_clustersfree_swap
 argument_list|(
 operator|&
 name|acg
@@ -4319,7 +4287,7 @@ control|)
 block|{
 name|setbit
 argument_list|(
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 operator|&
 name|acg
@@ -4352,7 +4320,7 @@ name|int32_t
 modifier|*
 name|sump
 init|=
-name|cg_clustersum
+name|cg_clustersum_swap
 argument_list|(
 operator|&
 name|acg
@@ -4364,7 +4332,7 @@ name|u_char
 modifier|*
 name|mapp
 init|=
-name|cg_clustersfree
+name|cg_clustersfree_swap
 argument_list|(
 operator|&
 name|acg

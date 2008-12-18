@@ -11,23 +11,6 @@ begin_comment
 comment|/*  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by Marshall  * Kirk McKusick and Network Associates Laboratories, the Security  * Research Division of Network Associates, Inc. under DARPA/SPAWAR  * contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA CHATS  * research program  *  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_alloc.c	8.19 (Berkeley) 7/13/95  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|HAVE_NBTOOL_CONFIG_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|"nbtool_config.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -99,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/ufs_bswap.h>
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
+file|"ffs/ufs_bswap.h"
 end_include
 
 begin_include
@@ -235,33 +218,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* in ffs_tables.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|inside
-index|[]
-decl_stmt|,
-name|around
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|u_char
-modifier|*
-specifier|const
-name|fragtbl
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Allocate a block in the file system.  *   * The size of the requested block is given, which must be some  * multiple of fs_fsize and<= fs_bsize.  * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate a block:  *   1) allocate the requested block.  *   2) allocate a rotationally optimal block in the same cylinder.  *   3) allocate a block in the same cylinder group.  *   4) quadradically rehash into other cylinder groups, until an  *      available block is located.  * If no block preference is given the following hierarchy is used  * to allocate a block:  *   1) allocate a block in the cylinder group that contains the  *      inode for the file.  *   2) quadradically rehash into other cylinder groups, until an  *      available block is located.  */
@@ -1454,7 +1410,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cg_chkmagic
+name|cg_chkmagic_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -1626,7 +1582,7 @@ operator|++
 control|)
 name|setbit
 argument_list|(
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -1739,7 +1695,7 @@ operator|++
 control|)
 name|clrbit
 argument_list|(
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -1919,7 +1875,7 @@ name|b_data
 expr_stmt|;
 name|blksfree
 operator|=
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -2370,7 +2326,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cg_chkmagic
+name|cg_chkmagic_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -2419,7 +2375,7 @@ name|ffs_isfreeblock
 argument_list|(
 name|fs
 argument_list|,
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -2448,7 +2404,7 @@ name|ffs_setblock
 argument_list|(
 name|fs
 argument_list|,
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -2522,7 +2478,7 @@ name|blkmap
 argument_list|(
 name|fs
 argument_list|,
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -2532,7 +2488,7 @@ argument_list|,
 name|bbase
 argument_list|)
 expr_stmt|;
-name|ffs_fragacct
+name|ffs_fragacct_swap
 argument_list|(
 name|fs
 argument_list|,
@@ -2576,7 +2532,7 @@ if|if
 condition|(
 name|isset
 argument_list|(
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -2609,7 +2565,7 @@ expr_stmt|;
 block|}
 name|setbit
 argument_list|(
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -2663,7 +2619,7 @@ name|blkmap
 argument_list|(
 name|fs
 argument_list|,
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -2673,7 +2629,7 @@ argument_list|,
 name|bbase
 argument_list|)
 expr_stmt|;
-name|ffs_fragacct
+name|ffs_fragacct_swap
 argument_list|(
 name|fs
 argument_list|,
@@ -2704,7 +2660,7 @@ name|ffs_isblock
 argument_list|(
 name|fs
 argument_list|,
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -3006,7 +2962,7 @@ name|u_char
 operator|*
 operator|)
 operator|&
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -3079,7 +3035,7 @@ name|u_char
 operator|*
 operator|)
 operator|&
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -3149,7 +3105,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -3214,7 +3170,7 @@ name|blkmap
 argument_list|(
 name|fs
 argument_list|,
-name|cg_blksfree
+name|cg_blksfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -3384,7 +3340,7 @@ condition|)
 return|return;
 name|freemapp
 operator|=
-name|cg_clustersfree
+name|cg_clustersfree_swap
 argument_list|(
 name|cgp
 argument_list|,
@@ -3393,7 +3349,7 @@ argument_list|)
 expr_stmt|;
 name|sump
 operator|=
-name|cg_clustersum
+name|cg_clustersum_swap
 argument_list|(
 name|cgp
 argument_list|,
