@@ -345,6 +345,13 @@ decl_stmt|;
 comment|/* is this a possible AHCI candidate ? */
 if|if
 condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|PCIC_STORAGE
+operator|||
 name|pci_get_subclass
 argument_list|(
 name|dev
@@ -353,7 +360,9 @@ operator|!=
 name|PCIS_STORAGE_SATA
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 comment|/* is this PCI device flagged as an AHCI compliant chip ? */
 if|if
