@@ -219,6 +219,16 @@ block|}
 enum|;
 end_enum
 
+begin_function_decl
+specifier|static
+name|int
+name|sysctl_kern_vm_guest
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|hz
@@ -593,7 +603,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_PROC
 argument_list|(
 name|_kern
 argument_list|,
@@ -602,13 +612,18 @@ argument_list|,
 name|vm_guest
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLTYPE_STRING
 argument_list|,
-operator|&
-name|vm_guest
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|"Running under a virtual machine?"
+name|sysctl_kern_vm_guest
+argument_list|,
+literal|"A"
+argument_list|,
+literal|"Virtual machine detected? (none|generic|xen)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -675,6 +690,31 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|vm_guest_sysctl_names
+index|[]
+init|=
+block|{
+literal|"none"
+block|,
+literal|"generic"
+block|,
+literal|"xen"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Detect known Virtual Machine hosts by inspecting the emulated BIOS.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1202,6 +1242,42 @@ operator|&
 name|maxpipekva
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Sysctl stringiying handler for kern.vm_guest.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|sysctl_kern_vm_guest
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+return|return
+operator|(
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+name|vm_guest_sysctl_names
+index|[
+name|vm_guest
+index|]
+argument_list|,
+name|strlen
+argument_list|(
+name|vm_guest_sysctl_names
+index|[
+name|vm_guest
+index|]
+argument_list|)
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
