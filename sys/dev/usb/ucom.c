@@ -2943,7 +2943,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 name|cc
-operator|=
+operator|-=
 name|ttydisc_rint_bypass
 argument_list|(
 name|tp
