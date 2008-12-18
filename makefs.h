@@ -851,7 +851,7 @@ parameter_list|,
 name|ns
 parameter_list|)
 define|\
-value|(ufs_rw32(cg_chkmagic(cgp), (ns)) == CG_MAGIC)
+value|(ufs_rw32((cgp)->cg_magic, (ns)) == CG_MAGIC)
 end_define
 
 begin_define
