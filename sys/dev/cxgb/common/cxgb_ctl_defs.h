@@ -211,7 +211,7 @@ name|net_device
 modifier|*
 name|lldevs
 index|[
-literal|2
+name|MAX_NPORTS
 index|]
 decl_stmt|;
 block|}
