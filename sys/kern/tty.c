@@ -3565,7 +3565,7 @@ name|tp
 operator|->
 name|t_inwait
 argument_list|,
-literal|"ttyinput"
+literal|"ttyinp"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3575,7 +3575,7 @@ name|tp
 operator|->
 name|t_outwait
 argument_list|,
-literal|"ttyoutput"
+literal|"ttyout"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3585,7 +3585,7 @@ name|tp
 operator|->
 name|t_bgwait
 argument_list|,
-literal|"ttybackground"
+literal|"ttybgw"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3647,7 +3647,7 @@ name|tp
 operator|->
 name|t_mtxobj
 argument_list|,
-literal|"ttylock"
+literal|"ttylck"
 argument_list|,
 name|NULL
 argument_list|,
