@@ -17,37 +17,13 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
-literal|"$NetBSD: strsuftoll.c,v 1.6 2004/03/05 05:58:29 lukem Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LIBC_SCCS and not lint */
-end_comment
 
 begin_include
 include|#

@@ -17,54 +17,13 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char sccsid[] = "@(#)cache.c	8.1 (Berkeley) 5/31/93";
-else|#
-directive|else
-end_else
-
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
-literal|"$NetBSD: pwcache.c,v 1.29 2004/06/20 22:20:14 jmc Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LIBC_SCCS and not lint */
-end_comment
 
 begin_include
 include|#

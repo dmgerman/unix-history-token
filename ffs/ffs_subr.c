@@ -13,18 +13,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|__KERNEL_RCSID(0, "$NetBSD: ffs_subr.c,v 1.32 2003/12/30 12:33:24 pk Exp $");
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
