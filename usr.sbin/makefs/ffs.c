@@ -1794,6 +1794,10 @@ name|fsopts
 operator|->
 name|maxsize
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|rounddown
 argument_list|(
 name|fsopts
