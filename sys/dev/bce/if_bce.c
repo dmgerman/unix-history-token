@@ -31238,13 +31238,6 @@ name|u_long
 operator|)
 name|sc
 operator|->
-name|stat_IfInFramesL2FilterDiscards
-operator|+
-operator|(
-name|u_long
-operator|)
-name|sc
-operator|->
 name|stat_IfInRuleCheckerDiscards
 operator|+
 operator|(
