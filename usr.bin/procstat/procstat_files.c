@@ -533,6 +533,13 @@ operator|&
 name|cnt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|freep
+operator|==
+name|NULL
+condition|)
+return|return;
 for|for
 control|(
 name|i
