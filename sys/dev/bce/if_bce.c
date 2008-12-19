@@ -22339,6 +22339,9 @@ condition|(
 name|sc
 operator|->
 name|tx_mbuf_map
+index|[
+name|i
+index|]
 operator|!=
 name|NULL
 condition|)
