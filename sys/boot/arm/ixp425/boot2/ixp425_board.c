@@ -1381,6 +1381,11 @@ operator|&
 operator|~
 name|EXP_BYTE_EN
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -1401,6 +1406,11 @@ block|{
 name|u_int32_t
 name|val
 decl_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 name|val
 operator|=
 operator|*
