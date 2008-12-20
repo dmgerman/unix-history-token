@@ -762,6 +762,8 @@ argument_list|,
 name|prop
 argument_list|,
 name|buf
+argument_list|,
+name|OPROMMAXPARAM
 argument_list|)
 expr_stmt|;
 name|proplen

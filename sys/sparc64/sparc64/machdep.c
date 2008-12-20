@@ -1234,11 +1234,20 @@ comment|/* 	 * UltraSparc II[e,i] based systems come up with the tick interrupt 
 name|tick_stop
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Initialize Open Firmware (needed for console). 	 */
-name|OF_init
+comment|/* 	 * Set up Open Firmware entry points  	 */
+name|ofw_tba
+operator|=
+name|rdpr
 argument_list|(
-name|vec
+name|tba
 argument_list|)
+expr_stmt|;
+name|ofw_vec
+operator|=
+operator|(
+name|u_long
+operator|)
+name|vec
 expr_stmt|;
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be before the 	 * console is inited so cninit gets the right value of boothowto. 	 */
 if|if
@@ -1330,6 +1339,19 @@ block|}
 block|}
 name|init_param1
 argument_list|()
+expr_stmt|;
+comment|/* 	 * Initialize Open Firmware (needed for console). 	 */
+name|OF_install
+argument_list|(
+name|OFW_STD_DIRECT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|OF_init
+argument_list|(
+name|ofw_entry
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Prime our per-CPU data page for use.  Note, we are using it for 	 * our stack, so don't pass the real size (PAGE_SIZE) to pcpu_init 	 * or it'll zero it out from under us. 	 */
 name|pc
@@ -1918,32 +1940,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-end_function
-
-begin_function
-name|void
-name|set_openfirm_callback
-parameter_list|(
-name|ofw_vec_t
-modifier|*
-name|vec
-parameter_list|)
-block|{
-name|ofw_tba
-operator|=
-name|rdpr
-argument_list|(
-name|tba
-argument_list|)
-expr_stmt|;
-name|ofw_vec
-operator|=
-operator|(
-name|u_long
-operator|)
-name|vec
-expr_stmt|;
 block|}
 end_function
 
@@ -3215,7 +3211,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|openfirmware_exit
+name|ofw_exit
 argument_list|(
 name|args
 argument_list|)

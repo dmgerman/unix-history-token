@@ -906,7 +906,7 @@ name|cell_t
 operator|)
 name|arg
 expr_stmt|;
-name|openfirmware
+name|ofw_entry
 argument_list|(
 operator|&
 name|args
@@ -949,7 +949,7 @@ operator|)
 name|SUNW_STOPSELF
 block|, 	}
 struct|;
-name|openfirmware_exit
+name|ofw_exit
 argument_list|(
 operator|&
 name|args

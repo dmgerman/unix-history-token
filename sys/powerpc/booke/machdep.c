@@ -1712,9 +1712,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|kobj_machdep_init
-argument_list|()
-expr_stmt|;
 comment|/* Initialise virtual memory. */
 name|pmap_mmu_install
 argument_list|(

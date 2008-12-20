@@ -195,6 +195,36 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * In the event that kobj_mtx has not been initialized yet,  * we will ignore it, and run without locks in order to support  * use of KOBJ before mutexes are available. This early in the boot  * process, everything is single threaded and so races should not  * happen. This is used to provide the PMAP layer on PowerPC, as well  * as board support.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KOBJ_LOCK
+parameter_list|()
+value|if (kobj_mutex_inited) mtx_lock(&kobj_mtx);
+end_define
+
+begin_define
+define|#
+directive|define
+name|KOBJ_UNLOCK
+parameter_list|()
+value|if (kobj_mutex_inited) mtx_unlock(&kobj_mtx);
+end_define
+
+begin_define
+define|#
+directive|define
+name|KOBJ_ASSERT
+parameter_list|(
+name|what
+parameter_list|)
+value|if (kobj_mutex_inited) mtx_assert(&kobj_mtx,what);
+end_define
+
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
@@ -268,21 +298,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function
-name|void
-name|kobj_machdep_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|kobj_init_mutex
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * This method structure is used to initialise new caches. Since the  * desc pointer is NULL, it is guaranteed never to match any read  * descriptors.  */
 end_comment
@@ -325,11 +340,8 @@ modifier|*
 name|desc
 parameter_list|)
 block|{
-name|mtx_assert
+name|KOBJ_ASSERT
 argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
@@ -385,11 +397,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|mtx_assert
+name|KOBJ_ASSERT
 argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
@@ -481,11 +490,8 @@ block|{
 name|kobj_ops_t
 name|ops
 decl_stmt|;
-name|mtx_assert
+name|KOBJ_ASSERT
 argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
@@ -515,11 +521,8 @@ argument_list|(
 literal|"kobj_compile_methods: out of memory"
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_LOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * We may have lost a race for kobj_class_compile here - check 	 * to make sure someone else hasn't already compiled this 	 * class. 	 */
 if|if
@@ -529,11 +532,8 @@ operator|->
 name|ops
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_UNLOCK
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
@@ -551,11 +551,8 @@ argument_list|,
 name|ops
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -571,20 +568,14 @@ name|kobj_ops_t
 name|ops
 parameter_list|)
 block|{
-name|mtx_assert
+name|KOBJ_ASSERT
 argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Increment refs to make sure that the ops table is not freed. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_LOCK
+argument_list|()
 expr_stmt|;
 name|cls
 operator|->
@@ -598,11 +589,8 @@ argument_list|,
 name|ops
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -836,19 +824,13 @@ name|ops
 init|=
 literal|0
 decl_stmt|;
-name|mtx_assert
+name|KOBJ_ASSERT
 argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_LOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Protect against a race between kobj_create and 	 * kobj_delete. 	 */
 if|if
@@ -904,11 +886,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -991,21 +970,15 @@ name|kobj_class_t
 name|cls
 parameter_list|)
 block|{
-name|mtx_assert
+name|KOBJ_ASSERT
 argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 name|retry
 label|:
-name|mtx_lock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_LOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Consider compiling the class' method table. 	 */
 if|if
@@ -1017,11 +990,8 @@ name|ops
 condition|)
 block|{
 comment|/* 		 * kobj_class_compile doesn't want the lock held 		 * because of the call to malloc - we drop the lock 		 * and re-try. 		 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_UNLOCK
+argument_list|()
 expr_stmt|;
 name|kobj_class_compile
 argument_list|(
@@ -1045,11 +1015,8 @@ operator|->
 name|refs
 operator|++
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1080,19 +1047,13 @@ name|int
 name|refs
 decl_stmt|;
 comment|/* 	 * Consider freeing the compiled method table for the class 	 * after its last instance is deleted. As an optimisation, we 	 * should defer this for a short while to avoid thrashing. 	 */
-name|mtx_assert
+name|KOBJ_ASSERT
 argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_LOCK
+argument_list|()
 expr_stmt|;
 name|cls
 operator|->
@@ -1105,11 +1066,8 @@ name|cls
 operator|->
 name|refs
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|kobj_mtx
-argument_list|)
+name|KOBJ_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
