@@ -309,7 +309,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"IXP425 PCI Bus"
+literal|"IXP4XX PCI Bus"
 argument_list|)
 expr_stmt|;
 return|return
@@ -488,10 +488,7 @@ argument_list|(
 literal|"cannot allocate PCI MEM space"
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|AHB_OFFSET
-value|0x10000000UL
+comment|/* NB: PCI dma window is 64M so anything above must be bounced */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -502,7 +499,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|AHB_OFFSET
+name|IXP425_AHB_OFFSET
 operator|+
 literal|64
 operator|*
@@ -588,7 +585,7 @@ name|sc_io_rman
 operator|.
 name|rm_descr
 operator|=
-literal|"IXP425 PCI I/O Ports"
+literal|"IXP4XX PCI I/O Ports"
 expr_stmt|;
 if|if
 condition|(
@@ -637,7 +634,7 @@ name|sc_mem_rman
 operator|.
 name|rm_descr
 operator|=
-literal|"IXP425 PCI Memory"
+literal|"IXP4XX PCI Memory"
 expr_stmt|;
 if|if
 condition|(
@@ -682,14 +679,14 @@ argument_list|,
 name|PCI_AHBMEMBASE
 argument_list|,
 operator|(
-name|AHB_OFFSET
+name|IXP425_AHB_OFFSET
 operator|&
 literal|0xFF000000
 operator|)
 operator|+
 operator|(
 operator|(
-name|AHB_OFFSET
+name|IXP425_AHB_OFFSET
 operator|&
 literal|0xFF000000
 operator|)
@@ -699,7 +696,7 @@ operator|)
 operator|+
 operator|(
 operator|(
-name|AHB_OFFSET
+name|IXP425_AHB_OFFSET
 operator|&
 literal|0xFF000000
 operator|)
@@ -709,7 +706,7 @@ operator|)
 operator|+
 operator|(
 operator|(
-name|AHB_OFFSET
+name|IXP425_AHB_OFFSET
 operator|&
 literal|0xFF000000
 operator|)
@@ -740,7 +737,7 @@ name|sc
 argument_list|,
 name|PCI_MAPREG_BAR0
 argument_list|,
-name|AHB_OFFSET
+name|IXP425_AHB_OFFSET
 operator|+
 literal|0x00000000
 argument_list|)
@@ -751,7 +748,7 @@ name|sc
 argument_list|,
 name|PCI_MAPREG_BAR1
 argument_list|,
-name|AHB_OFFSET
+name|IXP425_AHB_OFFSET
 operator|+
 literal|0x01000000
 argument_list|)
@@ -762,7 +759,7 @@ name|sc
 argument_list|,
 name|PCI_MAPREG_BAR2
 argument_list|,
-name|AHB_OFFSET
+name|IXP425_AHB_OFFSET
 operator|+
 literal|0x02000000
 argument_list|)
@@ -773,7 +770,7 @@ name|sc
 argument_list|,
 name|PCI_MAPREG_BAR3
 argument_list|,
-name|AHB_OFFSET
+name|IXP425_AHB_OFFSET
 operator|+
 literal|0x03000000
 argument_list|)

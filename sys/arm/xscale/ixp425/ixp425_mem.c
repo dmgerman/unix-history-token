@@ -107,16 +107,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|MCU_REG_READ
-parameter_list|(
-name|x
-parameter_list|)
-value|(*(volatile uint32_t *)(IXP425_MCU_VBASE + (x)))
-end_define
-
 begin_function
 name|uint32_t
 name|ixp425_sdram_size
@@ -124,6 +114,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+define|#
+directive|define
+name|MCU_REG_READ
+parameter_list|(
+name|x
+parameter_list|)
+value|(*(volatile uint32_t *)(IXP425_MCU_VBASE + (x)))
 name|uint32_t
 name|size
 decl_stmt|,
@@ -189,6 +186,55 @@ operator|(
 name|size
 operator|)
 return|;
+undef|#
+directive|undef
+name|MCU_REG_READ
+block|}
+end_function
+
+begin_function
+name|uint32_t
+name|ixp435_ddram_size
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+define|#
+directive|define
+name|MCU_REG_READ
+parameter_list|(
+name|x
+parameter_list|)
+value|(*(volatile uint32_t *)(IXP425_MCU_VBASE + (x)))
+name|uint32_t
+name|sbr0
+decl_stmt|;
+comment|/* 	 * Table 198, page 516 shows DDR-I/II SDRAM bank sizes 	 * for SBR0 and SBR1.  The manual states both banks must 	 * be programmed to be the same size.  We just assume 	 * it's done right and calculate 2x for the memory size. 	 */
+name|sbr0
+operator|=
+name|MCU_REG_READ
+argument_list|(
+name|MCU_DDR_SBR0
+argument_list|)
+expr_stmt|;
+return|return
+literal|2
+operator|*
+literal|16
+operator|*
+operator|(
+name|sbr0
+operator|&
+literal|0x7f
+operator|)
+operator|*
+literal|1024
+operator|*
+literal|1024
+return|;
+undef|#
+directive|undef
+name|MCU_REG_READ
 block|}
 end_function
 

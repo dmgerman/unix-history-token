@@ -323,7 +323,7 @@ name|qmgr_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|"IXP425 Q-Manager debug msgs"
+literal|"IXP4XX Q-Manager debug msgs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -623,7 +623,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"IXP425 Q-Manager"
+literal|"IXP4XX Q-Manager"
 argument_list|)
 expr_stmt|;
 return|return

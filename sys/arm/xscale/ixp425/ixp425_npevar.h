@@ -251,18 +251,57 @@ begin_comment
 comment|/* XXX ... more not include */
 end_comment
 
+begin_comment
+comment|/* NPE ID's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPE_A
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPE_B
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPE_C
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPE_MAX
+value|(NPE_C+1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP425_NPE_A_IMAGEID
+value|0x10820200
+end_define
+
 begin_define
 define|#
 directive|define
 name|IXP425_NPE_B_IMAGEID
-value|0x01000200
+value|0x01020201
 end_define
 
 begin_define
 define|#
 directive|define
 name|IXP425_NPE_C_IMAGEID
-value|0x02000200
+value|0x02050201
 end_define
 
 begin_struct_decl
@@ -278,6 +317,9 @@ modifier|*
 name|ixpnpe_attach
 parameter_list|(
 name|device_t
+parameter_list|,
+name|int
+name|npeid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -359,7 +401,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixpnpe_sendmsg
+name|ixpnpe_sendmsg_async
 parameter_list|(
 name|struct
 name|ixpnpe_softc
@@ -377,7 +419,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixpnpe_recvmsg
+name|ixpnpe_recvmsg_async
 parameter_list|(
 name|struct
 name|ixpnpe_softc
@@ -394,7 +436,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixpnpe_sendandrecvmsg
+name|ixpnpe_sendandrecvmsg_sync
 parameter_list|(
 name|struct
 name|ixpnpe_softc
@@ -409,6 +451,23 @@ index|]
 parameter_list|,
 name|uint32_t
 name|recv
+index|[
+literal|2
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ixpnpe_recvmsg_sync
+parameter_list|(
+name|struct
+name|ixpnpe_softc
+modifier|*
+parameter_list|,
+name|uint32_t
+name|msg
 index|[
 literal|2
 index|]
