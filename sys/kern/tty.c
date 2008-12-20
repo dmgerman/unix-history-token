@@ -3565,7 +3565,7 @@ name|tp
 operator|->
 name|t_inwait
 argument_list|,
-literal|"ttyinp"
+literal|"ttyin"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3585,7 +3585,7 @@ name|tp
 operator|->
 name|t_bgwait
 argument_list|,
-literal|"ttybgw"
+literal|"ttybg"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3647,7 +3647,7 @@ name|tp
 operator|->
 name|t_mtxobj
 argument_list|,
-literal|"ttylck"
+literal|"ttymtx"
 argument_list|,
 name|NULL
 argument_list|,
