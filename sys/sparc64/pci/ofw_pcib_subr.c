@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ofw_bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pci/pcireg.h>
 end_include
 

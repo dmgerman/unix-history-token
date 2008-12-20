@@ -1007,38 +1007,6 @@ begin_comment
 comment|/* whether to prefer temporary addresses 					in the source address selection */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* VIMAGE_GLOBALS */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ip6_use_defzone
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* whether to use the default scope zone 				    when unspecified */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pfil_head
-name|inet6_pfil_hook
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* packet filter hooks */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1056,6 +1024,38 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_use_defzone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* whether to use the default scope zone 				    when unspecified */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE_GLOBALS */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pfil_head
+name|inet6_pfil_hook
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* packet filter hooks */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1947,8 +1947,6 @@ expr|struct
 name|rtentry
 operator|*
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

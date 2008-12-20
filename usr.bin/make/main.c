@@ -507,6 +507,16 @@ comment|/* -j argument */
 end_comment
 
 begin_decl_stmt
+name|int
+name|makeErrors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of targets not remade due to errors */
+end_comment
+
+begin_decl_stmt
 name|Boolean
 name|jobsRunning
 decl_stmt|;
@@ -4806,15 +4816,23 @@ expr_stmt|;
 if|if
 condition|(
 name|queryFlag
-operator|&&
-name|outOfDate
 condition|)
 return|return
 operator|(
-literal|1
+name|outOfDate
 operator|)
 return|;
-else|else
+if|if
+condition|(
+name|makeErrors
+operator|!=
+literal|0
+condition|)
+name|Finish
+argument_list|(
+name|makeErrors
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

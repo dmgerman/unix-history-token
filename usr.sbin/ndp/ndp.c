@@ -224,6 +224,19 @@ parameter_list|)
 value|(x += ROUNDUP((n)->sa_len))
 end_define
 
+begin_define
+define|#
+directive|define
+name|NEXTADDR
+parameter_list|(
+name|w
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += sizeof(s);}
+end_define
+
 begin_decl_stmt
 specifier|static
 name|pid_t
@@ -1918,14 +1931,6 @@ name|sdl_family
 operator|==
 name|AF_LINK
 operator|&&
-operator|(
-name|rtm
-operator|->
-name|rtm_flags
-operator|&
-name|RTF_LLINFO
-operator|)
-operator|&&
 operator|!
 operator|(
 name|rtm
@@ -2283,6 +2288,15 @@ name|m_rtmsg
 operator|.
 name|m_rtm
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|cp
+init|=
+name|m_rtmsg
+operator|.
+name|m_space
+decl_stmt|;
 name|struct
 name|sockaddr_dl
 modifier|*
@@ -2505,14 +2519,6 @@ name|sdl_family
 operator|==
 name|AF_LINK
 operator|&&
-operator|(
-name|rtm
-operator|->
-name|rtm_flags
-operator|&
-name|RTF_LLINFO
-operator|)
-operator|&&
 operator|!
 operator|(
 name|rtm
@@ -2563,6 +2569,14 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/*           * need to reinit the field because it has rt_key          * but we want the actual address          */
+name|NEXTADDR
+argument_list|(
+name|RTA_DST
+argument_list|,
+name|sin_m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rtmsg
@@ -2871,6 +2885,9 @@ index|]
 operator|=
 name|NET_RT_FLAGS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RTF_LLINFO
 name|mib
 index|[
 literal|5
@@ -2878,6 +2895,17 @@ index|]
 operator|=
 name|RTF_LLINFO
 expr_stmt|;
+else|#
+directive|else
+name|mib
+index|[
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sysctl
@@ -4320,16 +4348,6 @@ operator||=
 name|RTA_DST
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|NEXTADDR
-parameter_list|(
-name|w
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += SA_SIZE(&s);}
 name|NEXTADDR
 argument_list|(
 name|RTA_DST
@@ -8186,6 +8204,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|NEXTADDR
+end_undef
 
 end_unit
 

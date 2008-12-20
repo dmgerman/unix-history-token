@@ -255,6 +255,27 @@ define|\
 value|(((const uint8_t *)(addr))[IEEE80211_ADDR_LEN - 1] % STA_HASHSIZE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_IEEE_CHAN
+value|256
+end_define
+
+begin_comment
+comment|/* max acceptable IEEE chan # */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|MAX_IEEE_CHAN
+operator|>=
+literal|256
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|sta_table
@@ -302,7 +323,7 @@ comment|/* ap-related state */
 name|int
 name|st_maxrssi
 index|[
-name|IEEE80211_CHAN_MAX
+name|MAX_IEEE_CHAN
 index|]
 decl_stmt|;
 block|}
@@ -546,14 +567,15 @@ name|sta_table
 modifier|*
 name|st
 decl_stmt|;
-name|MALLOC
-argument_list|(
 name|st
-argument_list|,
+operator|=
+operator|(
 expr|struct
 name|sta_table
 operator|*
-argument_list|,
+operator|)
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -680,7 +702,7 @@ operator|->
 name|st_scanlock
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|st
 argument_list|,
@@ -829,7 +851,7 @@ operator|.
 name|se_ies
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|se
 argument_list|,
@@ -998,14 +1020,15 @@ condition|)
 goto|goto
 name|found
 goto|;
-name|MALLOC
-argument_list|(
 name|se
-argument_list|,
+operator|=
+operator|(
 expr|struct
 name|sta_entry
 operator|*
-argument_list|,
+operator|)
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1710,6 +1733,22 @@ operator|->
 name|se_notseen
 operator|=
 literal|0
+expr_stmt|;
+name|KASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|sp
+operator|->
+name|bchan
+argument_list|)
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"bchan size"
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7111,7 +7150,7 @@ operator|.
 name|se_ies
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|se
 argument_list|,
@@ -7521,6 +7560,22 @@ operator|!=
 name|flags
 condition|)
 continue|continue;
+name|KASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|chan
+operator|->
+name|ic_ieee
+argument_list|)
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"ic_chan size"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX channel have interference */
 if|if
 condition|(

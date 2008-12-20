@@ -152,6 +152,11 @@ index|[
 name|PASSWD_FIELD_LEN
 index|]
 decl_stmt|,
+name|confpasswd
+index|[
+name|PASSWD_FIELD_LEN
+index|]
+decl_stmt|,
 name|uid
 index|[
 name|UID_FIELD_LEN
@@ -232,7 +237,7 @@ begin_define
 define|#
 directive|define
 name|USER_DIALOG_HEIGHT
-value|LINES - 2
+value|LINES - 1
 end_define
 
 begin_comment
@@ -395,7 +400,7 @@ directive|define
 name|LAYOUT_UNAME
 value|0
 block|{
-literal|3
+literal|2
 block|,
 literal|6
 block|,
@@ -421,7 +426,7 @@ directive|define
 name|LAYOUT_UID
 value|1
 block|{
-literal|3
+literal|2
 block|,
 literal|23
 block|,
@@ -447,7 +452,7 @@ directive|define
 name|LAYOUT_UGROUP
 value|2
 block|{
-literal|3
+literal|2
 block|,
 literal|33
 block|,
@@ -473,11 +478,11 @@ directive|define
 name|LAYOUT_PASSWD
 value|3
 block|{
-literal|3
+literal|6
 block|,
-literal|43
+literal|6
 block|,
-literal|15
+literal|20
 block|,
 name|PASSWD_FIELD_LEN
 operator|-
@@ -499,10 +504,39 @@ block|}
 block|,
 define|#
 directive|define
-name|LAYOUT_GECOS
+name|LAYOUT_CONFPASSWD
 value|4
 block|{
-literal|8
+literal|6
+block|,
+literal|28
+block|,
+literal|20
+block|,
+name|PASSWD_FIELD_LEN
+operator|-
+literal|1
+block|,
+literal|"Confirm Password:"
+block|,
+literal|"Confirm what you typed for the password"
+block|,
+name|confpasswd
+block|,
+name|NO_ECHO_OBJ
+argument_list|(
+name|STRINGOBJ
+argument_list|)
+block|,
+name|NULL
+block|}
+block|,
+define|#
+directive|define
+name|LAYOUT_GECOS
+value|5
+block|{
+literal|10
 block|,
 literal|6
 block|,
@@ -526,9 +560,9 @@ block|,
 define|#
 directive|define
 name|LAYOUT_UMEMB
-value|5
+value|6
 block|{
-literal|8
+literal|10
 block|,
 literal|43
 block|,
@@ -552,9 +586,9 @@ block|,
 define|#
 directive|define
 name|LAYOUT_HOMEDIR
-value|6
+value|7
 block|{
-literal|13
+literal|14
 block|,
 literal|6
 block|,
@@ -578,9 +612,9 @@ block|,
 define|#
 directive|define
 name|LAYOUT_SHELL
-value|7
+value|8
 block|{
-literal|13
+literal|14
 block|,
 literal|29
 block|,
@@ -604,7 +638,7 @@ block|,
 define|#
 directive|define
 name|LAYOUT_U_OKBUTTON
-value|8
+value|9
 block|{
 literal|18
 block|,
@@ -629,7 +663,7 @@ block|,
 define|#
 directive|define
 name|LAYOUT_U_CANCELBUTTON
-value|9
+value|10
 block|{
 literal|18
 block|,
@@ -1946,6 +1980,25 @@ return|return
 literal|0
 return|;
 block|}
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|passwd
+argument_list|,
+name|confpasswd
+argument_list|)
+condition|)
+block|{
+name|feepout
+argument_list|(
+literal|"Passwords don't match"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -3326,7 +3379,7 @@ literal|1
 argument_list|,
 name|USER_DIALOG_X
 operator|+
-literal|22
+literal|24
 argument_list|,
 literal|" Add a new user "
 argument_list|)

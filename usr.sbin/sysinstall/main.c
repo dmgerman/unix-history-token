@@ -720,11 +720,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__sparc64__
 argument_list|)
 operator|||
@@ -739,8 +734,7 @@ operator|||
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"Are you sure you wish to exit?  The system will reboot\n"
-literal|"(be sure to remove any floppies/CDs/DVDs from the drives)."
+literal|"Are you sure you wish to exit?  The system will reboot."
 argument_list|)
 endif|#
 directive|endif

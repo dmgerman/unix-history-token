@@ -56,6 +56,16 @@ directive|ifndef
 name|_NO_NAMESPACE_POLLUTION
 end_ifndef
 
+begin_comment
+comment|/* Needed to display interrupts on OFW PCI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PCI_REROUTE_INTERRUPT
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/filio.h>
 end_include
 
@@ -3559,7 +3565,7 @@ name|tp
 operator|->
 name|t_inwait
 argument_list|,
-literal|"tty input"
+literal|"ttyinp"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3569,7 +3575,7 @@ name|tp
 operator|->
 name|t_outwait
 argument_list|,
-literal|"tty output"
+literal|"ttyout"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3579,7 +3585,7 @@ name|tp
 operator|->
 name|t_bgwait
 argument_list|,
-literal|"tty background"
+literal|"ttybgw"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3589,7 +3595,7 @@ name|tp
 operator|->
 name|t_dcdwait
 argument_list|,
-literal|"tty dcd"
+literal|"ttydcd"
 argument_list|)
 expr_stmt|;
 name|ttyinq_init
@@ -3641,7 +3647,7 @@ name|tp
 operator|->
 name|t_mtxobj
 argument_list|,
-literal|"tty lock"
+literal|"ttylck"
 argument_list|,
 name|NULL
 argument_list|,
@@ -7490,9 +7496,9 @@ modifier|*
 name|rtp
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
-name|td
+name|p
 parameter_list|,
 name|int
 name|fd
@@ -7527,29 +7533,71 @@ name|cdevsw
 modifier|*
 name|cdp
 decl_stmt|;
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
 comment|/* Validate the file descriptor. */
 if|if
 condition|(
-name|fget
-argument_list|(
-name|td
-argument_list|,
-name|fd
-argument_list|,
-operator|&
-name|fp
-argument_list|)
-operator|!=
-literal|0
+operator|(
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EBADF
 operator|)
 return|;
+name|FILEDESC_SLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fp
+operator|=
+name|fget_locked
+argument_list|(
+name|fdp
+argument_list|,
+name|fd
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+name|fp
+operator|->
+name|f_ops
+operator|==
+operator|&
+name|badfileops
+condition|)
+block|{
+name|FILEDESC_SUNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBADF
+operator|)
+return|;
+block|}
 comment|/* Make sure the vnode is bound to a character device. */
 name|error
 operator|=
@@ -7740,11 +7788,9 @@ argument_list|)
 expr_stmt|;
 name|done1
 label|:
-name|fdrop
+name|FILEDESC_SUNLOCK
 argument_list|(
-name|fp
-argument_list|,
-name|td
+name|fdp
 argument_list|)
 expr_stmt|;
 return|return

@@ -75,6 +75,10 @@ name|vi_putc_t
 modifier|*
 name|sc_putc
 decl_stmt|;
+name|vi_putm_t
+modifier|*
+name|sc_putm
+decl_stmt|;
 name|vi_set_border_t
 modifier|*
 name|sc_set_border

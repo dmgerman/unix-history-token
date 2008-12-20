@@ -1142,7 +1142,12 @@ operator|=
 literal|0
 expr_stmt|;
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
+comment|/* 	 * Init mutexes, which we use heavily in PMAP 	 */
 name|mutex_init
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Install the OF client interface 	 */
+name|OF_bootstrap
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the console before printing anything. 	 */
@@ -1168,9 +1173,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|kdb_init
-argument_list|()
-expr_stmt|;
-name|kobj_machdep_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * XXX: Initialize the interrupt tables. 	 *      Disable translation in case the vector area 	 *      hasn't been mapped (G5) 	 */

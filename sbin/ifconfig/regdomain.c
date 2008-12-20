@@ -124,6 +124,9 @@ begin_struct
 struct|struct
 name|mystate
 block|{
+name|XML_Parser
+name|parser
+decl_stmt|;
 name|struct
 name|regdata
 modifier|*
@@ -564,7 +567,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX complain */
+name|warnx
+argument_list|(
+literal|"no mode for netband at line %ld"
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -671,7 +685,27 @@ name|rd
 operator|->
 name|bands_11na
 expr_stmt|;
-comment|/* XXX else complain */
+else|else
+name|warnx
+argument_list|(
+literal|"unknown mode \"%s\" at line %ld"
+argument_list|,
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|mode
+argument_list|)
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -699,7 +733,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX complain */
+name|warnx
+argument_list|(
+literal|"band without enclosing netband at line %ld"
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|mt
@@ -766,6 +811,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|warnx
+argument_list|(
+literal|"duplicate freqband at line %ld ignored"
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX complain */
 block|}
 else|else
@@ -827,6 +884,14 @@ name|strdup
 argument_list|(
 name|id
 argument_list|)
+expr_stmt|;
+name|mt
+operator|->
+name|country
+operator|->
+name|code
+operator|=
+name|NO_COUNTRY
 expr_stmt|;
 name|mt
 operator|->
@@ -924,9 +989,14 @@ end_function
 
 begin_function
 specifier|static
-name|uint32_t
+name|int
 name|decode_flag
 parameter_list|(
+name|struct
+name|mystate
+modifier|*
+name|mt
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -971,7 +1041,7 @@ name|FLAG
 parameter_list|(
 name|x
 parameter_list|)
-value|{ #x, sizeof(#x), x }
+value|{ #x, sizeof(#x)-1, x }
 name|FLAG
 argument_list|(
 name|IEEE80211_CHAN_A
@@ -1180,6 +1250,22 @@ index|]
 operator|.
 name|value
 return|;
+name|warnx
+argument_list|(
+literal|"unknown flag \"%.*s\" at line %ld ignored"
+argument_list|,
+name|len
+argument_list|,
+name|p
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1436,6 +1522,8 @@ name|flags
 operator||=
 name|decode_flag
 argument_list|(
+name|mt
+argument_list|,
 name|p
 argument_list|,
 name|len
@@ -1458,6 +1546,8 @@ name|flags
 operator||=
 name|decode_flag
 argument_list|(
+name|mt
+argument_list|,
 name|p
 argument_list|,
 name|len
@@ -1465,7 +1555,18 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* XXX complain */
+name|warnx
+argument_list|(
+literal|"flags without freqband or netband at line %ld ignored"
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 goto|goto
 name|done
@@ -1730,13 +1831,20 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|warnx
 argument_list|(
-literal|"Unexpected XML: name \"%s\" data \"%s\"\n"
+literal|"unexpected XML token \"%s\" data \"%s\" at line %ld"
 argument_list|,
 name|name
 argument_list|,
 name|p
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX goto done? */
@@ -1825,21 +1933,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|warnx
 argument_list|(
-literal|"No frequency band information at line %d\n"
+literal|"no freqbands for band at line %ld"
 argument_list|,
-if|#
-directive|if
-literal|0
-argument_list|XML_GetCurrentLineNumber(parser));
-else|#
-directive|else
-literal|0
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -1852,7 +1957,18 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* XXX complain */
+name|warnx
+argument_list|(
+literal|"no maxpower for band at line %ld"
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* default max power w/ DFS to max power */
 if|if
@@ -1939,10 +2055,21 @@ name|country
 operator|->
 name|code
 operator|==
-literal|0
+name|NO_COUNTRY
 condition|)
 block|{
-comment|/* XXX must have iso cc */
+name|warnx
+argument_list|(
+literal|"no ISO cc for country at line %ld"
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1955,7 +2082,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX must have name */
+name|warnx
+argument_list|(
+literal|"no name for country at line %ld"
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1968,7 +2106,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX? rd ref? */
+name|warnx
+argument_list|(
+literal|"no regdomain reference for country at line %ld"
+argument_list|,
+name|XML_GetCurrentLineNumber
+argument_list|(
+name|mt
+operator|->
+name|parser
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 name|mt
 operator|->
@@ -2230,9 +2379,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|XML_Parser
-name|parser
-decl_stmt|;
 name|struct
 name|mystate
 modifier|*
@@ -2310,6 +2456,8 @@ name|rdp
 operator|=
 name|rdp
 expr_stmt|;
+name|mt
+operator|->
 name|parser
 operator|=
 name|XML_ParserCreate
@@ -2319,6 +2467,8 @@ argument_list|)
 expr_stmt|;
 name|XML_SetUserData
 argument_list|(
+name|mt
+operator|->
 name|parser
 argument_list|,
 name|mt
@@ -2326,6 +2476,8 @@ argument_list|)
 expr_stmt|;
 name|XML_SetElementHandler
 argument_list|(
+name|mt
+operator|->
 name|parser
 argument_list|,
 name|start_element
@@ -2335,6 +2487,8 @@ argument_list|)
 expr_stmt|;
 name|XML_SetCharacterDataHandler
 argument_list|(
+name|mt
+operator|->
 name|parser
 argument_list|,
 name|char_data
@@ -2344,6 +2498,8 @@ if|if
 condition|(
 name|XML_Parse
 argument_list|(
+name|mt
+operator|->
 name|parser
 argument_list|,
 name|p
@@ -2366,12 +2522,16 @@ name|XML_ErrorString
 argument_list|(
 name|XML_GetErrorCode
 argument_list|(
+name|mt
+operator|->
 name|parser
 argument_list|)
 argument_list|)
 argument_list|,
 name|XML_GetCurrentLineNumber
 argument_list|(
+name|mt
+operator|->
 name|parser
 argument_list|)
 argument_list|)
@@ -2383,6 +2543,8 @@ return|;
 block|}
 name|XML_ParserFree
 argument_list|(
+name|mt
+operator|->
 name|parser
 argument_list|)
 expr_stmt|;

@@ -891,7 +891,7 @@ name|archive
 argument_list|,
 name|EINVAL
 argument_list|,
-literal|"Consistency check failed"
+literal|"Incorrect file header signature"
 argument_list|)
 expr_stmt|;
 return|return

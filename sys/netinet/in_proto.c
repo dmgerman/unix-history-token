@@ -163,6 +163,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip.h>
 end_include
 
@@ -1522,11 +1528,21 @@ block|,
 operator|.
 name|dom_maxrtkey
 operator|=
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 expr|struct
 name|sockaddr_in
-operator|)
+argument_list|)
+block|,
+operator|.
+name|dom_ifattach
+operator|=
+name|in_domifattach
+block|,
+operator|.
+name|dom_ifdetach
+operator|=
+name|in_domifdetach
 block|}
 decl_stmt|;
 end_decl_stmt

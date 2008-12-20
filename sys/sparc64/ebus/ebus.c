@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ofw_bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -398,6 +392,13 @@ argument_list|(
 name|bus_get_resource
 argument_list|,
 name|bus_generic_rl_get_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_child_pnpinfo_str
+argument_list|,
+name|ofw_bus_gen_child_pnpinfo_str
 argument_list|)
 block|,
 comment|/* ofw_bus interface */

@@ -1028,7 +1028,6 @@ name|RTF_UP
 operator|)
 condition|)
 return|return;
-comment|/* XXX */
 name|ro
 operator|->
 name|ro_rt
@@ -1042,7 +1041,7 @@ name|ro_dst
 argument_list|,
 literal|1
 argument_list|,
-name|RTF_CLONING
+literal|0
 argument_list|,
 name|fibnum
 argument_list|)

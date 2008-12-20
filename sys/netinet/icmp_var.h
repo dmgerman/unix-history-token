@@ -154,6 +154,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -165,6 +171,11 @@ end_decl_stmt
 begin_comment
 comment|/* icmp statistics */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern

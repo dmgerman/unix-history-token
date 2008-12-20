@@ -2609,12 +2609,12 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-name|cam_periph_release
+name|cam_periph_unlock
 argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-name|cam_periph_unlock
+name|cam_periph_release
 argument_list|(
 name|periph
 argument_list|)

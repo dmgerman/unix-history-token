@@ -61,6 +61,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE_GLOBALS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -68,6 +74,11 @@ name|rip6stat
 name|rip6stat
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

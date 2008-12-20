@@ -389,6 +389,7 @@ block|{
 name|int
 name|s
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1727,6 +1728,10 @@ parameter_list|,
 name|struct
 name|iovec
 modifier|*
+parameter_list|,
+specifier|const
+name|int
+name|iovlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5670,6 +5675,13 @@ block|}
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|IOV_SIZE
+value|7
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -5693,7 +5705,7 @@ name|struct
 name|iovec
 name|iov
 index|[
-literal|7
+name|IOV_SIZE
 index|]
 decl_stmt|;
 name|struct
@@ -6685,7 +6697,7 @@ name|f_file
 argument_list|,
 name|iov
 argument_list|,
-literal|7
+name|IOV_SIZE
 argument_list|)
 operator|<
 literal|0
@@ -6867,7 +6879,7 @@ name|f_file
 argument_list|,
 name|iov
 argument_list|,
-literal|7
+name|IOV_SIZE
 argument_list|)
 operator|<
 literal|0
@@ -7006,7 +7018,7 @@ name|ttymsg
 argument_list|(
 name|iov
 argument_list|,
-literal|7
+name|IOV_SIZE
 argument_list|,
 name|f
 operator|->
@@ -7060,6 +7072,8 @@ argument_list|(
 name|f
 argument_list|,
 name|iov
+argument_list|,
+name|IOV_SIZE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7096,6 +7110,10 @@ name|struct
 name|iovec
 modifier|*
 name|iov
+parameter_list|,
+specifier|const
+name|int
+name|iovlen
 parameter_list|)
 block|{
 specifier|static
@@ -7249,7 +7267,7 @@ name|ttymsg
 argument_list|(
 name|iov
 argument_list|,
-literal|7
+name|iovlen
 argument_list|,
 name|line
 argument_list|,
@@ -7335,7 +7353,7 @@ name|ttymsg
 argument_list|(
 name|iov
 argument_list|,
-literal|7
+name|iovlen
 argument_list|,
 name|line
 argument_list|,
@@ -11526,8 +11544,6 @@ name|masklen
 init|=
 operator|-
 literal|1
-decl_stmt|,
-name|i
 decl_stmt|;
 name|struct
 name|addrinfo
@@ -11544,6 +11560,12 @@ decl_stmt|,
 modifier|*
 name|maskp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|int
+name|i
+decl_stmt|;
 name|u_int32_t
 modifier|*
 name|addr6p
@@ -11551,6 +11573,8 @@ decl_stmt|,
 modifier|*
 name|mask6p
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|ip
 index|[
@@ -12580,10 +12604,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|reject
 decl_stmt|;
 name|size_t
 name|l1
@@ -12629,6 +12649,14 @@ name|m4p
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|int
+name|j
+decl_stmt|,
+name|reject
+decl_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -12644,6 +12672,8 @@ name|m6p
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|addrinfo
 name|hints

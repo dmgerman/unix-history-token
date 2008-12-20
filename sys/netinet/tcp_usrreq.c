@@ -2402,9 +2402,9 @@ name|inp
 operator|->
 name|inp_inc
 operator|.
-name|inc_isipv6
-operator|=
-literal|1
+name|inc_flags
+operator||=
+name|INC_ISIPV6
 expr_stmt|;
 if|if
 condition|(
@@ -5214,7 +5214,7 @@ expr_stmt|;
 comment|/* update flowinfo - draft-itojun-ipv6-flowlabel-api-00 */
 name|inp
 operator|->
-name|in6p_flowinfo
+name|inp_flow
 operator|&=
 operator|~
 name|IPV6_FLOWLABEL_MASK
@@ -5223,13 +5223,13 @@ if|if
 condition|(
 name|inp
 operator|->
-name|in6p_flags
+name|inp_flags
 operator|&
 name|IN6P_AUTOFLOWLABEL
 condition|)
 name|inp
 operator|->
-name|in6p_flowinfo
+name|inp_flow
 operator||=
 operator|(
 name|htonl

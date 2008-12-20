@@ -120,6 +120,9 @@ parameter_list|,
 name|char
 modifier|*
 name|end
+parameter_list|,
+name|unsigned
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -163,6 +166,13 @@ operator|*
 operator|)
 name|p
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|FLAG_V
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%6d  %-29.29s %.74s\n"
@@ -206,6 +216,32 @@ name|in
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%6d  %-15.15s %-29.29s %.74s\n"
+argument_list|,
+name|xp
+operator|->
+name|pr_id
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|in
+argument_list|)
+argument_list|,
+name|xp
+operator|->
+name|pr_host
+argument_list|,
+name|xp
+operator|->
+name|pr_path
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 operator|(
@@ -449,6 +485,12 @@ name|q
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|FLAG_V
+condition|)
 name|printf
 argument_list|(
 literal|"%6d  %-29.29s %.74s\n"
@@ -570,6 +612,12 @@ argument_list|,
 literal|"Invalid length for jail"
 argument_list|)
 expr_stmt|;
+name|in
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -596,7 +644,6 @@ name|flags
 operator|&
 name|FLAG_V
 condition|)
-block|{
 name|in
 operator|.
 name|s_addr
@@ -608,6 +655,12 @@ index|]
 operator|.
 name|s_addr
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|FLAG_V
+condition|)
 name|printf
 argument_list|(
 literal|"%6s  %-15.15s\n"
@@ -620,7 +673,6 @@ name|in
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* IPv6 addresses. */
 name|ia6p
@@ -715,6 +767,46 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* If requested print the old style single line version. */
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|FLAG_V
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"%6d  %-15.15s %-29.29s %.74s\n"
+argument_list|,
+name|xp
+operator|->
+name|pr_id
+argument_list|,
+operator|(
+name|in
+operator|.
+name|s_addr
+operator|)
+condition|?
+name|inet_ntoa
+argument_list|(
+name|in
+argument_list|)
+else|:
+literal|""
+argument_list|,
+name|xp
+operator|->
+name|pr_host
+argument_list|,
+name|xp
+operator|->
+name|pr_path
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|q
@@ -1022,11 +1114,6 @@ argument_list|,
 literal|"Sci-Fi prison. Kernel/userland out of sync?"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"   JID  Hostname                      Path\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1034,6 +1121,11 @@ operator|&
 name|FLAG_V
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"   JID  Hostname                      Path\n"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"        Name                          State\n"
@@ -1044,12 +1136,21 @@ argument_list|(
 literal|"        CPUSetID\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"        IP Address(es)\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"   JID  IP Address      Hostname"
+literal|"                      Path\n"
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -1124,6 +1225,8 @@ operator|)
 name|p
 operator|+
 name|len
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 break|break;

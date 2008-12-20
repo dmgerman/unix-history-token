@@ -965,16 +965,24 @@ literal|"\004ExtAPIC"
 comment|/* Extended APIC register */
 literal|"\005CR8"
 comment|/* CR8 in legacy mode */
-literal|"\006<b5>"
-literal|"\007<b6>"
-literal|"\010<b7>"
+literal|"\006ABM"
+comment|/* LZCNT instruction */
+literal|"\007SSE4A"
+comment|/* SSE4A */
+literal|"\010MAS"
+comment|/* Misaligned SSE mode */
 literal|"\011Prefetch"
 comment|/* 3DNow! Prefetch/PrefetchW */
-literal|"\012<b9>"
-literal|"\013<b10>"
-literal|"\014<b11>"
-literal|"\015<b12>"
-literal|"\016<b13>"
+literal|"\012OSVW"
+comment|/* OS visible workaround */
+literal|"\013IBS"
+comment|/* Instruction based sampling */
+literal|"\014SSE5"
+comment|/* SSE5 */
+literal|"\015SKINIT"
+comment|/* SKINIT/STGI */
+literal|"\016WDT"
+comment|/* Watchdog timer */
 literal|"\017<b14>"
 literal|"\020<b15>"
 literal|"\021<b16>"

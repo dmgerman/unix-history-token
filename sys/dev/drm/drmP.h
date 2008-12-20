@@ -341,6 +341,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -1098,46 +1104,6 @@ directive|define
 name|jiffies
 value|ticks
 end_define
-
-begin_comment
-comment|/* Capabilities taken from src/sys/dev/pci/pcireg.h. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PCIY_AGP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PCIY_AGP
-value|0x02
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PCIY_EXPRESS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PCIY_EXPRESS
-value|0x10
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -2169,11 +2135,19 @@ name|dma_addr_t
 modifier|*
 name|busaddr
 decl_stmt|;
-name|drm_dma_handle_t
+name|struct
+name|drm_dma_handle
+modifier|*
+name|sg_dmah
+decl_stmt|;
+comment|/* Handle for sg_pages   */
+name|struct
+name|drm_dma_handle
 modifier|*
 name|dmah
 decl_stmt|;
-comment|/* Handle to PCI memory for ATI PCIGART table */
+comment|/* Handle to PCI memory  */
+comment|/* for ATI PCIGART table */
 block|}
 name|drm_sg_mem_t
 typedef|;

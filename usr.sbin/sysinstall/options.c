@@ -159,12 +159,6 @@ return|return
 literal|"CDROM"
 return|;
 case|case
-name|DEVICE_TYPE_TAPE
-case|:
-return|return
-literal|"Tape"
-return|;
-case|case
 name|DEVICE_TYPE_DOS
 case|:
 return|return

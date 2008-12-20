@@ -4666,6 +4666,7 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tmp

@@ -1314,6 +1314,8 @@ block|}
 if|if
 condition|(
 name|last
+operator|!=
+name|NULL
 condition|)
 block|{
 name|struct
@@ -1488,6 +1490,8 @@ block|}
 if|if
 condition|(
 name|last
+operator|!=
+name|NULL
 condition|)
 block|{
 name|struct

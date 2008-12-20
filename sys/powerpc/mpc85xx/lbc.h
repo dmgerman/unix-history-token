@@ -22,18 +22,15 @@ name|LBC_IVAR_DEVTYPE
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|LBC_IVAR_CLOCK
-value|2
-end_define
+begin_comment
+comment|/* Maximum number of devices on Local Bus */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|LBC_IVAR_REGSHIFT
-value|3
+name|LBC_DEV_MAX
+value|8
 end_define
 
 begin_comment
@@ -50,9 +47,190 @@ end_define
 begin_define
 define|#
 directive|define
-name|LBC_DEVTYPE_UART
+name|LBC_DEVTYPE_RTC
 value|2
 end_define
+
+begin_comment
+comment|/* Local access registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_BR
+parameter_list|(
+name|n
+parameter_list|)
+value|(OCP85XX_LBC_OFF + (8 * n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_OR
+parameter_list|(
+name|n
+parameter_list|)
+value|(OCP85XX_LBC_OFF + 4 + (8 * n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LBCR
+value|(OCP85XX_LBC_OFF + 0xd0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBC85XX_LCRR
+value|(OCP85XX_LBC_OFF + 0xd4)
+end_define
+
+begin_comment
+comment|/* LBC machine select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBCRES_MSEL_GPCM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBCRES_MSEL_FCM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBCRES_MSEL_UPMA
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBCRES_MSEL_UPMB
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBCRES_MSEL_UPMC
+value|10
+end_define
+
+begin_comment
+comment|/* LBC data error checking modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBCRES_DECC_DISABLED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBCRES_DECC_NORMAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBCRES_DECC_RMW
+value|2
+end_define
+
+begin_comment
+comment|/* LBC atomic operation modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LBCRES_ATOM_DISABLED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBCRES_ATOM_RAWA
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LBCRES_ATOM_WARA
+value|2
+end_define
+
+begin_struct
+struct|struct
+name|lbc_resource
+block|{
+name|int
+name|lbr_devtype
+decl_stmt|;
+comment|/* LBC device type */
+name|int
+name|lbr_unit
+decl_stmt|;
+comment|/* Resource table entry number */
+name|vm_paddr_t
+name|lbr_base_addr
+decl_stmt|;
+comment|/* Device mem region base address */
+name|size_t
+name|lbr_size
+decl_stmt|;
+comment|/* Device mem region size */
+name|int
+name|lbr_port_size
+decl_stmt|;
+comment|/* Data bus width */
+name|uint8_t
+name|lbr_msel
+decl_stmt|;
+comment|/* LBC machine select */
+name|uint8_t
+name|lbr_decc
+decl_stmt|;
+comment|/* Data error checking mode */
+name|uint8_t
+name|lbr_atom
+decl_stmt|;
+comment|/* Atomic operation mode */
+name|uint8_t
+name|lbr_wp
+decl_stmt|;
+comment|/* Write protect */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|lbc_resource
+name|mpc85xx_lbc_resources
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

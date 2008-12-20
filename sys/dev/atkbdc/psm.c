@@ -18164,6 +18164,17 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|syninfo
+operator|.
+name|sysctl_tree
+operator|!=
+name|NULL
+condition|)
+return|return;
 comment|/* Attach extra synaptics sysctl nodes under hw.psm.synaptics */
 name|sysctl_ctx_init
 argument_list|(
@@ -19910,11 +19921,6 @@ literal|"synaptics: BEGIN init\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|disable_aux_dev
-argument_list|(
-name|kbdc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|hw
@@ -19929,7 +19935,7 @@ name|squelch
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Just to be on the safe side */
+comment|/* 	 * Just to be on the safe side: this avoids troubles with 	 * following mouse_ext_command() when the previous command 	 * was PSMC_SET_RESOLUTION. Set Scaling has no effect on 	 * Synaptics Touchpad behaviour. 	 */
 name|set_mouse_scaling
 argument_list|(
 name|kbdc
@@ -19937,7 +19943,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Identify the Touchpad version */
+comment|/* Identify the Touchpad version. */
 if|if
 condition|(
 name|mouse_ext_command
@@ -20057,7 +20063,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* Get the Touchpad model information */
+comment|/* Get the Touchpad model information. */
 if|if
 condition|(
 name|mouse_ext_command
@@ -20348,7 +20354,7 @@ name|infoGeometry
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Read the extended capability bits */
+comment|/* Read the extended capability bits. */
 if|if
 condition|(
 name|mouse_ext_command
@@ -20406,7 +20412,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* Set the different capabilities when they exist */
+comment|/* Set the different capabilities when they exist. */
 if|if
 condition|(
 operator|(
@@ -20600,7 +20606,7 @@ name|capPalmDetect
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * if we have bits set in status[0]& 0x70 - then we can load 		 * more information about buttons using query 0x09 		 */
+comment|/* 		 * If we have bits set in status[0]& 0x70, then we can load 		 * more information about buttons using query 0x09. 		 */
 if|if
 condition|(
 name|status
@@ -20711,7 +20717,7 @@ literal|"  No extended capabilities\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Read the mode byte 	 * 	 * XXX: Note the Synaptics documentation also defines the first 	 * byte of the response to this query to be a constant 0x3b, this 	 * does not appear to be true for Touchpads with guest devices. 	 */
+comment|/* 	 * Read the mode byte. 	 * 	 * XXX: Note the Synaptics documentation also defines the first 	 * byte of the response to this query to be a constant 0x3b, this 	 * does not appear to be true for Touchpads with guest devices. 	 */
 if|if
 condition|(
 name|mouse_ext_command
@@ -20769,7 +20775,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* Set the mode byte -- request wmode where available */
+comment|/* Set the mode byte; request wmode where available. */
 if|if
 condition|(
 name|sc
@@ -20793,7 +20799,7 @@ argument_list|,
 literal|0xc0
 argument_list|)
 expr_stmt|;
-comment|/* Reset the sampling rate */
+comment|/* "Commit" the Set Mode Byte command sent above. */
 name|set_mouse_sampling_rate
 argument_list|(
 name|kbdc
@@ -20846,6 +20852,15 @@ name|synaptics_sysctl_create_tree
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+comment|/* 	 * The touchpad will have to be reinitialized after 	 * suspend/resume. 	 */
+name|sc
+operator|->
+name|config
+operator||=
+name|PSM_CONFIG_HOOKRESUME
+operator||
+name|PSM_CONFIG_INITAFTERSUSPEND
 expr_stmt|;
 return|return
 operator|(

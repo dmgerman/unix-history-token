@@ -9104,6 +9104,10 @@ name|tf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|found_interrupt
+operator|=
+literal|0
+expr_stmt|;
 name|cc
 operator|=
 name|core_pcpu
@@ -9125,15 +9129,6 @@ name|ri
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|!
-name|iap_pmc_has_overflowed
-argument_list|(
-name|ri
-argument_list|)
-condition|)
-continue|continue;
 if|if
 condition|(
 operator|(
@@ -9158,6 +9153,15 @@ name|PMC_TO_MODE
 argument_list|(
 name|pm
 argument_list|)
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|!
+name|iap_pmc_has_overflowed
+argument_list|(
+name|ri
 argument_list|)
 condition|)
 continue|continue;
@@ -9375,6 +9379,10 @@ name|uintmax_t
 operator|)
 name|intrstatus
 argument_list|)
+expr_stmt|;
+name|found_interrupt
+operator|=
+literal|0
 expr_stmt|;
 name|cc
 operator|=
@@ -9722,17 +9730,6 @@ name|v
 argument_list|)
 expr_stmt|;
 block|}
-name|KASSERT
-argument_list|(
-name|found_interrupt
-argument_list|,
-operator|(
-literal|"[core,%d] no interrupting PMCs were found"
-operator|,
-name|__LINE__
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Reenable all non-stalled PMCs. 	 */
 name|PMCDBG
 argument_list|(

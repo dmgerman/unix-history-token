@@ -180,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/uma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -905,7 +911,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|mtx
+name|rwlock
 name|ifnet_lock
 decl_stmt|;
 end_decl_stmt
@@ -1121,10 +1127,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|struct
 name|ifnet
 modifier|*
-name|ifnet_byindex
+name|ifnet_byindex_locked
 parameter_list|(
 name|u_short
 name|idx
@@ -1140,9 +1147,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|IFNET_RLOCK
-argument_list|()
-expr_stmt|;
 name|ifp
 operator|=
 name|V_ifindex_table
@@ -1151,6 +1155,39 @@ name|idx
 index|]
 operator|.
 name|ife_ifnet
+expr_stmt|;
+return|return
+operator|(
+name|ifp
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|ifnet
+modifier|*
+name|ifnet_byindex
+parameter_list|(
+name|u_short
+name|idx
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
+name|ifp
+operator|=
+name|ifnet_byindex_locked
+argument_list|(
+name|idx
+argument_list|)
 expr_stmt|;
 name|IFNET_RUNLOCK
 argument_list|()
@@ -1217,7 +1254,7 @@ argument_list|()
 expr_stmt|;
 name|ifa
 operator|=
-name|ifnet_byindex
+name|ifnet_byindex_locked
 argument_list|(
 name|idx
 argument_list|)
@@ -2371,7 +2408,7 @@ name|V_if_index
 operator|>
 literal|0
 operator|&&
-name|ifnet_byindex
+name|ifnet_byindex_locked
 argument_list|(
 name|V_if_index
 argument_list|)
@@ -5220,6 +5257,8 @@ argument_list|,
 name|rt
 operator|->
 name|rt_flags
+operator||
+name|RTF_RNH_LOCKED
 argument_list|,
 operator|(
 expr|struct
@@ -6246,6 +6285,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_llatbl.h>
+end_include
 
 begin_comment
 comment|/*  * Default action when installing a route with a Link Level gateway.  * Lookup an appropriate real ifa to point to.  * This should be moved to /sys/net/link.c eventually.  */

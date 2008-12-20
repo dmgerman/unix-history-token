@@ -401,6 +401,7 @@ argument|&pfil_head_list
 argument_list|,
 argument|ph_list
 argument_list|)
+block|{
 if|if
 condition|(
 name|ph
@@ -431,15 +432,8 @@ return|return
 name|EEXIST
 return|;
 block|}
-name|PFIL_LIST_UNLOCK
-argument_list|()
-expr_stmt|;
+block|}
 name|PFIL_LOCK_INIT
-argument_list|(
-name|ph
-argument_list|)
-expr_stmt|;
-name|PFIL_WLOCK
 argument_list|(
 name|ph
 argument_list|)
@@ -466,9 +460,6 @@ operator|->
 name|ph_out
 argument_list|)
 expr_stmt|;
-name|PFIL_LIST_LOCK
-argument_list|()
-expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -482,11 +473,6 @@ expr_stmt|;
 name|PFIL_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
-name|PFIL_WUNLOCK
-argument_list|(
-name|ph
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -496,7 +482,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_head_unregister() removes a pfil_head from the packet filter  * hook mechanism.  */
+comment|/*  * pfil_head_unregister() removes a pfil_head from the packet filter hook  * mechanism.  The producer of the hook promises that all outstanding  * invocations of the hook have completed before it unregisters the hook.  */
 end_comment
 
 begin_function
@@ -520,7 +506,6 @@ decl_stmt|;
 name|PFIL_LIST_LOCK
 argument_list|()
 expr_stmt|;
-comment|/*  	 * LIST_REMOVE is safe for unlocked pfil_heads in ph_list. 	 * No need to WLOCK all of them. 	 */
 name|LIST_REMOVE
 argument_list|(
 name|ph
@@ -530,11 +515,6 @@ argument_list|)
 expr_stmt|;
 name|PFIL_LIST_UNLOCK
 argument_list|()
-expr_stmt|;
-name|PFIL_WLOCK
-argument_list|(
-name|ph
-argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
@@ -707,7 +687,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-comment|/* Get memory */
 if|if
 condition|(
 name|flags
@@ -810,13 +789,11 @@ name|error
 goto|;
 block|}
 block|}
-comment|/* Lock */
 name|PFIL_WLOCK
 argument_list|(
 name|ph
 argument_list|)
 expr_stmt|;
-comment|/* Add */
 if|if
 condition|(
 name|flags
@@ -858,7 +835,7 @@ condition|(
 name|err
 condition|)
 goto|goto
-name|done
+name|locked_error
 goto|;
 name|ph
 operator|->
@@ -926,7 +903,7 @@ name|arg
 argument_list|)
 expr_stmt|;
 goto|goto
-name|done
+name|locked_error
 goto|;
 block|}
 name|ph
@@ -943,7 +920,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-name|done
+name|locked_error
 label|:
 name|PFIL_WUNLOCK
 argument_list|(

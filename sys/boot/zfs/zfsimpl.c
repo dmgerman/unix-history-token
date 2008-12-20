@@ -3933,7 +3933,7 @@ name|i
 decl_stmt|,
 name|rc
 decl_stmt|;
-comment|/* 	 * We truncate the offset to 32bits, mainly so that I don't 	 * have to find a copy of __divdi3 to put into the bootstrap. 	 * I don't think the bootstrap needs to access anything bigger 	 * than 2G anyway. Note that block addresses are still 64bit 	 * so it doesn't affect the possible size of the media. 	 * We still use 64bit block numbers so that the bitshifts 	 * work correctly. Note: bsize may not be a power of two here. 	 */
+comment|/* 	 * Note: bsize may not be a power of two here so we need to do an 	 * actual divide rather than a bitshift. 	 */
 while|while
 condition|(
 name|buflen
@@ -3944,24 +3944,14 @@ block|{
 name|uint64_t
 name|bn
 init|=
-operator|(
-operator|(
-name|int
-operator|)
 name|offset
-operator|)
 operator|/
 name|bsize
 decl_stmt|;
 name|int
 name|boff
 init|=
-operator|(
-operator|(
-name|int
-operator|)
 name|offset
-operator|)
 operator|%
 name|bsize
 decl_stmt|;

@@ -247,6 +247,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Flags for inc_flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INC_ISIPV6
+value|0x01
+end_define
+
 begin_define
 define|#
 directive|define

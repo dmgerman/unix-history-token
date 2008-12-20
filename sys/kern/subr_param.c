@@ -206,6 +206,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_enum
+enum|enum
+name|VM_GUEST
+block|{
+name|VM_GUEST_NO
+block|,
+name|VM_GUEST_VM
+block|,
+name|VM_GUEST_XEN
+block|}
+enum|;
+end_enum
+
+begin_function_decl
+specifier|static
+name|int
+name|sysctl_kern_vm_guest
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|hz
@@ -318,6 +341,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Limit on pipe KVA */
+end_comment
+
+begin_decl_stmt
+name|int
+name|vm_guest
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Running as virtual machine guest? */
 end_comment
 
 begin_decl_stmt
@@ -569,6 +602,32 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vm_guest
+argument_list|,
+name|CTLFLAG_RD
+operator||
+name|CTLTYPE_STRING
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|sysctl_kern_vm_guest
+argument_list|,
+literal|"A"
+argument_list|,
+literal|"Virtual machine detected? (none|generic|xen)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * These have to be allocated somewhere; allocating  * them here forces loader errors if this file is omitted  * (if they've been externed everywhere else; hah!).  */
 end_comment
@@ -632,9 +691,35 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|vm_guest_sysctl_names
+index|[]
+init|=
+block|{
+literal|"none"
+block|,
+literal|"generic"
+block|,
+literal|"xen"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Detect known Virtual Machine hosts by inspecting the emulated BIOS.  */
+end_comment
+
 begin_function
 specifier|static
-name|int
+name|enum
+name|VM_GUEST
 name|detect_virtual
 parameter_list|(
 name|void
@@ -699,7 +784,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|VM_GUEST_VM
 operator|)
 return|;
 block|}
@@ -761,7 +846,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|VM_GUEST_VM
 operator|)
 return|;
 block|}
@@ -773,7 +858,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|VM_GUEST_NO
 operator|)
 return|;
 block|}
@@ -790,6 +875,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|XEN
+name|vm_guest
+operator|=
+name|detect_virtual
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|vm_guest
+operator|=
+name|VM_GUEST_XEN
+expr_stmt|;
+endif|#
+directive|endif
 name|hz
 operator|=
 operator|-
@@ -812,8 +913,9 @@ literal|1
 condition|)
 name|hz
 operator|=
-name|detect_virtual
-argument_list|()
+name|vm_guest
+operator|>
+name|VM_GUEST_NO
 condition|?
 name|HZ_VM
 else|:
@@ -1140,6 +1242,42 @@ operator|&
 name|maxpipekva
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Sysctl stringiying handler for kern.vm_guest.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|sysctl_kern_vm_guest
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+return|return
+operator|(
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+name|vm_guest_sysctl_names
+index|[
+name|vm_guest
+index|]
+argument_list|,
+name|strlen
+argument_list|(
+name|vm_guest_sysctl_names
+index|[
+name|vm_guest
+index|]
+argument_list|)
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

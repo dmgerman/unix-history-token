@@ -862,7 +862,7 @@ name|mmfsa_ra
 operator|=
 name|mmfsa_ra
 expr_stmt|;
-name|openfirmware
+name|ofw_entry
 argument_list|(
 operator|&
 name|args

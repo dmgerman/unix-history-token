@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081123_0118"
+value|"20081219_0119"
 end_define
 
 begin_expr_stmt
@@ -522,6 +522,31 @@ define|#
 directive|define
 name|HDA_SIS_ALL
 value|HDA_MODEL_CONSTRUCT(SIS, 0xffff)
+end_define
+
+begin_comment
+comment|/* ULI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ULI_VENDORID
+value|0x10b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ULI_M5461
+value|HDA_MODEL_CONSTRUCT(ULI, 0x5461)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ULI_ALL
+value|HDA_MODEL_CONSTRUCT(ULI, 0xffff)
 end_define
 
 begin_comment
@@ -2107,6 +2132,12 @@ block|,
 literal|"SiS 966"
 block|}
 block|,
+block|{
+name|HDA_ULI_M5461
+block|,
+literal|"ULI M5461"
+block|}
+block|,
 comment|/* Unknown */
 block|{
 name|HDA_INTEL_ALL
@@ -2136,6 +2167,12 @@ block|{
 name|HDA_SIS_ALL
 block|,
 literal|"SiS (Unknown)"
+block|}
+block|,
+block|{
+name|HDA_ULI_ALL
+block|,
+literal|"ULI (Unknown)"
 block|}
 block|, }
 struct|;
@@ -3348,6 +3385,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_SII1392
+value|HDA_CODEC_CONSTRUCT(SII, 0x1392)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_SIIXXXX
 value|HDA_CODEC_CONSTRUCT(SII, 0xffff)
 end_define
@@ -3493,6 +3537,62 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_VT1708B_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe720)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe721)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_2
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe722)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_3
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe723)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_4
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe724)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_5
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe725)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_6
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe726)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708B_7
+value|HDA_CODEC_CONSTRUCT(VIA, 0xe727)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_VTXXXX
 value|HDA_CODEC_CONSTRUCT(VIA, 0xffff)
 end_define
@@ -3500,6 +3600,34 @@ end_define
 begin_comment
 comment|/* ATI */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIRS600_1
+value|HDA_CODEC_CONSTRUCT(ATI, 0x793c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIRS600_2
+value|HDA_CODEC_CONSTRUCT(ATI, 0x7919)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIRS690
+value|HDA_CODEC_CONSTRUCT(ATI, 0x791a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ATIR6XX
+value|HDA_CODEC_CONSTRUCT(ATI, 0xaa01)
+end_define
 
 begin_define
 define|#
@@ -4083,6 +4211,84 @@ block|{
 name|HDA_CODEC_VT1709_7
 block|,
 literal|"VIA VT1709_7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_0
+block|,
+literal|"VIA VT1708B_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_1
+block|,
+literal|"VIA VT1708B_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_2
+block|,
+literal|"VIA VT1708B_2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_3
+block|,
+literal|"VIA VT1708B_3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_4
+block|,
+literal|"VIA VT1708B_4"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_5
+block|,
+literal|"VIA VT1708B_5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_6
+block|,
+literal|"VIA VT1708B_6"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708B_7
+block|,
+literal|"VIA VT1708B_7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIRS600_1
+block|,
+literal|"ATI RS600 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIRS600_2
+block|,
+literal|"ATI RS600 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIRS690
+block|,
+literal|"ATI RS690/780 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ATIR6XX
+block|,
+literal|"ATI R6xx HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_SII1392
+block|,
+literal|"Silicon Image SiI1392 HDMI"
 block|}
 block|,
 comment|/* Unknown codec */

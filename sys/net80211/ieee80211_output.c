@@ -707,7 +707,6 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* XXX AUTH'd */
-comment|/* XXX mark vap to identify if associd is required */
 if|if
 condition|(
 name|ni
@@ -717,22 +716,11 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|vap
+name|ni
 operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_STA
-operator|||
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_HOSTAP
-operator|||
-name|IS_DWDS
-argument_list|(
-name|vap
-argument_list|)
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_ASSOCID
 operator|)
 condition|)
 block|{

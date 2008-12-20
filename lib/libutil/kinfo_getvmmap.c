@@ -99,6 +99,11 @@ decl_stmt|,
 modifier|*
 name|kv
 decl_stmt|;
+operator|*
+name|cntp
+operator|=
+literal|0
+expr_stmt|;
 name|len
 operator|=
 literal|0
@@ -155,7 +160,7 @@ name|error
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|len
@@ -181,7 +186,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|error
@@ -214,7 +219,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -289,7 +294,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}

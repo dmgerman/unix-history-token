@@ -195,7 +195,7 @@ define|#
 directive|define
 name|IEEE80211_NODE_BITS
 define|\
-value|"\20\1AUTH\2QOS\3ERP\5PWR_MGT\6AREF\7HT\10HTCOMPAT\11WPS\12TSN" \ 	"\13AMPDU_RX\14AMPDU_TX\15MIMO_PS\16MIMO_RTS\17RIFS\20SGI20\21SGI40"
+value|"\20\1AUTH\2QOS\3ERP\5PWR_MGT\6AREF\7HT\10HTCOMPAT\11WPS\12TSN" \ 	"\13AMPDU_RX\14AMPDU_TX\15MIMO_PS\16MIMO_RTS\17RIFS\20SGI20\21SGI40" \ 	"\22ASSOCID"
 end_define
 
 begin_define
@@ -3037,7 +3037,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|struct ieee80211_channel ic_channels[IEEE80211_CHAN_MAX+1]; 	uint8_t			ic_chan_avail[IEEE80211_CHAN_BYTES]; 	uint8_t			ic_chan_active[IEEE80211_CHAN_BYTES]; 	uint8_t			ic_chan_scan[IEEE80211_CHAN_BYTES];
+block|struct ieee80211_channel ic_channels[IEEE80211_CHAN_MAX]; 	uint8_t			ic_chan_avail[IEEE80211_CHAN_BYTES]; 	uint8_t			ic_chan_active[IEEE80211_CHAN_BYTES]; 	uint8_t			ic_chan_scan[IEEE80211_CHAN_BYTES];
 endif|#
 directive|endif
 name|db_printf
