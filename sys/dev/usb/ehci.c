@@ -4372,8 +4372,6 @@ argument_list|)
 expr_stmt|;
 name|ehci_dump_exfer
 argument_list|(
-name|sc
-argument_list|,
 name|ex
 argument_list|)
 expr_stmt|;
