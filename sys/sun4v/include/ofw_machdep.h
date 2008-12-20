@@ -21,6 +21,25 @@ directive|include
 file|<sys/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|cell_t
+typedef|;
+end_typedef
+
 begin_function_decl
 name|int
 name|OF_decode_addr
@@ -61,8 +80,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ofw_entry
+parameter_list|(
 name|void
-name|openfirmware_exit
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ofw_exit
 parameter_list|(
 name|void
 modifier|*
