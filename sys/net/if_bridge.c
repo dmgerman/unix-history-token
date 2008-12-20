@@ -8847,7 +8847,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -9308,7 +9308,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -9642,7 +9642,7 @@ name|rcvif
 operator|=
 name|bifp
 expr_stmt|;
-name|BPF_MTAP
+name|ETHER_BPF_MTAP
 argument_list|(
 name|bifp
 argument_list|,
@@ -10065,7 +10065,7 @@ parameter_list|)
 define|\
 value|if ((iface)->if_type == IFT_GIF) \ 		continue; \
 comment|/* It is destined for us. */
-value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if ((iface)->if_type == IFT_BRIDGE) {			\ 			BPF_MTAP(iface, m);				\ 			iface->if_ipackets++;				\
+value|\ 	if (memcmp(IF_LLADDR((iface)), eh->ether_dhost,  ETHER_ADDR_LEN) == 0 \ 	    OR_CARP_CHECK_WE_ARE_DST((iface))				\ 	    ) {								\ 		if ((iface)->if_type == IFT_BRIDGE) {			\ 			ETHER_BPF_MTAP(iface, m);			\ 			iface->if_ipackets++;				\
 comment|/* Filter on the physical interface. */
 value|\ 			if (pfil_local_phys&&				\ 			    (inet_pfil_hook.ph_busy_count>= 0		\ 			     OR_PFIL_HOOKED_INET6)) {			\ 				if (bridge_pfil(&m, NULL, ifp,		\ 				    PFIL_IN) != 0 || m == NULL) {	\ 					BRIDGE_UNLOCK(sc);		\ 					return (NULL);			\ 				}					\ 			}						\ 		}							\ 		if (bif->bif_flags& IFBIF_LEARNING)			\ 			(void) bridge_rtupdate(sc,			\ 			    eh->ether_shost, bif, 0, IFBAF_DYNAMIC);	\ 		m->m_pkthdr.rcvif = iface;				\ 		BRIDGE_UNLOCK(sc);					\ 		return (m);						\ 	}								\ 									\
 comment|/* We just received a packet that we sent out. */
