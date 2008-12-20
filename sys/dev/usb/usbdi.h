@@ -1331,11 +1331,19 @@ name|USBD_SHOW_INTERFACE_CLASS
 value|0x2
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|module
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|usbd_driver_load
 parameter_list|(
-name|module_t
+name|struct
+name|module
+modifier|*
 name|mod
 parameter_list|,
 name|int
