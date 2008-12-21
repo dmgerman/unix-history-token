@@ -1522,11 +1522,10 @@ name|DRM_ERROR
 parameter_list|(
 name|fmt
 parameter_list|,
-name|arg
 modifier|...
 parameter_list|)
 define|\
-value|printf("error: [" DRM_NAME ":pid%d:%s] *ERROR* " fmt,		\ 	    DRM_CURRENTPID, __func__ , ## arg)
+value|printf("error: [" DRM_NAME ":pid%d:%s] *ERROR* " fmt,		\ 	    DRM_CURRENTPID, __func__ , ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -1536,10 +1535,9 @@ name|DRM_INFO
 parameter_list|(
 name|fmt
 parameter_list|,
-name|arg
 modifier|...
 parameter_list|)
-value|printf("info: [" DRM_NAME "] " fmt , ## arg)
+value|printf("info: [" DRM_NAME "] " fmt , ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -1549,10 +1547,9 @@ name|DRM_DEBUG
 parameter_list|(
 name|fmt
 parameter_list|,
-name|arg
 modifier|...
 parameter_list|)
-value|do {					\ 	if (drm_debug_flag)						\ 		printf("[" DRM_NAME ":pid%d:%s] " fmt, DRM_CURRENTPID,	\ 			__func__ , ## arg);				\ } while (0)
+value|do {					\ 	if (drm_debug_flag)						\ 		printf("[" DRM_NAME ":pid%d:%s] " fmt, DRM_CURRENTPID,	\ 			__func__ , ##__VA_ARGS__);			\ } while (0)
 end_define
 
 begin_typedef
