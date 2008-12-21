@@ -878,6 +878,9 @@ name|curthread
 decl_stmt|;
 name|long
 name|dummy
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|curthread
 operator|=
