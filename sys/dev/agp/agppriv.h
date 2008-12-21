@@ -46,7 +46,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\     printf("agp: " fmt, __VA_ARGS__);			\ } while (0)
+value|do {				\     printf("agp: " fmt, ##__VA_ARGS__);			\ } while (0)
 end_define
 
 begin_else
