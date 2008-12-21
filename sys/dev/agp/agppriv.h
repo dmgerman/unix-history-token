@@ -31,12 +31,6 @@ directive|include
 file|<dev/agp/agpvar.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|AGP_DEBUGxx
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -48,10 +42,11 @@ define|#
 directive|define
 name|AGP_DPF
 parameter_list|(
-name|x
+name|fmt
+parameter_list|,
 modifier|...
 parameter_list|)
-value|do {			\     printf("agp: ");				\     printf(##x);				\ } while (0)
+value|do {				\     printf("agp: " fmt, __VA_ARGS__);			\ } while (0)
 end_define
 
 begin_else
@@ -64,7 +59,8 @@ define|#
 directive|define
 name|AGP_DPF
 parameter_list|(
-name|x
+name|fmt
+parameter_list|,
 modifier|...
 parameter_list|)
 value|do {} while (0)
