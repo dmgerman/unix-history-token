@@ -2344,7 +2344,7 @@ literal|0
 argument_list|,
 operator|(
 literal|"vm_object_terminate: freeing busy page %p "
-literal|"p->busy = %d, p->flags %x\n"
+literal|"p->busy = %d, p->oflags %x\n"
 operator|,
 name|p
 operator|,
@@ -2354,7 +2354,7 @@ name|busy
 operator|,
 name|p
 operator|->
-name|flags
+name|oflags
 operator|)
 argument_list|)
 expr_stmt|;
