@@ -2062,11 +2062,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|coll
 operator|->
 name|co_options
 operator|&
 name|CO_TRUSTSTATUSFILE
+operator|)
 condition|)
 block|{
 name|path
