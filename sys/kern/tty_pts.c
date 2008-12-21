@@ -2550,6 +2550,12 @@ name|tp
 argument_list|)
 decl_stmt|;
 comment|/* Wake up any blocked readers/writers. */
+name|psc
+operator|->
+name|pts_flags
+operator||=
+name|PTS_FINISHED
+expr_stmt|;
 name|ptsdrv_outwakeup
 argument_list|(
 name|tp
@@ -2559,12 +2565,6 @@ name|ptsdrv_inwakeup
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
-name|psc
-operator|->
-name|pts_flags
-operator||=
-name|PTS_FINISHED
 expr_stmt|;
 block|}
 end_function
