@@ -327,13 +327,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|has_stopself
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|isjbus
 decl_stmt|;
 end_decl_stmt
@@ -392,16 +385,6 @@ name|func
 parameter_list|,
 name|u_long
 name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|sun4u_stopself
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -916,56 +899,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stop the calling CPU.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|sun4u_stopself
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-specifier|static
-struct|struct
-block|{
-name|cell_t
-name|name
-decl_stmt|;
-name|cell_t
-name|nargs
-decl_stmt|;
-name|cell_t
-name|nreturns
-decl_stmt|;
-block|}
-name|args
-init|=
-block|{
-operator|(
-name|cell_t
-operator|)
-name|SUNW_STOPSELF
-block|, 	}
-struct|;
-name|ofw_exit
-argument_list|(
-operator|&
-name|args
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"%s: failed."
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Fire up any non-boot processors.  */
 end_comment
 
@@ -1022,19 +955,6 @@ name|NULL
 argument_list|,
 name|MTX_SPIN
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|OF_test
-argument_list|(
-name|SUNW_STOPSELF
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|has_stopself
-operator|=
-literal|1
 expr_stmt|;
 name|intr_setup
 argument_list|(
@@ -2083,15 +2003,6 @@ name|cpumask
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|has_stopself
-operator|!=
-literal|0
-condition|)
-name|sun4u_stopself
-argument_list|()
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2452,9 +2363,11 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-literal|"%s: couldn't send IPI"
+literal|"%s: couldn't send IPI to module 0x%u"
 argument_list|,
 name|__func__
+argument_list|,
+name|mid
 argument_list|)
 expr_stmt|;
 block|}
@@ -2789,12 +2702,20 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+comment|/* 		 * On at least Fire V880 we may receive IDR_NACKs for 		 * CPUs we actually haven't tried to send an IPI to, 		 * but which apparently can be safely ignored. 		 */
+if|if
+condition|(
+name|cpus
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* 		 * Leave interrupts enabled for a bit before retrying 		 * in order to avoid deadlocks if the other CPUs are 		 * also trying to send IPIs. 		 */
 name|DELAY
 argument_list|(
 literal|2
 operator|*
-name|bnp
+name|mp_ncpus
 argument_list|)
 expr_stmt|;
 block|}
@@ -2825,9 +2746,13 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-literal|"%s: couldn't send IPI"
+literal|"%s: couldn't send IPI (cpus=0x%u ids=0x%lu)"
 argument_list|,
 name|__func__
+argument_list|,
+name|cpus
+argument_list|,
+name|ids
 argument_list|)
 expr_stmt|;
 block|}
