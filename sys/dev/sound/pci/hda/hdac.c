@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081219_0119"
+value|"20081223_0120"
 end_define
 
 begin_expr_stmt
@@ -2907,6 +2907,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_AD1884A
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x184a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1882
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1882)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1883
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1883)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1884
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1884)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1984A
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x194a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1984B
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x194b)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_AD1981HD
 value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1981)
 end_define
@@ -2935,6 +2977,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_AD1987
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1987)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_AD1988
 value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x1988)
 end_define
@@ -2944,6 +2993,20 @@ define|#
 directive|define
 name|HDA_CODEC_AD1988B
 value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x198b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1882A
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x882a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_AD1989B
+value|HDA_CODEC_CONSTRUCT(ANALOGDEVICES, 0x989b)
 end_define
 
 begin_define
@@ -3782,6 +3845,36 @@ literal|"Realtek ALC889"
 block|}
 block|,
 block|{
+name|HDA_CODEC_AD1882
+block|,
+literal|"Analog Devices AD1882"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1882A
+block|,
+literal|"Analog Devices AD1882A"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1883
+block|,
+literal|"Analog Devices AD1883"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1884
+block|,
+literal|"Analog Devices AD1884"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1884A
+block|,
+literal|"Analog Devices AD1884A"
+block|}
+block|,
+block|{
 name|HDA_CODEC_AD1981HD
 block|,
 literal|"Analog Devices AD1981HD"
@@ -3800,21 +3893,45 @@ literal|"Analog Devices AD1984"
 block|}
 block|,
 block|{
+name|HDA_CODEC_AD1984A
+block|,
+literal|"Analog Devices AD1984A"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1984B
+block|,
+literal|"Analog Devices AD1984B"
+block|}
+block|,
+block|{
 name|HDA_CODEC_AD1986A
 block|,
 literal|"Analog Devices AD1986A"
 block|}
 block|,
 block|{
+name|HDA_CODEC_AD1987
+block|,
+literal|"Analog Devices AD1987"
+block|}
+block|,
+block|{
 name|HDA_CODEC_AD1988
 block|,
-literal|"Analog Devices AD1988"
+literal|"Analog Devices AD1988A"
 block|}
 block|,
 block|{
 name|HDA_CODEC_AD1988B
 block|,
 literal|"Analog Devices AD1988B"
+block|}
+block|,
+block|{
+name|HDA_CODEC_AD1989B
+block|,
+literal|"Analog Devices AD1989B"
 block|}
 block|,
 block|{
