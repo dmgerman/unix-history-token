@@ -926,7 +926,7 @@ operator|!
 name|mac_mmap_revocation
 condition|)
 return|return;
-name|vm_map_lock_read
+name|vm_map_lock
 argument_list|(
 name|map
 argument_list|)
@@ -1203,11 +1203,6 @@ name|protection
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|vm_map_lock_upgrade
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 comment|/* 		 * This is the really simple case: if a map has more 		 * max_protection than is allowed, but it's not being 		 * actually used (that is, the current protection is still 		 * allowed), we can just wipe it out and do nothing more. 		 */
 if|if
 condition|(
@@ -1433,18 +1428,13 @@ name|vme
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_map_lock_downgrade
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_map_unlock_read
+name|vm_map_unlock
 argument_list|(
 name|map
 argument_list|)
