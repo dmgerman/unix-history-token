@@ -4493,6 +4493,12 @@ condition|)
 block|{
 name|MPASS
 argument_list|(
+name|vp
+operator|->
+name|v_dd
+operator|==
+name|NULL
+operator|||
 name|ncp
 operator|->
 name|nc_dvp
