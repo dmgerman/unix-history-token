@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp.c,v 1.6.18.3 2006/03/10 00:20:08 marka Exp $"
+literal|"$Id: irp.c,v 1.6.18.5 2008/02/28 05:49:37 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2034,8 +2034,9 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|todo
-operator|=
+operator|(
+name|void
+operator|)
 name|vsprintf
 argument_list|(
 name|buffer
@@ -2043,6 +2044,13 @@ argument_list|,
 name|fmt
 argument_list|,
 name|ap
+argument_list|)
+expr_stmt|;
+name|todo
+operator|=
+name|strlen
+argument_list|(
+name|buffer
 argument_list|)
 expr_stmt|;
 name|va_end

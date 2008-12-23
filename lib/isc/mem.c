@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: mem.c,v 1.116.18.18 2007/10/30 23:31:43 marka Exp $ */
+comment|/* $Id: mem.c,v 1.116.18.21 2008/02/07 23:45:56 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -743,7 +743,7 @@ parameter_list|,
 name|e
 parameter_list|)
 define|\
-value|do { \ 		if ((isc_mem_debugging& (ISC_MEM_DEBUGTRACE | \ 					  ISC_MEM_DEBUGRECORD)) != 0&& \ 		     b != NULL) \ 		         add_trace_entry(a, b, c, d, e); \ 	} while (0)
+value|do { \ 		if ((isc_mem_debugging& (ISC_MEM_DEBUGTRACE | \ 					  ISC_MEM_DEBUGRECORD)) != 0&& \ 		     b != NULL) \ 			 add_trace_entry(a, b, c, d, e); \ 	} while (0)
 end_define
 
 begin_define
@@ -1383,7 +1383,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-comment|/*  	 * round down to ALIGNMENT_SIZE 	 */
+comment|/* 	 * round down to ALIGNMENT_SIZE 	 */
 return|return
 operator|(
 name|size
@@ -4398,6 +4398,14 @@ operator|->
 name|freelists
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ctx
+operator|->
+name|basic_table
+operator|!=
+name|NULL
+condition|)
 call|(
 name|ctx
 operator|->
@@ -5282,12 +5290,6 @@ operator|->
 name|hi_water
 condition|)
 block|{
-name|ctx
-operator|->
-name|hi_called
-operator|=
-name|ISC_TRUE
-expr_stmt|;
 name|call_water
 operator|=
 name|ISC_TRUE
@@ -5616,12 +5618,6 @@ literal|0U
 operator|)
 condition|)
 block|{
-name|ctx
-operator|->
-name|hi_called
-operator|=
-name|ISC_FALSE
-expr_stmt|;
 if|if
 condition|(
 name|ctx
@@ -5660,6 +5656,74 @@ operator|->
 name|water_arg
 argument_list|,
 name|ISC_MEM_LOWATER
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|isc_mem_waterack
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+block|{
+name|REQUIRE
+argument_list|(
+name|VALID_CONTEXT
+argument_list|(
+name|ctx
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|MCTXLOCK
+argument_list|(
+name|ctx
+argument_list|,
+operator|&
+name|ctx
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|==
+name|ISC_MEM_LOWATER
+condition|)
+name|ctx
+operator|->
+name|hi_called
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flag
+operator|==
+name|ISC_MEM_HIWATER
+condition|)
+name|ctx
+operator|->
+name|hi_called
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+name|MCTXUNLOCK
+argument_list|(
+name|ctx
+argument_list|,
+operator|&
+name|ctx
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}

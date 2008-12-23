@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: socket.h,v 1.57.18.6.46.4 2008/07/23 23:16:43 marka Exp $ */
+comment|/* $Id: socket.h,v 1.57.18.15 2008/09/04 08:03:08 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -634,6 +634,36 @@ end_comment
 
 begin_function_decl
 name|isc_result_t
+name|isc_socket_open
+parameter_list|(
+name|isc_socket_t
+modifier|*
+name|sock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Open a new socket file descriptor of the given socket structure.  It simply  * opens a new descriptor; all of the other parameters including the socket  * type are inherited from the existing socket.  This function is provided to  * avoid overhead of destroying and creating sockets when many short-lived  * sockets are frequently opened and closed.  When the efficiency is not an  * issue, it should be safer to detach the unused socket and re-create a new  * one.  This optimization may not be available for some systems, in which  * case this function will return ISC_R_NOTIMPLEMENTED and must not be used.  *  * Requires:  *  * \li	there must be no other reference to this socket.  *  * \li	'socket' is a valid and previously closed by isc_socket_close()  *  * Returns:  *	Same as isc_socket_create().  * \li	ISC_R_NOTIMPLEMENTED  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_socket_close
+parameter_list|(
+name|isc_socket_t
+modifier|*
+name|sock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Close a socket file descriptor of the given socket structure.  This function  * is provided as an alternative to destroying an unused socket when overhead  * destroying/re-creating sockets can be significant, and is expected to be  * used with isc_socket_open().  This optimization may not be available for some  * systems, in which case this function will return ISC_R_NOTIMPLEMENTED and  * must not be used.  *  * Requires:  *  * \li	The socket must have a valid descriptor.  *  * \li	There must be no other reference to this socket.  *  * \li	There must be no pending I/O requests.  *  * Returns:  * \li	#ISC_R_NOTIMPLEMENTED  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
 name|isc_socket_bind
 parameter_list|(
 name|isc_socket_t
@@ -1085,8 +1115,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|isc_socketmgr_create2
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|isc_socketmgr_t
+modifier|*
+modifier|*
+name|managerp
+parameter_list|,
+name|unsigned
+name|int
+name|maxsocks
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Create a socket manager.  *  * Notes:  *  *\li	All memory will be allocated in memory context 'mctx'.  *  * Requires:  *  *\li	'mctx' is a valid memory context.  *  *\li	'managerp' points to a NULL isc_socketmgr_t.  *  * Ensures:  *  *\li	'*managerp' is a valid isc_socketmgr_t.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_UNEXPECTED  */
+comment|/*%<  * Create a socket manager.  If "maxsocks" is non-zero, it specifies the  * maximum number of sockets that the created manager should handle.  * isc_socketmgr_create() is equivalent of isc_socketmgr_create2() with  * "maxsocks" being zero.  *  * Notes:  *  *\li	All memory will be allocated in memory context 'mctx'.  *  * Requires:  *  *\li	'mctx' is a valid memory context.  *  *\li	'managerp' points to a NULL isc_socketmgr_t.  *  * Ensures:  *  *\li	'*managerp' is a valid isc_socketmgr_t.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_UNEXPECTED  *\li	#ISC_R_NOTIMPLEMENTED  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|isc_socketmgr_getmaxsockets
+parameter_list|(
+name|isc_socketmgr_t
+modifier|*
+name|manager
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|nsockp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Returns in "*nsockp" the maximum number of sockets this manager may open.  *  * Requires:  *  *\li	'*manager' is a valid isc_socketmgr_t.  *\li	'nsockp' is not NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOTIMPLEMENTED  */
 end_comment
 
 begin_function_decl

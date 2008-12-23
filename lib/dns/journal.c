@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: journal.c,v 1.86.18.12 2007/09/07 05:21:41 marka Exp $ */
+comment|/* $Id: journal.c,v 1.86.18.14 2008/09/25 04:01:36 tbox Exp $ */
 end_comment
 
 begin_include
@@ -128,7 +128,7 @@ file|<dns/soa.h>
 end_include
 
 begin_comment
-comment|/*! \file   * \brief Journalling.  *  * A journal file consists of  *  *   \li A fixed-size header of type journal_rawheader_t.  *  *   \li The index.  This is an unordered array of index entries  *     of type journal_rawpos_t giving the locations  *     of some arbitrary subset of the journal's addressable  *     transactions.  The index entries are used as hints to  *     speed up the process of locating a transaction with a given  *     serial number.  Unused index entries have an "offset"  *     field of zero.  The size of the index can vary between  *     journal files, but does not change during the lifetime  *     of a file.  The size can be zero.  *  *   \li The journal data.  This  consists of one or more transactions.  *     Each transaction begins with a transaction header of type  *     journal_rawxhdr_t.  The transaction header is followed by a  *     sequence of RRs, similar in structure to an IXFR difference  *     sequence (RFC1995).  That is, the pre-transaction SOA,  *     zero or more other deleted RRs, the post-transaction SOA,  *     and zero or more other added RRs.  Unlike in IXFR, each RR  *     is prefixed with a 32-bit length.  *  *     The journal data part grows as new transactions are  *     appended to the file.  Only those transactions  *     whose serial number is current-(2^31-1) to current  *     are considered "addressable" and may be pointed  *     to from the header or index.  They may be preceded  *     by old transactions that are no longer addressable,  *     and they may be followed by transactions that were  *     appended to the journal but never committed by updating  *     the "end" position in the header.  The latter will  *     be overwritten when new transactions are added.  */
+comment|/*! \file  * \brief Journalling.  *  * A journal file consists of  *  *   \li A fixed-size header of type journal_rawheader_t.  *  *   \li The index.  This is an unordered array of index entries  *     of type journal_rawpos_t giving the locations  *     of some arbitrary subset of the journal's addressable  *     transactions.  The index entries are used as hints to  *     speed up the process of locating a transaction with a given  *     serial number.  Unused index entries have an "offset"  *     field of zero.  The size of the index can vary between  *     journal files, but does not change during the lifetime  *     of a file.  The size can be zero.  *  *   \li The journal data.  This  consists of one or more transactions.  *     Each transaction begins with a transaction header of type  *     journal_rawxhdr_t.  The transaction header is followed by a  *     sequence of RRs, similar in structure to an IXFR difference  *     sequence (RFC1995).  That is, the pre-transaction SOA,  *     zero or more other deleted RRs, the post-transaction SOA,  *     and zero or more other added RRs.  Unlike in IXFR, each RR  *     is prefixed with a 32-bit length.  *  *     The journal data part grows as new transactions are  *     appended to the file.  Only those transactions  *     whose serial number is current-(2^31-1) to current  *     are considered "addressable" and may be pointed  *     to from the header or index.  They may be preceded  *     by old transactions that are no longer addressable,  *     and they may be followed by transactions that were  *     appended to the journal but never committed by updating  *     the "end" position in the header.  The latter will  *     be overwritten when new transactions are added.  */
 end_comment
 
 begin_comment
@@ -6238,8 +6238,6 @@ argument_list|(
 name|result
 argument_list|)
 argument_list|,
-name|j
-operator|->
 name|filename
 argument_list|)
 expr_stmt|;

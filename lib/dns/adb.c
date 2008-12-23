@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: adb.c,v 1.215.18.17 2007/09/11 02:23:26 marka Exp $ */
+comment|/* $Id: adb.c,v 1.215.18.24 2008/10/17 03:35:14 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*! \file   *  * \note  * In finds, if task == NULL, no events will be generated, and no events  * have been sent.  If task != NULL but taskaction == NULL, an event has been  * posted but not yet freed.  If neither are NULL, no event was posted.  *  */
+comment|/*! \file  *  * \note  * In finds, if task == NULL, no events will be generated, and no events  * have been sent.  If task != NULL but taskaction == NULL, an event has been  * posted but not yet freed.  If neither are NULL, no event was posted.  *  */
 end_comment
 
 begin_comment
@@ -270,7 +270,7 @@ value|ISC_MAGIC_VALID(x, DNS_ADBFETCH6_MAGIC)
 end_define
 
 begin_comment
-comment|/*!   * The number of buckets needs to be a prime (for good hashing).  *  * XXXRTH  How many buckets do we need?  */
+comment|/*!  * The number of buckets needs to be a prime (for good hashing).  *  * XXXRTH  How many buckets do we need?  */
 end_comment
 
 begin_define
@@ -479,6 +479,10 @@ name|isc_mutex_t
 name|reflock
 decl_stmt|;
 comment|/*%< Covers irefcnt, erefcnt */
+name|isc_mutex_t
+name|overmemlock
+decl_stmt|;
+comment|/*%< Covers overmem */
 name|isc_mem_t
 modifier|*
 name|mctx
@@ -2302,6 +2306,10 @@ name|unsigned
 name|int
 name|findoptions
 decl_stmt|;
+name|dns_adbnamehooklist_t
+modifier|*
+name|hookhead
+decl_stmt|;
 name|INSIST
 argument_list|(
 name|DNS_ADBNAME_VALID
@@ -2441,6 +2449,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|hookhead
+operator|=
+operator|&
+name|adbname
+operator|->
+name|v4
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2476,6 +2491,13 @@ name|in6a
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|hookhead
+operator|=
+operator|&
+name|adbname
+operator|->
+name|v6
 expr_stmt|;
 block|}
 name|INSIST
@@ -2603,9 +2625,8 @@ name|anh
 operator|=
 name|ISC_LIST_HEAD
 argument_list|(
-name|adbname
-operator|->
-name|v4
+operator|*
+name|hookhead
 argument_list|)
 init|;
 name|anh
@@ -2669,37 +2690,16 @@ name|nh
 operator|!=
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|rdtype
-operator|==
-name|dns_rdatatype_a
-condition|)
 name|ISC_LIST_APPEND
 argument_list|(
-name|adbname
-operator|->
-name|v4
+operator|*
+name|hookhead
 argument_list|,
 name|nh
 argument_list|,
 name|plink
 argument_list|)
 expr_stmt|;
-else|else
-name|ISC_LIST_APPEND
-argument_list|(
-name|adbname
-operator|->
-name|v6
-argument_list|,
-name|nh
-argument_list|,
-name|plink
-argument_list|)
-expr_stmt|;
-block|}
 name|nh
 operator|=
 name|NULL
@@ -8237,6 +8237,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|FIND_RETURNLAME
+argument_list|(
+name|find
+argument_list|)
+operator|&&
 name|entry_is_lame
 argument_list|(
 name|adb
@@ -8250,9 +8256,17 @@ argument_list|,
 name|now
 argument_list|)
 condition|)
+block|{
+name|find
+operator|->
+name|options
+operator||=
+name|DNS_ADBFIND_LAMEPRUNED
+expr_stmt|;
 goto|goto
 name|nextv6
 goto|;
+block|}
 name|addrinfo
 operator|=
 name|new_adbaddrinfo
@@ -8395,7 +8409,7 @@ name|adb
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Kill the timer, and then the ADB itself.  Note that this implies 	 * that this task was the one scheduled to get timer events.  If 	 * this is not true (and it is unfortunate there is no way to INSIST() 	 * this) badness will occur. 	 */
+comment|/* 	 * Wait for lock around check_exit() call to be released. 	 */
 name|LOCK
 argument_list|(
 operator|&
@@ -8404,6 +8418,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Kill the timer, and then the ADB itself.  Note that this implies 	 * that this task was the one scheduled to get timer events.  If 	 * this is not true (and it is unfortunate there is no way to INSIST() 	 * this) badness will occur. 	 */
 name|isc_timer_detach
 argument_list|(
 operator|&
@@ -9386,6 +9401,14 @@ operator|->
 name|mplock
 argument_list|)
 expr_stmt|;
+name|DESTROYLOCK
+argument_list|(
+operator|&
+name|adb
+operator|->
+name|overmemlock
+argument_list|)
+expr_stmt|;
 name|isc_mem_putanddetach
 argument_list|(
 operator|&
@@ -9732,6 +9755,25 @@ name|ISC_R_SUCCESS
 condition|)
 goto|goto
 name|fail0d
+goto|;
+name|result
+operator|=
+name|isc_mutex_init
+argument_list|(
+operator|&
+name|adb
+operator|->
+name|overmemlock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+goto|goto
+name|fail0e
 goto|;
 comment|/* 	 * Initialize the bucket locks for names and elements. 	 * May as well initialize the list heads, too. 	 */
 name|result
@@ -10259,6 +10301,16 @@ operator|->
 name|afmp
 argument_list|)
 expr_stmt|;
+name|DESTROYLOCK
+argument_list|(
+operator|&
+name|adb
+operator|->
+name|overmemlock
+argument_list|)
+expr_stmt|;
+name|fail0e
+label|:
 name|DESTROYLOCK
 argument_list|(
 operator|&
@@ -14574,11 +14626,20 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+else|else
+name|fetch
+operator|=
+name|NULL
+expr_stmt|;
 name|INSIST
 argument_list|(
 name|address_type
 operator|!=
 literal|0
+operator|&&
+name|fetch
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|dns_resolver_destroyfetch
@@ -16742,6 +16803,24 @@ else|:
 literal|"low"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We can't use adb->lock as there is potential for water 	 * to be called when adb->lock is held. 	 */
+name|LOCK
+argument_list|(
+operator|&
+name|adb
+operator|->
+name|overmemlock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|adb
+operator|->
+name|overmem
+operator|!=
+name|overmem
+condition|)
+block|{
 name|adb
 operator|->
 name|overmem
@@ -16783,6 +16862,24 @@ name|ISC_TRUE
 argument_list|)
 expr_stmt|;
 block|}
+name|isc_mem_waterack
+argument_list|(
+name|adb
+operator|->
+name|mctx
+argument_list|,
+name|mark
+argument_list|)
+expr_stmt|;
+block|}
+name|UNLOCK
+argument_list|(
+operator|&
+name|adb
+operator|->
+name|overmemlock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

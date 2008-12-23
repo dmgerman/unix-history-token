@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: client.c,v 1.219.18.28.10.2 2008/07/23 07:28:54 tbox Exp $ */
+comment|/* $Id: client.c,v 1.219.18.31 2008/05/22 23:46:03 tbox Exp $ */
 end_comment
 
 begin_include
@@ -411,7 +411,7 @@ value|ISC_MAGIC_VALID(m, MANAGER_MAGIC)
 end_define
 
 begin_comment
-comment|/*!   * Client object states.  Ordering is significant: higher-numbered  * states are generally "more active", meaning that the client can  * have more dynamically allocated data, outstanding events, etc.  * In the list below, any such properties listed for state N  * also apply to any state> N.  *  * To force the client into a less active state, set client->newstate  * to that state and call exit_check().  This will cause any  * activities defined for higher-numbered states to be aborted.  */
+comment|/*!  * Client object states.  Ordering is significant: higher-numbered  * states are generally "more active", meaning that the client can  * have more dynamically allocated data, outstanding events, etc.  * In the list below, any such properties listed for state N  * also apply to any state> N.  *  * To force the client into a less active state, set client->newstate  * to that state and call exit_check().  This will cause any  * activities defined for higher-numbered states to be aborted.  */
 end_comment
 
 begin_define
@@ -4545,7 +4545,7 @@ name|rcode
 operator|=
 name|rcode
 expr_stmt|;
-comment|/* 	 * FORMERR loop avoidance:  If we sent a FORMERR message 	 * with the same ID to the same client less than two 	 * seconds ago, assume that we are in an infinite error  	 * packet dialog with a server for some protocol whose  	 * error responses look enough like DNS queries to 	 * elicit a FORMERR response.  Drop a packet to break 	 * the loop. 	 */
+comment|/* 	 * FORMERR loop avoidance:  If we sent a FORMERR message 	 * with the same ID to the same client less than two 	 * seconds ago, assume that we are in an infinite error 	 * packet dialog with a server for some protocol whose 	 * error responses look enough like DNS queries to 	 * elicit a FORMERR response.  Drop a packet to break 	 * the loop. 	 */
 if|if
 condition|(
 name|rcode
@@ -6273,7 +6273,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* 	 * Determine the destination address.  If the receiving interface is 	 * bound to a specific address, we simply use it regardless of the 	 * address family.  All IPv4 queries should fall into this case. 	 * Otherwise, if this is a TCP query, get the address from the 	 * receiving socket (this needs a system call and can be heavy). 	 * For IPv6 UDP queries, we get this from the pktinfo structure (if 	 * supported). 	 * If all the attempts fail (this can happen due to memory shortage, 	 * etc), we regard this as an error for safety.  	 */
+comment|/* 	 * Determine the destination address.  If the receiving interface is 	 * bound to a specific address, we simply use it regardless of the 	 * address family.  All IPv4 queries should fall into this case. 	 * Otherwise, if this is a TCP query, get the address from the 	 * receiving socket (this needs a system call and can be heavy). 	 * For IPv6 UDP queries, we get this from the pktinfo structure (if 	 * supported). 	 * If all the attempts fail (this can happen due to memory shortage, 	 * etc), we regard this as an error for safety. 	 */
 if|if
 condition|(
 operator|(
@@ -7618,6 +7618,7 @@ index|]
 operator|=
 name|clientmctx
 expr_stmt|;
+block|}
 name|manager
 operator|->
 name|nextmctx
@@ -7637,7 +7638,6 @@ name|nextmctx
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|#
 directive|else
 name|clientmctx

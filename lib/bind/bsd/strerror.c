@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strerror.c,v 1.4.332.1 2005/04/27 05:00:46 sra Exp $"
+literal|"$Id: strerror.c,v 1.4.332.2 2008/02/18 04:04:06 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,11 +157,16 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_SYSERROR_LIST
 specifier|const
 name|char
 modifier|*
 name|ret
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|tmp
 index|[
@@ -180,6 +185,9 @@ if|if
 condition|(
 name|errnum
 operator|<
+operator|(
+name|u_int
+operator|)
 name|sys_nerr
 condition|)
 return|return

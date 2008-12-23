@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.257.18.40 2007/09/26 03:08:14 each Exp $ */
+comment|/* $Id: query.c,v 1.257.18.46 2008/10/15 22:33:01 marka Exp $ */
 end_comment
 
 begin_comment
@@ -11594,6 +11594,19 @@ operator|&
 name|nlabels
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Check for a pathological condition created when 			 * serving some malformed signed zones and bail out. 			 */
+if|if
+condition|(
+name|dns_name_countlabels
+argument_list|(
+name|name
+argument_list|)
+operator|==
+name|nlabels
+condition|)
+goto|goto
+name|cleanup
+goto|;
 if|if
 condition|(
 name|olabels
@@ -12416,6 +12429,9 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|nameservers
+parameter_list|,
+name|isc_boolean_t
+name|resuming
 parameter_list|)
 block|{
 name|isc_result_t
@@ -12432,6 +12448,11 @@ name|isc_sockaddr_t
 modifier|*
 name|peeraddr
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|resuming
+condition|)
 name|inc_stats
 argument_list|(
 name|client
@@ -14479,6 +14500,9 @@ name|dns_rdataset_t
 modifier|*
 name|noqname
 decl_stmt|;
+name|isc_boolean_t
+name|resuming
+decl_stmt|;
 name|CTRACE
 argument_list|(
 literal|"query_find"
@@ -14545,6 +14569,14 @@ name|options
 operator|=
 literal|0
 expr_stmt|;
+name|resuming
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|is_zone
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 if|if
 condition|(
 name|event
@@ -14558,10 +14590,6 @@ operator|=
 name|ISC_FALSE
 expr_stmt|;
 name|authoritative
-operator|=
-name|ISC_FALSE
-expr_stmt|;
-name|is_zone
 operator|=
 name|ISC_FALSE
 expr_stmt|;
@@ -14708,6 +14736,10 @@ operator|=
 name|event
 operator|->
 name|result
+expr_stmt|;
+name|resuming
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 goto|goto
 name|resume
@@ -15549,6 +15581,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|resuming
 argument_list|)
 expr_stmt|;
 if|if
@@ -16112,6 +16146,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|resuming
 argument_list|)
 expr_stmt|;
 else|else
@@ -16126,6 +16162,8 @@ argument_list|,
 name|fname
 argument_list|,
 name|rdataset
+argument_list|,
+name|resuming
 argument_list|)
 expr_stmt|;
 if|if
@@ -17797,6 +17835,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|resuming
 argument_list|)
 expr_stmt|;
 if|if
@@ -18680,6 +18720,9 @@ decl_stmt|;
 name|dns_rdatatype_t
 name|qtype
 decl_stmt|;
+name|isc_boolean_t
+name|want_ad
+decl_stmt|;
 name|CTRACE
 argument_list|(
 literal|"ns_query_start"
@@ -19188,6 +19231,28 @@ operator|&=
 operator|~
 name|NS_QUERYATTR_SECURE
 expr_stmt|;
+comment|/* 	 * Set 'want_ad' if the client has set AD in the query. 	 * This allows AD to be returned on queries without DO set. 	 */
+if|if
+condition|(
+operator|(
+name|message
+operator|->
+name|flags
+operator|&
+name|DNS_MESSAGEFLAG_AD
+operator|)
+operator|!=
+literal|0
+condition|)
+name|want_ad
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+else|else
+name|want_ad
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 comment|/* 	 * This is an ordinary query. 	 */
 name|result
 operator|=
@@ -19228,6 +19293,8 @@ name|WANTDNSSEC
 argument_list|(
 name|client
 argument_list|)
+operator|||
+name|want_ad
 condition|)
 name|message
 operator|->
