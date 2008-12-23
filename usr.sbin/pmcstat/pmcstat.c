@@ -5765,6 +5765,26 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
+comment|/* Close the pipe to self, if present. */
+if|if
+condition|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_HAS_PIPE
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|pipefd
+index|[
+name|READPIPEFD
+index|]
+argument_list|)
+expr_stmt|;
 name|runstate
 operator|=
 name|PMCSTAT_FINISHED
