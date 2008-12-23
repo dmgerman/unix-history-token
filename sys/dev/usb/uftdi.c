@@ -706,6 +706,12 @@ operator|->
 name|product
 operator|==
 name|USB_PRODUCT_FTDI_EMCU2H
+operator|||
+name|uaa
+operator|->
+name|product
+operator|==
+name|USB_PRODUCT_FTDI_MAXSTREAM
 operator|)
 condition|)
 return|return
@@ -1094,6 +1100,9 @@ name|USB_PRODUCT_FTDI_PCMSFU
 case|:
 case|case
 name|USB_PRODUCT_FTDI_EMCU2H
+case|:
+case|case
+name|USB_PRODUCT_FTDI_MAXSTREAM
 case|:
 name|sc
 operator|->
