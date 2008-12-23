@@ -22339,6 +22339,9 @@ condition|(
 name|sc
 operator|->
 name|tx_mbuf_map
+index|[
+name|i
+index|]
 operator|!=
 name|NULL
 condition|)
@@ -31229,13 +31232,6 @@ operator|)
 name|sc
 operator|->
 name|stat_Dot3StatsFCSErrors
-operator|+
-operator|(
-name|u_long
-operator|)
-name|sc
-operator|->
-name|stat_IfInFramesL2FilterDiscards
 operator|+
 operator|(
 name|u_long
