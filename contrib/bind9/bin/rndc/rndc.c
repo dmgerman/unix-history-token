@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: rndc.c,v 1.96.18.17.42.3 2008/07/23 23:16:43 marka Exp $ */
+comment|/* $Id: rndc.c,v 1.96.18.21 2008/10/15 03:07:19 marka Exp $ */
 end_comment
 
 begin_comment
@@ -191,6 +191,7 @@ value|10
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|progname
@@ -436,7 +437,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Usage: %s [-c config] [-s server] [-p port]\n\         [-k key-file ] [-y key] [-V] command\n\ \n\ command is one of the following:\n\ \n\   reload	Reload configuration file and zones.\n\   reload zone [class [view]]\n\ 		Reload a single zone.\n\   refresh zone [class [view]]\n\ 		Schedule immediate maintenance for a zone.\n\   retransfer zone [class [view]]\n\ 		Retransfer a single zone without checking serial number.\n\   freeze	Suspend updates to all dynamic zones.\n\   freeze zone [class [view]]\n\   		Suspend updates to a dynamic zone.\n\   thaw		Enable updates to all dynamic zones and reload them.\n\   thaw zone [class [view]]\n\   		Enable updates to a frozen dynamic zone and reload it.\n\   notify zone [class [view]]\n\ 		Resend NOTIFY messages for the zone.\n\   reconfig	Reload configuration file and new zones only.\n\   stats		Write server statistics to the statistics file.\n\   querylog	Toggle query logging.\n\   dumpdb [-all|-cache|-zones] [view ...]\n\ 		Dump cache(s) to the dump file (named_dump.db).\n\   stop		Save pending updates to master files and stop the server.\n\   stop -p	Save pending updates to master files and stop the server\n\ 		reporting process id.\n\   halt		Stop the server without saving pending updates.\n\   halt -p	Stop the server without saving pending updates reporting\n\ 		process id.\n\   trace		Increment debugging level by one.\n\   trace level	Change the debugging level.\n\   notrace	Set debugging level to 0.\n\   flush 	Flushes all of the server's caches.\n\   flush [view]	Flushes the server's cache for a view.\n\   flushname name [view]\n\ 		Flush the given name from the server's cache(s)\n\   status	Display status of the server.\n\   recursing	Dump the queries that are currently recursing (named.recursing)\n\   validation newstate [view]\n\ 		Enable / disable DNSSEC validation.\n\   *restart	Restart the server.\n\ \n\ * == not yet implemented\n\ Version: %s\n"
+literal|"\ Usage: %s [-c config] [-s server] [-p port]\n\ 	[-k key-file ] [-y key] [-V] command\n\ \n\ command is one of the following:\n\ \n\   reload	Reload configuration file and zones.\n\   reload zone [class [view]]\n\ 		Reload a single zone.\n\   refresh zone [class [view]]\n\ 		Schedule immediate maintenance for a zone.\n\   retransfer zone [class [view]]\n\ 		Retransfer a single zone without checking serial number.\n\   freeze	Suspend updates to all dynamic zones.\n\   freeze zone [class [view]]\n\ 		Suspend updates to a dynamic zone.\n\   thaw		Enable updates to all dynamic zones and reload them.\n\   thaw zone [class [view]]\n\ 		Enable updates to a frozen dynamic zone and reload it.\n\   notify zone [class [view]]\n\ 		Resend NOTIFY messages for the zone.\n\   reconfig	Reload configuration file and new zones only.\n\   stats		Write server statistics to the statistics file.\n\   querylog	Toggle query logging.\n\   dumpdb [-all|-cache|-zones] [view ...]\n\ 		Dump cache(s) to the dump file (named_dump.db).\n\   stop		Save pending updates to master files and stop the server.\n\   stop -p	Save pending updates to master files and stop the server\n\ 		reporting process id.\n\   halt		Stop the server without saving pending updates.\n\   halt -p	Stop the server without saving pending updates reporting\n\ 		process id.\n\   trace		Increment debugging level by one.\n\   trace level	Change the debugging level.\n\   notrace	Set debugging level to 0.\n\   flush 	Flushes all of the server's caches.\n\   flush [view]	Flushes the server's cache for a view.\n\   flushname name [view]\n\ 		Flush the given name from the server's cache(s)\n\   status	Display status of the server.\n\   recursing	Dump the queries that are currently recursing (named.recursing)\n\   validation newstate [view]\n\ 		Enable / disable DNSSEC validation.\n\   *restart	Restart the server.\n\ \n\ * == not yet implemented\n\ Version: %s\n"
 argument_list|,
 name|progname
 argument_list|,

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: msgs.h,v 1.9.18.2 2005/04/29 00:16:59 marka Exp $ */
+comment|/* $Id: msgs.h,v 1.9.18.4 2008/08/08 06:27:56 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -210,7 +210,7 @@ comment|/*@{*/
 end_comment
 
 begin_comment
-comment|/*!  * Message numbers    * are only required to be unique per message set,  * but are unique throughout the entire catalog to not be as confusing when  * debugging.  *  * The initial numbering was done by multiply by 100 the set number the  * message appears in then adding the incremental message number.  */
+comment|/*!  * Message numbers  * are only required to be unique per message set,  * but are unique throughout the entire catalog to not be as confusing when  * debugging.  *  * The initial numbering was done by multiply by 100 the set number the  * message appears in then adding the incremental message number.  */
 end_comment
 
 begin_define
@@ -1042,11 +1042,22 @@ begin_define
 define|#
 directive|define
 name|ISC_MSG_FILTER
-value|1420
+value|1421
 end_define
 
 begin_comment
 comment|/*%< setsockopt(SO_ACCEPTFILTER): %s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_MSG_TOOMANYHANDLES
+value|1422
+end_define
+
+begin_comment
+comment|/*%< %s: too many open WSA event handles: %s */
 end_comment
 
 begin_define

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: resource.h,v 1.5.18.2.52.2 2008/07/23 23:48:17 tbox Exp $ */
+comment|/* $Id: resource.h,v 1.5.18.4 2008/08/01 23:45:58 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -81,7 +81,7 @@ end_comment
 
 begin_function_decl
 name|isc_result_t
-name|isc_resource_curlimit
+name|isc_resource_getcurlimit
 parameter_list|(
 name|isc_resource_t
 name|resource
@@ -94,7 +94,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the current limit on a resource.  *  * Requires:  *	'resource' is a valid member of the isc_resource_t enumeration.  *  * Returns:  *	ISC_R_SUCCESS		Success.  *	ISC_R_NOTIMPLEMENTED	'resource' is not a type known by the OS.  */
+comment|/*%<  * Same as isc_resource_getlimit(), but returns the current (soft) limit.  *  * Returns:  *\li	#ISC_R_SUCCESS		Success.  *\li	#ISC_R_NOTIMPLEMENTED	'resource' is not a type known by the OS.  */
 end_comment
 
 begin_macro

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: app.c,v 1.50.18.2.50.1 2008/07/29 04:47:31 each Exp $ */
+comment|/* $Id: app.c,v 1.50.18.8 2008/10/15 03:41:17 marka Exp $ */
 end_comment
 
 begin_comment
@@ -68,6 +68,23 @@ include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EPOLL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/epoll.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -227,6 +244,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|isc_boolean_t
 name|want_shutdown
 init|=
@@ -240,6 +258,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|isc_boolean_t
 name|want_reload
 init|=
@@ -1115,7 +1134,9 @@ begin_function
 specifier|static
 name|isc_result_t
 name|evloop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|isc_result_t
 name|result
@@ -1141,15 +1162,9 @@ decl_stmt|,
 modifier|*
 name|tvp
 decl_stmt|;
-name|fd_set
+name|isc_socketwait_t
 modifier|*
-name|readfds
-decl_stmt|,
-modifier|*
-name|writefds
-decl_stmt|;
-name|int
-name|maxfd
+name|swait
 decl_stmt|;
 name|isc_boolean_t
 name|readytasks
@@ -1266,31 +1281,18 @@ name|tv
 expr_stmt|;
 block|}
 block|}
-name|isc__socketmgr_getfdsets
-argument_list|(
-operator|&
-name|readfds
-argument_list|,
-operator|&
-name|writefds
-argument_list|,
-operator|&
-name|maxfd
-argument_list|)
+name|swait
+operator|=
+name|NULL
 expr_stmt|;
 name|n
 operator|=
-name|select
+name|isc__socketmgr_waitevents
 argument_list|(
-name|maxfd
-argument_list|,
-name|readfds
-argument_list|,
-name|writefds
-argument_list|,
-name|NULL
-argument_list|,
 name|tvp
+argument_list|,
+operator|&
+name|swait
 argument_list|)
 expr_stmt|;
 if|if
@@ -1302,7 +1304,7 @@ operator|||
 name|call_timer_dispatch
 condition|)
 block|{
-comment|/* 			 * We call isc__timermgr_dispatch() only when 			 * necessary, in order to reduce overhead.  If the 			 * select() call indicates a timeout, we need the 			 * dispatch.  Even if not, if we set the 0-timeout  			 * for the select() call, we need to check the timer 			 * events.  In the 'readytasks' case, there may be no 			 * timeout event actually, but there is no other way 			 * to reduce the overhead. 			 * Note that we do not have to worry about the case 			 * where a new timer is inserted during the select() 			 * call, since this loop only runs in the non-thread 			 * mode. 			 */
+comment|/* 			 * We call isc__timermgr_dispatch() only when 			 * necessary, in order to reduce overhead.  If the 			 * select() call indicates a timeout, we need the 			 * dispatch.  Even if not, if we set the 0-timeout 			 * for the select() call, we need to check the timer 			 * events.  In the 'readytasks' case, there may be no 			 * timeout event actually, but there is no other way 			 * to reduce the overhead. 			 * Note that we do not have to worry about the case 			 * where a new timer is inserted during the select() 			 * call, since this loop only runs in the non-thread 			 * mode. 			 */
 name|isc__timermgr_dispatch
 argument_list|()
 expr_stmt|;
@@ -1318,11 +1320,7 @@ name|void
 operator|)
 name|isc__socketmgr_dispatch
 argument_list|(
-name|readfds
-argument_list|,
-name|writefds
-argument_list|,
-name|maxfd
+name|swait
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1556,9 +1554,6 @@ index|[
 name|ISC_STRERRORSIZE
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
 ifdef|#
 directive|ifdef
 name|HAVE_SIGWAIT
@@ -1567,6 +1562,9 @@ name|sig
 decl_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* ISC_PLATFORM_USETHREADS */
 ifdef|#
 directive|ifdef
 name|HAVE_LINUXTHREADS
