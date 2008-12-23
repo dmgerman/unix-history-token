@@ -1787,7 +1787,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXP_FCTRL_USB
+name|EXP_FCTRL_USB_DEVICE
 value|(1<<1)
 end_define
 
@@ -1861,12 +1861,20 @@ name|EXP_FCTRL_NPEA
 value|(1<<11)
 end_define
 
+begin_comment
+comment|/* reset */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EXP_FCTRL_NPEB
 value|(1<<12)
 end_define
+
+begin_comment
+comment|/* reset */
+end_comment
 
 begin_define
 define|#
@@ -1875,6 +1883,10 @@ name|EXP_FCTRL_NPEC
 value|(1<<13)
 end_define
 
+begin_comment
+comment|/* reset */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1882,9 +1894,85 @@ name|EXP_FCTRL_PCI
 value|(1<<14)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_ECC_TIMESYNC
+value|(1<<15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_UTOPIA_PHY
+value|(3<<16)
+end_define
+
 begin_comment
-comment|/* XXX more stuff we don't care about */
+comment|/* PHY limit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_USB_HOST
+value|(1<<18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_NPEA_ETH
+value|(1<<19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_NPEB_ETH
+value|(1<<20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_RSA
+value|(1<<21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_MAXFREQ
+value|(3<<22)
+end_define
+
+begin_comment
+comment|/* XScale frequency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_RESVD
+value|(0xff<<24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_IXP46X_ONLY
+define|\
+value|(EXP_FCTRL_ECC_TIMESYNC | EXP_FCTRL_USB_HOST | EXP_FCTRL_NPEA_ETH | \ 	 EXP_FCTRL_NPEB_ETH | EXP_FCTRL_RSA | EXP_FCTRL_MAXFREQ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXP_FCTRL_BITS
+define|\
+value|"\20\1RCOMP\2USB\3HASH\4AES\5DES\6HDLC\7AAL\10HSS\11UTOPIA\12ETH0" \ 	"\13ETH1\17PCI\20ECC\23USB_HOST\24NPEA_ETH\25NPEB_ETH\26RSA"
+end_define
 
 begin_comment
 comment|/*  * PCI  */
