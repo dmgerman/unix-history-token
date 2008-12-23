@@ -1701,7 +1701,12 @@ name|bus
 operator|->
 name|bus_mtx
 argument_list|,
-literal|"USB bus lock"
+name|device_get_nameunit
+argument_list|(
+name|bus
+operator|->
+name|parent
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,

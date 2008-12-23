@@ -106,6 +106,9 @@ name|usb2_xfer_queue
 name|intr_q
 decl_stmt|;
 name|device_t
+name|parent
+decl_stmt|;
+name|device_t
 name|bdev
 decl_stmt|;
 comment|/* filled by HC driver */

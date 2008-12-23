@@ -658,6 +658,14 @@ operator|)
 return|;
 block|}
 comment|/* get all DMA memory */
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|parent
+operator|=
+name|self
+expr_stmt|;
 if|if
 condition|(
 name|usb2_bus_mem_alloc_all

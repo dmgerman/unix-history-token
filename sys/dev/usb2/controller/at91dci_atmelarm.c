@@ -502,6 +502,16 @@ operator|=
 name|sc
 expr_stmt|;
 comment|/* get all DMA memory */
+name|sc
+operator|->
+name|sc_dci
+operator|.
+name|sc_bus
+operator|.
+name|parent
+operator|=
+name|dev
+expr_stmt|;
 if|if
 condition|(
 name|usb2_bus_mem_alloc_all
