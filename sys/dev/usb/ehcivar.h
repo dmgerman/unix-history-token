@@ -435,6 +435,28 @@ begin_comment
 comment|/* big-endian byte order descriptors */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EHCI_SCFLG_BIGEMMIO
+value|0x0040
+end_define
+
+begin_comment
+comment|/* big-endian byte order MMIO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_SCFLG_TT
+value|0x0080
+end_define
+
+begin_comment
+comment|/* transaction translator present */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1039,6 +1061,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|usbd_status
+name|ehci_reset
+parameter_list|(
+name|ehci_softc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|usbd_status
