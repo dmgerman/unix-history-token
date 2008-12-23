@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ipprotosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netipsec/ah_var.h>
 end_include
 
