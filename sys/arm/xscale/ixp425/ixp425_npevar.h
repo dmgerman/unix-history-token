@@ -375,14 +375,6 @@ parameter_list|(
 name|struct
 name|ixpnpe_softc
 modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|imageName
-parameter_list|,
-name|uint32_t
-name|imageId
 parameter_list|)
 function_decl|;
 end_function_decl
