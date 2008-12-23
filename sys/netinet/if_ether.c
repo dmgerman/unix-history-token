@@ -3845,6 +3845,7 @@ argument_list|)
 operator|!=
 name|INADDR_ANY
 condition|)
+block|{
 name|arprequest
 argument_list|(
 name|ifp
@@ -3871,7 +3872,7 @@ name|ifp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * interface address is considered static entry 	 * because the output of the arp utility shows 	 * that L2 entry as permanent 	 */
+comment|/*  		 * interface address is considered static entry 		 * because the output of the arp utility shows 		 * that L2 entry as permanent 		 */
 name|IF_AFDATA_LOCK
 argument_list|(
 name|ifp
@@ -3930,6 +3931,7 @@ argument_list|(
 name|lle
 argument_list|)
 expr_stmt|;
+block|}
 name|ifa
 operator|->
 name|ifa_rtrequest
