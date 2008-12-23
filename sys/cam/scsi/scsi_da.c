@@ -1384,6 +1384,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Storcase (Kingston) InfoStation IFS FC2/SATA-R 201A 		 * PR: 129858 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"IFS"
+block|,
+literal|"FC2/SATA-R*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * Samsung YP-U3 mp3-player 		 * PR: 125398 		 */
 block|{
 name|T_DIRECT
