@@ -4070,12 +4070,6 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|vdrop
-argument_list|(
-operator|*
-name|vp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|VOP_VPTOCNP
@@ -4097,6 +4091,12 @@ operator|*
 name|vp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vdrop
+argument_list|(
+operator|*
+name|vp
 argument_list|)
 expr_stmt|;
 name|VFS_UNLOCK_GIANT
