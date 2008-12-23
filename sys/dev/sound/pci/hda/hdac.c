@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081223_0120"
+value|"20081223_0121"
 end_define
 
 begin_expr_stmt
@@ -3478,7 +3478,7 @@ value|HDA_CODEC_CONSTRUCT(AGERE, 0xffff)
 end_define
 
 begin_comment
-comment|/*  * Conexant  *  * Ok, the truth is, I don't have any idea at all whether  * it is "Venice" or "Waikiki" or other unnamed CXyadayada. The only  * place that tell me it is "Venice" is from its Windows driver INF.  *  *  Venice - CX?????  * Waikiki - CX20551-22  */
+comment|/* Conexant */
 end_comment
 
 begin_define
@@ -3491,15 +3491,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_CXVENICE
+name|HDA_CODEC_CX20549
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5045)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_CXWAIKIKI
+name|HDA_CODEC_CX20551
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5047)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20561
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5051)
 end_define
 
 begin_define
@@ -4247,15 +4254,21 @@ literal|"IDT 92HD83C1X"
 block|}
 block|,
 block|{
-name|HDA_CODEC_CXVENICE
+name|HDA_CODEC_CX20549
 block|,
-literal|"Conexant Venice"
+literal|"Conexant CX20549 (Venice)"
 block|}
 block|,
 block|{
-name|HDA_CODEC_CXWAIKIKI
+name|HDA_CODEC_CX20551
 block|,
-literal|"Conexant Waikiki"
+literal|"Conexant CX20551 (Waikiki)"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20561
+block|,
+literal|"Conexant CX20561 (Hermosa)"
 block|}
 block|,
 block|{
@@ -11244,7 +11257,7 @@ if|if
 condition|(
 name|id
 operator|==
-name|HDA_CODEC_CXVENICE
+name|HDA_CODEC_CX20549
 operator|&&
 name|sc
 operator|->
@@ -11320,7 +11333,7 @@ if|if
 condition|(
 name|id
 operator|==
-name|HDA_CODEC_CXWAIKIKI
+name|HDA_CODEC_CX20551
 operator|&&
 name|sc
 operator|->
@@ -22900,7 +22913,7 @@ block|,
 block|{
 name|HDA_MATCH_ALL
 block|,
-name|HDA_CODEC_CXVENICE
+name|HDA_CODEC_CX20549
 block|,
 literal|0
 block|,
