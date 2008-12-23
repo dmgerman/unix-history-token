@@ -936,6 +936,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_IXP425
+value|0x690541c0
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_IXP425_533
 value|0x690541c0
 end_define
@@ -959,6 +966,13 @@ define|#
 directive|define
 name|CPU_ID_IXP435
 value|0x69054040
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_IXP465
+value|0x69054200
 end_define
 
 begin_comment
