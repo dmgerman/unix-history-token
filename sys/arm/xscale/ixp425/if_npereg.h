@@ -73,17 +73,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|NPE_PORTS_MAX
-value|2
-end_define
-
-begin_comment
-comment|/* logical ports */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NPE_FRAME_SIZE_DEFAULT
 value|1536
 end_define
