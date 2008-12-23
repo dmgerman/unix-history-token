@@ -2402,12 +2402,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3445,7 +3439,7 @@ argument_list|,
 operator|&
 name|Giant
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 name|err
@@ -3698,7 +3692,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* will unlock mutex */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

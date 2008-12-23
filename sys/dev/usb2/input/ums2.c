@@ -601,14 +601,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1903,7 +1895,7 @@ name|sc
 operator|->
 name|sc_mtx
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/*          * Force the report (non-boot) protocol.          *          * Mice without boot protocol support may choose not to implement          * Set_Protocol at all; Ignore any error.          */

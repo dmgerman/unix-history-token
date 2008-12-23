@@ -3692,7 +3692,7 @@ name|bus
 operator|->
 name|bus_mtx
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -7261,15 +7261,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|USB_BUS_UNLOCK
-argument_list|(
-name|xfer
-operator|->
-name|udev
-operator|->
-name|bus
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -7676,15 +7667,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|USB_BUS_UNLOCK
-argument_list|(
-name|xfer
-operator|->
-name|udev
-operator|->
-name|bus
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -9732,25 +9714,13 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/* the callback should drop the mutex */
 block|}
-else|else
-block|{
+block|}
 name|mtx_unlock
 argument_list|(
 name|mtx
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|mtx_unlock
-argument_list|(
-name|mtx
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 

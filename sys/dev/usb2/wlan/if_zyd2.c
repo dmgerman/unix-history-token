@@ -6157,7 +6157,7 @@ name|sc
 operator|->
 name|sc_mtx
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Endpoint 1 = Bulk out (512b @ high speed / 64b @ full speed) 	 * Endpoint 2 = Bulk in  (512b @ high speed / 64b @ full speed) 	 * Endpoint 3 = Intr in (64b) 	 * Endpoint 4 = Intr out @ high speed / bulk out @ full speed (64b) 	 */
@@ -6285,10 +6285,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* start watchdog (will exit mutex) */
 name|zyd_watchdog
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -14528,14 +14535,6 @@ operator|&
 name|zyd_watchdog
 argument_list|,
 name|sc
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}

@@ -2193,7 +2193,7 @@ name|sc
 operator|->
 name|sc_mtx
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 name|iface_index
@@ -2314,10 +2314,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* start watchdog (will exit mutex) */
 name|kue_watchdog
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -4130,14 +4137,6 @@ operator|&
 name|kue_watchdog
 argument_list|,
 name|sc
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}

@@ -2604,7 +2604,7 @@ name|sc
 operator|->
 name|sc_mtx
 argument_list|,
-name|CALLOUT_RETURNUNLOCKED
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* search through all the descriptors looking for bidir mode */
@@ -2984,7 +2984,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* will unlock mutex */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3184,14 +3191,6 @@ operator|&
 name|ulpt_watchdog
 argument_list|,
 name|sc
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
 argument_list|)
 expr_stmt|;
 block|}
