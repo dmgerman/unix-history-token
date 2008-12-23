@@ -268,6 +268,38 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XENBUS_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+value|printf
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|kvec
@@ -580,6 +612,9 @@ name|i
 decl_stmt|,
 name|err
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XENBUS_DEBUG
 name|enum
 name|xsd_sockmsg_type
 name|itype
@@ -587,7 +622,9 @@ init|=
 operator|*
 name|type
 decl_stmt|;
-name|printf
+endif|#
+directive|endif
+name|DPRINTF
 argument_list|(
 literal|"read_reply "
 argument_list|)
@@ -658,7 +695,7 @@ name|reply_list
 argument_list|)
 condition|)
 block|{
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"giving up and returning an error type=%d\n"
 argument_list|,
@@ -767,7 +804,7 @@ operator|.
 name|reply_lock
 argument_list|)
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"itype=%d htype=%d "
 argument_list|,
@@ -821,7 +858,7 @@ if|if
 condition|(
 name|len
 condition|)
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"len=%d\n"
 argument_list|,
@@ -830,7 +867,7 @@ name|len
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"len=NULL\n"
 argument_list|)
@@ -1118,7 +1155,7 @@ index|]
 operator|.
 name|iov_len
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"xs_talkv "
 argument_list|)
@@ -1157,7 +1194,7 @@ operator|.
 name|request_mutex
 argument_list|)
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"xs_talkv failed %d\n"
 argument_list|,
@@ -1218,7 +1255,7 @@ operator|.
 name|request_mutex
 argument_list|)
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"xs_talkv failed %d\n"
 argument_list|,
@@ -1344,7 +1381,7 @@ argument_list|,
 name|wmsg
 argument_list|)
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"handling %p ..."
 argument_list|,
@@ -1400,7 +1437,7 @@ operator|.
 name|vec_size
 argument_list|)
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"... %p done\n"
 argument_list|,
@@ -1485,7 +1522,7 @@ name|struct
 name|kvec
 name|iovec
 decl_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"xs_single %s "
 argument_list|,
@@ -2147,7 +2184,7 @@ operator|*
 operator|)
 name|path
 return|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"xs_read "
 argument_list|)
@@ -2292,7 +2329,7 @@ argument_list|(
 name|string
 argument_list|)
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"xenbus_write dir=%s val=%s "
 argument_list|,
@@ -2653,7 +2690,7 @@ argument_list|,
 literal|"T"
 argument_list|)
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"xenbus_transaction_end "
 argument_list|)
@@ -2995,7 +3032,7 @@ control|)
 name|HYPERVISOR_yield
 argument_list|()
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"gather "
 argument_list|)
@@ -3087,7 +3124,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|DPRINTF
 argument_list|(
 literal|" %s "
 argument_list|,
@@ -3140,7 +3177,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4380,7 +4417,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"event=%d "
 argument_list|,
@@ -4442,7 +4479,7 @@ name|type
 operator|==
 name|XS_WATCH_EVENT
 condition|)
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
