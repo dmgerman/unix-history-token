@@ -11023,7 +11023,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"HTT\">HTT group</flag>"
+literal|"<flag name=\"HTT\">HTT group</flag>\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11042,7 +11042,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"THREAD\">SMT group</flag>"
+literal|"<flag name=\"THREAD\">SMT group</flag>\n"
 argument_list|)
 expr_stmt|;
 block|}
