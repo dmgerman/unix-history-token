@@ -808,9 +808,6 @@ name|int
 name|iovlen
 decl_stmt|;
 name|int
-name|fflags
-decl_stmt|;
-name|int
 name|cylno
 decl_stmt|;
 name|ino_t
@@ -1479,12 +1476,6 @@ operator|->
 name|f_mntonname
 argument_list|)
 expr_stmt|;
-name|fflags
-operator|=
-name|mntp
-operator|->
-name|f_flags
-expr_stmt|;
 name|build_iovec
 argument_list|(
 operator|&
@@ -1596,7 +1587,9 @@ name|iov
 argument_list|,
 name|iovlen
 argument_list|,
-name|fflags
+name|mntp
+operator|->
+name|f_flags
 argument_list|)
 operator|<
 literal|0
@@ -2435,9 +2428,6 @@ decl_stmt|;
 name|int
 name|iovlen
 decl_stmt|;
-name|int
-name|fflags
-decl_stmt|;
 name|char
 name|errmsg
 index|[
@@ -2469,12 +2459,6 @@ literal|0
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-name|fflags
-operator|=
-name|mntp
-operator|->
-name|f_flags
 expr_stmt|;
 comment|/* 	 * We modified a mounted file system.  Do a mount update on 	 * it unless it is read-write, so we can continue using it 	 * as safely as possible. 	 */
 if|if
@@ -2615,7 +2599,9 @@ name|iov
 argument_list|,
 name|iovlen
 argument_list|,
-name|fflags
+name|mntp
+operator|->
+name|f_flags
 argument_list|)
 operator|==
 literal|0
