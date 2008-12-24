@@ -2678,6 +2678,11 @@ name|lladdrlen
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|checklink
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -3311,8 +3316,9 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * This means a router's state has changed from 			 * non-reachable to probably reachable, and might 			 * affect the status of associated prefixes.. 			 */
-name|pfxlist_onlink_check
-argument_list|()
+name|checklink
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -3772,6 +3778,13 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|checklink
+condition|)
+name|pfxlist_onlink_check
+argument_list|()
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
