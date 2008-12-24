@@ -694,6 +694,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|lle
 operator|->
 name|la_flags
@@ -708,10 +709,9 @@ name|lle
 operator|->
 name|la_expire
 operator|)
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 operator|!
 name|callout_pending
 argument_list|(
@@ -728,6 +728,7 @@ name|lle
 operator|->
 name|la_timer
 argument_list|)
+operator|)
 condition|)
 operator|(
 name|void
@@ -737,7 +738,6 @@ argument_list|(
 name|lle
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* 		 * Still valid, just drop our reference 		 */
