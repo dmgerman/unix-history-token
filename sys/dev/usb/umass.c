@@ -563,6 +563,7 @@ name|CBWCDBLENGTH
 index|]
 decl_stmt|;
 block|}
+name|__packed
 name|umass_bbb_cbw_t
 typedef|;
 end_typedef
@@ -619,6 +620,7 @@ directive|define
 name|CSWSTATUS_PHASE
 value|0x2
 block|}
+name|__packed
 name|umass_bbb_csw_t
 typedef|;
 end_typedef
