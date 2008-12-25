@@ -1648,6 +1648,19 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|RTF_REJECT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Choose one of blackhole or reject, not both.\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|flags
 operator||=
 name|RTF_BLACKHOLE
@@ -1671,6 +1684,19 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|RTF_BLACKHOLE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Choose one of blackhole or reject, not both.\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|flags
 operator||=
 name|RTF_REJECT
@@ -3321,9 +3347,9 @@ literal|"       arp -d hostname [pub]"
 argument_list|,
 literal|"       arp -d [-i interface] -a"
 argument_list|,
-literal|"       arp -s hostname ether_addr [temp] [reject] [blackhole] [pub [only]]"
+literal|"       arp -s hostname ether_addr [temp] [reject | blackhole] [pub [only]]"
 argument_list|,
-literal|"       arp -S hostname ether_addr [temp] [reject] [blackhole] [pub [only]]"
+literal|"       arp -S hostname ether_addr [temp] [reject | blackhole] [pub [only]]"
 argument_list|,
 literal|"       arp -f filename"
 argument_list|)
