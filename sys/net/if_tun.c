@@ -307,6 +307,10 @@ name|TUN_IFHEAD
 value|0x0100
 define|#
 directive|define
+name|TUN_CLOSED
+value|0x0200
+define|#
+directive|define
 name|TUN_READY
 value|(TUN_OPEN | TUN_INITED)
 comment|/* 	 * XXXRW: tun_pid is used to exclusively lock /dev/tun.  Is this 	 * actually needed?  Can we just return EBUSY if already open? 	 * Problem is that this involved inherent races when a tun device 	 * is handed off from one process to another, as opposed to just 	 * being slightly stale informationally. 	 */
@@ -1296,10 +1300,14 @@ name|tp
 operator|->
 name|tun_flags
 operator|&
+operator|(
 name|TUN_OPEN
+operator||
+name|TUN_CLOSED
+operator|)
 operator|)
 operator|!=
-literal|0
+name|TUN_CLOSED
 condition|)
 name|cv_wait_unlock
 argument_list|(
@@ -1308,6 +1316,15 @@ name|tp
 operator|->
 name|tun_cv
 argument_list|,
+operator|&
+name|tp
+operator|->
+name|tun_mtx
+argument_list|)
+expr_stmt|;
+else|else
+name|mtx_unlock
+argument_list|(
 operator|&
 name|tp
 operator|->
@@ -2560,6 +2577,12 @@ name|ifp
 argument_list|,
 literal|"closed\n"
 argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|tun_flags
+operator||=
+name|TUN_CLOSED
 expr_stmt|;
 name|cv_broadcast
 argument_list|(
