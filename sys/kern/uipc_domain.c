@@ -386,6 +386,13 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Protocol switch methods fall into three categories: mandatory, 	 * mandatory but protosw_init() provides a default, and optional. 	 * 	 * For true protocols (i.e., pru_attach != NULL), KASSERT truly 	 * mandatory methods with no defaults, and initialize defaults for 	 * other mandatory methods if the protocol hasn't defined an 	 * implementation (NULL function pointer). 	 */
+if|#
+directive|if
+literal|0
+block|if (pu->pru_attach != NULL) { 		KASSERT(pu->pru_abort != NULL, 		    ("protosw_init: %ssw[%d] pru_abort NULL", 		    pr->pr_domain->dom_name, 		    (int)(pr - pr->pr_domain->dom_protosw))); 		KASSERT(pu->pru_send != NULL, 		    ("protosw_init: %ssw[%d] pru_send NULL", 		    pr->pr_domain->dom_name, 		    (int)(pr - pr->pr_domain->dom_protosw))); 	}
+endif|#
+directive|endif
 define|#
 directive|define
 name|DEFAULT
