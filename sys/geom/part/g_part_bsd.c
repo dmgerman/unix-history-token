@@ -1899,11 +1899,24 @@ name|gpt_heads
 condition|)
 name|printf
 argument_list|(
-literal|"GEOM: %s: geometry does not match label.\n"
+literal|"GEOM: %s: geometry does not match label"
+literal|" (%uh,%us != %uh,%us).\n"
 argument_list|,
 name|pp
 operator|->
 name|name
+argument_list|,
+name|heads
+argument_list|,
+name|sectors
+argument_list|,
+name|basetable
+operator|->
+name|gpt_heads
+argument_list|,
+name|basetable
+operator|->
+name|gpt_sectors
 argument_list|)
 expr_stmt|;
 name|chs
