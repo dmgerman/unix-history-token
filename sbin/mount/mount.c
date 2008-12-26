@@ -2510,6 +2510,10 @@ modifier|*
 name|mntopts
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -2522,8 +2526,6 @@ name|statfs
 name|sf
 decl_stmt|;
 name|int
-name|argc
-decl_stmt|,
 name|i
 decl_stmt|,
 name|ret
