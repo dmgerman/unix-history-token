@@ -2396,6 +2396,12 @@ operator|=
 name|SIN_PROXY
 expr_stmt|;
 block|}
+name|rtm
+operator|->
+name|rtm_flags
+operator||=
+name|RTF_LLDATA
+expr_stmt|;
 if|if
 condition|(
 name|rtmsg
@@ -3596,6 +3602,8 @@ operator|(
 name|RTF_HOST
 operator||
 name|RTF_STATIC
+operator||
+name|RTF_LLDATA
 operator|)
 expr_stmt|;
 name|dst

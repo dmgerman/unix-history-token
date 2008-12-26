@@ -2577,6 +2577,12 @@ argument_list|,
 name|sin_m
 argument_list|)
 expr_stmt|;
+name|rtm
+operator|->
+name|rtm_flags
+operator||=
+name|RTF_LLDATA
+expr_stmt|;
 if|if
 condition|(
 name|rtmsg
@@ -4328,6 +4334,8 @@ operator|(
 name|RTF_HOST
 operator||
 name|RTF_STATIC
+operator||
+name|RTF_LLDATA
 operator|)
 expr_stmt|;
 if|#

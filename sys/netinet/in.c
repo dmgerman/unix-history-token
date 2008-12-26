@@ -6006,7 +6006,11 @@ name|rtm
 operator|.
 name|rtm_flags
 operator||=
+operator|(
 name|RTF_HOST
+operator||
+name|RTF_LLDATA
+operator|)
 expr_stmt|;
 if|if
 condition|(

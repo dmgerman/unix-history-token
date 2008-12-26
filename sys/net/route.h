@@ -575,6 +575,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RTF_LLDATA
+value|0x400
+end_define
+
+begin_comment
+comment|/* used by apps to add/del L2 entries */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RTF_STATIC
 value|0x800
 end_define
