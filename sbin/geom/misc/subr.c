@@ -942,7 +942,7 @@ name|open
 argument_list|(
 name|path
 argument_list|,
-name|O_RDWR
+name|O_WRONLY
 argument_list|)
 expr_stmt|;
 if|if
