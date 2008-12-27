@@ -646,6 +646,33 @@ specifier|const
 name|char
 modifier|*
 specifier|const
+name|vm_guest_sysctl_names
+index|[]
+init|=
+block|{
+literal|"none"
+block|,
+literal|"generic"
+block|,
+literal|"xen"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XEN
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
 name|vm_bnames
 index|[]
 init|=
@@ -686,27 +713,6 @@ comment|/* Sun xVM VirtualBox */
 literal|"Parallels Virtual Platform"
 block|,
 comment|/* Parallels VM */
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|vm_guest_sysctl_names
-index|[]
-init|=
-block|{
-literal|"none"
-block|,
-literal|"generic"
-block|,
-literal|"xen"
-block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -863,6 +869,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Boot time overrides that are not scaled against main memory  */
