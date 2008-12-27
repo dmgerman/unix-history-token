@@ -4931,6 +4931,9 @@ name|int
 name|type
 decl_stmt|;
 block|{
+name|device_t
+name|dev
+decl_stmt|;
 name|struct
 name|ndis_softc
 modifier|*
@@ -4942,9 +4945,16 @@ decl_stmt|;
 name|ndis_pnpevent_handler
 name|pnpeventfunc
 decl_stmt|;
-name|sc
+name|dev
 operator|=
 name|arg
+expr_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|arg
+argument_list|)
 expr_stmt|;
 name|NDIS_LOCK
 argument_list|(
