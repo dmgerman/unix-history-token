@@ -2262,6 +2262,30 @@ literal|0
 block|, 	}
 block|,
 block|{
+literal|0x1415
+block|,
+literal|0x9538
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Oxford Semiconductor OX16PCI958 UARTs"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|10
+block|,
+name|PUC_PORT_8S
+block|,
+literal|0x18
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
 literal|0x14d2
 block|,
 literal|0x8010
