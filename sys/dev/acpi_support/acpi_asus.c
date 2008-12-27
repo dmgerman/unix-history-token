@@ -4522,7 +4522,7 @@ decl_stmt|;
 name|ACPI_OBJECT
 name|acpiarg
 index|[
-literal|0
+literal|1
 index|]
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
