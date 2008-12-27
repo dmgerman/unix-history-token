@@ -1174,7 +1174,6 @@ operator|,
 expr|struct
 name|inpcb
 operator|*
-name|pcb
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1200,7 +1199,6 @@ operator|,
 expr|struct
 name|inpcb
 operator|*
-name|pcb
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2695,7 +2693,7 @@ parameter_list|,
 name|struct
 name|inpcb
 modifier|*
-name|pcb
+name|inp
 parameter_list|)
 block|{
 name|int
@@ -2703,18 +2701,18 @@ name|error
 decl_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|pcb
+name|inp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"null pcb"
+literal|"null inp"
 operator|)
 argument_list|)
 expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|!=
@@ -2727,7 +2725,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2735,7 +2733,7 @@ name|sp_out
 operator|!=
 name|NULL
 operator|&&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2755,7 +2753,7 @@ argument_list|(
 name|m
 argument_list|,
 operator|&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2773,7 +2771,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2785,7 +2783,7 @@ name|dir
 operator|=
 name|IPSEC_DIR_INBOUND
 expr_stmt|;
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2793,7 +2791,7 @@ name|sp_out
 operator|->
 name|spidx
 operator|=
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2801,7 +2799,7 @@ name|sp_in
 operator|->
 name|spidx
 expr_stmt|;
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2819,7 +2817,7 @@ block|{
 name|bzero
 argument_list|(
 operator|&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2829,7 +2827,7 @@ name|spidx
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2842,7 +2840,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2852,7 +2850,7 @@ name|spidx
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2890,7 +2888,7 @@ parameter_list|,
 name|struct
 name|inpcb
 modifier|*
-name|pcb
+name|inp
 parameter_list|)
 block|{
 name|int
@@ -2898,18 +2896,18 @@ name|error
 decl_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|pcb
+name|inp
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"null pcb"
+literal|"null inp"
 operator|)
 argument_list|)
 expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|!=
@@ -2922,7 +2920,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2930,7 +2928,7 @@ name|sp_out
 operator|!=
 name|NULL
 operator|&&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2950,7 +2948,7 @@ argument_list|(
 name|m
 argument_list|,
 operator|&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2968,7 +2966,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2980,7 +2978,7 @@ name|dir
 operator|=
 name|IPSEC_DIR_INBOUND
 expr_stmt|;
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2988,7 +2986,7 @@ name|sp_out
 operator|->
 name|spidx
 operator|=
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -2996,7 +2994,7 @@ name|sp_in
 operator|->
 name|spidx
 expr_stmt|;
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -3014,7 +3012,7 @@ block|{
 name|bzero
 argument_list|(
 operator|&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -3024,7 +3022,7 @@ name|spidx
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -3037,7 +3035,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -3047,7 +3045,7 @@ name|spidx
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pcb
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -7658,7 +7656,7 @@ modifier|*
 name|isr
 decl_stmt|;
 name|size_t
-name|siz
+name|size
 decl_stmt|;
 name|KEYDEBUG
 argument_list|(
@@ -7708,7 +7706,7 @@ name|policy
 operator|)
 argument_list|)
 expr_stmt|;
-name|siz
+name|size
 operator|=
 literal|0
 expr_stmt|;
@@ -7869,14 +7867,14 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|siz
+name|size
 operator|+=
 name|clen
 expr_stmt|;
 block|}
 return|return
 operator|(
-name|siz
+name|size
 operator|)
 return|;
 block|}
