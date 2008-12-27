@@ -16,7 +16,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
