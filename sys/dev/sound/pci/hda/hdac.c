@@ -438,6 +438,76 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_NVIDIA_MCP78_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0774)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP78_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0775)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP78_3
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0776)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP78_4
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0777)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP73_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x07fc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP73_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x07fd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP79_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP79_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP79_3
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_MCP79_4
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0ac3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_NVIDIA_ALL
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0xffff)
 end_define
@@ -2106,6 +2176,66 @@ block|{
 name|HDA_NVIDIA_MCP67_2
 block|,
 literal|"NVidia MCP67"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP73_1
+block|,
+literal|"NVidia MCP73"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP73_2
+block|,
+literal|"NVidia MCP73"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP78_1
+block|,
+literal|"NVidia MCP78"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP78_2
+block|,
+literal|"NVidia MCP78"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP78_3
+block|,
+literal|"NVidia MCP78"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP78_4
+block|,
+literal|"NVidia MCP78"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP79_1
+block|,
+literal|"NVidia MCP79"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP79_2
+block|,
+literal|"NVidia MCP79"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP79_3
+block|,
+literal|"NVidia MCP79"
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_MCP79_4
+block|,
+literal|"NVidia MCP79"
 block|}
 block|,
 block|{
