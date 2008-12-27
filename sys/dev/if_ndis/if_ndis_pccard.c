@@ -116,6 +116,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/ndis/pe_var.h>
 end_include
 
