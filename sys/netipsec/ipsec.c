@@ -6411,7 +6411,7 @@ begin_function
 name|int
 name|ipsec6_set_policy
 parameter_list|(
-name|in6p
+name|inp
 parameter_list|,
 name|optname
 parameter_list|,
@@ -6424,7 +6424,7 @@ parameter_list|)
 name|struct
 name|inpcb
 modifier|*
-name|in6p
+name|inp
 decl_stmt|;
 name|int
 name|optname
@@ -6460,7 +6460,7 @@ decl_stmt|;
 comment|/* sanity check. */
 if|if
 condition|(
-name|in6p
+name|inp
 operator|==
 name|NULL
 operator|||
@@ -6507,7 +6507,7 @@ case|:
 name|pcb_sp
 operator|=
 operator|&
-name|in6p
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -6520,7 +6520,7 @@ case|:
 name|pcb_sp
 operator|=
 operator|&
-name|in6p
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -6568,7 +6568,7 @@ begin_function
 name|int
 name|ipsec6_get_policy
 parameter_list|(
-name|in6p
+name|inp
 parameter_list|,
 name|request
 parameter_list|,
@@ -6579,7 +6579,7 @@ parameter_list|)
 name|struct
 name|inpcb
 modifier|*
-name|in6p
+name|inp
 decl_stmt|;
 name|caddr_t
 name|request
@@ -6612,7 +6612,7 @@ decl_stmt|;
 comment|/* sanity check. */
 if|if
 condition|(
-name|in6p
+name|inp
 operator|==
 name|NULL
 operator|||
@@ -6629,7 +6629,7 @@ name|EINVAL
 return|;
 name|IPSEC_ASSERT
 argument_list|(
-name|in6p
+name|inp
 operator|->
 name|inp_sp
 operator|!=
@@ -6675,7 +6675,7 @@ name|IPSEC_DIR_INBOUND
 case|:
 name|pcb_sp
 operator|=
-name|in6p
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -6687,7 +6687,7 @@ name|IPSEC_DIR_OUTBOUND
 case|:
 name|pcb_sp
 operator|=
-name|in6p
+name|inp
 operator|->
 name|inp_sp
 operator|->
@@ -8050,7 +8050,7 @@ name|m
 parameter_list|,
 name|dir
 parameter_list|,
-name|in6p
+name|inp
 parameter_list|)
 name|struct
 name|mbuf
@@ -8063,7 +8063,7 @@ decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
-name|in6p
+name|inp
 decl_stmt|;
 block|{
 name|INIT_VNET_IPSEC
@@ -8095,11 +8095,11 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_ASSERT
 argument_list|(
-name|in6p
+name|inp
 operator|==
 name|NULL
 operator|||
-name|in6p
+name|inp
 operator|->
 name|inp_socket
 operator|!=
@@ -8114,7 +8114,7 @@ comment|/* get SP for this packet */
 comment|/* XXX Is it right to call with IP_FORWARDING. */
 if|if
 condition|(
-name|in6p
+name|inp
 operator|==
 name|NULL
 condition|)
@@ -8141,7 +8141,7 @@ name|m
 argument_list|,
 name|dir
 argument_list|,
-name|in6p
+name|inp
 argument_list|,
 operator|&
 name|error
