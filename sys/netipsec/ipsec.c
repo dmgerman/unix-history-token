@@ -1189,7 +1189,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|int
-name|ipsec6_setspidx_in6pcb
+name|ipsec6_setspidx_inpcb
 name|__P
 argument_list|(
 operator|(
@@ -1911,7 +1911,7 @@ name|INET6
 operator|*
 name|error
 operator|=
-name|ipsec6_setspidx_in6pcb
+name|ipsec6_setspidx_inpcb
 argument_list|(
 name|m
 argument_list|,
@@ -2877,7 +2877,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|ipsec6_setspidx_in6pcb
+name|ipsec6_setspidx_inpcb
 parameter_list|(
 name|m
 parameter_list|,
