@@ -3479,11 +3479,6 @@ name|dummy
 decl_stmt|;
 block|{
 name|struct
-name|thread
-modifier|*
-name|t
-decl_stmt|;
-name|struct
 name|x86desc
 modifier|*
 name|gdt
@@ -3495,10 +3490,6 @@ decl_stmt|;
 name|uint16_t
 name|ltable
 decl_stmt|;
-name|t
-operator|=
-name|curthread
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
