@@ -12,7 +12,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<machine/xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/hypervisor.h>
 end_include
 
 begin_include
@@ -91,6 +85,10 @@ name|frame
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|grant_ref_t
+modifier|*
+name|result
 parameter_list|)
 function_decl|;
 end_function_decl
