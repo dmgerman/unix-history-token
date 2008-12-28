@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -326,6 +332,11 @@ name|tdata
 parameter_list|,
 name|unsigned
 name|len
+parameter_list|,
+name|struct
+name|lock_object
+modifier|*
+name|lock
 parameter_list|)
 block|{
 name|struct
@@ -388,9 +399,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|tsleep
+name|_sleep
 argument_list|(
 name|intf
+argument_list|,
+name|lock
 argument_list|,
 name|PCATCH
 argument_list|,
@@ -546,6 +559,11 @@ name|tdata
 parameter_list|,
 name|unsigned
 name|len
+parameter_list|,
+name|struct
+name|lock_object
+modifier|*
+name|lock
 parameter_list|)
 block|{
 name|struct
@@ -603,9 +621,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|tsleep
+name|_sleep
 argument_list|(
 name|intf
+argument_list|,
+name|lock
 argument_list|,
 name|PCATCH
 argument_list|,
