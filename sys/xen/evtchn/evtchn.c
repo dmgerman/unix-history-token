@@ -1488,6 +1488,8 @@ name|bind_virq
 decl_stmt|;
 name|int
 name|evtchn
+init|=
+literal|0
 decl_stmt|,
 name|irq
 decl_stmt|;
@@ -1609,6 +1611,11 @@ name|irq
 index|]
 operator|++
 expr_stmt|;
+name|unmask_evtchn
+argument_list|(
+name|evtchn
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 name|mtx_unlock_spin
@@ -1657,9 +1664,12 @@ name|evtchn_bind_ipi
 name|bind_ipi
 decl_stmt|;
 name|int
-name|evtchn
-decl_stmt|,
 name|irq
+decl_stmt|;
+name|int
+name|evtchn
+init|=
+literal|0
 decl_stmt|;
 name|mtx_lock_spin
 argument_list|(
@@ -1772,6 +1782,11 @@ index|[
 name|irq
 index|]
 operator|++
+expr_stmt|;
+name|unmask_evtchn
+argument_list|(
+name|evtchn
+argument_list|)
 expr_stmt|;
 name|out
 label|:
