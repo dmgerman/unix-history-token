@@ -167,6 +167,16 @@ begin_comment
 comment|/* Access to protected structures in ip_fw.h. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_ALIAS_SCTP
+end_define
+
+begin_comment
+comment|/*Using alias_sctp*/
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -17361,6 +17371,34 @@ condition|)
 return|return
 name|IPPROTO_UDP
 return|;
+ifdef|#
+directive|ifdef
+name|_ALIAS_SCTP
+comment|/*Using alias_sctp*/
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"sctp"
+argument_list|)
+condition|)
+return|return
+name|IPPROTO_SCTP
+return|;
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"unknown protocol %s. Expected sctp, tcp or udp"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|errx
 argument_list|(
 name|EX_DATAERR
@@ -17370,6 +17408,8 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -18030,6 +18070,56 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|_ALIAS_SCTP
+comment|/*Using alias_sctp*/
+comment|/* 	   * The sctp nat does not allow the port numbers to be mapped to new port numbers 	   * Therefore, no ports are to be specified in the target port field 	   */
+if|if
+condition|(
+name|r
+operator|->
+name|proto
+operator|==
+name|IPPROTO_SCTP
+condition|)
+block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"redirect_port:"
+literal|"port numbers do not change in sctp, so do not specify them as part of the target"
+argument_list|)
+expr_stmt|;
+else|else
+name|StrToAddr
+argument_list|(
+operator|*
+name|av
+argument_list|,
+operator|&
+name|r
+operator|->
+name|laddr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+endif|#
+directive|endif
+comment|/*Using alias_sctp*/
 if|if
 condition|(
 name|StrToAddrAndPortRange
@@ -18074,6 +18164,14 @@ argument_list|(
 name|portRange
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_ALIAS_SCTP
+comment|/*Using alias_sctp*/
+block|}
+endif|#
+directive|endif
+comment|/*Using alias_sctp*/
 block|}
 name|INC_ARGCV
 argument_list|()
@@ -18179,6 +18277,39 @@ argument_list|(
 name|portRange
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_ALIAS_SCTP
+comment|/*Using alias_sctp*/
+if|if
+condition|(
+name|r
+operator|->
+name|proto
+operator|==
+name|IPPROTO_SCTP
+condition|)
+block|{
+comment|/* so the logic below still works */
+name|numLocalPorts
+operator|=
+name|GETNUMPORTS
+argument_list|(
+name|portRange
+argument_list|)
+expr_stmt|;
+name|r
+operator|->
+name|lport
+operator|=
+name|r
+operator|->
+name|pport
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/*Using alias_sctp*/
 name|r
 operator|->
 name|pport_cnt
@@ -18423,6 +18554,66 @@ name|space
 operator|+=
 name|SOF_SPOOL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_ALIAS_SCTP
+comment|/*Using alias_sctp*/
+comment|/* 		       * The sctp nat does not allow the port numbers to be mapped to new port numbers 		       * Therefore, no ports are to be specified in the target port field 		       */
+if|if
+condition|(
+name|r
+operator|->
+name|proto
+operator|==
+name|IPPROTO_SCTP
+condition|)
+block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|sep
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+block|{
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"redirect_port:"
+literal|"port numbers do not change in sctp, so do not specify them as part of the target"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|StrToAddr
+argument_list|(
+name|sep
+argument_list|,
+operator|&
+name|tmp
+operator|->
+name|addr
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|->
+name|port
+operator|=
+name|r
+operator|->
+name|pport
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+endif|#
+directive|endif
+comment|/*Using alias_sctp*/
 if|if
 condition|(
 name|StrToAddrAndPortRange
@@ -18476,6 +18667,14 @@ argument_list|(
 name|portRange
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_ALIAS_SCTP
+comment|/*Using alias_sctp*/
+block|}
+endif|#
+directive|endif
+comment|/*Using alias_sctp*/
 name|r
 operator|->
 name|spool_cnt

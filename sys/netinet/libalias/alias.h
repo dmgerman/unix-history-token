@@ -11,6 +11,10 @@ begin_comment
 comment|/*  * Alias.h defines the outside world interfaces for the packet aliasing  * software.  *  * This software is placed into the public domain with no restrictions on its  * distribution.  */
 end_comment
 
+begin_comment
+comment|/**  * Modifications to add sctp functionality by David A. Hayes  *	$Id: alias.h 122 2008-06-25 06:50:47Z dhayes $   * All are inclosed in #ifdef _ALIAS_SCTP  *   */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -53,6 +57,27 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ALIAS_SCTP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ALIAS_SCTP
+end_define
+
+begin_comment
+comment|//if ALIAS_SCTP code is to be included
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The kernel version of libalias does not support these features.  */

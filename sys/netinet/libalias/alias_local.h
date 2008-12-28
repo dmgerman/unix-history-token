@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Alias_local.h contains the function prototypes for alias.c,  * alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well  * as any future add-ons).  It also includes macros, globals and  * struct definitions shared by more than one alias*.c file.  *  * This include file is intended to be used only within the aliasing  * software.  Outside world interfaces are defined in alias.h  *  * This software is placed into the public domain with no restrictions  * on its distribution.  *  * Initial version:  August, 1996  (cjm)  *  *<updated several times by original author and Eivind Eklund>  */
 end_comment
 
+begin_comment
+comment|/**  * Modifications to add sctp functionality by David A. Hayes  *	$Id: alias_local.h 122 2008-06-25 06:50:47Z dhayes $   * All are inclosed in #ifdef _ALIAS_SCTP  *   */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -30,6 +34,55 @@ include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* if alias_sctp is not required, #define _ALIAS_SCTP should be commented out */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ALIAS_SCTP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ALIAS_SCTP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_ALIAS_SCTP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/libalias/alias_sctp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -278,6 +331,45 @@ name|u_short
 name|true_port
 decl_stmt|;
 comment|/* in host byte order. */
+comment|/*   *   *alias_sctp code   */
+ifdef|#
+directive|ifdef
+name|_ALIAS_SCTP
+comment|/*counts associations that have progressed to UP and not yet removed */
+name|int
+name|sctpLinkCount
+decl_stmt|;
+comment|/*Timing queue for keeping track of association timeouts */
+name|struct
+name|sctp_nat_timer
+name|sctpNatTimer
+decl_stmt|;
+comment|/* Size of hash table used in this instance*/
+name|u_int
+name|sctpNatTableSize
+decl_stmt|;
+comment|/**  * @brief Local look up table  *  * lookup table of sctp_nat_assoc sorted by l_vtag/l_port   */
+name|LIST_HEAD
+argument_list|(
+name|sctpNatTableL
+argument_list|,
+name|sctp_nat_assoc
+argument_list|)
+operator|*
+name|sctpTableLocal
+expr_stmt|;
+comment|/**  * @brief Global look up table  *  * lookup table of sctp_nat_assoc sorted by g_vtag/g_port   */
+name|LIST_HEAD
+argument_list|(
+name|sctpNatTableG
+argument_list|,
+name|sctp_nat_assoc
+argument_list|)
+operator|*
+name|sctpTableGlobal
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -428,6 +520,73 @@ end_define
 begin_comment
 comment|/* Prototypes */
 end_comment
+
+begin_comment
+comment|/*   *   *alias_sctp code   */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_ALIAS_SCTP
+end_ifdef
+
+begin_comment
+comment|/*  * SctpFunction prototypes  *   */
+end_comment
+
+begin_function_decl
+name|void
+name|AliasSctpInit
+parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AliasSctpTerm
+parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|SctpAlias
+parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
+name|ip
+modifier|*
+name|ip
+parameter_list|,
+name|int
+name|direction
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|//int SctpAliasOut(struct libalias *la, struct ip *ip);
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We do not calculate TCP checksums when libalias is a kernel  * module, since it has no idea about checksum offloading.  * If TCP data has changed, then we just set checksum to zero,  * and caller must recalculate it himself.  * In case if libalias will edit UDP data, the same approach  * should be used.  */
