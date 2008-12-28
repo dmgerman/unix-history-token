@@ -1211,6 +1211,11 @@ argument_list|,
 name|rnh
 argument_list|)
 expr_stmt|;
+name|RADIX_NODE_HEAD_UNLOCK
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 name|RADIX_NODE_HEAD_DESTROY
 argument_list|(
 name|rnh
