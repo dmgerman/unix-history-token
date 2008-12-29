@@ -3382,13 +3382,11 @@ name|is_posix
 operator|=
 name|TRUE
 expr_stmt|;
-name|Var_Set
+name|Var_SetGlobal
 argument_list|(
 literal|"%POSIX"
 argument_list|,
 literal|"1003.2"
-argument_list|,
-name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 break|break;
