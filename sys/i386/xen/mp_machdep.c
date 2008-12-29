@@ -340,19 +340,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/evtchn.h>
+file|<xen/evtchn.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen_intr.h>
+file|<xen/xen_intr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
@@ -1768,6 +1768,10 @@ block|{
 name|int
 name|rc
 decl_stmt|;
+name|unsigned
+name|int
+name|irq
+decl_stmt|;
 name|per_cpu
 argument_list|(
 name|resched_irq
@@ -1817,6 +1821,9 @@ operator||
 name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
+argument_list|,
+operator|&
+name|irq
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1837,7 +1844,7 @@ argument_list|,
 name|cpu
 argument_list|)
 operator|=
-name|rc
+name|irq
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -1871,6 +1878,9 @@ operator||
 name|INTR_TYPE_TTY
 operator||
 name|INTR_MPSAFE
+argument_list|,
+operator|&
+name|irq
 argument_list|)
 expr_stmt|;
 if|if
@@ -1889,7 +1899,7 @@ argument_list|,
 name|cpu
 argument_list|)
 operator|=
-name|rc
+name|irq
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1950,8 +1960,6 @@ name|resched_irq
 argument_list|,
 name|cpu
 argument_list|)
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1973,8 +1981,6 @@ name|callfunc_irq
 argument_list|,
 name|cpu
 argument_list|)
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return

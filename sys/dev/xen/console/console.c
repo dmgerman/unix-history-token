@@ -100,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen_intr.h>
+file|<xen/xen_intr.h>
 end_include
 
 begin_include
@@ -495,7 +495,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&x, _name, NULL, MTX_SPIN|MTX_RECURSE)
+value|mtx_init(&x, _name, NULL, MTX_DEF|MTX_RECURSE)
 end_define
 
 begin_define
@@ -506,7 +506,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|do {											\ 				if (panicstr == NULL)					\                         mtx_lock_spin(&(l));			\ 		} while (0)
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_lock(&(l));			\ 		} while (0)
 end_define
 
 begin_define
@@ -517,7 +517,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|do {											\ 				if (panicstr == NULL)					\                         mtx_unlock_spin(&(l));			\ 		} while (0)
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_unlock(&(l));			\ 		} while (0)
 end_define
 
 begin_define
@@ -1047,6 +1047,24 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
+name|struct
+name|xc_softc
+modifier|*
+name|sc
+init|=
+operator|(
+expr|struct
+name|xc_softc
+operator|*
+operator|)
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|xen_start_info
@@ -1122,8 +1140,8 @@ operator|&
 name|SIF_INITDOMAIN
 condition|)
 block|{
-name|PANIC_IF
-argument_list|(
+name|error
+operator|=
 name|bind_virq_to_irqhandler
 argument_list|(
 name|VIRQ_CONSOLE
@@ -1136,10 +1154,22 @@ name|NULL
 argument_list|,
 name|xencons_priv_interrupt
 argument_list|,
+name|sc
+argument_list|,
 name|INTR_TYPE_TTY
+argument_list|,
+name|NULL
 argument_list|)
-operator|<
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|error
+operator|>=
 literal|0
+argument_list|,
+operator|(
+literal|"can't register console interrupt"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

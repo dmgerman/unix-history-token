@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  * hypervisor.h   *   * Linux-specific hypervisor handling.  *   * Copyright (c) 2002, K A Fraser  */
+comment|/******************************************************************************  * hypervisor.h   *   * Linux-specific hypervisor handling.  *   * Copyright (c) 2002, K A Fraser  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

@@ -114,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/hypervisor.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
@@ -126,13 +126,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen_intr.h>
+file|<xen/xen_intr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/evtchn.h>
+file|<xen/evtchn.h>
 end_include
 
 begin_include
@@ -1345,7 +1345,9 @@ name|xb_disk
 operator|->
 name|d_unit
 operator|=
-name|unit
+name|sc
+operator|->
+name|xb_unit
 expr_stmt|;
 name|sc
 operator|->
@@ -1385,7 +1387,7 @@ name|xb_disk
 operator|->
 name|d_name
 operator|=
-literal|"xbd"
+name|name
 expr_stmt|;
 name|sc
 operator|->
@@ -1730,6 +1732,8 @@ argument_list|)
 argument_list|,
 literal|"virtual-device"
 argument_list|,
+name|NULL
+argument_list|,
 literal|"%i"
 argument_list|,
 operator|&
@@ -1739,8 +1743,6 @@ expr_stmt|;
 if|if
 condition|(
 name|err
-operator|!=
-literal|1
 condition|)
 block|{
 name|xenbus_dev_fatal
@@ -1941,11 +1943,11 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
 return|return
+operator|(
 name|err
+operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|0
@@ -2003,6 +2005,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|info
+operator|->
+name|connected
+operator|==
+name|BLKIF_STATE_SUSPENDED
+operator|&&
 operator|!
 name|err
 condition|)
@@ -2212,7 +2220,6 @@ if|if
 condition|(
 name|err
 operator|==
-operator|-
 name|EAGAIN
 condition|)
 goto|goto
@@ -2301,7 +2308,7 @@ modifier|*
 name|sring
 decl_stmt|;
 name|int
-name|err
+name|error
 decl_stmt|;
 name|info
 operator|->
@@ -2363,7 +2370,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|err
+name|error
 operator|=
 name|xenbus_grant_ring
 argument_list|(
@@ -2381,13 +2388,16 @@ argument_list|)
 operator|>>
 name|PAGE_SHIFT
 operator|)
+argument_list|,
+operator|&
+name|info
+operator|->
+name|ring_ref
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
-operator|<
-literal|0
+name|error
 condition|)
 block|{
 name|free
@@ -2409,13 +2419,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|info
-operator|->
-name|ring_ref
-operator|=
-name|err
-expr_stmt|;
-name|err
+name|error
 operator|=
 name|bind_listening_port_to_irqhandler
 argument_list|(
@@ -2438,21 +2442,22 @@ name|INTR_TYPE_BIO
 operator||
 name|INTR_MPSAFE
 argument_list|,
-name|NULL
+operator|&
+name|info
+operator|->
+name|irq
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
-operator|<=
-literal|0
+name|error
 condition|)
 block|{
 name|xenbus_dev_fatal
 argument_list|(
 name|dev
 argument_list|,
-name|err
+name|error
 argument_list|,
 literal|"bind_evtchn_to_irqhandler failed"
 argument_list|)
@@ -2461,14 +2466,10 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|info
-operator|->
-name|irq
-operator|=
-name|err
-expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|fail
 label|:
@@ -2480,7 +2481,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-name|err
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
@@ -4569,8 +4572,6 @@ argument_list|(
 name|info
 operator|->
 name|irq
-argument_list|,
-name|info
 argument_list|)
 expr_stmt|;
 name|info
