@@ -843,8 +843,6 @@ block|}
 if|if
 condition|(
 name|last_timestamp
-operator|+
-literal|1
 operator|!=
 name|map
 operator|->
