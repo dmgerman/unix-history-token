@@ -4635,6 +4635,20 @@ name|ctxt
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|line
+argument_list|,
+name|MAKE_JOB_PREFIX
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|Job_SetPrefix
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

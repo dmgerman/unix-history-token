@@ -711,11 +711,25 @@ begin_comment
 comment|/* Format string to use to head output from a 				 * job when it's not the most-recent job heard 				 * from */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|targPrefix
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* What we print at the start of targFmt */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TARG_FMT
-value|"--- %s ---\n"
+value|"%s %s ---\n"
 end_define
 
 begin_comment
@@ -732,7 +746,7 @@ parameter_list|,
 name|gn
 parameter_list|)
 define|\
-value|fprintf(fp, targFmt, gn->name);
+value|fprintf(fp, targFmt, targPrefix, gn->name);
 end_define
 
 begin_comment
@@ -7495,6 +7509,62 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|Job_SetPrefix
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|targPrefix
+condition|)
+block|{
+name|free
+argument_list|(
+name|targPrefix
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|Var_Exists
+argument_list|(
+name|MAKE_JOB_PREFIX
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+condition|)
+block|{
+name|Var_SetGlobal
+argument_list|(
+name|MAKE_JOB_PREFIX
+argument_list|,
+literal|"---"
+argument_list|)
+expr_stmt|;
+block|}
+name|targPrefix
+operator|=
+name|Var_Subst
+argument_list|(
+literal|"${"
+name|MAKE_JOB_PREFIX
+literal|"}"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+literal|0
+argument_list|)
+operator|->
+name|buf
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/**  * Job_Init  *	Initialize the process module, given a maximum number of jobs.  *  * Side Effects:  *	lists and counters are initialized  */
 end_comment
@@ -7703,18 +7773,12 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|maxJobs
 operator|==
 literal|1
 operator|&&
 name|fifoFd
 operator|<
-literal|0
-operator|)
-operator|||
-name|beVerbose
-operator|==
 literal|0
 condition|)
 block|{
