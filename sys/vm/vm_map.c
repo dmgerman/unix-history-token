@@ -12222,14 +12222,6 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|RETURN
-parameter_list|(
-name|why
-parameter_list|)
-define|\
-value|{ \ 		vm_map_unlock_read(map); \ 		return (why); \ 		}
 comment|/* 	 * Lookup the faulting address. 	 */
 if|if
 condition|(
@@ -12243,11 +12235,18 @@ argument_list|,
 name|out_entry
 argument_list|)
 condition|)
-name|RETURN
+block|{
+name|vm_map_unlock_read
 argument_list|(
-name|KERN_INVALID_ADDRESS
+name|map
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|KERN_INVALID_ADDRESS
+operator|)
+return|;
+block|}
 name|entry
 operator|=
 operator|*
@@ -12329,11 +12328,16 @@ operator|!=
 name|fault_type
 condition|)
 block|{
-name|RETURN
+name|vm_map_unlock_read
 argument_list|(
-name|KERN_PROTECTION_FAILURE
+name|map
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|KERN_PROTECTION_FAILURE
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -12368,11 +12372,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|RETURN
+name|vm_map_unlock_read
 argument_list|(
-name|KERN_PROTECTION_FAILURE
+name|map
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|KERN_PROTECTION_FAILURE
+operator|)
+return|;
 block|}
 comment|/* 	 * If this page is not pageable, we have to get it for all possible 	 * accesses. 	 */
 operator|*
@@ -12576,9 +12585,6 @@ operator|(
 name|KERN_SUCCESS
 operator|)
 return|;
-undef|#
-directive|undef
-name|RETURN
 block|}
 end_function
 
