@@ -3463,16 +3463,12 @@ block|{
 name|vm_map_entry_t
 name|cur
 decl_stmt|;
+comment|/* 	 * If the map is empty, then the map entry immediately preceding 	 * "address" is the map's header. 	 */
 name|cur
 operator|=
-name|vm_map_entry_splay
-argument_list|(
-name|address
-argument_list|,
 name|map
 operator|->
 name|root
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3488,6 +3484,33 @@ name|map
 operator|->
 name|header
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|address
+operator|>=
+name|cur
+operator|->
+name|start
+operator|&&
+name|cur
+operator|->
+name|end
+operator|>
+name|address
+condition|)
+block|{
+operator|*
+name|entry
+operator|=
+name|cur
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
 else|else
 block|{
 name|map
@@ -3495,7 +3518,15 @@ operator|->
 name|root
 operator|=
 name|cur
+operator|=
+name|vm_map_entry_splay
+argument_list|(
+name|address
+argument_list|,
+name|cur
+argument_list|)
 expr_stmt|;
+comment|/* 		 * If "address" is contained within a map entry, the new root 		 * is that map entry.  Otherwise, the new root is a map entry 		 * immediately before or after "address". 		 */
 if|if
 condition|(
 name|address
@@ -12186,7 +12217,6 @@ decl_stmt|;
 name|RetryLookup
 label|:
 empty_stmt|;
-comment|/* 	 * Lookup the faulting address. 	 */
 name|vm_map_lock_read
 argument_list|(
 name|map
@@ -12200,42 +12230,7 @@ name|why
 parameter_list|)
 define|\
 value|{ \ 		vm_map_unlock_read(map); \ 		return (why); \ 		}
-comment|/* 	 * If the map has an interesting hint, try it before calling full 	 * blown lookup routine. 	 */
-name|entry
-operator|=
-name|map
-operator|->
-name|root
-expr_stmt|;
-operator|*
-name|out_entry
-operator|=
-name|entry
-expr_stmt|;
-if|if
-condition|(
-name|entry
-operator|==
-name|NULL
-operator|||
-operator|(
-name|vaddr
-operator|<
-name|entry
-operator|->
-name|start
-operator|)
-operator|||
-operator|(
-name|vaddr
-operator|>=
-name|entry
-operator|->
-name|end
-operator|)
-condition|)
-block|{
-comment|/* 		 * Entry was either not a valid hint, or the vaddr was not 		 * contained in the entry, so do a full lookup. 		 */
+comment|/* 	 * Lookup the faulting address. 	 */
 if|if
 condition|(
 operator|!
@@ -12258,7 +12253,6 @@ operator|=
 operator|*
 name|out_entry
 expr_stmt|;
-block|}
 comment|/* 	 * Handle submaps. 	 */
 if|if
 condition|(
@@ -12650,42 +12644,7 @@ name|fault_type
 init|=
 name|fault_typea
 decl_stmt|;
-comment|/* 	 * If the map has an interesting hint, try it before calling full 	 * blown lookup routine. 	 */
-name|entry
-operator|=
-name|map
-operator|->
-name|root
-expr_stmt|;
-operator|*
-name|out_entry
-operator|=
-name|entry
-expr_stmt|;
-if|if
-condition|(
-name|entry
-operator|==
-name|NULL
-operator|||
-operator|(
-name|vaddr
-operator|<
-name|entry
-operator|->
-name|start
-operator|)
-operator|||
-operator|(
-name|vaddr
-operator|>=
-name|entry
-operator|->
-name|end
-operator|)
-condition|)
-block|{
-comment|/* 		 * Entry was either not a valid hint, or the vaddr was not 		 * contained in the entry, so do a full lookup. 		 */
+comment|/* 	 * Lookup the faulting address. 	 */
 if|if
 condition|(
 operator|!
@@ -12708,7 +12667,6 @@ operator|=
 operator|*
 name|out_entry
 expr_stmt|;
-block|}
 comment|/* 	 * Fail if the entry refers to a submap. 	 */
 if|if
 condition|(
