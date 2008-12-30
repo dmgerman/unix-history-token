@@ -3485,7 +3485,7 @@ modifier|*
 name|so2
 decl_stmt|;
 name|u_int
-name|mbcnt
+name|mbcnt_delta
 decl_stmt|,
 name|sbcc
 decl_stmt|;
@@ -3973,7 +3973,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|mbcnt
+name|mbcnt_delta
 operator|=
 name|so2
 operator|->
@@ -4061,7 +4061,7 @@ name|so_snd
 operator|.
 name|sb_mbmax
 operator|-=
-name|mbcnt
+name|mbcnt_delta
 expr_stmt|;
 name|SOCKBUF_UNLOCK
 argument_list|(
