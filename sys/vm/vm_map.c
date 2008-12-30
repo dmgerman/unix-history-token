@@ -2806,7 +2806,15 @@ name|y
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|addr
+operator|>=
+name|root
+operator|->
+name|end
+condition|)
 block|{
 name|y
 operator|=
@@ -2816,12 +2824,6 @@ name|right
 expr_stmt|;
 if|if
 condition|(
-name|addr
-operator|<
-name|root
-operator|->
-name|end
-operator|||
 name|y
 operator|==
 name|NULL
@@ -2898,6 +2900,8 @@ name|y
 expr_stmt|;
 block|}
 block|}
+else|else
+break|break;
 block|}
 comment|/* 	 * Pass Two: Walk back up the two spines, flip the pointers 	 * and set max_free.  The subtrees of the root go at the 	 * bottom of llist and rlist. 	 */
 name|ltree
