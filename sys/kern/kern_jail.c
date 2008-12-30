@@ -1420,6 +1420,13 @@ operator|=
 name|ip4
 expr_stmt|;
 block|}
+else|else
+name|j
+operator|->
+name|ip4
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -1621,6 +1628,13 @@ operator|=
 name|ip6
 expr_stmt|;
 block|}
+else|else
+name|j
+operator|->
+name|ip6
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
 return|return
