@@ -440,7 +440,7 @@ name|msgYesNo
 argument_list|(
 literal|"WARNING:  It is safe to use a geometry of %lu/%lu/%lu for %s on\n"
 literal|"computers with modern BIOS versions.  If this disk is to be used\n"
-literal|"on an old machines it is recommended that it does not have more\n"
+literal|"on an old machine it is recommended that it does not have more\n"
 literal|"than 65535 cylinders, more than 255 heads, or more than\n"
 ifdef|#
 directive|ifdef
