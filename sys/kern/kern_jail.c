@@ -1654,6 +1654,12 @@ argument_list|,
 name|M_PRISON
 argument_list|)
 expr_stmt|;
+name|j
+operator|->
+name|ip6
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -1665,6 +1671,12 @@ name|ip4
 argument_list|,
 name|M_PRISON
 argument_list|)
+expr_stmt|;
+name|j
+operator|->
+name|ip4
+operator|=
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif
