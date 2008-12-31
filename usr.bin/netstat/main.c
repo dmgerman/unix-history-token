@@ -3197,9 +3197,6 @@ name|AF_UNSPEC
 operator|)
 operator|&&
 operator|!
-name|Lflag
-operator|&&
-operator|!
 name|sflag
 condition|)
 name|unixpr
