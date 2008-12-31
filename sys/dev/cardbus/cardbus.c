@@ -1026,13 +1026,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|POWER_DISABLE_SOCKET
-argument_list|(
-name|brdev
-argument_list|,
-name|cbdev
-argument_list|)
-expr_stmt|;
+comment|/*	POWER_DISABLE_SOCKET(brdev, cbdev); */
 return|return
 operator|(
 name|ENOENT
@@ -1348,6 +1342,7 @@ argument_list|,
 name|cbdev
 argument_list|)
 expr_stmt|;
+comment|/* XXX Should I wait for power to become good? */
 for|for
 control|(
 name|i
