@@ -6206,14 +6206,17 @@ block|,
 literal|"overwrite me"
 block|,
 comment|/* will be disk specific label */
-literal|"FreeBSD comes with a boot selector that allows you to easily\n"
+literal|"FreeBSD comes with a boot manager that allows you to easily\n"
 literal|"select between FreeBSD and any other operating systems on your machine\n"
 literal|"at boot time.  If you have more than one drive and want to boot\n"
-literal|"from the second one, the boot selector will also make it possible\n"
+literal|"from the second one, the boot manager will also make it possible\n"
 literal|"to do so (limitations in the PC BIOS usually prevent this otherwise).\n"
-literal|"If you do not want a boot selector, or wish to replace an existing\n"
-literal|"one, select \"standard\".  If you would prefer your Master Boot\n"
-literal|"Record to remain untouched then select \"None\".\n\n"
+literal|"If you will only have FreeBSD on the machine the boot manager is\n"
+literal|"not needed and it slows down the boot while offering you the choice\n"
+literal|"of which operating system to boot.  If you do not want a boot\n"
+literal|"manager, or wish to replace an existing one, select \"standard\".\n"
+literal|"If you would prefer your Master Boot Record remain untouched then\n"
+literal|"select \"None\".\n\n"
 literal|"  NOTE:  PC-DOS users will almost certainly require \"None\"!"
 block|,
 literal|"Press F1 to read about drive setup"
@@ -6221,21 +6224,6 @@ block|,
 literal|"drives"
 block|,
 block|{
-block|{
-literal|"BootMgr"
-block|,
-literal|"Install the FreeBSD Boot Manager"
-block|,
-name|dmenuRadioCheck
-block|,
-name|dmenuSetValue
-block|,
-name|NULL
-block|,
-operator|&
-name|BootMgr
-block|}
-block|,
 block|{
 literal|"Standard"
 block|,
@@ -6257,6 +6245,29 @@ block|,
 literal|')'
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"BootMgr"
+block|,
+literal|"Install the FreeBSD Boot Manager"
+block|,
+name|dmenuRadioCheck
+block|,
+name|dmenuSetValue
+block|,
+name|NULL
+block|,
+operator|&
+name|BootMgr
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|0
 block|}
 block|,
 block|{
