@@ -908,11 +908,9 @@ expr_stmt|;
 comment|/* XXX defer if_start calls? */
 name|error
 operator|=
-call|(
 name|parent
 operator|->
 name|if_transmit
-call|)
 argument_list|(
 name|parent
 argument_list|,

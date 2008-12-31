@@ -1286,11 +1286,9 @@ name|len
 expr_stmt|;
 name|err
 operator|=
-call|(
 name|ifp
 operator|->
 name|if_transmit
-call|)
 argument_list|(
 name|ifp
 argument_list|,
