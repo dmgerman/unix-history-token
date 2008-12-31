@@ -6529,12 +6529,12 @@ name|tok
 operator|=
 name|au_to_return32
 argument_list|(
-operator|(
-name|char
-operator|)
+name|au_errno_to_bsm
+argument_list|(
 name|ar
 operator|->
 name|ar_errno
+argument_list|)
 argument_list|,
 name|ar
 operator|->
