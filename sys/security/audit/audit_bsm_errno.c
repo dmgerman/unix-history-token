@@ -20,7 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/audit/audit.h>
 end_include
 
 begin_include
@@ -32,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bsm/libbsm.h>
+file|<bsm/audit_record.h>
 end_include
 
 begin_include
