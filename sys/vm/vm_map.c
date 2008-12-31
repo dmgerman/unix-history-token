@@ -166,7 +166,7 @@ file|<vm/uma.h>
 end_include
 
 begin_comment
-comment|/*  *	Virtual memory maps provide for the mapping, protection,  *	and sharing of virtual memory objects.  In addition,  *	this module provides for an efficient virtual copy of  *	memory from one map to another.  *  *	Synchronization is required prior to most operations.  *  *	Maps consist of an ordered doubly-linked list of simple  *	entries; a single hint is used to speed up lookups.  *  *	Since portions of maps are specified by start/end addresses,  *	which may not align with existing map entries, all  *	routines merely "clip" entries to these start/end values.  *	[That is, an entry is split into two, bordering at a  *	start or end value.]  Note that these clippings may not  *	always be necessary (as the two resulting entries are then  *	not changed); however, the clipping is done for convenience.  *  *	As mentioned above, virtual copy operations are performed  *	by copying VM object references from one map to  *	another, and then marking both regions as copy-on-write.  */
+comment|/*  *	Virtual memory maps provide for the mapping, protection,  *	and sharing of virtual memory objects.  In addition,  *	this module provides for an efficient virtual copy of  *	memory from one map to another.  *  *	Synchronization is required prior to most operations.  *  *	Maps consist of an ordered doubly-linked list of simple  *	entries; a self-adjusting binary search tree of these  *	entries is used to speed up lookups.  *  *	Since portions of maps are specified by start/end addresses,  *	which may not align with existing map entries, all  *	routines merely "clip" entries to these start/end values.  *	[That is, an entry is split into two, bordering at a  *	start or end value.]  Note that these clippings may not  *	always be necessary (as the two resulting entries are then  *	not changed); however, the clipping is done for convenience.  *  *	As mentioned above, virtual copy operations are performed  *	by copying VM object references from one map to  *	another, and then marking both regions as copy-on-write.  */
 end_comment
 
 begin_comment
@@ -6273,7 +6273,7 @@ name|protection
 operator|=
 name|new_prot
 expr_stmt|;
-comment|/* 		 * Update physical map if necessary. Worry about copy-on-write 		 * here -- CHECK THIS XXX 		 */
+comment|/* 		 * Update physical map if necessary. Worry about copy-on-write 		 * here. 		 */
 if|if
 condition|(
 name|current
@@ -6839,7 +6839,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_inherit:  *  *	Sets the inheritance of the specified address  *	range in the target map.  Inheritance  *	affects how the map will be shared with  *	child maps at the time of vm_map_fork.  */
+comment|/*  *	vm_map_inherit:  *  *	Sets the inheritance of the specified address  *	range in the target map.  Inheritance  *	affects how the map will be shared with  *	child maps at the time of vmspace_fork.  */
 end_comment
 
 begin_function

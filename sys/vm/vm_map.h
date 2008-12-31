@@ -144,7 +144,6 @@ name|vm_eflags_t
 name|eflags
 decl_stmt|;
 comment|/* map entry flags */
-comment|/* Only in task maps: */
 name|vm_prot_t
 name|protection
 decl_stmt|;
@@ -411,7 +410,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  *	A map is a set of map entries.  These map entries are  *	organized both as a binary search tree and as a doubly-linked  *	list.  Both structures are ordered based upon the start and  *	end addresses contained within each map entry.  Sleator and  *	Tarjan's top-down splay algorithm is employed to control  *	height imbalance in the binary search tree.  *  *	Note: the lock structure cannot be the first element of vm_map  *	because this can result in a running lockup between two or more  *	system processes trying to kmem_alloc_wait() due to kmem_alloc_wait()  *	and free tsleep/waking up 'map' and the underlying lockmgr also  *	sleeping and waking up on 'map'.  The lockup occurs when the map fills  *	up.  The 'exec' map, for example.  *  * List of locks  *	(c)	const until freed  */
+comment|/*  *	A map is a set of map entries.  These map entries are  *	organized both as a binary search tree and as a doubly-linked  *	list.  Both structures are ordered based upon the start and  *	end addresses contained within each map entry.  Sleator and  *	Tarjan's top-down splay algorithm is employed to control  *	height imbalance in the binary search tree.  *  * List of locks  *	(c)	const until freed  */
 end_comment
 
 begin_struct
@@ -450,7 +449,7 @@ decl_stmt|;
 name|u_char
 name|system_map
 decl_stmt|;
-comment|/* Am I a system map? */
+comment|/* (c) Am I a system map? */
 name|vm_flags_t
 name|flags
 decl_stmt|;
