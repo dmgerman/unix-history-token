@@ -15,10 +15,32 @@ directive|define
 name|_BSM_AUDIT_H
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_comment
+comment|/* Temporary until rdar://problem/6133383 is resolved. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -32,6 +54,15 @@ include|#
 directive|include
 file|<sys/queue.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __APPLE__ */
+end_comment
 
 begin_define
 define|#
@@ -153,14 +184,25 @@ value|6
 end_define
 
 begin_comment
-comment|/* User requests roate. */
+comment|/* User requests rotate. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDIT_TRIGGER_INITIALIZE
+value|7
+end_define
+
+begin_comment
+comment|/* Initialize audit. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AUDIT_TRIGGER_MAX
-value|6
+value|7
 end_define
 
 begin_comment
@@ -189,6 +231,20 @@ begin_define
 define|#
 directive|define
 name|AU_DEFAUDITID
+value|(uid_t)(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AU_DEFAUDITSID
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AU_ASSIGN_ASID
 value|-1
 end_define
 
@@ -431,6 +487,13 @@ define|#
 directive|define
 name|A_SENDTRIGGER
 value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_GETSINFO_ADDR
+value|32
 end_define
 
 begin_comment
@@ -770,6 +833,10 @@ name|au_asid_t
 name|ai_asid
 decl_stmt|;
 comment|/* Audit session ID. */
+name|u_int64_t
+name|ai_flags
+decl_stmt|;
+comment|/* Audit session flags. */
 block|}
 struct|;
 end_struct
@@ -806,6 +873,10 @@ name|au_asid_t
 name|ap_asid
 decl_stmt|;
 comment|/* Audit session ID. */
+name|u_int64_t
+name|ap_flags
+decl_stmt|;
+comment|/* Audit session flags. */
 block|}
 struct|;
 end_struct
@@ -851,6 +922,43 @@ typedef|typedef
 name|struct
 name|auditpinfo_addr
 name|auditpinfo_addr_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|au_session
+block|{
+name|auditinfo_addr_t
+modifier|*
+name|as_aia_p
+decl_stmt|;
+comment|/* Ptr to full audit info. */
+define|#
+directive|define
+name|as_asid
+value|as_aia_p->ai_asid
+define|#
+directive|define
+name|as_auid
+value|as_aia_p->ai_auid
+define|#
+directive|define
+name|as_termid
+value|as_aia_p->ai_termid
+name|au_mask_t
+name|as_mask
+decl_stmt|;
+comment|/* Process Audit Masks. */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|au_session
+name|au_session_t
 typedef|;
 end_typedef
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Apple Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_audit.c#31 $  */
+comment|/*-  * Copyright (c) 2004 Apple Inc.  * Copyright (c) 2005 SPARTA, Inc.  * All rights reserved.  *  * This code was developed in part by Robert N. M. Watson, Senior Principal  * Scientist, SPARTA, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $P4: //depot/projects/trustedbsd/openbsm/libbsm/bsm_audit.c#34 $  */
 end_comment
 
 begin_include
@@ -67,11 +67,22 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<pthread.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -128,6 +139,12 @@ name|audit_free_q
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|pthread_mutex_t
@@ -136,6 +153,11 @@ init|=
 name|PTHREAD_MUTEX_INITIALIZER
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This call frees a token_t and its internal data.  */
@@ -196,12 +218,17 @@ name|rec
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_lock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|audit_rec_count
@@ -247,12 +274,17 @@ name|au_rec_q
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|rec
@@ -322,12 +354,17 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_lock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|audit_rec_count
@@ -335,12 +372,17 @@ operator|==
 name|MAX_AUDIT_RECORDS
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|rec
@@ -381,12 +423,17 @@ expr_stmt|;
 name|audit_rec_count
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|memset
 argument_list|(
@@ -666,6 +713,10 @@ condition|(
 name|errno
 operator|!=
 name|ENOSYS
+operator|&&
+name|errno
+operator|!=
+name|EPERM
 condition|)
 return|return
 operator|(
@@ -795,6 +846,13 @@ name|aia
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|tot_rec_size
 operator|=
@@ -1037,12 +1095,17 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_lock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Add the record to the freelist tail */
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -1054,12 +1117,17 @@ argument_list|,
 name|au_rec_q
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_PTHREAD_MUTEX_LOCK
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
 name|mutex
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
