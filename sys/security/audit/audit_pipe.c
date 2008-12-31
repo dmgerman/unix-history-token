@@ -372,7 +372,7 @@ argument|audit_pipe_preselect
 argument_list|)
 name|ap_preselect_list
 expr_stmt|;
-comment|/* 	 * Current pending record list.  Protected by a combination of ap_mtx 	 * and ap_sx.  Note particularly that *both* locks are required to 	 * remove a record from the head of the queue, as an in-progress read		 * may sleep while copying and therefore cannot hold ap_mtx. 	 */
+comment|/* 	 * Current pending record list.  Protected by a combination of ap_mtx 	 * and ap_sx.  Note particularly that *both* locks are required to 	 * remove a record from the head of the queue, as an in-progress read 	 * may sleep while copying and therefore cannot hold ap_mtx. 	 */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
