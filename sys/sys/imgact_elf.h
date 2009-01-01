@@ -264,6 +264,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|__elfN
 parameter_list|(
