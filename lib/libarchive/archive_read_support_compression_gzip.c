@@ -1788,16 +1788,18 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-comment|/* Restart header parser with the next block. */
-name|state
-operator|->
-name|header_state
-operator|=
+comment|/* zlib has been torn down */
 name|state
 operator|->
 name|header_done
 operator|=
 literal|0
+expr_stmt|;
+name|state
+operator|->
+name|eof
+operator|=
+literal|1
 expr_stmt|;
 comment|/* FALL THROUGH */
 case|case
