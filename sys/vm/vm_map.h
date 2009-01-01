@@ -853,6 +853,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vm_map_locked
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vm_map_unlock_and_wait
 parameter_list|(
 name|vm_map_t
