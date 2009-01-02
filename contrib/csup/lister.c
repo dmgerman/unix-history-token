@@ -2152,6 +2152,10 @@ name|sr_clientattr
 expr_stmt|;
 if|if
 condition|(
+name|fa
+operator|!=
+name|NULL
+operator|&&
 name|fattr_equal
 argument_list|(
 name|fa
