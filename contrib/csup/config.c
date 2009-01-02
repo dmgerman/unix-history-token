@@ -590,6 +590,12 @@ name|co_options
 operator||=
 name|CO_SETMODE
 expr_stmt|;
+name|coll
+operator|->
+name|co_options
+operator||=
+name|CO_NORSYNC
+expr_stmt|;
 name|error
 operator|=
 name|config_parse_refusefiles
