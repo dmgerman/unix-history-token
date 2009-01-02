@@ -9082,7 +9082,7 @@ name|cvsroot
 parameter_list|,
 name|tag
 parameter_list|)
-value|do {		\ 	if ((rf) == NULL) {						\ 		lprintf(1, " Edit %s", fup->coname);			\ 		if (fup->attic)						\ 			lprintf(1, " -> Attic");			\ 		lprintf(1, "\n");					\ 		(rf) = rcsfile_frompath((path), (name), (cvsroot),	\ 		    (tag));						\ 		if ((rf) == NULL) {					\ 			xasprintf(&(up)->errmsg,			\ 			    "Error reading rcsfile %s\n", (name));	\ 			return (UPDATER_ERR_MSG);			\ 		}							\ 	}								\ } while (0)
+value|do {		\ 	if ((rf) == NULL) {						\ 		lprintf(1, " Edit %s", fup->coname);			\ 		if (fup->attic)						\ 			lprintf(1, " -> Attic");			\ 		lprintf(1, "\n");					\ 		(rf) = rcsfile_frompath((path), (name), (cvsroot),	\ 		    (tag), 0);						\ 		if ((rf) == NULL) {					\ 			xasprintf(&(up)->errmsg,			\ 			    "Error reading rcsfile %s\n", (name));	\ 			return (UPDATER_ERR_MSG);			\ 		}							\ 	}								\ } while (0)
 while|while
 condition|(
 operator|(

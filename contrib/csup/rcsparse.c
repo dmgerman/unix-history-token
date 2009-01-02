@@ -289,6 +289,9 @@ parameter_list|,
 name|FILE
 modifier|*
 name|infp
+parameter_list|,
+name|int
+name|ro
 parameter_list|)
 block|{
 name|yyscan_t
@@ -388,6 +391,13 @@ argument_list|(
 name|scanner
 argument_list|)
 expr_stmt|;
+comment|/* Parse deltatexts if we need to edit. */
+if|if
+condition|(
+operator|!
+name|ro
+condition|)
+block|{
 name|error
 operator|=
 name|parse_deltatexts
@@ -409,6 +419,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 name|rcslex_destroy
 argument_list|(
 name|scanner

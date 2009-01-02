@@ -2327,6 +2327,8 @@ argument_list|,
 name|coll
 operator|->
 name|co_tag
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|free
