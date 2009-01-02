@@ -5642,6 +5642,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 name|snprintf
 argument_list|(
