@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"fattr.h"
 end_include
 
 begin_include
@@ -146,11 +146,6 @@ name|blocksize
 decl_stmt|;
 name|size_t
 name|fsize
-decl_stmt|;
-name|struct
-name|fattr
-modifier|*
-name|fa
 decl_stmt|;
 name|int
 name|fd
@@ -281,16 +276,6 @@ operator|=
 name|st
 operator|.
 name|st_size
-expr_stmt|;
-name|rf
-operator|->
-name|fa
-operator|=
-name|fattr_fromstat
-argument_list|(
-operator|&
-name|st
-argument_list|)
 expr_stmt|;
 name|rf
 operator|->
