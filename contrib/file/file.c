@@ -197,20 +197,58 @@ directive|include
 file|<getopt.h>
 end_include
 
-begin_comment
-comment|/* for long options (is this portable?)*/
-end_comment
-
 begin_else
 else|#
 directive|else
 end_else
 
-begin_undef
-undef|#
-directive|undef
+begin_include
+include|#
+directive|include
+file|"mygetopt.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_GETOPT_LONG
-end_undef
+end_ifndef
+
+begin_function_decl
+name|int
+name|getopt_long
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|argv
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|optstring
+parameter_list|,
+specifier|const
+name|struct
+name|option
+modifier|*
+name|longopts
+parameter_list|,
+name|int
+modifier|*
+name|longindex
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -242,7 +280,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.117 2007/12/27 16:35:58 christos Exp $"
+literal|"@(#)$File: file.c,v 1.121 2008/07/03 15:48:18 christos Exp $"
 argument_list|)
 end_macro
 
@@ -422,12 +460,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_GETOPT_LONG
-end_ifdef
-
 begin_function_decl
 name|private
 name|void
@@ -437,23 +469,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|private int byteconv4(int, int, int); private short byteconv2(int, int, int);
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
@@ -560,9 +575,6 @@ define|#
 directive|define
 name|OPTSTRING
 value|"bcCde:f:F:hikLm:nNprsvz0"
-ifdef|#
-directive|ifdef
-name|HAVE_GETOPT_LONG
 name|int
 name|longindex
 decl_stmt|;
@@ -620,8 +632,6 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-endif|#
-directive|endif
 specifier|static
 specifier|const
 struct|struct
@@ -680,17 +690,8 @@ literal|"tokens"
 block|,
 name|MAGIC_NO_CHECK_TOKENS
 block|}
-block|,
-block|{
-literal|"troff"
-block|,
-name|MAGIC_NO_CHECK_TROFF
-block|}
 block|, 	}
 struct|;
-ifdef|#
-directive|ifdef
-name|LC_CTYPE
 comment|/* makes islower etc work for other langs */
 operator|(
 name|void
@@ -702,8 +703,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__EMX__
@@ -866,29 +865,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|HAVE_GETOPT_LONG
-while|while
-condition|(
-operator|(
-name|c
-operator|=
-name|getopt
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-name|OPTSTRING
-argument_list|)
-operator|)
-operator|!=
-operator|-
-literal|1
-condition|)
-else|#
-directive|else
 while|while
 condition|(
 operator|(
@@ -912,16 +888,11 @@ operator|!=
 operator|-
 literal|1
 condition|)
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|c
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|HAVE_GETOPT_LONG
 case|case
 literal|0
 case|:
@@ -955,8 +926,6 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'0'
 case|:
@@ -1485,13 +1454,23 @@ name|wid
 argument_list|)
 expr_stmt|;
 block|}
+name|c
+operator|=
+name|magic
+operator|->
+name|haderr
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
 name|magic_close
 argument_list|(
 name|magic
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|c
 return|;
 block|}
 end_function
@@ -1697,7 +1676,10 @@ name|fgets
 argument_list|(
 name|buf
 argument_list|,
-name|MAXPATHLEN
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|f
 argument_list|)
@@ -1960,47 +1942,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * byteconv4  * Input:  *	from		4 byte quantity to convert  *	same		whether to perform byte swapping  *	big_endian	whether we are a big endian host  */
-end_comment
-
-begin_comment
-unit|private int byteconv4(int from, int same, int big_endian) { 	if (same) 		return from; 	else if (big_endian) {
-comment|/* lsb -> msb conversion on msb */
-end_comment
-
-begin_comment
-unit|union { 			int i; 			char c[4]; 		} retval, tmpval;  		tmpval.i = from; 		retval.c[0] = tmpval.c[3]; 		retval.c[1] = tmpval.c[2]; 		retval.c[2] = tmpval.c[1]; 		retval.c[3] = tmpval.c[0];  		return retval.i; 	} 	else 		return ntohl(from);
-comment|/* msb -> lsb conversion on lsb */
-end_comment
-
-begin_comment
-unit|}
-comment|/*  * byteconv2  * Same as byteconv4, but for shorts  */
-end_comment
-
-begin_comment
-unit|private short byteconv2(int from, int same, int big_endian) { 	if (same) 		return from; 	else if (big_endian) {
-comment|/* lsb -> msb conversion on msb */
-end_comment
-
-begin_comment
-unit|union { 			short s; 			char c[2]; 		} retval, tmpval;  		tmpval.s = (short) from; 		retval.c[0] = tmpval.c[1]; 		retval.c[1] = tmpval.c[0];  		return retval.s; 	} 	else 		return ntohs(from);
-comment|/* msb -> lsb conversion on lsb */
-end_comment
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|size_t
 name|file_mbswidth
@@ -2189,9 +2130,6 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_GETOPT_LONG
 operator|(
 name|void
 operator|)
@@ -2202,8 +2140,6 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|1
@@ -2211,12 +2147,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_GETOPT_LONG
-end_ifdef
 
 begin_function
 name|private
@@ -2280,11 +2210,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
