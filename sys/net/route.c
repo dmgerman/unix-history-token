@@ -1357,7 +1357,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: %p has %d refs\t"
+literal|"%s: %p has %d refs\n"
 argument_list|,
 name|__func__
 argument_list|,
