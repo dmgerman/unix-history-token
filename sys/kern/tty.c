@@ -1245,6 +1245,10 @@ decl_stmt|;
 comment|/* 	 * Don't actually close the device if it is being used as the 	 * console. 	 */
 if|if
 condition|(
+name|dev_console_filename
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|dev_console_filename
