@@ -2979,6 +2979,9 @@ case|:
 case|case
 name|FILE_SEARCH
 case|:
+ifndef|#
+directive|ifndef
+name|COMPILE_ONLY
 comment|/* binary test if pattern is not text */
 if|if
 condition|(
@@ -3007,6 +3010,8 @@ name|flag
 operator||=
 name|BINTEST
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|FILE_DEFAULT
