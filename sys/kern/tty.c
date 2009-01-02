@@ -1242,6 +1242,26 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
+comment|/* 	 * Don't actually close the device if it is being used as the 	 * console. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|dev_console_filename
+argument_list|,
+name|tty_devname
+argument_list|(
+name|tp
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|tty_lock
 argument_list|(
 name|tp
