@@ -6106,7 +6106,7 @@ name|ifq_head
 operator|!=
 name|NULL
 condition|)
-name|pcn_start
+name|pcn_start_locked
 argument_list|(
 name|ifp
 argument_list|)
