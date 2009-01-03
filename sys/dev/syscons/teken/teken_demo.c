@@ -221,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|NROWS
-value|24
+value|25
 end_define
 
 begin_decl_stmt
@@ -1475,7 +1475,7 @@ name|setenv
 argument_list|(
 literal|"TERM"
 argument_list|,
-literal|"xterm-color"
+literal|"cons25"
 argument_list|,
 literal|1
 argument_list|)

@@ -264,6 +264,32 @@ begin_comment
 comment|/* Origin mode. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEKEN_CONS25
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TS_WRAPPED
+value|0x00
+end_define
+
+begin_comment
+comment|/* Simple line wrapping. */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !TEKEN_CONS25 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -273,6 +299,15 @@ end_define
 
 begin_comment
 comment|/* Next character should be printed on col 0. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TEKEN_CONS25 */
 end_comment
 
 begin_comment

@@ -40,6 +40,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Emulate cons25-like behaviour. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEKEN_CONS25
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
