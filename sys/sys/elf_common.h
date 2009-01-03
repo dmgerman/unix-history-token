@@ -2057,6 +2057,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SHT_GNU_HASH
+value|0x6ffffff6
+end_define
+
+begin_define
+define|#
+directive|define
 name|SHT_SUNW_ANNOTATE
 value|0x6ffffff7
 end_define
