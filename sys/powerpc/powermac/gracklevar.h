@@ -87,9 +87,6 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|sc_dmat
 decl_stmt|;
-name|int
-name|sc_icells
-decl_stmt|;
 name|struct
 name|ofw_bus_iinfo
 name|sc_pci_iinfo

@@ -247,6 +247,27 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
+name|OF_searchprop
+parameter_list|(
+name|phandle_t
+name|node
+parameter_list|,
+name|char
+modifier|*
+name|propname
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ssize_t
 name|OF_getprop_alloc
 parameter_list|(
 name|phandle_t

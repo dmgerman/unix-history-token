@@ -126,9 +126,6 @@ decl_stmt|;
 name|int
 name|sc_u3
 decl_stmt|;
-name|int
-name|sc_icells
-decl_stmt|;
 block|}
 struct|;
 end_struct
