@@ -2280,7 +2280,7 @@ name|d_tmp2
 operator|->
 name|revdate
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -2323,7 +2323,7 @@ name|d_tmp3
 operator|->
 name|revdate
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 break|break;
