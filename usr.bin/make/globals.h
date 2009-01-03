@@ -182,6 +182,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Boolean
+name|beQuiet
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if want quiet headers with -j */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
 name|noExecute
 decl_stmt|;
 end_decl_stmt

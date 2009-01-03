@@ -468,6 +468,18 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
+name|beQuiet
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -Q flag */
+end_comment
+
+begin_decl_stmt
+name|Boolean
 name|compatMake
 decl_stmt|;
 end_decl_stmt
@@ -1524,7 +1536,7 @@ expr_stmt|;
 define|#
 directive|define
 name|OPTFLAGS
-value|"ABC:D:E:I:PSV:Xd:ef:ij:km:npqrstvx:"
+value|"ABC:D:E:I:PSV:Xd:ef:ij:km:nQpqrstvx:"
 for|for
 control|(
 init|;
@@ -2098,6 +2110,21 @@ name|DEBUG_GRAPH1
 expr_stmt|;
 break|break;
 case|case
+literal|'Q'
+case|:
+name|beQuiet
+operator|=
+name|TRUE
+expr_stmt|;
+name|MFLAGS_append
+argument_list|(
+literal|"-Q"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'q'
 case|:
 name|queryFlag
@@ -2164,6 +2191,10 @@ case|:
 name|beVerbose
 operator|=
 name|TRUE
+expr_stmt|;
+name|beQuiet
+operator|=
+name|FALSE
 expr_stmt|;
 name|MFLAGS_append
 argument_list|(
