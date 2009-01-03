@@ -3912,7 +3912,7 @@ case|:
 if|if
 condition|(
 name|optval
-operator|>
+operator|>=
 literal|0
 operator|&&
 name|optval
