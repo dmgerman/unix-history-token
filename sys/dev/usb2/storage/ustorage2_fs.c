@@ -5689,37 +5689,14 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|struct
-name|ustorage_fs_lun
-modifier|*
-name|currlun
-init|=
-name|sc
-operator|->
-name|sc_transfer
-operator|.
-name|currlun
-decl_stmt|;
-name|uint8_t
-name|rc
-decl_stmt|;
-comment|/* 	 * We ignore the requested LBA and write out all dirty data buffers. 	 */
-name|rc
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|rc
-condition|)
-block|{
-name|currlun
-operator|->
-name|sense_data
-operator|=
-name|SS_WRITE_ERROR
-expr_stmt|;
-block|}
+block|struct ustorage_fs_lun *currlun = sc->sc_transfer.currlun; 	uint8_t rc;
+comment|/* 	 * We ignore the requested LBA and write out all dirty data buffers. 	 */
+block|rc = 0; 	if (rc) { 		currlun->sense_data = SS_WRITE_ERROR; 	}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

@@ -629,18 +629,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|uint32_t
-name|usb2_get_dma_delay
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|usb2_transfer_unsetup_sub
 parameter_list|(
@@ -823,7 +811,6 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-specifier|static
 name|uint32_t
 name|usb2_get_dma_delay
 parameter_list|(
@@ -5414,6 +5401,14 @@ name|transferring
 operator|=
 literal|1
 expr_stmt|;
+comment|/* increment power reference */
+name|usb2_transfer_power_ref
+argument_list|(
+name|xfer
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check if the transfer is waiting on a queue, most 	 * frequently the "done_q": 	 */
 if|if
 condition|(
@@ -7033,6 +7028,15 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* decrement power reference */
+name|usb2_transfer_power_ref
+argument_list|(
+name|xfer
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|xfer
 operator|->
 name|flags_int

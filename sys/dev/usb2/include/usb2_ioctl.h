@@ -55,65 +55,6 @@ name|USB_GENERIC_NAME
 value|"ugen"
 end_define
 
-begin_comment
-comment|/* definition of USB power mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_OFF
-value|0
-end_define
-
-begin_comment
-comment|/* turn off device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_ON
-value|1
-end_define
-
-begin_comment
-comment|/* always on */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_SAVE
-value|2
-end_define
-
-begin_comment
-comment|/* automatic suspend and resume */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_SUSPEND
-value|3
-end_define
-
-begin_comment
-comment|/* force suspend */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_POWER_MODE_RESUME
-value|4
-end_define
-
-begin_comment
-comment|/* force resume */
-end_comment
-
 begin_struct
 struct|struct
 name|usb2_read_dir

@@ -1068,6 +1068,94 @@ end_define
 begin_define
 define|#
 directive|define
+name|EHCI_USBMODE
+value|0x68
+end_define
+
+begin_comment
+comment|/* RW USB Device mode register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_CM
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* R/WO Controller Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_CM_IDLE
+value|0x0
+end_define
+
+begin_comment
+comment|/* Idle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_CM_HOST
+value|0x3
+end_define
+
+begin_comment
+comment|/* Host Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_ES
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* R/WO Endian Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_ES_LE
+value|0x0
+end_define
+
+begin_comment
+comment|/* Little-endian byte alignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_ES_BE
+value|0x4
+end_define
+
+begin_comment
+comment|/* Big-endian byte alignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_UM_SDIS
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* R/WO Stream Disable Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EHCI_PORT_RESET_COMPLETE
 value|2
 end_define
@@ -2588,17 +2676,32 @@ define|#
 directive|define
 name|EHCI_SCFLG_SETMODE
 value|0x0001
-comment|/* set bridge mode again after init 					 * (Marvell) */
+comment|/* set bridge mode again after init */
 define|#
 directive|define
 name|EHCI_SCFLG_FORCESPEED
 value|0x0002
-comment|/* force speed (Marvell) */
+comment|/* force speed */
 define|#
 directive|define
 name|EHCI_SCFLG_NORESTERM
 value|0x0004
-comment|/* don't terminate reset sequence 					 * (Marvell) */
+comment|/* don't terminate reset sequence */
+define|#
+directive|define
+name|EHCI_SCFLG_BIGEDESC
+value|0x0008
+comment|/* big-endian byte order descriptors */
+define|#
+directive|define
+name|EHCI_SCFLG_BIGEMMIO
+value|0x0010
+comment|/* big-endian byte order MMIO */
+define|#
+directive|define
+name|EHCI_SCFLG_TT
+value|0x0020
+comment|/* transaction translator present */
 name|uint8_t
 name|sc_offs
 decl_stmt|;

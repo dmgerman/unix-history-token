@@ -1388,17 +1388,6 @@ block|,
 block|{
 name|USB_VPI
 argument_list|(
-argument|USB_VENDOR_RALINK
-argument_list|,
-argument|USB_PRODUCT_RALINK_RT2573
-argument_list|,
-literal|0
-argument_list|)
-block|}
-block|,
-block|{
-name|USB_VPI
-argument_list|(
 argument|USB_VENDOR_SIEMENS2
 argument_list|,
 argument|USB_PRODUCT_SIEMENS2_WL54G
@@ -4593,7 +4582,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: MAC/BBP RT2570 (rev 0x%02x), RF %s\n"
+literal|"%s: MAC/BBP RT2570 (rev 0x%02x), RF %s (0x%02x)\n"
 argument_list|,
 name|sc
 operator|->
@@ -4609,6 +4598,10 @@ name|sc
 operator|->
 name|sc_rf_rev
 argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|sc_rf_rev
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -5471,6 +5464,8 @@ name|int
 name|rev
 parameter_list|)
 block|{
+empty_stmt|;
+comment|/* style fix */
 switch|switch
 condition|(
 name|rev

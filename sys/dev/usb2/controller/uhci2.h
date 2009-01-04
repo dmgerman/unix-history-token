@@ -1218,6 +1218,11 @@ comment|/* device configuration */
 name|uint8_t
 name|sc_isreset
 decl_stmt|;
+comment|/* bits set if a root hub is reset */
+name|uint8_t
+name|sc_isresumed
+decl_stmt|;
+comment|/* bits set if a port was resumed */
 name|uint8_t
 name|sc_saved_sof
 decl_stmt|;

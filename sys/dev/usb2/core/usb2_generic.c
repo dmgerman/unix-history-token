@@ -8293,32 +8293,13 @@ break|break;
 case|case
 name|USB_POWER_MODE_ON
 case|:
-comment|/* enable port */
-name|err
-operator|=
-name|usb2_req_set_port_feature
-argument_list|(
-name|udev
-operator|->
-name|parent_hub
-argument_list|,
-name|NULL
-argument_list|,
-name|udev
-operator|->
-name|port_no
-argument_list|,
-name|UHF_PORT_ENABLE
-argument_list|)
-expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 name|USB_POWER_MODE_SAVE
 case|:
+break|break;
 case|case
 name|USB_POWER_MODE_RESUME
 case|:
-comment|/* TODO: implement USB power save */
 name|err
 operator|=
 name|usb2_req_clear_port_feature
@@ -8336,11 +8317,14 @@ argument_list|,
 name|UHF_PORT_SUSPEND
 argument_list|)
 expr_stmt|;
+name|mode
+operator|=
+name|USB_POWER_MODE_SAVE
+expr_stmt|;
 break|break;
 case|case
 name|USB_POWER_MODE_SUSPEND
 case|:
-comment|/* TODO: implement USB power save */
 name|err
 operator|=
 name|usb2_req_set_port_feature
@@ -8357,6 +8341,10 @@ name|port_no
 argument_list|,
 name|UHF_PORT_SUSPEND
 argument_list|)
+expr_stmt|;
+name|mode
+operator|=
+name|USB_POWER_MODE_SAVE
 expr_stmt|;
 break|break;
 default|default:
@@ -8376,13 +8364,14 @@ name|ENXIO
 operator|)
 return|;
 comment|/* I/O failure */
+comment|/* set new power mode */
+name|usb2_set_power_mode
+argument_list|(
 name|udev
-operator|->
-name|power_mode
-operator|=
+argument_list|,
 name|mode
+argument_list|)
 expr_stmt|;
-comment|/* update copy of power mode */
 return|return
 operator|(
 literal|0

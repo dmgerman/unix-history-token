@@ -1464,6 +1464,17 @@ name|USB_VPI
 argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
+argument|USB_PRODUCT_HP_4470C
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_HP
+argument_list|,
 argument|USB_PRODUCT_HP_4670V
 argument_list|,
 literal|0

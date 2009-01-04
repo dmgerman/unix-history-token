@@ -223,6 +223,62 @@ modifier|*
 name|pdelay
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|device_suspend
+function_decl|)
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|device_resume
+function_decl|)
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|set_hw_power
+function_decl|)
+parameter_list|(
+name|struct
+name|usb2_bus
+modifier|*
+name|bus
+parameter_list|)
+function_decl|;
+comment|/* 	 * The following flag is set if one or more control transfers are 	 * active: 	 */
+define|#
+directive|define
+name|USB_HW_POWER_CONTROL
+value|0x01
+comment|/* 	 * The following flag is set if one or more bulk transfers are 	 * active: 	 */
+define|#
+directive|define
+name|USB_HW_POWER_BULK
+value|0x02
+comment|/* 	 * The following flag is set if one or more interrupt transfers are 	 * active: 	 */
+define|#
+directive|define
+name|USB_HW_POWER_INTERRUPT
+value|0x04
+comment|/* 	 * The following flag is set if one or more isochronous transfers 	 * are active: 	 */
+define|#
+directive|define
+name|USB_HW_POWER_ISOC
+value|0x08
 comment|/* USB Device mode only - Mandatory */
 name|void
 function_decl|(
@@ -283,21 +339,6 @@ name|struct
 name|usb2_pipe
 modifier|*
 name|pipe
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|rem_wakeup_set
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_device
-modifier|*
-name|udev
-parameter_list|,
-name|uint8_t
-name|is_on
 parameter_list|)
 function_decl|;
 comment|/* USB Device mode only - Optional */
@@ -377,18 +418,6 @@ name|xfer
 parameter_list|)
 function_decl|;
 comment|/* Optional */
-name|uint8_t
-function_decl|(
-modifier|*
-name|isdone
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_xfer
-modifier|*
-name|xfer
-parameter_list|)
-function_decl|;
 name|void
 modifier|*
 name|info

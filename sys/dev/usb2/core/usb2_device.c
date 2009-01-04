@@ -4285,7 +4285,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb2_suspend_resume_device  *  * The following function will suspend or resume the USB device.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb2_suspend_resume  *  * The following function will suspend or resume the USB device.  *  * Returns:  *    0: Success  * Else: Failure  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4885,11 +4885,20 @@ name|uint32_t
 operator|)
 name|ticks
 expr_stmt|;
+comment|/* 	 * We need to force the power mode to "on" because there are plenty 	 * of USB devices out there that do not work very well with 	 * automatic suspend and resume! 	 */
 name|udev
 operator|->
 name|power_mode
 operator|=
 name|USB_POWER_MODE_ON
+expr_stmt|;
+name|udev
+operator|->
+name|pwr_save
+operator|.
+name|last_xfer_time
+operator|=
+name|ticks
 expr_stmt|;
 comment|/* we are not ready yet */
 name|udev
@@ -5281,9 +5290,26 @@ operator|->
 name|address
 argument_list|)
 expr_stmt|;
+comment|/* XXX try to re-enumerate the device */
+name|err
+operator|=
+name|usb2_req_re_enumerate
+argument_list|(
+name|udev
+argument_list|,
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 name|DPRINTF
 argument_list|(
@@ -5726,6 +5752,11 @@ decl_stmt|;
 name|uint8_t
 name|config_quirk
 decl_stmt|;
+name|uint8_t
+name|set_config_failed
+init|=
+literal|0
+decl_stmt|;
 comment|/* 		 * Most USB devices should attach to config index 0 by 		 * default 		 */
 if|if
 condition|(
@@ -5884,12 +5915,55 @@ condition|(
 name|err
 condition|)
 block|{
+if|if
+condition|(
+name|udev
+operator|->
+name|ddesc
+operator|.
+name|bNumConfigurations
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|set_config_failed
+condition|)
+block|{
+name|set_config_failed
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX try to re-enumerate the device */
+name|err
+operator|=
+name|usb2_req_re_enumerate
+argument_list|(
+name|udev
+argument_list|,
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+goto|goto
+name|repeat_set_config
+goto|;
+block|}
 name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
 literal|"Failure selecting "
-literal|"configuration index %u: %s, port %u, addr %u\n"
+literal|"configuration index %u: %s, port %u, "
+literal|"addr %u (ignored)\n"
 argument_list|,
 name|config_index
 argument_list|,
@@ -5906,6 +5980,12 @@ name|udev
 operator|->
 name|address
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* 			 * Some USB devices do not have any 			 * configurations. Ignore any set config 			 * failures! 			 */
+name|err
+operator|=
+literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -6013,7 +6093,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|usb2_test_huawei
+name|usb2_test_huawei_autoinst_p
 argument_list|(
 name|udev
 argument_list|,
@@ -6262,6 +6342,33 @@ operator|=
 name|udev
 operator|->
 name|bus
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ugen%u.%u:<%s> at %s (disconnected)\n"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|bus
+operator|->
+name|bdev
+argument_list|)
+argument_list|,
+name|udev
+operator|->
+name|device_index
+argument_list|,
+name|udev
+operator|->
+name|manufacturer
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|bus
+operator|->
+name|bdev
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Destroy UGEN symlink, if any 	 */
 if|if
@@ -7338,6 +7445,46 @@ block|}
 end_function
 
 begin_function
+name|uint32_t
+name|usb2_get_isoc_fps
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+block|{
+empty_stmt|;
+comment|/* indent fix */
+switch|switch
+condition|(
+name|udev
+operator|->
+name|speed
+condition|)
+block|{
+case|case
+name|USB_SPEED_LOW
+case|:
+case|case
+name|USB_SPEED_FULL
+case|:
+return|return
+operator|(
+literal|1000
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|8000
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_function
 name|struct
 name|usb2_device_descriptor
 modifier|*
@@ -7983,6 +8130,70 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usb2_peer_can_wakeup  *  * Return values:  * 0: Peer cannot do resume signalling.  * Else: Peer can do resume signalling.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|uint8_t
+name|usb2_peer_can_wakeup
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|)
+block|{
+specifier|const
+name|struct
+name|usb2_config_descriptor
+modifier|*
+name|cdp
+decl_stmt|;
+name|cdp
+operator|=
+name|udev
+operator|->
+name|cdesc
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cdp
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb2_mode
+operator|==
+name|USB_MODE_HOST
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|cdp
+operator|->
+name|bmAttributes
+operator|&
+name|UC_REMOTE_WAKEUP
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* not supported */
 block|}
 end_function
 

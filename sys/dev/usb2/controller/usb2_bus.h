@@ -93,10 +93,17 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
+name|usb2_bus_msg
+name|attach_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* 	 * This mutex protects the USB hardware: 	 */
+name|struct
 name|mtx
 name|bus_mtx
 decl_stmt|;
-comment|/* This mutex protects the USB 					 * hardware */
 name|struct
 name|usb2_perm
 name|perm
@@ -105,6 +112,11 @@ name|struct
 name|usb2_xfer_queue
 name|intr_q
 decl_stmt|;
+name|struct
+name|usb2_callout
+name|power_wdog
+decl_stmt|;
+comment|/* power management */
 name|device_t
 name|parent
 decl_stmt|;
@@ -140,6 +152,10 @@ index|[
 name|USB_MAX_DEVICES
 index|]
 decl_stmt|;
+name|uint32_t
+name|hw_power_state
+decl_stmt|;
+comment|/* see USB_HW_POWER_XXX */
 name|uint32_t
 name|uframe_usage
 index|[

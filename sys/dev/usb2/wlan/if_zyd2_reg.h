@@ -740,6 +740,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ZYD_MAC_CAM_MODE
+value|0x9700
+end_define
+
+begin_comment
+comment|/* CAM: Continuous Access Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ZYD_MACB_TXPWR_CTL1
 value|0x9b00
 end_define
@@ -902,23 +913,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ZYD_EEPROM_PHY_REG
-value|0xf831
-end_define
-
-begin_comment
-comment|/* PHY registers */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ZYD_EEPROM_DEVICE_VER
 value|0xf837
 end_define
 
 begin_comment
 comment|/* Device version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZYD_EEPROM_PHY_REG
+value|0xf83c
+end_define
+
+begin_comment
+comment|/* PHY registers */
 end_comment
 
 begin_define
@@ -1138,13 +1149,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|ZYD_RF_PV2000
+name|ZYD_RF_AL2230S
 value|0xa
 end_define
-
-begin_comment
-comment|/* not supported yet */
-end_comment
 
 begin_define
 define|#
@@ -2942,7 +2949,7 @@ define|#
 directive|define
 name|ZYD_DEF_PHY
 define|\
-value|{									\ 	{ ZYD_CR0,   0x0a }, { ZYD_CR1,   0x06 }, { ZYD_CR2,   0x26 },	\ 	{ ZYD_CR3,   0x38 }, { ZYD_CR4,   0x80 }, { ZYD_CR9,   0xa0 },	\ 	{ ZYD_CR10,  0x81 }, { ZYD_CR11,  0x00 }, { ZYD_CR12,  0x7f },	\ 	{ ZYD_CR13,  0x8c }, { ZYD_CR14,  0x80 }, { ZYD_CR15,  0x3d },	\ 	{ ZYD_CR16,  0x20 }, { ZYD_CR17,  0x1e }, { ZYD_CR18,  0x0a },	\ 	{ ZYD_CR19,  0x48 }, { ZYD_CR20,  0x0c }, { ZYD_CR21,  0x0c },	\ 	{ ZYD_CR22,  0x23 }, { ZYD_CR23,  0x90 }, { ZYD_CR24,  0x14 },	\ 	{ ZYD_CR25,  0x40 }, { ZYD_CR26,  0x10 }, { ZYD_CR27,  0x19 },	\ 	{ ZYD_CR28,  0x7f }, { ZYD_CR29,  0x80 }, { ZYD_CR30,  0x4b },	\ 	{ ZYD_CR31,  0x60 }, { ZYD_CR32,  0x43 }, { ZYD_CR33,  0x08 },	\ 	{ ZYD_CR34,  0x06 }, { ZYD_CR35,  0x0a }, { ZYD_CR36,  0x00 },	\ 	{ ZYD_CR37,  0x00 }, { ZYD_CR38,  0x38 }, { ZYD_CR39,  0x0c },	\ 	{ ZYD_CR40,  0x84 }, { ZYD_CR41,  0x2a }, { ZYD_CR42,  0x80 },	\ 	{ ZYD_CR43,  0x10 }, { ZYD_CR44,  0x12 }, { ZYD_CR46,  0xff },	\ 	{ ZYD_CR47,  0x08 }, { ZYD_CR48,  0x26 }, { ZYD_CR49,  0x5b },	\ 	{ ZYD_CR64,  0xd0 }, { ZYD_CR65,  0x04 }, { ZYD_CR66,  0x58 },	\ 	{ ZYD_CR67,  0xc9 }, { ZYD_CR68,  0x88 }, { ZYD_CR69,  0x41 },	\ 	{ ZYD_CR70,  0x23 }, { ZYD_CR71,  0x10 }, { ZYD_CR72,  0xff },	\ 	{ ZYD_CR73,  0x32 }, { ZYD_CR74,  0x30 }, { ZYD_CR75,  0x65 },	\ 	{ ZYD_CR76,  0x41 }, { ZYD_CR77,  0x1b }, { ZYD_CR78,  0x30 },	\ 	{ ZYD_CR79,  0x68 }, { ZYD_CR80,  0x64 }, { ZYD_CR81,  0x64 },	\ 	{ ZYD_CR82,  0x00 }, { ZYD_CR83,  0x00 }, { ZYD_CR84,  0x00 },	\ 	{ ZYD_CR85,  0x02 }, { ZYD_CR86,  0x00 }, { ZYD_CR87,  0x00 },	\ 	{ ZYD_CR88,  0xff }, { ZYD_CR89,  0xfc }, { ZYD_CR90,  0x00 },	\ 	{ ZYD_CR91,  0x00 }, { ZYD_CR92,  0x00 }, { ZYD_CR93,  0x08 },	\ 	{ ZYD_CR94,  0x00 }, { ZYD_CR95,  0x00 }, { ZYD_CR96,  0xff },	\ 	{ ZYD_CR97,  0xe7 }, { ZYD_CR98,  0x00 }, { ZYD_CR99,  0x00 },	\ 	{ ZYD_CR100, 0x00 }, { ZYD_CR101, 0xae }, { ZYD_CR102, 0x02 },	\ 	{ ZYD_CR103, 0x00 }, { ZYD_CR104, 0x03 }, { ZYD_CR105, 0x65 },	\ 	{ ZYD_CR106, 0x04 }, { ZYD_CR107, 0x00 }, { ZYD_CR108, 0x0a },	\ 	{ ZYD_CR109, 0xaa }, { ZYD_CR110, 0xaa }, { ZYD_CR111, 0x25 },	\ 	{ ZYD_CR112, 0x25 }, { ZYD_CR113, 0x00 }, { ZYD_CR119, 0x1e },	\ 	{ ZYD_CR125, 0x90 }, { ZYD_CR126, 0x00 }, { ZYD_CR127, 0x00 },	\ 	{ ZYD_CR5,   0x00 }, { ZYD_CR6,   0x00 }, { ZYD_CR7,   0x00 },	\ 	{ ZYD_CR8,   0x00 }, { ZYD_CR9,   0x20 }, { ZYD_CR12,  0xf0 },	\ 	{ ZYD_CR20,  0x0e }, { ZYD_CR21,  0x0e }, { ZYD_CR27,  0x10 },	\ 	{ ZYD_CR44,  0x33 }, { ZYD_CR47,  0x30 }, { ZYD_CR83,  0x24 },	\ 	{ ZYD_CR84,  0x04 }, { ZYD_CR85,  0x00 }, { ZYD_CR86,  0x0C },	\ 	{ ZYD_CR87,  0x12 }, { ZYD_CR88,  0x0C }, { ZYD_CR89,  0x00 },	\ 	{ ZYD_CR90,  0x10 }, { ZYD_CR91,  0x08 }, { ZYD_CR93,  0x00 },	\ 	{ ZYD_CR94,  0x01 }, { ZYD_CR95,  0x00 }, { ZYD_CR96,  0x50 },	\ 	{ ZYD_CR97,  0x37 }, { ZYD_CR98,  0x35 }, { ZYD_CR101, 0x13 },	\ 	{ ZYD_CR102, 0x27 }, { ZYD_CR103, 0x27 }, { ZYD_CR104, 0x18 },	\ 	{ ZYD_CR105, 0x12 }, { ZYD_CR109, 0x27 }, { ZYD_CR110, 0x27 },	\ 	{ ZYD_CR111, 0x27 }, { ZYD_CR112, 0x27 }, { ZYD_CR113, 0x27 },	\ 	{ ZYD_CR114, 0x27 }, { ZYD_CR115, 0x26 }, { ZYD_CR116, 0x24 },	\ 	{ ZYD_CR117, 0xfc }, { ZYD_CR118, 0xfa }, { ZYD_CR120, 0x4f },	\ 	{ ZYD_CR123, 0x27 }, { ZYD_CR125, 0xaa }, { ZYD_CR127, 0x03 },	\ 	{ ZYD_CR128, 0x14 }, { ZYD_CR129, 0x12 }, { ZYD_CR130, 0x10 },	\ 	{ ZYD_CR131, 0x0C }, { ZYD_CR136, 0xdf }, { ZYD_CR137, 0x40 },	\ 	{ ZYD_CR138, 0xa0 }, { ZYD_CR139, 0xb0 }, { ZYD_CR140, 0x99 },	\ 	{ ZYD_CR141, 0x82 }, { ZYD_CR142, 0x54 }, { ZYD_CR143, 0x1c },	\ 	{ ZYD_CR144, 0x6c }, { ZYD_CR147, 0x07 }, { ZYD_CR148, 0x4c },	\ 	{ ZYD_CR149, 0x50 }, { ZYD_CR150, 0x0e }, { ZYD_CR151, 0x18 },	\ 	{ ZYD_CR160, 0xfe }, { ZYD_CR161, 0xee }, { ZYD_CR162, 0xaa },	\ 	{ ZYD_CR163, 0xfa }, { ZYD_CR164, 0xfa }, { ZYD_CR165, 0xea },	\ 	{ ZYD_CR166, 0xbe }, { ZYD_CR167, 0xbe }, { ZYD_CR168, 0x6a },	\ 	{ ZYD_CR169, 0xba }, { ZYD_CR170, 0xba }, { ZYD_CR171, 0xba },	\ 	{ ZYD_CR204, 0x7d }, { ZYD_CR203, 0x30 }, 			\ 	{ 0, 0 }							\ }
+value|{									\ 	{ ZYD_CR0,   0x0a }, { ZYD_CR1,   0x06 }, { ZYD_CR2,   0x26 },	\ 	{ ZYD_CR3,   0x38 }, { ZYD_CR4,   0x80 }, { ZYD_CR9,   0xa0 },	\ 	{ ZYD_CR10,  0x81 }, { ZYD_CR11,  0x00 }, { ZYD_CR12,  0x7f },	\ 	{ ZYD_CR13,  0x8c }, { ZYD_CR14,  0x80 }, { ZYD_CR15,  0x3d },	\ 	{ ZYD_CR16,  0x20 }, { ZYD_CR17,  0x1e }, { ZYD_CR18,  0x0a },	\ 	{ ZYD_CR19,  0x48 }, { ZYD_CR20,  0x0c }, { ZYD_CR21,  0x0c },	\ 	{ ZYD_CR22,  0x23 }, { ZYD_CR23,  0x90 }, { ZYD_CR24,  0x14 },	\ 	{ ZYD_CR25,  0x40 }, { ZYD_CR26,  0x10 }, { ZYD_CR27,  0x19 },	\ 	{ ZYD_CR28,  0x7f }, { ZYD_CR29,  0x80 }, { ZYD_CR30,  0x4b },	\ 	{ ZYD_CR31,  0x60 }, { ZYD_CR32,  0x43 }, { ZYD_CR33,  0x08 },	\ 	{ ZYD_CR34,  0x06 }, { ZYD_CR35,  0x0a }, { ZYD_CR36,  0x00 },	\ 	{ ZYD_CR37,  0x00 }, { ZYD_CR38,  0x38 }, { ZYD_CR39,  0x0c },	\ 	{ ZYD_CR40,  0x84 }, { ZYD_CR41,  0x2a }, { ZYD_CR42,  0x80 },	\ 	{ ZYD_CR43,  0x10 }, { ZYD_CR44,  0x12 }, { ZYD_CR46,  0xff },	\ 	{ ZYD_CR47,  0x1e }, { ZYD_CR48,  0x26 }, { ZYD_CR49,  0x5b },	\ 	{ ZYD_CR64,  0xd0 }, { ZYD_CR65,  0x04 }, { ZYD_CR66,  0x58 },	\ 	{ ZYD_CR67,  0xc9 }, { ZYD_CR68,  0x88 }, { ZYD_CR69,  0x41 },	\ 	{ ZYD_CR70,  0x23 }, { ZYD_CR71,  0x10 }, { ZYD_CR72,  0xff },	\ 	{ ZYD_CR73,  0x32 }, { ZYD_CR74,  0x30 }, { ZYD_CR75,  0x65 },	\ 	{ ZYD_CR76,  0x41 }, { ZYD_CR77,  0x1b }, { ZYD_CR78,  0x30 },	\ 	{ ZYD_CR79,  0x68 }, { ZYD_CR80,  0x64 }, { ZYD_CR81,  0x64 },	\ 	{ ZYD_CR82,  0x00 }, { ZYD_CR83,  0x00 }, { ZYD_CR84,  0x00 },	\ 	{ ZYD_CR85,  0x02 }, { ZYD_CR86,  0x00 }, { ZYD_CR87,  0x00 },	\ 	{ ZYD_CR88,  0xff }, { ZYD_CR89,  0xfc }, { ZYD_CR90,  0x00 },	\ 	{ ZYD_CR91,  0x00 }, { ZYD_CR92,  0x00 }, { ZYD_CR93,  0x08 },	\ 	{ ZYD_CR94,  0x00 }, { ZYD_CR95,  0x00 }, { ZYD_CR96,  0xff },	\ 	{ ZYD_CR97,  0xe7 }, { ZYD_CR98,  0x00 }, { ZYD_CR99,  0x00 },	\ 	{ ZYD_CR100, 0x00 }, { ZYD_CR101, 0xae }, { ZYD_CR102, 0x02 },	\ 	{ ZYD_CR103, 0x00 }, { ZYD_CR104, 0x03 }, { ZYD_CR105, 0x65 },	\ 	{ ZYD_CR106, 0x04 }, { ZYD_CR107, 0x00 }, { ZYD_CR108, 0x0a },	\ 	{ ZYD_CR109, 0xaa }, { ZYD_CR110, 0xaa }, { ZYD_CR111, 0x25 },	\ 	{ ZYD_CR112, 0x25 }, { ZYD_CR113, 0x00 }, { ZYD_CR119, 0x1e },	\ 	{ ZYD_CR125, 0x90 }, { ZYD_CR126, 0x00 }, { ZYD_CR127, 0x00 },	\ 	{ ZYD_CR5,   0x00 }, { ZYD_CR6,   0x00 }, { ZYD_CR7,   0x00 },	\ 	{ ZYD_CR8,   0x00 }, { ZYD_CR9,   0x20 }, { ZYD_CR12,  0xf0 },	\ 	{ ZYD_CR20,  0x0e }, { ZYD_CR21,  0x0e }, { ZYD_CR27,  0x10 },	\ 	{ ZYD_CR44,  0x33 }, { ZYD_CR47,  0x1E }, { ZYD_CR83,  0x24 },	\ 	{ ZYD_CR84,  0x04 }, { ZYD_CR85,  0x00 }, { ZYD_CR86,  0x0C },	\ 	{ ZYD_CR87,  0x12 }, { ZYD_CR88,  0x0C }, { ZYD_CR89,  0x00 },	\ 	{ ZYD_CR90,  0x10 }, { ZYD_CR91,  0x08 }, { ZYD_CR93,  0x00 },	\ 	{ ZYD_CR94,  0x01 }, { ZYD_CR95,  0x00 }, { ZYD_CR96,  0x50 },	\ 	{ ZYD_CR97,  0x37 }, { ZYD_CR98,  0x35 }, { ZYD_CR101, 0x13 },	\ 	{ ZYD_CR102, 0x27 }, { ZYD_CR103, 0x27 }, { ZYD_CR104, 0x18 },	\ 	{ ZYD_CR105, 0x12 }, { ZYD_CR109, 0x27 }, { ZYD_CR110, 0x27 },	\ 	{ ZYD_CR111, 0x27 }, { ZYD_CR112, 0x27 }, { ZYD_CR113, 0x27 },	\ 	{ ZYD_CR114, 0x27 }, { ZYD_CR115, 0x26 }, { ZYD_CR116, 0x24 },	\ 	{ ZYD_CR117, 0xfc }, { ZYD_CR118, 0xfa }, { ZYD_CR120, 0x4f },	\ 	{ ZYD_CR125, 0xaa }, { ZYD_CR127, 0x03 }, { ZYD_CR128, 0x14 },	\ 	{ ZYD_CR129, 0x12 }, { ZYD_CR130, 0x10 }, { ZYD_CR131, 0x0C },	\ 	{ ZYD_CR136, 0xdf }, { ZYD_CR137, 0x40 }, { ZYD_CR138, 0xa0 },	\ 	{ ZYD_CR139, 0xb0 }, { ZYD_CR140, 0x99 }, { ZYD_CR141, 0x82 },	\ 	{ ZYD_CR142, 0x54 }, { ZYD_CR143, 0x1c }, { ZYD_CR144, 0x6c },	\ 	{ ZYD_CR147, 0x07 }, { ZYD_CR148, 0x4c }, { ZYD_CR149, 0x50 },	\ 	{ ZYD_CR150, 0x0e }, { ZYD_CR151, 0x18 }, { ZYD_CR160, 0xfe },	\ 	{ ZYD_CR161, 0xee }, { ZYD_CR162, 0xaa }, { ZYD_CR163, 0xfa },	\ 	{ ZYD_CR164, 0xfa }, { ZYD_CR165, 0xea }, { ZYD_CR166, 0xbe },	\ 	{ ZYD_CR167, 0xbe }, { ZYD_CR168, 0x6a }, { ZYD_CR169, 0xba },	\ 	{ ZYD_CR170, 0xba }, { ZYD_CR171, 0xba }, { ZYD_CR204, 0x7d },	\ 	{ ZYD_CR203, 0x30 }, { 0, 0}					\ }
 end_define
 
 begin_define
@@ -2990,15 +2997,71 @@ define|#
 directive|define
 name|ZYD_AL2230_PHY_B
 define|\
-value|{									\ 	{ ZYD_CR10,  0x89 }, { ZYD_CR15,  0x20 }, { ZYD_CR17,  0x2b },	\ 	{ ZYD_CR23,  0x40 }, { ZYD_CR24,  0x20 }, { ZYD_CR26,  0x93 },	\ 	{ ZYD_CR28,  0x3e }, { ZYD_CR29,  0x00 }, { ZYD_CR33,  0x28 },	\ 	{ ZYD_CR34,  0x30 }, { ZYD_CR35,  0x3e }, { ZYD_CR41,  0x24 },	\ 	{ ZYD_CR44,  0x32 }, { ZYD_CR46,  0x99 }, { ZYD_CR47,  0x1e },	\ 	{ ZYD_CR48,  0x00 }, { ZYD_CR49,  0x00 }, { ZYD_CR51,  0x01 },	\ 	{ ZYD_CR52,  0x80 }, { ZYD_CR53,  0x7e }, { ZYD_CR65,  0x00 },	\ 	{ ZYD_CR66,  0x00 }, { ZYD_CR67,  0x00 }, { ZYD_CR68,  0x00 },	\ 	{ ZYD_CR69,  0x28 }, { ZYD_CR79,  0x58 }, { ZYD_CR80,  0x30 },	\ 	{ ZYD_CR81,  0x30 }, { ZYD_CR87,  0x0a }, { ZYD_CR89,  0x04 },	\ 	{ ZYD_CR91,  0x00 }, { ZYD_CR92,  0x0a }, { ZYD_CR98,  0x8d },	\ 	{ ZYD_CR99,  0x00 }, { ZYD_CR101, 0x13 }, { ZYD_CR106, 0x24 },	\ 	{ ZYD_CR107, 0x2a }, { ZYD_CR109, 0x13 }, { ZYD_CR110, 0x1f },	\ 	{ ZYD_CR111, 0x1f }, { ZYD_CR114, 0x27 }, { ZYD_CR115, 0x26 },	\ 	{ ZYD_CR116, 0x24 }, { ZYD_CR117, 0xfa }, { ZYD_CR118, 0xfa },	\ 	{ ZYD_CR119, 0x10 }, { ZYD_CR120, 0x4f }, { ZYD_CR121, 0x6c },	\ 	{ ZYD_CR122, 0xfc }, { ZYD_CR123, 0x57 }, { ZYD_CR125, 0xad },	\ 	{ ZYD_CR126, 0x6c }, { ZYD_CR127, 0x03 }, { ZYD_CR137, 0x50 },	\ 	{ ZYD_CR138, 0xa8 }, { ZYD_CR144, 0xac }, { ZYD_CR150, 0x0d },	\ 	{ ZYD_CR252, 0x00 }, { ZYD_CR253, 0x00 }			\ }
+value|{									\ 	{ ZYD_CR10,  0x89 }, { ZYD_CR15,  0x20 }, { ZYD_CR17,  0x2B },	\ 	{ ZYD_CR23,  0x40 }, { ZYD_CR24,  0x20 }, { ZYD_CR26,  0x93 },	\ 	{ ZYD_CR28,  0x3e }, { ZYD_CR29,  0x00 }, { ZYD_CR33,  0x28 },	\ 	{ ZYD_CR34,  0x30 }, { ZYD_CR35,  0x3e }, { ZYD_CR41,  0x24 },	\ 	{ ZYD_CR44,  0x32 }, { ZYD_CR46,  0x99 }, { ZYD_CR47,  0x1e },	\ 	{ ZYD_CR48,  0x06 }, { ZYD_CR49,  0xf9 }, { ZYD_CR51,  0x01 },	\ 	{ ZYD_CR52,  0x80 }, { ZYD_CR53,  0x7e }, { ZYD_CR65,  0x00 },	\ 	{ ZYD_CR66,  0x00 }, { ZYD_CR67,  0x00 }, { ZYD_CR68,  0x00 },	\ 	{ ZYD_CR69,  0x28 }, { ZYD_CR79,  0x58 }, { ZYD_CR80,  0x30 },	\ 	{ ZYD_CR81,  0x30 }, { ZYD_CR87,  0x0a }, { ZYD_CR89,  0x04 },	\ 	{ ZYD_CR91,  0x00 }, { ZYD_CR92,  0x0a }, { ZYD_CR98,  0x8d },	\ 	{ ZYD_CR99,  0x00 }, { ZYD_CR101, 0x13 }, { ZYD_CR102, 0x27 },	\ 	{ ZYD_CR106, 0x24 }, { ZYD_CR107, 0x2a }, { ZYD_CR109, 0x13 },	\ 	{ ZYD_CR110, 0x1f }, { ZYD_CR111, 0x1f }, { ZYD_CR112, 0x1f },	\ 	{ ZYD_CR113, 0x27 }, { ZYD_CR114, 0x27 }, { ZYD_CR115, 0x26 },	\ 	{ ZYD_CR116, 0x24 }, { ZYD_CR117, 0xfa }, { ZYD_CR118, 0xfa },	\ 	{ ZYD_CR119, 0x10 }, { ZYD_CR120, 0x4f }, { ZYD_CR121, 0x6c },	\ 	{ ZYD_CR122, 0xfc }, { ZYD_CR123, 0x57 }, { ZYD_CR125, 0xad },	\ 	{ ZYD_CR126, 0x6c }, { ZYD_CR127, 0x03 }, { ZYD_CR137, 0x50 },	\ 	{ ZYD_CR138, 0xa8 }, { ZYD_CR144, 0xac }, { ZYD_CR150, 0x0d },	\ 	{ ZYD_CR252, 0x34 }, { ZYD_CR253, 0x34 }			\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZYD_AL2230_RF
+name|ZYD_AL2230_PHY_PART1
 define|\
-value|{									\ 	0x03f790, 0x033331, 0x00000d, 0x0b3331, 0x03b812, 0x00fff3,	\ 	0x000da4, 0x0f4dc5, 0x0805b6, 0x011687, 0x000688, 0x0403b9,	\ 	0x00dbba, 0x00099b, 0x0bdffc, 0x00000d, 0x00500f, 0x00d00f,	\ 	0x004c0f, 0x00540f, 0x00700f, 0x00500f				\ }
+value|{									\ 	{ ZYD_CR240, 0x57 }, { ZYD_CR9,   0xe0 }			\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230_PHY_PART2
+define|\
+value|{									\ 	{ ZYD_CR251, 0x2f }, { ZYD_CR251, 0x7f },			\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230_PHY_PART3
+define|\
+value|{									\ 	{ ZYD_CR128, 0x14 }, { ZYD_CR129, 0x12 }, { ZYD_CR130, 0x10 },	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230S_PHY_INIT
+define|\
+value|{									\ 	{ ZYD_CR47,  0x1e }, { ZYD_CR106, 0x22 }, { ZYD_CR107, 0x2a },	\ 	{ ZYD_CR109, 0x13 }, { ZYD_CR118, 0xf8 }, { ZYD_CR119, 0x12 },	\ 	{ ZYD_CR122, 0xe0 }, { ZYD_CR128, 0x10 }, { ZYD_CR129, 0x0e },	\ 	{ ZYD_CR130, 0x10 }						\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230_PHY_FINI_PART1
+define|\
+value|{									\ 	{ ZYD_CR80,  0x30 }, { ZYD_CR81,  0x30 }, { ZYD_CR79,  0x58 },	\ 	{ ZYD_CR12,  0xf0 }, { ZYD_CR77,  0x1b }, { ZYD_CR78,  0x58 },	\ 	{ ZYD_CR203, 0x06 }, { ZYD_CR240, 0x80 },			\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230_RF_PART1
+define|\
+value|{									\ 	0x03f790, 0x033331, 0x00000d, 0x0b3331, 0x03b812, 0x00fff3	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230_RF_PART2
+define|\
+value|{									\ 	0x000da4, 0x0f4dc5, 0x0805b6, 0x011687, 0x000688, 0x0403b9,	\ 	0x00dbba, 0x00099b, 0x0bdffc, 0x00000d, 0x00500f		\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230_RF_PART3
+define|\
+value|{									\ 	0x00d00f, 0x004c0f, 0x00540f, 0x00700f, 0x00500f		\ }
 end_define
 
 begin_define
@@ -3012,9 +3075,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|ZYD_AL2230_RF_B_PART1
+define|\
+value|{									\ 	0x8cccd0, 0x481dc0, 0xcfff00, 0x25a000				\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230_RF_B_PART2
+define|\
+value|{									\ 	0x25a000, 0xa3b2f0, 0x6da010, 0xe36280, 0x116000, 0x9dc020,	\ 	0x5ddb00, 0xd99000, 0x3ffbd0, 0xb00000, 0xf01a00		\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230_RF_B_PART3
+define|\
+value|{									\ 	0xf01b00, 0xf01e00, 0xf01a00					\ }
+end_define
+
+begin_define
+define|#
+directive|define
 name|ZYD_AL2230_CHANTABLE
 define|\
 value|{						\ 	{ 0x03f790, 0x033331, 0x00000d },	\ 	{ 0x03f790, 0x0b3331, 0x00000d },	\ 	{ 0x03e790, 0x033331, 0x00000d },	\ 	{ 0x03e790, 0x0b3331, 0x00000d },	\ 	{ 0x03f7a0, 0x033331, 0x00000d },	\ 	{ 0x03f7a0, 0x0b3331, 0x00000d },	\ 	{ 0x03e7a0, 0x033331, 0x00000d },	\ 	{ 0x03e7a0, 0x0b3331, 0x00000d },	\ 	{ 0x03f7b0, 0x033331, 0x00000d },	\ 	{ 0x03f7b0, 0x0b3331, 0x00000d },	\ 	{ 0x03e7b0, 0x033331, 0x00000d },	\ 	{ 0x03e7b0, 0x0b3331, 0x00000d },	\ 	{ 0x03f7c0, 0x033331, 0x00000d },	\ 	{ 0x03e7c0, 0x066661, 0x00000d }	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZYD_AL2230_CHANTABLE_B
+define|\
+value|{						\ 	{ 0x09efc0, 0x8cccc0, 0xb00000 },	\ 	{ 0x09efc0, 0x8cccd0, 0xb00000 },	\ 	{ 0x09e7c0, 0x8cccc0, 0xb00000 },	\ 	{ 0x09e7c0, 0x8cccd0, 0xb00000 },	\ 	{ 0x05efc0, 0x8cccc0, 0xb00000 },	\ 	{ 0x05efc0, 0x8cccd0, 0xb00000 },	\ 	{ 0x05e7c0, 0x8cccc0, 0xb00000 },	\ 	{ 0x05e7c0, 0x8cccd0, 0xb00000 },	\ 	{ 0x0defc0, 0x8cccc0, 0xb00000 },	\ 	{ 0x0defc0, 0x8cccd0, 0xb00000 },	\ 	{ 0x0de7c0, 0x8cccc0, 0xb00000 },	\ 	{ 0x0de7c0, 0x8cccd0, 0xb00000 },	\ 	{ 0x03efc0, 0x8cccc0, 0xb00000 },	\ 	{ 0x03e7c0, 0x866660, 0xb00000 }	\ }
 end_define
 
 begin_define
@@ -3195,6 +3290,13 @@ name|ZYD_DOWNLOADSTS
 value|0x31
 end_define
 
+begin_define
+define|#
+directive|define
+name|ZYD_READFWDATAREQ
+value|0x32
+end_define
+
 begin_comment
 comment|/* possible values for register ZYD_CR_INTERRUPT */
 end_comment
@@ -3367,7 +3469,7 @@ define|#
 directive|define
 name|ZYD_FILTER_BSS
 define|\
-value|(ZYD_FILTER_ASS_RSP | ZYD_FILTER_REASS_RSP |			\ 	 ZYD_FILTER_PRB_RSP | ZYD_FILTER_BCN | ZYD_FILTER_DEASS |	\ 	 ZYD_FILTER_AUTH | ZYD_FILTER_DEAUTH)
+value|(ZYD_FILTER_ASS_REQ | ZYD_FILTER_ASS_RSP |		\ 	ZYD_FILTER_REASS_REQ | ZYD_FILTER_REASS_RSP |		\ 	ZYD_FILTER_PRB_REQ | ZYD_FILTER_PRB_RSP |		\ 	(0x3<< 6) |						\ 	ZYD_FILTER_BCN | ZYD_FILTER_ATIM | ZYD_FILTER_DEASS |	\ 	ZYD_FILTER_AUTH | ZYD_FILTER_DEAUTH |			\ 	(0x7<< 13) |						\ 	ZYD_FILTER_PS_POLL | ZYD_FILTER_ACK)
 end_define
 
 begin_define
@@ -4003,6 +4105,23 @@ parameter_list|,
 name|uint8_t
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|cfg_bandedge6
+function_decl|)
+parameter_list|(
+name|struct
+name|zyd_softc
+modifier|*
+parameter_list|,
+name|struct
+name|zyd_rf
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
 name|uint8_t
 name|width
 decl_stmt|;
@@ -4339,6 +4458,15 @@ decl_stmt|;
 name|uint32_t
 name|sc_unit
 decl_stmt|;
+name|uint32_t
+name|sc_atim_wnd
+decl_stmt|;
+name|uint32_t
+name|sc_pre_tbtt
+decl_stmt|;
+name|uint32_t
+name|sc_bcn_int
+decl_stmt|;
 name|int
 name|sc_ns_arg
 decl_stmt|;
@@ -4379,7 +4507,22 @@ name|uint8_t
 name|sc_pa_rev
 decl_stmt|;
 name|uint8_t
-name|sc_fix_cr47
+name|sc_al2230s
+decl_stmt|;
+name|uint8_t
+name|sc_cckgain
+decl_stmt|;
+name|uint8_t
+name|sc_bandedge6
+decl_stmt|;
+name|uint8_t
+name|sc_newphy
+decl_stmt|;
+name|uint8_t
+name|sc_ledtype
+decl_stmt|;
+name|uint8_t
+name|sc_txled
 decl_stmt|;
 name|uint8_t
 name|sc_fix_cr157

@@ -89,6 +89,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|usb2_test_huawei_autoinst_t
+name|usb2_test_huawei_autoinst_w
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|usb2_quirk_ioctl_t
 name|usb2_quirk_ioctl_w
 decl_stmt|;
@@ -135,6 +142,16 @@ name|usb2_test_quirk_p
 init|=
 operator|&
 name|usb2_test_quirk_w
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|usb2_test_huawei_autoinst_t
+modifier|*
+name|usb2_test_huawei_autoinst_p
+init|=
+operator|&
+name|usb2_test_huawei_autoinst_w
 decl_stmt|;
 end_decl_stmt
 
@@ -309,6 +326,30 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|uint8_t
+name|usb2_test_huawei_autoinst_w
+parameter_list|(
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+parameter_list|,
+name|struct
+name|usb2_attach_arg
+modifier|*
+name|uaa
+parameter_list|)
+block|{
+return|return
+operator|(
+name|USB_ERR_INVAL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|usb2_quirk_unload
 parameter_list|(
@@ -397,6 +438,35 @@ name|pause
 argument_list|(
 literal|"WAIT"
 argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usb2_test_huawei_unload
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+comment|/* reset function pointers */
+name|usb2_test_huawei_autoinst_p
+operator|=
+operator|&
+name|usb2_test_huawei_autoinst_w
+expr_stmt|;
+comment|/* wait for CPU to exit the loaded functions, if any */
+comment|/* XXX this is a tradeoff */
+name|pause
+argument_list|(
+literal|"WAIT"
+argument_list|,
+literal|16
+operator|*
 name|hz
 argument_list|)
 expr_stmt|;
