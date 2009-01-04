@@ -2840,8 +2840,6 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
-block|,
 operator|&
 name|rip_usrreqs
 block|}
