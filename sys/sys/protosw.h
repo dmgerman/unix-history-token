@@ -299,11 +299,6 @@ modifier|*
 name|pr_ctloutput
 decl_stmt|;
 comment|/* control output (from above) */
-comment|/* user-protocol hook */
-name|pr_usrreq_t
-modifier|*
-name|pr_ousrreq
-decl_stmt|;
 comment|/* utility hooks */
 name|pr_init_t
 modifier|*
