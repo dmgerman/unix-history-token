@@ -179,8 +179,20 @@ name|teken_wcwidth
 parameter_list|(
 name|teken_char_t
 name|c
+name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|TEKEN_CONS25
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+else|#
+directive|else
+comment|/* !TEKEN_CONS25 */
 return|return
 operator|(
 name|c
@@ -193,6 +205,9 @@ literal|1
 else|:
 literal|1
 return|;
+endif|#
+directive|endif
+comment|/* TEKEN_CONS25 */
 block|}
 end_function
 

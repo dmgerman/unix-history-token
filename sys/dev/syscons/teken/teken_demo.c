@@ -1480,6 +1480,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TEKEN_UTF8
 name|setenv
 argument_list|(
 literal|"LC_CTYPE"
@@ -1489,6 +1492,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* TEKEN_UTF8 */
 name|execlp
 argument_list|(
 literal|"zsh"
