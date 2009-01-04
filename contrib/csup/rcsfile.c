@@ -6030,11 +6030,11 @@ name|rcsnum_cmp
 argument_list|(
 name|d
 operator|->
-name|revdate
+name|revnum
 argument_list|,
 name|d2
 operator|->
-name|revdate
+name|revnum
 argument_list|)
 operator|<
 literal|0
