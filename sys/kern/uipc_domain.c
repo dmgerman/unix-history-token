@@ -206,6 +206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|dom_mtx
@@ -1368,7 +1369,7 @@ comment|/* 	 * Protect us against races when two protocol registrations for 	 * 
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 comment|/* The new protocol must not yet exist. */
@@ -1416,7 +1417,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1459,7 +1460,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1486,7 +1487,7 @@ comment|/* Job is done, no more protection required. */
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Initialize and activate the protocol. */
@@ -1609,7 +1610,7 @@ comment|/* Lock out everyone else while we are manipulating the protosw. */
 name|mtx_lock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 comment|/* The protocol must exist and only once. */
@@ -1660,7 +1661,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1688,7 +1689,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1781,7 +1782,7 @@ comment|/* Job is done, not more protection required. */
 name|mtx_unlock
 argument_list|(
 operator|&
-name|Giant
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 return|return
