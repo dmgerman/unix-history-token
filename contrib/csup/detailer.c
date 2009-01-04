@@ -2846,7 +2846,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/*  	 * I don't think we can use the status file, since it only records file 	 * attributes in cvsmode. 	 */
+comment|/* 	 * I don't think we can use the status file, since it only records file 	 * attributes in cvsmode. 	 */
 name|client_attr
 operator|=
 name|NULL
@@ -3059,7 +3059,7 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-comment|/*          * Try to check if the file exists either live or dead to see if we can         * edit it and put it live or dead, rather than receiving the entire         * file. 	*/
+comment|/*         * Try to check if the file exists either live or dead to see if we can         * edit it and put it live or dead, rather than receiving the entire         * file. 	*/
 if|if
 condition|(
 name|fa

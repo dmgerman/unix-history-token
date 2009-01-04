@@ -3634,7 +3634,7 @@ break|break;
 case|case
 literal|'I'
 case|:
-comment|/*  			 * Create directory and add DirDown entry in status 			 * file. 			 */
+comment|/* 			 * Create directory and add DirDown entry in status 			 * file. 			 */
 name|name
 operator|=
 name|proto_get_ascii
@@ -3913,7 +3913,7 @@ break|break;
 case|case
 literal|'J'
 case|:
-comment|/*  			 * Set attributes of directory and update DirUp entry in 			 * status file. 			 */
+comment|/* 			 * Set attributes of directory and update DirUp entry in 			 * status file. 			 */
 name|name
 operator|=
 name|proto_get_ascii
@@ -6202,7 +6202,7 @@ name|UPDATER_ERR_MSG
 operator|)
 return|;
 block|}
-comment|/*  	 * Now, make sure they were set and record what was set in the status 	 * file. 	 */
+comment|/* 	 * Now, make sure they were set and record what was set in the status 	 * file. 	 */
 name|fa
 operator|=
 name|fattr_frompath

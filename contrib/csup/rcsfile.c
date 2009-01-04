@@ -333,13 +333,6 @@ argument|delta
 argument_list|)
 name|deltatable
 expr_stmt|;
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|delta
-argument_list|)
-name|deltatable_dates
-expr_stmt|;
 name|char
 modifier|*
 name|desc
@@ -1889,7 +1882,6 @@ operator|->
 name|deltalist
 argument_list|)
 expr_stmt|;
-comment|/*  	 * XXX: We do not take as much care as cvsup to cope with hand-hacked 	 * RCS-files, and therefore we'll just let them be updated. If having 	 * them correct is important, it will be catched by the checksum anyway. 	 */
 comment|/* Write out deltatexts. */
 name|error
 operator|=
@@ -4010,7 +4002,6 @@ name|text
 argument_list|)
 expr_stmt|;
 comment|/* Free all subbranches of a delta. */
-comment|/* XXX: Is this ok? Since the branchpoint is removed, there is no good 	 * reason for the branch to exists, but we might still have deltas in 	 * these branches. 	 */
 while|while
 condition|(
 operator|!
@@ -4431,7 +4422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Searches the global deltalist for a delta.  */
+comment|/*  * Searches the global deltalist for a delta.  */
 end_comment
 
 begin_function
@@ -5472,7 +5463,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  			 * On import we need to set the diffbase to our 			 * branchpoint for writing out later. 			 * XXX: this could perhaps be done at a better time. 			 */
+comment|/* 			 * On import we need to set the diffbase to our 			 * branchpoint for writing out later. 			 */
 if|if
 condition|(
 name|LIST_FIRST
