@@ -1399,15 +1399,6 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"pr_ousrreq: %p   "
-argument_list|,
-name|pr
-operator|->
-name|pr_ousrreq
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
 literal|"pr_init: %p\n"
 argument_list|,
 name|pr
@@ -1450,15 +1441,6 @@ expr_stmt|;
 name|db_print_indent
 argument_list|(
 name|indent
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"pr_ousrreq: %p\n"
-argument_list|,
-name|pr
-operator|->
-name|pr_ousrreq
 argument_list|)
 expr_stmt|;
 block|}

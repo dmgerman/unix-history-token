@@ -1748,12 +1748,6 @@ name|NULL
 expr_stmt|;
 name|dpr
 operator|->
-name|pr_ousrreq
-operator|=
-name|NULL
-expr_stmt|;
-name|dpr
-operator|->
 name|pr_init
 operator|=
 name|NULL
