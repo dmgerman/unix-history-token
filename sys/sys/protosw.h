@@ -741,8 +741,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PRU_FLUSH
+value|25
+end_define
+
+begin_comment
+comment|/* flush the socket */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRU_NREQ
-value|24
+value|25
 end_define
 
 begin_ifdef
@@ -808,6 +819,8 @@ block|,
 literal|"SOSETLABEL"
 block|,
 literal|"CLOSE"
+block|,
+literal|"FLUSH"
 block|, }
 decl_stmt|;
 end_decl_stmt
