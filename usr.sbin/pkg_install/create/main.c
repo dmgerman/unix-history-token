@@ -795,6 +795,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+name|Regenerate
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+case|case
 literal|0
 case|:
 if|if
