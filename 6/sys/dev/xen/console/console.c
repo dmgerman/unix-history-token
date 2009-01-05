@@ -517,7 +517,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&x, _name, NULL, MTX_SPIN|MTX_RECURSE)
+value|mtx_init(&x, _name, NULL, MTX_DEF|MTX_RECURSE)
 end_define
 
 begin_define
@@ -528,7 +528,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|do {											\ 				if (panicstr == NULL)					\                         mtx_lock_spin(&(l));			\ 		} while (0)
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_lock(&(l));			\ 		} while (0)
 end_define
 
 begin_define
@@ -539,7 +539,7 @@ parameter_list|(
 name|l
 parameter_list|)
 define|\
-value|do {											\ 				if (panicstr == NULL)					\                         mtx_unlock_spin(&(l));			\ 		} while (0)
+value|do {											\ 				if (panicstr == NULL)					\                         mtx_unlock(&(l));			\ 		} while (0)
 end_define
 
 begin_define
@@ -1177,6 +1177,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|struct
 name|xc_softc
 modifier|*

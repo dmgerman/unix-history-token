@@ -214,17 +214,17 @@ directive|include
 file|<machine/intr_machdep.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<machine/xen/xen-os.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
 
 begin_include
 include|#

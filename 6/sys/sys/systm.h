@@ -462,6 +462,12 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
+name|lock_object
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|clockframe
 struct_decl|;
 end_struct_decl
@@ -2521,6 +2527,40 @@ end_function
 begin_comment
 comment|/*  * Common `proc' functions are declared here so that proc.h can be included  * less often.  */
 end_comment
+
+begin_function_decl
+name|int
+name|_sleep
+parameter_list|(
+name|void
+modifier|*
+name|chan
+parameter_list|,
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|,
+name|int
+name|pri
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|wmesg
+parameter_list|,
+name|int
+name|timo
+parameter_list|)
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int

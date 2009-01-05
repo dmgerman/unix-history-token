@@ -1889,7 +1889,7 @@ name|mtx_object
 argument_list|,
 literal|"codrain"
 argument_list|,
-name|SLEEPQ_MSLEEP
+name|SLEEPQ_SLEEP
 argument_list|,
 literal|0
 argument_list|)

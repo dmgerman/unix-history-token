@@ -45,6 +45,12 @@ else|#
 directive|else
 end_else
 
+begin_error
+error|#
+directive|error
+literal|"using old handle"
+end_error
+
 begin_define
 define|#
 directive|define

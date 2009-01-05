@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<xen/hypervisor.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/xen/synch_bitops.h>
 end_include
 
@@ -621,6 +627,10 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+condition|)
 operator|*
 name|result
 operator|=
@@ -1237,9 +1247,9 @@ name|head
 parameter_list|)
 block|{
 name|int
-name|error
+name|ref
 decl_stmt|,
-name|h
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -1248,12 +1258,15 @@ argument_list|(
 name|count
 argument_list|,
 operator|&
-name|h
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|unlikely
+argument_list|(
 name|error
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1263,7 +1276,7 @@ return|;
 operator|*
 name|head
 operator|=
-name|h
+name|ref
 expr_stmt|;
 return|return
 operator|(

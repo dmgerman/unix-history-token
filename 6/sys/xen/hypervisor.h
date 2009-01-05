@@ -78,6 +78,24 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/interface/xen.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/interface/platform.h>
 end_include
 
@@ -196,12 +214,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|XENHVM
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|start_info_t
@@ -209,11 +221,6 @@ modifier|*
 name|xen_start_info
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern

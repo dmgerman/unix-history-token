@@ -118,6 +118,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/xen_intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/evtchn.h>
 end_include
 
@@ -131,6 +143,18 @@ begin_include
 include|#
 directive|include
 file|<dev/xen/console/xencons_ring.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/evtchn.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/interface/io/console.h>
 end_include
 
 begin_define
@@ -153,6 +177,14 @@ specifier|extern
 name|char
 modifier|*
 name|console_page
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|cn_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -372,6 +404,12 @@ name|cons
 decl_stmt|,
 name|prod
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|cn_mtx
+argument_list|)
+expr_stmt|;
 name|intf
 operator|=
 name|xencons_interface
@@ -437,6 +475,12 @@ argument_list|)
 expr_stmt|;
 name|xencons_tx
 argument_list|()
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|cn_mtx
+argument_list|)
 expr_stmt|;
 block|}
 end_function

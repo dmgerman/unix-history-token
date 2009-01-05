@@ -15,6 +15,12 @@ directive|define
 name|_XENBUS_COMMS_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|sx
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -63,6 +69,10 @@ name|data
 parameter_list|,
 name|unsigned
 name|len
+parameter_list|,
+name|struct
+name|lock_object
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -77,6 +87,10 @@ name|data
 parameter_list|,
 name|unsigned
 name|len
+parameter_list|,
+name|struct
+name|lock_object
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

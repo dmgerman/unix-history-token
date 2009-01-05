@@ -228,19 +228,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/xen/xenfunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/hypervisor.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<xen/features.h>
 end_include
 
 begin_include

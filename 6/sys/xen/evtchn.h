@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  * evtchn.h  *   * Communication via Xen event channels.  * Also definitions for the device that demuxes notifications to userspace.  *   * Copyright (c) 2004, K A Fraser  */
+comment|/******************************************************************************  * evtchn.h  *   * Communication via Xen event channels.  * Also definitions for the device that demuxes notifications to userspace.  *   * Copyright (c) 2004, K A Fraser  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -18,7 +18,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/hypervisor.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/xen/synch_bitops.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
 end_include
 
 begin_comment
@@ -42,12 +60,6 @@ end_function_decl
 begin_comment
 comment|/* Entry point for notifications into Linux subsystems. */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|intrframe
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|void

@@ -16,7 +16,7 @@ name|_XEN_INTR_H_
 end_define
 
 begin_comment
-comment|/* * The flat IRQ space is divided into two regions: *  1. A one-to-one mapping of real physical IRQs. This space is only used *     if we have physical device-access privilege. This region is at the  *     start of the IRQ space so that existing device drivers do not need *     to be modified to translate physical IRQ numbers into our IRQ space. *  3. A dynamic mapping of inter-domain and Xen-sourced virtual IRQs. These *     are bound using the provided bind/unbind functions. */
+comment|/* * The flat IRQ space is divided into two regions: *  1. A one-to-one mapping of real physical IRQs. This space is only used *     if we have physical device-access privilege. This region is at the  *     start of the IRQ space so that existing device drivers do not need *     to be modified to translate physical IRQ numbers into our IRQ space. *  3. A dynamic mapping of inter-domain and Xen-sourced virtual IRQs. These *     are bound using the provided bind/unbind functions. * * * $FreeBSD$ */
 end_comment
 
 begin_define
@@ -95,7 +95,7 @@ value|((_x) - DYNIRQ_BASE)
 end_define
 
 begin_comment
-comment|/*  * Dynamic binding of event channels and VIRQ sources to guest IRQ space.  */
+comment|/*   * Dynamic binding of event channels and VIRQ sources to guest IRQ space.  */
 end_comment
 
 begin_comment
