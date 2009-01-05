@@ -173,7 +173,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|volatile
-name|int
+name|sig_atomic_t
 name|global_fd_for_cleanup
 decl_stmt|;
 end_decl_stmt
