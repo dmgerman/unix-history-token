@@ -1024,6 +1024,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CENTAUR_VENDOR_ID
+value|"CentaurHauls"
+end_define
+
+begin_define
+define|#
+directive|define
 name|INTEL_VENDOR_ID
 value|"GenuineIntel"
 end_define

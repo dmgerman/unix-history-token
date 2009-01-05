@@ -96,6 +96,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_VENDOR_IDT
+value|0x111d
+end_define
+
+begin_comment
+comment|/* Centaur/IDT/VIA */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_VENDOR_INTEL
 value|0x8086
 end_define
@@ -103,6 +114,13 @@ end_define
 begin_comment
 comment|/* Intel */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_VENDOR_CENTAUR
+value|CPU_VENDOR_IDT
+end_define
 
 begin_ifndef
 ifndef|#

@@ -149,24 +149,6 @@ name|MSR_SS_ENABLE
 value|(1<<16)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CPU_VENDOR_CENTAUR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CPU_VENDOR_CENTAUR
-value|0x111d
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Frequency and MSR control values. */
 end_comment

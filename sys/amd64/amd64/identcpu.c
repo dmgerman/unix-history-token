@@ -363,6 +363,13 @@ name|CPU_VENDOR_AMD
 block|}
 block|,
 comment|/* AuthenticAMD */
+block|{
+name|CENTAUR_VENDOR_ID
+block|,
+name|CPU_VENDOR_CENTAUR
+block|}
+block|,
+comment|/* CentaurHauls */
 block|}
 struct|;
 end_struct
