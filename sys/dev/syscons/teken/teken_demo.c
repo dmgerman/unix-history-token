@@ -1471,6 +1471,9 @@ expr_stmt|;
 case|case
 literal|0
 case|:
+ifdef|#
+directive|ifdef
+name|TEKEN_CONS25
 name|setenv
 argument_list|(
 literal|"TERM"
@@ -1480,6 +1483,21 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* !TEKEN_CONS25 */
+name|setenv
+argument_list|(
+literal|"TERM"
+argument_list|,
+literal|"xterm"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* TEKEN_CONS25 */
 ifdef|#
 directive|ifdef
 name|TEKEN_UTF8

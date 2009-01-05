@@ -1133,6 +1133,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'\x0C'
+case|:
+name|teken_subr_newpage
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'\r'
 case|:
 name|teken_subr_carriage_return
