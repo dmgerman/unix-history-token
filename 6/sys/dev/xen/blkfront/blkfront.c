@@ -4709,6 +4709,14 @@ name|blk_shadow
 modifier|*
 name|copy
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|info
+operator|->
+name|sc
+condition|)
+return|return;
 comment|/* Stage 1: Make a safe copy of the shadow state. */
 name|copy
 operator|=
