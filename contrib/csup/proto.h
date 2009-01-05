@@ -139,6 +139,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|proto_get_sizet
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|proto_get_time
 parameter_list|(
 name|char
