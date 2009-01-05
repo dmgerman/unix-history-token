@@ -2357,8 +2357,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -3372,6 +3371,19 @@ operator|.
 name|vdd
 expr_stmt|;
 break|break;
+case|case
+name|MMCBR_IVAR_MAX_DATA
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|result
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
@@ -3528,6 +3540,7 @@ operator|=
 name|value
 expr_stmt|;
 break|break;
+comment|/* These are read-only */
 case|case
 name|MMCBR_IVAR_HOST_OCR
 case|:
@@ -3536,6 +3549,9 @@ name|MMCBR_IVAR_F_MIN
 case|:
 case|case
 name|MMCBR_IVAR_F_MAX
+case|:
+case|case
+name|MMCBR_IVAR_MAX_DATA
 case|:
 return|return
 operator|(
