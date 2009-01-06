@@ -1913,6 +1913,24 @@ name|USBREV_UNKNOWN
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * Quirk for Parallels Desktop 4.0. 	 */
+if|if
+condition|(
+name|pci_get_devid
+argument_list|(
+name|self
+argument_list|)
+operator|==
+name|PCI_UHCI_DEVICEID_ICH6_A
+condition|)
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|usbrev
+operator|=
+name|USBREV_2_0
+expr_stmt|;
 name|err
 operator|=
 name|bus_setup_intr

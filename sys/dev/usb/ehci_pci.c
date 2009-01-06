@@ -1346,6 +1346,27 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * Quirk for Parallels Desktop 4.0. 		 */
+if|if
+condition|(
+name|pci_get_devid
+argument_list|(
+name|self
+argument_list|)
+operator|==
+name|PCI_EHCI_DEVICEID_ICH6
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|usbrev
+operator|=
+name|USBREV_2_0
+expr_stmt|;
+break|break;
+block|}
 name|sc
 operator|->
 name|sc_bus
