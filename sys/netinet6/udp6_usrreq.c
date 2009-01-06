@@ -1055,7 +1055,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 						 * Engage the tunneling 						 * protocol we will have to 						 * leave the info_lock up, 						 * since we are hunting 						 * through multiple UDP 						 * inp's hope we don't break. 						 *  						 */
+comment|/* 						 * Engage the tunneling 						 * protocol we will have to 						 * leave the info_lock up, 						 * since we are hunting 						 * through multiple UDP's. 						 *  						 */
 name|udp_tun_func_t
 name|tunnel_func
 decl_stmt|;
@@ -1172,7 +1172,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Engage the tunneling protocol we must make sure 			 * all locks are released when we call the tunneling 			 * protocol. 			 */
+comment|/* 			 * Engage the tunneling protocol. 			 */
 name|udp_tun_func_t
 name|tunnel_func
 decl_stmt|;
@@ -1419,7 +1419,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Engage the tunneling protocol we must make sure all locks 		 * are released when we call the tunneling protocol. 		 */
+comment|/* 		 * Engage the tunneling protocol. 		 */
 name|udp_tun_func_t
 name|tunnel_func
 decl_stmt|;

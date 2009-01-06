@@ -2176,7 +2176,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Engage the tunneling protocol we 					 * will have to leave the info_lock 					 * up, since we are hunting through 					 * multiple UDP inp's hope we don't 					 * break. 					 *  					 * XXXML: Maybe add a flag to the 					 * prototype so that the tunneling 					 * can defer work that can't be done 					 * under the info lock? 					 */
+comment|/* 					 * Engage the tunneling protocol we 					 * will have to leave the info_lock 					 * up, since we are hunting through 					 * multiple UDP's. 					 *  					 */
 name|udp_tun_func_t
 name|tunnel_func
 decl_stmt|;
@@ -2290,7 +2290,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Engage the tunneling protocol we must make sure 			 * all locks are released when we call the tunneling 			 * protocol. 			 */
+comment|/* 			 * Engage the tunneling protocol. 			 */
 name|udp_tun_func_t
 name|tunnel_func
 decl_stmt|;
@@ -2541,7 +2541,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Engage the tunneling protocol we must make sure all locks 		 * are released when we call the tunneling protocol. 		 */
+comment|/* 		 * Engage the tunneling protocol. 		 */
 name|udp_tun_func_t
 name|tunnel_func
 decl_stmt|;
@@ -5357,6 +5357,32 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_type
+operator|==
+name|SOCK_DGRAM
+argument_list|,
+operator|(
+literal|"udp_set_kernel_tunneling: !dgram"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_pcb
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"udp_set_kernel_tunneling: NULL inp"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -5392,6 +5418,26 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_ppcb
+operator|!=
+name|NULL
+condition|)
+block|{
+name|INP_WUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+block|}
 name|inp
 operator|->
 name|inp_ppcb
