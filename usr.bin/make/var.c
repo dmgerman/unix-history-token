@@ -9017,7 +9017,6 @@ end_comment
 begin_function
 name|Buffer
 modifier|*
-comment|//Var_Subst(const char *var, const char *str, GNode *ctxt, Boolean undefErr)
 name|Var_Subst
 parameter_list|(
 specifier|const
