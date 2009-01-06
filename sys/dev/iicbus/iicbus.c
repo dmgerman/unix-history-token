@@ -114,9 +114,11 @@ argument_list|,
 literal|"Philips I2C bus"
 argument_list|)
 expr_stmt|;
+comment|/* Allow other subclasses to override this driver. */
 return|return
 operator|(
-literal|0
+operator|-
+literal|1000
 operator|)
 return|;
 block|}
