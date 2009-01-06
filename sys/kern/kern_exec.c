@@ -1644,27 +1644,6 @@ name|image_header
 operator|=
 name|NULL
 expr_stmt|;
-name|SDT_PROBE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|exec
-argument_list|,
-name|args
-operator|->
-name|fname
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Translate the file name. namei() returns a vnode pointer 	 *	in ni_vp amoung other things. 	 * 	 * XXXAUDIT: It would be desirable to also audit the name of the 	 * interpreter if this is an interpreted binary. 	 */
 name|ndp
 operator|=
@@ -1696,6 +1675,27 @@ operator|->
 name|fname
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec
+argument_list|,
+name|args
+operator|->
+name|fname
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|interpret
@@ -3034,6 +3034,27 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE
+argument_list|(
+name|proc
+argument_list|,
+name|kernel
+argument_list|, ,
+name|exec_success
+argument_list|,
+name|args
+operator|->
+name|fname
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|done1
 label|:
 comment|/* 	 * Free any resources malloc'd earlier that we didn't use. 	 */
@@ -3068,27 +3089,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|SDT_PROBE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|exec_success
-argument_list|,
-name|args
-operator|->
-name|fname
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Handle deferred decrement of ref counts. 	 */
