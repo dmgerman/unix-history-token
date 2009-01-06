@@ -1478,6 +1478,20 @@ name|audit_pipe
 modifier|*
 name|ap
 decl_stmt|;
+comment|/* Lockless read to avoid acquiring the global lock if not needed. */
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|audit_pipe_list
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|AUDIT_PIPE_LIST_RLOCK
 argument_list|()
 expr_stmt|;
