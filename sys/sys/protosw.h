@@ -99,26 +99,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|void
-name|pr_in_input_t
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/* XXX FIX THIS */
-end_comment
-
-begin_typedef
-typedef|typedef
 name|int
 name|pr_output_t
 parameter_list|(
@@ -128,26 +108,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|socket
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|pr_in_output_t
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|socket
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
@@ -226,36 +186,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|int
-name|pr_usrreq_t
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_struct
 struct|struct
 name|protosw
@@ -324,7 +254,7 @@ name|pr_usrreqs
 modifier|*
 name|pr_usrreqs
 decl_stmt|;
-comment|/* supersedes pr_usrreq() */
+comment|/* user-protocol hook */
 block|}
 struct|;
 end_struct
@@ -452,7 +382,7 @@ comment|/* enforce ipsec policy; last header */
 end_comment
 
 begin_comment
-comment|/*  * In earlier BSD network stacks, a single pr_usrreq() function pointer was  * invoked with an operation number indicating what operation was desired.  * We now provide individual function pointers which protocols can implement,  * which offers a number of benefits (such as type checking for arguments).  * These older constants are still present in order to support TCP debugging.  *  * The arguments to usrreq were:  *	(*protosw[].pr_usrreq)(up, req, m, nam, opt);  * where up is a (struct socket *), req is one of these requests,  * m is an optional mbuf chain containing a message,  * nam is an optional mbuf chain containing an address,  * and opt is a pointer to a socketopt structure or nil.  * The protocol is responsible for disposal of the mbuf chain m,  * the caller is responsible for any space held by nam and opt.  * A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
+comment|/*  * In earlier BSD network stacks, a single pr_usrreq() function pointer was  * invoked with an operation number indicating what operation was desired.  * We now provide individual function pointers which protocols can implement,  * which offers a number of benefits (such as type checking for arguments).  * These older constants are still present in order to support TCP debugging.  */
 end_comment
 
 begin_define
@@ -2083,7 +2013,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The arguments to ctloutput are:  *	(*protosw[].pr_ctloutput)(req, so, level, optname, optval, p);  * req is one of the actions listed below, so is a (struct socket *),  * level is an indication of which protocol layer the option is intended.  * optname is a protocol dependent socket option request,  * optval is a pointer to a mbuf-chain pointer, for value-return results.  * The protocol is responsible for disposal of the mbuf chain *optval  * if supplied,  * the caller is responsible for any space held by *optval, when returned.  * A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
+comment|/*  * The arguments to ctloutput are:  *	(*protosw[].pr_ctloutput)(req, so, level, optname, optval, p);  * req is one of the actions listed below, so is a (struct socket *),  * level is an indication of which protocol layer the option is intended.  * optname is a protocol dependent socket option request,  * optval is a pointer to a mbuf-chain pointer, for value-return results.  * The protocol is responsible for disposal of the mbuf chain *optval  * if supplied,  * the caller is responsible for any space held by *optval, when returned.  * A non-zero return from ctloutput gives an  * UNIX error number which should be passed to higher level software.  */
 end_comment
 
 begin_define
