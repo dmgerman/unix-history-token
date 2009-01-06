@@ -1033,6 +1033,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CSUM_SCTP
+value|0x0040
+end_define
+
+begin_comment
+comment|/* will csum SCTP */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CSUM_IP_CHECKED
 value|0x0100
 end_define
@@ -1072,6 +1083,17 @@ end_define
 
 begin_comment
 comment|/* csum_data has pseudo hdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_SCTP_VALID
+value|0x1000
+end_define
+
+begin_comment
+comment|/* SCTP checksum is valid */
 end_comment
 
 begin_define
