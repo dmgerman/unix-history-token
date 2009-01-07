@@ -3439,12 +3439,23 @@ name|se
 operator|->
 name|se_noise
 expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_STA
+condition|)
+block|{
+comment|/* NB: only infrastructure mode requires an associd */
 name|ni
 operator|->
 name|ni_flags
 operator||=
 name|IEEE80211_NODE_ASSOCID
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ieee80211_ies_init
