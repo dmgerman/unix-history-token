@@ -1329,6 +1329,8 @@ label|:
 if|if
 condition|(
 name|i
+operator|>
+literal|0
 condition|)
 block|{
 name|fprintf
