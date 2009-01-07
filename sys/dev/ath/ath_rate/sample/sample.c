@@ -4906,8 +4906,9 @@ operator|!=
 name|IEEE80211_FIXED_RATE_NONE
 condition|)
 block|{
-comment|/* 		 * A fixed rate is to be used; ic_fixed_rate is the 		 * IEEE code for this rate (sans basic bit).  Convert this 		 * to the index into the negotiated rate set for 		 * the node. 		 */
-comment|/* NB: the rate set is assumed sorted */
+comment|/* 		 * A fixed rate is to be used; ucastrate is the IEEE code 		 * for this rate (sans basic bit).  Check this against the 		 * negotiated rate set for the node.  Note the fixed rate 		 * may not be available for various reasons so we only 		 * setup the static rate index if the lookup is successful. 		 * XXX handle MCS 		 */
+for|for
+control|(
 name|srate
 operator|=
 name|ni
@@ -4917,34 +4918,26 @@ operator|.
 name|rs_nrates
 operator|-
 literal|1
-expr_stmt|;
-for|for
-control|(
 init|;
 name|srate
 operator|>=
 literal|0
-operator|&&
-name|RATE
-argument_list|(
-name|srate
-argument_list|)
-operator|!=
-name|tp
-operator|->
-name|ucastrate
 condition|;
 name|srate
 operator|--
 control|)
-empty_stmt|;
-comment|/* 		 * The fixed rate may not be available due to races 		 * and mode settings.  Also orphaned nodes created in 		 * adhoc mode may not have any rate set so this lookup 		 * can fail. 		 */
 if|if
 condition|(
+name|RATE
+argument_list|(
 name|srate
-operator|>=
-literal|0
+argument_list|)
+operator|==
+name|tp
+operator|->
+name|ucastrate
 condition|)
+block|{
 name|sn
 operator|->
 name|static_rix
@@ -4953,9 +4946,13 @@ name|sc
 operator|->
 name|sc_rixmap
 index|[
-name|srate
+name|tp
+operator|->
+name|ucastrate
 index|]
 expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* 	 * Construct a bitmask of usable rates.  This has all 	 * negotiated rates minus those marked by the hal as 	 * to be ignored for doing rate control. 	 */
 name|sn
