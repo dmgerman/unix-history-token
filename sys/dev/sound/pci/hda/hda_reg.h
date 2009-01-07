@@ -674,8 +674,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HDA_CMD_VERB_GET_DIGITAL_CONV_FMT
+name|HDA_CMD_VERB_GET_DIGITAL_CONV_FMT1
 value|0xf0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CMD_VERB_GET_DIGITAL_CONV_FMT2
+value|0xf0e
 end_define
 
 begin_define
@@ -702,7 +709,7 @@ parameter_list|,
 name|nid
 parameter_list|)
 define|\
-value|(HDA_CMD_12BIT((cad), (nid),					\     HDA_CMD_VERB_GET_DIGITAL_CONV_FMTT, 0x0))
+value|(HDA_CMD_12BIT((cad), (nid),					\     HDA_CMD_VERB_GET_DIGITAL_CONV_FMT1, 0x0))
 end_define
 
 begin_define
@@ -4510,7 +4517,7 @@ parameter_list|(
 name|param
 parameter_list|)
 define|\
-value|(((param)& HDA_PARAM_PIN_CAP_PRESENCE_DETECT_CAP_MASK)>>		\     HDA_PARAM_PIN_CAP_PRESENCE_DETECT_CAP_MASK)
+value|(((param)& HDA_PARAM_PIN_CAP_PRESENCE_DETECT_CAP_MASK)>>		\     HDA_PARAM_PIN_CAP_PRESENCE_DETECT_CAP_SHIFT)
 end_define
 
 begin_define
@@ -5191,56 +5198,200 @@ begin_define
 define|#
 directive|define
 name|HDA_CONFIG_DEFAULTCONF_SEQUENCE_MASK
-value|0x00000000f
+value|0x0000000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_SEQUENCE_SHIFT
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDA_CONFIG_DEFAULTCONF_ASSOCIATION_MASK
-value|0x0000000f0
+value|0x000000f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_ASSOCIATION_SHIFT
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDA_CONFIG_DEFAULTCONF_MISC_MASK
-value|0x000000f00
+value|0x00000f00
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_MISC_SHIFT
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDA_CONFIG_DEFAULTCONF_COLOR_MASK
-value|0x00000f000
+value|0x0000f000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_COLOR_SHIFT
+value|12
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDA_CONFIG_DEFAULTCONF_CONNECTION_TYPE_MASK
-value|0x000f00000
+value|0x000f0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_CONNECTION_TYPE_SHIFT
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDA_CONFIG_DEFAULTCONF_DEVICE_MASK
-value|0x000f00000
+value|0x00f00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_DEVICE_SHIFT
+value|20
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDA_CONFIG_DEFAULTCONF_LOCATION_MASK
-value|0x03f000000
+value|0x3f000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_LOCATION_SHIFT
+value|24
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_MASK
-value|0x0c0000000
+value|0xc0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_SHIFT
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_SEQUENCE
+parameter_list|(
+name|conf
+parameter_list|)
+define|\
+value|(((conf)& HDA_CONFIG_DEFAULTCONF_SEQUENCE_MASK)>>			\     HDA_CONFIG_DEFAULTCONF_SEQUENCE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_ASSOCIATION
+parameter_list|(
+name|conf
+parameter_list|)
+define|\
+value|(((conf)& HDA_CONFIG_DEFAULTCONF_ASSOCIATION_MASK)>>		\     HDA_CONFIG_DEFAULTCONF_ASSOCIATION_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_MISC
+parameter_list|(
+name|conf
+parameter_list|)
+define|\
+value|(((conf)& HDA_CONFIG_DEFAULTCONF_MISC_MASK)>>			\     HDA_CONFIG_DEFAULTCONF_MISC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_COLOR
+parameter_list|(
+name|conf
+parameter_list|)
+define|\
+value|(((conf)& HDA_CONFIG_DEFAULTCONF_COLOR_MASK)>>			\     HDA_CONFIG_DEFAULTCONF_COLOR_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_CONNECTION_TYPE
+parameter_list|(
+name|conf
+parameter_list|)
+define|\
+value|(((conf)& HDA_CONFIG_DEFAULTCONF_CONNECTION_TYPE_MASK)>>		\     HDA_CONFIG_DEFAULTCONF_CONNECTION_TYPE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_DEVICE
+parameter_list|(
+name|conf
+parameter_list|)
+define|\
+value|(((conf)& HDA_CONFIG_DEFAULTCONF_DEVICE_MASK)>>			\     HDA_CONFIG_DEFAULTCONF_DEVICE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_LOCATION
+parameter_list|(
+name|conf
+parameter_list|)
+define|\
+value|(((conf)& HDA_CONFIG_DEFAULTCONF_LOCATION_MASK)>>			\     HDA_CONFIG_DEFAULTCONF_LOCATION_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CONFIG_DEFAULTCONF_CONNECTIVITY
+parameter_list|(
+name|conf
+parameter_list|)
+define|\
+value|(((conf)& HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_MASK)>>		\     HDA_CONFIG_DEFAULTCONF_CONNECTIVITY_SHIFT)
 end_define
 
 begin_define
