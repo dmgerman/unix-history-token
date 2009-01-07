@@ -8460,8 +8460,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|i
+operator|<=
+literal|0
 condition|)
 block|{
 name|al

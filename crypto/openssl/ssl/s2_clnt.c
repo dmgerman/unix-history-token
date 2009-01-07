@@ -4972,8 +4972,9 @@ name|SSL_VERIFY_NONE
 operator|)
 operator|&&
 operator|(
-operator|!
 name|i
+operator|<=
+literal|0
 operator|)
 condition|)
 block|{
