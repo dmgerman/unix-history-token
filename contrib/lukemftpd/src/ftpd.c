@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ftpd.c,v 1.176 2006/05/09 20:18:06 mrg Exp $	*/
+comment|/*	$NetBSD: ftpd.c,v 1.187 2008/09/13 03:30:35 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -14891,6 +14891,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -14920,8 +14923,8 @@ name|cp
 operator|=
 name|tmpline
 expr_stmt|;
-if|if
-condition|(
+name|ret
+operator|=
 name|getline
 argument_list|(
 name|cp
@@ -14930,11 +14933,18 @@ sizeof|sizeof
 argument_list|(
 name|tmpline
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|stdin
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 block|{
 name|reply
@@ -14949,6 +14959,21 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+literal|2
+condition|)
+block|{
+comment|/* Ignore truncated command */
+comment|/* XXX: abort xfer with "500 command too long",& return 1 ? */
+return|return
+literal|0
+return|;
 block|}
 comment|/* 		 * Manually parse OOB commands, because we can't 		 * recursively call the yacc parser... 		 */
 if|if
