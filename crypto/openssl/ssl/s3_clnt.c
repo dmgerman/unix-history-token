@@ -3494,8 +3494,9 @@ name|SSL_VERIFY_NONE
 operator|)
 operator|&&
 operator|(
-operator|!
 name|i
+operator|<=
+literal|0
 operator|)
 ifndef|#
 directive|ifndef
@@ -5764,7 +5765,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EVP_VerifyFinal
 argument_list|(
 operator|&
@@ -5779,6 +5779,8 @@ name|n
 argument_list|,
 name|pkey
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 comment|/* bad signature */
@@ -5877,7 +5879,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EVP_VerifyFinal
 argument_list|(
 operator|&
@@ -5892,6 +5893,8 @@ name|n
 argument_list|,
 name|pkey
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 comment|/* bad signature */
