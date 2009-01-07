@@ -1232,6 +1232,8 @@ expr_stmt|;
 if|if
 condition|(
 name|i
+operator|>
+literal|0
 condition|)
 name|BIO_printf
 argument_list|(
