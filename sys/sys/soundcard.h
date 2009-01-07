@@ -5869,9 +5869,27 @@ name|numcards
 decl_stmt|;
 comment|/* Number of sound cards in the system */
 name|int
+name|numaudioengines
+decl_stmt|;
+comment|/* Number of audio engines in the system */
+name|char
+name|license
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* For example "GPL" or "CDDL" */
+name|char
+name|revision_info
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/* For internal use */
+name|int
 name|filler
 index|[
-literal|241
+literal|172
 index|]
 decl_stmt|;
 comment|/* For future expansion (set to -1) */
