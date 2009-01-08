@@ -20060,6 +20060,12 @@ argument_list|,
 literal|"IP_FW_NAT_CFG"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|do_quiet
+condition|)
+block|{
 comment|/* After every modification, we show the resultant rule. */
 name|int
 name|_ac
@@ -20086,6 +20092,7 @@ argument_list|,
 name|_av
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
