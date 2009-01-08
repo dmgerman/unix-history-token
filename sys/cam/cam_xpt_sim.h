@@ -130,6 +130,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|xpt_sim_opened
+parameter_list|(
+name|struct
+name|cam_sim
+modifier|*
+name|sim
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|xpt_done
 parameter_list|(
