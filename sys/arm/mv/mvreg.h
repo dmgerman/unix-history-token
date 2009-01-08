@@ -211,6 +211,31 @@ begin_comment
 comment|/* XXX u-boot has 1MB */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MV_CESA_SRAM_PHYS_BASE
+value|0xFD000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_CESA_SRAM_BASE
+value|MV_CESA_SRAM_PHYS_BASE
+end_define
+
+begin_comment
+comment|/* VA == PA mapping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MV_CESA_SRAM_SIZE
+value|(1024 * 1024)
+end_define
+
 begin_comment
 comment|/* XXX this is probably not robust against wraparounds... */
 end_comment
@@ -220,9 +245,9 @@ if|#
 directive|if
 operator|(
 operator|(
-name|MV_DEV_CS2_PHYS_BASE
+name|MV_CESA_SRAM_PHYS_BASE
 operator|+
-name|MV_DEV_CS2_SIZE
+name|MV_CESA_SRAM_SIZE
 operator|)
 operator|>
 literal|0xFFFEFFFF
@@ -395,6 +420,59 @@ name|MV_PCI_SIZE
 value|0x2000
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_KIRKWOOD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_CESA_BASE
+value|(MV_BASE + 0x30000)
+end_define
+
+begin_comment
+comment|/* CESA,PCI don't coexist */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ORION
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_DISCOVERY
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_CESA_BASE
+value|(MV_BASE + 0x90000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MV_CESA_SIZE
+value|0x10000
+end_define
+
 begin_define
 define|#
 directive|define
@@ -559,6 +637,62 @@ directive|define
 name|MV_ETH_SIZE
 value|0x2000
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ORION
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_MV_KIRKWOOD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_SATAHC_BASE
+value|(MV_BASE + 0x80000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_SATAHC_SIZE
+value|0x6000
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_DISCOVERY
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_SATAHC_BASE
+value|(MV_BASE + 0xA0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_SATAHC_SIZE
+value|0x6000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1017,6 +1151,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MV_INT_CESA
+value|22
+end_define
+
+begin_comment
+comment|/* Security engine completion int. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MV_INT_IDMA_ERR
 value|23
 end_define
@@ -1407,7 +1552,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MV_INT_CRYPTO
+name|MV_INT_CESA
 value|19
 end_define
 
@@ -2659,7 +2804,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_GPIO_POLARITY
+name|MV_GPIO_POLAR_LOW
 value|0x2
 end_define
 
@@ -3134,11 +3279,40 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_WIN_USB_CTRL
+name|MV_WIN_CESA_CTRL
 parameter_list|(
 name|n
 parameter_list|)
-value|(0x10 * (n) + 0x0)
+value|(0x8 * (n) + 0xa04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x8 * (n) + 0xa00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_MAX
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_USB_CTRL
+parameter_list|(
+name|n
+parameter_list|,
+name|m
+parameter_list|)
+value|(0x10 * (n) + (m) * 0x1000 + 0x0)
 end_define
 
 begin_define
@@ -3147,8 +3321,10 @@ directive|define
 name|MV_WIN_USB_BASE
 parameter_list|(
 name|n
+parameter_list|,
+name|m
 parameter_list|)
-value|(0x10 * (n) + 0x4)
+value|(0x10 * (n) + (m) * 0x1000 + 0x4)
 end_define
 
 begin_define
@@ -3252,6 +3428,87 @@ end_define
 begin_define
 define|#
 directive|define
+name|MV_WIN_XOR_BASE
+parameter_list|(
+name|n
+parameter_list|,
+name|m
+parameter_list|)
+value|(0x4 * (n) + 0xa50 + (m) * 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_XOR_SIZE
+parameter_list|(
+name|n
+parameter_list|,
+name|m
+parameter_list|)
+value|(0x4 * (n) + 0xa70 + (m) * 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_XOR_REMAP
+parameter_list|(
+name|n
+parameter_list|,
+name|m
+parameter_list|)
+value|(0x4 * (n) + 0xa90 + (m) * 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_XOR_CTRL
+parameter_list|(
+name|n
+parameter_list|,
+name|m
+parameter_list|)
+value|(0x4 * (n) + 0xa40 + (m) * 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_XOR_OVERR
+parameter_list|(
+name|n
+parameter_list|,
+name|m
+parameter_list|)
+value|(0x4 * (n) + 0xaa0 + (m) * 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_XOR_MAX
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_XOR_CHAN_MAX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_XOR_NON_REMAP
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|MV_WIN_PCIE_CTRL
 parameter_list|(
 name|n
@@ -3306,6 +3563,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|MV_WIN_SATA_CTRL
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x10 * (n) + 0x30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_SATA_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x10 * (n) + 0x34)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_SATA_MAX
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|WIN_REG_IDX_RD
 parameter_list|(
 name|pre
@@ -3323,16 +3607,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|WIN_REG_BASE_IDX_RD
+name|WIN_REG_IDX_RD2
 parameter_list|(
 name|pre
 parameter_list|,
 name|reg
 parameter_list|,
 name|off
+parameter_list|,
+name|base
 parameter_list|)
 define|\
-value|static __inline uint32_t						\ 	pre ## _ ## reg ## _read(uint32_t base, int i)				\ 	{									\ 		return (bus_space_read_4(obio_tag, base, off(i)));		\ 	}
+value|static  __inline uint32_t						\ 	pre ## _ ## reg ## _read(int i, int j)					\ 	{									\ 		return (bus_space_read_4(obio_tag, base, off(i, j)));		\ 	}									\  #define WIN_REG_BASE_IDX_RD(pre,reg,off)					\ 	static __inline uint32_t						\ 	pre ## _ ## reg ## _read(uint32_t base, int i)				\ 	{									\ 		return (bus_space_read_4(obio_tag, base, off(i)));		\ 	}
 end_define
 
 begin_define
@@ -3350,6 +3636,23 @@ name|base
 parameter_list|)
 define|\
 value|static __inline void							\ 	pre ## _ ## reg ## _write(int i, uint32_t val)				\ 	{									\ 		bus_space_write_4(obio_tag, base, off(i), val);			\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|WIN_REG_IDX_WR2
+parameter_list|(
+name|pre
+parameter_list|,
+name|reg
+parameter_list|,
+name|off
+parameter_list|,
+name|base
+parameter_list|)
+define|\
+value|static __inline void							\ 	pre ## _ ## reg ## _write(int i, int j, uint32_t val)			\ 	{									\ 		bus_space_write_4(obio_tag, base, off(i, j), val);		\ 	}
 end_define
 
 begin_define

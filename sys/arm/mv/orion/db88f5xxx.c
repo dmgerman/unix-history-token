@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pte.h>
 end_include
 
@@ -317,7 +323,7 @@ argument_list|(
 name|irq
 argument_list|)
 argument_list|,
-name|MV_GPIO_POLARITY
+name|MV_GPIO_POLAR_LOW
 operator||
 name|MV_GPIO_LEVEL
 argument_list|,
@@ -332,6 +338,74 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * mv_gpio_config row structure:  *<GPIO number>,<GPIO flags>,<GPIO mode>  *  * - GPIO pin number (less than zero marks end of table)  * - GPIO flags:  *	MV_GPIO_BLINK  *	MV_GPIO_POLAR_LOW  *	MV_GPIO_EDGE  *	MV_GPIO_LEVEL  * - GPIO mode:  *	1	- Output, set to HIGH.  *	0	- Output, set to LOW.  *	-1	- Input.  */
+end_comment
+
+begin_comment
+comment|/* GPIO Configuration for DB-88F5281 */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|gpio_config
+name|mv_gpio_config
+index|[]
+init|=
+block|{
+block|{
+literal|12
+block|,
+name|MV_GPIO_POLAR_LOW
+operator||
+name|MV_GPIO_LEVEL
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+literal|13
+block|,
+name|MV_GPIO_POLAR_LOW
+operator||
+name|MV_GPIO_LEVEL
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* GPIO Configuration for DB-88F5182 */
+end_comment
+
+begin_endif
+unit|const struct gpio_config mv_gpio_config[] = { 	{ 0, MV_GPIO_POLAR_LOW | MV_GPIO_LEVEL, -1 }, 	{ 1, MV_GPIO_POLAR_LOW | MV_GPIO_LEVEL, -1 }, 	{ -1, -1, -1 } };
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -359,6 +433,57 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|platform_mpp_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * MPP configuration for DB-88F5281 	 * 	 * MPP[2]:  PCI_REQn[3] 	 * MPP[3]:  PCI_GNTn[3] 	 * MPP[4]:  PCI_REQn[4] 	 * MPP[5]:  PCI_GNTn[4] 	 * MPP[6]:<UNKNOWN> 	 * MPP[7]:<UNKNOWN> 	 * MPP[8]:<UNKNOWN> 	 * MPP[9]:<UNKNOWN> 	 * MPP[14]: NAND Flash REn[2] 	 * MPP[15]: NAND Flash WEn[2] 	 * MPP[16]: UA1_RXD 	 * MPP[17]: UA1_TXD 	 * MPP[18]: UA1_CTS 	 * MPP[19]: UA1_RTS 	 * 	 * Others:  GPIO 	 * 	 *<UNKNOWN> entries are not documented, not on the schematics etc. 	 */
+name|bus_space_write_4
+argument_list|(
+name|obio_tag
+argument_list|,
+name|MV_MPP_BASE
+argument_list|,
+name|MPP_CONTROL0
+argument_list|,
+literal|0x33222203
+argument_list|)
+expr_stmt|;
+name|bus_space_write_4
+argument_list|(
+name|obio_tag
+argument_list|,
+name|MV_MPP_BASE
+argument_list|,
+name|MPP_CONTROL1
+argument_list|,
+literal|0x44000033
+argument_list|)
+expr_stmt|;
+name|bus_space_write_4
+argument_list|(
+name|obio_tag
+argument_list|,
+name|MV_MPP_BASE
+argument_list|,
+name|MPP_CONTROL2
+argument_list|,
+literal|0x00000000
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * MPP configuration for DB-88F5182 	 * 	 * MPP[2]:  PCI_REQn[3] 	 * MPP[3]:  PCI_GNTn[3] 	 * MPP[4]:  PCI_REQn[4] 	 * MPP[5]:  PCI_GNTn[4] 	 * MPP[6]:  SATA0_ACT 	 * MPP[7]:  SATA1_ACT 	 * MPP[12]: SATA0_PRESENT 	 * MPP[13]: SATA1_PRESENT 	 * MPP[14]: NAND_FLASH_REn[2] 	 * MPP[15]: NAND_FLASH_WEn[2] 	 * MPP[16]: UA1_RXD 	 * MPP[17]: UA1_TXD 	 * MPP[18]: UA1_CTS 	 * MPP[19]: UA1_RTS 	 * 	 * Others:  GPIO 	 */
+block|bus_space_write_4(obio_tag, MV_MPP_BASE, MPP_CONTROL0, 0x55222203); 	bus_space_write_4(obio_tag, MV_MPP_BASE, MPP_CONTROL1, 0x44550000); 	bus_space_write_4(obio_tag, MV_MPP_BASE, MPP_CONTROL2, 0x00000000);
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -394,10 +519,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * TODO routine setting GPIO/MPP pins   */
-end_comment
 
 end_unit
 

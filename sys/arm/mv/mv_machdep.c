@@ -2439,6 +2439,10 @@ expr_stmt|;
 name|print_kenv
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Re-initialise MPP 	 */
+name|platform_mpp_init
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Re-initialise decode windows 	 */
 if|if
 condition|(

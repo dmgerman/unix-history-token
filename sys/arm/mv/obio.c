@@ -628,10 +628,6 @@ argument_list|)
 expr_stmt|;
 name|rv
 operator|=
-literal|0
-expr_stmt|;
-name|rv
-operator|+=
 name|bus_print_child_header
 argument_list|(
 name|dev

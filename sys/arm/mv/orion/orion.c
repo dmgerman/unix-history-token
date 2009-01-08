@@ -392,7 +392,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|resource_spec
-name|mv_gpio_spec
+name|mv_gpio_res
 index|[]
 init|=
 block|{

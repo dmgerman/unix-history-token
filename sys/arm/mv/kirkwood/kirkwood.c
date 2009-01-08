@@ -379,7 +379,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|resource_spec
-name|mv_gpio_spec
+name|mv_gpio_res
 index|[]
 init|=
 block|{
@@ -460,7 +460,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|resource_spec
-name|mv_xor_spec
+name|mv_xor_res
 index|[]
 init|=
 block|{
@@ -593,7 +593,21 @@ block|,
 operator|-
 literal|1
 block|}
-block|, }
+block|,
+comment|/* CESA */
+block|{
+literal|3
+block|,
+literal|0x00
+block|,
+name|MV_CESA_SRAM_PHYS_BASE
+block|,
+name|MV_CESA_SRAM_SIZE
+block|,
+operator|-
+literal|1
+block|}
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
@@ -615,6 +629,59 @@ init|=
 sizeof|sizeof
 argument_list|(
 name|cpu_win_tbl
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|decode_win
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|decode_win
+name|xor_win_tbl
+index|[]
+init|=
+block|{
+comment|/* PCIE MEM */
+block|{
+literal|4
+block|,
+literal|0xE8
+block|,
+name|MV_PCIE_MEM_PHYS_BASE
+block|,
+name|MV_PCIE_MEM_SIZE
+block|,
+operator|-
+literal|1
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|decode_win
+modifier|*
+name|xor_wins
+init|=
+name|xor_win_tbl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|xor_wins_no
+init|=
+sizeof|sizeof
+argument_list|(
+name|xor_win_tbl
 argument_list|)
 operator|/
 sizeof|sizeof

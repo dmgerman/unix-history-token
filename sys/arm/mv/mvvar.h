@@ -189,6 +189,26 @@ end_struct
 
 begin_struct
 struct|struct
+name|gpio_config
+block|{
+name|int
+name|gc_gpio
+decl_stmt|;
+comment|/* GPIO number */
+name|uint32_t
+name|gc_flags
+decl_stmt|;
+comment|/* GPIO flags */
+name|int
+name|gc_output
+decl_stmt|;
+comment|/* GPIO output value */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|decode_win
 block|{
 name|int
@@ -219,6 +239,16 @@ specifier|const
 name|struct
 name|obio_pci
 name|mv_pci_info
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|gpio_config
+name|mv_gpio_config
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -261,6 +291,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
+name|struct
+name|decode_win
+modifier|*
+name|xor_wins
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|cpu_wins_no
 decl_stmt|;
@@ -270,6 +310,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|idma_wins_no
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xor_wins_no
 decl_stmt|;
 end_decl_stmt
 
@@ -383,6 +430,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|platform_pmap_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|platform_mpp_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -509,6 +565,33 @@ end_function_decl
 begin_function_decl
 name|int
 name|decode_win_idma_valid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|decode_win_xor_dump
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|decode_win_xor_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|decode_win_xor_valid
 parameter_list|(
 name|void
 parameter_list|)
