@@ -11961,6 +11961,14 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|rxp
+operator|->
+name|rx_mbuf
+operator|!=
+name|NULL
+condition|)
 name|bus_dmamap_unload
 argument_list|(
 name|sc
