@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2009 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -157,6 +157,23 @@ include|#
 directive|include
 file|<net80211/ieee80211_input.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_tdma.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -384,6 +401,25 @@ name|iv_opdetach
 operator|=
 name|adhoc_vdetach
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+comment|/* 	 * Throw control to tdma support.  Note we do this 	 * after setting up our callbacks so it can piggyback 	 * on top of us. 	 */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_TDMA
+condition|)
+name|ieee80211_tdma_vattach
+argument_list|(
+name|vap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1389,6 +1425,47 @@ name|ni_macaddr
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * Beware of frames that come in too early; we 			 * can receive broadcast frames and creating sta 			 * entries will blow up because there is no bss 			 * channel yet. 			 */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|!=
+name|IEEE80211_S_RUN
+condition|)
+block|{
+name|IEEE80211_DISCARD
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_INPUT
+argument_list|,
+name|wh
+argument_list|,
+literal|"data"
+argument_list|,
+literal|"not in RUN state (%s)"
+argument_list|,
+name|ieee80211_state_name
+index|[
+name|vap
+operator|->
+name|iv_state
+index|]
+argument_list|)
+expr_stmt|;
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_rx_badstate
+operator|++
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 comment|/* 			 * Fake up a node for this newly 			 * discovered member of the IBSS. 			 */
 name|ni
 operator|=

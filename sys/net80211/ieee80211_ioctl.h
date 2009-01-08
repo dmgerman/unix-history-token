@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -715,9 +715,13 @@ name|is_beacon_miss
 decl_stmt|;
 comment|/* beacon miss notification */
 name|uint32_t
+name|is_rx_badstate
+decl_stmt|;
+comment|/* rx discard state != RUN */
+name|uint32_t
 name|is_spare
 index|[
-literal|13
+literal|12
 index|]
 decl_stmt|;
 block|}
@@ -2495,6 +2499,50 @@ begin_comment
 comment|/* RIFS config (on, off) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_TDMA_SLOT
+value|201
+end_define
+
+begin_comment
+comment|/* TDMA: assigned slot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_TDMA_SLOTCNT
+value|202
+end_define
+
+begin_comment
+comment|/* TDMA: slots in bss */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_TDMA_SLOTLEN
+value|203
+end_define
+
+begin_comment
+comment|/* TDMA: slot length (usecs) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_TDMA_BINTERVAL
+value|204
+end_define
+
+begin_comment
+comment|/* TDMA: beacon intvl (slots) */
+end_comment
+
 begin_comment
 comment|/*  * Parameters for controlling a scan requested with  * IEEE80211_IOC_SCAN_REQ.  *  * Active scans cause ProbeRequest frames to be issued for each  * specified ssid and, by default, a broadcast ProbeRequest frame.  * The set of ssid's is specified in the request.  *  * By default the scan will cause a BSS to be joined (in station/adhoc  * mode) or a channel to be selected for operation (hostap mode).  * To disable that specify IEEE80211_IOC_SCAN_NOPICK and if the  *  * If the station is currently associated to an AP then a scan request  * will cause the station to leave the current channel and potentially  * miss frames from the AP.  Alternatively the station may notify the  * AP that it is going into power save mode before it leaves the channel.  * This ensures frames for the station are buffered by the AP.  This is  * termed a ``bg scan'' and is requested with the IEEE80211_IOC_SCAN_BGSCAN  * flag.  Background scans may take longer than foreground scans and may  * be preempted by traffic.  If a station is not associated to an AP  * then a request for a background scan is automatically done in the  * foreground.  *  * The results of the scan request are cached by the system.  This  * information is aged out and/or invalidated based on events like not  * being able to associated to an AP.  To flush the current cache  * contents before doing a scan the IEEE80211_IOC_SCAN_FLUSH flag may  * be specified.  *  * By default the scan will be done until a suitable AP is located  * or a channel is found for use.  A scan can also be constrained  * to be done once (IEEE80211_IOC_SCAN_ONCE) or to last for no more  * than a specified duration.  */
 end_comment
@@ -2758,6 +2806,17 @@ end_define
 
 begin_comment
 comment|/* use specified mac addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CLONE_TDMA
+value|0x0010
+end_define
+
+begin_comment
+comment|/* operate in TDMA mode */
 end_comment
 
 begin_endif

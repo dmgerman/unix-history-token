@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001 Atsushi Onoe  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -112,6 +112,23 @@ include|#
 directive|include
 file|<net80211/ieee80211_regdomain.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_tdma.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -11407,7 +11424,7 @@ decl_stmt|;
 name|uint16_t
 name|capinfo
 decl_stmt|;
-comment|/* 	 * beacon frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] cabability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[3] parameter set (DS) 	 *	[8] CF parameter set (optional) 	 *	[tlv] parameter set (IBSS/TIM) 	 *	[tlv] country (optional) 	 *	[3] power control (optional) 	 *	[5] channel switch announcement (CSA) (optional) 	 *	[tlv] extended rate phy (ERP) 	 *	[tlv] extended supported rates 	 *	[tlv] RSN parameters 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 * XXX Vendor-specific OIDs (e.g. Atheros) 	 *	[tlv] WPA parameters 	 *	[tlv] WME parameters 	 *	[tlv] Vendor OUI HT capabilities (optional) 	 *	[tlv] Vendor OUI HT information (optional) 	 *	[tlv] application data (optional) 	 */
+comment|/* 	 * beacon frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] cabability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[3] parameter set (DS) 	 *	[8] CF parameter set (optional) 	 *	[tlv] parameter set (IBSS/TIM) 	 *	[tlv] country (optional) 	 *	[3] power control (optional) 	 *	[5] channel switch announcement (CSA) (optional) 	 *	[tlv] extended rate phy (ERP) 	 *	[tlv] extended supported rates 	 *	[tlv] RSN parameters 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 * XXX Vendor-specific OIDs (e.g. Atheros) 	 *	[tlv] WPA parameters 	 *	[tlv] WME parameters 	 *	[tlv] Vendor OUI HT capabilities (optional) 	 *	[tlv] Vendor OUI HT information (optional) 	 *	[tlv] TDMA parameters (optional) 	 *	[tlv] application data (optional) 	 */
 name|memset
 argument_list|(
 name|bo
@@ -12031,6 +12048,36 @@ name|ni
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_TDMA
+condition|)
+block|{
+name|bo
+operator|->
+name|bo_tdma
+operator|=
+name|frm
+expr_stmt|;
+name|frm
+operator|=
+name|ieee80211_add_tdma
+argument_list|(
+name|frm
+argument_list|,
+name|vap
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|vap
@@ -12176,7 +12223,7 @@ name|uint8_t
 modifier|*
 name|frm
 decl_stmt|;
-comment|/* 	 * beacon frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] cabability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[3] parameter set (DS) 	 *	[8] CF parameter set (optional) 	 *	[tlv] parameter set (IBSS/TIM) 	 *	[tlv] country (optional) 	 *	[3] power control (optional) 	 *	[5] channel switch announcement (CSA) (optional) 	 *	[tlv] extended rate phy (ERP) 	 *	[tlv] extended supported rates 	 *	[tlv] RSN parameters 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	[tlv] Vendor OUI HT capabilities (optional) 	 *	[tlv] Vendor OUI HT information (optional) 	 * XXX Vendor-specific OIDs (e.g. Atheros) 	 *	[tlv] WPA parameters 	 *	[tlv] WME parameters 	 *	[tlv] application data (optional) 	 * NB: we allocate the max space required for the TIM bitmap. 	 * XXX how big is this? 	 */
+comment|/* 	 * beacon frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] cabability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[3] parameter set (DS) 	 *	[8] CF parameter set (optional) 	 *	[tlv] parameter set (IBSS/TIM) 	 *	[tlv] country (optional) 	 *	[3] power control (optional) 	 *	[5] channel switch announcement (CSA) (optional) 	 *	[tlv] extended rate phy (ERP) 	 *	[tlv] extended supported rates 	 *	[tlv] RSN parameters 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	[tlv] Vendor OUI HT capabilities (optional) 	 *	[tlv] Vendor OUI HT information (optional) 	 * XXX Vendor-specific OIDs (e.g. Atheros) 	 *	[tlv] WPA parameters 	 *	[tlv] WME parameters 	 *	[tlv] TDMA parameters (optional) 	 *	[tlv] application data (optional) 	 * NB: we allocate the max space required for the TIM bitmap. 	 * XXX how big is this? 	 */
 name|pktlen
 operator|=
 literal|8
@@ -12311,6 +12358,28 @@ argument_list|)
 else|:
 literal|0
 operator|)
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+operator|+
+operator|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_TDMA
+condition|?
+comment|/* TDMA */
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_tdma_param
+argument_list|)
+else|:
+literal|0
+operator|)
+endif|#
+directive|endif
 operator|+
 name|IEEE80211_MAX_APPIE
 expr_stmt|;
@@ -12854,6 +12923,29 @@ name|IEEE80211_BEACON_HTINFO
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_TDMA
+condition|)
+block|{
+comment|/* 		 * NB: the beacon is potentially updated every TBTT. 		 */
+name|ieee80211_tdma_update_beacon
+argument_list|(
+name|vap
+argument_list|,
+name|bo
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|vap
