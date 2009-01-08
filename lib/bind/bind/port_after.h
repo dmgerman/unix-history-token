@@ -189,11 +189,12 @@ directive|undef
 name|NEED_GETTIMEOFDAY
 end_undef
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|HAVE_STRNDUP
-end_undef
+value|1
+end_define
 
 begin_undef
 undef|#

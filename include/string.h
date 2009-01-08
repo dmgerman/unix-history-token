@@ -589,6 +589,20 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
+begin_function_decl
+name|char
+modifier|*
+name|strndup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|char
 modifier|*
