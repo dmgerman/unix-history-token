@@ -110,6 +110,11 @@ init|=
 literal|6
 block|,
 comment|/* set active/inactive flow timeouts */
+name|NGM_NETFLOW_SETCONFIG
+init|=
+literal|7
+block|,
+comment|/* set flow generation options */
 block|}
 enum|;
 end_enum
@@ -186,6 +191,9 @@ name|u_int16_t
 name|ifinfo_index
 decl_stmt|;
 comment|/* connected iface index */
+name|uint32_t
+name|conf
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -246,6 +254,54 @@ name|uint32_t
 name|active_timeout
 decl_stmt|;
 comment|/* flow active timeout */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_CONF_INGRESS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_CONF_EGRESS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_CONF_ONCE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_CONF_THISONCE
+value|8
+end_define
+
+begin_comment
+comment|/* This structure is passed to NGM_NETFLOW_SETCONFIG */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_netflow_setconfig
+block|{
+name|u_int16_t
+name|iface
+decl_stmt|;
+comment|/* which iface config change */
+name|u_int32_t
+name|conf
+decl_stmt|;
+comment|/* new config */
 block|}
 struct|;
 end_struct
@@ -521,7 +577,7 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_IFINFO_TYPE
-value|{			\ 	{ "packets",&ng_parse_uint32_type },	\ 	{ "data link type",&ng_parse_uint8_type },	\ 	{ "index",&ng_parse_uint16_type },		\ 	{ NULL }					\ }
+value|{			\ 	{ "packets",&ng_parse_uint32_type },	\ 	{ "data link type",&ng_parse_uint8_type },	\ 	{ "index",&ng_parse_uint16_type },		\ 	{ "conf",&ng_parse_uint32_type },		\ 	{ NULL }					\ }
 end_define
 
 begin_comment
@@ -555,6 +611,17 @@ define|#
 directive|define
 name|NG_NETFLOW_SETTIMEOUTS_TYPE
 value|{			\ 	{ "inactive",&ng_parse_uint32_type },	\ 	{ "active",&ng_parse_uint32_type },	\ 	{ NULL }					\ }
+end_define
+
+begin_comment
+comment|/* Parse the setifindex structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NETFLOW_SETCONFIG_TYPE
+value|{			\ 	{ "iface",&ng_parse_uint16_type },	\ 	{ "conf",&ng_parse_uint32_type },	\ 	{ NULL }					\ }
 end_define
 
 begin_comment
@@ -711,6 +778,20 @@ parameter_list|)
 value|{ error = (x); goto done; }
 end_define
 
+begin_define
+define|#
+directive|define
+name|MTAG_NETFLOW
+value|1221656444
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTAG_NETFLOW_CALLED
+value|0
+end_define
+
 begin_comment
 comment|/* Prototypes for netflow.c */
 end_comment
@@ -762,11 +843,9 @@ name|struct
 name|ip
 modifier|*
 parameter_list|,
-name|iface_p
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
+name|unsigned
+name|int
+name|src_if_index
 parameter_list|)
 function_decl|;
 end_function_decl
