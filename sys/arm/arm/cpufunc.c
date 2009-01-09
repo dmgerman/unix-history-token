@@ -1001,7 +1001,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|cpu_functions
-name|feroceon_cpufuncs
+name|sheeva_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
@@ -1018,7 +1018,7 @@ comment|/* control		*/
 name|cpufunc_domains
 block|,
 comment|/* Domain		*/
-name|feroceon_setttb
+name|sheeva_setttb
 block|,
 comment|/* Setttb		*/
 name|cpufunc_faultstatus
@@ -1056,31 +1056,31 @@ comment|/* icache_sync_range	*/
 name|armv5_ec_dcache_wbinv_all
 block|,
 comment|/* dcache_wbinv_all	*/
-name|feroceon_dcache_wbinv_range
+name|sheeva_dcache_wbinv_range
 block|,
 comment|/* dcache_wbinv_range	*/
-name|feroceon_dcache_inv_range
+name|sheeva_dcache_inv_range
 block|,
 comment|/* dcache_inv_range	*/
-name|feroceon_dcache_wb_range
+name|sheeva_dcache_wb_range
 block|,
 comment|/* dcache_wb_range	*/
 name|armv5_ec_idcache_wbinv_all
 block|,
 comment|/* idcache_wbinv_all	*/
-name|feroceon_idcache_wbinv_range
+name|sheeva_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_all	*/
-name|feroceon_l2cache_wbinv_all
+name|sheeva_l2cache_wbinv_all
 block|,
 comment|/* l2cache_wbinv_all    */
-name|feroceon_l2cache_wbinv_range
+name|sheeva_l2cache_wbinv_range
 block|,
 comment|/* l2cache_wbinv_range  */
-name|feroceon_l2cache_inv_range
+name|sheeva_l2cache_inv_range
 block|,
 comment|/* l2cache_inv_range    */
-name|feroceon_l2cache_wb_range
+name|sheeva_l2cache_wb_range
 block|,
 comment|/* l2cache_wb_range     */
 comment|/* Other functions */
@@ -3154,7 +3154,7 @@ condition|)
 block|{
 name|cpufuncs
 operator|=
-name|feroceon_cpufuncs
+name|sheeva_cpufuncs
 expr_stmt|;
 comment|/* 			 * Workaround for Marvell MV78100 CPU: Cache prefetch 			 * mechanism may affect the cache coherency validity, 			 * so it needs to be disabled. 			 * 			 * Refer to errata document MV-S501058-00C.pdf (p. 3.1 			 * L2 Prefetching Mechanism) for details. 			 */
 if|if
@@ -3168,7 +3168,7 @@ operator|==
 name|CPU_ID_MV88FR571_41
 condition|)
 block|{
-name|feroceon_control_ext
+name|sheeva_control_ext
 argument_list|(
 literal|0xffffffff
 argument_list|,
@@ -3186,7 +3186,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|feroceon_control_ext
+name|sheeva_control_ext
 argument_list|(
 literal|0xffffffff
 argument_list|,

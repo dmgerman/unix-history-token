@@ -338,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|cpu_l2cache_wbinv_all
-value|feroceon_l2cache_wbinv_all
+value|sheeva_l2cache_wbinv_all
 end_define
 
 begin_else

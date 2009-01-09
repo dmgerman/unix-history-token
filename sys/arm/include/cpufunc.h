@@ -1993,7 +1993,7 @@ end_decl_stmt
 
 begin_function_decl
 name|u_int
-name|feroceon_control_ext
+name|sheeva_control_ext
 parameter_list|(
 name|u_int
 parameter_list|,
@@ -2004,7 +2004,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|feroceon_setttb
+name|sheeva_setttb
 parameter_list|(
 name|u_int
 parameter_list|)
@@ -2013,7 +2013,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|feroceon_dcache_wbinv_range
+name|sheeva_dcache_wbinv_range
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
@@ -2024,7 +2024,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|feroceon_dcache_inv_range
+name|sheeva_dcache_inv_range
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
@@ -2035,7 +2035,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|feroceon_dcache_wb_range
+name|sheeva_dcache_wb_range
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
@@ -2046,7 +2046,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|feroceon_idcache_wbinv_range
+name|sheeva_idcache_wbinv_range
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
@@ -2057,7 +2057,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|feroceon_l2cache_wbinv_range
+name|sheeva_l2cache_wbinv_range
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
@@ -2068,7 +2068,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|feroceon_l2cache_inv_range
+name|sheeva_l2cache_inv_range
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
@@ -2079,7 +2079,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|feroceon_l2cache_wb_range
+name|sheeva_l2cache_wb_range
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
@@ -2090,7 +2090,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|feroceon_l2cache_wbinv_all
+name|sheeva_l2cache_wbinv_all
 parameter_list|(
 name|void
 parameter_list|)
