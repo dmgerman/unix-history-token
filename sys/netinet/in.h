@@ -2522,6 +2522,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_NONLOCALOK
+value|24
+end_define
+
+begin_comment
+comment|/* allow bind to spoof other machines */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_TABLE_ADD
 value|40
 end_define

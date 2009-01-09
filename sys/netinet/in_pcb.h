@@ -1585,6 +1585,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_NONLOCALOK
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Allow bind to spoof any address */
+end_comment
+
+begin_comment
+comment|/* - requires options IP_NONLOCALBIND */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN6P_IPV6_V6ONLY
 value|0x008000
 end_define
