@@ -6933,6 +6933,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sysctl_ifmalist
 parameter_list|(
@@ -7069,17 +7070,17 @@ if|if
 condition|(
 name|jailed
 argument_list|(
-name|curproc
+name|curthread
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 operator|&&
 operator|!
 name|prison_if
 argument_list|(
-name|curproc
+name|curthread
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|ifma
 operator|->
