@@ -2527,7 +2527,7 @@ value|24
 end_define
 
 begin_comment
-comment|/* allow bind to spoof other machines */
+comment|/* bool: allow bind to spoof non-local addresses; 					requires kernel compile option IP_NONLOCALBIND */
 end_comment
 
 begin_define
