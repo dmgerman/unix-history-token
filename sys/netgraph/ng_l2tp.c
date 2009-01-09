@@ -3013,7 +3013,7 @@ argument_list|(
 operator|&
 name|hpriv
 operator|->
-name|conf
+name|stats
 argument_list|,
 sizeof|sizeof
 argument_list|(
