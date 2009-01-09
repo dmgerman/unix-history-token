@@ -1676,7 +1676,7 @@ name|sin_zero
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Is the address a local IP address?  			 * If INP_NONLOCALOK is set, then the socket may be bound 			 * to any local endpoint address. 			 */
+comment|/* 			 * Is the address a local IP address?  			 * If INP_NONLOCALOK is set, then the socket may be bound 			 * to any endpoint address, local or not. 			 */
 if|if
 condition|(
 if|#
