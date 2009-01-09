@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: socket.c,v 1.237.18.56 2008/11/12 03:58:36 marka Exp $ */
+comment|/* $Id: socket.c,v 1.237.18.56.2.1 2008/12/23 00:14:34 marka Exp $ */
 end_comment
 
 begin_comment
@@ -14205,8 +14205,6 @@ name|ISC_LOG_DEBUG
 argument_list|(
 literal|1
 argument_list|)
-argument_list|,
-name|ISC_LOG_INFO
 argument_list|,
 literal|"unexpected POLL timeout"
 argument_list|)
