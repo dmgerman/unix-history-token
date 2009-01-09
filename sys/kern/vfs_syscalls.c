@@ -19568,6 +19568,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|count
+operator|>
+name|INT_MAX
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|error
 operator|=
