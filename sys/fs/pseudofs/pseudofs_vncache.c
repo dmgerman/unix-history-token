@@ -881,6 +881,12 @@ operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
+name|vput
+argument_list|(
+operator|*
+name|vpp
+argument_list|)
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
