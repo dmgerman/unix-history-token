@@ -1390,6 +1390,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIS_MULTIMEDIA_HDA
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIS_MULTIMEDIA_OTHER
 value|0x80
 end_define
