@@ -53,25 +53,15 @@ directive|include
 file|<arm/mv/mvvar.h>
 end_include
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
-name|platform_pci_get_irq
-parameter_list|(
-name|u_int
-name|bus
-parameter_list|,
-name|u_int
-name|slot
-parameter_list|,
-name|u_int
-name|func
-parameter_list|,
-name|u_int
-name|pin
-parameter_list|)
-function_decl|;
-end_function_decl
+specifier|const
+name|struct
+name|obio_pci_irq_map
+name|pci_irq_map
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -372,7 +362,7 @@ literal|3
 block|,
 literal|0x59
 block|,
-name|platform_pci_get_irq
+name|pci_irq_map
 block|,
 operator|-
 literal|1

@@ -114,28 +114,22 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
+begin_struct
+struct|struct
+name|obio_pci_irq_map
+block|{
 name|int
-function_decl|(
-modifier|*
-name|obio_get_irq_t
-function_decl|)
-parameter_list|(
-name|u_int
-name|bus
-parameter_list|,
-name|u_int
-name|slot
-parameter_list|,
-name|u_int
-name|func
-parameter_list|,
-name|u_int
-name|pin
-parameter_list|)
-function_decl|;
-end_typedef
+name|opim_slot
+decl_stmt|;
+name|int
+name|opim_pin
+decl_stmt|;
+name|int
+name|opim_irq
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -175,14 +169,16 @@ decl_stmt|;
 name|int
 name|op_mem_win_attr
 decl_stmt|;
-name|obio_get_irq_t
-name|op_get_irq
+specifier|const
+name|struct
+name|obio_pci_irq_map
+modifier|*
+name|op_pci_irq_map
 decl_stmt|;
-comment|/* IRQ Mapping callback */
 name|int
 name|op_irq
 decl_stmt|;
-comment|/* used if callback is NULL */
+comment|/* used if IRQ map table is NULL */
 block|}
 struct|;
 end_struct
