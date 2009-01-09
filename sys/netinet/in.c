@@ -5870,6 +5870,34 @@ operator|!=
 name|LLE_VALID
 condition|)
 continue|continue;
+comment|/* Skip if jailed and not a valid IP of the prison. */
+if|if
+condition|(
+name|jailed
+argument_list|(
+name|wr
+operator|->
+name|td
+operator|->
+name|td_ucred
+argument_list|)
+operator|&&
+operator|!
+name|prison_if
+argument_list|(
+name|wr
+operator|->
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|L3_ADDR
+argument_list|(
+name|lle
+argument_list|)
+argument_list|)
+condition|)
+continue|continue;
 comment|/* 			 * produce a msg made of: 			 *  struct rt_msghdr; 			 *  struct sockaddr_inarp; (IPv4) 			 *  struct sockaddr_dl; 			 */
 name|bzero
 argument_list|(
