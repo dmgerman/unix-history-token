@@ -3898,6 +3898,7 @@ name|ENOPROTOOPT
 expr_stmt|;
 break|break;
 block|}
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 case|case
