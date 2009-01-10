@@ -10772,19 +10772,6 @@ name|next_rec_engine
 operator|=
 literal|0
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"flags: %08x %d\n"
-argument_list|,
-name|ch
-operator|->
-name|flags
-argument_list|,
-name|ai
-operator|->
-name|busy
-argument_list|)
-expr_stmt|;
 name|CHN_UNLOCK
 argument_list|(
 name|ch
