@@ -13370,27 +13370,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|LOMAC_OBJECTS
-value|(MPC_OBJECT_CRED |				\
-comment|/* MPC_OBJECT_PROC | */
-value|\ 			 MPC_OBJECT_VNODE |				\ 			 MPC_OBJECT_INPCB |				\ 			 MPC_OBJECT_SOCKET |				\ 			 MPC_OBJECT_DEVFS |				\ 			 MPC_OBJECT_MBUF |				\ 			 MPC_OBJECT_IPQ |				\ 			 MPC_OBJECT_IP6Q |				\ 			 MPC_OBJECT_IFNET |				\ 			 MPC_OBJECT_BPFDESC |				\ 			 MPC_OBJECT_PIPE |				\ 			 MPC_OBJECT_MOUNT |				\
-comment|/* MPC_OBJECT_POSIXSEM | */
-value|\
-comment|/* MPC_OBJECT_POSIXSHM | */
-value|\
-comment|/* MPC_OBJECT_SYSVMSG | */
-value|\
-comment|/* MPC_OBJECT_SYSVMSQ | */
-value|\
-comment|/* MPC_OBJECT_SYSVSEM | */
-value|\
-comment|/* MPC_OBJECT_SYSVSHM | */
-value|\ 			 MPC_OBJECT_SYNCACHE)
-end_define
-
 begin_expr_stmt
 name|MAC_POLICY_SET
 argument_list|(
@@ -13405,8 +13384,6 @@ name|MPC_LOADTIME_FLAG_NOTLATE
 argument_list|,
 operator|&
 name|lomac_slot
-argument_list|,
-name|LOMAC_OBJECTS
 argument_list|)
 expr_stmt|;
 end_expr_stmt

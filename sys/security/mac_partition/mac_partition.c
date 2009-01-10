@@ -1144,8 +1144,6 @@ name|MPC_LOADTIME_FLAG_UNLOADOK
 argument_list|,
 operator|&
 name|partition_slot
-argument_list|,
-name|MPC_OBJECT_CRED
 argument_list|)
 expr_stmt|;
 end_expr_stmt
