@@ -2684,9 +2684,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|memf
-operator|!=
-name|NULL
+operator|!
+name|live
 condition|)
 block|{
 if|if
