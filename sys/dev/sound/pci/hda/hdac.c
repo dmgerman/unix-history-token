@@ -357,6 +357,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_PCH
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x3b56)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_SCH
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x811b)
 end_define
@@ -535,6 +542,97 @@ define|#
 directive|define
 name|HDA_ATI_SB600
 value|HDA_MODEL_CONSTRUCT(ATI, 0x4383)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RS600
+value|HDA_MODEL_CONSTRUCT(ATI, 0x793b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RS690
+value|HDA_MODEL_CONSTRUCT(ATI, 0x7919)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RS780
+value|HDA_MODEL_CONSTRUCT(ATI, 0x960f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_R600
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV630
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV610
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV670
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV635
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV620
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa28)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV770
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV730
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa38)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV710
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa40)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_ATI_RV740
+value|HDA_MODEL_CONSTRUCT(ATI, 0xaa48)
 end_define
 
 begin_define
@@ -2125,6 +2223,12 @@ literal|"Intel 82801J"
 block|}
 block|,
 block|{
+name|HDA_INTEL_PCH
+block|,
+literal|"Intel PCH"
+block|}
+block|,
+block|{
 name|HDA_INTEL_SCH
 block|,
 literal|"Intel SCH"
@@ -2248,6 +2352,78 @@ block|{
 name|HDA_ATI_SB600
 block|,
 literal|"ATI SB600"
+block|}
+block|,
+block|{
+name|HDA_ATI_RS600
+block|,
+literal|"ATI RS600"
+block|}
+block|,
+block|{
+name|HDA_ATI_RS690
+block|,
+literal|"ATI RS690"
+block|}
+block|,
+block|{
+name|HDA_ATI_RS780
+block|,
+literal|"ATI RS780"
+block|}
+block|,
+block|{
+name|HDA_ATI_R600
+block|,
+literal|"ATI R600"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV610
+block|,
+literal|"ATI RV610"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV620
+block|,
+literal|"ATI RV620"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV630
+block|,
+literal|"ATI RV630"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV635
+block|,
+literal|"ATI RV635"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV710
+block|,
+literal|"ATI RV710"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV730
+block|,
+literal|"ATI RV730"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV740
+block|,
+literal|"ATI RV740"
+block|}
+block|,
+block|{
+name|HDA_ATI_RV770
+block|,
+literal|"ATI RV770"
 block|}
 block|,
 block|{
@@ -3578,6 +3754,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_SII1390
+value|HDA_CODEC_CONSTRUCT(SII, 0x1390)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_SII1392
 value|HDA_CODEC_CONSTRUCT(SII, 0x1392)
 end_define
@@ -3793,6 +3976,118 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_VT1708S_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0x1397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_2
+value|HDA_CODEC_CONSTRUCT(VIA, 0x2397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_3
+value|HDA_CODEC_CONSTRUCT(VIA, 0x3397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_4
+value|HDA_CODEC_CONSTRUCT(VIA, 0x4397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_5
+value|HDA_CODEC_CONSTRUCT(VIA, 0x5397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_6
+value|HDA_CODEC_CONSTRUCT(VIA, 0x6397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1708S_7
+value|HDA_CODEC_CONSTRUCT(VIA, 0x7397)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_0
+value|HDA_CODEC_CONSTRUCT(VIA, 0x0398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_1
+value|HDA_CODEC_CONSTRUCT(VIA, 0x1398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_2
+value|HDA_CODEC_CONSTRUCT(VIA, 0x2398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_3
+value|HDA_CODEC_CONSTRUCT(VIA, 0x3398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_4
+value|HDA_CODEC_CONSTRUCT(VIA, 0x4398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_5
+value|HDA_CODEC_CONSTRUCT(VIA, 0x5398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_6
+value|HDA_CODEC_CONSTRUCT(VIA, 0x6398)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_VT1702_7
+value|HDA_CODEC_CONSTRUCT(VIA, 0x7398)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_VTXXXX
 value|HDA_CODEC_CONSTRUCT(VIA, 0xffff)
 end_define
@@ -3843,6 +4138,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIAMCP78
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP7A
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0007)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP67
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAXXXX
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0xffff)
 end_define
@@ -3850,6 +4166,34 @@ end_define
 begin_comment
 comment|/* INTEL */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELG45_1
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2801)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELG45_2
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2802)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELG45_3
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2803)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELG45_4
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
+end_define
 
 begin_define
 define|#
@@ -4522,6 +4866,102 @@ literal|"VIA VT1708B_7"
 block|}
 block|,
 block|{
+name|HDA_CODEC_VT1708S_0
+block|,
+literal|"VIA VT1708S_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_1
+block|,
+literal|"VIA VT1708S_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_2
+block|,
+literal|"VIA VT1708S_2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_3
+block|,
+literal|"VIA VT1708S_3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_4
+block|,
+literal|"VIA VT1708S_4"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_5
+block|,
+literal|"VIA VT1708S_5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_6
+block|,
+literal|"VIA VT1708S_6"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1708S_7
+block|,
+literal|"VIA VT1708S_7"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_0
+block|,
+literal|"VIA VT1702_0"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_1
+block|,
+literal|"VIA VT1702_1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_2
+block|,
+literal|"VIA VT1702_2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_3
+block|,
+literal|"VIA VT1702_3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_4
+block|,
+literal|"VIA VT1702_4"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_5
+block|,
+literal|"VIA VT1702_5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_6
+block|,
+literal|"VIA VT1702_6"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VT1702_7
+block|,
+literal|"VIA VT1702_7"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ATIRS600_1
 block|,
 literal|"ATI RS600 HDMI"
@@ -4543,6 +4983,54 @@ block|{
 name|HDA_CODEC_ATIR6XX
 block|,
 literal|"ATI R6xx HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP67
+block|,
+literal|"NVidia MCP67 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP78
+block|,
+literal|"NVidia MCP78 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP7A
+block|,
+literal|"NVidia MCP7A HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELG45_1
+block|,
+literal|"Intel G45 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELG45_2
+block|,
+literal|"Intel G45 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELG45_3
+block|,
+literal|"Intel G45 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELG45_4
+block|,
+literal|"Intel G45 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_SII1390
+block|,
+literal|"Silicon Image SiI1390 HDMI"
 block|}
 block|,
 block|{
