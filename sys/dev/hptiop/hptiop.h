@@ -44,7 +44,7 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|hpt_dbg_level
+name|hpt_iop_dbg_level
 init|=
 literal|0
 decl_stmt|;
@@ -57,7 +57,7 @@ name|KdPrint
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (hpt_dbg_level) printf x; } while (0)
+value|do { if (hpt_iop_dbg_level) printf x; } while (0)
 end_define
 
 begin_define
