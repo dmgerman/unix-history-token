@@ -3939,7 +3939,28 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|SNDCTL_CARDINFO
+case|:
+name|ret
+operator|=
+name|sound_oss_card_info
+argument_list|(
+operator|(
+name|oss_card_info
+operator|*
+operator|)
+name|arg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|SNDCTL_AUDIOINFO
+case|:
+case|case
+name|SNDCTL_AUDIOINFO_EX
+case|:
+case|case
+name|SNDCTL_ENGINEINFO
 case|:
 name|ret
 operator|=
@@ -6732,11 +6753,11 @@ expr_stmt|;
 operator|*
 name|arg_i
 operator|=
-name|DSP_CAP_REALTIME
+name|PCM_CAP_REALTIME
 operator||
-name|DSP_CAP_MMAP
+name|PCM_CAP_MMAP
 operator||
-name|DSP_CAP_TRIGGER
+name|PCM_CAP_TRIGGER
 expr_stmt|;
 if|if
 condition|(
@@ -6757,7 +6778,7 @@ condition|)
 operator|*
 name|arg_i
 operator||=
-name|DSP_CAP_DUPLEX
+name|PCM_CAP_DUPLEX
 expr_stmt|;
 name|pcm_unlock
 argument_list|(
@@ -8330,8 +8351,6 @@ break|break;
 if|#
 directive|if
 literal|0
-comment|/** 	 * @note The SNDCTL_CARDINFO ioctl was omitted per 4Front developer 	 * documentation.  "The usability of this call is very limited. It's 	 * provided only for completeness of the API. OSS API doesn't have 	 * any concept of card. Any information returned by this ioctl calld 	 * is reserved exclusively for the utility programs included in the 	 * OSS package. Applications should not try to use for this 	 * information in any ways." 	 */
-block|case SNDCTL_CARDINFO: 		ret = EINVAL; 		break;
 comment|/** 	 * @note The S/PDIF interface ioctls, @c SNDCTL_DSP_READCTL and 	 * @c SNDCTL_DSP_WRITECTL have been omitted at the suggestion of 	 * 4Front Technologies. 	 */
 block|case SNDCTL_DSP_READCTL: 	case SNDCTL_DSP_WRITECTL: 		ret = EINVAL; 		break;
 endif|#
@@ -10447,17 +10466,31 @@ name|ch
 operator|->
 name|pid
 expr_stmt|;
-comment|/* 			 * These flags stolen from SNDCTL_DSP_GETCAPS handler. 			 * Note, however, that a single channel operates in 			 * only one direction, so DSP_CAP_DUPLEX is out. 			 */
+comment|/* 			 * These flags stolen from SNDCTL_DSP_GETCAPS handler. 			 * Note, however, that a single channel operates in 			 * only one direction, so PCM_CAP_DUPLEX is out. 			 */
 comment|/** 			 * @todo @c SNDCTL_AUDIOINFO::caps - Make drivers keep 			 *       these in pcmchan::caps? 			 */
 name|ai
 operator|->
 name|caps
 operator|=
-name|DSP_CAP_REALTIME
+name|PCM_CAP_REALTIME
 operator||
-name|DSP_CAP_MMAP
+name|PCM_CAP_MMAP
 operator||
-name|DSP_CAP_TRIGGER
+name|PCM_CAP_TRIGGER
+operator||
+operator|(
+operator|(
+name|ch
+operator|->
+name|direction
+operator|==
+name|PCMDIR_PLAY
+operator|)
+condition|?
+name|PCM_CAP_OUTPUT
+else|:
+name|PCM_CAP_INPUT
+operator|)
 expr_stmt|;
 comment|/* 			 * Collect formats supported @b natively by the 			 * device.  Also determine min/max channels.  (I.e., 			 * mono, stereo, or both?) 			 * 			 * If any channel is stereo, maxch = 2; 			 * if all channels are stereo, minch = 2, too; 			 * if any channel is mono, minch = 1; 			 * and if all channels are mono, maxch = 1. 			 */
 name|minch
@@ -10726,6 +10759,31 @@ name|rates
 index|[
 name|i
 index|]
+expr_stmt|;
+name|ai
+operator|->
+name|next_play_engine
+operator|=
+literal|0
+expr_stmt|;
+name|ai
+operator|->
+name|next_rec_engine
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"flags: %08x %d\n"
+argument_list|,
+name|ch
+operator|->
+name|flags
+argument_list|,
+name|ai
+operator|->
+name|busy
+argument_list|)
 expr_stmt|;
 name|CHN_UNLOCK
 argument_list|(

@@ -2688,18 +2688,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|DSP_CAP_REVISION
+name|PCM_CAP_REVISION
 value|0x000000ff
 end_define
 
 begin_comment
-comment|/* revision level (0 to 255) */
+comment|/* Bits for revision level (0 to 255) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DSP_CAP_DUPLEX
+name|PCM_CAP_DUPLEX
 value|0x00000100
 end_define
 
@@ -2710,40 +2710,60 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DSP_CAP_REALTIME
+name|PCM_CAP_REALTIME
 value|0x00000200
 end_define
 
 begin_comment
-comment|/* Real time capability */
+comment|/* Not in use */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DSP_CAP_BATCH
+name|PCM_CAP_BATCH
 value|0x00000400
 end_define
 
 begin_comment
-comment|/*      * Device has some kind of internal buffers which may      * cause some delays and decrease precision of timing      */
+comment|/* Device has some kind of */
+end_comment
+
+begin_comment
+comment|/* internal buffers which may */
+end_comment
+
+begin_comment
+comment|/* cause some delays and */
+end_comment
+
+begin_comment
+comment|/* decrease precision of timing */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DSP_CAP_COPROC
+name|PCM_CAP_COPROC
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* Has a coprocessor, sometimes it's a DSP but usually not */
+comment|/* Has a coprocessor */
+end_comment
+
+begin_comment
+comment|/* Sometimes it's a DSP */
+end_comment
+
+begin_comment
+comment|/* but usually not */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DSP_CAP_TRIGGER
+name|PCM_CAP_TRIGGER
 value|0x00001000
 end_define
 
@@ -2754,13 +2774,386 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DSP_CAP_MMAP
+name|PCM_CAP_MMAP
 value|0x00002000
 end_define
 
 begin_comment
 comment|/* Supports mmap() */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_MULTI
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Supports multiple open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_BIND
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Supports binding to front/rear/center/lfe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_INPUT
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Supports recording */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_OUTPUT
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Supports playback */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_VIRTUAL
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Virtual device */
+end_comment
+
+begin_comment
+comment|/* 0x00040000 and 0x00080000 reserved for future use */
+end_comment
+
+begin_comment
+comment|/* Analog/digital control capabilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_ANALOGOUT
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_ANALOGIN
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_DIGITALOUT
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_DIGITALIN
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_ADMASK
+value|0x00f00000
+end_define
+
+begin_comment
+comment|/*  * NOTE! (capabilities& PCM_CAP_ADMASK)==0 means just that the  * digital/analog interface control features are not supported by the   * device/driver. However the device still supports analog, digital or  * both inputs/outputs (depending on the device). See the OSS Programmer's  * Guide for full details.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_SPECIAL
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Not for ordinary "multimedia" use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_SHADOW
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* OBSOLETE */
+end_comment
+
+begin_comment
+comment|/*  * Preferred channel usage. These bits can be used to  * give recommendations to the application. Used by few drivers.  * For example if ((caps& DSP_CH_MASK) == DSP_CH_MONO) means that  * the device works best in mono mode. However it doesn't necessarily mean  * that the device cannot be used in stereo. These bits should only be used  * by special applications such as multi track hard disk recorders to find  * out the initial setup. However the user should be able to override this  * selection.  *  * To find out which modes are actually supported the application should   * try to select them using SNDCTL_DSP_CHANNELS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CH_MASK
+value|0x06000000
+end_define
+
+begin_comment
+comment|/* Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CH_ANY
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* No preferred mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CH_MONO
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CH_STEREO
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CH_MULTI
+value|0x06000000
+end_define
+
+begin_comment
+comment|/* More than two channels */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_HIDDEN
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Hidden device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_FREERATE
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_MODEM
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Modem device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCM_CAP_DEFAULT
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* "Default" device */
+end_comment
+
+begin_comment
+comment|/*  * The PCM_CAP_* capability names were known as DSP_CAP_* prior OSS 4.0  * so it's necessary to define the older names too.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_ADMASK
+value|PCM_CAP_ADMASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_ANALOGIN
+value|PCM_CAP_ANALOGIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_ANALOGOUT
+value|PCM_CAP_ANALOGOUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_BATCH
+value|PCM_CAP_BATCH
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_BIND
+value|PCM_CAP_BIND
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_COPROC
+value|PCM_CAP_COPROC
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_DEFAULT
+value|PCM_CAP_DEFAULT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_DIGITALIN
+value|PCM_CAP_DIGITALIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_DIGITALOUT
+value|PCM_CAP_DIGITALOUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_DUPLEX
+value|PCM_CAP_DUPLEX
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_FREERATE
+value|PCM_CAP_FREERATE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_HIDDEN
+value|PCM_CAP_HIDDEN
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_INPUT
+value|PCM_CAP_INPUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_MMAP
+value|PCM_CAP_MMAP
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_MODEM
+value|PCM_CAP_MODEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_MULTI
+value|PCM_CAP_MULTI
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_OUTPUT
+value|PCM_CAP_OUTPUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_REALTIME
+value|PCM_CAP_REALTIME
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_REVISION
+value|PCM_CAP_REVISION
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_SHADOW
+value|PCM_CAP_SHADOW
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_TRIGGER
+value|PCM_CAP_TRIGGER
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CAP_VIRTUAL
+value|PCM_CAP_VIRTUAL
+end_define
 
 begin_comment
 comment|/*  * What do these function do ?  */
@@ -6400,9 +6793,15 @@ name|devnode
 decl_stmt|;
 comment|/* Device special file name (inside 					   /dev) */
 name|int
+name|next_play_engine
+decl_stmt|;
+name|int
+name|next_rec_engine
+decl_stmt|;
+name|int
 name|filler
 index|[
-literal|186
+literal|184
 index|]
 decl_stmt|;
 block|}
@@ -6642,10 +7041,21 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|char
+name|hw_info
+index|[
+literal|400
+index|]
+decl_stmt|;
+name|int
+name|intr_count
+decl_stmt|,
+name|ack_count
+decl_stmt|;
 name|int
 name|filler
 index|[
-literal|256
+literal|154
 index|]
 decl_stmt|;
 block|}
@@ -6739,6 +7149,20 @@ define|#
 directive|define
 name|SNDCTL_CARDINFO
 value|_IOWR('X',11, oss_card_info)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_ENGINEINFO
+value|_IOWR('X',12, oss_audioinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_AUDIOINFO_EX
+value|_IOWR('X',13, oss_audioinfo)
 end_define
 
 begin_comment

@@ -2865,6 +2865,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|sound_oss_card_info
+parameter_list|(
+name|oss_card_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
