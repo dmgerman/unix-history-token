@@ -58,11 +58,11 @@ begin_define
 define|#
 directive|define
 name|DRIVER_DATE
-value|"20060524"
+value|"20080613"
 end_define
 
 begin_comment
-comment|/* Interface history:  *  * 1.1 - ??  * 1.2 - Add vertex2 ioctl (keith)  *     - Add stencil capability to clear ioctl (gareth, keith)  *     - Increase MAX_TEXTURE_LEVELS (brian)  * 1.3 - Add cmdbuf ioctl (keith)  *     - Add support for new radeon packets (keith)  *     - Add getparam ioctl (keith)  *     - Add flip-buffers ioctl, deprecate fullscreen foo (keith).  * 1.4 - Add scratch registers to get_param ioctl.  * 1.5 - Add r200 packets to cmdbuf ioctl  *     - Add r200 function to init ioctl  *     - Add 'scalar2' instruction to cmdbuf  * 1.6 - Add static GART memory manager  *       Add irq handler (won't be turned on unless X server knows to)  *       Add irq ioctls and irq_active getparam.  *       Add wait command for cmdbuf ioctl  *       Add GART offset query for getparam  * 1.7 - Add support for cube map registers: R200_PP_CUBIC_FACES_[0..5]  *       and R200_PP_CUBIC_OFFSET_F1_[0..5].  *       Added packets R200_EMIT_PP_CUBIC_FACES_[0..5] and  *       R200_EMIT_PP_CUBIC_OFFSETS_[0..5].  (brian)  * 1.8 - Remove need to call cleanup ioctls on last client exit (keith)  *       Add 'GET' queries for starting additional clients on different VT's.  * 1.9 - Add DRM_IOCTL_RADEON_CP_RESUME ioctl.  *       Add texture rectangle support for r100.  * 1.10- Add SETPARAM ioctl; first parameter to set is FB_LOCATION, which  *       clients use to tell the DRM where they think the framebuffer is  *       located in the card's address space  * 1.11- Add packet R200_EMIT_RB3D_BLENDCOLOR to support GL_EXT_blend_color  *       and GL_EXT_blend_[func|equation]_separate on r200  * 1.12- Add R300 CP microcode support - this just loads the CP on r300  *       (No 3D support yet - just microcode loading).  * 1.13- Add packet R200_EMIT_TCL_POINT_SPRITE_CNTL for ARB_point_parameters  *     - Add hyperz support, add hyperz flags to clear ioctl.  * 1.14- Add support for color tiling  *     - Add R100/R200 surface allocation/free support  * 1.15- Add support for texture micro tiling  *     - Add support for r100 cube maps  * 1.16- Add R200_EMIT_PP_TRI_PERF_CNTL packet to support brilinear  *       texture filtering on r200  * 1.17- Add initial support for R300 (3D).  * 1.18- Add support for GL_ATI_fragment_shader, new packets  *       R200_EMIT_PP_AFS_0/1, R200_EMIT_PP_TXCTLALL_0-5 (replaces  *       R200_EMIT_PP_TXFILTER_0-5, 2 more regs) and R200_EMIT_ATF_TFACTOR  *       (replaces R200_EMIT_TFACTOR_0 (8 consts instead of 6)  * 1.19- Add support for gart table in FB memory and PCIE r300  * 1.20- Add support for r300 texrect  * 1.21- Add support for card type getparam  * 1.22- Add support for texture cache flushes (R300_TX_CNTL)  * 1.23- Add new radeon memory map work from benh  * 1.24- Add general-purpose packet for manipulating scratch registers (r300)  * 1.25- Add support for r200 vertex programs (R200_EMIT_VAP_PVS_CNTL,  *       new packet type)  */
+comment|/* Interface history:  *  * 1.1 - ??  * 1.2 - Add vertex2 ioctl (keith)  *     - Add stencil capability to clear ioctl (gareth, keith)  *     - Increase MAX_TEXTURE_LEVELS (brian)  * 1.3 - Add cmdbuf ioctl (keith)  *     - Add support for new radeon packets (keith)  *     - Add getparam ioctl (keith)  *     - Add flip-buffers ioctl, deprecate fullscreen foo (keith).  * 1.4 - Add scratch registers to get_param ioctl.  * 1.5 - Add r200 packets to cmdbuf ioctl  *     - Add r200 function to init ioctl  *     - Add 'scalar2' instruction to cmdbuf  * 1.6 - Add static GART memory manager  *       Add irq handler (won't be turned on unless X server knows to)  *       Add irq ioctls and irq_active getparam.  *       Add wait command for cmdbuf ioctl  *       Add GART offset query for getparam  * 1.7 - Add support for cube map registers: R200_PP_CUBIC_FACES_[0..5]  *       and R200_PP_CUBIC_OFFSET_F1_[0..5].  *       Added packets R200_EMIT_PP_CUBIC_FACES_[0..5] and  *       R200_EMIT_PP_CUBIC_OFFSETS_[0..5].  (brian)  * 1.8 - Remove need to call cleanup ioctls on last client exit (keith)  *       Add 'GET' queries for starting additional clients on different VT's.  * 1.9 - Add DRM_IOCTL_RADEON_CP_RESUME ioctl.  *       Add texture rectangle support for r100.  * 1.10- Add SETPARAM ioctl; first parameter to set is FB_LOCATION, which  *       clients use to tell the DRM where they think the framebuffer is  *       located in the card's address space  * 1.11- Add packet R200_EMIT_RB3D_BLENDCOLOR to support GL_EXT_blend_color  *       and GL_EXT_blend_[func|equation]_separate on r200  * 1.12- Add R300 CP microcode support - this just loads the CP on r300  *       (No 3D support yet - just microcode loading).  * 1.13- Add packet R200_EMIT_TCL_POINT_SPRITE_CNTL for ARB_point_parameters  *     - Add hyperz support, add hyperz flags to clear ioctl.  * 1.14- Add support for color tiling  *     - Add R100/R200 surface allocation/free support  * 1.15- Add support for texture micro tiling  *     - Add support for r100 cube maps  * 1.16- Add R200_EMIT_PP_TRI_PERF_CNTL packet to support brilinear  *       texture filtering on r200  * 1.17- Add initial support for R300 (3D).  * 1.18- Add support for GL_ATI_fragment_shader, new packets  *       R200_EMIT_PP_AFS_0/1, R200_EMIT_PP_TXCTLALL_0-5 (replaces  *       R200_EMIT_PP_TXFILTER_0-5, 2 more regs) and R200_EMIT_ATF_TFACTOR  *       (replaces R200_EMIT_TFACTOR_0 (8 consts instead of 6)  * 1.19- Add support for gart table in FB memory and PCIE r300  * 1.20- Add support for r300 texrect  * 1.21- Add support for card type getparam  * 1.22- Add support for texture cache flushes (R300_TX_CNTL)  * 1.23- Add new radeon memory map work from benh  * 1.24- Add general-purpose packet for manipulating scratch registers (r300)  * 1.25- Add support for r200 vertex programs (R200_EMIT_VAP_PVS_CNTL,  *       new packet type)  * 1.26- Add support for variable size PCI(E) gart aperture  * 1.27- Add support for IGP GART  * 1.28- Add support for VBL on CRTC2  * 1.29- R500 3D cmd buffer support  */
 end_comment
 
 begin_define
@@ -76,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|DRIVER_MINOR
-value|25
+value|29
 end_define
 
 begin_define
@@ -122,24 +122,31 @@ name|CHIP_RV380
 block|,
 name|CHIP_R420
 block|,
+name|CHIP_R423
+block|,
 name|CHIP_RV410
 block|,
 name|CHIP_RS400
 block|,
+name|CHIP_RS480
+block|,
+name|CHIP_RS690
+block|,
+name|CHIP_RS740
+block|,
+name|CHIP_RV515
+block|,
+name|CHIP_R520
+block|,
+name|CHIP_RV530
+block|,
+name|CHIP_RV560
+block|,
+name|CHIP_RV570
+block|,
+name|CHIP_R580
+block|,
 name|CHIP_LAST
-block|, }
-enum|;
-end_enum
-
-begin_enum
-enum|enum
-name|radeon_cp_microcode_version
-block|{
-name|UCODE_R100
-block|,
-name|UCODE_R200
-block|,
-name|UCODE_R300
 block|, }
 enum|;
 end_enum
@@ -152,45 +159,49 @@ begin_enum
 enum|enum
 name|radeon_chip_flags
 block|{
-name|CHIP_FAMILY_MASK
+name|RADEON_FAMILY_MASK
 init|=
 literal|0x0000ffffUL
 block|,
-name|CHIP_FLAGS_MASK
+name|RADEON_FLAGS_MASK
 init|=
 literal|0xffff0000UL
 block|,
-name|CHIP_IS_MOBILITY
+name|RADEON_IS_MOBILITY
 init|=
 literal|0x00010000UL
 block|,
-name|CHIP_IS_IGP
+name|RADEON_IS_IGP
 init|=
 literal|0x00020000UL
 block|,
-name|CHIP_SINGLE_CRTC
+name|RADEON_SINGLE_CRTC
 init|=
 literal|0x00040000UL
 block|,
-name|CHIP_IS_AGP
+name|RADEON_IS_AGP
 init|=
 literal|0x00080000UL
 block|,
-name|CHIP_HAS_HIERZ
+name|RADEON_HAS_HIERZ
 init|=
 literal|0x00100000UL
 block|,
-name|CHIP_IS_PCIE
+name|RADEON_IS_PCIE
 init|=
 literal|0x00200000UL
 block|,
-name|CHIP_NEW_MEMMAP
+name|RADEON_NEW_MEMMAP
 init|=
 literal|0x00400000UL
 block|,
-name|CHIP_IS_PCI
+name|RADEON_IS_PCI
 init|=
 literal|0x00800000UL
+block|,
+name|RADEON_IS_IGPGART
+init|=
+literal|0x01000000UL
 block|, }
 enum|;
 end_enum
@@ -226,7 +237,8 @@ name|unsigned
 name|int
 name|age
 decl_stmt|;
-name|drm_buf_t
+name|struct
+name|drm_buf
 modifier|*
 name|buf
 decl_stmt|;
@@ -261,9 +273,27 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
+comment|/* Double Words */
 name|int
 name|size_l2qw
 decl_stmt|;
+comment|/* log2 Quad Words */
+name|int
+name|rptr_update
+decl_stmt|;
+comment|/* Double Words */
+name|int
+name|rptr_update_l2qw
+decl_stmt|;
+comment|/* log2 Quad Words */
+name|int
+name|fetch_size
+decl_stmt|;
+comment|/* Double Words */
+name|int
+name|fetch_size_l2ow
+decl_stmt|;
+comment|/* log2 Oct Words */
 name|u32
 name|tail
 decl_stmt|;
@@ -331,10 +361,12 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-name|DRMFILE
-name|filp
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 decl_stmt|;
-comment|/* 0: free, -1: heap, other: real files */
+comment|/* NULL: free, -1: heap, other: real files */
 block|}
 struct|;
 end_struct
@@ -375,12 +407,28 @@ decl_stmt|;
 name|u32
 name|flags
 decl_stmt|;
-name|DRMFILE
-name|filp
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RADEON_FLUSH_EMITED
+value|(1< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PURGE_EMITED
+value|(1< 1)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -441,9 +489,6 @@ decl_stmt|;
 name|int
 name|usec_timeout
 decl_stmt|;
-name|int
-name|microcode_version
-decl_stmt|;
 struct|struct
 block|{
 name|u32
@@ -478,9 +523,6 @@ name|do_boxes
 decl_stmt|;
 name|int
 name|page_flipping
-decl_stmt|;
-name|int
-name|current_page
 decl_stmt|;
 name|u32
 name|color_fmt
@@ -577,6 +619,18 @@ decl_stmt|;
 name|atomic_t
 name|swi_emitted
 decl_stmt|;
+name|int
+name|vblank_crtc
+decl_stmt|;
+name|uint32_t
+name|irq_enable_reg
+decl_stmt|;
+name|int
+name|irq_enabled
+decl_stmt|;
+name|uint32_t
+name|r500_disp_irq_reg
+decl_stmt|;
 name|struct
 name|radeon_surface
 name|surfaces
@@ -597,6 +651,11 @@ name|unsigned
 name|long
 name|pcigart_offset
 decl_stmt|;
+name|unsigned
+name|int
+name|pcigart_offset_set
+decl_stmt|;
+name|struct
 name|drm_ati_pcigart_info
 name|gart_info
 decl_stmt|;
@@ -606,11 +665,33 @@ index|[
 literal|5
 index|]
 decl_stmt|;
+name|unsigned
+name|int
+name|crtc_last_cnt
+decl_stmt|;
+name|unsigned
+name|int
+name|crtc2_last_cnt
+decl_stmt|;
 comment|/* starting from here on, data is preserved accross an open */
 name|uint32_t
 name|flags
 decl_stmt|;
 comment|/* see radeon_chip_flags */
+name|unsigned
+name|long
+name|fb_aper_offset
+decl_stmt|;
+name|int
+name|num_gb_pipes
+decl_stmt|;
+name|int
+name|track_flush
+decl_stmt|;
+name|uint32_t
+name|chip_family
+decl_stmt|;
+comment|/* extract from flags */
 block|}
 name|drm_radeon_private_t
 typedef|;
@@ -644,7 +725,8 @@ decl_stmt|;
 name|int
 name|nbox
 decl_stmt|;
-name|drm_clip_rect_t
+name|struct
+name|drm_clip_rect
 name|__user
 modifier|*
 name|boxes
@@ -663,7 +745,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|drm_ioctl_desc_t
+name|struct
+name|drm_ioctl_desc
 name|radeon_ioctls
 index|[]
 decl_stmt|;
@@ -677,6 +760,86 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Check whether the given hardware address is inside the framebuffer or the  * GART area.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline__
+name|int
+name|radeon_check_offset
+parameter_list|(
+name|drm_radeon_private_t
+modifier|*
+name|dev_priv
+parameter_list|,
+name|u64
+name|off
+parameter_list|)
+block|{
+name|u32
+name|fb_start
+init|=
+name|dev_priv
+operator|->
+name|fb_location
+decl_stmt|;
+name|u32
+name|fb_end
+init|=
+name|fb_start
+operator|+
+name|dev_priv
+operator|->
+name|fb_size
+operator|-
+literal|1
+decl_stmt|;
+name|u32
+name|gart_start
+init|=
+name|dev_priv
+operator|->
+name|gart_vm_start
+decl_stmt|;
+name|u32
+name|gart_end
+init|=
+name|gart_start
+operator|+
+name|dev_priv
+operator|->
+name|gart_size
+operator|-
+literal|1
+decl_stmt|;
+return|return
+operator|(
+operator|(
+name|off
+operator|>=
+name|fb_start
+operator|&&
+name|off
+operator|<=
+name|fb_end
+operator|)
+operator|||
+operator|(
+name|off
+operator|>=
+name|gart_start
+operator|&&
+name|off
+operator|<=
+name|gart_end
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* radeon_cp.c */
 end_comment
 
@@ -685,7 +848,19 @@ specifier|extern
 name|int
 name|radeon_cp_init
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -695,7 +870,19 @@ specifier|extern
 name|int
 name|radeon_cp_start
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -705,7 +892,19 @@ specifier|extern
 name|int
 name|radeon_cp_stop
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -715,7 +914,19 @@ specifier|extern
 name|int
 name|radeon_cp_reset
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -725,7 +936,19 @@ specifier|extern
 name|int
 name|radeon_cp_idle
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -735,7 +958,19 @@ specifier|extern
 name|int
 name|radeon_cp_resume
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -745,7 +980,19 @@ specifier|extern
 name|int
 name|radeon_engine_reset
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -755,7 +1002,19 @@ specifier|extern
 name|int
 name|radeon_fullscreen
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -765,7 +1024,31 @@ specifier|extern
 name|int
 name|radeon_cp_buffers
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|u32
+name|radeon_read_fb_location
+parameter_list|(
+name|drm_radeon_private_t
+modifier|*
+name|dev_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -775,7 +1058,8 @@ specifier|extern
 name|void
 name|radeon_freelist_reset
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -784,11 +1068,13 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|drm_buf_t
+name|struct
+name|drm_buf
 modifier|*
 name|radeon_freelist_get
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -827,7 +1113,19 @@ specifier|extern
 name|int
 name|radeon_mem_alloc
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -837,7 +1135,19 @@ specifier|extern
 name|int
 name|radeon_mem_free
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -847,7 +1157,19 @@ specifier|extern
 name|int
 name|radeon_mem_init_heap
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -871,8 +1193,10 @@ specifier|extern
 name|void
 name|radeon_mem_release
 parameter_list|(
-name|DRMFILE
-name|filp
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|,
 name|struct
 name|mem_block
@@ -888,10 +1212,41 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|void
+name|radeon_irq_set_state
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|u32
+name|mask
+parameter_list|,
+name|int
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|radeon_irq_emit
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -901,7 +1256,19 @@ specifier|extern
 name|int
 name|radeon_irq_wait
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -911,7 +1278,8 @@ specifier|extern
 name|void
 name|radeon_do_release
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -920,17 +1288,48 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|radeon_driver_vblank_wait
+name|u32
+name|radeon_get_vblank_counter
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|unsigned
 name|int
+name|crtc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|radeon_enable_vblank
+parameter_list|(
+name|struct
+name|drm_device
 modifier|*
-name|sequence
+name|dev
+parameter_list|,
+name|int
+name|crtc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|radeon_disable_vblank
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|crtc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -950,7 +1349,8 @@ specifier|extern
 name|void
 name|radeon_driver_irq_preinstall
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -959,10 +1359,11 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|radeon_driver_irq_postinstall
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -974,9 +1375,39 @@ specifier|extern
 name|void
 name|radeon_driver_irq_uninstall
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|radeon_vblank_crtc_get
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|radeon_vblank_crtc_set
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|int64_t
+name|value
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1029,12 +1460,15 @@ specifier|extern
 name|void
 name|radeon_driver_preclose
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|DRMFILE
-name|filp
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1044,13 +1478,15 @@ specifier|extern
 name|void
 name|radeon_driver_postclose
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_file_t
+name|struct
+name|drm_file
 modifier|*
-name|filp
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1060,7 +1496,8 @@ specifier|extern
 name|void
 name|radeon_driver_lastclose
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -1072,13 +1509,15 @@ specifier|extern
 name|int
 name|radeon_driver_open
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_file_t
+name|struct
+name|drm_file
 modifier|*
-name|filp_priv
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1113,7 +1552,10 @@ specifier|extern
 name|void
 name|r300_init_reg_flags
 parameter_list|(
-name|void
+name|struct
+name|drm_device
+modifier|*
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1123,16 +1565,15 @@ specifier|extern
 name|int
 name|r300_do_cp_cmdbuf
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|DRMFILE
-name|filp
-parameter_list|,
-name|drm_file_t
+name|struct
+name|drm_file
 modifier|*
-name|filp_priv
+name|file_priv
 parameter_list|,
 name|drm_radeon_kcmd_buffer_t
 modifier|*
@@ -1258,6 +1699,10 @@ name|RADEON_SCISSOR_2_ENABLE
 value|(1<< 30)
 end_define
 
+begin_comment
+comment|/*  * PCIE radeons (rv370/rv380, rv410, r423/r430/r480, r5xx)  * don't have an explicit bus mastering disable bit.  It's handled  * by the PCI D-states.  PMI_BM_DIS disables D-state bus master  * handling, not bus mastering itself.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1265,11 +1710,97 @@ name|RADEON_BUS_CNTL
 value|0x0030
 end_define
 
+begin_comment
+comment|/* r1xx, r2xx, r300, r(v)350, r420/r481, rs400/rs480 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RADEON_BUS_MASTER_DIS
 value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* rs600/rs690/rs740 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RS600_BUS_MASTER_DIS
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS600_MSI_REARM
+value|(1<< 20)
+end_define
+
+begin_comment
+comment|/* see RS480_MSI_REARM in AIC_CNTL for rs480 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_BUS_CNTL1
+value|0x0034
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PMI_BM_DIS
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PMI_INT_DIS
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV370_BUS_CNTL
+value|0x004c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV370_PMI_BM_DIS
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV370_PMI_INT_DIS
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_MSI_REARM_EN
+value|0x0160
+end_define
+
+begin_comment
+comment|/* rv370/rv380, rv410, r423/r430/r480, r5xx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RV370_MSI_REARM_EN
+value|(1<< 0)
 end_define
 
 begin_define
@@ -1381,49 +1912,49 @@ begin_define
 define|#
 directive|define
 name|RADEON_PCIE_TX_GART_UNMAPPED_ACCESS_PASS_THRU
-value|(0<<1)
+value|(0<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RADEON_PCIE_TX_GART_UNMAPPED_ACCESS_CLAMP_LO
-value|(1<<1)
+value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RADEON_PCIE_TX_GART_UNMAPPED_ACCESS_DISCARD
-value|(3<<1)
+value|(3<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RADEON_PCIE_TX_GART_MODE_32_128_CACHE
-value|(0<<3)
+value|(0<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RADEON_PCIE_TX_GART_MODE_8_4_128_CACHE
-value|(1<<3)
+value|(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RADEON_PCIE_TX_GART_CHK_RW_VALID_EN
-value|(1<<5)
+value|(1<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RADEON_PCIE_TX_GART_INVALIDATE_TLB
-value|(1<<8)
+value|(1<< 8)
 end_define
 
 begin_define
@@ -1478,6 +2009,424 @@ end_define
 begin_define
 define|#
 directive|define
+name|RS480_NB_MC_INDEX
+value|0x168
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_NB_MC_IND_WR_EN
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_NB_MC_DATA
+value|0x16c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_MC_INDEX
+value|0x78
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_MC_INDEX_MASK
+value|0x1ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_MC_INDEX_WR_EN
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_MC_INDEX_WR_ACK
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_MC_DATA
+value|0x7c
+end_define
+
+begin_comment
+comment|/* MC indirect registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RS480_MC_MISC_CNTL
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_DISABLE_GTW
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* switch between MCIND GART and MM GART registers. 0 = mmgart, 1 = mcind gart */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RS480_GART_INDEX_REG_EN
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_BLOCK_GFX_D3_EN
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_K8_FB_LOCATION
+value|0x1e
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_GART_FEATURE_ID
+value|0x2b
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_HANG_EN
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_TLB_ENABLE
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_P2P_ENABLE
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_GTW_LAC_EN
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_2LEVEL_GART
+value|(0<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_1LEVEL_GART
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_PDC_EN
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_GART_BASE
+value|0x2c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_GART_CACHE_CNTRL
+value|0x2e
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_GART_CACHE_INVALIDATE
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* wait for it to clear */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RS480_AGP_ADDRESS_SPACE_SIZE
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_GART_EN
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_VA_SIZE_32MB
+value|(0<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_VA_SIZE_64MB
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_VA_SIZE_128MB
+value|(2<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_VA_SIZE_256MB
+value|(3<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_VA_SIZE_512MB
+value|(4<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_VA_SIZE_1GB
+value|(5<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_VA_SIZE_2GB
+value|(6<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_AGP_MODE_CNTL
+value|0x39
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_POST_GART_Q_SIZE
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_NONGART_SNOOP
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_AGP_RD_BUF_SIZE
+value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_REQ_TYPE_SNOOP_SHIFT
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_REQ_TYPE_SNOOP_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_REQ_TYPE_SNOOP_DIS
+value|(1<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_MC_MISC_UMA_CNTL
+value|0x5f
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_MC_MCLK_CNTL
+value|0x7a
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_MC_UMA_DUALCH_CNTL
+value|0x86
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_MC_FB_LOCATION
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_MC_AGP_LOCATION
+value|0x101
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_MC_AGP_BASE
+value|0x102
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_MC_AGP_BASE_2
+value|0x103
+end_define
+
+begin_define
+define|#
+directive|define
+name|R520_MC_IND_INDEX
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
+name|R520_MC_IND_WR_EN
+value|(1<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R520_MC_IND_DATA
+value|0x74
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV515_MC_FB_LOCATION
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV515_MC_AGP_LOCATION
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV515_MC_AGP_BASE
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|RV515_MC_AGP_BASE_2
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|R520_MC_FB_LOCATION
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|R520_MC_AGP_LOCATION
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|R520_MC_AGP_BASE
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|R520_MC_AGP_BASE_2
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
 name|RADEON_MPP_TB_CONFIG
 value|0x01c0
 end_define
@@ -1499,8 +2448,167 @@ end_define
 begin_define
 define|#
 directive|define
+name|RADEON_AGP_BASE_2
+value|0x015c
+end_define
+
+begin_comment
+comment|/* r200+ only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RS480_AGP_BASE_2
+value|0x0164
+end_define
+
+begin_define
+define|#
+directive|define
 name|RADEON_AGP_BASE
 value|0x0170
+end_define
+
+begin_comment
+comment|/* pipe config regs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R400_GB_PIPE_SELECT
+value|0x402c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_DYN_SCLK_PWMEM_PIPE
+value|0x000d
+end_define
+
+begin_comment
+comment|/* PLL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R500_SU_REG_DEST
+value|0x42c8
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_GB_TILE_CONFIG
+value|0x4018
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ENABLE_TILING
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_PIPE_COUNT_RV350
+value|(0<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_PIPE_COUNT_R300
+value|(3<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_PIPE_COUNT_R420_3P
+value|(6<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_PIPE_COUNT_R420
+value|(7<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TILE_SIZE_8
+value|(0<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TILE_SIZE_16
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TILE_SIZE_32
+value|(2<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SUBPIXEL_1_12
+value|(0<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SUBPIXEL_1_16
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DST_PIPE_CONFIG
+value|0x170c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_PIPE_AUTO_CONFIG
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_RB2D_DSTCACHE_MODE
+value|0x3428
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DC_AUTOFLUSH_ENABLE
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DC_DC_DISABLE_IGNORE_PE
+value|(1<< 17)
 end_define
 
 begin_define
@@ -1515,6 +2623,13 @@ define|#
 directive|define
 name|RADEON_RB3D_COLORPITCH
 value|0x1c48
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_SRC_X_Y
+value|0x1590
 end_define
 
 begin_define
@@ -1639,6 +2754,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RADEON_SRC_PITCH_OFFSET
+value|0x1428
+end_define
+
+begin_define
+define|#
+directive|define
 name|RADEON_DST_PITCH_OFFSET
 value|0x142c
 end_define
@@ -1757,6 +2879,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|RADEON_CRTC_CRNT_FRAME
+value|0x0214
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CRTC2_CRNT_FRAME
+value|0x0314
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CRTC_STATUS
+value|0x005c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CRTC2_STATUS
+value|0x03fc
+end_define
+
+begin_define
+define|#
+directive|define
 name|RADEON_GEN_INT_CNTL
 value|0x0040
 end_define
@@ -1766,6 +2916,13 @@ define|#
 directive|define
 name|RADEON_CRTC_VBLANK_MASK
 value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CRTC2_VBLANK_MASK
+value|(1<< 9)
 end_define
 
 begin_define
@@ -1806,6 +2963,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|RADEON_CRTC2_VBLANK_STAT
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CRTC2_VBLANK_STAT_ACK
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RADEON_GUI_IDLE_INT_TEST_ACK
 value|(1<< 19)
 end_define
@@ -1829,6 +3000,13 @@ define|#
 directive|define
 name|RADEON_SW_INT_FIRE
 value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_DISPLAY_INT_STATUS
+value|(1<< 0)
 end_define
 
 begin_define
@@ -2093,35 +3271,46 @@ end_define
 begin_define
 define|#
 directive|define
-name|RADEON_RB2D_DSTCACHE_CTLSTAT
+name|R300_RB2D_DSTCACHE_CTLSTAT
 value|0x342c
+end_define
+
+begin_comment
+comment|/* use R300_DSTCACHE_CTLSTAT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_DSTCACHE_CTLSTAT
+value|0x1714
 end_define
 
 begin_define
 define|#
 directive|define
-name|RADEON_RB2D_DC_FLUSH
+name|R300_RB2D_DC_FLUSH
 value|(3<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RADEON_RB2D_DC_FREE
+name|R300_RB2D_DC_FREE
 value|(3<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RADEON_RB2D_DC_FLUSH_ALL
+name|R300_RB2D_DC_FLUSH_ALL
 value|0xf
 end_define
 
 begin_define
 define|#
 directive|define
-name|RADEON_RB2D_DC_BUSY
+name|R300_RB2D_DC_BUSY
 value|(1<< 31)
 end_define
 
@@ -2282,6 +3471,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|R300_ZB_ZCACHE_CTLSTAT
+value|0x4f18
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZC_FLUSH
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZC_FREE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZC_BUSY
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RADEON_RB3D_DSTCACHE_CTLSTAT
 value|0x325c
 end_define
@@ -2312,6 +3529,34 @@ define|#
 directive|define
 name|RADEON_RB3D_DC_BUSY
 value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_RB3D_DSTCACHE_CTLSTAT
+value|0x4e4c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_RB3D_DC_FLUSH
+value|(2<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_RB3D_DC_FREE
+value|(2<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_RB3D_DC_FINISH
+value|(1<< 4)
 end_define
 
 begin_define
@@ -2461,6 +3706,10 @@ name|RADEON_SOFT_RESET_HDP
 value|(1<<  7)
 end_define
 
+begin_comment
+comment|/*  *   6:0  Available slots in the FIFO  *   8    Host Interface active  *   9    CP request active  *   10   FIFO request active  *   11   Host Interface retry active  *   12   CP retry active  *   13   FIFO retry active  *   14   FIFO pipeline busy  *   15   Event engine busy  *   16   CP command stream busy  *   17   2D engine busy  *   18   2D portion of render backend busy  *   20   3D setup engine busy  *   26   GA engine busy  *   27   CBA 2D engine busy  *   31   2D engine busy or 3D engine busy or FIFO not empty or CP busy or  *           command stream queue not empty or Ring Buffer not empty  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2468,11 +3717,187 @@ name|RADEON_RBBM_STATUS
 value|0x0e40
 end_define
 
+begin_comment
+comment|/* Same as the previous RADEON_RBBM_STATUS; this is a mirror of that register.  */
+end_comment
+
+begin_comment
+comment|/* #define RADEON_RBBM_STATUS		0x1740 */
+end_comment
+
+begin_comment
+comment|/* bits 6:0 are dword slots available in the cmd fifo */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RADEON_RBBM_FIFOCNT_MASK
 value|0x007f
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_HIRQ_ON_RBB
+value|(1<<  8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CPRQ_ON_RBB
+value|(1<<  9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CFRQ_ON_RBB
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_HIRQ_IN_RTBUF
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CPRQ_IN_RTBUF
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CFRQ_IN_RTBUF
+value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PIPE_BUSY
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_ENG_EV_BUSY
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CP_CMDSTRM_BUSY
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_E2_BUSY
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_RB2D_BUSY
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_RB3D_BUSY
+value|(1<< 19)
+end_define
+
+begin_comment
+comment|/* not used on r300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_VAP_BUSY
+value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_RE_BUSY
+value|(1<< 21)
+end_define
+
+begin_comment
+comment|/* not used on r300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_TAM_BUSY
+value|(1<< 22)
+end_define
+
+begin_comment
+comment|/* not used on r300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_TDM_BUSY
+value|(1<< 23)
+end_define
+
+begin_comment
+comment|/* not used on r300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_PB_BUSY
+value|(1<< 24)
+end_define
+
+begin_comment
+comment|/* not used on r300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_TIM_BUSY
+value|(1<< 25)
+end_define
+
+begin_comment
+comment|/* not used on r300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_GA_BUSY
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_CBA2D_BUSY
+value|(1<< 27)
 end_define
 
 begin_define
@@ -3352,6 +4777,13 @@ define|#
 directive|define
 name|RADEON_PCIGART_TRANSLATE_EN
 value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS400_MSI_REARM
+value|(1<< 3)
 end_define
 
 begin_define
@@ -4866,6 +6298,139 @@ name|RADEON_VHA_BACKFRAME1_OFF_PITCH_V_2
 value|0x1898
 end_define
 
+begin_define
+define|#
+directive|define
+name|R500_D1CRTC_STATUS
+value|0x609c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D2CRTC_STATUS
+value|0x689c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_CRTC_V_BLANK
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D1CRTC_FRAME_COUNT
+value|0x60a4
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D2CRTC_FRAME_COUNT
+value|0x68a4
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D1MODE_V_COUNTER
+value|0x6530
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D2MODE_V_COUNTER
+value|0x6d30
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D1MODE_VBLANK_STATUS
+value|0x6534
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D2MODE_VBLANK_STATUS
+value|0x6d34
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_VBLANK_OCCURED
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_VBLANK_ACK
+value|(1<<4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_VBLANK_STAT
+value|(1<<12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_VBLANK_INT
+value|(1<<16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_DxMODE_INT_MASK
+value|0x6540
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D1MODE_INT_MASK
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D2MODE_INT_MASK
+value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_DISP_INTERRUPT_STATUS
+value|0x7edc
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D1_VBLANK_INTERRUPT
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_D2_VBLANK_INTERRUPT
+value|(1<< 5)
+end_define
+
 begin_comment
 comment|/* Constants */
 end_comment
@@ -5017,6 +6582,58 @@ end_define
 begin_define
 define|#
 directive|define
+name|R500_WRITE_MCIND
+parameter_list|(
+name|addr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|do {								\ 	RADEON_WRITE(R520_MC_IND_INDEX, 0xff0000 | ((addr)& 0xff));	\ 	RADEON_WRITE(R520_MC_IND_DATA, (val));			\ 	RADEON_WRITE(R520_MC_IND_INDEX, 0);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS480_WRITE_MCIND
+parameter_list|(
+name|addr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|do {									\ 	RADEON_WRITE( RS480_NB_MC_INDEX,				\ 			((addr)& 0xff) | RS480_NB_MC_IND_WR_EN);	\ 	RADEON_WRITE( RS480_NB_MC_DATA, (val) );			\ 	RADEON_WRITE( RS480_NB_MC_INDEX, 0xff );			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS690_WRITE_MCIND
+parameter_list|(
+name|addr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|do {								\ 	RADEON_WRITE(RS690_MC_INDEX, RS690_MC_INDEX_WR_EN | ((addr)& RS690_MC_INDEX_MASK));	\ 	RADEON_WRITE(RS690_MC_DATA, val);			\ 	RADEON_WRITE(RS690_MC_INDEX, RS690_MC_INDEX_WR_ACK);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP_WRITE_MCIND
+parameter_list|(
+name|addr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|do {									\     if (((dev_priv->flags& RADEON_FAMILY_MASK) == CHIP_RS690) ||	\ 	((dev_priv->flags& RADEON_FAMILY_MASK) == CHIP_RS740))		\ 	        RS690_WRITE_MCIND( addr, val );                         \ 	else                                                            \ 	        RS480_WRITE_MCIND( addr, val );                         \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CP_PACKET0
 parameter_list|(
 name|reg
@@ -5116,7 +6733,7 @@ define|#
 directive|define
 name|RADEON_FLUSH_CACHE
 parameter_list|()
-value|do {					\ 	OUT_RING( CP_PACKET0( RADEON_RB3D_DSTCACHE_CTLSTAT, 0 ) );	\ 	OUT_RING( RADEON_RB3D_DC_FLUSH );				\ } while (0)
+value|do {					\ 	if ((dev_priv->flags& RADEON_FAMILY_MASK)<= CHIP_RV280) {	\ 	        OUT_RING(CP_PACKET0(RADEON_RB3D_DSTCACHE_CTLSTAT, 0));	\ 	        OUT_RING(RADEON_RB3D_DC_FLUSH);				\ 	} else {                                                        \ 	        OUT_RING(CP_PACKET0(R300_RB3D_DSTCACHE_CTLSTAT, 0));	\ 	        OUT_RING(R300_RB3D_DC_FLUSH);				\         }                                                               \ } while (0)
 end_define
 
 begin_define
@@ -5124,7 +6741,7 @@ define|#
 directive|define
 name|RADEON_PURGE_CACHE
 parameter_list|()
-value|do {					\ 	OUT_RING( CP_PACKET0( RADEON_RB3D_DSTCACHE_CTLSTAT, 0 ) );	\ 	OUT_RING( RADEON_RB3D_DC_FLUSH_ALL );				\ } while (0)
+value|do {					\ 	if ((dev_priv->flags& RADEON_FAMILY_MASK)<= CHIP_RV280) {	\ 	        OUT_RING(CP_PACKET0( RADEON_RB3D_DSTCACHE_CTLSTAT, 0));	\ 	        OUT_RING(RADEON_RB3D_DC_FLUSH | RADEON_RB3D_DC_FREE);	\ 	} else {                                                        \ 	        OUT_RING(CP_PACKET0(R300_RB3D_DSTCACHE_CTLSTAT, 0));	\ 	        OUT_RING(R300_RB3D_DC_FLUSH | R300_RB3D_DC_FREE );	\         }                                                               \ } while (0)
 end_define
 
 begin_define
@@ -5132,7 +6749,7 @@ define|#
 directive|define
 name|RADEON_FLUSH_ZCACHE
 parameter_list|()
-value|do {					\ 	OUT_RING( CP_PACKET0( RADEON_RB3D_ZCACHE_CTLSTAT, 0 ) );	\ 	OUT_RING( RADEON_RB3D_ZC_FLUSH );				\ } while (0)
+value|do {					\ 	if ((dev_priv->flags& RADEON_FAMILY_MASK)<= CHIP_RV280) {	\ 	        OUT_RING( CP_PACKET0( RADEON_RB3D_ZCACHE_CTLSTAT, 0 ) ); \ 	        OUT_RING( RADEON_RB3D_ZC_FLUSH );			\ 	} else {                                                        \ 	        OUT_RING( CP_PACKET0( R300_ZB_ZCACHE_CTLSTAT, 0 ) );	\ 	        OUT_RING( R300_ZC_FLUSH );				\         }                                                               \ } while (0)
 end_define
 
 begin_define
@@ -5140,7 +6757,7 @@ define|#
 directive|define
 name|RADEON_PURGE_ZCACHE
 parameter_list|()
-value|do {					\ 	OUT_RING( CP_PACKET0( RADEON_RB3D_ZCACHE_CTLSTAT, 0 ) );	\ 	OUT_RING( RADEON_RB3D_ZC_FLUSH_ALL );				\ } while (0)
+value|do {					\ 	if ((dev_priv->flags& RADEON_FAMILY_MASK)<= CHIP_RV280) {	\ 	        OUT_RING(CP_PACKET0(RADEON_RB3D_ZCACHE_CTLSTAT, 0));	\ 	        OUT_RING(RADEON_RB3D_ZC_FLUSH | RADEON_RB3D_ZC_FREE);	\ 	} else {                                                        \ 	        OUT_RING(CP_PACKET0(R300_ZB_ZCACHE_CTLSTAT, 0));	\ 	        OUT_RING(R300_ZC_FLUSH | R300_ZC_FREE);			\         }                                                               \ } while (0)
 end_define
 
 begin_comment
@@ -5228,7 +6845,7 @@ name|BEGIN_RING
 parameter_list|(
 name|n
 parameter_list|)
-value|do {						\ 	if ( RADEON_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_RING( %d ) in %s\n",			\ 			   n, __FUNCTION__ );				\ 	}								\ 	if ( dev_priv->ring.space<= (n) * sizeof(u32) ) {		\ 		COMMIT_RING();						\ 		radeon_wait_ring( dev_priv, (n) * sizeof(u32) );	\ 	}								\ 	_nr = n; dev_priv->ring.space -= (n) * sizeof(u32);		\ 	ring = dev_priv->ring.start;					\ 	write = dev_priv->ring.tail;					\ 	mask = dev_priv->ring.tail_mask;				\ } while (0)
+value|do {						\ 	if ( RADEON_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_RING( %d )\n", (n));			\ 	}								\ 	if ( dev_priv->ring.space<= (n) * sizeof(u32) ) {		\ 		COMMIT_RING();						\ 		radeon_wait_ring( dev_priv, (n) * sizeof(u32) );	\ 	}								\ 	_nr = n; dev_priv->ring.space -= (n) * sizeof(u32);		\ 	ring = dev_priv->ring.start;					\ 	write = dev_priv->ring.tail;					\ 	mask = dev_priv->ring.tail_mask;				\ } while (0)
 end_define
 
 begin_define
@@ -5236,7 +6853,7 @@ define|#
 directive|define
 name|ADVANCE_RING
 parameter_list|()
-value|do {						\ 	if ( RADEON_VERBOSE ) {						\ 		DRM_INFO( "ADVANCE_RING() wr=0x%06x tail=0x%06x\n",	\ 			  write, dev_priv->ring.tail );			\ 	}								\ 	if (((dev_priv->ring.tail + _nr)& mask) != write) {		\ 		DRM_ERROR( 						\ 			"ADVANCE_RING(): mismatch: nr: %x write: %x line: %d\n",	\ 			((dev_priv->ring.tail + _nr)& mask),		\ 			write, __LINE__);						\ 	} else								\ 		dev_priv->ring.tail = write;				\ } while (0)
+value|do {						\ 	if ( RADEON_VERBOSE ) {						\ 		DRM_INFO( "ADVANCE_RING() wr=0x%06x tail=0x%06x\n",	\ 			  write, dev_priv->ring.tail );			\ 	}								\ 	if (((dev_priv->ring.tail + _nr)& mask) != write) {		\ 		DRM_ERROR(						\ 			"ADVANCE_RING(): mismatch: nr: %x write: %x line: %d\n",	\ 			((dev_priv->ring.tail + _nr)& mask),		\ 			write, __LINE__);						\ 	} else								\ 		dev_priv->ring.tail = write;				\ } while (0)
 end_define
 
 begin_define

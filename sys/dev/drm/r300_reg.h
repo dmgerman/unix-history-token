@@ -17,6 +17,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* *INDENT-OFF* */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -156,7 +160,7 @@ value|28
 end_define
 
 begin_comment
-comment|/* This file contains registers and constants for the R300. They have been found mostly by examining command buffers captured using glxtest, as well as by extrapolating some known registers and constants from the R200.  I am fairly certain that they are correct unless stated otherwise in comments. */
+comment|/*  * This file contains registers and constants for the R300. They have been  * found mostly by examining command buffers captured using glxtest, as well  * as by extrapolating some known registers and constants from the R200.  * I am fairly certain that they are correct unless stated otherwise  * in comments.  */
 end_comment
 
 begin_define
@@ -202,7 +206,18 @@ value|0x1DAC
 end_define
 
 begin_comment
-comment|/* This register is written directly and also starts data section in many 3d CP_PACKET3's */
+comment|/*  * Vertex Array Processing (VAP) Control  * Stolen from r200 code from Christoph Brill (It's a guess!)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_VAP_CNTL
+value|0x2080
+end_define
+
+begin_comment
+comment|/* This register is written directly and also starts data section  * in many 3d CP_PACKET3's  */
 end_comment
 
 begin_define
@@ -304,7 +319,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* State based - direct writes to registers trigger vertex generation */
+comment|/* State based - direct writes to registers trigger vertex            generation */
 end_comment
 
 begin_define
@@ -458,6 +473,10 @@ name|R300_VAP_OUTPUT_VTX_FMT_1
 value|0x2094
 end_define
 
+begin_comment
+comment|/* each of the following is 3 bits wide, specifies number 	   of components */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -515,7 +534,7 @@ value|21
 end_define
 
 begin_comment
-comment|/* END */
+comment|/* END: Wild guesses */
 end_comment
 
 begin_define
@@ -610,8 +629,47 @@ begin_comment
 comment|/* gap */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|R300_VAP_CNTL_STATUS
+value|0x2140
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_VC_NO_SWAP
+value|(0<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_VC_16BIT_SWAP
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_VC_32BIT_SWAP
+value|(2<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_VAP_TCL_BYPASS
+value|(1<< 8)
+end_define
+
 begin_comment
-comment|/* Where do we get our vertex data? // // Vertex data either comes either from immediate mode registers or from // vertex arrays. // There appears to be no mixed mode (though we can force the pitch of // vertex arrays to 0, effectively reusing the same element over and over // again). // // Immediate mode is controlled by the INPUT_CNTL registers. I am not sure // if these registers influence vertex array processing. // // Vertex arrays are controlled via the 3D_LOAD_VBPNTR packet3. // // In both cases, vertex attributes are then passed through INPUT_ROUTE.  // Beginning with INPUT_ROUTE_0_0 is a list of WORDs that route vertex data // into the vertex processor's input registers. // The first word routes the first input, the second word the second, etc. // The corresponding input is routed into the register with the given index. // The list is ended by a word with INPUT_ROUTE_END set. // // Always set COMPONENTS_4 in immediate mode. */
+comment|/* gap */
+end_comment
+
+begin_comment
+comment|/* Where do we get our vertex data?  *  * Vertex data either comes either from immediate mode registers or from  * vertex arrays.  * There appears to be no mixed mode (though we can force the pitch of  * vertex arrays to 0, effectively reusing the same element over and over  * again).  *  * Immediate mode is controlled by the INPUT_CNTL registers. I am not sure  * if these registers influence vertex array processing.  *  * Vertex arrays are controlled via the 3D_LOAD_VBPNTR packet3.  *  * In both cases, vertex attributes are then passed through INPUT_ROUTE.  *  * Beginning with INPUT_ROUTE_0_0 is a list of WORDs that route vertex data  * into the vertex processor's input registers.  * The first word routes the first input, the second word the second, etc.  * The corresponding input is routed into the register with the given index.  * The list is ended by a word with INPUT_ROUTE_END set.  *  * Always set COMPONENTS_4 in immediate mode.  */
 end_comment
 
 begin_define
@@ -783,7 +841,7 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* Notes: //  - always set up to produce at least two attributes: //    if vertex program uses only position, fglrx will set normal, too //  - INPUT_CNTL_0_COLOR and INPUT_CNTL_COLOR bits are always equal */
+comment|/* Notes:  *  - always set up to produce at least two attributes:  *    if vertex program uses only position, fglrx will set normal, too  *  - INPUT_CNTL_0_COLOR and INPUT_CNTL_COLOR bits are always equal.  */
 end_comment
 
 begin_define
@@ -913,7 +971,7 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* Words parallel to INPUT_ROUTE_0; All words that are active in INPUT_ROUTE_0 // are set to a swizzling bit pattern, other words are 0. // // In immediate mode, the pattern is always set to xyzw. In vertex array // mode, the swizzling pattern is e.g. used to set zw components in texture // coordinates with only tweo components. */
+comment|/* Words parallel to INPUT_ROUTE_0; All words that are active in INPUT_ROUTE_0  * are set to a swizzling bit pattern, other words are 0.  *  * In immediate mode, the pattern is always set to xyzw. In vertex array  * mode, the swizzling pattern is e.g. used to set zw components in texture  * coordinates with only tweo components.  */
 end_comment
 
 begin_define
@@ -1057,7 +1115,7 @@ value|0x21FC
 end_define
 
 begin_comment
-comment|/* END */
+comment|/* END: Vertex data assembly */
 end_comment
 
 begin_comment
@@ -1065,7 +1123,11 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* BEGIN: Upload vertex program and data // The programmable vertex shader unit has a memory bank of unknown size // that can be written to in 16 byte units by writing the address into // UPLOAD_ADDRESS, followed by data in UPLOAD_DATA (multiples of 4 DWORDs). // // Pointers into the memory bank are always in multiples of 16 bytes. // // The memory bank is divided into areas with fixed meaning. // // Starting at address UPLOAD_PROGRAM: Vertex program instructions. // Native limits reported by drivers from ATI suggest size 256 (i.e. 4KB), // whereas the difference between known addresses suggests size 512. // // Starting at address UPLOAD_PARAMETERS: Vertex program parameters. // Native reported limits and the VPI layout suggest size 256, whereas // difference between known addresses suggests size 512. // // At address UPLOAD_POINTSIZE is a vector (0, 0, ps, 0), where ps is the // floating point pointsize. The exact purpose of this state is uncertain, // as there is also the R300_RE_POINTSIZE register. // // Multiple vertex programs and parameter sets can be loaded at once, // which could explain the size discrepancy. */
+comment|/* BEGIN: Upload vertex program and data */
+end_comment
+
+begin_comment
+comment|/*  * The programmable vertex shader unit has a memory bank of unknown size  * that can be written to in 16 byte units by writing the address into  * UPLOAD_ADDRESS, followed by data in UPLOAD_DATA (multiples of 4 DWORDs).  *  * Pointers into the memory bank are always in multiples of 16 bytes.  *  * The memory bank is divided into areas with fixed meaning.  *  * Starting at address UPLOAD_PROGRAM: Vertex program instructions.  * Native limits reported by drivers from ATI suggest size 256 (i.e. 4KB),  * whereas the difference between known addresses suggests size 512.  *  * Starting at address UPLOAD_PARAMETERS: Vertex program parameters.  * Native reported limits and the VPI layout suggest size 256, whereas  * difference between known addresses suggests size 512.  *  * At address UPLOAD_POINTSIZE is a vector (0, 0, ps, 0), where ps is the  * floating point pointsize. The exact purpose of this state is uncertain,  * as there is also the R300_RE_POINTSIZE register.  *  * Multiple vertex programs and parameter sets can be loaded at once,  * which could explain the size discrepancy.  */
 end_comment
 
 begin_define
@@ -1108,7 +1170,7 @@ value|0x2208
 end_define
 
 begin_comment
-comment|/* END */
+comment|/* END: Upload vertex program and data */
 end_comment
 
 begin_comment
@@ -1116,7 +1178,7 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* I do not know the purpose of this register. However, I do know that // it is set to 221C_CLEAR for clear operations and to 221C_NORMAL // for normal rendering. */
+comment|/* I do not know the purpose of this register. However, I do know that  * it is set to 221C_CLEAR for clear operations and to 221C_NORMAL  * for normal rendering.  */
 end_comment
 
 begin_define
@@ -1141,23 +1203,51 @@ value|0x0001C000
 end_define
 
 begin_comment
-comment|/* gap */
-end_comment
-
-begin_comment
-comment|/* Sometimes, END_OF_PKT and 0x2284=0 are the only commands sent between // rendering commands and overwriting vertex program parameters. // Therefore, I suspect writing zero to 0x2284 synchronizes the engine and // avoids bugs caused by still running shaders reading bad data from memory. */
+comment|/* These seem to be per-pixel and per-vertex X and Y clipping planes. The first  * plane is per-pixel and the second plane is per-vertex.  *  * This was determined by experimentation alone but I believe it is correct.  *  * These registers are called X_QUAD0_1_FL to X_QUAD0_4_FL by glxtest.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R300_VAP_PVS_WAITIDLE
-value|0x2284
+name|R300_VAP_CLIP_X_0
+value|0x2220
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_VAP_CLIP_X_1
+value|0x2224
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_VAP_CLIP_Y_0
+value|0x2228
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_VAP_CLIP_Y_1
+value|0x2230
 end_define
 
 begin_comment
-comment|/* GUESS */
+comment|/* gap */
 end_comment
+
+begin_comment
+comment|/* Sometimes, END_OF_PKT and 0x2284=0 are the only commands sent between  * rendering commands and overwriting vertex program parameters.  * Therefore, I suspect writing zero to 0x2284 synchronizes the engine and  * avoids bugs caused by still running shaders reading bad data from memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_VAP_PVS_STATE_FLUSH_REG
+value|0x2284
+end_define
 
 begin_comment
 comment|/* Absolutely no clue what this register is about. */
@@ -1197,7 +1287,7 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* Addresses are relative to the vertex program instruction area of the // memory bank. PROGRAM_END points to the last instruction of the active // program // // The meaning of the two UNKNOWN fields is obviously not known. However, // experiments so far have shown that both *must* point to an instruction // inside the vertex program, otherwise the GPU locks up. // fglrx usually sets CNTL_3_UNKNOWN to the end of the program and // CNTL_1_UNKNOWN points to instruction where last write to position takes place.  // Most likely this is used to ignore rest of the program in cases where group of verts arent visible. // For some reason this "section" is sometimes accepted other instruction that have // no relationship with position calculations.  */
+comment|/* Addresses are relative to the vertex program instruction area of the  * memory bank. PROGRAM_END points to the last instruction of the active  * program  *  * The meaning of the two UNKNOWN fields is obviously not known. However,  * experiments so far have shown that both *must* point to an instruction  * inside the vertex program, otherwise the GPU locks up.  *  * fglrx usually sets CNTL_3_UNKNOWN to the end of the program and  * R300_PVS_CNTL_1_POS_END_SHIFT points to instruction where last write to  * position takes place.  *  * Most likely this is used to ignore rest of the program in cases  * where group of verts arent visible. For some reason this "section"  * is sometimes accepted other instruction that have no relationship with  * position calculations.  */
 end_comment
 
 begin_define
@@ -1275,7 +1365,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* The entire range from 0x2300 to 0x2AC inclusive seems to be used for // immediate vertices */
+comment|/* The entire range from 0x2300 to 0x2AC inclusive seems to be used for  * immediate vertices  */
 end_comment
 
 begin_define
@@ -1353,6 +1443,10 @@ name|R300_VAP_VTX_POS_0_Z_2
 value|0x24A8
 end_define
 
+begin_comment
+comment|/* write 0 to indicate end of packet? */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1361,15 +1455,11 @@ value|0x24AC
 end_define
 
 begin_comment
-comment|/* write 0 to indicate end of packet? */
-end_comment
-
-begin_comment
 comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* These are values from r300_reg/r300_reg.h - they are known to be correct    and are here so we can use one register file instead of several    - Vladimir */
+comment|/* These are values from r300_reg/r300_reg.h - they are known to be correct  * and are here so we can use one register file instead of several  * - Vladimir  */
 end_comment
 
 begin_define
@@ -1496,7 +1586,7 @@ value|21
 end_define
 
 begin_comment
-comment|/* UNK30 seems to enables point to quad transformation on textures    (or something closely related to that).    This bit is rather fatal at the time being due to lackings at pixel shader side */
+comment|/* UNK30 seems to enables point to quad transformation on textures  * (or something closely related to that).  * This bit is rather fatal at the time being due to lackings at pixel  * shader side  */
 end_comment
 
 begin_define
@@ -1537,8 +1627,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|R300_GB_UNK30
-value|(1<<30)
+name|R300_GB_UNK31
+value|(1<<31)
 end_define
 
 begin_comment
@@ -1782,6 +1872,13 @@ define|#
 directive|define
 name|R300_GB_TILE_PIPE_COUNT_R420
 value|(7<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_GB_TILE_PIPE_COUNT_RV410
+value|(3<<1)
 end_define
 
 begin_define
@@ -2133,6 +2230,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R300_AA_DISABLE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
 name|R300_AA_ENABLE
 value|0x01
 end_define
@@ -2166,10 +2270,6 @@ value|(3<<1)
 end_define
 
 begin_comment
-comment|/* END */
-end_comment
-
-begin_comment
 comment|/* gap */
 end_comment
 
@@ -2180,8 +2280,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R300_TX_CNTL
+name|R300_TX_INVALTAGS
 value|0x4100
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_TX_FLUSH
+value|0x0
 end_define
 
 begin_comment
@@ -2308,7 +2415,7 @@ value|(1<< 15)
 end_define
 
 begin_comment
-comment|/* The pointsize is given in multiples of 6. The pointsize can be // enormous: Clear() renders a single point that fills the entire // framebuffer. */
+comment|/* The pointsize is given in multiples of 6. The pointsize can be  * enormous: Clear() renders a single point that fills the entire  * framebuffer.  */
 end_comment
 
 begin_define
@@ -2362,7 +2469,7 @@ value|(R300_POINTSIZE_Y_MASK / 6)
 end_define
 
 begin_comment
-comment|/* The line width is given in multiples of 6.    In default mode lines are classified as vertical lines.    HO: horizontal    VE: vertical or horizontal    HO& VE: no classification */
+comment|/* The line width is given in multiples of 6.  * In default mode lines are classified as vertical lines.  * HO: horizontal  * VE: vertical or horizontal  * HO& VE: no classification  */
 end_comment
 
 begin_define
@@ -2420,6 +2527,17 @@ define|#
 directive|define
 name|R300_RE_UNK4238
 value|0x4238
+end_define
+
+begin_comment
+comment|/* Something shade related */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_RE_SHADE
+value|0x4274
 end_define
 
 begin_define
@@ -2504,7 +2622,36 @@ value|(1<< 8)
 end_define
 
 begin_comment
-comment|/* Not sure why there are duplicate of factor and constant values.     My best guess so far is that there are seperate zbiases for test and write.     Ordering might be wrong.    Some of the tests indicate that fgl has a fallback implementation of zbias    via pixel shaders. */
+comment|/* Fog parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_RE_FOG_SCALE
+value|0x4294
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_RE_FOG_START
+value|0x4298
+end_define
+
+begin_comment
+comment|/* Not sure why there are duplicate of factor and constant values.  * My best guess so far is that there are seperate zbiases for test and write.  * Ordering might be wrong.  * Some of the tests indicate that fgl has a fallback implementation of zbias  * via pixel shaders.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_RE_ZBIAS_CNTL
+value|0x42A0
+end_define
+
+begin_comment
+comment|/* GUESS */
 end_comment
 
 begin_define
@@ -2536,7 +2683,7 @@ value|0x42B0
 end_define
 
 begin_comment
-comment|/* This register needs to be set to (1<<1) for RV350 to correctly    perform depth test (see --vb-triangles in r300_demo)    Don't know about other chips. - Vladimir    This is set to 3 when GL_POLYGON_OFFSET_FILL is on.    My guess is that there are two bits for each zbias primitive (FILL, LINE, POINT).    One to enable depth test and one for depth write.    Yet this doesnt explain why depth writes work ...     */
+comment|/* This register needs to be set to (1<<1) for RV350 to correctly  * perform depth test (see --vb-triangles in r300_demo)  * Don't know about other chips. - Vladimir  * This is set to 3 when GL_POLYGON_OFFSET_FILL is on.  * My guess is that there are two bits for each zbias primitive  * (FILL, LINE, POINT).  *  One to enable depth test and one for depth write.  * Yet this doesnt explain why depth writes work ...  */
 end_comment
 
 begin_define
@@ -2589,7 +2736,11 @@ value|(1<< 2)
 end_define
 
 begin_comment
-comment|/* BEGIN: Rasterization / Interpolators - many guesses // 0_UNKNOWN_18 has always been set except for clear operations. // TC_CNT is the number of incoming texture coordinate sets (i.e. it depends // on the vertex program, *not* the fragment program) */
+comment|/* BEGIN: Rasterization / Interpolators - many guesses */
+end_comment
+
+begin_comment
+comment|/* 0_UNKNOWN_18 has always been set except for clear operations.  * TC_CNT is the number of incoming texture coordinate sets (i.e. it depends  * on the vertex program, *not* the fragment program)  */
 end_comment
 
 begin_define
@@ -2613,16 +2764,16 @@ name|R300_RS_CNTL_TC_CNT_MASK
 value|(7<< 2)
 end_define
 
+begin_comment
+comment|/* number of color interpolators used */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_RS_CNTL_CI_CNT_SHIFT
 value|7
 end_define
-
-begin_comment
-comment|/* number of color interpolators used */
-end_comment
 
 begin_define
 define|#
@@ -2632,7 +2783,7 @@ value|(1<< 18)
 end_define
 
 begin_comment
-comment|/* Guess: RS_CNTL_1 holds the index of the highest used RS_ROUTE_n register. */
+comment|/* Guess: RS_CNTL_1 holds the index of the highest used RS_ROUTE_n 	   register. */
 end_comment
 
 begin_define
@@ -2647,7 +2798,7 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* Only used for texture coordinates. // Use the source field to route texture coordinate input from the vertex program // to the desired interpolator. Note that the source field is relative to the // outputs the vertex program *actually* writes. If a vertex program only writes // texcoord[1], this will be source index 0. // Set INTERP_USED on all interpolators that produce data used by the // fragment program. INTERP_USED looks like a swizzling mask, but // I haven't seen it used that way. // // Note: The _UNKNOWN constants are always set in their respective register. // I don't know if this is necessary. */
+comment|/* Only used for texture coordinates.  * Use the source field to route texture coordinate input from the  * vertex program to the desired interpolator. Note that the source  * field is relative to the outputs the vertex program *actually*  * writes. If a vertex program only writes texcoord[1], this will  * be source index 0.  * Set INTERP_USED on all interpolators that produce data used by  * the fragment program. INTERP_USED looks like a swizzling mask,  * but I haven't seen it used that way.  *  * Note: The _UNKNOWN constants are always set in their respective  * register. I don't know if this is necessary.  */
 end_comment
 
 begin_define
@@ -2749,7 +2900,7 @@ value|0x00D10000
 end_define
 
 begin_comment
-comment|/* These DWORDs control how vertex data is routed into fragment program // registers, after interpolators. */
+comment|/* These DWORDs control how vertex data is routed into fragment program  * registers, after interpolators.  */
 end_comment
 
 begin_define
@@ -2926,7 +3077,7 @@ comment|/* GUESS */
 end_comment
 
 begin_comment
-comment|/* Special handling for color: When the fragment program uses color, // the ROUTE_0_COLOR bit is set and ROUTE_0_COLOR_DEST contains the // color register index. */
+comment|/* Special handling for color: When the fragment program uses color,  * the ROUTE_0_COLOR bit is set and ROUTE_0_COLOR_DEST contains the  * color register index.  *  * Apperently you may set the R300_RS_ROUTE_0_COLOR bit, but not provide any  * R300_RS_ROUTE_0_COLOR_DEST value; this setup is used for clearing the state.  * See r300_ioctl.c:r300EmitClearState. I'm not sure if this setup is strictly  * correct or not. - Oliver.  */
 end_comment
 
 begin_define
@@ -2987,11 +3138,145 @@ value|(1<< 11)
 end_define
 
 begin_comment
-comment|/* END */
+comment|/* END: Rasterization / Interpolators - many guesses */
 end_comment
 
 begin_comment
-comment|/* BEGIN: Scissors and cliprects // There are four clipping rectangles. Their corner coordinates are inclusive. // Every pixel is assigned a number from 0 and 15 by setting bits 0-3 depending // on whether the pixel is inside cliprects 0-3, respectively. For example, // if a pixel is inside cliprects 0 and 1, but outside 2 and 3, it is assigned // the number 3 (binary 0011). // Iff the bit corresponding to the pixel's number in RE_CLIPRECT_CNTL is set, // the pixel is rasterized. // // In addition to this, there is a scissors rectangle. Only pixels inside the // scissors rectangle are drawn. (coordinates are inclusive) // // For some reason, the top-left corner of the framebuffer is at (1440, 1440) // for the purpose of clipping and scissors. */
+comment|/* Hierarchical Z Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ
+value|0x43a4
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_DISABLE
+value|(0<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_ENABLE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_MIN
+value|(0<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_MAX
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_ADJ_256
+value|(0<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_ADJ_128
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_ADJ_64
+value|(2<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_ADJ_32
+value|(3<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_ADJ_16
+value|(4<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_ADJ_8
+value|(5<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_ADJ_4
+value|(6<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_ADJ_2
+value|(7<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_HZ_Z0MIN_NO
+value|(0<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_HZ_Z0MIN
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_HZ_Z0MAX_NO
+value|(0<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_HYPERZ_HZ_Z0MAX
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_SC_EDGERULE
+value|0x43a8
+end_define
+
+begin_comment
+comment|/* BEGIN: Scissors and cliprects */
+end_comment
+
+begin_comment
+comment|/* There are four clipping rectangles. Their corner coordinates are inclusive.  * Every pixel is assigned a number from 0 and 15 by setting bits 0-3 depending  * on whether the pixel is inside cliprects 0-3, respectively. For example,  * if a pixel is inside cliprects 0 and 1, but outside 2 and 3, it is assigned  * the number 3 (binary 0011).  * Iff the bit corresponding to the pixel's number in RE_CLIPRECT_CNTL is set,  * the pixel is rasterized.  *  * In addition to this, there is a scissors rectangle. Only pixels inside the  * scissors rectangle are drawn. (coordinates are inclusive)  *  * For some reason, the top-left corner of the framebuffer is at (1440, 1440)  * for the purpose of clipping and scissors.  */
 end_comment
 
 begin_define
@@ -3265,11 +3550,15 @@ value|(0x1FFF<< 13)
 end_define
 
 begin_comment
-comment|/* END */
+comment|/* END: Scissors and cliprects */
 end_comment
 
 begin_comment
-comment|/* BEGIN: Texture specification // The texture specification dwords are grouped by meaning and not by texture unit. // This means that e.g. the offset for texture image unit N is found in register // TX_OFFSET_0 + (4*N) */
+comment|/* BEGIN: Texture specification */
+end_comment
+
+begin_comment
+comment|/*  * The texture specification dwords are grouped by meaning and not by texture  * unit. This means that e.g. the offset for texture image unit N is found in  * register TX_OFFSET_0 + (4*N)  */
 end_comment
 
 begin_define
@@ -3420,43 +3709,35 @@ value|(10<<  11)
 end_define
 
 begin_comment
-comment|/* NOTE: NEAREST doesnt seem to exist.    Im not seting MAG_FILTER_MASK and (3<< 11) on for all    anisotropy modes because that would void selected mag filter */
+comment|/* NOTE: NEAREST doesnt seem to exist.  * Im not seting MAG_FILTER_MASK and (3<< 11) on for all  * anisotropy modes because that would void selected mag filter  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|R300_TX_MIN_FILTER_ANISO_NEAREST
-value|((0<< 13)
-comment|/*|R300_TX_MAG_FILTER_MASK|(3<<11)*/
-value|)
+value|(0<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
 name|R300_TX_MIN_FILTER_ANISO_LINEAR
-value|((0<< 13)
-comment|/*|R300_TX_MAG_FILTER_MASK|(3<<11)*/
-value|)
+value|(0<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
 name|R300_TX_MIN_FILTER_ANISO_NEAREST_MIP_NEAREST
-value|((1<< 13)
-comment|/*|R300_TX_MAG_FILTER_MASK|(3<<11)*/
-value|)
+value|(1<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
 name|R300_TX_MIN_FILTER_ANISO_NEAREST_MIP_LINEAR
-value|((2<< 13)
-comment|/*|R300_TX_MAG_FILTER_MASK|(3<<11)*/
-value|)
+value|(2<< 13)
 end_define
 
 begin_define
@@ -3665,19 +3946,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|R300_TX_SIZE_SHIFT
+name|R300_TX_MAX_MIP_LEVEL_SHIFT
 value|26
 end_define
-
-begin_comment
-comment|/* largest of width, height */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|R300_TX_SIZE_MASK
-value|(15<< 26)
+name|R300_TX_MAX_MIP_LEVEL_MASK
+value|(0xf<< 26)
 end_define
 
 begin_define
@@ -4041,6 +4318,10 @@ name|R300_TX_FORMAT_ONE
 value|5
 end_define
 
+begin_comment
+comment|/* 2.0*Z, everything above 1.0 is set to 0.0 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4049,7 +4330,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* 2.0*Z, everything above 1.0 is set to 0.0 */
+comment|/* 2.0*W, everything above 1.0 is set to 0.0 */
 end_comment
 
 begin_define
@@ -4058,10 +4339,6 @@ directive|define
 name|R300_TX_FORMAT_CUT_W
 value|7
 end_define
-
-begin_comment
-comment|/* 2.0*W, everything above 1.0 is set to 0.0 */
-end_comment
 
 begin_define
 define|#
@@ -4110,15 +4387,11 @@ name|A
 parameter_list|,
 name|FMT
 parameter_list|)
-value|(\ 	  ((R300_TX_FORMAT_##B)<<R300_TX_FORMAT_B_SHIFT) \ 	| ((R300_TX_FORMAT_##G)<<R300_TX_FORMAT_G_SHIFT) \ 	| ((R300_TX_FORMAT_##R)<<R300_TX_FORMAT_R_SHIFT) \ 	| ((R300_TX_FORMAT_##A)<<R300_TX_FORMAT_A_SHIFT) \ 	| (R300_TX_FORMAT_##FMT) \ 	  )
+value|(		\ 		((R300_TX_FORMAT_##B)<<R300_TX_FORMAT_B_SHIFT)		\ 		| ((R300_TX_FORMAT_##G)<<R300_TX_FORMAT_G_SHIFT)	\ 		| ((R300_TX_FORMAT_##R)<<R300_TX_FORMAT_R_SHIFT)	\ 		| ((R300_TX_FORMAT_##A)<<R300_TX_FORMAT_A_SHIFT)	\ 		| (R300_TX_FORMAT_##FMT)				\ 		)
 end_define
 
 begin_comment
-comment|/* These can be ORed with result of R300_EASY_TX_FORMAT() */
-end_comment
-
-begin_comment
-comment|/* We don't really know what they do. Take values from a constant color ? */
+comment|/* These can be ORed with result of R300_EASY_TX_FORMAT() 	   We don't really know what they do. Take values from a            constant color ? */
 end_comment
 
 begin_define
@@ -4235,7 +4508,11 @@ value|5
 end_define
 
 begin_comment
-comment|/* END */
+comment|/* END: Guess from R200 */
+end_comment
+
+begin_comment
+comment|/* 32 bit chroma key */
 end_comment
 
 begin_define
@@ -4246,7 +4523,7 @@ value|0x4580
 end_define
 
 begin_comment
-comment|/* 32 bit chroma key */
+comment|/* ff00ff00 == { 0, 1.0, 0, 1.0 } */
 end_comment
 
 begin_define
@@ -4257,15 +4534,15 @@ value|0x45C0
 end_define
 
 begin_comment
-comment|//ff00ff00 == { 0, 1.0, 0, 1.0 }
+comment|/* END: Texture specification */
 end_comment
 
 begin_comment
-comment|/* END */
+comment|/* BEGIN: Fragment program instruction set */
 end_comment
 
 begin_comment
-comment|/* BEGIN: Fragment program instruction set // Fragment programs are written directly into register space. // There are separate instruction streams for texture instructions and ALU // instructions. // In order to synchronize these streams, the program is divided into up // to 4 nodes. Each node begins with a number of TEX operations, followed // by a number of ALU operations. // The first node can have zero TEX ops, all subsequent nodes must have at least // one TEX ops. // All nodes must have at least one ALU op. // // The index of the last node is stored in PFS_CNTL_0: A value of 0 means // 1 node, a value of 3 means 4 nodes. // The total amount of instructions is defined in PFS_CNTL_2. The offsets are // offsets into the respective instruction streams, while *_END points to the // last instruction relative to this offset. */
+comment|/* Fragment programs are written directly into register space.  * There are separate instruction streams for texture instructions and ALU  * instructions.  * In order to synchronize these streams, the program is divided into up  * to 4 nodes. Each node begins with a number of TEX operations, followed  * by a number of ALU operations.  * The first node can have zero TEX ops, all subsequent nodes must have at  * least  * one TEX ops.  * All nodes must have at least one ALU op.  *  * The index of the last node is stored in PFS_CNTL_0: A value of 0 means  * 1 node, a value of 3 means 4 nodes.  * The total amount of instructions is defined in PFS_CNTL_2. The offsets are  * offsets into the respective instruction streams, while *_END points to the  * last instruction relative to this offset.  */
 end_comment
 
 begin_define
@@ -4304,7 +4581,7 @@ value|0x4604
 end_define
 
 begin_comment
-comment|/* There is an unshifted value here which has so far always been equal to the // index of the highest used temporary register. */
+comment|/* There is an unshifted value here which has so far always been equal to the  * index of the highest used temporary register.  */
 end_comment
 
 begin_define
@@ -4339,7 +4616,7 @@ begin_define
 define|#
 directive|define
 name|R300_PFS_CNTL_ALU_END_MASK
-value|(63<< 0)
+value|(63<< 6)
 end_define
 
 begin_define
@@ -4383,7 +4660,7 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* Nodes are stored backwards. The last active node is always stored in // PFS_NODE_3. // Example: In a 2-node program, NODE_0 and NODE_1 are set to 0. The // first node is stored in NODE_2, the second node is stored in NODE_3. // // Offsets are relative to the master offset from PFS_CNTL_2. // LAST_NODE is set for the last node, and only for the last node. */
+comment|/* Nodes are stored backwards. The last active node is always stored in  * PFS_NODE_3.  * Example: In a 2-node program, NODE_0 and NODE_1 are set to 0. The  * first node is stored in NODE_2, the second node is stored in NODE_3.  *  * Offsets are relative to the master offset from PFS_CNTL_2.  */
 end_comment
 
 begin_define
@@ -4470,10 +4747,6 @@ name|R300_PFS_NODE_TEX_END_MASK
 value|(31<< 17)
 end_define
 
-begin_comment
-comment|/*#       define R300_PFS_NODE_LAST_NODE           (1<< 22) */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -4489,7 +4762,7 @@ value|(1<< 23)
 end_define
 
 begin_comment
-comment|/* TEX // As far as I can tell, texture instructions cannot write into output // registers directly. A subsequent ALU instruction is always necessary, // even if it's just MAD o0, r0, 1, 0 */
+comment|/* TEX  * As far as I can tell, texture instructions cannot write into output  * registers directly. A subsequent ALU instruction is always necessary,  * even if it's just MAD o0, r0, 1, 0  */
 end_comment
 
 begin_define
@@ -4513,16 +4786,16 @@ name|R300_FPITX_SRC_MASK
 value|(31<< 0)
 end_define
 
+begin_comment
+comment|/* GUESS */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_FPITX_SRC_CONST
 value|(1<< 5)
 end_define
-
-begin_comment
-comment|/* GUESS */
-end_comment
 
 begin_define
 define|#
@@ -4545,16 +4818,16 @@ name|R300_FPITX_IMAGE_SHIFT
 value|11
 end_define
 
+begin_comment
+comment|/* GUESS based on layout and native limits */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_FPITX_IMAGE_MASK
 value|(15<< 11)
 end_define
-
-begin_comment
-comment|/* GUESS based on layout and native limits */
-end_comment
 
 begin_comment
 comment|/* Unsure if these are opcodes, or some kind of bitfield, but this is how  * they were set when I checked  */
@@ -4595,8 +4868,15 @@ name|R300_FPITX_OP_TXB
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|R300_FPITX_OPCODE_MASK
+value|(7<< 15)
+end_define
+
 begin_comment
-comment|/* ALU // The ALU instructions register blocks are enumerated according to the order // in which fglrx. I assume there is space for 64 instructions, since // each block has space for a maximum of 64 DWORDs, and this matches reported // native limits. // // The basic functional block seems to be one MAD for each color and alpha, // and an adder that adds all components after the MUL. //  - ADD, MUL, MAD etc.: use MAD with appropriate neutral operands //  - DP4: Use OUTC_DP4, OUTA_DP4 //  - DP3: Use OUTC_DP3, OUTA_DP4, appropriate alpha operands //  - DPH: Use OUTC_DP4, OUTA_DP4, appropriate alpha operands //  - CMP: If ARG2< 0, return ARG1, else return ARG0 //  - FLR: use FRC+MAD //  - XPD: use MAD+MAD //  - SGE, SLT: use MAD+CMP //  - RSQ: use ABS modifier for argument //  - Use OUTC_REPL_ALPHA to write results of an alpha-only operation (e.g. RCP) //    into color register //  - apparently, there's no quick DST operation //  - fglrx set FPI2_UNKNOWN_31 on a "MAD fragment.color, tmp0, tmp1, tmp2" //  - fglrx set FPI2_UNKNOWN_31 on a "MAX r2, r1, c0" //  - fglrx once set FPI0_UNKNOWN_31 on a "FRC r1, r1" // // Operand selection // First stage selects three sources from the available registers and // constant parameters. This is defined in INSTR1 (color) and INSTR3 (alpha). // fglrx sorts the three source fields: Registers before constants, // lower indices before higher indices; I do not know whether this is necessary. // fglrx fills unused sources with "read constant 0" // According to specs, you cannot select more than two different constants. // // Second stage selects the operands from the sources. This is defined in // INSTR0 (color) and INSTR2 (alpha). You can also select the special constants // zero and one. // Swizzling and negation happens in this stage, as well. // // Important: Color and alpha seem to be mostly separate, i.e. their sources // selection appears to be fully independent (the register storage is probably // physically split into a color and an alpha section). // However (because of the apparent physical split), there is some interaction // WRT swizzling. If, for example, you want to load an R component into an // Alpha operand, this R component is taken from a *color* source, not from // an alpha source. The corresponding register doesn't even have to appear in // the alpha sources list. (I hope this alll makes sense to you) // // Destination selection // The destination register index is in FPI1 (color) and FPI3 (alpha) together // with enable bits. // There are separate enable bits for writing into temporary registers // (DSTC_REG_* /DSTA_REG) and and program output registers (DSTC_OUTPUT_* /DSTA_OUTPUT). // You can write to both at once, or not write at all (the same index // must be used for both). // // Note: There is a special form for LRP //  - Argument order is the same as in ARB_fragment_program. //  - Operation is MAD //  - ARG1 is set to ARGC_SRC1C_LRP/ARGC_SRC1A_LRP //  - Set FPI0/FPI2_SPECIAL_LRP // Arbitrary LRP (including support for swizzling) requires vanilla MAD+MAD */
+comment|/* ALU  * The ALU instructions register blocks are enumerated according to the order  * in which fglrx. I assume there is space for 64 instructions, since  * each block has space for a maximum of 64 DWORDs, and this matches reported  * native limits.  *  * The basic functional block seems to be one MAD for each color and alpha,  * and an adder that adds all components after the MUL.  *  - ADD, MUL, MAD etc.: use MAD with appropriate neutral operands  *  - DP4: Use OUTC_DP4, OUTA_DP4  *  - DP3: Use OUTC_DP3, OUTA_DP4, appropriate alpha operands  *  - DPH: Use OUTC_DP4, OUTA_DP4, appropriate alpha operands  *  - CMPH: If ARG2> 0.5, return ARG0, else return ARG1  *  - CMP: If ARG2< 0, return ARG1, else return ARG0  *  - FLR: use FRC+MAD  *  - XPD: use MAD+MAD  *  - SGE, SLT: use MAD+CMP  *  - RSQ: use ABS modifier for argument  *  - Use OUTC_REPL_ALPHA to write results of an alpha-only operation  *    (e.g. RCP) into color register  *  - apparently, there's no quick DST operation  *  - fglrx set FPI2_UNKNOWN_31 on a "MAD fragment.color, tmp0, tmp1, tmp2"  *  - fglrx set FPI2_UNKNOWN_31 on a "MAX r2, r1, c0"  *  - fglrx once set FPI0_UNKNOWN_31 on a "FRC r1, r1"  *  * Operand selection  * First stage selects three sources from the available registers and  * constant parameters. This is defined in INSTR1 (color) and INSTR3 (alpha).  * fglrx sorts the three source fields: Registers before constants,  * lower indices before higher indices; I do not know whether this is  * necessary.  *  * fglrx fills unused sources with "read constant 0"  * According to specs, you cannot select more than two different constants.  *  * Second stage selects the operands from the sources. This is defined in  * INSTR0 (color) and INSTR2 (alpha). You can also select the special constants  * zero and one.  * Swizzling and negation happens in this stage, as well.  *  * Important: Color and alpha seem to be mostly separate, i.e. their sources  * selection appears to be fully independent (the register storage is probably  * physically split into a color and an alpha section).  * However (because of the apparent physical split), there is some interaction  * WRT swizzling. If, for example, you want to load an R component into an  * Alpha operand, this R component is taken from a *color* source, not from  * an alpha source. The corresponding register doesn't even have to appear in  * the alpha sources list. (I hope this all makes sense to you)  *  * Destination selection  * The destination register index is in FPI1 (color) and FPI3 (alpha)  * together with enable bits.  * There are separate enable bits for writing into temporary registers  * (DSTC_REG_* /DSTA_REG) and and program output registers (DSTC_OUTPUT_*  * /DSTA_OUTPUT). You can write to both at once, or not write at all (the  * same index must be used for both).  *  * Note: There is a special form for LRP  *  - Argument order is the same as in ARB_fragment_program.  *  - Operation is MAD  *  - ARG1 is set to ARGC_SRC1C_LRP/ARGC_SRC1A_LRP  *  - Set FPI0/FPI2_SPECIAL_LRP  * Arbitrary LRP (including support for swizzling) requires vanilla MAD+MAD  */
 end_comment
 
 begin_define
@@ -4667,6 +4947,13 @@ define|#
 directive|define
 name|R300_FPI1_SRC2C_CONST
 value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FPI1_SRC_MASK
+value|0x0003ffff
 end_define
 
 begin_define
@@ -4807,6 +5094,13 @@ define|#
 directive|define
 name|R300_FPI3_SRC2A_CONST
 value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FPI3_SRC_MASK
+value|0x0003ffff
 end_define
 
 begin_define
@@ -4977,16 +5271,16 @@ name|R300_FPI0_ARGC_ONE
 value|21
 end_define
 
+begin_comment
+comment|/* GUESS */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_FPI0_ARGC_HALF
 value|22
 end_define
-
-begin_comment
-comment|/* GUESS */
-end_comment
 
 begin_define
 define|#
@@ -5180,6 +5474,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R300_FPI0_OUTC_CMPH
+value|(7<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
 name|R300_FPI0_OUTC_CMP
 value|(8<< 23)
 end_define
@@ -5324,16 +5625,16 @@ name|R300_FPI2_ARGA_ONE
 value|17
 end_define
 
+begin_comment
+comment|/* GUESS */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_FPI2_ARGA_HALF
 value|18
 end_define
-
-begin_comment
-comment|/* GUESS */
-end_comment
 
 begin_define
 define|#
@@ -5356,16 +5657,16 @@ name|R300_FPI2_ARG0A_NEG
 value|(1<< 5)
 end_define
 
+begin_comment
+comment|/* GUESS */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_FPI2_ARG0A_ABS
 value|(1<< 6)
 end_define
-
-begin_comment
-comment|/* GUESS */
-end_comment
 
 begin_define
 define|#
@@ -5388,16 +5689,16 @@ name|R300_FPI2_ARG1A_NEG
 value|(1<< 12)
 end_define
 
+begin_comment
+comment|/* GUESS */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_FPI2_ARG1A_ABS
 value|(1<< 13)
 end_define
-
-begin_comment
-comment|/* GUESS */
-end_comment
 
 begin_define
 define|#
@@ -5420,16 +5721,16 @@ name|R300_FPI2_ARG2A_NEG
 value|(1<< 19)
 end_define
 
+begin_comment
+comment|/* GUESS */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_FPI2_ARG2A_ABS
 value|(1<< 20)
 end_define
-
-begin_comment
-comment|/* GUESS */
-end_comment
 
 begin_define
 define|#
@@ -5523,12 +5824,75 @@ value|(1<< 31)
 end_define
 
 begin_comment
-comment|/* END */
+comment|/* END: Fragment program instruction set */
 end_comment
 
 begin_comment
-comment|/* gap */
+comment|/* Fog state and color */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_RE_FOG_STATE
+value|0x4BC0
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FOG_ENABLE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FOG_MODE_LINEAR
+value|(0<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FOG_MODE_EXP
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FOG_MODE_EXP2
+value|(2<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FOG_MODE_MASK
+value|(3<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FOG_COLOR_R
+value|0x4BC8
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FOG_COLOR_G
+value|0x4BCC
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FOG_COLOR_B
+value|0x4BD0
+end_define
 
 begin_define
 define|#
@@ -5683,7 +6047,7 @@ value|0x4DFC
 end_define
 
 begin_comment
-comment|/* Notes: // - AFAIK fglrx always sets BLEND_UNKNOWN when blending is used in the application // - AFAIK fglrx always sets BLEND_NO_SEPARATE when CBLEND and ABLEND are set to the same //   function (both registers are always set up completely in any case) // - Most blend flags are simply copied from R200 and not tested yet */
+comment|/* Notes:  * - AFAIK fglrx always sets BLEND_UNKNOWN when blending is used in  *   the application  * - AFAIK fglrx always sets BLEND_NO_SEPARATE when CBLEND and ABLEND  *    are set to the same  *   function (both registers are always set up completely in any case)  * - Most blend flags are simply copied from R200 and not tested yet  */
 end_comment
 
 begin_define
@@ -5767,162 +6131,162 @@ end_define
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_ZERO
-value|(32<< 16)
+name|R300_COMB_FCN_MIN
+value|(4<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_ONE
-value|(33<< 16)
+name|R300_COMB_FCN_MAX
+value|(5<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_SRC_COLOR
-value|(34<< 16)
+name|R300_COMB_FCN_RSUB_CLAMP
+value|(6<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_ONE_MINUS_SRC_COLOR
-value|(35<< 16)
+name|R300_COMB_FCN_RSUB_NOCLAMP
+value|(7<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_DST_COLOR
-value|(36<< 16)
+name|R300_BLEND_GL_ZERO
+value|(32)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_ONE_MINUS_DST_COLOR
-value|(37<< 16)
+name|R300_BLEND_GL_ONE
+value|(33)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_SRC_ALPHA
-value|(38<< 16)
+name|R300_BLEND_GL_SRC_COLOR
+value|(34)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_ONE_MINUS_SRC_ALPHA
-value|(39<< 16)
+name|R300_BLEND_GL_ONE_MINUS_SRC_COLOR
+value|(35)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_DST_ALPHA
-value|(40<< 16)
+name|R300_BLEND_GL_DST_COLOR
+value|(36)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_ONE_MINUS_DST_ALPHA
-value|(41<< 16)
+name|R300_BLEND_GL_ONE_MINUS_DST_COLOR
+value|(37)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_GL_SRC_ALPHA_SATURATE
-value|(42<< 16)
+name|R300_BLEND_GL_SRC_ALPHA
+value|(38)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_SRC_BLEND_MASK
-value|(63<< 16)
+name|R300_BLEND_GL_ONE_MINUS_SRC_ALPHA
+value|(39)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_ZERO
-value|(32<< 24)
+name|R300_BLEND_GL_DST_ALPHA
+value|(40)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_ONE
-value|(33<< 24)
+name|R300_BLEND_GL_ONE_MINUS_DST_ALPHA
+value|(41)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_SRC_COLOR
-value|(34<< 24)
+name|R300_BLEND_GL_SRC_ALPHA_SATURATE
+value|(42)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_ONE_MINUS_SRC_COLOR
-value|(35<< 24)
+name|R300_BLEND_GL_CONST_COLOR
+value|(43)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_DST_COLOR
-value|(36<< 24)
+name|R300_BLEND_GL_ONE_MINUS_CONST_COLOR
+value|(44)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_ONE_MINUS_DST_COLOR
-value|(37<< 24)
+name|R300_BLEND_GL_CONST_ALPHA
+value|(45)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_SRC_ALPHA
-value|(38<< 24)
+name|R300_BLEND_GL_ONE_MINUS_CONST_ALPHA
+value|(46)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_ONE_MINUS_SRC_ALPHA
-value|(39<< 24)
+name|R300_BLEND_MASK
+value|(63)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_DST_ALPHA
-value|(40<< 24)
+name|R300_SRC_BLEND_SHIFT
+value|(16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_GL_ONE_MINUS_DST_ALPHA
-value|(41<< 24)
+name|R300_DST_BLEND_SHIFT
+value|(24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DST_BLEND_MASK
-value|(63<< 24)
+name|R300_RB3D_BLEND_COLOR
+value|0x4E10
 end_define
 
 begin_define
@@ -6020,7 +6384,7 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* Bit 16: Larger tiles // Bit 17: 4x2 tiles // Bit 18: Extremely weird tile like, but some pixels duplicated? */
+comment|/* Bit 16: Larger tiles  * Bit 17: 4x2 tiles  * Bit 18: Extremely weird tile like, but some pixels duplicated?  */
 end_comment
 
 begin_define
@@ -6143,32 +6507,36 @@ begin_comment
 comment|/* GUESS */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|R300_RB3D_AARESOLVE_CTL
+value|0x4E88
+end_define
+
 begin_comment
 comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* Guess by Vladimir. // Set to 0A before 3D operations, set to 02 afterwards. */
+comment|/* Guess by Vladimir.  * Set to 0A before 3D operations, set to 02 afterwards.  */
+end_comment
+
+begin_comment
+comment|/*#define R300_RB3D_DSTCACHE_CTLSTAT          0x4E4C*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_DSTCACHE_CTLSTAT
-value|0x4E4C
-end_define
-
-begin_define
-define|#
-directive|define
-name|R300_RB3D_DSTCACHE_02
+name|R300_RB3D_DSTCACHE_UNKNOWN_02
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_DSTCACHE_0A
+name|R300_RB3D_DSTCACHE_UNKNOWN_0A
 value|0x0000000A
 end_define
 
@@ -6177,96 +6545,56 @@ comment|/* gap */
 end_comment
 
 begin_comment
-comment|/* There seems to be no "write only" setting, so use Z-test = ALWAYS for this. */
-end_comment
-
-begin_comment
-comment|/* Bit (1<<8) is the "test" bit. so plain write is 6  - vd */
+comment|/* There seems to be no "write only" setting, so use Z-test = ALWAYS  * for this.  * Bit (1<<8) is the "test" bit. so plain write is 6  - vd  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZSTENCIL_CNTL_0
+name|R300_ZB_CNTL
 value|0x4F00
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_Z_DISABLED_1
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* GUESS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R300_RB3D_Z_DISABLED_2
-value|0x00000014
-end_define
-
-begin_comment
-comment|/* GUESS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R300_RB3D_Z_TEST
-value|0x00000012
+name|R300_STENCIL_ENABLE
+value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_Z_TEST_AND_WRITE
-value|0x00000016
+name|R300_Z_ENABLE
+value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_Z_WRITE_ONLY
-value|0x00000006
+name|R300_Z_WRITE_ENABLE
+value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_Z_TEST
-value|0x00000012
+name|R300_Z_SIGNED_COMPARE
+value|(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_Z_TEST_AND_WRITE
-value|0x00000016
+name|R300_STENCIL_FRONT_BACK
+value|(1<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_Z_WRITE_ONLY
-value|0x00000006
-end_define
-
-begin_define
-define|#
-directive|define
-name|R300_RB3D_STENCIL_ENABLE
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|R300_RB3D_ZSTENCIL_CNTL_1
-value|0x4F04
+name|R300_ZB_ZSTENCILCNTL
+value|0x4f04
 end_define
 
 begin_comment
@@ -6396,106 +6724,120 @@ name|R300_ZS_DECR_WRAP
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|R300_Z_FUNC_SHIFT
+value|0
+end_define
+
 begin_comment
-comment|/* front and back refer to operations done for front           and back faces, i.e. separate stencil function support */
+comment|/* front and back refer to operations done for front 	   and back faces, i.e. separate stencil function support */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS1_DEPTH_FUNC_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|R300_RB3D_ZS1_FRONT_FUNC_SHIFT
+name|R300_S_FRONT_FUNC_SHIFT
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS1_FRONT_FAIL_OP_SHIFT
+name|R300_S_FRONT_SFAIL_OP_SHIFT
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS1_FRONT_ZPASS_OP_SHIFT
+name|R300_S_FRONT_ZPASS_OP_SHIFT
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS1_FRONT_ZFAIL_OP_SHIFT
+name|R300_S_FRONT_ZFAIL_OP_SHIFT
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS1_BACK_FUNC_SHIFT
+name|R300_S_BACK_FUNC_SHIFT
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS1_BACK_FAIL_OP_SHIFT
+name|R300_S_BACK_SFAIL_OP_SHIFT
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS1_BACK_ZPASS_OP_SHIFT
+name|R300_S_BACK_ZPASS_OP_SHIFT
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS1_BACK_ZFAIL_OP_SHIFT
+name|R300_S_BACK_ZFAIL_OP_SHIFT
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZSTENCIL_CNTL_2
-value|0x4F08
+name|R300_ZB_STENCILREFMASK
+value|0x4f08
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS2_STENCIL_REF_SHIFT
+name|R300_STENCILREF_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS2_STENCIL_MASK
-value|0xFF
+name|R300_STENCILREF_MASK
+value|0x000000ff
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS2_STENCIL_MASK_SHIFT
+name|R300_STENCILMASK_SHIFT
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZS2_STENCIL_WRITE_MASK_SHIFT
+name|R300_STENCILMASK_MASK
+value|0x0000ff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_STENCILWRITEMASK_SHIFT
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_STENCILWRITEMASK_MASK
+value|0x00ff0000
 end_define
 
 begin_comment
@@ -6505,22 +6847,68 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R300_RB3D_ZSTENCIL_FORMAT
-value|0x4F10
+name|R300_ZB_FORMAT
+value|0x4f10
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DEPTH_FORMAT_16BIT_INT_Z
+name|R300_DEPTHFORMAT_16BIT_INT_Z
 value|(0<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DEPTH_FORMAT_24BIT_INT_Z
+name|R300_DEPTHFORMAT_16BIT_13E3
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DEPTHFORMAT_24BIT_INT_Z_8BIT_STENCIL
 value|(2<< 0)
+end_define
+
+begin_comment
+comment|/* reserved up to (15<< 0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_INVERT_13E3_LEADING_ONES
+value|(0<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_INVERT_13E3_LEADING_ZEROS
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZTOP
+value|0x4F14
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZTOP_DISABLE
+value|(0<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZTOP_ENABLE
+value|(1<< 0)
 end_define
 
 begin_comment
@@ -6530,85 +6918,685 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R300_RB3D_DEPTHOFFSET
-value|0x4F20
+name|R300_ZB_ZCACHE_CTLSTAT
+value|0x4f18
 end_define
 
 begin_define
 define|#
 directive|define
-name|R300_RB3D_DEPTHPITCH
-value|0x4F24
+name|R300_ZB_ZCACHE_CTLSTAT_ZC_FLUSH_NO_EFFECT
+value|(0<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZCACHE_CTLSTAT_ZC_FLUSH_FLUSH_AND_FREE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZCACHE_CTLSTAT_ZC_FREE_NO_EFFECT
+value|(0<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZCACHE_CTLSTAT_ZC_FREE_FREE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZCACHE_CTLSTAT_ZC_BUSY_IDLE
+value|(0<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZCACHE_CTLSTAT_ZC_BUSY_BUSY
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_BW_CNTL
+value|0x4f1c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_HIZ_DISABLE
+value|(0<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_HIZ_ENABLE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_HIZ_MIN
+value|(0<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_HIZ_MAX
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FAST_FILL_DISABLE
+value|(0<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FAST_FILL_ENABLE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_RD_COMP_DISABLE
+value|(0<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_RD_COMP_ENABLE
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_WR_COMP_DISABLE
+value|(0<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_WR_COMP_ENABLE
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_CB_CLEAR_RMW
+value|(0<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_CB_CLEAR_CACHE_LINEAR
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FORCE_COMPRESSED_STENCIL_VALUE_DISABLE
+value|(0<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_FORCE_COMPRESSED_STENCIL_VALUE_ENABLE
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_ZEQUAL_OPTIMIZE_ENABLE
+value|(0<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_ZEQUAL_OPTIMIZE_DISABLE
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_SEQUAL_OPTIMIZE_ENABLE
+value|(0<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_SEQUAL_OPTIMIZE_DISABLE
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_BMASK_ENABLE
+value|(0<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_BMASK_DISABLE
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_EQUAL_REJECT_DISABLE
+value|(0<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_EQUAL_REJECT_ENABLE
+value|(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_FP_EXP_BITS_DISABLE
+value|(0<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_FP_EXP_BITS_1
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_FP_EXP_BITS_2
+value|(2<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_FP_EXP_BITS_3
+value|(3<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_FP_EXP_BITS_4
+value|(4<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_FP_EXP_BITS_5
+value|(5<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_FP_INVERT_LEADING_ONES
+value|(0<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_HIZ_FP_INVERT_LEADING_ZEROS
+value|(1<< 15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_TILE_OVERWRITE_RECOMPRESSION_ENABLE
+value|(0<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_TILE_OVERWRITE_RECOMPRESSION_DISABLE
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_CONTIGUOUS_6XAA_SAMPLES_ENABLE
+value|(0<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_CONTIGUOUS_6XAA_SAMPLES_DISABLE
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_PEQ_PACKING_DISABLE
+value|(0<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_PEQ_PACKING_ENABLE
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_COVERED_PTR_MASKING_DISABLE
+value|(0<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_COVERED_PTR_MASKING_ENABLE
+value|(1<< 18)
+end_define
+
+begin_comment
+comment|/* gap */
+end_comment
+
+begin_comment
+comment|/* Z Buffer Address Offset.  * Bits 31 to 5 are used for aligned Z buffer address offset for macro tiles.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_DEPTHOFFSET
+value|0x4f20
+end_define
+
+begin_comment
+comment|/* Z Buffer Pitch and Endian Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_DEPTHPITCH
+value|0x4f24
 end_define
 
 begin_define
 define|#
 directive|define
 name|R300_DEPTHPITCH_MASK
-value|0x00001FF8
+value|0x00003FFC
 end_define
-
-begin_comment
-comment|/* GUESS */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|R300_DEPTH_TILE_ENABLE
+name|R300_DEPTHMACROTILE_DISABLE
+value|(0<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DEPTHMACROTILE_ENABLE
 value|(1<< 16)
 end_define
 
-begin_comment
-comment|/* GUESS */
-end_comment
+begin_define
+define|#
+directive|define
+name|R300_DEPTHMICROTILE_LINEAR
+value|(0<< 17)
+end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DEPTH_MICROTILE_ENABLE
+name|R300_DEPTHMICROTILE_TILED
 value|(1<< 17)
 end_define
 
-begin_comment
-comment|/* GUESS */
-end_comment
+begin_define
+define|#
+directive|define
+name|R300_DEPTHMICROTILE_TILED_SQUARE
+value|(2<< 17)
+end_define
 
 begin_define
 define|#
 directive|define
-name|R300_DEPTH_ENDIAN_NO_SWAP
+name|R300_DEPTHENDIAN_NO_SWAP
 value|(0<< 18)
 end_define
 
-begin_comment
-comment|/* GUESS */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|R300_DEPTH_ENDIAN_WORD_SWAP
+name|R300_DEPTHENDIAN_WORD_SWAP
 value|(1<< 18)
 end_define
 
+begin_define
+define|#
+directive|define
+name|R300_DEPTHENDIAN_DWORD_SWAP
+value|(2<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DEPTHENDIAN_HALF_DWORD_SWAP
+value|(3<< 18)
+end_define
+
 begin_comment
-comment|/* GUESS */
+comment|/* Z Buffer Clear Value */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R300_DEPTH_ENDIAN_DWORD_SWAP
-value|(2<< 18)
+name|R300_ZB_DEPTHCLEARVALUE
+value|0x4f28
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZMASK_OFFSET
+value|0x4f30
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZMASK_PITCH
+value|0x4f34
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZMASK_WRINDEX
+value|0x4f38
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZMASK_DWORD
+value|0x4f3c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZMASK_RDINDEX
+value|0x4f40
 end_define
 
 begin_comment
-comment|/* GUESS */
+comment|/* Hierarchical Z Memory Offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_HIZ_OFFSET
+value|0x4f44
+end_define
+
+begin_comment
+comment|/* Hierarchical Z Write Index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_HIZ_WRINDEX
+value|0x4f48
+end_define
+
+begin_comment
+comment|/* Hierarchical Z Data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_HIZ_DWORD
+value|0x4f4c
+end_define
+
+begin_comment
+comment|/* Hierarchical Z Read Index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_HIZ_RDINDEX
+value|0x4f50
+end_define
+
+begin_comment
+comment|/* Hierarchical Z Pitch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_HIZ_PITCH
+value|0x4f54
+end_define
+
+begin_comment
+comment|/* Z Buffer Z Pass Counter Data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZPASS_DATA
+value|0x4f58
+end_define
+
+begin_comment
+comment|/* Z Buffer Z Pass Counter Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_ZPASS_ADDR
+value|0x4f5c
+end_define
+
+begin_comment
+comment|/* Depth buffer X and Y coordinate offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_ZB_DEPTHXY_OFFSET
+value|0x4f60
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DEPTHX_OFFSET_SHIFT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DEPTHX_OFFSET_MASK
+value|0x000007FE
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DEPTHY_OFFSET_SHIFT
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_DEPTHY_OFFSET_MASK
+value|0x07FE0000
+end_define
+
+begin_comment
+comment|/* Sets the fifo sizes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R500_ZB_FIFO_SIZE
+value|0x4fd0
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_OP_FIFO_SIZE_FULL
+value|(0<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_OP_FIFO_SIZE_HALF
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_OP_FIFO_SIZE_QUATER
+value|(2<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_OP_FIFO_SIZE_EIGTHS
+value|(4<< 0)
+end_define
+
+begin_comment
+comment|/* Stencil Reference Value and Mask for backfacing quads */
 end_comment
 
 begin_comment
-comment|/* BEGIN: Vertex program instruction set // Every instruction is four dwords long: //  DWORD 0: output and opcode //  DWORD 1: first argument //  DWORD 2: second argument //  DWORD 3: third argument // // Notes: //  - ABS r, a is implemented as MAX r, a, -a //  - MOV is implemented as ADD to zero //  - XPD is implemented as MUL + MAD //  - FLR is implemented as FRC + ADD //  - apparently, fglrx tries to schedule instructions so that there is at least //    one instruction between the write to a temporary and the first read //    from said temporary; however, violations of this scheduling are allowed //  - register indices seem to be unrelated with OpenGL aliasing to conventional state //  - only one attribute and one parameter can be loaded at a time; however, the //    same attribute/parameter can be used for more than one argument //  - the second software argument for POW is the third hardware argument (no idea why) //  - MAD with only temporaries as input seems to use VPI_OUT_SELECT_MAD_2 // // There is some magic surrounding LIT: //  The single argument is replicated across all three inputs, but swizzled: //   First argument: xyzy //   Second argument: xyzx //   Third argument: xyzw //  Whenever the result is used later in the fragment program, fglrx forces x and w //  to be 1.0 in the input selection; I don't know whether this is strictly necessary */
+comment|/* R300_ZB_STENCILREFMASK handles front face */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R500_ZB_STENCILREFMASK_BF
+value|0x4fd4
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_STENCILREF_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_STENCILREF_MASK
+value|0x000000ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_STENCILMASK_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_STENCILMASK_MASK
+value|0x0000ff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_STENCILWRITEMASK_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_STENCILWRITEMASK_MASK
+value|0x00ff0000
+end_define
+
+begin_comment
+comment|/* BEGIN: Vertex program instruction set */
+end_comment
+
+begin_comment
+comment|/* Every instruction is four dwords long:  *  DWORD 0: output and opcode  *  DWORD 1: first argument  *  DWORD 2: second argument  *  DWORD 3: third argument  *  * Notes:  *  - ABS r, a is implemented as MAX r, a, -a  *  - MOV is implemented as ADD to zero  *  - XPD is implemented as MUL + MAD  *  - FLR is implemented as FRC + ADD  *  - apparently, fglrx tries to schedule instructions so that there is at  *    least one instruction between the write to a temporary and the first  *    read from said temporary; however, violations of this scheduling are  *    allowed  *  - register indices seem to be unrelated with OpenGL aliasing to  *    conventional state  *  - only one attribute and one parameter can be loaded at a time; however,  *    the same attribute/parameter can be used for more than one argument  *  - the second software argument for POW is the third hardware argument  *    (no idea why)  *  - MAD with only temporaries as input seems to use VPI_OUT_SELECT_MAD_2  *  * There is some magic surrounding LIT:  *   The single argument is replicated across all three inputs, but swizzled:  *     First argument: xyzy  *     Second argument: xyzx  *     Third argument: xyzw  *   Whenever the result is used later in the fragment program, fglrx forces  *   x and w to be 1.0 in the input selection; I don't know whether this is  *   strictly necessary  */
 end_comment
 
 begin_define
@@ -6681,6 +7669,10 @@ name|R300_VPI_OUT_OP_SLT
 value|(10<< 0)
 end_define
 
+begin_comment
+comment|/* Used in GL_POINT_DISTANCE_ATTENUATION_ARB, vector(scalar, vector) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -6688,9 +7680,12 @@ name|R300_VPI_OUT_OP_UNK12
 value|(12<< 0)
 end_define
 
-begin_comment
-comment|/* Used in GL_POINT_DISTANCE_ATTENUATION_ARB, vector(scalar, vector) */
-end_comment
+begin_define
+define|#
+directive|define
+name|R300_VPI_OUT_OP_ARL
+value|(13<< 0)
+end_define
 
 begin_define
 define|#
@@ -6706,16 +7701,16 @@ name|R300_VPI_OUT_OP_LOG
 value|(66<< 0)
 end_define
 
+begin_comment
+comment|/* Used in fog computations, scalar(scalar) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_VPI_OUT_OP_UNK67
 value|(67<< 0)
 end_define
-
-begin_comment
-comment|/* Used in fog computations, scalar(scalar) */
-end_comment
 
 begin_define
 define|#
@@ -6745,16 +7740,16 @@ name|R300_VPI_OUT_OP_RSQ
 value|(72<< 0)
 end_define
 
+begin_comment
+comment|/* Used in GL_POINT_DISTANCE_ATTENUATION_ARB, scalar(scalar) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_VPI_OUT_OP_UNK73
 value|(73<< 0)
 end_define
-
-begin_comment
-comment|/* Used in GL_POINT_DISTANCE_ATTENUATION_ARB, scalar(scalar) */
-end_comment
 
 begin_define
 define|#
@@ -6777,13 +7772,6 @@ name|R300_VPI_OUT_OP_MAD_2
 value|(128<< 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|R300_VPI_OUT_OP_UNK129
-value|(129<< 0)
-end_define
-
 begin_comment
 comment|/* all temps, vector(scalar, vector, vector) */
 end_comment
@@ -6791,8 +7779,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|R300_VPI_OUT_OP_UNK129
+value|(129<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|R300_VPI_OUT_REG_CLASS_TEMPORARY
 value|(0<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_VPI_OUT_REG_CLASS_ADDR
+value|(1<< 8)
 end_define
 
 begin_define
@@ -6816,16 +7818,16 @@ name|R300_VPI_OUT_REG_INDEX_SHIFT
 value|13
 end_define
 
+begin_comment
+comment|/* GUESS based on fglrx native limits */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_VPI_OUT_REG_INDEX_MASK
 value|(31<< 13)
 end_define
-
-begin_comment
-comment|/* GUESS based on fglrx native limits */
-end_comment
 
 begin_define
 define|#
@@ -6890,16 +7892,16 @@ name|R300_VPI_IN_REG_CLASS_MASK
 value|(31<< 0)
 end_define
 
-begin_comment
-comment|/* GUESS */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|R300_VPI_IN_REG_INDEX_SHIFT
 value|5
 end_define
+
+begin_comment
+comment|/* GUESS based on fglrx native limits */
+end_comment
 
 begin_define
 define|#
@@ -6909,11 +7911,7 @@ value|(255<< 5)
 end_define
 
 begin_comment
-comment|/* GUESS based on fglrx native limits */
-end_comment
-
-begin_comment
-comment|/* The R300 can select components from the input register arbitrarily. // Use the following constants, shifted by the component shift you // want to select */
+comment|/* The R300 can select components from the input register arbitrarily.  * Use the following constants, shifted by the component shift you  * want to select  */
 end_comment
 
 begin_define
@@ -7022,15 +8020,15 @@ value|(1<< 28)
 end_define
 
 begin_comment
-comment|/* END */
+comment|/* END: Vertex program instruction set */
 end_comment
 
 begin_comment
-comment|//BEGIN: Packet 3 commands
+comment|/* BEGIN: Packet 3 commands */
 end_comment
 
 begin_comment
-comment|// A primitive emission dword.
+comment|/* A primitive emission dword. */
 end_comment
 
 begin_define
@@ -7110,16 +8108,16 @@ name|R300_PRIM_TYPE_3VRT_LINE_LIST
 value|(10<< 0)
 end_define
 
+begin_comment
+comment|/* GUESS (based on r200) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_PRIM_TYPE_POINT_SPRITES
 value|(11<< 0)
 end_define
-
-begin_comment
-comment|// GUESS (based on r200)
-end_comment
 
 begin_define
 define|#
@@ -7184,16 +8182,16 @@ name|R300_PRIM_WALK_MASK
 value|(3<< 4)
 end_define
 
+begin_comment
+comment|/* GUESS (based on r200) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R300_PRIM_COLOR_ORDER_BGRA
 value|(0<< 6)
 end_define
-
-begin_comment
-comment|// GUESS (based on r200)
-end_comment
 
 begin_define
 define|#
@@ -7202,10 +8200,6 @@ name|R300_PRIM_COLOR_ORDER_RGBA
 value|(1<< 6)
 end_define
 
-begin_comment
-comment|// GUESS
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -7213,20 +8207,15 @@ name|R300_PRIM_NUM_VERTICES_SHIFT
 value|16
 end_define
 
-begin_comment
-comment|// Draw a primitive from vertex data in arrays loaded via 3D_LOAD_VBPNTR.
-end_comment
+begin_define
+define|#
+directive|define
+name|R300_PRIM_NUM_VERTICES_MASK
+value|0xffff
+end_define
 
 begin_comment
-comment|// Two parameter dwords:
-end_comment
-
-begin_comment
-comment|// 0. The first parameter appears to be always 0
-end_comment
-
-begin_comment
-comment|// 1. The second parameter is a standard primitive emission dword.
+comment|/* Draw a primitive from vertex data in arrays loaded via 3D_LOAD_VBPNTR.  * Two parameter dwords:  * 0. The first parameter appears to be always 0  * 1. The second parameter is a standard primitive emission dword.  */
 end_comment
 
 begin_define
@@ -7237,55 +8226,7 @@ value|0x00002800
 end_define
 
 begin_comment
-comment|// Specify the full set of vertex arrays as (address, stride).
-end_comment
-
-begin_comment
-comment|// The first parameter is the number of vertex arrays specified.
-end_comment
-
-begin_comment
-comment|// The rest of the command is a variable length list of blocks, where
-end_comment
-
-begin_comment
-comment|// each block is three dwords long and specifies two arrays.
-end_comment
-
-begin_comment
-comment|// The first dword of a block is split into two words, the lower significant
-end_comment
-
-begin_comment
-comment|// word refers to the first array, the more significant word to the second
-end_comment
-
-begin_comment
-comment|// array in the block.
-end_comment
-
-begin_comment
-comment|// The low byte of each word contains the size of an array entry in dwords,
-end_comment
-
-begin_comment
-comment|// the high byte contains the stride of the array.
-end_comment
-
-begin_comment
-comment|// The second dword of a block contains the pointer to the first array,
-end_comment
-
-begin_comment
-comment|// the third dword of a block contains the pointer to the second array.
-end_comment
-
-begin_comment
-comment|// Note that if the total number of arrays is odd, the third dword of
-end_comment
-
-begin_comment
-comment|// the last block is omitted.
+comment|/* Specify the full set of vertex arrays as (address, stride).  * The first parameter is the number of vertex arrays specified.  * The rest of the command is a variable length list of blocks, where  * each block is three dwords long and specifies two arrays.  * The first dword of a block is split into two words, the lower significant  * word refers to the first array, the more significant word to the second  * array in the block.  * The low byte of each word contains the size of an array entry in dwords,  * the high byte contains the stride of the array.  * The second dword of a block contains the pointer to the first array,  * the third dword of a block contains the pointer to the second array.  * Note that if the total number of arrays is odd, the third dword of  * the last block is omitted.  */
 end_comment
 
 begin_define
@@ -7326,13 +8267,154 @@ end_define
 begin_define
 define|#
 directive|define
+name|R300_PACKET3_3D_DRAW_VBUF_2
+value|0x00003400
+end_define
+
+begin_define
+define|#
+directive|define
 name|R300_PACKET3_3D_DRAW_INDX_2
 value|0x00003600
 end_define
 
 begin_comment
-comment|//END
+comment|/* END: Packet 3 commands */
 end_comment
+
+begin_comment
+comment|/* Color formats for 2d packets  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_CP_COLOR_FORMAT_CI8
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CP_COLOR_FORMAT_ARGB1555
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CP_COLOR_FORMAT_RGB565
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CP_COLOR_FORMAT_ARGB8888
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CP_COLOR_FORMAT_RGB332
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CP_COLOR_FORMAT_RGB8
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CP_COLOR_FORMAT_ARGB4444
+value|15
+end_define
+
+begin_comment
+comment|/*  * CP type-3 packets  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R300_CP_CMD_BITBLT_MULTI
+value|0xC0009B00
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_VAP_INDEX_OFFSET
+value|0x208c
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_GA_US_VECTOR_INDEX
+value|0x4250
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_GA_US_VECTOR_DATA
+value|0x4254
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_RS_IP_0
+value|0x4074
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_RS_INST_0
+value|0x4320
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_US_CONFIG
+value|0x4600
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_US_FC_CTRL
+value|0x4624
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_US_CODE_ADDR
+value|0x4630
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_RB3D_COLOR_CLEAR_VALUE_AR
+value|0x46c0
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500_RB3D_CONSTANT_COLOR_AR
+value|0x4ef8
+end_define
 
 begin_endif
 endif|#
@@ -7341,6 +8423,10 @@ end_endif
 
 begin_comment
 comment|/* _R300_REG_H */
+end_comment
+
+begin_comment
+comment|/* *INDENT-ON* */
 end_comment
 
 end_unit

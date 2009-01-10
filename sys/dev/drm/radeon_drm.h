@@ -1448,6 +1448,10 @@ name|R300_WAIT_3D
 value|0x2
 end_define
 
+begin_comment
+comment|/* these two defines are DOING IT WRONG - however  * we have userspace which relies on using these.  * The wait interface is backwards compat new   * code should use the NEW_WAIT defines below  * THESE ARE NOT BIT FIELDS  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1465,8 +1469,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|R300_NEW_WAIT_2D_3D
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_NEW_WAIT_2D_2D_CLEAN
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_NEW_WAIT_3D_3D_CLEAN
+value|0x6
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_NEW_WAIT_2D_2D_CLEAN_3D_3D_CLEAN
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
 name|R300_CMD_SCRATCH
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|R300_CMD_R500FP
+value|9
 end_define
 
 begin_typedef
@@ -1598,6 +1637,21 @@ decl_stmt|;
 block|}
 name|scratch
 struct|;
+struct|struct
+block|{
+name|unsigned
+name|char
+name|cmd_type
+decl_stmt|,
+name|count
+decl_stmt|,
+name|adrlo
+decl_stmt|,
+name|adrhi_flags
+decl_stmt|;
+block|}
+name|r500fp
+struct|;
 block|}
 name|drm_r300_cmd_header_t
 typedef|;
@@ -1650,6 +1704,20 @@ define|#
 directive|define
 name|RADEON_USE_COMP_ZBUF
 value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500FP_CONSTANT_TYPE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R500FP_CONSTANT_CLAMP
+value|(1<< 2)
 end_define
 
 begin_comment
@@ -2162,7 +2230,8 @@ name|int
 name|vc_format
 decl_stmt|;
 comment|/* The current cliprects, or a subset thereof. 	 */
-name|drm_clip_rect_t
+name|struct
+name|drm_clip_rect
 name|boxes
 index|[
 name|RADEON_NR_SAREA_CLIPRECTS
@@ -2185,7 +2254,8 @@ name|unsigned
 name|int
 name|last_clear
 decl_stmt|;
-name|drm_tex_region_t
+name|struct
+name|drm_tex_region
 name|tex_list
 index|[
 name|RADEON_NR_TEX_HEAPS
@@ -2964,7 +3034,8 @@ decl_stmt|;
 name|int
 name|nbox
 decl_stmt|;
-name|drm_clip_rect_t
+name|struct
+name|drm_clip_rect
 name|__user
 modifier|*
 name|boxes
@@ -3206,6 +3277,39 @@ name|RADEON_PARAM_CARD_TYPE
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_VBLANK_CRTC
+value|13
+end_define
+
+begin_comment
+comment|/* VBLANK CRTC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_FB_LOCATION
+value|14
+end_define
+
+begin_comment
+comment|/* FB location */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_NUM_GB_PIPES
+value|15
+end_define
+
+begin_comment
+comment|/* num GB pipes */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -3399,6 +3503,28 @@ begin_comment
 comment|/* Use new memory map */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RADEON_SETPARAM_PCIGART_TABLE_SIZE
+value|5
+end_define
+
+begin_comment
+comment|/* PCI GART Table Size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_SETPARAM_VBLANK_CRTC
+value|6
+end_define
+
+begin_comment
+comment|/* VBLANK CRTC */
+end_comment
+
 begin_comment
 comment|/* 1.14: Clients can allocate/free a surface  */
 end_comment
@@ -3438,6 +3564,20 @@ block|}
 name|drm_radeon_surface_free_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_VBLANK_CRTC1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_VBLANK_CRTC2
+value|2
+end_define
 
 begin_endif
 endif|#

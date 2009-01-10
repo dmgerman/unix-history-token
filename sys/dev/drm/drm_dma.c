@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* drm_dma.c -- DMA IOCTL and function support -*- linux-c -*-  * Created: Fri Mar 19 14:30:16 1999 by faith@valinux.com  */
-end_comment
-
-begin_comment
 comment|/*-  * Copyright 1999, 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  */
 end_comment
 
@@ -21,6 +17,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/** @file drm_dma.c  * Support code for DMA buffer management.  *  * The implementation used to be significantly more complicated, but the  * complexity has been moved into the drivers as different buffer management  * schemes evolved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -31,7 +31,8 @@ begin_function
 name|int
 name|drm_dma_setup
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -50,7 +51,7 @@ operator|->
 name|dma
 argument_list|)
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -66,13 +67,11 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|DRM_ERR
-argument_list|(
 name|ENOMEM
-argument_list|)
 return|;
 name|DRM_SPININIT
 argument_list|(
+operator|&
 name|dev
 operator|->
 name|dma_lock
@@ -90,7 +89,8 @@ begin_function
 name|void
 name|drm_dma_takedown
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -218,7 +218,7 @@ index|]
 operator|.
 name|seglist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_SEGS
 argument_list|)
 expr_stmt|;
 block|}
@@ -271,7 +271,7 @@ index|]
 operator|.
 name|dev_private
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 block|}
@@ -286,7 +286,7 @@ index|]
 operator|.
 name|buflist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 block|}
@@ -297,7 +297,7 @@ name|dma
 operator|->
 name|buflist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 name|free
@@ -306,7 +306,7 @@ name|dma
 operator|->
 name|pagelist
 argument_list|,
-name|M_DRM
+name|DRM_MEM_PAGES
 argument_list|)
 expr_stmt|;
 name|free
@@ -315,7 +315,7 @@ name|dev
 operator|->
 name|dma
 argument_list|,
-name|M_DRM
+name|DRM_MEM_DRIVER
 argument_list|)
 expr_stmt|;
 name|dev
@@ -326,6 +326,7 @@ name|NULL
 expr_stmt|;
 name|DRM_SPINUNINIT
 argument_list|(
+operator|&
 name|dev
 operator|->
 name|dma_lock
@@ -338,7 +339,8 @@ begin_function
 name|void
 name|drm_free_buffer
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
@@ -361,7 +363,7 @@ literal|0
 expr_stmt|;
 name|buf
 operator|->
-name|filp
+name|file_priv
 operator|=
 name|NULL
 expr_stmt|;
@@ -378,12 +380,15 @@ begin_function
 name|void
 name|drm_reclaim_buffers
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|DRMFILE
-name|filp
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 block|{
 name|drm_device_dma_t
@@ -428,9 +433,9 @@ index|[
 name|i
 index|]
 operator|->
-name|filp
+name|file_priv
 operator|==
-name|filp
+name|file_priv
 condition|)
 block|{
 switch|switch
@@ -493,38 +498,44 @@ begin_function
 name|int
 name|drm_dma
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 block|{
-name|DRM_DEVICE
-expr_stmt|;
 if|if
 condition|(
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|dma_ioctl
 condition|)
 block|{
+comment|/* shared code returns -errno */
 return|return
+operator|-
 name|dev
 operator|->
 name|driver
-operator|.
+operator|->
 name|dma_ioctl
 argument_list|(
-name|kdev
-argument_list|,
-name|cmd
+name|dev
 argument_list|,
 name|data
 argument_list|,
-name|flags
-argument_list|,
-name|p
-argument_list|,
-name|filp
+name|file_priv
 argument_list|)
 return|;
 block|}

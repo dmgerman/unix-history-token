@@ -95,7 +95,8 @@ struct|struct
 name|_drm_savage_sarea
 block|{
 comment|/* LRU lists for texture memory in agp space and on the card. 	 */
-name|drm_tex_region_t
+name|struct
+name|drm_tex_region
 name|texList
 index|[
 name|SAVAGE_NR_TEX_HEAPS
@@ -344,7 +345,8 @@ name|vb_stride
 decl_stmt|;
 comment|/* stride of vertices in 32bit words */
 comment|/* boxes in client's address space */
-name|drm_clip_rect_t
+name|struct
+name|drm_clip_rect
 name|__user
 modifier|*
 name|box_addr

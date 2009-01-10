@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|SAREA_MAX
-value|0x2000
+value|0x2000UL
 end_define
 
 begin_endif
@@ -122,8 +122,7 @@ begin_comment
 comment|/** SAREA drawable */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|drm_sarea_drawable
 block|{
@@ -136,16 +135,14 @@ name|int
 name|flags
 decl_stmt|;
 block|}
-name|drm_sarea_drawable_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/** SAREA frame */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|drm_sarea_frame
 block|{
@@ -170,35 +167,37 @@ name|int
 name|fullscreen
 decl_stmt|;
 block|}
-name|drm_sarea_frame_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/** SAREA */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|drm_sarea
 block|{
 comment|/** first thing is always the DRM locking structure */
-name|drm_hw_lock_t
+name|struct
+name|drm_hw_lock
 name|lock
 decl_stmt|;
 comment|/** \todo Use readers/writer lock for drm_sarea::drawable_lock */
-name|drm_hw_lock_t
+name|struct
+name|drm_hw_lock
 name|drawable_lock
 decl_stmt|;
-name|drm_sarea_drawable_t
+name|struct
+name|drm_sarea_drawable
 name|drawableTable
 index|[
 name|SAREA_MAX_DRAWABLES
 index|]
 decl_stmt|;
 comment|/**< drawables */
-name|drm_sarea_frame_t
+name|struct
+name|drm_sarea_frame
 name|frame
 decl_stmt|;
 comment|/**< frame */
@@ -206,9 +205,43 @@ name|drm_context_t
 name|dummy_context
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__KERNEL__
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|drm_sarea_drawable
+name|drm_sarea_drawable_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|drm_sarea_frame
+name|drm_sarea_frame_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|drm_sarea
 name|drm_sarea_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

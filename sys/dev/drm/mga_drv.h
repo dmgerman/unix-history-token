@@ -145,7 +145,8 @@ decl_stmt|;
 name|drm_mga_age_t
 name|age
 decl_stmt|;
-name|drm_buf_t
+name|struct
+name|drm_buf
 modifier|*
 name|buf
 decl_stmt|;
@@ -222,7 +223,7 @@ comment|/** 	 * If AGP memory is used for DMA buffers, this will be the value 	 
 name|u32
 name|wagp_enable
 decl_stmt|;
-comment|/** 	 * \name MMIO region parameters. 	 *  	 * \sa drm_mga_private_t::mmio 	 */
+comment|/** 	 * \name MMIO region parameters. 	 * 	 * \sa drm_mga_private_t::mmio 	 */
 comment|/*@{*/
 name|u32
 name|mmio_base
@@ -239,6 +240,10 @@ decl_stmt|;
 name|u32
 name|maccess
 decl_stmt|;
+name|atomic_t
+name|vbl_received
+decl_stmt|;
+comment|/**< Number of vblanks received. */
 name|wait_queue_head_t
 name|fence_queue
 decl_stmt|;
@@ -327,7 +332,8 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
-name|drm_ioctl_desc_t
+name|struct
+name|drm_ioctl_desc
 name|mga_ioctls
 index|[]
 decl_stmt|;
@@ -349,7 +355,19 @@ specifier|extern
 name|int
 name|mga_dma_bootstrap
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -359,7 +377,19 @@ specifier|extern
 name|int
 name|mga_dma_init
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -369,7 +399,19 @@ specifier|extern
 name|int
 name|mga_dma_flush
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -379,7 +421,19 @@ specifier|extern
 name|int
 name|mga_dma_reset
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -389,7 +443,19 @@ specifier|extern
 name|int
 name|mga_dma_buffers
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -399,7 +465,8 @@ specifier|extern
 name|int
 name|mga_driver_load
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
@@ -415,7 +482,8 @@ specifier|extern
 name|int
 name|mga_driver_unload
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -427,7 +495,8 @@ specifier|extern
 name|void
 name|mga_driver_lastclose
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -439,7 +508,8 @@ specifier|extern
 name|int
 name|mga_driver_dma_quiescent
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -499,11 +569,13 @@ specifier|extern
 name|int
 name|mga_freelist_put
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|drm_buf_t
+name|struct
+name|drm_buf
 modifier|*
 name|buf
 parameter_list|)
@@ -559,9 +631,58 @@ end_comment
 begin_function_decl
 specifier|extern
 name|int
+name|mga_enable_vblank
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|crtc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|mga_disable_vblank
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|crtc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|u32
+name|mga_get_vblank_counter
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|crtc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|mga_driver_fence_wait
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
@@ -578,7 +699,8 @@ specifier|extern
 name|int
 name|mga_driver_vblank_wait
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
@@ -605,7 +727,8 @@ specifier|extern
 name|void
 name|mga_driver_irq_preinstall
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -614,10 +737,11 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|mga_driver_irq_postinstall
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -629,7 +753,8 @@ specifier|extern
 name|void
 name|mga_driver_irq_uninstall
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -936,7 +1061,7 @@ parameter_list|(
 name|dev_priv
 parameter_list|)
 define|\
-value|do {									\ 	if ( test_bit( 0,&dev_priv->prim.wrapped ) ) {			\ 		if ( mga_is_idle( dev_priv ) ) {			\ 			mga_do_dma_wrap_end( dev_priv );		\ 		} else if ( dev_priv->prim.space<			\ 			    dev_priv->prim.high_mark ) {		\ 			if ( MGA_DMA_DEBUG )				\ 				DRM_INFO( "%s: wrap...\n", __FUNCTION__ );	\ 			return DRM_ERR(EBUSY);			\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	if ( test_bit( 0,&dev_priv->prim.wrapped ) ) {			\ 		if ( mga_is_idle( dev_priv ) ) {			\ 			mga_do_dma_wrap_end( dev_priv );		\ 		} else if ( dev_priv->prim.space<			\ 			    dev_priv->prim.high_mark ) {		\ 			if ( MGA_DMA_DEBUG )				\ 				DRM_INFO( "wrap...\n");		\ 			return -EBUSY;			\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -947,7 +1072,7 @@ parameter_list|(
 name|dev_priv
 parameter_list|)
 define|\
-value|do {									\ 	if ( test_bit( 0,&dev_priv->prim.wrapped ) ) {			\ 		if ( mga_do_wait_for_idle( dev_priv )< 0 ) {		\ 			if ( MGA_DMA_DEBUG )				\ 				DRM_INFO( "%s: wrap...\n", __FUNCTION__ );	\ 			return DRM_ERR(EBUSY);			\ 		}							\ 		mga_do_dma_wrap_end( dev_priv );			\ 	}								\ } while (0)
+value|do {									\ 	if ( test_bit( 0,&dev_priv->prim.wrapped ) ) {			\ 		if ( mga_do_wait_for_idle( dev_priv )< 0 ) {		\ 			if ( MGA_DMA_DEBUG )				\ 				DRM_INFO( "wrap...\n");		\ 			return -EBUSY;			\ 		}							\ 		mga_do_dma_wrap_end( dev_priv );			\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -983,7 +1108,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|do {									\ 	if ( MGA_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_DMA( %d ) in %s\n",			\ 			  (n), __FUNCTION__ );				\ 		DRM_INFO( "   space=0x%x req=0x%Zx\n",			\ 			  dev_priv->prim.space, (n) * DMA_BLOCK_SIZE );	\ 	}								\ 	prim = dev_priv->prim.start;					\ 	write = dev_priv->prim.tail;					\ } while (0)
+value|do {									\ 	if ( MGA_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_DMA( %d )\n", (n) );		\ 		DRM_INFO( "   space=0x%x req=0x%Zx\n",			\ 			  dev_priv->prim.space, (n) * DMA_BLOCK_SIZE );	\ 	}								\ 	prim = dev_priv->prim.start;					\ 	write = dev_priv->prim.tail;					\ } while (0)
 end_define
 
 begin_define
@@ -992,7 +1117,7 @@ directive|define
 name|BEGIN_DMA_WRAP
 parameter_list|()
 define|\
-value|do {									\ 	if ( MGA_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_DMA() in %s\n", __FUNCTION__ );		\ 		DRM_INFO( "   space=0x%x\n", dev_priv->prim.space );	\ 	}								\ 	prim = dev_priv->prim.start;					\ 	write = dev_priv->prim.tail;					\ } while (0)
+value|do {									\ 	if ( MGA_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_DMA()\n" );				\ 		DRM_INFO( "   space=0x%x\n", dev_priv->prim.space );	\ 	}								\ 	prim = dev_priv->prim.start;					\ 	write = dev_priv->prim.tail;					\ } while (0)
 end_define
 
 begin_define
@@ -1010,7 +1135,7 @@ directive|define
 name|FLUSH_DMA
 parameter_list|()
 define|\
-value|do {									\ 	if ( 0 ) {							\ 		DRM_INFO( "%s:\n", __FUNCTION__ );				\ 		DRM_INFO( "   tail=0x%06x head=0x%06lx\n",		\ 			  dev_priv->prim.tail,				\ 			  MGA_READ( MGA_PRIMADDRESS ) -			\ 			  dev_priv->primary->offset );			\ 	}								\ 	if ( !test_bit( 0,&dev_priv->prim.wrapped ) ) {		\ 		if ( dev_priv->prim.space<				\ 		     dev_priv->prim.high_mark ) {			\ 			mga_do_dma_wrap_start( dev_priv );		\ 		} else {						\ 			mga_do_dma_flush( dev_priv );			\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	if ( 0 ) {							\ 		DRM_INFO( "\n" );					\ 		DRM_INFO( "   tail=0x%06x head=0x%06lx\n",		\ 			  dev_priv->prim.tail,				\ 			  MGA_READ( MGA_PRIMADDRESS ) -			\ 			  dev_priv->primary->offset );			\ 	}								\ 	if ( !test_bit( 0,&dev_priv->prim.wrapped ) ) {		\ 		if ( dev_priv->prim.space<				\ 		     dev_priv->prim.high_mark ) {			\ 			mga_do_dma_wrap_start( dev_priv );		\ 		} else {						\ 			mga_do_dma_flush( dev_priv );			\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_comment

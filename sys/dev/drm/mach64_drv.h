@@ -4,7 +4,7 @@ comment|/* mach64_drv.h -- Private header for mach64 driver -*- linux-c -*-  * C
 end_comment
 
 begin_comment
-comment|/*-  * Copyright 2000 Gareth Hughes  * Copyright 2002 Frank C. Earl  * Copyright 2002-2003 Leif Delgass  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE COPYRIGHT OWNER(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  *    Frank C. Earl<fearl@airmail.net>  *    Leif Delgass<ldelgass@retinalburn.net>  *    Josï¿½Fonseca<j_r_fonseca@yahoo.co.uk>  */
+comment|/*-  * Copyright 2000 Gareth Hughes  * Copyright 2002 Frank C. Earl  * Copyright 2002-2003 Leif Delgass  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE COPYRIGHT OWNER(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  *    Frank C. Earl<fearl@airmail.net>  *    Leif Delgass<ldelgass@retinalburn.net>  *    JosÃ© Fonseca<j_r_fonseca@yahoo.co.uk>  */
 end_comment
 
 begin_include
@@ -62,14 +62,14 @@ begin_define
 define|#
 directive|define
 name|DRIVER_DATE
-value|"20020904"
+value|"20060718"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRIVER_MAJOR
-value|1
+value|2
 end_define
 
 begin_define
@@ -126,7 +126,8 @@ name|list_head
 name|list
 decl_stmt|;
 comment|/* List pointers for free_list, placeholders, or pending list */
-name|drm_buf_t
+name|struct
+name|drm_buf
 modifier|*
 name|buf
 decl_stmt|;
@@ -149,11 +150,6 @@ typedef|typedef
 struct|struct
 name|drm_mach64_descriptor_ring
 block|{
-name|drm_dma_handle_t
-modifier|*
-name|dmah
-decl_stmt|;
-comment|/* Handle to pci dma memory */
 name|void
 modifier|*
 name|start
@@ -268,6 +264,10 @@ name|depth_offset
 decl_stmt|,
 name|depth_pitch
 decl_stmt|;
+name|atomic_t
+name|vbl_received
+decl_stmt|;
+comment|/**< Number of vblanks received. */
 name|u32
 name|front_offset_pitch
 decl_stmt|;
@@ -309,7 +309,8 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
-name|drm_ioctl_desc_t
+name|struct
+name|drm_ioctl_desc
 name|mach64_ioctls
 index|[]
 decl_stmt|;
@@ -331,7 +332,19 @@ specifier|extern
 name|int
 name|mach64_dma_init
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -341,7 +354,19 @@ specifier|extern
 name|int
 name|mach64_dma_idle
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -351,7 +376,19 @@ specifier|extern
 name|int
 name|mach64_dma_flush
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -361,7 +398,19 @@ specifier|extern
 name|int
 name|mach64_engine_reset
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -371,7 +420,19 @@ specifier|extern
 name|int
 name|mach64_dma_buffers
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -381,7 +442,8 @@ specifier|extern
 name|void
 name|mach64_driver_lastclose
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -393,7 +455,8 @@ specifier|extern
 name|int
 name|mach64_init_freelist
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -405,7 +468,8 @@ specifier|extern
 name|void
 name|mach64_destroy_freelist
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -414,13 +478,31 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|drm_buf_t
+name|struct
+name|drm_buf
 modifier|*
 name|mach64_freelist_get
 parameter_list|(
 name|drm_mach64_private_t
 modifier|*
 name|dev_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|mach64_freelist_put
+parameter_list|(
+name|drm_mach64_private_t
+modifier|*
+name|dev_priv
+parameter_list|,
+name|struct
+name|drm_buf
+modifier|*
+name|copy_buf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -530,6 +612,38 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|mach64_add_buf_to_ring
+parameter_list|(
+name|drm_mach64_private_t
+modifier|*
+name|dev_priv
+parameter_list|,
+name|drm_mach64_freelist_t
+modifier|*
+name|_entry
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|mach64_add_hostdata_buf_to_ring
+parameter_list|(
+name|drm_mach64_private_t
+modifier|*
+name|dev_priv
+parameter_list|,
+name|drm_mach64_freelist_t
+modifier|*
+name|_entry
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|mach64_do_dma_idle
 parameter_list|(
 name|drm_mach64_private_t
@@ -556,7 +670,8 @@ specifier|extern
 name|int
 name|mach64_do_cleanup_dma
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -572,7 +687,19 @@ specifier|extern
 name|int
 name|mach64_dma_clear
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -582,7 +709,19 @@ specifier|extern
 name|int
 name|mach64_dma_swap
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -592,7 +731,19 @@ specifier|extern
 name|int
 name|mach64_dma_vertex
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -602,7 +753,19 @@ specifier|extern
 name|int
 name|mach64_dma_blit
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -612,7 +775,35 @@ specifier|extern
 name|int
 name|mach64_get_param
 parameter_list|(
-name|DRM_IOCTL_ARGS
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|u32
+name|mach64_get_vblank_counter
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|crtc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -620,16 +811,31 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|mach64_driver_vblank_wait
+name|mach64_enable_vblank
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|,
-name|unsigned
 name|int
+name|crtc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|mach64_disable_vblank
+parameter_list|(
+name|struct
+name|drm_device
 modifier|*
-name|sequence
+name|dev
+parameter_list|,
+name|int
+name|crtc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -649,7 +855,8 @@ specifier|extern
 name|void
 name|mach64_driver_irq_preinstall
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -658,10 +865,11 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|mach64_driver_irq_postinstall
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -673,7 +881,8 @@ specifier|extern
 name|void
 name|mach64_driver_irq_uninstall
 parameter_list|(
-name|drm_device_t
+name|struct
+name|drm_device
 modifier|*
 name|dev
 parameter_list|)
@@ -2767,182 +2976,8 @@ comment|/* frame-buffer offset for gui-masters */
 end_comment
 
 begin_comment
-comment|/* ================================================================  * Misc helper macros  */
+comment|/* ================================================================  * Ring operations  *  * Since the Mach64 bus master engine requires polling, these functions end  * up being called frequently, hence being inline.  */
 end_comment
-
-begin_function
-specifier|static
-name|__inline__
-name|void
-name|mach64_set_dma_eol
-parameter_list|(
-specifier|volatile
-name|u32
-modifier|*
-name|addr
-parameter_list|)
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-name|int
-name|nr
-init|=
-literal|31
-decl_stmt|;
-comment|/* Taken from include/asm-i386/bitops.h linux header */
-asm|__asm__
-specifier|__volatile__
-asm|("lock;" "btsl %1,%0":"=m"(*addr) 			     :"Ir"(nr));
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-name|u32
-name|old
-decl_stmt|;
-name|u32
-name|mask
-init|=
-name|cpu_to_le32
-argument_list|(
-name|MACH64_DMA_EOL
-argument_list|)
-decl_stmt|;
-comment|/* Taken from the include/asm-ppc/bitops.h linux header */
-asm|__asm__
-specifier|__volatile__
-asm|("\n\ 1:	lwarx	%0,0,%3 \n\ 	or	%0,%0,%2 \n\ 	stwcx.	%0,0,%3 \n\ 	bne-	1b":"=&r"(old), "=m"(*addr) 			     :"r"(mask), "r"(addr), "m"(*addr) 			     :"cc");
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-name|u32
-name|temp
-decl_stmt|;
-name|u32
-name|mask
-init|=
-name|MACH64_DMA_EOL
-decl_stmt|;
-comment|/* Taken from the include/asm-alpha/bitops.h linux header */
-asm|__asm__
-specifier|__volatile__
-asm|("1:	ldl_l %0,%3\n" 			     "	bis %0,%2,%0\n" 			     "	stl_c %0,%1\n" 			     "	beq %0,2f\n" 			     ".subsection 2\n" 			     "2:	br 1b\n" 			     ".previous":"=&r"(temp), "=m"(*addr) 			     :"Ir"(mask), "m"(*addr));
-else|#
-directive|else
-name|u32
-name|mask
-init|=
-name|cpu_to_le32
-argument_list|(
-name|MACH64_DMA_EOL
-argument_list|)
-decl_stmt|;
-operator|*
-name|addr
-operator||=
-name|mask
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline__
-name|void
-name|mach64_clear_dma_eol
-parameter_list|(
-specifier|volatile
-name|u32
-modifier|*
-name|addr
-parameter_list|)
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-name|int
-name|nr
-init|=
-literal|31
-decl_stmt|;
-comment|/* Taken from include/asm-i386/bitops.h linux header */
-asm|__asm__
-specifier|__volatile__
-asm|("lock;" "btrl %1,%0":"=m"(*addr) 			     :"Ir"(nr));
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-name|u32
-name|old
-decl_stmt|;
-name|u32
-name|mask
-init|=
-name|cpu_to_le32
-argument_list|(
-name|MACH64_DMA_EOL
-argument_list|)
-decl_stmt|;
-comment|/* Taken from the include/asm-ppc/bitops.h linux header */
-asm|__asm__
-specifier|__volatile__
-asm|("\n\ 1:	lwarx	%0,0,%3 \n\ 	andc	%0,%0,%2 \n\ 	stwcx.	%0,0,%3 \n\ 	bne-	1b":"=&r"(old), "=m"(*addr) 			     :"r"(mask), "r"(addr), "m"(*addr) 			     :"cc");
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-name|u32
-name|temp
-decl_stmt|;
-name|u32
-name|mask
-init|=
-operator|~
-name|MACH64_DMA_EOL
-decl_stmt|;
-comment|/* Taken from the include/asm-alpha/bitops.h linux header */
-asm|__asm__
-specifier|__volatile__
-asm|("1:	ldl_l %0,%3\n" 			     "	and %0,%2,%0\n" 			     "	stl_c %0,%1\n" 			     "	beq %0,2f\n" 			     ".subsection 2\n" 			     "2:	br 1b\n" 			     ".previous":"=&r"(temp), "=m"(*addr) 			     :"Ir"(mask), "m"(*addr));
-else|#
-directive|else
-name|u32
-name|mask
-init|=
-name|cpu_to_le32
-argument_list|(
-operator|~
-name|MACH64_DMA_EOL
-argument_list|)
-decl_stmt|;
-operator|*
-name|addr
-operator|&=
-name|mask
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -2966,9 +3001,7 @@ name|ring
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s: head_addr: 0x%08x head: %d tail: %d space: %d\n"
-argument_list|,
-name|__FUNCTION__
+literal|"head_addr: 0x%08x head: %d tail: %d space: %d\n"
 argument_list|,
 name|ring
 operator|->
@@ -3074,9 +3107,7 @@ parameter_list|)
 block|{
 name|DRM_DEBUG
 argument_list|(
-literal|"%s: head_addr: 0x%08x head: %d tail: %d space: %d\n"
-argument_list|,
-name|__FUNCTION__
+literal|"head_addr: 0x%08x head: %d tail: %d space: %d\n"
 argument_list|,
 name|ring
 operator|->
@@ -3167,9 +3198,7 @@ condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"%s: idle failed, resetting engine\n"
-argument_list|,
-name|__FUNCTION__
+literal|"idle failed, resetting engine\n"
 argument_list|)
 expr_stmt|;
 name|mach64_dump_engine_info
@@ -3194,6 +3223,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  * Poll the ring head and make sure the bus master is alive.  *   * Mach64's bus master engine will stop if there are no more entries to process.  * This function polls the engine for the last processed entry and calls   * mach64_ring_resume if there is an unprocessed entry.  *   * Note also that, since we update the ring tail while the bus master engine is   * in operation, it is possible that the last tail update was too late to be   * processed, and the bus master engine stops at the previous tail position.   * Therefore it is important to call this function frequently.   */
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3211,9 +3244,7 @@ parameter_list|)
 block|{
 name|DRM_DEBUG
 argument_list|(
-literal|"%s: head_addr: 0x%08x head: %d tail: %d space: %d\n"
-argument_list|,
-name|__FUNCTION__
+literal|"head_addr: 0x%08x head: %d tail: %d space: %d\n"
 argument_list|,
 name|ring
 operator|->
@@ -3429,9 +3460,7 @@ parameter_list|)
 block|{
 name|DRM_DEBUG
 argument_list|(
-literal|"%s: head_addr: 0x%08x head: %d tail: %d space: %d\n"
-argument_list|,
-name|__FUNCTION__
+literal|"head_addr: 0x%08x head: %d tail: %d space: %d\n"
 argument_list|,
 name|dev_priv
 operator|->
@@ -3524,9 +3553,7 @@ name|ring
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__FUNCTION__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|mach64_ring_tick
@@ -3577,57 +3604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ================================================================  * DMA descriptor ring macros  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RING_LOCALS
-define|\
-value|int _ring_tail, _ring_write; unsigned int _ring_mask; volatile u32 *_ring
-end_define
-
-begin_define
-define|#
-directive|define
-name|RING_WRITE_OFS
-value|_ring_write
-end_define
-
-begin_define
-define|#
-directive|define
-name|BEGIN_RING
-parameter_list|(
-name|n
-parameter_list|)
-define|\
-value|do {											\ 	if ( MACH64_VERBOSE ) {								\ 		DRM_INFO( "BEGIN_RING( %d ) in %s\n",					\ 			   (n), __FUNCTION__ );						\ 	}										\ 	if ( dev_priv->ring.space<= (n) * sizeof(u32) ) {				\ 		int ret;								\ 		if ((ret=mach64_wait_ring( dev_priv, (n) * sizeof(u32)))< 0 ) {	\ 			DRM_ERROR( "wait_ring failed, resetting engine\n");		\ 			mach64_dump_engine_info( dev_priv );				\ 			mach64_do_engine_reset( dev_priv );				\ 			return ret;							\ 		}									\ 	}										\ 	dev_priv->ring.space -= (n) * sizeof(u32);					\ 	_ring = (u32 *) dev_priv->ring.start;						\ 	_ring_tail = _ring_write = dev_priv->ring.tail;					\ 	_ring_mask = dev_priv->ring.tail_mask;						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OUT_RING
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|do {								\ 	if ( MACH64_VERBOSE ) {					\ 		DRM_INFO( "   OUT_RING( 0x%08x ) at 0x%x\n",	\ 			   (unsigned int)(x), _ring_write );	\ 	}							\ 	_ring[_ring_write++] = cpu_to_le32( x );		\ 	_ring_write&= _ring_mask;				\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADVANCE_RING
-parameter_list|()
-define|\
-value|do {									\ 	if ( MACH64_VERBOSE ) {						\ 		DRM_INFO( "ADVANCE_RING() wr=0x%06x tail=0x%06x\n",	\ 			  _ring_write, _ring_tail );			\ 	}								\ 	DRM_MEMORYBARRIER();						\ 	mach64_clear_dma_eol(&_ring[(_ring_tail - 2)& _ring_mask] );	\ 	DRM_MEMORYBARRIER();						\ 	dev_priv->ring.tail = _ring_write;				\ 	mach64_ring_tick( dev_priv,&(dev_priv)->ring );		\ } while (0)
-end_define
-
-begin_comment
-comment|/* ================================================================  * DMA macros  */
+comment|/* ================================================================  * DMA macros  *   * Mach64's ring buffer doesn't take register writes directly. These   * have to be written indirectly in DMA buffers. These macros simplify   * the task of setting up a buffer, writing commands to it, and   * queuing the buffer in the ring.   */
 end_comment
 
 begin_define
@@ -3635,7 +3612,7 @@ define|#
 directive|define
 name|DMALOCALS
 define|\
-value|drm_mach64_freelist_t *_entry = NULL;	\ 	drm_buf_t *_buf = NULL; 		\ 	u32 *_buf_wptr; int _outcount
+value|drm_mach64_freelist_t *_entry = NULL;	\ 	struct drm_buf *_buf = NULL;		\ 	u32 *_buf_wptr; int _outcount
 end_define
 
 begin_define
@@ -3646,7 +3623,7 @@ parameter_list|(
 name|__buf
 parameter_list|)
 define|\
-value|((dev_priv->is_pci) ? 							\ 	((u32 *)(__buf)->address) : 					\ 	((u32 *)((char *)dev_priv->dev_buffers->handle + (__buf)->offset)))
+value|((dev_priv->is_pci) ?							\ 	((u32 *)(__buf)->address) :					\ 	((u32 *)((char *)dev_priv->dev_buffers->handle + (__buf)->offset)))
 end_define
 
 begin_define
@@ -3682,7 +3659,8 @@ modifier|*
 modifier|*
 name|entry
 parameter_list|,
-name|drm_buf_t
+name|struct
+name|drm_buf
 modifier|*
 name|buf
 parameter_list|)
@@ -3708,16 +3686,12 @@ condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"Empty pending list in %s\n"
-argument_list|,
-name|__FUNCTION__
+literal|"Empty pending list in \n"
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_ERR
-argument_list|(
+operator|-
 name|EINVAL
-argument_list|)
 return|;
 block|}
 endif|#
@@ -3765,10 +3739,8 @@ name|pending
 condition|)
 block|{
 return|return
-name|DRM_ERR
-argument_list|(
+operator|-
 name|EFAULT
-argument_list|)
 return|;
 block|}
 name|ptr
@@ -3816,14 +3788,14 @@ define|#
 directive|define
 name|DMAGETPTR
 parameter_list|(
-name|filp
+name|file_priv
 parameter_list|,
 name|dev_priv
 parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|do {									\ 	if ( MACH64_VERBOSE ) {						\ 		DRM_INFO( "DMAGETPTR( %d ) in %s\n",			\ 			  n, __FUNCTION__ );				\ 	}								\ 	_buf = mach64_freelist_get( dev_priv );				\ 	if (_buf == NULL) {						\ 		DRM_ERROR("%s: couldn't get buffer in DMAGETPTR\n",	\ 			   __FUNCTION__ );				\ 		return DRM_ERR(EAGAIN);					\ 	}								\ 	if (_buf->pending) {						\ 	        DRM_ERROR("%s: pending buf in DMAGETPTR\n",		\ 			   __FUNCTION__ );				\ 		return DRM_ERR(EFAULT);					\ 	}								\ 	_buf->filp = filp;						\ 	_outcount = 0;							\ 									\         _buf_wptr = GETBUFPTR( _buf );					\ } while (0)
+value|do {									\ 	if ( MACH64_VERBOSE ) {						\ 		DRM_INFO( "DMAGETPTR( %d )\n", (n) );			\ 	}								\ 	_buf = mach64_freelist_get( dev_priv );				\ 	if (_buf == NULL) {						\ 		DRM_ERROR("couldn't get buffer in DMAGETPTR\n");	\ 		return -EAGAIN;					\ 	}								\ 	if (_buf->pending) {						\ 	        DRM_ERROR("pending buf in DMAGETPTR\n");		\ 		return -EFAULT;					\ 	}								\ 	_buf->file_priv = file_priv;					\ 	_outcount = 0;							\ 									\         _buf_wptr = GETBUFPTR( _buf );					\ } while (0)
 end_define
 
 begin_define
@@ -3849,9 +3821,9 @@ parameter_list|,
 name|_discard
 parameter_list|)
 define|\
-value|do {											     \ 	struct list_head *ptr;								     \ 	RING_LOCALS;									     \ 											     \ 	if ( MACH64_VERBOSE ) {								     \ 		DRM_INFO( "DMAADVANCE() in %s\n", __FUNCTION__ );			     \ 	}										     \ 											     \ 	if (_buf->used<= 0) {								     \ 		DRM_ERROR( "DMAADVANCE() in %s: sending empty buf %d\n",		     \ 				   __FUNCTION__, _buf->idx );				     \ 		return DRM_ERR(EFAULT);							     \ 	}										     \ 	if (_buf->pending) {								     \
+value|do {								\ 		struct list_head *ptr;					\ 		int ret;						\ 									\ 		if ( MACH64_VERBOSE ) {					\ 			DRM_INFO( "DMAADVANCE() in \n" );		\ 		}							\ 									\ 		if (_buf->used<= 0) {					\ 			DRM_ERROR( "DMAADVANCE(): sending empty buf %d\n", \ 				   _buf->idx );				\ 			return -EFAULT;					\ 		}							\ 		if (_buf->pending) {					\
 comment|/* This is a resued buffer, so we need to find it in the pending list */
-value|\ 		int ret;								     \ 		if ( (ret=mach64_find_pending_buf_entry(dev_priv,&_entry, _buf)) ) {	     \ 			DRM_ERROR( "DMAADVANCE() in %s: couldn't find pending buf %d\n",     \ 				   __FUNCTION__, _buf->idx );				     \ 			return ret;							     \ 		}									     \ 		if (_entry->discard) {							     \ 			DRM_ERROR( "DMAADVANCE() in %s: sending discarded pending buf %d\n", \ 				   __FUNCTION__, _buf->idx );				     \ 			return DRM_ERR(EFAULT);						     \ 		}									     \      	} else {									     \ 		if (list_empty(&dev_priv->placeholders)) {				     \ 			DRM_ERROR( "DMAADVANCE() in %s: empty placeholder list\n",	     \ 			   	__FUNCTION__ );						     \ 			return DRM_ERR(EFAULT);						     \ 		}									     \ 		ptr = dev_priv->placeholders.next;					     \ 		list_del(ptr);								     \ 		_entry = list_entry(ptr, drm_mach64_freelist_t, list);			     \ 		_buf->pending = 1;							     \ 		_entry->buf = _buf;							     \ 		list_add_tail(ptr,&dev_priv->pending);					     \ 	}										     \ 	_entry->discard = (_discard);							     \ 	ADD_BUF_TO_RING( dev_priv );							     \ } while (0)
+value|\ 			if ((ret = mach64_find_pending_buf_entry(dev_priv,&_entry, _buf))) { \ 				DRM_ERROR( "DMAADVANCE(): couldn't find pending buf %d\n", _buf->idx );	\ 				return ret;				\ 			}						\ 			if (_entry->discard) {				\ 				DRM_ERROR( "DMAADVANCE(): sending discarded pending buf %d\n", _buf->idx ); \ 				return -EFAULT;				\ 			}						\ 		} else {						\ 			if (list_empty(&dev_priv->placeholders)) {	\ 				DRM_ERROR( "DMAADVANCE(): empty placeholder list\n"); \ 				return -EFAULT;				\ 			}						\ 			ptr = dev_priv->placeholders.next;		\ 			list_del(ptr);					\ 			_entry = list_entry(ptr, drm_mach64_freelist_t, list); \ 			_buf->pending = 1;				\ 			_entry->buf = _buf;				\ 			list_add_tail(ptr,&dev_priv->pending);		\ 		}							\ 		_entry->discard = (_discard);				\ 		if ((ret = mach64_add_buf_to_ring( dev_priv, _entry ))) \ 			return ret;					\ 	} while (0)
 end_define
 
 begin_define
@@ -3860,22 +3832,7 @@ directive|define
 name|DMADISCARDBUF
 parameter_list|()
 define|\
-value|do {											\ 	if (_entry == NULL) {								\ 		int ret;								\ 		if ( (ret=mach64_find_pending_buf_entry(dev_priv,&_entry, _buf)) ) {	\ 			DRM_ERROR( "%s: couldn't find pending buf %d\n",		\ 				   __FUNCTION__, _buf->idx );				\ 			return ret;							\ 		}									\ 	}										\ 	_entry->discard = 1;								\ } while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADD_BUF_TO_RING
-parameter_list|(
-name|dev_priv
-parameter_list|)
-define|\
-value|do {											\ 	int bytes, pages, remainder;							\ 	u32 address, page;								\ 	int i;										\ 											\ 	bytes = _buf->used;								\ 	address = GETBUFADDR( _buf );							\ 											\ 	pages = (bytes + MACH64_DMA_CHUNKSIZE - 1) / MACH64_DMA_CHUNKSIZE;		\ 											\ 	BEGIN_RING( pages * 4 );							\ 											\ 	for ( i = 0 ; i< pages-1 ; i++ ) {						\ 		page = address + i * MACH64_DMA_CHUNKSIZE;				\ 		OUT_RING( MACH64_APERTURE_OFFSET + MACH64_BM_ADDR );			\ 		OUT_RING( page );							\ 		OUT_RING( MACH64_DMA_CHUNKSIZE | MACH64_DMA_HOLD_OFFSET );		\ 		OUT_RING( 0 );								\ 	}										\ 											\
-comment|/* generate the final descriptor for any remaining commands in this buffer */
-value|\ 	page = address + i * MACH64_DMA_CHUNKSIZE;					\ 	remainder = bytes - i * MACH64_DMA_CHUNKSIZE;					\ 											\
-comment|/* Save dword offset of last descriptor for this buffer.			\ 	 * This is needed to check for completion of the buffer in freelist_get		\ 	 */
-value|\ 	_entry->ring_ofs = RING_WRITE_OFS;						\ 											\ 	OUT_RING( MACH64_APERTURE_OFFSET + MACH64_BM_ADDR );				\ 	OUT_RING( page );								\ 	OUT_RING( remainder | MACH64_DMA_HOLD_OFFSET | MACH64_DMA_EOL );		\ 	OUT_RING( 0 );									\ 											\ 	ADVANCE_RING();									\ } while(0)
+value|do {								\ 		if (_entry == NULL) {					\ 			int ret;					\ 			if ((ret = mach64_find_pending_buf_entry(dev_priv,&_entry, _buf))) { \ 				DRM_ERROR( "couldn't find pending buf %d\n", \ 					   _buf->idx );			\ 				return ret;				\ 			}						\ 		}							\ 		_entry->discard = 1;					\ 	} while(0)
 end_define
 
 begin_define
@@ -3886,22 +3843,7 @@ parameter_list|(
 name|dev_priv
 parameter_list|)
 define|\
-value|do {											\ 	struct list_head *ptr;								\ 	RING_LOCALS;									\ 											\ 	if ( MACH64_VERBOSE ) {								\ 		DRM_INFO( "DMAADVANCEHOSTDATA() in %s\n", __FUNCTION__ );		\ 	}										\ 											\ 	if (_buf->used<= 0) {								\ 		DRM_ERROR( "DMAADVANCEHOSTDATA() in %s: sending empty buf %d\n",	\ 				   __FUNCTION__, _buf->idx );				\ 		return DRM_ERR(EFAULT);							\ 	}										\ 	if (list_empty(&dev_priv->placeholders)) {					\ 		DRM_ERROR( "%s: empty placeholder list in DMAADVANCEHOSTDATA()\n",	\ 			   __FUNCTION__ );						\ 		return DRM_ERR(EFAULT);							\ 	}										\ 											\         ptr = dev_priv->placeholders.next;						\ 	list_del(ptr);									\ 	_entry = list_entry(ptr, drm_mach64_freelist_t, list);				\ 	_entry->buf = _buf;								\ 	_entry->buf->pending = 1;							\ 	list_add_tail(ptr,&dev_priv->pending);						\ 	_entry->discard = 1;								\ 	ADD_HOSTDATA_BUF_TO_RING( dev_priv );						\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADD_HOSTDATA_BUF_TO_RING
-parameter_list|(
-name|dev_priv
-parameter_list|)
-define|\
-value|do {											 \ 	int bytes, pages, remainder;							 \ 	u32 address, page;								 \ 	int i;										 \ 											 \ 	bytes = _buf->used - MACH64_HOSTDATA_BLIT_OFFSET;				 \ 	pages = (bytes + MACH64_DMA_CHUNKSIZE - 1) / MACH64_DMA_CHUNKSIZE;		 \ 	address = GETBUFADDR( _buf );							 \ 											 \ 	BEGIN_RING( 4 + pages * 4 );							 \ 											 \ 	OUT_RING( MACH64_APERTURE_OFFSET + MACH64_BM_ADDR );				 \ 	OUT_RING( address );								 \ 	OUT_RING( MACH64_HOSTDATA_BLIT_OFFSET | MACH64_DMA_HOLD_OFFSET );		 \ 	OUT_RING( 0 );									 \ 											 \ 	address += MACH64_HOSTDATA_BLIT_OFFSET;						 \ 											 \ 	for ( i = 0 ; i< pages-1 ; i++ ) {						 \ 		page = address + i * MACH64_DMA_CHUNKSIZE;				 \ 		OUT_RING( MACH64_APERTURE_OFFSET + MACH64_BM_HOSTDATA );		 \ 		OUT_RING( page );							 \ 		OUT_RING( MACH64_DMA_CHUNKSIZE | MACH64_DMA_HOLD_OFFSET );		 \ 		OUT_RING( 0 );								 \ 	}										 \ 											 \
-comment|/* generate the final descriptor for any remaining commands in this buffer */
-value|\ 	page = address + i * MACH64_DMA_CHUNKSIZE;					 \ 	remainder = bytes - i * MACH64_DMA_CHUNKSIZE;					 \ 											 \
-comment|/* Save dword offset of last descriptor for this buffer.			 \ 	 * This is needed to check for completion of the buffer in freelist_get		 \ 	 */
-value|\ 	_entry->ring_ofs = RING_WRITE_OFS;						 \ 											 \ 	OUT_RING( MACH64_APERTURE_OFFSET + MACH64_BM_HOSTDATA );			 \ 	OUT_RING( page );								 \ 	OUT_RING( remainder | MACH64_DMA_HOLD_OFFSET | MACH64_DMA_EOL );		 \ 	OUT_RING( 0 );									 \ 											 \ 	ADVANCE_RING();									 \ } while(0)
+value|do {								\ 		struct list_head *ptr;					\ 		int ret;						\ 									\ 		if ( MACH64_VERBOSE ) {					\ 			DRM_INFO( "DMAADVANCEHOSTDATA() in \n" );	\ 		}							\ 									\ 		if (_buf->used<= 0) {					\ 			DRM_ERROR( "DMAADVANCEHOSTDATA(): sending empty buf %d\n", _buf->idx );	\ 			return -EFAULT;					\ 		}							\ 		if (list_empty(&dev_priv->placeholders)) {		\ 			DRM_ERROR( "empty placeholder list in DMAADVANCEHOSTDATA()\n" ); \ 			return -EFAULT;					\ 		}							\ 									\ 		ptr = dev_priv->placeholders.next;			\ 		list_del(ptr);						\ 		_entry = list_entry(ptr, drm_mach64_freelist_t, list);	\ 		_entry->buf = _buf;					\ 		_entry->buf->pending = 1;				\ 		list_add_tail(ptr,&dev_priv->pending);			\ 		_entry->discard = 1;					\ 		if ((ret = mach64_add_hostdata_buf_to_ring( dev_priv, _entry ))) \ 			return ret;					\ 	} while (0)
 end_define
 
 begin_endif
