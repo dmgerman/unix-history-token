@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.196.18.48 2007/08/28 07:20:04 tbox Exp $ */
+comment|/* $Id: rbtdb.c,v 1.196.18.53 2008/01/31 23:46:05 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -3800,7 +3800,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Sanity check: since an additional cache entry has a reference to 	 * the original DB node (in the callback arg), there should be no 	 * acache entries when the node can be freed.  	 */
+comment|/* 	 * Sanity check: since an additional cache entry has a reference to 	 * the original DB node (in the callback arg), there should be no 	 * acache entries when the node can be freed. 	 */
 for|for
 control|(
 name|i
@@ -5937,6 +5937,9 @@ name|unsigned
 name|int
 name|refs
 decl_stmt|;
+name|isc_boolean_t
+name|writer
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_RBTDB
@@ -6035,6 +6038,12 @@ operator|=
 name|version
 operator|->
 name|serial
+expr_stmt|;
+name|writer
+operator|=
+name|version
+operator|->
+name|writer
 expr_stmt|;
 if|if
 condition|(
@@ -6423,8 +6432,6 @@ expr_stmt|;
 comment|/* 	 * Update the zone's secure status. 	 */
 if|if
 condition|(
-name|version
-operator|->
 name|writer
 operator|&&
 name|commit
@@ -12327,7 +12334,7 @@ name|ISC_R_SUCCESS
 operator|)
 condition|)
 block|{
-comment|/* 				 * We update the node's status only when we 				 * can get write access; otherwise, we leave 				 * others to this work.  Periodical cleaning 				 * will eventually take the job as the last 				 * resort. 				 * We won't downgrade the lock, since other 				 * rdatasets are probably stale, too.  				 */
+comment|/* 				 * We update the node's status only when we 				 * can get write access; otherwise, we leave 				 * others to this work.  Periodical cleaning 				 * will eventually take the job as the last 				 * resort. 				 * We won't downgrade the lock, since other 				 * rdatasets are probably stale, too. 				 */
 name|locktype
 operator|=
 name|isc_rwlocktype_write
@@ -13393,7 +13400,7 @@ operator|<=
 name|now
 condition|)
 block|{
-comment|/* 				 * This rdataset is stale.  If no one else is 				 * using the node, we can clean it up right 				 * now, otherwise we mark it as stale, and the 				 * node as dirty, so it will get cleaned up  				 * later. 				 */
+comment|/* 				 * This rdataset is stale.  If no one else is 				 * using the node, we can clean it up right 				 * now, otherwise we mark it as stale, and the 				 * node as dirty, so it will get cleaned up 				 * later. 				 */
 if|if
 condition|(
 operator|(
@@ -28184,6 +28191,10 @@ expr_stmt|;
 if|if
 condition|(
 name|acarray
+operator|!=
+name|NULL
+operator|&&
+name|acarray
 index|[
 name|count
 index|]
@@ -28192,6 +28203,7 @@ name|entry
 operator|==
 name|entry
 condition|)
+block|{
 name|acarray
 index|[
 name|count
@@ -28209,8 +28221,8 @@ name|count
 index|]
 operator|.
 name|cbarg
-operator|!=
-name|NULL
+operator|==
+name|cbarg
 argument_list|)
 expr_stmt|;
 name|isc_mem_put
@@ -28221,11 +28233,6 @@ name|common
 operator|.
 name|mctx
 argument_list|,
-name|acarray
-index|[
-name|count
-index|]
-operator|.
 name|cbarg
 argument_list|,
 sizeof|sizeof
@@ -28242,6 +28249,24 @@ operator|.
 name|cbarg
 operator|=
 name|NULL
+expr_stmt|;
+block|}
+else|else
+name|isc_mem_put
+argument_list|(
+name|rbtdb
+operator|->
+name|common
+operator|.
+name|mctx
+argument_list|,
+name|cbarg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|acache_cbarg_t
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|dns_acache_detachentry
 argument_list|(
@@ -28975,12 +29000,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|oldcbarg
-operator|!=
-name|NULL
-condition|)
 name|acache_cancelentry
 argument_list|(
 name|rbtdb
@@ -29394,12 +29413,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|cbarg
-operator|!=
-name|NULL
-condition|)
 name|acache_cancelentry
 argument_list|(
 name|rbtdb

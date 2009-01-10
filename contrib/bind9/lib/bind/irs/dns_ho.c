@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_ho.c,v 1.14.18.7 2006/12/07 03:54:24 marka Exp $"
+literal|"$Id: dns_ho.c,v 1.14.18.8 2008/09/24 05:59:50 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5253,8 +5253,6 @@ operator|->
 name|h_addr_ptrs
 index|[
 name|MAXADDRS
-operator|-
-literal|1
 index|]
 condition|)
 name|hap
@@ -5333,9 +5331,11 @@ name|res
 operator|->
 name|nsort
 operator|&&
-name|haveanswer
-operator|>
-literal|1
+name|hap
+operator|!=
+name|pvt
+operator|->
+name|h_addr_ptrs
 operator|&&
 name|qtype
 operator|==
@@ -5351,7 +5351,11 @@ name|pvt
 operator|->
 name|h_addr_ptrs
 argument_list|,
-name|haveanswer
+name|hap
+operator|-
+name|pvt
+operator|->
+name|h_addr_ptrs
 argument_list|)
 expr_stmt|;
 if|if
@@ -5767,8 +5771,6 @@ operator|->
 name|h_addr_ptrs
 index|[
 name|MAXADDRS
-operator|-
-literal|1
 index|]
 condition|)
 return|return

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dighost.c,v 1.259.18.43.10.3 2008/07/23 23:16:43 marka Exp $ */
+comment|/* $Id: dighost.c,v 1.259.18.49 2008/07/23 23:33:02 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2599,6 +2599,11 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -2684,6 +2689,11 @@ condition|(
 name|debugging
 condition|)
 block|{
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|va_start
 argument_list|(
 name|args
@@ -7497,9 +7507,8 @@ operator|->
 name|nsfound
 operator|++
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -7509,6 +7518,13 @@ operator|&
 name|ns
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|check_result
+argument_list|(
+name|result
+argument_list|,
+literal|"dns_rdata_tostruct"
 argument_list|)
 expr_stmt|;
 name|dns_name_format
@@ -9071,7 +9087,7 @@ argument_list|)
 expr_stmt|;
 name|fatal
 argument_list|(
-literal|"'%s' is not in legal name syntax (%s)"
+literal|"Origin '%s' is not in legal name syntax (%s)"
 argument_list|,
 name|lookup
 operator|->
@@ -13116,9 +13132,8 @@ argument_list|(
 literal|"got an SOA"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -13128,6 +13143,13 @@ operator|&
 name|soa
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|check_result
+argument_list|(
+name|result
+argument_list|,
+literal|"dns_rdata_tostruct"
 argument_list|)
 expr_stmt|;
 name|serial
@@ -13864,7 +13886,7 @@ operator|&
 name|any
 argument_list|)
 expr_stmt|;
-comment|/* 		* We don't expect a match when the packet is  		* sent to 0.0.0.0, :: or to a multicast addresses. 		* XXXMPA broadcast needs to be handled here as well. 		*/
+comment|/* 		* We don't expect a match when the packet is 		* sent to 0.0.0.0, :: or to a multicast addresses. 		* XXXMPA broadcast needs to be handled here as well. 		*/
 if|if
 condition|(
 operator|(
@@ -15259,7 +15281,7 @@ operator|->
 name|trace_root
 condition|)
 block|{
-comment|/* 				 * This is the initial NS query.  				 */
+comment|/* 				 * This is the initial NS query. 				 */
 name|int
 name|n
 decl_stmt|;
@@ -19461,9 +19483,8 @@ operator|&
 name|rdata
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -19473,6 +19494,13 @@ operator|&
 name|ns
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|check_result
+argument_list|(
+name|result
+argument_list|,
+literal|"dns_rdata_tostruct"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -20478,7 +20506,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * take a DNSKEY RRset and the RRSIG RRset corresponding in parameter  * return ISC_R_SUCCESS if the DNSKEY RRset contains a trusted_key  * 			and the RRset is valid  * return ISC_R_NOTFOUND if not contains trusted key  			or if the RRset isn't valid  * return ISC_R_FAILURE if problem  *  */
+comment|/*  *  * take a DNSKEY RRset and the RRSIG RRset corresponding in parameter  * return ISC_R_SUCCESS if the DNSKEY RRset contains a trusted_key  * 			and the RRset is valid  * return ISC_R_NOTFOUND if not contains trusted key 			or if the RRset isn't valid  * return ISC_R_FAILURE if problem  *  */
 end_comment
 
 begin_function
@@ -21528,7 +21556,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * take a pointer on a rdataset in parameter and try to resolv it.  * the searched rrset is a rrset on 'name' with type 'type'  * (and if the type is a rrsig the signature cover 'covers').  * the lookedup is to known if you have already done the query on the net.  * ISC_R_SUCCESS: if we found the rrset  * ISC_R_NOTFOUND: we do not found the rrset in cache  * and we do a query on the net  * ISC_R_FAILURE: rrset not found   */
+comment|/*  *  * take a pointer on a rdataset in parameter and try to resolv it.  * the searched rrset is a rrset on 'name' with type 'type'  * (and if the type is a rrsig the signature cover 'covers').  * the lookedup is to known if you have already done the query on the net.  * ISC_R_SUCCESS: if we found the rrset  * ISC_R_NOTFOUND: we do not found the rrset in cache  * and we do a query on the net  * ISC_R_FAILURE: rrset not found  */
 end_comment
 
 begin_function

@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: assertions.c,v 1.2.18.1 2005/04/27 05:01:05 sra Exp $"
+literal|"$Id: assertions.c,v 1.2.18.2 2008/10/15 03:57:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,6 +209,10 @@ end_function
 
 begin_comment
 comment|/*  * Private.  */
+end_comment
+
+begin_comment
+comment|/* coverity[+kill] */
 end_comment
 
 begin_function

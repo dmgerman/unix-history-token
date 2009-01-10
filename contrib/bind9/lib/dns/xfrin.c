@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: xfrin.c,v 1.135.18.16.10.3 2008/07/23 23:16:43 marka Exp $ */
+comment|/* $Id: xfrin.c,v 1.135.18.23 2008/09/25 04:15:52 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1824,6 +1824,26 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
+if|if
+condition|(
+name|rdata
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_none
+operator|||
+name|dns_rdatatype_ismeta
+argument_list|(
+name|rdata
+operator|->
+name|type
+argument_list|)
+condition|)
+name|FAIL
+argument_list|(
+name|DNS_R_FORMERR
+argument_list|)
+expr_stmt|;
 name|redo
 label|:
 switch|switch
@@ -5084,6 +5104,22 @@ name|xfr
 operator|->
 name|id
 expr_stmt|;
+if|if
+condition|(
+name|xfr
+operator|->
+name|tsigctx
+operator|!=
+name|NULL
+condition|)
+name|dst_context_destroy
+argument_list|(
+operator|&
+name|xfr
+operator|->
+name|tsigctx
+argument_list|)
+expr_stmt|;
 name|CHECK
 argument_list|(
 name|render
@@ -5789,6 +5825,12 @@ name|xfr
 operator|->
 name|tsigctx
 expr_stmt|;
+name|xfr
+operator|->
+name|tsigctx
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|xfr
@@ -6293,7 +6335,16 @@ operator|->
 name|nmsg
 operator|++
 expr_stmt|;
-comment|/* 	 * Copy the context back. 	 */
+comment|/* 	 * Take the context back. 	 */
+name|INSIST
+argument_list|(
+name|xfr
+operator|->
+name|tsigctx
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 name|xfr
 operator|->
 name|tsigctx
@@ -6301,6 +6352,12 @@ operator|=
 name|msg
 operator|->
 name|tsigctx
+expr_stmt|;
+name|msg
+operator|->
+name|tsigctx
+operator|=
+name|NULL
 expr_stmt|;
 name|dns_message_destroy
 argument_list|(
@@ -6737,6 +6794,22 @@ operator|&
 name|xfr
 operator|->
 name|tcpmsg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xfr
+operator|->
+name|tsigctx
+operator|!=
+name|NULL
+condition|)
+name|dst_context_destroy
+argument_list|(
+operator|&
+name|xfr
+operator|->
+name|tsigctx
 argument_list|)
 expr_stmt|;
 if|if
