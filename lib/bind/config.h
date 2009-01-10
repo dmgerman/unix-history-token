@@ -471,6 +471,22 @@ comment|/* #undef BROKEN_TCP_BIND_BEFORE_CONNECT */
 end_comment
 
 begin_comment
+comment|/* Solaris hack to get select_large_fdset. */
+end_comment
+
+begin_comment
+comment|/* #undef FD_SETSIZE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `capset' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CAPSET */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -626,6 +642,30 @@ directive|define
 name|HAVE_STRING_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/capability.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_CAPABILITY_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/devpoll.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_DEVPOLL_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/dyntune.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_DYNTUNE_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/param.h> header file. */
@@ -888,11 +928,9 @@ directive|ifndef
 name|__cplusplus
 end_ifndef
 
-begin_define
-define|#
-directive|define
-name|inline
-end_define
+begin_comment
+comment|/* #undef inline */
+end_comment
 
 begin_endif
 endif|#
