@@ -249,7 +249,7 @@ if|if
 condition|(
 name|mac_labeled
 operator|&
-name|MPC_OBJECT_IPQ
+name|MPC_OBJECT_IP6Q
 condition|)
 block|{
 name|q6

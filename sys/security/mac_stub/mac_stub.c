@@ -6883,7 +6883,7 @@ directive|define
 name|STUB_OBJECTS
 value|(MPC_OBJECT_CRED |				\
 comment|/* XXX: MPC_OBJECT_PROC | */
-value|\ 			 MPC_OBJECT_VNODE |				\ 			 MPC_OBJECT_INPCB |				\ 			 MPC_OBJECT_SOCKET |				\ 			 MPC_OBJECT_DEVFS |				\ 			 MPC_OBJECT_MBUF |				\ 			 MPC_OBJECT_IPQ |				\ 			 MPC_OBJECT_IFNET |				\ 			 MPC_OBJECT_BPFDESC |				\ 			 MPC_OBJECT_PIPE |				\ 			 MPC_OBJECT_MOUNT |				\ 			 MPC_OBJECT_POSIXSEM |				\ 			 MPC_OBJECT_POSIXSHM |				\ 			 MPC_OBJECT_SYSVMSG |				\ 			 MPC_OBJECT_SYSVMSQ |				\ 			 MPC_OBJECT_SYSVSEM |				\ 			 MPC_OBJECT_SYSVSHM |				\ 			 MPC_OBJECT_SYNCACHE)
+value|\ 			 MPC_OBJECT_VNODE |				\ 			 MPC_OBJECT_INPCB |				\ 			 MPC_OBJECT_SOCKET |				\ 			 MPC_OBJECT_DEVFS |				\ 			 MPC_OBJECT_MBUF |				\ 			 MPC_OBJECT_IPQ |				\ 			 MPC_OBJECT_IP6Q |				\ 			 MPC_OBJECT_IFNET |				\ 			 MPC_OBJECT_BPFDESC |				\ 			 MPC_OBJECT_PIPE |				\ 			 MPC_OBJECT_MOUNT |				\ 			 MPC_OBJECT_POSIXSEM |				\ 			 MPC_OBJECT_POSIXSHM |				\ 			 MPC_OBJECT_SYSVMSG |				\ 			 MPC_OBJECT_SYSVMSQ |				\ 			 MPC_OBJECT_SYSVSEM |				\ 			 MPC_OBJECT_SYSVSHM |				\ 			 MPC_OBJECT_SYNCACHE)
 end_define
 
 begin_expr_stmt

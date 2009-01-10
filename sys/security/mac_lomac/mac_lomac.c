@@ -13376,7 +13376,7 @@ directive|define
 name|LOMAC_OBJECTS
 value|(MPC_OBJECT_CRED |				\
 comment|/* MPC_OBJECT_PROC | */
-value|\ 			 MPC_OBJECT_VNODE |				\ 			 MPC_OBJECT_INPCB |				\ 			 MPC_OBJECT_SOCKET |				\ 			 MPC_OBJECT_DEVFS |				\ 			 MPC_OBJECT_MBUF |				\ 			 MPC_OBJECT_IPQ |				\ 			 MPC_OBJECT_IFNET |				\ 			 MPC_OBJECT_BPFDESC |				\ 			 MPC_OBJECT_PIPE |				\ 			 MPC_OBJECT_MOUNT |				\
+value|\ 			 MPC_OBJECT_VNODE |				\ 			 MPC_OBJECT_INPCB |				\ 			 MPC_OBJECT_SOCKET |				\ 			 MPC_OBJECT_DEVFS |				\ 			 MPC_OBJECT_MBUF |				\ 			 MPC_OBJECT_IPQ |				\ 			 MPC_OBJECT_IP6Q |				\ 			 MPC_OBJECT_IFNET |				\ 			 MPC_OBJECT_BPFDESC |				\ 			 MPC_OBJECT_PIPE |				\ 			 MPC_OBJECT_MOUNT |				\
 comment|/* MPC_OBJECT_POSIXSEM | */
 value|\
 comment|/* MPC_OBJECT_POSIXSHM | */
