@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: mem.h,v 1.54.12.7 2007/08/28 07:19:15 tbox Exp $ */
+comment|/* $Id: mem.h,v 1.54.12.9 2008/04/28 23:45:38 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -555,7 +555,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach to / detach from a memory context.  *  * This is intended for applications that use multiple memory contexts  * in such a way that it is not obvious when the last allocations from  * a given context has been freed and destroying the context is safe.  *   * Most applications do not need to call these functions as they can  * simply create a single memory context at the beginning of main()  * and destroy it at the end of main(), thereby guaranteeing that it  * is not destroyed while there are outstanding allocations.  */
+comment|/*  * Attach to / detach from a memory context.  *  * This is intended for applications that use multiple memory contexts  * in such a way that it is not obvious when the last allocations from  * a given context has been freed and destroying the context is safe.  *  * Most applications do not need to call these functions as they can  * simply create a single memory context at the beginning of main()  * and destroy it at the end of main(), thereby guaranteeing that it  * is not destroyed while there are outstanding allocations.  */
 end_comment
 
 begin_function_decl
@@ -700,7 +700,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set high and low water marks for this memory context.  When the memory  * usage of 'mctx' exceeds 'hiwater', '(water)(water_arg, ISC_MEM_HIWATER)'  * will be called.  When the usage drops below 'lowater', 'water' will  * again be called, this time with ISC_MEM_LOWATER.  *  * If 'water' is NULL then 'water_arg', 'hi_water' and 'lo_water' are  * ignored and the state is reset.  *  * Requires:  *  *	'water' is not NULL.  *	hi_water>= lo_water  */
+comment|/*  * Set high and low water marks for this memory context.  * When the memory usage of 'mctx' exceeds 'hiwater',  * '(water)(water_arg, #ISC_MEM_HIWATER)' will be called.  'water' needs to  * call isc_mem_waterack() with #ISC_MEM_HIWATER to acknowlege the state  * change.  'water' may be called multiple times.  *  * When the usage drops below 'lowater', 'water' will again be called, this  * time with #ISC_MEM_LOWATER.  'water' need to calls isc_mem_waterack() with  * #ISC_MEM_LOWATER to acknowlege the change.  *  *	static void  *	water(void *arg, int mark) {  *		struct foo *foo = arg;  *  *		LOCK(&foo->marklock);  *		if (foo->mark != mark) {  *			foo->mark = mark;  *			....  *			isc_mem_waterack(foo->mctx, mark);  *		}  *		UNLOCK(&foo->marklock);  *	}  *  * If 'water' is NULL then 'water_arg', 'hi_water' and 'lo_water' are  * ignored and the state is reset.  *  * Requires:  *  *	'water' is not NULL.  *	hi_water>= lo_water  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc_mem_waterack
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|mark
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Called to acknowledge changes in signalled by calls to 'water'.  */
 end_comment
 
 begin_comment

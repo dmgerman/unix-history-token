@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: xfrin.c,v 1.124.2.4.2.21.4.5 2008/07/28 23:47:49 tbox Exp $ */
+comment|/* $Id: xfrin.c,v 1.124.2.4.2.28 2008/09/25 04:16:12 marka Exp $ */
 end_comment
 
 begin_include
@@ -1824,6 +1824,26 @@ block|{
 name|isc_result_t
 name|result
 decl_stmt|;
+if|if
+condition|(
+name|rdata
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_none
+operator|||
+name|dns_rdatatype_ismeta
+argument_list|(
+name|rdata
+operator|->
+name|type
+argument_list|)
+condition|)
+name|FAIL
+argument_list|(
+name|DNS_R_FORMERR
+argument_list|)
+expr_stmt|;
 name|redo
 label|:
 switch|switch

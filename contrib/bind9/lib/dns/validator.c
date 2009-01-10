@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.91.2.5.8.40 2008/02/19 17:10:55 each Exp $ */
+comment|/* $Id: validator.c,v 1.91.2.5.8.41 2008/08/21 04:59:16 marka Exp $ */
 end_comment
 
 begin_include
@@ -4597,6 +4597,10 @@ name|DNS_R_NCACHENXRRSET
 operator|&&
 name|result
 operator|!=
+name|DNS_R_EMPTYNAME
+operator|&&
+name|result
+operator|!=
 name|DNS_R_NXRRSET
 operator|&&
 name|result
@@ -5700,6 +5704,10 @@ operator|||
 name|result
 operator|==
 name|DNS_R_NCACHENXRRSET
+operator|||
+name|result
+operator|==
+name|DNS_R_EMPTYNAME
 operator|||
 name|result
 operator|==
@@ -8250,6 +8258,10 @@ operator|||
 name|result
 operator|==
 name|DNS_R_NCACHENXRRSET
+operator|||
+name|result
+operator|==
+name|DNS_R_EMPTYNAME
 operator|||
 name|result
 operator|==
@@ -11351,6 +11363,10 @@ operator|&&
 name|result
 operator|!=
 name|DNS_R_NXDOMAIN
+operator|&&
+name|result
+operator|!=
+name|DNS_R_EMPTYNAME
 operator|&&
 name|result
 operator|!=

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dighost.c,v 1.221.2.19.2.46.4.2 2008/07/23 23:16:25 marka Exp $ */
+comment|/* $Id: dighost.c,v 1.221.2.19.2.48 2008/07/23 23:36:21 marka Exp $ */
 end_comment
 
 begin_comment

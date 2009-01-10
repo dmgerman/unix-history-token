@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: view.c,v 1.103.2.5.2.17 2007/08/28 07:19:14 tbox Exp $ */
+comment|/* $Id: view.c,v 1.103.2.5.2.19 2008/06/17 23:45:32 tbox Exp $ */
 end_comment
 
 begin_include
@@ -4268,47 +4268,6 @@ expr_stmt|;
 block|}
 name|cleanup
 label|:
-if|if
-condition|(
-name|result
-operator|==
-name|DNS_R_NXDOMAIN
-operator|||
-name|result
-operator|==
-name|DNS_R_NXRRSET
-condition|)
-block|{
-comment|/* 		 * We don't care about any DNSSEC proof data in these cases. 		 */
-if|if
-condition|(
-name|dns_rdataset_isassociated
-argument_list|(
-name|rdataset
-argument_list|)
-condition|)
-name|dns_rdataset_disassociate
-argument_list|(
-name|rdataset
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sigrdataset
-operator|!=
-name|NULL
-operator|&&
-name|dns_rdataset_isassociated
-argument_list|(
-name|sigrdataset
-argument_list|)
-condition|)
-name|dns_rdataset_disassociate
-argument_list|(
-name|sigrdataset
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|dns_rdataset_isassociated

@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strtoul.c,v 1.1.2.1 2003/06/27 03:51:35 marka Exp $"
+literal|"$Id: strtoul.c,v 1.1.2.1.4.1 2008/04/28 04:25:42 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,7 @@ name|c
 operator|=
 operator|*
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -315,6 +316,7 @@ name|c
 operator|=
 operator|*
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -376,6 +378,7 @@ name|acc
 operator|>
 name|cutoff
 operator|||
+operator|(
 name|acc
 operator|==
 name|cutoff
@@ -383,6 +386,7 @@ operator|&&
 name|c
 operator|>
 name|cutlim
+operator|)
 condition|)
 name|any
 operator|=
@@ -437,13 +441,8 @@ name|endptr
 operator|!=
 literal|0
 condition|)
-operator|*
-name|endptr
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
+name|DE_CONST
+argument_list|(
 operator|(
 name|any
 condition|?
@@ -453,6 +452,10 @@ literal|1
 else|:
 name|nptr
 operator|)
+argument_list|,
+operator|*
+name|endptr
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

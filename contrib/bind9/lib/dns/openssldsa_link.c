@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004, 2006, 2007  Internet Systems Consorti
 end_comment
 
 begin_comment
-comment|/* $Id: openssldsa_link.c,v 1.1.4.7 2007/08/28 07:19:13 tbox Exp $ */
+comment|/* $Id: openssldsa_link.c,v 1.1.4.8 2008/12/24 00:21:45 marka Exp $ */
 end_comment
 
 begin_ifdef
@@ -645,8 +645,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-literal|0
+operator|!=
+literal|1
 condition|)
 return|return
 operator|(

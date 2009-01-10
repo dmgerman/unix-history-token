@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2006-2008  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: interfacemgr.c,v 1.59.2.5.8.21.4.3 2008/07/23 23:16:25 marka Exp $ */
+comment|/* $Id: interfacemgr.c,v 1.59.2.5.8.24 2008/07/23 23:36:22 marka Exp $ */
 end_comment
 
 begin_include

@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp.c,v 1.3.2.1.10.4 2006/03/10 00:17:21 marka Exp $"
+literal|"$Id: irp.c,v 1.3.2.1.10.5 2008/04/28 04:25:42 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,44 @@ include|#
 directive|include
 file|"port_after.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VSPRINTF_CHAR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VSPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|strlen(vsprintf
+comment|/**/
+value|x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VSPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|((size_t)vsprintf x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Forward. */
@@ -2036,13 +2074,15 @@ argument_list|)
 expr_stmt|;
 name|todo
 operator|=
-name|vsprintf
+name|VSPRINTF
 argument_list|(
+operator|(
 name|buffer
-argument_list|,
+operator|,
 name|fmt
-argument_list|,
+operator|,
 name|ap
+operator|)
 argument_list|)
 expr_stmt|;
 name|va_end

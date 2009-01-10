@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2008  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: app.c,v 1.43.2.3.8.8.4.1 2008/07/29 04:43:57 each Exp $ */
+comment|/* $Id: app.c,v 1.43.2.3.8.11 2008/10/15 03:41:17 marka Exp $ */
 end_comment
 
 begin_include
@@ -64,6 +64,23 @@ include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EPOLL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/epoll.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1113,7 +1130,9 @@ begin_function
 specifier|static
 name|isc_result_t
 name|evloop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|isc_result_t
 name|result
@@ -1139,15 +1158,9 @@ decl_stmt|,
 modifier|*
 name|tvp
 decl_stmt|;
-name|fd_set
+name|isc_socketwait_t
 modifier|*
-name|readfds
-decl_stmt|,
-modifier|*
-name|writefds
-decl_stmt|;
-name|int
-name|maxfd
+name|swait
 decl_stmt|;
 name|isc_boolean_t
 name|readytasks
@@ -1264,31 +1277,18 @@ name|tv
 expr_stmt|;
 block|}
 block|}
-name|isc__socketmgr_getfdsets
-argument_list|(
-operator|&
-name|readfds
-argument_list|,
-operator|&
-name|writefds
-argument_list|,
-operator|&
-name|maxfd
-argument_list|)
+name|swait
+operator|=
+name|NULL
 expr_stmt|;
 name|n
 operator|=
-name|select
+name|isc__socketmgr_waitevents
 argument_list|(
-name|maxfd
-argument_list|,
-name|readfds
-argument_list|,
-name|writefds
-argument_list|,
-name|NULL
-argument_list|,
 name|tvp
+argument_list|,
+operator|&
+name|swait
 argument_list|)
 expr_stmt|;
 if|if
@@ -1316,11 +1316,7 @@ name|void
 operator|)
 name|isc__socketmgr_dispatch
 argument_list|(
-name|readfds
-argument_list|,
-name|writefds
-argument_list|,
-name|maxfd
+name|swait
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1554,9 +1550,6 @@ index|[
 name|ISC_STRERRORSIZE
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* ISC_PLATFORM_USETHREADS */
 ifdef|#
 directive|ifdef
 name|HAVE_SIGWAIT
@@ -1565,6 +1558,9 @@ name|sig
 decl_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* ISC_PLATFORM_USETHREADS */
 ifdef|#
 directive|ifdef
 name|HAVE_LINUXTHREADS

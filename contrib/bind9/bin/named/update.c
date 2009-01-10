@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: update.c,v 1.88.2.5.2.35 2008/01/17 23:45:27 tbox Exp $ */
+comment|/* $Id: update.c,v 1.88.2.5.2.36 2008/04/28 03:28:10 marka Exp $ */
 end_comment
 
 begin_include
@@ -6194,6 +6194,14 @@ specifier|static
 name|isc_result_t
 name|add_sigs
 parameter_list|(
+name|ns_client_t
+modifier|*
+name|client
+parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
 name|dns_db_t
 modifier|*
 name|db
@@ -6264,6 +6272,11 @@ comment|/* XXX */
 name|unsigned
 name|int
 name|i
+decl_stmt|;
+name|isc_boolean_t
+name|added_sig
+init|=
+name|ISC_FALSE
 decl_stmt|;
 name|dns_rdataset_init
 argument_list|(
@@ -6421,6 +6434,33 @@ argument_list|(
 operator|&
 name|sig_rdata
 argument_list|)
+expr_stmt|;
+name|added_sig
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|added_sig
+condition|)
+block|{
+name|update_log
+argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"found no private keys, "
+literal|"unable to generate any signatures"
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|ISC_R_NOTFOUND
 expr_stmt|;
 block|}
 name|failure
@@ -6923,6 +6963,10 @@ name|CHECK
 argument_list|(
 name|add_sigs
 argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
 name|db
 argument_list|,
 name|newver
@@ -7734,6 +7778,10 @@ name|CHECK
 argument_list|(
 name|add_sigs
 argument_list|(
+name|client
+argument_list|,
+name|zone
+argument_list|,
 name|db
 argument_list|,
 name|newver

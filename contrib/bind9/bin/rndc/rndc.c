@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rndc.c,v 1.77.2.5.2.19 2006/08/04 03:03:08 marka Exp $ */
+comment|/* $Id: rndc.c,v 1.77.2.5.2.21 2008/10/15 23:45:34 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -175,6 +175,7 @@ value|10
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|progname
@@ -398,7 +399,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Usage: %s [-c config] [-s server] [-p port]\n\         [-k key-file ] [-y key] [-V] command\n\ \n\ command is one of the following:\n\ \n\   reload	Reload configuration file and zones.\n\   reload zone [class [view]]\n\ 		Reload a single zone.\n\   refresh zone [class [view]]\n\ 		Schedule immediate maintenance for a zone.\n\   retransfer zone [class [view]]\n\ 		Retransfer a single zone without checking serial number.\n\   freeze zone [class [view]]\n\   		Suspend updates to a dynamic zone.\n\   thaw zone [class [view]]\n\   		Enable updates to a frozen dynamic zone and reload it.\n\   reconfig	Reload configuration file and new zones only.\n\   stats		Write server statistics to the statistics file.\n\   querylog	Toggle query logging.\n\   dumpdb [-all|-cache|-zones] [view ...]\n\ 		Dump cache(s) to the dump file (named_dump.db).\n\   stop		Save pending updates to master files and stop the server.\n\   stop -p	Save pending updates to master files and stop the server\n\ 		reporting process id.\n\   halt		Stop the server without saving pending updates.\n\   halt -p	Stop the server without saving pending updates reporting\n\ 		process id.\n\   trace		Increment debugging level by one.\n\   trace level	Change the debugging level.\n\   notrace	Set debugging level to 0.\n\   flush 	Flushes all of the server's caches.\n\   flush [view]	Flushes the server's cache for a view.\n\   flushname name [view]\n\ 		Flush the given name from the server's cache(s)\n\   status	Display status of the server.\n\   recursing	Dump the queries that are currently recursing (named.recursing)\n\   *restart	Restart the server.\n\ \n\ * == not yet implemented\n\ Version: %s\n"
+literal|"\ Usage: %s [-c config] [-s server] [-p port]\n\ 	[-k key-file ] [-y key] [-V] command\n\ \n\ command is one of the following:\n\ \n\   reload	Reload configuration file and zones.\n\   reload zone [class [view]]\n\ 		Reload a single zone.\n\   refresh zone [class [view]]\n\ 		Schedule immediate maintenance for a zone.\n\   retransfer zone [class [view]]\n\ 		Retransfer a single zone without checking serial number.\n\   freeze zone [class [view]]\n\ 		Suspend updates to a dynamic zone.\n\   thaw zone [class [view]]\n\ 		Enable updates to a frozen dynamic zone and reload it.\n\   reconfig	Reload configuration file and new zones only.\n\   stats		Write server statistics to the statistics file.\n\   querylog	Toggle query logging.\n\   dumpdb [-all|-cache|-zones] [view ...]\n\ 		Dump cache(s) to the dump file (named_dump.db).\n\   stop		Save pending updates to master files and stop the server.\n\   stop -p	Save pending updates to master files and stop the server\n\ 		reporting process id.\n\   halt		Stop the server without saving pending updates.\n\   halt -p	Stop the server without saving pending updates reporting\n\ 		process id.\n\   trace		Increment debugging level by one.\n\   trace level	Change the debugging level.\n\   notrace	Set debugging level to 0.\n\   flush 	Flushes all of the server's caches.\n\   flush [view]	Flushes the server's cache for a view.\n\   flushname name [view]\n\ 		Flush the given name from the server's cache(s)\n\   status	Display status of the server.\n\   recursing	Dump the queries that are currently recursing (named.recursing)\n\   *restart	Restart the server.\n\ \n\ * == not yet implemented\n\ Version: %s\n"
 argument_list|,
 name|progname
 argument_list|,

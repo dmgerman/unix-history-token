@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 1.7.2.11.4.3 2005/08/25 04:44:13 marka Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 1.7.2.11.4.4 2008/04/28 05:46:51 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -1036,6 +1036,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RES_NSID
+value|0x00040000
+end_define
+
+begin_comment
+comment|/*%< request name server ID */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RES_NOTLDQUERY
 value|0x00100000
 end_define
@@ -2055,6 +2066,13 @@ define|#
 directive|define
 name|res_nopt
 value|__res_nopt
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_nopt_rdata
+value|__res_nopt_rdata
 end_define
 
 begin_define
@@ -3162,6 +3180,35 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_nopt_rdata
+name|__P
+argument_list|(
+operator|(
+name|res_state
+operator|,
+name|int
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|,
+name|u_char
+operator|*
+operator|,
+name|u_short
+operator|,
+name|u_short
+operator|,
+name|u_char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

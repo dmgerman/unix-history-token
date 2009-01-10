@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkquery.c,v 1.1.2.2.4.2 2004/03/16 12:34:18 marka Exp $"
+literal|"$Id: res_mkquery.c,v 1.1.2.2.4.3 2008/04/28 05:46:51 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,24 +725,6 @@ begin_comment
 comment|/* attach OPT pseudo-RR, as documented in RFC2671 (EDNS0). */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|T_OPT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|T_OPT
-value|41
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|res_nopt
@@ -852,15 +834,15 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
-comment|/* "." */
+comment|/*%< "." */
 name|ns_put16
 argument_list|(
-name|T_OPT
+name|ns_t_opt
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* TYPE */
+comment|/*%< TYPE */
 name|cp
 operator|+=
 name|INT16SZ
@@ -874,7 +856,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* CLASS = UDP payload size */
+comment|/*%< CLASS = UDP payload size */
 name|cp
 operator|+=
 name|INT16SZ
@@ -885,14 +867,14 @@ operator|++
 operator|=
 name|NOERROR
 expr_stmt|;
-comment|/* extended RCODE */
+comment|/*%< extended RCODE */
 operator|*
 name|cp
 operator|++
 operator|=
 literal|0
 expr_stmt|;
-comment|/* EDNS version */
+comment|/*%< EDNS version */
 if|if
 condition|(
 name|statp
@@ -943,7 +925,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* RDLEN */
+comment|/*%< RDLEN */
 name|cp
 operator|+=
 name|INT16SZ
@@ -974,10 +956,200 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Construct variable data (RDATA) block for OPT psuedo-RR, append it  * to the buffer, then update the RDLEN field (previously set to zero by  * res_nopt()) with the new RDATA length.  */
+end_comment
+
+begin_function
+name|int
+name|res_nopt_rdata
+parameter_list|(
+name|res_state
+name|statp
+parameter_list|,
+name|int
+name|n0
+parameter_list|,
+comment|/*%< current offset in buffer */
+name|u_char
+modifier|*
+name|buf
+parameter_list|,
+comment|/*%< buffer to put query */
+name|int
+name|buflen
+parameter_list|,
+comment|/*%< size of buffer */
+name|u_char
+modifier|*
+name|rdata
+parameter_list|,
+comment|/*%< ptr to start of opt rdata */
+name|u_short
+name|code
+parameter_list|,
+comment|/*%< OPTION-CODE */
+name|u_short
+name|len
+parameter_list|,
+comment|/*%< OPTION-LENGTH */
+name|u_char
+modifier|*
+name|data
+parameter_list|)
+comment|/*%< OPTION_DATA */
+block|{
+specifier|register
+name|u_char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|ep
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+operator|(
+name|statp
+operator|->
+name|options
+operator|&
+name|RES_DEBUG
+operator|)
+operator|!=
+literal|0U
+condition|)
+name|printf
+argument_list|(
+literal|";; res_nopt_rdata()\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|cp
+operator|=
+name|buf
+operator|+
+name|n0
+expr_stmt|;
+name|ep
+operator|=
+name|buf
+operator|+
+name|buflen
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ep
+operator|-
+name|cp
+operator|)
+operator|<
+operator|(
+literal|4
+operator|+
+name|len
+operator|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|rdata
+operator|<
+operator|(
+name|buf
+operator|+
+literal|2
+operator|)
+operator|||
+name|rdata
+operator|>=
+name|ep
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|ns_put16
+argument_list|(
+name|code
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|INT16SZ
+expr_stmt|;
+name|ns_put16
+argument_list|(
+name|len
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|INT16SZ
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|cp
+argument_list|,
+name|data
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|len
+expr_stmt|;
+name|len
+operator|=
+name|cp
+operator|-
+name|rdata
+expr_stmt|;
+name|ns_put16
+argument_list|(
+name|len
+argument_list|,
+name|rdata
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* Update RDLEN field */
+return|return
+operator|(
+name|cp
+operator|-
+name|buf
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*! \file */
+end_comment
 
 end_unit
 

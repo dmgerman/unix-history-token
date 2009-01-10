@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2006, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: lwresd.c,v 1.37.2.2.2.8.14.3 2008/07/23 23:16:26 marka Exp $ */
+comment|/* $Id: lwresd.c,v 1.37.2.2.2.11 2008/07/23 23:36:22 marka Exp $ */
 end_comment
 
 begin_comment

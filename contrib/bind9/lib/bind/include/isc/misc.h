@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*  * $Id: misc.h,v 1.2.2.1.4.1 2004/03/09 08:33:31 marka Exp $  */
+comment|/*  * $Id: misc.h,v 1.2.2.1.4.2 2008/04/28 04:25:42 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_define

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bitncmp.c,v 1.1.206.1 2004/03/09 08:33:39 marka Exp $"
+literal|"$Id: bitncmp.c,v 1.1.206.2 2008/05/12 00:20:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,14 @@ expr_stmt|;
 if|if
 condition|(
 name|x
+operator|||
+operator|(
+name|n
+operator|%
+literal|8
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

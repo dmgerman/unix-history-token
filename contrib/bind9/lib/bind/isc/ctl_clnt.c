@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_clnt.c,v 1.4.2.1.4.4 2007/05/18 06:25:17 marka Exp $"
+literal|"$Id: ctl_clnt.c,v 1.4.2.1.4.5 2008/04/28 04:25:42 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,23 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MEMORY_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

@@ -6,7 +6,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/support.c,v 1.2.2.1.10.2 2005/10/11 00:48:14 marka Exp $"
+literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/Attic/support.c,v 1.2.2.1.10.2 2005/10/11 00:48:14 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

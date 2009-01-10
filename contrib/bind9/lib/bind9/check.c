@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: check.c,v 1.37.6.39 2007/12/14 01:28:26 marka Exp $ */
+comment|/* $Id: check.c,v 1.37.6.41 2008/04/28 23:45:35 tbox Exp $ */
 end_comment
 
 begin_include
@@ -1085,6 +1085,11 @@ name|cfg_obj_t
 modifier|*
 name|options
 parameter_list|,
+specifier|const
+name|cfg_obj_t
+modifier|*
+name|global
+parameter_list|,
 name|isc_log_t
 modifier|*
 name|logctx
@@ -1130,6 +1135,58 @@ operator|&
 name|forwarders
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|forwarders
+operator|!=
+name|NULL
+operator|&&
+name|global
+operator|!=
+name|NULL
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|file
+init|=
+name|cfg_obj_file
+argument_list|(
+name|global
+argument_list|)
+decl_stmt|;
+name|unsigned
+name|int
+name|line
+init|=
+name|cfg_obj_line
+argument_list|(
+name|global
+argument_list|)
+decl_stmt|;
+name|cfg_obj_log
+argument_list|(
+name|forwarders
+argument_list|,
+name|logctx
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"forwarders declared in root zone and "
+literal|"in general configuration: %s:%u"
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ISC_R_FAILURE
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|forward
@@ -3720,6 +3777,11 @@ parameter_list|,
 specifier|const
 name|cfg_obj_t
 modifier|*
+name|voptions
+parameter_list|,
+specifier|const
+name|cfg_obj_t
+modifier|*
 name|config
 parameter_list|,
 name|isc_symtab_t
@@ -3784,6 +3846,11 @@ name|fixedname
 decl_stmt|;
 name|isc_buffer_t
 name|b
+decl_stmt|;
+name|isc_boolean_t
+name|root
+init|=
+name|ISC_FALSE
 decl_stmt|;
 specifier|static
 name|optionstable
@@ -4560,6 +4627,23 @@ name|result
 operator|=
 name|tresult
 expr_stmt|;
+if|if
+condition|(
+name|dns_name_equal
+argument_list|(
+name|dns_fixedname_name
+argument_list|(
+operator|&
+name|fixedname
+argument_list|)
+argument_list|,
+name|dns_rootname
+argument_list|)
+condition|)
+name|root
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 block|}
 comment|/* 	 * Look for inappropriate options for the given zone type. 	 */
 for|for
@@ -5074,11 +5158,89 @@ block|}
 block|}
 block|}
 comment|/* 	 * Check that forwarding is reasonable. 	 */
+name|obj
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|root
+condition|)
+block|{
+if|if
+condition|(
+name|voptions
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|cfg_map_get
+argument_list|(
+name|voptions
+argument_list|,
+literal|"forwarders"
+argument_list|,
+operator|&
+name|obj
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|obj
+operator|==
+name|NULL
+condition|)
+block|{
+specifier|const
+name|cfg_obj_t
+modifier|*
+name|options
+init|=
+name|NULL
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|cfg_map_get
+argument_list|(
+name|config
+argument_list|,
+literal|"options"
+argument_list|,
+operator|&
+name|options
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|cfg_map_get
+argument_list|(
+name|options
+argument_list|,
+literal|"forwarders"
+argument_list|,
+operator|&
+name|obj
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|check_forward
 argument_list|(
 name|zoptions
+argument_list|,
+name|obj
 argument_list|,
 name|logctx
 argument_list|)
@@ -5946,7 +6108,7 @@ parameter_list|,
 specifier|const
 name|cfg_obj_t
 modifier|*
-name|vconfig
+name|voptions
 parameter_list|,
 name|dns_rdataclass_t
 name|vclass
@@ -6034,7 +6196,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|vconfig
+name|voptions
 operator|!=
 name|NULL
 condition|)
@@ -6043,7 +6205,7 @@ name|void
 operator|)
 name|cfg_map_get
 argument_list|(
-name|vconfig
+name|voptions
 argument_list|,
 literal|"zone"
 argument_list|,
@@ -6104,6 +6266,8 @@ operator|=
 name|check_zoneconf
 argument_list|(
 name|zone
+argument_list|,
+name|voptions
 argument_list|,
 name|config
 argument_list|,
@@ -6219,7 +6383,7 @@ return|;
 block|}
 if|if
 condition|(
-name|vconfig
+name|voptions
 operator|!=
 name|NULL
 condition|)
@@ -6233,7 +6397,7 @@ name|void
 operator|)
 name|cfg_map_get
 argument_list|(
-name|vconfig
+name|voptions
 argument_list|,
 literal|"key"
 argument_list|,
@@ -6292,7 +6456,7 @@ expr_stmt|;
 comment|/* 	 * Check that forwarding is reasonable. 	 */
 if|if
 condition|(
-name|vconfig
+name|voptions
 operator|==
 name|NULL
 condition|)
@@ -6329,6 +6493,8 @@ name|check_forward
 argument_list|(
 name|options
 argument_list|,
+name|NULL
+argument_list|,
 name|logctx
 argument_list|)
 operator|!=
@@ -6345,7 +6511,9 @@ if|if
 condition|(
 name|check_forward
 argument_list|(
-name|vconfig
+name|voptions
+argument_list|,
+name|NULL
 argument_list|,
 name|logctx
 argument_list|)
@@ -6360,7 +6528,7 @@ block|}
 comment|/* 	 * Check that dual-stack-servers is reasonable. 	 */
 if|if
 condition|(
-name|vconfig
+name|voptions
 operator|==
 name|NULL
 condition|)
@@ -6413,7 +6581,7 @@ if|if
 condition|(
 name|check_dual_stack
 argument_list|(
-name|vconfig
+name|voptions
 argument_list|,
 name|logctx
 argument_list|)
@@ -6428,7 +6596,7 @@ block|}
 comment|/* 	 * Check that rrset-order is reasonable. 	 */
 if|if
 condition|(
-name|vconfig
+name|voptions
 operator|!=
 name|NULL
 condition|)
@@ -6437,7 +6605,7 @@ if|if
 condition|(
 name|check_order
 argument_list|(
-name|vconfig
+name|voptions
 argument_list|,
 name|logctx
 argument_list|)
@@ -6451,7 +6619,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|vconfig
+name|voptions
 operator|!=
 name|NULL
 condition|)
@@ -6461,7 +6629,7 @@ name|void
 operator|)
 name|cfg_map_get
 argument_list|(
-name|vconfig
+name|voptions
 argument_list|,
 literal|"server"
 argument_list|,
@@ -6491,7 +6659,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|vconfig
+name|voptions
 operator|!=
 name|NULL
 condition|)
@@ -6499,7 +6667,7 @@ name|tresult
 operator|=
 name|check_options
 argument_list|(
-name|vconfig
+name|voptions
 argument_list|,
 name|logctx
 argument_list|,

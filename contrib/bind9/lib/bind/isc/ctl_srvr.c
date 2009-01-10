@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_srvr.c,v 1.3.2.1.4.4 2006/12/07 04:52:50 marka Exp $"
+literal|"$Id: ctl_srvr.c,v 1.3.2.1.4.5 2008/04/28 04:25:42 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,6 +138,23 @@ include|#
 directive|include
 file|<fcntl.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MEMORY_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

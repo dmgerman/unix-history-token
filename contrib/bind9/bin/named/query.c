@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.198.2.13.4.53 2008/01/17 23:45:27 tbox Exp $ */
+comment|/* $Id: query.c,v 1.198.2.13.4.56 2008/10/15 22:30:47 marka Exp $ */
 end_comment
 
 begin_include
@@ -7872,6 +7872,19 @@ operator|&
 name|nlabels
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Check for a pathological condition created when 			 * serving some malformed signed zones and bail out. 			 */
+if|if
+condition|(
+name|dns_name_countlabels
+argument_list|(
+name|name
+argument_list|)
+operator|==
+name|nlabels
+condition|)
+goto|goto
+name|cleanup
+goto|;
 if|if
 condition|(
 name|olabels
@@ -8694,6 +8707,9 @@ parameter_list|,
 name|dns_rdataset_t
 modifier|*
 name|nameservers
+parameter_list|,
+name|isc_boolean_t
+name|resuming
 parameter_list|)
 block|{
 name|isc_result_t
@@ -8706,6 +8722,11 @@ decl_stmt|,
 modifier|*
 name|sigrdataset
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|resuming
+condition|)
 name|inc_stats
 argument_list|(
 name|client
@@ -10003,6 +10024,9 @@ name|dns_rdataset_t
 modifier|*
 name|noqname
 decl_stmt|;
+name|isc_boolean_t
+name|resuming
+decl_stmt|;
 name|CTRACE
 argument_list|(
 literal|"query_find"
@@ -10069,6 +10093,14 @@ name|options
 operator|=
 literal|0
 expr_stmt|;
+name|resuming
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|is_zone
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 if|if
 condition|(
 name|event
@@ -10082,10 +10114,6 @@ operator|=
 name|ISC_FALSE
 expr_stmt|;
 name|authoritative
-operator|=
-name|ISC_FALSE
-expr_stmt|;
-name|is_zone
 operator|=
 name|ISC_FALSE
 expr_stmt|;
@@ -10232,6 +10260,10 @@ operator|=
 name|event
 operator|->
 name|result
+expr_stmt|;
+name|resuming
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 goto|goto
 name|resume
@@ -11054,6 +11086,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|resuming
 argument_list|)
 expr_stmt|;
 if|if
@@ -11598,6 +11632,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|resuming
 argument_list|)
 expr_stmt|;
 else|else
@@ -11612,6 +11648,8 @@ argument_list|,
 name|fname
 argument_list|,
 name|rdataset
+argument_list|,
+name|resuming
 argument_list|)
 expr_stmt|;
 if|if
@@ -13212,6 +13250,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|resuming
 argument_list|)
 expr_stmt|;
 if|if

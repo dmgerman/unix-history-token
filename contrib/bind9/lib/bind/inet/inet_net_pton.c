@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_net_pton.c,v 1.4.2.1.8.2 2004/03/17 00:29:47 marka Exp $"
+literal|"$Id: inet_net_pton.c,v 1.4.2.1.8.3 2008/08/26 04:50:32 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,6 +673,15 @@ name|bits
 operator|+=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|bits
+operator|>
+literal|32
+condition|)
+goto|goto
+name|enoent
+goto|;
 block|}
 do|while
 condition|(
@@ -705,15 +714,6 @@ literal|'\0'
 condition|)
 goto|goto
 name|enoent
-goto|;
-if|if
-condition|(
-name|bits
-operator|>
-literal|32
-condition|)
-goto|goto
-name|emsgsize
 goto|;
 block|}
 comment|/* Firey death and destruction unless we prefetched EOS. */

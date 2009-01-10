@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2008  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: resource.c,v 1.11.206.3.4.3 2008/07/28 22:45:53 marka Exp $ */
+comment|/* $Id: resource.c,v 1.11.206.7 2008/08/05 07:23:56 marka Exp $ */
 end_comment
 
 begin_include
@@ -80,11 +80,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__hpux
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SYS_DYNTUNE_H
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -553,6 +561,11 @@ name|defined
 argument_list|(
 name|__hpux
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SYS_DYNTUNE_H
+argument_list|)
 if|if
 condition|(
 name|resource
@@ -758,7 +771,7 @@ end_function
 
 begin_function
 name|isc_result_t
-name|isc_resource_curlimit
+name|isc_resource_getcurlimit
 parameter_list|(
 name|isc_resource_t
 name|resource
