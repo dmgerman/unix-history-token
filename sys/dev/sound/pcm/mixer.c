@@ -4866,7 +4866,7 @@ return|;
 block|}
 return|return
 operator|(
-name|ENXIO
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -5094,7 +5094,6 @@ condition|(
 name|cmd
 condition|)
 block|{
-comment|/** @todo Double check return values, error codes. */
 case|case
 name|SNDCTL_DSP_GET_RECSRC_NAMES
 case|:
@@ -5157,7 +5156,7 @@ break|break;
 default|default:
 name|ret
 operator|=
-name|ENXIO
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
