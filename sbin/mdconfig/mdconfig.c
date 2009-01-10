@@ -292,7 +292,7 @@ argument_list|,
 literal|"usage: mdconfig -a -t type [-n] [-o [no]option] ... [-f file]\n"
 literal|"                [-s size] [-S sectorsize] [-u unit]\n"
 literal|"                [-x sectors/track] [-y heads/cyl]\n"
-literal|"       mdconfig -d -u unit\n"
+literal|"       mdconfig -d -u unit [-o [no]force]\n"
 literal|"       mdconfig -l [-v] [-n] [-u unit]\n"
 argument_list|)
 expr_stmt|;
@@ -828,6 +828,59 @@ break|break;
 case|case
 literal|'o'
 case|:
+if|if
+condition|(
+name|action
+operator|==
+name|DETACH
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"force"
+argument_list|)
+condition|)
+name|mdio
+operator|.
+name|md_options
+operator||=
+name|MD_FORCE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"noforce"
+argument_list|)
+condition|)
+name|mdio
+operator|.
+name|md_options
+operator|&=
+operator|~
+name|MD_FORCE
+expr_stmt|;
+else|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Unknown option: %s."
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|cmdline
