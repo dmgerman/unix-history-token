@@ -968,9 +968,17 @@ literal|"NEW-ENVIRON"
 block|,
 literal|"TN3270E"
 block|,
+literal|"XAUTH"
+block|,
 literal|"CHARSET"
 block|,
+literal|"RSP"
+block|,
 literal|"COM-PORT"
+block|,
+literal|"SLE"
+block|,
+literal|"STARTTLS"
 block|,
 literal|"KERMIT"
 block|,
