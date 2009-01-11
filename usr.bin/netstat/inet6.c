@@ -3620,7 +3620,7 @@ name|p
 argument_list|(
 name|rip6s_isum
 argument_list|,
-literal|"\t%ju checksum calcuration%s on inbound\n"
+literal|"\t%ju checksum calculation%s on inbound\n"
 argument_list|)
 expr_stmt|;
 name|p
