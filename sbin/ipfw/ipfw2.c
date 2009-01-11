@@ -30040,6 +30040,11 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|test_only
+condition|)
+return|return;
 comment|/* Parse parameters. */
 for|for
 control|(
