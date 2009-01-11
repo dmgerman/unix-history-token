@@ -822,6 +822,12 @@ argument_list|,
 name|priv
 argument_list|)
 expr_stmt|;
+comment|/* slcompress is not thread-safe. Protect it's state here. */
+name|NG_NODE_FORCE_WRITER
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 comment|/* Done */
 return|return
 operator|(
