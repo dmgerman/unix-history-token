@@ -3678,18 +3678,45 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unknown device ID: %x\n"
+literal|"unknown device ID: %x assuming 8139\n"
 argument_list|,
 name|rl_did
 argument_list|)
 expr_stmt|;
-name|error
+name|sc
+operator|->
+name|rl_type
 operator|=
-name|ENXIO
+name|RL_8139
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
+comment|/* 		 * Read RL_IDR register to get ethernet address as accessing 		 * EEPROM may not extract correct address. 		 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ETHER_ADDR_LEN
+condition|;
+name|i
+operator|++
+control|)
+name|eaddr
+index|[
+name|i
+index|]
+operator|=
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|RL_IDR0
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Allocate the parent bus DMA tag appropriate for PCI. 	 */
 define|#
