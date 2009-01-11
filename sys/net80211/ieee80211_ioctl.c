@@ -13983,6 +13983,9 @@ operator|)
 operator|!=
 name|IEEE80211_C_WPA
 condition|)
+return|return
+name|EOPNOTSUPP
+return|;
 name|flags
 operator||=
 name|IEEE80211_F_WPA1
