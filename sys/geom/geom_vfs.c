@@ -192,6 +192,23 @@ decl_stmt|;
 name|int
 name|vfslocked
 decl_stmt|;
+comment|/* 	 * Provider ('bio_to') could have withered away sometime 	 * between incrementing the 'nend' in g_io_deliver() and now, 	 * making 'bio_to' a dangling pointer.  We cannot do that 	 * in g_wither_geom(), as it would require going over 	 * the 'g_bio_run_up' list, resetting the pointer. 	 */
+if|if
+condition|(
+name|bip
+operator|->
+name|bio_from
+operator|->
+name|provider
+operator|==
+name|NULL
+condition|)
+name|bip
+operator|->
+name|bio_to
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|bip
@@ -537,7 +554,7 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do not destroy the geom. Filesystem will do this during unmount. 	 */
+comment|/* 	 * Do not destroy the geom.  Filesystem will do that during unmount. 	 */
 block|}
 end_function
 
