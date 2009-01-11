@@ -4856,21 +4856,6 @@ operator|&
 name|maclabel
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|sc
-operator|->
-name|sc_label
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"%s: label not initialized"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* Retransmit SYN|ACK and reset retransmit count. */
