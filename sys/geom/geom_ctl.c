@@ -2363,16 +2363,8 @@ name|req
 operator|->
 name|serror
 operator|=
-name|sbuf_new
-argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|SBUF_AUTOEXTEND
-argument_list|)
+name|sbuf_new_auto
+argument_list|()
 expr_stmt|;
 comment|/* It is an error if we cannot return an error text */
 if|if
