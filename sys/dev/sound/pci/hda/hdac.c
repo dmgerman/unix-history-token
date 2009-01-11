@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20081226_0122"
+value|"20090110_0123"
 end_define
 
 begin_expr_stmt
@@ -28124,7 +28124,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-comment|/* Disable crossassociatement connections. */
+comment|/* Disable crossassociatement and unwanted crosschannel connections. */
 comment|/* ... using selectors */
 for|for
 control|(
@@ -28251,6 +28251,16 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|cw
+operator|->
+name|bindas
+operator|==
+operator|-
+literal|2
+condition|)
+continue|continue;
+if|if
+condition|(
 name|w
 operator|->
 name|bindas
@@ -28258,13 +28268,18 @@ operator|==
 name|cw
 operator|->
 name|bindas
-operator|||
+operator|&&
+operator|(
+name|w
+operator|->
+name|bindseqmask
+operator|&
 name|cw
 operator|->
-name|bindas
-operator|==
-operator|-
-literal|2
+name|bindseqmask
+operator|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 name|w
@@ -28357,6 +28372,22 @@ operator|->
 name|childwidget
 operator|->
 name|bindas
+operator|||
+operator|(
+name|ctl
+operator|->
+name|widget
+operator|->
+name|bindseqmask
+operator|&
+name|ctl
+operator|->
+name|childwidget
+operator|->
+name|bindseqmask
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ctl
