@@ -325,6 +325,12 @@ argument|opt
 argument_list|)
 name|op_next
 expr_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|opt
+argument_list|)
+name|op_append
+expr_stmt|;
 block|}
 struct|;
 end_struct
