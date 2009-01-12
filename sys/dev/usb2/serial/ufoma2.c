@@ -2293,6 +2293,35 @@ argument_list|,
 literal|"Mode to transit when port is opened"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_UINT
+argument_list|(
+name|sctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|soid
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"comunit"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+operator|(
+name|sc
+operator|->
+name|sc_ucom
+operator|.
+name|sc_unit
+operator|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Unit number as USB serial"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3577,7 +3606,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
