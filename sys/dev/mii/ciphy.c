@@ -964,15 +964,27 @@ operator|&
 name|BMSR_LINK
 condition|)
 break|break;
-comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
+comment|/* Announce link loss right after it happens. */
 if|if
 condition|(
 operator|++
 name|sc
 operator|->
 name|mii_ticks
+operator|==
+literal|0
+condition|)
+break|break;
+comment|/* 		 * Only retry autonegotiation every mii_anegticks seconds. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|mii_ticks
 operator|<=
-name|MII_ANEGTICKS
+name|sc
+operator|->
+name|mii_anegticks
 condition|)
 break|break;
 name|sc
@@ -986,11 +998,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 block|}
 comment|/* Update the media status. */
 name|ciphy_status
@@ -1230,6 +1238,13 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_FDX
+expr_stmt|;
+else|else
+name|mii
+operator|->
+name|mii_media_active
+operator||=
+name|IFM_HDX
 expr_stmt|;
 block|}
 end_function
