@@ -1062,12 +1062,20 @@ name|RXCSR_FIFO_THRESH_64QW
 value|0x08000000
 end_define
 
+begin_comment
+comment|/* JMC250/JMC260 REVFM< 2 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RXCSR_FIFO_THRESH_128QW
 value|0x0C000000
 end_define
+
+begin_comment
+comment|/* JMC250/JMC260 REVFM< 2 */
+end_comment
 
 begin_define
 define|#
@@ -1770,6 +1778,116 @@ directive|define
 name|GHC_RESET
 value|0x40000000
 end_define
+
+begin_define
+define|#
+directive|define
+name|GHC_RX_DMA_PWR_DIS
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* JMC250 REVFM>= 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GHC_FIFO_RD_PWR_DIS
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* JMC250 REVFM>= 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GHC_FIFO_WR_PWR_DIS
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* JMC250 REVFM>= 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GHC_TX_OFFLD_CLK_100
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* JMC250/JMC260 REVFM>= 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GHC_TX_OFFLD_CLK_1000
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* JMC250/JMC260 REVFM>= 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GHC_TX_OFFLD_CLK_DIS
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* JMC250/JMC260 REVFM>= 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GHC_TX_MAC_CLK_100
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* JMC250/JMC260 REVFM>= 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GHC_TX_MAC_CLK_1000
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* JMC250/JMC260 REVFM>= 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GHC_TX_MAC_CLK_DIS
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* JMC250/JMC260 REVFM>= 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GHC_AUTO_PHY_STAT_DIS
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* JMC250/JMC260 REVFM>= 2 */
+end_comment
 
 begin_define
 define|#
@@ -4137,6 +4255,34 @@ define|#
 directive|define
 name|CHIPMODE_MODE_128P_PHY
 value|0x00000000
+end_define
+
+begin_comment
+comment|/* Chip full mask revision. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPMODE_REVFM
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x0F)
+end_define
+
+begin_comment
+comment|/* Chip ECO revision. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPMODE_REVECO
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 4)& 0x0F)
 end_define
 
 begin_comment
