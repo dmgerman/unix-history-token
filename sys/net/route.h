@@ -568,8 +568,15 @@ begin_comment
 comment|/* external daemon resolves name */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTF_LLINFO
+value|0x400
+end_define
+
 begin_comment
-comment|/*			0x400		   unused, was RTF_LLINFO */
+comment|/* DEPRECATED - exists ONLY for backward  					   compatibility */
 end_comment
 
 begin_define
