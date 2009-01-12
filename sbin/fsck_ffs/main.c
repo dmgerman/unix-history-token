@@ -290,6 +290,10 @@ name|skipclean
 operator|=
 literal|1
 expr_stmt|;
+name|catastrophicflag
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -301,7 +305,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:dfFm:npy"
+literal|"b:Bc:CdfFm:npy"
 argument_list|)
 operator|)
 operator|!=
@@ -393,6 +397,14 @@ name|debug
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'C'
+case|:
+name|catastrophicflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'f'
 case|:
@@ -2871,7 +2883,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-BFpfny] [-b block] [-c level] [-m mode] "
+literal|"usage: %s [-BCFpfny] [-b block] [-c level] [-m mode] "
 literal|"filesystem ...\n"
 argument_list|,
 name|getprogname

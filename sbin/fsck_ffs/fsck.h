@@ -1030,6 +1030,16 @@ comment|/* output debugging info */
 end_comment
 
 begin_decl_stmt
+name|char
+name|catastrophicflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* run in catastrophic mode */
+end_comment
+
+begin_decl_stmt
 name|int
 name|cvtlevel
 decl_stmt|;
@@ -1548,6 +1558,21 @@ name|name
 parameter_list|,
 name|ino_t
 name|newnum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|check_cgmagic
+parameter_list|(
+name|int
+name|cg
+parameter_list|,
+name|struct
+name|cg
+modifier|*
+name|cgp
 parameter_list|)
 function_decl|;
 end_function_decl
