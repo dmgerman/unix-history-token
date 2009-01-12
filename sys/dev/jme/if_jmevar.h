@@ -438,6 +438,42 @@ value|sizeof(struct jme_ssb)
 end_define
 
 begin_comment
+comment|/* Statistics counters. */
+end_comment
+
+begin_struct
+struct|struct
+name|jme_hw_stats
+block|{
+name|uint32_t
+name|rx_good_frames
+decl_stmt|;
+name|uint32_t
+name|rx_crc_errs
+decl_stmt|;
+name|uint32_t
+name|rx_mii_errs
+decl_stmt|;
+name|uint32_t
+name|rx_fifo_oflows
+decl_stmt|;
+name|uint32_t
+name|rx_desc_empty
+decl_stmt|;
+name|uint32_t
+name|rx_bad_frames
+decl_stmt|;
+name|uint32_t
+name|tx_good_frames
+decl_stmt|;
+name|uint32_t
+name|tx_bad_frames
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Software state per device.  */
 end_comment
 
@@ -555,12 +591,24 @@ name|JME_FLAG_DMA32BIT
 value|0x0200
 define|#
 directive|define
+name|JME_FLAG_HWMIB
+value|0x0400
+define|#
+directive|define
 name|JME_FLAG_DETACH
 value|0x4000
 define|#
 directive|define
 name|JME_FLAG_LINK
 value|0x8000
+name|struct
+name|jme_hw_stats
+name|jme_ostats
+decl_stmt|;
+name|struct
+name|jme_hw_stats
+name|jme_stats
+decl_stmt|;
 name|struct
 name|callout
 name|jme_tick_ch
