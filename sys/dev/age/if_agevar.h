@@ -203,16 +203,6 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|STAILQ_HEAD
-argument_list|(
-name|age_txdq
-argument_list|,
-name|age_txdesc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|age_rxdesc
