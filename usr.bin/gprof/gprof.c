@@ -567,6 +567,9 @@ literal|1
 operator|)
 operator|||
 operator|(
+operator|!
+name|Kflag
+operator|&&
 name|elf_getnfile
 argument_list|(
 name|a_outname
