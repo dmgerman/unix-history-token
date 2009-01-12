@@ -196,6 +196,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|print_via_padlock_info
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|cpu_class
@@ -504,13 +514,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
+switch|switch
 condition|(
 name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_INTEL
 condition|)
 block|{
+case|case
+name|CPU_VENDOR_INTEL
+case|:
 comment|/* Please make up your mind folks! */
 name|strcat
 argument_list|(
@@ -519,15 +530,10 @@ argument_list|,
 literal|"EM64T"
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|cpu_vendor_id
-operator|==
+break|break;
+case|case
 name|CPU_VENDOR_AMD
-condition|)
-block|{
+case|:
 comment|/* 		 * Values taken from AMD Processor Recognition 		 * http://www.amd.com/K6/k6docs/pdf/20734g.pdf 		 * (also describes ``Features'' encodings. 		 */
 name|strcpy
 argument_list|(
@@ -536,21 +542,65 @@ argument_list|,
 literal|"AMD "
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
+operator|(
 name|cpu_id
 operator|&
-literal|0xF00
-condition|)
-block|{
-case|case
 literal|0xf00
-case|:
+operator|)
+operator|==
+literal|0xf00
+condition|)
 name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
 literal|"AMD64 Processor"
+argument_list|)
+expr_stmt|;
+else|else
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Unknown"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CPU_VENDOR_CENTAUR
+case|:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"VIA "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cpu_id
+operator|&
+literal|0xff0
+operator|)
+operator|==
+literal|0x6f0
+condition|)
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Nano Processor"
+argument_list|)
+expr_stmt|;
+else|else
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Unknown"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -563,7 +613,6 @@ literal|"Unknown"
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 block|}
 comment|/* 	 * Replace cpu_model with cpu_brand minus leading spaces if 	 * we have one. 	 */
 name|brand
@@ -701,6 +750,10 @@ operator|||
 name|cpu_vendor_id
 operator|==
 name|CPU_VENDOR_AMD
+operator|||
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_CENTAUR
 condition|)
 block|{
 name|printf
@@ -1013,6 +1066,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_CENTAUR
+condition|)
+name|print_via_padlock_info
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|cpu_feature
 operator|&
@@ -1103,6 +1165,30 @@ argument_list|)
 operator|>=
 literal|0x3
 operator|)
+condition|)
+name|tsc_is_invariant
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|CPU_VENDOR_CENTAUR
+case|:
+if|if
+condition|(
+name|AMD64_CPU_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|0x6
+operator|&&
+name|AMD64_CPU_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|>=
+literal|0xf
 condition|)
 name|tsc_is_invariant
 operator|=
@@ -1388,7 +1474,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Final stage of CPU identification. -- Should I check TI?  */
+comment|/*  * Final stage of CPU identification.  */
 end_comment
 
 begin_function
@@ -1525,6 +1611,10 @@ operator|||
 name|cpu_vendor_id
 operator|==
 name|CPU_VENDOR_AMD
+operator|||
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_CENTAUR
 condition|)
 block|{
 name|do_cpuid
@@ -2329,6 +2419,105 @@ literal|0x0f
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|print_via_padlock_info
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|regs
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Check for supported models. */
+switch|switch
+condition|(
+name|cpu_id
+operator|&
+literal|0xff0
+condition|)
+block|{
+case|case
+literal|0x690
+case|:
+if|if
+condition|(
+operator|(
+name|cpu_id
+operator|&
+literal|0xf
+operator|)
+operator|<
+literal|3
+condition|)
+return|return;
+case|case
+literal|0x6a0
+case|:
+case|case
+literal|0x6d0
+case|:
+case|case
+literal|0x6f0
+case|:
+break|break;
+default|default:
+return|return;
+block|}
+name|do_cpuid
+argument_list|(
+literal|0xc0000000
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|regs
+index|[
+literal|0
+index|]
+operator|>=
+literal|0xc0000001
+condition|)
+name|do_cpuid
+argument_list|(
+literal|0xc0000001
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+else|else
+return|return;
+name|printf
+argument_list|(
+literal|"\n  VIA Padlock Features=0x%b"
+argument_list|,
+name|regs
+index|[
+literal|3
+index|]
+argument_list|,
+literal|"\020"
+literal|"\003RNG"
+comment|/* RNG */
+literal|"\007AES"
+comment|/* ACE */
+literal|"\011AES-CTR"
+comment|/* ACE2 */
+literal|"\013SHA1,SHA256"
+comment|/* PHE */
+literal|"\015RSA"
+comment|/* PMM */
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
