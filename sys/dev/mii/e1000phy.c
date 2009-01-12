@@ -924,6 +924,8 @@ name|esc
 decl_stmt|;
 name|uint16_t
 name|reg
+decl_stmt|,
+name|page
 decl_stmt|;
 name|esc
 operator|=
@@ -980,6 +982,15 @@ name|MII_MODEL_MARVELL_E1112
 condition|)
 block|{
 comment|/* Select 1000BASE-X only mode. */
+name|page
+operator|=
+name|PHY_READ
+argument_list|(
+name|sc
+argument_list|,
+name|E1000_EADR
+argument_list|)
+expr_stmt|;
 name|PHY_WRITE
 argument_list|(
 name|sc
@@ -1022,7 +1033,7 @@ name|sc
 argument_list|,
 name|E1000_EADR
 argument_list|,
-literal|1
+name|page
 argument_list|)
 expr_stmt|;
 block|}
