@@ -792,6 +792,24 @@ value|0x000000ff
 end_define
 
 begin_comment
+comment|/*  * CPUID manufacturers identifiers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTEL_VENDOR_ID
+value|"GenuineIntel"
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMD_VENDOR_ID
+value|"AuthenticAMD"
+end_define
+
+begin_comment
 comment|/*  * Model-specific registers for the i386 family  */
 end_comment
 
@@ -2327,6 +2345,17 @@ end_define
 
 begin_comment
 comment|/* boundary for ram above 4G */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_K8_UCODE_UPDATE
+value|0xc0010020
+end_define
+
+begin_comment
+comment|/* update microcode */
 end_comment
 
 begin_endif
