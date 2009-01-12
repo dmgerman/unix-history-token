@@ -760,6 +760,9 @@ name|agp_gatt
 modifier|*
 name|gatt
 decl_stmt|;
+name|uint32_t
+name|devid
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -788,8 +791,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|devid
+operator|=
 name|pci_cfgregread
 argument_list|(
 literal|0
@@ -802,8 +806,16 @@ literal|0
 argument_list|,
 literal|4
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|devid
 operator|==
 literal|0x11031022
+operator|||
+name|devid
+operator|==
+literal|0x12031022
 condition|)
 block|{
 name|sc
@@ -818,6 +830,7 @@ expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
