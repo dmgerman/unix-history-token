@@ -1094,13 +1094,21 @@ name|USB_REV_1_0
 expr_stmt|;
 break|break;
 default|default:
+comment|/* Quirk for Parallels Desktop 4.0 */
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"USB revision is unknown. Assuming v1.1.\n"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_bus
 operator|.
 name|usbrev
 operator|=
-name|USB_REV_UNKNOWN
+name|USB_REV_1_1
 expr_stmt|;
 break|break;
 block|}
