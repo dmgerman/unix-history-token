@@ -7115,7 +7115,7 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if we got started after that we got cancelled, but 	 * before we managed to do the callback. Check if we are 	 * draining. 	 */
+comment|/* 	 * Check if we got started after that we got cancelled, but 	 * before we managed to do the callback. 	 */
 if|if
 condition|(
 operator|(
@@ -7157,7 +7157,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-elseif|else
+name|done
+label|:
+comment|/* 	 * Check if we are draining. 	 */
 if|if
 condition|(
 name|xfer
@@ -7196,8 +7198,6 @@ name|cv_drain
 argument_list|)
 expr_stmt|;
 block|}
-name|done
-label|:
 comment|/* do the next callback, if any */
 name|usb2_command_wrapper
 argument_list|(
