@@ -8197,6 +8197,9 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|uint8_t
+name|old_mode
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -8233,13 +8236,30 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
 return|return
 operator|(
 name|err
 operator|)
 return|;
-block|}
+comment|/* get old power mode */
+name|old_mode
+operator|=
+name|udev
+operator|->
+name|power_mode
+expr_stmt|;
+comment|/* if no change, then just return */
+if|if
+condition|(
+name|old_mode
+operator|==
+name|mode
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 switch|switch
 condition|(
 name|mode
@@ -8365,6 +8385,31 @@ name|ENXIO
 operator|)
 return|;
 comment|/* I/O failure */
+comment|/* if we are powered off we need to re-enumerate first */
+if|if
+condition|(
+name|old_mode
+operator|==
+name|USB_POWER_MODE_OFF
+condition|)
+block|{
+name|err
+operator|=
+name|ugen_re_enumerate
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
 comment|/* set new power mode */
 name|usb2_set_power_mode
 argument_list|(
