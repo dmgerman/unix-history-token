@@ -23,6 +23,13 @@ directive|define
 name|_MUSB2_OTG_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|MUSB2_MAX_DEVICES
+value|(USB_MIN_DEVICES + 1)
+end_define
+
 begin_comment
 comment|/* Common registers */
 end_comment
@@ -1982,6 +1989,14 @@ name|usb2_hw_ep_profile
 name|sc_hw_ep_profile
 index|[
 literal|16
+index|]
+decl_stmt|;
+name|struct
+name|usb2_device
+modifier|*
+name|sc_devices
+index|[
+name|MUSB2_MAX_DEVICES
 index|]
 decl_stmt|;
 name|struct

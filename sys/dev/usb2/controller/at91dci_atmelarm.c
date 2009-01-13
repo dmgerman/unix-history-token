@@ -501,7 +501,7 @@ name|sc_pull_arg
 operator|=
 name|sc
 expr_stmt|;
-comment|/* get all DMA memory */
+comment|/* initialise some bus fields */
 name|sc
 operator|->
 name|sc_dci
@@ -512,6 +512,31 @@ name|parent
 operator|=
 name|dev
 expr_stmt|;
+name|sc
+operator|->
+name|sc_dci
+operator|.
+name|sc_bus
+operator|.
+name|devices
+operator|=
+name|sc
+operator|->
+name|sc_dci
+operator|.
+name|sc_devices
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dci
+operator|.
+name|sc_bus
+operator|.
+name|devices_max
+operator|=
+name|AT91_MAX_DEVICES
+expr_stmt|;
+comment|/* get all DMA memory */
 if|if
 condition|(
 name|usb2_bus_mem_alloc_all

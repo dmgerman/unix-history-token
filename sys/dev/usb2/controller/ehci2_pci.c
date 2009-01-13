@@ -705,7 +705,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* get all DMA memory */
+comment|/* initialise some bus fields */
 name|sc
 operator|->
 name|sc_bus
@@ -714,6 +714,25 @@ name|parent
 operator|=
 name|self
 expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|devices
+operator|=
+name|sc
+operator|->
+name|sc_devices
+expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|devices_max
+operator|=
+name|EHCI_MAX_DEVICES
+expr_stmt|;
+comment|/* get all DMA memory */
 if|if
 condition|(
 name|usb2_bus_mem_alloc_all
@@ -734,7 +753,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|sc

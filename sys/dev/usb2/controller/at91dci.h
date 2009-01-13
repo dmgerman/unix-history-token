@@ -26,6 +26,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91_MAX_DEVICES
+value|(USB_MIN_DEVICES + 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91_UDP_FRM
 value|0x00
 end_define
@@ -971,6 +978,14 @@ decl_stmt|;
 name|struct
 name|usb2_config_td
 name|sc_config_td
+decl_stmt|;
+name|struct
+name|usb2_device
+modifier|*
+name|sc_devices
+index|[
+name|AT91_MAX_DEVICES
+index|]
 decl_stmt|;
 name|struct
 name|resource

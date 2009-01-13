@@ -296,7 +296,7 @@ name|sc_clocks_arg
 operator|=
 name|sc
 expr_stmt|;
-comment|/* get all DMA memory */
+comment|/* initialise some bus fields */
 name|sc
 operator|->
 name|sc_otg
@@ -307,6 +307,31 @@ name|parent
 operator|=
 name|dev
 expr_stmt|;
+name|sc
+operator|->
+name|sc_otg
+operator|.
+name|sc_bus
+operator|.
+name|devices
+operator|=
+name|sc
+operator|->
+name|sc_otg
+operator|.
+name|sc_devices
+expr_stmt|;
+name|sc
+operator|->
+name|sc_otg
+operator|.
+name|sc_bus
+operator|.
+name|devices_max
+operator|=
+name|MUSB2_MAX_DEVICES
+expr_stmt|;
+comment|/* get all DMA memory */
 if|if
 condition|(
 name|usb2_bus_mem_alloc_all

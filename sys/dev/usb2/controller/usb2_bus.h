@@ -147,10 +147,8 @@ comment|/* filled by HC driver */
 name|struct
 name|usb2_device
 modifier|*
+modifier|*
 name|devices
-index|[
-name|USB_MAX_DEVICES
-index|]
 decl_stmt|;
 name|uint32_t
 name|hw_power_state
