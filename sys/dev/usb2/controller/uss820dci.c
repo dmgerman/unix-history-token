@@ -7048,7 +7048,7 @@ operator||
 name|UHD_OC_INDIVIDUAL
 operator|)
 operator|>>
-literal|16
+literal|8
 block|,
 operator|.
 name|bPwrOn2PwrGood
