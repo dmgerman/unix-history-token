@@ -16709,7 +16709,7 @@ literal|0
 block|,
 literal|1
 block|,
-name|MV_61XX
+name|MV61XX
 block|,
 name|ATA_UDMA6
 block|,
