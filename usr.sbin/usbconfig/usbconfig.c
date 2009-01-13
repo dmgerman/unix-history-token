@@ -1356,7 +1356,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"cannot only specify one of 'set_config', "
+literal|"can only specify one of 'set_config', "
 literal|"'set_alt', 'reset', 'suspend', 'resume', "
 literal|"'power_save', 'power_on' and 'power_off' "
 literal|"at the same time!"
