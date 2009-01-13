@@ -735,6 +735,23 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+comment|/* Get rid of USB callback processes */
+name|usb2_proc_unsetup
+argument_list|(
+operator|&
+name|bus
+operator|->
+name|giant_callback_proc
+argument_list|)
+expr_stmt|;
+name|usb2_proc_unsetup
+argument_list|(
+operator|&
+name|bus
+operator|->
+name|non_giant_callback_proc
+argument_list|)
+expr_stmt|;
 comment|/* Get rid of USB roothub process */
 name|usb2_proc_unsetup
 argument_list|(
@@ -1569,7 +1586,59 @@ name|bus
 operator|=
 name|bus
 expr_stmt|;
-comment|/* Create USB explore and roothub processes */
+comment|/* Create USB explore, roothub and callback processes */
+if|if
+condition|(
+name|usb2_proc_setup
+argument_list|(
+operator|&
+name|bus
+operator|->
+name|giant_callback_proc
+argument_list|,
+operator|&
+name|bus
+operator|->
+name|bus_mtx
+argument_list|,
+name|USB_PRI_MED
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: Creation of USB Giant "
+literal|"callback process failed.\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|usb2_proc_setup
+argument_list|(
+operator|&
+name|bus
+operator|->
+name|non_giant_callback_proc
+argument_list|,
+operator|&
+name|bus
+operator|->
+name|bus_mtx
+argument_list|,
+name|USB_PRI_HIGH
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: Creation of USB non-Giant "
+literal|"callback process failed.\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|usb2_proc_setup

@@ -73,8 +73,10 @@ name|dma_parent_tag
 decl_stmt|;
 name|struct
 name|usb2_process
+modifier|*
 name|done_p
 decl_stmt|;
+comment|/* pointer to callback process */
 name|void
 modifier|*
 name|memory_base
