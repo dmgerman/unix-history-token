@@ -5939,6 +5939,8 @@ name|siglen
 argument_list|,
 name|pkey
 argument_list|)
+operator|==
+literal|1
 condition|)
 block|{
 if|if

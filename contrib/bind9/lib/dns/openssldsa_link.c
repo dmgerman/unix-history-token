@@ -645,8 +645,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-literal|0
+operator|!=
+literal|1
 condition|)
 return|return
 operator|(
