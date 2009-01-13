@@ -6462,13 +6462,6 @@ argument_list|(
 name|ed_flags
 argument_list|)
 expr_stmt|;
-name|usb2_pc_cpu_flush
-argument_list|(
-name|ed
-operator|->
-name|page_cache
-argument_list|)
-expr_stmt|;
 name|td
 operator|=
 name|xfer
@@ -6496,6 +6489,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* the append function will flush the endpoint descriptor */
 name|OHCI_APPEND_QH
 argument_list|(
 name|ed
@@ -8332,13 +8326,6 @@ argument_list|(
 name|ed_flags
 argument_list|)
 expr_stmt|;
-name|usb2_pc_cpu_flush
-argument_list|(
-name|ed
-operator|->
-name|page_cache
-argument_list|)
-expr_stmt|;
 name|td
 operator|=
 name|xfer
@@ -8354,6 +8341,7 @@ operator|->
 name|itd_self
 expr_stmt|;
 comment|/* isochronous transfers are not affected by suspend / resume */
+comment|/* the append function will flush the endpoint descriptor */
 name|OHCI_APPEND_QH
 argument_list|(
 name|ed
