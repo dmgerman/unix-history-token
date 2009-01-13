@@ -469,8 +469,6 @@ end_comment
 begin_decl_stmt
 name|Boolean
 name|beQuiet
-init|=
-name|TRUE
 decl_stmt|;
 end_decl_stmt
 
@@ -2115,6 +2113,10 @@ case|:
 name|beQuiet
 operator|=
 name|TRUE
+expr_stmt|;
+name|beVerbose
+operator|=
+name|FALSE
 expr_stmt|;
 name|MFLAGS_append
 argument_list|(
