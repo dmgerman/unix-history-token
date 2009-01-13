@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2007-2008 Semihalf, Rafal Jaworowski<raj@semihalf.com>  * Copyright (C) 2006 Semihalf, Marian Balakowicz<m8@semihalf.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Some hw specific parts of this pmap were derived or influenced  * by NetBSD's ibm4xx pmap module. More generic code is shared with  * a few other pmap modules from the FreeBSD tree.  */
+comment|/*-  * Copyright (C) 2007-2008 Semihalf, Rafal Jaworowski<raj@semihalf.com>  * Copyright (C) 2006 Semihalf, Marian Balakowicz<m8@semihalf.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Some hw specific parts of this pmap were derived or influenced  * by NetBSD's ibm4xx pmap module. More generic code is shared with  * a few other pmap modules from the FreeBSD tree.  */
 end_comment
 
 begin_comment
-comment|/*   * VM layout notes:   *   * Kernel and user threads run within one common virtual address space   * defined by AS=0.   *   * Virtual address space layout:   * -----------------------------   * 0x0000_0000 - 0xbfff_efff	: user process   * 0xc000_0000 - 0xc1ff_ffff	: kernel reserved   *   0xc000_0000 - kernelend	: kernel code&data   *   0xc1ff_c000 - 0xc200_0000	: kstack0   * 0xc200_0000 - 0xffef_ffff	: KVA   *   0xc200_0000 - 0xc200_3fff : reserved for page zero/copy   *   0xc200_4000 - ptbl buf end: reserved for ptbl bufs   *   ptbl buf end- 0xffef_ffff	: actual free KVA space   * 0xfff0_0000 - 0xffff_ffff	: I/O devices region   */
+comment|/*   * VM layout notes:   *   * Kernel and user threads run within one common virtual address space   * defined by AS=0.   *   * Virtual address space layout:   * -----------------------------   * 0x0000_0000 - 0xafff_ffff	: user process   * 0xb000_0000 - 0xbfff_ffff	: pmap_mapdev()-ed area (PCI/PCIE etc.)   * 0xc000_0000 - 0xc0ff_ffff	: kernel reserved   *   0xc000_0000 - kernelend	: kernel code+data, env, metadata etc.   * 0xc100_0000 - 0xfeef_ffff	: KVA   *   0xc100_0000 - 0xc100_3fff : reserved for page zero/copy   *   0xc100_4000 - 0xc200_3fff : reserved for ptbl bufs   *   0xc200_4000 - 0xc200_8fff : guard page + kstack0   *   0xc200_9000 - 0xfeef_ffff	: actual free KVA space   * 0xfef0_0000 - 0xffff_ffff	: I/O devices region   */
 end_comment
 
 begin_include
@@ -2163,10 +2163,45 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|//debugf("ptbl_init: s (ptbl_bufs = 0x%08x size 0x%08x)\n",
-comment|//		(u_int32_t)ptbl_bufs, sizeof(struct ptbl_buf) * PTBL_BUFS);
-comment|//debugf("ptbl_init: s (ptbl_buf_pool_vabase = 0x%08x size = 0x%08x)\n",
-comment|//		ptbl_buf_pool_vabase, PTBL_BUFS * PTBL_PAGES * PAGE_SIZE);
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: s (ptbl_bufs = 0x%08x size 0x%08x)"
+argument_list|,
+name|__func__
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|ptbl_bufs
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ptbl_buf
+argument_list|)
+operator|*
+name|PTBL_BUFS
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: s (ptbl_buf_pool_vabase = 0x%08x size = 0x%08x)"
+argument_list|,
+name|__func__
+argument_list|,
+name|ptbl_buf_pool_vabase
+argument_list|,
+name|PTBL_BUFS
+operator|*
+name|PTBL_PAGES
+operator|*
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -2229,7 +2264,6 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
-comment|//debugf("ptbl_init: e\n");
 block|}
 end_function
 
@@ -2252,7 +2286,6 @@ name|ptbl_buf
 modifier|*
 name|buf
 decl_stmt|;
-comment|//debugf("ptbl_buf_alloc: s\n");
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2289,7 +2322,17 @@ operator|&
 name|ptbl_buf_freelist_lock
 argument_list|)
 expr_stmt|;
-comment|//debugf("ptbl_buf_alloc: e (buf = 0x%08x)\n", (u_int32_t)buf);
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: buf = %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|buf
@@ -2931,9 +2974,25 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|//int su = (pmap == kernel_pmap);
-comment|//debugf("ptbl_unhold: s (pmap = %08x su = %d pdir_idx = %d)\n",
-comment|//		(u_int32_t)pmap, su, pdir_idx);
+name|CTR4
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: pmap = %p su = %d pdir_idx = %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+operator|(
+name|pmap
+operator|==
+name|kernel_pmap
+operator|)
+argument_list|,
+name|pdir_idx
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -3038,7 +3097,7 @@ name|wire_count
 operator|--
 expr_stmt|;
 block|}
-comment|/* 	 * Free ptbl pages if there are no pte etries in this ptbl. 	 * wire_count has the same value for all ptbl pages, so check 	 * the last page. 	 */
+comment|/* 	 * Free ptbl pages if there are no pte etries in this ptbl. 	 * wire_count has the same value for all ptbl pages, so check the last 	 * page. 	 */
 if|if
 condition|(
 name|m
@@ -3064,7 +3123,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|//debugf("ptbl_unhold: e\n");
 return|return
 operator|(
 literal|0
@@ -3074,7 +3132,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increment hold count for ptbl pages. This routine is used when  * new pte entry is being inserted into ptbl.  */
+comment|/*  * Increment hold count for ptbl pages. This routine is used when a new pte  * entry is being inserted into the ptbl.  */
 end_comment
 
 begin_function
@@ -3106,7 +3164,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|//debugf("ptbl_hold: s (pmap = 0x%08x pdir_idx = %d)\n", (u_int32_t)pmap, pdir_idx);
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: pmap = %p pdir_idx = %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+name|pdir_idx
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -3206,7 +3276,6 @@ name|wire_count
 operator|++
 expr_stmt|;
 block|}
-comment|//debugf("ptbl_hold: e\n");
 block|}
 end_function
 
@@ -3224,11 +3293,6 @@ block|{
 name|pv_entry_t
 name|pv
 decl_stmt|;
-name|debugf
-argument_list|(
-literal|"pv_alloc: s\n"
-argument_list|)
-expr_stmt|;
 name|pv_entry_count
 operator|++
 expr_stmt|;
@@ -3267,11 +3331,6 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-name|debugf
-argument_list|(
-literal|"pv_alloc: e\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pv
@@ -3294,7 +3353,6 @@ name|pv_entry_t
 name|pve
 parameter_list|)
 block|{
-comment|//debugf("pv_free: s\n");
 name|pv_entry_count
 operator|--
 expr_stmt|;
@@ -3305,7 +3363,6 @@ argument_list|,
 name|pve
 argument_list|)
 expr_stmt|;
-comment|//debugf("pv_free: e\n");
 block|}
 end_function
 
@@ -3529,7 +3586,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|flags
 parameter_list|)
 block|{
@@ -4720,7 +4777,7 @@ argument_list|(
 literal|"mmu_booke_bootstrap: phys_avail too small"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Removed kernel physical address range from avail 	 * regions list. Page align all regions. 	 * Non-page aligned memory isn't very interesting to us. 	 * Also, sort the entries for ascending addresses. 	 */
+comment|/* 	 * Remove kernel physical address range from avail regions list. Page 	 * align all regions.  Non-page aligned memory isn't very interesting 	 * to us.  Also, sort the entries for ascending addresses. 	 */
 name|sz
 operator|=
 literal|0
@@ -5690,7 +5747,6 @@ name|shpgperproc
 init|=
 name|PMAP_SHPGPERPROC
 decl_stmt|;
-comment|//debugf("mmu_booke_init: s\n");
 comment|/* 	 * Initialize the address space (zone) for the pv entries.  Set a 	 * high water mark so that the system can recover from excessive 	 * numbers of pv entries. 	 */
 name|pvzone
 operator|=
@@ -5777,7 +5833,6 @@ comment|/* Initialize ptbl allocation. */
 name|ptbl_init
 argument_list|()
 expr_stmt|;
-comment|//debugf("mmu_booke_init: e\n");
 block|}
 end_function
 
@@ -5807,7 +5862,6 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|//debugf("mmu_booke_qenter: s (sva = 0x%08x count = %d)\n", sva, count);
 name|va
 operator|=
 name|sva
@@ -5841,7 +5895,6 @@ name|m
 operator|++
 expr_stmt|;
 block|}
-comment|//debugf("mmu_booke_qenter: e\n");
 block|}
 end_function
 
@@ -5867,7 +5920,6 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|//debugf("mmu_booke_qremove: s (sva = 0x%08x count = %d)\n", sva, count);
 name|va
 operator|=
 name|sva
@@ -5892,7 +5944,6 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-comment|//debugf("mmu_booke_qremove: e\n");
 block|}
 end_function
 
@@ -5933,15 +5984,13 @@ argument_list|(
 name|va
 argument_list|)
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 name|pte_t
 modifier|*
 name|pte
 decl_stmt|;
-comment|//debugf("mmu_booke_kenter: s (pdir_idx = %d ptbl_idx = %d va=0x%08x pa=0x%08x)\n",
-comment|//		pdir_idx, ptbl_idx, va, pa);
 name|KASSERT
 argument_list|(
 operator|(
@@ -6240,7 +6289,6 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-comment|//debugf("mmu_booke_pinit0: s (pmap = 0x%08x)\n", (u_int32_t)pmap);
 name|mmu_booke_pinit
 argument_list|(
 name|mmu
@@ -6255,7 +6303,6 @@ argument_list|,
 name|pmap
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_pinit0: e\n");
 block|}
 end_function
 
@@ -6405,13 +6452,37 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-comment|//debugf("mmu_booke_release: s\n");
+name|printf
+argument_list|(
+literal|"mmu_booke_release: s\n"
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|resident_count
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_release: pmap resident count %ld != 0"
+operator|,
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|resident_count
+operator|)
+argument_list|)
+expr_stmt|;
 name|PMAP_LOCK_DESTROY
 argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_release: e\n");
 block|}
 end_function
 
@@ -6524,7 +6595,7 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 name|int
@@ -7058,7 +7129,6 @@ name|PTBL_UNHOLD
 argument_list|)
 expr_stmt|;
 block|}
-comment|//debugf("mmu_booke_enter_locked: e\n");
 block|}
 end_function
 
@@ -7202,7 +7272,6 @@ name|vm_prot_t
 name|prot
 parameter_list|)
 block|{
-comment|//debugf("mmu_booke_enter_quick: s\n");
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -7234,7 +7303,6 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_enter_quick e\n");
 block|}
 end_function
 
@@ -7264,7 +7332,7 @@ name|pte_t
 modifier|*
 name|pte
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|hold_flag
 decl_stmt|;
 name|int
@@ -7300,7 +7368,7 @@ operator|)
 operator|)
 argument_list|,
 operator|(
-literal|"mmu_booke_enter: kernel pmap, non kernel va"
+literal|"mmu_booke_remove: kernel pmap, non kernel va"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7316,7 +7384,7 @@ name|VM_MAXUSER_ADDRESS
 operator|)
 argument_list|,
 operator|(
-literal|"mmu_booke_enter: user pmap, non user va"
+literal|"mmu_booke_remove: user pmap, non user va"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7429,10 +7497,9 @@ name|pv
 decl_stmt|,
 name|pvn
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|hold_flag
 decl_stmt|;
-comment|//debugf("mmu_booke_remove_all: s\n");
 name|mtx_assert
 argument_list|(
 operator|&
@@ -7519,12 +7586,11 @@ argument_list|,
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_remove_all: e\n");
 block|}
 end_function
 
 begin_comment
-comment|/*  * Map a range of physical addresses into kernel virtual address space.  *  * The value passed in *virt is a suggested virtual address for the mapping.  * Architectures which can support a direct-mapped physical to virtual region  * can return the appropriate address within that region, leaving '*virt'  * unchanged.  We cannot and therefore do not; *virt is updated with the  * first usable address after the mapped region.  */
+comment|/*  * Map a range of physical addresses into kernel virtual address space.  */
 end_comment
 
 begin_function
@@ -8393,7 +8459,7 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pte_wbit
 decl_stmt|;
 name|m
@@ -8556,7 +8622,7 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|//debugf("mmu_booke_zero_page_area: s\n");
+comment|/* XXX KASSERT off and size are within a single page? */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8604,7 +8670,6 @@ operator|&
 name|zero_page_mutex
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_zero_page_area: e\n");
 block|}
 end_function
 
@@ -8624,7 +8689,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-comment|//debugf("mmu_booke_zero_page: s\n");
 name|mmu_booke_zero_page_area
 argument_list|(
 name|mmu
@@ -8636,7 +8700,6 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_zero_page: e\n");
 block|}
 end_function
 
@@ -8775,7 +8838,6 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|//debugf("mmu_booke_zero_page_idle: s\n");
 name|va
 operator|=
 name|zero_page_idle_va
@@ -8809,7 +8871,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_zero_page_idle: e\n");
 block|}
 end_function
 
@@ -8955,7 +9016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return whether or not the specified virtual address is elgible  * for prefault.  */
+comment|/*  * Return whether or not the specified virtual address is eligible  * for prefault.  */
 end_comment
 
 begin_function
@@ -10016,7 +10077,6 @@ name|base
 decl_stmt|,
 name|offset
 decl_stmt|;
-comment|//debugf("mmu_booke_unmapdev: s (va = 0x%08x)\n", va);
 comment|/* 	 * Unmap only if this is inside kernel virtual space. 	 */
 if|if
 condition|(
@@ -10067,12 +10127,11 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-comment|//debugf("mmu_booke_unmapdev: e\n");
 block|}
 end_function
 
 begin_comment
-comment|/*  * mmu_booke_object_init_pt preloads the ptes for a given object  * into the specified pmap. This eliminates the blast of soft  * faults on process startup and immediately after an mmap.  */
+comment|/*  * mmu_booke_object_init_pt preloads the ptes for a given object into the  * specified pmap. This eliminates the blast of soft faults on process startup  * and immediately after an mmap.  */
 end_comment
 
 begin_function
@@ -10781,7 +10840,7 @@ name|int
 name|idx
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|mas0
 decl_stmt|,
 name|mas7
@@ -10813,7 +10872,7 @@ argument_list|,
 name|mas0
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 name|mtspr
 argument_list|(
 name|SPR_MAS1
@@ -10826,7 +10885,7 @@ operator|.
 name|mas1
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 name|mtspr
 argument_list|(
 name|SPR_MAS2
@@ -10839,7 +10898,7 @@ operator|.
 name|mas2
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 name|mtspr
 argument_list|(
 name|SPR_MAS3
@@ -10852,7 +10911,7 @@ operator|.
 name|mas3
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 name|mtspr
 argument_list|(
 name|SPR_MAS7
@@ -10860,7 +10919,7 @@ argument_list|,
 name|mas7
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync; tlbwe; isync; msync");
+asm|__asm __volatile("isync; tlbwe; isync; msync");
 comment|//debugf("tlb1_write_entry: e\n");;
 block|}
 end_function
@@ -11190,7 +11249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mapin contiguous RAM region into the TLB1 using maximum of  * KERNEL_REGION_MAX_TLB_ENTRIES entries.  *  * If necessarry round up last entry size and return total size  * used by all allocated entries.  */
+comment|/*  * Map in contiguous RAM region into the TLB1 using maximum of  * KERNEL_REGION_MAX_TLB_ENTRIES entries.  *  * If necessary round up last entry size and return total size  * used by all allocated entries.  */
 end_comment
 
 begin_function
@@ -11227,14 +11286,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|debugf
+name|CTR4
 argument_list|(
-literal|"tlb1_mapin_region:\n"
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" region size = 0x%08x va = 0x%08x pa = 0x%08x\n"
+name|KTR_PMAP
+argument_list|,
+literal|"%s: region size = 0x%08x va = 0x%08x pa = 0x%08x"
+argument_list|,
+name|__func__
 argument_list|,
 name|size
 argument_list|,
@@ -11395,9 +11453,14 @@ operator|!
 name|esz
 condition|)
 break|break;
-name|debugf
+name|CTR5
 argument_list|(
-literal|"  entry %d: sz  = 0x%08x (va = 0x%08x pa = 0x%08x)\n"
+name|KTR_PMAP
+argument_list|,
+literal|"%s: entry %d: sz  = 0x%08x (va = 0x%08x "
+literal|"pa = 0x%08x)"
+argument_list|,
+name|__func__
 argument_list|,
 name|tlb1_idx
 argument_list|,
@@ -11428,9 +11491,13 @@ operator|+=
 name|esz
 expr_stmt|;
 block|}
-name|debugf
+name|CTR3
 argument_list|(
-literal|" mapped size 0x%08x (wasted space 0x%08x)\n"
+name|KTR_PMAP
+argument_list|,
+literal|"%s: mapped size 0x%08x (wasted space 0x%08x)"
+argument_list|,
+name|__func__
 argument_list|,
 name|mapped_size
 argument_list|,
@@ -11462,7 +11529,7 @@ block|{
 name|uint32_t
 name|mas0
 decl_stmt|;
-comment|/* TBL1[1] is used to map the kernel. Save that entry. */
+comment|/* TLB1[1] is used to map the kernel. Save that entry. */
 name|mas0
 operator|=
 name|MAS0_TLBSEL
@@ -11559,7 +11626,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|mas4
 decl_stmt|;
 comment|/* Defaults: TLB0, PID0, TSIZED=4K */
@@ -11584,7 +11651,7 @@ argument_list|,
 name|mas4
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 block|}
 end_function
 
@@ -11783,7 +11850,7 @@ modifier|*
 name|va
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|prot
 decl_stmt|;
 name|vm_paddr_t
