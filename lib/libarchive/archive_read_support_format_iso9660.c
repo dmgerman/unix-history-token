@@ -2297,7 +2297,23 @@ name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Ignoring out-of-order file"
+literal|"Ignoring out-of-order file @%x (%s) %jd< %jd"
+argument_list|,
+name|file
+argument_list|,
+name|iso9660
+operator|->
+name|pathname
+operator|.
+name|s
+argument_list|,
+name|file
+operator|->
+name|offset
+argument_list|,
+name|iso9660
+operator|->
+name|current_position
 argument_list|)
 expr_stmt|;
 name|iso9660
@@ -3044,6 +3060,9 @@ name|file
 operator|->
 name|offset
 operator|=
+operator|(
+name|uint64_t
+operator|)
 name|toi
 argument_list|(
 name|isodirrec

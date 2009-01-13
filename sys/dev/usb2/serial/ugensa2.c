@@ -79,12 +79,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_request.h>
 end_include
 
@@ -781,29 +775,6 @@ argument_list|(
 argument|USB_VENDOR_HP
 argument_list|,
 argument|USB_PRODUCT_HP_49GPLUS
-argument_list|,
-literal|0
-argument_list|)
-block|}
-block|,
-comment|/*	{USB_VPI(USB_VENDOR_HUAWEI, USB_PRODUCT_HUAWEI_E270, 0)}, */
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_HUAWEI
-argument_list|,
-argument|USB_PRODUCT_HUAWEI_MOBILE
-argument_list|,
-literal|0
-argument_list|)
-block|}
-block|,
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_MERLIN
-argument_list|,
-argument|USB_PRODUCT_MERLIN_V620
 argument_list|,
 literal|0
 argument_list|)

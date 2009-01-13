@@ -3658,6 +3658,13 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|".NOTPARALLEL:\n.NO_PARALLEL:\n.POSIX:\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|buildopts
@@ -3682,16 +3689,14 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|".if defined(PROG)&& !defined(%s)\n"
-argument_list|,
-name|objvar
+literal|".if defined(PROG)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s=${PROG}.o\n"
+literal|"%s?=${PROG}.o\n"
 argument_list|,
 name|objvar
 argument_list|)
@@ -3777,7 +3782,7 @@ name|line
 argument_list|,
 name|MAXLINELEN
 argument_list|,
-literal|"cd %s&& make -f %s crunchgen_objs"
+literal|"cd %s&& make -f %s -Q crunchgen_objs"
 argument_list|,
 name|p
 operator|->

@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_sw_transfer.h>
 end_include
 
@@ -657,7 +651,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* get all DMA memory */
+comment|/* initialise some bus fields */
 name|sc
 operator|->
 name|sc_bus
@@ -666,6 +660,25 @@ name|parent
 operator|=
 name|self
 expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|devices
+operator|=
+name|sc
+operator|->
+name|sc_devices
+expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|devices_max
+operator|=
+name|OHCI_MAX_DEVICES
+expr_stmt|;
+comment|/* get all DMA memory */
 if|if
 condition|(
 name|usb2_bus_mem_alloc_all
@@ -686,7 +699,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|sc
@@ -1079,47 +1094,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|err
-operator|=
-name|usb2_config_td_setup
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_config_td
-argument_list|,
-name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bus_mtx
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|self
-argument_list|,
-literal|"could not setup config thread!\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|error
-goto|;
-block|}
 comment|/* sc->sc_bus.usbrev; set by ohci_init() */
 if|#
 directive|if
@@ -1304,14 +1278,6 @@ decl_stmt|;
 name|device_t
 name|bdev
 decl_stmt|;
-name|usb2_config_td_drain
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_config_td
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1463,14 +1429,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|usb2_config_td_unsetup
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_config_td
-argument_list|)
-expr_stmt|;
 name|usb2_bus_mem_free_all
 argument_list|(
 operator|&

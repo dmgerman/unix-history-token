@@ -413,12 +413,64 @@ begin_comment
 comment|/* Mask for incoming data or error */
 end_comment
 
+begin_comment
+comment|/*  * List of serial adapter commands or deferred function calls:  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|USB_COM_CFG_START_TRANSFERS
+block|,
+name|USB_COM_CFG_OPEN
+block|,
+name|USB_COM_CFG_CLOSE
+block|,
+name|USB_COM_CFG_BREAK_ON
+block|,
+name|USB_COM_CFG_BREAK_OFF
+block|,
+name|USB_COM_CFG_DTR_ON
+block|,
+name|USB_COM_CFG_DTR_OFF
+block|,
+name|USB_COM_CFG_RTS_ON
+block|,
+name|USB_COM_CFG_RTS_OFF
+block|,
+name|USB_COM_CFG_STATUS_CHANGE
+block|,
+name|USB_COM_CFG_PARAM
+block|,
+name|USB_COM_CFG_MAX
+block|, }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|usb2_com_command_msg
+block|{
+name|struct
+name|usb2_proc_msg
+name|hdr
+decl_stmt|;
+comment|/* must be first */
+name|struct
+name|usb2_com_softc
+modifier|*
+name|cc_softc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|usb2_com_super_softc
 block|{
 name|struct
-name|usb2_config_td
+name|usb2_process
 name|sc_config_td
 decl_stmt|;
 block|}
@@ -429,6 +481,15 @@ begin_struct
 struct|struct
 name|usb2_com_softc
 block|{
+name|struct
+name|usb2_com_command_msg
+name|sc_cmds
+index|[
+literal|2
+operator|*
+name|USB_COM_CFG_MAX
+index|]
+decl_stmt|;
 name|struct
 name|termios
 name|sc_termios_copy
@@ -522,6 +583,12 @@ name|uint8_t
 name|sc_ttyfreed
 decl_stmt|;
 comment|/* set when TTY has been freed */
+name|uint8_t
+name|sc_last_cmd_flag
+index|[
+name|USB_COM_CFG_MAX
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

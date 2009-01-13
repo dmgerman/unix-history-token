@@ -1907,6 +1907,12 @@ name|is_opened
 operator|=
 literal|0
 expr_stmt|;
+name|pdev
+operator|->
+name|claimed_interfaces
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|error

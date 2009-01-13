@@ -7783,11 +7783,9 @@ operator|<
 literal|0
 operator|)
 operator|||
-name|beQuiet
+name|is_posix
 operator|||
-name|beVerbose
-operator|==
-literal|0
+name|beQuiet
 condition|)
 block|{
 comment|/* 		 * If only one job can run at a time, there's no need for a 		 * banner, no is there? 		 */

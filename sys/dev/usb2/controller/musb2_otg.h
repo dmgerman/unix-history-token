@@ -23,6 +23,13 @@ directive|define
 name|_MUSB2_OTG_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|MUSB2_MAX_DEVICES
+value|(USB_MIN_DEVICES + 1)
+end_define
+
 begin_comment
 comment|/* Common registers */
 end_comment
@@ -1974,14 +1981,18 @@ name|usb2_sw_transfer
 name|sc_root_intr
 decl_stmt|;
 name|struct
-name|usb2_config_td
-name|sc_config_td
-decl_stmt|;
-name|struct
 name|usb2_hw_ep_profile
 name|sc_hw_ep_profile
 index|[
 literal|16
+index|]
+decl_stmt|;
+name|struct
+name|usb2_device
+modifier|*
+name|sc_devices
+index|[
+name|MUSB2_MAX_DEVICES
 index|]
 decl_stmt|;
 name|struct
@@ -2148,6 +2159,21 @@ name|struct
 name|musbotg_softc
 modifier|*
 name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|musbotg_vbus_interrupt
+parameter_list|(
+name|struct
+name|musbotg_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint8_t
+name|is_on
 parameter_list|)
 function_decl|;
 end_function_decl

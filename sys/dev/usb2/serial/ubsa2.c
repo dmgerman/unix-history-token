@@ -79,12 +79,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_request.h>
 end_include
 
@@ -197,7 +191,7 @@ begin_define
 define|#
 directive|define
 name|UBSA_CONFIG_INDEX
-value|1
+value|0
 end_define
 
 begin_define

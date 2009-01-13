@@ -269,7 +269,7 @@ name|usb2_needs_explore
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -379,6 +379,17 @@ name|uint8_t
 name|conf_no
 parameter_list|)
 block|{
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+init|=
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|udev
+decl_stmt|;
 name|usb2_error_t
 name|err
 init|=
@@ -399,8 +410,6 @@ expr_stmt|;
 comment|/* XXX */
 name|sx_xlock
 argument_list|(
-name|xfer
-operator|->
 name|udev
 operator|->
 name|default_sx
@@ -431,8 +440,6 @@ if|if
 condition|(
 name|usb2_set_config_index
 argument_list|(
-name|xfer
-operator|->
 name|udev
 argument_list|,
 name|conf_no
@@ -458,8 +465,6 @@ if|if
 condition|(
 name|usb2_probe_and_attach
 argument_list|(
-name|xfer
-operator|->
 name|udev
 argument_list|,
 name|USB_IFACE_INDEX_ANY
@@ -490,8 +495,6 @@ expr_stmt|;
 comment|/* XXX */
 name|sx_unlock
 argument_list|(
-name|xfer
-operator|->
 name|udev
 operator|->
 name|default_sx
@@ -563,6 +566,8 @@ modifier|*
 name|udev
 init|=
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|udev
 decl_stmt|;
@@ -1176,6 +1181,17 @@ name|uint8_t
 name|do_stall
 parameter_list|)
 block|{
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+init|=
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|udev
+decl_stmt|;
 name|usb2_error_t
 name|err
 decl_stmt|;
@@ -1188,14 +1204,10 @@ name|err
 operator|=
 name|usb2_set_endpoint_stall
 argument_list|(
-name|xfer
-operator|->
 name|udev
 argument_list|,
 name|usb2_get_pipe_by_addr
 argument_list|(
-name|xfer
-operator|->
 name|udev
 argument_list|,
 name|ep
@@ -1325,6 +1337,8 @@ decl_stmt|;
 name|udev
 operator|=
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|udev
 expr_stmt|;
@@ -1632,6 +1646,8 @@ expr_stmt|;
 name|udev
 operator|=
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|udev
 expr_stmt|;

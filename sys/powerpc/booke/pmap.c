@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2007 Semihalf, Rafal Jaworowski<raj@semihalf.com>  * Copyright (C) 2006 Semihalf, Marian Balakowicz<m8@semihalf.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Some hw specific parts of this pmap were derived or influenced  * by NetBSD's ibm4xx pmap module. More generic code is shared with  * a few other pmap modules from the FreeBSD tree.  */
+comment|/*-  * Copyright (C) 2007-2008 Semihalf, Rafal Jaworowski<raj@semihalf.com>  * Copyright (C) 2006 Semihalf, Marian Balakowicz<m8@semihalf.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Some hw specific parts of this pmap were derived or influenced  * by NetBSD's ibm4xx pmap module. More generic code is shared with  * a few other pmap modules from the FreeBSD tree.  */
 end_comment
 
 begin_comment
-comment|/*   * VM layout notes:   *   * Kernel and user threads run within one common virtual address space   * defined by AS=0.   *   * Virtual address space layout:   * -----------------------------   * 0x0000_0000 - 0xbfff_efff	: user process   * 0xc000_0000 - 0xc1ff_ffff	: kernel reserved   *   0xc000_0000 - kernelend	: kernel code&data   *   0xc1ff_c000 - 0xc200_0000	: kstack0   * 0xc200_0000 - 0xffef_ffff	: KVA   *   0xc200_0000 - 0xc200_3fff : reserved for page zero/copy   *   0xc200_4000 - ptbl buf end: reserved for ptbl bufs   *   ptbl buf end- 0xffef_ffff	: actual free KVA space   * 0xfff0_0000 - 0xffff_ffff	: I/O devices region   */
+comment|/*   * VM layout notes:   *   * Kernel and user threads run within one common virtual address space   * defined by AS=0.   *   * Virtual address space layout:   * -----------------------------   * 0x0000_0000 - 0xafff_ffff	: user process   * 0xb000_0000 - 0xbfff_ffff	: pmap_mapdev()-ed area (PCI/PCIE etc.)   * 0xc000_0000 - 0xc0ff_ffff	: kernel reserved   *   0xc000_0000 - kernelend	: kernel code+data, env, metadata etc.   * 0xc100_0000 - 0xfeef_ffff	: KVA   *   0xc100_0000 - 0xc100_3fff : reserved for page zero/copy   *   0xc100_4000 - 0xc200_3fff : reserved for ptbl bufs   *   0xc200_4000 - 0xc200_8fff : guard page + kstack0   *   0xc200_9000 - 0xfeef_ffff	: actual free KVA space   * 0xfef0_0000 - 0xffff_ffff	: I/O devices region   */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ktr.h>
 end_include
 
 begin_include
@@ -370,6 +376,14 @@ name|zero_page_mutex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|tlbivax_mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Reserved KVA space for mmu_booke_zero_page_idle. This is used  * by idle thred only, no lock required.  */
 end_comment
@@ -486,7 +500,29 @@ end_define
 begin_function_decl
 specifier|extern
 name|void
-name|load_pid0
+name|tlb_lock
+parameter_list|(
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|tlb_unlock
+parameter_list|(
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|tid_flush
 parameter_list|(
 name|tlbtid_t
 parameter_list|)
@@ -515,6 +551,9 @@ specifier|volatile
 name|pmap_t
 name|tidbusy
 index|[
+name|MAXCPU
+index|]
+index|[
 name|TID_MAX
 operator|+
 literal|1
@@ -523,75 +562,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Actual maximum number of TLB0 entries.  * This number differs between e500 core revisions.  */
+comment|/*  * TLB0 capabilities (entry, way numbers etc.). These can vary between e500  * core revisions and should be read from h/w registers during early config.  */
 end_comment
 
 begin_decl_stmt
-name|u_int32_t
-name|tlb0_size
+name|uint32_t
+name|tlb0_entries
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
-name|tlb0_nways
+name|uint32_t
+name|tlb0_ways
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
-name|tlb0_nentries_per_way
+name|uint32_t
+name|tlb0_entries_per_way
 decl_stmt|;
 end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|TLB0_SIZE
-value|(tlb0_size)
+name|TLB0_ENTRIES
+value|(tlb0_entries)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TLB0_NWAYS
-value|(tlb0_nways)
+name|TLB0_WAYS
+value|(tlb0_ways)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TLB0_ENTRIES_PER_WAY
-value|(tlb0_nentries_per_way)
+value|(tlb0_entries_per_way)
 end_define
-
-begin_comment
-comment|/* Pointer to kernel tlb0 table, allocated in mmu_booke_bootstrap() */
-end_comment
-
-begin_decl_stmt
-name|tlb_entry_t
-modifier|*
-name|tlb0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Spinlock to assure proper locking between threads and  * between tlb miss handler and kernel.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|tlb0_mutex
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|TLB1_SIZE
+name|TLB1_ENTRIES
 value|16
 end_define
 
@@ -604,7 +620,7 @@ specifier|static
 name|tlb_entry_t
 name|tlb1
 index|[
-name|TLB1_SIZE
+name|TLB1_ENTRIES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -636,47 +652,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|tid_flush
-parameter_list|(
-name|tlbtid_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|tlb1_inval_va
-parameter_list|(
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|tlb0_inval_va
-parameter_list|(
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|tlb_print_entry
 parameter_list|(
 name|int
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -692,32 +678,7 @@ name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|,
-name|u_int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|__tlb1_set_entry
-parameter_list|(
-name|unsigned
-name|int
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|vm_size_t
-parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|,
-name|unsigned
-name|int
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -810,13 +771,11 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|inline
 name|void
-name|tlb0_inval_entry
+name|tlb0_flush_entry
 parameter_list|(
 name|vm_offset_t
-parameter_list|,
-name|unsigned
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -832,42 +791,6 @@ name|vm_offset_t
 parameter_list|,
 name|unsigned
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|tlb0_write_entry
-parameter_list|(
-name|unsigned
-name|int
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|tlb0_flush_entry
-parameter_list|(
-name|pmap_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|tlb0_init
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -998,7 +921,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|pte_t
+modifier|*
 name|ptbl_alloc
 parameter_list|(
 name|mmu_t
@@ -1086,6 +1010,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pte_enter
 parameter_list|(
@@ -1097,7 +1022,7 @@ name|vm_page_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1113,12 +1038,13 @@ name|pmap_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|pv_entry_t
 name|pv_alloc
 parameter_list|(
@@ -2197,13 +2123,13 @@ argument_list|(
 name|SPR_TLB0CFG
 argument_list|)
 expr_stmt|;
-name|tlb0_size
+name|tlb0_entries
 operator|=
 name|tlb0_cfg
 operator|&
 name|TLBCFG_NENTRY_MASK
 expr_stmt|;
-name|tlb0_nways
+name|tlb0_ways
 operator|=
 operator|(
 name|tlb0_cfg
@@ -2213,11 +2139,11 @@ operator|)
 operator|>>
 name|TLBCFG_ASSOC_SHIFT
 expr_stmt|;
-name|tlb0_nentries_per_way
+name|tlb0_entries_per_way
 operator|=
-name|tlb0_size
+name|tlb0_entries
 operator|/
-name|tlb0_nways
+name|tlb0_ways
 expr_stmt|;
 block|}
 end_function
@@ -2237,10 +2163,45 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|//debugf("ptbl_init: s (ptbl_bufs = 0x%08x size 0x%08x)\n",
-comment|//		(u_int32_t)ptbl_bufs, sizeof(struct ptbl_buf) * PTBL_BUFS);
-comment|//debugf("ptbl_init: s (ptbl_buf_pool_vabase = 0x%08x size = 0x%08x)\n",
-comment|//		ptbl_buf_pool_vabase, PTBL_BUFS * PTBL_PAGES * PAGE_SIZE);
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: s (ptbl_bufs = 0x%08x size 0x%08x)"
+argument_list|,
+name|__func__
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|ptbl_bufs
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ptbl_buf
+argument_list|)
+operator|*
+name|PTBL_BUFS
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: s (ptbl_buf_pool_vabase = 0x%08x size = 0x%08x)"
+argument_list|,
+name|__func__
+argument_list|,
+name|ptbl_buf_pool_vabase
+argument_list|,
+name|PTBL_BUFS
+operator|*
+name|PTBL_PAGES
+operator|*
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -2303,7 +2264,6 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
-comment|//debugf("ptbl_init: e\n");
 block|}
 end_function
 
@@ -2326,7 +2286,6 @@ name|ptbl_buf
 modifier|*
 name|buf
 decl_stmt|;
-comment|//debugf("ptbl_buf_alloc: s\n");
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2363,7 +2322,17 @@ operator|&
 name|ptbl_buf_freelist_lock
 argument_list|)
 expr_stmt|;
-comment|//debugf("ptbl_buf_alloc: e (buf = 0x%08x)\n", (u_int32_t)buf);
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: buf = %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|buf
@@ -2387,7 +2356,17 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-comment|//debugf("ptbl_buf_free: s (buf = 0x%08x)\n", (u_int32_t)buf);
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: buf = %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2410,12 +2389,11 @@ operator|&
 name|ptbl_buf_freelist_lock
 argument_list|)
 expr_stmt|;
-comment|//debugf("ptbl_buf_free: e\n");
 block|}
 end_function
 
 begin_comment
-comment|/*  * Search the list of allocated ptbl bufs and find   * on list of allocated ptbls  */
+comment|/*  * Search the list of allocated ptbl bufs and find on list of allocated ptbls  */
 end_comment
 
 begin_function
@@ -2436,17 +2414,32 @@ name|ptbl_buf
 modifier|*
 name|pbuf
 decl_stmt|;
-comment|//debugf("ptbl_free_pmap_ptbl: s (pmap = 0x%08x ptbl = 0x%08x)\n",
-comment|//		(u_int32_t)pmap, (u_int32_t)ptbl);
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: ptbl = %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|ptbl
+argument_list|)
+expr_stmt|;
+name|PMAP_LOCK_ASSERT
+argument_list|(
+name|pmap
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|pbuf
 argument_list|,
-argument|&pmap->ptbl_list
+argument|&pmap->pm_ptbl_list
 argument_list|,
 argument|link
 argument_list|)
-block|{
 if|if
 condition|(
 name|pbuf
@@ -2465,14 +2458,14 @@ argument_list|(
 operator|&
 name|pmap
 operator|->
-name|ptbl_list
+name|pm_ptbl_list
 argument_list|,
 name|pbuf
 argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-comment|/* Free correspondig ptbl buf. */
+comment|/* Free corresponding ptbl buf. */
 name|ptbl_buf_free
 argument_list|(
 name|pbuf
@@ -2480,8 +2473,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
-comment|//debugf("ptbl_free_pmap_ptbl: e\n");
 block|}
 end_function
 
@@ -2491,7 +2482,8 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|pte_t
+modifier|*
 name|ptbl_alloc
 parameter_list|(
 name|mmu_t
@@ -2523,11 +2515,32 @@ name|unsigned
 name|int
 name|pidx
 decl_stmt|;
+name|pte_t
+modifier|*
+name|ptbl
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|//int su = (pmap == kernel_pmap);
-comment|//debugf("ptbl_alloc: s (pmap = 0x%08x su = %d pdir_idx = %d)\n", (u_int32_t)pmap, su, pdir_idx);
+name|CTR4
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: pmap = %p su = %d pdir_idx = %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+operator|(
+name|pmap
+operator|==
+name|kernel_pmap
+operator|)
+argument_list|,
+name|pdir_idx
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -2579,12 +2592,7 @@ argument_list|(
 literal|"pte_alloc: couldn't alloc kernel virtual memory"
 argument_list|)
 expr_stmt|;
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|pdir_idx
-index|]
+name|ptbl
 operator|=
 operator|(
 name|pte_t
@@ -2594,7 +2602,17 @@ name|pbuf
 operator|->
 name|kva
 expr_stmt|;
-comment|//debugf("ptbl_alloc: kva = 0x%08x\n", (u_int32_t)pmap->pm_pdir[pdir_idx]);
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: ptbl kva = %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|ptbl
+argument_list|)
+expr_stmt|;
 comment|/* Allocate ptbl pages, this will sleep! */
 for|for
 control|(
@@ -2667,7 +2685,7 @@ operator|=
 name|m
 expr_stmt|;
 block|}
-comment|/* Map in allocated pages into kernel_pmap. */
+comment|/* Map allocated pages into kernel_pmap. */
 name|mmu_booke_qenter
 argument_list|(
 name|mmu
@@ -2675,12 +2693,7 @@ argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|pdir_idx
-index|]
+name|ptbl
 argument_list|,
 name|mtbl
 argument_list|,
@@ -2693,12 +2706,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|pdir_idx
-index|]
+name|ptbl
 argument_list|,
 name|PTBL_PAGES
 operator|*
@@ -2711,14 +2719,18 @@ argument_list|(
 operator|&
 name|pmap
 operator|->
-name|ptbl_list
+name|pm_ptbl_list
 argument_list|,
 name|pbuf
 argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-comment|//debugf("ptbl_alloc: e\n");
+return|return
+operator|(
+name|ptbl
+operator|)
+return|;
 block|}
 end_function
 
@@ -2758,8 +2770,25 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|//int su = (pmap == kernel_pmap);
-comment|//debugf("ptbl_free: s (pmap = 0x%08x su = %d pdir_idx = %d)\n", (u_int32_t)pmap, su, pdir_idx);
+name|CTR4
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: pmap = %p su = %d pdir_idx = %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+operator|(
+name|pmap
+operator|==
+name|kernel_pmap
+operator|)
+argument_list|,
+name|pdir_idx
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -2786,7 +2815,17 @@ index|[
 name|pdir_idx
 index|]
 expr_stmt|;
-comment|//debugf("ptbl_free: ptbl = 0x%08x\n", (u_int32_t)ptbl);
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: ptbl = %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|ptbl
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -2798,6 +2837,28 @@ argument_list|,
 operator|(
 literal|"ptbl_free: null ptbl"
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Invalidate the pdir entry as soon as possible, so that other CPUs 	 * don't attempt to look up the page tables we are releasing. 	 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
+name|pmap
+operator|->
+name|pm_pdir
+index|[
+name|pdir_idx
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
 argument_list|)
 expr_stmt|;
 for|for
@@ -2877,16 +2938,6 @@ argument_list|,
 name|ptbl
 argument_list|)
 expr_stmt|;
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|pdir_idx
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-comment|//debugf("ptbl_free: e\n");
 block|}
 end_function
 
@@ -2923,9 +2974,25 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|//int su = (pmap == kernel_pmap);
-comment|//debugf("ptbl_unhold: s (pmap = %08x su = %d pdir_idx = %d)\n",
-comment|//		(u_int32_t)pmap, su, pdir_idx);
+name|CTR4
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: pmap = %p su = %d pdir_idx = %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+operator|(
+name|pmap
+operator|==
+name|kernel_pmap
+operator|)
+argument_list|,
+name|pdir_idx
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -3030,7 +3097,7 @@ name|wire_count
 operator|--
 expr_stmt|;
 block|}
-comment|/* 	 * Free ptbl pages if there are no pte etries in this ptbl. 	 * wire_count has the same value for all ptbl pages, so check 	 * the last page. 	 */
+comment|/* 	 * Free ptbl pages if there are no pte etries in this ptbl. 	 * wire_count has the same value for all ptbl pages, so check the last 	 * page. 	 */
 if|if
 condition|(
 name|m
@@ -3056,7 +3123,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|//debugf("ptbl_unhold: e\n");
 return|return
 operator|(
 literal|0
@@ -3066,7 +3132,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increment hold count for ptbl pages. This routine is used when  * new pte entry is being inserted into ptbl.  */
+comment|/*  * Increment hold count for ptbl pages. This routine is used when a new pte  * entry is being inserted into the ptbl.  */
 end_comment
 
 begin_function
@@ -3098,7 +3164,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|//debugf("ptbl_hold: s (pmap = 0x%08x pdir_idx = %d)\n", (u_int32_t)pmap, pdir_idx);
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: pmap = %p pdir_idx = %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+name|pdir_idx
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -3198,7 +3276,6 @@ name|wire_count
 operator|++
 expr_stmt|;
 block|}
-comment|//debugf("ptbl_hold: e\n");
 block|}
 end_function
 
@@ -3216,11 +3293,6 @@ block|{
 name|pv_entry_t
 name|pv
 decl_stmt|;
-name|debugf
-argument_list|(
-literal|"pv_alloc: s\n"
-argument_list|)
-expr_stmt|;
 name|pv_entry_count
 operator|++
 expr_stmt|;
@@ -3259,11 +3331,6 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-name|debugf
-argument_list|(
-literal|"pv_alloc: e\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pv
@@ -3286,7 +3353,6 @@ name|pv_entry_t
 name|pve
 parameter_list|)
 block|{
-comment|//debugf("pv_free: s\n");
 name|pv_entry_count
 operator|--
 expr_stmt|;
@@ -3297,7 +3363,6 @@ argument_list|,
 name|pve
 argument_list|)
 expr_stmt|;
-comment|//debugf("pv_free: e\n");
 block|}
 end_function
 
@@ -3521,7 +3586,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|flags
 parameter_list|)
 block|{
@@ -3683,6 +3748,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
+name|tlb0_flush_entry
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
 name|pte
 operator|->
 name|flags
@@ -3694,6 +3770,12 @@ operator|->
 name|rpn
 operator|=
 literal|0
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
 expr_stmt|;
 name|pmap
 operator|->
@@ -3737,6 +3819,7 @@ comment|/*  * Insert PTE for a given page and virtual address.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pte_enter
 parameter_list|(
@@ -3752,7 +3835,7 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 block|{
@@ -3777,13 +3860,27 @@ decl_stmt|;
 name|pte_t
 modifier|*
 name|ptbl
-decl_stmt|;
-name|pte_t
+decl_stmt|,
 modifier|*
 name|pte
 decl_stmt|;
-comment|//int su = (pmap == kernel_pmap);
-comment|//debugf("pte_enter: s (su = %d pmap = 0x%08x va = 0x%08x)\n", su, (u_int32_t)pmap, va);
+name|CTR4
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: su = %d pmap = %p va = %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+operator|==
+name|kernel_pmap
+argument_list|,
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 comment|/* Get the page table pointer. */
 name|ptbl
 operator|=
@@ -3797,7 +3894,24 @@ expr_stmt|;
 if|if
 condition|(
 name|ptbl
+operator|==
+name|NULL
 condition|)
+block|{
+comment|/* Allocate page table pages. */
+name|ptbl
+operator|=
+name|ptbl_alloc
+argument_list|(
+name|mmu
+argument_list|,
+name|pmap
+argument_list|,
+name|pdir_idx
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* 		 * Check if there is valid mapping for requested 		 * va, if there is, remove it. 		 */
 name|pte
@@ -3853,43 +3967,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-comment|/* Allocate page table pages. */
-name|ptbl_alloc
-argument_list|(
-name|mmu
-argument_list|,
-name|pmap
-argument_list|,
-name|pdir_idx
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Flush entry from TLB. */
-name|tlb0_flush_entry
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|)
-expr_stmt|;
-name|pte
-operator|=
-operator|&
-operator|(
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|pdir_idx
-index|]
-index|[
-name|ptbl_idx
-index|]
-operator|)
-expr_stmt|;
-comment|/* 	 * Insert pv_entry into pv_list for mapped page 	 * if part of managed memory. 	 */
+comment|/* 	 * Insert pv_entry into pv_list for mapped page if part of managed 	 * memory. 	 */
 if|if
 condition|(
 operator|(
@@ -3916,8 +3994,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pte
-operator|->
 name|flags
 operator||=
 name|PTE_MANAGED
@@ -3936,8 +4012,6 @@ block|}
 block|}
 else|else
 block|{
-name|pte
-operator|->
 name|flags
 operator||=
 name|PTE_FAKE
@@ -3949,6 +4023,55 @@ name|pm_stats
 operator|.
 name|resident_count
 operator|++
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
+name|tlb0_flush_entry
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pmap
+operator|->
+name|pm_pdir
+index|[
+name|pdir_idx
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * If we just allocated a new page table, hook it in 		 * the pdir. 		 */
+name|pmap
+operator|->
+name|pm_pdir
+index|[
+name|pdir_idx
+index|]
+operator|=
+name|ptbl
+expr_stmt|;
+block|}
+name|pte
+operator|=
+operator|&
+operator|(
+name|pmap
+operator|->
+name|pm_pdir
+index|[
+name|pdir_idx
+index|]
+index|[
+name|ptbl_idx
+index|]
+operator|)
 expr_stmt|;
 name|pte
 operator|->
@@ -3972,7 +4095,12 @@ operator||
 name|flags
 operator|)
 expr_stmt|;
-comment|//debugf("pte_enter: e\n");
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4214,6 +4342,23 @@ argument_list|(
 literal|"mmu_booke_bootstrap: entered\n"
 argument_list|)
 expr_stmt|;
+comment|/* Initialize invalidation mutex */
+name|mtx_init
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|,
+literal|"tlbivax"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+comment|/* Read TLB0 size and associativity. */
+name|tlb0_get_tlbconf
+argument_list|()
+expr_stmt|;
 comment|/* Align kernel start and end address (kernel image). */
 name|kernelstart
 operator|=
@@ -4248,50 +4393,9 @@ argument_list|(
 literal|" msgbufp at 0x%08x end = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|msgbufp
-argument_list|,
-name|kernelend
-argument_list|)
-expr_stmt|;
-name|kernelend
-operator|=
-name|round_page
-argument_list|(
-name|kernelend
-argument_list|)
-expr_stmt|;
-comment|/* Allocate space for tlb0 table. */
-name|tlb0_get_tlbconf
-argument_list|()
-expr_stmt|;
-comment|/* Read TLB0 size and associativity. */
-name|tlb0
-operator|=
-operator|(
-name|tlb_entry_t
-operator|*
-operator|)
-name|kernelend
-expr_stmt|;
-name|kernelend
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|tlb_entry_t
-argument_list|)
-operator|*
-name|tlb0_size
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" tlb0 at 0x%08x end = 0x%08x\n"
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|tlb0
 argument_list|,
 name|kernelend
 argument_list|)
@@ -4328,7 +4432,7 @@ argument_list|(
 literal|" ptbl_bufs at 0x%08x end = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|ptbl_bufs
 argument_list|,
@@ -4378,9 +4482,18 @@ argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|" kernel pdir at 0x%08x\n"
+literal|" kernel pdir at 0x%08x end = 0x%08x\n"
 argument_list|,
 name|kernel_pdir
+argument_list|,
+name|kernelend
+argument_list|)
+expr_stmt|;
+name|debugf
+argument_list|(
+literal|" kernelend: 0x%08x\n"
+argument_list|,
+name|kernelend
 argument_list|)
 expr_stmt|;
 if|if
@@ -4433,25 +4546,14 @@ operator|&
 operator|~
 literal|0xffffff
 expr_stmt|;
-comment|/* 	 * Clear the structures - note we can only do it safely after the 	 * possible additional TLB1 translations are in place so that 	 * all range up to the currently calculated 'kernelend' is covered. 	 */
-name|memset
+name|debugf
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|tlb0
+literal|" updated kernelend: 0x%08x\n"
 argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tlb_entry_t
-argument_list|)
-operator|*
-name|tlb0_size
+name|kernelend
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Clear the structures - note we can only do it safely after the 	 * possible additional TLB1 translations are in place (above) so that 	 * all range up to the currently calculated 'kernelend' is covered. 	 */
 name|memset
 argument_list|(
 operator|(
@@ -4532,6 +4634,34 @@ name|virtual_avail
 operator|+=
 name|PAGE_SIZE
 expr_stmt|;
+name|debugf
+argument_list|(
+literal|"zero_page_va = 0x%08x\n"
+argument_list|,
+name|zero_page_va
+argument_list|)
+expr_stmt|;
+name|debugf
+argument_list|(
+literal|"zero_page_idle_va = 0x%08x\n"
+argument_list|,
+name|zero_page_idle_va
+argument_list|)
+expr_stmt|;
+name|debugf
+argument_list|(
+literal|"copy_page_src_va = 0x%08x\n"
+argument_list|,
+name|copy_page_src_va
+argument_list|)
+expr_stmt|;
+name|debugf
+argument_list|(
+literal|"copy_page_dst_va = 0x%08x\n"
+argument_list|,
+name|copy_page_dst_va
+argument_list|)
+expr_stmt|;
 comment|/* Initialize page zero/copy mutexes. */
 name|mtx_init
 argument_list|(
@@ -4557,21 +4687,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* Initialize tlb0 table mutex. */
-name|mtx_init
-argument_list|(
-operator|&
-name|tlb0_mutex
-argument_list|,
-literal|"tlb0"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
 comment|/* Allocate KVA space for ptbl bufs. */
 name|ptbl_buf_pool_vabase
 operator|=
@@ -4587,23 +4702,11 @@ name|PAGE_SIZE
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"ptbl_buf_pool_vabase = 0x%08x\n"
+literal|"ptbl_buf_pool_vabase = 0x%08x end = 0x%08x\n"
 argument_list|,
 name|ptbl_buf_pool_vabase
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|"virtual_avail = %08x\n"
 argument_list|,
 name|virtual_avail
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|"virtual_end   = %08x\n"
-argument_list|,
-name|virtual_end
 argument_list|)
 expr_stmt|;
 comment|/* Calculate corresponding physical addresses for the kernel region. */
@@ -4674,7 +4777,7 @@ argument_list|(
 literal|"mmu_booke_bootstrap: phys_avail too small"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Removed kernel physical address range from avail 	 * regions list. Page align all regions. 	 * Non-page aligned memory isn't very interesting to us. 	 * Also, sort the entries for ascending addresses. 	 */
+comment|/* 	 * Remove kernel physical address range from avail regions list. Page 	 * align all regions.  Non-page aligned memory isn't very interesting 	 * to us.  Also, sort the entries for ascending addresses. 	 */
 name|sz
 operator|=
 literal|0
@@ -5314,14 +5417,14 @@ argument_list|(
 literal|"kernel_pmap = 0x%08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|kernel_pmap
 argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
-literal|"kptbl_min = %d, kernel_kptbls = %d\n"
+literal|"kptbl_min = %d, kernel_ptbls = %d\n"
 argument_list|,
 name|kptbl_min
 argument_list|,
@@ -5386,26 +5489,48 @@ name|PTBL_PAGES
 operator|)
 operator|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXCPU
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|kernel_pmap
 operator|->
 name|pm_tid
+index|[
+name|i
+index|]
 operator|=
-name|KERNEL_TID
+name|TID_KERNEL
 expr_stmt|;
+comment|/* Initialize each CPU's tidbusy entry 0 with kernel_pmap */
+name|tidbusy
+index|[
+name|i
+index|]
+index|[
+literal|0
+index|]
+operator|=
+name|kernel_pmap
+expr_stmt|;
+block|}
+comment|/* Mark kernel_pmap active on all CPUs */
 name|kernel_pmap
 operator|->
 name|pm_active
 operator|=
 operator|~
 literal|0
-expr_stmt|;
-comment|/* Initialize tidbusy with kenel_pmap entry. */
-name|tidbusy
-index|[
-literal|0
-index|]
-operator|=
-name|kernel_pmap
 expr_stmt|;
 comment|/*******************************************************/
 comment|/* Final setup */
@@ -5500,9 +5625,19 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-comment|/* Initialize TLB0 handling. */
-name|tlb0_init
-argument_list|()
+name|debugf
+argument_list|(
+literal|"virtual_avail = %08x\n"
+argument_list|,
+name|virtual_avail
+argument_list|)
+expr_stmt|;
+name|debugf
+argument_list|(
+literal|"virtual_end   = %08x\n"
+argument_list|,
+name|virtual_end
+argument_list|)
 expr_stmt|;
 name|debugf
 argument_list|(
@@ -5612,7 +5747,6 @@ name|shpgperproc
 init|=
 name|PMAP_SHPGPERPROC
 decl_stmt|;
-comment|//debugf("mmu_booke_init: s\n");
 comment|/* 	 * Initialize the address space (zone) for the pv entries.  Set a 	 * high water mark so that the system can recover from excessive 	 * numbers of pv entries. 	 */
 name|pvzone
 operator|=
@@ -5699,7 +5833,6 @@ comment|/* Initialize ptbl allocation. */
 name|ptbl_init
 argument_list|()
 expr_stmt|;
-comment|//debugf("mmu_booke_init: e\n");
 block|}
 end_function
 
@@ -5729,7 +5862,6 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|//debugf("mmu_booke_qenter: s (sva = 0x%08x count = %d)\n", sva, count);
 name|va
 operator|=
 name|sva
@@ -5763,7 +5895,6 @@ name|m
 operator|++
 expr_stmt|;
 block|}
-comment|//debugf("mmu_booke_qenter: e\n");
 block|}
 end_function
 
@@ -5789,7 +5920,6 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|//debugf("mmu_booke_qremove: s (sva = 0x%08x count = %d)\n", sva, count);
 name|va
 operator|=
 name|sva
@@ -5814,7 +5944,6 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-comment|//debugf("mmu_booke_qremove: e\n");
 block|}
 end_function
 
@@ -5855,15 +5984,13 @@ argument_list|(
 name|va
 argument_list|)
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 name|pte_t
 modifier|*
 name|pte
 decl_stmt|;
-comment|//debugf("mmu_booke_kenter: s (pdir_idx = %d ptbl_idx = %d va=0x%08x pa=0x%08x)\n",
-comment|//		pdir_idx, ptbl_idx, va, pa);
 name|KASSERT
 argument_list|(
 operator|(
@@ -5914,6 +6041,10 @@ operator||
 name|PTE_VALID
 operator|)
 expr_stmt|;
+name|flags
+operator||=
+name|PTE_M
+expr_stmt|;
 name|pte
 operator|=
 operator|&
@@ -5929,6 +6060,12 @@ name|ptbl_idx
 index|]
 operator|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PTE_ISVALID
@@ -5937,12 +6074,18 @@ name|pte
 argument_list|)
 condition|)
 block|{
-comment|//debugf("mmu_booke_kenter: replacing entry!\n");
+name|CTR1
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: replacing entry!"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Flush entry from TLB0 */
 name|tlb0_flush_entry
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
@@ -5993,7 +6136,12 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
-comment|//debugf("mmu_booke_kenter: e\n");
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6035,7 +6183,7 @@ name|pte_t
 modifier|*
 name|pte
 decl_stmt|;
-comment|//debugf("mmu_booke_kremove: s (va = 0x%08x)\n", va);
+comment|//	CTR2(KTR_PMAP,("%s: s (va = 0x%08x)\n", __func__, va));
 name|KASSERT
 argument_list|(
 operator|(
@@ -6081,14 +6229,26 @@ name|pte
 argument_list|)
 condition|)
 block|{
-comment|//debugf("mmu_booke_kremove: e (invalid pte)\n");
+name|CTR1
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: invalid pte"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
-comment|/* Invalidate entry in TLB0. */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
+comment|/* Invalidate entry in TLB0, update PTE. */
 name|tlb0_flush_entry
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
@@ -6104,7 +6264,12 @@ name|rpn
 operator|=
 literal|0
 expr_stmt|;
-comment|//debugf("mmu_booke_kremove: e\n");
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6124,7 +6289,6 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-comment|//debugf("mmu_booke_pinit0: s (pmap = 0x%08x)\n", (u_int32_t)pmap);
 name|mmu_booke_pinit
 argument_list|(
 name|mmu
@@ -6139,7 +6303,6 @@ argument_list|,
 name|pmap
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_pinit0: e\n");
 block|}
 end_function
 
@@ -6159,12 +6322,32 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-comment|//struct thread *td;
-comment|//struct proc *p;
-comment|//td = PCPU_GET(curthread);
-comment|//p = td->td_proc;
-comment|//debugf("mmu_booke_pinit: s (pmap = 0x%08x)\n", (u_int32_t)pmap);
-comment|//printf("mmu_booke_pinit: proc %d '%s'\n", p->p_pid, p->p_comm);
+name|int
+name|i
+decl_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: pmap = %p, proc %d '%s'"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|,
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -6174,7 +6357,7 @@ name|kernel_pmap
 operator|)
 argument_list|,
 operator|(
-literal|"mmu_booke_pinit: initializing kernel_pmap"
+literal|"pmap_pinit: initializing kernel_pmap"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6183,11 +6366,27 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXCPU
+condition|;
+name|i
+operator|++
+control|)
 name|pmap
 operator|->
 name|pm_tid
+index|[
+name|i
+index|]
 operator|=
-literal|0
+name|TID_NONE
 expr_stmt|;
 name|pmap
 operator|->
@@ -6231,10 +6430,9 @@ argument_list|(
 operator|&
 name|pmap
 operator|->
-name|ptbl_list
+name|pm_ptbl_list
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_pinit: e\n");
 block|}
 end_function
 
@@ -6254,13 +6452,37 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-comment|//debugf("mmu_booke_release: s\n");
+name|printf
+argument_list|(
+literal|"mmu_booke_release: s\n"
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|resident_count
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"pmap_release: pmap resident count %ld != 0"
+operator|,
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|resident_count
+operator|)
+argument_list|)
+expr_stmt|;
 name|PMAP_LOCK_DESTROY
 argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_release: e\n");
 block|}
 end_function
 
@@ -6373,7 +6595,7 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 name|int
@@ -6491,7 +6713,28 @@ name|pa
 operator|)
 condition|)
 block|{
-comment|//debugf("mmu_booke_enter_locked: update\n");
+comment|/* 		 * Before actually updating pte->flags we calculate and 		 * prepare its new value in a helper var. 		 */
+name|flags
+operator|=
+name|pte
+operator|->
+name|flags
+expr_stmt|;
+name|flags
+operator|&=
+operator|~
+operator|(
+name|PTE_UW
+operator||
+name|PTE_UX
+operator||
+name|PTE_SW
+operator||
+name|PTE_SX
+operator||
+name|PTE_MODIFIED
+operator|)
+expr_stmt|;
 comment|/* Wiring change, just update stats. */
 if|if
 condition|(
@@ -6507,8 +6750,6 @@ name|pte
 argument_list|)
 condition|)
 block|{
-name|pte
-operator|->
 name|flags
 operator||=
 name|PTE_WIRED
@@ -6532,8 +6773,6 @@ name|pte
 argument_list|)
 condition|)
 block|{
-name|pte
-operator|->
 name|flags
 operator|&=
 operator|~
@@ -6548,30 +6787,6 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-comment|/* Save the old bits and clear the ones we're interested in. */
-name|flags
-operator|=
-name|pte
-operator|->
-name|flags
-expr_stmt|;
-name|pte
-operator|->
-name|flags
-operator|&=
-operator|~
-operator|(
-name|PTE_UW
-operator||
-name|PTE_UX
-operator||
-name|PTE_SW
-operator||
-name|PTE_SX
-operator||
-name|PTE_MODIFIED
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|prot
@@ -6580,8 +6795,6 @@ name|VM_PROT_WRITE
 condition|)
 block|{
 comment|/* Add write permissions. */
-name|pte
-operator|->
 name|flags
 operator||=
 name|PTE_SW
@@ -6591,8 +6804,6 @@ condition|(
 operator|!
 name|su
 condition|)
-name|pte
-operator|->
 name|flags
 operator||=
 name|PTE_UW
@@ -6601,6 +6812,7 @@ block|}
 else|else
 block|{
 comment|/* Handle modified pages, sense modify status. */
+comment|/* 			 * The PTE_MODIFIED flag could be set by underlying 			 * TLB misses since we last read it (above), possibly 			 * other CPUs could update it so we check in the PTE 			 * directly rather than rely on that saved local flags 			 * copy. 			 */
 if|if
 condition|(
 name|PTE_ISMODIFIED
@@ -6614,7 +6826,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we're turning on execute permissions, flush the icache. */
 if|if
 condition|(
 name|prot
@@ -6622,8 +6833,6 @@ operator|&
 name|VM_PROT_EXECUTE
 condition|)
 block|{
-name|pte
-operator|->
 name|flags
 operator||=
 name|PTE_SX
@@ -6633,12 +6842,11 @@ condition|(
 operator|!
 name|su
 condition|)
-name|pte
-operator|->
 name|flags
 operator||=
 name|PTE_UX
 expr_stmt|;
+comment|/* 			 * Check existing flags for execute permissions: if we 			 * are turning execute permissions on, icache should 			 * be flushed. 			 */
 if|if
 condition|(
 operator|(
@@ -6657,25 +6865,39 @@ name|sync
 operator|++
 expr_stmt|;
 block|}
-comment|/* Flush the old mapping from TLB0. */
-name|pte
-operator|->
 name|flags
 operator|&=
 operator|~
 name|PTE_REFERENCED
 expr_stmt|;
+comment|/* 		 * The new flags value is all calculated -- only now actually 		 * update the PTE. 		 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
 name|tlb0_flush_entry
 argument_list|(
-name|pmap
-argument_list|,
 name|va
+argument_list|)
+expr_stmt|;
+name|pte
+operator|->
+name|flags
+operator|=
+name|flags
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * If there is an existing mapping, but its for a different 		 * physical address, pte_enter() will delete the old mapping. 		 */
+comment|/* 		 * If there is an existing mapping, but it's for a different 		 * physical address, pte_enter() will delete the old mapping. 		 */
 comment|//if ((pte != NULL)&& PTE_ISVALID(pte))
 comment|//	debugf("mmu_booke_enter_locked: replace\n");
 comment|//else
@@ -6688,6 +6910,10 @@ name|PTE_SR
 operator||
 name|PTE_VALID
 operator|)
+expr_stmt|;
+name|flags
+operator||=
+name|PTE_M
 expr_stmt|;
 if|if
 condition|(
@@ -6864,6 +7090,8 @@ operator||
 name|PTE_VALID
 operator||
 name|PTE_UR
+operator||
+name|PTE_M
 expr_stmt|;
 name|pte_enter
 argument_list|(
@@ -6901,7 +7129,6 @@ name|PTBL_UNHOLD
 argument_list|)
 expr_stmt|;
 block|}
-comment|//debugf("mmu_booke_enter_locked: e\n");
 block|}
 end_function
 
@@ -7045,7 +7272,6 @@ name|vm_prot_t
 name|prot
 parameter_list|)
 block|{
-comment|//debugf("mmu_booke_enter_quick: s\n");
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -7077,7 +7303,6 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_enter_quick e\n");
 block|}
 end_function
 
@@ -7107,7 +7332,7 @@ name|pte_t
 modifier|*
 name|pte
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|hold_flag
 decl_stmt|;
 name|int
@@ -7143,7 +7368,7 @@ operator|)
 operator|)
 argument_list|,
 operator|(
-literal|"mmu_booke_enter: kernel pmap, non kernel va"
+literal|"mmu_booke_remove: kernel pmap, non kernel va"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7159,7 +7384,7 @@ name|VM_MAXUSER_ADDRESS
 operator|)
 argument_list|,
 operator|(
-literal|"mmu_booke_enter: user pmap, non user va"
+literal|"mmu_booke_remove: user pmap, non user va"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7227,7 +7452,6 @@ argument_list|(
 name|pte
 argument_list|)
 condition|)
-block|{
 name|pte_remove
 argument_list|(
 name|mmu
@@ -7239,15 +7463,6 @@ argument_list|,
 name|hold_flag
 argument_list|)
 expr_stmt|;
-comment|/* Flush mapping from TLB0. */
-name|tlb0_flush_entry
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|PMAP_UNLOCK
 argument_list|(
@@ -7282,10 +7497,9 @@ name|pv
 decl_stmt|,
 name|pvn
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|hold_flag
 decl_stmt|;
-comment|//debugf("mmu_booke_remove_all: s\n");
 name|mtx_assert
 argument_list|(
 operator|&
@@ -7357,18 +7571,6 @@ argument_list|,
 name|hold_flag
 argument_list|)
 expr_stmt|;
-comment|/* Flush mapping from TLB0. */
-name|tlb0_flush_entry
-argument_list|(
-name|pv
-operator|->
-name|pv_pmap
-argument_list|,
-name|pv
-operator|->
-name|pv_va
-argument_list|)
-expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pv
@@ -7384,12 +7586,11 @@ argument_list|,
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_remove_all: e\n");
 block|}
 end_function
 
 begin_comment
-comment|/*  * Map a range of physical addresses into kernel virtual address space.  *  * The value passed in *virt is a suggested virtual address for the mapping.  * Architectures which can support a direct-mapped physical to virtual region  * can return the appropriate address within that region, leaving '*virt'  * unchanged.  We cannot and therefore do not; *virt is updated with the  * first usable address after the mapped region.  */
+comment|/*  * Map a range of physical addresses into kernel virtual address space.  */
 end_comment
 
 begin_function
@@ -7498,8 +7699,31 @@ name|p_vmspace
 operator|->
 name|vm_pmap
 expr_stmt|;
-comment|//debugf("mmu_booke_activate: s (proc = '%s', id = %d, pmap = 0x%08x)\n",
-comment|//		td->td_proc->p_comm, td->td_proc->p_pid, pmap);
+name|CTR5
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: s (td = %p, proc = '%s', id = %d, pmap = 0x%08x)"
+argument_list|,
+name|__func__
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_comm
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|pmap
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -7519,13 +7743,17 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|atomic_set_int
+argument_list|(
+operator|&
 name|pmap
 operator|->
 name|pm_active
-operator||=
+argument_list|,
 name|PCPU_GET
 argument_list|(
 name|cpumask
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|PCPU_SET
@@ -7537,10 +7765,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|pmap
 operator|->
 name|pm_tid
+index|[
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+index|]
+operator|==
+name|TID_NONE
 condition|)
 name|tid_alloc
 argument_list|(
@@ -7548,21 +7783,53 @@ name|pmap
 argument_list|)
 expr_stmt|;
 comment|/* Load PID0 register with pmap tid value. */
-name|load_pid0
+name|mtspr
 argument_list|(
+name|SPR_PID0
+argument_list|,
 name|pmap
 operator|->
 name|pm_tid
+index|[
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+index|]
 argument_list|)
 expr_stmt|;
+asm|__asm __volatile("isync");
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_activate: e (tid = %d for '%s')\n", pmap->pm_tid,
-comment|//		td->td_proc->p_comm);
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: e (tid = %d for '%s')"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+operator|->
+name|pm_tid
+index|[
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+index|]
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7598,17 +7865,43 @@ name|p_vmspace
 operator|->
 name|vm_pmap
 expr_stmt|;
+name|CTR5
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: td=%p, proc = '%s', id = %d, pmap = 0x%08x"
+argument_list|,
+name|__func__
+argument_list|,
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_comm
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|pmap
+argument_list|)
+expr_stmt|;
+name|atomic_clear_int
+argument_list|(
+operator|&
 name|pmap
 operator|->
 name|pm_active
-operator|&=
-operator|~
-operator|(
+argument_list|,
 name|PCPU_GET
 argument_list|(
 name|cpumask
 argument_list|)
-operator|)
+argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
@@ -7772,6 +8065,12 @@ name|pte
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
 comment|/* Handle modified pages. */
 if|if
 condition|(
@@ -7800,7 +8099,11 @@ argument_list|,
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
-comment|/* Flush mapping from TLB0. */
+name|tlb0_flush_entry
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
 name|pte
 operator|->
 name|flags
@@ -7816,11 +8119,10 @@ operator||
 name|PTE_REFERENCED
 operator|)
 expr_stmt|;
-name|tlb0_flush_entry
+name|mtx_unlock_spin
 argument_list|(
-name|pmap
-argument_list|,
-name|va
+operator|&
+name|tlbivax_mutex
 argument_list|)
 expr_stmt|;
 block|}
@@ -7951,6 +8253,12 @@ name|pte
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
 comment|/* Handle modified pages. */
 if|if
 condition|(
@@ -7995,15 +8303,10 @@ operator||
 name|PTE_REFERENCED
 operator|)
 expr_stmt|;
-name|tlb0_flush_entry
+name|mtx_unlock_spin
 argument_list|(
-name|pv
-operator|->
-name|pv_pmap
-argument_list|,
-name|pv
-operator|->
-name|pv_va
+operator|&
+name|tlbivax_mutex
 argument_list|)
 expr_stmt|;
 block|}
@@ -8156,7 +8459,7 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pte_wbit
 decl_stmt|;
 name|m
@@ -8319,7 +8622,7 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|//debugf("mmu_booke_zero_page_area: s\n");
+comment|/* XXX KASSERT off and size are within a single page? */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8367,7 +8670,6 @@ operator|&
 name|zero_page_mutex
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_zero_page_area: e\n");
 block|}
 end_function
 
@@ -8387,7 +8689,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-comment|//debugf("mmu_booke_zero_page: s\n");
 name|mmu_booke_zero_page_area
 argument_list|(
 name|mmu
@@ -8399,7 +8700,6 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_zero_page: e\n");
 block|}
 end_function
 
@@ -8427,13 +8727,6 @@ name|sva
 decl_stmt|,
 name|dva
 decl_stmt|;
-comment|//debugf("mmu_booke_copy_page: s\n");
-name|mtx_lock
-argument_list|(
-operator|&
-name|copy_page_mutex
-argument_list|)
-expr_stmt|;
 name|sva
 operator|=
 name|copy_page_src_va
@@ -8441,6 +8734,12 @@ expr_stmt|;
 name|dva
 operator|=
 name|copy_page_dst_va
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|copy_page_mutex
+argument_list|)
 expr_stmt|;
 name|mmu_booke_kenter
 argument_list|(
@@ -8501,7 +8800,6 @@ operator|&
 name|copy_page_mutex
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_copy_page: e\n");
 block|}
 end_function
 
@@ -8540,7 +8838,6 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|//debugf("mmu_booke_zero_page_idle: s\n");
 name|va
 operator|=
 name|zero_page_idle_va
@@ -8574,7 +8871,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|//debugf("mmu_booke_zero_page_idle: e\n");
 block|}
 end_function
 
@@ -8720,7 +9016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return whether or not the specified virtual address is elgible  * for prefault.  */
+comment|/*  * Return whether or not the specified virtual address is eligible  * for prefault.  */
 end_comment
 
 begin_function
@@ -8843,6 +9139,12 @@ condition|)
 goto|goto
 name|make_sure_to_unlock
 goto|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pte
@@ -8858,6 +9160,13 @@ name|PTE_MODIFIED
 operator|)
 condition|)
 block|{
+name|tlb0_flush_entry
+argument_list|(
+name|pv
+operator|->
+name|pv_va
+argument_list|)
+expr_stmt|;
 name|pte
 operator|->
 name|flags
@@ -8873,18 +9182,13 @@ operator||
 name|PTE_REFERENCED
 operator|)
 expr_stmt|;
-name|tlb0_flush_entry
+block|}
+name|mtx_unlock_spin
 argument_list|(
-name|pv
-operator|->
-name|pv_pmap
-argument_list|,
-name|pv
-operator|->
-name|pv_va
+operator|&
+name|tlbivax_mutex
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|make_sure_to_unlock
 label|:
@@ -9015,6 +9319,19 @@ name|pte
 argument_list|)
 condition|)
 block|{
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
+name|tlb0_flush_entry
+argument_list|(
+name|pv
+operator|->
+name|pv_va
+argument_list|)
+expr_stmt|;
 name|pte
 operator|->
 name|flags
@@ -9022,15 +9339,10 @@ operator|&=
 operator|~
 name|PTE_REFERENCED
 expr_stmt|;
-name|tlb0_flush_entry
+name|mtx_unlock_spin
 argument_list|(
-name|pv
-operator|->
-name|pv_pmap
-argument_list|,
-name|pv
-operator|->
-name|pv_va
+operator|&
+name|tlbivax_mutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -9175,6 +9487,19 @@ name|pte
 argument_list|)
 condition|)
 block|{
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbivax_mutex
+argument_list|)
+expr_stmt|;
+name|tlb0_flush_entry
+argument_list|(
+name|pv
+operator|->
+name|pv_va
+argument_list|)
+expr_stmt|;
 name|pte
 operator|->
 name|flags
@@ -9182,15 +9507,10 @@ operator|&=
 operator|~
 name|PTE_REFERENCED
 expr_stmt|;
-name|tlb0_flush_entry
+name|mtx_unlock_spin
 argument_list|(
-name|pv
-operator|->
-name|pv_pmap
-argument_list|,
-name|pv
-operator|->
-name|pv_va
+operator|&
+name|tlbivax_mutex
 argument_list|)
 expr_stmt|;
 block|}
@@ -9757,7 +10077,6 @@ name|base
 decl_stmt|,
 name|offset
 decl_stmt|;
-comment|//debugf("mmu_booke_unmapdev: s (va = 0x%08x)\n", va);
 comment|/* 	 * Unmap only if this is inside kernel virtual space. 	 */
 if|if
 condition|(
@@ -9808,12 +10127,11 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-comment|//debugf("mmu_booke_unmapdev: e\n");
 block|}
 end_function
 
 begin_comment
-comment|/*  * mmu_booke_object_init_pt preloads the ptes for a given object  * into the specified pmap. This eliminates the blast of soft  * faults on process startup and immediately after an mmap.  */
+comment|/*  * mmu_booke_object_init_pt preloads the ptes for a given object into the  * specified pmap. This eliminates the blast of soft faults on process startup  * and immediately after an mmap.  */
 end_comment
 
 begin_function
@@ -9905,100 +10223,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Flush all entries from TLB0 matching given tid.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|tid_flush
-parameter_list|(
-name|tlbtid_t
-name|tid
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|,
-name|entryidx
-decl_stmt|,
-name|way
-decl_stmt|;
-comment|//debugf("tid_flush: s (tid = %d)\n", tid);
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|tlb0_mutex
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|TLB0_SIZE
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|MAS1_GETTID
-argument_list|(
-name|tlb0
-index|[
-name|i
-index|]
-operator|.
-name|mas1
-argument_list|)
-operator|==
-name|tid
-condition|)
-block|{
-name|way
-operator|=
-name|i
-operator|/
-name|TLB0_ENTRIES_PER_WAY
-expr_stmt|;
-name|entryidx
-operator|=
-name|i
-operator|-
-operator|(
-name|way
-operator|*
-name|TLB0_ENTRIES_PER_WAY
-operator|)
-expr_stmt|;
-comment|//debugf("tid_flush: inval tlb0 entry %d\n", i);
-name|tlb0_inval_entry
-argument_list|(
-name|entryidx
-operator|<<
-name|MAS2_TLB0_ENTRY_IDX_SHIFT
-argument_list|,
-name|way
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|tlb0_mutex
-argument_list|)
-expr_stmt|;
-comment|//debugf("tid_flush: e\n");
-block|}
-end_function
-
-begin_comment
 comment|/*  * Allocate a TID. If necessary, steal one from someone else.  * The new TID is flushed from the TLB before returning.  */
 end_comment
 
@@ -10014,18 +10238,9 @@ block|{
 name|tlbtid_t
 name|tid
 decl_stmt|;
-specifier|static
-name|tlbtid_t
-name|next_tid
-init|=
-name|TID_MIN
+name|int
+name|thiscpu
 decl_stmt|;
-comment|//struct thread *td;
-comment|//struct proc *p;
-comment|//td = PCPU_GET(curthread);
-comment|//p = td->td_proc;
-comment|//debugf("tid_alloc: s (pmap = 0x%08x)\n", (u_int32_t)pmap);
-comment|//printf("tid_alloc: proc %d '%s'\n", p->p_pid, p->p_comm);
 name|KASSERT
 argument_list|(
 operator|(
@@ -10039,14 +10254,57 @@ literal|"tid_alloc: kernel pmap"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Find a likely TID, allocate unused if possible, 	 * skip reserved entries. 	 */
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: s (pmap = %p)"
+argument_list|,
+name|__func__
+argument_list|,
+name|pmap
+argument_list|)
+expr_stmt|;
+name|thiscpu
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
 name|tid
 operator|=
-name|next_tid
+name|PCPU_GET
+argument_list|(
+name|tid_next
+argument_list|)
 expr_stmt|;
-while|while
+if|if
+condition|(
+name|tid
+operator|>
+name|TID_MAX
+condition|)
+name|tid
+operator|=
+name|TID_MIN
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|tid_next
+argument_list|,
+name|tid
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* If we are stealing TID then clear the relevant pmap's field */
+if|if
 condition|(
 name|tidbusy
+index|[
+name|thiscpu
+index|]
 index|[
 name|tid
 index|]
@@ -10054,73 +10312,43 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: warning: stealing tid %d"
+argument_list|,
+name|__func__
+argument_list|,
 name|tid
-operator|==
-name|next_tid
-condition|)
-break|break;
-if|if
-condition|(
+argument_list|)
+expr_stmt|;
+name|tidbusy
+index|[
+name|thiscpu
+index|]
+index|[
 name|tid
-operator|==
-name|TID_MAX
-condition|)
-name|tid
+index|]
+operator|->
+name|pm_tid
+index|[
+name|thiscpu
+index|]
 operator|=
-name|TID_MIN
+name|TID_NONE
 expr_stmt|;
-else|else
-name|tid
-operator|++
-expr_stmt|;
-block|}
-comment|/* Now clean it out */
+comment|/* Flush all entries from TLB0 matching this TID. */
 name|tid_flush
 argument_list|(
 name|tid
 argument_list|)
 expr_stmt|;
-comment|/* If we are stealing pmap then clear its tid */
-if|if
-condition|(
-name|tidbusy
-index|[
-name|tid
-index|]
-condition|)
-block|{
-comment|//debugf("warning: stealing tid %d\n", tid);
-name|tidbusy
-index|[
-name|tid
-index|]
-operator|->
-name|pm_tid
-operator|=
-literal|0
-expr_stmt|;
 block|}
-comment|/* Calculate next tid */
-if|if
-condition|(
-name|tid
-operator|==
-name|TID_MAX
-condition|)
-name|next_tid
-operator|=
-name|TID_MIN
-expr_stmt|;
-else|else
-name|next_tid
-operator|=
-name|tid
-operator|+
-literal|1
-expr_stmt|;
 name|tidbusy
+index|[
+name|thiscpu
+index|]
 index|[
 name|tid
 index|]
@@ -10130,10 +10358,29 @@ expr_stmt|;
 name|pmap
 operator|->
 name|pm_tid
+index|[
+name|thiscpu
+index|]
 operator|=
 name|tid
 expr_stmt|;
-comment|//debugf("tid_alloc: e (%02d next = %02d)\n", tid, next_tid);
+asm|__asm __volatile("msync; isync");
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: e (%02d next = %02d)"
+argument_list|,
+name|__func__
+argument_list|,
+name|tid
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|tid_next
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tid
@@ -10141,62 +10388,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Free this pmap's TID.  */
-end_comment
-
-begin_ifdef
-unit|static void tid_free(pmap_t pmap) { 	tlbtid_t oldtid;  	oldtid = pmap->pm_tid;  	if (oldtid == 0) { 		panic("tid_free: freeing kernel tid"); 	}
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_endif
-unit|if (tidbusy[oldtid] == 0) 		debugf("tid_free: freeing free tid %d\n", oldtid); 	if (tidbusy[oldtid] != pmap) { 		debugf("tid_free: freeing someone esle's tid\n " 		       "tidbusy[%d] = 0x%08x pmap = 0x%08x\n", 		       oldtid, (u_int32_t)tidbusy[oldtid], (u_int32_t)pmap); 	}
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|tidbusy[oldtid] = NULL; 	tid_flush(oldtid); }
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_if
-if|#
-directive|if
-name|DEBUG
-end_if
-
-begin_endif
-unit|static void tid_print_busy(void) { 	int i;  	for (i = 0; i< TID_MAX; i++) { 		debugf("tid %d = pmap 0x%08x", i, (u_int32_t)tidbusy[i]); 		if (tidbusy[i]) 			debugf(" pmap->tid = %d", tidbusy[i]->pm_tid); 		debugf("\n"); 	}  }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**************************************************************************/
@@ -10218,16 +10409,16 @@ parameter_list|(
 name|int
 name|i
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mas1
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mas2
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mas3
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|mas7
 parameter_list|)
 block|{
@@ -10304,7 +10495,7 @@ operator|=
 operator|(
 name|mas1
 operator|&
-name|MAS1_TS
+name|MAS1_TS_MASK
 operator|)
 condition|?
 literal|1
@@ -10423,342 +10614,85 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write given entry to TLB0 hardware.  * Use 32 bit pa, clear 4 high-order bits of RPN (mas7).  */
+comment|/*  * Invalidate TLB0 entry.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
-name|tlb0_write_entry
-parameter_list|(
-name|unsigned
-name|int
-name|idx
-parameter_list|,
-name|unsigned
-name|int
-name|way
-parameter_list|)
-block|{
-name|u_int32_t
-name|mas0
-decl_stmt|,
-name|mas7
-decl_stmt|,
-name|nv
-decl_stmt|;
-comment|/* Clear high order RPN bits. */
-name|mas7
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Preserve NV. */
-name|mas0
-operator|=
-name|mfspr
-argument_list|(
-name|SPR_MAS0
-argument_list|)
-expr_stmt|;
-name|nv
-operator|=
-name|mas0
-operator|&
-operator|(
-name|TLB0_NWAYS
-operator|-
-literal|1
-operator|)
-expr_stmt|;
-comment|/* Select entry. */
-name|mas0
-operator|=
-name|MAS0_TLBSEL
-argument_list|(
-literal|0
-argument_list|)
-operator||
-name|MAS0_ESEL
-argument_list|(
-name|way
-argument_list|)
-operator||
-name|nv
-expr_stmt|;
-comment|//debugf("tlb0_write_entry: s (idx=%d way=%d mas0=0x%08x "
-comment|//		"mas1=0x%08x mas2=0x%08x mas3=0x%08x)\n",
-comment|//		idx, way, mas0, tlb0[idx].mas1,
-comment|//		tlb0[idx].mas2, tlb0[idx].mas3);
-name|mtspr
-argument_list|(
-name|SPR_MAS0
-argument_list|,
-name|mas0
-argument_list|)
-expr_stmt|;
-asm|__asm volatile("isync");
-name|mtspr
-argument_list|(
-name|SPR_MAS1
-argument_list|,
-name|tlb0
-index|[
-name|idx
-index|]
-operator|.
-name|mas1
-argument_list|)
-expr_stmt|;
-asm|__asm volatile("isync");
-name|mtspr
-argument_list|(
-name|SPR_MAS2
-argument_list|,
-name|tlb0
-index|[
-name|idx
-index|]
-operator|.
-name|mas2
-argument_list|)
-expr_stmt|;
-asm|__asm volatile("isync");
-name|mtspr
-argument_list|(
-name|SPR_MAS3
-argument_list|,
-name|tlb0
-index|[
-name|idx
-index|]
-operator|.
-name|mas3
-argument_list|)
-expr_stmt|;
-asm|__asm volatile("isync");
-name|mtspr
-argument_list|(
-name|SPR_MAS7
-argument_list|,
-name|mas7
-argument_list|)
-expr_stmt|;
-asm|__asm volatile("isync; tlbwe; isync; msync");
-comment|//debugf("tlb0_write_entry: e\n");
-block|}
-end_function
-
-begin_comment
-comment|/*  * Invalidate TLB0 entry, clear correspondig tlb0 table element.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|tlb0_inval_entry
-parameter_list|(
-name|vm_offset_t
-name|va
-parameter_list|,
-name|unsigned
-name|int
-name|way
-parameter_list|)
-block|{
-name|int
-name|idx
-init|=
-name|tlb0_tableidx
-argument_list|(
-name|va
-argument_list|,
-name|way
-argument_list|)
-decl_stmt|;
-comment|//debugf("tlb0_inval_entry: s (va=0x%08x way=%d idx=%d)\n",
-comment|//		va, way, idx);
-name|tlb0
-index|[
-name|idx
-index|]
-operator|.
-name|mas1
-operator|=
-literal|1
-operator|<<
-name|MAS1_TSIZE_SHIFT
-expr_stmt|;
-comment|/* !MAS1_VALID */
-name|tlb0
-index|[
-name|idx
-index|]
-operator|.
-name|mas2
-operator|=
-name|va
-operator|&
-name|MAS2_EPN
-expr_stmt|;
-name|tlb0
-index|[
-name|idx
-index|]
-operator|.
-name|mas3
-operator|=
-literal|0
-expr_stmt|;
-name|tlb0_write_entry
-argument_list|(
-name|idx
-argument_list|,
-name|way
-argument_list|)
-expr_stmt|;
-comment|//debugf("tlb0_inval_entry: e\n");
-block|}
-end_function
-
-begin_comment
-comment|/*  * Invalidate TLB0 entry that corresponds to pmap/va.  */
-end_comment
-
-begin_function
-specifier|static
+specifier|inline
 name|void
 name|tlb0_flush_entry
 parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-name|int
-name|idx
-decl_stmt|,
-name|way
-decl_stmt|;
-comment|//debugf("tlb0_flush_entry: s (pmap=0x%08x va=0x%08x)\n",
-comment|//		(u_int32_t)pmap, va);
-name|mtx_lock_spin
+name|CTR2
 argument_list|(
-operator|&
-name|tlb0_mutex
-argument_list|)
-expr_stmt|;
-comment|/* Check all TLB0 ways. */
-for|for
-control|(
-name|way
-operator|=
-literal|0
-init|;
-name|way
-operator|<
-name|TLB0_NWAYS
-condition|;
-name|way
-operator|++
-control|)
-block|{
-name|idx
-operator|=
-name|tlb0_tableidx
-argument_list|(
-name|va
+name|KTR_PMAP
 argument_list|,
-name|way
-argument_list|)
-expr_stmt|;
-comment|/* Invalidate only if entry matches va and pmap tid. */
-if|if
-condition|(
-operator|(
-operator|(
-name|MAS1_GETTID
-argument_list|(
-name|tlb0
-index|[
-name|idx
-index|]
-operator|.
-name|mas1
-argument_list|)
-operator|==
-name|pmap
-operator|->
-name|pm_tid
-operator|)
-operator|&&
-operator|(
-operator|(
-name|tlb0
-index|[
-name|idx
-index|]
-operator|.
-name|mas2
-operator|&
-name|MAS2_EPN
-operator|)
-operator|==
-name|va
-operator|)
-operator|)
-condition|)
-block|{
-name|tlb0_inval_entry
-argument_list|(
-name|va
+literal|"%s: s va=0x%08x"
 argument_list|,
-name|way
+name|__func__
+argument_list|,
+name|va
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-name|mtx_unlock_spin
+name|mtx_assert
 argument_list|(
 operator|&
-name|tlb0_mutex
+name|tlbivax_mutex
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|//debugf("tlb0_flush_entry: e\n");
+asm|__asm __volatile("tlbivax 0, %0" :: "r"(va& MAS2_EPN_MASK));
+asm|__asm __volatile("isync; msync");
+asm|__asm __volatile("tlbsync; msync");
+name|CTR1
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"%s: e"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Clean TLB0 hardware and tlb0[] table. */
+comment|/* Print out contents of the MAS registers for each TLB0 entry */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|tlb0_init
+name|tlb0_print_tlbentries
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|uint32_t
+name|mas0
+decl_stmt|,
+name|mas1
+decl_stmt|,
+name|mas2
+decl_stmt|,
+name|mas3
+decl_stmt|,
+name|mas7
+decl_stmt|;
 name|int
 name|entryidx
 decl_stmt|,
 name|way
+decl_stmt|,
+name|idx
 decl_stmt|;
 name|debugf
 argument_list|(
-literal|"tlb0_init: TLB0_SIZE = %d TLB0_NWAYS = %d\n"
-argument_list|,
-name|TLB0_SIZE
-argument_list|,
-name|TLB0_NWAYS
-argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|tlb0_mutex
+literal|"TLB0 entries:\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -10769,12 +10703,11 @@ literal|0
 init|;
 name|way
 operator|<
-name|TLB0_NWAYS
+name|TLB0_WAYS
 condition|;
 name|way
 operator|++
 control|)
-block|{
 for|for
 control|(
 name|entryidx
@@ -10789,66 +10722,93 @@ name|entryidx
 operator|++
 control|)
 block|{
-name|tlb0_inval_entry
+name|mas0
+operator|=
+name|MAS0_TLBSEL
 argument_list|(
+literal|0
+argument_list|)
+operator||
+name|MAS0_ESEL
+argument_list|(
+name|way
+argument_list|)
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_MAS0
+argument_list|,
+name|mas0
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("isync");
+name|mas2
+operator|=
 name|entryidx
 operator|<<
 name|MAS2_TLB0_ENTRY_IDX_SHIFT
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_MAS2
+argument_list|,
+name|mas2
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("isync; tlbre");
+name|mas1
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS1
+argument_list|)
+expr_stmt|;
+name|mas2
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS2
+argument_list|)
+expr_stmt|;
+name|mas3
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS3
+argument_list|)
+expr_stmt|;
+name|mas7
+operator|=
+name|mfspr
+argument_list|(
+name|SPR_MAS7
+argument_list|)
+expr_stmt|;
+name|idx
+operator|=
+name|tlb0_tableidx
+argument_list|(
+name|mas2
 argument_list|,
 name|way
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-name|mtx_unlock_spin
+name|tlb_print_entry
 argument_list|(
-operator|&
-name|tlb0_mutex
+name|idx
+argument_list|,
+name|mas1
+argument_list|,
+name|mas2
+argument_list|,
+name|mas3
+argument_list|,
+name|mas7
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_if
-if|#
-directive|if
-name|DEBUG
-end_if
-
-begin_comment
-comment|/* Print out tlb0 entries for given va. */
-end_comment
-
-begin_comment
-unit|static void tlb0_print_tlbentries_va(vm_offset_t va) { 	u_int32_t mas0, mas1, mas2, mas3, mas7; 	int way, idx;  	debugf("TLB0 entries for va = 0x%08x:\n", va); 	for (way = 0; way< TLB0_NWAYS; way ++) { 		mas0 = MAS0_TLBSEL(0) | MAS0_ESEL(way); 		mtspr(SPR_MAS0, mas0); 		__asm volatile("isync");  		mas2 = va& MAS2_EPN; 		mtspr(SPR_MAS2, mas2); 		__asm volatile("isync; tlbre");  		mas1 = mfspr(SPR_MAS1); 		mas2 = mfspr(SPR_MAS2); 		mas3 = mfspr(SPR_MAS3); 		mas7 = mfspr(SPR_MAS7);  		idx = tlb0_tableidx(va, way); 		tlb_print_entry(idx, mas1, mas2, mas3, mas7); 	} }
-comment|/* Print out contents of the MAS registers for each TLB0 entry */
-end_comment
-
-begin_comment
-unit|static void tlb0_print_tlbentries(void) { 	u_int32_t mas0, mas1, mas2, mas3, mas7; 	int entryidx, way, idx;  	debugf("TLB0 entries:\n"); 	for (way = 0; way< TLB0_NWAYS; way ++) { 		for (entryidx = 0; entryidx< TLB0_ENTRIES_PER_WAY; entryidx++) {  			mas0 = MAS0_TLBSEL(0) | MAS0_ESEL(way); 			mtspr(SPR_MAS0, mas0); 			__asm volatile("isync");  			mas2 = entryidx<< MAS2_TLB0_ENTRY_IDX_SHIFT; 			mtspr(SPR_MAS2, mas2);  			__asm volatile("isync; tlbre");  			mas1 = mfspr(SPR_MAS1); 			mas2 = mfspr(SPR_MAS2); 			mas3 = mfspr(SPR_MAS3); 			mas7 = mfspr(SPR_MAS7);  			idx = tlb0_tableidx(mas2, way); 			tlb_print_entry(idx, mas1, mas2, mas3, mas7); 		} 	} }
-comment|/* Print out kernel tlb0[] table. */
-end_comment
-
-begin_endif
-unit|static void tlb0_print_entries(void) { 	int i;  	debugf("tlb0[] table entries:\n"); 	for (i = 0; i< TLB0_SIZE; i++) { 		tlb_print_entry(i, tlb0[i].mas1, 				tlb0[i].mas2, tlb0[i].mas3, 0); 	} }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**************************************************************************/
@@ -10860,6 +10820,10 @@ end_comment
 
 begin_comment
 comment|/**************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  * TLB1 mapping notes:  *  * TLB1[0]	CCSRBAR  * TLB1[1]	Kernel text and data.  * TLB1[2-15]	Additional kernel text and data mappings (if required), PCI  *		windows, other devices mappings.  */
 end_comment
 
 begin_comment
@@ -10876,7 +10840,7 @@ name|int
 name|idx
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|mas0
 decl_stmt|,
 name|mas7
@@ -10908,7 +10872,7 @@ argument_list|,
 name|mas0
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 name|mtspr
 argument_list|(
 name|SPR_MAS1
@@ -10921,7 +10885,7 @@ operator|.
 name|mas1
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 name|mtspr
 argument_list|(
 name|SPR_MAS2
@@ -10934,7 +10898,7 @@ operator|.
 name|mas2
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 name|mtspr
 argument_list|(
 name|SPR_MAS3
@@ -10947,7 +10911,7 @@ operator|.
 name|mas3
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 name|mtspr
 argument_list|(
 name|SPR_MAS7
@@ -10955,7 +10919,7 @@ argument_list|,
 name|mas7
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync; tlbwe; isync; msync");
+asm|__asm __volatile("isync; tlbwe; isync; msync");
 comment|//debugf("tlb1_write_entry: e\n");;
 block|}
 end_function
@@ -11036,7 +11000,6 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-comment|/* 	 * tsize = log2(size) / 2 - 5 	 */
 return|return
 operator|(
 name|ilog2
@@ -11049,158 +11012,6 @@ operator|-
 literal|5
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Setup entry in a sw tlb1 table, write entry to TLB1 hardware.  * This routine is used for low level operations on the TLB1,  * for creating temporaray as well as permanent mappings (tlb_set_entry).  *  * We assume kernel mappings only, thus all entries created have supervisor  * permission bits set nad user permission bits cleared.  *  * Provided mapping size must be a power of 4.  * Mapping flags must be a combination of MAS2_[WIMG].  * Entry TID is set to _tid which must not exceed 8 bit value.  * Entry TS is set to either 0 or MAS1_TS based on provided _ts.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|__tlb1_set_entry
-parameter_list|(
-name|unsigned
-name|int
-name|idx
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|,
-name|vm_offset_t
-name|pa
-parameter_list|,
-name|vm_size_t
-name|size
-parameter_list|,
-name|u_int32_t
-name|flags
-parameter_list|,
-name|unsigned
-name|int
-name|_tid
-parameter_list|,
-name|unsigned
-name|int
-name|_ts
-parameter_list|)
-block|{
-name|int
-name|tsize
-decl_stmt|;
-name|u_int32_t
-name|ts
-decl_stmt|,
-name|tid
-decl_stmt|;
-comment|//debugf("__tlb1_set_entry: s (idx = %d va = 0x%08x pa = 0x%08x "
-comment|//		"size = 0x%08x flags = 0x%08x _tid = %d _ts = %d\n",
-comment|//		idx, va, pa, size, flags, _tid, _ts);
-comment|/* Convert size to TSIZE */
-name|tsize
-operator|=
-name|size2tsize
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-comment|//debugf("__tlb1_set_entry: tsize = %d\n", tsize);
-name|tid
-operator|=
-operator|(
-name|_tid
-operator|<<
-name|MAS1_TID_SHIFT
-operator|)
-operator|&
-name|MAS1_TID_MASK
-expr_stmt|;
-name|ts
-operator|=
-operator|(
-name|_ts
-operator|)
-condition|?
-name|MAS1_TS
-else|:
-literal|0
-expr_stmt|;
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
-name|mas1
-operator|=
-name|MAS1_VALID
-operator||
-name|MAS1_IPROT
-operator||
-name|ts
-operator||
-name|tid
-expr_stmt|;
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
-name|mas1
-operator||=
-operator|(
-operator|(
-name|tsize
-operator|<<
-name|MAS1_TSIZE_SHIFT
-operator|)
-operator|&
-name|MAS1_TSIZE_MASK
-operator|)
-expr_stmt|;
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
-name|mas2
-operator|=
-operator|(
-name|va
-operator|&
-name|MAS2_EPN
-operator|)
-operator||
-name|flags
-expr_stmt|;
-comment|/* Set supervisor rwx permission bits */
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
-name|mas3
-operator|=
-operator|(
-name|pa
-operator|&
-name|MAS3_RPN
-operator|)
-operator||
-name|MAS3_SR
-operator||
-name|MAS3_SW
-operator||
-name|MAS3_SX
-expr_stmt|;
-comment|//debugf("__tlb1_set_entry: mas1 = %08x mas2 = %08x mas3 = 0x%08x\n",
-comment|//		tlb1[idx].mas1, tlb1[idx].mas2, tlb1[idx].mas3);
-name|tlb1_write_entry
-argument_list|(
-name|idx
-argument_list|)
-expr_stmt|;
-comment|//debugf("__tlb1_set_entry: e\n");
 block|}
 end_function
 
@@ -11222,21 +11033,30 @@ parameter_list|,
 name|vm_size_t
 name|size
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 block|{
-comment|//debugf("tlb1_set_entry: s (tlb1_idx = %d va = 0x%08x pa = 0x%08x "
-comment|//		"size = 0x%08x flags = 0x%08x\n",
-comment|//		tlb1_idx, va, pa, size, flags);
+name|uint32_t
+name|ts
+decl_stmt|,
+name|tid
+decl_stmt|;
+name|int
+name|tsize
+decl_stmt|;
 if|if
 condition|(
 name|tlb1_idx
 operator|>=
-name|TLB1_SIZE
+name|TLB1_ENTRIES
 condition|)
 block|{
-comment|//debugf("tlb1_set_entry: e (tlb1 full!)\n");
+name|printf
+argument_list|(
+literal|"tlb1_set_entry: TLB1 full!\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -11244,94 +11064,116 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* TS = 0, TID = 0 */
-name|__tlb1_set_entry
+comment|/* Convert size to TSIZE */
+name|tsize
+operator|=
+name|size2tsize
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
+name|tid
+operator|=
+operator|(
+name|TID_KERNEL
+operator|<<
+name|MAS1_TID_SHIFT
+operator|)
+operator|&
+name|MAS1_TID_MASK
+expr_stmt|;
+comment|/* XXX TS is hard coded to 0 for now as we only use single address space */
+name|ts
+operator|=
+operator|(
+literal|0
+operator|<<
+name|MAS1_TS_SHIFT
+operator|)
+operator|&
+name|MAS1_TS_MASK
+expr_stmt|;
+comment|/* XXX LOCK tlb1[] */
+name|tlb1
+index|[
+name|tlb1_idx
+index|]
+operator|.
+name|mas1
+operator|=
+name|MAS1_VALID
+operator||
+name|MAS1_IPROT
+operator||
+name|ts
+operator||
+name|tid
+expr_stmt|;
+name|tlb1
+index|[
+name|tlb1_idx
+index|]
+operator|.
+name|mas1
+operator||=
+operator|(
+operator|(
+name|tsize
+operator|<<
+name|MAS1_TSIZE_SHIFT
+operator|)
+operator|&
+name|MAS1_TSIZE_MASK
+operator|)
+expr_stmt|;
+name|tlb1
+index|[
+name|tlb1_idx
+index|]
+operator|.
+name|mas2
+operator|=
+operator|(
+name|va
+operator|&
+name|MAS2_EPN_MASK
+operator|)
+operator||
+name|flags
+expr_stmt|;
+comment|/* Set supervisor RWX permission bits */
+name|tlb1
+index|[
+name|tlb1_idx
+index|]
+operator|.
+name|mas3
+operator|=
+operator|(
+name|pa
+operator|&
+name|MAS3_RPN
+operator|)
+operator||
+name|MAS3_SR
+operator||
+name|MAS3_SW
+operator||
+name|MAS3_SX
+expr_stmt|;
+name|tlb1_write_entry
 argument_list|(
 name|tlb1_idx
 operator|++
-argument_list|,
-name|va
-argument_list|,
-name|pa
-argument_list|,
-name|size
-argument_list|,
-name|flags
-argument_list|,
-name|KERNEL_TID
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-comment|//debugf("tlb1_set_entry: e\n");
+comment|/* XXX UNLOCK tlb1[] */
+comment|/* 	 * XXX in general TLB1 updates should be propagated between CPUs, 	 * since current design assumes to have the same TLB1 set-up on all 	 * cores. 	 */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Invalidate TLB1 entry, clear correspondig tlb1 table element.  * This routine is used to clear temporary entries created  * early in a locore.S or through the use of __tlb1_set_entry().  */
-end_comment
-
-begin_function
-name|void
-name|tlb1_inval_entry
-parameter_list|(
-name|unsigned
-name|int
-name|idx
-parameter_list|)
-block|{
-name|vm_offset_t
-name|va
-decl_stmt|;
-name|va
-operator|=
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
-name|mas2
-operator|&
-name|MAS2_EPN
-expr_stmt|;
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
-name|mas1
-operator|=
-literal|0
-expr_stmt|;
-comment|/* !MAS1_VALID */
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
-name|mas2
-operator|=
-literal|0
-expr_stmt|;
-name|tlb1
-index|[
-name|idx
-index|]
-operator|.
-name|mas3
-operator|=
-literal|0
-expr_stmt|;
-name|tlb1_write_entry
-argument_list|(
-name|idx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -11407,7 +11249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mapin contiguous RAM region into the TLB1 using maximum of  * KERNEL_REGION_MAX_TLB_ENTRIES entries.  *  * If necessarry round up last entry size and return total size  * used by all allocated entries.  */
+comment|/*  * Map in contiguous RAM region into the TLB1 using maximum of  * KERNEL_REGION_MAX_TLB_ENTRIES entries.  *  * If necessary round up last entry size and return total size  * used by all allocated entries.  */
 end_comment
 
 begin_function
@@ -11444,14 +11286,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|debugf
+name|CTR4
 argument_list|(
-literal|"tlb1_mapin_region:\n"
-argument_list|)
-expr_stmt|;
-name|debugf
-argument_list|(
-literal|" region size = 0x%08x va = 0x%08x pa = 0x%08x\n"
+name|KTR_PMAP
+argument_list|,
+literal|"%s: region size = 0x%08x va = 0x%08x pa = 0x%08x"
+argument_list|,
+name|__func__
 argument_list|,
 name|size
 argument_list|,
@@ -11518,23 +11359,6 @@ literal|2
 operator|*
 name|log
 operator|)
-expr_stmt|;
-comment|/* Minimum region size is 4KB */
-if|if
-condition|(
-name|esz
-operator|<
-operator|(
-literal|1
-operator|<<
-literal|12
-operator|)
-condition|)
-name|esz
-operator|=
-literal|1
-operator|<<
-literal|12
 expr_stmt|;
 comment|/* If this is last entry cover remaining size. */
 if|if
@@ -11629,9 +11453,14 @@ operator|!
 name|esz
 condition|)
 break|break;
-name|debugf
+name|CTR5
 argument_list|(
-literal|"  entry %d: sz  = 0x%08x (va = 0x%08x pa = 0x%08x)\n"
+name|KTR_PMAP
+argument_list|,
+literal|"%s: entry %d: sz  = 0x%08x (va = 0x%08x "
+literal|"pa = 0x%08x)"
+argument_list|,
+name|__func__
 argument_list|,
 name|tlb1_idx
 argument_list|,
@@ -11662,9 +11491,13 @@ operator|+=
 name|esz
 expr_stmt|;
 block|}
-name|debugf
+name|CTR3
 argument_list|(
-literal|" mapped size 0x%08x (wasted space 0x%08x)\n"
+name|KTR_PMAP
+argument_list|,
+literal|"%s: mapped size 0x%08x (wasted space 0x%08x)"
+argument_list|,
+name|__func__
 argument_list|,
 name|mapped_size
 argument_list|,
@@ -11696,7 +11529,7 @@ block|{
 name|uint32_t
 name|mas0
 decl_stmt|;
-comment|/* TBL1[1] is used to map the kernel. Save that entry. */
+comment|/* TLB1[1] is used to map the kernel. Save that entry. */
 name|mas0
 operator|=
 name|MAS0_TLBSEL
@@ -11753,11 +11586,13 @@ argument_list|(
 name|SPR_MAS3
 argument_list|)
 expr_stmt|;
-comment|/* Mapin CCSRBAR in TLB1[0] */
-name|__tlb1_set_entry
-argument_list|(
+comment|/* Map in CCSRBAR in TLB1[0] */
+name|tlb1_idx
+operator|=
 literal|0
-argument_list|,
+expr_stmt|;
+name|tlb1_set_entry
+argument_list|(
 name|CCSRBAR_VA
 argument_list|,
 name|ccsrbar
@@ -11765,20 +11600,16 @@ argument_list|,
 name|CCSRBAR_SIZE
 argument_list|,
 name|_TLB_ENTRY_IO
-argument_list|,
-name|KERNEL_TID
-argument_list|,
-literal|0
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Set the next available TLB1 entry index. Note TLB[1] is reserved 	 * for initial mapping of kernel text+data, which was set early in 	 * locore, we need to skip this [busy] entry. 	 */
+name|tlb1_idx
+operator|=
+literal|2
 expr_stmt|;
 comment|/* Setup TLB miss defaults */
 name|set_mas4_defaults
 argument_list|()
-expr_stmt|;
-comment|/* Reset next available TLB1 entry index. */
-name|tlb1_idx
-operator|=
-literal|2
 expr_stmt|;
 block|}
 end_function
@@ -11795,7 +11626,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|mas4
 decl_stmt|;
 comment|/* Defaults: TLB0, PID0, TSIZED=4K */
@@ -11820,7 +11651,7 @@ argument_list|,
 name|mas4
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync");
+asm|__asm __volatile("isync");
 block|}
 end_function
 
@@ -11835,7 +11666,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|mas0
 decl_stmt|,
 name|mas1
@@ -11862,7 +11693,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|TLB1_SIZE
+name|TLB1_ENTRIES
 condition|;
 name|i
 operator|++
@@ -11887,7 +11718,7 @@ argument_list|,
 name|mas0
 argument_list|)
 expr_stmt|;
-asm|__asm volatile("isync; tlbre");
+asm|__asm __volatile("isync; tlbre");
 name|mas1
 operator|=
 name|mfspr
@@ -11960,7 +11791,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|TLB1_SIZE
+name|TLB1_ENTRIES
 condition|;
 name|i
 operator|++
@@ -12019,7 +11850,7 @@ modifier|*
 name|va
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|prot
 decl_stmt|;
 name|vm_paddr_t
@@ -12212,7 +12043,7 @@ index|]
 operator|.
 name|mas2
 operator|&
-name|MAS2_EPN
+name|MAS2_EPN_MASK
 operator|)
 operator|+
 operator|(
