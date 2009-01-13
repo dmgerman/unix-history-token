@@ -123,7 +123,7 @@ end_struct
 begin_function
 specifier|static
 name|void
-name|musbotg_vbus_interrupt
+name|musbotg_vbus_poll
 parameter_list|(
 name|struct
 name|musbotg_super_softc
@@ -138,24 +138,12 @@ literal|1
 decl_stmt|;
 comment|/* fake VBUS on - TODO */
 comment|/* just forward it */
-call|(
-name|sc
-operator|->
-name|sc_otg
-operator|.
-name|sc_bus
-operator|.
-name|methods
-operator|->
-name|vbus_interrupt
-call|)
+name|musbotg_vbus_interrupt
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_otg
-operator|.
-name|sc_bus
 argument_list|,
 name|vbus_val
 argument_list|)
@@ -667,7 +655,7 @@ block|}
 else|else
 block|{
 comment|/* poll VBUS one time */
-name|musbotg_vbus_interrupt
+name|musbotg_vbus_poll
 argument_list|(
 name|sc
 argument_list|)

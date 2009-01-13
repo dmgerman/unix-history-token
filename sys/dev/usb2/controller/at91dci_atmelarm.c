@@ -215,7 +215,7 @@ end_struct
 begin_function
 specifier|static
 name|void
-name|at91_vbus_interrupt
+name|at91_vbus_poll
 parameter_list|(
 name|struct
 name|at91_udp_softc
@@ -247,24 +247,12 @@ argument_list|,
 name|VBUS_MASK
 argument_list|)
 expr_stmt|;
-call|(
-name|sc
-operator|->
-name|sc_dci
-operator|.
-name|sc_bus
-operator|.
-name|methods
-operator|->
-name|vbus_interrupt
-call|)
+name|at91dci_vbus_interrupt
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_dci
-operator|.
-name|sc_bus
 argument_list|,
 name|vbus_val
 argument_list|)
@@ -972,7 +960,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|at91_vbus_interrupt
+name|at91_vbus_poll
 argument_list|,
 name|sc
 argument_list|,
@@ -1002,7 +990,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|at91_vbus_interrupt
+name|at91_vbus_poll
 argument_list|,
 name|sc
 argument_list|,
@@ -1071,7 +1059,7 @@ block|}
 else|else
 block|{
 comment|/* poll VBUS one time */
-name|at91_vbus_interrupt
+name|at91_vbus_poll
 argument_list|(
 name|sc
 argument_list|)

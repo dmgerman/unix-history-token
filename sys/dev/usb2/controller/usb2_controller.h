@@ -341,21 +341,6 @@ modifier|*
 name|pipe
 parameter_list|)
 function_decl|;
-comment|/* USB Device mode only - Optional */
-name|void
-function_decl|(
-modifier|*
-name|vbus_interrupt
-function_decl|)
-parameter_list|(
-name|struct
-name|usb2_bus
-modifier|*
-parameter_list|,
-name|uint8_t
-name|is_on
-parameter_list|)
-function_decl|;
 comment|/* USB Device and Host mode - Optional */
 name|void
 function_decl|(

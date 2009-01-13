@@ -2163,6 +2163,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|musbotg_vbus_interrupt
+parameter_list|(
+name|struct
+name|musbotg_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint8_t
+name|is_on
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
