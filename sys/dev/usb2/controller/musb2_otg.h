@@ -1981,10 +1981,6 @@ name|usb2_sw_transfer
 name|sc_root_intr
 decl_stmt|;
 name|struct
-name|usb2_config_td
-name|sc_config_td
-decl_stmt|;
-name|struct
 name|usb2_hw_ep_profile
 name|sc_hw_ep_profile
 index|[

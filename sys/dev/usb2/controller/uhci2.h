@@ -1108,10 +1108,6 @@ name|usb2_bus
 name|sc_bus
 decl_stmt|;
 comment|/* base device */
-name|struct
-name|usb2_config_td
-name|sc_config_td
-decl_stmt|;
 name|union
 name|uhci_hub_desc
 name|sc_hub_desc

@@ -79,6 +79,10 @@ name|usb2_process
 name|explore_proc
 decl_stmt|;
 name|struct
+name|usb2_process
+name|roothub_proc
+decl_stmt|;
+name|struct
 name|usb2_bus_msg
 name|explore_msg
 index|[
@@ -95,6 +99,13 @@ decl_stmt|;
 name|struct
 name|usb2_bus_msg
 name|attach_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|usb2_bus_msg
+name|roothub_msg
 index|[
 literal|2
 index|]

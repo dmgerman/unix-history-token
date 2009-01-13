@@ -1685,10 +1685,6 @@ name|sc_bus
 decl_stmt|;
 comment|/* base device */
 name|struct
-name|usb2_config_td
-name|sc_config_td
-decl_stmt|;
-name|struct
 name|usb2_callout
 name|sc_tmo_rhsc
 decl_stmt|;
