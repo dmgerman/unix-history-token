@@ -359,17 +359,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_ROOT_HUB_ADDR
-value|1
-end_define
-
-begin_comment
-comment|/* value */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|USB_ISOC_TIME_MAX
 value|128
 end_define

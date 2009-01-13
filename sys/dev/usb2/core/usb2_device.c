@@ -4626,23 +4626,30 @@ name|device_index
 operator|=
 name|USB_ROOT_HUB_ADDR
 init|;
+operator|(
+name|device_index
+operator|!=
+name|bus
+operator|->
+name|devices_max
+operator|)
+operator|&&
+operator|(
+name|bus
+operator|->
+name|devices
+index|[
+name|device_index
+index|]
+operator|!=
+name|NULL
+operator|)
 condition|;
 name|device_index
 operator|++
 control|)
-block|{
-if|#
-directive|if
-operator|(
-name|USB_ROOT_HUB_ADDR
-operator|>
-name|USB_MIN_DEVICES
-operator|)
-error|#
-directive|error
-literal|"Incorrect device limit."
-endif|#
-directive|endif
+comment|/* nop */
+empty_stmt|;
 if|if
 condition|(
 name|device_index
@@ -4658,8 +4665,7 @@ name|bus
 operator|->
 name|bdev
 argument_list|,
-literal|"No free USB device "
-literal|"index for new device!\n"
+literal|"No free USB device index for new device!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4667,19 +4673,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|bus
-operator|->
-name|devices
-index|[
-name|device_index
-index|]
-operator|==
-name|NULL
-condition|)
-break|break;
 block|}
 if|if
 condition|(
