@@ -883,12 +883,12 @@ end_ifndef
 
 begin_struct
 struct|struct
-name|pte_entry
+name|pte
 block|{
 name|vm_offset_t
 name|rpn
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 block|}
@@ -898,7 +898,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|pte_entry
+name|pte
 name|pte_t
 typedef|;
 end_typedef

@@ -2016,7 +2016,14 @@ parameter_list|,
 name|size_t
 name|sz
 parameter_list|)
-block|{  }
+block|{
+name|pcpu
+operator|->
+name|pc_tid_next
+operator|=
+name|TID_MIN
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
