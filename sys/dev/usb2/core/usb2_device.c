@@ -352,82 +352,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* static structures */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint8_t
-name|usb2_hub_speed_combs
-index|[
-name|USB_SPEED_MAX
-index|]
-index|[
-name|USB_SPEED_MAX
-index|]
-init|=
-block|{
-comment|/* HUB */
-comment|/* subdevice */
-index|[
-name|USB_SPEED_HIGH
-index|]
-index|[
-name|USB_SPEED_HIGH
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_HIGH
-index|]
-index|[
-name|USB_SPEED_FULL
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_HIGH
-index|]
-index|[
-name|USB_SPEED_LOW
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_FULL
-index|]
-index|[
-name|USB_SPEED_FULL
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_FULL
-index|]
-index|[
-name|USB_SPEED_LOW
-index|]
-operator|=
-literal|1
-block|,
-index|[
-name|USB_SPEED_LOW
-index|]
-index|[
-name|USB_SPEED_LOW
-index|]
-operator|=
-literal|1
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* This variable is global to allow easy access to it: */
 end_comment
 
@@ -5002,62 +4926,13 @@ name|usb2_mode
 operator|=
 name|usb2_mode
 expr_stmt|;
-comment|/* check speed combination */
+comment|/* speed combination should be checked by the parent HUB */
 name|hub
 operator|=
 name|udev
 operator|->
 name|parent_hub
 expr_stmt|;
-if|if
-condition|(
-name|hub
-condition|)
-block|{
-if|if
-condition|(
-name|usb2_hub_speed_combs
-index|[
-name|hub
-operator|->
-name|speed
-index|]
-index|[
-name|speed
-index|]
-operator|==
-literal|0
-condition|)
-block|{
-if|#
-directive|if
-name|USB_DEBUG
-name|printf
-argument_list|(
-literal|"%s: the selected subdevice and HUB speed "
-literal|"combination is not supported %d/%d.\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|speed
-argument_list|,
-name|hub
-operator|->
-name|speed
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* reject this combination */
-name|err
-operator|=
-name|USB_ERR_INVAL
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
-block|}
 comment|/* search for our High Speed USB HUB, if any */
 name|adev
 operator|=
