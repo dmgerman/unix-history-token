@@ -131,13 +131,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/ethernet/if_kue2_reg.h>
+file|<dev/usb2/ethernet/if_kuereg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/ethernet/if_kue2_fw.h>
+file|<dev/usb2/ethernet/if_kuefw.h>
 end_include
 
 begin_comment

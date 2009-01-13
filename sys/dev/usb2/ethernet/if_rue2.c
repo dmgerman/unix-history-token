@@ -131,7 +131,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/ethernet/if_rue2_reg.h>
+file|<dev/usb2/ethernet/if_ruereg.h>
 end_include
 
 begin_if

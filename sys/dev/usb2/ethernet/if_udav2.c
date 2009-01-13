@@ -143,7 +143,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/ethernet/if_udav2_reg.h>
+file|<dev/usb2/ethernet/if_udavreg.h>
 end_include
 
 begin_comment

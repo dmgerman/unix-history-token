@@ -151,7 +151,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/ethernet/if_cdce2_reg.h>
+file|<dev/usb2/ethernet/if_cdcereg.h>
 end_include
 
 begin_decl_stmt
