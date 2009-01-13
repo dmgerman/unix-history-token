@@ -6721,9 +6721,17 @@ block|{
 comment|/* filter input argument */
 if|if
 condition|(
+operator|(
 name|power_mode
 operator|!=
 name|USB_POWER_MODE_ON
+operator|)
+operator|&&
+operator|(
+name|power_mode
+operator|!=
+name|USB_POWER_MODE_OFF
+operator|)
 condition|)
 block|{
 name|power_mode

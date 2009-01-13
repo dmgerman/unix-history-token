@@ -8248,29 +8248,30 @@ block|{
 case|case
 name|USB_POWER_MODE_OFF
 case|:
-comment|/* clear suspend */
+comment|/* get the device unconfigured */
 name|err
 operator|=
-name|usb2_req_clear_port_feature
+name|ugen_set_config
 argument_list|(
-name|udev
-operator|->
-name|parent_hub
+name|f
 argument_list|,
-name|NULL
-argument_list|,
-name|udev
-operator|->
-name|port_no
-argument_list|,
-name|UHF_PORT_SUSPEND
+name|USB_UNCONFIG_INDEX
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|err
 condition|)
-break|break;
+block|{
+name|DPRINTFN
+argument_list|(
+literal|0
+argument_list|,
+literal|"Could not unconfigure "
+literal|"device (ignored)\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* clear port enable */
 name|err
 operator|=
