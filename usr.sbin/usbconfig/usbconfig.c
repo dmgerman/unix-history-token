@@ -2530,7 +2530,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No device match\n"
+literal|"No device match or lack of permissions.\n"
 argument_list|)
 expr_stmt|;
 block|}
