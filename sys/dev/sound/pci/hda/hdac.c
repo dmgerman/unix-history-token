@@ -23885,7 +23885,7 @@ break|break;
 case|case
 name|HDA_CODEC_AD1983
 case|:
-comment|/* 		 * This codec has several posisble usages, but none 		 * fit parser best. Help parser to choose better. 		 */
+comment|/* 		 * This codec has several possible usages, but none 		 * fit the parser best. Help parser to choose better. 		 */
 comment|/* Disable direct unmixed playback to get pcm volume. */
 name|w
 operator|=
