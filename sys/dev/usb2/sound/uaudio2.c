@@ -14072,6 +14072,11 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|USB_GET_STATE
@@ -14418,7 +14423,7 @@ goto|goto
 name|tr_setup
 goto|;
 block|}
-return|return;
+break|break;
 default|default:
 comment|/* Error */
 name|DPRINTF
@@ -14433,6 +14438,18 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|error
+operator|==
+name|USB_ERR_CANCELLED
+condition|)
+block|{
+comment|/* do nothing - we are detaching */
+break|break;
+block|}
 goto|goto
 name|tr_transferred
 goto|;
