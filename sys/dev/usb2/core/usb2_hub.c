@@ -5152,6 +5152,8 @@ name|udev
 operator|=
 name|xfer
 operator|->
+name|xroot
+operator|->
 name|udev
 expr_stmt|;
 if|if

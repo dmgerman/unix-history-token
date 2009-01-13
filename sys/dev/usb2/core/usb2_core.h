@@ -635,7 +635,7 @@ name|USB_XFER_LOCK
 parameter_list|(
 name|_x
 parameter_list|)
-value|mtx_lock((_x)->xfer_mtx)
+value|mtx_lock((_x)->xroot->xfer_mtx)
 end_define
 
 begin_define
@@ -645,7 +645,7 @@ name|USB_XFER_UNLOCK
 parameter_list|(
 name|_x
 parameter_list|)
-value|mtx_unlock((_x)->xfer_mtx)
+value|mtx_unlock((_x)->xroot->xfer_mtx)
 end_define
 
 begin_define
@@ -657,7 +657,7 @@ name|_x
 parameter_list|,
 name|_t
 parameter_list|)
-value|mtx_assert((_x)->xfer_mtx, _t)
+value|mtx_assert((_x)->xroot->xfer_mtx, _t)
 end_define
 
 begin_comment
@@ -1141,25 +1141,9 @@ name|pipe
 decl_stmt|;
 comment|/* our USB pipe */
 name|struct
-name|usb2_device
-modifier|*
-name|udev
-decl_stmt|;
-name|struct
-name|mtx
-modifier|*
-name|xfer_mtx
-decl_stmt|;
-comment|/* cannot be changed during operation */
-name|struct
 name|usb2_xfer_root
 modifier|*
-name|usb2_root
-decl_stmt|;
-comment|/* used by HC driver */
-name|void
-modifier|*
-name|usb2_sc
+name|xroot
 decl_stmt|;
 comment|/* used by HC driver */
 name|void

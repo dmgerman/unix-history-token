@@ -43,6 +43,18 @@ directive|include
 file|<dev/usb2/core/usb2_device.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb2/core/usb2_busdma.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb2/core/usb2_transfer.h>
+end_include
+
 begin_comment
 comment|/*  * Define this unconditionally in case a kernel module is loaded that  * has been compiled with debugging options.  */
 end_comment
@@ -365,6 +377,11 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
+name|struct
+name|usb2_device
+modifier|*
+name|udev
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"usb2_dump_xfer: xfer=%p\n"
@@ -399,6 +416,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|udev
+operator|=
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|udev
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"xfer %p: udev=%p vid=0x%04x pid=0x%04x addr=%d "
@@ -406,14 +431,10 @@ literal|"pipe=%p ep=0x%02x attr=0x%02x\n"
 argument_list|,
 name|xfer
 argument_list|,
-name|xfer
-operator|->
 name|udev
 argument_list|,
 name|UGETW
 argument_list|(
-name|xfer
-operator|->
 name|udev
 operator|->
 name|ddesc
@@ -423,8 +444,6 @@ argument_list|)
 argument_list|,
 name|UGETW
 argument_list|(
-name|xfer
-operator|->
 name|udev
 operator|->
 name|ddesc
@@ -432,8 +451,6 @@ operator|.
 name|idProduct
 argument_list|)
 argument_list|,
-name|xfer
-operator|->
 name|udev
 operator|->
 name|address

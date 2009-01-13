@@ -1755,14 +1755,10 @@ name|detach
 goto|;
 block|}
 comment|/* start interrupt pipe */
-name|USB_XFER_LOCK
+name|mtx_lock
 argument_list|(
-name|sc
-operator|->
-name|sc_xfer
-index|[
-literal|4
-index|]
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|usb2_transfer_start
@@ -1775,14 +1771,10 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-name|USB_XFER_UNLOCK
+name|mtx_unlock
 argument_list|(
-name|sc
-operator|->
-name|sc_xfer
-index|[
-literal|4
-index|]
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return

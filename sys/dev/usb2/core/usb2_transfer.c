@@ -1094,7 +1094,7 @@ name|parm
 operator|->
 name|curr_xfer
 operator|->
-name|usb2_root
+name|xroot
 operator|->
 name|dma_parent_tag
 expr_stmt|;
@@ -1128,7 +1128,7 @@ name|parm
 operator|->
 name|curr_xfer
 operator|->
-name|usb2_root
+name|xroot
 operator|->
 name|dma_parent_tag
 expr_stmt|;
@@ -2698,7 +2698,7 @@ operator|=
 operator|&
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 operator|->
 name|dma_parent_tag
 expr_stmt|;
@@ -2838,7 +2838,7 @@ parameter_list|,
 name|struct
 name|mtx
 modifier|*
-name|priv_mtx
+name|xfer_mtx
 parameter_list|)
 block|{
 name|struct
@@ -2960,7 +2960,7 @@ return|;
 block|}
 if|if
 condition|(
-name|priv_mtx
+name|xfer_mtx
 operator|==
 name|NULL
 condition|)
@@ -2972,7 +2972,7 @@ argument_list|,
 literal|"using global lock\n"
 argument_list|)
 expr_stmt|;
-name|priv_mtx
+name|xfer_mtx
 operator|=
 operator|&
 name|Giant
@@ -3254,9 +3254,9 @@ argument_list|)
 expr_stmt|;
 name|info
 operator|->
-name|priv_mtx
+name|xfer_mtx
 operator|=
-name|priv_mtx
+name|xfer_mtx
 expr_stmt|;
 name|usb2_dma_tag_setup
 argument_list|(
@@ -3280,7 +3280,7 @@ index|]
 operator|.
 name|tag
 argument_list|,
-name|priv_mtx
+name|xfer_mtx
 argument_list|,
 operator|&
 name|usb2_bdma_done_event
@@ -3301,6 +3301,12 @@ operator|=
 name|udev
 operator|->
 name|bus
+expr_stmt|;
+name|info
+operator|->
+name|udev
+operator|=
+name|udev
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -3361,7 +3367,7 @@ index|[
 literal|0
 index|]
 operator|.
-name|usb2_root
+name|xroot
 operator|=
 name|info
 expr_stmt|;
@@ -3386,7 +3392,7 @@ index|[
 literal|1
 index|]
 operator|.
-name|usb2_root
+name|xroot
 operator|=
 name|info
 expr_stmt|;
@@ -3630,12 +3636,6 @@ name|xfer
 expr_stmt|;
 name|xfer
 operator|->
-name|udev
-operator|=
-name|udev
-expr_stmt|;
-name|xfer
-operator|->
 name|address
 operator|=
 name|udev
@@ -3650,13 +3650,7 @@ name|priv_sc
 expr_stmt|;
 name|xfer
 operator|->
-name|xfer_mtx
-operator|=
-name|priv_mtx
-expr_stmt|;
-name|xfer
-operator|->
-name|usb2_root
+name|xroot
 operator|=
 name|info
 expr_stmt|;
@@ -4610,12 +4604,12 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* 				 * HINT: when you start/stop a transfer, it 				 * might be a good idea to directly use the 				 * "pxfer[]" structure: 				 * 				 * usb2_transfer_start(sc->pxfer[0]); 				 * usb2_transfer_stop(sc->pxfer[0]); 				 * 				 * That way, if your code has many parts that 				 * will not stop running under the same 				 * lock, in other words "priv_mtx", the 				 * usb2_transfer_start and 				 * usb2_transfer_stop functions will simply 				 * return when they detect a NULL pointer 				 * argument. 				 * 				 * To avoid any races we clear the "pxfer[]" 				 * pointer while holding the private mutex 				 * of the driver: 				 */
+comment|/* 				 * HINT: when you start/stop a transfer, it 				 * might be a good idea to directly use the 				 * "pxfer[]" structure: 				 * 				 * usb2_transfer_start(sc->pxfer[0]); 				 * usb2_transfer_stop(sc->pxfer[0]); 				 * 				 * That way, if your code has many parts that 				 * will not stop running under the same 				 * lock, in other words "xfer_mtx", the 				 * usb2_transfer_start and 				 * usb2_transfer_stop functions will simply 				 * return when they detect a NULL pointer 				 * argument. 				 * 				 * To avoid any races we clear the "pxfer[]" 				 * pointer while holding the private mutex 				 * of the driver: 				 */
 name|pxfer
 index|[
 name|n_setup
@@ -4627,7 +4621,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -4688,14 +4682,14 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 condition|)
 block|{
 name|info
 operator|=
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 expr_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
@@ -5294,7 +5288,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5310,7 +5304,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5329,7 +5323,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -5364,7 +5358,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5386,7 +5380,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5421,7 +5415,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5435,7 +5429,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5535,7 +5529,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5565,7 +5559,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5576,7 +5570,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5592,7 +5586,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5646,7 +5640,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5662,7 +5656,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5709,7 +5703,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5725,7 +5719,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5836,7 +5830,7 @@ argument_list|(
 operator|&
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 operator|->
 name|dma_q
 argument_list|,
@@ -5884,7 +5878,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5950,7 +5944,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -5984,7 +5978,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6059,7 +6053,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6074,7 +6068,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6145,7 +6139,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6293,7 +6287,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6352,7 +6346,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6369,7 +6363,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6384,7 +6378,7 @@ name|info
 operator|=
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 expr_stmt|;
 name|pq
 operator|=
@@ -6407,7 +6401,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6423,7 +6417,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6475,6 +6469,8 @@ if|if
 condition|(
 name|xfer
 operator|->
+name|xroot
+operator|->
 name|xfer_mtx
 operator|!=
 operator|&
@@ -6521,11 +6517,13 @@ argument_list|(
 operator|&
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 operator|->
 name|cv_drain
 argument_list|,
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|xfer_mtx
 argument_list|)
@@ -6665,7 +6663,7 @@ name|info
 init|=
 name|pm
 operator|->
-name|usb2_root
+name|xroot
 decl_stmt|;
 comment|/* Change locking order */
 name|USB_BUS_UNLOCK
@@ -6680,7 +6678,7 @@ name|mtx_lock
 argument_list|(
 name|info
 operator|->
-name|priv_mtx
+name|xfer_mtx
 argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
@@ -6709,7 +6707,7 @@ name|mtx_unlock
 argument_list|(
 name|info
 operator|->
-name|priv_mtx
+name|xfer_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -6737,7 +6735,7 @@ name|info
 init|=
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 decl_stmt|;
 name|struct
 name|usb2_xfer_queue
@@ -6753,7 +6751,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -6861,13 +6859,13 @@ name|info
 init|=
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 decl_stmt|;
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -6880,6 +6878,8 @@ operator|!
 name|mtx_owned
 argument_list|(
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|xfer_mtx
 argument_list|)
@@ -6946,7 +6946,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -6955,7 +6955,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -6994,7 +6994,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -7019,7 +7019,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -7110,7 +7110,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -7192,7 +7192,7 @@ argument_list|(
 operator|&
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 operator|->
 name|cv_drain
 argument_list|)
@@ -7241,7 +7241,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -7397,7 +7397,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -7469,6 +7469,8 @@ name|mtx_owned
 argument_list|(
 name|xfer
 operator|->
+name|xroot
+operator|->
 name|xfer_mtx
 argument_list|)
 condition|)
@@ -7479,7 +7481,7 @@ operator|=
 operator|&
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 operator|->
 name|dma_q
 expr_stmt|;
@@ -7512,7 +7514,7 @@ condition|)
 block|{
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 operator|->
@@ -7537,7 +7539,7 @@ else|else
 block|{
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 operator|->
@@ -7601,7 +7603,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -7710,7 +7712,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -7727,7 +7729,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -7771,7 +7773,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -7788,7 +7790,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -7839,7 +7841,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -7913,9 +7915,15 @@ name|usb2_xfer_root
 modifier|*
 name|info
 decl_stmt|;
-name|udev
+name|info
 operator|=
 name|xfer
+operator|->
+name|xroot
+expr_stmt|;
+name|udev
+operator|=
+name|info
 operator|->
 name|udev
 expr_stmt|;
@@ -7974,7 +7982,7 @@ index|[
 literal|1
 index|]
 operator|->
-name|usb2_root
+name|xroot
 expr_stmt|;
 if|if
 condition|(
@@ -8198,7 +8206,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
@@ -8279,7 +8287,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -8301,7 +8309,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -8380,7 +8388,7 @@ name|usb2_get_dma_delay
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -8408,7 +8416,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -8427,7 +8435,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -8800,7 +8808,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -8865,7 +8873,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -9415,6 +9423,8 @@ name|usb2_clear_data_toggle
 argument_list|(
 name|xfer2
 operator|->
+name|xroot
+operator|->
 name|udev
 argument_list|,
 name|xfer2
@@ -9754,7 +9764,7 @@ decl_stmt|;
 name|struct
 name|usb2_xfer_root
 modifier|*
-name|usb2_root
+name|xroot
 decl_stmt|;
 name|struct
 name|usb2_device
@@ -9837,15 +9847,15 @@ condition|(
 name|xfer
 condition|)
 block|{
-name|usb2_root
+name|xroot
 operator|=
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 expr_stmt|;
 name|udev
 operator|=
-name|xfer
+name|xroot
 operator|->
 name|udev
 expr_stmt|;
@@ -9880,7 +9890,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -9910,7 +9920,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -9941,7 +9951,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -9956,7 +9966,7 @@ index|[
 literal|1
 index|]
 operator|->
-name|usb2_root
+name|xroot
 operator|->
 name|done_m
 index|[
@@ -9978,7 +9988,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -9995,7 +10005,7 @@ name|USB_BUS_LOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
@@ -10003,7 +10013,7 @@ expr_stmt|;
 name|pm
 operator|=
 operator|&
-name|usb2_root
+name|xroot
 operator|->
 name|done_m
 index|[
@@ -10025,7 +10035,7 @@ name|USB_BUS_UNLOCK
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|)
