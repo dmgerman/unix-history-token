@@ -3974,7 +3974,7 @@ name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|xfer
 operator|->
-name|udev
+name|xroot
 operator|->
 name|bus
 argument_list|,
