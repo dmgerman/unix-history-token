@@ -6485,33 +6485,36 @@ name|count
 decl_stmt|,
 name|newlen
 decl_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|nbp
 operator|->
 name|nb_len
-operator|==
+operator|!=
 literal|0
-operator|||
+operator|&&
 name|id
-operator|==
+operator|!=
 name|nbp
 operator|->
 name|nb_last_id
 operator|-
 literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"msdosfs: non-decreasing id: id %d, last id %d\n"
 argument_list|,
-operator|(
-literal|"non-decreasing id: id %d, last id %d"
-operator|,
 name|id
-operator|,
+argument_list|,
 name|nbp
 operator|->
 name|nb_last_id
-operator|)
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* Will store this substring in a WIN_CHARS-aligned slot. */
 name|slot
 operator|=
