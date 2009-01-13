@@ -135,13 +135,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/wlan/if_zyd2_reg.h>
+file|<dev/usb2/wlan/if_zydreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/wlan/if_zyd2_fw.h>
+file|<dev/usb2/wlan/if_zydfw.h>
 end_include
 
 begin_if

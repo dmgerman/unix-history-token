@@ -131,7 +131,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/ethernet/if_aue2_reg.h>
+file|<dev/usb2/ethernet/if_auereg.h>
 end_include
 
 begin_expr_stmt

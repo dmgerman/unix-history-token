@@ -131,13 +131,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/wlan/if_ural2_reg.h>
+file|<dev/usb2/wlan/if_uralreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/wlan/if_ural2_var.h>
+file|<dev/usb2/wlan/if_uralvar.h>
 end_include
 
 begin_if
