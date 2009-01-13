@@ -1751,7 +1751,7 @@ argument_list|(
 literal|"hw.igb.ave_latency"
 argument_list|,
 operator|&
-name|igb_low_latency
+name|igb_ave_latency
 argument_list|)
 expr_stmt|;
 end_expr_stmt
