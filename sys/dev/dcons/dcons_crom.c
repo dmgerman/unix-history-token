@@ -1091,7 +1091,7 @@ name|sc
 operator|->
 name|dma_tag
 argument_list|,
-literal|0
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|sc
