@@ -2703,6 +2703,20 @@ argument_list|,
 literal|0ul
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dg
+operator|.
+name|buf
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|dcons_init
 argument_list|(
 name|dg
@@ -3277,9 +3291,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|dcons_attach
-argument_list|()
-expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -3292,6 +3303,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|dcons_attach
+argument_list|()
+expr_stmt|;
 name|dcons_cnprobe
 argument_list|(
 operator|&
@@ -3322,6 +3336,13 @@ argument_list|(
 literal|"dcons: unload\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drv_init
+operator|==
+literal|1
+condition|)
+block|{
 name|callout_stop
 argument_list|(
 operator|&
@@ -3402,6 +3423,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MOD_SHUTDOWN
