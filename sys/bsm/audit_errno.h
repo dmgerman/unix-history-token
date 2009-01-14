@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.   *  * P4: //depot/projects/trustedbsd/openbsm/sys/bsm/audit_errno.h#4  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2008 Apple Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.   *  * P4: //depot/projects/trustedbsd/openbsm/sys/bsm/audit_errno.h#5  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -22,266 +22,266 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ESUCCESS
+name|BSM_ERRNO_ESUCCESS
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EPERM
+name|BSM_ERRNO_EPERM
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOENT
+name|BSM_ERRNO_ENOENT
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ESRCH
+name|BSM_ERRNO_ESRCH
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EINTR
+name|BSM_ERRNO_EINTR
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EIO
+name|BSM_ERRNO_EIO
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENXIO
+name|BSM_ERRNO_ENXIO
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_E2BIG
+name|BSM_ERRNO_E2BIG
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOEXEC
+name|BSM_ERRNO_ENOEXEC
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EBADF
+name|BSM_ERRNO_EBADF
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ECHILD
+name|BSM_ERRNO_ECHILD
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EAGAIN
+name|BSM_ERRNO_EAGAIN
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOMEM
+name|BSM_ERRNO_ENOMEM
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EACCES
+name|BSM_ERRNO_EACCES
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EFAULT
+name|BSM_ERRNO_EFAULT
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOTBLK
+name|BSM_ERRNO_ENOTBLK
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EBUSY
+name|BSM_ERRNO_EBUSY
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EEXIST
+name|BSM_ERRNO_EEXIST
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EXDEV
+name|BSM_ERRNO_EXDEV
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENODEV
+name|BSM_ERRNO_ENODEV
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOTDIR
+name|BSM_ERRNO_ENOTDIR
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EISDIR
+name|BSM_ERRNO_EISDIR
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EINVAL
+name|BSM_ERRNO_EINVAL
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENFILE
+name|BSM_ERRNO_ENFILE
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EMFILE
+name|BSM_ERRNO_EMFILE
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOTTY
+name|BSM_ERRNO_ENOTTY
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ETXTBSY
+name|BSM_ERRNO_ETXTBSY
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EFBIG
+name|BSM_ERRNO_EFBIG
 value|27
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOSPC
+name|BSM_ERRNO_ENOSPC
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ESPIPE
+name|BSM_ERRNO_ESPIPE
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EROFS
+name|BSM_ERRNO_EROFS
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EMLINK
+name|BSM_ERRNO_EMLINK
 value|31
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EPIPE
+name|BSM_ERRNO_EPIPE
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EDOM
+name|BSM_ERRNO_EDOM
 value|33
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ERANGE
+name|BSM_ERRNO_ERANGE
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOMSG
+name|BSM_ERRNO_ENOMSG
 value|35
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EIDRM
+name|BSM_ERRNO_EIDRM
 value|36
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ECHRNG
+name|BSM_ERRNO_ECHRNG
 value|37
 end_define
 
@@ -292,7 +292,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EL2NSYNC
+name|BSM_ERRNO_EL2NSYNC
 value|38
 end_define
 
@@ -303,7 +303,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EL3HLT
+name|BSM_ERRNO_EL3HLT
 value|39
 end_define
 
@@ -314,7 +314,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EL3RST
+name|BSM_ERRNO_EL3RST
 value|40
 end_define
 
@@ -325,7 +325,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ELNRNG
+name|BSM_ERRNO_ELNRNG
 value|41
 end_define
 
@@ -336,7 +336,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EUNATCH
+name|BSM_ERRNO_EUNATCH
 value|42
 end_define
 
@@ -347,7 +347,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOCSI
+name|BSM_ERRNO_ENOCSI
 value|43
 end_define
 
@@ -358,7 +358,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EL2HLT
+name|BSM_ERRNO_EL2HLT
 value|44
 end_define
 
@@ -369,42 +369,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EDEADLK
+name|BSM_ERRNO_EDEADLK
 value|45
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOLCK
+name|BSM_ERRNO_ENOLCK
 value|46
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ECANCELED
+name|BSM_ERRNO_ECANCELED
 value|47
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOTSUP
+name|BSM_ERRNO_ENOTSUP
 value|48
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EDQUOT
+name|BSM_ERRNO_EDQUOT
 value|49
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EBADE
+name|BSM_ERRNO_EBADE
 value|50
 end_define
 
@@ -415,7 +415,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EBADR
+name|BSM_ERRNO_EBADR
 value|51
 end_define
 
@@ -426,7 +426,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EXFULL
+name|BSM_ERRNO_EXFULL
 value|52
 end_define
 
@@ -437,7 +437,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOANO
+name|BSM_ERRNO_ENOANO
 value|53
 end_define
 
@@ -448,7 +448,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EBADRQC
+name|BSM_ERRNO_EBADRQC
 value|54
 end_define
 
@@ -459,7 +459,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EBADSLT
+name|BSM_ERRNO_EBADSLT
 value|55
 end_define
 
@@ -470,7 +470,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EDEADLOCK
+name|BSM_ERRNO_EDEADLOCK
 value|56
 end_define
 
@@ -481,7 +481,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EBFONT
+name|BSM_ERRNO_EBFONT
 value|57
 end_define
 
@@ -492,7 +492,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EOWNERDEAD
+name|BSM_ERRNO_EOWNERDEAD
 value|58
 end_define
 
@@ -503,7 +503,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOTRECOVERABLE
+name|BSM_ERRNO_ENOTRECOVERABLE
 value|59
 end_define
 
@@ -514,7 +514,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOSTR
+name|BSM_ERRNO_ENOSTR
 value|60
 end_define
 
@@ -525,7 +525,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENODATA
+name|BSM_ERRNO_ENODATA
 value|61
 end_define
 
@@ -536,7 +536,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ETIME
+name|BSM_ERRNO_ETIME
 value|62
 end_define
 
@@ -547,7 +547,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOSR
+name|BSM_ERRNO_ENOSR
 value|63
 end_define
 
@@ -558,7 +558,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENONET
+name|BSM_ERRNO_ENONET
 value|64
 end_define
 
@@ -569,7 +569,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOPKG
+name|BSM_ERRNO_ENOPKG
 value|65
 end_define
 
@@ -580,21 +580,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EREMOTE
+name|BSM_ERRNO_EREMOTE
 value|66
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOLINK
+name|BSM_ERRNO_ENOLINK
 value|67
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EADV
+name|BSM_ERRNO_EADV
 value|68
 end_define
 
@@ -605,7 +605,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ESRMNT
+name|BSM_ERRNO_ESRMNT
 value|69
 end_define
 
@@ -616,7 +616,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ECOMM
+name|BSM_ERRNO_ECOMM
 value|70
 end_define
 
@@ -627,14 +627,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EPROTO
+name|BSM_ERRNO_EPROTO
 value|71
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ELOCKUNMAPPED
+name|BSM_ERRNO_ELOCKUNMAPPED
 value|72
 end_define
 
@@ -645,7 +645,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOTACTIVE
+name|BSM_ERRNO_ENOTACTIVE
 value|73
 end_define
 
@@ -656,35 +656,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EMULTIHOP
+name|BSM_ERRNO_EMULTIHOP
 value|74
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EBADMSG
+name|BSM_ERRNO_EBADMSG
 value|77
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENAMETOOLONG
+name|BSM_ERRNO_ENAMETOOLONG
 value|78
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EOVERFLOW
+name|BSM_ERRNO_EOVERFLOW
 value|79
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOTUNIQ
+name|BSM_ERRNO_ENOTUNIQ
 value|80
 end_define
 
@@ -695,7 +695,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EBADFD
+name|BSM_ERRNO_EBADFD
 value|81
 end_define
 
@@ -706,7 +706,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EREMCHG
+name|BSM_ERRNO_EREMCHG
 value|82
 end_define
 
@@ -717,7 +717,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ELIBACC
+name|BSM_ERRNO_ELIBACC
 value|83
 end_define
 
@@ -728,7 +728,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ELIBBAD
+name|BSM_ERRNO_ELIBBAD
 value|84
 end_define
 
@@ -739,7 +739,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ELIBSCN
+name|BSM_ERRNO_ELIBSCN
 value|85
 end_define
 
@@ -750,7 +750,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ELIBMAX
+name|BSM_ERRNO_ELIBMAX
 value|86
 end_define
 
@@ -761,7 +761,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ELIBEXEC
+name|BSM_ERRNO_ELIBEXEC
 value|87
 end_define
 
@@ -772,35 +772,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EILSEQ
+name|BSM_ERRNO_EILSEQ
 value|88
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOSYS
+name|BSM_ERRNO_ENOSYS
 value|89
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ELOOP
+name|BSM_ERRNO_ELOOP
 value|90
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ERESTART
+name|BSM_ERRNO_ERESTART
 value|91
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ESTRPIPE
+name|BSM_ERRNO_ESTRPIPE
 value|92
 end_define
 
@@ -811,217 +811,217 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOTEMPTY
+name|BSM_ERRNO_ENOTEMPTY
 value|93
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EUSERS
+name|BSM_ERRNO_EUSERS
 value|94
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOTSOCK
+name|BSM_ERRNO_ENOTSOCK
 value|95
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EDESTADDRREQ
+name|BSM_ERRNO_EDESTADDRREQ
 value|96
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EMSGSIZE
+name|BSM_ERRNO_EMSGSIZE
 value|97
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EPROTOTYPE
+name|BSM_ERRNO_EPROTOTYPE
 value|98
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOPROTOOPT
+name|BSM_ERRNO_ENOPROTOOPT
 value|99
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EPROTONOSUPPORT
+name|BSM_ERRNO_EPROTONOSUPPORT
 value|120
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ESOCKTNOSUPPORT
+name|BSM_ERRNO_ESOCKTNOSUPPORT
 value|121
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EOPNOTSUPP
+name|BSM_ERRNO_EOPNOTSUPP
 value|122
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EPFNOSUPPORT
+name|BSM_ERRNO_EPFNOSUPPORT
 value|123
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EAFNOSUPPORT
+name|BSM_ERRNO_EAFNOSUPPORT
 value|124
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EADDRINUSE
+name|BSM_ERRNO_EADDRINUSE
 value|125
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EADDRNOTAVAIL
+name|BSM_ERRNO_EADDRNOTAVAIL
 value|126
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENETDOWN
+name|BSM_ERRNO_ENETDOWN
 value|127
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENETUNREACH
+name|BSM_ERRNO_ENETUNREACH
 value|128
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENETRESET
+name|BSM_ERRNO_ENETRESET
 value|129
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ECONNABORTED
+name|BSM_ERRNO_ECONNABORTED
 value|130
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ECONNRESET
+name|BSM_ERRNO_ECONNRESET
 value|131
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOBUFS
+name|BSM_ERRNO_ENOBUFS
 value|132
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EISCONN
+name|BSM_ERRNO_EISCONN
 value|133
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ENOTCONN
+name|BSM_ERRNO_ENOTCONN
 value|134
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ESHUTDOWN
+name|BSM_ERRNO_ESHUTDOWN
 value|143
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ETOOMANYREFS
+name|BSM_ERRNO_ETOOMANYREFS
 value|144
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ETIMEDOUT
+name|BSM_ERRNO_ETIMEDOUT
 value|145
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ECONNREFUSED
+name|BSM_ERRNO_ECONNREFUSED
 value|146
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EHOSTDOWN
+name|BSM_ERRNO_EHOSTDOWN
 value|147
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EHOSTUNREACH
+name|BSM_ERRNO_EHOSTUNREACH
 value|148
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EALREADY
+name|BSM_ERRNO_EALREADY
 value|149
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_EINPROGRESS
+name|BSM_ERRNO_EINPROGRESS
 value|150
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSM_ESTALE
+name|BSM_ERRNO_ESTALE
 value|151
 end_define
 
@@ -1032,7 +1032,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EPROCLIM
+name|BSM_ERRNO_EPROCLIM
 value|190
 end_define
 
@@ -1043,7 +1043,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EBADRPC
+name|BSM_ERRNO_EBADRPC
 value|191
 end_define
 
@@ -1054,7 +1054,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ERPCMISMATCH
+name|BSM_ERRNO_ERPCMISMATCH
 value|192
 end_define
 
@@ -1065,7 +1065,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EPROGUNAVAIL
+name|BSM_ERRNO_EPROGUNAVAIL
 value|193
 end_define
 
@@ -1076,7 +1076,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EPROGMISMATCH
+name|BSM_ERRNO_EPROGMISMATCH
 value|194
 end_define
 
@@ -1087,7 +1087,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EPROCUNAVAIL
+name|BSM_ERRNO_EPROCUNAVAIL
 value|195
 end_define
 
@@ -1098,7 +1098,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EFTYPE
+name|BSM_ERRNO_EFTYPE
 value|196
 end_define
 
@@ -1109,7 +1109,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EAUTH
+name|BSM_ERRNO_EAUTH
 value|197
 end_define
 
@@ -1120,7 +1120,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENEEDAUTH
+name|BSM_ERRNO_ENEEDAUTH
 value|198
 end_define
 
@@ -1131,7 +1131,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOATTR
+name|BSM_ERRNO_ENOATTR
 value|199
 end_define
 
@@ -1142,7 +1142,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EDOOFUS
+name|BSM_ERRNO_EDOOFUS
 value|200
 end_define
 
@@ -1153,7 +1153,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EJUSTRETURN
+name|BSM_ERRNO_EJUSTRETURN
 value|201
 end_define
 
@@ -1164,7 +1164,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOIOCTL
+name|BSM_ERRNO_ENOIOCTL
 value|202
 end_define
 
@@ -1175,7 +1175,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EDIRIOCTL
+name|BSM_ERRNO_EDIRIOCTL
 value|203
 end_define
 
@@ -1186,7 +1186,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EPWROFF
+name|BSM_ERRNO_EPWROFF
 value|204
 end_define
 
@@ -1197,7 +1197,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EDEVERR
+name|BSM_ERRNO_EDEVERR
 value|205
 end_define
 
@@ -1208,7 +1208,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EBADEXEC
+name|BSM_ERRNO_EBADEXEC
 value|206
 end_define
 
@@ -1219,7 +1219,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EBADARCH
+name|BSM_ERRNO_EBADARCH
 value|207
 end_define
 
@@ -1230,7 +1230,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ESHLIBVERS
+name|BSM_ERRNO_ESHLIBVERS
 value|208
 end_define
 
@@ -1241,7 +1241,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EBADMACHO
+name|BSM_ERRNO_EBADMACHO
 value|209
 end_define
 
@@ -1252,7 +1252,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EPOLICY
+name|BSM_ERRNO_EPOLICY
 value|210
 end_define
 
@@ -1263,7 +1263,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EDOTDOT
+name|BSM_ERRNO_EDOTDOT
 value|211
 end_define
 
@@ -1274,7 +1274,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EUCLEAN
+name|BSM_ERRNO_EUCLEAN
 value|212
 end_define
 
@@ -1285,7 +1285,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOTNAM
+name|BSM_ERRNO_ENOTNAM
 value|213
 end_define
 
@@ -1296,7 +1296,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENAVAIL
+name|BSM_ERRNO_ENAVAIL
 value|214
 end_define
 
@@ -1307,7 +1307,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EISNAM
+name|BSM_ERRNO_EISNAM
 value|215
 end_define
 
@@ -1318,7 +1318,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EREMOTEIO
+name|BSM_ERRNO_EREMOTEIO
 value|216
 end_define
 
@@ -1329,7 +1329,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOMEDIUM
+name|BSM_ERRNO_ENOMEDIUM
 value|217
 end_define
 
@@ -1340,7 +1340,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EMEDIUMTYPE
+name|BSM_ERRNO_EMEDIUMTYPE
 value|218
 end_define
 
@@ -1351,7 +1351,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_ENOKEY
+name|BSM_ERRNO_ENOKEY
 value|219
 end_define
 
@@ -1362,7 +1362,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EKEYEXPIRED
+name|BSM_ERRNO_EKEYEXPIRED
 value|220
 end_define
 
@@ -1373,7 +1373,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EKEYREVOKED
+name|BSM_ERRNO_EKEYREVOKED
 value|221
 end_define
 
@@ -1384,7 +1384,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_EKEYREJECTED
+name|BSM_ERRNO_EKEYREJECTED
 value|222
 end_define
 
@@ -1399,7 +1399,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BSM_UNKNOWNERR
+name|BSM_ERRNO_UNKNOWN
 value|250
 end_define
 

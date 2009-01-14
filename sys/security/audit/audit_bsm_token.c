@@ -3403,7 +3403,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * token ID                1 byte  * socket domain           2 bytes  * socket type             2 bytes  * address type            2 byte  * local port              2 bytes  * local address           4 bytes/16 bytes (IPv4/IPv6 address)  * remote port             2 bytes  * remote address          4 bytes/16 bytes (IPv4/IPv6 address)  */
+comment|/*  * token ID                1 byte  * socket domain           2 bytes  * socket type             2 bytes  * address type            2 byte  * local port              2 bytes  * local address           4 bytes/16 bytes (IPv4/IPv6 address)  * remote port             2 bytes  * remote address          4 bytes/16 bytes (IPv4/IPv6 address)  *  * Domain and type arguments to this routine are assumed to already have been  * converted to the BSM constant space, so we don't do that here.  */
 end_comment
 
 begin_function
