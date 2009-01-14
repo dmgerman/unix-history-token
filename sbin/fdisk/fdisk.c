@@ -618,13 +618,13 @@ index|[
 literal|0x06
 index|]
 operator|=
-literal|"Primary 'big' DOS (>= 32MB)"
+literal|"Primary DOS, 16 bit FAT (>= 32MB)"
 block|,
 index|[
 literal|0x07
 index|]
 operator|=
-literal|"OS/2 HPFS, NTFS, QNX-2 (16 bit) or Advanced UNIX"
+literal|"NTFS, OS/2 HPFS, QNX-2 (16 bit) or Advanced UNIX"
 block|,
 index|[
 literal|0x08
@@ -709,6 +709,12 @@ literal|0x18
 index|]
 operator|=
 literal|"AST Windows swapfile"
+block|,
+index|[
+literal|0x1b
+index|]
+operator|=
+literal|"ASUS Recovery partition (NTFS)"
 block|,
 index|[
 literal|0x24
@@ -1034,6 +1040,12 @@ literal|0xDB
 index|]
 operator|=
 literal|"CP/M, Concurrent CP/M, Concurrent DOS or CTOS"
+block|,
+index|[
+literal|0xDE
+index|]
+operator|=
+literal|"DELL Utilities - FAT filesystem"
 block|,
 index|[
 literal|0xE1
