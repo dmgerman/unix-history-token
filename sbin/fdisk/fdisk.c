@@ -1112,8 +1112,7 @@ specifier|static
 name|void
 name|print_s0
 parameter_list|(
-name|int
-name|which
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2017,10 +2016,7 @@ condition|(
 name|v_flag
 condition|)
 name|print_s0
-argument_list|(
-operator|-
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2069,10 +2065,7 @@ condition|(
 name|v_flag
 condition|)
 name|print_s0
-argument_list|(
-operator|-
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2199,10 +2192,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|print_s0
-argument_list|(
-operator|-
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2269,8 +2259,7 @@ specifier|static
 name|void
 name|print_s0
 parameter_list|(
-name|int
-name|which
+name|void
 parameter_list|)
 block|{
 name|int
@@ -2284,13 +2273,6 @@ argument_list|(
 literal|"Information from DOS bootblock is:\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|which
-operator|==
-operator|-
-literal|1
-condition|)
 for|for
 control|(
 name|i
@@ -2314,12 +2296,6 @@ operator|,
 name|print_part
 argument_list|(
 name|i
-argument_list|)
-expr_stmt|;
-else|else
-name|print_part
-argument_list|(
-name|which
 argument_list|)
 expr_stmt|;
 block|}
@@ -4590,10 +4566,7 @@ name|iotest
 condition|)
 block|{
 name|print_s0
-argument_list|(
-operator|-
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 literal|0
