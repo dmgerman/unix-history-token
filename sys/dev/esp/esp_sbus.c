@@ -495,7 +495,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Functions and the switch for the MI code.  */
+comment|/*  * Functions and the switch for the MI code  */
 end_comment
 
 begin_function_decl
@@ -506,8 +506,10 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|,
 name|int
+name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -520,10 +522,13 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|,
 name|int
+name|reg
 parameter_list|,
 name|u_char
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -536,6 +541,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -548,6 +554,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -560,6 +567,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -572,17 +580,22 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|,
 name|caddr_t
 modifier|*
+name|addr
 parameter_list|,
 name|size_t
 modifier|*
+name|len
 parameter_list|,
 name|int
+name|datain
 parameter_list|,
 name|size_t
 modifier|*
+name|dmasize
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -595,6 +608,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -607,6 +621,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -619,6 +634,7 @@ parameter_list|(
 name|struct
 name|ncr53c9x_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -631,10 +647,12 @@ parameter_list|(
 name|struct
 name|esp_softc
 modifier|*
+name|esc
 parameter_list|,
 name|struct
 name|ncr53c9x_glue
 modifier|*
+name|gluep
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1257,7 +1275,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Search accompanying DMA engine. It should have been 		 * already attached otherwise there isn't much we can do. 		 */
+comment|/* 		 * Search accompanying DMA engine.  It should have been 		 * already attached otherwise there isn't much we can do. 		 */
 if|if
 condition|(
 name|device_get_children
@@ -2220,10 +2238,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Attach this instance, and then all the sub-devices  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2292,7 +2306,7 @@ operator|/=
 literal|1000000
 expr_stmt|;
 comment|/* 	 * XXX More of this should be in ncr53c9x_attach(), but 	 * XXX should we really poke around the chip that much in 	 * XXX the MI code?  Think about this more... 	 */
-comment|/* 	 * Read the part-unique ID code of the SCSI chip. The contained 	 * value is only valid if all of the following conditions are met: 	 * - After power-up or chip reset. 	 * - Before any value is written to this register. 	 * - The NCRCFG2_FE bit is set. 	 * - A (NCRCMD_NOP | NCRCMD_DMA) command has been issued. 	 */
+comment|/* 	 * Read the part-unique ID code of the SCSI chip.  The contained 	 * value is only valid if all of the following conditions are met: 	 * - After power-up or chip reset. 	 * - Before any value is written to this register. 	 * - The NCRCFG2_FE bit is set. 	 * - A (NCRCMD_NOP | NCRCMD_DMA) command has been issued. 	 */
 name|NCRCMD
 argument_list|(
 name|sc
@@ -2510,7 +2524,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* NCRCFG2_FE enables> 64K transfers */
+comment|/* NCRCFG2_FE enables> 64K transfers. */
 name|sc
 operator|->
 name|sc_cfg2
@@ -2774,7 +2788,7 @@ case|:
 case|case
 name|NCR_VARIANT_FAS236
 case|:
-comment|/* 		 * The onboard SCSI chips in Sun Ultra 1 are actually 		 * documented to be NCR53C9X which use NCRCFG3_FCLK and 		 * NCRCFG3_FSCSI. BSD/OS however probes these chips as 		 * FAS100A and uses NCRF9XCFG3_FCLK and NCRF9XCFG3_FSCSI 		 * instead which seems to be correct as otherwise sync 		 * negotiation just doesn't work. Using NCRF9XCFG3_FCLK 		 * and NCRF9XCFG3_FSCSI with these chips in fact also 		 * yields Fast-SCSI speed. 		 */
+comment|/* 		 * The onboard SCSI chips in Sun Ultra 1 are actually 		 * documented to be NCR53C9X which use NCRCFG3_FCLK and 		 * NCRCFG3_FSCSI.  BSD/OS however probes these chips as 		 * FAS100A and uses NCRF9XCFG3_FCLK and NCRF9XCFG3_FSCSI 		 * instead which seems to be correct as otherwise sync 		 * negotiation just doesn't work.  Using NCRF9XCFG3_FCLK 		 * and NCRF9XCFG3_FSCSI with these chips in fact also 		 * yields Fast-SCSI speed. 		 */
 name|sc
 operator|->
 name|sc_features
@@ -2840,7 +2854,7 @@ name|sc
 operator|->
 name|sc_minsync
 expr_stmt|;
-comment|/* Establish interrupt channel */
+comment|/* Establish interrupt channel. */
 name|esc
 operator|->
 name|sc_irqrid
@@ -2935,7 +2949,7 @@ goto|goto
 name|fail_ires
 goto|;
 block|}
-comment|/* Turn on target selection using the `DMA' method */
+comment|/* Turn on target selection using the `DMA' method. */
 if|if
 condition|(
 name|sc
@@ -3036,7 +3050,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Glue functions.  */
+comment|/*  * Glue functions  */
 end_comment
 
 begin_ifdef
@@ -3745,30 +3759,21 @@ operator|*
 operator|)
 name|sc
 decl_stmt|;
-name|uint32_t
-name|csr
-decl_stmt|;
-name|csr
-operator|=
-name|L64854_GCSR
-argument_list|(
-name|esc
-operator|->
-name|sc_dma
-argument_list|)
-expr_stmt|;
-name|csr
-operator|&=
-operator|~
-name|D_EN_DMA
-expr_stmt|;
 name|L64854_SCSR
 argument_list|(
 name|esc
 operator|->
 name|sc_dma
 argument_list|,
-name|csr
+name|L64854_GCSR
+argument_list|(
+name|esc
+operator|->
+name|sc_dma
+argument_list|)
+operator|&
+operator|~
+name|D_EN_DMA
 argument_list|)
 expr_stmt|;
 block|}
