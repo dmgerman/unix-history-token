@@ -11615,9 +11615,12 @@ name|bge_asicrev
 condition|)
 block|{
 case|case
+name|BGE_ASICREV_BCM5714_A0
+case|:
+case|case
 name|BGE_ASICREV_BCM5714
 case|:
-comment|/* 		 * Apparently, MSI doesn't work when this chip is configured 		 * in single-port mode. 		 */
+comment|/* 		 * Apparently, MSI doesn't work when these chips are 		 * configured in single-port mode. 		 */
 if|if
 condition|(
 name|bge_has_multiple_ports
@@ -11652,17 +11655,18 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-case|case
-name|BGE_ASICREV_BCM5752
-case|:
-case|case
-name|BGE_ASICREV_BCM5780
-case|:
+default|default:
+if|if
+condition|(
+name|BGE_IS_575X_PLUS
+argument_list|(
+name|sc
+argument_list|)
+condition|)
 name|can_use_msi
 operator|=
 literal|1
 expr_stmt|;
-break|break;
 block|}
 return|return
 operator|(
