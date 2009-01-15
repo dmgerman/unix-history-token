@@ -13653,6 +13653,12 @@ name|nextqtd
 expr_stmt|;
 name|next
 operator|=
+operator|(
+name|snext
+operator|!=
+name|NULL
+operator|)
+condition|?
 name|htohc32
 argument_list|(
 name|sc
@@ -13660,6 +13666,11 @@ argument_list|,
 name|snext
 operator|->
 name|physaddr
+argument_list|)
+else|:
+name|EHCI_NULL
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now loop through any qTDs before us and keep track of the pointer 	 * that points to us for the end. 	 */
