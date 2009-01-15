@@ -10820,7 +10820,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->bge_btag, sc->bge_bhandle, \ 			  rcb + offsetof(struct bge_rcb, offset), val)
+value|bus_write_4(sc->bge_res, rcb + offsetof(struct bge_rcb, offset), val)
 end_define
 
 begin_define
@@ -12721,7 +12721,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->bge_btag, sc->bge_bhandle, reg, val)
+value|bus_write_4(sc->bge_res, reg, val)
 end_define
 
 begin_define
@@ -12734,7 +12734,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->bge_btag, sc->bge_bhandle, reg)
+value|bus_read_4(sc->bge_res, reg)
 end_define
 
 begin_define
@@ -13205,12 +13205,6 @@ name|bge_mtx
 decl_stmt|;
 name|device_t
 name|bge_miibus
-decl_stmt|;
-name|bus_space_handle_t
-name|bge_bhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|bge_btag
 decl_stmt|;
 name|void
 modifier|*
