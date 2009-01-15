@@ -347,6 +347,7 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|bge_type
 block|{
@@ -9054,6 +9055,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|bge_type
 modifier|*
@@ -9190,6 +9192,11 @@ name|pname
 decl_stmt|;
 if|if
 condition|(
+name|bge_has_eaddr
+argument_list|(
+name|sc
+argument_list|)
+operator|&&
 name|pci_get_vpd_ident
 argument_list|(
 name|dev
