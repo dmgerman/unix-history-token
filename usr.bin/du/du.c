@@ -312,8 +312,11 @@ decl_stmt|,
 name|dflag
 decl_stmt|,
 name|cflag
-decl_stmt|,
+decl_stmt|;
+name|int
 name|hflag
+decl_stmt|,
+name|lflag
 decl_stmt|,
 name|ch
 decl_stmt|,
@@ -356,6 +359,8 @@ name|cflag
 operator|=
 name|hflag
 operator|=
+name|lflag
+operator|=
 literal|0
 expr_stmt|;
 name|save
@@ -387,7 +392,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HI:LPasd:chkmnrx"
+literal|"HI:LPasd:chklmnrx"
 argument_list|)
 operator|)
 operator|!=
@@ -543,6 +548,14 @@ literal|"1024"
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|lflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -950,6 +963,10 @@ condition|)
 break|break;
 if|if
 condition|(
+name|lflag
+operator|==
+literal|0
+operator|&&
 name|p
 operator|->
 name|fts_statp
@@ -1890,7 +1907,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-c] [-h | -k | -m] [-n] [-x] [-I mask] [file ...]\n"
+literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-c] "
+literal|"[-l] [-h | -k | -m] [-n] [-x] [-I mask] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
