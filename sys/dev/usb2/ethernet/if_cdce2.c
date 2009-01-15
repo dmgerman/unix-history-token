@@ -439,7 +439,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|CDCE_BULK_A
 index|]
 operator|=
 block|{
@@ -596,7 +596,7 @@ comment|/* no timeout */
 block|}
 block|,
 index|[
-literal|1
+name|CDCE_BULK_B
 index|]
 operator|=
 block|{
@@ -753,7 +753,7 @@ comment|/* 10 seconds */
 block|}
 block|,
 index|[
-literal|2
+name|CDCE_INTR
 index|]
 operator|=
 block|{
@@ -2461,7 +2461,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|CDCE_INTR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2683,7 +2683,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|CDCE_BULK_B
 index|]
 argument_list|)
 expr_stmt|;
@@ -2693,7 +2693,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|CDCE_BULK_A
 index|]
 argument_list|)
 expr_stmt|;
@@ -3961,7 +3961,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|CDCE_BULK_A
 index|]
 argument_list|)
 expr_stmt|;
@@ -3971,7 +3971,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|CDCE_BULK_B
 index|]
 argument_list|)
 expr_stmt|;
@@ -4289,7 +4289,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|CDCE_BULK_A
 index|]
 argument_list|)
 expr_stmt|;
@@ -4299,7 +4299,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|CDCE_BULK_B
 index|]
 argument_list|)
 expr_stmt|;

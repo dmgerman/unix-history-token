@@ -104,17 +104,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UARK_N_TRANSFER
-value|4
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UARK_SET_DATA_BITS
 parameter_list|(
 name|x
@@ -198,6 +187,24 @@ directive|define
 name|UARK_IFACE_INDEX
 value|0
 end_define
+
+begin_enum
+enum|enum
+block|{
+name|UARK_BULK_DT_WR
+block|,
+name|UARK_BULK_DT_RD
+block|,
+name|UARK_BULK_CS_WR
+block|,
+name|UARK_BULK_CS_RD
+block|,
+name|UARK_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -438,7 +445,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UARK_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -491,7 +498,7 @@ name|uark_bulk_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UARK_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -544,7 +551,7 @@ name|uark_bulk_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|UARK_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -609,7 +616,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|UARK_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -1249,7 +1256,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UARK_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1316,7 +1323,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UARK_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1355,7 +1362,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UARK_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -1456,7 +1463,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UARK_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1504,7 +1511,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UARK_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1543,7 +1550,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UARK_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -1603,7 +1610,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UARK_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1636,7 +1643,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UARK_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1646,7 +1653,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UARK_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1679,7 +1686,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UARK_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1712,7 +1719,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UARK_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1722,7 +1729,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UARK_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;

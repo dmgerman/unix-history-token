@@ -33,17 +33,6 @@ begin_comment
 comment|/* config number 1 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UDAV_ENDPT_MAX
-value|6
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
 begin_comment
 comment|/* Packet length */
 end_comment
@@ -919,6 +908,28 @@ parameter_list|)
 value|((sc)->sc_miibus ?				\ 			    device_get_softc((sc)->sc_miibus) : NULL)
 end_define
 
+begin_enum
+enum|enum
+block|{
+name|UDAV_BULK_DT_WR
+block|,
+name|UDAV_BULK_DT_RD
+block|,
+name|UDAV_BULK_CS_WR
+block|,
+name|UDAV_BULK_CS_RD
+block|,
+name|UDAV_INTR_DT_RD
+block|,
+name|UDAV_INTR_CS_RD
+block|,
+name|UDAV_N_TRANSFER
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|udav_softc
@@ -955,7 +966,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|UDAV_ENDPT_MAX
+name|UDAV_N_TRANSFER
 index|]
 decl_stmt|;
 name|device_t

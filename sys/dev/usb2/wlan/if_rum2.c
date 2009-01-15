@@ -3055,7 +3055,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|RUM_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -3123,7 +3123,7 @@ comment|/* ms */
 block|}
 block|,
 index|[
-literal|1
+name|RUM_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -3180,7 +3180,7 @@ name|rum_bulk_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|RUM_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -3238,7 +3238,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|RUM_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -5714,7 +5714,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|RUM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -6622,7 +6622,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|RUM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -6763,7 +6763,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|RUM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -6802,7 +6802,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|RUM_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -7698,7 +7698,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|RUM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -7786,7 +7786,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|RUM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -8026,7 +8026,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|RUM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -8070,7 +8070,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|RUM_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -8450,7 +8450,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|RUM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -12160,7 +12160,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|RUM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -12170,7 +12170,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|RUM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -12380,7 +12380,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|RUM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -12390,7 +12390,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|RUM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -12400,7 +12400,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|RUM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -12410,7 +12410,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|RUM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;

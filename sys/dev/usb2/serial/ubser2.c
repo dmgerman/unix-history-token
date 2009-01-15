@@ -211,40 +211,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|UBSER_TR_DT_WRITE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|UBSER_TR_DT_READ
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|UBSER_TR_CS_WRITE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|UBSER_TR_CS_READ
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|UBSER_TR_MAX
-value|4
-end_define
+begin_enum
+enum|enum
+block|{
+name|UBSER_BULK_DT_WR
+block|,
+name|UBSER_BULK_DT_RD
+block|,
+name|UBSER_BULK_CS_WR
+block|,
+name|UBSER_BULK_CS_RD
+block|,
+name|UBSER_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -266,7 +249,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|UBSER_TR_MAX
+name|UBSER_N_TRANSFER
 index|]
 decl_stmt|;
 name|struct
@@ -466,12 +449,12 @@ name|struct
 name|usb2_config
 name|ubser_config
 index|[
-name|UBSER_TR_MAX
+name|UBSER_N_TRANSFER
 index|]
 init|=
 block|{
 index|[
-name|UBSER_TR_DT_WRITE
+name|UBSER_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -525,7 +508,7 @@ name|ubser_write_callback
 block|, 	}
 block|,
 index|[
-name|UBSER_TR_DT_READ
+name|UBSER_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -579,7 +562,7 @@ name|ubser_read_callback
 block|, 	}
 block|,
 index|[
-name|UBSER_TR_CS_WRITE
+name|UBSER_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -644,7 +627,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-name|UBSER_TR_CS_READ
+name|UBSER_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -1228,7 +1211,7 @@ name|sc_xfer
 argument_list|,
 name|ubser_config
 argument_list|,
-name|UBSER_TR_MAX
+name|UBSER_N_TRANSFER
 argument_list|,
 name|sc
 argument_list|,
@@ -1253,7 +1236,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_DT_WRITE
+name|UBSER_BULK_DT_WR
 index|]
 operator|->
 name|max_data_length
@@ -1364,7 +1347,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_DT_READ
+name|UBSER_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1454,7 +1437,7 @@ literal|0
 init|;
 name|n
 operator|<
-name|UBSER_TR_MAX
+name|UBSER_N_TRANSFER
 condition|;
 name|n
 operator|++
@@ -1483,7 +1466,7 @@ name|sc
 operator|->
 name|sc_xfer
 argument_list|,
-name|UBSER_TR_MAX
+name|UBSER_N_TRANSFER
 argument_list|)
 expr_stmt|;
 return|return
@@ -1686,7 +1669,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_DT_WRITE
+name|UBSER_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -1785,7 +1768,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_CS_WRITE
+name|UBSER_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1907,7 +1890,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_CS_WRITE
+name|UBSER_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1946,7 +1929,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_DT_READ
+name|UBSER_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -2113,7 +2096,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_CS_READ
+name|UBSER_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2161,7 +2144,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_CS_READ
+name|UBSER_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2376,7 +2359,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_DT_READ
+name|UBSER_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2409,7 +2392,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_CS_READ
+name|UBSER_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2419,7 +2402,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_DT_READ
+name|UBSER_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2452,7 +2435,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_DT_WRITE
+name|UBSER_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2485,7 +2468,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_CS_WRITE
+name|UBSER_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2495,7 +2478,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|UBSER_TR_DT_WRITE
+name|UBSER_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;

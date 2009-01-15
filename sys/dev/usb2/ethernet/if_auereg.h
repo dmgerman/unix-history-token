@@ -43,12 +43,27 @@ begin_comment
 comment|/*  * Note that while the ADMtek technically has four endpoints, the control  * endpoint (endpoint 0) is regarded as special by the USB code and drivers  * don't have direct access to it (we access it using usb2_do_request()  * when reading/writing registers.  Consequently, our endpoint indexes  * don't match those in the ADMtek Pegasus manual: we consider the RX data  * endpoint to be index 0 and work up from there.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|AUE_ENDPT_MAX
-value|6
-end_define
+begin_enum
+enum|enum
+block|{
+name|AUE_BULK_DT_WR
+block|,
+name|AUE_BULK_DT_RD
+block|,
+name|AUE_BULK_CS_WR
+block|,
+name|AUE_BULK_CS_RD
+block|,
+name|AUE_INTR_DT_RD
+block|,
+name|AUE_INTR_CS_RD
+block|,
+name|AUE_N_TRANSFER
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
 
 begin_define
 define|#
@@ -868,7 +883,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|AUE_ENDPT_MAX
+name|AUE_N_TRANSFER
 index|]
 decl_stmt|;
 name|device_t

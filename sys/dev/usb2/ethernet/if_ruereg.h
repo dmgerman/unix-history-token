@@ -24,13 +24,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RUE_ENDPT_MAX
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
 name|RUE_INTR_PKTLEN
 value|0x8
 end_define
@@ -740,6 +733,28 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+block|{
+name|RUE_BULK_DT_WR
+block|,
+name|RUE_BULK_DT_RD
+block|,
+name|RUE_BULK_CS_WR
+block|,
+name|RUE_BULK_CS_RD
+block|,
+name|RUE_INTR_DT_RD
+block|,
+name|RUE_INTR_CS_RD
+block|,
+name|RUE_N_TRANSFER
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|rue_softc
@@ -776,7 +791,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|RUE_ENDPT_MAX
+name|RUE_N_TRANSFER
 index|]
 decl_stmt|;
 name|device_t

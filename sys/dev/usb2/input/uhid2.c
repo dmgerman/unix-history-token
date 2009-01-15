@@ -218,17 +218,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|UHID_N_TRANSFER
-value|4
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UHID_BSIZE
 value|1024
 end_define
@@ -247,6 +236,24 @@ end_define
 begin_comment
 comment|/* bytes, frame number */
 end_comment
+
+begin_enum
+enum|enum
+block|{
+name|UHID_INTR_DT_RD
+block|,
+name|UHID_INTR_CS_RD
+block|,
+name|UHID_CTRL_DT_WR
+block|,
+name|UHID_CTRL_DT_RD
+block|,
+name|UHID_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -634,7 +641,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UHID_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -701,7 +708,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UHID_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -740,7 +747,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UHID_INTR_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -1395,7 +1402,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UHID_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -1449,7 +1456,7 @@ name|uhid_intr_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UHID_INTR_CS_RD
 index|]
 operator|=
 block|{
@@ -1507,7 +1514,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|2
+name|UHID_CTRL_DT_WR
 index|]
 operator|=
 block|{
@@ -1559,7 +1566,7 @@ comment|/* 1 second */
 block|}
 block|,
 index|[
-literal|3
+name|UHID_CTRL_DT_RD
 index|]
 operator|=
 block|{
@@ -1648,7 +1655,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UHID_CTRL_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1661,7 +1668,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UHID_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1695,7 +1702,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UHID_CTRL_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1705,7 +1712,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UHID_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1738,7 +1745,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UHID_CTRL_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1771,7 +1778,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UHID_CTRL_DT_WR
 index|]
 argument_list|)
 expr_stmt|;

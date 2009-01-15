@@ -169,17 +169,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UMOSCOM_N_DATA_TRANSFER
-value|6
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UMOSCOM_CONFIG_INDEX
 value|0
 end_define
@@ -859,6 +848,28 @@ name|UMOSCOM_BAUD_REF
 value|115200
 end_define
 
+begin_enum
+enum|enum
+block|{
+name|UMOSCOM_BULK_DT_WR
+block|,
+name|UMOSCOM_BULK_DT_RD
+block|,
+name|UMOSCOM_BULK_CS_WR
+block|,
+name|UMOSCOM_BULK_CS_RD
+block|,
+name|UMOSCOM_INTR_DT_RD
+block|,
+name|UMOSCOM_INTR_CS_RD
+block|,
+name|UMOSCOM_N_TRANSFER
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|umoscom_softc
@@ -874,9 +885,9 @@ decl_stmt|;
 name|struct
 name|usb2_xfer
 modifier|*
-name|sc_xfer_data
+name|sc_xfer
 index|[
-name|UMOSCOM_N_DATA_TRANSFER
+name|UMOSCOM_N_TRANSFER
 index|]
 decl_stmt|;
 name|struct
@@ -1196,12 +1207,12 @@ name|struct
 name|usb2_config
 name|umoscom_config_data
 index|[
-name|UMOSCOM_N_DATA_TRANSFER
+name|UMOSCOM_N_TRANSFER
 index|]
 init|=
 block|{
 index|[
-literal|0
+name|UMOSCOM_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -1254,7 +1265,7 @@ name|umoscom_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UMOSCOM_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -1307,7 +1318,7 @@ name|umoscom_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|UMOSCOM_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -1365,7 +1376,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|UMOSCOM_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -1423,7 +1434,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|4
+name|UMOSCOM_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -1477,7 +1488,7 @@ name|umoscom_intr_callback
 block|, 	}
 block|,
 index|[
-literal|5
+name|UMOSCOM_INTR_CS_RD
 index|]
 operator|=
 block|{
@@ -1948,11 +1959,11 @@ name|iface_index
 argument_list|,
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 argument_list|,
 name|umoscom_config_data
 argument_list|,
-name|UMOSCOM_N_DATA_TRANSFER
+name|UMOSCOM_N_TRANSFER
 argument_list|,
 name|sc
 argument_list|,
@@ -2096,9 +2107,9 @@ name|usb2_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 argument_list|,
-name|UMOSCOM_N_DATA_TRANSFER
+name|UMOSCOM_N_TRANSFER
 argument_list|)
 expr_stmt|;
 return|return
@@ -3075,7 +3086,7 @@ if|#
 directive|if
 literal|0
 comment|/* start interrupt endpoint */
-block|usb2_transfer_start(sc->sc_xfer_data[4]);
+block|usb2_transfer_start(sc->sc_xfer[UMOSCOM_INTR_DT_RD]);
 endif|#
 directive|endif
 comment|/* start read endpoint */
@@ -3083,9 +3094,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|1
+name|UMOSCOM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3117,9 +3128,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|5
+name|UMOSCOM_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3127,9 +3138,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|4
+name|UMOSCOM_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3138,9 +3149,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|3
+name|UMOSCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3148,9 +3159,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|1
+name|UMOSCOM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3181,9 +3192,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|0
+name|UMOSCOM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3214,9 +3225,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|2
+name|UMOSCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3224,9 +3235,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|0
+name|UMOSCOM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3288,9 +3299,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|2
+name|UMOSCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3362,9 +3373,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|2
+name|UMOSCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3401,9 +3412,9 @@ name|xfer_other
 init|=
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|0
+name|UMOSCOM_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -3516,9 +3527,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|3
+name|UMOSCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3571,9 +3582,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|3
+name|UMOSCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3610,9 +3621,9 @@ name|xfer_other
 init|=
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|1
+name|UMOSCOM_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -3721,9 +3732,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|5
+name|UMOSCOM_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3776,9 +3787,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|5
+name|UMOSCOM_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3815,9 +3826,9 @@ name|xfer_other
 init|=
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|4
+name|UMOSCOM_INTR_DT_RD
 index|]
 decl_stmt|;
 if|if

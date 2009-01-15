@@ -237,16 +237,27 @@ name|UMCT_CONFIG_INDEX
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|UMCT_ENDPT_MAX
-value|6
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
+begin_enum
+enum|enum
+block|{
+name|UMCT_BULK_DT_WR
+block|,
+name|UMCT_BULK_DT_RD
+block|,
+name|UMCT_BULK_CS_WR
+block|,
+name|UMCT_BULK_CS_RD
+block|,
+name|UMCT_INTR_DT_RD
+block|,
+name|UMCT_INTR_CS_RD
+block|,
+name|UMCT_N_TRANSFER
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -270,7 +281,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|UMCT_ENDPT_MAX
+name|UMCT_N_TRANSFER
 index|]
 decl_stmt|;
 name|uint32_t
@@ -561,12 +572,12 @@ name|struct
 name|usb2_config
 name|umct_config
 index|[
-name|UMCT_ENDPT_MAX
+name|UMCT_N_TRANSFER
 index|]
 init|=
 block|{
 index|[
-literal|0
+name|UMCT_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -620,7 +631,7 @@ name|umct_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UMCT_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -681,7 +692,7 @@ comment|/* first interrupt endpoint */
 block|}
 block|,
 index|[
-literal|2
+name|UMCT_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -746,7 +757,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|UMCT_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -811,7 +822,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|4
+name|UMCT_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -872,7 +883,7 @@ comment|/* second interrupt endpoint */
 block|}
 block|,
 index|[
-literal|5
+name|UMCT_INTR_CS_RD
 index|]
 operator|=
 block|{
@@ -1410,7 +1421,7 @@ name|sc_xfer
 argument_list|,
 name|umct_config
 argument_list|,
-name|UMCT_ENDPT_MAX
+name|UMCT_N_TRANSFER
 argument_list|,
 name|sc
 argument_list|,
@@ -1444,7 +1455,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMCT_BULK_DT_RD
 index|]
 operator|->
 name|pipe
@@ -1471,28 +1482,28 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UMCT_INTR_DT_RD
 index|]
 decl_stmt|;
 name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UMCT_INTR_DT_RD
 index|]
 operator|=
 name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMCT_BULK_DT_RD
 index|]
 expr_stmt|;
 name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMCT_BULK_DT_RD
 index|]
 operator|=
 name|temp
@@ -1501,7 +1512,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMCT_BULK_DT_RD
 index|]
 operator|->
 name|callback
@@ -1513,7 +1524,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UMCT_INTR_DT_RD
 index|]
 operator|->
 name|callback
@@ -1530,7 +1541,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMCT_BULK_DT_WR
 index|]
 operator|->
 name|max_data_length
@@ -1659,7 +1670,7 @@ name|sc
 operator|->
 name|sc_xfer
 argument_list|,
-name|UMCT_ENDPT_MAX
+name|UMCT_N_TRANSFER
 argument_list|)
 expr_stmt|;
 return|return
@@ -1864,7 +1875,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UMCT_INTR_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -2015,7 +2026,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UMCT_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2064,7 +2075,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UMCT_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2614,7 +2625,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UMCT_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2625,7 +2636,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMCT_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2659,7 +2670,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UMCT_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2669,7 +2680,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UMCT_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2680,7 +2691,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UMCT_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2690,7 +2701,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMCT_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2723,7 +2734,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMCT_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2756,7 +2767,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UMCT_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2766,7 +2777,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMCT_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2825,7 +2836,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UMCT_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2894,7 +2905,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UMCT_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2933,7 +2944,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMCT_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -3034,7 +3045,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UMCT_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3082,7 +3093,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UMCT_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3121,7 +3132,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMCT_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if

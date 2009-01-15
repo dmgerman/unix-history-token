@@ -168,17 +168,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|UBSA_N_TRANSFER
-value|6
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UBSA_BSIZE
 value|1024
 end_define
@@ -550,6 +539,28 @@ begin_comment
 comment|/* CTS has changed state */
 end_comment
 
+begin_enum
+enum|enum
+block|{
+name|UBSA_BULK_DT_WR
+block|,
+name|UBSA_BULK_DT_RD
+block|,
+name|UBSA_BULK_CS_WR
+block|,
+name|UBSA_BULK_CS_RD
+block|,
+name|UBSA_INTR_DT_RD
+block|,
+name|UBSA_INTR_CS_RD
+block|,
+name|UBSA_N_TRANSFER
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|ubsa_softc
@@ -841,7 +852,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UBSA_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -895,7 +906,7 @@ name|ubsa_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UBSA_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -949,7 +960,7 @@ name|ubsa_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|UBSA_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -1007,7 +1018,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|UBSA_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -1065,7 +1076,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|4
+name|UBSA_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -1119,7 +1130,7 @@ name|ubsa_intr_callback
 block|, 	}
 block|,
 index|[
-literal|5
+name|UBSA_INTR_CS_RD
 index|]
 operator|=
 block|{
@@ -2494,7 +2505,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UBSA_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2505,7 +2516,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UBSA_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2539,7 +2550,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UBSA_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2549,7 +2560,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UBSA_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2560,7 +2571,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UBSA_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2570,7 +2581,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UBSA_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2603,7 +2614,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UBSA_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2636,7 +2647,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UBSA_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2646,7 +2657,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UBSA_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2755,7 +2766,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UBSA_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2822,7 +2833,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UBSA_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2861,7 +2872,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UBSA_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -2962,7 +2973,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UBSA_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3010,7 +3021,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UBSA_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3049,7 +3060,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UBSA_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -3219,7 +3230,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UBSA_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3267,7 +3278,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UBSA_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3306,7 +3317,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UBSA_INTR_DT_RD
 index|]
 decl_stmt|;
 if|if

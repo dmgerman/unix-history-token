@@ -18,17 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CDCE_N_TRANSFER
-value|3
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CDCE_IND_SIZE_MAX
 value|32
 end_define
@@ -105,6 +94,22 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+block|{
+name|CDCE_BULK_A
+block|,
+name|CDCE_BULK_B
+block|,
+name|CDCE_INTR
+block|,
+name|CDCE_N_TRANSFER
+init|=
+literal|3
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct

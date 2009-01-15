@@ -498,16 +498,27 @@ begin_comment
 comment|/* bytes */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
+name|UVSCOM_BULK_DT_WR
+block|,
+name|UVSCOM_BULK_DT_RD
+block|,
+name|UVSCOM_BULK_CS_WR
+block|,
+name|UVSCOM_BULK_CS_RD
+block|,
+name|UVSCOM_INTR_DT_RD
+block|,
+name|UVSCOM_INTR_CS_RD
+block|,
 name|UVSCOM_N_TRANSFER
-value|6
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -860,7 +871,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UVSCOM_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -913,7 +924,7 @@ name|uvscom_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UVSCOM_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -966,7 +977,7 @@ name|uvscom_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|UVSCOM_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -1024,7 +1035,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|UVSCOM_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -1082,7 +1093,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|4
+name|UVSCOM_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -1136,7 +1147,7 @@ name|uvscom_intr_callback
 block|, 	}
 block|,
 index|[
-literal|5
+name|UVSCOM_INTR_CS_RD
 index|]
 operator|=
 block|{
@@ -1761,7 +1772,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UVSCOM_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1824,7 +1835,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UVSCOM_INTR_DT_RD
 index|]
 condition|)
 block|{
@@ -1834,7 +1845,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UVSCOM_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1923,7 +1934,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UVSCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1990,7 +2001,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UVSCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2029,7 +2040,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UVSCOM_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -2130,7 +2141,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UVSCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2178,7 +2189,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UVSCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2217,7 +2228,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UVSCOM_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -2447,7 +2458,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UVSCOM_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2495,7 +2506,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UVSCOM_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2534,7 +2545,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UVSCOM_INTR_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -3232,7 +3243,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UVSCOM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3265,7 +3276,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UVSCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3275,7 +3286,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UVSCOM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3308,7 +3319,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UVSCOM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3341,7 +3352,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UVSCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3351,7 +3362,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UVSCOM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;

@@ -7,13 +7,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2005, 2006 Damien Bergamini<damien.bergamini@free.fr>  * Copyright (c) 2006 Niall O'Higgins<niallo@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RUM_N_TRANSFER
-value|4
-end_define
-
 begin_struct
 struct|struct
 name|rum_node
@@ -307,6 +300,24 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+block|{
+name|RUM_BULK_DT_WR
+block|,
+name|RUM_BULK_DT_RD
+block|,
+name|RUM_BULK_CS_WR
+block|,
+name|RUM_BULK_CS_RD
+block|,
+name|RUM_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct

@@ -129,6 +129,24 @@ begin_comment
 comment|/* units */
 end_comment
 
+begin_enum
+enum|enum
+block|{
+name|UBTBCMFW_BULK_DT_WR
+block|,
+name|UBTBCMFW_BULK_DT_RD
+block|,
+name|UBTBCMFW_BULK_CS_WR
+block|,
+name|UBTBCMFW_BULK_CS_RD
+block|,
+name|UBTBCMFW_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|ubtbcmfw_softc
@@ -154,7 +172,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|UBTBCMFW_T_MAX
+name|UBTBCMFW_N_TRANSFER
 index|]
 decl_stmt|;
 name|uint8_t
@@ -400,7 +418,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UBTBCMFW_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -454,7 +472,7 @@ name|ubtbcmfw_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UBTBCMFW_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -513,7 +531,7 @@ name|ubtbcmfw_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|UBTBCMFW_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -578,7 +596,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|UBTBCMFW_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -1208,7 +1226,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UBTBCMFW_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1275,7 +1293,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UBTBCMFW_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1314,7 +1332,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UBTBCMFW_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -1428,7 +1446,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UBTBCMFW_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1486,7 +1504,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UBTBCMFW_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1525,7 +1543,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UBTBCMFW_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -1585,7 +1603,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UBTBCMFW_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1618,7 +1636,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UBTBCMFW_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1628,7 +1646,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UBTBCMFW_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1661,7 +1679,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UBTBCMFW_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1694,7 +1712,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UBTBCMFW_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1704,7 +1722,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UBTBCMFW_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -1756,7 +1774,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UBTBCMFW_BULK_DT_RD
 index|]
 operator|->
 name|max_data_length
@@ -1812,7 +1830,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UBTBCMFW_BULK_DT_WR
 index|]
 operator|->
 name|max_data_length

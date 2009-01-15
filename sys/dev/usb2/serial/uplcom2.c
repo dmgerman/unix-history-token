@@ -241,13 +241,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPLCOM_N_TRANSFER
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
 name|UPLCOM_SET_REQUEST
 value|0x01
 end_define
@@ -300,6 +293,28 @@ directive|define
 name|TYPE_PL2303X
 value|1
 end_define
+
+begin_enum
+enum|enum
+block|{
+name|UPLCOM_BULK_DT_WR
+block|,
+name|UPLCOM_BULK_DT_RD
+block|,
+name|UPLCOM_BULK_CS_WR
+block|,
+name|UPLCOM_BULK_CS_RD
+block|,
+name|UPLCOM_INTR_DT_RD
+block|,
+name|UPLCOM_INTR_CS_RD
+block|,
+name|UPLCOM_N_TRANSFER
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -638,7 +653,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UPLCOM_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -696,7 +711,7 @@ literal|0
 block|, 	}
 block|,
 index|[
-literal|1
+name|UPLCOM_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -754,7 +769,7 @@ literal|0
 block|, 	}
 block|,
 index|[
-literal|2
+name|UPLCOM_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -816,7 +831,7 @@ literal|0
 block|, 	}
 block|,
 index|[
-literal|3
+name|UPLCOM_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -878,7 +893,7 @@ literal|0
 block|, 	}
 block|,
 index|[
-literal|4
+name|UPLCOM_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -937,7 +952,7 @@ literal|1
 block|, 	}
 block|,
 index|[
-literal|5
+name|UPLCOM_INTR_CS_RD
 index|]
 operator|=
 block|{
@@ -3489,7 +3504,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UPLCOM_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3500,7 +3515,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UPLCOM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3534,7 +3549,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UPLCOM_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3545,7 +3560,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UPLCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3555,7 +3570,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UPLCOM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3588,7 +3603,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UPLCOM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3621,7 +3636,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UPLCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3631,7 +3646,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UPLCOM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3859,7 +3874,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UPLCOM_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3907,7 +3922,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UPLCOM_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3946,7 +3961,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UPLCOM_INTR_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -4032,7 +4047,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UPLCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -4106,7 +4121,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UPLCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -4145,7 +4160,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UPLCOM_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -4246,7 +4261,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UPLCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -4294,7 +4309,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UPLCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -4333,7 +4348,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UPLCOM_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if

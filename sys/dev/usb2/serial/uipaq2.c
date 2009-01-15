@@ -139,12 +139,23 @@ name|UIPAQ_BUF_SIZE
 value|1024
 end_define
 
-begin_define
-define|#
-directive|define
-name|UIPAQ_N_DATA_TRANSFER
-value|4
-end_define
+begin_enum
+enum|enum
+block|{
+name|UIPAQ_BULK_DT_WR
+block|,
+name|UIPAQ_BULK_DT_RD
+block|,
+name|UIPAQ_BULK_CS_WR
+block|,
+name|UIPAQ_BULK_CS_RD
+block|,
+name|UIPAQ_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -161,9 +172,9 @@ decl_stmt|;
 name|struct
 name|usb2_xfer
 modifier|*
-name|sc_xfer_data
+name|sc_xfer
 index|[
-name|UIPAQ_N_DATA_TRANSFER
+name|UIPAQ_N_TRANSFER
 index|]
 decl_stmt|;
 name|struct
@@ -366,12 +377,12 @@ name|struct
 name|usb2_config
 name|uipaq_config_data
 index|[
-name|UIPAQ_N_DATA_TRANSFER
+name|UIPAQ_N_TRANSFER
 index|]
 init|=
 block|{
 index|[
-literal|0
+name|UIPAQ_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -424,7 +435,7 @@ name|uipaq_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UIPAQ_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -477,7 +488,7 @@ name|uipaq_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|UIPAQ_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -535,7 +546,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|UIPAQ_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -6484,11 +6495,11 @@ name|iface_index
 argument_list|,
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 argument_list|,
 name|uipaq_config_data
 argument_list|,
-name|UIPAQ_N_DATA_TRANSFER
+name|UIPAQ_N_TRANSFER
 argument_list|,
 name|sc
 argument_list|,
@@ -6607,9 +6618,9 @@ name|usb2_transfer_unsetup
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 argument_list|,
-name|UIPAQ_N_DATA_TRANSFER
+name|UIPAQ_N_TRANSFER
 argument_list|)
 expr_stmt|;
 return|return
@@ -6645,9 +6656,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|1
+name|UIPAQ_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -6679,9 +6690,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|3
+name|UIPAQ_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -6689,9 +6700,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|1
+name|UIPAQ_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -6722,9 +6733,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|0
+name|UIPAQ_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -6755,9 +6766,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|2
+name|UIPAQ_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -6765,9 +6776,9 @@ name|usb2_transfer_stop
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|0
+name|UIPAQ_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -7264,9 +7275,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|2
+name|UIPAQ_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -7331,9 +7342,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|2
+name|UIPAQ_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -7370,9 +7381,9 @@ name|xfer_other
 init|=
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|0
+name|UIPAQ_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -7471,9 +7482,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|3
+name|UIPAQ_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -7519,9 +7530,9 @@ name|usb2_transfer_start
 argument_list|(
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|3
+name|UIPAQ_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -7558,9 +7569,9 @@ name|xfer_other
 init|=
 name|sc
 operator|->
-name|sc_xfer_data
+name|sc_xfer
 index|[
-literal|1
+name|UIPAQ_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
