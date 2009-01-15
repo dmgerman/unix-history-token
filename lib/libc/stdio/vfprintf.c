@@ -278,6 +278,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|CHAR
+value|char
+end_define
+
+begin_include
+include|#
+directive|include
+file|"printfcommon.h"
+end_include
+
 begin_comment
 comment|/*  * Flush out all the vectors defined by the given uio,  * then reset it so that it can be reused.  */
 end_comment
@@ -1556,12 +1569,6 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/* handy char pointer (short term usage) */
-name|struct
-name|__siov
-modifier|*
-name|iovp
-decl_stmt|;
-comment|/* for PRINT macro */
 name|int
 name|flags
 decl_stmt|;
@@ -1701,23 +1708,11 @@ modifier|*
 name|xdigs
 decl_stmt|;
 comment|/* digits for %[xX] conversion */
-define|#
-directive|define
-name|NIOV
-value|8
 name|struct
-name|__suio
-name|uio
+name|io_state
+name|io
 decl_stmt|;
-comment|/* output information: summary */
-name|struct
-name|__siov
-name|iov
-index|[
-name|NIOV
-index|]
-decl_stmt|;
-comment|/* ... and individual io vectors */
+comment|/* I/O buffering state */
 name|char
 name|buf
 index|[
@@ -1758,94 +1753,6 @@ modifier|*
 name|convbuf
 decl_stmt|;
 comment|/* wide to multibyte conversion result */
-comment|/* 	 * Choose PADSIZE to trade efficiency vs. size.  If larger printf 	 * fields occur frequently, increase PADSIZE and make the initialisers 	 * below longer. 	 */
-define|#
-directive|define
-name|PADSIZE
-value|16
-comment|/* pad chunk size */
-specifier|static
-name|char
-name|blanks
-index|[
-name|PADSIZE
-index|]
-init|=
-block|{
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-decl_stmt|;
-specifier|static
-name|char
-name|zeroes
-index|[
-name|PADSIZE
-index|]
-init|=
-block|{
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|}
-decl_stmt|;
 specifier|static
 specifier|const
 name|char
@@ -1866,7 +1773,7 @@ index|]
 init|=
 literal|"0123456789ABCDEF"
 decl_stmt|;
-comment|/* 	 * BEWARE, these `goto error' on error, and PAD uses `n'. 	 */
+comment|/* BEWARE, these `goto error' on error. */
 define|#
 directive|define
 name|PRINT
@@ -1875,7 +1782,7 @@ name|ptr
 parameter_list|,
 name|len
 parameter_list|)
-value|{ \ 	iovp->iov_base = (ptr); \ 	iovp->iov_len = (len); \ 	uio.uio_resid += (len); \ 	iovp++; \ 	if (++uio.uio_iovcnt>= NIOV) { \ 		if (__sprint(fp,&uio)) \ 			goto error; \ 		iovp = iov; \ 	} \ }
+value|{ \ 	if (io_print(&io, (ptr), (len)))	\ 		goto error; \ }
 define|#
 directive|define
 name|PAD
@@ -1884,7 +1791,7 @@ name|howmany
 parameter_list|,
 name|with
 parameter_list|)
-value|{ \ 	if ((n = (howmany))> 0) { \ 		while (n> PADSIZE) { \ 			PRINT(with, PADSIZE); \ 			n -= PADSIZE; \ 		} \ 		PRINT(with, n); \ 	} \ }
+value|{ \ 	if (io_pad(&io, (howmany), (with))) \ 		goto error; \ }
 define|#
 directive|define
 name|PRINTANDPAD
@@ -1897,12 +1804,12 @@ name|len
 parameter_list|,
 name|with
 parameter_list|)
-value|do {	\ 	n2 = (ep) - (p);       			\ 	if (n2> (len))				\ 		n2 = (len);			\ 	if (n2> 0)				\ 		PRINT((p), n2);			\ 	PAD((len) - (n2> 0 ? n2 : 0), (with));	\ } while(0)
+value|{	\ 	if (io_printandpad(&io, (p), (ep), (len), (with))) \ 		goto error; \ }
 define|#
 directive|define
 name|FLUSH
 parameter_list|()
-value|{ \ 	if (uio.uio_resid&& __sprint(fp,&uio)) \ 		goto error; \ 	uio.uio_iovcnt = 0; \ 	iovp = iov; \ }
+value|{ \ 	if (io_flush(&io)) \ 		goto error; \ }
 comment|/* 	 * Get the argument indexed by nextarg.   If the argument table is 	 * built, use it to get the argument.  If its not, get the next 	 * argument (and arguments must be gotten sequentially). 	 */
 define|#
 directive|define
@@ -2074,25 +1981,13 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|uio
-operator|.
-name|uio_iov
-operator|=
-name|iovp
-operator|=
-name|iov
-expr_stmt|;
-name|uio
-operator|.
-name|uio_resid
-operator|=
-literal|0
-expr_stmt|;
-name|uio
-operator|.
-name|uio_iovcnt
-operator|=
-literal|0
+name|io_init
+argument_list|(
+operator|&
+name|io
+argument_list|,
+name|fp
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=

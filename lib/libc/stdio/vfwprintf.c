@@ -168,6 +168,21 @@ end_include
 begin_function_decl
 specifier|static
 name|int
+name|__sprint
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|struct
+name|__suio
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|__sbprintf
 parameter_list|(
 name|FILE
@@ -268,6 +283,143 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|CHAR
+value|wchar_t
+end_define
+
+begin_include
+include|#
+directive|include
+file|"printfcommon.h"
+end_include
+
+begin_comment
+comment|/*  * Flush out all the vectors defined by the given uio,  * then reset it so that it can be reused.  *  * XXX The fact that we do this a character at a time and convert to a  * multibyte character sequence even if the destination is a wide  * string eclipses the benefits of buffering.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|__sprint
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
+name|struct
+name|__suio
+modifier|*
+name|uio
+parameter_list|)
+block|{
+name|struct
+name|__siov
+modifier|*
+name|iov
+decl_stmt|;
+name|wchar_t
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|len
+decl_stmt|;
+name|iov
+operator|=
+name|uio
+operator|->
+name|uio_iov
+expr_stmt|;
+for|for
+control|(
+init|;
+name|uio
+operator|->
+name|uio_resid
+operator|!=
+literal|0
+condition|;
+name|uio
+operator|->
+name|uio_resid
+operator|-=
+name|len
+operator|,
+name|iov
+operator|++
+control|)
+block|{
+name|p
+operator|=
+operator|(
+name|wchar_t
+operator|*
+operator|)
+name|iov
+operator|->
+name|iov_base
+expr_stmt|;
+name|len
+operator|=
+name|iov
+operator|->
+name|iov_len
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|len
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|__xfputwc
+argument_list|(
+name|p
+index|[
+name|i
+index|]
+argument_list|,
+name|fp
+argument_list|)
+operator|==
+name|WEOF
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+block|}
+name|uio
+operator|->
+name|uio_iovcnt
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Helper function for `fprintf to unbuffered unix file': creates a  * temporary buffer.  We only work on write-only files; this avoids  * worries about ungetc buffers and so forth.  */
@@ -1680,8 +1832,6 @@ name|int
 name|n
 decl_stmt|,
 name|n2
-decl_stmt|,
-name|n3
 decl_stmt|;
 comment|/* handy integer (short term usage) */
 name|wchar_t
@@ -1709,7 +1859,7 @@ name|wchar_t
 name|sign
 decl_stmt|;
 comment|/* sign prefix (' ', '+', '-', or \0) */
-name|char
+name|wchar_t
 name|thousands_sep
 decl_stmt|;
 comment|/* locale specific thousands separator */
@@ -1828,6 +1978,11 @@ modifier|*
 name|xdigs
 decl_stmt|;
 comment|/* digits for [xX] conversion */
+name|struct
+name|io_state
+name|io
+decl_stmt|;
+comment|/* I/O buffering state */
 name|wchar_t
 name|buf
 index|[
@@ -1868,94 +2023,6 @@ modifier|*
 name|convbuf
 decl_stmt|;
 comment|/* multibyte to wide conversion result */
-comment|/* 	 * Choose PADSIZE to trade efficiency vs. size.  If larger printf 	 * fields occur frequently, increase PADSIZE and make the initialisers 	 * below longer. 	 */
-define|#
-directive|define
-name|PADSIZE
-value|16
-comment|/* pad chunk size */
-specifier|static
-name|wchar_t
-name|blanks
-index|[
-name|PADSIZE
-index|]
-init|=
-block|{
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-decl_stmt|;
-specifier|static
-name|wchar_t
-name|zeroes
-index|[
-name|PADSIZE
-index|]
-init|=
-block|{
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|,
-literal|'0'
-block|}
-decl_stmt|;
 specifier|static
 specifier|const
 name|char
@@ -1976,7 +2043,7 @@ index|]
 init|=
 literal|"0123456789ABCDEF"
 decl_stmt|;
-comment|/* 	 * BEWARE, these `goto error' on error, PRINT uses `n2' and 	 * PAD uses `n'. 	 */
+comment|/* BEWARE, these `goto error' on error. */
 define|#
 directive|define
 name|PRINT
@@ -1985,7 +2052,7 @@ name|ptr
 parameter_list|,
 name|len
 parameter_list|)
-value|do {			\ 	for (n3 = 0; n3< (len); n3++)		\ 		__xfputwc((ptr)[n3], fp);	\ } while (0)
+value|do {			\ 	if (io_print(&io, (ptr), (len)))	\ 		goto error; \ } while (0)
 define|#
 directive|define
 name|PAD
@@ -1994,7 +2061,7 @@ name|howmany
 parameter_list|,
 name|with
 parameter_list|)
-value|do {		\ 	if ((n = (howmany))> 0) {		\ 		while (n> PADSIZE) {		\ 			PRINT(with, PADSIZE);	\ 			n -= PADSIZE;		\ 		}				\ 		PRINT(with, n);			\ 	}					\ } while (0)
+value|{ \ 	if (io_pad(&io, (howmany), (with))) \ 		goto error; \ }
 define|#
 directive|define
 name|PRINTANDPAD
@@ -2007,7 +2074,12 @@ name|len
 parameter_list|,
 name|with
 parameter_list|)
-value|do {	\ 	n2 = (ep) - (p);       			\ 	if (n2> (len))				\ 		n2 = (len);			\ 	if (n2> 0)				\ 		PRINT((p), n2);			\ 	PAD((len) - (n2> 0 ? n2 : 0), (with));	\ } while(0)
+value|{	\ 	if (io_printandpad(&io, (p), (ep), (len), (with))) \ 		goto error; \ }
+define|#
+directive|define
+name|FLUSH
+parameter_list|()
+value|{ \ 	if (io_flush(&io)) \ 		goto error; \ }
 comment|/* 	 * Get the argument indexed by nextarg.   If the argument table is 	 * built, use it to get the argument.  If its not, get the next 	 * argument (and arguments must be gotten sequentially). 	 */
 define|#
 directive|define
@@ -2144,6 +2216,14 @@ argument_list|(
 name|orgap
 argument_list|,
 name|ap
+argument_list|)
+expr_stmt|;
+name|io_init
+argument_list|(
+operator|&
+name|io
+argument_list|,
+name|fp
 argument_list|)
 expr_stmt|;
 name|ret
@@ -4404,13 +4484,23 @@ name|flags
 operator|&
 name|ALT
 condition|)
+block|{
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+operator|*
+name|decimal_point
+expr_stmt|;
 name|PRINT
 argument_list|(
-name|decimal_point
+name|buf
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|PAD
 argument_list|(
 operator|-
@@ -4668,9 +4758,16 @@ name|ret
 operator|+=
 name|prsize
 expr_stmt|;
+name|FLUSH
+argument_list|()
+expr_stmt|;
+comment|/* copy out the I/O vectors */
 block|}
 name|done
 label|:
+name|FLUSH
+argument_list|()
+expr_stmt|;
 name|error
 label|:
 name|va_end
