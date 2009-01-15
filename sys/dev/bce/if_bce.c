@@ -258,7 +258,19 @@ name|HP_VENDORID
 block|,
 literal|0x3070
 block|,
-literal|"HP NC380T PCI Express Dual Port Multifunction Gigabit Server Adapter"
+literal|"HP NC380T PCIe DP Multifunc Gig Server Adapter"
+block|}
+block|,
+block|{
+name|BRCM_VENDORID
+block|,
+name|BRCM_DEVICEID_BCM5706
+block|,
+name|HP_VENDORID
+block|,
+literal|0x1709
+block|,
+literal|"HP NC371i Multifunction Gigabit Server Adapter"
 block|}
 block|,
 block|{
@@ -308,7 +320,7 @@ name|HP_VENDORID
 block|,
 literal|0x7037
 block|,
-literal|"HP NC373T PCI Express Multifunction Gigabit Server Adapter"
+literal|"HP NC373T PCIe Multifunction Gig Server Adapter"
 block|}
 block|,
 block|{
@@ -320,7 +332,19 @@ name|HP_VENDORID
 block|,
 literal|0x7038
 block|,
-literal|"HP NC373i Integrated Multifunction Gigabit Server Adapter"
+literal|"HP NC373i Multifunction Gigabit Server Adapter"
+block|}
+block|,
+block|{
+name|BRCM_VENDORID
+block|,
+name|BRCM_DEVICEID_BCM5708
+block|,
+name|HP_VENDORID
+block|,
+literal|0x7045
+block|,
+literal|"HP NC374m PCIe Multifunction Adapter"
 block|}
 block|,
 block|{
@@ -355,21 +379,9 @@ name|BRCM_DEVICEID_BCM5708S
 block|,
 name|HP_VENDORID
 block|,
-literal|0x7038
-block|,
-literal|"HP NC373i PCI Express Multifunction Gigabit Server Adapter"
-block|}
-block|,
-block|{
-name|BRCM_VENDORID
-block|,
-name|BRCM_DEVICEID_BCM5708S
-block|,
-name|HP_VENDORID
-block|,
 literal|0x703b
 block|,
-literal|"HP NC373i Integrated Multifunction Gigabit Server Adapter"
+literal|"HP NC373i Multifunction Gigabit Server Adapter"
 block|}
 block|,
 block|{
@@ -381,7 +393,7 @@ name|HP_VENDORID
 block|,
 literal|0x703d
 block|,
-literal|"HP NC373F PCI Express Multifunction Gigabit Server Adapter"
+literal|"HP NC373F PCIe Multifunc Giga Server Adapter"
 block|}
 block|,
 block|{
@@ -406,7 +418,7 @@ name|HP_VENDORID
 block|,
 literal|0x7055
 block|,
-literal|"HP NC382i Integrated Quad Port PCI Express Gigabit Server Adapter"
+literal|"HP NC382i DP Multifunction Gigabit Server Adapter"
 block|}
 block|,
 block|{
@@ -418,7 +430,7 @@ name|HP_VENDORID
 block|,
 literal|0x7059
 block|,
-literal|"HP NC382T PCI Express Dual Port Multifunction Gigabit Server Adapter"
+literal|"HP NC382T PCIe DP Multifunction Gigabit Server Adapter"
 block|}
 block|,
 block|{
@@ -443,7 +455,7 @@ name|HP_VENDORID
 block|,
 literal|0x171d
 block|,
-literal|"HP NC382m Dual Port 1GbE Multifunction BL-c Adapter"
+literal|"HP NC382m DP 1GbE Multifunction BL-c Adapter"
 block|}
 block|,
 block|{
@@ -455,7 +467,7 @@ name|HP_VENDORID
 block|,
 literal|0x7056
 block|,
-literal|"HP NC382i Integrated Quad Port PCI Express Gigabit Server Adapter"
+literal|"HP NC382i DP Multifunction Gigabit Server Adapter"
 block|}
 block|,
 block|{
