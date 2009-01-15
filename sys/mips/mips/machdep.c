@@ -265,6 +265,12 @@ directive|include
 file|<machine/bootinfo.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/hwfunc.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -371,12 +377,6 @@ name|int
 name|cold
 init|=
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|Maxmem
 decl_stmt|;
 end_decl_stmt
 
@@ -683,27 +683,22 @@ condition|)
 name|bootverbose
 operator|++
 expr_stmt|;
-comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|printf
 argument_list|(
 literal|"real memory  = %lu (%luK bytes)\n"
 argument_list|,
 name|ptoa
 argument_list|(
-name|Maxmem
+name|realmem
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
-name|Maxmem
+name|realmem
 argument_list|)
 operator|/
 literal|1024
 argument_list|)
-expr_stmt|;
-name|realmem
-operator|=
-name|Maxmem
 expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
