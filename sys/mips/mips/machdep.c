@@ -829,12 +829,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
-empty_stmt|;
+name|platform_reset
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
