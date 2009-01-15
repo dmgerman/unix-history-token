@@ -354,6 +354,12 @@ name|int
 name|_tcp_do_rfc3390
 decl_stmt|;
 name|int
+name|_tcp_do_rfc3465
+decl_stmt|;
+name|int
+name|_tcp_abc_l_var
+decl_stmt|;
+name|int
 name|_tcp_do_ecn
 decl_stmt|;
 name|int
@@ -1172,6 +1178,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_tcp_abc_l_var
+value|VNET_INET(tcp_abc_l_var)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_tcp_autorcvbuf_inc
 value|VNET_INET(tcp_autorcvbuf_inc)
 end_define
@@ -1251,6 +1264,13 @@ define|#
 directive|define
 name|V_tcp_do_rfc3390
 value|VNET_INET(tcp_do_rfc3390)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_do_rfc3465
+value|VNET_INET(tcp_do_rfc3465)
 end_define
 
 begin_define
