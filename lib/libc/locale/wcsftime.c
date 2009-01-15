@@ -95,6 +95,11 @@ decl_stmt|,
 modifier|*
 name|sformat
 decl_stmt|;
+specifier|const
+name|wchar_t
+modifier|*
+name|formatp
+decl_stmt|;
 name|size_t
 name|n
 decl_stmt|,
@@ -114,6 +119,10 @@ name|mbs
 operator|=
 name|initial
 expr_stmt|;
+name|formatp
+operator|=
+name|format
+expr_stmt|;
 name|sflen
 operator|=
 name|wcsrtombs
@@ -121,7 +130,7 @@ argument_list|(
 name|NULL
 argument_list|,
 operator|&
-name|format
+name|formatp
 argument_list|,
 literal|0
 argument_list|,
@@ -169,7 +178,7 @@ argument_list|(
 name|sformat
 argument_list|,
 operator|&
-name|format
+name|formatp
 argument_list|,
 name|sflen
 operator|+

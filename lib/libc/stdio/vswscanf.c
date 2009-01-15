@@ -178,6 +178,11 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+specifier|const
+name|wchar_t
+modifier|*
+name|strp
+decl_stmt|;
 comment|/* 	 * XXX Convert the wide character string to multibyte, which 	 * __vfwscanf() will convert back to wide characters. 	 */
 if|if
 condition|(
@@ -208,6 +213,10 @@ name|mbs
 operator|=
 name|initial
 expr_stmt|;
+name|strp
+operator|=
+name|str
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -218,7 +227,7 @@ argument_list|(
 name|mbstr
 argument_list|,
 operator|&
-name|str
+name|strp
 argument_list|,
 name|SIZE_T_MAX
 argument_list|,
