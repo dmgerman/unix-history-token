@@ -496,39 +496,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|PMAP_DIAGNOSTIC
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PMAP_INLINE
-value|__inline
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PMAP_INLINE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
@@ -696,10 +663,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* PMAP_INLINE */
-end_comment
-
 begin_function_decl
 name|void
 name|pmap_kenter
@@ -712,10 +675,6 @@ name|pa
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* PMAP_INLINE */
-end_comment
 
 begin_function_decl
 name|void
