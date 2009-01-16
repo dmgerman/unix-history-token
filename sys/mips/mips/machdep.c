@@ -877,6 +877,27 @@ empty_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|SYSCTL_STRUCT
+argument_list|(
+name|_machdep
+argument_list|,
+name|CPU_BOOTINFO
+argument_list|,
+name|bootinfo
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|bootinfo
+argument_list|,
+name|bootinfo
+argument_list|,
+literal|"Bootinfo struct: kernel filename, BIOS harddisk geometry, etc"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -920,25 +941,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PORT_TO_JMIPS */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PORT_TO_JMIPS
-end_ifdef
-
-begin_comment
-comment|/* art */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -959,46 +961,6 @@ literal|"Disable setting the real time clock to system time"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PORT_TO_JMIPS */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_STRUCT
-argument_list|(
-name|_machdep
-argument_list|,
-name|CPU_BOOTINFO
-argument_list|,
-name|bootinfo
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|bootinfo
-argument_list|,
-name|bootinfo
-argument_list|,
-literal|"Bootinfo struct: kernel filename, BIOS harddisk geometry, etc"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PORT_TO_JMIPS
-end_ifdef
-
-begin_comment
-comment|/* dchu */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1476,12 +1438,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-name|int
-name|spinco
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
