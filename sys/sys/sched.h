@@ -543,6 +543,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * This routine provides a consistent thread name for use with KTR graphing  * functions.  */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|sched_tdname
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|__inline
