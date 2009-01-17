@@ -184,15 +184,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|TEKEN_CONS25
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-else|#
-directive|else
-comment|/* !TEKEN_CONS25 */
+name|TEKEN_XTERM
 return|return
 operator|(
 name|c
@@ -205,9 +197,17 @@ literal|1
 else|:
 literal|1
 return|;
+else|#
+directive|else
+comment|/* !TEKEN_XTERM */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 endif|#
 directive|endif
-comment|/* TEKEN_CONS25 */
+comment|/* TEKEN_XTERM */
 block|}
 end_function
 
@@ -282,28 +282,8 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TEKEN_CONS25
+name|TEKEN_XTERM
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TS_WRAPPED
-value|0x00
-end_define
-
-begin_comment
-comment|/* Simple line wrapping. */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !TEKEN_CONS25 */
-end_comment
 
 begin_define
 define|#
@@ -316,13 +296,33 @@ begin_comment
 comment|/* Next character should be printed on col 0. */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !TEKEN_XTERM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_WRAPPED
+value|0x00
+end_define
+
+begin_comment
+comment|/* Simple line wrapping. */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* TEKEN_CONS25 */
+comment|/* TEKEN_XTERM */
 end_comment
 
 begin_comment

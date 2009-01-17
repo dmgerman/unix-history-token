@@ -1473,19 +1473,7 @@ literal|0
 case|:
 ifdef|#
 directive|ifdef
-name|TEKEN_CONS25
-name|setenv
-argument_list|(
-literal|"TERM"
-argument_list|,
-literal|"cons25"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* !TEKEN_CONS25 */
+name|TEKEN_XTERM
 name|setenv
 argument_list|(
 literal|"TERM"
@@ -1495,9 +1483,21 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* !TEKEN_XTERM */
+name|setenv
+argument_list|(
+literal|"TERM"
+argument_list|,
+literal|"cons25"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-comment|/* TEKEN_CONS25 */
+comment|/* TEKEN_XTERM */
 ifdef|#
 directive|ifdef
 name|TEKEN_UTF8
