@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -6896,7 +6902,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|vm_page_cowsetup
 parameter_list|(
 name|vm_page_t
@@ -6911,6 +6917,21 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|cow
+operator|==
+name|USHRT_MAX
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 name|m
 operator|->
 name|cow
@@ -6921,6 +6942,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
