@@ -1565,8 +1565,17 @@ name|vm_ooffset_t
 operator|)
 literal|0
 argument_list|,
+ifdef|#
+directive|ifdef
+name|__amd64__
+name|KERNBASE
+argument_list|,
+else|#
+directive|else
 name|VM_MIN_KERNEL_ADDRESS
 argument_list|,
+endif|#
+directive|endif
 name|start
 argument_list|,
 name|VM_PROT_ALL
