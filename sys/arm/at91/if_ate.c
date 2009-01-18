@@ -796,7 +796,7 @@ operator|)
 operator|==
 name|ETH_CFG_RMII
 expr_stmt|;
-comment|/*Sysctls*/
+comment|/* Sysctls */
 name|sctx
 operator|=
 name|device_get_sysctl_ctx
