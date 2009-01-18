@@ -1798,7 +1798,7 @@ name|V
 parameter_list|(
 name|v
 parameter_list|)
-value|printf(#v"= %d\n", fs->v);
+value|printf(#v"= %lu\n", (unsigned long)fs->v);
 endif|#
 directive|endif
 name|fs
