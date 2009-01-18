@@ -227,17 +227,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MP_MIN_MRRU
-value|1500
-end_define
-
-begin_comment
-comment|/* per RFC 1990 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MP_INITIAL_SEQ
 value|0
 end_define
@@ -9029,6 +9018,29 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/* Check peer's MRRU for this bundle. */
+if|if
+condition|(
+name|plen
+operator|>
+name|priv
+operator|->
+name|conf
+operator|.
+name|mrru
+condition|)
+block|{
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EMSGSIZE
+operator|)
+return|;
+block|}
 comment|/* Extract mbuf. */
 name|NGI_GET_M
 argument_list|(
@@ -11690,28 +11702,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Check bundle parameters */
-if|if
-condition|(
-name|newConf
-operator|->
-name|bund
-operator|.
-name|enableMultilink
-operator|&&
-name|newConf
-operator|->
-name|bund
-operator|.
-name|mrru
-operator|<
-name|MP_MIN_MRRU
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* Disallow changes to multi-link configuration while MP is active */
 if|if
 condition|(
