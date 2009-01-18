@@ -678,7 +678,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	kmem_malloc:  *  * 	Allocate wired-down memory in the kernel's address map for the higher  * 	level kernel memory allocator (kern/kern_malloc.c).  We cannot use  * 	kmem_alloc() because we may need to allocate memory at interrupt  * 	level where we cannot block (canwait == FALSE).  *  * 	This routine has its own private kernel submap (kmem_map) and object  * 	(kmem_object).  This, combined with the fact that only malloc uses  * 	this routine, ensures that we will never block in map or object waits.  *  * 	Note that this still only works in a uni-processor environment and  * 	when called at splhigh().  *  * 	We don't worry about expanding the map (adding entries) since entries  * 	for wired maps are statically allocated.  *  *	NOTE:  This routine is not supposed to block if M_NOWAIT is set, but  *	I have not verified that it actually does not block.  *  *	`map' is ONLY allowed to be kmem_map or one of the mbuf submaps to  *	which we never free.  */
+comment|/*  *	kmem_malloc:  *  * 	Allocate wired-down memory in the kernel's address map for the higher  * 	level kernel memory allocator (kern/kern_malloc.c).  We cannot use  * 	kmem_alloc() because we may need to allocate memory at interrupt  * 	level where we cannot block (canwait == FALSE).  *  * 	This routine has its own private kernel submap (kmem_map) and object  * 	(kmem_object).  This, combined with the fact that only malloc uses  * 	this routine, ensures that we will never block in map or object waits.  *  * 	Note that this still only works in a uni-processor environment and  * 	when called at splhigh().  *  * 	We don't worry about expanding the map (adding entries) since entries  * 	for wired maps are statically allocated.  *  *	`map' is ONLY allowed to be kmem_map or one of the mbuf submaps to  *	which we never free.  */
 end_comment
 
 begin_function
@@ -918,7 +918,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: if M_NOWAIT specified alone, allocate from  	 * interrupt-safe queues only (just the free list).  If  	 * M_USE_RESERVE is also specified, we can also 	 * allocate from the cache.  Neither of the latter two 	 * flags may be specified from an interrupt since interrupts 	 * are not allowed to mess with the cache queue. 	 */
 if|if
 condition|(
 operator|(
