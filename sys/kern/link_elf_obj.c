@@ -3571,6 +3571,11 @@ argument_list|(
 name|kernel_map
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In order to satisfy amd64's architectural requirements on the 	 * location of code and data in the kernel's address space, request a 	 * mapping that is above the kernel.   	 */
+name|mapbase
+operator|=
+name|KERNBASE
+expr_stmt|;
 name|error
 operator|=
 name|vm_map_find
