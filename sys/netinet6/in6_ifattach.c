@@ -3882,20 +3882,6 @@ name|in6_multi
 modifier|*
 name|oin6m
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"%s: purging ifp %p\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|IFF_LOCKGIANT
 argument_list|(
 name|ifp
