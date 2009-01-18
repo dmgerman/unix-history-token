@@ -2128,6 +2128,15 @@ argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rle
+operator|->
+name|res
+operator|!=
+name|NULL
+condition|)
+block|{
 name|rman_set_bustag
 argument_list|(
 name|rle
@@ -2147,6 +2156,7 @@ argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 if|if
