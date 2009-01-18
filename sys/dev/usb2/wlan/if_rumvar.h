@@ -323,11 +323,11 @@ begin_struct
 struct|struct
 name|rum_softc
 block|{
-name|void
+name|struct
+name|ifnet
 modifier|*
-name|sc_evilhack
+name|sc_ifp
 decl_stmt|;
-comment|/* XXX this pointer must be first */
 name|struct
 name|rum_ifq
 name|sc_tx_queue
@@ -374,11 +374,6 @@ name|sc_xfer
 index|[
 name|RUM_N_TRANSFER
 index|]
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
 decl_stmt|;
 name|struct
 name|usb2_device

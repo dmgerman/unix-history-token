@@ -115,11 +115,11 @@ begin_struct
 struct|struct
 name|cdce_softc
 block|{
-name|void
+name|struct
+name|ifnet
 modifier|*
-name|sc_evilhack
+name|sc_ifp
 decl_stmt|;
-comment|/* XXX this pointer must be first */
 name|union
 name|cdce_eth_tx
 name|sc_tx
@@ -143,11 +143,6 @@ decl_stmt|;
 name|struct
 name|cdce_mq
 name|sc_tx_mq
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
 decl_stmt|;
 name|struct
 name|usb2_xfer

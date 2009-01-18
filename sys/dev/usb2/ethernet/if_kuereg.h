@@ -490,11 +490,11 @@ begin_struct
 struct|struct
 name|kue_softc
 block|{
-name|void
+name|struct
+name|ifnet
 modifier|*
-name|sc_evilhack
+name|sc_ifp
 decl_stmt|;
-comment|/* XXX this pointer must be first */
 name|struct
 name|usb2_config_td
 name|sc_config_td
@@ -510,11 +510,6 @@ decl_stmt|;
 name|struct
 name|kue_ether_desc
 name|sc_desc
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
 decl_stmt|;
 name|device_t
 name|sc_dev

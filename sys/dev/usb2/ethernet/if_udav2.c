@@ -1723,12 +1723,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|sc
-operator|->
-name|sc_evilhack
-operator|=
-name|ifp
-expr_stmt|;
 name|ifp
 operator|->
 name|if_softc

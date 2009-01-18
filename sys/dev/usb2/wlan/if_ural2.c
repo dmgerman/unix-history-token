@@ -4647,12 +4647,6 @@ goto|;
 block|}
 name|sc
 operator|->
-name|sc_evilhack
-operator|=
-name|ifp
-expr_stmt|;
-name|sc
-operator|->
 name|sc_ifp
 operator|=
 name|ifp

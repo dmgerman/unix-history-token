@@ -4374,11 +4374,11 @@ begin_struct
 struct|struct
 name|zyd_softc
 block|{
-name|void
+name|struct
+name|ifnet
 modifier|*
-name|sc_evilhack
+name|sc_ifp
 decl_stmt|;
-comment|/* XXX this pointer must be first */
 name|struct
 name|zyd_rf
 name|sc_rf
@@ -4422,11 +4422,6 @@ decl_stmt|;
 name|struct
 name|cv
 name|sc_intr_cv
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
 decl_stmt|;
 name|struct
 name|usb2_device
