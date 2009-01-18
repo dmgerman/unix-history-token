@@ -65,12 +65,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_request.h>
 end_include
 
@@ -174,13 +168,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|U3G_N_TRANSFER
-value|2
-end_define
 
 begin_define
 define|#
@@ -316,6 +303,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+block|{
+name|U3G_BULK_WR
+block|,
+name|U3G_BULK_RD
+block|,
+name|U3G_N_TRANSFER
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -488,7 +489,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|U3G_BULK_WR
 index|]
 operator|=
 block|{
@@ -542,7 +543,7 @@ name|u3g_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|U3G_BULK_RD
 index|]
 operator|=
 block|{
@@ -2204,7 +2205,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|U3G_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2214,7 +2215,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|U3G_BULK_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2362,7 +2363,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|U3G_BULK_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2397,7 +2398,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|U3G_BULK_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2431,7 +2432,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|U3G_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2465,7 +2466,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|U3G_BULK_WR
 index|]
 argument_list|)
 expr_stmt|;

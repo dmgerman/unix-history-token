@@ -4689,13 +4689,13 @@ name|info
 operator|=
 name|xfer
 operator|->
-name|usb2_root
+name|xroot
 expr_stmt|;
 name|mtx_assert
 argument_list|(
 name|info
 operator|->
-name|priv_mtx
+name|xfer_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -4710,9 +4710,7 @@ block|{
 comment|/* some error happened */
 name|USB_BUS_LOCK
 argument_list|(
-name|xfer
-operator|->
-name|udev
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -4726,9 +4724,7 @@ argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
-name|xfer
-operator|->
-name|udev
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -4996,9 +4992,7 @@ condition|)
 block|{
 name|USB_BUS_LOCK
 argument_list|(
-name|xfer
-operator|->
-name|udev
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -5012,9 +5006,7 @@ argument_list|)
 expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
-name|xfer
-operator|->
-name|udev
+name|info
 operator|->
 name|bus
 argument_list|)
@@ -5144,7 +5136,7 @@ name|mtx_assert
 argument_list|(
 name|info
 operator|->
-name|priv_mtx
+name|xfer_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)

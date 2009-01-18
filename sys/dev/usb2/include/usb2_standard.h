@@ -2824,11 +2824,6 @@ name|UPS_RESET
 value|0x0010
 define|#
 directive|define
-name|UPS_PORT_MODE_DEVICE
-value|0x0020
-comment|/* currently FreeBSD specific */
-define|#
-directive|define
 name|UPS_PORT_POWER
 value|0x0100
 define|#
@@ -2847,6 +2842,11 @@ define|#
 directive|define
 name|UPS_PORT_INDICATOR
 value|0x1000
+define|#
+directive|define
+name|UPS_PORT_MODE_DEVICE
+value|0x8000
+comment|/* currently FreeBSD specific */
 name|uWord
 name|wPortChange
 decl_stmt|;

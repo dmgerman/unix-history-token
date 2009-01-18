@@ -114,6 +114,13 @@ name|MINBUFSIZE
 value|4096
 end_define
 
+begin_define
+define|#
+directive|define
+name|TIMEOUT
+value|120
+end_define
+
 begin_comment
 comment|/* Option flags */
 end_comment
@@ -377,8 +384,6 @@ end_comment
 begin_decl_stmt
 name|long
 name|T_secs
-init|=
-literal|120
 decl_stmt|;
 end_decl_stmt
 
@@ -493,6 +498,8 @@ end_comment
 begin_decl_stmt
 name|long
 name|ftp_timeout
+init|=
+name|TIMEOUT
 decl_stmt|;
 end_decl_stmt
 
@@ -503,6 +510,8 @@ end_comment
 begin_decl_stmt
 name|long
 name|http_timeout
+init|=
+name|TIMEOUT
 decl_stmt|;
 end_decl_stmt
 

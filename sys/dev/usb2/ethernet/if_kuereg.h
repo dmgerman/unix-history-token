@@ -468,6 +468,24 @@ name|KUE_ENDPT_MAX
 value|4
 end_define
 
+begin_enum
+enum|enum
+block|{
+name|KUE_BULK_DT_WR
+block|,
+name|KUE_BULK_DT_RD
+block|,
+name|KUE_BULK_CS_WR
+block|,
+name|KUE_BULK_CS_RD
+block|,
+name|KUE_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|kue_softc
@@ -511,7 +529,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|KUE_ENDPT_MAX
+name|KUE_N_TRANSFER
 index|]
 decl_stmt|;
 name|uint32_t

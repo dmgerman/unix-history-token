@@ -317,17 +317,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UKBD_N_TRANSFER
-value|3
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UKBD_IN_BUF_SIZE
 value|(2*(UKBD_NMOD + (2*UKBD_NKEYCODE)))
 end_define
@@ -410,6 +399,22 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+block|{
+name|UKBD_INTR_DT
+block|,
+name|UKBD_INTR_CS
+block|,
+name|UKBD_CTRL_LED
+block|,
+name|UKBD_N_TRANSFER
+init|=
+literal|3
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -1618,7 +1623,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UKBD_INTR_DT
 index|]
 argument_list|)
 expr_stmt|;
@@ -2434,7 +2439,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UKBD_INTR_DT
 index|]
 decl_stmt|;
 if|if
@@ -2669,7 +2674,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UKBD_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -2746,7 +2751,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UKBD_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -2982,7 +2987,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UKBD_INTR_DT
 index|]
 operator|=
 block|{
@@ -3036,7 +3041,7 @@ name|ukbd_intr_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UKBD_INTR_CS
 index|]
 operator|=
 block|{
@@ -3094,7 +3099,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|2
+name|UKBD_CTRL_LED
 index|]
 operator|=
 block|{
@@ -3682,7 +3687,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UKBD_INTR_DT
 index|]
 argument_list|)
 expr_stmt|;
@@ -6646,7 +6651,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UKBD_CTRL_LED
 index|]
 argument_list|)
 expr_stmt|;

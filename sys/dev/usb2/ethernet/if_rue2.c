@@ -131,7 +131,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/ethernet/if_rue2_reg.h>
+file|<dev/usb2/ethernet/if_ruereg.h>
 end_include
 
 begin_if
@@ -666,12 +666,12 @@ name|struct
 name|usb2_config
 name|rue_config
 index|[
-name|RUE_ENDPT_MAX
+name|RUE_N_TRANSFER
 index|]
 init|=
 block|{
 index|[
-literal|0
+name|RUE_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -733,7 +733,7 @@ comment|/* 10 seconds */
 block|}
 block|,
 index|[
-literal|1
+name|RUE_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -799,7 +799,7 @@ comment|/* no timeout */
 block|}
 block|,
 index|[
-literal|2
+name|RUE_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -864,7 +864,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|RUE_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -929,7 +929,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|4
+name|RUE_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -983,7 +983,7 @@ name|rue_intr_callback
 block|, 	}
 block|,
 index|[
-literal|5
+name|RUE_INTR_CS_RD
 index|]
 operator|=
 block|{
@@ -2855,7 +2855,7 @@ name|sc_xfer
 argument_list|,
 name|rue_config
 argument_list|,
-name|RUE_ENDPT_MAX
+name|RUE_N_TRANSFER
 argument_list|,
 name|sc
 argument_list|,
@@ -3368,7 +3368,7 @@ name|sc
 operator|->
 name|sc_xfer
 argument_list|,
-name|RUE_ENDPT_MAX
+name|RUE_N_TRANSFER
 argument_list|)
 expr_stmt|;
 comment|/* get rid of any late children */
@@ -3454,7 +3454,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|RUE_INTR_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -3616,7 +3616,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|RUE_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3665,7 +3665,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|RUE_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3704,7 +3704,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|RUE_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -3983,7 +3983,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|RUE_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -4066,7 +4066,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|RUE_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -4117,7 +4117,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|RUE_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -4229,7 +4229,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|RUE_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -4413,7 +4413,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|RUE_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -4638,7 +4638,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|RUE_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -4648,7 +4648,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|RUE_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -4658,7 +4658,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|RUE_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -5561,7 +5561,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|RUE_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -5571,7 +5571,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|RUE_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -5581,7 +5581,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|RUE_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -5591,7 +5591,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|RUE_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -5601,7 +5601,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|RUE_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -5611,7 +5611,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|RUE_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;

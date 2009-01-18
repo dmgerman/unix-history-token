@@ -453,12 +453,23 @@ begin_comment
 comment|/* The interrupt endpoint is currently unused by the KLSI part. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CUE_ENDPT_MAX
-value|4
-end_define
+begin_enum
+enum|enum
+block|{
+name|CUE_BULK_DT_WR
+block|,
+name|CUE_BULK_DT_RD
+block|,
+name|CUE_BULK_CS_WR
+block|,
+name|CUE_BULK_CS_RD
+block|,
+name|CUE_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -499,7 +510,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|CUE_ENDPT_MAX
+name|CUE_N_TRANSFER
 index|]
 decl_stmt|;
 name|uint32_t

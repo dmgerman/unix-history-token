@@ -101,12 +101,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_request.h>
 end_include
 
@@ -354,27 +348,41 @@ begin_comment
 comment|/* bytes */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
+name|UFOMA_CTRL_ENDPT_INTR
+block|,
+name|UFOMA_CTRL_ENDPT_INTR_CLEAR
+block|,
+name|UFOMA_CTRL_ENDPT_READ
+block|,
+name|UFOMA_CTRL_ENDPT_WRITE
+block|,
 name|UFOMA_CTRL_ENDPT_MAX
-value|4
-end_define
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
+name|UFOMA_BULK_ENDPT_WRITE
+block|,
+name|UFOMA_BULK_ENDPT_READ
+block|,
+name|UFOMA_BULK_ENDPT_WRITE_CLEAR
+block|,
+name|UFOMA_BULK_ENDPT_READ_CLEAR
+block|,
 name|UFOMA_BULK_ENDPT_MAX
-value|4
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -862,7 +870,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UFOMA_CTRL_ENDPT_INTR
 index|]
 operator|=
 block|{
@@ -919,7 +927,7 @@ name|ufoma_intr_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UFOMA_CTRL_ENDPT_INTR_CLEAR
 index|]
 operator|=
 block|{
@@ -984,7 +992,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|2
+name|UFOMA_CTRL_ENDPT_READ
 index|]
 operator|=
 block|{
@@ -1050,7 +1058,7 @@ comment|/* 1 second */
 block|}
 block|,
 index|[
-literal|3
+name|UFOMA_CTRL_ENDPT_WRITE
 index|]
 operator|=
 block|{
@@ -1125,7 +1133,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UFOMA_BULK_ENDPT_WRITE
 index|]
 operator|=
 block|{
@@ -1178,7 +1186,7 @@ name|ufoma_bulk_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UFOMA_BULK_ENDPT_READ
 index|]
 operator|=
 block|{
@@ -1231,7 +1239,7 @@ name|ufoma_bulk_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|UFOMA_BULK_ENDPT_WRITE_CLEAR
 index|]
 operator|=
 block|{
@@ -1296,7 +1304,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|UFOMA_BULK_ENDPT_READ_CLEAR
 index|]
 operator|=
 block|{
@@ -3312,7 +3320,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|0
+name|UFOMA_CTRL_ENDPT_INTR
 index|]
 decl_stmt|;
 if|if
@@ -3606,7 +3614,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|2
+name|UFOMA_CTRL_ENDPT_READ
 index|]
 argument_list|)
 expr_stmt|;
@@ -3765,7 +3773,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|1
+name|UFOMA_CTRL_ENDPT_INTR_CLEAR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3814,7 +3822,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|1
+name|UFOMA_CTRL_ENDPT_INTR_CLEAR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3876,7 +3884,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|2
+name|UFOMA_BULK_ENDPT_WRITE_CLEAR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3943,7 +3951,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|2
+name|UFOMA_BULK_ENDPT_WRITE_CLEAR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3982,7 +3990,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|0
+name|UFOMA_BULK_ENDPT_WRITE
 index|]
 decl_stmt|;
 if|if
@@ -4083,7 +4091,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|3
+name|UFOMA_BULK_ENDPT_READ_CLEAR
 index|]
 argument_list|)
 expr_stmt|;
@@ -4131,7 +4139,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|3
+name|UFOMA_BULK_ENDPT_READ_CLEAR
 index|]
 argument_list|)
 expr_stmt|;
@@ -4170,7 +4178,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|1
+name|UFOMA_BULK_ENDPT_READ
 index|]
 decl_stmt|;
 if|if
@@ -5352,7 +5360,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|0
+name|UFOMA_CTRL_ENDPT_INTR
 index|]
 argument_list|)
 expr_stmt|;
@@ -5370,7 +5378,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|2
+name|UFOMA_CTRL_ENDPT_READ
 index|]
 argument_list|)
 expr_stmt|;
@@ -5383,7 +5391,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|1
+name|UFOMA_BULK_ENDPT_READ
 index|]
 argument_list|)
 expr_stmt|;
@@ -5418,7 +5426,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|1
+name|UFOMA_CTRL_ENDPT_INTR
 index|]
 argument_list|)
 expr_stmt|;
@@ -5428,7 +5436,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|0
+name|UFOMA_CTRL_ENDPT_INTR_CLEAR
 index|]
 argument_list|)
 expr_stmt|;
@@ -5446,7 +5454,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|2
+name|UFOMA_CTRL_ENDPT_READ
 index|]
 argument_list|)
 expr_stmt|;
@@ -5459,7 +5467,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|3
+name|UFOMA_BULK_ENDPT_READ_CLEAR
 index|]
 argument_list|)
 expr_stmt|;
@@ -5469,7 +5477,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|1
+name|UFOMA_BULK_ENDPT_READ
 index|]
 argument_list|)
 expr_stmt|;
@@ -5510,7 +5518,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|3
+name|UFOMA_CTRL_ENDPT_WRITE
 index|]
 argument_list|)
 expr_stmt|;
@@ -5523,7 +5531,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|0
+name|UFOMA_BULK_ENDPT_WRITE
 index|]
 argument_list|)
 expr_stmt|;
@@ -5564,7 +5572,7 @@ name|sc
 operator|->
 name|sc_ctrl_xfer
 index|[
-literal|3
+name|UFOMA_CTRL_ENDPT_WRITE
 index|]
 argument_list|)
 expr_stmt|;
@@ -5577,7 +5585,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|2
+name|UFOMA_BULK_ENDPT_WRITE_CLEAR
 index|]
 argument_list|)
 expr_stmt|;
@@ -5587,7 +5595,7 @@ name|sc
 operator|->
 name|sc_bulk_xfer
 index|[
-literal|0
+name|UFOMA_BULK_ENDPT_WRITE
 index|]
 argument_list|)
 expr_stmt|;

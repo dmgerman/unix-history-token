@@ -68,9 +68,18 @@ decl_stmt|;
 name|mbstate_t
 name|mbs
 decl_stmt|;
+specifier|const
+name|wchar_t
+modifier|*
+name|pwcsp
+decl_stmt|;
 name|mbs
 operator|=
 name|initial
+expr_stmt|;
+name|pwcsp
+operator|=
+name|pwcs
 expr_stmt|;
 return|return
 operator|(
@@ -79,7 +88,7 @@ argument_list|(
 name|s
 argument_list|,
 operator|&
-name|pwcs
+name|pwcsp
 argument_list|,
 name|SIZE_T_MAX
 argument_list|,

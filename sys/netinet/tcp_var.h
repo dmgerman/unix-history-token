@@ -551,6 +551,10 @@ modifier|*
 name|t_toe
 decl_stmt|;
 comment|/* TOE pcb pointer */
+name|int
+name|t_bytes_acked
+decl_stmt|;
+comment|/* # bytes acked during current RTT */
 block|}
 struct|;
 end_struct

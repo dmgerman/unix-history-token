@@ -341,19 +341,16 @@ modifier|*
 name|pipe
 parameter_list|)
 function_decl|;
-comment|/* USB Device mode only - Optional */
+comment|/* USB Device and Host mode - Optional */
 name|void
 function_decl|(
 modifier|*
-name|vbus_interrupt
+name|roothub_exec
 function_decl|)
 parameter_list|(
 name|struct
 name|usb2_bus
 modifier|*
-parameter_list|,
-name|uint8_t
-name|is_on
 parameter_list|)
 function_decl|;
 block|}
@@ -693,6 +690,18 @@ parameter_list|,
 name|usb2_bus_mem_cb_t
 modifier|*
 name|cb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb2_bus_roothub_exec
+parameter_list|(
+name|struct
+name|usb2_bus
+modifier|*
+name|bus
 parameter_list|)
 function_decl|;
 end_function_decl

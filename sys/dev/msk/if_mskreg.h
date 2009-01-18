@@ -11789,6 +11789,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GM_RXF_SPARE1
+define|\
+value|(GM_MIB_CNT_BASE + 40)
+end_define
+
+begin_comment
+comment|/* Rx spare 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GM_RXO_OK_LO
 define|\
 value|(GM_MIB_CNT_BASE + 48)
@@ -11969,6 +11981,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GM_RXF_SPARE2
+define|\
+value|(GM_MIB_CNT_BASE + 168)
+end_define
+
+begin_comment
+comment|/* Rx spare 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GM_RXE_FIFO_OV
 define|\
 value|(GM_MIB_CNT_BASE + 176)
@@ -11976,6 +12000,18 @@ end_define
 
 begin_comment
 comment|/* Rx FIFO overflow Event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GM_RXF_SPARE3
+define|\
+value|(GM_MIB_CNT_BASE + 184)
+end_define
+
+begin_comment
+comment|/* Rx spare 3 */
 end_comment
 
 begin_define
@@ -12132,6 +12168,18 @@ end_define
 
 begin_comment
 comment|/* 1519-MaxSize Byte Tx Frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GM_TXF_SPARE1
+define|\
+value|(GM_MIB_CNT_BASE + 296)
+end_define
+
+begin_comment
+comment|/* Tx spare 1 */
 end_comment
 
 begin_define
@@ -15440,13 +15488,6 @@ name|MSK_TSO_MAXSIZE
 value|(65535 + sizeof(struct ether_vlan_header))
 end_define
 
-begin_define
-define|#
-directive|define
-name|MSK_MAXRXSEGS
-value|32
-end_define
-
 begin_comment
 comment|/*  * It seems that the hardware requires extra decriptors(LEs) to offload  * TCP/UDP checksum, VLAN hardware tag inserstion and TSO.  *  * 1 descriptor for TCP/UDP checksum offload.  * 1 descriptor VLAN hardware tag insertion.  * 1 descriptor for TSO(TCP Segmentation Offload)  * 1 descriptor for 64bits DMA : Not applicatable due to the use of  *  BUS_SPACE_MAXADDR_32BIT in parent DMA tag creation.  */
 end_comment
@@ -15490,66 +15531,6 @@ directive|define
 name|MSK_MIN_FRAMELEN
 value|(ETHER_MIN_LEN - ETHER_CRC_LEN)
 end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JSLOTS
-value|((MSK_RX_RING_CNT * 3) / 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JRAWLEN
-value|(MSK_JUMBO_FRAMELEN + ETHER_ALIGN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JLEN
-value|(MSK_JRAWLEN + (sizeof(uint64_t) - \ 	(MSK_JRAWLEN % sizeof(uint64_t))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JPAGESZ
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_RESID
-define|\
-value|(MSK_JPAGESZ - (MSK_JLEN * MSK_JSLOTS) % MSK_JPAGESZ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JMEM
-value|((MSK_JLEN * MSK_JSLOTS) + MSK_RESID)
-end_define
-
-begin_struct
-struct|struct
-name|msk_jpool_entry
-block|{
-name|int
-name|slot
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|msk_jpool_entry
-argument_list|)
-name|jpool_entries
-expr_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -15638,21 +15619,6 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|msk_jumbo_rx_tag
 decl_stmt|;
-name|bus_dma_tag_t
-name|msk_jumbo_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|msk_jumbo_map
-decl_stmt|;
-name|bus_dma_tag_t
-name|msk_jumbo_mtag
-decl_stmt|;
-name|caddr_t
-name|msk_jslots
-index|[
-name|MSK_JSLOTS
-index|]
-decl_stmt|;
 name|struct
 name|msk_rxdesc
 name|msk_jumbo_rxdesc
@@ -15724,13 +15690,6 @@ name|msk_jumbo_rx_ring
 decl_stmt|;
 name|bus_addr_t
 name|msk_jumbo_rx_ring_paddr
-decl_stmt|;
-name|void
-modifier|*
-name|msk_jumbo_buf
-decl_stmt|;
-name|bus_addr_t
-name|msk_jumbo_buf_paddr
 decl_stmt|;
 block|}
 struct|;
@@ -15884,6 +15843,139 @@ struct_decl|struct
 name|msk_if_softc
 struct_decl|;
 end_struct_decl
+
+begin_struct
+struct|struct
+name|msk_hw_stats
+block|{
+comment|/* Rx stats. */
+name|uint32_t
+name|rx_ucast_frames
+decl_stmt|;
+name|uint32_t
+name|rx_bcast_frames
+decl_stmt|;
+name|uint32_t
+name|rx_pause_frames
+decl_stmt|;
+name|uint32_t
+name|rx_mcast_frames
+decl_stmt|;
+name|uint32_t
+name|rx_crc_errs
+decl_stmt|;
+name|uint32_t
+name|rx_spare1
+decl_stmt|;
+name|uint64_t
+name|rx_good_octets
+decl_stmt|;
+name|uint64_t
+name|rx_bad_octets
+decl_stmt|;
+name|uint32_t
+name|rx_runts
+decl_stmt|;
+name|uint32_t
+name|rx_runt_errs
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_64
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_65_127
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_128_255
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_256_511
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_512_1023
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_1024_1518
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_1519_max
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_too_long
+decl_stmt|;
+name|uint32_t
+name|rx_pkts_jabbers
+decl_stmt|;
+name|uint32_t
+name|rx_spare2
+decl_stmt|;
+name|uint32_t
+name|rx_fifo_oflows
+decl_stmt|;
+name|uint32_t
+name|rx_spare3
+decl_stmt|;
+comment|/* Tx stats. */
+name|uint32_t
+name|tx_ucast_frames
+decl_stmt|;
+name|uint32_t
+name|tx_bcast_frames
+decl_stmt|;
+name|uint32_t
+name|tx_pause_frames
+decl_stmt|;
+name|uint32_t
+name|tx_mcast_frames
+decl_stmt|;
+name|uint64_t
+name|tx_octets
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_64
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_65_127
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_128_255
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_256_511
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_512_1023
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_1024_1518
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_1519_max
+decl_stmt|;
+name|uint32_t
+name|tx_spare1
+decl_stmt|;
+name|uint32_t
+name|tx_colls
+decl_stmt|;
+name|uint32_t
+name|tx_late_colls
+decl_stmt|;
+name|uint32_t
+name|tx_excess_colls
+decl_stmt|;
+name|uint32_t
+name|tx_multi_colls
+decl_stmt|;
+name|uint32_t
+name|tx_single_colls
+decl_stmt|;
+name|uint32_t
+name|tx_underflows
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Softc for the Marvell Yukon II controller. */
@@ -16169,6 +16261,10 @@ define|#
 directive|define
 name|MSK_FLAG_RAMBUF
 value|0x0010
+define|#
+directive|define
+name|MSK_FLAG_NOJUMBO
+value|0x0020
 name|struct
 name|callout
 name|msk_tick_ch
@@ -16203,6 +16299,10 @@ name|msk_softc
 decl_stmt|;
 comment|/* parent controller */
 name|struct
+name|msk_hw_stats
+name|msk_stats
+decl_stmt|;
+name|struct
 name|task
 name|msk_link_task
 decl_stmt|;
@@ -16220,49 +16320,9 @@ name|uint16_t
 name|msk_vtag
 decl_stmt|;
 comment|/* VLAN tag id. */
-name|SLIST_HEAD
-argument_list|(
-argument|__msk_jfreehead
-argument_list|,
-argument|msk_jpool_entry
-argument_list|)
-name|msk_jfree_listhead
-expr_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument|__msk_jinusehead
-argument_list|,
-argument|msk_jpool_entry
-argument_list|)
-name|msk_jinuse_listhead
-expr_stmt|;
-name|struct
-name|mtx
-name|msk_jlist_mtx
-decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|MSK_JLIST_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->msk_jlist_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_JLIST_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->msk_jlist_mtx)
-end_define
 
 begin_define
 define|#

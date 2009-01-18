@@ -19,6 +19,13 @@ directive|define
 name|_EHCI_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|EHCI_MAX_DEVICES
+value|USB_MAX_DEVICES
+end_define
+
 begin_comment
 comment|/* PCI config registers */
 end_comment
@@ -2577,10 +2584,6 @@ name|sc_bus
 decl_stmt|;
 comment|/* base device */
 name|struct
-name|usb2_config_td
-name|sc_config_td
-decl_stmt|;
-name|struct
 name|usb2_callout
 name|sc_tmo_pcd
 decl_stmt|;
@@ -2595,6 +2598,14 @@ decl_stmt|;
 name|struct
 name|usb2_sw_transfer
 name|sc_root_intr
+decl_stmt|;
+name|struct
+name|usb2_device
+modifier|*
+name|sc_devices
+index|[
+name|EHCI_MAX_DEVICES
+index|]
 decl_stmt|;
 name|struct
 name|resource

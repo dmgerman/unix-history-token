@@ -3610,9 +3610,13 @@ name|ata_request
 operator|=
 name|NULL
 expr_stmt|;
-name|USB_XFER_UNLOCK
+comment|/* drop the USB transfer lock while doing the ATA interrupt */
+name|mtx_unlock
 argument_list|(
-name|xfer
+operator|&
+name|sc
+operator|->
+name|locked_mtx
 argument_list|)
 expr_stmt|;
 name|ata_interrupt
@@ -3625,9 +3629,12 @@ name|parent
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|USB_XFER_LOCK
+name|mtx_lock
 argument_list|(
-name|xfer
+operator|&
+name|sc
+operator|->
+name|locked_mtx
 argument_list|)
 expr_stmt|;
 return|return;

@@ -729,17 +729,6 @@ name|AXE_IFACE_IDX
 value|0
 end_define
 
-begin_comment
-comment|/* The interrupt endpoint is currently unused by the ASIX part. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXE_ENDPT_MAX
-value|6
-end_define
-
 begin_struct
 struct|struct
 name|axe_sframe_hdr
@@ -764,6 +753,32 @@ name|sc
 parameter_list|)
 value|((sc)->sc_miibus ?				\ 			    device_get_softc((sc)->sc_miibus) : NULL)
 end_define
+
+begin_comment
+comment|/* The interrupt endpoint is currently unused by the ASIX part. */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|AXE_BULK_DT_WR
+block|,
+name|AXE_BULK_DT_RD
+block|,
+name|AXE_BULK_CS_WR
+block|,
+name|AXE_BULK_CS_RD
+block|,
+name|AXE_INTR_DT_RD
+block|,
+name|AXE_INTR_CS_RD
+block|,
+name|AXE_N_TRANSFER
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -801,7 +816,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|AXE_ENDPT_MAX
+name|AXE_N_TRANSFER
 index|]
 decl_stmt|;
 name|device_t

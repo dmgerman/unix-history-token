@@ -1,22 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$ 	*/
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2005, 2006 Damien Bergamini<damien.bergamini@free.fr>  * Copyright (c) 2006 Niall O'Higgins<niallo@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*-  * Copyright (c) 2005  *	Damien Bergamini<damien.bergamini@free.fr>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RUM_N_TRANSFER
-value|4
-end_define
 
 begin_struct
 struct|struct
-name|rum_node
+name|ural_node
 block|{
 name|struct
 name|ieee80211_node
@@ -33,16 +26,16 @@ end_struct
 begin_define
 define|#
 directive|define
-name|RUM_NODE
+name|URAL_NODE
 parameter_list|(
 name|ni
 parameter_list|)
-value|((struct rum_node *)(ni))
+value|((struct ural_node *)(ni))
 end_define
 
 begin_struct
 struct|struct
-name|rum_vap
+name|ural_vap
 block|{
 name|struct
 name|ieee80211vap
@@ -79,16 +72,16 @@ end_struct
 begin_define
 define|#
 directive|define
-name|RUM_VAP
+name|URAL_VAP
 parameter_list|(
 name|vap
 parameter_list|)
-value|((struct rum_vap *)(vap))
+value|((struct ural_vap *)(vap))
 end_define
 
 begin_struct
 struct|struct
-name|rum_config_copy_chan
+name|ural_config_copy_chan
 block|{
 name|uint32_t
 name|chan_to_ieee
@@ -133,7 +126,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|rum_config_copy_bss
+name|ural_config_copy_bss
 block|{
 name|uint16_t
 name|ni_intval
@@ -153,18 +146,18 @@ end_struct
 
 begin_struct
 struct|struct
-name|rum_config_copy
+name|ural_config_copy
 block|{
 name|struct
-name|rum_config_copy_chan
+name|ural_config_copy_chan
 name|ic_curchan
 decl_stmt|;
 name|struct
-name|rum_config_copy_chan
+name|ural_config_copy_chan
 name|ic_bsschan
 decl_stmt|;
 name|struct
-name|rum_config_copy_bss
+name|ural_config_copy_bss
 name|iv_bss
 decl_stmt|;
 name|enum
@@ -201,7 +194,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|rum_rx_radiotap_header
+name|ural_rx_radiotap_header
 block|{
 name|struct
 name|ieee80211_radiotap_header
@@ -232,14 +225,14 @@ end_struct
 begin_define
 define|#
 directive|define
-name|RT2573_RX_RADIOTAP_PRESENT
+name|RAL_RX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA) |				\ 	 (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL))
+value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	     (1<< IEEE80211_RADIOTAP_RATE) |				\ 	     (1<< IEEE80211_RADIOTAP_CHANNEL) |			\ 	     (1<< IEEE80211_RADIOTAP_ANTENNA) |			\ 	     (1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL))
 end_define
 
 begin_struct
 struct|struct
-name|rum_tx_radiotap_header
+name|ural_tx_radiotap_header
 block|{
 name|struct
 name|ieee80211_radiotap_header
@@ -267,14 +260,14 @@ end_struct
 begin_define
 define|#
 directive|define
-name|RT2573_TX_RADIOTAP_PRESENT
+name|RAL_TX_RADIOTAP_PRESENT
 define|\
-value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_RATE) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL) |				\ 	 (1<< IEEE80211_RADIOTAP_ANTENNA))
+value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	     (1<< IEEE80211_RADIOTAP_RATE) |				\ 	     (1<< IEEE80211_RADIOTAP_CHANNEL) |			\ 	     (1<< IEEE80211_RADIOTAP_ANTENNA))
 end_define
 
 begin_struct
 struct|struct
-name|rum_bbp_prom
+name|ural_bbp_prom
 block|{
 name|uint8_t
 name|val
@@ -289,7 +282,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|rum_ifq
+name|ural_ifq
 block|{
 name|struct
 name|mbuf
@@ -308,9 +301,27 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+block|{
+name|URAL_BULK_DT_WR
+block|,
+name|URAL_BULK_DT_RD
+block|,
+name|URAL_BULK_CS_WR
+block|,
+name|URAL_BULK_CS_RD
+block|,
+name|URAL_N_TRANSFER
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
-name|rum_softc
+name|ural_softc
 block|{
 name|void
 modifier|*
@@ -318,7 +329,7 @@ name|sc_evilhack
 decl_stmt|;
 comment|/* XXX this pointer must be first */
 name|struct
-name|rum_ifq
+name|ural_ifq
 name|sc_tx_queue
 decl_stmt|;
 name|struct
@@ -326,11 +337,11 @@ name|usb2_config_td
 name|sc_config_td
 decl_stmt|;
 name|struct
-name|rum_tx_desc
+name|ural_tx_desc
 name|sc_tx_desc
 decl_stmt|;
 name|struct
-name|rum_rx_desc
+name|ural_rx_desc
 name|sc_rx_desc
 decl_stmt|;
 name|struct
@@ -342,18 +353,18 @@ name|usb2_callout
 name|sc_watchdog
 decl_stmt|;
 name|struct
-name|rum_bbp_prom
+name|ural_bbp_prom
 name|sc_bbp_prom
 index|[
 literal|16
 index|]
 decl_stmt|;
 name|struct
-name|rum_rx_radiotap_header
+name|ural_rx_radiotap_header
 name|sc_rxtap
 decl_stmt|;
 name|struct
-name|rum_tx_radiotap_header
+name|ural_tx_radiotap_header
 name|sc_txtap
 decl_stmt|;
 name|struct
@@ -361,7 +372,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|RUM_N_TRANSFER
+name|URAL_N_TRANSFER
 index|]
 decl_stmt|;
 name|struct
@@ -380,34 +391,21 @@ name|ieee80211_rate_table
 modifier|*
 name|sc_rates
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|sc_newstate
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|enum
-name|ieee80211_state
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
 name|enum
 name|ieee80211_state
 name|sc_ns_state
 decl_stmt|;
 name|uint32_t
-name|sc_sta
-index|[
-literal|6
-index|]
+name|sc_unit
 decl_stmt|;
 name|uint32_t
-name|sc_unit
+name|sc_asic_rev
+decl_stmt|;
+name|uint32_t
+name|sc_rf_regs
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|int
 name|sc_ns_arg
@@ -417,24 +415,24 @@ name|sc_flags
 decl_stmt|;
 define|#
 directive|define
-name|RUM_FLAG_READ_STALL
+name|URAL_FLAG_READ_STALL
 value|0x0001
 define|#
 directive|define
-name|RUM_FLAG_WRITE_STALL
+name|URAL_FLAG_WRITE_STALL
 value|0x0002
 define|#
 directive|define
-name|RUM_FLAG_LL_READY
+name|URAL_FLAG_LL_READY
+value|0x0004
+define|#
+directive|define
+name|URAL_FLAG_HL_READY
 value|0x0008
 define|#
 directive|define
-name|RUM_FLAG_HL_READY
+name|URAL_FLAG_WAIT_COMMAND
 value|0x0010
-define|#
-directive|define
-name|RUM_FLAG_WAIT_COMMAND
-value|0x0020
 name|uint16_t
 name|sc_txtap_len
 decl_stmt|;
@@ -442,22 +440,25 @@ name|uint16_t
 name|sc_rxtap_len
 decl_stmt|;
 name|uint16_t
-name|sc_last_chan
-decl_stmt|;
-name|uint8_t
-name|sc_txpow
+name|sc_sta
 index|[
-literal|44
+literal|11
 index|]
 decl_stmt|;
 name|uint8_t
 name|sc_rf_rev
 decl_stmt|;
 name|uint8_t
-name|sc_rffreq
+name|sc_txpow
+index|[
+literal|14
+index|]
 decl_stmt|;
 name|uint8_t
-name|sc_ftype
+name|sc_led_mode
+decl_stmt|;
+name|uint8_t
+name|sc_hw_radio
 decl_stmt|;
 name|uint8_t
 name|sc_rx_ant
@@ -469,40 +470,13 @@ name|uint8_t
 name|sc_nb_ant
 decl_stmt|;
 name|uint8_t
-name|sc_ext_2ghz_lna
-decl_stmt|;
-name|uint8_t
-name|sc_ext_5ghz_lna
-decl_stmt|;
-name|uint8_t
-name|sc_sifs
-decl_stmt|;
-name|uint8_t
-name|sc_bbp17
-decl_stmt|;
-name|uint8_t
-name|sc_hw_radio
-decl_stmt|;
-name|uint8_t
 name|sc_amrr_timer
-decl_stmt|;
-name|uint8_t
-name|sc_beacon_buf
-index|[
-literal|0x800
-index|]
 decl_stmt|;
 name|uint8_t
 name|sc_myaddr
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
-decl_stmt|;
-name|int8_t
-name|sc_rssi_2ghz_corr
-decl_stmt|;
-name|int8_t
-name|sc_rssi_5ghz_corr
 decl_stmt|;
 name|char
 name|sc_name

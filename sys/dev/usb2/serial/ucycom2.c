@@ -91,12 +91,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_request.h>
 end_include
 
@@ -144,20 +138,25 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UCYCOM_ENDPT_MAX
-value|3
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UCYCOM_IFACE_INDEX
 value|0
 end_define
+
+begin_enum
+enum|enum
+block|{
+name|UCYCOM_CTRL_RD
+block|,
+name|UCYCOM_INTR_RD
+block|,
+name|UCYCOM_INTR_CS
+block|,
+name|UCYCOM_N_TRANSFER
+init|=
+literal|3
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -181,7 +180,7 @@ name|usb2_xfer
 modifier|*
 name|sc_xfer
 index|[
-name|UCYCOM_ENDPT_MAX
+name|UCYCOM_N_TRANSFER
 index|]
 decl_stmt|;
 name|uint32_t
@@ -433,12 +432,12 @@ name|struct
 name|usb2_config
 name|ucycom_config
 index|[
-name|UCYCOM_ENDPT_MAX
+name|UCYCOM_N_TRANSFER
 index|]
 init|=
 block|{
 index|[
-literal|0
+name|UCYCOM_CTRL_RD
 index|]
 operator|=
 block|{
@@ -499,7 +498,7 @@ comment|/* 1 second */
 block|}
 block|,
 index|[
-literal|1
+name|UCYCOM_INTR_RD
 index|]
 operator|=
 block|{
@@ -552,7 +551,7 @@ name|ucycom_intr_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|UCYCOM_INTR_CS
 index|]
 operator|=
 block|{
@@ -1269,7 +1268,7 @@ name|sc_xfer
 argument_list|,
 name|ucycom_config
 argument_list|,
-name|UCYCOM_ENDPT_MAX
+name|UCYCOM_N_TRANSFER
 argument_list|,
 name|sc
 argument_list|,
@@ -1415,7 +1414,7 @@ name|sc
 operator|->
 name|sc_xfer
 argument_list|,
-name|UCYCOM_ENDPT_MAX
+name|UCYCOM_N_TRANSFER
 argument_list|)
 expr_stmt|;
 return|return
@@ -1485,7 +1484,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UCYCOM_INTR_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1518,7 +1517,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UCYCOM_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -1528,7 +1527,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UCYCOM_INTR_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1561,7 +1560,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UCYCOM_CTRL_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1594,7 +1593,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UCYCOM_CTRL_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2395,7 +2394,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UCYCOM_INTR_RD
 index|]
 decl_stmt|;
 if|if
@@ -2672,7 +2671,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UCYCOM_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -2720,7 +2719,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UCYCOM_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;

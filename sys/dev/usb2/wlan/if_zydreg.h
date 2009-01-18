@@ -4129,30 +4129,6 @@ block|}
 struct|;
 end_struct
 
-begin_enum
-enum|enum
-block|{
-name|ZYD_TR_BULK_DT_WR
-block|,
-name|ZYD_TR_BULK_DT_RD
-block|,
-name|ZYD_TR_BULK_CS_WR
-block|,
-name|ZYD_TR_BULK_CS_RD
-block|,
-name|ZYD_TR_INTR_DT_WR
-block|,
-name|ZYD_TR_INTR_DT_RD
-block|,
-name|ZYD_TR_INTR_CS_WR
-block|,
-name|ZYD_TR_INTR_CS_RD
-block|,
-name|ZYD_N_TRANSFER
-block|, }
-enum|;
-end_enum
-
 begin_struct
 struct|struct
 name|zyd_ifq
@@ -4367,6 +4343,32 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+block|{
+name|ZYD_BULK_DT_WR
+block|,
+name|ZYD_BULK_DT_RD
+block|,
+name|ZYD_BULK_CS_WR
+block|,
+name|ZYD_BULK_CS_RD
+block|,
+name|ZYD_INTR_DT_WR
+block|,
+name|ZYD_INTR_DT_RD
+block|,
+name|ZYD_INTR_CS_WR
+block|,
+name|ZYD_INTR_CS_RD
+block|,
+name|ZYD_N_TRANSFER
+init|=
+literal|8
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct

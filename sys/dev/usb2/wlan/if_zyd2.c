@@ -135,13 +135,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/wlan/if_zyd2_reg.h>
+file|<dev/usb2/wlan/if_zydreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/wlan/if_zyd2_fw.h>
+file|<dev/usb2/wlan/if_zydfw.h>
 end_include
 
 begin_if
@@ -1776,7 +1776,7 @@ index|]
 init|=
 block|{
 index|[
-name|ZYD_TR_BULK_DT_WR
+name|ZYD_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -1843,7 +1843,7 @@ comment|/* 10 seconds */
 block|}
 block|,
 index|[
-name|ZYD_TR_BULK_DT_RD
+name|ZYD_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -1901,7 +1901,7 @@ literal|0
 block|, 	}
 block|,
 index|[
-name|ZYD_TR_BULK_CS_WR
+name|ZYD_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -1966,7 +1966,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-name|ZYD_TR_BULK_CS_RD
+name|ZYD_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -2031,7 +2031,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-name|ZYD_TR_INTR_DT_WR
+name|ZYD_INTR_DT_WR
 index|]
 operator|=
 block|{
@@ -2101,7 +2101,7 @@ literal|1
 block|, 	}
 block|,
 index|[
-name|ZYD_TR_INTR_DT_RD
+name|ZYD_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -2163,7 +2163,7 @@ literal|1
 block|, 	}
 block|,
 index|[
-name|ZYD_TR_INTR_CS_WR
+name|ZYD_INTR_CS_WR
 index|]
 operator|=
 block|{
@@ -2228,7 +2228,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-name|ZYD_TR_INTR_CS_RD
+name|ZYD_INTR_CS_RD
 index|]
 operator|=
 block|{
@@ -2727,7 +2727,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_DT_RD
+name|ZYD_INTR_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -2921,7 +2921,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_CS_RD
+name|ZYD_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -2982,7 +2982,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_CS_RD
+name|ZYD_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3401,7 +3401,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_DT_RD
+name|ZYD_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3614,7 +3614,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_DT_RD
+name|ZYD_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3653,7 +3653,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_DT_WR
+name|ZYD_INTR_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -3750,7 +3750,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_CS_WR
+name|ZYD_INTR_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3839,7 +3839,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_CS_WR
+name|ZYD_INTR_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3994,7 +3994,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_DT_WR
+name|ZYD_INTR_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -4758,7 +4758,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_DT_RD
+name|ZYD_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -5532,7 +5532,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_CS_RD
+name|ZYD_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -5739,7 +5739,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_CS_RD
+name|ZYD_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -12387,7 +12387,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_INTR_DT_RD
+name|ZYD_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -14082,7 +14082,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|ZYD_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -14092,7 +14092,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|ZYD_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -14202,7 +14202,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_DT_WR
+name|ZYD_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -14212,7 +14212,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_DT_RD
+name|ZYD_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -14222,7 +14222,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_CS_WR
+name|ZYD_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -14232,7 +14232,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_CS_RD
+name|ZYD_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -14575,7 +14575,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_DT_WR
+name|ZYD_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -14619,7 +14619,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_DT_WR
+name|ZYD_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -15210,7 +15210,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|ZYD_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -15300,7 +15300,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_CS_WR
+name|ZYD_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -15488,7 +15488,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-name|ZYD_TR_BULK_CS_WR
+name|ZYD_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -16360,7 +16360,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|ZYD_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;

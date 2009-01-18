@@ -271,6 +271,8 @@ name|usb2_cv_signal
 argument_list|(
 name|xfer
 operator|->
+name|xroot
+operator|->
 name|udev
 operator|->
 name|default_cv
@@ -300,6 +302,11 @@ name|usb2_device_request
 name|req
 decl_stmt|;
 name|struct
+name|usb2_device
+modifier|*
+name|udev
+decl_stmt|;
+name|struct
 name|usb2_pipe
 modifier|*
 name|pipe
@@ -319,10 +326,16 @@ name|to
 init|=
 name|USB_EP_MAX
 decl_stmt|;
-name|USB_BUS_LOCK
-argument_list|(
+name|udev
+operator|=
 name|xfer
 operator|->
+name|xroot
+operator|->
+name|udev
+expr_stmt|;
+name|USB_BUS_LOCK
+argument_list|(
 name|udev
 operator|->
 name|bus
@@ -331,16 +344,12 @@ expr_stmt|;
 comment|/* round robin pipe clear stall */
 name|pipe
 operator|=
-name|xfer
-operator|->
 name|udev
 operator|->
 name|pipe_curr
 expr_stmt|;
 name|pipe_end
 operator|=
-name|xfer
-operator|->
 name|udev
 operator|->
 name|pipes
@@ -349,8 +358,6 @@ name|USB_EP_MAX
 expr_stmt|;
 name|pipe_first
 operator|=
-name|xfer
-operator|->
 name|udev
 operator|->
 name|pipes
@@ -540,8 +547,6 @@ literal|1
 expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
-name|xfer
-operator|->
 name|udev
 operator|->
 name|bus
@@ -554,8 +559,6 @@ argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
-name|xfer
-operator|->
 name|udev
 operator|->
 name|bus
@@ -592,8 +595,6 @@ name|tr_setup
 goto|;
 block|}
 comment|/* store current pipe */
-name|xfer
-operator|->
 name|udev
 operator|->
 name|pipe_curr
@@ -602,8 +603,6 @@ name|pipe
 expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
-name|xfer
-operator|->
 name|udev
 operator|->
 name|bus
@@ -1242,6 +1241,8 @@ name|usb2_pause_mtx
 argument_list|(
 name|xfer
 operator|->
+name|xroot
+operator|->
 name|xfer_mtx
 argument_list|,
 name|temp
@@ -1309,13 +1310,13 @@ else|else
 block|{
 name|usb2_cv_wait
 argument_list|(
-name|xfer
-operator|->
 name|udev
 operator|->
 name|default_cv
 argument_list|,
 name|xfer
+operator|->
+name|xroot
 operator|->
 name|xfer_mtx
 argument_list|)

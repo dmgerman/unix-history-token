@@ -1427,6 +1427,14 @@ literal|256
 operator|*
 literal|1024
 expr_stmt|;
+name|V_tcp_do_rfc3465
+operator|=
+literal|1
+expr_stmt|;
+name|V_tcp_abc_l_var
+operator|=
+literal|2
+expr_stmt|;
 name|V_tcp_mssdflt
 operator|=
 name|TCP_MSS

@@ -93,12 +93,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_request.h>
 end_include
 
@@ -455,16 +449,27 @@ begin_comment
 comment|/* bytes */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
+name|UCHCOM_BULK_DT_WR
+block|,
+name|UCHCOM_BULK_DT_RD
+block|,
+name|UCHCOM_BULK_CS_WR
+block|,
+name|UCHCOM_BULK_CS_RD
+block|,
+name|UCHCOM_INTR_DT_RD
+block|,
+name|UCHCOM_INTR_CS_RD
+block|,
 name|UCHCOM_N_TRANSFER
-value|6
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -1039,7 +1044,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UCHCOM_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -1092,7 +1097,7 @@ name|uchcom_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UCHCOM_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -1145,7 +1150,7 @@ name|uchcom_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|UCHCOM_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -1203,7 +1208,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|UCHCOM_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -1261,7 +1266,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|4
+name|UCHCOM_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -1315,7 +1320,7 @@ name|uchcom_intr_callback
 block|, 	}
 block|,
 index|[
-literal|5
+name|UCHCOM_INTR_CS_RD
 index|]
 operator|=
 block|{
@@ -3621,7 +3626,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UCHCOM_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3632,7 +3637,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UCHCOM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3666,7 +3671,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UCHCOM_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3677,7 +3682,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UCHCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3687,7 +3692,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UCHCOM_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3720,7 +3725,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UCHCOM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3753,7 +3758,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UCHCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3763,7 +3768,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UCHCOM_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -3916,7 +3921,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UCHCOM_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -3964,7 +3969,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|5
+name|UCHCOM_INTR_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -4003,7 +4008,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|UCHCOM_INTR_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -4089,7 +4094,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UCHCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -4163,7 +4168,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|UCHCOM_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -4202,7 +4207,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UCHCOM_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -4303,7 +4308,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UCHCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -4351,7 +4356,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|UCHCOM_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -4390,7 +4395,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UCHCOM_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if

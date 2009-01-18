@@ -208,6 +208,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|PMAP_DEBUG
+end_undef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2823,6 +2829,20 @@ name|npte
 decl_stmt|,
 name|opte
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PMAP_DEBUG
+name|printf
+argument_list|(
+literal|"pmap_kenter:  va: 0x%08x -> pa: 0x%08x\n"
+argument_list|,
+name|va
+argument_list|,
+name|pa
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|npte
 operator|=
 name|mips_paddr_to_tlbpfn
@@ -6766,6 +6786,20 @@ argument_list|,
 name|prot
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PMAP_DEBUG
+name|printf
+argument_list|(
+literal|"pmap_enter:  va: 0x%08x -> pa: 0x%08x\n"
+argument_list|,
+name|va
+argument_list|,
+name|pa
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Now validate mapping with desired protection/wiring. 	 */
 name|newpte
 operator|=
@@ -8076,7 +8110,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_UNCACHED
 argument_list|(
 name|phys
 argument_list|)
@@ -8086,6 +8120,13 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+name|va
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|mips_dcache_wbinv_range
+argument_list|(
 name|va
 argument_list|,
 name|PAGE_SIZE
@@ -8340,7 +8381,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_UNCACHED
 argument_list|(
 name|phys
 argument_list|)
@@ -8354,6 +8395,15 @@ operator|)
 operator|(
 name|caddr_t
 operator|)
+name|va
+operator|+
+name|off
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|mips_dcache_wbinv_range
+argument_list|(
 name|va
 operator|+
 name|off
@@ -8565,7 +8615,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_UNCACHED
 argument_list|(
 name|phys
 argument_list|)
@@ -8575,6 +8625,13 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+name|va
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|mips_dcache_wbinv_range
+argument_list|(
 name|va
 argument_list|,
 name|PAGE_SIZE

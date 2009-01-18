@@ -258,17 +258,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UMS_N_TRANSFER
-value|2
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UMS_BUTTON_MAX
 value|31
 end_define
@@ -286,6 +275,20 @@ name|i
 parameter_list|)
 value|((i)< 3 ? (((i) + 2) % 3) : (i))
 end_define
+
+begin_enum
+enum|enum
+block|{
+name|UMS_INTR_DT
+block|,
+name|UMS_INTR_CS
+block|,
+name|UMS_N_TRANSFER
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -633,7 +636,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 decl_stmt|;
 if|if
@@ -1380,7 +1383,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMS_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -1448,7 +1451,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMS_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -1470,7 +1473,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 operator|=
 block|{
@@ -1524,7 +1527,7 @@ name|ums_intr_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|UMS_INTR_CS
 index|]
 operator|=
 block|{
@@ -2632,7 +2635,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 operator|->
 name|max_frame_size
@@ -2649,7 +2652,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 operator|->
 name|max_frame_size
@@ -3262,7 +3265,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 argument_list|)
 expr_stmt|;
@@ -3295,7 +3298,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|UMS_INTR_CS
 index|]
 argument_list|)
 expr_stmt|;
@@ -3305,7 +3308,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|UMS_INTR_DT
 index|]
 argument_list|)
 expr_stmt|;

@@ -111,6 +111,45 @@ directive|include
 file|<machine/vmparam.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEXUS_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|dprintf
+value|printf
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|dprintf
+parameter_list|(
+name|x
+parameter_list|,
+name|arg
+modifier|...
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEXUS_DEBUG */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -1183,7 +1222,7 @@ operator|&
 name|msize
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s: discovered hinted child %s at maddr %p(%d)\n"
 argument_list|,
@@ -1400,7 +1439,7 @@ name|needactivate
 decl_stmt|,
 name|passthrough
 decl_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s: entry (%p, %p, %d, %p, %p, %p, %ld, %d)\n"
 argument_list|,
@@ -1437,7 +1476,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s: requested rid is %d\n"
 argument_list|,
@@ -1934,7 +1973,7 @@ name|resource_list_entry
 modifier|*
 name|rle
 decl_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s: entry (%p, %p, %d, %d, %p, %ld)\n"
 argument_list|,
@@ -2140,7 +2179,7 @@ name|ndev
 operator|->
 name|nx_resources
 decl_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s: entry\n"
 argument_list|,
@@ -2182,7 +2221,7 @@ modifier|*
 name|r
 parameter_list|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s: entry\n"
 argument_list|,

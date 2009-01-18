@@ -344,12 +344,6 @@ name|struct
 name|rman
 name|sc_irq_rman
 decl_stmt|;
-name|uint32_t
-name|sc_mem
-decl_stmt|;
-name|uint32_t
-name|sc_io
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -464,18 +458,6 @@ operator|->
 name|sc_busno
 operator|=
 name|busno
-expr_stmt|;
-name|sc
-operator|->
-name|sc_io
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_mem
-operator|=
-literal|0
 expr_stmt|;
 comment|/* TODO: Check for host mode */
 comment|/* Enabled PCI, IG mode, EAP mode */
@@ -829,12 +811,6 @@ block|}
 comment|/* Use KSEG1 to access IO ports for it is uncached */
 name|sc
 operator|->
-name|sc_io
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
 name|sc_io_rman
 index|[
 literal|0
@@ -964,12 +940,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Use KSEG1 to access PCI memory for it is uncached */
-name|sc
-operator|->
-name|sc_mem
-operator|=
-literal|0
-expr_stmt|;
 name|sc
 operator|->
 name|sc_mem_rman

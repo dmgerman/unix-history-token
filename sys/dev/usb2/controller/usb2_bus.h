@@ -79,6 +79,19 @@ name|usb2_process
 name|explore_proc
 decl_stmt|;
 name|struct
+name|usb2_process
+name|roothub_proc
+decl_stmt|;
+comment|/* 	 * There are two callback processes. One for Giant locked 	 * callbacks. One for non-Giant locked callbacks. This should 	 * avoid congestion and reduce response time in most cases. 	 */
+name|struct
+name|usb2_process
+name|giant_callback_proc
+decl_stmt|;
+name|struct
+name|usb2_process
+name|non_giant_callback_proc
+decl_stmt|;
+name|struct
 name|usb2_bus_msg
 name|explore_msg
 index|[
@@ -95,6 +108,13 @@ decl_stmt|;
 name|struct
 name|usb2_bus_msg
 name|attach_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|usb2_bus_msg
+name|roothub_msg
 index|[
 literal|2
 index|]
@@ -147,10 +167,8 @@ comment|/* filled by HC driver */
 name|struct
 name|usb2_device
 modifier|*
+modifier|*
 name|devices
-index|[
-name|USB_MAX_DEVICES
-index|]
 decl_stmt|;
 name|uint32_t
 name|hw_power_state

@@ -131,13 +131,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/wlan/if_ural2_reg.h>
+file|<dev/usb2/wlan/if_uralreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/usb2/wlan/if_ural2_var.h>
+file|<dev/usb2/wlan/if_uralvar.h>
 end_include
 
 begin_if
@@ -2542,7 +2542,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|URAL_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -2610,7 +2610,7 @@ comment|/* ms */
 block|}
 block|,
 index|[
-literal|1
+name|URAL_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -2667,7 +2667,7 @@ name|ural_bulk_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|URAL_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -2725,7 +2725,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|3
+name|URAL_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -5040,7 +5040,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|URAL_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -5980,7 +5980,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|URAL_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -6122,7 +6122,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|URAL_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -6161,7 +6161,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|URAL_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -6978,7 +6978,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|URAL_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -7070,7 +7070,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|URAL_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -7307,7 +7307,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|URAL_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -7351,7 +7351,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|URAL_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -7735,7 +7735,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|URAL_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -11023,7 +11023,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|URAL_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -11033,7 +11033,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|URAL_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -11232,7 +11232,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|URAL_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -11242,7 +11242,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|URAL_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -11252,7 +11252,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|URAL_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -11262,7 +11262,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|URAL_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;

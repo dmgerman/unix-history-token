@@ -119,8 +119,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAS1_TS
+name|MAS1_TS_MASK
 value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAS1_TS_SHIFT
+value|12
 end_define
 
 begin_define
@@ -217,7 +224,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAS2_EPN
+name|MAS2_EPN_MASK
 value|0xFFFFF000
 end_define
 
@@ -498,7 +505,7 @@ value|12
 end_define
 
 begin_comment
-comment|/*  * Maximum number of TLB1 entries used for a permanat  * mapping of kernel region (kernel image plus statically  * allocated data.  */
+comment|/*  * Maximum number of TLB1 entries used for a permanent mapping of kernel  * region (kernel image plus statically allocated data).  */
 end_comment
 
 begin_define
@@ -515,6 +522,24 @@ name|_TLB_ENTRY_IO
 value|(MAS2_I | MAS2_G)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_TLB_ENTRY_MEM
+value|(MAS2_M)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -522,15 +547,20 @@ name|_TLB_ENTRY_MEM
 value|(0)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
-name|KERNEL_TID
+name|TID_KERNEL
 value|0
 end_define
 
 begin_comment
-comment|/* TLB TID to use for kernel translations */
+comment|/* TLB TID to use for kernel (shared) translations */
 end_comment
 
 begin_define
@@ -552,7 +582,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Number of TIDs reserve for user */
+comment|/* Number of TIDs reserved for user */
 end_comment
 
 begin_define
@@ -567,6 +597,13 @@ define|#
 directive|define
 name|TID_MAX
 value|255
+end_define
+
+begin_define
+define|#
+directive|define
+name|TID_NONE
+value|-1
 end_define
 
 begin_if
@@ -584,13 +621,13 @@ typedef|typedef
 struct|struct
 name|tlb_entry
 block|{
-name|u_int32_t
+name|uint32_t
 name|mas1
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|mas2
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|mas3
 decl_stmt|;
 block|}
@@ -600,7 +637,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int8_t
+name|int
 name|tlbtid_t
 typedef|;
 end_typedef
@@ -610,6 +647,15 @@ struct_decl|struct
 name|pmap
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|void
+name|tlb0_print_tlbentries
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

@@ -4100,6 +4100,7 @@ name|drvstat
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 case|case
 name|CAM_SEL_TIMEOUT
 case|:

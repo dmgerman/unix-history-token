@@ -77,12 +77,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb2/core/usb2_config_td.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb2/core/usb2_request.h>
 end_include
 
@@ -212,17 +206,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ULPT_N_TRANSFER
-value|5
-end_define
-
-begin_comment
-comment|/* units */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UR_GET_DEVICE_ID
 value|0x00
 end_define
@@ -287,6 +270,26 @@ directive|define
 name|LPS_MASK
 value|(LPS_SELECT|LPS_NERR|LPS_NOPAPER)
 end_define
+
+begin_enum
+enum|enum
+block|{
+name|ULPT_BULK_DT_WR
+block|,
+name|ULPT_BULK_DT_RD
+block|,
+name|ULPT_INTR_DT_RD
+block|,
+name|ULPT_BULK_CS_WR
+block|,
+name|ULPT_BULK_CS_RD
+block|,
+name|ULPT_N_TRANSFER
+init|=
+literal|5
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -861,7 +864,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|ULPT_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -930,7 +933,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|ULPT_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -969,7 +972,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|ULPT_BULK_DT_WR
 index|]
 decl_stmt|;
 if|if
@@ -1158,7 +1161,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|ULPT_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1229,7 +1232,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|ULPT_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1268,7 +1271,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|ULPT_BULK_DT_RD
 index|]
 decl_stmt|;
 if|if
@@ -1592,7 +1595,7 @@ index|]
 init|=
 block|{
 index|[
-literal|0
+name|ULPT_BULK_DT_WR
 index|]
 operator|=
 block|{
@@ -1650,7 +1653,7 @@ name|ulpt_write_callback
 block|, 	}
 block|,
 index|[
-literal|1
+name|ULPT_BULK_DT_RD
 index|]
 operator|=
 block|{
@@ -1708,7 +1711,7 @@ name|ulpt_read_callback
 block|, 	}
 block|,
 index|[
-literal|2
+name|ULPT_INTR_DT_RD
 index|]
 operator|=
 block|{
@@ -1760,7 +1763,7 @@ comment|/* 1 second */
 block|}
 block|,
 index|[
-literal|3
+name|ULPT_BULK_CS_WR
 index|]
 operator|=
 block|{
@@ -1818,7 +1821,7 @@ comment|/* 50ms */
 block|}
 block|,
 index|[
-literal|4
+name|ULPT_BULK_CS_RD
 index|]
 operator|=
 block|{
@@ -1904,7 +1907,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|ULPT_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1937,7 +1940,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|4
+name|ULPT_BULK_CS_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1947,7 +1950,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|ULPT_BULK_DT_RD
 index|]
 argument_list|)
 expr_stmt|;
@@ -1980,7 +1983,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|ULPT_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2013,7 +2016,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|3
+name|ULPT_BULK_CS_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2023,7 +2026,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|ULPT_BULK_DT_WR
 index|]
 argument_list|)
 expr_stmt|;
@@ -2172,7 +2175,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|1
+name|ULPT_BULK_DT_RD
 index|]
 operator|->
 name|max_data_length
@@ -2238,7 +2241,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|0
+name|ULPT_BULK_DT_WR
 index|]
 operator|->
 name|max_data_length
@@ -3174,7 +3177,7 @@ name|sc
 operator|->
 name|sc_xfer
 index|[
-literal|2
+name|ULPT_INTR_DT_RD
 index|]
 argument_list|)
 expr_stmt|;

@@ -1648,6 +1648,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|CTR1
+argument_list|(
+name|KTR_CALLOUT
+argument_list|,
+literal|"callout %p finished"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
