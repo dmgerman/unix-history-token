@@ -344,7 +344,12 @@ operator|~
 name|bit
 argument_list|)
 operator|+
+operator|(
 name|ofs
+operator|&
+operator|~
+literal|31U
+operator|)
 operator|-
 literal|1
 operator|)
