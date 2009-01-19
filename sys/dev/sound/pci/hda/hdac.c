@@ -4145,6 +4145,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIAMCP78_2
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0006)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAMCP7A
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0007)
 end_define
@@ -4154,6 +4161,13 @@ define|#
 directive|define
 name|HDA_CODEC_NVIDIAMCP67
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP73
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x8001)
 end_define
 
 begin_define
@@ -4992,7 +5006,19 @@ literal|"NVidia MCP67 HDMI"
 block|}
 block|,
 block|{
+name|HDA_CODEC_NVIDIAMCP73
+block|,
+literal|"NVidia MCP73 HDMI"
+block|}
+block|,
+block|{
 name|HDA_CODEC_NVIDIAMCP78
+block|,
+literal|"NVidia MCP78 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP78_2
 block|,
 literal|"NVidia MCP78 HDMI"
 block|}
