@@ -390,10 +390,7 @@ if|if
 condition|(
 name|addr
 operator|<
-operator|(
-name|vm_offset_t
-operator|)
-name|KERNBASE
+name|VM_MIN_KERNEL_ADDRESS
 condition|)
 return|return
 operator|(

@@ -26,7 +26,7 @@ name|INKERNEL
 parameter_list|(
 name|va
 parameter_list|)
-value|(((va)>= DMAP_MIN_ADDRESS&& (va)< DMAP_MAX_ADDRESS) \ 	    || ((va)>= KERNBASE&& (va)< VM_MAX_KERNEL_ADDRESS))
+value|(((va)>= DMAP_MIN_ADDRESS&& (va)< DMAP_MAX_ADDRESS) \ 	    || ((va)>= VM_MIN_KERNEL_ADDRESS&& (va)< VM_MAX_KERNEL_ADDRESS))
 end_define
 
 begin_struct

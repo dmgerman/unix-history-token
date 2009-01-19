@@ -6138,7 +6138,7 @@ name|ksize
 init|=
 name|VM_MAX_KERNEL_ADDRESS
 operator|-
-name|KERNBASE
+name|VM_MIN_KERNEL_ADDRESS
 decl_stmt|;
 return|return
 name|sysctl_handle_long
@@ -6286,7 +6286,7 @@ condition|)
 block|{
 name|kernel_vm_end
 operator|=
-name|KERNBASE
+name|VM_MIN_KERNEL_ADDRESS
 expr_stmt|;
 name|nkpt
 operator|=
