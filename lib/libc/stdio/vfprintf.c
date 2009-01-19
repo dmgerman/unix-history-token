@@ -937,6 +937,10 @@ name|decimal_point
 decl_stmt|;
 comment|/* locale specific decimal point */
 name|int
+name|decpt_len
+decl_stmt|;
+comment|/* length of decimal_point */
+name|int
 name|signflag
 decl_stmt|;
 comment|/* true if float is negative */
@@ -1293,6 +1297,25 @@ name|localeconv
 argument_list|()
 operator|->
 name|decimal_point
+expr_stmt|;
+comment|/* The overwhelmingly common case is decpt_len == 1. */
+name|decpt_len
+operator|=
+operator|(
+name|decimal_point
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|?
+literal|1
+else|:
+name|strlen
+argument_list|(
+name|decimal_point
+argument_list|)
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -2556,8 +2579,9 @@ name|flags
 operator|&
 name|ALT
 condition|)
-operator|++
 name|size
+operator|+=
+name|decpt_len
 expr_stmt|;
 block|}
 else|else
@@ -2592,7 +2616,7 @@ name|size
 operator|+=
 name|prec
 operator|+
-literal|1
+name|decpt_len
 expr_stmt|;
 if|if
 condition|(
@@ -3554,7 +3578,7 @@ name|PRINT
 argument_list|(
 name|decimal_point
 argument_list|,
-literal|1
+name|decpt_len
 argument_list|)
 expr_stmt|;
 name|PAD
@@ -3671,7 +3695,7 @@ name|PRINT
 argument_list|(
 name|decimal_point
 argument_list|,
-literal|1
+name|decpt_len
 argument_list|)
 expr_stmt|;
 block|}
@@ -3701,28 +3725,19 @@ operator|&
 name|ALT
 condition|)
 block|{
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-operator|*
+name|PRINT
+argument_list|(
 name|cp
 operator|++
-expr_stmt|;
-name|buf
-index|[
+argument_list|,
 literal|1
-index|]
-operator|=
-operator|*
-name|decimal_point
+argument_list|)
 expr_stmt|;
 name|PRINT
 argument_list|(
-name|buf
+name|decimal_point
 argument_list|,
-literal|2
+name|decpt_len
 argument_list|)
 expr_stmt|;
 name|PRINT
