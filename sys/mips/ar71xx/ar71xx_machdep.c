@@ -317,7 +317,7 @@ name|physmem
 operator|=
 name|realmem
 expr_stmt|;
-comment|/*          * ns8250 uart code uses DELAY so ticker should be inititalized           * before cninit. And tick_init_params refers to hz, so * init_param1           * should be called first.          */
+comment|/* 	 * ns8250 uart code uses DELAY so ticker should be inititalized  	 * before cninit. And tick_init_params refers to hz, so * init_param1  	 * should be called first. 	 */
 name|init_param1
 argument_list|()
 expr_stmt|;
