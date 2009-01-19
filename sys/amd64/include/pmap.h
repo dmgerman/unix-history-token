@@ -382,7 +382,7 @@ begin_define
 define|#
 directive|define
 name|NKPDPE
-value|1
+value|howmany(NKPT, NPDEPG)
 end_define
 
 begin_comment
