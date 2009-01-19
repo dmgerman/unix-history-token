@@ -392,17 +392,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NKPDE
-value|(NKPDPE*NPDEPG)
-end_define
-
-begin_comment
-comment|/* number of kernel PD slots */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NUPML4E
 value|(NPML4EPG/2)
 end_define

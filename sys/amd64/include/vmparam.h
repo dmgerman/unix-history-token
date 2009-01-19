@@ -263,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|KVADDR(KPML4I, NPDPEPG-1, NKPDE-1, NPTEPG-1)
+value|KVADDR(KPML4I, NPDPEPG-1, NPDEPG-1, NPTEPG-1)
 end_define
 
 begin_define
