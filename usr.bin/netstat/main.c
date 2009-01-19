@@ -2666,9 +2666,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|memf
-operator|!=
-name|NULL
+operator|!
+name|live
 condition|)
 block|{
 if|if
@@ -4019,21 +4018,22 @@ argument_list|,
 literal|"usage: netstat [-AaLnSW] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -i | -I interface [-abdhnt] [-f address_family]\n"
+literal|"       netstat -i | -I interface [-abdhntW] [-f address_family]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -w wait [-I interface] [-d] [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -s [-s] [-z] [-f protocol_family | -p protocol] [-M core]"
+literal|"       netstat -s [-s] [-z] [-f protocol_family | -p protocol]\n"
+literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -i | -I interface -s [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -m [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -B [ -I interface]"
+literal|"       netstat -B [-I interface]"
 argument_list|,
-literal|"       netstat -r [-AenW] [-f address_family] [-M core] [-N system]"
+literal|"       netstat -r [-AanW] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -rs [-s] [-M core] [-N system]"
 argument_list|,
