@@ -645,7 +645,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Boot time overrides that are scaled against the kernel map  */
+comment|/*  * Boot time overrides that are scaled against the kmem map  */
 end_comment
 
 begin_function
@@ -656,7 +656,7 @@ name|long
 name|kmempages
 parameter_list|)
 block|{
-comment|/* 	 * The default for maxpipekva is max(5% of the kernel map, 512KB). 	 * See sys_pipe.c for more details. 	 */
+comment|/* 	 * The default for maxpipekva is max(5% of the kmem map, 512KB). 	 * See sys_pipe.c for more details. 	 */
 name|maxpipekva
 operator|=
 operator|(
