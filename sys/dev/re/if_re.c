@@ -1856,7 +1856,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|RL_TIMEOUT
+name|RL_PHY_TIMEOUT
 condition|;
 name|i
 operator|++
@@ -1888,7 +1888,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|RL_TIMEOUT
+name|RL_PHY_TIMEOUT
 condition|)
 block|{
 name|device_printf
@@ -1981,7 +1981,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|RL_TIMEOUT
+name|RL_PHY_TIMEOUT
 condition|;
 name|i
 operator|++
@@ -2016,7 +2016,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|RL_TIMEOUT
+name|RL_PHY_TIMEOUT
 condition|)
 block|{
 name|device_printf

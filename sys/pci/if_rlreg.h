@@ -4839,6 +4839,13 @@ name|RL_TIMEOUT
 value|1000
 end_define
 
+begin_define
+define|#
+directive|define
+name|RL_PHY_TIMEOUT
+value|2000
+end_define
+
 begin_comment
 comment|/*  * General constants that are fun to know.  *  * RealTek PCI vendor ID  */
 end_comment
