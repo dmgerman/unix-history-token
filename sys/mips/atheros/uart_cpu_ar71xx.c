@@ -209,7 +209,7 @@ name|uart_bus_space_mem
 operator|=
 name|MIPS_PHYS_TO_KSEG1
 argument_list|(
-name|AR71XX_UART_ADDR
+name|ATH_UART_ADDR
 argument_list|)
 operator|+
 literal|3
@@ -222,7 +222,7 @@ name|bsh
 operator|=
 name|MIPS_PHYS_TO_KSEG1
 argument_list|(
-name|AR71XX_UART_ADDR
+name|ATH_UART_ADDR
 argument_list|)
 operator|+
 literal|3
