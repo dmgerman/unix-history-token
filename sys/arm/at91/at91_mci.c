@@ -3370,6 +3370,23 @@ name|vdd
 expr_stmt|;
 break|break;
 case|case
+name|MMCBR_IVAR_CAPS
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|result
+operator|=
+name|sc
+operator|->
+name|host
+operator|.
+name|caps
+expr_stmt|;
+break|break;
+case|case
 name|MMCBR_IVAR_MAX_DATA
 case|:
 operator|*
@@ -3539,6 +3556,9 @@ name|value
 expr_stmt|;
 break|break;
 comment|/* These are read-only */
+case|case
+name|MMCBR_IVAR_CAPS
+case|:
 case|case
 name|MMCBR_IVAR_HOST_OCR
 case|:
