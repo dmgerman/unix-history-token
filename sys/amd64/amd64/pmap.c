@@ -3616,7 +3616,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|rtval
 operator|=
 operator|(
@@ -3631,15 +3630,8 @@ operator|&
 name|PDRMASK
 operator|)
 expr_stmt|;
-name|PMAP_UNLOCK
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-return|return
-name|rtval
-return|;
-block|}
+else|else
+block|{
 name|pte
 operator|=
 name|pmap_pde_to_pte
@@ -3664,6 +3656,7 @@ operator|&
 name|PAGE_MASK
 operator|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|PMAP_UNLOCK
