@@ -13633,8 +13633,7 @@ expr_stmt|;
 comment|/* Allow other subclasses to override this driver. */
 return|return
 operator|(
-operator|-
-literal|1000
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
