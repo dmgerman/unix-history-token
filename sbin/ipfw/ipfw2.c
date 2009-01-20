@@ -3197,7 +3197,9 @@ begin_function
 specifier|static
 name|void
 name|altq_fetch
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|pfioc_altq
@@ -3210,7 +3212,9 @@ name|altq
 decl_stmt|;
 name|int
 name|pffd
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|mnr
 decl_stmt|;
 if|if
@@ -6158,6 +6162,7 @@ comment|/* fills command for the extension header filtering */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fill_ext6hdr
 parameter_list|(
@@ -6338,6 +6343,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_ext6hdr
 parameter_list|(
@@ -6590,6 +6596,7 @@ name|want
 parameter_list|,
 name|int
 name|cmd
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -6640,6 +6647,7 @@ operator|&
 name|HAVE_PROTO
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -6675,6 +6683,7 @@ argument_list|(
 literal|" ip"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -6761,6 +6770,7 @@ name|tagptr
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|comment
@@ -14003,6 +14013,8 @@ name|char
 name|md
 decl_stmt|,
 name|nd
+init|=
+literal|'\0'
 decl_stmt|;
 if|if
 condition|(
@@ -15426,6 +15438,7 @@ comment|/*  * fills command for ipv6 flow-id filtering  * note that the 20 bit f
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fill_flow6
 parameter_list|(
@@ -15627,8 +15640,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* any */
-empty_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|F_LEN
@@ -15731,8 +15746,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* any */
-empty_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|F_LEN
@@ -18819,6 +18836,7 @@ specifier|static
 name|void
 name|print_nat_config
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|buf
@@ -20917,10 +20935,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|a
-operator|<
-literal|0
-operator|||
 name|a
 operator|>
 literal|128
