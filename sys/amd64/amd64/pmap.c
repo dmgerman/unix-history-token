@@ -382,13 +382,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|nkpt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|ndmpdp
 decl_stmt|;
 end_decl_stmt
@@ -2303,10 +2296,6 @@ name|kernel_pmap
 operator|->
 name|pm_pvchunk
 argument_list|)
-expr_stmt|;
-name|nkpt
-operator|=
-name|NKPT
 expr_stmt|;
 comment|/* 	 * Reserve some special page table entries/VA space for temporary 	 * mapping of pages. 	 */
 define|#
@@ -6288,10 +6277,6 @@ name|kernel_vm_end
 operator|=
 name|VM_MIN_KERNEL_ADDRESS
 expr_stmt|;
-name|nkpt
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -6327,9 +6312,6 @@ name|NPTEPG
 operator|-
 literal|1
 operator|)
-expr_stmt|;
-name|nkpt
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -6409,7 +6391,9 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|nkpt
+name|kernel_vm_end
+operator|>>
+name|PDPSHIFT
 argument_list|,
 name|VM_ALLOC_INTERRUPT
 operator||
@@ -6567,9 +6551,6 @@ name|panic
 argument_list|(
 literal|"pmap_growkernel: no memory to grow kernel"
 argument_list|)
-expr_stmt|;
-name|nkpt
-operator|++
 expr_stmt|;
 if|if
 condition|(
