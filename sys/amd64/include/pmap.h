@@ -873,7 +873,7 @@ struct|struct
 name|md_page
 block|{
 name|int
-name|pv_list_count
+name|pv_unused
 decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
