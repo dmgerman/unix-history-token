@@ -2362,7 +2362,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|catastrophicflag
+name|damagedflag
 condition|)
 block|{
 if|if
