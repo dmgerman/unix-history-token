@@ -273,8 +273,11 @@ name|ofw_iicbus_driver
 argument_list|,
 name|ofw_iicbus_methods
 argument_list|,
-literal|1
-comment|/* no softc */
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|iicbus_softc
+argument_list|)
 argument_list|,
 name|iicbus_driver
 argument_list|)
