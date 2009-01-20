@@ -134,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/ar71xx/ar71xxreg.h>
+file|<mips/atheros/ar71xxreg.h>
 end_include
 
 begin_decl_stmt
