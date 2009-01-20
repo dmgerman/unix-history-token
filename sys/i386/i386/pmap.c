@@ -6377,14 +6377,15 @@ break|break;
 block|}
 continue|continue;
 block|}
-comment|/* 		 * This index is bogus, but out of the way 		 */
 name|nkpg
 operator|=
 name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|nkpt
+name|kernel_vm_end
+operator|>>
+name|PDRSHIFT
 argument_list|,
 name|VM_ALLOC_INTERRUPT
 operator||
@@ -6397,8 +6398,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|nkpg
+operator|==
+name|NULL
 condition|)
 name|panic
 argument_list|(
