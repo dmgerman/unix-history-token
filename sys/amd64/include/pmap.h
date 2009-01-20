@@ -351,15 +351,11 @@ directive|ifndef
 name|NKPT
 end_ifndef
 
-begin_comment
-comment|/* 240 page tables needed to map 16G (120B "struct vm_page", 2M page tables). */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|NKPT
-value|240
+value|32
 end_define
 
 begin_endif
