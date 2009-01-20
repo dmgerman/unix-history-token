@@ -1221,6 +1221,13 @@ modifier|*
 name|t
 decl_stmt|;
 comment|/* target suffix */
+name|s
+operator|=
+name|t
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* silence gcc */
 name|gn
 operator|=
 name|SuffTransFind
