@@ -125,14 +125,6 @@ name|doff_t
 name|i_offset
 decl_stmt|;
 comment|/* Offset of free space in directory. */
-name|ino_t
-name|i_ino
-decl_stmt|;
-comment|/* Inode number of found directory. */
-name|u_int32_t
-name|i_reclen
-decl_stmt|;
-comment|/* Size of found directory entry. */
 union|union
 block|{
 name|struct

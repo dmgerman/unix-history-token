@@ -294,6 +294,14 @@ name|doff_t
 name|slotoffset
 decl_stmt|;
 comment|/* offset of area with free space */
+name|doff_t
+name|i_diroff
+decl_stmt|;
+comment|/* cached i_diroff value. */
+name|doff_t
+name|i_offset
+decl_stmt|;
+comment|/* cached i_offset value. */
 name|int
 name|slotsize
 decl_stmt|;
@@ -395,7 +403,10 @@ operator|->
 name|cn_thread
 decl_stmt|;
 name|ino_t
-name|saved_ino
+name|ino
+decl_stmt|;
+name|int
+name|ltype
 decl_stmt|;
 name|bp
 operator|=
@@ -443,6 +454,16 @@ name|cn_thread
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
+name|ino
+operator|=
+literal|0
+expr_stmt|;
+name|i_diroff
+operator|=
+name|dp
+operator|->
+name|i_diroff
+expr_stmt|;
 name|slotstatus
 operator|=
 name|FOUND
@@ -602,8 +623,6 @@ operator|->
 name|cn_namelen
 argument_list|,
 operator|&
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 operator|&
@@ -640,8 +659,6 @@ operator|->
 name|b_data
 operator|+
 operator|(
-name|dp
-operator|->
 name|i_offset
 operator|&
 name|bmask
@@ -654,8 +671,6 @@ goto|;
 case|case
 name|ENOENT
 case|:
-name|dp
-operator|->
 name|i_offset
 operator|=
 name|roundup2
@@ -685,14 +700,10 @@ name|nameiop
 operator|!=
 name|LOOKUP
 operator|||
-name|dp
-operator|->
 name|i_diroff
 operator|==
 literal|0
 operator|||
-name|dp
-operator|->
 name|i_diroff
 operator|>=
 name|dp
@@ -704,8 +715,6 @@ name|entryoffsetinblock
 operator|=
 literal|0
 expr_stmt|;
-name|dp
-operator|->
 name|i_offset
 operator|=
 literal|0
@@ -717,12 +726,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|dp
-operator|->
 name|i_offset
 operator|=
-name|dp
-operator|->
 name|i_diroff
 expr_stmt|;
 if|if
@@ -730,8 +735,6 @@ condition|(
 operator|(
 name|entryoffsetinblock
 operator|=
-name|dp
-operator|->
 name|i_offset
 operator|&
 name|bmask
@@ -747,8 +750,6 @@ argument_list|,
 operator|(
 name|off_t
 operator|)
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 name|NULL
@@ -775,8 +776,6 @@ expr_stmt|;
 block|}
 name|prevoff
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 name|endsearch
@@ -798,8 +797,6 @@ name|searchloop
 label|:
 while|while
 condition|(
-name|dp
-operator|->
 name|i_offset
 operator|<
 name|endsearch
@@ -809,8 +806,6 @@ comment|/* 		 * If necessary, get the next directory block. 		 */
 if|if
 condition|(
 operator|(
-name|dp
-operator|->
 name|i_offset
 operator|&
 name|bmask
@@ -839,8 +834,6 @@ argument_list|,
 operator|(
 name|off_t
 operator|)
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 name|NULL
@@ -958,8 +951,6 @@ name|ufs_dirbad
 argument_list|(
 name|dp
 argument_list|,
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 literal|"mangled entry"
@@ -979,8 +970,6 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-name|dp
-operator|->
 name|i_offset
 operator|+=
 name|i
@@ -1046,8 +1035,6 @@ name|FOUND
 expr_stmt|;
 name|slotoffset
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 name|slotsize
@@ -1078,8 +1065,6 @@ literal|1
 condition|)
 name|slotoffset
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 if|if
@@ -1095,8 +1080,6 @@ name|COMPACT
 expr_stmt|;
 name|slotsize
 operator|=
-name|dp
-operator|->
 name|i_offset
 operator|+
 name|ep
@@ -1227,8 +1210,6 @@ name|FOUND
 expr_stmt|;
 name|slotoffset
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 name|slotsize
@@ -1236,12 +1217,6 @@ operator|=
 name|ep
 operator|->
 name|d_reclen
-expr_stmt|;
-name|dp
-operator|->
-name|i_reclen
-operator|=
-name|slotsize
 expr_stmt|;
 name|enduseful
 operator|=
@@ -1264,21 +1239,11 @@ goto|goto
 name|notfound
 goto|;
 block|}
-name|dp
-operator|->
-name|i_ino
+name|ino
 operator|=
 name|ep
 operator|->
 name|d_ino
-expr_stmt|;
-name|dp
-operator|->
-name|i_reclen
-operator|=
-name|ep
-operator|->
-name|d_reclen
 expr_stmt|;
 goto|goto
 name|found
@@ -1287,12 +1252,8 @@ block|}
 block|}
 name|prevoff
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
-name|dp
-operator|->
 name|i_offset
 operator|+=
 name|ep
@@ -1313,8 +1274,6 @@ name|d_ino
 condition|)
 name|enduseful
 operator|=
-name|dp
-operator|->
 name|i_offset
 expr_stmt|;
 block|}
@@ -1331,16 +1290,12 @@ block|{
 name|numdirpasses
 operator|--
 expr_stmt|;
-name|dp
-operator|->
 name|i_offset
 operator|=
 literal|0
 expr_stmt|;
 name|endsearch
 operator|=
-name|dp
-operator|->
 name|i_diroff
 expr_stmt|;
 goto|goto
@@ -1616,8 +1571,6 @@ expr_stmt|;
 comment|/* 	 * Check that directory length properly reflects presence 	 * of this entry. 	 */
 if|if
 condition|(
-name|dp
-operator|->
 name|i_offset
 operator|+
 name|DIRSIZ
@@ -1639,8 +1592,6 @@ name|ufs_dirbad
 argument_list|(
 name|dp
 argument_list|,
-name|dp
-operator|->
 name|i_offset
 argument_list|,
 literal|"i_size too small"
@@ -1650,8 +1601,6 @@ name|dp
 operator|->
 name|i_size
 operator|=
-name|dp
-operator|->
 name|i_offset
 operator|+
 name|DIRSIZ
@@ -1706,8 +1655,6 @@ name|dp
 operator|->
 name|i_diroff
 operator|=
-name|dp
-operator|->
 name|i_offset
 operator|&
 operator|~
@@ -1731,6 +1678,19 @@ name|ISLASTCN
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|LOCKPARENT
+condition|)
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|vdp
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Write access to directory required to delete files. 		 */
 name|error
 operator|=
@@ -1756,7 +1716,13 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Return pointer to current entry in dp->i_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in dp->i_count. 		 * Save directory inode pointer in ndp->ni_dvp for dirremove(). 		 */
+comment|/* 		 * Return pointer to current entry in dp->i_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in dp->i_count. 		 * Save directory inode pointer in ndp->ni_dvp for dirremove(). 		 * 		 * Technically we shouldn't be setting these in the 		 * WANTPARENT case (first lookup in rename()), but any 		 * lookups that will result in directory changes will 		 * overwrite these. 		 */
+name|dp
+operator|->
+name|i_offset
+operator|=
+name|i_offset
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1796,9 +1762,7 @@ name|dp
 operator|->
 name|i_number
 operator|==
-name|dp
-operator|->
-name|i_ino
+name|ino
 condition|)
 block|{
 name|VREF
@@ -1828,9 +1792,7 @@ name|vdp
 operator|->
 name|v_mount
 argument_list|,
-name|dp
-operator|->
-name|i_ino
+name|ino
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
@@ -1945,15 +1907,19 @@ name|error
 operator|)
 return|;
 comment|/* 		 * Careful about locking second inode. 		 * This can only occur if the target is ".". 		 */
+name|dp
+operator|->
+name|i_offset
+operator|=
+name|i_offset
+expr_stmt|;
 if|if
 condition|(
 name|dp
 operator|->
 name|i_number
 operator|==
-name|dp
-operator|->
-name|i_ino
+name|ino
 condition|)
 return|return
 operator|(
@@ -1971,9 +1937,7 @@ name|vdp
 operator|->
 name|v_mount
 argument_list|,
-name|dp
-operator|->
-name|i_ino
+name|ino
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
@@ -2018,11 +1982,14 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
-name|saved_ino
+name|ltype
 operator|=
-name|dp
-operator|->
-name|i_ino
+name|VOP_ISLOCKED
+argument_list|(
+name|pdp
+argument_list|,
+name|td
+argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
@@ -2042,7 +2009,7 @@ name|pdp
 operator|->
 name|v_mount
 argument_list|,
-name|saved_ino
+name|ino
 argument_list|,
 name|cnp
 operator|->
@@ -2056,7 +2023,7 @@ name|vn_lock
 argument_list|(
 name|pdp
 argument_list|,
-name|LK_EXCLUSIVE
+name|ltype
 operator||
 name|LK_RETRY
 argument_list|,
@@ -2085,9 +2052,7 @@ name|dp
 operator|->
 name|i_number
 operator|==
-name|dp
-operator|->
-name|i_ino
+name|ino
 condition|)
 block|{
 name|VREF
@@ -2096,6 +2061,58 @@ name|vdp
 argument_list|)
 expr_stmt|;
 comment|/* we want ourself, ie "." */
+comment|/* 		 * When we lookup "." we still can be asked to lock it 		 * differently. 		 */
+name|ltype
+operator|=
+name|cnp
+operator|->
+name|cn_lkflags
+operator|&
+name|LK_TYPE_MASK
+expr_stmt|;
+if|if
+condition|(
+name|ltype
+operator|!=
+name|VOP_ISLOCKED
+argument_list|(
+name|vdp
+argument_list|,
+name|td
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|ltype
+operator|==
+name|LK_EXCLUSIVE
+condition|)
+name|vn_lock
+argument_list|(
+name|vdp
+argument_list|,
+name|LK_UPGRADE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* if (ltype == LK_SHARED) */
+name|vn_lock
+argument_list|(
+name|vdp
+argument_list|,
+name|LK_DOWNGRADE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|vpp
 operator|=
@@ -2112,9 +2129,7 @@ name|pdp
 operator|->
 name|v_mount
 argument_list|,
-name|dp
-operator|->
-name|i_ino
+name|ino
 argument_list|,
 name|cnp
 operator|->
@@ -4057,6 +4072,9 @@ name|struct
 name|direct
 modifier|*
 name|ep
+decl_stmt|,
+modifier|*
+name|rep
 decl_stmt|;
 name|struct
 name|buf
@@ -4175,32 +4193,22 @@ operator|(
 name|error
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|UFS_DIRHASH
-comment|/* 	 * Remove the dirhash entry. This is complicated by the fact 	 * that `ep' is the previous entry when dp->i_count != 0. 	 */
+comment|/* Set 'rep' to the entry being removed. */
 if|if
 condition|(
-name|dp
-operator|->
-name|i_dirhash
-operator|!=
-name|NULL
-condition|)
-name|ufsdirhash_remove
-argument_list|(
-name|dp
-argument_list|,
-operator|(
 name|dp
 operator|->
 name|i_count
 operator|==
 literal|0
-operator|)
-condition|?
+condition|)
+name|rep
+operator|=
 name|ep
-else|:
+expr_stmt|;
+else|else
+name|rep
+operator|=
 operator|(
 expr|struct
 name|direct
@@ -4217,6 +4225,24 @@ name|ep
 operator|->
 name|d_reclen
 operator|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UFS_DIRHASH
+comment|/* 	 * Remove the dirhash entry. This is complicated by the fact 	 * that `ep' is the previous entry when dp->i_count != 0. 	 */
+if|if
+condition|(
+name|dp
+operator|->
+name|i_dirhash
+operator|!=
+name|NULL
+condition|)
+name|ufsdirhash_remove
+argument_list|(
+name|dp
+argument_list|,
+name|rep
 argument_list|,
 name|dp
 operator|->
@@ -4249,9 +4275,9 @@ name|ep
 operator|->
 name|d_reclen
 operator|+=
-name|dp
+name|rep
 operator|->
-name|i_reclen
+name|d_reclen
 expr_stmt|;
 block|}
 ifdef|#

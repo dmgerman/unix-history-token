@@ -4524,6 +4524,8 @@ operator|->
 name|mnt_kern_flag
 operator||=
 name|MNTK_MPSAFE
+operator||
+name|MNTK_LOOKUP_SHARED
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(

@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_vfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -267,26 +261,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOOKUP_SHARED
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|lookup_shared
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -295,11 +269,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -318,6 +287,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enables/Disables shared locks for path name translation"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.lookup_shared"
+argument_list|,
+operator|&
+name|lookup_shared
 argument_list|)
 expr_stmt|;
 end_expr_stmt

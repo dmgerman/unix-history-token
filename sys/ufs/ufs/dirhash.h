@@ -15,6 +15,18 @@ directive|define
 name|_UFS_UFS_DIRHASH_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_sx.h>
+end_include
+
 begin_comment
 comment|/*  * For fast operations on large directories, we maintain a hash  * that maps the file name to the offset of the directory entry within  * the directory file.  *  * The hashing uses a dumb spillover to the next free slot on  * collisions, so we must keep the utilisation low to avoid  * long linear searches. Deleted entries that are not the last  * in a chain must be marked DIRHASH_DEL.  *  * We also maintain information about free space in each block  * to speed up creations.  */
 end_comment
@@ -128,10 +140,13 @@ struct|struct
 name|dirhash
 block|{
 name|struct
-name|mtx
-name|dh_mtx
+name|sx
+name|dh_lock
 decl_stmt|;
-comment|/* protects all fields except dh_list */
+comment|/* protects all fields except list& score */
+name|int
+name|dh_refcount
+decl_stmt|;
 name|doff_t
 modifier|*
 modifier|*
@@ -150,6 +165,10 @@ name|int
 name|dh_hused
 decl_stmt|;
 comment|/* entries in use */
+name|int
+name|dh_memreq
+decl_stmt|;
+comment|/* Memory used. */
 comment|/* Free space statistics. XXX assumes DIRBLKSIZ is 512. */
 name|u_int8_t
 modifier|*
