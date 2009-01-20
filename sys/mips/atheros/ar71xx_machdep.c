@@ -179,8 +179,7 @@ name|void
 parameter_list|)
 block|{
 specifier|volatile
-name|unsigned
-name|int
+name|uint32_t
 modifier|*
 name|p
 init|=
@@ -190,14 +189,28 @@ operator|*
 operator|)
 name|MIPS_PHYS_TO_KSEG1
 argument_list|(
-name|AR71XX_RST_RESET
+name|ATH_RST_RESET
 argument_list|)
+decl_stmt|;
+name|uint32_t
+name|reg
+init|=
+operator|*
+name|p
 decl_stmt|;
 operator|*
 name|p
 operator|=
-name|RST_RESET_CPU_COLD_RESET
+name|reg
+operator||
+name|RST_RESET_FULL_CHIP_RESET
 expr_stmt|;
+comment|/* Wait for reset */
+while|while
+condition|(
+literal|1
+condition|)
+empty_stmt|;
 block|}
 end_function
 
