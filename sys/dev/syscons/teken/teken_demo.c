@@ -217,12 +217,43 @@ name|NCOLS
 value|80
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEKEN_XTERM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NROWS
+value|24
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !TEKEN_XTERM */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NROWS
 value|25
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TEKEN_XTERM */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -420,8 +451,6 @@ operator|->
 name|a
 operator|.
 name|ta_bgcolor
-operator|+
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1608,8 +1637,6 @@ operator|+
 literal|8
 operator|*
 name|j
-operator|+
-literal|1
 argument_list|,
 name|ccolors
 index|[
