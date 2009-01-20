@@ -4551,10 +4551,6 @@ name|RL_FLAG_MSI
 value|0x0001
 define|#
 directive|define
-name|RL_FLAG_INVMAR
-value|0x0004
-define|#
-directive|define
 name|RL_FLAG_PHYWAKE
 value|0x0008
 define|#
