@@ -146,7 +146,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|teken_char_t
+name|uint16_t
 name|teken_boxdrawing
 index|[
 literal|31
