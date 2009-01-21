@@ -671,7 +671,7 @@ name|unit
 condition|)
 name|pause
 argument_list|(
-literal|"atatch"
+literal|"ataatch"
 argument_list|,
 literal|1
 argument_list|)
