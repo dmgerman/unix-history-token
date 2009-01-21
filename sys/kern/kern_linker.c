@@ -2495,7 +2495,77 @@ literal|" informing modules\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Inform any modules associated with this file. 	 */
+comment|/* 	 * Quiesce all the modules to give them a chance to veto the unload. 	 */
+name|MOD_SLOCK
+expr_stmt|;
+for|for
+control|(
+name|mod
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|file
+operator|->
+name|modules
+argument_list|)
+init|;
+name|mod
+condition|;
+name|mod
+operator|=
+name|module_getfnext
+argument_list|(
+name|mod
+argument_list|)
+control|)
+block|{
+name|error
+operator|=
+name|module_quiesce
+argument_list|(
+name|mod
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|flags
+operator|!=
+name|LINKER_UNLOAD_FORCE
+condition|)
+block|{
+name|KLD_DPF
+argument_list|(
+name|FILE
+argument_list|,
+operator|(
+literal|"linker_file_unload: module %s"
+literal|" vetoed unload\n"
+operator|,
+name|module_getname
+argument_list|(
+name|mod
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 			 * XXX: Do we need to tell all the quiesced modules 			 * that they can resume work now via a new module 			 * event? 			 */
+name|MOD_SUNLOCK
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
+name|MOD_SUNLOCK
+expr_stmt|;
+comment|/* 	 * Inform any modules associated with this file that they are 	 * being be unloaded. 	 */
 name|MOD_XLOCK
 expr_stmt|;
 for|for
@@ -2535,8 +2605,6 @@ operator|=
 name|module_unload
 argument_list|(
 name|mod
-argument_list|,
-name|flags
 argument_list|)
 operator|)
 operator|!=
@@ -2548,8 +2616,8 @@ argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_file_unload: module %p"
-literal|" vetoes unload\n"
+literal|"linker_file_unload: module %s"
+literal|" failed unload\n"
 operator|,
 name|mod
 operator|)
