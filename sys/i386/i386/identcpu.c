@@ -3193,6 +3193,28 @@ operator|&=
 operator|~
 name|CPUID_HTT
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tsc_is_invariant
+operator|&&
+operator|(
+name|amd_pminfo
+operator|&
+name|AMDPM_TSC_INVARIANT
+operator|)
+condition|)
+block|{
+name|tsc_is_invariant
+operator|=
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n  P-state invariant TSC"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 			 * If this CPU supports HTT or CMP then mention the 			 * number of physical/logical cores it contains. 			 */
 if|if
 condition|(
@@ -3989,12 +4011,14 @@ name|int
 name|status
 parameter_list|)
 block|{
-comment|/* If there was an error during the transition, don't do anything. */
+comment|/* 	 * If there was an error during the transition or 	 * TSC is P-state invariant, don't do anything. 	 */
 if|if
 condition|(
 name|status
 operator|!=
 literal|0
+operator|||
+name|tsc_is_invariant
 condition|)
 return|return;
 comment|/* Total setting for this level gives the new frequency in MHz. */

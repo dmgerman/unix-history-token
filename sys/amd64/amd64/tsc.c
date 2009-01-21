@@ -149,6 +149,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|tsc_is_invariant
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|eventhandler_tag
 name|tsc_levels_tag
@@ -158,6 +164,38 @@ decl_stmt|,
 name|tsc_post_tag
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_timecounter
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|invariant_tsc
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|tsc_is_invariant
+argument_list|,
+literal|0
+argument_list|,
+literal|"Indicates whether the TSC is P-state invariant"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.timecounter.invariant_tsc"
+argument_list|,
+operator|&
+name|tsc_is_invariant
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -681,6 +719,8 @@ name|timecounter
 operator|!=
 operator|&
 name|tsc_timecounter
+operator|||
+name|tsc_is_invariant
 condition|)
 return|return;
 name|printf
@@ -720,12 +760,14 @@ name|int
 name|status
 parameter_list|)
 block|{
-comment|/* If there was an error during the transition, don't do anything. */
+comment|/* 	 * If there was an error during the transition or 	 * TSC is P-state invariant, don't do anything. 	 */
 if|if
 condition|(
 name|status
 operator|!=
 literal|0
+operator|||
+name|tsc_is_invariant
 condition|)
 return|return;
 comment|/* Total setting for this level gives the new frequency in MHz. */

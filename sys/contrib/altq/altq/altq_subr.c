@@ -3978,6 +3978,33 @@ operator|!=
 literal|0
 condition|)
 return|return;
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|701102
+operator|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|)
+comment|/* If TSC is P-state invariant, don't do anything. */
+if|if
+condition|(
+name|tsc_is_invariant
+condition|)
+return|return;
+endif|#
+directive|endif
 comment|/* Total setting for this level gives the new frequency in MHz. */
 name|init_machclk
 argument_list|()
