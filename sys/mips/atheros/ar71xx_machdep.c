@@ -183,12 +183,12 @@ name|reg
 init|=
 name|ATH_READ_REG
 argument_list|(
-name|APB_RST_RESET
+name|AR71XX_RST_RESET
 argument_list|)
 decl_stmt|;
 name|ATH_WRITE_REG
 argument_list|(
-name|APB_RST_RESET
+name|AR71XX_RST_RESET
 argument_list|,
 name|reg
 operator||
