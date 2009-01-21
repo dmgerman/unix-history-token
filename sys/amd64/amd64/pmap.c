@@ -13121,8 +13121,10 @@ condition|)
 block|{
 name|pte
 operator|=
-name|vtopte
+name|pmap_pde_to_pte
 argument_list|(
+name|pde
+argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
