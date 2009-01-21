@@ -749,6 +749,67 @@ value|0x00000100
 end_define
 
 begin_comment
+comment|/*  * CPUID instruction 1 eax info  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID_STEPPING
+value|0x0000000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_MODEL
+value|0x000000f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_FAMILY
+value|0x00000f00
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_EXT_MODEL
+value|0x000f0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_EXT_FAMILY
+value|0x0ff00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMD64_CPU_MODEL
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|((((id)& CPUID_MODEL)>> 4) | \     (((id)& CPUID_EXT_MODEL)>> 12))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMD64_CPU_FAMILY
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|((((id)& CPUID_FAMILY)>> 8) + \     (((id)& CPUID_EXT_FAMILY)>> 20))
+end_define
+
+begin_comment
 comment|/*  * CPUID instruction 1 ebx info  */
 end_comment
 
