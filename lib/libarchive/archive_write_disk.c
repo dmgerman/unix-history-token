@@ -2195,8 +2195,8 @@ comment|/* We've created the object and are ready to pour data into it. */
 if|if
 condition|(
 name|ret
-operator|==
-name|ARCHIVE_OK
+operator|>=
+name|ARCHIVE_WARN
 condition|)
 name|a
 operator|->
@@ -3983,7 +3983,7 @@ literal|0
 condition|)
 name|ret
 operator|=
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 expr_stmt|;
 operator|*
 name|tail
@@ -4126,7 +4126,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -4216,7 +4216,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -4255,7 +4255,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -4362,7 +4362,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -4519,7 +4519,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -4577,7 +4577,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -4659,7 +4659,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -6265,7 +6265,7 @@ name|c
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -6366,7 +6366,7 @@ name|c
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -6404,7 +6404,7 @@ name|c
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -6819,7 +6819,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create the specified dir, recursing to create parents as necessary.  *  * Returns ARCHIVE_OK if the path exists when we're done here.  * Otherwise, returns ARCHIVE_WARN.  * Assumes path is in mutable storage; path is unchanged on exit.  */
+comment|/*  * Create the specified dir, recursing to create parents as necessary.  *  * Returns ARCHIVE_OK if the path exists when we're done here.  * Otherwise, returns ARCHIVE_FAILED.  * Assumes path is in mutable storage; path is unchanged on exit.  */
 end_comment
 
 begin_function
@@ -7035,7 +7035,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -7064,7 +7064,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -7098,7 +7098,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
@@ -7252,7 +7252,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}

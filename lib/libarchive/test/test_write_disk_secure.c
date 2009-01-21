@@ -293,7 +293,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-name|ARCHIVE_WARN
+name|ARCHIVE_FAILED
 argument_list|,
 name|archive_write_header
 argument_list|(
