@@ -19033,8 +19033,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|uap
-operator|->
 name|count
 operator|>
 name|INT_MAX
