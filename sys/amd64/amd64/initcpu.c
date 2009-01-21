@@ -157,6 +157,16 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|amd_pminfo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* AMD advanced power management info */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|cpu_high
 decl_stmt|;
 end_decl_stmt

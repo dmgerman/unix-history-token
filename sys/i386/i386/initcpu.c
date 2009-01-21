@@ -379,6 +379,18 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|amd_pminfo
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* AMD advanced power management info */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|via_feature_rng
 init|=
 literal|0
