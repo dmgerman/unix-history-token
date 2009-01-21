@@ -157,7 +157,7 @@ name|bas
 operator|.
 name|bst
 operator|=
-literal|0
+name|MIPS_BUS_SPACE_MEM
 expr_stmt|;
 name|di
 operator|->
@@ -200,20 +200,16 @@ name|parity
 operator|=
 name|UART_PARITY_NONE
 expr_stmt|;
-comment|/* Bad MIPS, no IO for MIPS */
+comment|/* TODO: check if uart_bus_space_io mandatory to set */
 name|uart_bus_space_io
 operator|=
-literal|0
+name|MIPS_BUS_SPACE_IO
 expr_stmt|;
 name|uart_bus_space_mem
 operator|=
-name|MIPS_PHYS_TO_KSEG1
-argument_list|(
-name|ATH_UART_ADDR
-argument_list|)
-operator|+
-literal|3
+name|MIPS_BUS_SPACE_MEM
 expr_stmt|;
+comment|/*  	 * FIXME: 	 * 3 is to compensate big endian, uart operates  	 * with bus_space_read_1/bus_space_write_1 and hence gets  	 * highest byte instead of lowest one. Actual fix will involve 	 * MIPS bus_space fixing. 	 */
 name|di
 operator|->
 name|bas
@@ -222,7 +218,7 @@ name|bsh
 operator|=
 name|MIPS_PHYS_TO_KSEG1
 argument_list|(
-name|ATH_UART_ADDR
+name|AR71XX_UART_ADDR
 argument_list|)
 operator|+
 literal|3
