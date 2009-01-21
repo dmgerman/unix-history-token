@@ -11459,6 +11459,11 @@ operator|=
 name|vfs_cache_lookup
 block|,
 operator|.
+name|vop_markatime
+operator|=
+name|ufs_markatime
+block|,
+operator|.
 name|vop_mkdir
 operator|=
 name|ufs_mkdir
@@ -11522,11 +11527,6 @@ operator|.
 name|vop_setattr
 operator|=
 name|ufs_setattr
-block|,
-operator|.
-name|vop_markatime
-operator|=
-name|ufs_markatime
 block|,
 ifdef|#
 directive|ifdef
@@ -11640,6 +11640,11 @@ operator|=
 name|ufsfifo_kqfilter
 block|,
 operator|.
+name|vop_markatime
+operator|=
+name|ufs_markatime
+block|,
+operator|.
 name|vop_print
 operator|=
 name|ufs_print
@@ -11658,11 +11663,6 @@ operator|.
 name|vop_setattr
 operator|=
 name|ufs_setattr
-block|,
-operator|.
-name|vop_markatime
-operator|=
-name|ufs_markatime
 block|,
 ifdef|#
 directive|ifdef

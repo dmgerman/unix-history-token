@@ -19334,7 +19334,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -19343,7 +19342,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
