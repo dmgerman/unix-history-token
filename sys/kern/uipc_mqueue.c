@@ -5207,11 +5207,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|VATTR_NULL
-argument_list|(
-name|vap
-argument_list|)
-expr_stmt|;
 name|vap
 operator|->
 name|va_type
@@ -5345,7 +5340,7 @@ name|vap
 operator|->
 name|va_rdev
 operator|=
-literal|0
+name|NODEV
 expr_stmt|;
 name|vap
 operator|->
@@ -5356,12 +5351,6 @@ expr_stmt|;
 name|vap
 operator|->
 name|va_filerev
-operator|=
-literal|0
-expr_stmt|;
-name|vap
-operator|->
-name|va_vaflags
 operator|=
 literal|0
 expr_stmt|;

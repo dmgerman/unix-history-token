@@ -977,11 +977,6 @@ name|error
 decl_stmt|;
 comment|/* extract the xfs vnode from the private data */
 comment|//xfs_vnode_t	*xvp = (xfs_vnode_t *)vp->v_data;
-name|VATTR_NULL
-argument_list|(
-name|vap
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1186,13 +1181,19 @@ name|BBSHIFT
 operator|)
 expr_stmt|;
 comment|/* XFS now supports devices that have block sizes 	 * other than 512 so BBSHIFT will work for now 	 * but need to get this value from the super block 	 */
-comment|/* 	 * Fields with no direct equivalent in XFS 	 * leave initialized by VATTR_NULL 	 */
-if|#
-directive|if
+comment|/* 	 * Fields with no direct equivalent in XFS 	 */
+name|vap
+operator|->
+name|va_filerev
+operator|=
 literal|0
-block|vap->va_filerev = 0; 	vap->va_birthtime = va.va_ctime; 	vap->va_vaflags = 0; 	vap->va_flags = 0; 	vap->va_spare = 0;
-endif|#
-directive|endif
+expr_stmt|;
+name|vap
+operator|->
+name|va_flags
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0

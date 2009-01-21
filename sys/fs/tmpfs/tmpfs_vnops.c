@@ -1391,11 +1391,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VATTR_NULL
-argument_list|(
-name|vap
-argument_list|)
-expr_stmt|;
 name|tmpfs_update
 argument_list|(
 name|vp
@@ -1550,7 +1545,7 @@ name|node
 operator|->
 name|tn_rdev
 else|:
-name|VNOVAL
+name|NODEV
 expr_stmt|;
 name|vap
 operator|->
@@ -1567,21 +1562,8 @@ name|vap
 operator|->
 name|va_filerev
 operator|=
-name|VNOVAL
-expr_stmt|;
-name|vap
-operator|->
-name|va_vaflags
-operator|=
 literal|0
 expr_stmt|;
-name|vap
-operator|->
-name|va_spare
-operator|=
-name|VNOVAL
-expr_stmt|;
-comment|/* XXX */
 return|return
 literal|0
 return|;

@@ -2275,7 +2275,7 @@ name|va
 operator|->
 name|va_rdev
 operator|=
-name|VNOVAL
+name|NODEV
 expr_stmt|;
 comment|/* device the special file represents */
 name|va

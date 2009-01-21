@@ -814,11 +814,6 @@ argument_list|(
 name|ENOENT
 argument_list|)
 expr_stmt|;
-name|VATTR_NULL
-argument_list|(
-name|vap
-argument_list|)
-expr_stmt|;
 name|vap
 operator|->
 name|va_type
@@ -859,6 +854,12 @@ operator|=
 name|vap
 operator|->
 name|va_size
+operator|=
+literal|0
+expr_stmt|;
+name|vap
+operator|->
+name|va_filerev
 operator|=
 literal|0
 expr_stmt|;
