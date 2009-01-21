@@ -19298,7 +19298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark for update the access time of the file if the filesystem  * supports VA_MARK_ATIME.  This functionality is used by execve  * and mmap, so we want to avoid the synchronous I/O implied by  * directly setting va_atime for the sake of efficiency.  */
+comment|/*  * Mark for update the access time of the file if the filesystem  * supports VOP_MARKATIME.  This functionality is used by execve  * and mmap, so we want to avoid the synchronous I/O implied by  * directly setting va_atime for the sake of efficiency.  */
 end_comment
 
 begin_function
@@ -19316,10 +19316,6 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|struct
-name|vattr
-name|atimeattr
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -19339,29 +19335,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|VATTR_NULL
-argument_list|(
-operator|&
-name|atimeattr
-argument_list|)
-expr_stmt|;
-name|atimeattr
-operator|.
-name|va_vaflags
-operator||=
-name|VA_MARK_ATIME
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|VOP_SETATTR
+name|VOP_MARKATIME
 argument_list|(
 name|vp
-argument_list|,
-operator|&
-name|atimeattr
-argument_list|,
-name|cred
 argument_list|)
 expr_stmt|;
 block|}
