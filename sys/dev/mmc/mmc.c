@@ -8122,7 +8122,7 @@ name|ivar
 operator|->
 name|hs_tran_speed
 operator|<
-name|max_dtr
+name|max_hs_dtr
 condition|)
 name|max_hs_dtr
 operator|=
