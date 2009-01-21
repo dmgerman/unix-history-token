@@ -6928,6 +6928,12 @@ name|scr
 argument_list|)
 expr_stmt|;
 comment|/* Get card switch capabilities. */
+name|ivar
+operator|->
+name|timing
+operator|=
+name|bus_timing_normal
+expr_stmt|;
 if|if
 condition|(
 operator|(
