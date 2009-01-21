@@ -1475,7 +1475,27 @@ name|cmd
 operator|=
 name|cmd
 expr_stmt|;
-comment|/*	printf("CMD: %x ARG %x\n", cmd->opcode, cmd->arg); */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"CMD: %#x ARG %#x\n"
+argument_list|,
+name|cmd
+operator|->
+name|opcode
+argument_list|,
+name|cmd
+operator|->
+name|arg
+argument_list|)
+expr_stmt|;
 name|mmc_wait_for_req
 argument_list|(
 name|sc
@@ -3010,6 +3030,12 @@ decl_stmt|;
 name|uint8_t
 name|value
 decl_stmt|;
+name|u_char
+name|switch_res
+index|[
+literal|64
+index|]
+decl_stmt|;
 switch|switch
 condition|(
 name|timing
@@ -3049,13 +3075,6 @@ argument_list|)
 operator|==
 name|mode_sd
 condition|)
-block|{
-name|u_char
-name|switch_res
-index|[
-literal|64
-index|]
-decl_stmt|;
 name|err
 operator|=
 name|mmc_sd_switch
@@ -3071,9 +3090,7 @@ argument_list|,
 name|switch_res
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|err
 operator|=
 name|mmc_switch
@@ -3087,7 +3104,6 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|err
@@ -7733,6 +7749,19 @@ argument_list|,
 name|pushpull
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"Idle cards for SD probe\n"
+argument_list|)
+expr_stmt|;
 name|mmc_idle_cards
 argument_list|(
 name|sc
@@ -7745,6 +7774,21 @@ argument_list|(
 name|sc
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"SD: SEND_IF_CONF %d\n"
+argument_list|,
+name|err
 argument_list|)
 expr_stmt|;
 if|if
