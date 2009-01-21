@@ -2853,8 +2853,15 @@ name|int
 name|width
 parameter_list|)
 block|{
+name|struct
+name|mmc_command
+name|cmd
+decl_stmt|;
 name|int
 name|err
+decl_stmt|;
+name|uint8_t
+name|value
 decl_stmt|;
 if|if
 condition|(
@@ -2868,10 +2875,6 @@ operator|==
 name|mode_sd
 condition|)
 block|{
-name|struct
-name|mmc_command
-name|cmd
-decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -2949,9 +2952,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|uint8_t
-name|value
-decl_stmt|;
 switch|switch
 condition|(
 name|width
