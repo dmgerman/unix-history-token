@@ -1793,7 +1793,7 @@ argument_list|)
 expr_stmt|;
 name|ahp
 operator|->
-name|ah_slottime
+name|ah_sifstime
 operator|=
 name|us
 expr_stmt|;
