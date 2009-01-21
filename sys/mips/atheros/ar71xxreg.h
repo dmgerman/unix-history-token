@@ -42,7 +42,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATH_UART_ADDR
+name|AR71XX_UART_ADDR
 value|0x18020000
 end_define
 
@@ -57,77 +57,77 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATH_MISC_INTR_STATUS
+name|AR71XX_MISC_INTR_STATUS
 value|0x18060010
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_MISC_INTR_MASK
+name|AR71XX_MISC_INTR_MASK
 value|0x18060014
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_INT_MISC_TIMER
+name|MISC_INTR_TIMER
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_INT_MISC_ERROR
+name|MISC_INTR_ERROR
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_INT_MISC_GPIO
+name|MISC_INTR_GPIO
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_INT_MISC_UART
+name|MISC_INTR_UART
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_INT_MISC_WATCHDOG
+name|MISC_INTR_WATCHDOG
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_INT_MISC_PERF
+name|MISC_INTR_PERF
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_INT_MISC_OHCI
+name|MISC_INTR_OHCI
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_INT_MISC_DMA
+name|MISC_INTR_DMA
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_RST_RESET
+name|AR71XX_RST_RESET
 value|0x18060024
 end_define
 
