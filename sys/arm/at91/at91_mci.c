@@ -921,8 +921,11 @@ name|host
 operator|.
 name|f_max
 operator|=
-literal|30000000
+name|at91_master_clock
+operator|/
+literal|2
 expr_stmt|;
+comment|/* Typically 30MHz */
 name|sc
 operator|->
 name|host
@@ -933,6 +936,12 @@ name|MMC_OCR_320_330
 operator||
 name|MMC_OCR_330_340
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|wire4
+condition|)
 name|sc
 operator|->
 name|host
@@ -940,6 +949,15 @@ operator|.
 name|caps
 operator|=
 name|MMC_CAP_4_BIT_DATA
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|host
+operator|.
+name|caps
+operator|=
+literal|0
 expr_stmt|;
 name|child
 operator|=
@@ -1428,10 +1446,6 @@ operator|->
 name|bus_width
 operator|==
 name|bus_width_4
-operator|&&
-name|sc
-operator|->
-name|wire4
 condition|)
 name|WR4
 argument_list|(
