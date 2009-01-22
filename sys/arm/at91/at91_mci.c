@@ -1314,11 +1314,6 @@ name|device_t
 name|reqdev
 parameter_list|)
 block|{
-name|uint32_t
-name|at91_master_clock
-init|=
-name|AT91C_MASTER_CLOCK
-decl_stmt|;
 name|struct
 name|at91_mci_softc
 modifier|*
