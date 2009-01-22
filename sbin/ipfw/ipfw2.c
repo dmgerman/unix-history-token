@@ -6,13 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -36,19 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
@@ -73,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
 end_include
 
 begin_include
@@ -114,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -130,20 +106,8 @@ file|<timeconv.h>
 end_include
 
 begin_comment
-comment|/* XXX do we need this ? */
+comment|/* _long_to_time */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
-end_include
 
 begin_include
 include|#
