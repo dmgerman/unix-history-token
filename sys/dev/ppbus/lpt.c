@@ -1742,6 +1742,17 @@ name|sc
 operator|->
 name|sc_dev
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LPT_DEBUG
+argument_list|)
 name|device_t
 name|ppbus
 init|=
@@ -1750,6 +1761,8 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 name|ppb_assert_locked
 argument_list|(
 name|ppbus
