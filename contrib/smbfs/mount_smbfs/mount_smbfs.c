@@ -1380,7 +1380,7 @@ literal|"                   [-N] [-O cowner:cgroup/sowner:sgroup] [-R retrycount
 argument_list|,
 literal|"                   [-T timeout] [-W workgroup] [-c case] [-d mode] [-f mode]"
 argument_list|,
-literal|"                   [-g gid] [-n opt] [-u uid] //user@server/share node"
+literal|"                   [-g gid] [-n opt] [-u uid] [-U username] //user@server/share node"
 argument_list|)
 expr_stmt|;
 name|exit
