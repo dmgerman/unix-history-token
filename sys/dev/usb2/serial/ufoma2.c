@@ -438,7 +438,7 @@ name|uint8_t
 name|sc_num_msg
 decl_stmt|;
 name|uint8_t
-name|sc_is_pseudo
+name|sc_nobulk
 decl_stmt|;
 name|uint8_t
 name|sc_ctrl_iface_no
@@ -2030,7 +2030,7 @@ condition|)
 block|{
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 operator|=
 literal|1
 expr_stmt|;
@@ -2039,7 +2039,7 @@ else|else
 block|{
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 operator|=
 literal|0
 expr_stmt|;
@@ -3582,7 +3582,7 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 operator|)
 condition|)
 block|{
@@ -3626,7 +3626,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 condition|)
 block|{
 name|DPRINTF
@@ -4349,7 +4349,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 operator|||
 operator|(
 name|sc
@@ -4611,7 +4611,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 condition|)
 block|{
 return|return;
@@ -4669,7 +4669,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 condition|)
 block|{
 return|return;
@@ -4762,7 +4762,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 operator|||
 operator|(
 name|sc
@@ -5369,7 +5369,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 condition|)
 block|{
 name|usb2_transfer_start
@@ -5445,7 +5445,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 condition|)
 block|{
 name|usb2_transfer_stop
@@ -5509,7 +5509,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 condition|)
 block|{
 name|usb2_transfer_start
@@ -5563,7 +5563,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_is_pseudo
+name|sc_nobulk
 condition|)
 block|{
 name|usb2_transfer_stop
