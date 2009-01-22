@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/at91/at91var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"uart_if.h"
 end_include
 
@@ -111,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_RCLK
-value|AT91C_MASTER_CLOCK
+value|at91_master_clock
 end_define
 
 begin_define
@@ -3232,11 +3238,6 @@ operator|.
 name|uc_range
 operator|=
 literal|8
-block|,
-operator|.
-name|uc_rclk
-operator|=
-name|DEFAULT_RCLK
 block|}
 decl_stmt|;
 end_decl_stmt
