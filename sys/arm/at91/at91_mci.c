@@ -1551,14 +1551,6 @@ name|mmc_request
 modifier|*
 name|req
 decl_stmt|;
-name|size_t
-name|block_size
-init|=
-literal|1
-operator|<<
-literal|9
-decl_stmt|;
-comment|// Fixed, per mmc/sd spec for 2GB cards
 name|void
 modifier|*
 name|vaddr
@@ -1779,7 +1771,9 @@ argument_list|,
 name|mr
 operator||
 operator|(
-name|block_size
+name|data
+operator|->
+name|len
 operator|<<
 literal|16
 operator|)
