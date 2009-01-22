@@ -65,6 +65,13 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|at91_master_clock
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
