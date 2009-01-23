@@ -353,11 +353,51 @@ value|((struct ieee80211_channel *) IEEE80211_CHAN_ANY)
 end_define
 
 begin_comment
-comment|/* bits 0-3 are for private use by drivers */
+comment|/* channel attributes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_PRIV0
+value|0x00000001
+end_define
+
 begin_comment
-comment|/* channel attributes */
+comment|/* driver private bit 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_PRIV1
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* driver private bit 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_PRIV2
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* driver private bit 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_PRIV3
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* driver private bit 3 */
 end_comment
 
 begin_define
