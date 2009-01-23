@@ -1792,6 +1792,36 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+comment|/* XXX bandaid; a running vap will likely crash */
+if|if
+condition|(
+operator|!
+name|allvapsdown
+argument_list|(
+name|ic
+argument_list|)
+condition|)
+block|{
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_IOCTL
+argument_list|,
+literal|"%s: reject: vaps are running\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+name|EBUSY
+return|;
+block|}
 name|error
 operator|=
 name|ic
@@ -1845,36 +1875,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|error
-return|;
-block|}
-comment|/* XXX bandaid; a running vap will likely crash */
-if|if
-condition|(
-operator|!
-name|allvapsdown
-argument_list|(
-name|ic
-argument_list|)
-condition|)
-block|{
-name|IEEE80211_UNLOCK
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
-name|IEEE80211_DPRINTF
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_MSG_IOCTL
-argument_list|,
-literal|"%s: reject: vaps are running\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-name|EBUSY
 return|;
 block|}
 comment|/* 	 * Commit: copy in new channel table and reset media state. 	 * On return the state machines will be clocked so all vaps 	 * will reset their state. 	 * 	 * XXX ic_bsschan is marked undefined, must have vap's in 	 *     INIT state or we blow up forcing stations off 	 */
