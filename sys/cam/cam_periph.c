@@ -756,6 +756,26 @@ block|}
 name|xpt_unlock_buses
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|p_drv
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cam_periph_alloc: invalid periph name '%s'\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|CAM_REQ_INVALID
+operator|)
+return|;
+block|}
 name|sim
 operator|=
 name|xpt_path_sim
