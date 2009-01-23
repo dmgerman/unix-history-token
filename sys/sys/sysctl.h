@@ -1318,7 +1318,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|(access), \ 		ptr, val, sysctl_handle_int, "I", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_int, "I", descr)
 end_define
 
 begin_ifdef
@@ -1389,7 +1389,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|(access), \&sym, val, sysctl_handle_int, "I", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access), \&sym, val, sysctl_handle_int, "I", descr)
 end_define
 
 begin_else
@@ -1421,7 +1421,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|(access), \& mod ## _0._ ## sym, val, sysctl_handle_int, "I", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access), \& mod ## _0._ ## sym, val, sysctl_handle_int, "I", descr)
 end_define
 
 begin_endif
@@ -1456,7 +1456,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|(access),	    \ 	ptr, val, sysctl_handle_int, "I", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|CTLFLAG_MPSAFE|(access),	    \ 	ptr, val, sysctl_handle_int, "I", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1483,7 +1483,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \ 		ptr, val, sysctl_handle_int, "IU", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_ifdef
@@ -1554,7 +1554,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \&sym, val, sysctl_handle_int, "IU", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \&sym, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_else
@@ -1586,7 +1586,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \& mod ## _0._ ## sym, val, sysctl_handle_int, "IU", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \& mod ## _0._ ## sym, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_endif
@@ -1621,7 +1621,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|(access),	    \ 	ptr, val, sysctl_handle_int, "IU", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access),	    \ 	ptr, val, sysctl_handle_int, "IU", __DESCR(descr))
 end_define
 
 begin_define
@@ -1644,7 +1644,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \ 		ptr, val, sysctl_handle_int, "IX", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_int, "IX", descr)
 end_define
 
 begin_define
@@ -1669,7 +1669,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|(access),	    \ 	ptr, val, sysctl_handle_int, "IX", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|CTLFLAG_MPSAFE|(access),	    \ 	ptr, val, sysctl_handle_int, "IX", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1696,7 +1696,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_LONG|(access), \ 		ptr, val, sysctl_handle_long, "L", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_LONG|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_long, "L", descr)
 end_define
 
 begin_define
@@ -1719,7 +1719,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "L", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_long, "L", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1746,7 +1746,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|(access), \ 		ptr, val, sysctl_handle_long, "LU", __DESCR(descr))
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_long, "LU", __DESCR(descr))
 end_define
 
 begin_define
@@ -1769,7 +1769,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "LU", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_long, "LU", __DESCR(descr))
 end_define
 
 begin_define
@@ -1792,7 +1792,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|(access), \ 		ptr, val, sysctl_handle_long, "LX", __DESCR(descr))
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_long, "LX", __DESCR(descr))
 end_define
 
 begin_define
@@ -1815,7 +1815,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "LX", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_long, "LX", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1842,7 +1842,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_QUAD|(access), \ 		ptr, val, sysctl_handle_quad, "Q", __DESCR(descr))
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_QUAD|CTLFLAG_MPSAFE|(access), \ 		ptr, val, sysctl_handle_quad, "Q", __DESCR(descr))
 end_define
 
 begin_define
@@ -1865,7 +1865,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_QUAD|(access),	    \ 	ptr, 0, sysctl_handle_quad, "Q", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_QUAD|CTLFLAG_MPSAFE|(access),	    \ 	ptr, 0, sysctl_handle_quad, "Q", __DESCR(descr))
 end_define
 
 begin_comment
