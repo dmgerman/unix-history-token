@@ -26881,6 +26881,15 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ifp
+operator|->
+name|if_l2com
+decl_stmt|;
 name|HAL_BOOL
 name|longCal
 decl_stmt|,
@@ -26889,6 +26898,18 @@ decl_stmt|;
 name|int
 name|nextcal
 decl_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SCAN
+condition|)
+comment|/* defer, off channel */
+goto|goto
+name|restart
+goto|;
 name|longCal
 operator|=
 operator|(
@@ -27049,6 +27070,8 @@ operator|!
 name|isCalDone
 condition|)
 block|{
+name|restart
+label|:
 comment|/* 		 * Use a shorter interval to potentially collect multiple 		 * data samples required to complete calibration.  Once 		 * we're told the work is done we drop back to a longer 		 * interval between requests.  We're more aggressive doing 		 * work when operating as an AP to improve operation right 		 * after startup. 		 */
 name|nextcal
 operator|=
