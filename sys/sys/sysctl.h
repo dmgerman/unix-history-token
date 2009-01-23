@@ -293,6 +293,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CTLFLAG_MPSAFE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Handler is MP safe */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CTLFLAG_RDTUN
 value|(CTLFLAG_RD|CTLFLAG_TUN)
 end_define

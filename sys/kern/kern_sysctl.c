@@ -6007,7 +6007,17 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* XXX: Handlers are not guaranteed to be Giant safe! */
+if|if
+condition|(
+operator|!
+operator|(
+name|oid
+operator|->
+name|oid_kind
+operator|&
+name|CTLFLAG_MPSAFE
+operator|)
+condition|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -6029,6 +6039,17 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|oid
+operator|->
+name|oid_kind
+operator|&
+name|CTLFLAG_MPSAFE
+operator|)
+condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
