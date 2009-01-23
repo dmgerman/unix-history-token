@@ -1152,9 +1152,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ln [-Ffhinsv] source_file [target_file]"
+literal|"usage: ln [-s [-F]] [-f | -i] [-hnv] source_file [target_file]"
 argument_list|,
-literal|"       ln [-Ffhinsv] source_file ... target_dir"
+literal|"       ln [-s [-F]] [-f | -i] [-hnv] source_file ... target_dir"
 argument_list|,
 literal|"       link source_file target_file"
 argument_list|)
