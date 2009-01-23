@@ -3782,7 +3782,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3847,7 +3847,7 @@ name|VFS_ROOT
 argument_list|(
 name|mp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 argument_list|,
 operator|&
 name|tdp
