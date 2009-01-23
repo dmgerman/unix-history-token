@@ -19268,7 +19268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark for update the access time of the file if the filesystem  * supports VOP_MARKATIME.  This functionality is used by execve  * and mmap, so we want to avoid the synchronous I/O implied by  * directly setting va_atime for the sake of efficiency.  */
+comment|/*  * Mark for update the access time of the file if the filesystem  * supports VOP_MARKATIME.  This functionality is used by execve and  * mmap, so we want to avoid the I/O implied by directly setting  * va_atime for the sake of efficiency.  */
 end_comment
 
 begin_function
