@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -92,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sleepqueue.h>
 end_include
 
@@ -106,6 +118,70 @@ include|#
 directive|include
 file|<sys/smp.h>
 end_include
+
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|callout_execute
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|callout_execute
+argument_list|,
+name|kernel
+argument_list|, ,
+name|callout_start
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|callout_execute
+argument_list|,
+name|kernel
+argument_list|, ,
+name|callout_start
+argument_list|,
+literal|0
+argument_list|,
+literal|"struct callout *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|callout_execute
+argument_list|,
+name|kernel
+argument_list|, ,
+name|callout_end
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|callout_execute
+argument_list|,
+name|kernel
+argument_list|, ,
+name|callout_end
+argument_list|,
+literal|0
+argument_list|,
+literal|"struct callout *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1555,9 +1631,47 @@ directive|endif
 name|THREAD_NO_SLEEPING
 argument_list|()
 expr_stmt|;
+name|SDT_PROBE
+argument_list|(
+name|callout_execute
+argument_list|,
+name|kernel
+argument_list|, ,
+name|callout_start
+argument_list|,
+name|c
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|c_func
 argument_list|(
 name|c_arg
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE
+argument_list|(
+name|callout_execute
+argument_list|,
+name|kernel
+argument_list|, ,
+name|callout_end
+argument_list|,
+name|c
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|THREAD_SLEEPING_OK
