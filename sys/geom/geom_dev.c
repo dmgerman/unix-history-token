@@ -214,13 +214,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|g_init_t
-name|g_dev_init
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|g_class
 name|g_dev_class
@@ -245,52 +238,9 @@ operator|.
 name|orphan
 operator|=
 name|g_dev_orphan
-block|,
-operator|.
-name|init
-operator|=
-name|g_dev_init
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|unrhdr
-modifier|*
-name|unithdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Locked by topology */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|g_dev_init
-parameter_list|(
-name|struct
-name|g_class
-modifier|*
-name|mp
-parameter_list|)
-block|{
-name|unithdr
-operator|=
-name|new_unrhdr
-argument_list|(
-literal|0
-argument_list|,
-name|INT_MAX
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 name|void
@@ -445,9 +395,6 @@ name|cdev
 modifier|*
 name|dev
 decl_stmt|;
-name|u_int
-name|unit
-decl_stmt|;
 name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
@@ -533,13 +480,6 @@ name|error
 operator|)
 argument_list|)
 expr_stmt|;
-name|unit
-operator|=
-name|alloc_unr
-argument_list|(
-name|unithdr
-argument_list|)
-expr_stmt|;
 name|dev
 operator|=
 name|make_dev
@@ -547,7 +487,7 @@ argument_list|(
 operator|&
 name|g_dev_cdevsw
 argument_list|,
-name|unit
+literal|0
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -2051,9 +1991,6 @@ name|cdev
 modifier|*
 name|dev
 decl_stmt|;
-name|u_int
-name|unit
-decl_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
@@ -2097,23 +2034,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Destroy the struct cdev *so we get no more requests */
-name|unit
-operator|=
-name|dev2unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|free_unr
-argument_list|(
-name|unithdr
-argument_list|,
-name|unit
 argument_list|)
 expr_stmt|;
 comment|/* Wait for the cows to come home */
