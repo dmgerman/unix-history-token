@@ -4376,7 +4376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Convert a select bit set to poll flags.  #  * The backend always returns POLLHUP/POLLERR if appropriate and we  * return this as a set bit in any set.  */
+comment|/*   * Convert a select bit set to poll flags.  *  * The backend always returns POLLHUP/POLLERR if appropriate and we  * return this as a set bit in any set.  */
 end_comment
 
 begin_decl_stmt
