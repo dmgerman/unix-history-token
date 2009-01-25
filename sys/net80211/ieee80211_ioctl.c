@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -16320,6 +16326,17 @@ block|}
 name|IEEE80211_UNLOCK
 argument_list|(
 name|ic
+argument_list|)
+expr_stmt|;
+comment|/* Wait for parent ioctl handler if it was queued */
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_thread
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_parent_task
 argument_list|)
 expr_stmt|;
 break|break;
