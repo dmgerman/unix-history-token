@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|PCPU_NAME_LEN
-value|(sizeof("CPU ") + sizeof(__STRING(MAXCPU) + 1))
+value|(sizeof("CPU ") + sizeof(__XSTRING(MAXCPU) + 1))
 end_define
 
 begin_comment

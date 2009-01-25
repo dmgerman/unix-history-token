@@ -253,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|TS_NAME_LEN
-value|(MAXCOMLEN + sizeof(" td ") + sizeof(__STRING(UINT_MAX)))
+value|(MAXCOMLEN + sizeof(" td ") + sizeof(__XSTRING(UINT_MAX)))
 end_define
 
 begin_comment
