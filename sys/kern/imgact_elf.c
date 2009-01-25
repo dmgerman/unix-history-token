@@ -3997,6 +3997,11 @@ operator|)
 return|;
 block|}
 block|}
+else|else
+name|addr
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Construct auxargs table (used by the fixup routine) 	 */
 name|elf_auxargs
 operator|=
