@@ -1708,7 +1708,7 @@ block|{
 comment|/* 				 * 3. As a last resort return the 'default' 				 * jail address. 				 */
 if|if
 condition|(
-name|prison_getip4
+name|prison_get_ip4
 argument_list|(
 name|cred
 argument_list|,
@@ -1956,7 +1956,7 @@ block|{
 comment|/* 				 * 3. As a last resort return the 'default' 				 * jail address. 				 */
 if|if
 condition|(
-name|prison_getip6
+name|prison_get_ip6
 argument_list|(
 name|cred
 argument_list|,

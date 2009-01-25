@@ -3751,7 +3751,7 @@ end_comment
 
 begin_function
 name|int
-name|prison_getip4
+name|prison_get_ip4
 parameter_list|(
 name|struct
 name|ucred
@@ -4378,7 +4378,7 @@ end_comment
 
 begin_function
 name|int
-name|prison_getip6
+name|prison_get_ip6
 parameter_list|(
 name|struct
 name|ucred
