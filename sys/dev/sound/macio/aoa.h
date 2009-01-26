@@ -15,6 +15,12 @@ directive|define
 name|SOUND_AOA_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AOA_DEBUG
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -28,20 +34,30 @@ begin_comment
 comment|/* nothing */
 end_comment
 
-begin_comment
-comment|/* #define DPRINTF(x)	printf x */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|printf x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
 name|aoa_softc
 block|{
-name|u_int8_t
-name|sc_super
-index|[
-name|PCM_SOFTC_SIZE
-index|]
-decl_stmt|;
 name|void
 modifier|*
 name|sc_intrp
@@ -70,6 +86,10 @@ name|int
 name|aoa_attach
 parameter_list|(
 name|device_t
+parameter_list|,
+name|void
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

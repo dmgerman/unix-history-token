@@ -375,7 +375,7 @@ name|aoa_softc
 modifier|*
 name|sc
 init|=
-name|device_get_softc
+name|pcm_getdevinfo
 argument_list|(
 name|self
 argument_list|)
@@ -919,7 +919,7 @@ name|aoa_softc
 modifier|*
 name|sc
 init|=
-name|device_get_softc
+name|pcm_getdevinfo
 argument_list|(
 name|self
 argument_list|)
@@ -1581,6 +1581,10 @@ name|aoa_attach
 parameter_list|(
 name|device_t
 name|self
+parameter_list|,
+name|void
+modifier|*
+name|sc
 parameter_list|)
 block|{
 name|char
@@ -1598,7 +1602,7 @@ name|pcm_register
 argument_list|(
 name|self
 argument_list|,
-name|self
+name|sc
 argument_list|,
 literal|1
 argument_list|,
