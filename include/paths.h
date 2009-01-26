@@ -52,7 +52,6 @@ begin_define
 define|#
 directive|define
 name|_PATH_SYSPATH
-define|\
 value|"/sbin:/usr/sbin"
 end_define
 
