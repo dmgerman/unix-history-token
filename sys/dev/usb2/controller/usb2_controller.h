@@ -279,6 +279,11 @@ define|#
 directive|define
 name|USB_HW_POWER_ISOC
 value|0x08
+comment|/* 	 * The following flag is set if one or more non-root-HUB devices  	 * are present on the given USB bus: 	 */
+define|#
+directive|define
+name|USB_HW_POWER_NON_ROOT_HUB
+value|0x10
 comment|/* USB Device mode only - Mandatory */
 name|void
 function_decl|(

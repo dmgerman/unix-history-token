@@ -5395,7 +5395,7 @@ decl_stmt|;
 name|uint32_t
 name|type_refs
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
 name|uint8_t
@@ -5656,6 +5656,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|type_refs
+index|[
+literal|4
+index|]
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Re-loop all the devices to get the actual state */
 for|for
 control|(
@@ -5691,6 +5698,14 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+comment|/* we found a non-Root-Hub USB device */
+name|type_refs
+index|[
+literal|4
+index|]
+operator|+=
+literal|1
+expr_stmt|;
 comment|/* "last_xfer_time" can be updated by a resume */
 name|temp
 operator|=
@@ -5864,6 +5879,21 @@ operator|->
 name|hw_power_state
 operator||=
 name|USB_HW_POWER_ISOC
+expr_stmt|;
+if|if
+condition|(
+name|type_refs
+index|[
+literal|4
+index|]
+operator|!=
+literal|0
+condition|)
+name|bus
+operator|->
+name|hw_power_state
+operator||=
+name|USB_HW_POWER_NON_ROOT_HUB
 expr_stmt|;
 block|}
 name|USB_BUS_UNLOCK
