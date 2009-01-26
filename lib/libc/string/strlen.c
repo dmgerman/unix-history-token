@@ -36,7 +36,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  * Portable strlen() for 32-bit and 64-bit systems.  *  * Rationale: it is generally much more efficient to do word length  * operations and avoid branches on modern computer systems, as  * compared to byte-length operations with a lot of branches.  *  * The expression:  *  *	((x - 0x01....01)& ~x& 0x80....80)  *  * would evaluate to a non-zero value iff any of the bytes in the  * original word is zero.  However, we can further reduce ~1/3 of  * time if we consider that strlen() usually operate on 7-bit ASCII  * by employing the following expression, which allows false positive  * when high bit of 1 and use the tail case to catch these case:  *  *	((x - 0x01....01)& 0x80....80)  *  * This is more than 5.2 times as compared to the raw implementation  * on Intel T7300 under EM64T mode for strings longer than word length.  */
+comment|/*  * Portable strlen() for 32-bit and 64-bit systems.  *  * Rationale: it is generally much more efficient to do word length  * operations and avoid branches on modern computer systems, as  * compared to byte-length operations with a lot of branches.  *  * The expression:  *  *	((x - 0x01....01)& ~x& 0x80....80)  *  * would evaluate to a non-zero value iff any of the bytes in the  * original word is zero.  However, we can further reduce ~1/3 of  * time if we consider that strlen() usually operate on 7-bit ASCII  * by employing the following expression, which allows false positive  * when high bit of 1 and use the tail case to catch these case:  *  *	((x - 0x01....01)& 0x80....80)  *  * This is more than 5.2 times as fast as the raw implementation on  * Intel T7300 under long mode for strings longer than word length.  */
 end_comment
 
 begin_comment
@@ -285,7 +285,9 @@ directive|endif
 block|}
 comment|/* NOTREACHED */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
