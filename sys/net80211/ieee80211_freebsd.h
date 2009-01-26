@@ -408,7 +408,7 @@ name|_qlen
 parameter_list|,
 name|_age
 parameter_list|)
-value|do {\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ni)->ni_savedq.ifq_tail != NULL) { 		\ 		_age -= M_AGE_GET((_ni)->ni_savedq.ifq_tail);	\ 		(_ni)->ni_savedq.ifq_tail->m_nextpkt = (_m);	\ 	} else { 						\ 		(_ni)->ni_savedq.ifq_head = (_m); 		\ 	}							\ 	M_AGE_SET(_m, _age);					\ 	(_ni)->ni_savedq.ifq_tail = (_m); 			\ 	(_qlen) = ++(_ni)->ni_savedq.ifq_len; 			\ } while (0)
+value|do {\ 	(_m)->m_nextpkt = NULL;					\ 	if ((_ni)->ni_savedq.ifq_tail != NULL) { 		\ 		_age -= M_AGE_GET((_ni)->ni_savedq.ifq_head);	\ 		(_ni)->ni_savedq.ifq_tail->m_nextpkt = (_m);	\ 	} else { 						\ 		(_ni)->ni_savedq.ifq_head = (_m); 		\ 	}							\ 	M_AGE_SET(_m, _age);					\ 	(_ni)->ni_savedq.ifq_tail = (_m); 			\ 	(_qlen) = ++(_ni)->ni_savedq.ifq_len; 			\ } while (0)
 end_define
 
 begin_define

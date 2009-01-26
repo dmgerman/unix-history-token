@@ -101,21 +101,6 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_opmode
-operator|==
-name|IEEE80211_M_HOSTAP
-operator|||
-name|ic
-operator|->
-name|ic_opmode
-operator|==
-name|IEEE80211_M_IBSS
-condition|)
-block|{
 comment|/* NB: driver should override */
 name|ic
 operator|->
@@ -123,7 +108,6 @@ name|ic_set_tim
 operator|=
 name|ieee80211_set_tim
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -136,16 +120,6 @@ name|ieee80211com
 modifier|*
 name|ic
 parameter_list|)
-block|{
-comment|/* 	 * Allocate these only if needed.  Beware that we 	 * know adhoc mode doesn't support ATIM yet... 	 */
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_opmode
-operator|==
-name|IEEE80211_M_HOSTAP
-condition|)
 block|{
 name|ic
 operator|->
@@ -208,7 +182,6 @@ name|ic_tim_len
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
