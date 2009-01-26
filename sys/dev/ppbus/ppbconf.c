@@ -1670,6 +1670,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+name|ppb
+operator|->
+name|ppc_lock
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|BUS_WRITE_IVAR
@@ -1688,6 +1695,13 @@ name|uintptr_t
 operator|)
 operator|&
 name|ppbus_intr
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+name|ppb
+operator|->
+name|ppc_lock
 argument_list|)
 expr_stmt|;
 if|if
