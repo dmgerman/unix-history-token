@@ -14083,7 +14083,7 @@ name|uap
 parameter_list|)
 block|{
 name|struct
-name|timespec
+name|timespec32
 name|ts32
 decl_stmt|;
 name|struct
