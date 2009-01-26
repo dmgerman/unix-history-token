@@ -192,7 +192,7 @@ name|AR71XX_RST_RESET
 argument_list|,
 name|reg
 operator||
-name|RST_RESET_FULL_CHIP_RESET
+name|RST_RESET_FULL_CHIP
 argument_list|)
 expr_stmt|;
 comment|/* Wait for reset */
