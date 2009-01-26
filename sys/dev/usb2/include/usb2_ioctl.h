@@ -651,7 +651,7 @@ begin_define
 define|#
 directive|define
 name|USB_GET_REPORT_DESC
-value|_IOR ('U', 21, struct usb2_gen_descriptor)
+value|_IOWR('U', 21, struct usb2_gen_descriptor)
 end_define
 
 begin_define
