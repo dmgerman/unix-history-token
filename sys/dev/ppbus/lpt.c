@@ -1334,14 +1334,14 @@ argument_list|,
 name|LPC_NINIT
 argument_list|)
 expr_stmt|;
-name|ppb_unlock
-argument_list|(
-name|ppbus
-argument_list|)
-expr_stmt|;
 name|lpt_release_ppbus
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|ppb_unlock
+argument_list|(
+name|ppbus
 argument_list|)
 expr_stmt|;
 comment|/* declare our interrupt handler */
