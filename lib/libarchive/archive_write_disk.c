@@ -669,6 +669,10 @@ comment|/* Current offset for writing data to the file. */
 name|off_t
 name|offset
 decl_stmt|;
+comment|/* Last offset actually written to disk. */
+name|off_t
+name|fd_offset
+decl_stmt|;
 comment|/* Maximum size of file, -1 if unknown. */
 name|off_t
 name|filesize
@@ -687,10 +691,6 @@ name|uid
 decl_stmt|;
 name|gid_t
 name|gid
-decl_stmt|;
-comment|/* Last offset written to disk. */
-name|off_t
-name|last_offset
 decl_stmt|;
 block|}
 struct|;
@@ -1095,8 +1095,6 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
-parameter_list|,
-name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1595,7 +1593,7 @@ literal|1
 expr_stmt|;
 name|a
 operator|->
-name|last_offset
+name|fd_offset
 operator|=
 literal|0
 expr_stmt|;
@@ -2327,11 +2325,13 @@ name|buff
 parameter_list|,
 name|size_t
 name|size
-parameter_list|,
-name|off_t
-name|offset
 parameter_list|)
 block|{
+name|uint64_t
+name|start_size
+init|=
+name|size
+decl_stmt|;
 name|ssize_t
 name|bytes_written
 init|=
@@ -2431,6 +2431,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+comment|/* If this write would run beyond the file size, truncate it. */
 if|if
 condition|(
 name|a
@@ -2443,6 +2444,8 @@ call|(
 name|off_t
 call|)
 argument_list|(
+name|a
+operator|->
 name|offset
 operator|+
 name|size
@@ -2452,6 +2455,8 @@ name|a
 operator|->
 name|filesize
 condition|)
+name|start_size
+operator|=
 name|size
 operator|=
 call|(
@@ -2462,6 +2467,8 @@ name|a
 operator|->
 name|filesize
 operator|-
+name|a
+operator|->
 name|offset
 argument_list|)
 expr_stmt|;
@@ -2529,6 +2536,8 @@ literal|'\0'
 condition|)
 break|break;
 block|}
+name|a
+operator|->
 name|offset
 operator|+=
 name|p
@@ -2556,13 +2565,15 @@ comment|/* Calculate next block boundary after offset. */
 name|block_end
 operator|=
 operator|(
+name|a
+operator|->
 name|offset
 operator|/
 name|block_size
+operator|+
+literal|1
 operator|)
 operator|*
-name|block_size
-operator|+
 name|block_size
 expr_stmt|;
 comment|/* If the adjusted write would cross block boundary, 			 * truncate it to the block boundary. */
@@ -2572,6 +2583,8 @@ name|size
 expr_stmt|;
 if|if
 condition|(
+name|a
+operator|->
 name|offset
 operator|+
 name|bytes_to_write
@@ -2582,17 +2595,21 @@ name|bytes_to_write
 operator|=
 name|block_end
 operator|-
+name|a
+operator|->
 name|offset
 expr_stmt|;
 block|}
 comment|/* Seek if necessary to the specified offset. */
 if|if
 condition|(
+name|a
+operator|->
 name|offset
 operator|!=
 name|a
 operator|->
-name|last_offset
+name|fd_offset
 condition|)
 block|{
 if|if
@@ -2603,6 +2620,8 @@ name|a
 operator|->
 name|fd
 argument_list|,
+name|a
+operator|->
 name|offset
 argument_list|,
 name|SEEK_SET
@@ -2629,6 +2648,34 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
+name|a
+operator|->
+name|fd_offset
+operator|=
+name|a
+operator|->
+name|offset
+expr_stmt|;
+name|a
+operator|->
+name|archive
+operator|.
+name|file_position
+operator|=
+name|a
+operator|->
+name|offset
+expr_stmt|;
+name|a
+operator|->
+name|archive
+operator|.
+name|raw_position
+operator|=
+name|a
+operator|->
+name|offset
+expr_stmt|;
 block|}
 name|bytes_written
 operator|=
@@ -2676,6 +2723,8 @@ name|size
 operator|-=
 name|bytes_written
 expr_stmt|;
+name|a
+operator|->
 name|offset
 operator|+=
 name|bytes_written
@@ -2698,18 +2747,18 @@ name|bytes_written
 expr_stmt|;
 name|a
 operator|->
-name|last_offset
+name|fd_offset
 operator|=
 name|a
 operator|->
-name|offset
-operator|=
 name|offset
 expr_stmt|;
 block|}
 return|return
 operator|(
-name|bytes_written
+name|start_size
+operator|-
+name|size
 operator|)
 return|;
 block|}
@@ -2766,6 +2815,12 @@ argument_list|,
 literal|"archive_write_disk_block"
 argument_list|)
 expr_stmt|;
+name|a
+operator|->
+name|offset
+operator|=
+name|offset
+expr_stmt|;
 name|r
 operator|=
 name|write_data_block
@@ -2775,15 +2830,13 @@ argument_list|,
 name|buff
 argument_list|,
 name|size
-argument_list|,
-name|offset
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|r
 operator|<
-literal|0
+name|ARCHIVE_OK
 condition|)
 return|return
 operator|(
@@ -2880,10 +2933,6 @@ argument_list|,
 name|buff
 argument_list|,
 name|size
-argument_list|,
-name|a
-operator|->
-name|offset
 argument_list|)
 operator|)
 return|;
@@ -2986,7 +3035,7 @@ if|if
 condition|(
 name|a
 operator|->
-name|last_offset
+name|fd_offset
 operator|==
 name|a
 operator|->
