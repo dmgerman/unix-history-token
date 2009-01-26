@@ -38,7 +38,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {								\ 	if ((sc)->sc_debug>= (level))				\ 		printf("%s:%s:%d: " fmt, (sc)->sc_name,		\ 			__FUNCTION__, __LINE__,## __VA_ARGS__);	\ } while (0)
+value|do {								\ 	if ((sc)->sc_debug>= (level))				\ 		device_printf((sc)->sc_dev, "%s:%d: " fmt, 	\ 			__FUNCTION__, __LINE__,## __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_define
@@ -84,21 +84,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|UBT_MBUFQ_LOCK
+name|UBT_NG_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_lock(&(sc)->sc_mbufq_mtx)
+value|mtx_lock(&(sc)->sc_ng_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UBT_MBUFQ_UNLOCK
+name|UBT_NG_UNLOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_unlock(&(sc)->sc_mbufq_mtx)
+value|mtx_unlock(&(sc)->sc_ng_mtx)
 end_define
 
 begin_comment
@@ -148,19 +148,8 @@ name|UBT_IF_0_INTR_DT_RD
 block|,
 name|UBT_IF_0_CTRL_DT_WR
 block|,
-name|UBT_IF_0_BULK_CS_WR
-block|,
-name|UBT_IF_0_BULK_CS_RD
-block|,
-name|UBT_IF_0_INTR_CS_RD
-block|,
-name|UBT_IF_0_N_TRANSFER
-block|,
-comment|/* number of interface 0's transfers */
 comment|/* Interface #1 transfers */
 name|UBT_IF_1_ISOC_DT_RD1
-init|=
-name|UBT_IF_0_N_TRANSFER
 block|,
 name|UBT_IF_1_ISOC_DT_RD2
 block|,
@@ -171,12 +160,7 @@ block|,
 name|UBT_N_TRANSFER
 block|,
 comment|/* total number of transfers */
-name|UBT_IF_1_N_TRANSFER
-init|=
-name|UBT_N_TRANSFER
-operator|-
-name|UBT_IF_1_ISOC_DT_RD1
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -188,36 +172,15 @@ begin_struct
 struct|struct
 name|ubt_softc
 block|{
-name|uint8_t
-name|sc_name
-index|[
-literal|16
-index|]
+name|device_t
+name|sc_dev
 decl_stmt|;
+comment|/* for debug printf */
 comment|/* State */
 name|ng_ubt_node_debug_ep
 name|sc_debug
 decl_stmt|;
 comment|/* debug level */
-name|int
-name|sc_flags
-decl_stmt|;
-comment|/* device flags */
-define|#
-directive|define
-name|UBT_FLAG_READ_STALL
-value|(1<< 0)
-comment|/* read transfer has stalled */
-define|#
-directive|define
-name|UBT_FLAG_WRITE_STALL
-value|(1<< 1)
-comment|/* write transfer has stalled */
-define|#
-directive|define
-name|UBT_FLAG_INTR_STALL
-value|(1<< 2)
-comment|/* inter transfer has stalled */
 name|ng_ubt_node_stat_ep
 name|sc_stat
 decl_stmt|;
@@ -279,11 +242,8 @@ comment|/* USB device specific */
 name|struct
 name|mtx
 name|sc_if_mtx
-index|[
-literal|2
-index|]
 decl_stmt|;
-comment|/* interface locks */
+comment|/* interfaces lock */
 name|struct
 name|usb2_xfer
 modifier|*
@@ -294,9 +254,9 @@ index|]
 decl_stmt|;
 name|struct
 name|mtx
-name|sc_mbufq_mtx
+name|sc_ng_mtx
 decl_stmt|;
-comment|/* lock for all queues */
+comment|/* lock for shared NG data */
 comment|/* HCI commands */
 name|struct
 name|ng_bt_mbufq
