@@ -1970,17 +1970,26 @@ argument_list|,
 literal|"fifo_close"
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|fip
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"fifo_close: no v_fifoinfo %p\n"
 argument_list|,
-operator|(
-literal|"fifo_close: no v_fifoinfo"
-operator|)
+name|vp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|ap
