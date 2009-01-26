@@ -30713,7 +30713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called with the arguments (excluding program name).  * Returns 0 if successful, 1 if empty command, errx() in case of errors.  */
+comment|/*  * Called with the arguments, including program name because getopt  * wants it to be present.  * Returns 0 if successful, 1 if empty command, errx() in case of errors.  */
 end_comment
 
 begin_function
@@ -30764,18 +30764,18 @@ value|" \t\f\v\n\r"
 if|if
 condition|(
 name|oldac
-operator|==
-literal|0
+operator|<
+literal|2
 condition|)
 return|return
 literal|1
 return|;
-elseif|else
+comment|/* need at least one argument */
 if|if
 condition|(
 name|oldac
 operator|==
-literal|1
+literal|2
 condition|)
 block|{
 comment|/* 		 * If we are called with a single string, try to split it into 		 * arguments for subsequent parsing. 		 * But first, remove spaces after a ',', by copying the string 		 * in-place. 		 */
@@ -30785,10 +30785,10 @@ name|arg
 init|=
 name|oldav
 index|[
-literal|0
+literal|1
 index|]
 decl_stmt|;
-comment|/* The string... */
+comment|/* The string is the first arg. */
 name|int
 name|l
 init|=
@@ -30969,11 +30969,14 @@ condition|)
 name|ac
 operator|++
 expr_stmt|;
+comment|/* 		 * Allocate the argument list, including one entry for 		 * the program name because getopt expects it. 		 */
 name|av
 operator|=
 name|calloc
 argument_list|(
 name|ac
+operator|+
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -30982,12 +30985,12 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Second, copy arguments from cmd[] to av[]. For each one, 		 * j is the initial character, i is the one past the end. 		 */
+comment|/* 		 * Second, copy arguments from arg[] to av[]. For each one, 		 * j is the initial character, i is the one past the end. 		 */
 for|for
 control|(
 name|ac
 operator|=
-literal|0
+literal|1
 operator|,
 name|i
 operator|=
@@ -31108,7 +31111,7 @@ name|i
 operator|=
 name|ac
 operator|=
-literal|0
+literal|1
 operator|,
 name|l
 operator|=
@@ -31232,6 +31235,20 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|av
+index|[
+literal|0
+index|]
+operator|=
+name|strdup
+argument_list|(
+name|oldav
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* copy progname from the caller */
 comment|/* Set the force flag for non-interactive processes */
 if|if
 condition|(
@@ -31259,8 +31276,9 @@ name|optind
 operator|=
 name|optreset
 operator|=
-literal|0
+literal|1
 expr_stmt|;
+comment|/* restart getopt() */
 while|while
 condition|(
 operator|(
@@ -32100,12 +32118,27 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|progname
+init|=
+name|av
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* original program name */
+specifier|const
 name|char
 modifier|*
 name|cmd
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+comment|/* preprocessor name, if any */
+specifier|const
+name|char
 modifier|*
 name|filename
 init|=
@@ -32116,6 +32149,7 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
+comment|/* file to read */
 name|int
 name|c
 decl_stmt|,
@@ -32134,15 +32168,6 @@ name|preproc
 init|=
 literal|0
 decl_stmt|;
-name|filename
-operator|=
-name|av
-index|[
-name|ac
-operator|-
-literal|1
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -32202,28 +32227,12 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|cmd
-operator|=
-name|optarg
-expr_stmt|;
-comment|/* 			 * Skip previous args and delete last one, so we 			 * pass all but the last argument to the preprocessor 			 * via av[optind-1] 			 */
-name|av
-operator|+=
-name|optind
-operator|-
-literal|1
-expr_stmt|;
-name|ac
-operator|-=
-name|optind
-operator|-
-literal|1
-expr_stmt|;
+comment|/* 			 * ipfw -p cmd [args] filename 			 * 			 * We are done with getopt(). All arguments 			 * except the filename go to the preprocessor, 			 * so we need to do the following: 			 * - check that a filename is actually present; 			 * - advance av by optind-1 to skip arguments 			 *   already processed; 			 * - decrease ac by optind, to remove the args 			 *   already processed and the final filename; 			 * - set the last entry in av[] to NULL so 			 *   popen() can detect the end of the array; 			 * - set optind=ac to let getopt() terminate. 			 */
 if|if
 condition|(
+name|optind
+operator|==
 name|ac
-operator|<
-literal|2
 condition|)
 name|errx
 argument_list|(
@@ -32231,6 +32240,10 @@ name|EX_USAGE
 argument_list|,
 literal|"no filename argument"
 argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|optarg
 expr_stmt|;
 name|av
 index|[
@@ -32241,17 +32254,19 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"command is %s\n"
-argument_list|,
 name|av
-index|[
-literal|0
-index|]
-argument_list|)
+operator|+=
+name|optind
+operator|-
+literal|1
+expr_stmt|;
+name|ac
+operator|-=
+name|optind
+expr_stmt|;
+name|optind
+operator|=
+name|ac
 expr_stmt|;
 break|break;
 case|case
@@ -32280,13 +32295,6 @@ literal|" summary ``ipfw''"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|cmd
-operator|!=
-name|NULL
-condition|)
-break|break;
 block|}
 if|if
 condition|(
@@ -32562,7 +32570,7 @@ name|char
 modifier|*
 name|args
 index|[
-literal|1
+literal|2
 index|]
 decl_stmt|;
 name|lineno
@@ -32588,11 +32596,21 @@ index|[
 literal|0
 index|]
 operator|=
+name|strdup
+argument_list|(
+name|progname
+argument_list|)
+expr_stmt|;
+name|args
+index|[
+literal|1
+index|]
+operator|=
 name|buf
 expr_stmt|;
 name|ipfw_main
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 name|args
 argument_list|)
@@ -32745,12 +32763,8 @@ condition|(
 name|ipfw_main
 argument_list|(
 name|ac
-operator|-
-literal|1
 argument_list|,
 name|av
-operator|+
-literal|1
 argument_list|)
 condition|)
 name|show_usage
