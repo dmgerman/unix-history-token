@@ -683,7 +683,7 @@ define|#
 directive|define
 name|IEEE80211_CHAN_108A
 define|\
-value|(IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_TURBO)
+value|(IEEE80211_CHAN_A | IEEE80211_CHAN_TURBO)
 end_define
 
 begin_define
@@ -691,7 +691,7 @@ define|#
 directive|define
 name|IEEE80211_CHAN_108G
 define|\
-value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_TURBO)
+value|(IEEE80211_CHAN_PUREG | IEEE80211_CHAN_TURBO)
 end_define
 
 begin_define
