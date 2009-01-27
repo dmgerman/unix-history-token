@@ -378,6 +378,20 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|U3GIBUFSIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|U3GOBUFSIZE
+value|1024
+end_define
+
 begin_comment
 comment|/*  * Various supported device vendors/products.  */
 end_comment
@@ -1705,52 +1719,23 @@ name|sc_bulkout_no
 operator|=
 name|bulkout_no
 expr_stmt|;
-comment|// Allocate a buffer enough for 10ms worth of data
 name|ucom
 operator|->
 name|sc_ibufsize
 operator|=
-name|u3g_speeds
-index|[
-name|sc
-operator|->
-name|sc_speed
-index|]
-operator|.
-name|ispeed
-operator|/
-literal|10
-operator|/
-name|USB_FRAMES_PER_SECOND
-operator|*
-literal|10
+name|U3GIBUFSIZE
 expr_stmt|;
 name|ucom
 operator|->
 name|sc_ibufsizepad
 operator|=
-name|ucom
-operator|->
-name|sc_ibufsize
+name|U3GIBUFSIZE
 expr_stmt|;
 name|ucom
 operator|->
 name|sc_obufsize
 operator|=
-name|u3g_speeds
-index|[
-name|sc
-operator|->
-name|sc_speed
-index|]
-operator|.
-name|ospeed
-operator|/
-literal|10
-operator|/
-name|USB_FRAMES_PER_SECOND
-operator|*
-literal|10
+name|U3GOBUFSIZE
 expr_stmt|;
 name|ucom
 operator|->
@@ -2012,7 +1997,7 @@ directive|if
 name|__FreeBSD_version
 operator|<
 literal|800000
-comment|/* Supply generous buffering for these cards to avoid disappointments 	 * when setting the speed incorrectly. Only do this for the first port 	 * assuming that the rest of the ports are used for diagnostics only 	 * anyway. 	 * Note: We abuse the fact that ucom sets the speed through 	 * ispeed/ospeed, not through ispeedwat/ospeedwat. 	 * XXX Are the speeds correct? 	 */
+comment|/* Supply generous buffering for these cards to avoid disappointments 	 * when setting the speed incorrectly. Only do this for the first port 	 * assuming that the rest of the ports are used for diagnostics only 	 * anyway. 	 * Note: We abuse the fact that ucom sets the speed through 	 * ispeed/ospeed, not through ispeedwat/ospeedwat. 	 */
 if|if
 condition|(
 name|portno
