@@ -243,7 +243,7 @@ operator|=
 literal|'S'
 expr_stmt|;
 comment|/* XXX */
-comment|/* XXX? too late to setup default channel list */
+comment|/* NB: driver calls ieee80211_init_channels or similar */
 block|}
 name|ic
 operator|->
