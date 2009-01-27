@@ -379,6 +379,14 @@ name|IEEE80211_CRYPTO_CKIP
 value|(1<<IEEE80211_CIPHER_CKIP)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CRYPTO_BITS
+define|\
+value|"\20\1WEP\2TKIP\3AES\4AES_CCM\5TKIPMIC\6CKIP"
+end_define
+
 begin_if
 if|#
 directive|if

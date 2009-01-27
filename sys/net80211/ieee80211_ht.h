@@ -181,6 +181,14 @@ define|\
 value|(((tap)->txa_flags& \ 	 (IEEE80211_AGGR_RUNNING|IEEE80211_AGGR_XCHGPEND|IEEE80211_AGGR_NAK)) != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_AGGR_BITS
+define|\
+value|"\20\1IMMEDIATE\2XCHGPEND\3RUNNING\4SETUP\5NAK"
+end_define
+
 begin_comment
 comment|/*  * Traffic estimator support.  We estimate packets/sec for  * each AC that is setup for AMPDU or will potentially be  * setup for AMPDU.  The traffic rate can be used to decide  * when AMPDU should be setup (according to a threshold)  * and is available for drivers to do things like cache  * eviction when only a limited number of BA streams are  * available and more streams are requested than available.  */
 end_comment

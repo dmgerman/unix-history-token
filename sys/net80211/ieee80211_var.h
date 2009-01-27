@@ -2312,6 +2312,14 @@ begin_comment
 comment|/* CONF: Dynamic WDS enabled */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_BITS
+define|\
+value|"\20\1TURBOP\2COMP\3FF\4BURST\5PRIVACY\6PUREG\10SCAN\11ASCAN\12SIBSS" \ 	"\13SHSLOT\14PMGTON\15DESBSSID\16WME\17BGSCAN\20SWRETRY\21TXPOW_FIXED" \ 	"\22IBSSON\23SHPREAMBLE\24DATAPAD\25USEPROT\26USERBARKER\27CSAPENDING" \ 	"\30WPA1\31WPA2\32DROPUNENC\33COUNTERM\34HIDESSID\35NOBRIDG\36PCF" \ 	"\37DOTH\40DWDS"
+end_define
+
 begin_comment
 comment|/* Atheros protocol-specific flags */
 end_comment
@@ -2630,6 +2638,21 @@ begin_comment
 comment|/* CONF: RIFS enabled */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_BITS
+define|\
+value|"\20\1NONHT_PR\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\22WDSLEGACY\23PROBECHAN\24HT" \ 	"\25AMDPU_TX\26AMPDU_TX\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN" \ 	"\33SHORTGI20\34SHORTGI40\35HTCOMPAT\36RIFS"
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FVEN_BITS
+value|"\20"
+end_define
+
 begin_comment
 comment|/* ic_caps/iv_caps: device driver capabilities */
 end_comment
@@ -2900,6 +2923,14 @@ define|\
 value|(IEEE80211_C_STA | IEEE80211_C_IBSS | IEEE80211_C_HOSTAP | \ 	 IEEE80211_C_AHDEMO | IEEE80211_C_MONITOR | IEEE80211_C_WDS | \ 	 IEEE80211_C_TDMA)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_BITS
+define|\
+value|"\20\1STA\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
+end_define
+
 begin_comment
 comment|/*  * ic_htcaps/iv_htcaps: HT-specific device/driver capabilities  *  * NB: the low 16-bits are the 802.11 definitions, the upper  *     16-bits are used to define s/w/driver capabilities.  */
 end_comment
@@ -2962,6 +2993,14 @@ end_define
 begin_comment
 comment|/* CAPABILITY: RIFS support */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_HTCAP_BITS
+define|\
+value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\21AMPDU\22AMSDU\23HT\24SMPS\25RIFS"
+end_define
 
 begin_function_decl
 name|void
@@ -3900,6 +3939,14 @@ end_define
 begin_comment
 comment|/* anything */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MSG_BITS
+define|\
+value|"\20\3IOCTL\4WDS\5ACTION\6RATECTL\7ROAM\10INACT\11DOTH\12SUPERG" \ 	"\13WME\14ACL\15WPA\16RADKEYS\17RADDUMP\20RADIUS\21DOT1X\22POWER" \ 	"\23STATE\24OUTPUT\25SCAN\26AUTH\27ASSOC\30NODE\31ELEMID\32XRATE" \ 	"\33INPUT\34CRYPTO\35DUPMPKTS\36DEBUG\3711N"
+end_define
 
 begin_ifdef
 ifdef|#

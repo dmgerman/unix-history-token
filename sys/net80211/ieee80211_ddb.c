@@ -126,113 +126,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|IEEE80211_MSG_BITS
-define|\
-value|"\20\3IOCTL\4WDS\5ACTION\6RATECTL\7ROAM\10INACT\11DOTH\12SUPERG" \ 	"\13WME\14ACL\15WPA\16RADKEYS\17RADDUMP\20RADIUS\21DOT1X\22POWER" \ 	"\23STATE\24OUTPUT\25SCAN\26AUTH\27ASSOC\30NODE\31ELEMID\32XRATE" \ 	"\33INPUT\34CRYPTO\35DUPMPKTS\36DEBUG\3711N"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_BITS
-define|\
-value|"\20\1TURBOP\2COMP\3FF\4BURST\5PRIVACY\6PUREG\10SCAN\11ASCAN\12SIBSS" \ 	"\13SHSLOT\14PMGTON\15DESBSSID\16WME\17BGSCAN\20SWRETRY\21TXPOW_FIXED" \ 	"\22IBSSON\23SHPREAMBLE\24DATAPAD\25USEPROT\26USERBARKER\27CSAPENDING" \ 	"\30WPA1\31WPA2\32DROPUNENC\33COUNTERM\34HIDESSID\35NOBRIDG\36PCF" \ 	"\37DOTH\40DWDS"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_FEXT_BITS
-define|\
-value|"\20\1NONHT_PR\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\22WDSLEGACY\23PROBECHAN\24HT" \ 	"\25AMDPU_TX\26AMPDU_TX\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN" \ 	"\33SHORTGI20\34SHORTGI40\35HTCOMPAT\36RIFS"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_FVEN_BITS
-value|"\20"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_BITS
-define|\
-value|"\20\1STA\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_CRYPTO_BITS
-define|\
-value|"\20\1WEP\2TKIP\3AES\4AES_CCM\5TKIPMIC\6CKIP\12PMGT"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_C_HTCAP_BITS
-define|\
-value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\21AMPDU\22AMSDU\23HT\24SMPS\25RIFS"
-end_define
-
-begin_comment
-comment|/* NB: policy bits not included */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_CHAN_BITS
-define|\
-value|"\20\5TURBO\6CCK\7OFDM\0102GHZ\0115GHZ\12PASSIVE\13DYN\14GFSK" \ 	"\15STURBO\16HALF\17QUARTER\20HT20\21HT40U\22HT40D\23DFS"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_NODE_BITS
-define|\
-value|"\20\1AUTH\2QOS\3ERP\5PWR_MGT\6AREF\7HT\10HTCOMPAT\11WPS\12TSN" \ 	"\13AMPDU_RX\14AMPDU_TX\15MIMO_PS\16MIMO_RTS\17RIFS\20SGI20\21SGI40" \ 	"\22ASSOCID"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_ERP_BITS
-define|\
-value|"\20\1NON_ERP_PRESENT\2USE_PROTECTION\3LONG_PREAMBLE"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_CAPINFO_BITS
-define|\
-value|"\20\1ESS\2IBSS\3CF_POLLABLE\4CF_POLLREQ\5PRIVACY\6SHORT_PREAMBLE" \ 	"\7PBCC\10CHNL_AGILITY\11SPECTRUM_MGMT\13SHORT_SLOTTIME\14RSN" \ 	"\16DSSOFDM"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_HTCAP_BITS
-define|\
-value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\13DELBA\14AMSDU(7935)\15DSSSCCK40\16PSMP\1740INTOLERANT" \ 	"\20LSIGTXOPPROT"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_AGGR_BITS
-define|\
-value|"\20\1IMMEDIATE\2XCHGPEND\3RUNNING\4SETUP\5NAK"
-end_define
-
-begin_define
-define|#
-directive|define
 name|DB_PRINTSYM
 parameter_list|(
 name|prefix
@@ -2915,7 +2808,7 @@ name|ic
 operator|->
 name|ic_cryptocaps
 argument_list|,
-name|IEEE80211_C_CRYPTO_BITS
+name|IEEE80211_CRYPTO_BITS
 argument_list|)
 expr_stmt|;
 name|db_printf

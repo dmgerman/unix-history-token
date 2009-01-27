@@ -634,6 +634,14 @@ name|IEEE80211_CHAN_HT
 value|(IEEE80211_CHAN_HT20 | IEEE80211_CHAN_HT40)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_BITS
+define|\
+value|"\20\1PRIV0\2PRIV2\3PRIV3\4PRIV4\5TURBO\6CCK\7OFDM\0102GHZ\0115GHZ" \ 	"\12PASSIVE\13DYN\14GFSK\15GSM\16STURBO\17HALF\20QUARTER\21HT20" \ 	"\22HT40U\23HT40D\24DFS\0254MSXMIT\26NOADHOC\27NOHOSTAP\03011D"
+end_define
+
 begin_comment
 comment|/*  * Useful combinations of channel characteristics.  */
 end_comment

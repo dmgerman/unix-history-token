@@ -2281,6 +2281,14 @@ begin_comment
 comment|/* bits 14-15 are reserved */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CAPINFO_BITS
+define|\
+value|"\20\1ESS\2IBSS\3CF_POLLABLE\4CF_POLLREQ\5PRIVACY\6SHORT_PREAMBLE" \ 	"\7PBCC\10CHNL_AGILITY\11SPECTRUM_MGMT\13SHORT_SLOTTIME\14RSN" \ 	"\16DSSOFDM"
+end_define
+
 begin_comment
 comment|/*  * 802.11i/WPA information element (maximally sized).  */
 end_comment
@@ -2665,6 +2673,14 @@ end_define
 begin_comment
 comment|/* L-SIG TXOP prot */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HTCAP_BITS
+define|\
+value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\13DELBA\14AMSDU(7935)\15DSSSCCK40\16PSMP\1740INTOLERANT" \ 	"\20LSIGTXOPPROT"
+end_define
 
 begin_comment
 comment|/* HT parameters (hc_param) */
@@ -3729,6 +3745,14 @@ define|#
 directive|define
 name|IEEE80211_ERP_LONG_PREAMBLE
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_ERP_BITS
+define|\
+value|"\20\1NON_ERP_PRESENT\2USE_PROTECTION\3LONG_PREAMBLE"
 end_define
 
 begin_define
