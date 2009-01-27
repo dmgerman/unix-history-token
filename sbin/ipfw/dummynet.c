@@ -1933,15 +1933,12 @@ name|int
 name|pipe_or_queue
 parameter_list|,
 name|int
-name|n
+name|i
 parameter_list|)
 block|{
 name|struct
 name|dn_pipe
 name|p
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|memset
 argument_list|(
