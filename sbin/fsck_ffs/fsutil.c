@@ -2464,7 +2464,7 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"YOU MAY NEED TO RERUN FSCK WITH -C IF IT CRASHED.\n"
+literal|"YOU MAY NEED TO RERUN FSCK WITH -D IF IT CRASHED.\n"
 argument_list|)
 expr_stmt|;
 block|}
