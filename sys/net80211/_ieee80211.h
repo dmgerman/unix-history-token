@@ -1120,6 +1120,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_CHANSTATE_CWINT
+value|0x04
+end_define
+
+begin_comment
+comment|/* interference detected */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_CHANSTATE_NORADAR
 value|0x10
 end_define
@@ -1148,6 +1159,17 @@ name|_c
 parameter_list|)
 define|\
 value|(((_c)->ic_state& IEEE80211_CHANSTATE_CACDONE) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_CWINT
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_state& IEEE80211_CHANSTATE_CWINT) != 0)
 end_define
 
 begin_comment
