@@ -16736,22 +16736,6 @@ define|\
 value|"\20\1STA\7FF\10TURBOP\11IBSS\12PMGT" \ 	"\13HOSTAP\14AHDEMO\15SWRETRY\16TXPMGT\17SHSLOT\20SHPREAMBLE" \ 	"\21MONITOR\22DFS\30WPA1\31WPA2\32BURST\33WME\34WDS\36BGSCAN" \ 	"\37TXFRAG\40TDMA"
 end_define
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_CRYPTO_BITS
-define|\
-value|"\20\1WEP\2TKIP\3AES\4AES_CCM\5TKIPMIC\6CKIP\12PMGT"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_HTCAP_BITS
-define|\
-value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\21AMPDU\22AMSDU\23HT"
-end_define
-
 begin_function
 specifier|static
 name|void
