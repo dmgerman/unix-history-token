@@ -3459,8 +3459,6 @@ argument_list|,
 name|data
 argument_list|,
 name|EAP_TTLS_MSCHAPV2_CHALLENGE_LEN
-operator|*
-literal|2
 operator|+
 literal|1
 argument_list|)
@@ -3992,7 +3990,9 @@ name|sm
 argument_list|,
 name|data
 argument_list|,
-name|EAP_TLS_KEY_LEN
+name|EAP_TTLS_MSCHAP_CHALLENGE_LEN
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4604,7 +4604,9 @@ name|sm
 argument_list|,
 name|data
 argument_list|,
-name|EAP_TLS_KEY_LEN
+name|EAP_TTLS_CHAP_CHALLENGE_LEN
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

@@ -4053,6 +4053,13 @@ condition|)
 return|return
 name|NULL
 return|;
+name|plain
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|left
@@ -4181,6 +4188,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|plain
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+operator|||
 name|plain
 index|[
 literal|0

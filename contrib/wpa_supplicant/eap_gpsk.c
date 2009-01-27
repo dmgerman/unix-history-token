@@ -1137,8 +1137,12 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"EAP-GPSK: Invalid CSuite_List len %d"
+literal|"EAP-GPSK: Invalid CSuite_List len %lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 operator|*
 name|list_len
 argument_list|)
@@ -2270,6 +2274,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 name|pos
 operator|+=
@@ -2617,12 +2624,22 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"EAP-GPSK: Message too short for MIC "
-literal|"(left=%d miclen=%d)"
+literal|"(left=%lu miclen=%lu)"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|end
 operator|-
 name|pos
+argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|miclen
 argument_list|)
 expr_stmt|;
@@ -2908,12 +2925,18 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"EAP-GPSK: Ignored %d bytes of extra "
+literal|"EAP-GPSK: Ignored %lu bytes of extra "
 literal|"data in the end of GPSK-2"
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|end
 operator|-
 name|pos
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -423,6 +423,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE8021X_EAPOL
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -513,6 +519,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IEEE8021X_EAPOL */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -6217,6 +6232,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|IEEE8021X_EAPOL
 block|}
 elseif|else
 if|if
@@ -6249,6 +6267,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* IEEE8021X_EAPOL */
 ifdef|#
 directive|ifdef
 name|CONFIG_PEERKEY

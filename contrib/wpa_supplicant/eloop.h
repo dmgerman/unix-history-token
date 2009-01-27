@@ -343,6 +343,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * eloop_is_timeout_registered - Check if a timeout is already registered  * @handler: Matching callback function  * @eloop_data: Matching eloop_data  * @user_data: Matching user_data  * Returns: 1 if the timeout is registered, 0 if the timeout is not registered  *  * Determine if a matching<handler,eloop_data,user_data> timeout is registered  * with eloop_register_timeout().  */
+end_comment
+
+begin_function_decl
+name|int
+name|eloop_is_timeout_registered
+parameter_list|(
+name|eloop_timeout_handler
+name|handler
+parameter_list|,
+name|void
+modifier|*
+name|eloop_data
+parameter_list|,
+name|void
+modifier|*
+name|user_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * eloop_register_signal - Register handler for signals  * @sig: Signal number (e.g., SIGHUP)  * @handler: Callback function to be called when the signal is received  * @user_data: Callback context data (signal_ctx)  * Returns: 0 on success, -1 on failure  *  * Register a callback function that will be called when a signal is received.  * The callback function is actually called only after the system signal  * handler has returned. This means that the normal limits for sighandlers  * (i.e., only "safe functions" allowed) do not apply for the registered  * callback.  *  * Signals are 'global' events and there is no local eloop_data pointer like  * with other handlers. The global user_data pointer registered with  * eloop_init() will be used as eloop_ctx for signal handlers.  */
 end_comment
 

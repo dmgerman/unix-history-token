@@ -1125,6 +1125,18 @@ name|secret
 operator|+
 name|L_S1
 expr_stmt|;
+if|if
+condition|(
+name|secret_len
+operator|&
+literal|1
+condition|)
+block|{
+comment|/* The last byte of S1 will be shared with S2 */
+name|S2
+operator|--
+expr_stmt|;
+block|}
 name|hmac_md5_vector
 argument_list|(
 name|S1

@@ -182,6 +182,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_NDIS_EVENTS_INTEGRATED
+end_ifdef
+
 begin_function_decl
 name|void
 name|wpa_driver_ndis_event_pipe_cb
@@ -196,6 +202,15 @@ name|user_data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_NDIS_EVENTS_INTEGRATED */
+end_comment
 
 begin_function_decl
 specifier|static

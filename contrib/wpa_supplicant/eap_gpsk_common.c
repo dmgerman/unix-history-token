@@ -1587,9 +1587,13 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"EAP-GPSK: Invalid SK length %d for "
+literal|"EAP-GPSK: Invalid SK length %lu for "
 literal|"AES-CMAC MIC"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|sk_len
 argument_list|)
 expr_stmt|;
