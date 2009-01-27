@@ -1399,12 +1399,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*    * The following is used to generate a printable argument for  * 64-bit numbers, irrespective of platform alignment and bit size.  * Because all the printf in this program use %llu as a format,  * we just return an unsigned long long, which is larger than  * we need in certain cases, but saves the hassle of using  * PRIu64 as a format specifier.  * We don't care about inlining, this is not performance critical code.  */
+end_comment
+
 begin_function
-specifier|static
-name|__inline
-name|uint64_t
+name|unsigned
+name|long
+name|long
 name|align_uint64
 parameter_list|(
+specifier|const
 name|uint64_t
 modifier|*
 name|pll

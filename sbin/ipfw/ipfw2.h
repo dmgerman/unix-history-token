@@ -340,6 +340,20 @@ parameter_list|)
 value|{if (!ac) errx(EX_USAGE, msg);}
 end_define
 
+begin_function_decl
+name|unsigned
+name|long
+name|long
+name|align_uint64
+parameter_list|(
+specifier|const
+name|uint64_t
+modifier|*
+name|pll
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* memory allocation support */
 end_comment

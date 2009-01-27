@@ -757,21 +757,29 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%4qu %8qu %2u %4u %3u\n"
+literal|"%4llu %8llu %2u %4u %3u\n"
 argument_list|,
+name|align_uint64
+argument_list|(
+operator|&
 name|q
 index|[
 name|l
 index|]
 operator|.
 name|tot_pkts
+argument_list|)
 argument_list|,
+name|align_uint64
+argument_list|(
+operator|&
 name|q
 index|[
 name|l
 index|]
 operator|.
 name|tot_bytes
+argument_list|)
 argument_list|,
 name|q
 index|[
@@ -803,21 +811,29 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"   S %20qd  F %20qd\n"
+literal|"   S %20llu  F %20llu\n"
 argument_list|,
+name|align_uint64
+argument_list|(
+operator|&
 name|q
 index|[
 name|l
 index|]
 operator|.
 name|S
+argument_list|)
 argument_list|,
+name|align_uint64
+argument_list|(
+operator|&
 name|q
 index|[
 name|l
 index|]
 operator|.
 name|F
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1120,21 +1136,29 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %4qu %8qu %2u %4u %3u\n"
+literal|" %4llu %8llu %2u %4u %3u\n"
 argument_list|,
+name|align_uint64
+argument_list|(
+operator|&
 name|q
 index|[
 name|l
 index|]
 operator|.
 name|tot_pkts
+argument_list|)
 argument_list|,
+name|align_uint64
+argument_list|(
+operator|&
 name|q
 index|[
 name|l
 index|]
 operator|.
 name|tot_bytes
+argument_list|)
 argument_list|,
 name|q
 index|[
@@ -1166,21 +1190,29 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"   S %20qd  F %20qd\n"
+literal|"   S %20llu  F %20llu\n"
 argument_list|,
+name|align_uint64
+argument_list|(
+operator|&
 name|q
 index|[
 name|l
 index|]
 operator|.
 name|S
+argument_list|)
 argument_list|,
+name|align_uint64
+argument_list|(
+operator|&
 name|q
 index|[
 name|l
 index|]
 operator|.
 name|F
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1725,11 +1757,15 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"   V %20qd\n"
+literal|"   V %20llu\n"
 argument_list|,
+name|align_uint64
+argument_list|(
+operator|&
 name|p
 operator|->
 name|V
+argument_list|)
 operator|>>
 name|MY_M
 argument_list|)
