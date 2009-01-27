@@ -276,13 +276,6 @@ name|verbose
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|IP_MASK_ALL
-value|0xffffffff
-end_define
-
 begin_comment
 comment|/*  * the following macro returns an error message if we run out of  * arguments.  */
 end_comment
@@ -315,17 +308,54 @@ parameter_list|)
 value|do {			\ 	if (!ac)							\ 		errx(EX_USAGE, "%s: missing argument", match_value(s_x, tok)); \ 	if (_substrcmp(*av, "tablearg") == 0) {				\ 		arg = IP_FW_TABLEARG;					\ 		break;							\ 	}								\ 									\ 	{								\ 	long val;							\ 	char *end;							\ 									\ 	val = strtol(*av,&end, 10);					\ 									\ 	if (!isdigit(**av) || *end != '\0' || (val == 0&& errno == EINVAL)) \ 		errx(EX_DATAERR, "%s: invalid argument: %s",		\ 		    match_value(s_x, tok), *av);			\ 									\ 	if (errno == ERANGE || val< min || val> max)			\ 		errx(EX_DATAERR, "%s: argument is out of range (%u..%u): %s", \ 		    match_value(s_x, tok), min, max, *av);		\ 									\ 	if (val == IP_FW_TABLEARG)					\ 		errx(EX_DATAERR, "%s: illegal argument value: %s",	\ 		    match_value(s_x, tok), *av);			\ 	arg = val;							\ 	}								\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|void
 name|PRINT_UINT_ARG
 parameter_list|(
+specifier|const
+name|char
+modifier|*
 name|str
 parameter_list|,
+name|uint32_t
 name|arg
 parameter_list|)
-value|do {					\ 	if (str != NULL)						\ 		printf("%s",str);					\ 	if (arg == IP_FW_TABLEARG)					\ 		printf("tablearg");					\ 	else								\ 		printf("%u", (uint32_t)arg);				\ } while (0)
-end_define
+block|{
+if|if
+condition|(
+name|str
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|==
+name|IP_FW_TABLEARG
+condition|)
+name|printf
+argument_list|(
+literal|"tablearg"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%u"
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * _s_x is a structure that stores a string<-> token pairs, used in  * various places in the parser. Entries are stored in arrays,  * with an entry with s=NULL as terminator.  * The search routines are match_token() and match_value().  * Often, an element with x=0 contains an error string.  *  */
@@ -1936,13 +1966,6 @@ comment|/* terminator */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|TABLEARG
-value|"tablearg"
-end_define
 
 begin_function
 specifier|static
@@ -14773,7 +14796,8 @@ index|[
 literal|1
 index|]
 operator|==
-name|IP_MASK_ALL
+operator|~
+literal|0
 operator|&&
 name|av
 operator|==
@@ -24861,7 +24885,7 @@ argument_list|(
 operator|*
 name|av
 argument_list|,
-name|TABLEARG
+literal|"tablearg"
 argument_list|)
 operator|==
 literal|0
