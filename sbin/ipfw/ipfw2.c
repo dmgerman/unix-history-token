@@ -225,54 +225,90 @@ directive|include
 file|<alias.h>
 end_include
 
-begin_decl_stmt
+begin_comment
+comment|/*  * Options that can be set on the command line.  * When reading commands from a file, a subset of the options can also  * be applied globally by specifying them before the file name.  * After that, each line can contain its own option that changes  * the global value.  * XXX The context is not restored after each line.  */
+end_comment
+
+begin_struct
+struct|struct
+name|cmdline_opts
+block|{
+comment|/* boolean options: */
 name|int
 name|do_value_as_ip
-decl_stmt|,
+decl_stmt|;
 comment|/* show table value as IP */
+name|int
 name|do_resolv
-decl_stmt|,
-comment|/* Would try to resolve all */
+decl_stmt|;
+comment|/* try to resolve all ip to names */
+name|int
 name|do_time
-decl_stmt|,
+decl_stmt|;
 comment|/* Show time stamps */
+name|int
 name|do_quiet
-decl_stmt|,
+decl_stmt|;
 comment|/* Be quiet in add and flush */
+name|int
 name|do_pipe
-decl_stmt|,
+decl_stmt|;
 comment|/* this cmd refers to a pipe */
+name|int
 name|do_nat
-decl_stmt|,
-comment|/* Nat configuration. */
-name|do_sort
-decl_stmt|,
-comment|/* field to sort results (0 = no) */
+decl_stmt|;
+comment|/* this cmd refers to a nat config */
+name|int
 name|do_dynamic
-decl_stmt|,
+decl_stmt|;
 comment|/* display dynamic rules */
+name|int
 name|do_expired
-decl_stmt|,
+decl_stmt|;
 comment|/* display expired dynamic rules */
+name|int
 name|do_compact
-decl_stmt|,
+decl_stmt|;
 comment|/* show rules in compact mode */
+name|int
 name|do_force
-decl_stmt|,
+decl_stmt|;
 comment|/* do not ask for confirmation */
-name|use_set
-decl_stmt|,
-comment|/* work with specified set number */
+name|int
 name|show_sets
-decl_stmt|,
-comment|/* display rule sets */
+decl_stmt|;
+comment|/* display the set each rule belongs to */
+name|int
 name|test_only
-decl_stmt|,
+decl_stmt|;
 comment|/* only check syntax */
+name|int
 name|comment_only
-decl_stmt|,
+decl_stmt|;
 comment|/* only print action and comment */
+name|int
 name|verbose
+decl_stmt|;
+comment|/* be verbose on some commands */
+comment|/* The options below can have multiple values. */
+name|int
+name|do_sort
+decl_stmt|;
+comment|/* field to sort results (0 = no) */
+comment|/* valid fields are 1 and above */
+name|int
+name|use_set
+decl_stmt|;
+comment|/* work with specified set number */
+comment|/* 0 means all sets, otherwise apply to set use_set - 1 */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|cmdline_opts
+name|co
 decl_stmt|;
 end_decl_stmt
 
@@ -2120,6 +2156,8 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|test_only
 condition|)
 return|return
@@ -2528,6 +2566,8 @@ name|s
 decl_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|do_resolv
 operator|&&
 operator|(
@@ -2568,6 +2608,8 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|do_resolv
 condition|)
 block|{
@@ -5038,6 +5080,8 @@ name|mb
 operator|==
 literal|32
 operator|&&
+name|co
+operator|.
 name|do_resolv
 condition|)
 name|he
@@ -5698,6 +5742,8 @@ name|mb
 operator|==
 literal|128
 operator|&&
+name|co
+operator|.
 name|do_resolv
 condition|)
 name|he
@@ -6657,6 +6703,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|co
+operator|.
 name|comment_only
 condition|)
 return|return;
@@ -6902,6 +6950,8 @@ comment|/* disabled */
 if|if
 condition|(
 operator|!
+name|co
+operator|.
 name|show_sets
 condition|)
 return|return;
@@ -6958,6 +7008,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|do_time
 operator|==
 literal|2
@@ -6974,6 +7026,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|co
+operator|.
 name|do_time
 operator|==
 literal|1
@@ -7089,6 +7143,8 @@ block|}
 block|}
 if|if
 condition|(
+name|co
+operator|.
 name|show_sets
 condition|)
 name|printf
@@ -7756,6 +7812,8 @@ comment|/* empty rules before options */
 if|if
 condition|(
 operator|!
+name|co
+operator|.
 name|do_compact
 condition|)
 block|{
@@ -7784,6 +7842,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|co
+operator|.
 name|comment_only
 condition|)
 name|comment
@@ -7836,6 +7896,8 @@ name|cmd
 decl_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|comment_only
 condition|)
 block|{
@@ -9581,6 +9643,8 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
+name|co
+operator|.
 name|do_expired
 condition|)
 block|{
@@ -9919,6 +9983,8 @@ name|int
 name|rev
 init|=
 operator|(
+name|co
+operator|.
 name|do_sort
 operator|<
 literal|0
@@ -9930,8 +9996,12 @@ init|=
 name|rev
 condition|?
 operator|-
+name|co
+operator|.
 name|do_sort
 else|:
+name|co
+operator|.
 name|do_sort
 decl_stmt|;
 name|long
@@ -10107,6 +10177,8 @@ condition|)
 return|return;
 if|if
 condition|(
+name|co
+operator|.
 name|do_sort
 operator|!=
 literal|0
@@ -10403,6 +10475,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|verbose
 condition|)
 name|printf
@@ -10764,6 +10838,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|verbose
 condition|)
 name|printf
@@ -11201,6 +11277,8 @@ operator|->
 name|pipe_nr
 operator|)
 operator|||
+name|co
+operator|.
 name|do_pipe
 operator|==
 literal|2
@@ -11320,6 +11398,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|verbose
 condition|)
 name|printf
@@ -11445,6 +11525,8 @@ name|fs
 operator|->
 name|fs_nr
 operator|&&
+name|co
+operator|.
 name|do_pipe
 operator|==
 literal|2
@@ -11457,6 +11539,8 @@ name|fs
 operator|->
 name|parent_nr
 operator|&&
+name|co
+operator|.
 name|do_pipe
 operator|==
 literal|1
@@ -12668,6 +12752,8 @@ specifier|const
 name|int
 name|ocmd
 init|=
+name|co
+operator|.
 name|do_pipe
 condition|?
 name|IP_DUMMYNET_GET
@@ -12686,6 +12772,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|test_only
 condition|)
 block|{
@@ -12760,6 +12848,8 @@ name|EX_OSERR
 argument_list|,
 literal|"getsockopt(IP_%s_GET)"
 argument_list|,
+name|co
+operator|.
 name|do_pipe
 condition|?
 literal|"DUMMYNET"
@@ -12770,6 +12860,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 condition|)
 block|{
@@ -12917,12 +13009,16 @@ block|{
 comment|/* skip rules from another set */
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 operator|&&
 name|r
 operator|->
 name|set
 operator|!=
+name|co
+operator|.
 name|use_set
 operator|-
 literal|1
@@ -12992,6 +13088,8 @@ block|}
 block|}
 if|if
 condition|(
+name|co
+operator|.
 name|do_dynamic
 operator|&&
 name|ndyn
@@ -13020,6 +13118,8 @@ control|)
 block|{
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 condition|)
 block|{
@@ -13053,6 +13153,8 @@ if|if
 condition|(
 name|set
 operator|!=
+name|co
+operator|.
 name|use_set
 operator|-
 literal|1
@@ -13154,12 +13256,16 @@ control|)
 block|{
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 operator|&&
 name|r
 operator|->
 name|set
 operator|!=
+name|co
+operator|.
 name|use_set
 operator|-
 literal|1
@@ -13177,6 +13283,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|co
+operator|.
 name|do_dynamic
 operator|&&
 name|ndyn
@@ -13212,6 +13320,8 @@ control|)
 block|{
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 condition|)
 block|{
@@ -13244,6 +13354,8 @@ if|if
 condition|(
 name|set
 operator|!=
+name|co
+operator|.
 name|use_set
 operator|-
 literal|1
@@ -13384,12 +13496,16 @@ condition|)
 break|break;
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 operator|&&
 name|r
 operator|->
 name|set
 operator|!=
+name|co
+operator|.
 name|use_set
 operator|-
 literal|1
@@ -13453,6 +13569,8 @@ block|}
 block|}
 if|if
 condition|(
+name|co
+operator|.
 name|do_dynamic
 operator|&&
 name|ndyn
@@ -13574,6 +13692,8 @@ condition|)
 break|break;
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 condition|)
 block|{
@@ -13606,6 +13726,8 @@ if|if
 condition|(
 name|set
 operator|!=
+name|co
+operator|.
 name|use_set
 operator|-
 literal|1
@@ -16107,6 +16229,8 @@ block|{
 comment|/* Do not allow using the following syntax: 		 *	ipfw set N delete set M 		 */
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 condition|)
 name|errx
@@ -16157,6 +16281,8 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|do_nat
 condition|)
 block|{
@@ -16194,11 +16320,15 @@ block|}
 elseif|else
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 condition|)
 block|{
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 operator|==
 literal|1
@@ -16244,6 +16374,8 @@ name|warn
 argument_list|(
 literal|"rule %u: setsockopt(IP_DUMMYNET_DEL)"
 argument_list|,
+name|co
+operator|.
 name|do_pipe
 operator|==
 literal|1
@@ -16265,6 +16397,8 @@ else|else
 block|{
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 condition|)
 name|rulenum
@@ -16283,6 +16417,8 @@ operator|)
 operator||
 operator|(
 operator|(
+name|co
+operator|.
 name|use_set
 operator|-
 literal|1
@@ -16706,6 +16842,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|co
+operator|.
 name|verbose
 condition|)
 name|warnx
@@ -16839,6 +16977,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|co
+operator|.
 name|verbose
 condition|)
 name|warnx
@@ -20094,6 +20234,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|co
+operator|.
 name|do_quiet
 condition|)
 block|{
@@ -20204,6 +20346,8 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 operator|==
 literal|1
@@ -21337,6 +21481,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 operator|!=
 literal|1
@@ -21550,6 +21696,8 @@ name|TOK_DELAY
 case|:
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 operator|!=
 literal|1
@@ -21594,6 +21742,8 @@ name|TOK_WEIGHT
 case|:
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 operator|==
 literal|1
@@ -21641,6 +21791,8 @@ name|TOK_PIPE
 case|:
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 operator|==
 literal|1
@@ -21701,6 +21853,8 @@ block|}
 block|}
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 operator|==
 literal|1
@@ -21739,7 +21893,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* do_pipe == 2, queue */
+comment|/* co.do_pipe == 2, queue */
 if|if
 condition|(
 name|p
@@ -28708,6 +28862,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|co
+operator|.
 name|do_quiet
 condition|)
 name|show_ipfw
@@ -28806,6 +28962,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|co
+operator|.
 name|do_quiet
 condition|)
 name|printf
@@ -28874,6 +29032,8 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 condition|)
 name|arg
@@ -28886,6 +29046,8 @@ operator|)
 operator||
 operator|(
 operator|(
+name|co
+operator|.
 name|use_set
 operator|-
 literal|1
@@ -28934,6 +29096,8 @@ elseif|else
 if|if
 condition|(
 operator|!
+name|co
+operator|.
 name|do_quiet
 condition|)
 name|printf
@@ -28992,6 +29156,8 @@ block|{
 name|int
 name|cmd
 init|=
+name|co
+operator|.
 name|do_pipe
 condition|?
 name|IP_DUMMYNET_FLUSH
@@ -29004,6 +29170,8 @@ operator|!
 name|force
 operator|&&
 operator|!
+name|co
+operator|.
 name|do_quiet
 condition|)
 block|{
@@ -29084,6 +29252,8 @@ block|}
 comment|/* `ipfw set N flush` - is the same that `ipfw delete set N` */
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 condition|)
 block|{
@@ -29092,6 +29262,8 @@ name|arg
 init|=
 operator|(
 operator|(
+name|co
+operator|.
 name|use_set
 operator|-
 literal|1
@@ -29151,6 +29323,8 @@ name|EX_UNAVAILABLE
 argument_list|,
 literal|"setsockopt(IP_%s_FLUSH)"
 argument_list|,
+name|co
+operator|.
 name|do_pipe
 condition|?
 literal|"DUMMYNET"
@@ -29161,12 +29335,16 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|co
+operator|.
 name|do_quiet
 condition|)
 name|printf
 argument_list|(
 literal|"Flushed all %s.\n"
 argument_list|,
+name|co
+operator|.
 name|do_pipe
 condition|?
 literal|"pipes"
@@ -29741,6 +29919,8 @@ if|if
 condition|(
 operator|!
 operator|(
+name|co
+operator|.
 name|do_quiet
 operator|&&
 operator|(
@@ -30122,6 +30302,8 @@ name|value
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|do_value_as_ip
 condition|)
 block|{
@@ -30335,6 +30517,8 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|test_only
 condition|)
 return|return;
@@ -31285,8 +31469,12 @@ comment|/* Set the force flag for non-interactive processes */
 if|if
 condition|(
 operator|!
+name|co
+operator|.
 name|do_force
 condition|)
+name|co
+operator|.
 name|do_force
 operator|=
 operator|!
@@ -31345,10 +31533,14 @@ break|break;
 case|case
 literal|'b'
 case|:
+name|co
+operator|.
 name|comment_only
 operator|=
 literal|1
 expr_stmt|;
+name|co
+operator|.
 name|do_compact
 operator|=
 literal|1
@@ -31357,6 +31549,8 @@ break|break;
 case|case
 literal|'c'
 case|:
+name|co
+operator|.
 name|do_compact
 operator|=
 literal|1
@@ -31365,6 +31559,8 @@ break|break;
 case|case
 literal|'d'
 case|:
+name|co
+operator|.
 name|do_dynamic
 operator|=
 literal|1
@@ -31373,6 +31569,8 @@ break|break;
 case|case
 literal|'e'
 case|:
+name|co
+operator|.
 name|do_expired
 operator|=
 literal|1
@@ -31381,6 +31579,8 @@ break|break;
 case|case
 literal|'f'
 case|:
+name|co
+operator|.
 name|do_force
 operator|=
 literal|1
@@ -31405,6 +31605,8 @@ comment|/* NOTREACHED */
 case|case
 literal|'i'
 case|:
+name|co
+operator|.
 name|do_value_as_ip
 operator|=
 literal|1
@@ -31413,6 +31615,8 @@ break|break;
 case|case
 literal|'n'
 case|:
+name|co
+operator|.
 name|test_only
 operator|=
 literal|1
@@ -31421,6 +31625,8 @@ break|break;
 case|case
 literal|'N'
 case|:
+name|co
+operator|.
 name|do_resolv
 operator|=
 literal|1
@@ -31429,6 +31635,8 @@ break|break;
 case|case
 literal|'q'
 case|:
+name|co
+operator|.
 name|do_quiet
 operator|=
 literal|1
@@ -31438,6 +31646,8 @@ case|case
 literal|'s'
 case|:
 comment|/* sort */
+name|co
+operator|.
 name|do_sort
 operator|=
 name|atoi
@@ -31449,6 +31659,8 @@ break|break;
 case|case
 literal|'S'
 case|:
+name|co
+operator|.
 name|show_sets
 operator|=
 literal|1
@@ -31457,6 +31669,8 @@ break|break;
 case|case
 literal|'t'
 case|:
+name|co
+operator|.
 name|do_time
 operator|=
 literal|1
@@ -31465,6 +31679,8 @@ break|break;
 case|case
 literal|'T'
 case|:
+name|co
+operator|.
 name|do_time
 operator|=
 literal|2
@@ -31475,6 +31691,8 @@ case|case
 literal|'v'
 case|:
 comment|/* verbose */
+name|co
+operator|.
 name|verbose
 operator|=
 literal|1
@@ -31550,10 +31768,14 @@ name|p
 expr_stmt|;
 block|}
 comment|/* 	 * Optional: pipe, queue or nat. 	 */
+name|co
+operator|.
 name|do_nat
 operator|=
 literal|0
 expr_stmt|;
+name|co
+operator|.
 name|do_pipe
 operator|=
 literal|0
@@ -31575,6 +31797,8 @@ name|av
 argument_list|)
 argument_list|)
 condition|)
+name|co
+operator|.
 name|do_nat
 operator|=
 literal|1
@@ -31597,6 +31821,8 @@ name|av
 argument_list|)
 argument_list|)
 condition|)
+name|co
+operator|.
 name|do_pipe
 operator|=
 literal|1
@@ -31614,6 +31840,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+name|co
+operator|.
 name|do_pipe
 operator|=
 literal|2
@@ -31655,6 +31883,8 @@ index|]
 argument_list|)
 condition|)
 block|{
+name|co
+operator|.
 name|use_set
 operator|=
 name|strtonum
@@ -31696,6 +31926,8 @@ name|av
 operator|+=
 literal|2
 expr_stmt|;
+name|co
+operator|.
 name|use_set
 operator|++
 expr_stmt|;
@@ -31703,8 +31935,12 @@ block|}
 block|}
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 operator|||
+name|co
+operator|.
 name|do_nat
 condition|)
 block|{
@@ -31724,8 +31960,12 @@ comment|/* 	 * For pipes, queues and nats we normally say 'nat|pipe NN config' 	
 if|if
 condition|(
 operator|(
+name|co
+operator|.
 name|do_pipe
 operator|||
+name|co
+operator|.
 name|do_nat
 operator|)
 operator|&&
@@ -31777,6 +32017,8 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 operator|==
 literal|0
@@ -31804,6 +32046,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|co
+operator|.
 name|do_nat
 operator|&&
 name|_substrcmp
@@ -31826,6 +32070,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|co
+operator|.
 name|do_pipe
 operator|&&
 name|_substrcmp
@@ -31848,6 +32094,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|co
+operator|.
 name|do_nat
 operator|&&
 name|_substrcmp
@@ -31959,6 +32207,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|co
+operator|.
 name|use_set
 operator|||
 name|try_next
@@ -31998,6 +32248,8 @@ literal|0
 condition|)
 name|flush
 argument_list|(
+name|co
+operator|.
 name|do_force
 argument_list|)
 expr_stmt|;
@@ -32226,6 +32478,8 @@ block|{
 case|case
 literal|'c'
 case|:
+name|co
+operator|.
 name|do_compact
 operator|=
 literal|1
@@ -32234,6 +32488,8 @@ break|break;
 case|case
 literal|'f'
 case|:
+name|co
+operator|.
 name|do_force
 operator|=
 literal|1
@@ -32242,6 +32498,8 @@ break|break;
 case|case
 literal|'N'
 case|:
+name|co
+operator|.
 name|do_resolv
 operator|=
 literal|1
@@ -32250,6 +32508,8 @@ break|break;
 case|case
 literal|'n'
 case|:
+name|co
+operator|.
 name|test_only
 operator|=
 literal|1
@@ -32303,6 +32563,8 @@ break|break;
 case|case
 literal|'q'
 case|:
+name|co
+operator|.
 name|do_quiet
 operator|=
 literal|1
@@ -32311,6 +32573,8 @@ break|break;
 case|case
 literal|'S'
 case|:
+name|co
+operator|.
 name|show_sets
 operator|=
 literal|1
