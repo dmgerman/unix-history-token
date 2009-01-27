@@ -858,7 +858,7 @@ parameter_list|(
 name|_c
 parameter_list|)
 define|\
-value|(((_c)->ic_flags& IEEE80211_CHAN_OFDM) != 0)
+value|(((_c)->ic_flags& (IEEE80211_CHAN_OFDM | IEEE80211_CHAN_DYN)) != 0)
 end_define
 
 begin_define
@@ -869,7 +869,7 @@ parameter_list|(
 name|_c
 parameter_list|)
 define|\
-value|(((_c)->ic_flags& IEEE80211_CHAN_CCK) != 0)
+value|(((_c)->ic_flags& (IEEE80211_CHAN_CCK | IEEE80211_CHAN_DYN)) != 0)
 end_define
 
 begin_define
