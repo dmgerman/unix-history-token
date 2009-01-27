@@ -502,31 +502,6 @@ init|=
 literal|392
 block|,
 comment|/* Japan */
-name|CTRY_JAPAN1
-init|=
-literal|393
-block|,
-comment|/* Japan (JP1) */
-name|CTRY_JAPAN2
-init|=
-literal|394
-block|,
-comment|/* Japan (JP0) */
-name|CTRY_JAPAN3
-init|=
-literal|395
-block|,
-comment|/* Japan (JP1-1) */
-name|CTRY_JAPAN4
-init|=
-literal|396
-block|,
-comment|/* Japan (JE1) */
-name|CTRY_JAPAN5
-init|=
-literal|397
-block|,
-comment|/* Japan (JE2) */
 name|CTRY_JORDAN
 init|=
 literal|400
@@ -837,6 +812,147 @@ init|=
 literal|716
 block|,
 comment|/* Zimbabwe */
+comment|/* NB: from here down not listed in 3166; they come from Atheros */
+name|CTRY_DEBUG
+init|=
+literal|0x1ff
+block|,
+comment|/* debug */
+name|CTRY_DEFAULT
+init|=
+literal|0
+block|,
+comment|/* default */
+name|CTRY_UNITED_STATES_FCC49
+init|=
+literal|842
+block|,
+comment|/* United States (Public Safety)*/
+name|CTRY_KOREA_ROC3
+init|=
+literal|412
+block|,
+comment|/* South Korea */
+name|CTRY_JAPAN1
+init|=
+literal|393
+block|,
+comment|/* Japan (JP1) */
+name|CTRY_JAPAN2
+init|=
+literal|394
+block|,
+comment|/* Japan (JP0) */
+name|CTRY_JAPAN3
+init|=
+literal|395
+block|,
+comment|/* Japan (JP1-1) */
+name|CTRY_JAPAN4
+init|=
+literal|396
+block|,
+comment|/* Japan (JE1) */
+name|CTRY_JAPAN5
+init|=
+literal|397
+block|,
+comment|/* Japan (JE2) */
+name|CTRY_JAPAN6
+init|=
+literal|399
+block|,
+comment|/* Japan (JP6) */
+name|CTRY_JAPAN7
+init|=
+literal|4007
+block|,
+comment|/* Japan (J7) */
+name|CTRY_JAPAN8
+init|=
+literal|4008
+block|,
+comment|/* Japan (J8) */
+name|CTRY_JAPAN9
+init|=
+literal|4009
+block|,
+comment|/* Japan (J9) */
+name|CTRY_JAPAN10
+init|=
+literal|4010
+block|,
+comment|/* Japan (J10) */
+name|CTRY_JAPAN11
+init|=
+literal|4011
+block|,
+comment|/* Japan (J11) */
+name|CTRY_JAPAN12
+init|=
+literal|4012
+block|,
+comment|/* Japan (J12) */
+name|CTRY_JAPAN13
+init|=
+literal|4013
+block|,
+comment|/* Japan (J13) */
+name|CTRY_JAPAN14
+init|=
+literal|4014
+block|,
+comment|/* Japan (J14) */
+name|CTRY_JAPAN15
+init|=
+literal|4015
+block|,
+comment|/* Japan (J15) */
+name|CTRY_JAPAN16
+init|=
+literal|4016
+block|,
+comment|/* Japan (J16) */
+name|CTRY_JAPAN17
+init|=
+literal|4017
+block|,
+comment|/* Japan (J17) */
+name|CTRY_JAPAN18
+init|=
+literal|4018
+block|,
+comment|/* Japan (J18) */
+name|CTRY_JAPAN19
+init|=
+literal|4019
+block|,
+comment|/* Japan (J19) */
+name|CTRY_JAPAN20
+init|=
+literal|4020
+block|,
+comment|/* Japan (J20) */
+name|CTRY_JAPAN21
+init|=
+literal|4021
+block|,
+comment|/* Japan (J21) */
+name|CTRY_JAPAN22
+init|=
+literal|4022
+block|,
+comment|/* Japan (J22) */
+name|CTRY_JAPAN23
+init|=
+literal|4023
+block|,
+comment|/* Japan (J23) */
+name|CTRY_JAPAN24
+init|=
+literal|4024
+block|,
+comment|/* Japan (J24) */
 block|}
 enum|;
 end_enum
@@ -911,6 +1027,23 @@ comment|/* "Region Free" */
 name|SKU_DEBUG
 init|=
 literal|0x1ff
+block|,
+comment|/* NB: from here down private */
+name|SKU_SR9
+init|=
+literal|0x0298
+block|,
+comment|/* Ubiquiti SR9 (900MHz/GSM) */
+name|SKU_XR9
+init|=
+literal|0x0299
+block|,
+comment|/* Ubiquiti XR9 (900MHz/GSM) */
+name|SKU_GZ901
+init|=
+literal|0x029a
+block|,
+comment|/* Zcomax GZ-901 (900MHz/GSM) */
 block|}
 enum|;
 end_enum
@@ -929,27 +1062,11 @@ name|_KERNEL
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|CTRY_DEBUG
-value|0x1ff
-end_define
-
-begin_comment
-comment|/* debug */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTRY_DEFAULT
-value|0
-end_define
-
-begin_comment
-comment|/* default */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|ieee80211com
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|void
@@ -973,6 +1090,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211vap
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|ieee80211_regdomain_vattach
@@ -995,6 +1118,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_regdomain
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|ieee80211_init_channels
@@ -1016,14 +1145,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_channel
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|ieee80211_sort_channels
 parameter_list|(
 name|struct
 name|ieee80211_channel
+modifier|*
 name|chans
-index|[]
 parameter_list|,
 name|int
 name|nchans
