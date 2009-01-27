@@ -311,6 +311,17 @@ name|uint8_t
 name|ic_extieee
 decl_stmt|;
 comment|/* HT40 extension channel number */
+name|int8_t
+name|ic_maxantgain
+decl_stmt|;
+comment|/* maximum antenna gain in .5 dBm */
+name|uint8_t
+name|ic_pad
+decl_stmt|;
+name|uint16_t
+name|ic_devdata
+decl_stmt|;
+comment|/* opaque device/driver data */
 block|}
 struct|;
 end_struct
