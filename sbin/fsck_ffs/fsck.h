@@ -1031,12 +1031,12 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|catastrophicflag
+name|damagedflag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* run in catastrophic mode */
+comment|/* run in damaged mode */
 end_comment
 
 begin_decl_stmt
