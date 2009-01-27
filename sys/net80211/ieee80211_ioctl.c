@@ -4156,6 +4156,8 @@ name|ic_getradiocaps
 argument_list|(
 name|ic
 argument_list|,
+name|IEEE80211_CHAN_MAX
+argument_list|,
 operator|&
 name|ci
 operator|->

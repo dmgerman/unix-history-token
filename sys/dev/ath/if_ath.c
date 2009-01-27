@@ -1404,6 +1404,8 @@ name|ieee80211com
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|struct
@@ -29320,6 +29322,9 @@ name|struct
 name|ieee80211com
 modifier|*
 name|ic
+parameter_list|,
+name|int
+name|maxchans
 parameter_list|,
 name|int
 modifier|*

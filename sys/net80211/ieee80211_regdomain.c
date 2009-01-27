@@ -86,6 +86,9 @@ modifier|*
 name|ic
 parameter_list|,
 name|int
+name|maxchan
+parameter_list|,
+name|int
 modifier|*
 name|n
 parameter_list|,
@@ -103,6 +106,21 @@ name|ic
 operator|->
 name|ic_nchans
 expr_stmt|;
+comment|/* XXX return count copied? */
+if|if
+condition|(
+name|maxchan
+operator|>
+name|ic
+operator|->
+name|ic_nchans
+condition|)
+name|maxchan
+operator|=
+name|ic
+operator|->
+name|ic_nchans
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|c
@@ -111,9 +129,7 @@ name|ic
 operator|->
 name|ic_channels
 argument_list|,
-name|ic
-operator|->
-name|ic_nchans
+name|maxchan
 operator|*
 sizeof|sizeof
 argument_list|(

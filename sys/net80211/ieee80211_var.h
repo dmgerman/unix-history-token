@@ -760,6 +760,8 @@ name|ieee80211com
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|struct
