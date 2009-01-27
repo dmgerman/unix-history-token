@@ -843,16 +843,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|show_usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_enum
 enum|enum
 name|tokens
@@ -13791,30 +13781,6 @@ end_function
 begin_function
 specifier|static
 name|void
-name|show_usage
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: ipfw [options]\n"
-literal|"do \"ipfw -h\" or see ipfw manpage for details\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_USAGE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|help
 parameter_list|(
 name|void
@@ -13824,8 +13790,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ipfw syntax summary (but please do read the ipfw(8) manpage):\n"
-literal|"ipfw [-abcdefhnNqStTv]<command> where<command> is one of:\n"
+literal|"ipfw syntax summary (but please do read the ipfw(8) manpage):\n\n"
+literal|"\tipfw [-abcdefhnNqStTv]<command>\n\n"
+literal|"where<command> is one of the following:\n\n"
 literal|"add [num] [set N] [prob x] RULE-BODY\n"
 literal|"{pipe|queue} N config PIPE-BODY\n"
 literal|"[pipe|queue] {zero|delete|show} [N{,N}]\n"
@@ -32603,26 +32570,20 @@ name|optind
 operator|+
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ac %d, optind %d\n"
-argument_list|,
-name|ac
-argument_list|,
-name|optind
-argument_list|)
-expr_stmt|;
 name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"extraneous filename arguments"
+literal|"extraneous filename arguments %s"
+argument_list|,
+name|av
+index|[
+name|ac
+operator|-
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -33059,9 +33020,16 @@ argument_list|,
 name|av
 argument_list|)
 condition|)
-name|show_usage
-argument_list|()
+block|{
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"usage: ipfw [options]\n"
+literal|"do \"ipfw -h\" or \"man ipfw\" for details"
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 name|EX_OK
