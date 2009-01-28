@@ -643,7 +643,7 @@ name|vp
 operator|->
 name|v_fifoinfo
 decl_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
@@ -1963,7 +1963,7 @@ name|vp
 operator|->
 name|v_fifoinfo
 decl_stmt|;
-name|ASSERT_VOP_LOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|vp
 argument_list|,
