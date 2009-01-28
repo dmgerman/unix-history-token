@@ -8822,17 +8822,44 @@ if|if
 condition|(
 name|verbose
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%s: chanFlags 0x%x b %p\n"
+literal|"%s:"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|printb
+argument_list|(
+literal|" chanFlags"
 argument_list|,
 name|chanFlags
 argument_list|,
-name|b
+name|IEEE80211_CHAN_BITS
 argument_list|)
 expr_stmt|;
+name|printb
+argument_list|(
+literal|" bandFlags"
+argument_list|,
+name|nb
+operator|->
+name|flags
+operator||
+name|b
+operator|->
+name|flags
+argument_list|,
+name|IEEE80211_CHAN_BITS
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
 name|prev
 operator|=
 name|NULL
@@ -8903,15 +8930,29 @@ if|if
 condition|(
 name|verbose
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%u: skip, flags 0x%x not available\n"
+literal|"%u: skip, "
 argument_list|,
 name|freq
-argument_list|,
-name|chanFlags
 argument_list|)
 expr_stmt|;
+name|printb
+argument_list|(
+literal|"flags"
+argument_list|,
+name|chanFlags
+argument_list|,
+name|IEEE80211_CHAN_BITS
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" not available\n"
+argument_list|)
+expr_stmt|;
+block|}
 continue|continue;
 block|}
 if|if
@@ -8989,7 +9030,8 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"%u: skip, device does not support HT20 operation\n"
+literal|"%u: skip, device does not "
+literal|"support HT20 operation\n"
 argument_list|,
 name|freq
 argument_list|)
@@ -9019,7 +9061,8 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"%u: skip, device does not support HT40 operation\n"
+literal|"%u: skip, device does not "
+literal|"support HT40 operation\n"
 argument_list|,
 name|freq
 argument_list|)
@@ -9226,9 +9269,10 @@ if|if
 condition|(
 name|verbose
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"[%3d] add freq %u flags 0x%x power %u\n"
+literal|"[%3d] add freq %u "
 argument_list|,
 name|ci
 operator|->
@@ -9239,16 +9283,29 @@ argument_list|,
 name|c
 operator|->
 name|ic_freq
+argument_list|)
+expr_stmt|;
+name|printb
+argument_list|(
+literal|"flags"
 argument_list|,
 name|c
 operator|->
 name|ic_flags
+argument_list|,
+name|IEEE80211_CHAN_BITS
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" power %u\n"
 argument_list|,
 name|c
 operator|->
 name|ic_maxregpower
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* NB: kernel fills in other fields */
 name|prev
 operator|=
