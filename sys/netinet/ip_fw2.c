@@ -10234,6 +10234,13 @@ name|IP_FW_PASS
 operator|)
 return|;
 comment|/* accept */
+name|dst_ip
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* make sure it is initialized */
 name|pktlen
 operator|=
 name|m
@@ -12283,6 +12290,8 @@ name|s_addr
 decl_stmt|;
 name|uint32_t
 name|v
+init|=
+literal|0
 decl_stmt|;
 name|match
 operator|=
