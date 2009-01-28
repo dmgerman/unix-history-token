@@ -1284,7 +1284,7 @@ argument_list|,
 sizeof|sizeof
 name|vdp
 operator|->
-name|id
+name|id_sierra
 argument_list|)
 operator|!=
 literal|0
