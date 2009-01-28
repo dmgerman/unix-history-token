@@ -1365,6 +1365,8 @@ expr_stmt|;
 if|if
 condition|(
 name|mmc_debug
+operator|>
+literal|1
 condition|)
 block|{
 name|device_printf
@@ -1485,10 +1487,12 @@ if|if
 condition|(
 name|mmc_debug
 operator|>
-literal|1
+literal|2
 operator|||
 operator|(
 name|mmc_debug
+operator|>
+literal|1
 operator|&&
 name|req
 operator|->
