@@ -3178,7 +3178,7 @@ name|bpos
 argument_list|,
 literal|"uu"
 argument_list|,
-name|umajor
+name|major
 argument_list|(
 name|c
 operator|->
@@ -3187,7 +3187,7 @@ operator|->
 name|va_rdev
 argument_list|)
 argument_list|,
-name|uminor
+name|minor
 argument_list|(
 name|c
 operator|->

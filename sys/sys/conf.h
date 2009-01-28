@@ -1418,37 +1418,7 @@ name|dev2unit
 parameter_list|(
 name|d
 parameter_list|)
-value|((d) ? (d)->si_drv0 : NODEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|minor
-parameter_list|(
-name|d
-parameter_list|)
-value|((d) ? (d)->si_drv0 : NODEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|unit2minor
-parameter_list|(
-name|u
-parameter_list|)
-value|(u)
-end_define
-
-begin_define
-define|#
-directive|define
-name|minor2unit
-parameter_list|(
-name|m
-parameter_list|)
-value|(m)
+value|((d)->si_drv0)
 end_define
 
 begin_typedef

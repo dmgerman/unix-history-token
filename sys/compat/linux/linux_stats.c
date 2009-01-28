@@ -208,7 +208,7 @@ comment|/* Map major number to 0 */
 end_comment
 
 begin_endif
-unit|tbuf.st_dev = uminor(buf->st_dev)& 0xf; 				tbuf.st_rdev = buf->st_rdev& 0xff; 			} 			dev_relthread(dev); 		} 	}  }
+unit|tbuf.st_dev = minor(buf->st_dev)& 0xf; 				tbuf.st_rdev = buf->st_rdev& 0xff; 			} 			dev_relthread(dev); 		} 	}  }
 endif|#
 directive|endif
 end_endif
@@ -602,7 +602,7 @@ name|tbuf
 operator|.
 name|st_dev
 operator|=
-name|uminor
+name|minor
 argument_list|(
 name|buf
 operator|->
@@ -610,7 +610,7 @@ name|st_dev
 argument_list|)
 operator||
 operator|(
-name|umajor
+name|major
 argument_list|(
 name|buf
 operator|->
@@ -2523,7 +2523,7 @@ name|lbuf
 operator|.
 name|st_dev
 operator|=
-name|uminor
+name|minor
 argument_list|(
 name|buf
 operator|->
@@ -2531,7 +2531,7 @@ name|st_dev
 argument_list|)
 operator||
 operator|(
-name|umajor
+name|major
 argument_list|(
 name|buf
 operator|->

@@ -6989,7 +6989,7 @@ operator|++
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|umajor
+name|major
 argument_list|(
 name|vap
 operator|->
@@ -7002,7 +7002,7 @@ name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|uminor
+name|minor
 argument_list|(
 name|vap
 operator|->
