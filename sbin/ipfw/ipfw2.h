@@ -520,40 +520,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* forward declarations to avoid header dependency */
+comment|/*  * Forward declarations to avoid include way too many headers.  * C does not allow duplicated typedefs, so we use the base struct  * that the typedef points to.  * Should the typedefs use a different type, the compiler will  * still detect the change when compiling the body of the  * functions involved, so we do not lose error checking.  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
+begin_struct_decl
+struct_decl|struct
 name|_ipfw_insn
-name|ipfw_insn
-typedef|;
-end_typedef
+struct_decl|;
+end_struct_decl
 
-begin_typedef
-typedef|typedef
-name|struct
+begin_struct_decl
+struct_decl|struct
 name|_ipfw_insn_u32
-name|ipfw_insn_u32
-typedef|;
-end_typedef
+struct_decl|;
+end_struct_decl
 
-begin_typedef
-typedef|typedef
-name|struct
+begin_struct_decl
+struct_decl|struct
 name|_ipfw_insn_ip6
-name|ipfw_insn_ip6
-typedef|;
-end_typedef
+struct_decl|;
+end_struct_decl
 
-begin_typedef
-typedef|typedef
-name|struct
+begin_struct_decl
+struct_decl|struct
 name|_ipfw_insn_icmp6
-name|ipfw_insn_icmp6
-typedef|;
-end_typedef
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * The reserved set numer. This is a constant in ip_fw.h  * but we store it in a variable so other files do not depend  * in that header just for one constant.  */
@@ -796,7 +788,8 @@ begin_function_decl
 name|void
 name|print_ip6
 parameter_list|(
-name|ipfw_insn_ip6
+name|struct
+name|_ipfw_insn_ip6
 modifier|*
 name|cmd
 parameter_list|,
@@ -812,7 +805,8 @@ begin_function_decl
 name|void
 name|print_flow6id
 parameter_list|(
-name|ipfw_insn_u32
+name|struct
+name|_ipfw_insn_u32
 modifier|*
 name|cmd
 parameter_list|)
@@ -823,7 +817,8 @@ begin_function_decl
 name|void
 name|print_icmp6types
 parameter_list|(
-name|ipfw_insn_u32
+name|struct
+name|_ipfw_insn_u32
 modifier|*
 name|cmd
 parameter_list|)
@@ -834,7 +829,8 @@ begin_function_decl
 name|void
 name|print_ext6hdr
 parameter_list|(
-name|ipfw_insn
+name|struct
+name|_ipfw_insn
 modifier|*
 name|cmd
 parameter_list|)
@@ -842,11 +838,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ipfw_insn
+name|struct
+name|_ipfw_insn
 modifier|*
 name|add_srcip6
 parameter_list|(
-name|ipfw_insn
+name|struct
+name|_ipfw_insn
 modifier|*
 name|cmd
 parameter_list|,
@@ -858,11 +856,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ipfw_insn
+name|struct
+name|_ipfw_insn
 modifier|*
 name|add_dstip6
 parameter_list|(
-name|ipfw_insn
+name|struct
+name|_ipfw_insn
 modifier|*
 name|cmd
 parameter_list|,
@@ -877,7 +877,8 @@ begin_function_decl
 name|void
 name|fill_flow6
 parameter_list|(
-name|ipfw_insn_u32
+name|struct
+name|_ipfw_insn_u32
 modifier|*
 name|cmd
 parameter_list|,
@@ -907,7 +908,8 @@ begin_function_decl
 name|void
 name|fill_icmp6types
 parameter_list|(
-name|ipfw_insn_icmp6
+name|struct
+name|_ipfw_insn_icmp6
 modifier|*
 name|cmd
 parameter_list|,
@@ -922,7 +924,8 @@ begin_function_decl
 name|int
 name|fill_ext6hdr
 parameter_list|(
-name|ipfw_insn
+name|struct
+name|_ipfw_insn
 modifier|*
 name|cmd
 parameter_list|,
