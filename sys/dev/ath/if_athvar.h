@@ -1115,10 +1115,12 @@ name|u_int16_t
 name|sc_curaid
 decl_stmt|;
 comment|/* current association id */
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
+modifier|*
 name|sc_curchan
 decl_stmt|;
-comment|/* current h/w channel */
+comment|/* current installed channel */
 name|u_int8_t
 name|sc_curbssid
 index|[

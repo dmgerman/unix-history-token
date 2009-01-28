@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -49,6 +49,12 @@ name|b
 parameter_list|)
 value|((a)>(b)?(a):(b))
 end_define
+
+begin_include
+include|#
+directive|include
+file|<net80211/_ieee80211.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -389,42 +395,57 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Internal form of a HAL_CHANNEL.  Note that the structure  * must be defined such that you can cast references to a  * HAL_CHANNEL so don't shuffle the first two members.  */
+comment|/*  * Maximum number of internal channels.  Entries are per unique  * frequency so this might be need to be increased to handle all  * usage cases; typically no more than 32 are really needed but  * dynamically allocating the data structures is a bit painful  * right now.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AH_MAXCHAN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AH_MAXCHAN
+value|96
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Internal per-channel state.  These are found  * using ic_devdata in the ieee80211_channel.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|uint32_t
-name|channelFlags
-decl_stmt|;
 name|uint16_t
 name|channel
 decl_stmt|;
-comment|/* NB: must be first for casting */
+comment|/* h/w frequency, NB: may be mapped */
 name|uint8_t
 name|privFlags
 decl_stmt|;
-name|int8_t
-name|maxRegTxPower
-decl_stmt|;
-name|int8_t
-name|maxTxPower
-decl_stmt|;
-name|int8_t
-name|minTxPower
-decl_stmt|;
-comment|/* as above... */
-name|HAL_BOOL
-name|bssSendHere
-decl_stmt|;
-name|uint8_t
-name|gainI
-decl_stmt|;
-name|HAL_BOOL
-name|iqCalValid
-decl_stmt|;
+define|#
+directive|define
+name|CHANNEL_IQVALID
+value|0x01
+comment|/* IQ calibration valid */
+define|#
+directive|define
+name|CHANNEL_ANI_INIT
+value|0x02
+comment|/* ANI state initialized */
+define|#
+directive|define
+name|CHANNEL_ANI_SETUP
+value|0x04
+comment|/* ANI state setup */
 name|uint8_t
 name|calValid
 decl_stmt|;
@@ -441,25 +462,45 @@ decl_stmt|;
 name|int16_t
 name|noiseFloorAdjust
 decl_stmt|;
-name|int8_t
-name|antennaMax
-decl_stmt|;
-name|uint32_t
-name|regDmnFlags
-decl_stmt|;
-comment|/* Flags for channel use in reg */
-name|uint32_t
-name|conformanceTestLimit
-decl_stmt|;
-comment|/* conformance test limit from reg domain */
 name|uint16_t
 name|mainSpur
 decl_stmt|;
-comment|/* cached spur value for this cahnnel */
+comment|/* cached spur value for this channel */
 block|}
 name|HAL_CHANNEL_INTERNAL
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* channel requires noise floor check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_NFCREQUIRED
+value|IEEE80211_CHAN_PRIV0
+end_define
+
+begin_comment
+comment|/* all full-width channels */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_ALLFULL
+define|\
+value|(IEEE80211_CHAN_ALL - (IEEE80211_CHAN_HALF | IEEE80211_CHAN_QUARTER))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_ALLTURBOFULL
+define|\
+value|(IEEE80211_CHAN_ALLTURBO - \ 	 (IEEE80211_CHAN_HALF | IEEE80211_CHAN_QUARTER))
+end_define
 
 begin_typedef
 typedef|typedef
@@ -672,6 +713,12 @@ name|HAL_CAPABILITIES
 typedef|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|regDomain
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * The ``private area'' follows immediately after the ``public area''  * in the data structure returned by ath_hal_attach.  Private data are  * used by device-independent code such as the regulatory domain support.  * In general, code within the HAL should never depend on data in the  * public area.  Instead any public data needed internally should be  * shadowed here.  *  * When declaring a device-specific ath_hal data structure this structure  * is assumed to at the front; e.g.  *  *	struct ath_hal_5212 {  *		struct ath_hal_private	ah_priv;  *		...  *	};  *  * It might be better to manage the method pointers in this structure  * using an indirect pointer to a read-only data structure but this would  * disallow class-style method overriding.  */
 end_comment
@@ -838,10 +885,9 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
-parameter_list|,
-name|uint32_t
 parameter_list|)
 function_decl|;
 name|int16_t
@@ -1004,6 +1050,13 @@ name|HAL_OPMODE
 name|ah_opmode
 decl_stmt|;
 comment|/* operating mode from reset */
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|ah_curchan
+decl_stmt|;
+comment|/* operating channel */
 name|HAL_CAPABILITIES
 name|ah_caps
 decl_stmt|;
@@ -1032,35 +1085,36 @@ comment|/* 	 * State for regulatory domain handling. 	 */
 name|HAL_REG_DOMAIN
 name|ah_currentRD
 decl_stmt|;
-comment|/* Current regulatory domain */
-name|HAL_CTRY_CODE
-name|ah_countryCode
-decl_stmt|;
-comment|/* current country code */
+comment|/* EEPROM regulatory domain */
 name|HAL_CHANNEL_INTERNAL
 name|ah_channels
 index|[
-literal|256
+name|AH_MAXCHAN
 index|]
 decl_stmt|;
-comment|/* calculated channel list */
+comment|/* private chan state */
 name|u_int
 name|ah_nchan
 decl_stmt|;
-comment|/* valid channels in list */
-name|HAL_CHANNEL_INTERNAL
+comment|/* valid items in ah_channels */
+specifier|const
+name|struct
+name|regDomain
 modifier|*
-name|ah_curchan
+name|ah_rd2GHz
 decl_stmt|;
-comment|/* current channel */
+comment|/* reg state for 2G band */
+specifier|const
+name|struct
+name|regDomain
+modifier|*
+name|ah_rd5GHz
+decl_stmt|;
+comment|/* reg state for 5G band */
 name|uint8_t
 name|ah_coverageClass
 decl_stmt|;
 comment|/* coverage class */
-name|HAL_BOOL
-name|ah_regdomainUpdate
-decl_stmt|;
-comment|/* regdomain is updated? */
 comment|/* 	 * RF Silent handling; setup according to the EEPROM. 	 */
 name|uint16_t
 name|ah_rfsilent
@@ -1230,12 +1284,10 @@ name|ath_hal_getpowerlimits
 parameter_list|(
 name|_ah
 parameter_list|,
-name|_chans
-parameter_list|,
-name|_nchan
+name|_chan
 parameter_list|)
 define|\
-value|AH_PRIVATE(_ah)->ah_getChipPowerLimits(_ah, _chans, _nchan)
+value|AH_PRIVATE(_ah)->ah_getChipPowerLimits(_ah, _chan)
 end_define
 
 begin_define
@@ -1354,21 +1406,11 @@ define|\
 value|AH_PRIVATE(_ah)->ah_eepromDiag(_ah, _request, _a, _asize,  _r, _rsize)
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_NET_IF_IEEE80211_H_
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_NET80211__IEEE80211_H_
-argument_list|)
-end_if
+end_ifndef
 
 begin_comment
 comment|/*  * Stuff that would naturally come from _ieee80211.h  */
@@ -1380,17 +1422,6 @@ directive|define
 name|IEEE80211_ADDR_LEN
 value|6
 end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_WEP_KEYLEN
-value|5
-end_define
-
-begin_comment
-comment|/* 40bit */
-end_comment
 
 begin_define
 define|#
@@ -1435,49 +1466,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|IEEE80211_MTU
-value|1500
-end_define
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_MAX_LEN
 value|(2300 + IEEE80211_CRC_LEN + \     (IEEE80211_WEP_IVLEN + IEEE80211_WEP_KIDLEN + IEEE80211_WEP_CRCLEN))
 end_define
-
-begin_enum
-enum|enum
-block|{
-name|IEEE80211_T_DS
-block|,
-comment|/* direct sequence spread spectrum */
-name|IEEE80211_T_FH
-block|,
-comment|/* frequency hopping */
-name|IEEE80211_T_OFDM
-block|,
-comment|/* frequency division multiplexing */
-name|IEEE80211_T_TURBO
-block|,
-comment|/* high rate DS */
-name|IEEE80211_T_HT
-block|,
-comment|/* HT - full GI */
-block|}
-enum|;
-end_enum
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_T_CCK
-value|IEEE80211_T_DS
-end_define
-
-begin_comment
-comment|/* more common nomenclatur */
-end_comment
 
 begin_endif
 endif|#
@@ -1487,24 +1478,6 @@ end_endif
 begin_comment
 comment|/* _NET_IF_IEEE80211_H_ */
 end_comment
-
-begin_comment
-comment|/* NB: these are defined privately until XR support is announced */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|ATHEROS_T_XR
-init|=
-name|IEEE80211_T_HT
-operator|+
-literal|1
-block|,
-comment|/* extended range */
-block|}
-enum|;
-end_enum
 
 begin_define
 define|#
@@ -1750,101 +1723,6 @@ name|HAL_MAX_BINS_ALLOWED
 value|28
 end_define
 
-begin_comment
-comment|/*  * A    = 5GHZ|OFDM  * T    = 5GHZ|OFDM|TURBO  *  * IS_CHAN_A(T) will return TRUE.  This is probably  * not the default behavior we want.  We should migrate to a better mask --  * perhaps CHANNEL_ALL.  *  * For now, IS_CHAN_G() masks itself with CHANNEL_108G.  *  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_A
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_A) == CHANNEL_A)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_B
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_B) == CHANNEL_B)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_G
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& (CHANNEL_108G|CHANNEL_G)) == CHANNEL_G)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_108G
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_108G) == CHANNEL_108G)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_T
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_T) == CHANNEL_T)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_PUREG
-parameter_list|(
-name|_c
-parameter_list|)
-define|\
-value|(((_c)->channelFlags& CHANNEL_PUREG) == CHANNEL_PUREG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_TURBO
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_TURBO) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_CCK
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_CCK) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_OFDM
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_OFDM) != 0)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1852,7 +1730,7 @@ name|IS_CHAN_5GHZ
 parameter_list|(
 name|_c
 parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_5GHZ) != 0)
+value|((_c)->channel> 4900)
 end_define
 
 begin_define
@@ -1862,37 +1740,7 @@ name|IS_CHAN_2GHZ
 parameter_list|(
 name|_c
 parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_2GHZ) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_PASSIVE
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_PASSIVE) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_HALF_RATE
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_HALF) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_QUARTER_RATE
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_QUARTER) != 0)
+value|(!IS_CHAN_5GHZ(_c))
 end_define
 
 begin_define
@@ -1903,50 +1751,6 @@ parameter_list|(
 name|_c
 parameter_list|)
 value|((_c)> 4940&& (_c)< 4990)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHANNEL_HT40
-value|(CHANNEL_HT40PLUS | CHANNEL_HT40MINUS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHANNEL_HT
-value|(CHANNEL_HT20 | CHANNEL_HT40)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_HT
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_HT) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_HT20
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_HT) == CHANNEL_HT20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_HT40
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->channelFlags& CHANNEL_HT40) != 0)
 end_define
 
 begin_comment
@@ -2097,91 +1901,6 @@ parameter_list|)
 define|\
 value|OS_REG_WRITE(_a, _r, OS_REG_READ(_a, _r)&~ (_f))
 end_define
-
-begin_comment
-comment|/*   * Regulatory domain support.  */
-end_comment
-
-begin_comment
-comment|/*  * Return the max allowed antenna gain based on the current  * regulatory domain.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|ath_hal_getantennareduction
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-parameter_list|,
-name|u_int
-name|twiceGain
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Return the test group for the specific channel based on  * the current regulator domain.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|ath_hal_getctl
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Return whether or not a noise floor check is required  * based on the current regulatory domain for the specified  * channel.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|ath_hal_getnfcheckrequired
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Map a public channel definition to the corresponding  * internal data structure.  This implicitly specifies  * whether or not the specified channel is ok to use  * based on the current regulatory domain constraints.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|HAL_CHANNEL_INTERNAL
-modifier|*
-name|ath_hal_checkchannel
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-specifier|const
-name|HAL_CHANNEL
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* system-configurable parameters */
@@ -2519,6 +2238,209 @@ end_endif
 begin_comment
 comment|/* AH_ASSERT */
 end_comment
+
+begin_comment
+comment|/*   * Regulatory domain support.  */
+end_comment
+
+begin_comment
+comment|/*  * Return the max allowed antenna gain and apply any regulatory  * domain specific changes.  */
+end_comment
+
+begin_function_decl
+name|u_int
+name|ath_hal_getantennareduction
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|,
+name|u_int
+name|twiceGain
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Return the test group for the specific channel based on  * the current regulatory setup.  */
+end_comment
+
+begin_function_decl
+name|u_int
+name|ath_hal_getctl
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Map a public channel definition to the corresponding  * internal data structure.  This implicitly specifies  * whether or not the specified channel is ok to use  * based on the current regulatory domain constraints.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AH_DEBUG
+end_ifndef
+
+begin_function
+specifier|static
+name|OS_INLINE
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+name|ath_hal_checkchannel
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|c
+parameter_list|)
+block|{
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+name|cc
+decl_stmt|;
+name|HALASSERT
+argument_list|(
+name|c
+operator|->
+name|ic_devdata
+operator|<
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_nchan
+argument_list|)
+expr_stmt|;
+name|cc
+operator|=
+operator|&
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_channels
+index|[
+name|c
+operator|->
+name|ic_devdata
+index|]
+expr_stmt|;
+name|HALASSERT
+argument_list|(
+name|c
+operator|->
+name|ic_freq
+operator|==
+name|cc
+operator|->
+name|channel
+operator|||
+name|IEEE80211_IS_CHAN_GSM
+argument_list|(
+name|c
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|cc
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* NB: non-inline version that checks state */
+end_comment
+
+begin_function_decl
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+name|ath_hal_checkchannel
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_DEBUG */
+end_comment
+
+begin_comment
+comment|/*  * Return the h/w frequency for a channel.  This may be  * different from ic_freq if this is a GSM device that  * takes 2.4GHz frequencies and down-converts them.  */
+end_comment
+
+begin_function
+specifier|static
+name|OS_INLINE
+name|uint16_t
+name|ath_hal_gethwchannel
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|c
+parameter_list|)
+block|{
+return|return
+name|ath_hal_checkchannel
+argument_list|(
+name|ah
+argument_list|,
+name|c
+argument_list|)
+operator|->
+name|channel
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Convert between microseconds and core system clocks.  */
@@ -3092,18 +3014,17 @@ comment|/*  * Common routine for implementing getChanNoise api.  */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int16_t
 name|ath_hal_getChanNoise
 parameter_list|(
 name|struct
 name|ath_hal
 modifier|*
-name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
-name|chan
 parameter_list|)
 function_decl|;
 end_function_decl

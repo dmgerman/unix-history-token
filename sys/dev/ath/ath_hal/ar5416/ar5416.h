@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5416.h,v 1.19 2008/11/11 21:38:13 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -342,7 +342,7 @@ parameter_list|,
 name|_c
 parameter_list|)
 define|\
-value|(IS_CHAN_5GHZ(_c)&& ath_hal_eepromGetFlag(ah, AR_EEP_FSTCLK_5G))
+value|(IEEE80211_IS_CHAN_5GHZ(_c)&& \ 	 ath_hal_eepromGetFlag(ah, AR_EEP_FSTCLK_5G))
 end_define
 
 begin_function_decl
@@ -451,7 +451,9 @@ specifier|const
 name|HAL_NODE_STATS
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -466,7 +468,9 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|,
 name|HAL_OPMODE
@@ -1087,7 +1091,8 @@ parameter_list|,
 name|HAL_OPMODE
 name|opmode
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -1150,7 +1155,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1197,12 +1204,10 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
-name|chans
-parameter_list|,
-name|uint32_t
-name|nchans
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1216,7 +1221,9 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,

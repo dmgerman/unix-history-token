@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2008 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $Id: ar5212.h,v 1.16 2008/11/22 07:42:00 sam Exp $  */
+comment|/*  * Copyright (c) 2002-2009 Sam Leffler, Errno Consulting  * Copyright (c) 2002-2008 Atheros Communications, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -546,7 +546,9 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -560,7 +562,9 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -590,7 +594,9 @@ name|int16_t
 modifier|*
 name|maxPower
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|,
 name|uint16_t
@@ -609,7 +615,10 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|,
 name|int16_t
@@ -755,13 +764,6 @@ name|uint32_t
 name|listenTime
 decl_stmt|;
 comment|/* NB: intentionally ordered so data exported to user space is first */
-name|HAL_CHANNEL
-name|c
-decl_stmt|;
-name|HAL_BOOL
-name|isSetup
-decl_stmt|;
-comment|/* has state to do a restore */
 name|uint32_t
 name|txFrameCount
 decl_stmt|;
@@ -1185,7 +1187,7 @@ name|struct
 name|ar5212AniState
 name|ah_ani
 index|[
-literal|64
+name|AH_MAXCHAN
 index|]
 decl_stmt|;
 comment|/* per-channel state */
@@ -1437,7 +1439,7 @@ name|_chan
 parameter_list|,
 name|_flag
 parameter_list|)
-value|do {			\ 	if ((IS_2425(_ah) || IS_2417(_ah))&&			\ 	    (((_chan)->channelFlags)& CHANNEL_CCK)) {		\ 		(_chan)->channelFlags&= ~CHANNEL_CCK;		\ 		(_chan)->channelFlags |= CHANNEL_OFDM;		\ 		(_flag) = AH_TRUE;				\ 	}							\ } while (0)
+value|do {			\ 	if ((IS_2425(_ah) || IS_2417(_ah))&&			\ 	    (((_chan)->ic_flags)& IEEE80211_CHAN_CCK)) {	\ 		(_chan)->ic_flags&= ~IEEE80211_CHAN_CCK;	\ 		(_chan)->ic_flags |= IEEE80211_CHAN_DYN;	\ 		(_flag) = AH_TRUE;				\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -1451,7 +1453,7 @@ name|_chan
 parameter_list|,
 name|_flag
 parameter_list|)
-value|do {                     \ 	if ((IS_2425(_ah) || IS_2417(_ah))&& (_flag) == AH_TRUE) {\ 		(_chan)->channelFlags&= ~CHANNEL_OFDM;		\ 		(_chan)->channelFlags |= CHANNEL_CCK;		\ 	}							\ } while (0)
+value|do {                     \ 	if ((IS_2425(_ah) || IS_2417(_ah))&& (_flag)) {	\ 		(_chan)->ic_flags&= ~IEEE80211_CHAN_DYN;	\ 		(_chan)->ic_flags |= IEEE80211_CHAN_CCK;	\ 	}							\ } while (0)
 end_define
 
 begin_struct_decl
@@ -2855,7 +2857,8 @@ parameter_list|,
 name|HAL_OPMODE
 name|opmode
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2878,7 +2881,9 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2936,7 +2941,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2952,7 +2959,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2973,7 +2981,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3000,9 +3009,10 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
-name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3054,7 +3064,9 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3074,9 +3086,9 @@ name|HAL_ANT_SETTING
 name|settings
 parameter_list|,
 specifier|const
-name|HAL_CHANNEL_INTERNAL
+name|struct
+name|ieee80211_channel
 modifier|*
-name|ichan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3107,12 +3119,10 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
-name|chans
-parameter_list|,
-name|uint32_t
-name|nchans
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3703,7 +3713,9 @@ specifier|const
 name|HAL_NODE_STATS
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3718,7 +3730,9 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|,
 name|HAL_OPMODE
