@@ -3419,6 +3419,8 @@ argument_list|,
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_ANYBODY
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -3553,6 +3555,8 @@ argument_list|,
 name|oidfmt
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_sysctl_oidfmt
 argument_list|,

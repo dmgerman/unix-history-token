@@ -354,6 +354,8 @@ argument_list|,
 name|ident
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|kern_ident
 argument_list|,
@@ -374,6 +376,8 @@ argument_list|,
 name|osrelease
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|osrelease
 argument_list|,
@@ -414,6 +418,8 @@ argument_list|,
 name|version
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|version
 argument_list|,
@@ -434,6 +440,8 @@ argument_list|,
 name|ostype
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|ostype
 argument_list|,
@@ -840,6 +848,8 @@ argument_list|,
 name|CTLTYPE_OPAQUE
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -1386,6 +1396,8 @@ operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
