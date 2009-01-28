@@ -2535,11 +2535,16 @@ name|j
 condition|)
 name|printf
 argument_list|(
-literal|"-%lld"
+literal|"-%jd"
 argument_list|,
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|i
 operator|+
 name|offset
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
