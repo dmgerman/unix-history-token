@@ -935,6 +935,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
+
 begin_comment
 comment|/*  * Description of dynamic rules.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, its address fields are first masked  * with the mask defined for the rule, then hashed, then matched  * against the entries in the corresponding list.  * Dynamic rules can be used for different purposes:  *  + stateful rules;  *  + enforcing limits on the number of sessions;  *  + in-kernel NAT (not implemented yet)  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is stored in dyn_count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rule holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted. XXX we should make them survive.  *  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall. XXX check the latter!!!  */
 end_comment
@@ -1155,6 +1164,12 @@ end_endif
 begin_comment
 comment|/* VIMAGE_GLOBALS */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_NODE
+end_ifdef
 
 begin_expr_stmt
 name|SYSCTL_V_INT
@@ -1444,6 +1459,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1454,6 +1478,12 @@ begin_comment
 comment|/*  * IPv6 specific variables  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_NODE
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -1461,6 +1491,15 @@ name|_net_inet6_ip6
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1486,15 +1525,6 @@ end_endif
 
 begin_comment
 comment|/* INET6 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYSCTL_NODE */
 end_comment
 
 begin_ifdef
