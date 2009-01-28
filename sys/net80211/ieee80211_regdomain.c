@@ -99,14 +99,6 @@ name|c
 parameter_list|)
 block|{
 comment|/* just feed back the current channel list */
-operator|*
-name|n
-operator|=
-name|ic
-operator|->
-name|ic_nchans
-expr_stmt|;
-comment|/* XXX return count copied? */
 if|if
 condition|(
 name|maxchan
@@ -137,6 +129,11 @@ expr|struct
 name|ieee80211_channel
 argument_list|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|n
+operator|=
+name|maxchan
 expr_stmt|;
 block|}
 end_function
