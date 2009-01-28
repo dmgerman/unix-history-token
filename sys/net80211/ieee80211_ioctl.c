@@ -4199,6 +4199,25 @@ operator|->
 name|ic_chans
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ci
+operator|->
+name|ic_nchans
+operator|<=
+name|maxchans
+argument_list|,
+operator|(
+literal|"nchans %d maxchans %d"
+operator|,
+name|ci
+operator|->
+name|ic_nchans
+operator|,
+name|maxchans
+operator|)
+argument_list|)
+expr_stmt|;
 name|ieee80211_sort_channels
 argument_list|(
 name|ci
