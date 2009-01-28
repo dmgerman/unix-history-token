@@ -3329,7 +3329,7 @@ operator|||
 name|args
 operator|.
 name|acregmin
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -3386,7 +3386,7 @@ operator|||
 name|args
 operator|.
 name|acregmax
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -3443,7 +3443,7 @@ operator|||
 name|args
 operator|.
 name|acdirmin
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -3500,7 +3500,7 @@ operator|||
 name|args
 operator|.
 name|acdirmax
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
