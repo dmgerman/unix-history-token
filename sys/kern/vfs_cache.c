@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/namei.h>
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -417,13 +417,13 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
+name|rwlock
 name|cache_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|MTX_SYSINIT
+name|RW_SYSINIT
 argument_list|(
 name|vfscache
 argument_list|,
@@ -431,8 +431,6 @@ operator|&
 name|cache_lock
 argument_list|,
 literal|"Name Cache"
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -440,17 +438,41 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|CACHE_LOCK
+name|CACHE_UPGRADE_LOCK
 parameter_list|()
-value|mtx_lock(&cache_lock)
+value|rw_try_upgrade(&cache_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CACHE_UNLOCK
+name|CACHE_RLOCK
 parameter_list|()
-value|mtx_unlock(&cache_lock)
+value|rw_rlock(&cache_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHE_RUNLOCK
+parameter_list|()
+value|rw_runlock(&cache_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHE_WLOCK
+parameter_list|()
+value|rw_wlock(&cache_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHE_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&cache_lock)
 end_define
 
 begin_comment
@@ -838,6 +860,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_long
+name|numupgrades
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|STATNODE
+argument_list|(
+name|CTLFLAG_RD
+argument_list|,
+name|numupgrades
+argument_list|,
+operator|&
+name|numupgrades
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|SYSCTL_OPAQUE
 argument_list|(
@@ -1061,7 +1103,7 @@ name|ncpp
 operator|++
 control|)
 block|{
-name|CACHE_LOCK
+name|CACHE_RLOCK
 argument_list|()
 expr_stmt|;
 name|count
@@ -1081,7 +1123,7 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -1237,7 +1279,7 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|CACHE_LOCK
+name|CACHE_RLOCK
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -1253,7 +1295,7 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -1446,12 +1488,12 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|cache_lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|CTR2
@@ -1617,6 +1659,8 @@ name|int
 name|error
 decl_stmt|,
 name|ltype
+decl_stmt|,
+name|wlocked
 decl_stmt|;
 if|if
 condition|(
@@ -1639,12 +1683,22 @@ return|;
 block|}
 name|retry
 label|:
-name|CACHE_LOCK
+name|CACHE_RLOCK
 argument_list|()
+expr_stmt|;
+name|wlocked
+operator|=
+literal|0
 expr_stmt|;
 name|numcalls
 operator|++
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|retry_wlocked
+label|:
 if|if
 condition|(
 name|cnp
@@ -1731,14 +1785,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|CACHE_UNLOCK
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|unlock
+goto|;
 block|}
 operator|*
 name|vpp
@@ -1849,7 +1898,7 @@ if|if
 condition|(
 name|ncp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -1880,14 +1929,9 @@ operator|.
 name|ncs_miss
 operator|++
 expr_stmt|;
-name|CACHE_UNLOCK
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|unlock
+goto|;
 block|}
 comment|/* We don't want to have an entry, so dump it */
 if|if
@@ -1911,12 +1955,24 @@ operator|.
 name|ncs_badhits
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|wlocked
+operator|&&
+operator|!
+name|CACHE_UPGRADE_LOCK
+argument_list|()
+condition|)
+goto|goto
+name|wlock
+goto|;
 name|cache_zap
 argument_list|(
 name|ncp
 argument_list|)
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1988,12 +2044,24 @@ operator|.
 name|ncs_badhits
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|wlocked
+operator|&&
+operator|!
+name|CACHE_UPGRADE_LOCK
+argument_list|()
+condition|)
+goto|goto
+name|wlock
+goto|;
 name|cache_zap
 argument_list|(
 name|ncp
 argument_list|)
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2002,6 +2070,18 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|wlocked
+operator|&&
+operator|!
+name|CACHE_UPGRADE_LOCK
+argument_list|()
+condition|)
+goto|goto
+name|wlock
+goto|;
 name|numneghits
 operator|++
 expr_stmt|;
@@ -2045,7 +2125,7 @@ name|cn_flags
 operator||=
 name|ISWHITEOUT
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2053,6 +2133,25 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+name|wlock
+label|:
+comment|/* 	 * We need to update the cache after our lookup, so upgrade to 	 * a write lock and retry the operation. 	 */
+name|CACHE_RUNLOCK
+argument_list|()
+expr_stmt|;
+name|CACHE_WLOCK
+argument_list|()
+expr_stmt|;
+name|numupgrades
+operator|++
+expr_stmt|;
+name|wlocked
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|retry_wlocked
+goto|;
 name|success
 label|:
 comment|/* 	 * On success we return a locked and ref'd vnode as per the lookup 	 * protocol. 	 */
@@ -2071,7 +2170,15 @@ operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
-name|CACHE_UNLOCK
+if|if
+condition|(
+name|wlocked
+condition|)
+name|CACHE_WUNLOCK
+argument_list|()
+expr_stmt|;
+else|else
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* 		 * When we lookup "." we still can be asked to lock it 		 * differently... 		 */
@@ -2196,7 +2303,15 @@ operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
-name|CACHE_UNLOCK
+if|if
+condition|(
+name|wlocked
+condition|)
+name|CACHE_WUNLOCK
+argument_list|()
+expr_stmt|;
+else|else
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -2282,6 +2397,24 @@ return|return
 operator|(
 operator|-
 literal|1
+operator|)
+return|;
+name|unlock
+label|:
+if|if
+condition|(
+name|wlocked
+condition|)
+name|CACHE_WUNLOCK
+argument_list|()
+expr_stmt|;
+else|else
+name|CACHE_RUNLOCK
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -2438,7 +2571,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-name|CACHE_LOCK
+name|CACHE_WLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -2458,7 +2591,7 @@ name|v_dd
 operator|=
 name|vp
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_WUNLOCK
 argument_list|()
 expr_stmt|;
 return|return;
@@ -2545,7 +2678,7 @@ argument_list|,
 name|hash
 argument_list|)
 expr_stmt|;
-name|CACHE_LOCK
+name|CACHE_WLOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * See if this vnode or negative entry is already in the cache 	 * with this name.  This can happen with concurrent lookups of 	 * the same path name. 	 */
@@ -2598,7 +2731,7 @@ name|nc_nlen
 argument_list|)
 condition|)
 block|{
-name|CACHE_UNLOCK
+name|CACHE_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|cache_free
@@ -2775,7 +2908,7 @@ argument_list|(
 name|ncp
 argument_list|)
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -2902,7 +3035,7 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|CACHE_LOCK
+name|CACHE_WLOCK
 argument_list|()
 expr_stmt|;
 while|while
@@ -2955,7 +3088,7 @@ name|v_dd
 operator|=
 name|NULL
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -2991,7 +3124,7 @@ modifier|*
 name|nnp
 decl_stmt|;
 comment|/* Scan hash tables for applicable entries */
-name|CACHE_LOCK
+name|CACHE_WLOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -3040,7 +3173,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|CACHE_UNLOCK
+name|CACHE_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -4005,7 +4138,7 @@ operator|*
 name|vp
 argument_list|)
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|vfslocked
@@ -4091,7 +4224,7 @@ name|vp
 operator|=
 name|dvp
 expr_stmt|;
-name|CACHE_LOCK
+name|CACHE_RLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -4107,7 +4240,7 @@ name|VI_DOOMED
 condition|)
 block|{
 comment|/* forced unmount */
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|vdrop
@@ -4211,7 +4344,7 @@ name|slash_prefixed
 operator|=
 literal|0
 expr_stmt|;
-name|CACHE_LOCK
+name|CACHE_RLOCK
 argument_list|()
 expr_stmt|;
 name|numfullpathcalls
@@ -4285,7 +4418,7 @@ block|{
 name|numfullpathfail4
 operator|++
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -4350,7 +4483,7 @@ block|{
 name|numfullpathfail4
 operator|++
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -4394,7 +4527,7 @@ name|VI_DOOMED
 condition|)
 block|{
 comment|/* forced unmount */
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -4425,7 +4558,7 @@ block|{
 name|numfullpathfail1
 operator|++
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -4518,7 +4651,7 @@ block|{
 name|numfullpathfail4
 operator|++
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -4579,7 +4712,7 @@ block|{
 name|numfullpathfail4
 operator|++
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -4618,7 +4751,7 @@ block|{
 name|numfullpathfail4
 operator|++
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -4640,7 +4773,7 @@ block|}
 name|numfullpathfound
 operator|++
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 operator|*
@@ -4681,7 +4814,7 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|;
-name|CACHE_LOCK
+name|CACHE_RLOCK
 argument_list|()
 expr_stmt|;
 name|ncp
@@ -4700,7 +4833,7 @@ operator|!
 name|ncp
 condition|)
 block|{
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -4733,7 +4866,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-name|CACHE_UNLOCK
+name|CACHE_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|buf
