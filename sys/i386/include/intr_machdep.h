@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|NUM_MSI_INTS
-value|128
+value|512
 end_define
 
 begin_define

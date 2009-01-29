@@ -618,6 +618,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|apic_cpuids
+index|[
+name|MAX_APIC_ID
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Holds pending bitmap based IPIs per CPU */
 end_comment
@@ -1437,6 +1448,13 @@ literal|0
 index|]
 operator|=
 name|boot_cpu_id
+expr_stmt|;
+name|apic_cpuids
+index|[
+name|boot_cpu_id
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|assign_cpu_ids
 argument_list|()
@@ -2647,6 +2665,13 @@ name|mp_ncpus
 index|]
 operator|=
 name|i
+expr_stmt|;
+name|apic_cpuids
+index|[
+name|i
+index|]
+operator|=
+name|mp_ncpus
 expr_stmt|;
 name|mp_ncpus
 operator|++
