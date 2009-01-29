@@ -112,7 +112,7 @@ name|CDEV_GET_SOFTC
 parameter_list|(
 name|x
 parameter_list|)
-value|devclass_get_softc(adb_mouse_devclass, minor(x)& 0x1f)
+value|devclass_get_softc(adb_mouse_devclass, dev2unit(x)& 0x1f)
 end_define
 
 begin_function_decl
