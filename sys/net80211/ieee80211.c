@@ -1071,6 +1071,13 @@ argument_list|,
 name|ieee80211_rateset_11g
 argument_list|)
 expr_stmt|;
+name|DEFAULTRATES
+argument_list|(
+name|IEEE80211_MODE_STURBO_A
+argument_list|,
+name|ieee80211_rateset_11a
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set auto mode to reset active channel state and any desired channel. 	 */
 operator|(
 name|void
