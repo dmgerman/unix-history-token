@@ -112,7 +112,7 @@ name|CDEV_GET_SOFTC
 parameter_list|(
 name|x
 parameter_list|)
-value|devclass_get_softc(adb_mouse_devclass, dev2unit(x)& 0x1f)
+value|(x)->si_drv1
 end_define
 
 begin_function_decl
@@ -953,6 +953,14 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|cdev
+operator|->
+name|si_drv1
+operator|=
+name|sc
 expr_stmt|;
 name|adb_set_autopoll
 argument_list|(
