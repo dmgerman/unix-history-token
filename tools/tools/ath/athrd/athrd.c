@@ -18,6 +18,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/_ieee80211.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_regdomain.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ah_internal.h"
 end_include
 
@@ -61,20 +73,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_CHAN_MAX
-value|255
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_REGCLASSIDS_MAX
-value|10
-end_define
-
 begin_decl_stmt
 name|int
 name|ath_hal_debug
@@ -102,14 +100,6 @@ end_decl_stmt
 begin_comment
 comment|/* FCC */
 end_comment
-
-begin_decl_stmt
-name|HAL_BOOL
-name|outdoor
-init|=
-name|AH_TRUE
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|HAL_BOOL
@@ -1027,7 +1017,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CHANNEL_5GHZ
+name|IEEE80211_CHAN_5GHZ
 condition|)
 block|{
 operator|*
@@ -1052,7 +1042,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CHANNEL_2GHZ
+name|IEEE80211_CHAN_2GHZ
 condition|)
 block|{
 operator|*
@@ -1172,701 +1162,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Country/Region Codes from MS WINNLS.H  * Numbering from ISO 3166  */
-end_comment
-
-begin_enum
-enum|enum
-name|CountryCode
-block|{
-name|CTRY_ALBANIA
-init|=
-literal|8
-block|,
-comment|/* Albania */
-name|CTRY_ALGERIA
-init|=
-literal|12
-block|,
-comment|/* Algeria */
-name|CTRY_ARGENTINA
-init|=
-literal|32
-block|,
-comment|/* Argentina */
-name|CTRY_ARMENIA
-init|=
-literal|51
-block|,
-comment|/* Armenia */
-name|CTRY_AUSTRALIA
-init|=
-literal|36
-block|,
-comment|/* Australia */
-name|CTRY_AUSTRIA
-init|=
-literal|40
-block|,
-comment|/* Austria */
-name|CTRY_AZERBAIJAN
-init|=
-literal|31
-block|,
-comment|/* Azerbaijan */
-name|CTRY_BAHRAIN
-init|=
-literal|48
-block|,
-comment|/* Bahrain */
-name|CTRY_BELARUS
-init|=
-literal|112
-block|,
-comment|/* Belarus */
-name|CTRY_BELGIUM
-init|=
-literal|56
-block|,
-comment|/* Belgium */
-name|CTRY_BELIZE
-init|=
-literal|84
-block|,
-comment|/* Belize */
-name|CTRY_BOLIVIA
-init|=
-literal|68
-block|,
-comment|/* Bolivia */
-name|CTRY_BRAZIL
-init|=
-literal|76
-block|,
-comment|/* Brazil */
-name|CTRY_BRUNEI_DARUSSALAM
-init|=
-literal|96
-block|,
-comment|/* Brunei Darussalam */
-name|CTRY_BULGARIA
-init|=
-literal|100
-block|,
-comment|/* Bulgaria */
-name|CTRY_CANADA
-init|=
-literal|124
-block|,
-comment|/* Canada */
-name|CTRY_CHILE
-init|=
-literal|152
-block|,
-comment|/* Chile */
-name|CTRY_CHINA
-init|=
-literal|156
-block|,
-comment|/* People's Republic of China */
-name|CTRY_COLOMBIA
-init|=
-literal|170
-block|,
-comment|/* Colombia */
-name|CTRY_COSTA_RICA
-init|=
-literal|188
-block|,
-comment|/* Costa Rica */
-name|CTRY_CROATIA
-init|=
-literal|191
-block|,
-comment|/* Croatia */
-name|CTRY_CYPRUS
-init|=
-literal|196
-block|,
-name|CTRY_CZECH
-init|=
-literal|203
-block|,
-comment|/* Czech Republic */
-name|CTRY_DENMARK
-init|=
-literal|208
-block|,
-comment|/* Denmark */
-name|CTRY_DOMINICAN_REPUBLIC
-init|=
-literal|214
-block|,
-comment|/* Dominican Republic */
-name|CTRY_ECUADOR
-init|=
-literal|218
-block|,
-comment|/* Ecuador */
-name|CTRY_EGYPT
-init|=
-literal|818
-block|,
-comment|/* Egypt */
-name|CTRY_EL_SALVADOR
-init|=
-literal|222
-block|,
-comment|/* El Salvador */
-name|CTRY_ESTONIA
-init|=
-literal|233
-block|,
-comment|/* Estonia */
-name|CTRY_FAEROE_ISLANDS
-init|=
-literal|234
-block|,
-comment|/* Faeroe Islands */
-name|CTRY_FINLAND
-init|=
-literal|246
-block|,
-comment|/* Finland */
-name|CTRY_FRANCE
-init|=
-literal|250
-block|,
-comment|/* France */
-name|CTRY_FRANCE2
-init|=
-literal|255
-block|,
-comment|/* France2 */
-name|CTRY_GEORGIA
-init|=
-literal|268
-block|,
-comment|/* Georgia */
-name|CTRY_GERMANY
-init|=
-literal|276
-block|,
-comment|/* Germany */
-name|CTRY_GREECE
-init|=
-literal|300
-block|,
-comment|/* Greece */
-name|CTRY_GSM
-init|=
-literal|843
-block|,
-comment|/* 900MHz/GSM */
-name|CTRY_GUATEMALA
-init|=
-literal|320
-block|,
-comment|/* Guatemala */
-name|CTRY_HONDURAS
-init|=
-literal|340
-block|,
-comment|/* Honduras */
-name|CTRY_HONG_KONG
-init|=
-literal|344
-block|,
-comment|/* Hong Kong S.A.R., P.R.C. */
-name|CTRY_HUNGARY
-init|=
-literal|348
-block|,
-comment|/* Hungary */
-name|CTRY_ICELAND
-init|=
-literal|352
-block|,
-comment|/* Iceland */
-name|CTRY_INDIA
-init|=
-literal|356
-block|,
-comment|/* India */
-name|CTRY_INDONESIA
-init|=
-literal|360
-block|,
-comment|/* Indonesia */
-name|CTRY_IRAN
-init|=
-literal|364
-block|,
-comment|/* Iran */
-name|CTRY_IRAQ
-init|=
-literal|368
-block|,
-comment|/* Iraq */
-name|CTRY_IRELAND
-init|=
-literal|372
-block|,
-comment|/* Ireland */
-name|CTRY_ISRAEL
-init|=
-literal|376
-block|,
-comment|/* Israel */
-name|CTRY_ITALY
-init|=
-literal|380
-block|,
-comment|/* Italy */
-name|CTRY_JAMAICA
-init|=
-literal|388
-block|,
-comment|/* Jamaica */
-name|CTRY_JAPAN
-init|=
-literal|392
-block|,
-comment|/* Japan */
-name|CTRY_JAPAN1
-init|=
-literal|393
-block|,
-comment|/* Japan (JP1) */
-name|CTRY_JAPAN2
-init|=
-literal|394
-block|,
-comment|/* Japan (JP0) */
-name|CTRY_JAPAN3
-init|=
-literal|395
-block|,
-comment|/* Japan (JP1-1) */
-name|CTRY_JAPAN4
-init|=
-literal|396
-block|,
-comment|/* Japan (JE1) */
-name|CTRY_JAPAN5
-init|=
-literal|397
-block|,
-comment|/* Japan (JE2) */
-name|CTRY_JAPAN6
-init|=
-literal|399
-block|,
-comment|/* Japan (JP6) */
-name|CTRY_JAPAN7
-init|=
-literal|4007
-block|,
-comment|/* Japan (J7) */
-name|CTRY_JAPAN8
-init|=
-literal|4008
-block|,
-comment|/* Japan (J8) */
-name|CTRY_JAPAN9
-init|=
-literal|4009
-block|,
-comment|/* Japan (J9) */
-name|CTRY_JAPAN10
-init|=
-literal|4010
-block|,
-comment|/* Japan (J10) */
-name|CTRY_JAPAN11
-init|=
-literal|4011
-block|,
-comment|/* Japan (J11) */
-name|CTRY_JAPAN12
-init|=
-literal|4012
-block|,
-comment|/* Japan (J12) */
-name|CTRY_JAPAN13
-init|=
-literal|4013
-block|,
-comment|/* Japan (J13) */
-name|CTRY_JAPAN14
-init|=
-literal|4014
-block|,
-comment|/* Japan (J14) */
-name|CTRY_JAPAN15
-init|=
-literal|4015
-block|,
-comment|/* Japan (J15) */
-name|CTRY_JAPAN16
-init|=
-literal|4016
-block|,
-comment|/* Japan (J16) */
-name|CTRY_JAPAN17
-init|=
-literal|4017
-block|,
-comment|/* Japan (J17) */
-name|CTRY_JAPAN18
-init|=
-literal|4018
-block|,
-comment|/* Japan (J18) */
-name|CTRY_JAPAN19
-init|=
-literal|4019
-block|,
-comment|/* Japan (J19) */
-name|CTRY_JAPAN20
-init|=
-literal|4020
-block|,
-comment|/* Japan (J20) */
-name|CTRY_JAPAN21
-init|=
-literal|4021
-block|,
-comment|/* Japan (J21) */
-name|CTRY_JAPAN22
-init|=
-literal|4022
-block|,
-comment|/* Japan (J22) */
-name|CTRY_JAPAN23
-init|=
-literal|4023
-block|,
-comment|/* Japan (J23) */
-name|CTRY_JAPAN24
-init|=
-literal|4024
-block|,
-comment|/* Japan (J24) */
-name|CTRY_JORDAN
-init|=
-literal|400
-block|,
-comment|/* Jordan */
-name|CTRY_KAZAKHSTAN
-init|=
-literal|398
-block|,
-comment|/* Kazakhstan */
-name|CTRY_KENYA
-init|=
-literal|404
-block|,
-comment|/* Kenya */
-name|CTRY_KOREA_NORTH
-init|=
-literal|408
-block|,
-comment|/* North Korea */
-name|CTRY_KOREA_ROC
-init|=
-literal|410
-block|,
-comment|/* South Korea */
-name|CTRY_KOREA_ROC2
-init|=
-literal|411
-block|,
-comment|/* South Korea */
-name|CTRY_KOREA_ROC3
-init|=
-literal|412
-block|,
-comment|/* South Korea */
-name|CTRY_KUWAIT
-init|=
-literal|414
-block|,
-comment|/* Kuwait */
-name|CTRY_LATVIA
-init|=
-literal|428
-block|,
-comment|/* Latvia */
-name|CTRY_LEBANON
-init|=
-literal|422
-block|,
-comment|/* Lebanon */
-name|CTRY_LIBYA
-init|=
-literal|434
-block|,
-comment|/* Libya */
-name|CTRY_LIECHTENSTEIN
-init|=
-literal|438
-block|,
-comment|/* Liechtenstein */
-name|CTRY_LITHUANIA
-init|=
-literal|440
-block|,
-comment|/* Lithuania */
-name|CTRY_LUXEMBOURG
-init|=
-literal|442
-block|,
-comment|/* Luxembourg */
-name|CTRY_MACAU
-init|=
-literal|446
-block|,
-comment|/* Macau */
-name|CTRY_MACEDONIA
-init|=
-literal|807
-block|,
-comment|/* the Former Yugoslav Republic of Macedonia */
-name|CTRY_MALAYSIA
-init|=
-literal|458
-block|,
-comment|/* Malaysia */
-name|CTRY_MALTA
-init|=
-literal|470
-block|,
-comment|/* Malta */
-name|CTRY_MEXICO
-init|=
-literal|484
-block|,
-comment|/* Mexico */
-name|CTRY_MONACO
-init|=
-literal|492
-block|,
-comment|/* Principality of Monaco */
-name|CTRY_MOROCCO
-init|=
-literal|504
-block|,
-comment|/* Morocco */
-name|CTRY_NETHERLANDS
-init|=
-literal|528
-block|,
-comment|/* Netherlands */
-name|CTRY_NEW_ZEALAND
-init|=
-literal|554
-block|,
-comment|/* New Zealand */
-name|CTRY_NICARAGUA
-init|=
-literal|558
-block|,
-comment|/* Nicaragua */
-name|CTRY_NORWAY
-init|=
-literal|578
-block|,
-comment|/* Norway */
-name|CTRY_OMAN
-init|=
-literal|512
-block|,
-comment|/* Oman */
-name|CTRY_PAKISTAN
-init|=
-literal|586
-block|,
-comment|/* Islamic Republic of Pakistan */
-name|CTRY_PANAMA
-init|=
-literal|591
-block|,
-comment|/* Panama */
-name|CTRY_PARAGUAY
-init|=
-literal|600
-block|,
-comment|/* Paraguay */
-name|CTRY_PERU
-init|=
-literal|604
-block|,
-comment|/* Peru */
-name|CTRY_PHILIPPINES
-init|=
-literal|608
-block|,
-comment|/* Republic of the Philippines */
-name|CTRY_POLAND
-init|=
-literal|616
-block|,
-comment|/* Poland */
-name|CTRY_PORTUGAL
-init|=
-literal|620
-block|,
-comment|/* Portugal */
-name|CTRY_PUERTO_RICO
-init|=
-literal|630
-block|,
-comment|/* Puerto Rico */
-name|CTRY_QATAR
-init|=
-literal|634
-block|,
-comment|/* Qatar */
-name|CTRY_ROMANIA
-init|=
-literal|642
-block|,
-comment|/* Romania */
-name|CTRY_RUSSIA
-init|=
-literal|643
-block|,
-comment|/* Russia */
-name|CTRY_SAUDI_ARABIA
-init|=
-literal|682
-block|,
-comment|/* Saudi Arabia */
-name|CTRY_SINGAPORE
-init|=
-literal|702
-block|,
-comment|/* Singapore */
-name|CTRY_SLOVAKIA
-init|=
-literal|703
-block|,
-comment|/* Slovak Republic */
-name|CTRY_SLOVENIA
-init|=
-literal|705
-block|,
-comment|/* Slovenia */
-name|CTRY_SOUTH_AFRICA
-init|=
-literal|710
-block|,
-comment|/* South Africa */
-name|CTRY_SPAIN
-init|=
-literal|724
-block|,
-comment|/* Spain */
-name|CTRY_SWEDEN
-init|=
-literal|752
-block|,
-comment|/* Sweden */
-name|CTRY_SWITZERLAND
-init|=
-literal|756
-block|,
-comment|/* Switzerland */
-name|CTRY_SYRIA
-init|=
-literal|760
-block|,
-comment|/* Syria */
-name|CTRY_TAIWAN
-init|=
-literal|158
-block|,
-comment|/* Taiwan */
-name|CTRY_THAILAND
-init|=
-literal|764
-block|,
-comment|/* Thailand */
-name|CTRY_TRINIDAD_Y_TOBAGO
-init|=
-literal|780
-block|,
-comment|/* Trinidad y Tobago */
-name|CTRY_TUNISIA
-init|=
-literal|788
-block|,
-comment|/* Tunisia */
-name|CTRY_TURKEY
-init|=
-literal|792
-block|,
-comment|/* Turkey */
-name|CTRY_UAE
-init|=
-literal|784
-block|,
-comment|/* U.A.E. */
-name|CTRY_UKRAINE
-init|=
-literal|804
-block|,
-comment|/* Ukraine */
-name|CTRY_UNITED_KINGDOM
-init|=
-literal|826
-block|,
-comment|/* United Kingdom */
-name|CTRY_UNITED_STATES
-init|=
-literal|840
-block|,
-comment|/* United States */
-name|CTRY_UNITED_STATES_FCC49
-init|=
-literal|842
-block|,
-comment|/* United States (Public Safety)*/
-name|CTRY_URUGUAY
-init|=
-literal|858
-block|,
-comment|/* Uruguay */
-name|CTRY_UZBEKISTAN
-init|=
-literal|860
-block|,
-comment|/* Uzbekistan */
-name|CTRY_VENEZUELA
-init|=
-literal|862
-block|,
-comment|/* Venezuela */
-name|CTRY_VIET_NAM
-init|=
-literal|704
-block|,
-comment|/* Viet Nam */
-name|CTRY_YEMEN
-init|=
-literal|887
-block|,
-comment|/* Yemen */
-name|CTRY_ZIMBABWE
-init|=
-literal|716
-comment|/* Zimbabwe */
-block|}
-enum|;
-end_enum
-
-begin_comment
 comment|/* Enumerated Regulatory Domain Information 8 bit values indicate that  * the regdomain is really a pair of unitary regdomains.  12 bit values  * are the real unitary regdomains and are the only ones which have the  * frequency bitmasks and flags set.  */
 end_comment
 
@@ -1893,11 +1188,6 @@ name|NULL1_ETSIC
 init|=
 literal|0x08
 block|,
-name|NULL1_GSM
-init|=
-literal|0x09
-block|,
-comment|/* GSM-only operation */
 name|FCC1_FCCA
 init|=
 literal|0x10
@@ -2466,10 +1756,6 @@ name|WORLD
 init|=
 literal|0x0199
 block|,
-name|GSM
-init|=
-literal|0x019a
-block|,
 name|DEBUG_REG_DMN
 init|=
 literal|0x01ff
@@ -2530,12 +1816,6 @@ argument_list|(
 name|NULL1_ETSIC
 argument_list|)
 block|,
-name|D
-argument_list|(
-name|NULL1_GSM
-argument_list|)
-block|,
-comment|/* GSM-only operation */
 name|D
 argument_list|(
 name|FCC1_FCCA
@@ -3214,11 +2494,6 @@ argument_list|)
 block|,
 name|D
 argument_list|(
-name|GSM
-argument_list|)
-block|,
-name|D
-argument_list|(
 name|DEBUG_REG_DMN
 argument_list|)
 block|,
@@ -3471,47 +2746,10 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|HAL_BOOL
-name|allow11g
-decl_stmt|;
-name|HAL_BOOL
-name|allow11aTurbo
-decl_stmt|;
-name|HAL_BOOL
-name|allow11gTurbo
-decl_stmt|;
-name|u_int16_t
-name|outdoorChanStart
-decl_stmt|;
 block|}
 name|COUNTRY_CODE_TO_ENUM_RD
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|YES
-value|AH_TRUE
-end_define
-
-begin_define
-define|#
-directive|define
-name|NO
-value|AH_FALSE
-end_define
-
-begin_comment
-comment|/* Index into table to avoid DEBUG and NO COUNTRY SET entries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTRY_ONLY_INDEX
-value|2
-end_define
 
 begin_comment
 comment|/*  * Country Code Table to Enumerated RD  */
@@ -3532,14 +2770,6 @@ block|,
 literal|"DB"
 block|,
 literal|"DEBUG"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3550,14 +2780,6 @@ block|,
 literal|"NA"
 block|,
 literal|"NO_COUNTRY_SET"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3568,14 +2790,6 @@ block|,
 literal|"AL"
 block|,
 literal|"ALBANIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3586,14 +2800,6 @@ block|,
 literal|"DZ"
 block|,
 literal|"ALGERIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3604,14 +2810,6 @@ block|,
 literal|"AR"
 block|,
 literal|"ARGENTINA"
-block|,
-name|NO
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3622,14 +2820,6 @@ block|,
 literal|"AM"
 block|,
 literal|"ARMENIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3640,14 +2830,6 @@ block|,
 literal|"AU"
 block|,
 literal|"AUSTRALIA"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3658,14 +2840,6 @@ block|,
 literal|"AT"
 block|,
 literal|"AUSTRIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3676,14 +2850,6 @@ block|,
 literal|"AZ"
 block|,
 literal|"AZERBAIJAN"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3694,14 +2860,6 @@ block|,
 literal|"BH"
 block|,
 literal|"BAHRAIN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3712,14 +2870,6 @@ block|,
 literal|"BY"
 block|,
 literal|"BELARUS"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3730,14 +2880,6 @@ block|,
 literal|"BE"
 block|,
 literal|"BELGIUM"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3748,14 +2890,6 @@ block|,
 literal|"BZ"
 block|,
 literal|"BELIZE"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3766,14 +2900,6 @@ block|,
 literal|"BO"
 block|,
 literal|"BOLVIA"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3784,14 +2910,6 @@ block|,
 literal|"BR"
 block|,
 literal|"BRAZIL"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3802,14 +2920,6 @@ block|,
 literal|"BN"
 block|,
 literal|"BRUNEI DARUSSALAM"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3820,14 +2930,6 @@ block|,
 literal|"BG"
 block|,
 literal|"BULGARIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3838,14 +2940,6 @@ block|,
 literal|"CA"
 block|,
 literal|"CANADA"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3856,14 +2950,6 @@ block|,
 literal|"CL"
 block|,
 literal|"CHILE"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3874,14 +2960,6 @@ block|,
 literal|"CN"
 block|,
 literal|"CHINA"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3892,14 +2970,6 @@ block|,
 literal|"CO"
 block|,
 literal|"COLOMBIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3910,14 +2980,6 @@ block|,
 literal|"CR"
 block|,
 literal|"COSTA RICA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3928,14 +2990,6 @@ block|,
 literal|"HR"
 block|,
 literal|"CROATIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3946,14 +3000,6 @@ block|,
 literal|"CY"
 block|,
 literal|"CYPRUS"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3964,14 +3010,6 @@ block|,
 literal|"CZ"
 block|,
 literal|"CZECH REPUBLIC"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -3982,14 +3020,6 @@ block|,
 literal|"DK"
 block|,
 literal|"DENMARK"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4000,14 +3030,6 @@ block|,
 literal|"DO"
 block|,
 literal|"DOMINICAN REPUBLIC"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4018,14 +3040,6 @@ block|,
 literal|"EC"
 block|,
 literal|"ECUADOR"
-block|,
-name|NO
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4036,14 +3050,6 @@ block|,
 literal|"EG"
 block|,
 literal|"EGYPT"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4054,14 +3060,6 @@ block|,
 literal|"SV"
 block|,
 literal|"EL SALVADOR"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4072,14 +3070,6 @@ block|,
 literal|"EE"
 block|,
 literal|"ESTONIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4090,14 +3080,6 @@ block|,
 literal|"FI"
 block|,
 literal|"FINLAND"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4108,14 +3090,6 @@ block|,
 literal|"FR"
 block|,
 literal|"FRANCE"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4126,14 +3100,6 @@ block|,
 literal|"F2"
 block|,
 literal|"FRANCE_RES"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4144,14 +3110,6 @@ block|,
 literal|"GE"
 block|,
 literal|"GEORGIA"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4162,14 +3120,6 @@ block|,
 literal|"DE"
 block|,
 literal|"GERMANY"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4180,32 +3130,6 @@ block|,
 literal|"GR"
 block|,
 literal|"GREECE"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
-block|}
-block|,
-block|{
-name|CTRY_GSM
-block|,
-name|NULL1_GSM
-block|,
-literal|"GS"
-block|,
-literal|"GSM"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4216,14 +3140,6 @@ block|,
 literal|"GT"
 block|,
 literal|"GUATEMALA"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4234,14 +3150,6 @@ block|,
 literal|"HN"
 block|,
 literal|"HONDURAS"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4252,14 +3160,6 @@ block|,
 literal|"HK"
 block|,
 literal|"HONG KONG"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4270,14 +3170,6 @@ block|,
 literal|"HU"
 block|,
 literal|"HUNGARY"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4288,14 +3180,6 @@ block|,
 literal|"IS"
 block|,
 literal|"ICELAND"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4306,14 +3190,6 @@ block|,
 literal|"IN"
 block|,
 literal|"INDIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4324,14 +3200,6 @@ block|,
 literal|"ID"
 block|,
 literal|"INDONESIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4342,14 +3210,6 @@ block|,
 literal|"IR"
 block|,
 literal|"IRAN"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4360,14 +3220,6 @@ block|,
 literal|"IE"
 block|,
 literal|"IRELAND"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4378,14 +3230,6 @@ block|,
 literal|"IL"
 block|,
 literal|"ISRAEL"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4396,14 +3240,6 @@ block|,
 literal|"IT"
 block|,
 literal|"ITALY"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4414,14 +3250,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4432,14 +3260,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN1"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4450,14 +3270,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN2"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4468,14 +3280,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN3"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4486,14 +3290,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN4"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4504,14 +3300,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN5"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4522,14 +3310,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN6"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4540,14 +3320,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN7"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4558,14 +3330,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN8"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4576,14 +3340,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN9"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4594,14 +3350,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN10"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4612,14 +3360,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN11"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4630,14 +3370,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN12"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4648,14 +3380,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN13"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4666,14 +3390,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN14"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4684,14 +3400,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN15"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4702,14 +3410,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN16"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4720,14 +3420,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN17"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4738,14 +3430,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN18"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4756,14 +3440,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN19"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4774,14 +3450,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN20"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4792,14 +3460,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN21"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4810,14 +3470,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN22"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4828,14 +3480,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN23"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4846,14 +3490,6 @@ block|,
 literal|"JP"
 block|,
 literal|"JAPAN24"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4864,14 +3500,6 @@ block|,
 literal|"JO"
 block|,
 literal|"JORDAN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4882,14 +3510,6 @@ block|,
 literal|"KZ"
 block|,
 literal|"KAZAKHSTAN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4900,14 +3520,6 @@ block|,
 literal|"KP"
 block|,
 literal|"NORTH KOREA"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4918,14 +3530,6 @@ block|,
 literal|"KR"
 block|,
 literal|"KOREA REPUBLIC"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4936,14 +3540,6 @@ block|,
 literal|"K2"
 block|,
 literal|"KOREA REPUBLIC2"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4954,14 +3550,6 @@ block|,
 literal|"K3"
 block|,
 literal|"KOREA REPUBLIC3"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4972,14 +3560,6 @@ block|,
 literal|"KW"
 block|,
 literal|"KUWAIT"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -4990,14 +3570,6 @@ block|,
 literal|"LV"
 block|,
 literal|"LATVIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5008,14 +3580,6 @@ block|,
 literal|"LB"
 block|,
 literal|"LEBANON"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5026,14 +3590,6 @@ block|,
 literal|"LI"
 block|,
 literal|"LIECHTENSTEIN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5044,14 +3600,6 @@ block|,
 literal|"LT"
 block|,
 literal|"LITHUANIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5062,14 +3610,6 @@ block|,
 literal|"LU"
 block|,
 literal|"LUXEMBOURG"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5080,14 +3620,6 @@ block|,
 literal|"MO"
 block|,
 literal|"MACAU"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5098,14 +3630,6 @@ block|,
 literal|"MK"
 block|,
 literal|"MACEDONIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5116,14 +3640,6 @@ block|,
 literal|"MY"
 block|,
 literal|"MALAYSIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|NO
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5134,14 +3650,6 @@ block|,
 literal|"MT"
 block|,
 literal|"MALTA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5152,14 +3660,6 @@ block|,
 literal|"MX"
 block|,
 literal|"MEXICO"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5170,14 +3670,6 @@ block|,
 literal|"MC"
 block|,
 literal|"MONACO"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5188,14 +3680,6 @@ block|,
 literal|"MA"
 block|,
 literal|"MOROCCO"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5206,14 +3690,6 @@ block|,
 literal|"NL"
 block|,
 literal|"NETHERLANDS"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5224,14 +3700,6 @@ block|,
 literal|"NZ"
 block|,
 literal|"NEW ZEALAND"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5242,14 +3710,6 @@ block|,
 literal|"NO"
 block|,
 literal|"NORWAY"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5260,14 +3720,6 @@ block|,
 literal|"OM"
 block|,
 literal|"OMAN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5278,14 +3730,6 @@ block|,
 literal|"PK"
 block|,
 literal|"PAKISTAN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5296,14 +3740,6 @@ block|,
 literal|"PA"
 block|,
 literal|"PANAMA"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5314,14 +3750,6 @@ block|,
 literal|"PE"
 block|,
 literal|"PERU"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5332,14 +3760,6 @@ block|,
 literal|"PH"
 block|,
 literal|"PHILIPPINES"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5350,14 +3770,6 @@ block|,
 literal|"PL"
 block|,
 literal|"POLAND"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5368,14 +3780,6 @@ block|,
 literal|"PT"
 block|,
 literal|"PORTUGAL"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5386,14 +3790,6 @@ block|,
 literal|"PR"
 block|,
 literal|"PUERTO RICO"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5404,14 +3800,6 @@ block|,
 literal|"QA"
 block|,
 literal|"QATAR"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5422,14 +3810,6 @@ block|,
 literal|"RO"
 block|,
 literal|"ROMANIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5440,14 +3820,6 @@ block|,
 literal|"RU"
 block|,
 literal|"RUSSIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5458,14 +3830,6 @@ block|,
 literal|"SA"
 block|,
 literal|"SAUDI ARABIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5476,14 +3840,6 @@ block|,
 literal|"SG"
 block|,
 literal|"SINGAPORE"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5494,14 +3850,6 @@ block|,
 literal|"SK"
 block|,
 literal|"SLOVAK REPUBLIC"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5512,14 +3860,6 @@ block|,
 literal|"SI"
 block|,
 literal|"SLOVENIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5530,14 +3870,6 @@ block|,
 literal|"ZA"
 block|,
 literal|"SOUTH AFRICA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5548,14 +3880,6 @@ block|,
 literal|"ES"
 block|,
 literal|"SPAIN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5566,14 +3890,6 @@ block|,
 literal|"SE"
 block|,
 literal|"SWEDEN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5584,14 +3900,6 @@ block|,
 literal|"CH"
 block|,
 literal|"SWITZERLAND"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5602,14 +3910,6 @@ block|,
 literal|"SY"
 block|,
 literal|"SYRIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5620,14 +3920,6 @@ block|,
 literal|"TW"
 block|,
 literal|"TAIWAN"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5638,14 +3930,6 @@ block|,
 literal|"TH"
 block|,
 literal|"THAILAND"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5656,14 +3940,6 @@ block|,
 literal|"TT"
 block|,
 literal|"TRINIDAD& TOBAGO"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5674,14 +3950,6 @@ block|,
 literal|"TN"
 block|,
 literal|"TUNISIA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5692,14 +3960,6 @@ block|,
 literal|"TR"
 block|,
 literal|"TURKEY"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5710,14 +3970,6 @@ block|,
 literal|"UA"
 block|,
 literal|"UKRAINE"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5728,14 +3980,6 @@ block|,
 literal|"AE"
 block|,
 literal|"UNITED ARAB EMIRATES"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5746,14 +3990,6 @@ block|,
 literal|"GB"
 block|,
 literal|"UNITED KINGDOM"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5764,14 +4000,6 @@ block|,
 literal|"US"
 block|,
 literal|"UNITED STATES"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|5825
 block|}
 block|,
 block|{
@@ -5782,14 +4010,6 @@ block|,
 literal|"PS"
 block|,
 literal|"UNITED STATES (PUBLIC SAFETY)"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5800,14 +4020,6 @@ block|,
 literal|"UY"
 block|,
 literal|"URUGUAY"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5818,14 +4030,6 @@ block|,
 literal|"UZ"
 block|,
 literal|"UZBEKISTAN"
-block|,
-name|YES
-block|,
-name|YES
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5836,14 +4040,6 @@ block|,
 literal|"VE"
 block|,
 literal|"VENEZUELA"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5854,14 +4050,6 @@ block|,
 literal|"VN"
 block|,
 literal|"VIET NAM"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5872,14 +4060,6 @@ block|,
 literal|"YE"
 block|,
 literal|"YEMEN"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|,
 block|{
@@ -5890,30 +4070,10 @@ block|,
 literal|"ZW"
 block|,
 literal|"ZIMBABWE"
-block|,
-name|YES
-block|,
-name|NO
-block|,
-name|YES
-block|,
-literal|7000
 block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_undef
-undef|#
-directive|undef
-name|YES
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|NO
-end_undef
 
 begin_function
 specifier|static
@@ -6247,7 +4407,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -6281,7 +4443,9 @@ parameter_list|,
 name|int
 name|nchan
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chans
 parameter_list|,
@@ -6414,7 +4578,8 @@ name|int
 name|anychan
 parameter_list|(
 specifier|const
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chans
 parameter_list|,
@@ -6449,7 +4614,7 @@ index|[
 name|i
 index|]
 operator|.
-name|privFlags
+name|ic_flags
 operator|&
 name|flag
 operator|)
@@ -6486,7 +4651,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CHANNEL_QUARTER
+name|IEEE80211_CHAN_QUARTER
 condition|)
 name|freq
 operator|+=
@@ -6497,7 +4662,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CHANNEL_HALF
+name|IEEE80211_CHAN_HALF
 condition|)
 name|freq
 operator|+=
@@ -6589,7 +4754,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CHANNEL_2GHZ
+name|IEEE80211_CHAN_2GHZ
 condition|)
 block|{
 comment|/* 2GHz band */
@@ -6608,22 +4773,6 @@ name|freq
 operator|<
 literal|2484
 condition|)
-block|{
-if|if
-condition|(
-name|ath_hal_isgsmsku
-argument_list|(
-name|ah
-argument_list|)
-condition|)
-return|return
-name|mapgsm
-argument_list|(
-name|freq
-argument_list|,
-name|flags
-argument_list|)
-return|;
 return|return
 operator|(
 operator|(
@@ -6636,7 +4785,6 @@ operator|)
 operator|/
 literal|5
 return|;
-block|}
 else|else
 return|return
 literal|15
@@ -6657,23 +4805,17 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CHANNEL_5GHZ
+name|IEEE80211_CHAN_5GHZ
 condition|)
 block|{
 comment|/* 5Ghz band */
 if|if
 condition|(
-name|ath_hal_ispublicsafetysku
-argument_list|(
-name|ah
-argument_list|)
-operator|&&
 name|IS_CHAN_IN_PUBLIC_SAFETY_BAND
 argument_list|(
 name|freq
 argument_list|)
 condition|)
-block|{
 return|return
 name|mappsb
 argument_list|(
@@ -6682,14 +4824,13 @@ argument_list|,
 name|flags
 argument_list|)
 return|;
-block|}
 elseif|else
 if|if
 condition|(
 operator|(
 name|flags
 operator|&
-name|CHANNEL_A
+name|IEEE80211_CHAN_A
 operator|)
 operator|&&
 operator|(
@@ -6698,7 +4839,6 @@ operator|<=
 literal|5000
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|freq
@@ -6708,9 +4848,7 @@ operator|)
 operator|/
 literal|5
 return|;
-block|}
 else|else
-block|{
 return|return
 operator|(
 name|freq
@@ -6720,7 +4858,6 @@ operator|)
 operator|/
 literal|5
 return|;
-block|}
 block|}
 else|else
 block|{
@@ -6740,22 +4877,6 @@ name|freq
 operator|<
 literal|2484
 condition|)
-block|{
-if|if
-condition|(
-name|ath_hal_isgsmsku
-argument_list|(
-name|ah
-argument_list|)
-condition|)
-return|return
-name|mapgsm
-argument_list|(
-name|freq
-argument_list|,
-name|flags
-argument_list|)
-return|;
 return|return
 operator|(
 operator|(
@@ -6768,7 +4889,6 @@ operator|)
 operator|/
 literal|5
 return|;
-block|}
 if|if
 condition|(
 name|freq
@@ -6778,17 +4898,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|ath_hal_ispublicsafetysku
-argument_list|(
-name|ah
-argument_list|)
-operator|&&
 name|IS_CHAN_IN_PUBLIC_SAFETY_BAND
 argument_list|(
 name|freq
 argument_list|)
 condition|)
-block|{
 return|return
 name|mappsb
 argument_list|(
@@ -6797,7 +4911,6 @@ argument_list|,
 name|flags
 argument_list|)
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -6805,7 +4918,6 @@ name|freq
 operator|>
 literal|4900
 condition|)
-block|{
 return|return
 operator|(
 name|freq
@@ -6815,9 +4927,7 @@ operator|)
 operator|/
 literal|5
 return|;
-block|}
 else|else
-block|{
 return|return
 literal|15
 operator|+
@@ -6831,7 +4941,6 @@ operator|/
 literal|20
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -6849,21 +4958,12 @@ end_function
 begin_define
 define|#
 directive|define
-name|IS_CHAN_DFS
+name|IEEE80211_IS_CHAN_4MS
 parameter_list|(
 name|_c
 parameter_list|)
-value|(((_c)->privFlags& CHANNEL_DFS) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_CHAN_4MS
-parameter_list|(
-name|_c
-parameter_list|)
-value|(((_c)->privFlags& CHANNEL_4MS_LIMIT) != 0)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_4MSXMIT) != 0)
 end_define
 
 begin_function
@@ -6879,7 +4979,9 @@ parameter_list|,
 name|int
 name|nc
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chans
 parameter_list|,
@@ -6905,7 +5007,9 @@ name|i
 operator|++
 control|)
 block|{
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|c
 init|=
@@ -6934,11 +5038,11 @@ name|ah
 argument_list|,
 name|c
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|c
 operator|->
-name|channelFlags
+name|ic_flags
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6951,12 +5055,12 @@ name|sep
 argument_list|,
 name|c
 operator|->
-name|channel
+name|ic_freq
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_HALF_RATE
+name|IEEE80211_IS_CHAN_HALF
 argument_list|(
 name|c
 argument_list|)
@@ -6968,7 +5072,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_QUARTER_RATE
+name|IEEE80211_IS_CHAN_QUARTER
 argument_list|(
 name|c
 argument_list|)
@@ -6980,7 +5084,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_TURBO
+name|IEEE80211_IS_CHAN_TURBO
 argument_list|(
 name|c
 argument_list|)
@@ -6992,7 +5096,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_HT
+name|IEEE80211_IS_CHAN_HT
 argument_list|(
 name|c
 argument_list|)
@@ -7004,7 +5108,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_A
+name|IEEE80211_IS_CHAN_A
 argument_list|(
 name|c
 argument_list|)
@@ -7016,7 +5120,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_108G
+name|IEEE80211_IS_CHAN_108G
 argument_list|(
 name|c
 argument_list|)
@@ -7028,7 +5132,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_G
+name|IEEE80211_IS_CHAN_G
 argument_list|(
 name|c
 argument_list|)
@@ -7046,7 +5150,7 @@ if|if
 condition|(
 name|dopassive
 operator|&&
-name|IS_CHAN_PASSIVE
+name|IEEE80211_IS_CHAN_PASSIVE
 argument_list|(
 name|c
 argument_list|)
@@ -7070,7 +5174,7 @@ literal|"%c%c%c %d.%d"
 argument_list|,
 name|type
 argument_list|,
-name|IS_CHAN_DFS
+name|IEEE80211_IS_CHAN_DFS
 argument_list|(
 name|c
 argument_list|)
@@ -7079,7 +5183,7 @@ literal|'*'
 else|:
 literal|' '
 argument_list|,
-name|IS_CHAN_4MS
+name|IEEE80211_IS_CHAN_4MS
 argument_list|(
 name|c
 argument_list|)
@@ -7118,7 +5222,7 @@ literal|"%c%c %d.%d"
 argument_list|,
 name|type
 argument_list|,
-name|IS_CHAN_DFS
+name|IEEE80211_IS_CHAN_DFS
 argument_list|(
 name|c
 argument_list|)
@@ -7157,7 +5261,7 @@ literal|"%c%c %d.%d"
 argument_list|,
 name|type
 argument_list|,
-name|IS_CHAN_4MS
+name|IEEE80211_IS_CHAN_4MS
 argument_list|(
 name|c
 argument_list|)
@@ -7244,81 +5348,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|checkchannels
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|HAL_CHANNEL
-modifier|*
-name|chans
-parameter_list|,
-name|int
-name|nchan
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nchan
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|HAL_CHANNEL
-modifier|*
-name|c
-init|=
-operator|&
-name|chans
-index|[
-name|i
-index|]
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|ath_hal_checkchannel
-argument_list|(
-name|ah
-argument_list|,
-name|c
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"Channel %u (0x%x) disallowed\n"
-argument_list|,
-name|c
-operator|->
-name|channel
-argument_list|,
-name|c
-operator|->
-name|channelFlags
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|intersect
 parameter_list|(
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|dst
 parameter_list|,
@@ -7331,7 +5364,8 @@ modifier|*
 name|nd
 parameter_list|,
 specifier|const
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|src
 parameter_list|,
@@ -7377,14 +5411,14 @@ index|[
 name|i
 index|]
 operator|.
-name|channel
+name|ic_freq
 operator|!=
 name|src
 index|[
 name|j
 index|]
 operator|.
-name|channel
+name|ic_freq
 condition|;
 name|j
 operator|++
@@ -7492,12 +5526,10 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
-name|chans
-parameter_list|,
-name|u_int32_t
-name|nchan
+name|chan
 parameter_list|)
 block|{ }
 end_function
@@ -7689,7 +5721,8 @@ name|struct
 name|ath_hal_private
 name|ahp
 decl_stmt|;
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 name|achans
 index|[
 name|IEEE80211_CHAN_MAX
@@ -7701,7 +5734,8 @@ index|[
 name|IEEE80211_CHAN_MAX
 index|]
 decl_stmt|;
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 name|bchans
 index|[
 name|IEEE80211_CHAN_MAX
@@ -7713,7 +5747,8 @@ index|[
 name|IEEE80211_CHAN_MAX
 index|]
 decl_stmt|;
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 name|gchans
 index|[
 name|IEEE80211_CHAN_MAX
@@ -7725,7 +5760,8 @@ index|[
 name|IEEE80211_CHAN_MAX
 index|]
 decl_stmt|;
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 name|tchans
 index|[
 name|IEEE80211_CHAN_MAX
@@ -7737,7 +5773,8 @@ index|[
 name|IEEE80211_CHAN_MAX
 index|]
 decl_stmt|;
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 name|tgchans
 index|[
 name|IEEE80211_CHAN_MAX
@@ -7749,7 +5786,8 @@ index|[
 name|IEEE80211_CHAN_MAX
 index|]
 decl_stmt|;
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 name|nchans
 index|[
 name|IEEE80211_CHAN_MAX
@@ -7795,15 +5833,6 @@ name|int16_t
 name|tpcReduction
 decl_stmt|,
 name|powerLimit
-decl_stmt|;
-name|int8_t
-name|regids
-index|[
-name|IEEE80211_REGCLASSIDS_MAX
-index|]
-decl_stmt|;
-name|int
-name|nregids
 decl_stmt|;
 name|int
 name|showdfs
@@ -7944,7 +5973,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"acdefoilm:pr4ABGhHNT"
+literal|"acdeflm:pr4ABGhHNT"
 argument_list|)
 operator|)
 operator|!=
@@ -7992,22 +6021,6 @@ case|case
 literal|'f'
 case|:
 name|showchannels
-operator|=
-name|AH_FALSE
-expr_stmt|;
-break|break;
-case|case
-literal|'o'
-case|:
-name|outdoor
-operator|=
-name|AH_TRUE
-expr_stmt|;
-break|break;
-case|case
-literal|'i'
-case|:
-name|outdoor
 operator|=
 name|AH_FALSE
 expr_stmt|;
@@ -8546,6 +6559,8 @@ name|modes
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* NB: no HAL_MODE_HT */
 name|modes
 operator|=
 name|HAL_MODE_11A
@@ -8557,9 +6572,8 @@ operator||
 name|HAL_MODE_TURBO
 operator||
 name|HAL_MODE_108G
-operator||
-name|HAL_MODE_HT
 expr_stmt|;
+block|}
 name|na
 operator|=
 name|nb
@@ -8589,7 +6603,7 @@ name|rd
 expr_stmt|;
 if|if
 condition|(
-name|ath_hal_init_channels
+name|ath_hal_getchannels
 argument_list|(
 operator|&
 name|ahp
@@ -8603,35 +6617,18 @@ argument_list|,
 operator|&
 name|ng
 argument_list|,
-name|regids
-argument_list|,
-name|IEEE80211_REGCLASSIDS_MAX
-argument_list|,
-operator|&
-name|nregids
+name|HAL_MODE_11G
 argument_list|,
 name|cc
 argument_list|,
-name|HAL_MODE_11G
-argument_list|,
-name|outdoor
+name|rd
 argument_list|,
 name|extendedChanMode
 argument_list|)
+operator|==
+name|HAL_OK
 condition|)
 block|{
-name|checkchannels
-argument_list|(
-operator|&
-name|ahp
-operator|.
-name|h
-argument_list|,
-name|gchans
-argument_list|,
-name|ng
-argument_list|)
-expr_stmt|;
 name|calctxpower
 argument_list|(
 operator|&
@@ -8662,7 +6659,7 @@ name|gchans
 argument_list|,
 name|ng
 argument_list|,
-name|CHANNEL_DFS
+name|IEEE80211_CHAN_DFS
 argument_list|)
 expr_stmt|;
 if|if
@@ -8677,7 +6674,7 @@ name|gchans
 argument_list|,
 name|ng
 argument_list|,
-name|CHANNEL_4MS_LIMIT
+name|IEEE80211_CHAN_4MSXMIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -8697,7 +6694,7 @@ name|rd
 expr_stmt|;
 if|if
 condition|(
-name|ath_hal_init_channels
+name|ath_hal_getchannels
 argument_list|(
 operator|&
 name|ahp
@@ -8711,35 +6708,18 @@ argument_list|,
 operator|&
 name|nb
 argument_list|,
-name|regids
-argument_list|,
-name|IEEE80211_REGCLASSIDS_MAX
-argument_list|,
-operator|&
-name|nregids
+name|HAL_MODE_11B
 argument_list|,
 name|cc
 argument_list|,
-name|HAL_MODE_11B
-argument_list|,
-name|outdoor
+name|rd
 argument_list|,
 name|extendedChanMode
 argument_list|)
+operator|==
+name|HAL_OK
 condition|)
 block|{
-name|checkchannels
-argument_list|(
-operator|&
-name|ahp
-operator|.
-name|h
-argument_list|,
-name|bchans
-argument_list|,
-name|nb
-argument_list|)
-expr_stmt|;
 name|calctxpower
 argument_list|(
 operator|&
@@ -8770,7 +6750,7 @@ name|bchans
 argument_list|,
 name|nb
 argument_list|,
-name|CHANNEL_DFS
+name|IEEE80211_CHAN_DFS
 argument_list|)
 expr_stmt|;
 if|if
@@ -8785,7 +6765,7 @@ name|bchans
 argument_list|,
 name|nb
 argument_list|,
-name|CHANNEL_4MS_LIMIT
+name|IEEE80211_CHAN_4MSXMIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -8805,7 +6785,7 @@ name|rd
 expr_stmt|;
 if|if
 condition|(
-name|ath_hal_init_channels
+name|ath_hal_getchannels
 argument_list|(
 operator|&
 name|ahp
@@ -8819,35 +6799,18 @@ argument_list|,
 operator|&
 name|na
 argument_list|,
-name|regids
-argument_list|,
-name|IEEE80211_REGCLASSIDS_MAX
-argument_list|,
-operator|&
-name|nregids
+name|HAL_MODE_11A
 argument_list|,
 name|cc
 argument_list|,
-name|HAL_MODE_11A
-argument_list|,
-name|outdoor
+name|rd
 argument_list|,
 name|extendedChanMode
 argument_list|)
+operator|==
+name|HAL_OK
 condition|)
 block|{
-name|checkchannels
-argument_list|(
-operator|&
-name|ahp
-operator|.
-name|h
-argument_list|,
-name|achans
-argument_list|,
-name|na
-argument_list|)
-expr_stmt|;
 name|calctxpower
 argument_list|(
 operator|&
@@ -8878,7 +6841,7 @@ name|achans
 argument_list|,
 name|na
 argument_list|,
-name|CHANNEL_DFS
+name|IEEE80211_CHAN_DFS
 argument_list|)
 expr_stmt|;
 if|if
@@ -8893,7 +6856,7 @@ name|achans
 argument_list|,
 name|na
 argument_list|,
-name|CHANNEL_4MS_LIMIT
+name|IEEE80211_CHAN_4MSXMIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -8913,7 +6876,7 @@ name|rd
 expr_stmt|;
 if|if
 condition|(
-name|ath_hal_init_channels
+name|ath_hal_getchannels
 argument_list|(
 operator|&
 name|ahp
@@ -8927,35 +6890,18 @@ argument_list|,
 operator|&
 name|nt
 argument_list|,
-name|regids
-argument_list|,
-name|IEEE80211_REGCLASSIDS_MAX
-argument_list|,
-operator|&
-name|nregids
+name|HAL_MODE_TURBO
 argument_list|,
 name|cc
 argument_list|,
-name|HAL_MODE_TURBO
-argument_list|,
-name|outdoor
+name|rd
 argument_list|,
 name|extendedChanMode
 argument_list|)
+operator|==
+name|HAL_OK
 condition|)
 block|{
-name|checkchannels
-argument_list|(
-operator|&
-name|ahp
-operator|.
-name|h
-argument_list|,
-name|tchans
-argument_list|,
-name|nt
-argument_list|)
-expr_stmt|;
 name|calctxpower
 argument_list|(
 operator|&
@@ -8986,7 +6932,7 @@ name|tchans
 argument_list|,
 name|nt
 argument_list|,
-name|CHANNEL_DFS
+name|IEEE80211_CHAN_DFS
 argument_list|)
 expr_stmt|;
 if|if
@@ -9001,7 +6947,7 @@ name|tchans
 argument_list|,
 name|nt
 argument_list|,
-name|CHANNEL_4MS_LIMIT
+name|IEEE80211_CHAN_4MSXMIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -9021,7 +6967,7 @@ name|rd
 expr_stmt|;
 if|if
 condition|(
-name|ath_hal_init_channels
+name|ath_hal_getchannels
 argument_list|(
 operator|&
 name|ahp
@@ -9035,35 +6981,18 @@ argument_list|,
 operator|&
 name|ntg
 argument_list|,
-name|regids
-argument_list|,
-name|IEEE80211_REGCLASSIDS_MAX
-argument_list|,
-operator|&
-name|nregids
+name|HAL_MODE_108G
 argument_list|,
 name|cc
 argument_list|,
-name|HAL_MODE_108G
-argument_list|,
-name|outdoor
+name|rd
 argument_list|,
 name|extendedChanMode
 argument_list|)
+operator|==
+name|HAL_OK
 condition|)
 block|{
-name|checkchannels
-argument_list|(
-operator|&
-name|ahp
-operator|.
-name|h
-argument_list|,
-name|tgchans
-argument_list|,
-name|ntg
-argument_list|)
-expr_stmt|;
 name|calctxpower
 argument_list|(
 operator|&
@@ -9094,7 +7023,7 @@ name|tgchans
 argument_list|,
 name|ntg
 argument_list|,
-name|CHANNEL_DFS
+name|IEEE80211_CHAN_DFS
 argument_list|)
 expr_stmt|;
 if|if
@@ -9109,7 +7038,7 @@ name|tgchans
 argument_list|,
 name|ntg
 argument_list|,
-name|CHANNEL_4MS_LIMIT
+name|IEEE80211_CHAN_4MSXMIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -9129,7 +7058,7 @@ name|rd
 expr_stmt|;
 if|if
 condition|(
-name|ath_hal_init_channels
+name|ath_hal_getchannels
 argument_list|(
 operator|&
 name|ahp
@@ -9143,37 +7072,20 @@ argument_list|,
 operator|&
 name|nn
 argument_list|,
-name|regids
-argument_list|,
-name|IEEE80211_REGCLASSIDS_MAX
-argument_list|,
-operator|&
-name|nregids
-argument_list|,
-name|cc
-argument_list|,
 name|modes
 operator|&
 name|HAL_MODE_HT
 argument_list|,
-name|outdoor
+name|cc
+argument_list|,
+name|rd
 argument_list|,
 name|extendedChanMode
 argument_list|)
+operator|==
+name|HAL_OK
 condition|)
 block|{
-name|checkchannels
-argument_list|(
-operator|&
-name|ahp
-operator|.
-name|h
-argument_list|,
-name|nchans
-argument_list|,
-name|nn
-argument_list|)
-expr_stmt|;
 name|calctxpower
 argument_list|(
 operator|&
@@ -9204,7 +7116,7 @@ name|nchans
 argument_list|,
 name|nn
 argument_list|,
-name|CHANNEL_DFS
+name|IEEE80211_CHAN_DFS
 argument_list|)
 expr_stmt|;
 if|if
@@ -9219,7 +7131,7 @@ name|nchans
 argument_list|,
 name|nn
 argument_list|,
-name|CHANNEL_4MS_LIMIT
+name|IEEE80211_CHAN_4MSXMIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -10042,7 +7954,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -10107,7 +8021,7 @@ name|ar5212GetLowerUpperValues
 argument_list|(
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|tempChannelList
 argument_list|,
@@ -10182,7 +8096,7 @@ name|interpolate
 argument_list|(
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|clo
 argument_list|,
@@ -10211,7 +8125,7 @@ name|interpolate
 argument_list|(
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|clo
 argument_list|,
@@ -10240,7 +8154,7 @@ name|interpolate
 argument_list|(
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|clo
 argument_list|,
@@ -10269,7 +8183,7 @@ name|interpolate
 argument_list|(
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|clo
 argument_list|,
@@ -10362,7 +8276,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -10424,7 +8340,7 @@ name|twiceMaxRDPower
 operator|=
 name|chan
 operator|->
-name|maxRegTxPower
+name|ic_maxregpower
 operator|*
 literal|2
 expr_stmt|;
@@ -10470,7 +8386,7 @@ name|ar5212GetMaxEdgePower
 argument_list|(
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|rep
 argument_list|)
@@ -10482,7 +8398,7 @@ name|MAX_RATE_POWER
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_G
+name|IEEE80211_IS_CHAN_G
 argument_list|(
 name|chan
 argument_list|)
@@ -10520,7 +8436,7 @@ name|ar5212GetMaxEdgePower
 argument_list|(
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|rep
 argument_list|)
@@ -10542,7 +8458,7 @@ block|}
 comment|/* Get Antenna Gain reduction */
 if|if
 condition|(
-name|IS_CHAN_5GHZ
+name|IEEE80211_IS_CHAN_5GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -10579,7 +8495,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_OFDM
+name|IEEE80211_IS_CHAN_OFDM
 argument_list|(
 name|chan
 argument_list|)
@@ -10588,7 +8504,7 @@ block|{
 comment|/* Get final OFDM target powers */
 if|if
 condition|(
-name|IS_CHAN_G
+name|IEEE80211_IS_CHAN_G
 argument_list|(
 name|chan
 argument_list|)
@@ -10643,7 +8559,7 @@ expr_stmt|;
 comment|/* 		 * If turbo is set, reduce power to keep power 		 * consumption under 2 Watts.  Note that we always do 		 * this unless specially configured.  Then we limit 		 * power only for non-AP operation. 		 */
 if|if
 condition|(
-name|IS_CHAN_TURBO
+name|IEEE80211_IS_CHAN_TURBO
 argument_list|(
 name|chan
 argument_list|)
@@ -10686,7 +8602,7 @@ name|eeversion
 operator|>=
 name|AR_EEPROM_VER4_0
 operator|&&
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -10927,12 +8843,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|IS_CHAN_CCK
-argument_list|(
-name|chan
-argument_list|)
-operator|||
-name|IS_CHAN_G
+name|IEEE80211_IS_CHAN_CCK
 argument_list|(
 name|chan
 argument_list|)
