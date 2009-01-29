@@ -3340,26 +3340,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vn_write_suspend_wait
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|vn_writechk
 parameter_list|(
 name|struct
