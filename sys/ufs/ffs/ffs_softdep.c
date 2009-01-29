@@ -12060,6 +12060,14 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_number
+operator|==
+name|ino
+condition|)
 name|ip
 operator|->
 name|i_flag
