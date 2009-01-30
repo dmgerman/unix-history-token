@@ -298,15 +298,19 @@ decl_stmt|;
 name|int
 name|_ip6_forward_srcrt
 decl_stmt|;
+comment|/* XXX remove */
 name|int
 name|_ip6_sourcecheck
 decl_stmt|;
+comment|/* XXX remove */
 name|int
 name|_ip6_sourcecheck_interval
 decl_stmt|;
+comment|/* XXX remove */
 name|int
 name|_ip6_ours_check_algorithm
 decl_stmt|;
+comment|/* XXX remove */
 name|int
 name|_nd6_prune
 decl_stmt|;
@@ -621,13 +625,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_ip6_forward_srcrt
-value|VNET_INET6(ip6_forward_srcrt)
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_ip6_forwarding
 value|VNET_INET6(ip6_forwarding)
 end_define
@@ -698,13 +695,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_ip6_ours_check_algorithm
-value|VNET_INET6(ip6_ours_check_algorithm)
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_ip6_prefer_tempaddr
 value|VNET_INET6(ip6_prefer_tempaddr)
 end_define
@@ -721,20 +711,6 @@ define|#
 directive|define
 name|V_ip6_sendredirects
 value|VNET_INET6(ip6_sendredirects)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip6_sourcecheck
-value|VNET_INET6(ip6_sourcecheck)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip6_sourcecheck_interval
-value|VNET_INET6(ip6_sourcecheck_interval)
 end_define
 
 begin_define

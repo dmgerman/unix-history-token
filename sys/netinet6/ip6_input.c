@@ -470,42 +470,6 @@ name|ip6_forward_rt
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|ip6_forward_srcrt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ip6_sourcecheck
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ip6_sourcecheck_interval
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ip6_ours_check_algorithm
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
