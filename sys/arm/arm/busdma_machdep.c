@@ -5540,6 +5540,13 @@ name|datacount
 argument_list|)
 expr_stmt|;
 block|}
+name|dmat
+operator|->
+name|bounce_zone
+operator|->
+name|total_bounced
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5614,6 +5621,13 @@ name|bpage
 operator|->
 name|datacount
 argument_list|)
+expr_stmt|;
+name|dmat
+operator|->
+name|bounce_zone
+operator|->
+name|total_bounced
+operator|++
 expr_stmt|;
 block|}
 block|}
