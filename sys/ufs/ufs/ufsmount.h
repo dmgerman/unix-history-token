@@ -610,6 +610,17 @@ begin_comment
 comment|/* Q_QUOTAOFF in progress */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|QTF_64BIT
+value|0x04
+end_define
+
+begin_comment
+comment|/* 64-bit quota file */
+end_comment
+
 begin_comment
 comment|/* Convert mount ptr to ufsmount ptr. */
 end_comment

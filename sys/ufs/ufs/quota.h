@@ -158,34 +158,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|Q_GETQUOTA
+name|Q_GETQUOTA32
 value|0x0300
 end_define
 
 begin_comment
-comment|/* get limits and usage */
+comment|/* get limits and usage (32-bit version) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|Q_SETQUOTA
+name|Q_SETQUOTA32
 value|0x0400
 end_define
 
 begin_comment
-comment|/* set limits and usage */
+comment|/* set limits and usage (32-bit version) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|Q_SETUSE
+name|Q_SETUSE32
 value|0x0500
 end_define
 
 begin_comment
-comment|/* set usage */
+comment|/* set usage (32-bit version) */
 end_comment
 
 begin_define
@@ -199,13 +199,46 @@ begin_comment
 comment|/* sync disk copy of a filesystems quotas */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|Q_GETQUOTA
+value|0x0700
+end_define
+
+begin_comment
+comment|/* get limits and usage (64-bit version) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_SETQUOTA
+value|0x0800
+end_define
+
+begin_comment
+comment|/* set limits and usage (64-bit version) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_SETUSE
+value|0x0900
+end_define
+
+begin_comment
+comment|/* set usage (64-bit version) */
+end_comment
+
 begin_comment
 comment|/*  * The following structure defines the format of the disk quota file  * (as it appears on disk) - the file is an array of these structures  * indexed by user or group number.  The setquota system call establishes  * the vnode for each quota file (a pointer is retained in the ufsmount  * structure).  */
 end_comment
 
 begin_struct
 struct|struct
-name|dqblk
+name|dqblk32
 block|{
 name|u_int32_t
 name|dqb_bhardlimit
@@ -239,6 +272,101 @@ name|int32_t
 name|dqb_itime
 decl_stmt|;
 comment|/* time limit for excessive files */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|dqblk64
+block|{
+name|u_int64_t
+name|dqb_bhardlimit
+decl_stmt|;
+comment|/* absolute limit on disk blks alloc */
+name|u_int64_t
+name|dqb_bsoftlimit
+decl_stmt|;
+comment|/* preferred limit on disk blks */
+name|u_int64_t
+name|dqb_curblocks
+decl_stmt|;
+comment|/* current block count */
+name|u_int64_t
+name|dqb_ihardlimit
+decl_stmt|;
+comment|/* maximum # allocated inodes + 1 */
+name|u_int64_t
+name|dqb_isoftlimit
+decl_stmt|;
+comment|/* preferred inode limit */
+name|u_int64_t
+name|dqb_curinodes
+decl_stmt|;
+comment|/* current # allocated inodes */
+name|int64_t
+name|dqb_btime
+decl_stmt|;
+comment|/* time limit for excessive disk use */
+name|int64_t
+name|dqb_itime
+decl_stmt|;
+comment|/* time limit for excessive files */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|dqblk
+value|dqblk64
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_DQHDR64_MAGIC
+value|"QUOTA64"
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_DQHDR64_VERSION
+value|0x20081104
+end_define
+
+begin_struct
+struct|struct
+name|dqhdr64
+block|{
+name|char
+name|dqh_magic
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Q_DQHDR64_MAGIC */
+name|uint32_t
+name|dqh_version
+decl_stmt|;
+comment|/* Q_DQHDR64_VERSION */
+name|uint32_t
+name|dqh_hdrlen
+decl_stmt|;
+comment|/* header length */
+name|uint32_t
+name|dqh_reclen
+decl_stmt|;
+comment|/* record length */
+name|char
+name|dqh_unused
+index|[
+literal|44
+index|]
+decl_stmt|;
+comment|/* reserved for future extension */
 block|}
 struct|;
 end_struct
@@ -305,7 +433,7 @@ name|dq_ump
 decl_stmt|;
 comment|/* (h) filesystem that this is 					   taken from */
 name|struct
-name|dqblk
+name|dqblk64
 name|dq_dqb
 decl_stmt|;
 comment|/* actual usage& quotas */
@@ -678,28 +806,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getquota
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
-name|mount
-modifier|*
-parameter_list|,
-name|u_long
-parameter_list|,
-name|int
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|qsync
 parameter_list|(
 name|struct
@@ -740,6 +846,94 @@ parameter_list|,
 name|struct
 name|mount
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getquota32
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|setquota32
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|setuse32
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getquota
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|u_long
 parameter_list|,
 name|int
 parameter_list|,
