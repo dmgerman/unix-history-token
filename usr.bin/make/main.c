@@ -2160,6 +2160,10 @@ break|break;
 case|case
 literal|'s'
 case|:
+name|beQuiet
+operator|=
+name|TRUE
+expr_stmt|;
 name|beSilent
 operator|=
 name|TRUE
