@@ -305,7 +305,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:dDfFm:npy"
+literal|"b:Bc:CdDfFm:npy"
 argument_list|)
 operator|)
 operator|!=
@@ -478,6 +478,13 @@ case|:
 name|preen
 operator|++
 expr_stmt|;
+comment|/*FALLTHROUGH*/
+case|case
+literal|'C'
+case|:
+name|ckclean
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|'y'
@@ -535,7 +542,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|preen
+name|ckclean
 condition|)
 operator|(
 name|void
@@ -839,7 +846,7 @@ if|if
 condition|(
 name|debug
 operator|&&
-name|preen
+name|ckclean
 condition|)
 name|pwarn
 argument_list|(
@@ -1016,7 +1023,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|preen
+name|ckclean
 operator|&&
 name|skipclean
 condition|)
@@ -1279,7 +1286,7 @@ literal|0
 operator|&&
 name|skipclean
 operator|&&
-name|preen
+name|ckclean
 condition|)
 block|{
 comment|/* 					 * file system is clean; 					 * skip snapshot and report it clean 					 */
