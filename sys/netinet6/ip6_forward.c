@@ -1094,14 +1094,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|skip_ipsec
-label|:
-endif|#
-directive|endif
-comment|/* IPSEC */
-ifdef|#
-directive|ifdef
-name|IPSEC
 if|if
 condition|(
 name|ipsecrt
@@ -1109,6 +1101,8 @@ condition|)
 goto|goto
 name|skip_routing
 goto|;
+name|skip_ipsec
+label|:
 endif|#
 directive|endif
 name|dst
