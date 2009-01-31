@@ -1628,8 +1628,8 @@ operator|=
 name|rfs
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("movl %%es,%0" : "=rm" (sf.sf_uc.uc_mcontext.mc_es));
-asm|__asm __volatile("movl %%ds,%0" : "=rm" (sf.sf_uc.uc_mcontext.mc_ds));
+asm|__asm __volatile("mov %%es,%0" : "=rm" (sf.sf_uc.uc_mcontext.mc_es));
+asm|__asm __volatile("mov %%ds,%0" : "=rm" (sf.sf_uc.uc_mcontext.mc_ds));
 name|sf
 operator|.
 name|sf_uc
@@ -2442,8 +2442,8 @@ operator|=
 name|rfs
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("movl %%es,%0" : "=rm" (sf.sf_uc.uc_mcontext.mc_es));
-asm|__asm __volatile("movl %%ds,%0" : "=rm" (sf.sf_uc.uc_mcontext.mc_ds));
+asm|__asm __volatile("mov %%es,%0" : "=rm" (sf.sf_uc.uc_mcontext.mc_es));
+asm|__asm __volatile("mov %%ds,%0" : "=rm" (sf.sf_uc.uc_mcontext.mc_ds));
 name|sf
 operator|.
 name|sf_uc

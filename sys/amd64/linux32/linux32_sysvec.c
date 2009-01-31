@@ -1967,7 +1967,7 @@ operator|=
 name|rfs
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("movl %%es,%0" :
+asm|__asm __volatile("mov %%es,%0" :
 literal|"=rm"
 operator|(
 name|frame
@@ -1983,7 +1983,7 @@ function|;
 end_function
 
 begin_asm
-asm|__asm __volatile("movl %%ds,%0" :
+asm|__asm __volatile("mov %%ds,%0" :
 end_asm
 
 begin_expr_stmt
@@ -2835,8 +2835,8 @@ operator|=
 name|rfs
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("movl %%es,%0" : "=rm" (frame.sf_sc.sc_es));
-asm|__asm __volatile("movl %%ds,%0" : "=rm" (frame.sf_sc.sc_ds));
+asm|__asm __volatile("mov %%es,%0" : "=rm" (frame.sf_sc.sc_es));
+asm|__asm __volatile("mov %%ds,%0" : "=rm" (frame.sf_sc.sc_ds));
 name|frame
 operator|.
 name|sf_sc
