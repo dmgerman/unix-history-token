@@ -1309,6 +1309,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
+comment|/* Note: we require exactly nine 				 * digits after the decimal point. */
 name|val
 operator|=
 name|ep
