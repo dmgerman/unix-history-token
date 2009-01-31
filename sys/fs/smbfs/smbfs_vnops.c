@@ -3879,11 +3879,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|SMBVDEBUG
 argument_list|(
 literal|"\n"
@@ -3945,8 +3940,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|smbfs_doio
 argument_list|(
 name|ap
